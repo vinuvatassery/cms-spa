@@ -65,6 +65,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   @Output() submitEvent = new EventEmitter<any>();
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+  readonly paymentTypeCode = PendingApprovalPaymentTypeCode;
   public state!: State;
   sortColumn = 'batchName';
   sortDir = 'Ascending';
@@ -184,6 +185,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.lovFacade.getPaymentStatusLov();
     this.paymentStatusLovSubscription = this.paymentStatusLov$.subscribe({
       next:(response) => {
+        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
         this.paymentStatusLovList = response;
       }
     });
@@ -193,6 +195,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodLovSubscription = this.paymentMethodLov$.subscribe({
       next:(response) => {
+        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
         this.paymentMethodLovList = response;
       }
     });

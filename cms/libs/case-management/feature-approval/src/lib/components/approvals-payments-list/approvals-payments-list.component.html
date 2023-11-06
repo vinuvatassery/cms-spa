@@ -117,24 +117,24 @@
       field="providerCount"
       title="Carrier Count"
       [width]="120"
-      *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'"
+      *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
     ></kendo-grid-column>
     <kendo-grid-column field="totalPayments" title="Pmt Count" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="paymentRequestSubTypeCode" title="Claim Type" [width]="120"
-      *ngIf="selectedPaymentType === 'TPA_CLAIM'">
+      *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="paymentRequestSubTypeCode" title="Premium Type" [width]="120"
-      *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'">
+      *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium">
       <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="paymentRequestSubTypeCode" title="Pharmacy Type" [width]="120"
-      *ngIf="selectedPaymentType === 'PHARMACY_CLAIM'">
+      *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim">
       <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
       </ng-template>
@@ -143,7 +143,7 @@
       field="premiumCount"
       title="Premium Count"
       [width]="100"
-      *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'"
+      *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
     >
     </kendo-grid-column>
     <kendo-grid-column field="creationTime" title="Date Approval Requested" [width]="150">

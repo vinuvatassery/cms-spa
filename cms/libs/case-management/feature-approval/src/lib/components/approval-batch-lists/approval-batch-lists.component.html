@@ -17,7 +17,7 @@
         <div>
           <div class="slidertitle-bar">
             <p>
-              <strong>Batch # {{ item.batchName }} </strong>
+              Batch # <strong> {{ item.batchName }} </strong>
               <label class="ml-1"
                 >${{ item.totalAmountDue | kendoNumber : 'n2' }}</label
               >
@@ -30,7 +30,7 @@
                 kendoButton
                 id="approveBatch{{ index }}"
                 [toggleable]="true"
-                [selected]="item.batchStatus == 'APPROVED'"
+                [selected]="item.batchStatus == approveStatus"
                 aria-label="Approve"
                 (selectedChange)="onApproveClicked(item, index)"
               >
@@ -54,12 +54,13 @@
               [fillMode]="formUiStyle.inputFillMode"
               [maxlength]="tAreaSendBackNotesMaxLength"
               [rows]="2"
+              class="table-text-area textarea"
               resizable="none"
               [(ngModel)]="item.sendBackNotes"
               (valueChange)="sendBackNotesChange(item)"
               aria-label="Send Back Notes"
               title="{{ item.sendBackNotes }}"
-              [disabled]="item.batchStatus == 'APPROVED'"
+              [disabled]="item.batchStatus != sendbackStatus"
             >
             <kendo-textarea-suffix class="justify-content-end">
               <span class="counter">{{ item.tAreaCessationCounter }}</span>
@@ -105,15 +106,16 @@
                     [extra]="false"
                     operator="eq"
                   >
-                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                  <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                  <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                  <kendo-filter-lte-operator></kendo-filter-lte-operator>
                   </kendo-grid-numeric-filter-menu>
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'TPA_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim"
                 field="invoiceNbr"
                 title="Invoice ID"
                 [width]="150"
@@ -132,16 +134,17 @@
                     operator="eq"
                     format="0"
                   >
-                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                  <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                  <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                  <kendo-filter-lte-operator></kendo-filter-lte-operator>
                   </kendo-grid-numeric-filter-menu>
                 </ng-template>
               </kendo-grid-column>
 
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'TPA_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim"
                 field="vendorName"
                 title="Provider Name"
                 [width]="250"
@@ -167,7 +170,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'INSURANCE_PREMIUM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
                 field="vendorName"
                 title="Insurance Vendor"
                 [width]="250"
@@ -193,7 +196,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="vendorName"
                 title="Pharmacy Name"
                 [width]="250"
@@ -219,7 +222,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'INSURANCE_PREMIUM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
                 field="premiumCount"
                 title="Item Count"
                 [width]="150"
@@ -249,7 +252,7 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'TPA_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim"
                 field="amountDue"
                 title="Total Due"
                 [width]="130"
@@ -270,7 +273,7 @@
                     [column]="column"
                     [filter]="filter"
                     [filterService]="filterService"
-                    [extra]="true"
+                    [extra]="false"
                     operator="eq"
                   >
                     <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -282,8 +285,8 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'INSURANCE_PREMIUM'"
-                field="amountDue"
+                *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
+                field="premiumTotalAmount"
                 title="Total Amount"
                 [width]="130"
               >
@@ -303,7 +306,7 @@
                     [column]="column"
                     [filter]="filter"
                     [filterService]="filterService"
-                    [extra]="true"
+                    [extra]="false"
                     operator="eq"
                   >
                     <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -311,6 +314,112 @@
                     <kendo-filter-gte-operator></kendo-filter-gte-operator>
                     <kendo-filter-lt-operator></kendo-filter-lt-operator>
                     <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                  </kendo-grid-numeric-filter-menu>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim"
+                field="serviceCount"
+                title="Service Count"
+                [width]="150"
+                format="0"
+              >
+                <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                  format="0"
+                >
+                  <kendo-grid-numeric-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="true"
+                    operator="eq"
+                    format="0"
+                  >
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                  </kendo-grid-numeric-filter-menu>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType != paymentTypeCode.InsurancePremium"
+                field="clientFullName"
+                title="Client Name"
+                [width]="250"
+              >
+                <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                >
+                  <kendo-grid-string-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="false"
+                    operator="contains"
+                  >
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                  </kendo-grid-string-filter-menu>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim"
+                field="nameOnInsuranceCard"
+                title="Name on Primary Insurance Card"
+                [width]="265"
+              >
+                <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                >
+                  <kendo-grid-string-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="false"
+                    operator="contains"
+                  >
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                  </kendo-grid-string-filter-menu>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType != paymentTypeCode.InsurancePremium"
+                field="clientId"
+                title="Client ID"
+                [width]="130"
+              >
+                <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                >
+                  <kendo-grid-numeric-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="false"
+                    operator="eq"
+                    format="0"
+                  >
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
                   </kendo-grid-numeric-filter-menu>
                 </ng-template>
               </kendo-grid-column>
@@ -346,288 +455,6 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'TPA_CLAIM'"
-                field="serviceCount"
-                title="Service Count"
-                [width]="150"
-                format="0"
-              >
-                <ng-template
-                  kendoGridFilterMenuTemplate
-                  let-filter
-                  let-column="column"
-                  let-filterService="filterService"
-                  format="0"
-                >
-                  <kendo-grid-numeric-filter-menu
-                    [column]="column"
-                    [filter]="filter"
-                    [filterService]="filterService"
-                    [extra]="true"
-                    operator="eq"
-                    format="0"
-                  >
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
-                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
-                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
-                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
-                  </kendo-grid-numeric-filter-menu>
-                </ng-template>
-              </kendo-grid-column>
-              <kendo-grid-column
-                *ngIf="selectedPaymentType != 'INSURANCE_PREMIUM'"
-                field="clientFullName"
-                title="Client Name"
-                [width]="250"
-              >
-                <ng-template
-                  kendoGridFilterMenuTemplate
-                  let-filter
-                  let-column="column"
-                  let-filterService="filterService"
-                >
-                  <kendo-grid-string-filter-menu
-                    [column]="column"
-                    [filter]="filter"
-                    [filterService]="filterService"
-                    [extra]="false"
-                    operator="contains"
-                  >
-                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                  </kendo-grid-string-filter-menu>
-                </ng-template>
-              </kendo-grid-column>
-              <kendo-grid-column
-                *ngIf="selectedPaymentType == 'TPA_CLAIM'"
-                field="nameOnInsuranceCard"
-                title="Name on Primary Insurance Card"
-                [width]="265"
-              >
-                <ng-template
-                  kendoGridFilterMenuTemplate
-                  let-filter
-                  let-column="column"
-                  let-filterService="filterService"
-                >
-                  <kendo-grid-string-filter-menu
-                    [column]="column"
-                    [filter]="filter"
-                    [filterService]="filterService"
-                    [extra]="false"
-                    operator="contains"
-                  >
-                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                  </kendo-grid-string-filter-menu>
-                </ng-template>
-              </kendo-grid-column>
-              <kendo-grid-column
-                *ngIf="selectedPaymentType != 'INSURANCE_PREMIUM'"
-                field="clientId"
-                title="Client ID"
-                [width]="130"
-              >
-                <ng-template
-                  kendoGridFilterMenuTemplate
-                  let-filter
-                  let-column="column"
-                  let-filterService="filterService"
-                >
-                  <kendo-grid-numeric-filter-menu
-                    [column]="column"
-                    [filter]="filter"
-                    [filterService]="filterService"
-                    [extra]="false"
-                    operator="eq"
-                    format="0"
-                  >
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                  </kendo-grid-numeric-filter-menu>
-                </ng-template>
-              </kendo-grid-column>
-              <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
-                field="drugName"
-                title="Drug Name"
-                [width]="200"
-              >
-                <ng-template
-                  kendoGridFilterMenuTemplate
-                  let-filter
-                  let-column="column"
-                  let-filterService="filterService"
-                >
-                  <kendo-grid-string-filter-menu
-                    [column]="column"
-                    [filter]="filter"
-                    [filterService]="filterService"
-                    [extra]="false"
-                    operator="contains"
-                  >
-                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                  </kendo-grid-string-filter-menu>
-                </ng-template>
-              </kendo-grid-column>
-              <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
-                field="ndcCode"
-                title="NDC Code"
-                [width]="130"
-              >
-                <ng-template
-                  kendoGridFilterMenuTemplate
-                  let-filter
-                  let-column="column"
-                  let-filterService="filterService"
-                >
-                  <kendo-grid-string-filter-menu
-                    [column]="column"
-                    [filter]="filter"
-                    [filterService]="filterService"
-                    [extra]="false"
-                    operator="contains"
-                  >
-                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                  </kendo-grid-string-filter-menu>
-                </ng-template>
-              </kendo-grid-column>
-              <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
-                field="rxQty"
-                title="RX Qty"
-                [width]="150"
-                format="0"
-              >
-                <ng-template
-                  kendoGridFilterMenuTemplate
-                  let-filter
-                  let-column="column"
-                  let-filterService="filterService"
-                  format="0"
-                >
-                  <kendo-grid-numeric-filter-menu
-                    [column]="column"
-                    [filter]="filter"
-                    [filterService]="filterService"
-                    [extra]="true"
-                    operator="eq"
-                    format="0"
-                  >
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
-                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
-                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
-                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
-                  </kendo-grid-numeric-filter-menu>
-                </ng-template>
-              </kendo-grid-column>
-              <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
-                field="rxType"
-                title="RX Type"
-                [width]="130"
-              >
-                <ng-template
-                  kendoGridFilterMenuTemplate
-                  let-filter
-                  let-column="column"
-                  let-filterService="filterService"
-                >
-                  <kendo-grid-string-filter-menu
-                    [column]="column"
-                    [filter]="filter"
-                    [filterService]="filterService"
-                    [extra]="false"
-                    operator="contains"
-                  >
-                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                  </kendo-grid-string-filter-menu>
-                </ng-template>
-              </kendo-grid-column>
-              <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
-                field="prescriptionTotalAmount"
-                title="Total Amount Paid"
-                [width]="130"
-              >
-                <ng-template kendoGridCellTemplate let-dataItem>
-                  <span class="text-muted">$</span>
-                  {{ dataItem.prescriptionTotalAmount }}
-                </ng-template>
-                <ng-template
-                  kendoGridFilterMenuTemplate
-                  let-filter
-                  let-column="column"
-                  let-filterService="filterService"
-                >
-                  <kendo-grid-numeric-filter-menu
-                    [column]="column"
-                    [filter]="filter"
-                    [filterService]="filterService"
-                    [extra]="true"
-                    operator="eq"
-                  >
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
-                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
-                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
-                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
-                  </kendo-grid-numeric-filter-menu>
-                </ng-template>
-              </kendo-grid-column>
-              <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
-                field="daySupply"
-                title="Days Supply"
-                [width]="150"
-                format="0"
-              >
-                <ng-template
-                  kendoGridFilterMenuTemplate
-                  let-filter
-                  let-column="column"
-                  let-filterService="filterService"
-                  format="0"
-                >
-                  <kendo-grid-numeric-filter-menu
-                    [column]="column"
-                    [filter]="filter"
-                    [filterService]="filterService"
-                    [extra]="true"
-                    operator="eq"
-                    format="0"
-                  >
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
-                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
-                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
-                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
-                  </kendo-grid-numeric-filter-menu>
-                </ng-template>
-              </kendo-grid-column>
-              <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
-                field="prescriptionFillDate"
-                title="Fill Date"
-                [width]="150"
-              >
-              </kendo-grid-column>
-              <kendo-grid-column
                 field="paymentStatusCode"
                 title="Payment Status"
                 [width]="170"
@@ -659,7 +486,183 @@
                 </ng-template>
               </kendo-grid-column>
               <kendo-grid-column
-                *ngIf="selectedPaymentType == 'PHARMACY_CLAIM'"
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
+                field="drugName"
+                title="Drug Name"
+                [width]="200"
+              >
+                <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                >
+                  <kendo-grid-string-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="false"
+                    operator="contains"
+                  >
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                  </kendo-grid-string-filter-menu>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
+                field="ndcCode"
+                title="NDC Code"
+                [width]="130"
+              >
+                <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                >
+                  <kendo-grid-string-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="false"
+                    operator="contains"
+                  >
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                  </kendo-grid-string-filter-menu>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
+                field="rxQty"
+                title="RX Qty"
+                [width]="150"
+                format="0"
+              >
+                <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                  format="0"
+                >
+                  <kendo-grid-numeric-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="true"
+                    operator="eq"
+                    format="0"
+                  >
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                  </kendo-grid-numeric-filter-menu>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
+                field="rxType"
+                title="Unit"
+                [width]="130"
+              >
+                <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                >
+                  <kendo-grid-string-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="false"
+                    operator="contains"
+                  >
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                  </kendo-grid-string-filter-menu>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
+                field="prescriptionTotalAmount"
+                title="Total Amount Paid"
+                [width]="130"
+              >
+                <ng-template kendoGridCellTemplate let-dataItem>
+                  <span class="text-muted">$</span>
+                  {{ dataItem.prescriptionTotalAmount }}
+                </ng-template>
+                <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                >
+                  <kendo-grid-numeric-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="true"
+                    operator="eq"
+                  >
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                  </kendo-grid-numeric-filter-menu>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
+                field="daySupply"
+                title="Days Supply"
+                [width]="150"
+                format="0"
+              >
+                <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                  format="0"
+                >
+                  <kendo-grid-numeric-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="true"
+                    operator="eq"
+                    format="0"
+                  >
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                  </kendo-grid-numeric-filter-menu>
+                </ng-template>
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
+                field="prescriptionFillDate"
+                title="Fill Date"
+                [width]="150"
+              >
+              </kendo-grid-column>
+              <kendo-grid-column
+                *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim"
                 field="prescriptionNbr"
                 title="Prescription #"
                 [width]="170"
