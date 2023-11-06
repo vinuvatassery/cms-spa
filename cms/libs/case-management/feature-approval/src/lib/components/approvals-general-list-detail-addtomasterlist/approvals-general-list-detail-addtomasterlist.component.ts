@@ -21,7 +21,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   @Input() approvalId: any;
   @Output() openEditModal = new EventEmitter<any>();
   @Input() subTypeCode: any;
-  @Input() selectedVendor$!: Observable<any>;
+  @Input() selectedMasterDetail$!: Observable<any>;
   ifApproveOrDeny: any;
   isPanelExpanded = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -33,7 +33,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   }
 
   private getVendorData() {
-    this.selectedVendor$.subscribe((value: any) => {
+    this.selectedMasterDetail$.subscribe((value: any) => {
         this.vendorData = value;
     });
   }

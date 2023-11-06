@@ -97,10 +97,10 @@ export class ApprovalPageComponent implements OnInit {
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId!: any;
   usersByRole$ = this.userManagementFacade.usersByRole$;
-  selectedVendor$ = this.financialVendorFacade.selectedVendor$;
+  selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
   clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
   ddlStates$ = this.contactFacade.ddlStates$;
-  healthCareForm!: FormGroup
+  healthCareForm!: FormGroup;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -129,13 +129,13 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalCount = response;
-      }
-      else{
+      } else {
         this.pendingApprovalCount = 0;
       }
       this.cd.detectChanges();
     });
   }
+
   loadApprovalsGeneralGrid(event: any): void {
     this.pendingApprovalGeneralFacade.loadApprovalsGeneral();
   }
@@ -253,22 +253,33 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
   }
 
-  getVendorDetail(userObject: any) {
-    if (userObject.subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
-      userObject.subTypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
+  getMasterDetails(userObject: any) {
+    if (
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
+      userObject.subTypeCode ===
+        PendingApprovalGeneralTypeCode.DentalProvider ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
-      userObject.subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider ||
-      userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsuranceProvider ||
-      userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsuranceVendor ||
+      userObject.subTypeCode ===
+        PendingApprovalGeneralTypeCode.MedicalProvider ||
+      userObject.subTypeCode ===
+        PendingApprovalGeneralTypeCode.InsuranceProvider ||
+      userObject.subTypeCode ===
+        PendingApprovalGeneralTypeCode.InsuranceVendor ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Pharmacy
     ) {
-      this.financialVendorFacade.getVendorDetails(
-        userObject.approvalEntityId
+      this.financialVendorFacade.getVendorDetails(userObject.approvalEntityId);
+      this.selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
+    } else if (
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.Drug ||
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan
+    ) {
+      this.pendingApprovalGeneralFacade.getMasterDetails(
+        userObject.approvalEntityId,
+        userObject.subTypeCode
       );
-      this.selectedVendor$ = this.financialVendorFacade.selectedVendor$;
-    } else if (userObject.subTypeCode === PendingApprovalGeneralTypeCode.Drug || userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
-      this.pendingApprovalGeneralFacade.getVendorDetails(userObject.approvalEntityId, userObject.subTypeCode);
-      this.selectedVendor$ = this.pendingApprovalGeneralFacade.selectedVendor$;
+      this.selectedMasterDetail$ =
+        this.pendingApprovalGeneralFacade.selectedMasterDetail$;
     }
   }
+
 }

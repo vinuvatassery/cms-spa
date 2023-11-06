@@ -167,7 +167,7 @@
                 [approvalId]="item.generalPendingApprovalId"
                 (openEditModal)="openEditModal($event)"
                 [subTypeCode]="item.subTypeCode"
-                [selectedVendor$]="selectedVendor$"
+                [selectedMasterDetail$]="selectedMasterDetail$"
               >
               </productivity-tools-approvals-general-list-detail-addtomasterlist>
             </ng-template>
@@ -234,7 +234,7 @@
   >
   <productivity-tools-approvals-edit-items
     [selectedSubtypeCode]="selectedSubtypeCode"
-    [selectedVendor$]="selectedVendor$"
+    [selectedMasterDetail$]="selectedMasterDetail$"
   >
   </productivity-tools-approvals-edit-items>
 </ng-template>

@@ -8,11 +8,11 @@
       aria-label="edit"
       title="Edit List Item"
       (click)="onEditListItemsDetailClicked()"
-      *ngIf="selectedVendor$ | async as item"
+      *ngIf="selectedMasterDetail$ | async as item"
     ></button>
     <table
       class="info-table-custom nobg-left"
-      *ngIf="selectedVendor$ | async as item"
+      *ngIf="selectedMasterDetail$ | async as item"
     >
       <caption hidden>
         Vendor Info
@@ -161,11 +161,11 @@
         </tr>
         <tr>
           <td>Start Date</td>
-          <td>{{vendorData.startDate}}</td>
+          <td>{{vendorData.startDate | date : 'MM/dd/YYYY'}}</td>
         </tr>
         <tr>
           <td>Term Date</td>
-          <td>{{vendorData.termDate}}</td>
+          <td>{{vendorData.termDate | date : 'MM/dd/YYYY'}}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.InsuranceProvider">
