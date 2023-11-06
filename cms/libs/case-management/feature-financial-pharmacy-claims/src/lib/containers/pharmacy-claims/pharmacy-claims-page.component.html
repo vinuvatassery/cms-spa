@@ -11,7 +11,7 @@
                     <kendo-tabstrip-tab title="Process" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-process-list 
+                                <cms-pharmacy-claims-process-list
                                 [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
                                 [pharmacyClaimsProcessGridLoader$]="pharmacyClaimsProcessLoader$"
                                 [deliveryMethodLov$]="deliveryMethodLov$"
@@ -27,7 +27,7 @@
                                 [searchDrugsLoader$]="searchDrugsLoader$"
                                 [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsProcess"
-                                [sortType]="sortType" [sort]="sortProcessList" 
+                                [sortType]="sortType" [sort]="sortProcessList"
                                 (addPharmacyClaimEvent)="addPharmacyClaim($event)"
                                 (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
                                 (getPharmacyClaimEvent)="getPharmacyClaim($event)"
@@ -47,9 +47,11 @@
                     <kendo-tabstrip-tab title="Batches">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-batches-list   [pharmacyClaimsBatchGridLists$]="pharmacyClaimsBatchGridLists$"
+                                <cms-pharmacy-claims-batches-list
+                                [PharmacyBatchGridLoader$]="pharmacyClaimsBatchGridLoader$"
+                                [pharmacyClaimsBatchGridLists$]="pharmacyClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsBatch"
-                                [sortType]="sortType" [sort]="sortBatchList" 
+                                [sortType]="sortType" [sort]="sortBatchList"
                                 (loadPharmacyClaimsBatchListEvent)="loadPharmacyClaimsBatchListGrid($event)"></cms-pharmacy-claims-batches-list>
                             </div>
                         </ng-template>
@@ -59,7 +61,7 @@
                             <div class="block-section">
                                 <cms-pharmacy-claims-all-payments-list  [pharmacyClaimsAllPaymentsGridLists$]="pharmacyClaimsAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsPayments"
-                                [sortType]="sortType" [sort]="sortPaymentsList" 
+                                [sortType]="sortType" [sort]="sortPaymentsList"
                                 (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>

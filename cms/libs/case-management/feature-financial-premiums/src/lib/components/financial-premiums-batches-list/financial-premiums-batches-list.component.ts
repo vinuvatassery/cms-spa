@@ -49,13 +49,14 @@ export class FinancialPremiumsBatchesListComponent
   columnDropList$ = this.columnDropListSubject.asObservable();
 
   gridColumns: any = {
-    batchName: 'Status',
-    unbatchedPayments: 'PCA #',
-    batchedPayments: 'Object',
-    paymentsRequested: 'Object Code',
-    paymentsReconciled: 'AY',
-    totalAdjustmentsAmount: 'Open Date',
-    totalPaymentsAmount: 'Close Date'
+    batchName: 'Batch #',
+    sendBackNotes: 'Send Back Notes',
+    unbatchedPayments: 'Unbatched Payments',
+    batchedPayments: '# of Payments in Batch',
+    paymentsRequested: '# of Payments Requested',
+    paymentsReconciled: '# of Payments Reconciled',
+    totalAdjustmentsAmount: 'Total Amount of Adjustments',
+    totalPaymentsAmount: 'Total Amount of Payments'
   };
 
   searchColumnList: { columnName: string; columnDesc: string }[] = [
