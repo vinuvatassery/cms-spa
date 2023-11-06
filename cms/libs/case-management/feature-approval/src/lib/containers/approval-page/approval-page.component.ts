@@ -257,7 +257,10 @@ export class ApprovalPageComponent implements OnInit {
     if (userObject.subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
-      userObject.subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider ||
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsuranceProvider ||
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsuranceVendor ||
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.Pharmacy
     ) {
       this.financialVendorFacade.getVendorDetails(
         userObject.approvalEntityId

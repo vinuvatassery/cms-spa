@@ -97,45 +97,45 @@
       <tbody *ngIf="subTypeCode === subTypeConst.InsuranceVendor">
         <tr>
           <td>Vendor Name</td>
-          <td>Nice VEndor</td>
+          <td>{{vendorData.vendorName}}</td>
         </tr>
         <tr>
           <td>TIN</td>
-          <td>XXXXXXXX</td>
+          <td>{{vendorData.tin}}</td>
           <td></td>
         </tr>
 
         <tr>
           <td>Accepts Combined Payments</td>
-          <td>Nice Brand</td>
+          <td>{{vendorData.acceptsCombinedPaymentsFlag}}</td>
         </tr>
         <tr>
           <td>Accepts Reports</td>
-          <td>XXXXXXXX</td>
+          <td>{{vendorData.acceptsReportsFlag}}</td>
         </tr>
         <tr>
           <td>Payment Method</td>
-          <td>XXXXXXXX</td>
+          <td>{{vendorData.paymentMethodCode}}</td>
         </tr>
         <tr>
           <td>Payment Run Date</td>
-          <td>dd/mm/yyyy</td>
+          <td>{{vendorData.paymentRunDateMonthly}}</td>
         </tr>
         <tr>
           <td>Name on Check</td>
-          <td>Yes</td>
+          <td>{{vendorData.nameOnCheck}}</td>
         </tr>
         <tr>
           <td>Name on Envelope</td>
-          <td>Abc street</td>
+          <td>{{vendorData.nameOnEnvelope}}</td>
         </tr>
         <tr>
           <td>Billing Email</td>
-          <td>Abc street</td>
+          <td>{{vendorData.email}}</td>
         </tr>
         <tr>
           <td>Billing Address</td>
-          <td>Abc street</td>
+          <td>{{vendorData.address1}}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.InsurancePlan">
@@ -171,13 +171,25 @@
       <tbody *ngIf="subTypeCode === subTypeConst.InsuranceProvider">
         <tr>
           <td>Provider Name</td>
-          <td>Nice Manufacturer</td>
+          <td>{{vendorData.vendorName}}</td>
+        </tr>
+        <tr>
+          <td>Tin</td>
+          <td>{{vendorData.tin}}</td>
+        </tr>
+        <tr>
+          <td>NPI </td>
+          <td>{{vendorData.npi}}</td>
+        </tr>
+        <tr>
+          <td>Preferred Pharmacy</td>
+          <td>{{vendorData.preferredFlag}}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
-        <tr hidden>
+        <tr>
           <td>Pharmacy</td>
-          <td>Very nice pharmacy</td>
+          <td>vendorData.vendorName</td>
         </tr>
       </tbody>
     </table>
