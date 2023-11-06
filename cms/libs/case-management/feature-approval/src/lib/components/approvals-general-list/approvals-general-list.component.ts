@@ -312,6 +312,10 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         return 'Request to add Insurance Providers To Master List';
       case PendingApprovalGeneralTypeCode.Pharmacy:
         return 'Request to add Pharmacies To Master List';
+      case PendingApprovalGeneralTypeCode.Drug:
+        return 'Request to add Drugs To Master List';
+      case PendingApprovalGeneralTypeCode.InsurancePlan:
+        return 'Request to add Insurance Plan To Master List';
     }
     return null;
   }

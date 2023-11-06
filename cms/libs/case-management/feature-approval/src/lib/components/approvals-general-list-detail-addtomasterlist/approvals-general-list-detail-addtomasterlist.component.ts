@@ -35,7 +35,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   private getVendorData() {
     this.selectedVendor$.subscribe((value: any) => {
       if (this.subTypeCode === PendingApprovalGeneralTypeCode.Drug) {
-        this.vendorData = value.items[0];
+        this.vendorData = value
       } else {
         this.vendorData = value;
       }

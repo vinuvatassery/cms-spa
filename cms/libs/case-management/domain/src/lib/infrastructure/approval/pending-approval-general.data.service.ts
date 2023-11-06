@@ -51,18 +51,9 @@ export class PendingApprovalGeneralService {
   }
   
   getVendorDetails(vendorId: string, subTypeCode: string) {
-    if (
-      subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
-      subTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
-      subTypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
-      subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider
-    ) {
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/temp`
-      );
-    } else if (subTypeCode == PendingApprovalGeneralTypeCode.Drug) {
+    if (subTypeCode == PendingApprovalGeneralTypeCode.Drug) {
       return this.http.post<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/drugs`,
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${vendorId}/drug`,
         null
       );
     }
