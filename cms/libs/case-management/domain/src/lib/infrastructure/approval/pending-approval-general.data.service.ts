@@ -56,6 +56,9 @@ export class PendingApprovalGeneralService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${vendorId}/drug`,
         null
       );
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsurancePlan) {
+      return this.http.get<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans/${vendorId}`);
     }
     return of();
   }

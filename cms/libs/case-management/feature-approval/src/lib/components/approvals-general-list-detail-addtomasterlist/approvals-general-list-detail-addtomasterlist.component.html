@@ -141,31 +141,31 @@
       <tbody *ngIf="subTypeCode === subTypeConst.InsurancePlan">
         <tr>
           <td>Insurance Provider</td>
-          <td>Nice Manufacturer</td>
+          <td>{{vendorData.providerName}}</td>
         </tr>
         <tr>
           <td>Insurance Plan Name</td>
-          <td>Nice Drug</td>
+          <td>{{vendorData.insurancePlanName}}</td>
         </tr>
         <tr>
           <td>Health Insurance Type</td>
-          <td>Nice Brand</td>
+          <td>{{vendorData.healthInsuranceTypeCode}}</td>
         </tr>
         <tr>
           <td>Can pay for medication</td>
-          <td>XXXXXXXX</td>
+          <td>{{vendorData.canPayForMedicationFlag}}</td>
         </tr>
         <tr>
           <td>Is a dental plan</td>
-          <td>XXXXXXXX</td>
+          <td>{{vendorData.dentalPlanFlag}}</td>
         </tr>
         <tr>
           <td>Start Date</td>
-          <td>abc@gmail.com</td>
+          <td>{{vendorData.startDate}}</td>
         </tr>
         <tr>
           <td>Term Date</td>
-          <td>Yes</td>
+          <td>{{vendorData.termDate}}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.InsuranceProvider">
