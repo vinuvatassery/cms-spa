@@ -96,13 +96,13 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   paymentSentDateRequired= false;
   tAreaCessationMaxLength:any=200;
   pageValidationMessage:any=null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentMethodType:any;
   pageValidationMessageFlag:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Medical Provider';
   premiumReconcileCount:any =0;
-  paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentMethodLovSubscription!:Subscription;
-  paymentMethodType:any;
   isRecordForPrint:any=0;
   showExportLoader = false;
   bulkNoteCounter:any=0;
@@ -176,6 +176,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       let batch = {columnCode:'batchName',columnDesc:'Batch #'};
       this.dropDropdownColumns.splice(0, 0, batch);
     }
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodSubscription();
     if(this.premiumsType === PremiumType.Dental){
       this.providerTitle = 'Dental Provider';
       this.sortColumn = this.providerTitle;
@@ -463,13 +465,13 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     else {
       this.reconcilePaymentGridUpdatedResult.push(dataItem);
     }
-    this.premiumReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== '').length;
+    this.premiumReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged).length;
     this.isRecordForPrint =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.isPrintAdviceLetter).length;
   }
 
   assignPaymentReconciledDateToPagedList() {
     this.reconcilePaymentGridPagedResult.data.forEach((item: any) => {
-      if (item.checkNbr !== undefined && item.checkNbr !== '' && item.checkNbr !== null) {
+      if (item.checkNbr !== undefined && item.checkNbr !== '' && item.checkNbr !== null && !item.reconciled) {
         item.paymentReconciledDate = this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value;
         item.datePaymentRecInValid = false;
         item.datePaymentRecInValidMsg = null;
@@ -482,7 +484,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   assignPaymentSendDateToPagedList() {
     this.reconcilePaymentGridPagedResult.data.forEach((item: any) => {
-      if (item.checkNbr !== undefined && item.checkNbr !== '' && item.checkNbr !== null) {
+      if (item.checkNbr !== undefined && item.checkNbr !== '' && item.checkNbr !== null && !item.reconciled) {
         item.paymentSentDate = this.reconcileAssignValueBatchForm.controls['datePaymentSend'].value;
         item.datePaymentSentInValid = false;
         item.datePaymentSentInValidMsg = null;
@@ -702,7 +704,11 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     else{
       this.assignRowDataToMainList(dataItem);
     }
+    if(this.selectedReconcileDataRows !== null && this.selectedReconcileDataRows?.length > 0){
+      this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
+      }
     this.isRecordForPrint =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.isPrintAdviceLetter).length;
+    this.cd.detectChanges();
   }
 
   noteChange(dataItem: any) {
@@ -714,6 +720,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     }
     this.calculateCharacterCount(dataItem)
     this.assignRowDataToMainList(dataItem);
+    this.cd.detectChanges();
   }
 
   private tAreaVariablesInitiation(dataItem: any) {
@@ -731,6 +738,10 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   }
 
   calculateCharacterCountBulkNote(note: any) {
+    this.reconcileAssignValueBatchForm.controls['note'].removeValidators([
+      Validators.required,
+    ]);
+    this.reconcileAssignValueBatchForm.controls['note'].updateValueAndValidity();
     let bulkNoteCharactersCount = note
       ? note.length
       : 0;
@@ -780,7 +791,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       dataItem.warrantNumberInValid = false;
     }
   }
-
 
   validateReconcileGridRecord() {
     this.reconcilePaymentGridUpdatedResult.forEach((currentPage: any, index: number) => {
@@ -865,6 +875,18 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.reconcileAssignValueBatchForm.controls['note'].removeValidators([
+      Validators.required,
+    ]);
+    this.reconcileAssignValueBatchForm.controls['note'].updateValueAndValidity();
+    this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].removeValidators([
+      Validators.required,
+    ]);
+    this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].updateValueAndValidity();
+    this.reconcileAssignValueBatchForm.controls['datePaymentSend'].removeValidators([
+      Validators.required,
+    ]);
+    this.reconcileAssignValueBatchForm.controls['datePaymentSend'].updateValueAndValidity();
     this.isSaveClicked = true;
     this.validateReconcileGridRecord();
     const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid || x.warrantNumberInValid);
@@ -955,6 +977,7 @@ let object={
         amountTotal : data.amountTotal,
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
+        warrantCalculation:this.warrantCalculationArray,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
       }
       this.loadIPBreakoutSummary(ReconcilePaymentResponseDto);

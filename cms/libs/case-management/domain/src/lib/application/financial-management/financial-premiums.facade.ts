@@ -251,7 +251,8 @@ export class FinancialPremiumsFacade {
         next: (dataResponse) => {
           const gridView = {
             data: dataResponse["items"],
-            total: dataResponse["totalCount"]
+            total: dataResponse["totalCount"],
+            acceptsReportsCount: dataResponse['acceptReportsFlagQueryCount'],
           };
           this.financialPremiumsAllPaymentsDataSubject.next(gridView);
           this.financialPremiumPaymentLoaderSubject.next(false);
@@ -281,6 +282,7 @@ export class FinancialPremiumsFacade {
         const gridView = {
           data: dataResponse['items'],
           total: dataResponse['totalCount'],
+          acceptsReportsCount: dataResponse['acceptReportsFlagQueryCount'],
         };
         this.batchLogDataSubject.next(gridView);
         this.hideLoader();

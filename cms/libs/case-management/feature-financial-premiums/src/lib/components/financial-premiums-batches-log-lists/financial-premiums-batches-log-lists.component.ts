@@ -256,7 +256,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.loadYesOrNoLovs();
     this.addActionRespSubscription();
     this.batchLogGridLists$.subscribe((response:any) =>{
-      this.totalRecord = response?.data?.filter((item: any) => item.acceptsReports === 'Y').length;
+      this.totalRecord = response?.acceptsReportsCount;
       if(this.selectAll){
       this.markAsChecked(response.data);
       }
@@ -817,6 +817,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     }
     else{
       this.noOfRecordToPrint = this.noOfRecordToPrint + 1;
+      this.selectedCount = this.noOfRecordToPrint
       this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
       if(!this.selectAll){
       this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});

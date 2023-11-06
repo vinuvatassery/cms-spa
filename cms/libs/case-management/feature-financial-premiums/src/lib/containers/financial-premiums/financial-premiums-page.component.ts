@@ -59,10 +59,12 @@ export class FinancialPremiumsPageComponent implements OnInit {
   financialPremiumPaymentLoader$ = this.financialPremiumsFacade.financialPremiumPaymentLoader$;
   insurancePremium$ = this.financialPremiumsFacade.insurancePremium$;
   premiumType: any;
-  vendorProfile$ = this.financialVendorFacade.providePanelSubject$
-  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
+  letterContentList$ = this.financialPremiumsFacade.letterContentList$;
+  letterContentLoader$ = this.financialPremiumsFacade.letterContentLoader$;
   ddlStates$ = this.contactFacade.ddlStates$;
-  paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
   providerDetailsDialog: any
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
@@ -225,4 +227,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
     }
   }
 
+  loadEachLetterTemplate(event:any){
+    this.financialPremiumsFacade.loadEachLetterTemplate(this.premiumType, event);  
+  }
 }

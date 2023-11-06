@@ -127,7 +127,7 @@
                          </div>
                   </div>
                   
-                  <div class="app-c-table">
+                  <div class="app-c-table mb-1">
                         <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
                         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (filterChange)="filterChange($event)"
@@ -307,7 +307,7 @@
                         </kendo-grid-column>   
                         <kendo-grid-column   title="Print Advice Ltr" [width]="130" class="text-center" [sticky]="true">
                               <ng-template kendoGridCellTemplate let-dataItem>                  
-                                    <input class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr" *ngIf="dataItem.acceptsReports === 'Y'"
+                                    <input class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr" *ngIf="dataItem.acceptsReportsFlag === 'Y'"
                                     aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
                                     />                                 
                               </ng-template>
@@ -354,7 +354,7 @@
                         <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2">$&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.warrantTotal | kendoNumber: 'n2'}}</span>
                        
                   </div>
-                  <div><span>{{ premiumReconcileCount }} advice letter(s) to be previewed</span>
+                  <div><span *ngIf="!onlyPrintAdviceLetter">{{ premiumReconcileCount }} advice letter(s) to be previewed</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close">
                               <span class="material-icons" aria-label="close" aria-hidden="true"
                                     (click)="toggleBreakoutPanel()">close</span>
@@ -387,6 +387,10 @@
       [items]="selectedReconcileDataRows"
       [batchId]="batchId"
       (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+      (loadTemplateEvent)="loadEachLetterTemplate($event)"
+      [letterContentList$]="letterContentList$"
+      [letterContentLoader$]="letterContentLoader$"
+      (onReconcileRecordEvent)="onReconcileRecord($event)"
       [premiumsType]="premiumsType"></cms-financial-premiums-print-authorization>
     </ng-template>
 
