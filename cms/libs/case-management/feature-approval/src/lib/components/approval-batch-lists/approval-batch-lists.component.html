@@ -30,7 +30,7 @@
                 kendoButton
                 id="approveBatch{{ index }}"
                 [toggleable]="true"
-                [selected]="item.batchStatus == 'APPROVED'"
+                [selected]="item.batchStatus == approveStatus"
                 aria-label="Approve"
                 (selectedChange)="onApproveClicked(item, index)"
               >
@@ -60,7 +60,7 @@
               (valueChange)="sendBackNotesChange(item)"
               aria-label="Send Back Notes"
               title="{{ item.sendBackNotes }}"
-              [disabled]="item.batchStatus != 'SEND_BACK'"
+              [disabled]="item.batchStatus != sendbackStatus"
             >
             <kendo-textarea-suffix class="justify-content-end">
               <span class="counter">{{ item.tAreaCessationCounter }}</span>
