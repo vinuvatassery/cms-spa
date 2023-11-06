@@ -29,10 +29,10 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   readonly approveOrDenyConst = GeneralApprovalApproveDeny;
   vendorData: any;
   ngOnInit(): void {
-    this.getVendorData();
+    this.getMasterDetailData();
   }
 
-  private getVendorData() {
+  private getMasterDetailData() {
     this.selectedMasterDetail$.subscribe((value: any) => {
         this.vendorData = value;
     });
