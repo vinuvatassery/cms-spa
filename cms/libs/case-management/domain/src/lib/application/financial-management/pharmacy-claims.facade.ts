@@ -111,13 +111,13 @@ export class FinancialPharmacyClaimsFacade {
   private getPharmacyClaimDataSubject = new Subject<any>();
   getPharmacyClaim$ = this.getPharmacyClaimDataSubject.asObservable();
 
-  private searchPharmaciesDataSubject = new Subject<any>();
+  searchPharmaciesDataSubject = new Subject<any>();
   searchPharmacies$ = this.searchPharmaciesDataSubject.asObservable();
 
   private searchPharmaciesLoaderDataSubject = new Subject<any>();
   searchPharmaciesLoader$ = this.searchPharmaciesLoaderDataSubject.asObservable();
 
-  private searchClientsDataSubject = new Subject<any>();
+  searchClientsDataSubject = new Subject<any>();
   searchClients$ = this.searchClientsDataSubject.asObservable();
 
   private searchClientLoaderDataSubject = new Subject<any>();
@@ -236,11 +236,7 @@ export class FinancialPharmacyClaimsFacade {
       .getPharmacyClaim(paymentRequestId)
       .subscribe({
         next: (dataResponse) => {
-          this.getPharmacyClaimDataSubject.next(dataResponse);
-          this.showHideSnackBar(
-            SnackBarNotificationType.SUCCESS,
-            dataResponse?.message
-          );
+          this.getPharmacyClaimDataSubject.next(dataResponse);         
           this.hideLoader();
         },
         error: (err) => {
