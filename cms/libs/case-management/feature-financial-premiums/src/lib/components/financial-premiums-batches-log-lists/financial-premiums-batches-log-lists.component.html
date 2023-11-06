@@ -243,8 +243,7 @@
           <ng-container *ngIf="!isPrintAdviceLetterClicked">
             <div *kendoGridDetailTemplate="let dataItem">
               <cms-financial-premiums-batches-log-invoice-lists
-                [paymentRequestId]="dataItem?.paymentRequestId"
-                [batchLogServicesData$]="batchLogServicesData$"
+                [paymentRequestId]="dataItem?.paymentRequestId"               
                 [pageSizes]="pageSizes"
                 (loadFinancialPremiumBatchInvoiceListEvent)=loadFinancialPremiumBatchInvoiceList($event)>
               </cms-financial-premiums-batches-log-invoice-lists>

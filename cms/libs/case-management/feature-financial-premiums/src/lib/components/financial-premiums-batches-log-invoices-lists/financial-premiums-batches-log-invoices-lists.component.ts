@@ -1,7 +1,9 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,  Component,  EventEmitter,  Input,  OnChanges,  Output } from '@angular/core';
+import { FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {  State,} from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
@@ -14,18 +16,27 @@ import { Subject } from 'rxjs';
 export class FinancialPremiumsBatchesLogInvoiceListsComponent  implements OnChanges
 { 
    @Input() paymentRequestId : any
-   @Input() batchLogServicesData$ : any
+
    @Input() pageSizes : any
    @Output() loadFinancialPremiumBatchInvoiceListEvent = new EventEmitter<any>();
    gridFinancialPremiumInvoiceSubject = new Subject<any>();
    gridFinancialPremiumInvoice$ =  this.gridFinancialPremiumInvoiceSubject.asObservable();
 
+   private batchLogServicesDataSubject =  new Subject<any>();
+   batchLogServicesDataList$ = this.batchLogServicesDataSubject.asObservable();
+
+   
    isFinancialPremiumInvoiceGridLoaderShow = false
    public state!: State;  
    sortType ="asc"
    sort = 'clientFullName'
    gridDataResult!: GridDataResult;
    public formUiStyle: UIFormStyle = new UIFormStyle();
+
+   constructor(
+    private readonly financialPremiumsFacade: FinancialPremiumsFacade,
+   
+  ) {}
 
       ngOnChanges(): void {            
         this.state = {
@@ -57,19 +68,27 @@ export class FinancialPremiumsBatchesLogInvoiceListsComponent  implements OnChan
           sortType: sortTypeValue    
         };
         this.loadFinancialPremiumBatchInvoiceListEvent.emit(gridDataRefinerValue);
-        this.gridDataHandle();
+        this.loadPremiumServicesByPayment('medical'  ,paymentRequestId, gridDataRefinerValue)
       }
 
-      gridDataHandle() {
-        this.batchLogServicesData$.subscribe((data: GridDataResult) => {      
-          this.gridDataResult = data;    
-          this.gridFinancialPremiumInvoiceSubject.next(this.gridDataResult);
-          if (data?.total >= 0 || data?.total === -1) {
+      loadPremiumServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {  
+        this.financialPremiumsFacade.loadPremiumSubListServicesByPayment(premiumType ,paymentId ,paginationParameters )
+        .subscribe({
+          next: (dataResponse : any) => {
+            const gridView = {
+              data: dataResponse['items'],
+              total: dataResponse['totalCount'],
+            };
+            this.batchLogServicesDataSubject.next(gridView);         
             this.isFinancialPremiumInvoiceGridLoaderShow = false;
-          }
+           
+          },
+          error: (err) => {
+            this.financialPremiumsFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;          
+          },
         });
-      
       }
+   
     
       loadFinancialInvoiceListGrid()
       {
