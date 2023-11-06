@@ -11,6 +11,7 @@ export class PendingApprovalPaymentFacade {
   public sortValueApprovalPaymentsApproval = 'batchName';
   public sortApprovalPaymentsList: SortDescriptor[] = [{
     field: this.sortValueApprovalPaymentsApproval,
+    dir: 'desc',
   }];
 
   /** Private properties **/

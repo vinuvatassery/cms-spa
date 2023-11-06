@@ -19,7 +19,6 @@ export class UserProfileCardComponent implements OnInit {
   @Input() userId!: any;
   @Input() reassign?: boolean = false;
   @Input() sendEmail?: boolean = false;
-  @Input() clientId: any;
   @Input() clientName: any;
   @Input() clientCaseId: any;
   userImage$ = this.userManagementFacade.userImage$;
