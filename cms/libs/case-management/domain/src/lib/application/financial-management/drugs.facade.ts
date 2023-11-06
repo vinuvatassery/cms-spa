@@ -84,5 +84,7 @@ export class DrugsFacade {
 
   }
 
-
+  addDrug(dto: any) {
+    return this.drugsDataService.addDrug(dto);
+  }
 }

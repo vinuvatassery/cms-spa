@@ -248,7 +248,7 @@ export class FinancialPharmacyClaimsDataService {
   }
 
   updatePharmacyClaim(data: any) {
-    return this.http.put<any>(
+    return this.http.patch<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`,      data    );
   }
 
