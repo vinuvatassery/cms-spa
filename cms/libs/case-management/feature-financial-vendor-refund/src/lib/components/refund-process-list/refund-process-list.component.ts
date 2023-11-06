@@ -43,22 +43,88 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() vendorRefundProcessGridLists$: any;
+  isColumnsReordered = false;
+  columnChangeDesc = 'Default Columns';
+  filteredByColumnDesc = '';
+  sortColumnDesc = 'Provider Name';
+  searchText = '';
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'vendorFullName';
+  sortColumn = 'Provider Name';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn='vendorFullName';
   gridDataResult!: GridDataResult;
+  showExportLoader = false;
   gridVendorsProcessDataSubject = new Subject<any>();
   gridVendorsProcessData$ = this.gridVendorsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
+  gridColumns: { [key: string]: string }  = {
+    ALL: 'All Columns',
+    vendorFullName: "Provider Name",
+    paymentStatusCode: "Payment Status",
+  };
+
+  columns: any = {
+    vendorFullName: 'Provider Name',
+    paymentMethodCode: 'Type' ,
+    clientFullName: 'Client Name',
+    insuranceName: 'Refund Warrant #"',
+    serviceCount: 'Index Code',
+    annualTotal: 'Grant #',
+    balanceAmount: 'Client Balance',
+    amountDue: 'PCA',
+    paymentStatusCode: 'Payment Status',
+  };
+
+  dropDowncolumns: any = [
+   
+    {
+      columnCode: 'vendorFullName',
+      columnDesc: 'Provider Name',
+    },
+   
+    {
+      columnCode: 'paymentMethodCode',
+      columnDesc: 'Type',
+    },
+    {
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+    },
+    {
+      columnCode: 'insuranceName',
+      columnDesc: 'Refund Warrant #"',
+    },
+  
+    {
+      columnCode: 'serviceCount',
+      columnDesc: 'Index Code',
+    },
+    {
+      columnCode: 'annualTotal',
+      columnDesc: 'Grant #',
+    },
+    {
+      columnCode: 'balanceAmount',
+      columnDesc: 'Client Balance',
+    },
+    {
+      columnCode: 'amountDue',
+      columnDesc: 'PCA',
+    },
+    {
+      columnCode: 'paymentStatusCode',
+      columnDesc: 'Payment Status',
+    },
+  ]
 
   public refundProcessMore = [
     {
@@ -101,12 +167,10 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: [{ field: 'vendorFullName', dir: 'asc' }]
     };
-
     this.loadVendorRefundProcessListGrid();
   }
-
   private loadVendorRefundProcessListGrid(): void {
     this.loadRefundProcess(
       this.state?.skip ?? 0,
@@ -121,6 +185,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
+    this.isVendorRefundProcessGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
@@ -172,9 +237,21 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       this.addEditRefundFormDialog.close();
     }
   }
+  searchColumnChangeHandler(data:any){
+    this.onChange(data)
+  }
 
   onChange(data: any) {
     this.defaultGridState();
+    let operator = 'startswith';
+    if (
+      this.selectedColumn === 'serviceCount' ||
+      this.selectedColumn === 'annualTotal' ||
+      this.selectedColumn === 'amountDue' ||
+      this.selectedColumn === 'balanceAmount'
+    ) {
+      operator = 'eq';
+    }
 
     this.filterData = {
       logic: 'and',
@@ -183,7 +260,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
           filters: [
             {
               field: this.selectedColumn ?? 'vendorFullName',
-              operator: 'startswith',
+              operator: operator,
               value: data,
             },
           ],
@@ -191,7 +268,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
@@ -215,14 +292,20 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
     if (stateData.filter?.filters.length > 0) {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
-      this.isFiltered = true;}
-      else {
-        this.filter = '';
-        this.isFiltered = false;
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
       }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
     this.loadVendorRefundProcessListGrid();
   }
 
@@ -246,4 +329,24 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       }
     });
   }
+  
+  setToDefault() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+    this.sortColumn = 'Invoice ID';
+    this.sortDir = 'Ascending';
+    this.filter = '';
+    this.selectedColumn = 'invoiceNbr';
+    this.isFiltered = false;
+    this.columnsReordered = false;
+    this.sortValue = 'invoiceNbr';
+    this.sortType = 'asc';
+    this.sort = this.sortColumn;
+    this.searchValue =''
+    this.loadVendorRefundProcessListGrid();
+  }
+  
 }
