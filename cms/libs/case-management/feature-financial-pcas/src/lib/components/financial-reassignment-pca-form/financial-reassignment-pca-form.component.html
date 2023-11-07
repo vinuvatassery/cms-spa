@@ -63,7 +63,7 @@
                   </kendo-floatinglabel>
             </div>
       </div>
-      <div class="flex-row mt-3">
+      <div class="flex-row mt-3" *ngIf="pcaCodeInfo !=null">
             <div class="flex-col flex-col-4">
                   <label> PCA Amount </label>
                   <p> $ {{pcaCodeInfo?.totalAmount}}</p>
@@ -71,7 +71,7 @@
             <div class="flex-col flex-col-4">
                   <label> Remaining </label>
                   <p class="green-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount <= pcaCodeInfo?.remainingAmount" >$ {{pcaCodeInfo?.remainingAmount}}</p>
-                  <p class="red-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount>pcaCodeInfo?.remainingAmount">-$ {{pcaCodeInfo?.remainingAmount}}</p>
+                  <p class="red-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount>pcaCodeInfo?.remainingAmount">$ <span  *ngIf="pcaCodeInfo?.remainingAmount>=0"> -</span>  {{pcaCodeInfo?.remainingAmount}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Close Date</label>
