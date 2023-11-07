@@ -52,7 +52,9 @@
                                 [pharmacyClaimsBatchGridLists$]="pharmacyClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsBatch"
                                 [sortType]="sortType" [sort]="sortBatchList"
-                                (loadPharmacyClaimsBatchListEvent)="loadPharmacyClaimsBatchListGrid($event)"></cms-pharmacy-claims-batches-list>
+                                (loadPharmacyClaimsBatchListEvent)="loadPharmacyClaimsBatchListGrid($event)"
+                                (exportPharmacyClaimsBatchListEvent)="onExportClaimsInBatch($event)"
+                                ></cms-pharmacy-claims-batches-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

@@ -103,6 +103,10 @@ export class PharmacyClaimsPageComponent {
     this.financialPharmacyClaimsFacade.exportPharmacyClaimsProcessListGrid(event);
   }
 
+  onExportClaimsInBatch(event: any){
+    this.financialPharmacyClaimsFacade.exportPharmacyClaimsBatchListGrid(event);
+  }
+
   onbatchClaimsClicked(event:any){
     this.financialPharmacyClaimsFacade.batchClaims(event);
   }

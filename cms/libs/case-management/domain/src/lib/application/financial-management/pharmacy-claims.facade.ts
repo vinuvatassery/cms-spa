@@ -212,6 +212,12 @@ export class FinancialPharmacyClaimsFacade {
     const fileName = 'pharmacy-claims-process'
     this.documentFacade.getExportFile(params,`claims/pharmacies` , fileName);
   }
+
+  exportPharmacyClaimsBatchListGrid(params: any){
+    const fileName = 'pharmacy-claims-batches'
+    this.documentFacade.getExportFile(params,`claims/pharmacies/batches` , fileName);
+  }
+
   updatePharmacyClaim(data: any) {
     this.showLoader();
     this.financialPharmacyClaimsDataService

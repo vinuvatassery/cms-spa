@@ -10,18 +10,17 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute, Router } from '@angular/router';
-import {  ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { GridFilterParam } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State
 } from '@progress/kendo-data-query';
 import { Subject, debounceTime } from 'rxjs';
-import { ConfigurationProvider } from '@cms/shared/util-core';
-import { IntlService } from '@progress/kendo-angular-intl';
-import { GridFilterParam } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-pharmacy-claims-batches-list',
   templateUrl: './pharmacy-claims-batches-list.component.html',
@@ -38,6 +37,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
   @Input() pharmacyClaimsBatchGridLists$: any;
   @Input() PharmacyBatchGridLoader$: any;
   @Output() loadPharmacyClaimsBatchListEvent = new EventEmitter<any>();
+  @Output() exportPharmacyClaimsBatchListEvent = new EventEmitter<any>();
   public state!: State;
   columnsReordered = false;
   searchValue = '';
@@ -104,7 +104,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
   //sorting
   sortColumn = 'batchName';
   sortColumnDesc = 'Batch #';
-  sortDir = 'Descending';
+  sortDir = 'Ascending';
 
   //filtering
   filteredBy = '';
@@ -137,6 +137,16 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
   navToBatchDetails(event : any){
     this.route.navigate([`/financial-management/pharmacy-claims/batch`],
     { queryParams :{bid: event.paymentRequestBatchId}});
+  }
+
+  onExportClaims() {
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.filter)
+    };
+
+    this.exportPharmacyClaimsBatchListEvent.emit(params);
   }
 
   searchColumnChangeHandler(value: string) {
