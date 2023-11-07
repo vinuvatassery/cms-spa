@@ -134,12 +134,12 @@ export class FinancialClaimsBatchesLogListsComponent
   noOfRecordToPrint:any = 0;
   totalRecord:any;
   batchLogPrintAdviceLetterPagedList:any;
-  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
   isEdit!: boolean;
   paymentRequestId!: string;
   @ViewChild('addEditClaimsDialog')
   private addEditClaimsDialog!: TemplateRef<any>;
   private addEditClaimsFormDialog: any;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 
 
   gridColumns: { [key: string]: string } = {
