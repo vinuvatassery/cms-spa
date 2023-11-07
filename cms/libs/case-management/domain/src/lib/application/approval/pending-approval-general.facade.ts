@@ -143,9 +143,9 @@ export class PendingApprovalGeneralFacade {
       }
     );
   }
-  getMasterDetails(vendorId: string,subTypeCode: string) {
+  getMasterDetails(masterDetailId: string,subTypeCode: string) {
     this.showLoader();
-    this.pendingApprovalGeneralService.getMasterDetails(vendorId, subTypeCode).subscribe({
+    this.pendingApprovalGeneralService.getMasterDetails(masterDetailId, subTypeCode).subscribe({
       next: (vendorDetail: any) => {    
         this.selectedMasterDetailSubject.next(vendorDetail);
         this.hideLoader();
