@@ -927,21 +927,20 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
       let warrantTotal=0; 
-     
+     this.batchId=data.batchId;
     
-      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId ).forEach((item: any) => {
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==data.batchId).forEach((item: any) => {
        
      
         let object={
           vendorId:item?.entityId,
-          batchId:this.batchId,
+          batchId:item?.batchId,
           paymentRequestId:item?.paymentRequestId,
           warrantNumber:item?.checkNbr,
   
         }
         this.warrantCalculationArray.push(object);
       });
-
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
