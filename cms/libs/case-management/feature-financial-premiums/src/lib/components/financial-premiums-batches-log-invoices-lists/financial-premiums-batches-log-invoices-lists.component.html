@@ -6,7 +6,9 @@
     </kendo-grid-column>
     <kendo-grid-column title="Name on Primary Insurance Card" [width]="50" field="insuranceName">       
     </kendo-grid-column>
-    <kendo-grid-column field="premiumAmt" title="Amount" [width]="50"> </kendo-grid-column>
+    <kendo-grid-column field="premiumAmt" title="Amount" [width]="50">  <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.premiumAmt | kendoNumber: 'n2'}}</span>
+     </ng-template> </kendo-grid-column>
     <kendo-grid-column field="clientId" title="Client ID" [width]="100"> </kendo-grid-column>    
     <kendo-grid-column field="insuranceIdNbr" title="Policy ID" [width]="50">  </kendo-grid-column>
     <kendo-grid-column field="insuranceGroupNumber" title="Group ID" [width]="50">        

@@ -48,7 +48,7 @@ export class FinancialPcasAssignmentSubReportListComponent implements OnChanges 
   }
 
   loadPcasAssignmentSubReport(data:any) {
-    this.loader$.next(false);
+    this.loader$.next(true);
     this.financialPcaFacade.loadFinancialPcaSubReportListGrid(data).subscribe({
       next: (dataResponse:any) => {
         const gridView = {
