@@ -302,7 +302,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       filter: this.state?.['filter']?.['filters'] ?? [],
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
-    this.currentPrintAdviceLetterGridFilter = this.filter;
+    this.currentPrintAdviceLetterGridFilter = this.state?.['filter']?.['filters'] ?? [];
     this.gridDataHandle();
   }
 

@@ -864,7 +864,7 @@ onRecordSelectionUnChecked(dataItem: any) {
     });
     const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
     if (exist === 0) {
-      this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true, 'batchId': dataItem.batchId });
+      this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true, 'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr });
     }else{
       const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
       if (recordIndex !== -1) {
@@ -874,7 +874,7 @@ onRecordSelectionUnChecked(dataItem: any) {
 }
 
 onRecordSelectionChecked(dataItem: any) {
-  this.unCheckedProcessRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true });
+  this.unCheckedProcessRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true, 'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr });
       this.currentPageRecords?.forEach((element: any) => {
         if (element.paymentRequestId === dataItem.paymentRequestId) {
           element.selected = false;
@@ -882,7 +882,7 @@ onRecordSelectionChecked(dataItem: any) {
       });
       const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
       if (exist === 0) {
-        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': false, 'batchId': dataItem.batchId });
+        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': false, 'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr });
       }else{
         const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
         if (recordIndex !== -1) {
