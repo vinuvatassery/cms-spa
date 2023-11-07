@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { GridFilterParam, PaymentStatusCode } from '@cms/case-management/domain';
+import { GridFilterParam, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -687,7 +687,7 @@ deletePremiumPayment(paymentId: string) {
       '/financial-management/premiums/' +
         this.premiumsType +
         '/payments/reconcile-payments',
-    ]);
+    ],{ queryParams :{loadType: LoadTypes.allPayments}});
   }
 
   public onPreviewSubmitPaymentOpenClicked(

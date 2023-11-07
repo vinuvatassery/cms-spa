@@ -19,7 +19,7 @@ import {
   State,
 } from '@progress/kendo-data-query';
 import { Subject, Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -166,9 +166,11 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, 
     private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider, 
-    public intl: IntlService,private readonly lovFacade: LovFacade) {}
+    public intl: IntlService,private readonly lovFacade: LovFacade,
+    public activeRoute: ActivatedRoute) {}
   
   ngOnInit(): void {
+    this.loadQueryParams();
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodSubscription();
     if(this.loadType === LoadTypes.allPayments){
@@ -276,6 +278,10 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     if(field == "paymentMethodDesc"){
       this.paymentMethodDesc = value;
     }
+  }
+
+  loadQueryParams(){
+    this.loadType = this.activeRoute.snapshot.queryParams['loadType'];
   }
 
   paymentMethodSubscription(){
