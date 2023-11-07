@@ -169,7 +169,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
     //this.route.navigate(['/financial-management/pharmacy-claims/batch'] );
 
     this.route.navigate([`/financial-management/${this.claimsType}/batch`],
-    { queryParams :{bid: 'cd1b2d4d-e5a9-451e-aaa6-fc19da03a1ca'}});
+    { queryParams :{bid: 'A1403777-5CF9-4B71-B7A3-BCEF29C9CD97'}});
   }
 
 }

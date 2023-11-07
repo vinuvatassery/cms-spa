@@ -20,18 +20,15 @@ export class PharmacyClaimsBatchPageComponent {
   sort = this.financialPharmacyClaimsFacade.sortBatchLogList;
   state!: State;
   batchLogGridLists$ = this.financialPharmacyClaimsFacade.batchLogData$;
-  claimsType= 'medical';
+  paymentByBatchGridLoader$ =  this.financialPharmacyClaimsFacade.paymentByBatchGridLoader$;
+  claimsType= 'pharmacies';
   batchId!:string;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private readonly route: ActivatedRoute,
   ) {}
 
-  // loadBatchLogListGrid(event: any) {
-  //   this.financialPharmacyClaimsFacade.loadBatchLogListGrid();
-  // }
   loadBatchLogListGrid(event: any) {
-    debugger
     const batchId = this.route.snapshot.queryParams['bid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
     this.financialPharmacyClaimsFacade.loadBatchLogListGrid(batchId, params, this.claimsType);

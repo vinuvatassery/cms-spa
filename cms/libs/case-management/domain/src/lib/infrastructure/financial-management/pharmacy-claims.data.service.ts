@@ -242,5 +242,9 @@ export class FinancialPharmacyClaimsDataService {
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments`, params);
   }
+  loadPharmacyPrescriptionsServices(batchId: string, params:GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payments/${batchId}/prescriptions`, params);
+  }
   
 }

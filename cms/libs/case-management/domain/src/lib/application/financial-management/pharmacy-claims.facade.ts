@@ -66,9 +66,6 @@ export class FinancialPharmacyClaimsFacade {
   private pharmacyClaimsAllPaymentsDataSubject =  new Subject<any>();
   pharmacyClaimsAllPaymentsData$ = this.pharmacyClaimsAllPaymentsDataSubject.asObservable();
 
-  // private batchLogDataSubject =  new Subject<any>();
-  // batchLogData$ = this.batchLogDataSubject.asObservable();
-
   private batchReconcileDataSubject =  new Subject<any>();
   reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
 
@@ -82,6 +79,7 @@ export class FinancialPharmacyClaimsFacade {
   private paymentsByBatchDataSubject =  new Subject<any>();
   private paymentByBatchGridLoaderSubject =  new BehaviorSubject<boolean>(false);
   batchLogData$ = this.paymentsByBatchDataSubject.asObservable();
+  paymentByBatchGridLoader$ = this.paymentByBatchGridLoaderSubject.asObservable();
 
   /** Private properties **/
  
@@ -154,7 +152,6 @@ export class FinancialPharmacyClaimsFacade {
     });  
   }
 
-
   loadPharmacyClaimsAllPaymentsListGrid(){
     this.financialPharmacyClaimsDataService.loadPharmacyClaimsAllPaymentsListService().subscribe({
       next: (dataResponse) => {
@@ -168,19 +165,6 @@ export class FinancialPharmacyClaimsFacade {
     });  
   }
 
-
-  // loadBatchLogListGrid(){
-  //   this.financialPharmacyClaimsDataService.loadBatchLogListService().subscribe({
-  //     next: (dataResponse) => {
-  //       this.batchLogDataSubject.next(dataResponse);
-  //       this.hideLoader();
-  //     },
-  //     error: (err) => {
-  //       this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-  //       this.hideLoader(); 
-  //     },
-  //   });  
-  // }
   loadBatchLogListGrid(batchId: string, params:GridFilterParam, claimType:string){
     this.paymentByBatchGridLoaderSubject.next(true);
     this.financialPharmacyClaimsDataService.loadPaymentsByBatch(batchId, params, claimType).subscribe({
@@ -227,4 +211,7 @@ export class FinancialPharmacyClaimsFacade {
  loadPrescriptions(paymentId: string, params: GridFilterParam){
   return  this.financialPharmacyClaimsDataService.loadPrescriptions(paymentId, params);
  }
+ loadPharmacyPrescriptionsServices(batchId: string, params:GridFilterParam, claimType:string){
+  return this.financialPharmacyClaimsDataService.loadPharmacyPrescriptionsServices(batchId, params, claimType);
+}
 }

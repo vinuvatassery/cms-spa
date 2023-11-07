@@ -18,8 +18,9 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
+import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
@@ -146,12 +147,15 @@ reverseClaimsDialog: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
+  @Input() loader$!: Observable<boolean>;
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
+  @Input() claimsType: any;
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'paymentNbr';
   sortDir = 'Ascending';
   columnsReordered = false;
+  sortColumnName = '';
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
@@ -163,11 +167,48 @@ reverseClaimsDialog: any;
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  gridColumns: { [key: string]: string } = {
+    itemNbr: 'Item #',
+    vendorName: 'Pharmacy Name',
+    clientFullName: 'Client Name',
+    nameOnInsuranceCard: 'Name on Primary Insurance Card',
+    clientId: 'Client ID',
+    paymentMethodCode: 'Payment Method',
+    paymentTypeCode: 'Payment Type',
+    creationTime : 'Entry Date',
+    paymentStatusCode: 'Payment Status',
+    serviceCount: 'Service Count',
+    serviceCost: 'Total Cost',
+    amountDue: 'Total Due',
+    clientMaximum: 'Client Annual Total',
+    balanceAmount: 'Client Balance',
+    indexCode: 'Index Code',
+    pcaCode : 'PCA Code',
+    objectCode: 'Object Code'
+  };
+
+  paymentMethods = ['CHECK', 'ACH', 'SPOTS'];
+  paymentTypes = ['COINSURANCE', 'COPAYMENT', 'DEDUCTIBLE', 'FULL PAY'];
+  paymentStatusList = [
+    'SUBMITTED',
+    'PENDING_APPROVAL',
+    'DENIED',
+    'MANAGER_APPROVED',
+    'PAYMENT_REQUESTED',
+    'ONHOLD',
+    'FAILED',
+    'PAID',
+  ];
+
+  paymentMethodFilter = '';
+  paymentTypeFilter = '';
+  paymentStatusFilter = '';
     
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService ) {}
   
   ngOnInit(): void {
+    this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
   }
   ngOnChanges(): void {
@@ -199,8 +240,9 @@ reverseClaimsDialog: any;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
+      sortColumn: this.sortColumn ?? 'paymentNbr',
+      sortType: sortTypeValue ?? 'asc',
+      filter: this.filter,
     };
     //this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
@@ -250,7 +292,34 @@ reverseClaimsDialog: any;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = stateData.sort[0]?.field;
+    this.sortColumnName = this.gridColumns[this.sortColumn];
+    this.filter = stateData?.filter?.filters;
     this.loadBatchLogListGrid();
+  }
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentMethodCode') {
+      this.paymentMethodFilter = value;
+    } else if (field === 'paymentTypeCode') {
+      this.paymentTypeFilter = value;
+    } else if (field === 'paymentStatusCode') {
+      this.paymentStatusFilter = value;
+    }
+
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
   }
 
   // updating the pagination infor based on dropdown selection
