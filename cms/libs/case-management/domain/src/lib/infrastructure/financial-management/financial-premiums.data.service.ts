@@ -326,7 +326,7 @@ export class FinancialPremiumsDataService {
     const filterRequestBody = {
       skipcount:skipcount,
       maxResultCount:maxResultCount,
-      sort:sort,
+      sorting:sort,
       sortType:sortType,
       filter:filter
     }
