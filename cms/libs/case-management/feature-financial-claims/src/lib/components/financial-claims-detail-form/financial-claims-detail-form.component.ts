@@ -16,7 +16,7 @@ import { groupBy, State } from '@progress/kendo-data-query';
 import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade, ExceptionTypeCode, ContactFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { Lov, LovFacade } from '@cms/system-config/domain';
+import { Lov, LovFacade, NavigationMenuFacade } from '@cms/system-config/domain';
 import { ActivatedRoute } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -192,7 +192,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     private readonly configProvider: ConfigurationProvider,
     private readonly financialPcaFacade: FinancialPcaFacade,
     public contactFacade: ContactFacade,
-    private readonly financialVendorFacade : FinancialVendorFacade
+    private readonly financialVendorFacade : FinancialVendorFacade,
+    private readonly navigationMenuFacade: NavigationMenuFacade
   ) {
     this.initMedicalClaimObject();
     this.initClaimForm();
@@ -828,6 +829,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             SnackBarNotificationType.SUCCESS,
             'Claim added successfully'
           );
+          this.navigationMenuFacade.pcaReassignmentCount();
         }
       },
       error: (error: any) => {
@@ -853,6 +855,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           );
           this.pcaExceptionDialogService.close();
         } else {
+          this.navigationMenuFacade.pcaReassignmentCount();
           this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
