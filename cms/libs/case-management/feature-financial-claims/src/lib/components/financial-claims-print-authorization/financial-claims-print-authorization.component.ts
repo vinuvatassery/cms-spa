@@ -4,7 +4,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {FinancialClaimsFacade, PaymentsFacade } from '@cms/case-management/domain';
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
-import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'cms-financial-claims-print-authorization',
@@ -206,7 +206,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
           paymentSentDate :payments[0].paymentSentDate,
           checkNbr :payments[0].checkNbr,
           comments :payments[0].comments,
-          printFlag: this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter == true ? StatusFlag.Yes : StatusFlag.No
+          printFlag: this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter ? StatusFlag.Yes : StatusFlag.No
       });
       if(this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter){
         this.returnResultFinalPrintList[this.currentIndex].printFlag = StatusFlag.Yes;

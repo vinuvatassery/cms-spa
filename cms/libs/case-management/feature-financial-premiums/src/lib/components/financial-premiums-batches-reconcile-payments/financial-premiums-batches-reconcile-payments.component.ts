@@ -5,7 +5,6 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  OnChanges,
   Output,
   TemplateRef,
   ViewChild,
@@ -24,9 +23,8 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { PremiumType } from '@cms/case-management/domain';
+import { PremiumType, LoadTypes } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
-import { LoadTypes } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-premiums-batches-reconcile-payments',
   templateUrl: './financial-premiums-batches-reconcile-payments.component.html',
@@ -748,14 +746,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     else{
       dataItem.warrantNumberChanged = false;
     }
-    if (this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === null
-      || this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === undefined
-      || this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === '') {
-      dataItem.isPrintAdviceLetter = false;
-      dataItem.paymentReconciledDate = this.currentDate;
-      dataItem.datePaymentRecInValid = false;
-      dataItem.datePaymentRecInValidMsg = null;
-    }
+    this.updateDatePaymentReconciledValidation(dataItem);
     if (dataItem.checkNbr !== '' && dataItem.acceptsReportsFlag == 'Y') {
       dataItem.isPrintAdviceLetter = true;
     }
@@ -784,6 +775,18 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       dataItem.warrantNumberInValid = false;
     }
   }
+
+  updateDatePaymentReconciledValidation(dataItem: any) {
+    if (this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === null
+      || this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === undefined
+      || this.reconcileAssignValueBatchForm.controls['datePaymentReconciled'].value === '') {
+      dataItem.isPrintAdviceLetter = false;
+      dataItem.paymentReconciledDate = this.currentDate;
+      dataItem.datePaymentRecInValid = false;
+      dataItem.datePaymentRecInValidMsg = null;
+    }
+  }
+
   validateReconcileGridRecord() {
     this.reconcilePaymentGridUpdatedResult.forEach((currentPage: any, index: number) => {
       if (currentPage.checkNbr !== null
