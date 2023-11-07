@@ -198,7 +198,8 @@
 
 <!-- Business Logic Modal -->
 <kendo-dialog kendoRippleContainer *ngIf="isOpenedbusinessInfo" (close)="onBusinessInfoCloseClicked()"
-  class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Healthcare Provider" kendoTooltip>
+  class="app-c-modal app-c-modal-lg app-c-modal-np" title="{{hasHealthcareProviderCreateUpdatePermission==true ? 
+    'Add New Healthcare Provider' : 'Request New Healthcare Provider' }}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.HealthcareProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="onBusinessInfoCloseClicked()"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"

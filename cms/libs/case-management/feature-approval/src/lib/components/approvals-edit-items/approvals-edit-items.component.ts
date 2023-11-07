@@ -12,6 +12,7 @@ import { Observable } from 'rxjs';
 export class ApprovalsEditItemsComponent implements OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Input() selectedSubtypeCode: any;
+  @Input() selectedMasterDetail$!: Observable<any>;
   @Input() selectedVendor$!: Observable<any>;
   @Input() clinicVendorList$: any;
   @Input() ddlStates$!: any;

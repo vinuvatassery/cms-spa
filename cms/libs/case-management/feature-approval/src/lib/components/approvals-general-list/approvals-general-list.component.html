@@ -60,11 +60,11 @@
                     onRowLevelDenyClicked($event, item, 'sendBackNotes', i)
                   "
                   [selected]="item.status == denyStatus"
-                  aria-label="Send Back"
+                  aria-label="Deny"
                   id="deny{{ i }}"
                   [toggleable]="true"
                 >
-                  Send Back
+                  Deny
                 </button>
               </div>
               <div
@@ -90,13 +90,15 @@
                     title="{{ item.sendBackNotes }}"
                     [ngClass]="ngDirtyInValid(item, 'sendBackNotes', i)"
                     id="sendBackNotes{{ i }}"
-                  ></kendo-textarea>
-
+                  >
                   <kendo-textarea-suffix class="justify-content-end">
                     <span class="counter">{{
                       item.tAreaCessationCounter
                     }}</span>
                   </kendo-textarea-suffix>
+                </kendo-textarea>
+
+           
                   <kendo-formerror *ngIf="item.sendBackNotesInValid">{{
                     item.sendBackNotesInValidMsg
                   }}</kendo-formerror>
@@ -114,7 +116,7 @@
                     aria-label="New Case Worker"
                     [fillMode]="formUiStyle.dropDownFillMode"
                     [data]="usersByRole$ | async"
-                    textField="firstName"
+                    textField="fullName"
                     valueField="loginUserId"
                     [valuePrimitive]="true"
                     [(ngModel)]="
@@ -165,7 +167,7 @@
                 [approvalId]="item.generalPendingApprovalId"
                 (openEditModal)="openEditModal($event)"
                 [subTypeCode]="item.subTypeCode"
-                [selectedVendor$]="selectedVendor$"
+                [selectedMasterDetail$]="selectedMasterDetail$"
               >
               </productivity-tools-approvals-general-list-detail-addtomasterlist>
             </ng-template>
@@ -232,7 +234,7 @@
   >
   <productivity-tools-approvals-edit-items
     [selectedSubtypeCode]="selectedSubtypeCode"
-    [selectedVendor$]="selectedVendor$"
+    [selectedMasterDetail$]="selectedMasterDetail$"
     [clinicVendorList$]="clinicVendorList$"
     [ddlStates$]="ddlStates$"
     [healthCareForm]="healthCareForm"

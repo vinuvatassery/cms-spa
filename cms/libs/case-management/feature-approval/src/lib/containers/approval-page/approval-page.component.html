@@ -50,8 +50,8 @@
             "
             (submitGeneralRequestsEvent)="submitGeneralRequests($event)"
             [usersByRole$]="usersByRole$"
-            (getVendorDetailEvent)="getVendorDetail($event)"
-            [selectedVendor$]="selectedVendor$"
+            (getMasterDetailsEvent)="getMasterDetails($event)"
+            [selectedMasterDetail$]="selectedMasterDetail$"
             [clinicVendorList$]="clinicVendorList$"
             [ddlStates$]="ddlStates$"
             (editClickedEvent)="editClicked($event)"
@@ -64,7 +64,7 @@
     <kendo-tabstrip-tab title="Payments">
       <ng-template kendoTabTitle>
         Payments
-        <span *ngIf="pendingApprovalCount>0" class="tab-batch-notify">{{
+        <span class="tab-batch-notify">{{
           pendingApprovalCount
         }}</span></ng-template
       >

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { PendingApprovalGeneralService } from '../../infrastructure/approval/pending-approval-general.data.service';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 
 /** External libraries **/
@@ -24,7 +24,7 @@ export class PendingApprovalGeneralFacade {
   private invoiceDataSubject = new Subject<any>();
   private serviceDataSubject = new Subject<any>();
   private isInvoiceLoadingSubject = new Subject<boolean>();
-  private selectedVendorSubject = new Subject<any>();
+  private selectedMasterDetailSubject = new Subject<any>();
   private submitGenerealRequestSubject = new Subject<any>();
 
   /** Public properties **/
@@ -34,7 +34,7 @@ export class PendingApprovalGeneralFacade {
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
   submitGenerealRequest$ = this.submitGenerealRequestSubject.asObservable();
-  selectedVendor$ = this.selectedVendorSubject.asObservable();
+  selectedMasterDetail$ = this.selectedMasterDetailSubject.asObservable();
 
 
 
@@ -143,11 +143,11 @@ export class PendingApprovalGeneralFacade {
       }
     );
   }
-  getVendorDetails(vendorId: string,subTypeCode: string) {
+  getMasterDetails(masterDetailId: string,subTypeCode: string) {
     this.showLoader();
-    this.pendingApprovalGeneralService.getVendorDetails(vendorId, subTypeCode).subscribe({
+    this.pendingApprovalGeneralService.getMasterDetails(masterDetailId, subTypeCode).subscribe({
       next: (vendorDetail: any) => {    
-        this.selectedVendorSubject.next(vendorDetail);
+        this.selectedMasterDetailSubject.next(vendorDetail);
         this.hideLoader();
       },
       error: (err) => {
