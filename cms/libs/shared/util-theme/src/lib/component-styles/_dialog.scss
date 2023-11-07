@@ -13,7 +13,9 @@
       padding: $size-xxxl $size-xxx $size-l $size-xxx;
       white-space: normal;
       max-width: 90%;
-
+      @media (max-width: $breakpoint-md) {
+        padding: $size-xxxl $size-xlg $size-l $size-xlg;
+      }
       .k-window-title {
         font-size: $font-size-xx;
         align-items: center;
@@ -65,20 +67,28 @@
       padding: $size-m $size-xxx;
       max-height: 65vh;
       overflow-y: auto;
+      @media (max-width: $breakpoint-md) {
+        padding: $size-m $size-xlg;
+      }
     }
     .k-dialog-body-padding {
       padding: $size-m $size-xxx; 
+      @media (max-width: $breakpoint-md) {
+        padding: $size-m $size-xlg;
+      }
     }
     .k-dialog-actions {
       padding: $size-xlg $size-xxxl $size-xlg;
       border-width: 0;
-
+      @media (max-width: $breakpoint-md) {
+        padding: $size-xlg $size-xlg $size-xlg;
+      }
       .k-button {
         min-width: 80px;
 
         +.k-button {
           margin-left: $size-xx;
-        }
+        } 
       }
 
       .justify-content-end {
@@ -110,6 +120,9 @@
       .k-window-content, .k-dialog-content{
         padding-inline: 0;
         padding-top: 0;
+        @media (max-width: $breakpoint-sm) {
+          padding-block: 0;
+        }
       }
       .app-c-tab {
         height: 100%;
