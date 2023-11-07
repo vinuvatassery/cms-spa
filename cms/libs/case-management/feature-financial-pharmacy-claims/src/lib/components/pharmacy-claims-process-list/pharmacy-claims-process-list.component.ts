@@ -20,7 +20,7 @@ import {
   State,
 } from '@progress/kendo-data-query';
 import { BatchPharmacyClaims } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-pharmacy-claims';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject, debounceTime, first } from 'rxjs';
 @Component({
   selector: 'cms-pharmacy-claims-process-list',
   templateUrl: './pharmacy-claims-process-list.component.html',
@@ -115,7 +115,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       buttonType: 'btn-h-primary',
       text: 'Batch Claims',
       icon: 'check',
-      click: (data: any): void => {
+      click: (data: any,paymentRequestId : any): void => {
         if (!this.isProcessBatchClosed) {
           this.isProcessBatchClosed = true;
           this.onBatchClaimsGridSelectedClicked();
@@ -127,7 +127,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       buttonType: 'btn-h-danger',
       text: 'Delete Claims',
       icon: 'delete',
-      click: (data: any): void => {
+      click: (data: any,paymentRequestId : any): void => {
         if (!this.isDeleteBatchClosed) {
           this.isDeleteBatchClosed = true;
           this.onBatchClaimsGridSelectedClicked();
@@ -140,10 +140,10 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       buttonType: 'btn-h-primary',
       text: 'Edit Claim',
       icon: 'edit',
-      click: (data: any): void => {
+      click: (data: any,paymentRequestId : any): void => {
         if (!this.isAddEditClaimMoreClose) {
           this.isAddEditClaimMoreClose = true;
-          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
+          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog,paymentRequestId);
         }
       },
     },
@@ -362,7 +362,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>,paymentRequestId : any): void {    
+    this.getPharmacyClaimEvent.emit(paymentRequestId);
     this.addEditClaimsFormDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-96full add_claims_modal',
@@ -425,15 +426,33 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   addPharmacyClaim(data: any) {
     this.addPharmacyClaimEvent.emit(data);
+
+    this.addPharmacyClaim$.pipe(first((addResponse: any ) => addResponse != null))
+    .subscribe((addResponse: any) =>
+    {
+      if(addResponse)
+      {      
+        this.loadPharmacyClaimsProcessListGrid();
+        this.modalCloseAddEditClaimsFormModal(true)
+      }
+
+    })
   }
 
   updatePharmacyClaim(data: any) {
     this.updatePharmacyClaimEvent.emit(data);
+    this.editPharmacyClaim$.pipe(first((editResponse: any ) => editResponse != null))
+    .subscribe((editResponse: any) =>
+    {
+      if(editResponse)
+      {      
+        this.loadPharmacyClaimsProcessListGrid();
+        this.modalCloseAddEditClaimsFormModal(true)
+      }
+
+    })
   }
 
-  getPharmacyClaim(paymentRequestId: any) {
-    this.getPharmacyClaimEvent.emit(paymentRequestId);
-  }
 
   searchPharmacies(searchText: any) {
     this.searchPharmaciesEvent.emit(searchText);

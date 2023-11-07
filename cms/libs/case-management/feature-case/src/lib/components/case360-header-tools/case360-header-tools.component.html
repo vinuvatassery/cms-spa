@@ -1,4 +1,4 @@
-<div class="tab-over-icon-btn" kendoTooltip>
+<div class="tab-over-icon-btn" >
   <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item"  (click)="onTodoDetailsClicked(todoDetailTemplate)">
     <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true"
      >playlist_add</span>
@@ -69,7 +69,7 @@
 <!-- New ID Card Modal Html-->
 <ng-template #sendNewIDcardDialog>
   <case-management-send-id-card [mailingAddress$]="mailingAddress$" (closeSendIdEvent)="handleIdCardClosed($event)"
-  (loadInitialData)="loadMailingAddress()"></case-management-send-id-card>
+  (loadInitialData)="loadMailingAddress()" kendoTooltip></case-management-send-id-card>
 </ng-template>
 
 

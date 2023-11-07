@@ -1,4 +1,18 @@
 <cms-pharmacy-claims-batch-list-detail-items [batchItemsGridLists$]="batchItemsGridLists$"
 [pageSizes]="pageSizes" [sortValue]="sortValue"
-[sortType]="sortType" [sort]="sort" 
+[sortType]="sortType" [sort]="sort"
+(onProviderNameClickEvent)="onProviderNameClick($event)" 
 (loadBatchItemsListEvent)="loadBatchItemListGrid($event)"></cms-pharmacy-claims-batch-list-detail-items>
+
+<ng-template #providerDetailsTemplate>
+    <cms-pharmacy-claims-provider-info 
+    [paymentRequestId]="paymentRequestId"
+    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+    (getProviderPanelEvent)="getProviderPanel($event)"
+    [vendorProfile$]="vendorProfile$"
+    (updateProviderProfileEvent)="updateProviderProfile($event)"
+    [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+    [ddlStates$]="ddlStates$"
+    [paymentMethodCode$]="paymentMethodCode$"
+    (onEditProviderProfileEvent)="OnEditProviderProfileClick()" ></cms-pharmacy-claims-provider-info>
+</ng-template>

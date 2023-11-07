@@ -3,7 +3,7 @@
       <input type="hidden" formControlName="pcaAssignmentId">
 <section class="k-dialog-body">
       <p class="text-muted">
-            All fields are required unless otherwise stated.34535
+            All fields are required unless otherwise stated.
       </p>
       <div class="flex-row">
             <div class="flex-col">
@@ -70,7 +70,7 @@
             </div>
             <div class="flex-col flex-col-4">
                   <label> Remaining </label>
-                  <p class="green-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount < pcaCodeInfo?.remainingAmount" >$ {{pcaCodeInfo?.remainingAmount}}</p>
+                  <p class="green-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount <= pcaCodeInfo?.remainingAmount" >$ {{pcaCodeInfo?.remainingAmount}}</p>
                   <p class="red-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount>pcaCodeInfo?.remainingAmount">-$ {{pcaCodeInfo?.remainingAmount}}</p>
             </div>
             <div class="flex-col flex-col-4">
