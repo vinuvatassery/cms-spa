@@ -8,7 +8,7 @@
             <section class="app-l-wrapper">
                 <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
                     class="app-c-tab case-360-tab">
-                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                    <kendo-tabstrip-tab title="Process" [selected]="tab===1">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-premiums-process-list   [premiumsType]="premiumType"   [financialPremiumsProcessGridLists$]="financialPremiumsProcessGridLists$"
@@ -34,7 +34,7 @@
                         </ng-template>
                     </kendo-tabstrip-tab>
 
-                    <kendo-tabstrip-tab title="Batches">
+                    <kendo-tabstrip-tab title="Batches" [selected]="tab===2">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-premiums-batches-list
@@ -49,7 +49,7 @@
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
-                    <kendo-tabstrip-tab title="All Payments">
+                    <kendo-tabstrip-tab title="All Payments" [selected]="tab===3">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-premiums-all-payments-list [premiumsType]="premiumType" [financialPremiumPaymentLoader$]=financialPremiumPaymentLoader$  [financialPremiumsAllPaymentsGridLists$]="financialPremiumsAllPaymentsGridLists$"

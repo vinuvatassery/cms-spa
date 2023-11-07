@@ -70,6 +70,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
+  tab = 1;
+
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
     private readonly router: Router,
@@ -87,6 +89,10 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.activatedRoute.params.subscribe(
       (data) => (this.premiumType = data['type'])
     );
+    this.activatedRoute.queryParams.subscribe(
+      (data) => (this.tab = +(data['tab'] ?? 1))
+    );
+    this.tab = this.financialPremiumsFacade.selectedClaimsTab;
     this.addNavigationSubscription();
   }
   private addNavigationSubscription() {
@@ -112,6 +118,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
   }
   loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
+    this.financialPremiumsFacade.selectedClaimsTab = 1;
+    this.tab = this.financialPremiumsFacade.selectedClaimsTab;
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       pagesize: gridDataRefinerValue.pagesize,
@@ -129,6 +137,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
   }
 
   loadFinancialPremiumsBatchListGrid(data: GridFilterParam) {
+    this.financialPremiumsFacade.selectedClaimsTab = 2;
+    this.tab = this.financialPremiumsFacade.selectedClaimsTab;
     this.financialPremiumsFacade.loadFinancialPremiumsBatchListGrid(
       data,
       this.premiumType
@@ -136,6 +146,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
   }
 
   loadFinancialPremiumsAllPaymentsListGrid(data: GridFilterParam) {
+    this.financialPremiumsFacade.selectedClaimsTab = 3;
+    this.tab = this.financialPremiumsFacade.selectedClaimsTab;
     this.dataExportParameters = data
     this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid(data, this.premiumType);
 

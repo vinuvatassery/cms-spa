@@ -33,7 +33,7 @@ import { LoadTypes } from '@cms/case-management/domain';
   styleUrls: ['./financial-premiums-batches-reconcile-payments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnInit, OnChanges,OnDestroy{
+export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnInit, OnDestroy{
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -170,9 +170,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     public activeRoute: ActivatedRoute) {}
   
   ngOnInit(): void {
+    debugger;
     this.loadQueryParams();
-    this.lovFacade.getPaymentMethodLov();
-    this.paymentMethodSubscription();
     if(this.loadType === LoadTypes.allPayments){
       this.columns.batchName ='Batch #';
       let batch = {columnCode:'batchName',columnDesc:'Batch #'};
@@ -228,17 +227,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     })
    }
 
-  ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sortBatch,
-      filter : this.filter === undefined?null:this.filter
-    };
-
-    this.loadReconcileListGrid();
-  }
-
   ngOnDestroy(): void {
     this.paymentMethodLovSubscription.unsubscribe();
   }
@@ -293,7 +281,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
    defaultGridState() {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.pageSizes[2]?.value,
       sort: this.sortBatch,
       filter: { logic: 'and', filters: [] },
     };
@@ -404,7 +392,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.searchItem = null;
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.pageSizes[2]?.value,
       sort: this.sort,
     };
 
