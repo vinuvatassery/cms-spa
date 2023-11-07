@@ -311,9 +311,9 @@ export class FinancialPremiumsDataService {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/all/reconcile-payments`,reconcileData);
   }
 
-  viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType:any) {
+  viewPrintAdviceLetterData(printAdviceLetterData: any, premiumType:any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/download-advice-letter`, printAdviceLetterData,
       { responseType: 'blob' }
     );
   }

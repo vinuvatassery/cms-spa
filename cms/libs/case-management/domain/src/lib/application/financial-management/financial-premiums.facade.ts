@@ -403,8 +403,8 @@ export class FinancialPremiumsFacade {
     return this.financialPremiumsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData, premiumType);
 }
 
-viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
-  return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
+viewAdviceLetterData(printAdviceLetterData: any, premiumType:any) {
+  return this.financialPremiumsDataService.viewPrintAdviceLetterData(printAdviceLetterData, premiumType);
 }
 
 loadMedicalPremiumList(

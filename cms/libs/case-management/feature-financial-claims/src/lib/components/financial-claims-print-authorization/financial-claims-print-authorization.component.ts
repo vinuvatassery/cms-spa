@@ -5,6 +5,7 @@ import {FinancialClaimsFacade, PaymentsFacade } from '@cms/case-management/domai
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-print-authorization',
@@ -40,6 +41,8 @@ export class FinancialClaimsPrintAuthorizationComponent {
   @Output() loadTemplateEvent  = new EventEmitter<any>();
   @Output() loadTemplateEventLog  = new EventEmitter<any>();
   @Output() onReconcileRecordEvent = new EventEmitter<any>();
+  letterContentSubscription!: Subscription;
+  letterContentListItemSubscription!: Subscription;
 
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,
@@ -59,15 +62,22 @@ export class FinancialClaimsPrintAuthorizationComponent {
       this.printAdviceLetterData = this.loadPrintLetterModelData();
       this.loadPrintLetterContent(this.printAdviceLetterData);
     }
-    this.letterContentList$?.subscribe((response:any)=>{
+    this.letterContentListSubscription();
+    this.letterContentLoaderSubscription();    
+  }
+  
+  letterContentLoaderSubscription() {
+    this.letterContentSubscription = this.letterContentLoader$?.subscribe((response:any)=>{
+      this.letterContentLoader = response;
+      this.ref.detectChanges();
+    });
+  }
+
+  letterContentListSubscription() {
+    this.letterContentListItemSubscription = this.letterContentList$?.subscribe((response:any)=>{
       this.letterContent = response.letterContent;
       this.ref.detectChanges();
     });
-    this.letterContentLoader$?.subscribe((response:any)=>{
-      this.letterContentLoader = response;
-      this.ref.detectChanges();
-    })
-    
   }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -81,6 +91,15 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   hideLoader() {
     this.loaderService.hide();
+  }
+
+  ngOnDestroy(): void {
+    if(this.letterContentListItemSubscription){
+    this.letterContentListItemSubscription.unsubscribe();
+    }
+    if(this.letterContentSubscription){
+    this.letterContentSubscription.unsubscribe();
+    }
   }
 
   loadPrintLetterContent(request:any) {

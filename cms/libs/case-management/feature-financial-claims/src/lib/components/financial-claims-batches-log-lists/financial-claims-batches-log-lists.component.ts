@@ -33,7 +33,7 @@ import {
 import { IntlService } from '@progress/kendo-angular-intl';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { Observable, Subject, debounceTime, first } from 'rxjs';
+import { Observable, Subject, Subscription, debounceTime, first } from 'rxjs';
 @Component({
   selector: 'cms-financial-claims-batches-log-lists',
   templateUrl: './financial-claims-batches-log-lists.component.html',
@@ -135,6 +135,7 @@ export class FinancialClaimsBatchesLogListsComponent
   totalRecord:any;
   batchLogPrintAdviceLetterPagedList:any;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  batchLogListItemsSubscription!:Subscription;
 
   gridColumns: { [key: string]: string } = {
     itemNbr: 'Item #',
@@ -339,7 +340,11 @@ export class FinancialClaimsBatchesLogListsComponent
     this.initializePage();
     this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
-    this.batchLogGridLists$.subscribe((response:any) =>{
+    this.batchLogListSubscription();
+  }
+
+  batchLogListSubscription(){
+    this.batchLogListItemsSubscription = this.batchLogGridLists$.subscribe((response:any) =>{
       this.totalRecord = response.total;
       if(this.selectAll){
       this.markAsChecked(response.data);
@@ -356,6 +361,10 @@ export class FinancialClaimsBatchesLogListsComponent
     };
     this.initializeGrid();
     this.loadBatchLogListGrid();
+  }
+
+  ngOnDestroy(): void {
+    this.batchLogListItemsSubscription.unsubscribe();
   }
 
   private loadLov() {

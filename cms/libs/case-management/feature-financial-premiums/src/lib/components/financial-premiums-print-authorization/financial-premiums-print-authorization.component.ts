@@ -5,6 +5,7 @@ import { FinancialPremiumsFacade } from '@cms/case-management/domain';
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-premiums-print-authorization',
@@ -24,6 +25,8 @@ export class FinancialPremiumsPrintAuthorizationComponent {
   letterContentLoader:boolean= false;
   currentIndex:any=0;
   reconcileArray:any=[]; 
+  premiumLetterContentSubscription!: Subscription;
+  premiumLetterContentListItemSubscription!: Subscription;
     /** Input properties **/
   @Input() items!: any;
   @Input() printOption: boolean = false;
@@ -59,16 +62,32 @@ export class FinancialPremiumsPrintAuthorizationComponent {
       this.finalPrintList = this.items;
       this.printAdviceLetterData = this.loadPrintLetterModelData();
       this.loadPrintLetterContent(this.printAdviceLetterData);
-    }
-    this.letterContentList$?.subscribe((response:any)=>{
+    }    
+    this.letterContentListSubscription();
+    this.letterContentLoaderSubscription();
+  }
+
+  letterContentLoaderSubscription() {
+    this.premiumLetterContentSubscription = this.letterContentLoader$?.subscribe((response:any)=>{
+      this.letterContentLoader = response;
+      this.ref.detectChanges();
+    });
+  }
+
+  letterContentListSubscription() {
+    this.premiumLetterContentListItemSubscription = this.letterContentList$?.subscribe((response:any)=>{
       this.letterContent = response.letterContent;
       this.ref.detectChanges();
     });
-    this.letterContentLoader$?.subscribe((response:any)=>{
-      this.letterContentLoader = response;
-      this.ref.detectChanges();
-    })
-    
+  }
+
+  ngOnDestroy(): void {
+    if(this.premiumLetterContentListItemSubscription){
+      this.premiumLetterContentListItemSubscription.unsubscribe();
+      }
+      if(this.premiumLetterContentSubscription){
+      this.premiumLetterContentSubscription.unsubscribe();
+      }
   }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -170,7 +189,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
 
   generateAndPrintAdviceLetter(request:any) {
     this.loaderService.show();
-    this.financialPremiumsFacade.viewAdviceLetterData(this.batchId, request, this.premiumsType)
+    this.financialPremiumsFacade.viewAdviceLetterData(request, this.premiumsType)
       .subscribe({
         next: (data: any) => {
           if (data) {

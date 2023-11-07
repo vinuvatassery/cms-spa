@@ -242,6 +242,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   sendReportDialog: any;
   selectedCount: number = 0;
   disablePrwButton:boolean= true;
+  batchLogListSubscription!: Subscription;
 
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,
@@ -255,7 +256,10 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.lovFacade.getYesOrNoLovs();
     this.loadYesOrNoLovs();
     this.addActionRespSubscription();
-    this.batchLogGridLists$.subscribe((response:any) =>{
+    this.batchLogListItemsSubscription();
+  }
+  batchLogListItemsSubscription() {
+    this.batchLogListSubscription = this.batchLogGridLists$.subscribe((response:any) =>{
       this.totalRecord = response?.acceptsReportsCount;
       if(this.selectAll){
       this.markAsChecked(response.data);
@@ -272,6 +276,10 @@ export class FinancialPremiumsBatchesLogListsComponent
 
     this.loadBatchLogListGrid();
     this.unsubscribeFromActionResponse();
+  }
+
+  ngOnDestroy(): void {
+    this.batchLogListSubscription.unsubscribe();
   }
 
   loadFinancialPremiumBatchInvoiceList(data: any) {
