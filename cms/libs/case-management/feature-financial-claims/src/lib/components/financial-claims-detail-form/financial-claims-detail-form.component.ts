@@ -275,7 +275,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
   }
 
-  updateProviderProfile(event:any){    
+  updateProviderProfile(event:any){
     this.financialVendorFacade.updateProviderPanel(event)
   }
 
@@ -394,7 +394,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   {
     this.addExceptionForm.at(indexNumber).reset();
     this.claimForm.controls['parentReasonForException'].setValue('');
-    this.claimForm.controls['parentExceptionFlag'].setValue('');
+    this.claimForm.controls['parentExceptionFlag'].setValue(StatusFlag.No);
     this.claimForm.controls['parentExceptionTypeCode'].setValue('');
     this.claimForm.controls['providerNotEligibleExceptionFlag'].setValue('');
     this.claimForm.controls['showProviderNotEligibleExceptionReason'].setValue('');
