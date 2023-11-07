@@ -227,7 +227,7 @@
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem,dataItem.paymentRequestId)">
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
               </button>
@@ -290,7 +290,7 @@
   <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="claimsProcessMore"
     class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-    <div class="btn-inner-block" (click)="onClickOpenAddEditClaimsFromModal(addEditClaimsDialog)">
+    <div class="btn-inner-block" (click)="onClickOpenAddEditClaimsFromModal(addEditClaimsDialog,'')">
       <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span>
       New Claims
     </div>
@@ -316,6 +316,24 @@
 </ng-template>
 <ng-template #addEditClaimsDialog>
   <cms-pharmacy-claims-detail-form
+  [deliveryMethodLov$]="deliveryMethodLov$"
+  [paymentRequestType$]="paymentRequestType$"
+  [addPharmacyClaim$] = "addPharmacyClaim$"
+  [editPharmacyClaim$] = "editPharmacyClaim$"
+  [getPharmacyClaim$] = "getPharmacyClaim$"
+  [searchPharmacies$] = "searchPharmacies$"
+  [searchClients$] = "searchClients$"
+  [searchDrugs$] = "searchDrugs$"
+  [searchPharmaciesLoader$]="searchPharmaciesLoader$"
+  [searchClientLoader$]="searchClientLoader$"
+  [searchDrugsLoader$]="searchDrugsLoader$"
+  (addPharmacyClaimEvent)="addPharmacyClaim($event)"
+  (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
+  (searchPharmaciesEvent)="searchPharmacies($event)"
+  (searchClientsEvent)="searchClients($event)"
+  (searchDrugEvent)="searchDrug($event)"
+  (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
+  (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
     (modalCloseAddEditClaimsFormModal)="modalCloseAddEditClaimsFormModal($event)"></cms-pharmacy-claims-detail-form>
 </ng-template>
 

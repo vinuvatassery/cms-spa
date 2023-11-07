@@ -15,6 +15,7 @@ import {
   PendingApprovalGeneralFacade,
   PendingApprovalPaymentFacade,
   UserRoleType,
+  FinancialVendorFacade,
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
@@ -22,14 +23,13 @@ import {
   DocumentFacade,
   ApiType,
 } from '@cms/shared/util-core';
-import { NotificationService } from '@progress/kendo-angular-notification';
 import {
   NavigationMenuFacade,
   UserManagementFacade,
   UserDataService,
   UserDefaultRoles,
+  UserLevel
 } from '@cms/system-config/domain';
-import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -94,12 +94,11 @@ export class ApprovalPageComponent implements OnInit {
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId!: any;
   usersByRole$ = this.userManagementFacade.usersByRole$;
-  selectedVendor$ = this.pendingApprovalGeneralFacade.selectedVendor$;
+  selectedVendor$ = this.financialVendorFacade.selectedVendor$;
 
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
-    private notificationService: NotificationService,
     private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
     private pendingApprovalPaymentFacade: PendingApprovalPaymentFacade,
     private userManagementFacade: UserManagementFacade,
@@ -107,8 +106,8 @@ export class ApprovalPageComponent implements OnInit {
     private documentFacade: DocumentFacade,
     private readonly userDataService: UserDataService,
     private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
-    private dialogService: DialogService,
-    private readonly cd: ChangeDetectorRef
+    private readonly cd: ChangeDetectorRef,
+    private readonly financialVendorFacade: FinancialVendorFacade
   ) {}
   ngOnInit(): void {
     this.getUserRole();
@@ -123,8 +122,11 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalCount = response;
-        this.cd.detectChanges();
       }
+      else{
+        this.pendingApprovalCount = 0;
+      }
+      this.cd.detectChanges();
     });
   }
   loadApprovalsGeneralGrid(event: any): void {
@@ -135,9 +137,9 @@ export class ApprovalPageComponent implements OnInit {
     this.userDataService.getProfile$.subscribe((profile: any) => {
       if (profile?.length > 0) {
         if (this.userManagementFacade.hasRole(UserRoleType.Level2)) {
-          this.userLevel = 2;
+          this.userLevel = UserLevel.Level2Value;
         } else if (this.userManagementFacade.hasRole(UserRoleType.Level1)) {
-          this.userLevel = 1;
+          this.userLevel = UserLevel.Level1Value;
         }
         this.navigationMenuFacade.getAllPendingApprovalPaymentCount(
           this.userLevel
@@ -232,22 +234,14 @@ export class ApprovalPageComponent implements OnInit {
       approvalId
     );
   }
-
-  loadApprovalsExceptionCard(data: any) {
-    this.pendingApprovalGeneralFacade.loadExceptionCard(data);
-  }
-
-  loadApprovalsExceptionInvoice(data: any) {
-    this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
-  }
+  
   submitGeneralRequests(requests: any) {
     this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
   }
 
   getVendorDetail(userObject: any) {
-    this.pendingApprovalGeneralFacade.getVendorDetails(
-      userObject.approvalEntityId,
-      userObject.subTypeCode
+    this.financialVendorFacade.getVendorDetails(
+      userObject.approvalEntityId
     );
   }
 }

@@ -52,7 +52,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   isProcessGridExpand = true;
   sendReportDialog: any;
   gridLoaderSubject = new BehaviorSubject(false);
-  gridDataResult!: GridDataResult;
+  gridDataResult!: any;
   @Input() premiumsType: any;
   @Input() batchingPremium$: any; 
   @Input() pageSizes: any;
@@ -196,6 +196,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
         if (!this.isSendReportOpened) {
           this.isSendReportOpened = true;
           this.selectAll = false; 
+          this.isRemoveBatchClosed = false;
           this.recordCountWhenSelectallClicked = this.totalGridRecordsCount;
           this.onBatchPremiumsGridSelectedClicked();
         }
@@ -221,6 +222,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
         if (!this.isRemoveBatchClosed) {
           this.isRemoveBatchClosed = true;
           this.directRemoveClicked = true;
+          this.isSendReportOpened = false;
           this.selectAll = false; 
           this.onBatchPremiumsGridSelectedClicked();
         }
@@ -261,7 +263,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   actionResponseSubscription = new Subscription;
   paymentRequestId: any;
   recordCountWhenSelectallClicked: number = 0;
-  totalGridRecordsCount: number = 0;;
+  totalGridRecordsCount: number = 0;
 
   
   /** Constructor **/
@@ -292,7 +294,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.onProviderNameClickEvent.emit(event);
   }
   premiumGridlistDataHandle() {
-    this.financialPremiumsProcessGridLists$.subscribe((data: GridDataResult) => {
+    this.financialPremiumsProcessGridLists$.subscribe((data:any) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
@@ -304,8 +306,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       }
       this.financialPremiumsProcessGridLists = this.gridDataResult?.data;
       if(this.recordCountWhenSelectallClicked == 0){
-        this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
-        this.totalGridRecordsCount = this.gridDataResult?.total;
+        this.recordCountWhenSelectallClicked = this.gridDataResult?.acceptsCombinedPaymentsCount;
+        this.totalGridRecordsCount = this.gridDataResult?.acceptsCombinedPaymentsCount;
       }
       if(!this.selectAll)
       {

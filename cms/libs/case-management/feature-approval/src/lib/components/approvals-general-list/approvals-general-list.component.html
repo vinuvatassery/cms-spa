@@ -71,7 +71,7 @@
                 *ngIf="
                   item.status == approveStatus &&
                   item.approvalTypeCode ==
-                    pendingApprovalGeneralTypeCode.GeneralAddtoMasterList
+                    pendingApprovalGeneralTypeCode.GeneralAddToMasterList
                 "
               >
                 <i>The user will be notified of your changes.</i>
@@ -90,13 +90,15 @@
                     title="{{ item.sendBackNotes }}"
                     [ngClass]="ngDirtyInValid(item, 'sendBackNotes', i)"
                     id="sendBackNotes{{ i }}"
-                  ></kendo-textarea>
-
+                  >
                   <kendo-textarea-suffix class="justify-content-end">
                     <span class="counter">{{
                       item.tAreaCessationCounter
                     }}</span>
                   </kendo-textarea-suffix>
+                </kendo-textarea>
+
+           
                   <kendo-formerror *ngIf="item.sendBackNotesInValid">{{
                     item.sendBackNotesInValidMsg
                   }}</kendo-formerror>
@@ -114,7 +116,7 @@
                     aria-label="New Case Worker"
                     [fillMode]="formUiStyle.dropDownFillMode"
                     [data]="usersByRole$ | async"
-                    textField="firstName"
+                    textField="fullName"
                     valueField="loginUserId"
                     [valuePrimitive]="true"
                     [(ngModel)]="
@@ -171,26 +173,12 @@
             </ng-template>
             <ng-template
               ngSwitchCase="{{
-                pendingApprovalGeneralTypeCode.GeneralException
+                pendingApprovalGeneralTypeCode.GeneralExceptions
               }}"
             >
               <productivity-tools-approvals-general-list-detail-exceptions
                 [approvalId]="item.generalPendingApprovalId"
-                [exceptionId]="item.approvalEntityId"
-                [approvalsExceptionCard$]="approvalsExceptionCard$ | async"
-                (loadApprovalsExceptionCardEvent)="
-                  loadApprovalsExceptionCard($event)
-                "
-                [pageSizes]="pageSizes"
-                [sortValue]="sortValue"
-                [sortType]="sortType"
-                [sort]="sort"
-                [gridSkipCount]="gridSkipCount"
-                [invoiceData$]="invoiceData$"
-                [isInvoiceLoading$]="isInvoiceLoading$"
-                (loadApprovalsExceptionInvoiceEvent)="
-                  loadApprovalsExceptionInvoice($event)
-                "
+                [exceptionId]="item.approvalEntityId"               
               >
               </productivity-tools-approvals-general-list-detail-exceptions>
             </ng-template>
@@ -204,16 +192,6 @@
   </div>
 </div>
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="">1 Approved</span>
-  <button
-    kendoButton
-    [primary]="true"
-    look="outline"
-    class=""
-    aria-label="Cancel"
-  >
-    Save
-  </button>
   <button
     kendoButton
     [primary]="true"
@@ -238,13 +216,10 @@
 </ng-template>
 
 <ng-template #submitRequestModalDialog>
-  <kendo-dialog
-    (close)="onCloseSubmitGeneralRequestClicked()"
-    class="app-c-modal app-c-modal-sm app-c-modal-np"
-    title="Submit item(s)?"
-    kendoTooltip
-  >
-    <section class="k-dialog-body newcase">
+ 
+  <kendo-dialog-titlebar class="text-normal" (close)="onCloseSubmitGeneralRequestClicked()">
+    Submit item(s)</kendo-dialog-titlebar>
+    <section class="k-dialog-body newcase"> 
       <p *ngIf="caseReassignmentsCount > 0" class="mb-1">
         Case re-assignments to be submitted:
         <strong>{{ caseReassignmentsCount }}</strong>
@@ -278,6 +253,5 @@
           </button>
         </div>
       </div>
-    </kendo-dialog-actions>
-  </kendo-dialog>
+    </kendo-dialog-actions> 
 </ng-template>

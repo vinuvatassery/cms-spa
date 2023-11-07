@@ -883,18 +883,19 @@ table,
         width: 50%; 
         border-bottom: 1px solid rgba($black, 0.1);
       }
-      &.providercontact{
+      &.providerContact{
         td{
           border-bottom: 0px solid rgba($black, 0.1);
           padding: 0px;
          
         }
-        &:nth-child(3n + 1){
+        &:nth-child(4n+4){
           border-bottom: 1px solid rgba($black, 0.1);
           td{
             padding-bottom: 10px;
           }
         }
+     
       }
     }
   }
