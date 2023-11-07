@@ -66,12 +66,14 @@
       <div class="flex-row mt-3" *ngIf="pcaCodeInfo !=null">
             <div class="flex-col flex-col-4">
                   <label> PCA Amount </label>
-                  <p> $ {{pcaCodeInfo?.totalAmount}}</p>
+                  <p><span class="tableamountview"> <strong>$</strong> {{pcaCodeInfo?.totalAmount|kendoNumber: 'n2'}}</span>
+                  </p>
+
             </div>
             <div class="flex-col flex-col-4">
                   <label> Remaining </label>
-                  <p class="green-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount <= pcaCodeInfo?.remainingAmount" >$ {{pcaCodeInfo?.remainingAmount}}</p>
-                  <p class="red-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount>pcaCodeInfo?.remainingAmount">$ <span  *ngIf="pcaCodeInfo?.remainingAmount>=0"> -</span>  {{pcaCodeInfo?.remainingAmount}}</p>
+                  <p class="green-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount <= pcaCodeInfo?.remainingAmount" ><span class="tableamountview"> <strong>$</strong> {{pcaCodeInfo?.remainingAmount|kendoNumber: 'n2'}}</span></p>
+                  <p class="red-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount>pcaCodeInfo?.remainingAmount"><span class="tableamountview"> <strong>$ <span  *ngIf="pcaCodeInfo?.remainingAmount>=0"> -</span></strong> {{pcaCodeInfo?.remainingAmount|kendoNumber: 'n2'}}</span></p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Close Date</label>
@@ -85,11 +87,10 @@
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Open Date">
-                         
-                                    <kendo-dropdownlist  [fillMode]="formUiStyle.inputFillMode"
+                                    <kendo-dropdownlist class="fixed-height-input"   [fillMode]="formUiStyle.inputFillMode"
                                     [data]="pcaAssignOpenDatesList$"
                                     textField="dateValue"
-                                    valueField="date" 
+                                    valueField="dateValue" 
                                     aria-label="date"
                                     [valuePrimitive]="true"
                                     formControlName="openDate">
@@ -109,7 +110,7 @@
                                     <kendo-dropdownlist  [fillMode]="formUiStyle.inputFillMode"
                                     [data]="pcaAssignCloseDatesList$"
                                     textField="dateValue"
-                                    valueField="date" 
+                                    valueField="dateValue" 
                                     aria-label="date"
                                     [valuePrimitive]="true"
                                     formControlName="closeDate">
@@ -123,6 +124,12 @@
                   </kendo-floatinglabel>
 
             </div>
+            <kendo-formerror *ngIf="openDateError">
+                  Open Date must be before Close Date
+            </kendo-formerror> 
+            <kendo-formerror *ngIf="pcaCodeInfo?.closeDate< this.pcaAssignmentForm.value.closeDate">
+                  Assignment Close Date cannot exceed the PCA Close Date
+            </kendo-formerror> 
       </div>
       <div class="flex-row">
             <div class="flex-col ">

@@ -260,7 +260,7 @@ emailscount:number=0;
   }
 
   onVendorProfileViewClicked() {  
-    debugger  
+      
     const query = {
       queryParams: {
         v_id: this.vendorProfile.vendorId,

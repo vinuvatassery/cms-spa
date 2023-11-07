@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { PcaAssignmentsFacade } from '@cms/case-management/domain';
@@ -9,6 +10,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
   selector: 'cms-financial-reassignment-pca-form',
   templateUrl: './financial-reassignment-pca-form.component.html',
   styleUrls: ['./financial-reassignment-pca-form.component.scss'],
+  providers: [DatePipe]
 })
 export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
 
@@ -39,29 +41,41 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
   objectCodeControl! : FormControl
   editPca = false
   formSubmitted =false;
+  startDate:any;
+  endDate:any;
+  openDateError =false
+
   constructor(  
     private formBuilder: FormBuilder,
     private readonly pcaAssignmentsFacade : PcaAssignmentsFacade,
-    public intl: IntlService
+    public intl: IntlService,private datePipe: DatePipe
   ) {}  
   ngOnInit(): void {  
     this.formSubmitted = false
     this.loadPcaEvent.emit()
     this.getPcaInfoData()
 
+   
     
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     
+   
+    let date = new Date();
+    this.startDate = new Date(date.getFullYear(), date.getMonth(), 1);
+     this.endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+    this.startDate=this.datePipe.transform(this.startDate, 'MM/dd/yyyy')
+    this.endDate=this.datePipe.transform(this.endDate, 'MM/dd/yyyy')
+
     this.pcaAssignmentForm = this.formBuilder.group({     
       pcaAssignmentId : [''],
       objectCode: ['', Validators.required],
       groupCodes: [[], Validators.required],
       pcaId: ['', Validators.required],
-      openDate: ['', Validators.required],
-      closeDate: ['', Validators.required],
-      amount: [0, Validators.required],
+      openDate: [this.startDate, Validators.required],
+      closeDate: [this.endDate , Validators.required],
+      amount: [null, Validators.required],
       unlimited: [false],
       ay : ['']
     });
@@ -82,8 +96,8 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
           pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
           objectCode: this.pcaAssignmentFormDataModel$?.objectId,     
           pcaId: '', 
-          openDate: '',
-          closeDate: '',
+          openDate:this.startDate,
+          closeDate: this.endDate,
           amount:this.pcaAssignmentFormDataModel$.pcaRemainingAmount,
           unlimited:false,
           groupCodes : this.groupCodesData$               
@@ -111,99 +125,22 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
     return (this.pcaAssignmentForm)?.controls as any;
   }
 
-  private composePcaAssignmentForm()
-  {
-    this.editPca =false
-        if(!this.pcaAssignmentFormDataModel$?.pcaAssignmentId)
-        {  
-          this.pcaAssignmentForm = this.formBuilder.group({     
-            pcaAssignmentId : [''],
-            objectCode: ['', Validators.required],
-            groupCodes: [[], Validators.required],
-            pcaId: ['', Validators.required],
-            openDate: ['', Validators.required],
-            closeDate: ['', Validators.required],
-            amount: ['', Validators.required],
-            unlimited: [false],
-            ay : ['']
-          });  
-          
-          this.pcaAssignmentForm.patchValue(
-            {     
-              objectCode:  this.objectCodeIdValue ,     
-              groupCodes :  this.groupCodeIdsdValue
-            }
-          )    
-      this.pcaAssignmentForm.controls['objectCode'].disable();
-
-    this.pcaAssignmentForm.controls['groupCodes'].disable();
-
-      this.pcaAssignmentForm.controls['ay'].disable();     
-    }
-     
-  }
-
-  private composePcaAssignmentEditForm()
-  {    
-      if(!this.pcaAssignmentForm)
-      {
-        this.pcaAssignmentForm = this.formBuilder.group({     
-          pcaAssignmentId : [''],
-          objectCode: ['', Validators.required],
-          groupCodes: [[], Validators.required],
-          pcaId: ['', Validators.required],
-          openDate: ['', Validators.required],
-          closeDate: ['', Validators.required],
-          amount: [0, Validators.required],
-          unlimited: [false],
-          ay : ['']
-        });  
-      }
-        if(this.pcaAssignmentFormDataModel$?.pcaAssignmentId)
-        {       
-          
-          this.pcaAssignmentForm.reset()
-          let groupCodeIdsAssignedValue : any=[];   
-          this.editPca = true      
-         // this.onPcaChange(this.pcaAssignmentFormDataModel$?.pcaId)    
-          this.pcaAssignmentForm.controls['pcaId'].disable();
-          
-          Object.values(this.groupCodesDataFilter).forEach((key : any) => {  
-                     
-              if(this.pcaAssignmentFormDataModel$.groupCodeIds.split(',').filter((x:any)=>x=== key.groupCodeId).length > 0)
-              {
-                groupCodeIdsAssignedValue.push(key)
-              }            
-            })            
-
-            this.pcaAssignmentForm.controls['ay'].disable();     
-           
-            if(this.pcaAssignmentFormDataModel$?.unlimited === true)
-            {
-              this.pcaAssignmentForm.controls['amount'].disable();  
-            }
-            
-            this.pcaAssignmentForm.patchValue(
-              {     
-                pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
-                objectCode:  this.pcaAssignmentFormDataModel$?.objectCodeId,     
-                pcaId: '', 
-                openDate: this.pcaAssignmentFormDataModel$?.openDate,
-                closeDate: '',
-                amount: this.pcaAssignmentFormDataModel$?.amount,
-                unlimited: this.pcaAssignmentFormDataModel$?.unlimited,
-                groupCodes : groupCodeIdsAssignedValue               
-              }
-            )
-           
-           
-        }
-   
-  }
-
   onPcaAssignmentFormSubmit()
   {    
-    
+    if(this.pcaAssignmentForm?.controls["openDate"].value && this.pcaAssignmentForm?.controls["closeDate"].value)
+    {
+        if(this.pcaAssignmentForm?.controls["openDate"].value > this.pcaAssignmentForm?.controls["closeDate"].value)
+        {
+       
+              this.openDateError = true;
+              return;
+        }
+        else
+        {
+          this.openDateError = false
+        }
+       
+    }
     this.formSubmitted = true
     this.pcaAssignmentForm.markAllAsTouched();
     if(this.pcaAssignmentForm.valid)
@@ -222,8 +159,8 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
                          this.pcaAssignmentForm?.controls["pcaAssignmentId"].value,          
         objectCodeId: this.pcaAssignmentForm?.controls["objectCode"].value,  
         pcaId: this.pcaAssignmentForm?.controls["pcaId"].value,  
-        openDate: this.pcaAssignmentForm?.controls["openDate"].value,  
-        closeDate: this.pcaAssignmentForm?.controls["closeDate"].value,  
+        openDate:new Date(this.pcaAssignmentForm?.controls["openDate"].value),  
+        closeDate:new Date(this.pcaAssignmentForm?.controls["closeDate"].value),  
         amount: this.pcaAssignmentForm?.controls["amount"].value,  
         unlimitedFlag: this.pcaAssignmentForm?.controls["unlimited"].value === true ? 'Y' : 'N',  
         groupCodeIds : this.groupCodeIdsdValueData,  
@@ -261,7 +198,6 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
     this.pcaAssignmentForm.patchValue(
       {     
         ay:  this.pcaCodeInfo?.ay ?? ''}    
-    )
-   
-  }
-}
+    ) 
+      }
+    }
