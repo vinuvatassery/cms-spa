@@ -50,15 +50,15 @@ export class PendingApprovalGeneralService {
     );
   }
   
-  getMasterDetails(entityId: string, subTypeCode: string) {
+  getMasterDetails(masterDetailId: string, subTypeCode: string) {
     if (subTypeCode == PendingApprovalGeneralTypeCode.Drug) {
       return this.http.post<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${entityId}`,
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${masterDetailId}`,
         null
       );
     } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsurancePlan) {
       return this.http.get<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans?insurancePlanId=${entityId}`);
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans?insurancePlanId=${masterDetailId}`);
     }
     return of();
   }
