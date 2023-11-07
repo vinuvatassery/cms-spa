@@ -21,7 +21,8 @@ export class FinancialPremiumsFacade {
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
-
+  public selectedClaimsTab = 1
+  
   public sortValueFinancialPremiumsProcess = 'clientFullName';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsProcess,

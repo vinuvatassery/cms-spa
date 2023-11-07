@@ -19,7 +19,7 @@ import {
   State,
 } from '@progress/kendo-data-query';
 import { Subject, Subscription } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -33,7 +33,7 @@ import { LoadTypes } from '@cms/case-management/domain';
   styleUrls: ['./financial-premiums-batches-reconcile-payments.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnInit, OnChanges,OnDestroy{
+export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnInit, OnDestroy{
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -166,11 +166,12 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, 
     private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider, 
-    public intl: IntlService,private readonly lovFacade: LovFacade) {}
+    public intl: IntlService,private readonly lovFacade: LovFacade,
+    public activeRoute: ActivatedRoute) {}
   
   ngOnInit(): void {
-    this.lovFacade.getPaymentMethodLov();
-    this.paymentMethodSubscription();
+    debugger;
+    this.loadQueryParams();
     if(this.loadType === LoadTypes.allPayments){
       this.columns.batchName ='Batch #';
       let batch = {columnCode:'batchName',columnDesc:'Batch #'};
@@ -226,17 +227,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     })
    }
 
-  ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sortBatch,
-      filter : this.filter === undefined?null:this.filter
-    };
-
-    this.loadReconcileListGrid();
-  }
-
   ngOnDestroy(): void {
     this.paymentMethodLovSubscription.unsubscribe();
   }
@@ -276,6 +266,10 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     if(field == "paymentMethodDesc"){
       this.paymentMethodDesc = value;
     }
+  }
+
+  loadQueryParams(){
+    this.loadType = this.activeRoute.snapshot.queryParams['loadType'];
   }
 
   paymentMethodSubscription(){
