@@ -11,6 +11,6 @@ import { Observable } from 'rxjs';
 export class ApprovalsEditItemsComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Input() selectedSubtypeCode: any;
-  @Input() selectedVendor$!: Observable<any>;
+  @Input() selectedMasterDetail$!: Observable<any>;
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
 }
