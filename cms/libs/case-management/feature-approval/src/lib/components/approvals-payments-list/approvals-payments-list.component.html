@@ -84,7 +84,7 @@
     <kendo-grid-column [sortable]="false" field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="View Pmts In Batch" title="View" kendoButton look="flat" class="card-link-button"
-          (click)="onOpenViewPaymentsBatchClicked(dataItem)">
+          (click)="onOpenViewPaymentsBatchClicked(dataItem,'V')">
           <span class="material-icons"> plagiarism </span>
         </button>
       </ng-template>
@@ -232,6 +232,9 @@
 
           <kendo-formerror *ngIf="dataItem.sendBackNotesInValid">{{
             dataItem.sendBackNotesInValidMsg
+            }}</kendo-formerror>
+          <kendo-formerror *ngIf="dataItem.atleastOnePaymentInValid">{{
+            dataItem.atleastOnePaymentInValidMsg
             }}</kendo-formerror>
         </div>
       </ng-template>
