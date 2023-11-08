@@ -1093,7 +1093,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
   resetApprovalPaymentListGrid(){
     this.sortValue = 'batchName';
-    this.sortType = 'asc';
+    this.sortType = 'desc';
     this.setGridValueAndData();
     this.sortColumn = 'batchName';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
