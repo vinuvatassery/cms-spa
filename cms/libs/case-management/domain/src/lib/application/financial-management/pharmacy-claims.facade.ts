@@ -256,7 +256,7 @@ export class FinancialPharmacyClaimsFacade {
           
         Object.values(dataResponse).forEach((key) => {          
 
-          key.fullCustomName = key?.vendorName + ' '+ key?.tin + ' '+ key?.mailCode + ' '+ key?.address
+          key.fullCustomName = key?.vendorName + ' '+ key?.tin ?? ''+ ' '+ key?.mailCode ?? '' + ' '+ key?.address
        
         });
           this.searchPharmaciesDataSubject.next(dataResponse);
@@ -277,7 +277,7 @@ export class FinancialPharmacyClaimsFacade {
       next: (dataResponse : Client) => {
         Object.values(dataResponse).forEach((key) => {          
 
-          key.fullCustomName = key?.clientFullName + ' '+ key?.clientId + ' '+ key?.ssn + ' '+ key?.dob
+          key.fullCustomName = key?.clientFullName + ' '+ key?.clientId + ' '+ (key?.ssn ?? '') + ' '+ key?.dob
        
         });
         this.searchClientsDataSubject.next(dataResponse);

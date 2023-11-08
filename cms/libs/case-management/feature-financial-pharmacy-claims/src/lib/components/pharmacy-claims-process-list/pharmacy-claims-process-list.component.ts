@@ -362,8 +362,11 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     }
   }
 
-  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>,paymentRequestId : any): void {    
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>,paymentRequestId : any): void {  
+    if(paymentRequestId !== '00000000-0000-0000-0000-000000000000')  
+    {
     this.getPharmacyClaimEvent.emit(paymentRequestId);
+    }
     this.addEditClaimsFormDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-96full add_claims_modal',
