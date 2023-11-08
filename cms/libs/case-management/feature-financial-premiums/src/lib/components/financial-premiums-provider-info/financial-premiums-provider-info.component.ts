@@ -262,7 +262,8 @@ emailscount:number=0;
   onVendorProfileViewClicked() {
     const query = {
       queryParams: {
-        v_id: this.vendorProfile.vendorId
+        v_id: this.vendorProfile.vendorId,
+        tab_code : FinancialVendorProviderTabCode.InsuranceVendors
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)
