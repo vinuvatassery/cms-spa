@@ -744,7 +744,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           currentPage.sendBackNotesInValidMsg = '';
           currentPage.sendBackButtonDisabled = true;
           currentPage.sendBackNotes = '';
-          this.assignRowDataToMainList(currentPage);
+          this.sendBackNotesChange(currentPage);
         }
       );
 
@@ -755,7 +755,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           currentPage.sendBackNotesInValidMsg = '';
           currentPage.sendBackNotes = '';
           currentPage.sendBackButtonDisabled = true;
-          this.assignRowDataToMainList(currentPage);
+          this.sendBackNotesChange(currentPage);
         }
       );
     }
