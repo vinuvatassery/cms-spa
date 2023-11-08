@@ -57,10 +57,13 @@
                     <kendo-tabstrip-tab title="All Payments">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-all-payments-list  [pharmacyClaimsAllPaymentsGridLists$]="pharmacyClaimsAllPaymentsGridLists$"
+                                <cms-pharmacy-claims-all-payments-list  
+                                [pharmacyClaimsAllPaymentsGridLists$]="pharmacyClaimsAllPaymentsGridLists$"
+                                [pharmacyClaimsAllPaymentsGridLoader$]="pharmacyClaimsAllPaymentsGridLoader$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList" 
-                                (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"></cms-pharmacy-claims-all-payments-list>
+                                (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"
+                                (exportGridEvent$)="onExportAllPayments($event)"></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
