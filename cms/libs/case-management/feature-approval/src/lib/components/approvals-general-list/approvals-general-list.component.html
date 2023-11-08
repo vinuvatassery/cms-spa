@@ -234,10 +234,13 @@
   >
   <productivity-tools-approvals-edit-items
     [selectedSubtypeCode]="selectedSubtypeCode"
-    [selectedMasterDetail$]="selectedMasterDetail$"
     [clinicVendorList$]="clinicVendorList$"
     [ddlStates$]="ddlStates$"
     [healthCareForm]="healthCareForm"
+    (searchClinicVendorClicked)="searchClinicClicked($event)"
+    [clinicVendorLoader$]="clinicVendorLoader$"
+    [selectedMasterData]="selectedMasterData"
+    (updateMasterDetailsClickedEvent)="updateMasterDetailsClicked($event)"
   >
   </productivity-tools-approvals-edit-items>
 </ng-template>

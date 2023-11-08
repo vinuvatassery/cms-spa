@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { FinancialVendorFacade, PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'productivity-tools-approvals-edit-items',
   templateUrl: './approvals-edit-items.component.html',
@@ -12,25 +12,28 @@ import { Observable } from 'rxjs';
 export class ApprovalsEditItemsComponent implements OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Input() selectedSubtypeCode: any;
-  @Input() selectedMasterDetail$!: Observable<any>;
   @Input() selectedVendor$!: Observable<any>;
   @Input() clinicVendorList$: any;
   @Input() ddlStates$!: any;
   @Input() healthCareForm!: FormGroup;
+  @Input() selectedMasterData: any;
+  @Input() clinicVendorLoader$! : Observable<any>;
+  @Output() searchClinicVendorClicked = new EventEmitter<any>();
+  @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
-  clinicSearchSubscription!: any;
+  clinicSearchSubscription!: Subscription;
   clinicVendorListLocal!: null;
   selectedClinicVendorId!: null;
-  searchClinicVendorClicked!: any;
-  vendorData: any;
+  isValidateForm!:boolean;
+  tinMaskFormat: string = '0 00-000000';
 
-  /** constructor */
+  constructor() { }
 
   ngOnInit(): void {
-    this.selectedVendor$.subscribe((value:any)=>this.vendorData = value);
     this.bindVendorData();
   }
-  
+ 
+
   searchClinic(clinicName: any) {
     this.clinicSearchSubscription?.unsubscribe();
 
@@ -41,40 +44,80 @@ export class ApprovalsEditItemsComponent implements OnInit{
 
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
       if (data && clinicName !== '') {
-        if (this.clinicSearchSubscription === PendingApprovalGeneralTypeCode.MedicalProvider
-          || this.clinicSearchSubscription === PendingApprovalGeneralTypeCode.MedicalClinic
+        if (this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider
+          || this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalClinic
         ) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic);
-        } else if (this.clinicSearchSubscription === PendingApprovalGeneralTypeCode.DentalProvider
-          || this.clinicSearchSubscription === PendingApprovalGeneralTypeCode.DentalClinic) {
+        } else if (this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider
+          || this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalClinic) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === PendingApprovalGeneralTypeCode.DentalClinic);
+        } else {
+          this.clinicVendorListLocal = data;
         }
         this.clinicSearchSubscription?.unsubscribe();
       }
     });
-
-
     this.selectedClinicVendorId = null;
     this.searchClinicVendorClicked.emit(clinicName);
   }
 
   bindVendorData(){
-    this.healthCareForm.controls['clinicName'].setValue(this.vendorData.clinicName);
-    this.healthCareForm.controls['providerFirstName'].setValue(this.vendorData.providerFirstName);
-    this.healthCareForm.controls['providerLastName'].setValue(this.vendorData.providerLastName);
-    this.healthCareForm.controls['tinNumber'].setValue(this.vendorData.tinNumber);
-    this.healthCareForm.controls['phoneNumber'].setValue(this.vendorData.phoneNumber);
-    this.healthCareForm.controls['email'].setValue(this.vendorData.email);
-    this.healthCareForm.controls['fax'].setValue(this.vendorData.fax);
-    this.healthCareForm.controls['addressLine1'].setValue(this.vendorData.addressLine1);
-    this.healthCareForm.controls['addressLine2'].setValue(this.vendorData.addressLine2);
-    this.healthCareForm.controls['city'].setValue(this.vendorData.city);
-    this.healthCareForm.controls['state'].setValue(this.vendorData.state);
-    this.healthCareForm.controls['zip'].setValue(this.vendorData.zip);
-    this.healthCareForm.controls['contactFirstName'].setValue(this.vendorData.contactFirstName);
-    this.healthCareForm.controls['contactLastName'].setValue(this.vendorData.contactLastName);
-    this.healthCareForm.controls['contactPhone'].setValue(this.vendorData.contactPhone);
-    this.healthCareForm.controls['contactFax'].setValue(this.vendorData.contactFax);
-    this.healthCareForm.controls['contactEmail'].setValue(this.vendorData.contactEmail);
+    this.healthCareForm.controls['providerName'].setValue(this.selectedMasterData?.vendorName);
+    this.healthCareForm.controls['firstName'].setValue(this.selectedMasterData?.firstName);
+    this.healthCareForm.controls['lastName'].setValue(this.selectedMasterData?.lastName);
+    this.healthCareForm.controls['tinNumber'].setValue(this.selectedMasterData?.tin);
+    this.healthCareForm.controls['phoneNumber'].setValue(this.selectedMasterData?.phoneNumber);
+    this.healthCareForm.controls['email'].setValue(this.selectedMasterData?.email);
+    this.healthCareForm.controls['fax'].setValue(this.selectedMasterData?.fax);
+    this.healthCareForm.controls['addressLine1'].setValue(this.selectedMasterData?.address1);
+    this.healthCareForm.controls['addressLine2'].setValue(this.selectedMasterData?.addressLine2); // not available
+    this.healthCareForm.controls['city'].setValue(this.selectedMasterData?.cityCode); 
+    this.healthCareForm.controls['state'].setValue(this.selectedMasterData?.stateCode); 
+    this.healthCareForm.controls['zip'].setValue(this.selectedMasterData?.zip); 
+    this.healthCareForm.controls['contactFirstName'].setValue(this.selectedMasterData?.contact1FirstName); 
+    this.healthCareForm.controls['contactLastName'].setValue(this.selectedMasterData?.contact1LastName);
+    this.healthCareForm.controls['contactPhone'].setValue(this.selectedMasterData?.phoneNumber); 
+    this.healthCareForm.controls['contactFax'].setValue(this.selectedMasterData?.fax); 
+    this.healthCareForm.controls['contactEmail'].setValue(this.selectedMasterData?.email); 
+  }
+  validateForm() {
+    if(this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.DentalClinic ||
+      this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.DentalProvider ||
+      this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.MedicalClinic ||
+      this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.MedicalProvider
+      ) {
+        this.healthCareForm.controls['providerName'].setValidators(Validators.required);
+        this.healthCareForm.controls['providerName'].updateValueAndValidity();
+        
+        this.healthCareForm.controls['firstName'].setValidators(Validators.required);
+        this.healthCareForm.controls['firstName'].updateValueAndValidity();
+        
+        this.healthCareForm.controls['lastName'].setValidators(Validators.required);
+        this.healthCareForm.controls['lastName'].updateValueAndValidity();
+
+        this.healthCareForm.controls['addressLine1'].setValidators(Validators.required);
+        this.healthCareForm.controls['addressLine1'].updateValueAndValidity();
+
+        this.healthCareForm.controls['city'].setValidators(Validators.required);
+        this.healthCareForm.controls['city'].updateValueAndValidity();
+
+        this.healthCareForm.controls['state'].setValidators(Validators.required);
+        this.healthCareForm.controls['state'].updateValueAndValidity();
+
+        this.healthCareForm.controls['zip'].setValidators(Validators.required);
+        this.healthCareForm.controls['zip'].updateValueAndValidity();
+
+      }
+  }
+  onUpdateClicked(){
+   this.validateForm();
+   this.isValidateForm = true;
+   if(this.healthCareForm.valid)
+   {
+    this.updateMasterDetailsClickedEvent.emit(this.healthCareForm.value)
+   }
+  }
+  get healthCareFormControls(){
+    return this.healthCareForm.controls as any;
   }
 }

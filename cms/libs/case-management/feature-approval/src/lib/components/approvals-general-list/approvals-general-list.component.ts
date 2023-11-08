@@ -14,7 +14,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { PanelBarCollapseEvent } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
@@ -58,6 +58,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
   @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
+  @Input() clinicVendorLoader$!: Observable<any>;
 
   pendingApprovalGeneralTypeCode: any;
   public state!: State;
@@ -102,6 +103,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() ddlStates$ : any;
   @Output() editClickedEvent = new EventEmitter<any>();
   @Input() healthCareForm!: FormGroup;
+  @Output() searchClinicVendorClicked = new EventEmitter<any>();
+  @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
+  selectedMasterData!:any;
 
   /** Constructor **/
   constructor(
@@ -113,6 +117,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
+    this.getMasterData();
     this.loadApprovalGeneralListGrid();
     this.pendingApprovalGeneralTypeCode = PendingApprovalGeneralTypeCode;
     this.getLoggedInUserProfile();
@@ -123,6 +128,10 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       }
     });
   }
+  private getMasterData() {
+    this.selectedMasterDetail$.subscribe((value: any) => this.selectedMasterData = value);
+  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -637,5 +646,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
   submit(data: any) {
     this.submitGeneralRequestsEvent.emit(data);
+  }
+  searchClinicClicked(event: any){
+    this.searchClinicVendorClicked.emit(event);
+  }
+  updateMasterDetailsClicked(event:any){
+    this.updateMasterDetailsClickedEvent.emit(event);
   }
 }

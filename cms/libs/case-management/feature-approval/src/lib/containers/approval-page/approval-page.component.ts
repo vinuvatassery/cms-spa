@@ -12,8 +12,6 @@ import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import {
   ApprovalFacade,
-  ContactFacade,
-  FinancialVendorFacade,
   PendingApprovalGeneralFacade,
   PendingApprovalGeneralTypeCode,
   PendingApprovalPaymentFacade,
@@ -35,7 +33,7 @@ import {
   UserLevel
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -103,10 +101,8 @@ export class ApprovalPageComponent implements OnInit {
   selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
   clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
   ddlStates$ = this.contactFacade.ddlStates$;
-  healthCareForm!: FormGroup;  clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
-  ddlStates$ = this.contactFacade.ddlStates$;
-  healthCareForm: FormGroup
-
+  healthCareForm!: FormGroup;  
+  clinicVendorLoader$ = this.financialVendorFacade.clinicVendorLoader$;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -143,6 +139,7 @@ export class ApprovalPageComponent implements OnInit {
       }
       this.cd.detectChanges();
     });
+    this.contactFacade.loadDdlStates();
   }
 
   loadApprovalsGeneralGrid(event: any): void {
@@ -292,12 +289,12 @@ export class ApprovalPageComponent implements OnInit {
   }
   buildVendorForm() {
   let form = this.formBuilder.group({
-      clinicName: [''],
-      providerFirstName: [''],
-      providerLastName: [],
+      providerName: [''],
+      firstName: [''],
+      lastName: [],
       tinNumber: [''],
       phoneNumber: [''],
-      email:[''],
+      email:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)],
       fax:[''],
       addressLine1: [''],
       addressLine2: [''],
@@ -308,7 +305,7 @@ export class ApprovalPageComponent implements OnInit {
       contactLastName: [''],
       contactPhone:[''],
       contactFax:[''],
-      contactEmail:['']
+      contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
     });
     this.healthCareForm = form;
   }
@@ -318,5 +315,10 @@ export class ApprovalPageComponent implements OnInit {
       this.buildVendorForm();
     }
   }
-
+  searchClinicVendorClicked(clientName: any) {
+    this.financialVendorFacade.searchClinicVendor(clientName);
+  }
+  updateMasterDetailsClicked(event: any){
+  
+  }
 }
