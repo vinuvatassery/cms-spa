@@ -263,7 +263,7 @@ emailscount:number=0;
     const query = {
       queryParams: {
         v_id: this.vendorProfile.vendorId,
-        tab_code : "ins_vend"
+        tab_code : FinancialVendorProviderTabCode.InsuranceVendors
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)

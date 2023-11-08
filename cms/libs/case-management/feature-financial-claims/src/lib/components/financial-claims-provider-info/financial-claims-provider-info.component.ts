@@ -260,7 +260,7 @@ export class FinancialClaimsProviderInfoComponent {
     const query = {
       queryParams: {
         v_id: this.vendorProfile.vendorId,
-        tab_code:"med_prv"
+        tab_code: FinancialVendorProviderTabCode.MedicalProvider
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)
