@@ -744,7 +744,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           currentPage.sendBackNotesInValidMsg = '';
           currentPage.sendBackButtonDisabled = true;
           currentPage.sendBackNotes = '';
-          this.assignRowDataToMainList(currentPage);
+          this.sendBackNotesChange(currentPage);
         }
       );
 
@@ -755,7 +755,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           currentPage.sendBackNotesInValidMsg = '';
           currentPage.sendBackNotes = '';
           currentPage.sendBackButtonDisabled = true;
-          this.assignRowDataToMainList(currentPage);
+          this.sendBackNotesChange(currentPage);
         }
       );
     }
@@ -1093,7 +1093,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
   resetApprovalPaymentListGrid(){
     this.sortValue = 'batchName';
-    this.sortType = 'asc';
+    this.sortType = 'desc';
     this.setGridValueAndData();
     this.sortColumn = 'batchName';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
