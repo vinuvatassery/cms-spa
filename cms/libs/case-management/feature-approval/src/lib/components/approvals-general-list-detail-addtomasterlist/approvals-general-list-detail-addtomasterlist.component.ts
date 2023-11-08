@@ -21,7 +21,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   @Input() approvalId: any;
   @Output() openEditModal = new EventEmitter<any>();
   @Input() subTypeCode: any;
-  @Input() selectedVendor$!: Observable<any>;
+  @Input() selectedMasterDetail$!: Observable<any>;
   ifApproveOrDeny: any;
   isPanelExpanded = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -29,16 +29,12 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   readonly approveOrDenyConst = GeneralApprovalApproveDeny;
   vendorData: any;
   ngOnInit(): void {
-    this.getVendorData();
+    this.getMasterDetailData();
   }
 
-  private getVendorData() {
-    this.selectedVendor$.subscribe((value: any) => {
-      if (this.subTypeCode === PendingApprovalGeneralTypeCode.Drug) {
-        this.vendorData = value.items[0];
-      } else {
+  private getMasterDetailData() {
+    this.selectedMasterDetail$.subscribe((value: any) => {
         this.vendorData = value;
-      }
     });
   }
 

@@ -94,8 +94,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedIndex: any;
   @ViewChild('editListItemDialogModal') editModalTemplate!: TemplateRef<any>;
   @Input() usersByRole$: any;
-  @Output() getVendorDetailEvent = new EventEmitter<any>();
-  @Input() selectedVendor$: any;
+  @Output() getMasterDetailsEvent = new EventEmitter<any>();
+  @Input() selectedMasterDetail$: any;
   selectedSubtypeCode: any;
 
   /** Constructor **/
@@ -246,7 +246,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         subTypeCode: item.subTypeCode,
       };
       this.selectedSubtypeCode = item.subTypeCode;
-      this.getVendorDetailEvent.emit(userObject);
+      this.getMasterDetailsEvent.emit(userObject);    
       this.isPanelExpanded = true;
       this.cd.detectChanges();
     }
@@ -312,6 +312,10 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         return 'Request to add Insurance Providers To Master List';
       case PendingApprovalGeneralTypeCode.Pharmacy:
         return 'Request to add Pharmacies To Master List';
+      case PendingApprovalGeneralTypeCode.Drug:
+        return 'Request to add Drugs To Master List';
+      case PendingApprovalGeneralTypeCode.InsurancePlan:
+        return 'Request to add Insurance Plans To Master List';
     }
     return null;
   }
