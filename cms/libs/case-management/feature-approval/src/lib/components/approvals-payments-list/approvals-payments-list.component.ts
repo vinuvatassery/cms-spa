@@ -711,7 +711,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   onOpenSubmitApprovalPaymentItemsClicked() {
-    debugger;
     this.validateApprovalsPaymentsGridRecord();
     const atleastOnePaymentInValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.atleastOnePaymentInValid);
     const atleastOnePaymentCount = atleastOnePaymentInValid.length;
@@ -760,7 +759,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           currentPage.atleastOnePaymentInValidMsg=null;
           currentPage.atleastOnePaymentInValid = false;
           currentPage.paymentRequestIds=[];
-          this.assignRowDataToMainList(currentPage);
           this.sendBackNotesChange(currentPage);
         }
       );
@@ -775,16 +773,10 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           currentPage.atleastOnePaymentInValidMsg=null;
           currentPage.atleastOnePaymentInValid = false;
           currentPage.paymentRequestIds=[];
-          this.assignRowDataToMainList(currentPage);
           this.sendBackNotesChange(currentPage);
         }
       );
     }
-    
-    
-    this.approveAndSendbackCount();
-    this.enableSubmitButtonMain();  
-    
     this.approveAndSendbackCount();
     this.enableSubmitButtonMain();
   }
