@@ -107,7 +107,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   approverCount = 0;
   sendBackCount = 0;
   batchDetailModalSourceList: any;
-  modelOpenMode:string="";
+  isSendbackMode:boolean=false;
   gridApprovalPaymentsDataSubject = new Subject<any>();
   gridApprovalPaymentsBatchData$ =
     this.gridApprovalPaymentsDataSubject.asObservable();
@@ -260,8 +260,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.isSubmitApprovalPaymentItems = false;
   }
 
-  onOpenViewPaymentsBatchClicked(data?: any,mode?:any) {
-    this.modelOpenMode=mode;
+  onOpenViewPaymentsBatchClicked(data?: any,isSendbackMode?:any) {
+    this.isSendbackMode=isSendbackMode;
     this.isViewPaymentsBatchDialog = true;
     this.selectedApprovalId = data?.approvalId;
     this.batchDetailModalSourceList =
@@ -541,7 +541,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.batchStatus = this.sendbackStatus;
       dataItem.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       dataItem.sendBackNotesInValid = true;
-      this.onOpenViewPaymentsBatchClicked(dataItem,'R');
+      this.onOpenViewPaymentsBatchClicked(dataItem,true);
     } else if (dataItem.batchStatus == this.sendbackStatus) {
       dataItem.batchStatus = '';
       dataItem.sendBackNotesInValidMsg = '';
@@ -553,7 +553,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       dataItem.sendBackNotesInValid = true;
       dataItem.sendBackButtonDisabled = false;
-      this.onOpenViewPaymentsBatchClicked(dataItem,'R');
+      this.onOpenViewPaymentsBatchClicked(dataItem,true);
     }
 
     this.sendBackNotesChange(dataItem);
@@ -761,6 +761,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           currentPage.atleastOnePaymentInValid = false;
           currentPage.paymentRequestIds=[];
           this.assignRowDataToMainList(currentPage);
+          this.sendBackNotesChange(currentPage);
         }
       );
 
@@ -775,9 +776,15 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           currentPage.atleastOnePaymentInValid = false;
           currentPage.paymentRequestIds=[];
           this.assignRowDataToMainList(currentPage);
+          this.sendBackNotesChange(currentPage);
         }
       );
     }
+    
+    
+    this.approveAndSendbackCount();
+    this.enableSubmitButtonMain();  
+    
     this.approveAndSendbackCount();
     this.enableSubmitButtonMain();
   }

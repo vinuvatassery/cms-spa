@@ -84,7 +84,7 @@
     <kendo-grid-column [sortable]="false" field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="View Pmts In Batch" title="View" kendoButton look="flat" class="card-link-button"
-          (click)="onOpenViewPaymentsBatchClicked(dataItem,'V')">
+          (click)="onOpenViewPaymentsBatchClicked(dataItem,false)">
           <span class="material-icons"> plagiarism </span>
         </button>
       </ng-template>
@@ -317,7 +317,7 @@
 </div>
 
 <kendo-dialog *ngIf="isSubmitApprovalPaymentItems" (close)="onCloseSubmitApprovalPaymentItemsClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Submit item(s)?" kendoTooltip>
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Submit Item(s)?" kendoTooltip>
   <section class="k-dialog-body newcase">
     <p class="mb-2">
       {{
