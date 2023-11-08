@@ -161,6 +161,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   paymentMethodLov$ = this.lovFacade.paymentMethodType$;
   paymentStatusLovSubscription!: Subscription;
   paymentMethodLovSubscription!: Subscription;
+  isWarningDialogShow: boolean=false;
   /** Constructor **/
   constructor(
     private route: Router,
@@ -543,11 +544,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.sendBackNotesInValid = true;
       this.onOpenViewPaymentsBatchClicked(dataItem,true);
     } else if (dataItem.batchStatus == this.sendbackStatus) {
-      dataItem.batchStatus = '';
-      dataItem.sendBackNotesInValidMsg = '';
-      dataItem.sendBackNotes = '';
-      dataItem.sendBackNotesInValid = false;
-      dataItem.sendBackButtonDisabled = true;
+      this.onOpenSendbackDeselectingWarningDialogClicked(dataItem);
     } else {
       dataItem.batchStatus = this.sendbackStatus;
       dataItem.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
@@ -1122,5 +1119,35 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+  }
+
+  onOpenSendbackDeselectingWarningDialogClicked(data?: any) {
+    this.isWarningDialogShow = true;
+    this.dataItem=data;
+  }
+  dataItem:any;
+  onSendbackDeselectingWarningDialogCancelClicked()
+  {
+    this.isWarningDialogShow=false;
+    this.dataItem.batchStatus =this.sendbackStatus;
+    this.sendBackNotesChange(this.dataItem);
+    this.approveAndSendbackCount();
+    this.enableSubmitButtonMain(); 
+  }
+
+  onSendbackDeselectingWarningDialogYesClicked()
+  {
+    this.isWarningDialogShow=false;
+    this.dataItem.batchStatus = '';
+    this.dataItem.sendBackNotesInValidMsg = '';
+    this.dataItem.sendBackNotes = '';
+    this.dataItem.sendBackNotesInValid = false;
+    this.dataItem.sendBackButtonDisabled = true;
+    this.dataItem.atleastOnePaymentInValidMsg = '';
+    this.dataItem.atleastOnePaymentInValid = false;
+    this.dataItem.paymentRequestIds = [];
+    this.sendBackNotesChange(this.dataItem);
+    this.approveAndSendbackCount();
+    this.enableSubmitButtonMain(); 
   }
 }
