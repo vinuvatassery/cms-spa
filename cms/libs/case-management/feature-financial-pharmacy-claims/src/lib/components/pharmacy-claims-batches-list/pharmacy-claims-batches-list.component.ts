@@ -58,7 +58,8 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
     totalClaims: '# of Claims',
     totalReconciled: '# of Pmts Reconciled',
     totalAmountPaid: 'Total Amt. Paid',
-    totalAmountReconciled: 'Total Amt. Reconciled'
+    totalAmountReconciled: 'Total Amt. Reconciled',
+    creationTime: 'Creation Time'
   };
 
   searchColumnList: { columnName: string; columnDesc: string }[] = [
@@ -98,13 +99,12 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
 
   //searching
   private searchSubject = new Subject<string>();
-  selectedSearchColumn: null | string = 'ALL';
+  selectedSearchColumn = 'ALL';
   searchText: null | string = null;
 
   //sorting
-  sortColumn = 'batchName';
-  sortColumnDesc = 'Batch #';
-  sortDir = 'Ascending';
+  sortColumnDesc = 'Creation Time';
+  sortDir = 'Descending';
 
   //filtering
   filteredBy = '';
@@ -129,6 +129,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
   }
 
   ngOnChanges(): void {
+    this.sortType = 'desc';
     this.initializePharmacyBatchGrid();
     this.loadPharmacyBatchListGrid();
   }
@@ -209,16 +210,15 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
   }
 
   restGrid() {
-    this.sortValue = 'batchName';
-    this.sortType = 'asc';
+    this.sortValue = 'creationTime';
+    this.sortColumnDesc = 'Creation Time';
+    this.sortType = 'desc';
     this.initializePharmacyBatchGrid();
-    this.sortColumn = 'batchName';
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.filter = [];
     this.searchText = '';
     this.selectedSearchColumn = 'ALL';
     this.filteredByColumnDesc = '';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
     this.showDateSearchWarning = false;
     this.showNumberSearchWarning = false;
@@ -292,7 +292,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'batchName', dir: 'asc' }],
+      sort: [{ field: 'ALL', dir: 'desc' }],
     };
   }
 

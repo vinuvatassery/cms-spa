@@ -49,6 +49,7 @@ export class FinancialPremiumsBatchesListComponent
   columnDropList$ = this.columnDropListSubject.asObservable();
 
   gridColumns: any = {
+    ALL: 'All Columns',
     batchName: 'Batch #',
     sendBackNotes: 'Send Back Notes',
     unbatchedPayments: 'Unbatched Payments',
@@ -56,10 +57,12 @@ export class FinancialPremiumsBatchesListComponent
     paymentsRequested: '# of Payments Requested',
     paymentsReconciled: '# of Payments Reconciled',
     totalAdjustmentsAmount: 'Total Amount of Adjustments',
-    totalPaymentsAmount: 'Total Amount of Payments'
+    totalPaymentsAmount: 'Total Amount of Payments',
+    creationTime: 'Creation Time'
   };
 
   searchColumnList: { columnName: string; columnDesc: string }[] = [
+    { columnName: 'ALL', columnDesc: 'All Columns' },
     {
       columnName: 'batchName',
       columnDesc: 'Batch #',
@@ -99,13 +102,12 @@ export class FinancialPremiumsBatchesListComponent
 
   //searching
   private searchSubject = new Subject<string>();
-  selectedSearchColumn: null | string = null;
+  selectedSearchColumn: null | string = 'ALL';
   searchText: null | string = null;
 
   //sorting
-  sortColumn = 'batchName';
-  sortColumnDesc = 'Batch #';
-  sortDir = 'Ascending';
+  sortColumnDesc = 'Creation Time';
+  sortDir = 'Descending';
 
   //filtering
   filteredBy = '';
@@ -130,6 +132,7 @@ export class FinancialPremiumsBatchesListComponent
     this.initializePremiumsBatchPage()
   }
   ngOnChanges(): void {
+    this.sortType = 'desc';
     this.initializePremiumsBatchGrid();
     this.loadFinancialPremiumsBatchListGrid();
   }
@@ -185,7 +188,7 @@ export class FinancialPremiumsBatchesListComponent
         {
           filters: [
             {
-              field: this.selectedSearchColumn ?? 'batchName',
+              field: this.selectedSearchColumn ?? 'ALL',
               operator: operator,
               value: data,
             },
@@ -200,17 +203,15 @@ export class FinancialPremiumsBatchesListComponent
   }
 
   restGrid() {
-    this.sortValue = 'batchName';
-    this.sortType = 'asc';
+    this.sortColumnDesc = 'Creation Time';
+    this.sortValue = 'creationTime';
+    this.sortType = 'desc';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.initializePremiumsBatchGrid();
-    this.sortColumn = 'batchName';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.filter = [];
     this.searchText = '';
-    this.selectedSearchColumn = null;
+    this.selectedSearchColumn = 'ALL';
     this.filteredByColumnDesc = '';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
     this.showDateSearchWarning = false;
     this.showNumberSearchWarning = false;
@@ -284,7 +285,7 @@ export class FinancialPremiumsBatchesListComponent
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'batchName', dir: 'asc' }],
+      sort: [{ field: 'ALL', dir: 'desc' }],
     };
   }
 

@@ -35,7 +35,7 @@ export class FinancialPharmacyClaimsFacade {
     field: this.sortValuePharmacyClaimsProcess,
   }];
 
-  public sortValuePharmacyClaimsBatch = 'batchName';
+  public sortValuePharmacyClaimsBatch = 'creationTime';
   public sortBatchList: SortDescriptor[] = [
     {
       field: this.sortValuePharmacyClaimsBatch,
