@@ -24,6 +24,8 @@ import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DrugsDataService } from '../../../../../domain/src/lib/infrastructure/financial-management/drugs.data.service';
 import { DrugDataService } from '../../../../../domain/src/lib/infrastructure/drug.data.service';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-refund-all-payment-list',
   templateUrl: './refund-all-payment-list.component.html',
@@ -77,6 +79,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
   /** Constructor **/
   constructor(
+    private readonly configProvider: ConfigurationProvider,
+    private readonly intl: IntlService,
     private readonly tempService: DrugsDataService,
     private route: Router,
     private dialogService: DialogService,
@@ -340,7 +344,98 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     },
   ];
 
+  searchText: null | string = null;
+  showDateSearchWarning = false;
+  showNumberSearchWarning = false;
+  dateColumns: any[] = ['depositDate', 'entryDate'];
+  selectedSearchColumn: null | string = null;
+
+  private isValidDate = (searchValue: any) =>
+  isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 
 
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configProvider?.appSettings?.dateFormat
+        );
+      } else {
+        return '';
+      }
+    }
+
+    return searchValue;
+  }
+
+  onSearch(searchValue: any) {
+    // const isDateSearch = searchValue.includes('/');
+    // this.showDateSearchWarning =
+    //   isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
+    // searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    // if (isDateSearch && !searchValue) return;
+    //this.setFilterBy(false, searchValue, []);
+    //this.searchSubject.next(searchValue);
+  }
+
+  searchColumnList: { columnName: string; columnDesc: string }[] = [
+    {
+      columnName: 'dateReceived',
+      columnDesc: 'Date Received',
+    },
+    {
+      columnName: 'vendor',
+      columnDesc: 'Vendor',
+    },
+    {
+      columnName: 'clientID',
+      columnDesc: 'Client ID',
+    },
+    {
+      columnName: 'refundType',
+      columnDesc: 'Refund Type',
+    },
+    {
+      columnName: 'refundWarrantNumber',
+      columnDesc: 'Refund Warrant Number',
+    },
+    {
+      columnName: 'refundAmount',
+      columnDesc: 'Refund Amount',
+    },
+    {
+      columnName: 'depositDate',
+      columnDesc: 'Deposit Date',
+    },
+    {
+      columnName: 'vpSuffix',
+      columnDesc: 'Vp Suffix',
+    },
+    {
+      columnName: 'creditSuffix',
+      columnDesc: 'Credit Suffix',
+    },
+    {
+      columnName: 'addedField',
+      columnDesc: 'Added Field',
+    },
+    {
+      columnName: 'grantNumber',
+      columnDesc: 'Grant #',
+    },
+    {
+      columnName: 'refundNote',
+      columnDesc: 'Refund Note',
+    },
+    {
+      columnName: 'entryDate',
+      columnDesc: 'Entry Date',
+    },
+    {
+      columnName: 'enteredBy',
+      columnDesc: 'Entered By',
+    },
+  ];
 
 }
