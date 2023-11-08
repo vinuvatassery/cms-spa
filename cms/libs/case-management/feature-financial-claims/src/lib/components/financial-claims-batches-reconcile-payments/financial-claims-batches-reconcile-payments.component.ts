@@ -678,9 +678,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.assignRowDataToMainList(dataItem);
     }
     if(this.selectedReconcileDataRows !== null && this.selectedReconcileDataRows?.length > 0){
-    this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
-    }
+      this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
+      }
     this.isRecordForPrint =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.isPrintAdviceLetter).length;
+    this.cd.detectChanges();
   }
 
   noteChange(dataItem: any) {    
