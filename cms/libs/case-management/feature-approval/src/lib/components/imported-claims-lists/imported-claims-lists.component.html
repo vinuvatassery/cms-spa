@@ -78,7 +78,7 @@
     (filterChange)="filterChange($event)"
     [selectable]="true"
     [isDetailExpanded]="expandInStockProducts"
-    [data]="claimsGridLists"
+    [data]="approvalsImportedClaimsLists$ | async"
     [navigable]="true"
   >
     <kendo-grid-column field="clientName" title="Client Name" [width]="160">
@@ -126,6 +126,9 @@
     >
     </kendo-grid-column>
     <kendo-grid-column field="entryDate" title="Enter Date" [width]="120">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.entryDate | date:'MM/dd/yyyy'}}
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
       [columnMenu]="false"
@@ -157,7 +160,7 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-    <ng-template kendoGridDetailTemplate let-dataItem>
+    <!-- <ng-template kendoGridDetailTemplate let-dataItem>
       <section *ngIf="dataItem.subRow">
         <p
           class="table_sub_row warning_info_row"
@@ -231,7 +234,7 @@
           </button>
         </p>
       </section>
-    </ng-template>
+    </ng-template> -->
     <ng-template
       kendoPagerTemplate
       let-totalPages="totalPages"

@@ -27,7 +27,7 @@ export * from './lib/application/reminder.facade';
 export * from '../../../case-management/domain/src/lib/application/approval/productivity-invoice.facade';
 export * from '../../../case-management/domain/src/lib/application/approval/pending-approval-payment.facade';
 export * from '../../../case-management/domain/src/lib/application/approval/pending-approval-general.facade';
-
+export * from '../../../case-management/domain/src/lib/application/approval/imported-claim.facade';
 /** Enums **/
 export * from '../../../case-management/domain/src/lib/enums/approval-user-status-code.enum';
 export * from '../../../case-management/domain/src/lib/enums/approval-type-code.enum';

@@ -14,6 +14,7 @@ import {
   PendingApprovalGeneralFacade,
   PendingApprovalPaymentFacade,
   UserRoleType,
+  ImportedClaimFacade
 } from '@cms/productivity-tools/domain';
 import {
   ReminderNotificationSnackbarService,
@@ -54,9 +55,9 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
   sortValueApprovalPaymentsApproval =
     this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
-  sortImportedClaimsList = this.approvalFacade.sortImportedClaimsList;
+  sortImportedClaimsList = this.importedClaimFacade.sortImportedClaimsList;
   sortValueImportedClaimsAPproval =
-    this.approvalFacade.sortValueImportedClaimsAPproval;
+    this.importedClaimFacade.sortValueImportedClaimsAPproval;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
   pendingApprovalPaymentsCount$ =
     this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
@@ -67,7 +68,7 @@ export class ApprovalPageComponent implements OnInit {
   approvalsGeneralLists$ =
     this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ =
-    this.approvalFacade.approvalsImportedClaimsLists$;
+    this.importedClaimFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
   approvalsPaymentsLists$ =
     this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
@@ -106,6 +107,7 @@ export class ApprovalPageComponent implements OnInit {
     private documentFacade: DocumentFacade,
     private readonly userDataService: UserDataService,
     private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
+    private readonly importedClaimFacade: ImportedClaimFacade,
     private dialogService: DialogService
   ) {}
   ngOnInit(): void {
@@ -154,7 +156,7 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   loadImportedClaimsGrid(event: any): void {
-    this.approvalFacade.loadImportedClaimsLists();
+    this.importedClaimFacade.loadImportedClaimsLists(event);
   }
   notificationTriger() {
     this.approvalFacade.NotifyShowHideSnackBar(

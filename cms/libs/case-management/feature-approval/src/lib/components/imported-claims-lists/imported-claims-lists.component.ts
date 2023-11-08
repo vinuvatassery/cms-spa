@@ -26,7 +26,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isImportedClaimsGridLoaderShow = false;
+  isImportedClaimsGridLoaderShow = true;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -34,7 +34,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   @Input() approvalsImportedClaimsLists$: any;
   @Output() loadImportedClaimsGridEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'clientName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -58,7 +58,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   claimsGridLists = [
     {
       id: 1,
-      clientName: 'Attention',
+      clientName: 'Attention data change',
       namePrimaryInsuranceCard: 'Attention',
       claimSource: 'Attention',
       policyID: 'xxxx',
@@ -153,6 +153,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   private loadImportedClaimsListGrid(): void {
+    debugger;
     this.loadImportedClaims(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -167,10 +168,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     sortTypeValue: string
   ) {
     this.isImportedClaimsGridLoaderShow = true;
-    const gridDataRefinerValue = {
+    const gridDataRefinerValue = { 
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
+      pageSize: maxResultCountValue,
+      sort: sortValue,
       sortType: sortTypeValue,
     };
     this.loadImportedClaimsGridEvent.emit(gridDataRefinerValue);
@@ -234,6 +235,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
+    debugger;
     this.approvalsImportedClaimsLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
@@ -243,9 +245,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       this.gridImportedClaimsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isImportedClaimsGridLoaderShow = false;
+      } else {
+        this.isImportedClaimsGridLoaderShow = false;
       }
-    });
-    this.isImportedClaimsGridLoaderShow = false;
+    }); 
   }
 
   onSearchClientsDialogClicked(template: TemplateRef<unknown>): void {
