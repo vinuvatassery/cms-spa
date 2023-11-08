@@ -295,7 +295,7 @@
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-        aria-hidden="false" (click)="dataItem.click(dataItem)">
+        aria-hidden="false" (click)="dataItem.click(dataItem)" [disabled]="setDisablePropertyOfBulkMore(dataItem)">
         <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
