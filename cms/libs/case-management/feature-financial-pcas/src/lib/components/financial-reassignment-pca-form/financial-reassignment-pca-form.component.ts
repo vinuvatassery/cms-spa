@@ -1,7 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { PcaAssignmentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { IntlService } from '@progress/kendo-angular-intl';
 
@@ -47,7 +46,6 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
 
   constructor(  
     private formBuilder: FormBuilder,
-    private readonly pcaAssignmentsFacade : PcaAssignmentsFacade,
     public intl: IntlService,private datePipe: DatePipe
   ) {}  
   ngOnInit(): void {  
