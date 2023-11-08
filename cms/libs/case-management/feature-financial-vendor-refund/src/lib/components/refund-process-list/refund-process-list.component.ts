@@ -35,6 +35,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   private batchConfirmRefundDialog: any;
   private addEditRefundFormDialog: any;
   isDeleteBatchClosed = false;
+  isDataAvailable=false;
   isProcessBatchClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isVendorRefundProcessGridLoaderShow = false;
@@ -132,7 +133,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       text: 'BATCH REFUNDS',
       icon: 'check',
       click: (data: any): void => {
-        if (!this.isProcessBatchClosed) {
+        if (!this.isProcessBatchClosed && this.isDataAvailable) {
           this.isProcessBatchClosed = true;
           this.onBatchRefundClicked(this.batchRefundConfirmationDialog, data);
         }
@@ -144,7 +145,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       text: 'DELETE REFUNDS',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteBatchClosed) {
+        if (!this.isDeleteBatchClosed && this.isDataAvailable) {
           this.isDeleteBatchClosed = true;
           this.onDeleteRefundOpenClicked(
             this.deleteRefundConfirmationDialog,
@@ -326,6 +327,10 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       this.gridVendorsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isVendorRefundProcessGridLoaderShow = false;
+      }
+      if(data?.total<1)
+      {
+        this.isDataAvailable=false;
       }
     });
   }

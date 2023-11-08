@@ -239,7 +239,6 @@
   <button kendoButton kendoButton class="k-error-button " aria-label="Delete"> Delete </button>
   <button kendoButton [primary]="true" aria-label="Batch" class=""> Batch </button>
   <kendo-splitbutton [data]="refundProcessMore" class="app-c-split-button app-dropdown-action"
-    buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
     <div class="btn-inner-block" (click)="onClickOpenAddEditRefundFromModal(addEditRefundDialog)">
       <span class="material-icons" aria-label="New Refund" aria-hidden="false">add</span>
@@ -247,7 +246,7 @@
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-        aria-hidden="false" (click)="dataItem.click(dataItem)">
+        aria-hidden="false" (click)="!isDataAvailable ? null: dataItem.click(dataItem)" [disabled]="!isDataAvailable" >
         <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
