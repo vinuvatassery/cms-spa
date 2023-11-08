@@ -425,7 +425,7 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumssType}/batches/print-advice-letter`,templateParams);
   }
 
-  CheckWarrantNumber(batchId:any, warrantNumber:any, vendorId:any){
+  checkWarrantNumber(batchId:any, warrantNumber:any, vendorId:any){
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
   }
 }

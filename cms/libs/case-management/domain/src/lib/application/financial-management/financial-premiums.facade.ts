@@ -646,9 +646,9 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
       return this.financialPremiumsDataService.removeSelectedPremiums(selectedPremiumPayments, premiumsType);
     }
 
-    CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    checkWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
       this.warrantNumberChangeLoaderSubject.next(true);
-      this.financialPremiumsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+      this.financialPremiumsDataService.checkWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
         next: (dataResponse:any) => {       
           this.warrantNumberChangeSubject.next(dataResponse);
           this.warrantNumberChangeLoaderSubject.next(false);
