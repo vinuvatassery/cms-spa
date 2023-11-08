@@ -27,7 +27,7 @@ export class FinancialPremiumsFacade {
     field: this.sortValueFinancialPremiumsProcess,
   }];
 
-  public sortValueFinancialPremiumsBatch = 'batchName';
+  public sortValueFinancialPremiumsBatch = 'creationTime';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsBatch,
   }];
@@ -282,7 +282,7 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadPremiumServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {  
+  loadPremiumServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {
     this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )
     .subscribe({
       next: (dataResponse : any) => {
@@ -300,8 +300,8 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadPremiumSubListServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {  
-    return this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )   
+  loadPremiumSubListServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {
+    return this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )
   }
 
   loadBatchItemsListGrid(batchId: any, paymentId: any, premiumType: string, params: GridFilterParam){
