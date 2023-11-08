@@ -259,7 +259,8 @@ export class FinancialClaimsProviderInfoComponent {
   onVendorProfileViewClicked() {
     const query = {
       queryParams: {
-        v_id: this.vendorProfile.vendorId
+        v_id: this.vendorProfile.vendorId,
+        tab_code:"med_prv"
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)
