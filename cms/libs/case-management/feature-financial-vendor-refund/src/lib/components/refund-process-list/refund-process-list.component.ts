@@ -35,7 +35,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   private batchConfirmRefundDialog: any;
   private addEditRefundFormDialog: any;
   isDeleteBatchClosed = false;
-  isDataAvailable=false;
+  isDataAvailable=true;
   isProcessBatchClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isVendorRefundProcessGridLoaderShow = false;
@@ -47,20 +47,21 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   isColumnsReordered = false;
   columnChangeDesc = 'Default Columns';
   filteredByColumnDesc = '';
-  sortColumnDesc = 'Provider Name';
+  sortColumnDesc = 'Vendor Name';
   searchText = '';
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'Provider Name';
+  sortColumn = 'Vendor Name';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn='vendorFullName';
+  selectedColumn='VendorName';
   gridDataResult!: GridDataResult;
   showExportLoader = false;
+  isBatchSelected=false;
   gridVendorsProcessDataSubject = new Subject<any>();
   gridVendorsProcessData$ = this.gridVendorsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -69,63 +70,64 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
 
   gridColumns: { [key: string]: string }  = {
     ALL: 'All Columns',
-    vendorFullName: "Provider Name",
-    paymentStatusCode: "Payment Status",
+    VendorName: "Vendor Name",
   };
 
   columns: any = {
-    vendorFullName: 'Provider Name',
-    paymentMethodCode: 'Type' ,
+    VendorName: 'Vendor Name',
+    type: 'Type' ,
     clientFullName: 'Client Name',
-    insuranceName: 'Refund Warrant #"',
-    serviceCount: 'Index Code',
-    annualTotal: 'Grant #',
-    balanceAmount: 'Client Balance',
-    amountDue: 'PCA',
-    paymentStatusCode: 'Payment Status',
+    refundWarrentnbr: 'Refund Warrant #',
+    refundAmount:'Refund Amount',
+    indexCode: 'Index Code',
+    pcaCode:'PCA',
+    vp:'VP',
+    refunfNotes:'Refund Note',
+  
+    
   };
 
   dropDowncolumns: any = [
    
     {
-      columnCode: 'vendorFullName',
-      columnDesc: 'Provider Name',
+      columnCode: 'VendorName',
+      columnDesc: 'Vendor Name',
     },
    
-    {
-      columnCode: 'paymentMethodCode',
-      columnDesc: 'Type',
-    },
     {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
     },
     {
-      columnCode: 'insuranceName',
-      columnDesc: 'Refund Warrant #"',
+      columnCode: 'refundWarrentnbr',
+      columnDesc: 'Refund Warrant #',
+    },
+    {
+      columnCode: 'refundAmount',
+      columnDesc: 'Refund Amount"',
     },
   
     {
-      columnCode: 'serviceCount',
+      columnCode: 'indexCode',
       columnDesc: 'Index Code',
     },
+   
     {
-      columnCode: 'annualTotal',
-      columnDesc: 'Grant #',
-    },
-    {
-      columnCode: 'balanceAmount',
-      columnDesc: 'Client Balance',
-    },
-    {
-      columnCode: 'amountDue',
+      columnCode: 'pcaCode',
       columnDesc: 'PCA',
     },
+  
     {
-      columnCode: 'paymentStatusCode',
-      columnDesc: 'Payment Status',
+      columnCode: 'vp',
+      columnDesc: 'VP',
+    },
+ 
+    {
+      columnCode: 'refunfNotes',
+      columnDesc: 'Refund Note',
     },
   ]
+  
 
   public refundProcessMore = [
     {
@@ -246,10 +248,9 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.defaultGridState();
     let operator = 'startswith';
     if (
-      this.selectedColumn === 'serviceCount' ||
-      this.selectedColumn === 'annualTotal' ||
-      this.selectedColumn === 'amountDue' ||
-      this.selectedColumn === 'balanceAmount'
+      this.selectedColumn === 'refundAmount' ||
+      this.selectedColumn === 'refundWarrentnbr' ||
+      this.selectedColumn === 'indexCode' 
     ) {
       operator = 'eq';
     }
@@ -260,7 +261,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorFullName',
+              field: this.selectedColumn ?? 'VendorName',
               operator: operator,
               value: data,
             },
@@ -328,7 +329,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       if (data?.total >= 0 || data?.total === -1) {
         this.isVendorRefundProcessGridLoaderShow = false;
       }
-      if(data?.total<1)
+      if(data?.total < 1)
       {
         this.isDataAvailable=false;
       }
@@ -341,13 +342,13 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    this.sortColumn = 'Invoice ID';
+    this.sortColumn = 'Vendor Name';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'invoiceNbr';
+    this.selectedColumn = 'VendorName',
     this.isFiltered = false;
     this.columnsReordered = false;
-    this.sortValue = 'invoiceNbr';
+    this.sortValue = 'VendorName';
     this.sortType = 'asc';
     this.sort = this.sortColumn;
     this.searchValue =''

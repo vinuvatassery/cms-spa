@@ -539,14 +539,14 @@ export class FinancialVendorRefundDataService {
   loadFinancialRefundProcessListService(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string) {
     const RefundPageAndSortedRequestDto =
     {
-      SortType : sortType,
-      Sorting : sort,
-      SkipCount : skipcount,
-      MaxResultCount : maxResultCount,
+      sortType : sortType,
+      sorting : sort,
+      skipCount : skipcount,
+      maxResultCount : maxResultCount,
       Filter : filter
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/refund/list`,
       RefundPageAndSortedRequestDto
     );
   }
