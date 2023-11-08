@@ -165,7 +165,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   generateAndPrintAdviceLetter(request:any) {
     this.loaderService.show();
-    this.financialClaimsFacade.viewAdviceLetterData(this.batchId,request,this.claimsType)
+    this.financialClaimsFacade.viewAdviceLetterData(request,this.claimsType)
       .subscribe({
         next: (data: any) => {
           if (data) {
