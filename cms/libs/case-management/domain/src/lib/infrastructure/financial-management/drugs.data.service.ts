@@ -30,4 +30,9 @@ export class DrugsDataService {
     );
   }
 
+  loadTempRefundList() : Observable<any> {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/refund/history`   );
+  }
+
 }

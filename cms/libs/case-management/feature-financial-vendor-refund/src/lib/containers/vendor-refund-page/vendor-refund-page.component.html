@@ -39,6 +39,8 @@
                         <ng-template kendoTabContent>
                             <div class="block-section ">
                                 <cms-refund-all-payment-list 
+                                [exportButtonShow$]="exportButtonShow$"
+                                (exportGridDataEvent)="exportClaimsPaymentsGridData($event)"
                                 [vendorRefundAllPaymentsGridLists$]="vendorRefundAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList" 

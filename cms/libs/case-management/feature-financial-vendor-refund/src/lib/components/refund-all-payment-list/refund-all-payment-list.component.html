@@ -35,18 +35,19 @@
 
 <!-- Case List table -->
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [data]="vendorRefundAllPaymentsGridData" [loading]="isVendorRefundAllPaymentsGridLoaderShow" [pageSize]="state.take"
-    [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
-    (filterChange)="filterChange($event)" [selectable]="true"
-    (selectedKeysChange)="selectedKeysChange($event)">
+  <kendo-grid [resizable]="true" [data]="dataListApi" kendoGridSelectBy="refundAmount"
+    [loading]="isVendorRefundAllPaymentsGridLoaderShow" [pageSize]="state.take" [pageable]="true" [sortable]="true"
+    [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
+    [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
+    [selectable]="true" [(selectedKeys)]="selectedPayments">
+
     <kendo-grid-checkbox-column *ngIf="isProcessGridExpand" [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"></kendo-grid-checkbox-column>
 
-    <kendo-grid-column field="batch" title="Batch #" [width]="160">
+    <kendo-grid-column field="dateReceived" title="Date Received" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button [attr.aria-label]="dataItem.batch" kendoButton look="flat" class="card-link-button">
-          {{ dataItem.batch }}
+        <button [attr.aria-label]="dataItem.dateReceived" kendoButton look="flat" class="card-link-button">
+          {{ dataItem.dateReceived }}
         </button>
       </ng-template>
     </kendo-grid-column>
@@ -58,27 +59,25 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="type" title="Type" [width]="180"> </kendo-grid-column>
-    <kendo-grid-column field="primaryInsurance" title="Name on Primary Insurance Card" [width]="160">
+    <kendo-grid-column field="clientID" title="Client ID" [width]="180"> </kendo-grid-column>
+    <kendo-grid-column field="refundType" title="Refund Type" [width]="180"> </kendo-grid-column>
+    <kendo-grid-column field="refundWarrantNumber" title="Refund Warrant Number" [width]="160">
     </kendo-grid-column>
 
-    <kendo-grid-column field="clientName" title="Client Name" [width]="180"> <ng-template kendoGridCellTemplate
+    <kendo-grid-column field="refundAmount" title="Refund Amount" [width]="180"> <ng-template kendoGridCellTemplate
         let-dataItem>
-        <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button">
-          {{ dataItem.clientName }}
+        <button [attr.aria-label]="dataItem.refundAmount" kendoButton look="flat" class="card-link-button">
+          {{ dataItem.refundAmount }}
         </button>
       </ng-template> </kendo-grid-column>
-    <kendo-grid-column field="memberID" title="Member ID" [width]="140"> </kendo-grid-column>
-    <kendo-grid-column field="refundWarrant" title="Refund Warrant #" [width]="180"> </kendo-grid-column>
-    <kendo-grid-column field="refundAmount" title="Refund Amount" [width]="160"> </kendo-grid-column>
-    <kendo-grid-column field="depositDate" title="Deposit Date" [width]="150"> </kendo-grid-column>
-    <kendo-grid-column field="depositMethod" title="Deposit Method" [width]="180"> </kendo-grid-column>
-    <kendo-grid-column field="originalWarranty" title="Original Warranty #" [width]="180"> </kendo-grid-column>
-    <kendo-grid-column field="originalAmount" title="Original Amount" [width]="180"> </kendo-grid-column>
-    <kendo-grid-column field="indexCode" title="Index Code" [width]="150"> </kendo-grid-column>
-    <kendo-grid-column field="pca" title="PCA" [width]="140"> </kendo-grid-column>
-    <kendo-grid-column field="grant" title="Grant #" [width]="140"> </kendo-grid-column>
-    <kendo-grid-column field="vp" title="VP" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="depositDate" title="Deposit Date" [width]="140"> </kendo-grid-column>
+    <kendo-grid-column field="vpSuffix" title="Vp Suffix" [width]="180"> </kendo-grid-column>
+    <kendo-grid-column field="creditSuffix" title="Credit Suffix" [width]="160"> </kendo-grid-column>
+    <kendo-grid-column field="addedField" title="Added Field" [width]="150"> </kendo-grid-column>
+    <kendo-grid-column field="grantNumber" title="Grant #" [width]="180"> </kendo-grid-column>
+    <kendo-grid-column field="refundNote" title="Refund Note" [width]="180"> </kendo-grid-column>
+    <kendo-grid-column field="entryDate" title="Entry Date" [width]="180"> </kendo-grid-column>
+    <kendo-grid-column field="enteredBy" title="Entered By" [width]="150"> </kendo-grid-column>
     <kendo-grid-column field="refundNote" title="Refund Note" [width]="200"> <ng-template kendoGridCellTemplate
         let-dataItem>
         <span class="grid-line-clip"> {{ dataItem.refundNote }}</span>
@@ -160,8 +159,8 @@
   <div [hidden]="hideReceiptingLogActionButtons">
     <span *ngIf="selectedPayments" class="">{{selectedPayments.length}} payment(s) selected</span>
     <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="cancelActions()"> Cancel </button>
-    <button kendoButton [primary]="true" aria-label="Download" icon="download"> Download </button>
-    <button kendoButton [primary]="true" aria-label="Print" icon="print"> Print </button>
+    <button kendoButton [primary]="true" aria-label="Download" icon="download" (click)="onClickedExport()"> Download </button>
+    <button kendoButton [primary]="true" aria-label="Print" icon="print" (click)="onClickedExport()"> Print </button>
   </div>
   <button [hidden]="hideActionButton" kendoButton [primary]="true" aria-label="Receipting Log"
     (click)="receptingLogClicked()"> Receipting Log </button>

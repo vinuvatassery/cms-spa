@@ -1,15 +1,20 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnChanges,
   OnInit,
-  Output,
+  Output
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
+import {
+  SelectableSettings,
+  SelectableMode,
+} from "@progress/kendo-angular-grid";
 import {
   CompositeFilterDescriptor,
   State,
@@ -17,6 +22,8 @@ import {
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { DrugsDataService } from '../../../../../domain/src/lib/infrastructure/financial-management/drugs.data.service';
+import { DrugDataService } from '../../../../../domain/src/lib/infrastructure/drug.data.service';
 @Component({
   selector: 'cms-refund-all-payment-list',
   templateUrl: './refund-all-payment-list.component.html',
@@ -49,7 +56,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
-
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -70,11 +76,21 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
 
   /** Constructor **/
-  constructor(private route: Router,
-    private dialogService: DialogService,) { }
+  constructor(
+    private readonly tempService: DrugsDataService,
+    private route: Router,
+    private dialogService: DialogService,
+    private readonly cdr: ChangeDetectorRef,
+  ) { }
 
+  dataListApi:any;
   ngOnInit(): void {
+    
     this.loadVendorRefundAllPaymentsListGrid();
+    this.tempService.loadTempRefundList().subscribe((data: any) => {
+      // alert(JSON.stringify(data));
+      this.dataListApi = data;
+    })
   }
   ngOnChanges(): void {
     this.state = {
@@ -201,10 +217,21 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.hideReceiptingLogActionButtons = !this.hideReceiptingLogActionButtons;
   }
 
-  selectedKeysChange(selection: any) {
-    this.selectedPayments = selection;
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+  @Input() exportButtonShow$: any;
+
+  showExportLoader = false;
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit(this.vendorRefundAllPaymentsGridData);
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
-  
+
   vendorRefundAllPaymentsGridData = [
     {
       batch: "Batch1",
@@ -248,8 +275,71 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       entryDate: "2023-02-02",
       by: "User2",
     },
-    // Add more data as needed
+    {
+      batch: "Batch3",
+      vendor: "Vendor3",
+      type: "Type3",
+      primaryInsurance: "Insurance3",
+      clientName: "Client3",
+      memberID: "Member3",
+      refundWarrant: "Warrant3",
+      refundAmount: 120,
+      depositDate: "2023-03-01",
+      depositMethod: "Method3",
+      originalWarranty: "Warranty3",
+      originalAmount: 300,
+      indexCode: "Code3",
+      pca: "PCA3",
+      grant: "Grant3",
+      vp: "VP3",
+      refundNote: "Note3",
+      entryDate: "2023-03-02",
+      by: "User3",
+    },
+    {
+      batch: "Batch4",
+      vendor: "Vendor4",
+      type: "Type4",
+      primaryInsurance: "Insurance4",
+      clientName: "Client4",
+      memberID: "Member4",
+      refundWarrant: "Warrant4",
+      refundAmount: 130,
+      depositDate: "2023-04-01",
+      depositMethod: "Method4",
+      originalWarranty: "Warranty4",
+      originalAmount: 400,
+      indexCode: "Code4",
+      pca: "PCA4",
+      grant: "Grant4",
+      vp: "VP4",
+      refundNote: "Note4",
+      entryDate: "2023-04-02",
+      by: "User4",
+    },
+    {
+      batch: "Batch5",
+      vendor: "Vendor5",
+      type: "Type5",
+      primaryInsurance: "Insurance5",
+      clientName: "Client5",
+      memberID: "Member5",
+      refundWarrant: "Warrant5",
+      refundAmount: 140,
+      depositDate: "2023-05-01",
+      depositMethod: "Method5",
+      originalWarranty: "Warranty5",
+      originalAmount: 500,
+      indexCode: "Code5",
+      pca: "PCA5",
+      grant: "Grant5",
+      vp: "VP5",
+      refundNote: "Note5",
+      entryDate: "2023-05-02",
+      by: "User5",
+    },
   ];
+
 
 
 
