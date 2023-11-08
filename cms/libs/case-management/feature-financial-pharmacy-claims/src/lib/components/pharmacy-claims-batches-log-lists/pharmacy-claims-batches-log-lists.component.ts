@@ -9,6 +9,7 @@ import {
   Output,
   TemplateRef,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -21,6 +22,8 @@ import {
 import { Observable, Subject } from 'rxjs';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
@@ -150,8 +153,11 @@ reverseClaimsDialog: any;
   @Input() loader$!: Observable<boolean>;
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>(); 
   @Input() claimsType: any;
+  @Input() exportButtonShow$: any
   public state!: State;
+  showExportLoader = false;
   sortColumn = 'paymentNbr';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -159,8 +165,9 @@ reverseClaimsDialog: any;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
+  showDateSearchWarning = false
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn= 'itemNbr';
   gridDataResult!: GridDataResult;
   gridClaimsBatchLogDataSubject = new Subject<any>();
   gridClaimsBatchLogData$ = this.gridClaimsBatchLogDataSubject.asObservable();
@@ -179,12 +186,13 @@ reverseClaimsDialog: any;
     paymentStatusCode: 'Payment Status',
     serviceCount: 'Service Count',
     serviceCost: 'Total Cost',
-    amountDue: 'Total Due',
+    amountPaid: 'Amount Paid',
     clientMaximum: 'Client Annual Total',
     balanceAmount: 'Client Balance',
     indexCode: 'Index Code',
     pcaCode : 'PCA Code',
-    objectCode: 'Object Code'
+    objectCode: 'Object Code',
+    checkNbr :'Warrant Number'
   };
 
   paymentMethods = ['CHECK', 'ACH', 'SPOTS'];
@@ -204,8 +212,64 @@ reverseClaimsDialog: any;
   paymentTypeFilter = '';
   paymentStatusFilter = '';
     
+  dropDowncolumns: any = [
+    {
+      columnCode: 'itemNbr',
+      columnDesc: 'Item #',
+    },
+    {
+      columnCode: 'vendorName',
+      columnDesc: 'Pharmacy Name',
+    },
+    {
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+    },
+    {
+      columnCode: 'clientId',
+      columnDesc: 'Client ID',
+    },
+    {
+      columnCode: 'paymentMethodCode',
+      columnDesc: 'Payment Method',
+    },
+    {
+      columnCode: 'paymentTypeCode',
+      columnDesc: 'Payment Type',
+    },
+    {
+      columnCode: 'creationTime',
+      columnDesc: 'Entry Date',
+    },
+    {
+      columnCode: 'paymentStatusCode',
+      columnDesc: 'Payment Status',
+    },
+    {
+      columnCode: 'indexCode',
+      columnDesc: 'Index Code',
+    },
+    {
+      columnCode: 'pca',
+      columnDesc: 'PCA',
+    },
+    {
+      columnCode: 'objectCode',
+      columnDesc: 'Ojbect Code',
+    },
+    {
+      columnCode: 'checkNbr',
+      columnDesc: 'Warrant Number',
+    },
+    {
+      columnCode: 'amountPaid',
+      columnDesc: 'Amount Paid',
+    },
+  ]
   /** Constructor **/
-  constructor(private route: Router,private dialogService: DialogService ) {}
+  constructor(private route: Router,private dialogService: DialogService,  private readonly cdr: ChangeDetectorRef,
+    private readonly configProvider: ConfigurationProvider,
+    private readonly intl: IntlService, ) {}
   
   ngOnInit(): void {
     this.sortColumnName = 'Item #';
@@ -240,18 +304,37 @@ reverseClaimsDialog: any;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: this.sortColumn ?? 'paymentNbr',
+      sortColumn: this.sortColumn ?? 'itemNbr',
       sortType: sortTypeValue ?? 'asc',
       filter: this.filter,
     };
-    //this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
  
-  
   onChange(data: any) {
     this.defaultGridState();
+
+    const isDateSearch = data.includes('/');
+    
+    data = this.formatSearchValue(data, isDateSearch);
+    if (isDateSearch && !data) return;
+
+    let operator = 'startswith';
+    if (
+      this.selectedColumn === 'itemNbr' ||
+      this.selectedColumn === 'serviceCount' ||
+      this.selectedColumn === 'serviceCost' ||
+      this.selectedColumn === 'clientId' ||
+      this.selectedColumn === 'amountPaid' ||
+      this.selectedColumn === 'indexCode' ||
+      this.selectedColumn === 'pcaCode' ||
+      this.selectedColumn === 'objectCode' ||
+      this.selectedColumn === 'checkNbr' ||
+      this.selectedColumn === 'balanceAmount'     
+    ) {
+      operator = 'eq';
+    }
 
     this.filterData = {
       logic: 'and',
@@ -259,8 +342,8 @@ reverseClaimsDialog: any;
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedColumn ?? 'itemNbr',
+              operator: operator,
               value: data,
             },
           ],
@@ -268,11 +351,42 @@ reverseClaimsDialog: any;
         },
       ],
     };
+
+    if( this.selectedColumn === 'creationTime')
+    {
+      
+      this.filterData = {
+        logic: 'and',
+        filters: [
+          {
+            filters: [
+              {
+                field: this.selectedColumn ?? 'itemNbr',
+                operator: 'gte',
+                value: data+'T01:01:00.000Z',
+              },
+            ],
+            logic: 'and',
+          },
+          {
+            filters: [
+              {
+                field: this.selectedColumn ?? 'itemNbr',
+                operator: 'lte',
+                value: data+'T23:59:00.000Z',
+              },
+            ],
+            logic: 'and',
+          }
+        ],
+      };
+    } 
+
+   
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
-
   defaultGridState() {
     this.state = {
       skip: 0,
@@ -280,6 +394,23 @@ reverseClaimsDialog: any;
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
     };
+  }
+  private isValidDate = (searchValue: any) =>
+  isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configProvider?.appSettings?.dateFormat
+        );
+      } else {
+        return '';
+      }
+    }
+  
+    return searchValue;
   }
 
   onColumnReorder($event: any) {
@@ -320,6 +451,21 @@ reverseClaimsDialog: any;
       ],
       logic: 'or',
     });
+  }
+  searchColumnChangeHandler(value: string) {
+    if(value === 'creationTime')
+    {
+      this.showDateSearchWarning = true
+    }
+    else
+    {
+      this.showDateSearchWarning = false
+    }
+    this.filter = [];
+   
+    if (this.searchValue) {
+      this.onChange(this.searchValue);
+    }
   }
 
   // updating the pagination infor based on dropdown selection
@@ -484,6 +630,20 @@ reverseClaimsDialog: any;
       this.isAddEditClaimMoreClose = false;
       this.addEditClaimsFormDialog.close();
     }
+  }
+  onClickedExport() {
+    debugger
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()
+
+    this.exportButtonShow$
+      .subscribe((response: any) => {
+        if (response) {
+          this.showExportLoader = false
+          this.cdr.detectChanges()
+        }
+
+      })
   }
   
 }
