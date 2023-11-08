@@ -14,9 +14,3 @@ export enum BatchStatusCode{
     PaymentRequested='PAYMENT_REQUESTED',
     ManagerApproved='MANAGER_APPROVED',
 }
-
-export enum PaymentStatusCodeDescription{
-    Paid='Paid',
-    PaymentRequested='Payment Requested',
-    ManagerApproved='Manager Approved',
-}

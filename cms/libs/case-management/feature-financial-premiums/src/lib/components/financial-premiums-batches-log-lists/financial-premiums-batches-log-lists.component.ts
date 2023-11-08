@@ -18,7 +18,7 @@ import { CompositeFilterDescriptor, State, } from '@progress/kendo-data-query';
 import { Subject, first, Subscription, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
-import { BatchStatusCode, PaymentStatusCode, PaymentStatusCodeDescription } from 'libs/case-management/domain/src/lib/enums/payment-status-code.enum';
+import { BatchStatusCode, PaymentStatusCode } from 'libs/case-management/domain/src/lib/enums/payment-status-code.enum';
 import { PaymentBatchName } from '@cms/case-management/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -107,9 +107,9 @@ export class FinancialPremiumsBatchesLogListsComponent
       buttonType: 'btn-h-primary',
       text: 'Unbatch Premium',
       icon: 'undo',
-      disabled: [PaymentStatusCodeDescription.Paid, PaymentStatusCodeDescription.PaymentRequested, PaymentStatusCodeDescription.ManagerApproved].includes(dataItem.paymentStatusCode),
+      disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {
-        if(![PaymentStatusCodeDescription.Paid, PaymentStatusCodeDescription.PaymentRequested, PaymentStatusCodeDescription.ManagerApproved].includes(data.paymentStatusCode) && !this.isUnBatchPaymentPremiumsClosed)
+        if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode) && !this.isUnBatchPaymentPremiumsClosed)
       {
           this.isUnBatchPaymentPremiumsClosed = true;
           this.selected = data;
@@ -167,7 +167,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       columnDesc: 'Pmt. Method',
     },
     {
-      columnCode: 'paymentStatusCode',
+      columnCode: 'paymentStatusCodeDesc',
       columnDesc: 'Pmt. Status',
     },
     {
@@ -188,7 +188,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     paymentRequestedDate: "Date Pmt. Requested",
     paymentSentDate: "Date Pmt. Sent",
     paymentMethodCode: "Pmt. Method",
-    paymentStatusCode: "Pmt. Status",
+    paymentStatusCodeDesc: "Pmt. Status",
     pca: "PCA",
     mailCode: "Mail Code"
   }
