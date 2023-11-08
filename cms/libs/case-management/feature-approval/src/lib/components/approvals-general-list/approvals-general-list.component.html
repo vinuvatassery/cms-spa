@@ -60,11 +60,11 @@
                     onRowLevelDenyClicked($event, item, 'sendBackNotes', i)
                   "
                   [selected]="item.status == denyStatus"
-                  aria-label="Send Back"
+                  aria-label="Deny"
                   id="deny{{ i }}"
                   [toggleable]="true"
                 >
-                  Send Back
+                  Deny
                 </button>
               </div>
               <div
@@ -167,7 +167,7 @@
                 [approvalId]="item.generalPendingApprovalId"
                 (openEditModal)="openEditModal($event)"
                 [subTypeCode]="item.subTypeCode"
-                [selectedVendor$]="selectedVendor$"
+                [selectedMasterDetail$]="selectedMasterDetail$"
               >
               </productivity-tools-approvals-general-list-detail-addtomasterlist>
             </ng-template>
@@ -210,7 +210,7 @@
   >
   <productivity-tools-approvals-edit-items
     [selectedSubtypeCode]="selectedSubtypeCode"
-    [selectedVendor$]="selectedVendor$"
+    [selectedMasterDetail$]="selectedMasterDetail$"
   >
   </productivity-tools-approvals-edit-items>
 </ng-template>
