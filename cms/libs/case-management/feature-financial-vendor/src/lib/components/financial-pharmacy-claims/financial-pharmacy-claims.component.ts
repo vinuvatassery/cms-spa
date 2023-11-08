@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
+import {  DocumentFacade } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-grid';
@@ -14,7 +15,8 @@ import { LovFacade } from '@cms/system-config/domain';
 export class FinancialPharmacyClaimsComponent {
   /* Input Properties */
   @Input() vendorId!: string;
-  
+  @Input() exportButtonShow$ =    this.documentFacade.exportButtonShow$
+  @Input() claimsType: any;
   /* public properties */
   formUiStyle: UIFormStyle = new UIFormStyle();
   isFinancialDrugsDetailShow = false;
@@ -43,9 +45,18 @@ export class FinancialPharmacyClaimsComponent {
   paymentRequestTypes: any = [];
   sortColumn = 'Entry Date';
   sortDir = 'Ascending';
-   
+ 
+   searchText = '';
+  filteredByColumnDesc = '';
+  sortColumnDesc = 'Batch #';
+  columnChangeDesc = 'Default Columns';
+  showExportLoader = false;
+
    /** Constructor **/
    constructor(private readonly claimsFacade: ClaimsFacade,
+   private documentFacade :  DocumentFacade,
+   private route: Router,
+   private readonly  cdr :ChangeDetectorRef,
     private readonly router: Router,  private readonly lovFacade: LovFacade,
     ) {}
    
@@ -92,6 +103,13 @@ export class FinancialPharmacyClaimsComponent {
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
+  public columnChange(e: any) {
+    this.cdr.detectChanges();
+  }
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+
 
   dropdownFilterChange(
     field: string,
@@ -154,7 +172,7 @@ export class FinancialPharmacyClaimsComponent {
 
   rowClickNavigation(field: string, dataItem: any){
     if(field === 'batchName'){
-      this.router.navigate(['financial-management/pharmacy-claims/batch'], {
+      this.router.navigate(['financial-management/pharmacy-claims/batch/items'], {
         queryParams: { bid: dataItem.batchId },
       });
     }
@@ -164,5 +182,46 @@ export class FinancialPharmacyClaimsComponent {
       });
     }
   }
+  onExportclaims(){
+    this.showExportLoader = true
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      JSON.stringify(this.filter));
 
+   let fileName = 'Pharmacy Claims'
+    this.documentFacade.getExportFile(param, `pharmacies/${this.vendorId}/claims`,fileName)
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+    })
+  }
+  private defaultGridState() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter: { logic: 'and', filters: [] },
+    }
+  }
+  resetGrid() {
+    this.defaultGridState();
+    this.sortValue = 'batchName';
+    this.sortType = 'asc';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchText = '';
+    this.filteredByColumnDesc = '';
+    this.columnChangeDesc = 'Default Columns';
+    this.loadClaimsListGrid();
+  }
+  
 }

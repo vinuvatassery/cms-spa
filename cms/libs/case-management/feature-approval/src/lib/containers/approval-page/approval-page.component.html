@@ -1,5 +1,5 @@
 <common-bread-crumb></common-bread-crumb>
-<div class="app-l-inner-rapper pt-0" kendoTooltip>
+<div class="app-l-inner-rapper pt-0">
   <!-- Main Title Section -->
   <section class="app-l-mainTittle">
     <h1 class="maintitle_withicon text-bold">
@@ -29,29 +29,15 @@
         <div class="nm-20 approval_container">
           <productivity-tools-approvals-general-list
             [approvalsGeneralLists$]="approvalsGeneralLists$"
-            [submitGenerealRequest$]="submitGenerealRequest$"
-            [approvalsExceptionCard$]="approvalsExceptionCard$"
-            [invoiceData$]="invoiceData$"
-            [pageSizes]="pageSizes"
-            [sortValue]="sortValue"
-            [sortType]="sortType"
-            [sort]="sort"
-            [gridSkipCount]="gridSkipCount"
-            [isInvoiceLoading$]="isInvoiceLoading$"
+            [submitGenerealRequest$]="submitGenerealRequest$"            
             (loadApprovalsGeneralGridEvent)="loadApprovalsGeneralGrid($event)"
             (loadCasereassignmentExpanedInfoParentEvent)="
               loadCasereassignmentExpanedInfoParentEvent($event)
             "
-            (loadApprovalsExceptionCardEvent)="
-              loadApprovalsExceptionCard($event)
-            "
-            (loadApprovalsExceptionInvoiceEvent)="
-              loadApprovalsExceptionInvoice($event)
-            "
             (submitGeneralRequestsEvent)="submitGeneralRequests($event)"
             [usersByRole$]="usersByRole$"
-            (getVendorDetailEvent)="getVendorDetail($event)"
-            [selectedVendor$]="selectedVendor$"
+            (getMasterDetailsEvent)="getMasterDetails($event)"
+            [selectedMasterDetail$]="selectedMasterDetail$"
           >
           </productivity-tools-approvals-general-list>
         </div>
@@ -60,8 +46,8 @@
     <kendo-tabstrip-tab title="Payments">
       <ng-template kendoTabTitle>
         Payments
-        <span *ngIf="pendingApprovalCount$ | async" class="tab-batch-notify">{{
-          pendingApprovalCount$ | async
+        <span class="tab-batch-notify">{{
+          pendingApprovalCount
         }}</span></ng-template
       >
       <ng-template kendoTabContent>

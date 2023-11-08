@@ -1,6 +1,7 @@
 <div>
   <kendo-grid [pageSize]="state.take" [pageable]="true" [skip]="state.skip" [sort]="state.sort" [resizable]="true"
-    [sortable]="false" [data]="financialPcaSubReportGridLists$ | async" (dataStateChange)="dataStateChange($event)">
+    [sortable]="false" [data]="financialPcaSubReportGridLists$ | async" (dataStateChange)="dataStateChange($event)"
+    [loading]="(loader$ | async) === true">
     <!-- financialPcaReportGridLists$ | async -->
     <kendo-grid-column field="priority" title="Priority" [width]="100"> </kendo-grid-column>
 
@@ -26,11 +27,11 @@
 
     <kendo-grid-column field="totalAmount" title="Amount Assigned" [width]="170">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount}}</span>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount | kendoNumber: 'n2'}}</span>
       </ng-template> </kendo-grid-column>
     <kendo-grid-column field="remainingAmount" title="Amount Remaining" [width]="180"> <ng-template
         kendoGridCellTemplate let-dataItem>
-        <span class="tableamountview"> <strong>$</strong> {{dataItem.remainingAmount}}</span>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.remainingAmount | kendoNumber: 'n2'}}</span>
       </ng-template> </kendo-grid-column>
 
     <!-- Pagination Template -->

@@ -30,6 +30,8 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   reconcilePaymentBreakoutList$ = this.financialClaimsFacade.reconcilePaymentBreakoutList$;
   warrantNumberChange$ = this.financialClaimsFacade.warrantNumberChange$;
   warrantNumberChangeLoader$ = this.financialClaimsFacade.warrantNumberChangeLoader$;
+  letterContentList$ = this.financialClaimsFacade.letterContentList$;
+  letterContentLoader$ = this.financialClaimsFacade.letterContentLoader$;
   batchId:any;
   claimsType: any;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
@@ -81,11 +83,9 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
     this.batchId = this.route.snapshot.queryParams['bid'];  
   }
 
-  loadReconcileListGrid(event: any) {
-    
+  loadReconcileListGrid(event: any) {    
     this.dataExportParameters = event;
-    const params = new GridFilterParam(event.skipCount, event.pageSize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
-   
+    const params = new GridFilterParam(event.skipCount, event.pageSize, event.sortColumn, event.sortType, JSON.stringify(event.filter));    
     this.financialClaimsFacade.loadReconcileListGrid(this.batchId,this.claimsType,params);    
   }
 
@@ -146,6 +146,9 @@ export class FinancialClaimsReconcilePageComponent implements OnInit {
   }
   warrantNumberChange(data:any){
     this.financialClaimsFacade.CheckWarrantNumber(data.batchId,data.checkNbr,data.vendorId);   
+  }
+  loadEachLetterTemplate(event:any){
+    this.financialClaimsFacade.loadEachLetterTemplate(this.claimsType, event);  
   }
   
 }

@@ -11,6 +11,7 @@ export class PendingApprovalPaymentFacade {
   public sortValueApprovalPaymentsApproval = 'batchName';
   public sortApprovalPaymentsList: SortDescriptor[] = [{
     field: this.sortValueApprovalPaymentsApproval,
+    dir: 'desc',
   }];
 
   /** Private properties **/
@@ -92,7 +93,6 @@ export class PendingApprovalPaymentFacade {
         },
       }
     );
-    this.hideLoader();
   }
 
   getPendingApprovalPaymentMainList(gridSetupData: any, serviceSubType: string, level: number) {
@@ -129,21 +129,18 @@ export class PendingApprovalPaymentFacade {
   }
 
   getPendingApprovalBatchDetailPaymentsGrid(gridSetupData: any, batchId: string, serviceSubType: string) {
-
-    this.PendingApprovalPaymentService.getPendingApprovalBatchDetailPaymentsGrid(gridSetupData, batchId, serviceSubType).subscribe(
-      {
-        next: (dataResponse: any) => {
-          const gridView = {
-            data: dataResponse["items"],
-            total: dataResponse["totalCount"]
-          };
-            this.pendingApprovalBatchDetailPaymentsGridSubject.next(gridView);
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-        },
-      }
-    );
+    this.PendingApprovalPaymentService.getPendingApprovalBatchDetailPaymentsGrid(gridSetupData, batchId, serviceSubType).subscribe({
+      next: (dataResponse: any) => {
+        const gridView = {
+          data: dataResponse["items"],
+          total: dataResponse["totalCount"]
+        };
+          this.pendingApprovalBatchDetailPaymentsGridSubject.next(gridView);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
   }
 
   submitForApproval(data: any) {

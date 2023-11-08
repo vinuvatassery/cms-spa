@@ -8,7 +8,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
 import { AddressType } from '../enums/address-type.enum';
 import { StatusFlag } from '../enums/status-flag.enum';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-vendor-details',
@@ -24,6 +24,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   @Input() profileInfoTitle!: string;
   @Input() ddlStates$!: any;
   @Input() clinicVendorList$!: any;
+  clinicVendorListLocal: any;
   @Input() clinicVendorLoader$!: any;
   @Input() hasCreateUpdatePermission: boolean = false;
   @Input() selectedClinicType: string = FinancialVendorTypeCode.MedicalClinic;
@@ -70,6 +71,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   specialHandlingTextArea = '';
   selectedClinicVendorId!: any;
   mailCodeLengthError!: boolean;
+  clinicSearchSubscription !: Subscription;
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
@@ -81,17 +83,43 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm = this.formBuilder.group({});
   }
 
+  searchClinic(clinicName: any) {
+    this.clinicSearchSubscription?.unsubscribe();
+
+    if (clinicName === '' || !clinicName) {
+      this.clinicVendorListLocal = null;
+      return;
+    }
+
+    this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
+      if (data && clinicName !== '') {
+        if (this.providerType === FinancialVendorTypeCode.MedicalProviders) {
+          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
+        } else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
+          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
+        } else {
+          this.clinicVendorListLocal = data;
+        }
+        this.clinicSearchSubscription?.unsubscribe();
+      }
+    });
+
+
+    this.selectedClinicVendorId = null;
+    this.searchClinicVendorClicked.emit(clinicName);
+  }
+
   ngOnInit(): void {
 
     this.lovFacade.getPaymentRunDateLov();
     this.lovFacade.getPaymentMethodLov();
     if (this.editVendorInfo) {
       this.setVendorDetailFormValues();
-    }
-    else {
+    } else {
       this.getPaymentMethods();
       this.getPaymentRunDate();
     }
+
     if (this.selectedClinicType === FinancialVendorTypeCode.MedicalProviders) {
       this.medicalProviderForm.controls[this.clinicTypeFieldName].setValue(FinancialVendorTypeCode.MedicalClinic)
     } else if (this.selectedClinicType === FinancialVendorTypeCode.DentalProviders) {
@@ -129,7 +157,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.controls['providerName'].setValue(this.vendorDetails.vendorName);
     this.medicalProviderForm.controls['vendorId'].setValue(this.vendorDetails.vendorId);
   }
-  
+
   onToggleAddNewContactClick() {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl('', Validators.required),
@@ -226,18 +254,16 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
           Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
-      if (this.providerType == this.vendorTypes.Manufacturers)
-      {
-        this.medicalProviderForm.controls['nameOnCheck'].setValidators([ Validators.nullValidator,]);
+      if (this.providerType == this.vendorTypes.Manufacturers) {
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.nullValidator,]);
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.nullValidator, ]);
+        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.nullValidator,]);
         this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
       }
-      else
-      {
-        this.medicalProviderForm.controls['nameOnCheck'].setValidators([ Validators.required,Validators.pattern('^[A-Za-z ]+$')]);
+      else {
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.required, Validators.pattern('^[A-Za-z ]+$')]);
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.required,Validators.pattern('^[A-Za-z ]+$')]);
+        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.required, Validators.pattern('^[A-Za-z ]+$')]);
         this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
       }
 
@@ -379,6 +405,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     if (this.clinicNameNotApplicable) {
       this.medicalProviderForm.controls['providerName'].setValue(null);
       this.medicalProviderForm.controls['providerName'].disable();
+      this.firstLastNameNotApplicable = false;
+      this.onNameChecked();
     }
     else {
       this.medicalProviderForm.controls['providerName'].enable();
@@ -391,6 +419,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['lastName'].setValue(null);
       this.medicalProviderForm.controls['firstName'].disable();
       this.medicalProviderForm.controls['lastName'].disable();
+      this.clinicNameNotApplicable = false;
+      this.onClinicNameChecked();
     }
     else {
       this.medicalProviderForm.controls['firstName'].enable();
@@ -405,13 +435,6 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
   isClinicNameFilterable = true;
 
-
-  searchClinic(clinicName: any) {
-    if (clinicName != '') {
-      this.selectedClinicVendorId = null;
-      this.searchClinicVendorClicked.emit(clinicName);
-    }
-  }
 
   closeVendorModal() {
     this.closeModalEventClicked.next(null);
@@ -454,12 +477,11 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
-    if(this.vendorTypes.Pharmacy == this.providerType)
-    {
+    if (this.vendorTypes.Pharmacy == this.providerType) {
       this.medicalProviderForm.controls['npiNbr'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['npiNbr'].updateValueAndValidity();
     }
-  
+
   }
 
   mapAddressContact(formValues: any) {
@@ -595,9 +617,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
   onPharmacyPhysicalAddressChecked() {
     let isPharmacyPhysicalAddressChecked = this.medicalProviderForm.controls['physicalAddressFlag'].value;
-    if (isPharmacyPhysicalAddressChecked) {  
+    if (isPharmacyPhysicalAddressChecked) {
       this.medicalProviderForm.controls['addressLine1']
-        .setValidators([Validators.required]); 
+        .setValidators([Validators.required]);
       this.medicalProviderForm.controls['addressLine1'].updateValueAndValidity();
 
       this.medicalProviderForm.controls['city']

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { PendingApprovalGeneralTypeCode } from '@cms/productivity-tools/domain';
+import { PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable } from 'rxjs';
@@ -11,6 +11,6 @@ import { Observable } from 'rxjs';
 export class ApprovalsEditItemsComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Input() selectedSubtypeCode: any;
-  @Input() selectedVendor$!: Observable<any>;
+  @Input() selectedMasterDetail$!: Observable<any>;
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
 }

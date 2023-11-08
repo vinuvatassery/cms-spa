@@ -119,7 +119,7 @@
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.MedicalProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.MedicalProviders)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList"
-    [hasCreateUpdatePermission]="hasClinicCreateUpdatePermission" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasMedicalAndDentalCreateUpdatePermission" [clinicVendorLoader$]="clinicVendorLoader"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
     (closeMedicalDentalProviderDialogEvent)="setupForClinic($event)"></cms-vendor-details>
 </kendo-dialog>
@@ -130,13 +130,14 @@
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.DentalProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.DentalProviders)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasMedicalAndDentalCreateUpdatePermission"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
     (closeMedicalDentalProviderDialogEvent)="setupForClinic($event)"></cms-vendor-details>
 </kendo-dialog>
 
 <!-- clinic -->
 <kendo-dialog kendoRippleContainer *ngIf="ShowClinicProvider" (close)="closeVendorDetailModal(vendorTypes.Clinic)"
-  class="app-c-modal app-c-modal-md hide app-c-modal-np" title="Add New Clinic" kendoTooltip>
+  class="app-c-modal app-c-modal-md hide app-c-modal-np" title="{{hasClinicCreateUpdatePermission ? 'Add New Clinic' : 'Request New Clinic'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=clinicForm [providerType]="vendorTypes.Clinic"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.Clinic)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
@@ -163,9 +164,11 @@
 </kendo-dialog>
 
 <kendo-dialog kendoRippleContainer *ngIf="isShowManufacturers" (close)="closeVendorDetailModal()"
-  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Manufacture" kendoTooltip>
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{ hasManufacturerCreateUpdatePermission == true ? 
+    'Add New Manufacturer' : 'Request New Manufacturer'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Manufacturers"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasManufacturerCreateUpdatePermission"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>

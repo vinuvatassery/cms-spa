@@ -81,16 +81,15 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
         {     
           pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
           objectCode: this.pcaAssignmentFormDataModel$?.objectId,     
-          pcaId: this.pcaAssignmentFormDataModel$?.pcaId, 
-          openDate: this.pcaAssignmentFormDataModel$?.openDate,
-          closeDate: this.pcaAssignmentFormDataModel$?.closeDate,
+          pcaId: '', 
+          openDate: '',
+          closeDate: '',
           amount:this.pcaAssignmentFormDataModel$.pcaRemainingAmount,
           unlimited:false,
           groupCodes : this.groupCodesData$               
         }
       )
-      this.onPcaChange(this.pcaAssignmentFormDataModel$?.pcaId)  
-      
+   
     
   }
   
@@ -166,7 +165,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
           this.pcaAssignmentForm.reset()
           let groupCodeIdsAssignedValue : any=[];   
           this.editPca = true      
-          this.onPcaChange(this.pcaAssignmentFormDataModel$?.pcaId)    
+         // this.onPcaChange(this.pcaAssignmentFormDataModel$?.pcaId)    
           this.pcaAssignmentForm.controls['pcaId'].disable();
           
           Object.values(this.groupCodesDataFilter).forEach((key : any) => {  
@@ -188,9 +187,9 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
               {     
                 pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
                 objectCode:  this.pcaAssignmentFormDataModel$?.objectCodeId,     
-                pcaId: this.pcaAssignmentFormDataModel$?.pcaId, 
+                pcaId: '', 
                 openDate: this.pcaAssignmentFormDataModel$?.openDate,
-                closeDate: this.pcaAssignmentFormDataModel$?.closeDate,
+                closeDate: '',
                 amount: this.pcaAssignmentFormDataModel$?.amount,
                 unlimited: this.pcaAssignmentFormDataModel$?.unlimited,
                 groupCodes : groupCodeIdsAssignedValue               

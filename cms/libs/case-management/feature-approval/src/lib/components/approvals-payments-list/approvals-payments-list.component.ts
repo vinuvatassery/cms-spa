@@ -12,14 +12,14 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
-import { GridDataResult, RowArgs } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, GridDataResult, RowArgs } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy,
 } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   LovFacade,
@@ -31,7 +31,7 @@ import {
   ApprovalTypeCode,
   ApprovalLimitPermissionCode,
   PendingApprovalPaymentTypeCode,
-} from '@cms/productivity-tools/domain';
+} from '@cms/case-management/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Component({
@@ -65,6 +65,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   @Output() submitEvent = new EventEmitter<any>();
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+  readonly paymentTypeCode = PendingApprovalPaymentTypeCode;
   public state!: State;
   sortColumn = 'batchName';
   sortDir = 'Ascending';
@@ -78,8 +79,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   approvalTypeCode!: any;
   approveStatus: string = 'APPROVED';
   sendbackStatus: string = 'SEND_BACK';
-  hasPaymentPendingApproval: boolean = false;
-  sendbackNotesRequireMessage: string = 'Send Back Notes are required.';
+  hasPaymentPendingApproval: boolean = true;
+  sendbackNotesRequireMessage: string = 'Send Back Note is required.';
   tAreaCessationMaxLength: any = 100;
   approveBatchCount: any = 0;
   sendbackBatchCount: any = 0;
@@ -113,6 +114,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   approvalTypeCodeEnum: any = ApprovalTypeCode;
+  sortColumnDesc = 'Batch';
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     batchName: 'Batch',
@@ -122,9 +124,13 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     totalPayments: 'Pmt Count',
     totalClaims: 'Premium Count',
     creationTime: 'Date Approval Requested',
+    premiumType: 'Premium Type',
+    premiumCount: 'Premium Count',
+    dateApprovalRequested: 'Date Approval Requested',
+    firstApprovalBy: 'First Approval By'
   };
 
-  dropDownColumnsLevel1: { columnCode: string; columnDesc: string }[] = [
+  dropDownColumns: { columnCode: string; columnDesc: string }[] = [
     {
       columnCode: 'ALL',
       columnDesc: 'All Columns',
@@ -136,25 +142,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     {
       columnCode: 'DateApprovalRequested',
       columnDesc: 'Date Approval Requested',
-    },
-  ];
-
-  dropDownColumnsLevel2: { columnCode: string; columnDesc: string }[] = [
-    {
-      columnCode: 'ALL',
-      columnDesc: 'All Columns',
-    },
-    {
-      columnCode: 'BatchName',
-      columnDesc: 'Batch #',
-    },
-    {
-      columnCode: 'DateApprovalRequested',
-      columnDesc: 'Date Approval Requested',
-    },
-    {
-      columnCode: 'FirstApprovalBy',
-      columnDesc: 'First Approval By',
     },
   ];
 
@@ -165,8 +152,14 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   showExportLoader = false;
 
   private depositDetailsDialog: any;
+  paymentStatusLovList: any;
+  paymentMethodLovList: any;
 
   pendingApprovalPaymentType$ = this.lovFacade.pendingApprovalPaymentType$;
+  paymentStatusLov$ = this.lovFacade.paymentStatus$;
+  paymentMethodLov$ = this.lovFacade.paymentMethodType$;
+  paymentStatusLovSubscription!: Subscription;
+  paymentMethodLovSubscription!: Subscription;
   /** Constructor **/
   constructor(
     private route: Router,
@@ -180,9 +173,32 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): any {
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.lovFacade.getPandingApprovalPaymentTypeLov();
     this.defaultPaymentType();
     this.getLoggedInUserProfile();
+    this.loadPaymentStatusLov();
+    this.loadPaymentMethodLov();
+  }
+
+  private loadPaymentStatusLov(){
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStatusLovSubscription = this.paymentStatusLov$.subscribe({
+      next:(response) => {
+        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
+        this.paymentStatusLovList = response;
+      }
+    });
+  }
+
+  private loadPaymentMethodLov(){
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodLovSubscription = this.paymentMethodLov$.subscribe({
+      next:(response) => {
+        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
+        this.paymentMethodLovList = response;
+      }
+    });
   }
 
   private defaultPaymentType() {
@@ -197,7 +213,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           }
           case PendingApprovalPaymentTypeCode.PharmacyClaim: {
             this.approvalPermissionCode =
-              ApprovalLimitPermissionCode.PharmacyPermissiomCode;
+              ApprovalLimitPermissionCode.PharmacyPermissionCode;
             break;
           }
           case PendingApprovalPaymentTypeCode.InsurancePremium: {
@@ -216,6 +232,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
 
   ngOnChanges(): void {
     this.setGridValueAndData();
+  }
+
+  ngOnDestroy(): void {
+    this.paymentStatusLovSubscription.unsubscribe();
+    this.paymentMethodLovSubscription.unsubscribe();
   }
 
   setGridValueAndData() {
@@ -255,6 +276,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       ...item,
     }));
     this.loadApprovalPaymentsListGrid();
+    this.enableSubmitButtonMain();
+    this.approveAndSendbackCount();
   }
 
   onLoadBatchDetailPaymentsList(data?: any) {
@@ -296,7 +319,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.setGridValues(data);
   }
 
-  searchColumnChangeHandler(value: string) {
+  searchColumnChangeHandler(value: string) {    
     this.filter = [];
     this.showDateSearchWarning = value === 'DateApprovalRequested';
     if (this.searchValue) {
@@ -360,6 +383,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
     if (stateData.filter?.filters.length > 0) {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
@@ -421,6 +445,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any) {
+    this.resetApprovalPaymentListGrid();
     this.pageValidationMessage = null;
     this.selectedPaymentType = paymentSubTypeCode;
     this.approveBatchCount = 0;
@@ -433,7 +458,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       }
       case PendingApprovalPaymentTypeCode.PharmacyClaim: {
         this.approvalPermissionCode =
-          ApprovalLimitPermissionCode.PharmacyPermissiomCode;
+          ApprovalLimitPermissionCode.PharmacyPermissionCode;
         break;
       }
       case PendingApprovalPaymentTypeCode.InsurancePremium: {
@@ -450,7 +475,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();
     this.gridDataHandle();
-    this.cd.detectChanges();
+    this.enableSubmitButtonMain();
   }
 
   onRowLevelApproveClicked(
@@ -461,6 +486,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   ) {
     dataItem.approveButtonDisabled = false;
     dataItem.sendBackButtonDisabled = true;
+    this.pageValidationMessage = null;
     dataItem.sendBackNotes = '';
     if (
       dataItem.batchStatus === undefined ||
@@ -483,6 +509,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.assignRowDataToMainList(dataItem);
     this.ngDirtyInValid(dataItem, control, rowIndex);
     this.approveAndSendbackCount();
+    this.enableSubmitButtonMain();    
   }
 
   onRowLevelSendbackClicked(
@@ -493,6 +520,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   ) {
     dataItem.approveButtonDisabled = true;
     dataItem.sendBackButtonDisabled = false;
+    this.pageValidationMessage = null;
     if (
       dataItem.batchStatus === undefined ||
       dataItem.batchStatus === '' ||
@@ -519,6 +547,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.ngDirtyInValid(dataItem, control, rowIndex);
     this.isApproveAllClicked = false;
     this.approveAndSendbackCount();
+    this.enableSubmitButtonMain();   
   }
 
   private tAreaVariablesInitiation(dataItem: any) {
@@ -675,7 +704,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     if (isValid.length > 0) {
       this.pageValidationMessage =
         totalCount +
-        ' validation error(s) found, please review each page for errors.';
+        ' Validation error(s) found, please review each page for errors.';
     } else if (
       this.approvalsPaymentsGridUpdatedResult.filter(
         (x: any) =>
@@ -683,7 +712,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           x.batchStatus == this.sendbackStatus
       ).length <= 0
     ) {
-      this.pageValidationMessage = 'No data for approval';
+      this.pageValidationMessage = 'No data for approval.';
     } else {
       this.pageValidationMessage = null;
       this.selectedApprovalSendbackDataRows =
@@ -731,6 +760,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       );
     }
     this.approveAndSendbackCount();
+    this.enableSubmitButtonMain();
   }
 
   validateApprovalsPaymentsGridRecord() {
@@ -913,7 +943,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
 
   loadSubmittedSummaryData() {
     this.selectedApprovalSendbackDataRows
-      .filter((x: any) => x.batchStatus == this.approveStatus)
+      .filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus)
       .forEach((currentPage: any, index: number) => {
         this.selectedBatchIds.push(currentPage.paymentRequestBatchId);
       });
@@ -1053,5 +1083,32 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.route.navigate([`/financial-management/${type}/batch`], {
       queryParams: { bid: data?.paymentRequestBatchId },
     });
+  }
+
+  enableSubmitButtonMain()
+  {
+    const totalCount = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus).length;
+    this.hasPaymentPendingApproval = (totalCount <= 0);
+    this.cd.detectChanges();
+  }
+  resetApprovalPaymentListGrid(){
+    this.sortValue = 'batchName';
+    this.sortType = 'asc';
+    this.setGridValueAndData();
+    this.sortColumn = 'batchName';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchValue = '';
+    this.selectedColumn = 'ALL';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.loadApprovalPaymentsListGrid();
+  }
+  
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 }

@@ -47,10 +47,11 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() financialClaimsAllPaymentsGridLoader$: any;
   @Input() financialClaimsAllPaymentsGridLists$: any;
   @Input() exportButtonShow$: any;
-
+  @Input() letterContentList$ :any;
+  @Input() letterContentLoader$ :any;
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
-
+  @Output() loadTemplateEvent = new EventEmitter<any>();
   @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
   unBatchClaimsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteClaimsConfirmationDialogTemplate', { read: TemplateRef })
@@ -114,6 +115,7 @@ export class FinancialClaimsAllPaymentsListComponent
   recordCountWhenSelectallClicked: number = 0;
   totalGridRecordsCount: number = 0;
   sendReportCount: number = 0;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 
   getPaymentsGridActions(dataItem: any) {
     let list = [
@@ -678,6 +680,26 @@ pageNumberAndCountChangedInSelectAll() {
     this.onProviderNameClickEvent.emit(event);
   }
 
+  onitemNumberClick(dataItem: any) {
+    this.route.navigate(
+      [`/financial-management/claims/${this.claimsType}/batch/items`],
+      { queryParams:
+        {
+          bid: dataItem?.batchId,
+          pid: dataItem.paymentRequestId,
+          eid: dataItem.vendorId,
+        }
+      }
+    );
+  }
+
+  onbatchNumberClick(dataItem: any) {
+    this.route.navigate(
+      [`/financial-management/claims/${this.claimsType}/batch`],
+      { queryParams: { bid: dataItem?.batchId } }
+    );
+  }
+
   onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
     this.UnBatchDialog = this.dialogService.open({
       content: template,
@@ -841,7 +863,7 @@ pageNumberAndCountChangedInSelectAll() {
     if(this.selectAll){
       if(this.unCheckedProcessRequest?.length > 0){
         this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
-        this.recordCountWhenSelectallClicked = this.sendReportCount;      
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
       }else{
         this.sendReportCount = this.totalGridRecordsCount;
       }
@@ -851,35 +873,39 @@ pageNumberAndCountChangedInSelectAll() {
   }
 
   markAsChecked(data:any){
-    data.forEach((element:any) => { 
+    data.forEach((element:any) => {
       if(this.selectAll){
-        element.selected = true; 
-      } 
+        element.selected = true;
+      }
       else{
-        element.selected = false; 
+        element.selected = false;
       }
       if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
         const itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
-          element.selected = false;    
+          element.selected = false;
         }
         const itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
-          element.selected = true;   
+          element.selected = true;
         }
       }
-     
+
     });
-  
+
   }
 
   markAsUnChecked(data:any){
-    data.forEach((element:any) => {     
-      element.selected = false;    
+    data.forEach((element:any) => {
+      element.selected = false;
   });
   }
 
   getSelectedReportCount(selectedSendReportList : []){
     this.sendReportCount = selectedSendReportList.length;
+  }
+
+    loadEachLetterTemplate(event:any){
+      this.loadTemplateEvent.emit(event);
   }
 }

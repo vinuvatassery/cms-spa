@@ -66,7 +66,7 @@
 
               <kendo-combobox placeholder="Clinic Name" [fillMode]="formUiStyle.dropDownFillMode"
                 [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                (filterChange)="searchClinic($event)" [data]="clinicVendorList$ | async"
+                (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal"
                 [formControlName]="'providerName'" [valuePrimitive]="true" [valueField]="'vendorName'"
                 [textField]="'vendorName'"><button kendoButton fillMode="clear" icon="image"></button>
                 <ng-template kendoComboBoxItemTemplate let-dataItem>
@@ -170,7 +170,7 @@
           </div>
 
           <div class="flex-col flex-col-4 mt-checkbox"
-            *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo && vendorTypes.Clinic != providerType && providerType != vendorTypes.HealthcareProviders">
+            *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo && vendorTypes.Clinic != providerType && providerType != vendorTypes.HealthcareProviders  && providerType != vendorTypes.MedicalProviders && providerType != vendorTypes.DentalProviders">
             <span class="app-checkboxwidtext-wrapper">
               <input class="adjust-attr" type="checkbox" id="pnApplicable" name="Applicable"
                 aria-labelledby="pnApplicable" [(ngModel)]="firstLastNameNotApplicable"
