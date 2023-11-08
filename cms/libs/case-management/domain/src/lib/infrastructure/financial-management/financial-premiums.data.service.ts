@@ -303,17 +303,17 @@ export class FinancialPremiumsDataService {
     );
   }
 
-  loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType: any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/print-advice-letter`, printAdviceLetterData);
+  loadPremiumPrintAdviceLetterData(printAdviceLetterData: any, premiumType: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/print-advice-letter-summary`, printAdviceLetterData);
   }
 
-  reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, premiumType:any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/reconcile-payments`,reconcileData);
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData: any, premiumType:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/all/reconcile-payments`,reconcileData);
   }
 
-  viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType:any) {
+  viewPrintAdviceLetterData(printAdviceLetterData: any, premiumType:any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/download-advice-letter`, printAdviceLetterData,
       { responseType: 'blob' }
     );
   }
@@ -419,5 +419,13 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
       body: selectedPremiumPayments
     }
     );
+  }
+
+  loadEachLetterTemplate(premiumssType:any, templateParams:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumssType}/batches/print-advice-letter`,templateParams);
+  }
+
+  checkWarrantNumber(batchId:any, warrantNumber:any, vendorId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
   }
 }

@@ -21,7 +21,8 @@ export class FinancialPremiumsFacade {
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
-
+  public selectedClaimsTab = 1
+  
   public sortValueFinancialPremiumsProcess = 'clientFullName';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsProcess,
@@ -155,6 +156,18 @@ export class FinancialPremiumsFacade {
 
   private paymentByBatchGridLoaderSubject =  new BehaviorSubject<boolean>(false);
   paymentByBatchGridLoader$ = this.paymentByBatchGridLoaderSubject.asObservable();
+
+  private warrantNumberChangeSubject = new Subject<any>();
+  warrantNumberChange$ = this.warrantNumberChangeSubject.asObservable();
+
+  private warrantNumberChangeLoaderSubject = new Subject<any>();
+  warrantNumberChangeLoader$ = this.warrantNumberChangeLoaderSubject.asObservable();
+
+  private letterContentSubject = new Subject<any>();
+  letterContentList$ = this.letterContentSubject.asObservable();
+
+  private letterContentLoaderSubject = new Subject<any>();
+  letterContentLoader$ = this.letterContentLoaderSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -239,7 +252,8 @@ export class FinancialPremiumsFacade {
         next: (dataResponse) => {
           const gridView = {
             data: dataResponse["items"],
-            total: dataResponse["totalCount"]
+            total: dataResponse["totalCount"],
+            acceptsReportsCount: dataResponse['acceptReportsFlagQueryCount'],
           };
           this.financialPremiumsAllPaymentsDataSubject.next(gridView);
           this.financialPremiumPaymentLoaderSubject.next(false);
@@ -269,6 +283,7 @@ export class FinancialPremiumsFacade {
         const gridView = {
           data: dataResponse['items'],
           total: dataResponse['totalCount'],
+          acceptsReportsCount: dataResponse['acceptReportsFlagQueryCount'],
         };
         this.batchLogDataSubject.next(gridView);
         this.hideLoader();
@@ -380,16 +395,16 @@ export class FinancialPremiumsFacade {
       });
     }
 
-  loadMedicalPremiumPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, premiumType: any) {
-    return this.financialPremiumsDataService.loadMedicalPremiumPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
+  loadPremiumPrintAdviceLetterData(printAdviceLetterData: any, premiumType: any) {
+    return this.financialPremiumsDataService.loadPremiumPrintAdviceLetterData(printAdviceLetterData, premiumType);
   }
 
-  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any, premiumType:any) {
-    return this.financialPremiumsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData, premiumType);
+  reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any, premiumType:any) {
+    return this.financialPremiumsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData, premiumType);
 }
 
-viewAdviceLetterData(batchId:any,printAdviceLetterData: any, premiumType:any) {
-  return this.financialPremiumsDataService.viewPrintAdviceLetterData(batchId, printAdviceLetterData, premiumType);
+viewAdviceLetterData(printAdviceLetterData: any, premiumType:any) {
+  return this.financialPremiumsDataService.viewPrintAdviceLetterData(printAdviceLetterData, premiumType);
 }
 
 loadMedicalPremiumList(
@@ -627,8 +642,35 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
       })
     }
 
-
     removeSelectedPremiums(selectedPremiumPayments: any, premiumsType: any) {
       return this.financialPremiumsDataService.removeSelectedPremiums(selectedPremiumPayments, premiumsType);
+    }
+
+    checkWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+      this.warrantNumberChangeLoaderSubject.next(true);
+      this.financialPremiumsDataService.checkWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+        next: (dataResponse:any) => {       
+          this.warrantNumberChangeSubject.next(dataResponse);
+          this.warrantNumberChangeLoaderSubject.next(false);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+          this.warrantNumberChangeLoaderSubject.next(false);
+        },
+      });
+    }
+
+    loadEachLetterTemplate(premiumssType:any,templateParams:any){
+      this.letterContentLoaderSubject.next(true);
+      this.financialPremiumsDataService.loadEachLetterTemplate(premiumssType,templateParams).subscribe({
+        next: (dataResponse:any) => {
+          this.letterContentSubject.next(dataResponse);
+          this.letterContentLoaderSubject.next(false);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+          this.letterContentLoaderSubject.next(false);
+        },
+      });
     }
 }
