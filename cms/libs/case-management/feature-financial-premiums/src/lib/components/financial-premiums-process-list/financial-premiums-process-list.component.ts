@@ -76,14 +76,14 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: any;
-  sortColumn = 'vendorName';
+  sortColumn = 'clientFullName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn='clientFullName';
   columnName: string = '';
   public selectedProcessClaims: any[] = [];
 
