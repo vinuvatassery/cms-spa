@@ -190,7 +190,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   public premiumsProcessMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Send Reports',
+      text: 'SEND REPORTS',
       icon: 'mail',
       click: (data: any): void => {
         if (!this.isSendReportOpened) {
@@ -204,7 +204,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Add Premiums',
+      text: 'ADD PREMIUMS',
       icon: 'add',
       click: (data: any): void => {
         if (!this.isAddPremiumClosed) {
@@ -216,7 +216,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
 
     {
       buttonType: 'btn-h-danger',
-      text: 'Remove Premiums',
+      text: 'REMOVE PREMIUMS',
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isRemoveBatchClosed) {
@@ -232,7 +232,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Premiums',
+      text: 'Edit Premium',
       icon: 'edit',
       click: (data: any): void => {
         if (!this.isEditBatchClosed) {
@@ -243,7 +243,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Remove Premiums',
+      text: 'Remove Premium',
       icon: 'delete',
       click: (data: any): void => {
         if (!this.isRemovePremiumGridOptionClosed) {

@@ -111,6 +111,10 @@
     </kendo-grid-column>
 
     <kendo-grid-column field="totalDue" title="Total Amount" [width]="160">
+      <ng-template kendoGridCellTemplate
+      let-dataItem>
+      <span class="tableamountview"> <strong>$</strong> {{dataItem.totalDue }}</span>
+    </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
