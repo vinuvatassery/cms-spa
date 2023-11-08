@@ -1,31 +1,333 @@
-<div class="app-l-inner-rapper">
-  <div class="flex-row">
-    <div class="flex-col mb-3">
-      <!-- //NOSONAR <common-signature-pad></common-signature-pad> -->
- 
-      <h2> 
-        <span      
-            class="material-icons"     
-            aria-label="home"
-            aria-hidden="true"
-        >home</span>
-         &nbsp; Dashboard
-      </h2>
+  
+  <div class="app-l-inner-rapper   mt-2" >
+    <!-- Main Title Section -->
+    <section class="app-l-mainTittle">
+      <h1 class="maintitle_withicon text-bold">
+        <span
+          aria-label="Clients"
+          class="material-icons sidebar-menu_icon "
+          aria-hidden="true"
+        >
+        home
+        </span>
+        Welcome back, Stacey
+      </h1>
+    </section>
+  
+   
+    
+    <kendo-tilelayout    
+    [columns]="2"
+    [reorderable]="true"
+    [resizable]="true"
+    autoFlow="column"
+    (reorder)="onReorder($event)"
+    (resize)="onResize($event)">
+      <!-- <kendo-tilelayout-item [colSpan]="2" [col]="1">
+        <kendo-tilelayout-item-body>
+          <kendo-tilelayout-item-header>
+            <h3>TODAY AT A GLANCE</h3>
+          </kendo-tilelayout-item-header>
+          <div class="flex-row dashboard-page-wrapper">
+            <section class="flex-col"> 
+            <div class="dash-top-cards-wrapper">
+              <div class="dash-info-card">
+                <p>TO DO ITEMS</p>
+                <div class="justify-content-between">
+                  <span>asd</span> <h3>313</h3>
+                </div>
+              </div>
+              <div class="dash-info-card">
+                <p>PENDING APPROVALS</p>
+                <div class="justify-content-between">
+                  <span>asd</span> <h3>313</h3>
+                </div>
+              </div>
+              <div class="dash-info-card">
+                <p>DIRECT MESSAGES</p>
+                <div class="justify-content-between">
+                  <span>asd</span> <h3>313</h3>
+                </div>
+              </div>
+              <div class="dash-info-card">
+                <p>REMINDERS TODAY</p>
+                <div class="justify-content-between">
+                  <span>asd</span> <h3>313</h3>
+                </div>
+              </div>
+              <div class="dash-info-card">
+                <p>NEW NOTIFICATIONS</p>
+                <div class="justify-content-between">
+                  <span>asd</span> <h3>313</h3>
+                </div>
+              </div>
+        
+              </div>
+            </section>
+       
+          </div>
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item> -->
+    
+      <!-- <kendo-tilelayout-item  [col]="1">
+        <kendo-tilelayout-item-header>
+          <h3>APPLICATIONS & CERS</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          222222222
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+    
+      <kendo-tilelayout-item  [col]="2"  >
+        <kendo-tilelayout-item-header>
+          <h3>RECENTLY VIEWED</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          3333333333333333
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+    
+      <kendo-tilelayout-item [col]="1"  >
+        <kendo-tilelayout-item-header>
+          <h3>FINANCIAL LINKS</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          4444444444444
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+      <kendo-tilelayout-item [col]="2"  >
+        <kendo-tilelayout-item-header>
+          <h3>LINKS</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          4444444444444
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+      <kendo-tilelayout-item [col]="1"  >
+        <kendo-tilelayout-item-header>
+          <h3>RENT OVERAGES</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          4444444444444
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+      <kendo-tilelayout-item [col]="2"  >
+        <kendo-tilelayout-item-header>
+          <h3>LIHEAP</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          4444444444444
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+      <kendo-tilelayout-item [col]="1"  >
+        <kendo-tilelayout-item-header>
+          <h3>INSURANCE TYPE & FPL</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          4444444444444
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item> -->
+      <!-- <kendo-tilelayout-item [col]="2"  >
+        <kendo-tilelayout-item-header>
+          <h3>Clients by Group</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          4444444444444
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+     -->
+      <kendo-tilelayout-item [col]="1"  >
+        <kendo-tilelayout-item-header>
+          <h3>ACTIVE CLIENTS BY STATUS</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          <kendo-chart>
+            <ng-template kendoChartDonutCenterTemplate>
+              <h3>8%</h3>
+              Clients
+            </ng-template>
+            
+            <kendo-chart-series>
+              <kendo-chart-series-item
+                type="donut"
+                [data]="clientByStatus"
+                categoryField="kind"
+                field="share" 
+              >
+                <kendo-chart-series-item-labels background="none"></kendo-chart-series-item-labels>
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+            <kendo-chart-legend [visible]="true"  position="right"></kendo-chart-legend>
+            <kendo-chart-tooltip> </kendo-chart-tooltip>
+          </kendo-chart>
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+      <kendo-tilelayout-item [col]="2"  >
+        <kendo-tilelayout-item-header>
+          <h3>ACTIVE CLIENTS BY GROUP</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          <kendo-chart>
+            <kendo-chart-series>
+              <kendo-chart-series-item
+                type="donut"
+                [data]="clientByGroup"
+                categoryField="kind"
+                field="share"
+              >
+               
+              <kendo-chart-series-item-labels background="none"></kendo-chart-series-item-labels>
+            </kendo-chart-series-item>
+          </kendo-chart-series>
+          <kendo-chart-legend [visible]="true"  position="right"></kendo-chart-legend>
+          <kendo-chart-tooltip> </kendo-chart-tooltip>
+          </kendo-chart>
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+
+      <kendo-tilelayout-item [col]="1"  >
+        <kendo-tilelayout-item-header>
+          <h3>PROGRAM EXPENSES</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          <kendo-chart>
+           
+            <kendo-chart-category-axis>
+                <kendo-chart-category-axis-item [categories]="['Q1', 'Q2', 'Q3', 'Q4']">
+                </kendo-chart-category-axis-item>
+            </kendo-chart-category-axis>
+            <kendo-chart-series >
+              <kendo-chart-series-item  [stack]="true" [gap]="2" [spacing]=".25" [data]="[100, 123, 234, 343]">
+              </kendo-chart-series-item>
+              <kendo-chart-series-item [stack]="true"  [data]="[120, 67, 231, 196]">
+              </kendo-chart-series-item>
+              <kendo-chart-series-item [stack]="true" [data]="[45, 124, 189, 143]">
+              </kendo-chart-series-item>
+              <kendo-chart-series-item  [stack]="true"  [data]="[87, 154, 210, 215]">
+                <kendo-chart-legend [visible]="true"  position="right"></kendo-chart-legend>
+                <kendo-chart-tooltip> </kendo-chart-tooltip>
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+         
+          </kendo-chart>
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+      <kendo-tilelayout-item [col]="2"  >
+        <kendo-tilelayout-item-header>
+          <h3>PROGRAM EXPENSES</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          <kendo-chart>
+             
+            <kendo-chart-category-axis>
+              <kendo-chart-category-axis-item
+                [categories]="['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']"
+                [title]="{ text: 'Months' }"
+              >
+              </kendo-chart-category-axis-item>
+            </kendo-chart-category-axis>
+            <kendo-chart-series>
+              <kendo-chart-series-item
+                type="line"
+                [data]="[123, 276, 310, 212, 240, 156, 98]"
+              >
+              </kendo-chart-series-item>
+              <kendo-chart-series-item
+                type="line"
+                [data]="[165, 210, 287, 144, 190, 167, 212]"
+              >
+              </kendo-chart-series-item>
+              <kendo-chart-series-item
+                type="line"
+                [data]="[56, 140, 195, 46, 123, 78, 95]"
+              >
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+            <kendo-chart-legend [visible]="true"  position="right"></kendo-chart-legend>
+            <kendo-chart-tooltip> </kendo-chart-tooltip>
+          </kendo-chart>
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+
+      <kendo-tilelayout-item [col]="1"  >
+        <kendo-tilelayout-item-header>
+          <h3>NET INCOME</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          <kendo-chart>
+             
+            <kendo-chart-category-axis>
+                <kendo-chart-category-axis-item [categories]="['Q1', 'Q2', 'Q3', 'Q4']">
+                </kendo-chart-category-axis-item>
+            </kendo-chart-category-axis>
+            <kendo-chart-series >
+              <kendo-chart-series-item  [stack]="true" [gap]="2" [spacing]=".25" [data]="[100, 123, 234, 343]">
+              </kendo-chart-series-item>
+              <kendo-chart-series-item [stack]="true"  [data]="[120, 67, 231, 196]">
+              </kendo-chart-series-item>
+              <kendo-chart-series-item [stack]="true" [data]="[45, 124, 189, 143]">
+              </kendo-chart-series-item>
+              <kendo-chart-series-item  [stack]="true"  [data]="[87, 154, 210, 215]">
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+            <kendo-chart-legend [visible]="true"  position="right"></kendo-chart-legend>
+            <kendo-chart-tooltip> </kendo-chart-tooltip>
+          </kendo-chart>
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+      
+      <kendo-tilelayout-item [col]="2"  >
+        <kendo-tilelayout-item-header>
+          <h3>PHARMACY CLAIMS</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          <kendo-chart>
+            <kendo-chart-series>
+              <kendo-chart-series-item
+                type="donut"
+                [data]="pharmacyClaims"
+                categoryField="kind"
+                field="share"
+              >
+                <kendo-chart-series-item-labels
+                  [content]="pharmacyClaimsLabelContent"
+                  color="#fff"
+                  background="none"
+                >
+                </kendo-chart-series-item-labels>
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+            <kendo-chart-legend [visible]="true"  position="right"></kendo-chart-legend>
+            <kendo-chart-tooltip> </kendo-chart-tooltip>
+          </kendo-chart>
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+      <kendo-tilelayout-item [col]="1"  >
+        <kendo-tilelayout-item-header>
+          <h3>PREMIUM EXPENSES BY INSURANCE TYPE</h3>
+        </kendo-tilelayout-item-header>
+        <kendo-tilelayout-item-body>
+          <kendo-chart>
+            <kendo-chart-title text="Units sold"></kendo-chart-title>
+            <kendo-chart-category-axis>
+                <kendo-chart-category-axis-item [categories]="['Q1', 'Q2', 'Q3', 'Q4']">
+                </kendo-chart-category-axis-item>
+            </kendo-chart-category-axis>
+            <kendo-chart-series >
+              <kendo-chart-series-item  [stack]="true" [gap]="2" [spacing]=".25" [data]="[100, 123, 234, 343]">
+              </kendo-chart-series-item>
+              <kendo-chart-series-item [stack]="true"  [data]="[120, 67, 231, 196]">
+              </kendo-chart-series-item>
+              <kendo-chart-series-item [stack]="true" [data]="[45, 124, 189, 143]">
+              </kendo-chart-series-item>
+              <kendo-chart-series-item  [stack]="true"  [data]="[87, 154, 210, 215]">
+              </kendo-chart-series-item>
+            </kendo-chart-series>
+            <kendo-chart-legend [visible]="true"  position="right"></kendo-chart-legend>
+            <kendo-chart-tooltip> </kendo-chart-tooltip>
+          </kendo-chart>
+        </kendo-tilelayout-item-body>
+      </kendo-tilelayout-item>
+    </kendo-tilelayout>
     </div>
-    <div class="flex-col mb-3">
-      <table class="table" >
-        <caption hidden> dashboard</caption>
-        <tr hidden>
-          <th scope="col">id</th>
-          <th scope="col">name</th>
-          <th scope="col">description</th>
-        </tr>
-        <tr *ngFor="let dashboard of dashboard$ | async">
-          <td>{{ dashboard.id }}</td>
-          <td>{{ dashboard.name }}</td>
-          <td>{{ dashboard.description }}</td>
-        </tr>
-      </table>
-    </div>
-  </div>
-</div>
+    <!-- //NOSONAR <common-signature-pad></common-signature-pad> -->

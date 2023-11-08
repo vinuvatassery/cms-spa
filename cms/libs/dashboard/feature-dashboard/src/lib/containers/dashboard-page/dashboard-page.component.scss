@@ -5,3 +5,20 @@
 .k-calendar {
   margin: 0 auto;
 }
+
+
+.dash-top-cards-wrapper{
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  grid-gap: 10px;
+}
+.dash-info-card{
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+border: 1px solid #0000000F;
+border-radius: 4px;
+padding: 1rem;
+}
+.dashboard-page-wrapper{
+  // display: grid;
+  // gap: 20px;
+}

@@ -28,6 +28,7 @@
     "@microsoft/signalr": "^7.0.3",
     "@nx/angular": "16.8.1",
     "@progress/kendo-angular-buttons": "^13.5.0",
+    "@progress/kendo-angular-charts": "^14.0.1",
     "@progress/kendo-angular-common": "^13.5.0",
     "@progress/kendo-angular-conversational-ui": "^13.5.0",
     "@progress/kendo-angular-dateinputs": "^13.5.0",
