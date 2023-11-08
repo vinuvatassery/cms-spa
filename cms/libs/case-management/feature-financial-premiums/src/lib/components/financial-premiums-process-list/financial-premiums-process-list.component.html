@@ -41,7 +41,7 @@
     <kendo-grid-checkbox-column *ngIf="isBatchPremiumsClicked" [columnMenu]="false" [showSelectAll]="true" class="text-center" 
     [width]="40" [sticky]="true"></kendo-grid-checkbox-column>
 
-      <kendo-grid-column *ngIf="isSendReportOpened || isRemoveBatchClosed"  field="add" [width]="40" class="text-center" 
+    <kendo-grid-column *ngIf="isRemoveBatchClosed"  field="add" [width]="40" class="text-center" 
       [sortable]="false"  [columnMenu]="false">
         <ng-template kendoGridHeaderTemplate let-dataItem>
             <input   
@@ -51,10 +51,25 @@
                  (change)="selectionAllChange()" kendoCheckBox />
          </ng-template> 
          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
-             <input 
+                <input
                  type="checkbox"
                  [(ngModel)]="dataItem.selected"
-                 [disabled]="dataItem.acceptsCombinedPaymentsFlag === 'N'"
+                 (change)="selectionChange(dataItem,dataItem.selected)" kendoCheckBox />
+         </ng-template>
+      </kendo-grid-column> 
+      <kendo-grid-column *ngIf="isSendReportOpened"  field="add" [width]="40" class="text-center" 
+      [sortable]="false"  [columnMenu]="false">
+        <ng-template kendoGridHeaderTemplate let-dataItem>
+            <input   
+                 type="checkbox" 
+                 name="selectAll"
+                 [(ngModel)]="selectAll"
+                 (change)="selectionAllChange()" kendoCheckBox />
+         </ng-template> 
+         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
+                <input *ngIf="dataItem.acceptsCombinedPaymentsFlag === 'Y'"
+                 type="checkbox"
+                 [(ngModel)]="dataItem.selected"
                  (change)="selectionChange(dataItem,dataItem.selected)" kendoCheckBox />
          </ng-template>
       </kendo-grid-column> 

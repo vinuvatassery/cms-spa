@@ -18,6 +18,7 @@ import { GridFilterParam } from '../../entities/grid-filter-param';
 import { BatchPharmacyClaims } from '../../entities/financial-management/batch-pharmacy-claims';
 import { Vendor } from '../../entities/vendor';
 import { Client } from '../../entities/client';
+import { PharmacyClaims } from '../../entities/financial-management/pharmacy-claim';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsFacade {
@@ -42,7 +43,7 @@ export class FinancialPharmacyClaimsFacade {
     },
   ];
 
-  public sortValuePharmacyClaimsPayments = 'batch';
+  public sortValuePharmacyClaimsPayments = 'creationTime';
   public sortPaymentsList: SortDescriptor[] = [
     {
       field: this.sortValuePharmacyClaimsPayments,
@@ -89,8 +90,10 @@ export class FinancialPharmacyClaimsFacade {
   pharmacyClaimsBatchLoader$ = this.pharmacyClaimsBatchLoaderSubject.asObservable();
 
   private pharmacyClaimsAllPaymentsDataSubject = new Subject<any>();
-  pharmacyClaimsAllPaymentsData$ =
-    this.pharmacyClaimsAllPaymentsDataSubject.asObservable();
+  pharmacyClaimsAllPaymentsData$ = this.pharmacyClaimsAllPaymentsDataSubject.asObservable();
+
+  private pharmacyClaimsAllPaymentsLoaderSubject = new BehaviorSubject<any>(false);
+  pharmacyClaimsAllPaymentsLoader$ = this.pharmacyClaimsAllPaymentsLoaderSubject.asObservable();
 
   private batchLogDataSubject = new Subject<any>();
   batchLogData$ = this.batchLogDataSubject.asObservable();
@@ -177,7 +180,7 @@ export class FinancialPharmacyClaimsFacade {
     this.financialPharmacyClaimsDataService.loadPharmacyClaimsProcessListService(params).subscribe({
       next: (dataResponse) => {
         const gridView = {
-          data: dataResponse['items'],
+          data: dataResponse['items'] as PharmacyClaims,
           total: dataResponse['totalCount'],
         };
         this.pharmacyClaimsProcessDataSubject.next(gridView);
@@ -335,15 +338,22 @@ export class FinancialPharmacyClaimsFacade {
     });
   }
 
-  loadPharmacyClaimsAllPaymentsListGrid() {
+  loadPharmacyClaimsAllPaymentsListGrid(params: GridFilterParam) {
+    this.pharmacyClaimsAllPaymentsLoaderSubject.next(true);
     this.financialPharmacyClaimsDataService
-      .loadPharmacyClaimsAllPaymentsListService()
+      .loadPharmacyClaimsAllPaymentsListService(params)
       .subscribe({
         next: (dataResponse) => {
-          this.pharmacyClaimsAllPaymentsDataSubject.next(dataResponse);
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.pharmacyClaimsAllPaymentsLoaderSubject.next(false);
+          this.pharmacyClaimsAllPaymentsDataSubject.next(gridView);
           this.hideLoader();
         },
         error: (err) => {
+          this.pharmacyClaimsAllPaymentsLoaderSubject.next(false);
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
           this.hideLoader();
         },

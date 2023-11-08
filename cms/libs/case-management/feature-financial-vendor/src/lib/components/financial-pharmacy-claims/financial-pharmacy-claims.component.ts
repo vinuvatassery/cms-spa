@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
-import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
+import {  DocumentFacade } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { LovFacade } from '@cms/system-config/domain';
-import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'cms-financial-pharmacy-claims',
   templateUrl: './financial-pharmacy-claims.component.html',

@@ -211,7 +211,7 @@
     </kendo-grid-column>
     <kendo-grid-column [sortable]="false" field="sendBackNotes" title="Send Back Notes" [width]="280">
       <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-        <div kendoTooltip>
+        <div >
           <kendo-textarea
             #tareaCessation
             [fillMode]="formUiStyle.inputFillMode"
@@ -313,8 +313,9 @@
   </button>
 </div>
 
-<kendo-dialog *ngIf="isSubmitApprovalPaymentItems" (close)="onCloseSubmitApprovalPaymentItemsClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Submit item(s)?" kendoTooltip>
+<kendo-dialog *ngIf="isSubmitApprovalPaymentItems" class="app-c-modal app-c-modal-sm app-c-modal-np"  >
+  <kendo-dialog-titlebar class="text-normal" (close)="onCloseSubmitApprovalPaymentItemsClicked()">
+    Submit Item(s)?</kendo-dialog-titlebar>
   <section class="k-dialog-body newcase">
     <p class="mb-2">
       {{
@@ -361,7 +362,7 @@
   (close)="onCloseViewPaymentsBatchClicked()"
   class="app-c-modal app-c-modal-xlg app-c-modal-np_0"
   title="View Payments in Each Batch"
-  kendoTooltip
+  
 >
   <productivity-tools-approval-batch-lists
     [approvalId]="selectedApprovalId"
