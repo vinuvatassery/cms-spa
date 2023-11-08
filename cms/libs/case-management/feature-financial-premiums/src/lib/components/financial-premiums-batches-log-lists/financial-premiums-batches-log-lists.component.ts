@@ -18,7 +18,7 @@ import { CompositeFilterDescriptor, State, } from '@progress/kendo-data-query';
 import { Subject, first, Subscription, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
-import { PaymentStatusCode } from 'libs/case-management/domain/src/lib/enums/payment-status-code.enum';
+import { BatchStatusCode, PaymentStatusCode } from 'libs/case-management/domain/src/lib/enums/payment-status-code.enum';
 import { PaymentBatchName } from '@cms/case-management/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -102,13 +102,14 @@ export class FinancialPremiumsBatchesLogListsComponent
       text: 'Unbatch Entire Batch',
       icon: 'undo',
       click: (data: any): void => {
-        if (!this.isBulkUnBatchOpened) {
+        if (!this.isBulkUnBatchOpened && !this.disableBtnUnbatchEntireBatch) {
           this.isBulkUnBatchOpened = true;
           this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
         }
       },
     }
   ];
+  disableBtnUnbatchEntireBatch= true;
 
   public batchLogGridActions(dataItem:any){
    return [
@@ -118,13 +119,11 @@ export class FinancialPremiumsBatchesLogListsComponent
       icon: 'undo',
       disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {
-        if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
-        {
-        if (!this.isUnBatchPaymentPremiumsClosed) {
+        if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode) && !this.isUnBatchPaymentPremiumsClosed)
+      {
           this.isUnBatchPaymentPremiumsClosed = true;
           this.selected = data;
           this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
-        }
       }
       },
     },
@@ -178,7 +177,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       columnDesc: 'Pmt. Method',
     },
     {
-      columnCode: 'paymentStatusCode',
+      columnCode: 'paymentStatusCodeDesc',
       columnDesc: 'Pmt. Status',
     },
     {
@@ -199,7 +198,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     paymentRequestedDate: "Date Pmt. Requested",
     paymentSentDate: "Date Pmt. Sent",
     paymentMethodCode: "Pmt. Method",
-    paymentStatusCode: "Pmt. Status",
+    paymentStatusCodeDesc: "Pmt. Status",
     pca: "PCA",
     mailCode: "Mail Code"
   }
@@ -257,6 +256,13 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.loadYesOrNoLovs();
     this.addActionRespSubscription();
     this.batchLogListItemsSubscription();
+    this.batchLogGridLists$.subscribe((data:GridDataResult) =>{
+        data.data.forEach(item =>{
+          if(!([BatchStatusCode.Paid, BatchStatusCode.PaymentRequested, BatchStatusCode.ManagerApproved].includes(item.batchStatusCode))){
+            this.disableBtnUnbatchEntireBatch = false
+          }
+        })
+    })
   }
   batchLogListItemsSubscription() {
     this.batchLogListSubscription = this.batchLogGridLists$.subscribe((response:any) =>{
@@ -280,6 +286,10 @@ export class FinancialPremiumsBatchesLogListsComponent
 
   ngOnDestroy(): void {
     this.batchLogListSubscription.unsubscribe();
+  }
+
+  setDisablePropertyOfBulkMore(dataItem : any){
+  return dataItem.text=='Unbatch Entire Batch' && this.disableBtnUnbatchEntireBatch
   }
 
   loadFinancialPremiumBatchInvoiceList(data: any) {
