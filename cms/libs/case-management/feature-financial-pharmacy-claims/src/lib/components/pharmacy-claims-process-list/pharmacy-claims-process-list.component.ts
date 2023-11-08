@@ -13,8 +13,9 @@ import {
 } from '@angular/core';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { ColumnVisibilityChangeEvent, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -68,6 +69,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   isPharmacyClaimsProcessGridLoaderShow = false;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
 
   @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
@@ -192,10 +195,15 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     { columnName: 'creationTime', columnDesc: 'Entry Date' }
   ];
 
+  paymentMethodFilter = '';
+  paymentTypeFilter = '';
+  paymentStatusFilter = '';
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly lovFacade: LovFacade
   ) { 
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -208,6 +216,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadPharmacyClaimsProcessListGrid();
     this.addSearchSubjectSubscription();
+    this.lovFacade.getPaymentStatusLov();
+    this.lovFacade.getPaymentMethodLov();
   }
 
   ngOnChanges(): void {
@@ -248,7 +258,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
@@ -259,8 +269,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   searchColumnChangeHandler(value: string) {
     this.filter = [];
-    //this.showNumberSearchWarning = (['pcaCode', 'appropriationYear']).includes(value);
-    //this.showDateSearchWarning = value === 'closeDate';
     if (this.searchText) {
       this.onSearch(this.searchText);
     }
@@ -268,8 +276,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   onSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    // this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'closeDate';
-    //searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
     this.searchSubject.next(searchValue);
@@ -303,7 +309,16 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   }
 
   resetGrid() {
-
+    this.defaultGridState();
+    this.sortValue = 'creationTime';
+    this.sortType = 'desc';
+    this.sortDir = this.sortType === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchText = '';
+    this.selectedSearchColumn = 'ALL';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.loadPharmacyClaimsProcessListGrid();
   }
 
   performSearch(data: any) {
@@ -502,5 +517,29 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       this.onBatchClaimsGridSelectedCancelClicked()
     })
     this.onbatchClaimsClickedEvent.emit(input)
+  }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentMethodCode') {
+      this.paymentMethodFilter = value;
+    } else if (field === 'paymentTypeCode') {
+      this.paymentTypeFilter = value;
+    } else if (field === 'paymentStatus') {
+      this.paymentStatusFilter = value;
+    }
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
   }
 }
