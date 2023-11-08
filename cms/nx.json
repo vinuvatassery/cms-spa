@@ -29,6 +29,9 @@
     },
     "@nx/angular:component": {
       "style": "scss"
+    },
+    "@nx/workspace:move": {
+      "projectNameAndRootFormat": "as-provided"
     }
   },
   "defaultProject": "cms",

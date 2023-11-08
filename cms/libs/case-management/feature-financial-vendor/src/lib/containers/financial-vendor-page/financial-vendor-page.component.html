@@ -2,7 +2,7 @@
   <common-bread-crumb></common-bread-crumb>
   <div class=" pt-0">
     <!-- Main Title Section -->
-  
+
     <kendo-dropdownbutton aria-label="new case" kendoButton icon="add" themeColor="primary" class="add-new-button"
       [data]="data">
       New Profile
@@ -13,161 +13,162 @@
         Financial Management
       </h1>
     </section>
-   
+
     <section class="app-l-client-wrapper" [ngClass]="{'due-notification-on': reminderTabOn}">
-      <div class="app-l-client-left"  >
+      <div class="app-l-client-left">
         <section class="app-l-wrapper">
-  
+
           <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
             class="app-c-tab case-360-tab">
-            <kendo-tabstrip-tab title="Manufacturers" [selected]="selectedVendorType===financeVendorTypeCodes.Manufacturers" 
+            <kendo-tabstrip-tab title="Manufacturers"
+              [selected]="selectedVendorType===financeVendorTypeCodes.Manufacturers"
               *ifPermission='["Financial_Manufacturers_Tab"]'>
               <ng-template kendoTabContent>
                 <div class="block-section ">
-                  
-                  <cms-financial-vendors-list  
-                  [financeTabTypeCode]="financeManagementTabs.Manufacturers"
-                  [vendorTypeCode]="financeVendorTypeCodes.Manufacturers"
-                  [vendorsList$]="vendorsList$"
-                  [pageSizes]="pageSizes" [sortValue]="sortValue"
-                  [sortType]="sortType" [sort]="sort" 
-                  [exportButtonShow$]="exportButtonShow$"                    
-                  (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                  (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
+
+                  <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Manufacturers"
+                    [vendorTypeCode]="financeVendorTypeCodes.Manufacturers" [vendorsList$]="vendorsList$"
+                    [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
+                    [exportButtonShow$]="exportButtonShow$"
+                    (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
+                    (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
                 </div>
               </ng-template>
             </kendo-tabstrip-tab>
-  
-            <kendo-tabstrip-tab title="Medical Providers" [selected]="selectedVendorType===financeVendorTypeCodes.MedicalProviders" 
-             *ifPermission='["Financial_MedicalProvider_Tab"]'>
+
+            <kendo-tabstrip-tab title="Medical Providers"
+              [selected]="selectedVendorType===financeVendorTypeCodes.MedicalProviders"
+              *ifPermission='["Financial_MedicalProvider_Tab"]'>
               <ng-template kendoTabContent>
                 <div class="block-section ">
-                  
+
                   <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.MedicalProvider"
-                  [financeTabTypeCode]="financeManagementTabs.MedicalProvider"
-                  [vendorTypeCode]="financeVendorTypeCodes.MedicalProviders"
-                  [vendorsList$]="vendorsList$"
-                  [pageSizes]="pageSizes" [sortValue]="sortValue"
-                  [sortType]="sortType" [sort]="sort"       
-                  [exportButtonShow$]="exportButtonShow$"                      
-                  (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                  (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
+                    [financeTabTypeCode]="financeManagementTabs.MedicalProvider"
+                    [vendorTypeCode]="financeVendorTypeCodes.MedicalProviders" [vendorsList$]="vendorsList$"
+                    [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
+                    [exportButtonShow$]="exportButtonShow$"
+                    (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
+                    (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
                 </div>
               </ng-template>
             </kendo-tabstrip-tab>
-  
+
             <kendo-tabstrip-tab title="Dental Providers" *ifPermission='["Financial_DentalProvider_Tab"]'
-            [selected]="selectedVendorType===financeVendorTypeCodes.DentalProviders" >
+              [selected]="selectedVendorType===financeVendorTypeCodes.DentalProviders">
               <ng-template kendoTabContent>
                 <div class="block-section ">
-                   
+
                   <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.DentalProvider"
-                  [financeTabTypeCode]="financeManagementTabs.DentalProvider"
-                  [vendorTypeCode]="financeVendorTypeCodes.DentalProviders"
-                  [vendorsList$]="vendorsList$"
-                  [pageSizes]="pageSizes" [sortValue]="sortValue"
-                  [sortType]="sortType" [sort]="sort" 
-                  [exportButtonShow$]="exportButtonShow$"         
-                  (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                  (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
+                    [financeTabTypeCode]="financeManagementTabs.DentalProvider"
+                    [vendorTypeCode]="financeVendorTypeCodes.DentalProviders" [vendorsList$]="vendorsList$"
+                    [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
+                    [exportButtonShow$]="exportButtonShow$"
+                    (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
+                    (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
                 </div>
               </ng-template>
-            </kendo-tabstrip-tab>         
-  
+            </kendo-tabstrip-tab>
+
             <kendo-tabstrip-tab title="Insurance Vendors" *ifPermission='["Financial_InsuranceVendors_Tab"]'
-            [selected]="selectedVendorType===financeVendorTypeCodes.InsuranceVendors" >
+              [selected]="selectedVendorType===financeVendorTypeCodes.InsuranceVendors">
               <ng-template kendoTabContent>
                 <div class="block-section ">
-                  
-                  <cms-financial-vendors-list
-                   [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"
-                   [vendorTypeCode]="financeVendorTypeCodes.InsuranceVendors"
-                   [vendorsList$]="vendorsList$"
-                   [pageSizes]="pageSizes" [sortValue]="sortValue"
-                   [sortType]="sortType" [sort]="sort" 
-                   [exportButtonShow$]="exportButtonShow$"         
-                   (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                   (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
+
+                  <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.InsuranceVendors"
+                    [vendorTypeCode]="financeVendorTypeCodes.InsuranceVendors" [vendorsList$]="vendorsList$"
+                    [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
+                    [exportButtonShow$]="exportButtonShow$"
+                    (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
+                    (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
                 </div>
               </ng-template>
             </kendo-tabstrip-tab>
-  
+
             <kendo-tabstrip-tab title="Pharmacies" *ifPermission='["Financial_Pharmacy_Tab"]'
-            [selected]="selectedVendorType===financeVendorTypeCodes.Pharmacy" >
+              [selected]="selectedVendorType===financeVendorTypeCodes.Pharmacy">
               <ng-template kendoTabContent>
                 <div class="block-section ">
-                  
-                  <cms-financial-vendors-list
-                   [financeTabTypeCode]="financeManagementTabs.Pharmacy"
-                   [vendorTypeCode]="financeVendorTypeCodes.Pharmacy"
-                   [vendorsList$]="vendorsList$"
-                   [pageSizes]="pageSizes" [sortValue]="sortValue"
-                   [sortType]="sortType" [sort]="sort" 
-                   [exportButtonShow$]="exportButtonShow$"         
-                   (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                   (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
+
+                  <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Pharmacy"
+                    [vendorTypeCode]="financeVendorTypeCodes.Pharmacy" [vendorsList$]="vendorsList$"
+                    [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
+                    [exportButtonShow$]="exportButtonShow$"
+                    (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
+                    (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
                 </div>
               </ng-template>
             </kendo-tabstrip-tab>
-  
+
           </kendo-tabstrip>
-  
+
         </section>
-        
+
       </div>
       <!-- Right Reminders-->
       <div class="app-l-client-right todo-list">
         <productivity-tools-reminder-list class="reminder-list-case-wrap"
-        (ReminderEventClicked)="onReminderDoneClicked($event)"></productivity-tools-reminder-list> 
+          (ReminderEventClicked)="onReminderDoneClicked($event)"></productivity-tools-reminder-list>
       </div>
     </section>
   </div>
-  </div>
-  <kendo-dialog kendoRippleContainer *ngIf="isShowMedicalProvider" (close)="closeVendorDetailModal()"
-    class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
-    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.MedicalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
-    [ddlStates$]="ddlStates"
-    [clinicVendorList$]="clinicVendorList"
-    [clinicVendorLoader$]="clinicVendorLoader"
+</div>
+
+<!-- medical -->
+<kendo-dialog kendoRippleContainer *ngIf="isShowMedicalProvider" (close)="closeVendorDetailModal(vendorTypes.MedicalProviders)"
+  class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.MedicalProviders"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.MedicalProviders)"
+    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList"
+    [hasCreateUpdatePermission]="hasMedicalAndDentalCreateUpdatePermission" [clinicVendorLoader$]="clinicVendorLoader"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
-    ></cms-vendor-details>
-  </kendo-dialog>
-  
-  <kendo-dialog kendoRippleContainer *ngIf="isShowDentalProvider" (close)="closeVendorDetailModal()"
-    class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Provider" kendoTooltip>
-    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.DentalProviders" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
-    [ddlStates$]="ddlStates"
-    [clinicVendorList$]="clinicVendorList"
-    [clinicVendorLoader$]="clinicVendorLoader"
+    (closeMedicalDentalProviderDialogEvent)="setupForClinic($event)"></cms-vendor-details>
+</kendo-dialog>
+
+<!-- dental -->
+<kendo-dialog kendoRippleContainer *ngIf="isShowDentalProvider" (close)="closeVendorDetailModal(vendorTypes.DentalProviders)"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Provider" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.DentalProviders"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.DentalProviders)"
+    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasMedicalAndDentalCreateUpdatePermission"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
-    ></cms-vendor-details>
-  </kendo-dialog>
-  
-  <kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"
-    class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Insurance Vendor" kendoTooltip>
-    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.InsuranceVendors" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"      [ddlStates$]="ddlStates"
-    [clinicVendorList$]="clinicVendorList"
-    [clinicVendorLoader$]="clinicVendorLoader"
+    (closeMedicalDentalProviderDialogEvent)="setupForClinic($event)"></cms-vendor-details>
+</kendo-dialog>
+
+<!-- clinic -->
+<kendo-dialog kendoRippleContainer *ngIf="ShowClinicProvider" (close)="closeVendorDetailModal(vendorTypes.Clinic)"
+  class="app-c-modal app-c-modal-md hide app-c-modal-np" title="{{hasClinicCreateUpdatePermission ? 'Add New Clinic' : 'Request New Clinic'}}" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]=clinicForm [providerType]="vendorTypes.Clinic"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.Clinic)"
+    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasClinicCreateUpdatePermission" [selectedClinicType]="selectedClinicType"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)" [saveVendorEventSubject]="saveVendorEventSubject"></cms-vendor-details>
+</kendo-dialog>
+
+<kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{hasinsuranceVendorCreateUpdatePermission==true? 'Add New Insurance Vendor':'Request New Insurance Vendor'}}" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.InsuranceVendors"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
+    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasinsuranceVendorCreateUpdatePermission"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
-  </kendo-dialog>
-  
-  <kendo-dialog kendoRippleContainer *ngIf="isShowPharmacyProvider" (close)="closeVendorDetailModal()"
-    class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Pharmacy" kendoTooltip>
-    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.Pharmacy" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
-    [ddlStates$]="ddlStates"
-    [clinicVendorList$]="clinicVendorList"
-    [clinicVendorLoader$]="clinicVendorLoader"
-    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
-    ></cms-vendor-details>
-  </kendo-dialog>
-  
-  <kendo-dialog kendoRippleContainer *ngIf="isShowManufacturers" (close)="closeVendorDetailModal()"
-    class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Manufacture" kendoTooltip>
-    <cms-vendor-details [medicalProviderForm] = medicalProviderForm [providerType]="vendorTypes.Manufacturers" (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
-     [ddlStates$]="ddlStates"
-     [clinicVendorList$]="clinicVendorList"
-     [clinicVendorLoader$]="clinicVendorLoader"
-     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
-     
-     ></cms-vendor-details>
-  </kendo-dialog>
+</kendo-dialog>
+
+<kendo-dialog kendoRippleContainer *ngIf="isShowPharmacyProvider" (close)="closeVendorDetailModal()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{ hasPharmacyCreateUpdatePermission == true ? 'Add New Pharmacy' : 'Request New Pharmacy'}}" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Pharmacy"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
+    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasPharmacyCreateUpdatePermission"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
+</kendo-dialog>
+
+<kendo-dialog kendoRippleContainer *ngIf="isShowManufacturers" (close)="closeVendorDetailModal()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{ hasManufacturerCreateUpdatePermission == true ? 
+    'Add New Manufacturer' : 'Request New Manufacturer'}}" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Manufacturers"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
+    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasManufacturerCreateUpdatePermission"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
+</kendo-dialog>

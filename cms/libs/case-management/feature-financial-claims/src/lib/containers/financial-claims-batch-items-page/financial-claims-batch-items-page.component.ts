@@ -4,7 +4,7 @@ import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, PaymentPanel, PaymentsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import {  filter } from 'rxjs';
-import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
@@ -38,7 +38,7 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
-
+ exportButtonShow$ = this.documentFacade.exportButtonShow$
   providerDetailsDialog:any;
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -51,7 +51,7 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
     public lovFacade: LovFacade,
     private readonly financialVendorFacade : FinancialVendorFacade,
     private dialogService: DialogService,
-   
+    private documentFacade: DocumentFacade
 
   ) {}
 
@@ -88,6 +88,22 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
     this.financialClaimsFacade.loadBatchItemsListGrid(itemId, params, this.claimsType);
   }
+
+  
+  exportBatchItemListGridData(data:any){
+    const  filter = JSON.stringify(data?.filter);
+     const PagingAndSortedRequest =
+     {
+       SortType : data?.sortType,
+       Sorting : data?.sortColumn,
+       SkipCount : data?.skipcount,
+       MaxResultCount : data?.maxResultCount,
+       Filter : filter
+     }
+     const itemId = this.route.snapshot.queryParams['pid'];
+     const fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase())  +' Claims batch items'
+     this.documentFacade.getExportFile(PagingAndSortedRequest,`claims/${itemId}/services` , fileName)
+   }
 
   loadPaymentPanel(event:any=null){
     this.paymentFacade.loadPaymentPanel(this.vendorAddressId,this.batchId);    

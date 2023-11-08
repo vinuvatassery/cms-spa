@@ -16,9 +16,10 @@
     <kendo-grid-column field="deliveryMethodCode" title="Unit" [width]="60"> </kendo-grid-column>
     <kendo-grid-column field="rxQty" title="RX Qty" [width]="78"> </kendo-grid-column>
     <kendo-grid-column field="rxDays" title="RX Days" [width]="85"> </kendo-grid-column>
-    <kendo-grid-column field="copayAmountPaid" title="Amount Paid" [width]="150"> <ng-template kendoGridCellTemplate
-        let-dataItem>
-        <span class="tableamountview"> {{dataItem.copayAmountPaid | kendoNumber : "c"}}</span>
+    <kendo-grid-column field="paymentTypeCode" title="Payment Type" [width]="150"></kendo-grid-column>
+    <kendo-grid-column field="copayAmountPaid" title="Amount Paid" [width]="150"> 
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.copayAmountPaid | kendoNumber: 'n2'}}</span>
       </ng-template></kendo-grid-column>
     <kendo-grid-column field="ndcCode" title="NDC Code" [width]="120"> </kendo-grid-column>
     <kendo-grid-column field="brandName" title="Brand Name" [width]="175"> </kendo-grid-column>
@@ -36,7 +37,7 @@
               [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
               [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>  
+            <kendo-grid-messages [pagerItems]="'rows'"  [pagerPage]="'Page'"> </kendo-grid-messages>  
           </div>
           <div class="d-flex">
             <kendo-pager-input></kendo-pager-input>

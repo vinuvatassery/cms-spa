@@ -17,7 +17,7 @@
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="{{tabCode !== financeManagementTabs.Manufacturers ? 'Payment Addresses' : 'Addresses and Contacts'}}">
+    <kendo-tabstrip-tab *ngIf="tabCode !== financeManagementTabs.Manufacturers" title="Payment Addresses">
       <ng-template kendoTabContent>
         <div class="block-section">
 
@@ -43,6 +43,7 @@
             [sortType]="sortType"
             [sort]="sort"
             [gridSkipCount]="gridSkipCount"
+            [hasCreateUpdatePermission]="hasDrugCreateUpdatePermission"
             [vendorDetails$]="vendorDetails$"></cms-financial-drugs>
           </div>
         </div>
@@ -87,13 +88,14 @@
       </ng-template>
     </kendo-tabstrip-tab>
 
-    <kendo-tabstrip-tab title="Invoices" *ngIf="tabCode === financeManagementTabs.Manufacturers || tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider">
+    <kendo-tabstrip-tab title="Invoices" *ngIf="tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider">
 
       <ng-template kendoTabContent>
         <div class="block-section">
 
           <div class="client-profile-outlet">
-            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId"></cms-invoices>
+            <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId" 
+            (loadInvoiceServiceEvent)="loadInvoiceServices($event)" [vendorName]="vendorName" [vendorTypeCode]="vendorTypeCode"></cms-invoices>
           </div>
         </div>
       </ng-template>
@@ -105,18 +107,7 @@
         <div class="block-section ">
 
           <div class="client-profile-outlet"  *ngIf="vendorTypeCode">
-            <cms-clients [vendorTypeCode]="vendorTypeCode" [providerId]="vendorId"></cms-clients>
-          </div>
-        </div>
-      </ng-template>
-    </kendo-tabstrip-tab>
-
-    <kendo-tabstrip-tab title="Contacts" *ngIf="tabCode !== financeManagementTabs.Pharmacy">
-      <ng-template kendoTabContent>
-        <div class="block-section">
-
-          <div class="client-profile-outlet">
-            <cms-contacts></cms-contacts>
+            <cms-clients [vendorTypeCode]="vendorTypeCode" [providerId]="vendorId" [vendorName]="vendorName"></cms-clients>
           </div>
         </div>
       </ng-template>

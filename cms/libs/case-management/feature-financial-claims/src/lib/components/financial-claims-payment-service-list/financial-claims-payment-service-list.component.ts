@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { FinancialClaimTypeCode, FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
@@ -24,6 +24,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
     state!: State;
     servicesList$ = new BehaviorSubject<any>([]);
     loader$ = new BehaviorSubject<boolean>(false);
+    serviceTitle = '';
 
     /** Constructor **/
     constructor(private readonly claimsFacade: FinancialClaimsFacade,
@@ -31,7 +32,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
         private readonly notificationSnackbarService: NotificationSnackbarService,) { }
 
     /* Life cycle events */
-    ngOnInit(): void {
+    ngOnInit(): void {        
         this.initializeGrid();
         this.loadServices();
     }
@@ -65,6 +66,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
                 };
                 this.servicesList$.next(gridView);
                 this.loader$.next(false);
+                this.serviceTitle = this.claimType == FinancialClaimTypeCode.Medical ? 'Medical Service' : 'Dental Service';
             },
             error: (err: any) => {
                 this.loader$.next(false);
@@ -75,6 +77,7 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
     }
 
     private initializeGrid(){
+        this.serviceTitle = this.claimType == FinancialClaimTypeCode.Medical ? 'Medical Service' : 'Dental Service';
         this.state = {
             skip: this.gridSkipCount,
             take: this.pageSizes[0]?.value,

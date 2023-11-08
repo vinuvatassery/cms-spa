@@ -36,7 +36,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   @Input() existingProviderData: any;  
   @Input() searchProviderLoaded$: any;
   @Input() selectedCustomProviderName: any;  
- 
+  @Input() hasCreateUpdatePermission:boolean=false; //Healtcare provider Add/Request
 
   /** Public properties **/
   providers$ = this.drugPharmacyFacade.healthCareProviders$;
@@ -151,7 +151,13 @@ export class HealthCareProviderSearchComponent implements OnInit
   }
   onOpenBusinessLogicClicked()
   {
-    this.businessLogicEvent.emit();
+    if(this.existHealthProvderForm.valid)
+      {
+        this.onExistHealthProvderSubmit();
+      }
+       else{
+        this.businessLogicEvent.emit();
+       }
   }
 
   onsearchTextChange(text : string)

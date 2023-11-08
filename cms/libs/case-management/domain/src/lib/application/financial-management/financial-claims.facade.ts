@@ -5,6 +5,7 @@ import { BehaviorSubject, Subject, catchError, of } from 'rxjs';
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
+import { Router } from '@angular/router';
 import {
   ConfigurationProvider,
   LoaderService,
@@ -13,13 +14,12 @@ import {
   NotificationSource,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
-import { Router } from '@angular/router';
-import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
-import { PaymentBatchName } from '../../entities/financial-management/Payment-details';
-import { GridFilterParam } from '../../entities/grid-filter-param';
-import { BatchClaim } from '../../entities/financial-management/batch-claim';
 import { Pharmacy } from '../../entities/client-pharmacy';
+import { PaymentBatchName } from '../../entities/financial-management/Payment-details';
+import { BatchClaim } from '../../entities/financial-management/batch-claim';
+import { GridFilterParam } from '../../entities/grid-filter-param';
+import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
+import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -27,8 +27,9 @@ export class FinancialClaimsFacade {
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
+  public selectedClaimsTab = 1
 
-  public sortValueFinancialClaimsProcess = 'invoiceNbr';
+  public sortValueFinancialClaimsProcess = 'creationTime';
   public sortProcessList: SortDescriptor[] = [
     {
       field: this.sortValueFinancialClaimsProcess,
@@ -42,7 +43,7 @@ export class FinancialClaimsFacade {
     },
   ];
 
-  public sortValueFinancialClaimsBatch = 'batchName';
+  public sortValueFinancialClaimsBatch = 'creationTime';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialClaimsBatch,
   }];
@@ -96,10 +97,12 @@ export class FinancialClaimsFacade {
   private showIneligibleExceptionSubject = new Subject<any>();
   private showBridgeUppExceptionSubject = new Subject<any>();
   private showDuplicatePaymentExceptionSubject = new Subject<any>();
+  public showDuplicatePaymentHighlightSubject = new Subject<any>();
   showExceedMaxBenefitException$ = this.showExceedMaxBenefitExceptionSubject.asObservable();
   showIneligibleException$ = this.showIneligibleExceptionSubject.asObservable();
   showBridgeUppException$ = this.showBridgeUppExceptionSubject.asObservable();
   showDuplicatePaymentException$ = this.showDuplicatePaymentExceptionSubject.asObservable();
+  showDuplicatePaymentExceptionHighlight$ = this.showDuplicatePaymentHighlightSubject.asObservable();
 
 
 
@@ -113,6 +116,9 @@ export class FinancialClaimsFacade {
   private financialClaimsBatchDataSubject =  new Subject<any>();
   financialClaimsBatchData$ = this.financialClaimsBatchDataSubject.asObservable();
 
+  private financialClaimsAllPaymentsDataLoaderSubject = new Subject<any>();
+  financialClaimsAllPaymentsDataLoader$ =
+    this.financialClaimsAllPaymentsDataLoaderSubject.asObservable();
   private financialClaimsAllPaymentsDataSubject = new Subject<any>();
   financialClaimsAllPaymentsData$ =
     this.financialClaimsAllPaymentsDataSubject.asObservable();
@@ -128,6 +134,12 @@ export class FinancialClaimsFacade {
 
   private batchReconcileDataSubject = new Subject<any>();
   reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
+
+  private letterContentSubject = new Subject<any>();
+  letterContentList$ = this.letterContentSubject.asObservable();
+
+  private letterContentLoaderSubject = new Subject<any>();
+  letterContentLoader$ = this.letterContentLoaderSubject.asObservable();
 
   private batchItemsDataSubject =  new Subject<any>();
   private batchItemsLoaderSubject =  new BehaviorSubject<any>(false);
@@ -181,6 +193,12 @@ export class FinancialClaimsFacade {
 
   private unbatchClaimsSubject =  new Subject<any>();
   unbatchClaims$ = this.unbatchClaimsSubject.asObservable();
+
+  private warrantNumberChangeSubject = new Subject<any>();
+  warrantNumberChange$ = this.warrantNumberChangeSubject.asObservable();
+
+  private warrantNumberChangeLoaderSubject = new Subject<any>();
+  warrantNumberChangeLoader$ = this.warrantNumberChangeLoaderSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -247,7 +265,7 @@ export class FinancialClaimsFacade {
         this.financialClaimsProcessDataSubject.next(gridView);
         this.hideLoader();
       },
-      error: (err) => {        
+      error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.hideLoader();
       },
@@ -256,7 +274,8 @@ export class FinancialClaimsFacade {
 
   loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string,claimsType : string){
 
-    this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType).subscribe({
+    this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType)
+    .subscribe({
       next: (dataResponse) => {
         const gridView = {
           data: dataResponse["items"],
@@ -295,6 +314,7 @@ export class FinancialClaimsFacade {
 
   loadFinancialClaimsAllPaymentsListGrid(skipCount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string, claimsType : string){
     filter = JSON.stringify(filter);
+    this.financialClaimsAllPaymentsDataLoaderSubject.next(true);
     this.financialClaimsDataService.loadFinancialClaimsAllPaymentsListService(skipCount, maxResultCount, sort, sortType, filter, claimsType).subscribe({
       next: (dataResponse) => {
         const gridView = {
@@ -302,9 +322,11 @@ export class FinancialClaimsFacade {
           total: dataResponse["totalCount"]
         };
         this.financialClaimsAllPaymentsDataSubject.next(gridView);
+        this.financialClaimsAllPaymentsDataLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.financialClaimsAllPaymentsDataLoaderSubject.next(false);
       },
     });
   }
@@ -343,6 +365,21 @@ export class FinancialClaimsFacade {
     });
   }
 
+  loadEachLetterTemplate(claimsType:any,templateParams:any){
+    this.letterContentLoaderSubject.next(true);
+    this.financialClaimsDataService.loadEachLetterTemplate(claimsType,templateParams).subscribe({
+      next: (dataResponse:any) => {
+        this.letterContentSubject.next(dataResponse);
+        this.letterContentLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.letterContentLoaderSubject.next(false);
+      },
+    });
+  }
+
+
   loadClaimsListGrid(){
     this.financialClaimsDataService.loadClaimsListService().subscribe({
       next: (dataResponse) => {
@@ -357,9 +394,11 @@ export class FinancialClaimsFacade {
   }
 
   loadReconcilePaymentBreakoutSummary(data:any){
+    this.loaderService.show(); 
     this.financialClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
       next: (dataResponse) => {
         this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
+        this.loaderService.hide(); 
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
@@ -368,6 +407,7 @@ export class FinancialClaimsFacade {
   }
 
   loadReconcilePaymentBreakoutListGrid(data:any) {
+    this.loaderService.show(); 
     data.filter=JSON.stringify(data.filter);
     this.financialClaimsDataService
       .loadReconcilePaymentBreakoutListService(data)
@@ -380,6 +420,7 @@ export class FinancialClaimsFacade {
               total: dataResponse['totalCount'],
             };
             this.reconcilePaymentBreakoutListDataSubject.next(gridView);
+            this.loaderService.hide();
           }
         },
         error: (err) => {
@@ -658,16 +699,16 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
   }
 
-  reconcilePaymentsAndLoadPrintLetterContent(batchId: any, reconcileData: any,claimsType:any) {
-    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId, reconcileData,claimsType);
+  reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any,claimsType:any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData,claimsType);
 }
 
-viewAdviceLetterData(batchId:any,printAdviceLetterData: any, claimsType:any) {
-  return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
+viewAdviceLetterData(printAdviceLetterData: any, claimsType:any) {
+  return this.financialClaimsDataService.viewPrintAdviceLetterData(printAdviceLetterData,claimsType);
 }
-loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string){
+loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string,clientCaseEligibilityId : string){
   this.showLoader();
-  this.financialClaimsDataService.checkExceededMaxBenefit(serviceCost,clientId, typeCode).subscribe({
+  this.financialClaimsDataService.checkExceededMaxBenefit(serviceCost,clientId, typeCode,clientCaseEligibilityId).subscribe({
     next: (serviceCostResponse:any)=>{
       this.serviceCostFlag =  serviceCostResponse;
       let response = {
@@ -716,9 +757,9 @@ checkGroupException(startDtae: any,endDate: any, clientId: number,cptCode:any, i
   })
   this.hideLoader();
 }
-checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, indexNumber: any, typeCode : string){
+checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any,paymentRequestId :any, indexNumber: any, typeCode : string){
   this.showLoader();
-  this.financialClaimsDataService.checkDuplicatePaymentException(startDtae,endDate,vendorId,totalAmountDue,typeCode).subscribe({
+  this.financialClaimsDataService.checkDuplicatePaymentException(startDtae,endDate,vendorId,totalAmountDue, paymentRequestId, typeCode).subscribe({
     next: (data:any)=>{
       const flag =  data;
       let response = {
@@ -733,4 +774,40 @@ checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalA
   })
   this.hideLoader();
 }
+deleteClaimService(tpaInvoiceId: any, typeCode: string) {
+  return this.financialClaimsDataService
+    .deleteClaimService(tpaInvoiceId,typeCode)
+    .pipe(
+      catchError((err: any) => {
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(
+          SnackBarNotificationType.ERROR,
+          err
+        );
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+          this.hideLoader();
+        }
+        return of(false);
+      })
+    );
+}
+
+loadFinancialClaimsInvoiceList(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string,claimsType : string){
+  return this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType) 
+}
+
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    this.warrantNumberChangeLoaderSubject.next(true);
+    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+      next: (dataResponse:any) => {       
+        this.warrantNumberChangeSubject.next(dataResponse);
+        this.warrantNumberChangeLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.warrantNumberChangeLoaderSubject.next(false);
+      },
+    });
+  }
 }

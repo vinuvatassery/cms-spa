@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { BatchPharmacyClaims } from '../../entities/financial-management/batch-pharmacy-claims';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsDataService {
@@ -22,6 +23,9 @@ export class FinancialPharmacyClaimsDataService {
 
   loadPrescriptions(paymentId: string, params: GridFilterParam) {
     return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/payments/${paymentId}/prescriptions${params.convertToQueryString()}`);
+  }
+  batchClaims(batchPharmacyClaims: BatchPharmacyClaims) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/batch`, batchPharmacyClaims);
   }
 
   loadPharmacyClaimsBatchListService( ) {
@@ -55,101 +59,9 @@ export class FinancialPharmacyClaimsDataService {
       
     ]);
   }
-  loadPharmacyClaimsAllPaymentsListService( ) {
-    return of([
-      {
-        id:1,
-      Item: '123213',
-      batch:'23213123',
-      PharmacyName: 'XXXXXX',  
-      clientName:'XXXXXX', 
-      paymentMethod:'XXXXXX', 
-      nameOnPrimaryInsuranceCard:'address2', 
-      memberID:'XXXXXX', 
-      RXNumber:'XXXXXX', 
-      FillDate:'XX/XX/XXXX', 
-      ndcCode:'XXXXXX', 
-      brandName:'XXXXXX', 
-      drugName: 'XXXXXX',
-      paymentType: 'XXXXXX',
-      amountPaid: 'xx.xx',
-      rxQty: 'XX',
-      rxType: 'XX',
-      rxDaysSupply: 'XX',
-      indexCode: 'XXXX',
-      pcaCode: 'XXXX',
-      objectCode: 'XXXX',
-      paymentStatus: 'XXXX',
-      warrantNumber: 'XXXXXX',
-      entryDate: 'XX/XX/XXXX',
-      by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
-        by: 'by',
-      },
-    ]);
+  loadPharmacyClaimsAllPaymentsListService(params: GridFilterParam) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`, params);
   }
-
 
   loadBatchLogListService( ) {
     return of([
@@ -237,6 +149,35 @@ export class FinancialPharmacyClaimsDataService {
       
      
     ]);
+  }
+  addPharmacyClaim(data: any) {
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`,      data    );
+  }
+
+  updatePharmacyClaim(data: any) {
+    return this.http.patch<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`,      data    );
+  }
+
+  getPharmacyClaim(paymentRequestId: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/${paymentRequestId}`);
+  }
+
+  searchPharmacies(searchText: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/searchText=${searchText}`);
+  }
+
+  searchClients(searchText: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/clients=${searchText}`);
+  }
+
+  searchDrug(searchText: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/drugs/ndcCode=${searchText}`);
   }
     loadPaymentsByBatch(batchId: string, params:GridFilterParam, claimType:string){
     return this.http.post<any>(

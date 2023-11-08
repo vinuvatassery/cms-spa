@@ -52,7 +52,7 @@
         <kendo-grid-column
           field="detailMsgFlag"
           title="Detailed Messages OK?"
-          [width]="150"
+          [width]="180"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.detailMsgFlag === 'Y' ? 'Yes' : 'No'}}  
@@ -70,13 +70,13 @@
         <kendo-grid-column
           field="effectiveDate"
           title="Effective Date"
-          [width]="100" 
+          [width]="140" 
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.effectiveDate | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}  
          </ng-template>   
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="50" [sortable]="false" >
+        <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem >
             <button *ngIf="dataItem?.creatorId"
               kendoButton
@@ -141,7 +141,7 @@
                   [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
                   (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages> 
+            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages> 
   
           </div>
           <div class="d-flex"> 

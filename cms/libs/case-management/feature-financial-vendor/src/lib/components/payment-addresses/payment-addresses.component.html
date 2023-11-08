@@ -46,7 +46,7 @@
 
               <kendo-grid-column field="mailCode" title="Mail Code" [width]="150">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  <button [attr.aria-label]="dataItem.mailCode" kendoButton look="flat" class="card-link-button"
+                  <button [attr.aria-label]="dataItem.mailCode" kendoButton look="flat"
                     >
                     {{ dataItem.mailCode }}
                   </button>
@@ -199,7 +199,7 @@
                   </common-grid-cell-date-range-filter>
                 </ng-template>
               </kendo-grid-column>
-              <kendo-grid-column [sortable]="false" [filterable]="false" field="creatorId" title="By" [width]="70">
+              <kendo-grid-column [sortable]="false" [filterable]="false" field="creatorId" title="By" [width]="70" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     <button
                       kendoButton
@@ -223,7 +223,7 @@
                     </kendo-popover>
                   </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column [sortable]="false" field="Option" title="Options" [columnMenu]="false" [width]="80" class="text-center">
+                <kendo-grid-column [sortable]="false" field="Option" title="Options" [columnMenu]="false" [width]="75" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                       <kendo-dropdownbutton [data]="paymentAddressActions" icon="more-vertical"
                           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -278,7 +278,7 @@
                [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage"  [valuePrimitive]="true" [(value)]="state.take"
                (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
              <kendo-pager-info> </kendo-pager-info>
-             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
            </div>
            <div class="d-flex">
              <kendo-pager-input></kendo-pager-input>

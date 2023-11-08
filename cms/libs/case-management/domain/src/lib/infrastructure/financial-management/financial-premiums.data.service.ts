@@ -2,7 +2,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 /** External libraries **/
-import { InsurancePlan } from '../../entities/insurance-plan';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
 import { BatchPremium } from '../../entities/financial-management/batch-premium';
@@ -278,8 +277,11 @@ export class FinancialPremiumsDataService {
       AmountTotal : data.amountTotal,
       WarrantTotal : data.warrantTotal,
       WarrantNbr : data.warrantNbr,
-      PaymentToReconcileCount : data.paymentToReconcileCount
+      PaymentToReconcileCount : data.paymentToReconcileCount,
+      warrantCalculation:data.warrantCalculation,
+
     }
+
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/payment-reconcile-summary`,ReconcilePaymentResponseDto
     );

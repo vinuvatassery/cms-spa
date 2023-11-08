@@ -11,7 +11,7 @@
                 <kendo-grid-column field="ProviderName" title="NDC" [width]="200"> </kendo-grid-column>
                 <kendo-grid-column field="ActivePlans" title="Active Plans" [width]="80"> </kendo-grid-column>
                 <kendo-grid-column field="ActiveClients" title="Active Clients" [width]="70"> </kendo-grid-column> 
-                <kendo-grid-column field="by" title="By" [width]="50">
+                <kendo-grid-column field="by" title="By" [width]="50" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
                             [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
@@ -61,7 +61,7 @@
                  [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage"  [valuePrimitive]="true" [(value)]="state.take"
                  (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
                <kendo-pager-info> </kendo-pager-info>
-               <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+               <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
              </div>
              <div class="d-flex">
                <kendo-pager-input></kendo-pager-input>

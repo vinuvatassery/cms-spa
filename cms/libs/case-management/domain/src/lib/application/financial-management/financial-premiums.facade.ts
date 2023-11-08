@@ -152,6 +152,9 @@ export class FinancialPremiumsFacade {
 
   private insurancePremiumSubject = new Subject<InsurancePremiumDetails>();
   insurancePremium$ =this.insurancePremiumSubject.asObservable();
+
+  private paymentByBatchGridLoaderSubject =  new BehaviorSubject<boolean>(false);
+  paymentByBatchGridLoader$ = this.paymentByBatchGridLoaderSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -260,6 +263,7 @@ export class FinancialPremiumsFacade {
   }
 
   loadBatchLogListGrid(premiumType : string ,batchId : string,paginationParameters : any){
+    this.paymentByBatchGridLoaderSubject.next(true);
     this.financialPremiumsDataService.loadBatchLogListService(premiumType ,batchId ,paginationParameters ).subscribe({
       next: (dataResponse : any) => {
         const gridView = {
@@ -268,10 +272,12 @@ export class FinancialPremiumsFacade {
         };
         this.batchLogDataSubject.next(gridView);
         this.hideLoader();
+        this.paymentByBatchGridLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.hideLoader();
+        this.paymentByBatchGridLoaderSubject.next(false);
       },
     });
   }
@@ -292,6 +298,10 @@ export class FinancialPremiumsFacade {
         this.hideLoader();
       },
     });
+  }
+
+  loadPremiumSubListServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {  
+    return this.financialPremiumsDataService.loadPremiumServicesByPayment(premiumType ,paymentId ,paginationParameters )   
   }
 
   loadBatchItemsListGrid(batchId: any, paymentId: any, premiumType: string, params: GridFilterParam){
@@ -399,6 +409,7 @@ loadMedicalPremiumList(
         const gridView = {
           data: dataResponse['items'],
           total: dataResponse['totalCount'],
+          acceptsCombinedPaymentsCount: dataResponse['acceptsCombinedPaymentsQueryCount'],
         };
       this.financialPremiumsProcessDataSubject.next(gridView);
     }},

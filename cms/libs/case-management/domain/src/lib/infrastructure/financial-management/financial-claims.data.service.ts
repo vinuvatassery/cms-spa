@@ -99,6 +99,9 @@ export class FinancialClaimsDataService {
   loadReconcileListService(batchId:any,claimsType:any,paginationParameters:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/reconcile-payments`,paginationParameters);
   }
+  loadEachLetterTemplate(claimsType:any,templateParams:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/print-advice-letter`,templateParams);
+  }
   loadClaimsListService() {
     return of([
       {
@@ -294,7 +297,8 @@ export class FinancialClaimsDataService {
       AmountTotal : data.amountTotal,
       WarrantTotal : data.warrantTotal,
       WarrantNbr : data.warrantNbr,
-      PaymentToReconcileCount : data.paymentToReconcileCount
+      PaymentToReconcileCount : data.paymentToReconcileCount,
+      warrantCalculation:data.warrantCalculation
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payments/payment-reconcile-summary`,ReconcilePaymentResponseDto
@@ -336,7 +340,7 @@ export class FinancialClaimsDataService {
   }
 
   searchPharmacies(searchText: string, typeCode: string) {
-    
+
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/SearchText=${searchText}`
@@ -424,29 +428,33 @@ export class FinancialClaimsDataService {
   }
 
   getPrintAdviceLetterData(batchId:any,selectedProviders: any, claimsType:any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/print-advice-letter`,selectedProviders);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/print-advice-letter-summary`,selectedProviders);
   }
 
-  reconcilePaymentsAndLoadPrintAdviceLetterContent(batchId: any, reconcileData: any, claimsType:any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/reconcile-payments`,reconcileData);
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData: any, claimsType:any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/all/reconcile-payments`,reconcileData);
   }
 
-  viewPrintAdviceLetterData(batchId: any, printAdviceLetterData: any, claimsType:any) {
+  viewPrintAdviceLetterData(printAdviceLetterData: any, claimsType:any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/download-advice-letter`, printAdviceLetterData,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/download-advice-letter`, printAdviceLetterData,
       { responseType: 'blob' }
     );
   }
-  checkExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string ) {
-    let path;
-    if (typeCode == ServiceSubTypeCode.medicalClaim) {
-      path = 'financial-management/claims/medical';
-    } else {
-      path = 'financial-management/claims/dental';
+
+  checkExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string,clientCaseEligibilityId : string ) {
+    let path = 'financial-management/claims/medical';
+
+    const limitExceedCheckDto =
+    {
+      clientId : clientId,
+      servicesCost : serviceCost,
+      clientCaseEligibilityId : clientCaseEligibilityId
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit-check?servicesCost=${serviceCost}&clientId=${clientId}`
-    );
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit-check`,limitExceedCheckDto);
   }
+
+
   checkIneligibleException(startDtae: any,endDate: any, clientId: number, typeCode : string ) {
     let path;
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
@@ -467,17 +475,17 @@ export class FinancialClaimsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/group-check?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}&cptCode=${cptCode}`
     );
   }
-  checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, typeCode : string ) {
+  checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, paymentRequestId :any, typeCode : string ) {
     let path;
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';
     } else {
       path = 'financial-management/claims/dental';
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${startDtae}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}`
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${startDtae}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}&paymentRequestId=${paymentRequestId}`
     );
   }
-  searchProvidorsById(VendorAddressId: string, typeCode: string) {    
+  searchProvidorsById(VendorAddressId: string, typeCode: string) {
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/providers/by-vendor-address/${VendorAddressId}`
@@ -487,5 +495,19 @@ export class FinancialClaimsDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/dental/providers/by-vendor-address/${VendorAddressId}`
       );
     }
+  }
+  deleteClaimService(tpaInvoiceId: any, typeCode: string) {
+    let path;
+    if (typeCode == ServiceSubTypeCode.medicalClaim) {
+      path = 'financial-management/claims/medical';
+    } else {
+      path = 'financial-management/claims/dental';
+    }
+    return this.http.delete<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/${path}/service/${tpaInvoiceId}`
+    );
+  }
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/payments/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
   }
 }
