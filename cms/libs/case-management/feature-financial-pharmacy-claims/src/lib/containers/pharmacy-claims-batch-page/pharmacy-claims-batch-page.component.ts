@@ -38,7 +38,6 @@ export class PharmacyClaimsBatchPageComponent {
     this.financialPharmacyClaimsFacade.loadBatchLogListGrid(batchId, params, this.claimsType);
   }
   exportPharmacyBatchesGridData(){
-    debugger
     const data = this.dataExportParameters
     if(data){
     const  filter = JSON.stringify(data?.filter);
