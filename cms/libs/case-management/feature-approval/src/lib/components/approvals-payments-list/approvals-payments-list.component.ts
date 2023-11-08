@@ -262,15 +262,24 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   onOpenViewPaymentsBatchClicked(data?: any,isSendbackMode?:any) {
-    this.isSendbackMode=isSendbackMode;
+    this.isSendbackMode=isSendbackMode;    
     this.isViewPaymentsBatchDialog = true;
     this.selectedApprovalId = data?.approvalId;
+    this.dataItem=data;
     this.batchDetailModalSourceList =
       this.approvalsPaymentsGridUpdatedResult.map((item: any) => ({ ...item }));
   }
 
   onCloseViewPaymentsBatchClicked() {
+    debugger;
     this.isViewPaymentsBatchDialog = false;
+    if(this.isSendbackMode)
+    {
+      this.dataItem.batchStatus="";
+      this.assignRowDataToMainList(this.dataItem);
+      this.enableSubmitButtonMain();
+      this.approveAndSendbackCount();
+    }
   }
 
   onBatchModalSaveClicked(data: any) {
@@ -544,6 +553,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.sendBackNotesInValid = true;
       this.onOpenViewPaymentsBatchClicked(dataItem,true);
     } else if (dataItem.batchStatus == this.sendbackStatus) {
+      this.isSendbackMode=false;
       this.onOpenSendbackDeselectingWarningDialogClicked(dataItem);
     } else {
       dataItem.batchStatus = this.sendbackStatus;
@@ -552,13 +562,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.sendBackButtonDisabled = false;
       this.onOpenViewPaymentsBatchClicked(dataItem,true);
     }
-
     this.sendBackNotesChange(dataItem);
     this.assignRowDataToMainList(dataItem);
     this.ngDirtyInValid(dataItem, control, rowIndex);
     this.isApproveAllClicked = false;
-    this.approveAndSendbackCount();
-    this.enableSubmitButtonMain();  
+     this.enableSubmitButtonMain();  
     dataItem.batchStatus="";
   }
 
@@ -713,7 +721,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     const atleastOnePaymentCount = atleastOnePaymentInValid.length;
     const isValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.sendBackNotesInValid);    
     const totalCount = isValid.length;
-    if (isValid.length > 0 || atleastOnePaymentCount>0) {
+    if (isValid.length > 0) {
       this.pageValidationMessage = totalCount + ' Validation error(s) found, please review each page for errors.';
     } 
     else if(atleastOnePaymentCount>0){
@@ -856,14 +864,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   approveAndSendbackCount() {
-    this.approveBatchCount = 0;
-    this.sendbackBatchCount = 0;
-    this.approvalsPaymentsGridUpdatedResult.forEach(
-      (item: any, index: number) => {
-        this.approveBatchCount = item.batchStatus == this.approveStatus ? this.approveBatchCount + 1 : this.approveBatchCount;
-        this.sendbackBatchCount = item.batchStatus == this.sendbackStatus ? this.sendbackBatchCount + 1 : this.sendbackBatchCount;
-      }
-    );
+    this.approveBatchCount = this.approvalsPaymentsGridUpdatedResult.filter((x: any)=>x.batchStatus==this.approveStatus).length;    
+    this.sendbackBatchCount =  this.approvalsPaymentsGridUpdatedResult.filter((x: any)=>x.batchStatus==this.sendbackStatus).length;
   }
 
   mainListDataHandle() {
@@ -1102,7 +1104,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
   resetApprovalPaymentListGrid(){
     this.sortValue = 'batchName';
-    this.sortType = 'asc';
+    this.sortType = 'desc';
     this.setGridValueAndData();
     this.sortColumn = 'batchName';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
