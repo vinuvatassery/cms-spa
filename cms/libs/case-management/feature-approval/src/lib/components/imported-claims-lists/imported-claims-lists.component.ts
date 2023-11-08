@@ -148,8 +148,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
     this.loadImportedClaimsListGrid();
   }
-  public expandInStockProducts({ dataItem }: RowArgs): boolean {
-    return dataItem.subRow.expand === 1;
+  public expandInClaimException({ dataItem }: RowArgs): boolean {
+    debugger;
+    //return dataItem.subRow.expand === 1;
+    return true;
   }
 
   private loadImportedClaimsListGrid(): void {

@@ -77,7 +77,7 @@
     (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)"
     [selectable]="true"
-    [isDetailExpanded]="expandInStockProducts"
+    [isDetailExpanded]="expandInClaimException"
     [data]="approvalsImportedClaimsLists$ | async"
     [navigable]="true"
   >
@@ -91,18 +91,21 @@
     </kendo-grid-column>
     <kendo-grid-column field="claimSource" title="Claim Source" [width]="180">
     </kendo-grid-column>
-    <kendo-grid-column field="policyID" title="Policy ID" [width]="120">
+    <kendo-grid-column field="policyId" title="Policy ID" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="amountDue" title="Amount Due" [width]="160">
     </kendo-grid-column>
     <kendo-grid-column
-      field="dateService"
+      field="dateOfService"
       title="Date of Service"
       [width]="160"
     >
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{dataItem.dateOfService | date:'MM/dd/yyyy'}}
+    </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
-      field="policyIDMatch"
+      field="policyIdMatch"
       title="Policy ID match?"
       [width]="180"
     >
@@ -160,9 +163,10 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-    <!-- <ng-template kendoGridDetailTemplate let-dataItem>
-      <section *ngIf="dataItem.subRow">
-        <p
+    <ng-template kendoGridDetailTemplate let-dataItem>
+      <!-- *ngIf="dataItem.subRow" -->
+      <section >
+        <!-- <p
           class="table_sub_row warning_info_row"
           *ngIf="dataItem.subRow.type === '01'"
         >
@@ -195,11 +199,11 @@
           >
             SEARCH CLIENTS
           </button>
-        </p>
+        </p> -->
 
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.subRow.type === '03'"
+          *ngIf="dataItem.policyIdMatch === 'No'"
         >
           <span class="material-icons">info</span>
           The system could not match the Policy ID to a client. Delete the claim
@@ -216,7 +220,7 @@
         </p>
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.subRow.type === '04'"
+          *ngIf="dataItem.eligibilityMatch === 'Yes'"
         >
           <span class="material-icons">info</span>
           The system could not match the Policy ID to a client. Delete the claim
@@ -234,7 +238,7 @@
           </button>
         </p>
       </section>
-    </ng-template> -->
+    </ng-template>
     <ng-template
       kendoPagerTemplate
       let-totalPages="totalPages"

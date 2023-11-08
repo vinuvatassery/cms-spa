@@ -19,5 +19,5 @@ export * from './lib/application/event-log.facade';
 export * from './lib/application/notification.facade';
 export * from './lib/application/direct-message.facade';
 export * from './lib/application/reminder.facade';
-
+export * from '../../../case-management/domain/src/lib/application/approval/imported-claim.facade';
 /** Enums **/

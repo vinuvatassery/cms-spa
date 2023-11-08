@@ -12,26 +12,10 @@ export class ImportedClaimFacade {
     field: this.sortValueImportedClaimsAPproval,
   }];
 
-  /** Private properties **/
-  // private pendingApprovalGridSubject = new Subject<any>();
-  // private pendingApprovalMainListSubject = new Subject<any>();
-  // private pendingApprovalSubmittedSummarySubject = new Subject<any>();
-  // private pendingApprovalBatchDetailPaymentsCountSubject = new Subject<any>();
-  // private pendingApprovalBatchDetailPaymentsGridSubject = new Subject<any>();
-  // private pendingApprovalSubmitSubject = new Subject<any>();
-  // private pendingApprovalPaymentsCountSubject = new Subject<any>();
-
+  /** Private properties **/ 
   private ImportedClaimsSubject =  new Subject<any>();
   /** Public properties **/
   approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
-
-
-  // pendingApprovalMainList$ = this.pendingApprovalMainListSubject.asObservable();
-  // pendingApprovalSubmittedSummary$ = this.pendingApprovalSubmittedSummarySubject.asObservable();
-  // pendingApprovalBatchDetailPaymentsCount$ = this.pendingApprovalBatchDetailPaymentsCountSubject.asObservable();
-  // pendingApprovalBatchDetailPaymentsGrid$ = this.pendingApprovalBatchDetailPaymentsGridSubject.asObservable();
-  // pendingApprovalSubmit$ = this.pendingApprovalSubmitSubject.asObservable();
-  // pendingApprovalPaymentsCount$ = this.pendingApprovalPaymentsCountSubject.asObservable();
 
   constructor(
     private readonly ImportedClaimService: ImportedClaimService,
@@ -63,8 +47,7 @@ export class ImportedClaimFacade {
     this.loaderService.hide();
   }
 
-  loadImportedClaimsLists(gridSetupData: any) {
-
+  loadImportedClaimsLists(gridSetupData: any) { 
     this.ImportedClaimService.loadImportedClaimsListServices(gridSetupData).subscribe(
       {
         next: (dataResponse: any) => {

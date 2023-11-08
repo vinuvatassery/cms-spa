@@ -33,6 +33,7 @@ import {
   UserLevel
 } from '@cms/system-config/domain';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { ImportedClaimFacade } from '@cms/productivity-tools/domain';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -58,9 +59,9 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
   sortValueApprovalPaymentsApproval =
     this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
-  sortImportedClaimsList = this.approvalFacade.sortImportedClaimsList;
+  sortImportedClaimsList = this.importedClaimFacade.sortImportedClaimsList;
   sortValueImportedClaimsAPproval =
-    this.approvalFacade.sortValueImportedClaimsAPproval;
+    this.importedClaimFacade.sortValueImportedClaimsAPproval;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
   pendingApprovalPaymentsCount$ =
     this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
@@ -71,7 +72,7 @@ export class ApprovalPageComponent implements OnInit {
   approvalsGeneralLists$ =
     this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ =
-    this.approvalFacade.approvalsImportedClaimsLists$;
+    this.importedClaimFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
   approvalsPaymentsLists$ =
     this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
@@ -114,7 +115,8 @@ export class ApprovalPageComponent implements OnInit {
     private readonly cd: ChangeDetectorRef,
     private readonly financialVendorFacade: FinancialVendorFacade,
     private contactFacade: ContactFacade,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private readonly importedClaimFacade:ImportedClaimFacade
   ) {}
   ngOnInit(): void {
     this.getUserRole();
@@ -171,7 +173,7 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   loadImportedClaimsGrid(event: any): void {
-    this.approvalFacade.loadImportedClaimsLists();
+    this.importedClaimFacade.loadImportedClaimsLists(event);
   }
   notificationTriger() {
     this.approvalFacade.NotifyShowHideSnackBar(

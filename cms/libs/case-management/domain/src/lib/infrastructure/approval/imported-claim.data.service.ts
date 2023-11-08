@@ -14,22 +14,6 @@ export class ImportedClaimService {
   ) {}
 
   /** Public methods **/
-  // loadApprovalsGeneral() {
-  //   return this.http.get(
-  //     `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general`
-  //   );
-  // }
-
-  // loadCasereassignmentExpandedInfo(approvalId: any) {
-  //   return this.http.get<any>(
-  //     `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/case-reassignment?approvalId=${approvalId}`
-  //   );
-  // }
-
-  // loadExceptionCard(exceptionId:string) {
-  //   return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/exceptions?exceptionId=${exceptionId}`);
-  //  }
-
   loadImportedClaimsListServices(data: any) {
     debugger;
     const importedClaimsRequestDto = {
@@ -44,29 +28,4 @@ export class ImportedClaimService {
       importedClaimsRequestDto
     );
   }
-  // submitGeneralRequests(requests : any)
-  // {
-  //   return this.http.post<any>(
-  //     `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/`,requests
-  //   );
-  // }
-  
-  // getVendorDetails(vendorId: string, subTypeCode: string) {
-  //   if (
-  //     subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
-  //     subTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
-  //     subTypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
-  //     subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider
-  //   ) {
-  //     return this.http.get(
-  //       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/temp`
-  //     );
-  //   } else if (subTypeCode == PendingApprovalGeneralTypeCode.Drug) {
-  //     return this.http.post<any>(
-  //       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/drugs`,
-  //       null
-  //     );
-  //   }
-  //   return of();
-  // }
 }
