@@ -77,7 +77,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="paymentMethod" title="Payment Method"  [width]="160" [sortable]="false"
+    <kendo-grid-column field="paymentMethod" title="Payment Method"  [width]="160" [sortable]="false"  [filterable]="false" 
       *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       

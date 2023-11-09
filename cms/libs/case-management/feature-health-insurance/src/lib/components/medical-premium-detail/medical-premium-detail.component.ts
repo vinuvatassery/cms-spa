@@ -1297,7 +1297,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
             next: (data: any) => {
               this.insurancePolicyFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
-                'Insurance plan updated successfully.'
+                'Insurance Policy has been added successfully'
               );
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
@@ -1323,7 +1323,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
             next: (data: any) => {
               this.insurancePolicyFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
-                'Insurance plan saved Successfully.'
+                'Insurance Policy has been added successfully'
               );
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
