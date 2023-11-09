@@ -335,7 +335,7 @@
 
 
     <ng-template #PrintAuthorizationDialogTemplate>
-      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)" class="text-normal">Review & Print Authorization(s)</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization(s)</kendo-dialog-titlebar>
     <cms-financial-claims-print-authorization
     [printOption]="true"
     [items]="selectedAllPaymentsList"

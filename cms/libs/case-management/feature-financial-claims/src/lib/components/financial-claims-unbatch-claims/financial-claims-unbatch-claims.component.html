@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (close)="closeUnBatchClicked()" class="text-normal"> {{isBulkUnBatchOpened ? 'Unbatch Payment(s)' : 'Unbatch Claim(s)?'}}</kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeUnBatchClicked()"> {{isBulkUnBatchOpened ? 'Unbatch Payment(s)' : 'Unbatch Claim(s)?'}}</kendo-dialog-titlebar>
 
 <section class="k-dialog-body">
     <p *ngIf="!isBulkUnBatchOpened" class="text-muted mb-1"> This action cannot be undone, but you may add this claim to a new batch at any time.</p>
