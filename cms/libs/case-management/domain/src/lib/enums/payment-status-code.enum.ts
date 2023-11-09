@@ -8,3 +8,9 @@ export enum PaymentStatusCode{
     Submitted='SUBMITTED',
     Failed='FAILED',
 }
+
+export enum BatchStatusCode{
+    Paid='PAID',
+    PaymentRequested='PAYMENT_REQUESTED',
+    ManagerApproved='MANAGER_APPROVED',
+}

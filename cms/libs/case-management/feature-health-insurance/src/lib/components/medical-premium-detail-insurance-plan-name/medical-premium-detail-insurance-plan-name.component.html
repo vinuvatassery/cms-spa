@@ -45,7 +45,7 @@
 
       <kendo-floatinglabel text="Insurance Plan Name">
         <kendo-textbox aria-label="insurance Plan Name" placeholder="Insurance Plan Name"
-          formControlName="insurancePlanName" [maxlength]="20" [fillMode]="formUiStyle.inputFillMode">
+          formControlName="insurancePlanName" [maxlength]="500" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
         <kendo-formerror
           *ngIf="!newhealthInsuranceForm.controls['insurancePlanName'].valid &&  isValidateForm">Insurance Plan Name is

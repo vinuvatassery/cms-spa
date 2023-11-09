@@ -77,7 +77,6 @@
     (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)"
     (columnReorder)="onColumnReorder($event)"
-    [selectable]="true"
      >
       <kendo-grid-column field="batchName" title="Batch #" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
@@ -151,10 +150,8 @@
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAdjustmentsAmount}}</span>
-       
-        </ng-template> 
-        
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAdjustmentsAmount | kendoNumber: 'n2'}}</span>
+        </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="totalPaymentsAmount " title="Total Amount of Payments" [width]="140">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -163,8 +160,8 @@
             <kendo-filter-eq-operator></kendo-filter-eq-operator>
           </kendo-grid-numeric-filter-menu>
         </ng-template>
-        <ng-template kendoGridCellTemplate let-dataItem> 
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalPaymentsAmount}}</span>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalPaymentsAmount | kendoNumber: 'n2'}}</span>
         </ng-template>
       </kendo-grid-column>
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">

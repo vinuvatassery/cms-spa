@@ -76,14 +76,14 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: any;
-  sortColumn = 'vendorName';
+  sortColumn = 'clientFullName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn='clientFullName';
   columnName: string = '';
   public selectedProcessClaims: any[] = [];
 
@@ -204,7 +204,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'ADD PREMIUMS',
+      text: 'ADD PREMIUM',
       icon: 'add',
       click: (data: any): void => {
         if (!this.isAddPremiumClosed) {
@@ -221,7 +221,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       click: (data: any): void => {
         if (!this.isRemoveBatchClosed) {
           this.isRemoveBatchClosed = true;
-          this.directRemoveClicked = true;
+          this.directRemoveClicked = false;
           this.isSendReportOpened = false;
           this.selectAll = false; 
           this.onBatchPremiumsGridSelectedClicked();
@@ -248,7 +248,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       click: (data: any): void => {
         if (!this.isRemovePremiumGridOptionClosed) {
           this.isRemovePremiumGridOptionClosed = true;
-          this.directRemoveClicked = false;
+          this.directRemoveClicked = true;
           this.onSinglePremiumRemove(data);
           this.onRemovePremiumsOpenClicked(this.removePremiumsConfirmationDialogTemplate);
         }
@@ -290,9 +290,11 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   ngOnDestroy(): void {
     this.unsubscribeFromActionResponse();
   }
+
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event);
   }
+
   premiumGridlistDataHandle() {
     this.financialPremiumsProcessGridLists$.subscribe((data:any) => {
       this.gridDataResult = data;
@@ -325,7 +327,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.handlePageCountSelectionChange();
     //If the user click on select all header and either changing the page number or page count
     this.pageNumberAndCountChangedInSelectAll();
-    this.gridLoaderSubject.next(false);
     });
     this.ref.detectChanges();
   }
@@ -368,8 +369,12 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     if(this.isRemoveBatchClosed){
       this.selectedSendReportList.SelectedSendReports = this.financialPremiumsProcessGridLists;
       if(this.unCheckedProcessRequest?.length == 0 && this.isPageChanged){
-        this.selectedSendReportList?.SelectedSendReports?.forEach((item: any) => { item.selected = true; });
-        this.checkedAndUncheckedRecordsFromSelectAll = this.selectedSendReportList?.SelectedSendReports;
+        this.markAsUnChecked(this.selectedSendReportList?.SelectedSendReports);
+        this.markAsUnChecked(this.financialPremiumsProcessGridLists);
+        this.markAsUnChecked(this.checkedAndUncheckedRecordsFromSelectAll);
+        this.sendReportCount = 0;
+        this.totalGridRecordsCount = 0;
+        this.selectAll = false;
       }else{
       for (const item of this.financialPremiumsProcessGridLists) {
         // Check if the item is in the second list.
@@ -381,6 +386,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
           item.selected = false;
         }
       }
+      this.selectAll = false;
     }
    }
   }
@@ -551,7 +557,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     if(this.sort[0]?.dir === 'desc'){
       this.sortDir = 'Descending';
     }
-    this.loadFinancialPremiumsProcessListGrid();
   }
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
@@ -685,6 +690,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.selectAll = false;
     this.recordCountWhenSelectallClicked = 0;
     this.sendReportCount = 0;
+    this.loadFinancialPremiumsProcessListGrid();
   }
 
   clientRecentPremiumsModalClicked (template: TemplateRef<unknown>, data:any): void {
