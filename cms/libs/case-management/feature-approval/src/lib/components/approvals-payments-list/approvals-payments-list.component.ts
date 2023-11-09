@@ -82,7 +82,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   hasPaymentPendingApproval: boolean = true;
   sendbackNotesRequireMessage: string = 'Send Back Note is required.';
   atleastOnePaymentRequireMessage: string = 'Selection of at least one payment is required.';
-  tAreaCessationMaxLength: any = 100;
+  tAreaCessationMaxLength: any = 200;
   approveBatchCount: any = 0;
   sendbackBatchCount: any = 0;
   pageValidationMessage: any = null;
