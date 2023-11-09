@@ -1,0 +1,106 @@
+.table td {
+  border: 1px solid;
+  padding: 10px;
+}
+
+.k-calendar {
+  margin: 0 auto;
+}
+
+
+.dash-top-cards-wrapper {
+  display: grid;
+  grid-template-columns: auto auto auto auto auto;
+  grid-gap: 10px;
+}
+
+.dash-info-card {
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #0000000F;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.dashboard-page-wrapper {
+  // display: grid;
+  // gap: 20px;
+}
+
+.dashboard_config_wrapper {
+  .k-tilelayout {
+    background: transparent;
+  }
+
+  .k-tilelayout-item {
+    border: 0px;
+    background-color: transparent;
+  }
+
+  .k-card-header {
+    border: 0px;
+
+    h3 {
+      font-size: 14px !important;
+      font-family: $font-family-bold;
+      color: rgba($black, 0.7);
+    }
+
+    padding: .5rem 0px;
+  }
+
+  .k-tilelayout-item-body {
+    background: #ffffff;
+    border: 1px solid #0000000F;
+  }
+
+  &.reorder_wrapper_enabled {
+    .k-card-header {
+      h3 {
+        background: #EFEFEF;
+        border-radius: 18px;
+        display: inline; 
+        padding: 8px 8px;
+        &::before {
+          content: "\e945";
+          font-family: "Material Icons";
+          display: inline-block;
+          font-size: 20px;
+          vertical-align: middle;
+          margin-right: 2px;
+        }
+
+        &:hover { 
+          background: #dcdcdc; 
+        }
+      }
+    }
+
+    .k-tilelayout-item {
+      background: #F7F7F7 0% 0% no-repeat padding-box;
+      padding: 8px; 
+      border-radius: 6px;
+      position: relative;
+      // &::before{
+      //   content: "\e945";
+      //   font-family: "Material Icons";
+      //   width: 12px;
+      //   height: 100%;
+      //   position: absolute;
+      //   left: 0;
+      //   top: 0;
+      //   background: #EFEFEF;
+      //   display: inline-flex;
+      //   align-items: center;
+      //   justify-content: center;
+      //   border-radius: 10px;
+      //   transition: .2s;
+
+      // }
+      // &:hover{
+      //   &::before{
+      //   background: #dcdcdc;
+      //   }
+      // }
+    }
+  }
+}
