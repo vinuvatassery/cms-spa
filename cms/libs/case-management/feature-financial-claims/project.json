@@ -5,6 +5,25 @@
   "sourceRoot": "libs/case-management/feature-financial-claims/src",
   "prefix": "cms",
   "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": [
+        "{workspaceRoot}/dist/libs/case-management/feature-financial-claims"
+      ],
+      "options": {
+        "project": "libs/case-management/feature-financial-claims/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": true
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/case-management/feature-financial-claims/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/case-management/feature-financial-claims/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
