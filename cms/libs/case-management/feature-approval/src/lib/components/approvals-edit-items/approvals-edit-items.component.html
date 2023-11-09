@@ -18,12 +18,12 @@
         <kendo-floatinglabel text="Clinic Name">
           <kendo-combobox placeholder="Clinic Name" [fillMode]="formUiStyle.dropDownFillMode"
             [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-            (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" [formControlName]="'providerName'"
-            [valuePrimitive]="true" [valueField]="'vendorName'" [textField]="'vendorName'"><button kendoButton
+            (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" formControlName="providerName"
+            [valuePrimitive]="true" valueField="vendorId" textField="vendorName"
+            [value]="selectedVendor"
+            [allowCustom]="true">
+            <button kendoButton
               fillMode="clear" icon="image"></button>
-            <ng-template kendoComboBoxItemTemplate let-dataItem>
-              <span>{{ dataItem.vendorName }}</span>
-            </ng-template>
           </kendo-combobox>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">

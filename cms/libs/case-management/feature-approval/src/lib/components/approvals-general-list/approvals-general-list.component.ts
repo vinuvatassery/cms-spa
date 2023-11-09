@@ -121,6 +121,10 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.loadApprovalGeneralListGrid();
     this.pendingApprovalGeneralTypeCode = PendingApprovalGeneralTypeCode;
     this.getLoggedInUserProfile();
+    this.subscribeToSubmitGeneralRequest();
+  }
+
+  subscribeToSubmitGeneralRequest(){
     this.submitGenerealRequest$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.onCloseSubmitGeneralRequestClicked();
@@ -128,6 +132,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       }
     });
   }
+
   private getMasterData() {
     this.selectedMasterDetail$.subscribe((value: any) => this.selectedMasterData = value);
   }
