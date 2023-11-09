@@ -30,6 +30,14 @@ export class FinancialPharmacyClaimsFacade {
   batchClaimsSubject  =  new Subject<any>();
   batchClaims$ = this.batchClaimsSubject.asObservable();
 
+  private unbatchEntireBatchSubject =  new Subject<any>();
+  unbatchEntireBatch$ = this.unbatchEntireBatchSubject.asObservable();
+ 
+  private unbatchClaimSubject =  new Subject<any>();
+  unbatchClaims$ = this.unbatchClaimSubject.asObservable();
+ 
+ 
+  
 
   public sortValuePharmacyClaimsProcess = 'creationTime';
   public sortProcessList: SortDescriptor[] = [{
@@ -400,10 +408,56 @@ export class FinancialPharmacyClaimsFacade {
       },
     });
   }
+  
+  unbatchEntireBatch(paymentRequestBatchIds: string) {
+    this.showLoader();
+    return this.financialPharmacyClaimsDataService
+      .unbatchEntireBatch(paymentRequestBatchIds)
+      .subscribe({
+        next: (response:any) => {
+          this.unbatchEntireBatchSubject.next(response);
+          if (response.status) {
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              response.message
+            );
+          }
+          this.hideLoader();
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
+        },
+      });
+  }
+
+  unbatchPremiums(paymentRequestIds: string) {
+    this.showLoader();
+    return this.financialPharmacyClaimsDataService
+      .unbatchClaim(paymentRequestIds)
+      .subscribe({
+        next: (response:any) => {
+          this.unbatchClaimSubject.next(response);
+          if (response.status) {
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              response.message
+            );
+          }
+          this.hideLoader();
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.hideLoader();
+        },
+      });
+  }
+
 
  loadPrescriptions(paymentId: string, params: GridFilterParam){
   return  this.financialPharmacyClaimsDataService.loadPrescriptions(paymentId, params);
  }
+
 
  batchClaims(batchPharmacyClaims: BatchPharmacyClaims) {
   this.showLoader();

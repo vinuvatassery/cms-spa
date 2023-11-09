@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Output, 
   EventEmitter,
+  Input,
 } from '@angular/core';
 @Component({
   selector: 'cms-pharmacy-claims-unbatch-claims',
@@ -11,9 +12,13 @@ import {
 })
 export class PharmacyClaimsUnbatchClaimsComponent { 
   @Output() UnBatchCloseClickedEvent = new EventEmitter();
-
+  @Input() isBulkUnBatchOpened = false;
  
   closeUnBatchClicked() {
+    this.UnBatchCloseClickedEvent.emit(false);
+  }
+
+  UnBatchClicked() {
     this.UnBatchCloseClickedEvent.emit(true);
   }
 }
