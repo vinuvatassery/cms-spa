@@ -71,7 +71,6 @@ aria-label="add"> PCA Setup</button>
             [resizable]="true" 
             [columnMenu]="{ filter: true }" 
             [sort]="state.sort"
-            [rowClass]="rowClass"
             [data]="financialPcaSetupGridLists$ | async" 
             [filter]="state.filter"
             (dataStateChange)="dataStateChange($event)" 

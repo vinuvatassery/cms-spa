@@ -74,7 +74,7 @@
       <div class="app-c-table">
         <kendo-grid [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [columnMenu]="{ filter: true }"
-          [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+          [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  
           [data]="batchLogGridLists$ | async" (filterChange)="filterChange($event)" filterable="menu"
           [filter]="state.filter">
           <kendo-grid-column  *ngIf="isPrintAdviceLetterClicked" [sortable]="false" field="add" [width]="40"  class="text-center"

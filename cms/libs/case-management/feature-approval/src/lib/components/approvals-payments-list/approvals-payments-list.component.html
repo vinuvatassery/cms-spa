@@ -79,7 +79,7 @@
   <kendo-grid [resizable]="true" [loading]="isApprovalPaymentsGridLoaderShow" [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
     [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
-    (filterChange)="filterChange($event)" [selectable]="true" [data]="pendingApprovalGridDataResult"
+    (filterChange)="filterChange($event)" [data]="pendingApprovalGridDataResult"
     [isDetailExpanded]="expandSendBackNotes" (columnVisibilityChange)="columnChange($event)" (columnReorder)="onColumnReorder($event)">
     <kendo-grid-column [sortable]="false" field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
