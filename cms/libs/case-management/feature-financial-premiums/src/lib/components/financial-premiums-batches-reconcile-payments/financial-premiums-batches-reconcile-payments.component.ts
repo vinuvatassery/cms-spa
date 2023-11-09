@@ -947,22 +947,20 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   onRowSelection(grid:any, selection:any)
     {
-      
       this.warrantCalculationArray=[];
-      const data = selection.selectedRows[0].dataItem;
+      const data = selection.selectedRows[0].dataItem;    
       this.isBreakoutPanelShow=true;
-      this.entityId=data.entityId;
-      this.paymentRequestId = data.paymentRequestId;
-      let warrantTotal=0;
-      this.batchId=this.batchId;    
-      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId).forEach((item: any) => {
-       
+      this.entityId=data.entityId; 
+      let warrantTotal=0; 
+      let bid=this.activeRoute.snapshot.queryParams["bid"];
+      this.batchId=data.batchId == '' || data.batchId == null || data.batchId==undefined ? bid:data.batchId;
+    
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==this.batchId).forEach((item: any) => {
         let object={
           vendorId:item?.entityId,
-          batchId:this.batchId,
+          batchId:item?.batchId,
           paymentRequestId:item?.paymentRequestId,
-          warrantNumber:item?.checkNbr,
-  
+          warrantNumber:item?.checkNbr
         }
         this.warrantCalculationArray.push(object);
       });
@@ -972,23 +970,22 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
           vendorId:data?.entityId,
           batchId:this.batchId,
           paymentRequestId:data?.paymentRequestId,
-          warrantNumber:data?.checkNbr,
-  
+          warrantNumber:data?.checkNbr  
         }
         this.warrantCalculationArray.push(object);
       }
+
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
         entityId : data.entityId,
-        premiumsType: this.premiumsType,
         amountTotal : data.amountTotal,
-        warrantTotal : data.amountPaid,
+        warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
       }
-      
+
       this.loadIPBreakoutSummary(ReconcilePaymentResponseDto);
     }
 
