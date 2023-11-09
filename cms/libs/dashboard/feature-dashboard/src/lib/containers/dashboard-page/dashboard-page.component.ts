@@ -35,6 +35,10 @@ export class DashboardPageComponent implements OnInit {
     this.isReorderEnable = true;
   }
 
+  editDashboardCancelClicked(){
+    this.isReorderEnable = false;
+  }
+
   public onReorder(e: TileLayoutReorderEvent): void {
     this.log(e, "reorder");
   }
