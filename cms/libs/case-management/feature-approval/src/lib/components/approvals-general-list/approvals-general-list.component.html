@@ -178,7 +178,8 @@
             >
               <productivity-tools-approvals-general-list-detail-exceptions
                 [approvalId]="item.generalPendingApprovalId"
-                [exceptionId]="item.approvalEntityId"               
+                [exceptionId]="item.approvalEntityId"       
+                (onVendorClickedEvent)="onProviderNameClick($event)"        
               >
               </productivity-tools-approvals-general-list-detail-exceptions>
             </ng-template>
