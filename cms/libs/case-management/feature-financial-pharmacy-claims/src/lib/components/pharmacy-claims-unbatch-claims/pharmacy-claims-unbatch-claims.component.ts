@@ -18,7 +18,7 @@ export class PharmacyClaimsUnbatchClaimsComponent {
     this.UnBatchCloseClickedEvent.emit(false);
   }
 
-  UnBatchClicked() {
+  unBatchClicked() {
     this.UnBatchCloseClickedEvent.emit(true);
   }
 }
