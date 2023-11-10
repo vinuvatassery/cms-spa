@@ -166,8 +166,6 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
     this.isPharmacyClaimsBatchGridLoaderShow = false;
   }
   navToBatchDetails(data : any){  
-    //this.route.navigate(['/financial-management/pharmacy-claims/batch'] );
-
     this.route.navigate([`/financial-management/${this.claimsType}/batch`],
     { queryParams :{bid: 'A1403777-5CF9-4B71-B7A3-BCEF29C9CD97'}});
   }
