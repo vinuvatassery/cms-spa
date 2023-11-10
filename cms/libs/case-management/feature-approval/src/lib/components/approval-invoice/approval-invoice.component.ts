@@ -22,6 +22,7 @@ import {
   GridDataResult,
 } from '@progress/kendo-angular-grid';
 import { LovFacade } from '@cms/system-config/domain';
+import { PendingApprovalGeneralFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'productivity-tools-approval-invoice',
   templateUrl: './approval-invoice.component.html',
@@ -32,13 +33,11 @@ export class ApprovalInvoiceComponent implements OnInit {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isInvoiceGridLoaderShow = false;
   @Input() exceptionId: any;
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
-  @Input() gridSkipCount: any;
-  @Input() invoiceData$: any;
-  @Input() isInvoiceLoading$: any;
+  public sortValue = this.pendingApprovalGeneralFacade.sortValue;
+  public sortType = this.pendingApprovalGeneralFacade.sortType;
+  public pageSizes = this.pendingApprovalGeneralFacade.gridPageSizes;
+  public gridSkipCount = this.pendingApprovalGeneralFacade.skipCount;
+  public sort = this.pendingApprovalGeneralFacade.sort;
   @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
   public state!: any;
   sortColumn = 'Service Start';
@@ -52,9 +51,10 @@ export class ApprovalInvoiceComponent implements OnInit {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
+  invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
   invoiceGridViewDataSubject = new Subject<any>();
-  invoiceGridView$ = this.invoiceGridViewDataSubject.asObservable();
-
+  invoiceGridView$ =  this.invoiceGridViewDataSubject.asObservable();
+  isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
   isInvoiceLoadingSubject = new Subject<boolean>();
   isInvoiceLoadingData$ = this.isInvoiceLoadingSubject.asObservable();
   providerId: any;
@@ -76,7 +76,7 @@ export class ApprovalInvoiceComponent implements OnInit {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private readonly router: Router
+    private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade
   ) {}
 
   ngOnInit(): void {
@@ -176,12 +176,13 @@ export class ApprovalInvoiceComponent implements OnInit {
   }
 
   gridDataHandle() {
+    this.isInvoiceGridLoaderShow = true;
     this.invoiceData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.invoiceGridViewDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isInvoiceGridLoaderShow = false;
-      }
+      } 
       this.isInvoiceGridLoaderShow = false;
     });
   }
@@ -276,7 +277,7 @@ export class ApprovalInvoiceComponent implements OnInit {
   }
 
   loadInvoiceListGrid(data: any) {
-    this.loadApprovalsExceptionInvoiceEvent.emit(data);
+    this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
   }
 
   dropdownFilterChange(

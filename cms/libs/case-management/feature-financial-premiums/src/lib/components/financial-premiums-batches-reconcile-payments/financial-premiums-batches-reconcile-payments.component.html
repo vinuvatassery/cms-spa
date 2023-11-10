@@ -2,7 +2,7 @@
       <section class="app-l-mainTittle">
             <div class="d-flex">
                   <button aria-label="Go back" kendoButton look="flat" class="mr-1"
-                        (click)="onLeavePageOpenClicked(leavePageDialogTemplate)" title="Go back"> <span class="material-icons">
+                        (click)="navToReconcilePayments()" title="Go back"> <span class="material-icons">
                               arrow_back </span> </button>
                   <h1 class="maintitle_withicon text-bold">Reconcile Payments </h1>
             </div>
@@ -42,7 +42,8 @@
                         </div>
                         <div class="flex-col flex-col-4 field-with-btn">
                               <kendo-floatinglabel text="Note">
-                                    <kendo-textarea
+                                    <div>                                             
+                                          <kendo-textarea
                                           #tareaCessation
                                           [fillMode]="formUiStyle.inputFillMode"
                                           [maxlength]="tAreaCessationMaxLength"
@@ -60,7 +61,10 @@
                                           <div class="justify-content-end flex-col flex-col-6">                                         
                                                 <span class="counter">{{ bulkNoteCounter }}</span>
                                               </div> 
+                                        </div>
+                                                                               
                                     </div>
+                                                         
                               </kendo-floatinglabel>
                               <button kendoButton [primary]="true" class="noshadow-btn" aria-label="Bulk" (click)="noteBatch()"> Bulk
                               </button>
@@ -73,7 +77,8 @@
                         <span class="filter-section_items filter--select">
                               <kendo-floatinglabel>
                                     <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDropdownColumns"
-                                    textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
+                                    textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"
+                                    (valueChange)="allColumnChange()">
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
                         </span>
@@ -106,7 +111,7 @@
                   </div>
 
                   <div *ngIf="pageValidationMessage !== null && pageValidationMessageFlag">
-                        <div class="info-banners  red-banner d-flex mt-2 mb-2">
+                        <div class="info-banners  red-banner d-flex mt-2 mb-.2">
                               <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
                               <div>              
                                 <p > {{pageValidationMessage}} </p>       
@@ -114,7 +119,7 @@
                          </div>
                   </div>
                   <div *ngIf="pageValidationMessage !== null && !pageValidationMessageFlag">
-                        <div class="info-banners canyon-banner-with-black d-flex mt-2 mb-2">
+                        <div class="info-banners green-banner d-flex mt-2 mb-2">
                               <span class="material-icons" aria-label="Error" aria-hidden="true">error</span>              
                               <div>              
                                 <p > {{pageValidationMessage}} </p>       
@@ -122,20 +127,30 @@
                          </div>
                   </div>
                   
-                  <div class="app-c-table">
+                  <div class="app-c-table mb-1">
                         <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
                         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (filterChange)="filterChange($event)"
                         [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true" filterable="menu" [filter]="state.filter"
                         [data]="reconcilePaymentGridPagedResult" 
                         (selectionChange)="onRowSelection(grid, $event)">
- 
-                        <kendo-grid-column   title="Print Advice Ltr" [width]="130"  class="text-center" [sticky]="true"> 
-                              <ng-template kendoGridCellTemplate let-dataItem>                  
-                                    <input *ngIf="dataItem.acceptsReportsFlag === 'Y'" class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr"
-                                    aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
-                                    />                                 
-                              </ng-template>
+                       
+                        <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
+                              <ng-template kendoGridCellTemplate let-dataItem>
+                                    <button [attr.aria-label]="dataItem?.batchName" kendoButton look="flat" 
+                                                class="card-link-button"  >
+                                                {{dataItem?.batchName}} 
+                                    </button>
+                                    </ng-template>
+                                    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                          <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                          [extra]="false" operator="eq">
+                                          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                        </kendo-grid-string-filter-menu>
+                                        </ng-template>
                         </kendo-grid-column>
 
                         <kendo-grid-column field="vendorName" [title]="providerTitle" [width]="160">
@@ -185,7 +200,7 @@
                             </kendo-grid-column>
                         <kendo-grid-column  field="paymentReconciledDate" title="Date Pmt. Reconciled" [width]="200">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">              
-                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
+                                    <kendo-datepicker [disabled]="dataItem?.reconciled" [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
                                     aria-label="Date Pmt. Reconciled"  id ="paymentReconciledDate{{rowIndex}}"  name ="paymentReconciledDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentReconciledDate"  (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_RECONCILED')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentReconciledDate',rowIndex)"
@@ -206,7 +221,7 @@
                         </kendo-grid-column>
                           <kendo-grid-column field="paymentSentDate" title="Date Pmt. Sent" [width]="160">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
+                                    <kendo-datepicker [disabled]="dataItem?.reconciled" [fillMode]="formUiStyle.dateInputFillMode" format="MM/dd/yyyy"
                                     aria-label="Date Pmt. Sent"  id ="paymentSentDate{{rowIndex}}"  name ="paymentSentDate{{rowIndex}}"
                                     [(ngModel)]="dataItem.paymentSentDate"   (valueChange)="dateChangeListItems($event,dataItem,'DATE_PAYMENT_SENT')"
                                     [ngClass]="ngDirtyInValid(dataItem,'paymentSentDate',rowIndex)" 
@@ -240,11 +255,11 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="checkNbr" title="Warrant Number" [width]="180">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-textbox  aria-label="Warrant Number"
+                                    <kendo-textbox [disabled]="dataItem?.reconciled" aria-label="Warrant Number"
                                     placeholder="Warrant Number"  [maxlength]="12"
                                     [fillMode]="formUiStyle.inputFillMode"
                                     [ngClass]="ngDirtyInValid(dataItem,'checkNbr',rowIndex)"  id ="checkNbr{{rowIndex}}"
-                                    [(ngModel)]="dataItem.checkNbr" (valueChange)="warrantNumberChange(dataItem)"    >
+                                    [(ngModel)]="dataItem.checkNbr" (afterValueChanged)="warrantNumberChange(dataItem)">
                                   </kendo-textbox>
                                   <kendo-formerror *ngIf="dataItem.warrantNumberInValid">{{dataItem.warrantNumberInValidMsg}}</kendo-formerror>
                               </ng-template>
@@ -262,6 +277,7 @@
                               <ng-template kendoGridCellTemplate let-dataItem>
                                     <div kendoTooltip>                                             
                                           <kendo-textarea
+                                          [disabled]="dataItem?.reconciled"
                                           #tareaCessation
                                           [fillMode]="formUiStyle.inputFillMode"
                                           [maxlength]="tAreaCessationMaxLength"
@@ -288,7 +304,14 @@
                                     <kendo-filter-contains-operator></kendo-filter-contains-operator>
                             </kendo-grid-string-filter-menu>
                             </ng-template>
-                        </kendo-grid-column>                            
+                        </kendo-grid-column>   
+                        <kendo-grid-column   title="Print Advice Ltr" [width]="130" class="text-center" [sticky]="true">
+                              <ng-template kendoGridCellTemplate let-dataItem>                  
+                                    <input class="adjust-attr" type="checkbox" id="printAdviceLetter" name="chkPrintAdviceLtr" *ngIf="dataItem.acceptsReportsFlag === 'Y'"
+                                    aria-labelledby="printAdviceLetter" kendoCheckBox  (change)="printAdviceLetterChange(dataItem)" [(ngModel)]="dataItem.isPrintAdviceLetter"
+                                    />                                 
+                              </ng-template>
+                        </kendo-grid-column>                         
                          <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
                         let-currentPage="currentPage">
                         <div class="grid-custom-paginationtemplates d-flex">
@@ -331,7 +354,7 @@
                         <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2">$&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.warrantTotal | kendoNumber: 'n2'}}</span>
                        
                   </div>
-                  <div><span>{{ premiumReconcileCount }} advice letter(s) to be previewed</span>
+                  <div><span *ngIf="!onlyPrintAdviceLetter">{{ premiumReconcileCount }} advice letter(s) to be previewed</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close">
                               <span class="material-icons" aria-label="close" aria-hidden="true"
                                     (click)="toggleBreakoutPanel()">close</span>
@@ -350,13 +373,13 @@
             </div>
             <div class="text-right flex-gap">                  
                   <button kendoButton [primary]="true"  look="outline" (click)="navToReconcilePayments()" aria-label="Cancel"> Cancel </button>
-                  <button kendoButton [primary]="true" [disabled]="premiumReconcileCount == 0" aria-label="Save"  (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
+                  <button kendoButton [primary]="true" [disabled]="premiumReconcileCount == 0 && isRecordForPrint == 0 && !warrantNumberChanged" aria-label="Save"  (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
             </div>     
       
       </div>
 </div>
 <ng-template #PrintAuthorizationDialog>
-      <kendo-dialog-titlebar  class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar  (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Advice Letter(s)</kendo-dialog-titlebar>
     <cms-financial-premiums-print-authorization
       [premiumReconcileCount]="premiumReconcileCount"
       [printOption]="onlyPrintAdviceLetter"
@@ -364,6 +387,10 @@
       [items]="selectedReconcileDataRows"
       [batchId]="batchId"
       (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+      (loadTemplateEvent)="loadEachLetterTemplate($event)"
+      [letterContentList$]="letterContentList$"
+      [letterContentLoader$]="letterContentLoader$"
+      (onReconcileRecordEvent)="onReconcileRecord($event)"
       [premiumsType]="premiumsType"></cms-financial-premiums-print-authorization>
     </ng-template>
 
@@ -372,7 +399,3 @@
        
     <cms-financial-premiums-leave-page [premiumsType]="premiumsType" [paymentRequestBatchId]="batchId" (modalLeavePageCloseClicked)="onLeavePageCloseClicked($event)"></cms-financial-premiums-leave-page>
     </ng-template>
-
-
-
-  

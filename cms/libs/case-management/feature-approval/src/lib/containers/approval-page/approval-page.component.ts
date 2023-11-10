@@ -13,9 +13,11 @@ import { State } from '@progress/kendo-data-query';
 import {
   ApprovalFacade,
   PendingApprovalGeneralFacade,
+  PendingApprovalGeneralTypeCode,
   PendingApprovalPaymentFacade,
   UserRoleType,
   FinancialVendorFacade,
+  ContactFacade,
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
@@ -30,6 +32,7 @@ import {
   UserDefaultRoles,
   UserLevel
 } from '@cms/system-config/domain';
+import { FormBuilder, FormGroup } from '@angular/forms';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -94,8 +97,10 @@ export class ApprovalPageComponent implements OnInit {
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId!: any;
   usersByRole$ = this.userManagementFacade.usersByRole$;
-  selectedVendor$ = this.financialVendorFacade.selectedVendor$;
-
+  selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
+  clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
+  ddlStates$ = this.contactFacade.ddlStates$;
+  healthCareForm!: FormGroup;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -107,7 +112,9 @@ export class ApprovalPageComponent implements OnInit {
     private readonly userDataService: UserDataService,
     private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
     private readonly cd: ChangeDetectorRef,
-    private readonly financialVendorFacade: FinancialVendorFacade
+    private readonly financialVendorFacade: FinancialVendorFacade,
+    private contactFacade: ContactFacade,
+    private formBuilder: FormBuilder
   ) {}
   ngOnInit(): void {
     this.getUserRole();
@@ -122,13 +129,13 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalCount = response;
-      }
-      else{
+      } else {
         this.pendingApprovalCount = 0;
       }
       this.cd.detectChanges();
     });
   }
+
   loadApprovalsGeneralGrid(event: any): void {
     this.pendingApprovalGeneralFacade.loadApprovalsGeneral();
   }
@@ -234,21 +241,38 @@ export class ApprovalPageComponent implements OnInit {
       approvalId
     );
   }
-
-  loadApprovalsExceptionCard(data: any) {
-    this.pendingApprovalGeneralFacade.loadExceptionCard(data);
-  }
-
-  loadApprovalsExceptionInvoice(data: any) {
-    this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
-  }
+  
   submitGeneralRequests(requests: any) {
     this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
   }
 
-  getVendorDetail(userObject: any) {
-    this.financialVendorFacade.getVendorDetails(
-      userObject.approvalEntityId
-    );
+  getMasterDetails(userObject: any) {
+    if (
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
+      userObject.subTypeCode ===
+        PendingApprovalGeneralTypeCode.DentalProvider ||
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
+      userObject.subTypeCode ===
+        PendingApprovalGeneralTypeCode.MedicalProvider ||
+      userObject.subTypeCode ===
+        PendingApprovalGeneralTypeCode.InsuranceProvider ||
+      userObject.subTypeCode ===
+        PendingApprovalGeneralTypeCode.InsuranceVendor ||
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.Pharmacy
+    ) {
+      this.financialVendorFacade.getVendorDetails(userObject.approvalEntityId);
+      this.selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
+    } else if (
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.Drug ||
+      userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan
+    ) {
+      this.pendingApprovalGeneralFacade.getMasterDetails(
+        userObject.approvalEntityId,
+        userObject.subTypeCode
+      );
+      this.selectedMasterDetail$ =
+        this.pendingApprovalGeneralFacade.selectedMasterDetail$;
+    }
   }
+
 }
