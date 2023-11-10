@@ -26,7 +26,7 @@
         <kendo-grid-column
           field="vendorName"
           title="Service Provider"
-          [width]="150"
+          [width]="180"
           [sticky]="true"
         >
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -38,7 +38,7 @@
         <kendo-grid-column
           field="serviceTypeDesc"
           title="Service Description"
-          [width]="150"
+          [width]="200"
         >
         </kendo-grid-column>
         <kendo-grid-column field="amountRequested" title="Amount" [width]="100">
@@ -48,7 +48,7 @@
         <kendo-grid-column
           field="serviceStartDate"
           title="Coverage Start Date"
-          [width]="130"
+          [width]="160"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.serviceStartDate | date:'MM/dd/YYYY' }}
@@ -57,7 +57,7 @@
         <kendo-grid-column
           field="serviceEndDate"
           title="Coverage End Date"
-          [width]="130"
+          [width]="160"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.serviceEndDate | date:'MM/dd/YYYY' }}
@@ -66,7 +66,7 @@
         <kendo-grid-column
         field="checkReconcileDate"
         title="Check Request"
-        [width]="130"
+        [width]="150"
       >
       <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.checkReconcileDate | date:'MM/dd/YYYY' }}
@@ -93,7 +93,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="paymentTypeDesc" title="Type" [width]="130">
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="80" [sortable]="false" [columnMenu]="false" [sticky]="true">
+        <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [sortable]="false" [columnMenu]="false" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -129,7 +129,7 @@
               [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"  aria-label="Rows Per Page"
               id="RowsPerPage" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages> 
+            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages> 
 
           </div>
           <div class="d-flex">

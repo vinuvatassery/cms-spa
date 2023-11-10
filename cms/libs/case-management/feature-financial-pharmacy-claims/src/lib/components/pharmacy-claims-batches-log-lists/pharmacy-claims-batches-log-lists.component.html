@@ -1,4 +1,4 @@
-   <div class=" pt-0"> 
+   <div class=" pt-0">
           <section class="app-l-mainTittle">
               <div class="d-flex">
                   <button aria-label="Go Back" title="Go Back" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)"> <span
@@ -8,7 +8,7 @@
               </div>
           </section>
           <section class="app-l-client-wrapper ">
-              <section class="app-l-wrapper"> 
+              <section class="app-l-wrapper">
                   <p> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
                   <section class="table-filter-section mat-form-no-b-space">
                       <span class="filter-section_items filter--select">
@@ -24,7 +24,7 @@
                         <kendo-floatinglabel text="Search">
                           <kendo-textbox  [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" aria-label="Search case"
                             rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-                    
+
                         </kendo-floatinglabel>
                       </span>
                       <span class="right-overlay-export">
@@ -43,8 +43,8 @@
       <span class="sort-items">Default Columns</span>
       <span class="sort-items" >Columns Re-ordered</span>
     </div>
-    
-   
+
+
     <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take" [loading]="(loader$ | async) ?? false"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
@@ -183,8 +183,9 @@
                 [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
                 [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
-              <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
-    
+
+              <kendo-grid-messages [pagerItems]="'rows'"  [pagerPage]="'Page'"> </kendo-grid-messages>
+
             </div>
             <div class="d-flex">
               <kendo-pager-input></kendo-pager-input>
@@ -202,22 +203,22 @@
           </div>
           <p>There is no data to display.</p>
         </ng-template>
-    
+
       </kendo-grid>
     </div>
-              </section> 
+              </section>
           </section>
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
     <span class="">0 claims(s) to be deleted</span>
-    <button (click)="goToBatchItems($event)">Batch Log items</button> 
-    <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button> 
+    <button (click)="goToBatchItems($event)">Batch Log items</button>
+    <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Preview Requests" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
     <button kendoButton [primary]="true" aria-label="Review" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
     <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
       buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAuthorizationClicked"
       [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-      <div class="btn-inner-block" > 
+      <div class="btn-inner-block" >
         Bulk
       </div>
       <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
@@ -232,7 +233,7 @@
 
   <ng-template #previewSubmitPaymentDialogTemplate>
     <kendo-dialog-titlebar (close)="onPreviewSubmitPaymentCloseClicked($event)"> Preview and Submit Payment Requests </kendo-dialog-titlebar>
- 
+
   <cms-pharmacy-claims-preview-payment-request></cms-pharmacy-claims-preview-payment-request>
   </ng-template>
 

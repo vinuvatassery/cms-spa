@@ -26,19 +26,19 @@
                     </ng-template>
                 </kendo-grid-column>
                 <kendo-grid-column field="eligibilityStatusDesc" title="Status" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="groupCodeDesc" title="Current Group" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="daysInGroup" title="Days in Group" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="groupCodeDesc" title="Current Group" [width]="140"></kendo-grid-column>
+                <kendo-grid-column field="daysInGroup" title="Days in Group" [width]="140"></kendo-grid-column>
                 <kendo-grid-column field="familySize" title="Family Size" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="grossMonthlyIncome" title="Gross Monthly Income" format="{0:c2}" [width]="100">
+                <kendo-grid-column field="grossMonthlyIncome" title="Gross Monthly Income" format="{0:c2}" [width]="180">
                 </kendo-grid-column>
-                <kendo-grid-column field="fplspStart" title="FPL@SP Start" [width]="100"></kendo-grid-column>
+                <kendo-grid-column field="fplspStart" title="FPL@SP Start" [width]="140"></kendo-grid-column>
                 <kendo-grid-column field="currentFPL" title="Current FPL" [width]="100"></kendo-grid-column>
-                <kendo-grid-column field="reviewCompletedDate" title="Review Completed" [width]="100">
+                <kendo-grid-column field="reviewCompletedDate" title="Review Completed" [width]="180">
                     <ng-template kendoGridCellTemplate let-dataItem>
                         {{dataItem.reviewCompletedDate |date:'MM/dd/YYYY'}}
                     </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="by" title="By" [width]="50">
+                <kendo-grid-column field="by" title="By" [width]="70" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
                             [popover]="onUserProfileDetailsHovered" showOn="hover"  [attr.aria-label]="dataItem.creatorId">
@@ -51,7 +51,7 @@
                         </kendo-popover>
                     </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="Option" title="Options" [width]="70" class="text-center">
+                <kendo-grid-column field="Option" title="Options" [width]="75" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <kendo-dropdownbutton [data]="actions" icon="more-vertical" title="More Options"
                             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -79,7 +79,7 @@
         [valueField]="'value'" #RowsPerPage id="RowsPerPage" aria-label ="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
         (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
       <kendo-pager-info> </kendo-pager-info>
-      <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+      <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
     </div>
     <div class="d-flex">
       <kendo-pager-input></kendo-pager-input>

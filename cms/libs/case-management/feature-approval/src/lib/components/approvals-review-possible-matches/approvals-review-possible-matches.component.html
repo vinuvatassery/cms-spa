@@ -1,0 +1,83 @@
+<kendo-dialog-titlebar (close)="closePossibleMatches()">
+  Search Clients
+</kendo-dialog-titlebar>
+<section class="k-dialog-body">
+  <p class="text-muted mb-2">
+    Select whether it’s a match. If it’s a match and the the claim passes all
+    criteria, it will automatically be submitted for approval. If it still fails
+    one or more criteria, it will stay in your approval queue.
+  </p>
+
+  <div class="flex-row">
+    <div class="flex-col mt-1">
+      <table class="table_view_data_info">
+        <caption hidden>
+          CLAIM & CLIENT INFO
+        </caption>
+        <tr>
+          <th></th>
+          <th><strong> CLAIM INFORMATION</strong></th>
+          <th><strong> CLIENT INFORMATION</strong></th>
+        </tr>
+        <tr>
+          <td><strong>Name:</strong></td>
+          <td>FName LName</td>
+          <td>LName LName</td>
+        </tr>
+        <tr>
+          <td><strong>DOB:</strong></td>
+          <td>XX/XX/XXXX</td>
+          <td>XX/XX/XXXX</td>
+        </tr>
+        <tr>
+          <td><strong>Policy ID:</strong></td>
+          <td>000000000</td>
+          <td>1111111111</td>
+        </tr>
+        <tr>
+          <td><strong>Case Worker:</strong></td>
+          <td>&nbsp;</td>
+          <td>
+            <button
+              kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered"
+              showOn="hover"
+              aria-label="modified by"
+              kendoButton
+              look="flat"
+              class="card-link-button"
+            >
+              FName LName
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="flex-col mt-3">
+      <kendo-buttongroup selection="single" class="fill_width_group_btn">
+        <button kendoButton aria-label="It’s a Match" [toggleable]="true">
+          It’s a Match
+        </button>
+        <button kendoButton aria-label="It’s Not a Match" [toggleable]="true">
+          It’s Not a Match
+        </button>
+      </kendo-buttongroup>
+    </div>
+  </div>
+</section>
+
+<kendo-popover #onUserProfileDetailsHovered width="330" position="right">
+  <ng-template kendoPopoverBodyTemplate>
+    <common-user-profile-card> </common-user-profile-card>
+  </ng-template>
+</kendo-popover>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton [primary]="true" look="outline" aria-label="Cancel">
+        Cancel
+      </button>
+      <button kendoButton [primary]="true" aria-label="Save">Save</button>
+    </div>
+  </div>
+</kendo-dialog-actions>

@@ -16,11 +16,12 @@ import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, debounceTime } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
+import { GridFilterParam, PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-batch-list-detail-items',
   templateUrl: './financial-claims-batch-list-detail-items.component.html', 
@@ -48,6 +49,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Output() getProviderPanelEvent = new EventEmitter<any>();
   @Output() updateProviderProfileEvent = new EventEmitter<any>();
   @Output() onEditProviderProfileEvent = new EventEmitter<any>();
+  @Output() onExportClickedEvent = new EventEmitter<any>();
   @Input() vendorProfile$ :any;
   @Input() updateProviderPanelSubject$:any
   @Input() ddlStates$ :any
@@ -72,12 +74,15 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   serviceGridColumnName = ''; 
+  @Input() exportButtonShow$:any
+  columnChangeDesc = 'Default Columns'
+  selectedSearchColumn='creationTime';
 
   gridColumns : {[key: string]: string} = {
             clientFullName: 'Client Name',
             nameOnInsuranceCard: 'Name on Primary Insurance Card',
             paymentStatus: 'Payment Status',
-            clientId: 'Member ID',
+            clientId: 'Client ID',
             serviceStartDate: 'Service Date',
             cptCode: 'CPT Code',
             serviceDesc:'',
@@ -86,23 +91,50 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
             creationTime: 'Entry Date',
             invoiceNbr:'Invoice ID'
           };
-    
-  paymentStatusList = ['SUBMITTED', 'PENDING_APPROVAL', 'DENIED', 'MANAGER_APPROVED', 'PAYMENT_REQUESTED', 'ONHOLD', 'FAILED', 'PAID'];
+searchText =''
+private searchSubject = new Subject<string>();
+       
+  searchColumnList : { columnName: string, columnDesc: string }[] 
+  
+
+  paymentStatusLov$ = this.lovFacade.paymentStatus$;
   paymentStatusFilter = '';
+  showExportLoader=false;
+  filteredByColumnDesc='';
+  showDateSearchWarning =false
+  showNumberSearchWarning =false
+  numberSearchColumnName =""
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
     public activeRoute: ActivatedRoute,
-    private readonly cd: ChangeDetectorRef) {
-    
+    private readonly cd: ChangeDetectorRef,
+    private lovFacade :  LovFacade) {
+      this.searchColumnList = []
     }
   
   ngOnInit(): void { 
     this.serviceGridColumnName = this.claimsType.charAt(0).toUpperCase() + this.claimsType.slice(1);
     this.gridColumns['serviceDesc'] = `${this.serviceGridColumnName} Service`;
+    this.searchColumnList = [
+      { columnName: 'clientFullName',  columnDesc: 'Client Name'},
+      { columnName: "nameOnInsuranceCard",columnDesc: "Name on Primary Insurance Card"},
+      { columnName: "clientId",columnDesc: "Client ID" },
+      { columnName: "serviceStartDate",columnDesc: "Service Date" },
+      { columnName: "invoiceNbr",columnDesc: "Invoice ID" },
+      { columnName: "cptCode",columnDesc: "CPT Code" },
+      { columnName: "serviceDesc",columnDesc: this.serviceGridColumnName+' Service' },
+      { columnName: "serviceCost",columnDesc: "Service Cost" },
+      { columnName: "amountDue",columnDesc: "Client Co-Pay" },
+      { columnName: "paymentStatus",columnDesc: "Payment Status" },
+      { columnName: "creationTime",columnDesc: "Entry Date" },
+      { columnName: "By",columnDesc: "creatorId" }
+    ]
     this.initializeGridState();
-    this.loadBatchLogItemsListGrid();   
-   
+    this.loadBatchLogItemsListGrid(); 
+    this.lovFacade.getPaymentStatusLov();
+    this.addSearchSubjectSubscription();
   }
+  
   ngOnChanges(): void {
     this.paymentPanelData$.subscribe((data: any)=>{
       this.paymentPanelDetails = data;
@@ -113,6 +145,41 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
     this.loadPaymentPanel.emit(true);
   }
 
+  
+  private addSearchSubjectSubscription() {
+    this.searchSubject.pipe(debounceTime(300))
+      .subscribe((searchValue) => {
+        this.performSearch(searchValue);
+      });
+  }
+
+  
+  performSearch(data: any) {
+    this.defaultGridState();
+    const operator = (['serviceStartDate','creationTime','clientId','invoiceNbr','serviceCost','amountDue']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
+
+
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedSearchColumn ?? 'creationTime',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+    this.loadBatchLogItemsListGrid();
+  }
+
   private loadBatchLogItemsListGrid(): void {
     this.loadBatchLogItems(
       this.state?.skip ?? 0,
@@ -121,6 +188,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
       this.sortType
     );
   }
+
   loadBatchLogItems(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -139,6 +207,61 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   }
  
   
+  searchColumnChangeHandler(value: string) {
+    this.showNumberSearchWarning = (['clientId','invoiceNbr','serviceCost','amountDue']).includes(value);
+    this.showDateSearchWarning =   (['serviceStartDate','creationTime']).includes(value);
+
+    if(this.showNumberSearchWarning){
+      this.numberSearchColumnName = this.gridColumns[value]
+    }
+    this.filter = [];
+    if (this.searchText) {
+      this.onSearch(this.searchText);
+    }
+  }
+
+  resetGrid(){
+    this.sortValue = 'creationTime';
+    this.sortType = 'asc';
+    this.sortColumn = 'clientName';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchText = '';
+    this.selectedSearchColumn = '';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.loadBatchLogItemsListGrid()
+  }
+  onSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    if (isDateSearch && !searchValue) return;
+    this.setFilterBy(false, searchValue, []);
+    this.searchSubject.next(searchValue);
+  }
+
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.searchColumnList?.find(i => i.columnName === this.selectedSearchColumn)?.columnDesc ?? '';
+    }
+  }
+
+
   onChange(data: any) {
     this.defaultGridState();
 
@@ -270,5 +393,35 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
       sort: [{ field: 'creationTime', dir: 'desc' }],
     };
     this.sortColumnDesc = 'Entry Date';
+  }
+
+  onClickedExport(){
+    this.showExportLoader = true
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      this.filter);
+
+    const PagingAndSortedRequest =
+    {
+      SortType : param?.sortType,
+      Sorting : param?.sorting,
+      SkipCount : param?.skipCount,
+      MaxResultCount : param?.maxResultCount,
+      Filter : param?.filter
+    }
+    this.onExportClickedEvent.emit(PagingAndSortedRequest);
+
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {
+        this.showExportLoader = false
+       this.cd.detectChanges()
+      }
+    })
   }
 }

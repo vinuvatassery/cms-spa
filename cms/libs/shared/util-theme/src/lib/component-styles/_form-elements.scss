@@ -154,6 +154,15 @@
       word-break: break-word;
     }
   }
+  &.green-banner {
+    background: $toLight-green;
+    color: var(--hive-success-palette-900);
+    padding: $size-xx $size-xx;
+    a {
+      color: $black;
+      word-break: break-word;
+    }
+  }
   &.red-banner {
     background: var(--hive-error-palette-100);
     color: var(--hive-error-palette-900);
@@ -225,15 +234,29 @@
   .k-button {
     &.k-icon-button {
       background: transparent;
-      position: absolute;
+      // position: absolute;
       right: 0;
       top: 0px;
       height: 100%;
+      min-height: 37px;
       z-index: 1;
+      .k-input-loading-icon{
+        padding-block: 0px;
+        padding-inline:0px;
+      }
     }
   }
 }
-
+.k-picker{
+  .k-button {
+    &.k-icon-button {
+      .k-input-loading-icon{
+        padding-block: 0px;
+        padding-inline:0px;
+      }
+    }
+  }
+}
 .k-numerictextbox {
   &.k-input {
     .k-button {
@@ -731,7 +754,7 @@
       background: var(--hive-neutral-palette-50) !important;
       border-color: var(--hive-neutral-palette-50) !important;
       .k-button {
-        opacity: 0.5;
+        opacity: 0.8;
       }
       .k-dropzone-hint {
         display: none;

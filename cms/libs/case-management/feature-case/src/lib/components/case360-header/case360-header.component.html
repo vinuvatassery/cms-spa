@@ -1,4 +1,4 @@
-<div class="app-l-inner-rapper pt-0 pb-0" kendoRippleContainer kendoTooltip>
+<div class="app-l-inner-rapper pt-0 pb-0" kendoRippleContainer>
   <div class="assigned-to-right" *ngIf="caseWorkerId">
    <span> Assigned To</span>
     <button
@@ -7,8 +7,7 @@
       class="avatar-sm-btn ml-1 c-default"
       kendoPopoverAnchor
       [popover]="userCard"
-      showOn="hover"
-      aria-label="Assigned To"
+      showOn="hover" 
     >    
     <common-user-photo-icon  [userId]="caseWorkerId"></common-user-photo-icon>        
     </button>
@@ -16,12 +15,14 @@
   <kendo-popover #userCard width="330" position="bottom" [callout]="false">
     <ng-template kendoPopoverBodyTemplate>
       <common-user-profile-card 
-      [userId]="caseWorkerId"     
-      [reassign]=true      
-      ></common-user-profile-card>
+        [userId]="caseWorkerId"     
+        [reassign]=true
+        [clientName]="loadedClientHeader?.clientFullName"
+        [clientCaseId]="clientCaseId">
+      </common-user-profile-card>
     </ng-template>
   </kendo-popover>
-
+    
   <!-- Main Title Section -->
   <section class="app-l-mainTittle" *ngIf="loadedClientHeader?.clientFullName">
     <h2 class="title-md">

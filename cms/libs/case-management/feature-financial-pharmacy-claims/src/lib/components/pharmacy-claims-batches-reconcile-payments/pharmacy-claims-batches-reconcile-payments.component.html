@@ -88,7 +88,7 @@
                               [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
                               [data]="reconcileGridLists$ | async">
                               <kendo-grid-checkbox-column [sticky]="true" title="Print Notice" [columnMenu]="false" [showSelectAll]="false"
-                                    [width]="80"></kendo-grid-checkbox-column>
+                              [width]="120"  class="text-center" class="text-center"></kendo-grid-checkbox-column>
                               <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="160">
                                     <ng-template kendoGridCellTemplate let-dataItem>
                                           <button [attr.aria-label]="dataItem.pharmacyName" kendoButton look="flat" (click)="onViewProviderDetailClicked(providerDetailsTemplate)"
@@ -125,7 +125,7 @@
                                                       id="RowsPerPage" [(value)]="state.take"
                                                       (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                                                 <kendo-pager-info> </kendo-pager-info>
-                                                <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'"
+                                                <kendo-grid-messages [pagerItems]="'rows'" 
                                                       [pagerPage]="'Page'"> </kendo-grid-messages>
 
                                           </div>

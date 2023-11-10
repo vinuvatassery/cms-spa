@@ -4,7 +4,7 @@ import { State } from '@progress/kendo-data-query';
 import {ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam, PaymentPanel, PaymentType, PaymentsFacade } from '@cms/case-management/domain'; 
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
-import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
 
@@ -49,7 +49,8 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
      public contactFacade: ContactFacade,
      public lovFacade: LovFacade,
      private dialogService: DialogService,
-     private readonly financialVendorFacade : FinancialVendorFacade
+     private readonly financialVendorFacade : FinancialVendorFacade,
+     private documentFacade : DocumentFacade
    ) {}
 
    ngOnInit(): void {
@@ -84,6 +85,7 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
     this.financialPremiumsFacade.loadBatchItemsListGrid(this.batchId, itemId, this.premiumType, params);
   }
+
 
   loadPaymentPanel(event:any=null){
     this.paymentFacade.loadPaymentPanel(this.vendorAddressId,this.batchId);    
@@ -136,4 +138,5 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
     this.lovFacade.getPaymentMethodLov()
   }
 
+  
 }

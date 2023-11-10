@@ -11,7 +11,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs';
-import { LoggingService } from '@cms/shared/util-core';
+import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
@@ -27,6 +27,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   state!: State;
   filter!: any;
+  unbatchPremiums$ = this.financialPremiumsFacade.unbatchPremiums$;
   sortType = this.financialPremiumsFacade.sortType;
   pageSizes = this.financialPremiumsFacade.gridPageSizes;
   gridSkipCount = this.financialPremiumsFacade.skipCount;
@@ -62,6 +63,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  exportButtonShow$ = this.documentFacade.exportButtonShow$;
   providerDetailsDialog: any
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
@@ -75,7 +77,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
     public contactFacade: ContactFacade,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
-    private readonly financialVendorFacade : FinancialVendorFacade
+    private readonly financialVendorFacade : FinancialVendorFacade,
+    private documentFacade: DocumentFacade,
 
   ) {}
   ngOnInit(): void {
@@ -99,6 +102,12 @@ export class FinancialPremiumsPageComponent implements OnInit {
           this.loggingService.logException(err);
         },
       });
+  }
+  deletePayment(paymentId: string){
+    this.financialPremiumsFacade.deletePremiumPayment(this.premiumType, paymentId);
+  }
+  unBatchPremiumClick(event:any){
+    this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
   }
   loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
     const gridDataRefiner = {
@@ -190,6 +199,30 @@ export class FinancialPremiumsPageComponent implements OnInit {
   OnEditProviderProfileClick(){
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
+  }
+  exportClaimsPaymentsGridData() {
+    const data = this.dataExportParameters;
+    if (data) {
+      const param = new GridFilterParam(
+        this.state?.skip ?? 0,
+        this.state?.take ?? 0,
+        this.sortValue,
+        this.sortType,
+  
+        JSON.stringify(this.filter)
+      );
+   
+      let fileName =
+        this.premiumType[0].toUpperCase() +
+        this.premiumType.substr(1).toLowerCase() +
+        ' Premium Payments';
+
+      this.documentFacade.getExportFile(
+        param,
+        `premium/${this.premiumType}/payments`,
+        fileName
+      );
+    }
   }
 
 }

@@ -18,24 +18,13 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'approval',
-    loadChildren: () =>
-      import('@cms/productivity-tools/feature-approval').then(
-        (m) => m.ProductivityToolsFeatureApprovalModule
-      ),
-  },
-  {
     path: '',
     redirectTo: 'todo-items',
     pathMatch: 'full',
   },
-
 ];
 
 @NgModule({
-  imports: [
-    CommonModule, 
-    RouterModule.forChild(routes)
-  ]
+  imports: [CommonModule, RouterModule.forChild(routes)],
 })
 export class ProductivityToolsFeatureHomeModule {}

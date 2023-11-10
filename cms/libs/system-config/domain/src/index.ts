@@ -32,3 +32,6 @@ export * from './lib/enums/lov-types.enum';
 export * from './lib/enums/accepted-case-status-code.enum'
 export * from './lib/enums/applicant-info-lov-types.enum';
 export * from './lib/enums/lab-result-type-code.enum';
+export * from './lib/enums/user-default-roles.enum';
+export * from './lib/enums/user-level.enum';
+

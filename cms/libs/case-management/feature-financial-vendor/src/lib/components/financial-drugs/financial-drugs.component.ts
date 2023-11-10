@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DrugCategoryCode } from '@cms/case-management/domain';
+import { DrugCategoryCode, FinancialVendorTypeCode, VendorFacade } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -18,28 +18,30 @@ export class FinancialDrugsComponent {
   @Input() drugDataLoader$: any;
   @Input() drugsData$!: Observable<any>;
   @Input() vendorDetails$!: Observable<any>;
-  @Input() pageSizes : any;
-  @Input() sortValue : any;
-  @Input() sortType : any;
-  @Input() sort : any;
-  @Input() gridSkipCount : any;
+  @Input() pageSizes: any;
+  @Input() sortValue: any;
+  @Input() sortType: any;
+  @Input() sort: any;
+  @Input() gridSkipCount: any;
+  @Input() hasCreateUpdatePermission: boolean = false;
+
   @Output() loadDrugListEvent = new EventEmitter<any>();
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isFinancialDrugsDetailShow = false;
   isFinancialDrugsDeactivateShow = false;
-  isFinancialDrugsReassignShow  = false;
+  isFinancialDrugsReassignShow = false;
   vendorId: any;
   DrugCategoryCode = DrugCategoryCode;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isDrugsGridLoaderShow = false;
   public state!: State;
   dialogTitle = "Add New";
-  filters:any=[];
+  filters: any = [];
   isFiltered = false;
-  yesOrNoLovs:any=[];
+  yesOrNoLovs: any = [];
   yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
-  deliveryMethodLovs:any=[];
+  deliveryMethodLovs: any = [];
   deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
   hivValue = null;
   hepaValue = null;
@@ -54,7 +56,8 @@ export class FinancialDrugsComponent {
     deliveryMethodDesc: 'Delivery Method',
     hiv: 'HIV Drugs?',
     hepatitis: 'Hep Drugs?',
-    opportunisticInfection: 'OI Drugs?'
+    opportunisticInfection: 'OI Drugs?',
+    option: 'Options'
   };
 
   //Column Standards
@@ -118,13 +121,17 @@ export class FinancialDrugsComponent {
     this.loadDrugsListGrid();
   }
 
-   /** Constructor **/
-   constructor(private route: ActivatedRoute,
+  /** Constructor **/
+  constructor(private route: ActivatedRoute,
     private readonly ref: ChangeDetectorRef,
-     private readonly lovFacade: LovFacade
-   ) {}
+    private readonly lovFacade: LovFacade,
+    private readonly vendorFacade: VendorFacade,
 
+  ) { }
 
+  private loadManufacturer() {
+    this.vendorDetails$ = this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers)
+  }
 
   ngOnInit(): void {
     this.lovFacade.getYesOrNoLovs();
@@ -132,6 +139,7 @@ export class FinancialDrugsComponent {
     this.loadYesOrNoLovs();
     this.loadDeliveryMethodLovs();
     this.vendorId = this.route.snapshot.queryParams['v_id'];
+    this.loadManufacturer();
   }
 
   ngOnChanges(): void {
@@ -146,7 +154,7 @@ export class FinancialDrugsComponent {
   }
 
   loadDrugsListGrid() {
-    this.loadDrugList (
+    this.loadDrugList(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
@@ -154,8 +162,12 @@ export class FinancialDrugsComponent {
     );
   }
 
-  clickOpenAddEditFinancialDrugsDetails(title:string) {
+  clickOpenAddEditFinancialDrugsDetails(title: string) {
     this.dialogTitle = title;
+    if (title === "Add New") {
+      this.dialogTitle = this.hasCreateUpdatePermission ? "Add New" : "Request New";
+    }
+
     this.isFinancialDrugsDetailShow = true;
   }
 
@@ -172,48 +184,47 @@ export class FinancialDrugsComponent {
   clickOpenReassignFinancialDrugsDetails() {
     this.isFinancialDrugsReassignShow = true;
   }
-  clickCloseReassignFinancialDrugs(){
+  clickCloseReassignFinancialDrugs() {
     this.isFinancialDrugsReassignShow = false;
   }
 
-  loadDrugList (
+  loadDrugList(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
-    sortTypeValue: string)
-    {
-      const gridDataRefinerValue = {
-        skipCount: skipCountValue,
-        pageSize: maxResultCountValue,
-        sortColumn: sortValue,
-        sortType: sortTypeValue,
-        filters: JSON.stringify(this.filter)
-      };
-     this.loadDrugListEvent.emit(gridDataRefinerValue);
+    sortTypeValue: string) {
+    const gridDataRefinerValue = {
+      skipCount: skipCountValue,
+      pageSize: maxResultCountValue,
+      sortColumn: sortValue,
+      sortType: sortTypeValue,
+      filters: JSON.stringify(this.filter)
+    };
+    this.loadDrugListEvent.emit(gridDataRefinerValue);
   }
 
   //Column Options Standard Implementation
 
-  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+  dropdownFilterChange(field: string, value: any, filterService: FilterService): void {
     filterService.filter({
-        filters: [{
-          field: field,
-          operator: "eq",
-          value:value.lovCode
+      filters: [{
+        field: field,
+        operator: "eq",
+        value: value.lovCode
       }],
-        logic: "or"
+      logic: "or"
     });
 
-    if(field == "hiv"){
+    if (field == "hiv") {
       this.hivValue = value;
     }
-    if(field == "hepatitis"){
+    if (field == "hepatitis") {
       this.hepaValue = value;
     }
-    if(field == "opportunisticInfection"){
+    if (field == "opportunisticInfection") {
       this.oppoValue = value;
     }
-    if(field == "deliveryMethodDesc"){
+    if (field == "deliveryMethodDesc") {
       this.deliveryMethodValue = value;
     }
   }
@@ -224,20 +235,20 @@ export class FinancialDrugsComponent {
 
   private loadYesOrNoLovs() {
     this.yesOrNoLov$
-    .subscribe({
-      next: (data: any) => {
-        this.yesOrNoLovs=data;
-      }
-    });
+      .subscribe({
+        next: (data: any) => {
+          this.yesOrNoLovs = data;
+        }
+      });
   }
 
   private loadDeliveryMethodLovs() {
     this.deliveryMethodLov$
-    .subscribe({
-      next: (data: any) => {
-        this.deliveryMethodLovs=data;
-      }
-    });
+      .subscribe({
+        next: (data: any) => {
+          this.deliveryMethodLovs = data;
+        }
+      });
   }
 
   restGrid() {
@@ -284,9 +295,9 @@ export class FinancialDrugsComponent {
     this.filterData = filter;
   }
 
-   private initializeGrid(resetState:boolean) {
+  private initializeGrid(resetState: boolean) {
     if (this.state == undefined || resetState) {
-       this.state = {
+      this.state = {
         skip: 0,
         take: this.pageSizes[0]?.value,
         sort: [{ field: this.sortValue, dir: this.sortType }],

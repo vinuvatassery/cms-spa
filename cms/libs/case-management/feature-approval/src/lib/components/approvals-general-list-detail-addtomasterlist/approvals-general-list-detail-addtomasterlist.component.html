@@ -1,0 +1,225 @@
+<div class="flex-row">
+  <div class="flex-col flex-col-6">
+    <button
+      kendoButton
+      class="mb-1 k-icon-button small-i-btn icon-hover-primary"
+      icon="edit"
+      title="Edit "
+      aria-label="edit"
+      title="Edit List Item"
+      (click)="onEditListItemsDetailClicked()"
+      *ngIf="selectedMasterDetail$ | async as item"
+    ></button>
+    <table
+      class="info-table-custom nobg-left"
+      *ngIf="selectedMasterDetail$ | async as item"
+    >
+      <caption hidden>
+        Vendor Info
+      </caption>
+      <tbody
+        *ngIf="
+          subTypeCode === subTypeConst.DentalClinic ||
+          subTypeCode === subTypeConst.MedicalClinic ||
+          subTypeCode === subTypeConst.MedicalProvider ||
+          subTypeCode === subTypeConst.DentalProvider
+        "
+      >
+        <tr>
+          <td>Clinic Name</td>
+          <td>{{ vendorData.vendorName }}</td>
+        </tr>
+        <tr>
+          <td>Provider First Name</td>
+          <td>{{ vendorData.firstName }}</td>
+        </tr>
+        <tr>
+          <td>Provider Last Name</td>
+          <td>{{ vendorData.lastName }}</td>
+        </tr>
+        <tr>
+          <td>TIN</td>
+          <td>{{ vendorData.tin }}</td>
+        </tr>
+        <ng-container *ngIf="vendorData.phoneNumber">
+          <tr>
+            <td>Phone</td>
+            <td>{{ vendorData.phoneNumber }}</td>
+          </tr>        
+          <tr>
+            <td>Email</td>
+            <td>{{ vendorData.Email }}</td>
+          </tr>
+          <tr>
+            <td>Fax</td>
+            <td>{{ vendorData.Fax }}</td>
+          </tr>
+        </ng-container>
+        <tr>
+          <td>Address</td>
+          <td>{{ vendorData.address1 }}</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="subTypeCode === subTypeConst.Drug">
+        <tr>
+          <td>Manufacturer</td>
+          <td>{{ vendorData.manufacturerName }}</td>
+        </tr>
+        <tr>
+          <td>Drug Name</td>
+          <td>{{ vendorData.drugName }}</td>
+        </tr>
+        <tr>
+          <td>Brand Name</td>
+          <td>{{ vendorData.brandName }}</td>
+        </tr>
+        <tr>
+          <td>NDC Code</td>
+          <td>{{ vendorData.ndcNbr }}</td>
+        </tr>
+        <tr>
+          <td>HIV Drug?</td>
+          <td>{{ vendorData.hiv }}</td>
+        </tr>
+        <tr>
+          <td>Hepatitis Drug?</td>
+          <td>{{ vendorData.hepatitis }}</td>
+        </tr>
+        <tr>
+          <td>Opportunistic infection drug?</td>
+          <td>{{ vendorData.opportunisticInfection }}</td>
+        </tr>
+        <tr>
+          <td>Delivery Method</td>
+          <td>{{ vendorData.deliveryMethodCode }}</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="subTypeCode === subTypeConst.InsuranceVendor">
+        <tr>
+          <td>Vendor Name</td>
+          <td>{{vendorData.vendorName}}</td>
+        </tr>
+        <tr>
+          <td>TIN</td>
+          <td>{{vendorData.tin}}</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td>Accepts Combined Payments</td>
+          <td>{{vendorData.acceptsCombinedPaymentsFlag}}</td>
+        </tr>
+        <tr>
+          <td>Accepts Reports</td>
+          <td>{{vendorData.acceptsReportsFlag}}</td>
+        </tr>
+        <tr>
+          <td>Payment Method</td>
+          <td>{{vendorData.paymentMethodCode}}</td>
+        </tr>
+        <tr>
+          <td>Payment Run Date</td>
+          <td>{{vendorData.paymentRunDateMonthly}}</td>
+        </tr>
+        <tr>
+          <td>Name on Check</td>
+          <td>{{vendorData.nameOnCheck}}</td>
+        </tr>
+        <tr>
+          <td>Name on Envelope</td>
+          <td>{{vendorData.nameOnEnvelope}}</td>
+        </tr>
+        <tr>
+          <td>Billing Email</td>
+          <td>{{vendorData.email}}</td>
+        </tr>
+        <tr>
+          <td>Billing Address</td>
+          <td>{{vendorData.address1}}</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="subTypeCode === subTypeConst.InsurancePlan">
+        <tr>
+          <td>Insurance Provider</td>
+          <td>{{vendorData.providerName}}</td>
+        </tr>
+        <tr>
+          <td>Insurance Plan Name</td>
+          <td>{{vendorData.insurancePlanName}}</td>
+        </tr>
+        <tr>
+          <td>Health Insurance Type</td>
+          <td>{{vendorData.healthInsuranceTypeCode}}</td>
+        </tr>
+        <tr>
+          <td>Can pay for medication</td>
+          <td>{{vendorData.canPayForMedicationFlag}}</td>
+        </tr>
+        <tr>
+          <td>Is a dental plan</td>
+          <td>{{vendorData.dentalPlanFlag}}</td>
+        </tr>
+        <tr>
+          <td>Start Date</td>
+          <td>{{vendorData.startDate | date : 'MM/dd/YYYY'}}</td>
+        </tr>
+        <tr>
+          <td>Term Date</td>
+          <td>{{vendorData.termDate | date : 'MM/dd/YYYY'}}</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="subTypeCode === subTypeConst.InsuranceProvider">
+        <tr>
+          <td>Provider Name</td>
+          <td>{{vendorData.vendorName}}</td>
+        </tr>
+        <tr>
+          <td>Tin</td>
+          <td>{{vendorData.tin}}</td>
+        </tr>
+        <tr>
+          <td>NPI </td>
+          <td>{{vendorData.npi}}</td>
+        </tr>
+        <tr>
+          <td>Preferred Pharmacy</td>
+          <td>{{vendorData.preferredFlag}}</td>
+        </tr>
+      </tbody>
+      <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
+        <tr>
+          <td>Pharmacy</td>
+          <td>vendorData.vendorName</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="flex-col flex-col-6">
+    <div *ngIf="ifApproveOrDeny === approveOrDenyConst.Approve">
+      <kendo-floatinglabel text="Send Back Notes">
+        <kendo-textbox
+          aria-label="Send Back Notes"
+          [fillMode]="formUiStyle.inputFillMode"
+        >
+        </kendo-textbox>
+      </kendo-floatinglabel>
+    </div>
+    <div *ngIf="ifApproveOrDeny === approveOrDenyConst.Deny">
+      <kendo-floatinglabel text="New Case Worker">
+        <kendo-dropdownlist
+          aria-label="New Case Worker"
+          [fillMode]="formUiStyle.dropDownFillMode"
+        >
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+  </div>
+</div>
+
+<ng-template #editListItemDialogModal>
+  <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()">
+    Edit List Item</kendo-dialog-titlebar
+  >
+  <productivity-tools-approvals-edit-items>
+  </productivity-tools-approvals-edit-items>
+</ng-template>

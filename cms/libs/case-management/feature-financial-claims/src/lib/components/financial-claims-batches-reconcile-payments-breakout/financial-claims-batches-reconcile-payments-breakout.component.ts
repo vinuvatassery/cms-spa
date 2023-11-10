@@ -1,10 +1,12 @@
 import { ChangeDetectionStrategy,ChangeDetectorRef, Component,Input,Output,EventEmitter, OnInit,OnChanges,TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
+import { FilterService,GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { LovFacade } from '@cms/system-config/domain';
+import { FinancialClaimsFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-claims-batches-reconcile-payments-breakout',
   templateUrl:
@@ -28,7 +30,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   clientName:any;
   private addClientRecentClaimsDialog: any;
   public state!: any;
-  public formUiStyle : UIFormStyle = new UIFormStyle();   
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   sortColumn = 'entryDate';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -38,7 +40,8 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-  
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -50,61 +53,67 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
     serviceEndDate:"Service End Date",
     amountDue:"Amount Due",
     paymentStatusCode:"Payment Status",
-    warrant:"Warrant Number",    
+    warrant:"Warrant Number",
     cptCode:"CPT Code",
-    entryDate:"Entry Date"     
+    entryDate:"Entry Date"
   }
-  
+
   dropDowncolumns : any = [
     {
       "columnCode": "invoiceNbr",
-      "columnDesc": "Invoice ID"    
+      "columnDesc": "Invoice ID"
     },
     {
       "columnCode": "clientName",
-      "columnDesc": "Client Name"    
+      "columnDesc": "Client Name"
     },
     {
       "columnCode": "serviceStartDate",
-      "columnDesc": "Service Start Date"        
+      "columnDesc": "Service Start Date"
     },
     {
       "columnCode": "serviceEndDate",
-      "columnDesc": "Service End Date"     
+      "columnDesc": "Service End Date"
     },
     {
       "columnCode": "amountDue",
-      "columnDesc": "Amount Due"         
+      "columnDesc": "Amount Due"
     },
     {
-      "columnCode": "paymentStatusCode",
-      "columnDesc": "Payment Status"         
+      "columnCode": "paymentStatusDesc",
+      "columnDesc": "Payment Status"
     },
     {
       "columnCode": "warrant",
-      "columnDesc": "Warrant Number"         
+      "columnDesc": "Warrant Number"
     },
     {
       "columnCode": "cptCode",
-      "columnDesc": "CPT Code"         
+      "columnDesc": "CPT Code"
     },
-    
+
     {
       "columnCode": "entryDate",
-      "columnDesc": "Entry Date"         
-    }    
+      "columnDesc": "Entry Date"
+    }
   ]
 
   gridReconcilePaymentBreakoutListSubject = new Subject<any>();
   gridReconcilePaymentBreakout$ = this.gridReconcilePaymentBreakoutListSubject.asObservable();
+  selectedPaymentStatus: string | null = null;
+  selectedpaymentMethod: string | null = null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentMethodTypes: any = [];
+  paymentStatus: any = [];
 
+  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,private readonly lovFacade: LovFacade, private readonly financialClaimsFacade: FinancialClaimsFacade) { }
 
-  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService) { }
-  
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
    }
   ngOnInit(): void {
+    this.getPaymentStatusLov();
      this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -156,6 +165,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   }
 
   onChange(data: any) {
+
     this.defaultGridState();
     let operator= "startswith"
 
@@ -163,7 +173,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
     {
       operator = "eq"
     }
-    
+
     this.filterData = {
       logic: 'and',
       filters: [
@@ -184,6 +194,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
     this.dataStateChange(stateData);
   }
   loadPaymentBreakout(gridDataRefinerValue:any) {
+
     this.loadReconcilePaymentBreakOutGridEvent.emit(gridDataRefinerValue);
     this.isGridLoaderShow=false;
   }
@@ -200,6 +211,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   }
 
   dataStateChange(stateData: any): void {
+
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -225,7 +237,9 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
       this.filter = "";
       this.isFiltered = false
     }
-    this.loadPaymentBreakoutGrid();    
+    if (!this.filteredBy.includes('Payment Status'))
+    this.selectedPaymentStatus = '';
+    this.loadPaymentBreakoutGrid();
   }
 
   pageselectionchange(data: any) {
@@ -241,8 +255,8 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
         this.isGridLoaderShow = false;
       }
     });
-  } 
-  
+  }
+
   public columnChange(e: any) {
     let event = e as ColumnVisibilityChangeEvent;
     const columnsRemoved = event?.columns.filter(x=> x.hidden).length
@@ -298,12 +312,12 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
       }
     });
     this.vendorId=data.vendorId;
-    this.clientId=data.clientId;  
-    this.clientName=data.clientName; 
+    this.clientId=data.clientId;
+    this.clientName=data.clientName;
   }
 
   closeRecentClaimsModal(result: any){
-    if (result) { 
+    if (result) {
       this.addClientRecentClaimsDialog.close();
     }
   }
@@ -311,5 +325,39 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
+  }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    ;
+    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
+    if (field === 'paymentMethodDesc') this.selectedpaymentMethod = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
+  private getPaymentStatusLov() {
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentStatus = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
   }
 }

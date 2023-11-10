@@ -23,17 +23,17 @@ export class FinancialVendorFacade {
   private clinicVendorLoaderSubject = new Subject<any>();  /** Public properties **/
   private providePanelSubject = new Subject<any>();
   private updateProviderPanelSubject = new Subject<any>();
-  private addProviderNewSubject= new Subject<any>();
-  private searchProviderSubject= new Subject<any>();
-  private removeprovidersubject=new Subject<any>();
-  searchProvider$=this.searchProviderSubject.asObservable();  
-  removeprovider$=this.removeprovidersubject.asObservable();
-  addProviderNew$=this.addProviderNewSubject.asObservable();
+  private addProviderNewSubject = new Subject<any>();
+  private searchProviderSubject = new Subject<any>();
+  private removeprovidersubject = new Subject<any>();
+  searchProvider$ = this.searchProviderSubject.asObservable();
+  removeprovider$ = this.removeprovidersubject.asObservable();
+  addProviderNew$ = this.addProviderNewSubject.asObservable();
   vendorsList$ = this.vendorsSubject.asObservable();
   selectedVendor$ = this.selectedVendorSubject.asObservable();
   vendorProfile$ = this.vendorProfileSubject.asObservable();
-   clinicVendorList$ = this.clinicVendorSubject.asObservable();
-  clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable(); 
+  clinicVendorList$ = this.clinicVendorSubject.asObservable();
+  clinicVendorLoader$ = this.clinicVendorLoaderSubject.asObservable();
   providePanelSubject$ = this.providePanelSubject.asObservable();
   updateProviderPanelSubject$ = this.updateProviderPanelSubject.asObservable();
   vendorProfileSpecialHandling$ = this.vendorProfileSpecialHandlingSubject.asObservable();
@@ -42,14 +42,14 @@ export class FinancialVendorFacade {
   vendorDetails$ = this.vendorsListSubject.asObservable();
 
   private medicalProviderSearchLoaderVisibilitySubject = new Subject<boolean>;
-  medicalProviderSearchLoaderVisibility$= this.medicalProviderSearchLoaderVisibilitySubject.asObservable();
+  medicalProviderSearchLoaderVisibility$ = this.medicalProviderSearchLoaderVisibilitySubject.asObservable();
   public insuranceVendorsSubject = new Subject<any>;
   insuranceVendors$ = this.insuranceVendorsSubject.asObservable();
 
   private providerListSubject = new Subject<any>();
   providerList$ = this.providerListSubject.asObservable();
   public selectedVendorType = FinancialVendorTypeCode.Manufacturers
-  public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'vendorName'
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{
@@ -84,7 +84,7 @@ export class FinancialVendorFacade {
     this.medicalProviderSearchLoaderVisibilitySubject.next(true);
     return this.financialVendorDataService.searchProvidorsById(vendoraddressId).subscribe({
       next: (response: Pharmacy[]) => {
-        response?.forEach((vendor:any) => {
+        response?.forEach((vendor: any) => {
           vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
         });
         this.insuranceVendorsSubject.next(response);
@@ -101,7 +101,7 @@ export class FinancialVendorFacade {
     this.medicalProviderSearchLoaderVisibilitySubject.next(true);
     return this.financialVendorDataService.searchInsurnaceVendor(searchText).subscribe({
       next: (response: Pharmacy[]) => {
-        response?.forEach((vendor:any) => {
+        response?.forEach((vendor: any) => {
           vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
         });
         this.insuranceVendorsSubject.next(response);
@@ -115,9 +115,9 @@ export class FinancialVendorFacade {
     });
   }
 
-  getVendors(skipcount: number, maxResultCount: number, sort: string, sortType: string, vendorTypeCode: string,filter : string): void {
+  getVendors(skipcount: number, maxResultCount: number, sort: string, sortType: string, vendorTypeCode: string, filter: string): void {
     filter = JSON.stringify(filter);
-    this.financialVendorDataService.getVendors(skipcount, maxResultCount, sort, sortType, vendorTypeCode,filter).subscribe({
+    this.financialVendorDataService.getVendors(skipcount, maxResultCount, sort, sortType, vendorTypeCode, filter).subscribe({
       next: (vendorsResponse: any) => {
         if (vendorsResponse) {
           const gridView = {
@@ -133,9 +133,9 @@ export class FinancialVendorFacade {
       },
     });
   }
-  getVendorProfile(vendorId: string,tabCode: string): void {
+  getVendorProfile(vendorId: string, tabCode: string): void {
     this.showLoader();
-    this.financialVendorDataService.getVendorProfile(vendorId,tabCode).subscribe({
+    this.financialVendorDataService.getVendorProfile(vendorId, tabCode).subscribe({
       next: (vendorResponse: any) => {
         if (vendorResponse) {
           this.vendorProfileSubject.next(vendorResponse);
@@ -144,7 +144,7 @@ export class FinancialVendorFacade {
       },
       error: (err) => {
         this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -158,7 +158,7 @@ export class FinancialVendorFacade {
         }
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
@@ -166,7 +166,7 @@ export class FinancialVendorFacade {
   getVendorDetails(vendorId: string) {
     this.showLoader();
     this.financialVendorDataService.getVendorDetails(vendorId).subscribe({
-      next: (vendorDetail: any) => {    
+      next: (vendorDetail: any) => {
         this.selectedVendorSubject.next(vendorDetail);
         this.hideLoader();
       },
@@ -177,13 +177,13 @@ export class FinancialVendorFacade {
     });
   }
 
-  getProviderPanel(vendorId:string){
+  getProviderPanel(paymentRequestId: string) {
     this.showLoader();
-    this.financialVendorDataService.getProviderPanel(vendorId).subscribe({
+    this.financialVendorDataService.getProviderPanel(paymentRequestId).subscribe({
       next: (vendorsResponse: any) => {
         if (vendorsResponse) {
-          this.providePanelSubject.next(vendorsResponse);   
-          this.hideLoader();      
+          this.providePanelSubject.next(vendorsResponse);
+          this.hideLoader();
         }
       },
       error: (err) => {
@@ -193,14 +193,30 @@ export class FinancialVendorFacade {
     });
   }
 
-  updateProviderPanel(ProviderPanelDto:any){
+  getProviderPanelByVendorAddressId(vendorAddressId: string) {
+    this.showLoader();
+    this.financialVendorDataService.getProviderPanelByVendorAddressId(vendorAddressId).subscribe({
+      next: (vendorsResponse: any) => {
+        if (vendorsResponse) {
+          this.providePanelSubject.next(vendorsResponse);
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  updateProviderPanel(ProviderPanelDto: any) {
     this.showLoader();
     return this.financialVendorDataService.updateProviderPanel(ProviderPanelDto).subscribe({
       next: (updatedResponse: any) => {
         if (updatedResponse) {
-          this.updateProviderPanelSubject.next(updatedResponse);            
-         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Updated success fully')
-          this.hideLoader();      
+          this.updateProviderPanelSubject.next(updatedResponse);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Updated success fully')
+          this.hideLoader();
         }
       },
       error: (err) => {
@@ -211,14 +227,14 @@ export class FinancialVendorFacade {
   }
 
 
-  updateManufacturerProfile(vendorProfile: any){
+  updateManufacturerProfile(vendorProfile: any) {
     return this.financialVendorDataService.updateManufacturerProfile(vendorProfile);
   }
   addVendorProfile(vendorProfile: any) {
     return this.financialVendorDataService.addVendorProfile(vendorProfile);
   }
 
-  searchClinicVendor(vendorName: any){
+  searchClinicVendor(vendorName: any) {
     this.clinicVendorLoaderSubject.next(true);
     this.clinicVendorSubject.next(null);
     this.financialVendorDataService.searchClinicVendors(vendorName).subscribe({
@@ -234,7 +250,7 @@ export class FinancialVendorFacade {
     });
   }
 
-  loadVendorList(vendorTypeCode:any): void {
+  loadVendorList(vendorTypeCode: any): void {
     this.showLoader();
     this.financialVendorDataService.loadVendorList(vendorTypeCode).subscribe({
       next: (reponse: any) => {
@@ -249,14 +265,14 @@ export class FinancialVendorFacade {
     });
   }
 
-  getProviderList(providerPageAndSortedRequest :any){
+  getProviderList(providerPageAndSortedRequest: any) {
     this.showLoader();
     this.financialVendorDataService.getProvidersList(providerPageAndSortedRequest).subscribe({
       next: (response: any) => {
         if (response) {
           const gridView = {
             data: response["items"],
-            total:response["totalCount"]
+            total: response["totalCount"]
           };
           this.hideLoader();
           this.providerListSubject.next(gridView);
@@ -267,61 +283,50 @@ export class FinancialVendorFacade {
       },
     });
   }
-  searchProvider(payload: any)
-  {
+  searchProvider(payload: any) {
     this.showLoader();
     return this.financialVendorDataService.searchProvider(payload).subscribe({
-      next: (response: any[]) => 
-      {
+      next: (response: any[]) => {
         this.searchProviderSubject.next(response);
         this.hideLoader();
       },
-      error: (err) => 
-      {
-       this.hideLoader();
+      error: (err) => {
+        this.hideLoader();
         this.showHideSnackBar(
           SnackBarNotificationType.ERROR,
-        err
+          err
         );
         this.loggingService.logException(err);
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.hideLoader();
       },
     });
   }
-  removeProvider(providerId: any): void 
-  {
+  removeProvider(providerId: any): void {
     this.showLoader();
     this.financialVendorDataService.removeprovider(providerId).subscribe({
-      next: (deleteResponse) =>
-      {
-        if (deleteResponse ?? false) 
-        {
+      next: (deleteResponse) => {
+        if (deleteResponse ?? false) {
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, deleteResponse.message)
           this.removeprovidersubject.next(deleteResponse)
         }
       },
-      error: (err) => 
-      {
+      error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       }
     });
   }
-  addProvider(provider:any) 
-  {
+  addProvider(provider: any) {
     this.showLoader();
     this.financialVendorDataService.addProvider(provider).subscribe({
-      next: (addNewdependentsResponse : any) => 
-      {
-        if (addNewdependentsResponse) 
-        {
+      next: (addNewdependentsResponse: any) => {
+        if (addNewdependentsResponse) {
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, addNewdependentsResponse.message)
         }
-        this. addProviderNewSubject.next(addNewdependentsResponse);
+        this.addProviderNewSubject.next(addNewdependentsResponse);
         this.hideLoader();
       },
-      error: (err) =>
-      {
+      error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
