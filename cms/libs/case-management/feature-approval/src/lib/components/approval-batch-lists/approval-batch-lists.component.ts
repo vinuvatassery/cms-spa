@@ -212,6 +212,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   onSendbackClicked(item: any, index: any) {
     item.approveButtonDisabled = true;
     item.sendBackButtonDisabled = false;
+    item.sendBackNotes = '';
     if (
       item.batchStatus === undefined ||
       item.batchStatus === '' ||

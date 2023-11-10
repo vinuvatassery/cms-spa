@@ -71,7 +71,6 @@ aria-label="add"> PCA Setup</button>
             [resizable]="true" 
             [columnMenu]="{ filter: true }" 
             [sort]="state.sort"
-            [rowClass]="rowClass"
             [data]="financialPcaSetupGridLists$ | async" 
             [filter]="state.filter"
             (dataStateChange)="dataStateChange($event)" 
@@ -192,7 +191,7 @@ aria-label="add"> PCA Setup</button>
                          </kendo-grid-string-filter-menu>
                      </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="60" [sortable]="false" class="text-center">
+            <kendo-grid-column field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="70" [sortable]="false" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     <kendo-dropdownbutton [data]="gridMoreActions" icon="more-vertical"
                       class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
