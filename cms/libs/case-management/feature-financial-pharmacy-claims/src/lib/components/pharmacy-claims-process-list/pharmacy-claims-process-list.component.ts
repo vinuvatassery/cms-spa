@@ -11,7 +11,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { GridFilterParam } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -42,6 +42,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   @Output() exportPharmacyClaimsProcessListEvent = new EventEmitter<any>();
   @Input() batchingClaims$: any; 
   @Output() onbatchClaimsClickedEvent = new EventEmitter<any>();
+  @Output() ondeleteClaimsClickedEvent = new EventEmitter<any>();
   public selectedProcessClaims: any[] = [];
   public selectableSettings: SelectableSettings;
   public checkboxOnly = true;
@@ -155,14 +156,14 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteBatchMoreOptionClosed) {
-          this.isDeleteBatchMoreOptionClosed = true;
-          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
-        }
+        this.onSingleClaimDelete(data.paymentRequestId.split(','));
+        this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
       },
     },
   ];
-
+  onSingleClaimDelete(selection: any) {
+    this.selectedKeysChange(selection);
+  }
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     pharmacyName: 'Pharmacy Name',
@@ -198,12 +199,14 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   paymentMethodFilter = '';
   paymentTypeFilter = '';
   paymentStatusFilter = '';
-
+  deletemodelbody =
+  'This action cannot be undone, but you may add a claim at any time.';
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
   ) { 
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -365,12 +368,18 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
+    if (!this.selectedProcessClaims.length)
+    {
+      this.financialClaimsFacade.errorShowHideSnackBar("Select a claim to delete")
+      return;
+    }
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
+    
     if (result) {
       this.isDeleteBatchMoreOptionClosed = false;
       this.deleteClaimsDialog.close();
@@ -518,7 +527,16 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     })
     this.onbatchClaimsClickedEvent.emit(input)
   }
-
+  onModalBatchDeletingClaimsButtonClicked(action: any) {
+    this.batchingClaims$.subscribe((_:any) =>{
+      this.isDeleteBatchMoreOptionClosed = false;
+      this.deleteClaimsDialog.close();
+      this.loadPharmacyClaimsProcessListGrid();
+      this.onBatchClaimsGridSelectedCancelClicked()
+    })
+    
+    this.ondeleteClaimsClickedEvent.emit(this.selectedProcessClaims)
+  }
   dropdownFilterChange(
     field: string,
     value: any,

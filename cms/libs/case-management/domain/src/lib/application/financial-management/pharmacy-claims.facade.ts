@@ -30,6 +30,9 @@ export class FinancialPharmacyClaimsFacade {
   batchClaimsSubject  =  new Subject<any>();
   batchClaims$ = this.batchClaimsSubject.asObservable();
 
+  deleteClaimsSubject  =  new Subject<any>();
+  deleteClaims$ = this.deleteClaimsSubject.asObservable();
+
 
   public sortValuePharmacyClaimsProcess = 'creationTime';
   public sortProcessList: SortDescriptor[] = [{
@@ -412,6 +415,27 @@ export class FinancialPharmacyClaimsFacade {
     .subscribe({
       next: (response:any) => {
         this.batchClaimsSubject.next(response);
+        if (response.status) {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+}
+ deleteClaims(batchPharmacyClaims: BatchPharmacyClaims) {
+  this.showLoader();
+  return this.financialPharmacyClaimsDataService
+    .deleteClaims(batchPharmacyClaims)
+    .subscribe({
+      next: (response:any) => {
+        this.deleteClaimsSubject.next(response);
         if (response.status) {
           this.notificationSnackbarService.manageSnackBar(
             SnackBarNotificationType.SUCCESS,

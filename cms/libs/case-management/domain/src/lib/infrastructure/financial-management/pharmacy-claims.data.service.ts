@@ -27,6 +27,14 @@ export class FinancialPharmacyClaimsDataService {
   batchClaims(batchPharmacyClaims: BatchPharmacyClaims) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/batch`, batchPharmacyClaims);
   }
+  deleteClaims(batchPharmacyClaims: BatchPharmacyClaims) {
+      const options = {
+        body: {
+          paymentRequestIds: batchPharmacyClaims,
+        }      
+   }
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments`, options);
+  }
 
   loadPharmacyClaimsBatchListService(params: GridFilterParam) {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/batches`, params);
