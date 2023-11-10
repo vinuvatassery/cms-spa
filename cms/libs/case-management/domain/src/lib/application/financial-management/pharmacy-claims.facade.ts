@@ -18,6 +18,7 @@ import { GridFilterParam } from '../../entities/grid-filter-param';
 import { BatchPharmacyClaims } from '../../entities/financial-management/batch-pharmacy-claims';
 import { Vendor } from '../../entities/vendor';
 import { Client } from '../../entities/client';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsFacade {
@@ -170,7 +171,7 @@ export class FinancialPharmacyClaimsFacade {
   ) { }
 
   /** Public methods **/
-  loadPharmacyClaimsProcessListGrid(params: GridFilterParam){
+   loadPharmacyClaimsProcessListGrid(params: GridFilterParam){
     this.pharmacyClaimsProcessLoaderSubject.next(true);
     this.financialPharmacyClaimsDataService.loadPharmacyClaimsProcessListService(params).subscribe({
       next: (dataResponse) => {
@@ -367,17 +368,21 @@ export class FinancialPharmacyClaimsFacade {
         },
       });
   }
-  loadReconcileListGrid(){
-    this.financialPharmacyClaimsDataService.loadReconcileListService().subscribe({
-      next: (dataResponse) => {
-        this.batchReconcileDataSubject.next(dataResponse);
+  loadReconcileListGrid(batchId:any,paginationParameters:any){
+    this.financialPharmacyClaimsDataService.loadReconcileListService(batchId,paginationParameters).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.batchReconcileDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.hideLoader(); 
-      },
-    });  
+      }
+    });
   }
   
  loadPrescriptions(paymentId: string, params: GridFilterParam){
