@@ -84,6 +84,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   hasPaymentPendingApproval: boolean = true;
   sendbackNotesRequireMessage: string = 'Send Back Note is required.';
   atleastOnePaymentRequireMessage: string = 'Selection of at least one payment is required.';
+  dataItem:any;
   tAreaCessationMaxLength: any = 200;
   approveBatchCount: any = 0;
   sendbackBatchCount: any = 0;
@@ -99,20 +100,17 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   requestedACHPayments: any = 0;
   requestedDORHoldPayments: any = 0;
   gridApprovalPaymentsMainListDataSubject = new Subject<any>();
-  gridApprovalPaymentsMainList$ =
-    this.gridApprovalPaymentsMainListDataSubject.asObservable();
+  gridApprovalPaymentsMainList$ =this.gridApprovalPaymentsMainListDataSubject.asObservable();
 
   approvalPaymentsSubmittedSummaryDataSubject = new Subject<any>();
-  approvalPaymentsSubmittedSummaryData$ =
-    this.approvalPaymentsSubmittedSummaryDataSubject.asObservable();
+  approvalPaymentsSubmittedSummaryData$ = this.approvalPaymentsSubmittedSummaryDataSubject.asObservable();
   selectedPaymentType: any;
   approverCount = 0;
   sendBackCount = 0;
   batchDetailModalSourceList: any;
   isSendbackMode:boolean=false;
   gridApprovalPaymentsDataSubject = new Subject<any>();
-  gridApprovalPaymentsBatchData$ =
-    this.gridApprovalPaymentsDataSubject.asObservable();
+  gridApprovalPaymentsBatchData$ = this.gridApprovalPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -273,7 +271,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   onCloseViewPaymentsBatchClicked() {
-    debugger;
     this.isViewPaymentsBatchDialog = false;
     if(this.isSendbackMode)
     {
@@ -562,11 +559,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.sendBackButtonDisabled = false;
       this.onOpenViewPaymentsBatchClicked(dataItem,true);
     }
+    this.cd.detectChanges();
     this.sendBackNotesChange(dataItem);
-    this.assignRowDataToMainList(dataItem);
-    this.ngDirtyInValid(dataItem, control, rowIndex);
-    this.isApproveAllClicked = false;
-     this.enableSubmitButtonMain();  
     dataItem.batchStatus="";
   }
 
@@ -716,32 +710,21 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   onOpenSubmitApprovalPaymentItemsClicked() {
     this.validateApprovalsPaymentsGridRecord();
     const atleastOnePaymentInValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.atleastOnePaymentInValid);
-    const atleastOnePaymentCount = atleastOnePaymentInValid.length;
     const isValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.sendBackNotesInValid);    
-    const totalCount = isValid.length;
-    if (isValid.length > 0) {
+    const totalCount = isValid.length + atleastOnePaymentInValid.length;
+    if (totalCount > 0) {
       this.pageValidationMessage = totalCount + ' Validation error(s) found, please review each page for errors.';
     } 
-    else if(atleastOnePaymentCount>0){
-      this.pageValidationMessage = atleastOnePaymentCount + ' Validation error(s) found, please review each page for errors.';
-    }
     else if (
       this.approvalsPaymentsGridUpdatedResult.filter((x: any) =>  x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus).length <= 0
     ) {
       this.pageValidationMessage = 'No data for approval.';
     } else {
       this.pageValidationMessage = null;
-      this.selectedApprovalSendbackDataRows = this.approvalsPaymentsGridUpdatedResult.filter(
-          (x: any) =>
-            x.batchStatus == this.approveStatus ||
-            x.batchStatus == this.sendbackStatus
-        );
+      this.selectedApprovalSendbackDataRows = this.approvalsPaymentsGridUpdatedResult.filter( (x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus);
     }
     this.selectedBatchIds = [];
-    if (
-      isValid.length <= 0 &&
-      this.selectedApprovalSendbackDataRows.length > 0
-    ) {
+    if ( totalCount <= 0 && this.selectedApprovalSendbackDataRows.length > 0 ) {
       this.checkApprovalLimit(this.selectedApprovalSendbackDataRows);
       this.loadSubmittedSummaryData();
       this.isSubmitApprovalPaymentItems = true;
@@ -1121,11 +1104,14 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 
-  onOpenSendbackDeselectingWarningDialogClicked(data?: any) {
-    this.isWarningDialogShow = true;
+  onOpenSendbackDeselectingWarningDialogClicked(data?: any) {  
+    data.batchStatus= this.sendbackStatus; 
+    this.cd.detectChanges();           
     this.dataItem=data;
+    this.sendBackNotesChange(this.dataItem);
+    this.isWarningDialogShow = true;    
   }
-  dataItem:any;
+  
   onSendbackDeselectingWarningDialogCancelClicked()
   {
     this.isWarningDialogShow=false;
