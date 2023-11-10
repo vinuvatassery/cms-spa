@@ -227,7 +227,7 @@ export class FinancialVendorPageComponent implements OnInit {
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next: (response: any) => {
         this.financialVendorFacade.hideLoader();
-        this.closeVendorDetailModal(this.providerTypeCode);
+        this.closeVendorDetailModal();
         let notificationMessage = "Vendor profile added successfully";
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
@@ -239,7 +239,7 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   closeVendorDetailModal(data?: any) {
-    if (data == this.vendorTypes.Clinic) {
+    if (this.ShowClinicProvider) {
       this.ShowClinicProvider = false;
     } else {
       this.isShowMedicalProvider = false;
