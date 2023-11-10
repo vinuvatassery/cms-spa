@@ -1231,9 +1231,10 @@ color: $app-primary-font-color;
 }
 .add-new-button-common {
   float: right;
-  position: absolute;
-  top: 40px;
-  right: 20px;
+  /* position: absolute; */
+  top: -60px;
+  right: 0;
+  z-index: 1;
 } 
 
 

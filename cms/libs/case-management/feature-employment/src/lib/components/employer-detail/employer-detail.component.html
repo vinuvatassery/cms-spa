@@ -46,7 +46,7 @@
 
 <!-- remove emploer popup confirmation  -->
 <kendo-dialog *ngIf="isRemoveEmployerConfirmationPopupOpened" (close)="onRemoveEmployerConfirmationClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete employer?">
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Delete Employer?">
   <case-management-remove-employer-confirmation  (deleteUpdateEmploymentEvent)="updateEmploymentHandle($event)"  
     [selectedEmployer]="selectedEmployer"
     (closeModal)="onRemoveEmployerConfirmationClosed()"
