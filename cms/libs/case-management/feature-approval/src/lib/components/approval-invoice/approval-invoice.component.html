@@ -13,8 +13,7 @@
       [resizable]="true"
       [columnMenu]="{ filter: true }"
       [sort]="state.sort"
-      (dataStateChange)="dataStateChange($event)"
-      [navigable]="true"
+      (dataStateChange)="dataStateChange($event)" 
       [data]="invoiceData$ | async"
     >
       <kendo-grid-column

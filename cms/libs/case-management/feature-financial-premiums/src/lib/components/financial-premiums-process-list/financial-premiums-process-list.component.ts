@@ -232,7 +232,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Premiums',
+      text: 'Edit Premium',
       icon: 'edit',
       click: (data: any): void => {
         if (!this.isEditBatchClosed) {
