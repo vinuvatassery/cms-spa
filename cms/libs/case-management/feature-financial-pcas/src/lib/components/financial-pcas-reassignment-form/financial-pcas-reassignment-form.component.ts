@@ -96,14 +96,23 @@ constructor(private formBuilder:FormBuilder){
       console.log(pcaDetails)
     }
   }
-  dateValidate()
+  openDateValidate()
   {
     const endDate = this.pcaReassignmentForm.controls['closeDate'].value;
     const startDate = this.pcaReassignmentForm.controls['openDate'].value;
-    if (endDate <= startDate && this.pcaReassignmentForm.controls['closeDate'].value) {
+    if (endDate <= startDate && this.pcaReassignmentForm.controls['openDate'].value) {
+      this.pcaReassignmentForm.controls['openDate'].setErrors({ 'incorrect': true })
+    }
+  }
+  closeDateValidate()
+  {
+    const endDate = this.pcaReassignmentForm.controls['closeDate'].value;
+    const startDate = this.pcaReassignmentForm.controls['openDate'].value;
+    if (endDate >= startDate && this.pcaReassignmentForm.controls['closeDate'].value) {
       this.pcaReassignmentForm.controls['closeDate'].setErrors({ 'incorrect': true })
     }
   }
+
   amountValidate()
   {
     const pcaAmmounnt = this.pcaReassignmentByFundSource.pcaAmount;
