@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 	/** Internal Libraries **/
 import {FinancialClaimsFacade, PaymentsFacade } from '@cms/case-management/domain';

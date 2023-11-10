@@ -299,7 +299,7 @@
 
     </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-      <span class="" *ngIf="isPrintVisaAuthorizationClicked">{{noOfRecordToPrint}} advice letter(s) to be previewed.</span>
+      <span class="" *ngIf="isPrintAuthorizationClicked">{{sendReportCount}} advice letter(s) to be previewed.</span>
       <button kendoButton [primary]="true" look="outline"   aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
       <button kendoButton [primary]="true" aria-label="Preview Requests"  *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
       <button kendoButton [primary]="true" aria-label="Preview" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
