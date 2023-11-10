@@ -90,7 +90,7 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
             
             this.financialVendorFacade.hideLoader();
            this.closeVendorDetailModal();
-            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
           },
           error:(err:any)=>{
             this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
