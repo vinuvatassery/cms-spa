@@ -26,6 +26,7 @@ import {
   UserManagementFacade,
   UserDataService,
   UserDefaultRoles,
+  UserLevel
 } from '@cms/system-config/domain';
 import {
   ApprovalTypeCode,
@@ -66,6 +67,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   readonly paymentTypeCode = PendingApprovalPaymentTypeCode;
+  readonly UserLevel = UserLevel;
   public state!: State;
   sortColumn = 'batchName';
   sortDir = 'Ascending';

@@ -1,7 +1,6 @@
 <section class="k-dialog-body">
   <p>
-    Click on the left and right navigational arrows to browse batches. Select
-    whether to approve or send them back to the user who submitted them.
+    Click on the left and right navigational arrows to browse batches. Select whether to approve or send them back to the user who submitted them. Enter the send back notes and select the payments to send back.
   </p>
   <div class="custom_scroll_view mt-2">
     <kendo-scrollview
@@ -107,7 +106,7 @@
                 </div>
               </ng-template>
             </kendo-grid-column> -->
-            <kendo-grid-column field="" title="Send Back" [width]="150" [sortable]="false">
+            <kendo-grid-column *ngIf="userLevel===UserLevel.Level1Value" field="" title="Send Back" [width]="150" [sortable]="false">
               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                 <div class="cms-button-group">
                   <button kendoButton 

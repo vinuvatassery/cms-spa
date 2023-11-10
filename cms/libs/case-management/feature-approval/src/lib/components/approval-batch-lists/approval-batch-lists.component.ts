@@ -17,6 +17,7 @@ import {
 import { Subject, BehaviorSubject } from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { PendingApprovalPaymentTypeCode } from '@cms/case-management/domain';
+import { UserLevel } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approval-batch-lists',
   templateUrl: './approval-batch-lists.component.html',
@@ -34,10 +35,12 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   @Input() paymentStatusLovList: any;
   @Input() paymentMethodLovList: any;
   @Input() isSendBackMode: any;
+  @Input() userLevel: any;
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
   @Output() batchModalSaveClickedEvent = new EventEmitter<any>();
   readonly paymentTypeCode = PendingApprovalPaymentTypeCode;
+  readonly UserLevel = UserLevel;
   public state!: State;
   isBatchDetailPaymentsGridLoaderShow = new BehaviorSubject<boolean>(true);
   sortColumn = 'paymentNbr';
@@ -52,7 +55,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   gridDataResult!: GridDataResult;
   batchId?: string | null;
   index: number = 0;
-  tAreaSendBackNotesMaxLength: any = 100;
+  tAreaSendBackNotesMaxLength: any = 200;
   approveBatchCount: any = 0;
   sendbackBatchCount: any = 0;
   approveStatus: string = 'APPROVED';
