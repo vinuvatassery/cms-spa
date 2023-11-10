@@ -137,6 +137,15 @@ export class FinancialPharmacyClaimsDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/${paymentRequestId}`);
   }
 
+  unbatchEntireBatch(paymentRequestBatchId: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/${paymentRequestBatchId}/unbatch`, null);
+  }
+
+  unbatchClaim(paymentRequestId: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/payment-requests/${paymentRequestId}/unbatch`, null);
+  }
+
+
   searchPharmacies(searchText: string) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/searchText=${searchText}`);
