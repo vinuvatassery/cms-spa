@@ -65,6 +65,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   @Output() submitEvent = new EventEmitter<any>();
   @Output() loadBatchDetailPaymentsGridEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+  readonly paymentTypeCode = PendingApprovalPaymentTypeCode;
   public state!: State;
   sortColumn = 'batchName';
   sortDir = 'Ascending';
@@ -172,6 +173,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): any {
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.lovFacade.getPandingApprovalPaymentTypeLov();
     this.defaultPaymentType();
     this.getLoggedInUserProfile();
@@ -183,6 +185,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.lovFacade.getPaymentStatusLov();
     this.paymentStatusLovSubscription = this.paymentStatusLov$.subscribe({
       next:(response) => {
+        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
         this.paymentStatusLovList = response;
       }
     });
@@ -192,6 +195,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodLovSubscription = this.paymentMethodLov$.subscribe({
       next:(response) => {
+        response.sort((value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr);
         this.paymentMethodLovList = response;
       }
     });
@@ -293,7 +297,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isApprovalPaymentsGridLoaderShow = false;
+    this.isApprovalPaymentsGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
@@ -315,7 +319,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.setGridValues(data);
   }
 
-  searchColumnChangeHandler(value: string) {
+  searchColumnChangeHandler(value: string) {    
     this.filter = [];
     this.showDateSearchWarning = value === 'DateApprovalRequested';
     if (this.searchValue) {
@@ -325,17 +329,16 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
 
   onApprovalSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    this.showDateSearchWarning =
-      isDateSearch || this.selectedColumn === 'DateApprovalRequested';
-    searchValue = this.formatSearchValue(
-      searchValue,
-      this.showDateSearchWarning
-    );
+    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'DateApprovalRequested';
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.onChange(searchValue);
   }
 
   setGridValues(data: any) {
+    if (this.selectedColumn === 'DateApprovalRequested' && (!this.isValidDate(data) && data !== '')) {
+      return;
+    }
     this.filterData = {
       logic: 'and',
       filters: [
@@ -422,7 +425,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
         this.isApprovalPaymentsGridLoaderShow = false;
       }
     });
-    this.isApprovalPaymentsGridLoaderShow = false;
   }
 
   onDepositDetailClicked(template: TemplateRef<unknown>): void {
@@ -441,6 +443,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   onPaymentTypeCodeValueChange(paymentSubTypeCode: any) {
+    this.resetApprovalPaymentListGrid();
     this.pageValidationMessage = null;
     this.selectedPaymentType = paymentSubTypeCode;
     this.approveBatchCount = 0;
@@ -582,8 +585,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
         this.cd.detectChanges();
       }
     });
-    this.isApprovalPaymentsGridLoaderShow = false;
-    this.cd.detectChanges();
   }
 
   assignDataFromUpdatedResultToPagedResult(itemResponse: any) {
@@ -739,7 +740,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           currentPage.sendBackNotesInValidMsg = '';
           currentPage.sendBackButtonDisabled = true;
           currentPage.sendBackNotes = '';
-          this.assignRowDataToMainList(currentPage);
+          this.sendBackNotesChange(currentPage);
         }
       );
 
@@ -750,7 +751,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
           currentPage.sendBackNotesInValidMsg = '';
           currentPage.sendBackNotes = '';
           currentPage.sendBackButtonDisabled = true;
-          this.assignRowDataToMainList(currentPage);
+          this.sendBackNotesChange(currentPage);
         }
       );
     }
@@ -1088,8 +1089,8 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
   resetApprovalPaymentListGrid(){
     this.sortValue = 'batchName';
-    this.sortType = 'asc';
-    this.initializeApprovalPaymentGrid();
+    this.sortType = 'desc';
+    this.setGridValueAndData();
     this.sortColumn = 'batchName';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
@@ -1101,13 +1102,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.columnChangeDesc = 'Default Columns';
     this.loadApprovalPaymentsListGrid();
   }
-  private initializeApprovalPaymentGrid(){
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-    };
-  }
+  
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';

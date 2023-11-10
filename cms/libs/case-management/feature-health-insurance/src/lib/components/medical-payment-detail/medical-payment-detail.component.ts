@@ -101,6 +101,7 @@ export class MedicalPaymentDetailComponent {
   @Input() paymentRequestId: any;
   isExcededMaxBanifitButtonText = 'Make Exception';
   groupedPaymentRequestTypes:any;
+  isDisabled: boolean = true;
   /** Constructor **/
   constructor(
     private formBuilder: FormBuilder,
@@ -310,7 +311,7 @@ export class MedicalPaymentDetailComponent {
       exceptionTypeCode: formValues.parentExceptionTypeCode,
       exceptionReasonCode: formValues.parentReasonForException,
       serviceSubTypeCode:this.financialProvider==FinancialClaimTypeCode.Medical ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
-      pcaCode:formValues.pcaCode,
+      pcaCode:'',
       tpaInvoices: [{}],
     };
     let checkDeniedClaim = false;
@@ -332,7 +333,7 @@ export class MedicalPaymentDetailComponent {
         tpaInvoiceId: element.tpaInvoiceId,
         exceptionFlag: element.exceptionFlag,
         exceptionTypeCode: element.exceptionTypeCode,
-        pcaCode:element.pcaCode,
+        pcaCode:"",
         entryDate:element.entryDate
       };
       if (
@@ -363,6 +364,8 @@ export class MedicalPaymentDetailComponent {
       this.insurancePolicyFacade.showLoader();
       this.insurancePolicyFacade.savePaymentRequest(bodyData).subscribe({
         next: () => {
+          debugger
+          this.insurancePolicyFacade.getMedicalClaimMaxbalance(this.clientId,this.caseEligibilityId);
           if(this.tabStatus=='hlt-ins-co-pay'){
             this.insurancePolicyFacade.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
@@ -374,7 +377,6 @@ export class MedicalPaymentDetailComponent {
               SnackBarNotificationType.SUCCESS,
               'Dental payment saved successfully.'
             );
-
           }
 
           this.insurancePolicyFacade.triggeredCoPaySaveSubject.next(true);
@@ -751,8 +753,7 @@ export class MedicalPaymentDetailComponent {
       ]),
       pcaCode: new FormControl(this.medicalClaimServices.pcaCode),
       serviceDescription: new FormControl(
-        this.medicalClaimServices.serviceDescription,
-        [Validators.required]
+        this.medicalClaimServices.serviceDescription
       ),
       serviceCost: new FormControl(this.medicalClaimServices.serviceCost, [
         Validators.required,

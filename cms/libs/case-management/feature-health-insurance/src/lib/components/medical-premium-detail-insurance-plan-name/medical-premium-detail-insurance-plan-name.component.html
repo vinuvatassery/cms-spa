@@ -25,7 +25,7 @@
 
 
 <kendo-dialog *ngIf="isaddNewInsurancePlanOpen" (close)="InsurancePlanClose()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Add New Insurance Plan">
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="{{hasCreateUpdatePermission === true ? 'Add New Insurance Plan' : 'Request New Insurance Plan'}}">
 
   <div [formGroup]="newhealthInsuranceForm">
     <section class="k-dialog-body mb-2">
@@ -45,7 +45,7 @@
 
       <kendo-floatinglabel text="Insurance Plan Name">
         <kendo-textbox aria-label="insurance Plan Name" placeholder="Insurance Plan Name"
-          formControlName="insurancePlanName" [maxlength]="20" [fillMode]="formUiStyle.inputFillMode">
+          formControlName="insurancePlanName" [maxlength]="500" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
         <kendo-formerror
           *ngIf="!newhealthInsuranceForm.controls['insurancePlanName'].valid &&  isValidateForm">Insurance Plan Name is

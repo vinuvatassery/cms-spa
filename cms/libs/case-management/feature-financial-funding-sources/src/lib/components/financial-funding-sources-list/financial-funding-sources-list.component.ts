@@ -149,7 +149,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'fundingSourceId', dir: 'asc' }]
+      sort: [{ field: 'fundingSourceCode', dir: 'asc' }]
     };
   }
 
@@ -216,7 +216,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
         {
           filters: [
             {
-              field: this.selectedSearchColumn ?? 'fundingSourceId',
+              field: this.selectedSearchColumn ?? 'fundingSourceCode',
               operator: operator,
               value: data,
             },

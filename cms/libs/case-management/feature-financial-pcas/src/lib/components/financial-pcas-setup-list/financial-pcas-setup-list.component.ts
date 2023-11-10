@@ -280,10 +280,6 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     this.filterData = filter;
   }
 
-  rowClass = (args: any) => ({
-    "table-row-disabled": (!args.dataItem.assigned),
-  });
-
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';

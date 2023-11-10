@@ -112,7 +112,7 @@
                         <kendo-grid [resizable]="true" [loading]="(itemsListGridLoader$ | async) ?? false" [pageSize]="state.take"
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  
                               [data]="batchItemsGridLists$ | async"
                               (filterChange)="filterChange($event)" filterable="menu" [filter]="state.filter">
                                     <kendo-grid-column field="clientFullName" title="Client Name" [width]="250">

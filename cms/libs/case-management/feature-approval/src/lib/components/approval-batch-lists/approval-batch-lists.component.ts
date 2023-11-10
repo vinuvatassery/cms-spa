@@ -13,10 +13,10 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
+import { PendingApprovalPaymentTypeCode } from '@cms/case-management/domain';
 @Component({
   selector: 'productivity-tools-approval-batch-lists',
   templateUrl: './approval-batch-lists.component.html',
@@ -36,6 +36,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
   @Output() batchModalSaveClickedEvent = new EventEmitter<any>();
+  readonly paymentTypeCode = PendingApprovalPaymentTypeCode;
   public state!: State;
   isBatchDetailPaymentsGridLoaderShow = new BehaviorSubject<boolean>(true);
   sortColumn = 'paymentNbr';
@@ -63,20 +64,8 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
-  columns: { [key: string]: string } = {
-    paymentNbr: 'Item #',
-    invoiceNbr: 'Invoice ID',
-    vendorName: 'Provider Name',
-    amountDue: 'Total Due',
-    paymentMethodCode: 'Payment Method',
-    serviceCount: 'Service Count',
-    clientFullName: 'Client Name',
-    nameOnInsuranceCard: 'Name on Primary Insurance Card',
-    clientId: 'Client ID',
-    paymentStatusCode: 'Payment Status',
-  };
-
+  columns: any; 
+  vendorNameField: any;
   paymentMethodFilter = '';
   paymentStatusFilter = '';
   public width = '100%';
@@ -91,8 +80,9 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       take: this.pageSizes[2]?.value,
       sort: this.sort,
     };
-    this.tAreaVariablesInitiation(this.batchDetailModalSourceList);
+    this.loadColumnsData();
     this.getCurrentBatchId();
+    this.tAreaVariablesInitiation(this.batchDetailModalSourceList[this.index]);
     this.loadBatchPaymentListGrid();
     this.approveAndSendbackCount();
   }
@@ -104,6 +94,45 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       sort: this.sort,
     };
     this.loadBatchPaymentListGrid();
+  }
+
+  private loadColumnsData(){
+    switch(this.selectedPaymentType){
+      case PendingApprovalPaymentTypeCode.InsurancePremium:
+        this.vendorNameField = 'Insurance Vendor';
+        break;
+      case PendingApprovalPaymentTypeCode.TpaClaim:
+        this.vendorNameField = 'Provider Name';
+        break;
+      case PendingApprovalPaymentTypeCode.PharmacyClaim:
+        this.vendorNameField = 'Pharmacy Name';
+        break;
+    }
+    
+    this.columns = {
+      paymentNbr: 'Item #',
+      invoiceNbr: 'Invoice ID',
+      vendorName: this.vendorNameField,
+      premiumCount: 'Item Count',
+      amountDue: 'Total Due',
+      premiumTotalAmount: 'Total Amount',
+      paymentMethodCode: 'Payment Method',
+      serviceCount: 'Service Count',
+      clientFullName: 'Client Name',
+      nameOnInsuranceCard: 'Name on Primary Insurance Card',
+      clientId: 'Client ID',
+      drugName: 'Drug Name',
+      ndcCode: 'NDC Code',
+      rxQty: 'RX Qty',
+      rxType: 'Unit',
+      prescriptionTotalAmount: 'Total Amount Paid',
+      daySupply: 'Days Supply',
+      prescriptionFillDate: 'Fill Date',
+      paymentStatusCode: 'Payment Status',
+      prescriptionNbr: 'Prescription #',
+      pcaCode: 'PCA Code',
+      mailCode: 'Mail Code',
+    }
   }
 
   getCurrentBatchId() {
@@ -183,6 +212,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   onSendbackClicked(item: any, index: any) {
     item.approveButtonDisabled = true;
     item.sendBackButtonDisabled = false;
+    item.sendBackNotes = '';
     if (
       item.batchStatus === undefined ||
       item.batchStatus === '' ||

@@ -53,7 +53,7 @@ export class FinancialPremiumsProviderInfoComponent {
   })
   isSubmitted: boolean = false
   @Input() paymentRequestId:any
-
+emailscount:number=0;
   constructor(public formBuilder: FormBuilder, 
     public activeRoute: ActivatedRoute,
     private route: Router,   
@@ -86,14 +86,8 @@ export class FinancialPremiumsProviderInfoComponent {
   createEmailsFormArray(contact: any): FormArray {
     let emails = new FormArray<FormGroup>([])
    
-    if(contact.emails && contact.emails.length===0){
-       emails.push(this.formBuilder.group({
-        emailAddress: ['',Validators.required],
-        vendorContactEmailId: null,
-        vendorContactId: contact.vendorContactId
-      }));
-    }
-    else{
+    if(contact.emails && contact.emails.length>0){
+      this.emailscount=contact.emails.length;
     contact.emails.forEach((email: any) => {
       return emails.push(this.formBuilder.group({
         emailAddress: [email.emailAddress,Validators.required],
@@ -265,10 +259,12 @@ export class FinancialPremiumsProviderInfoComponent {
     return FinancialVendorTypeCode;
   }
 
-  onVendorProfileViewClicked() {
+  onVendorProfileViewClicked() {  
+      
     const query = {
       queryParams: {
-        v_id: this.vendorProfile.vendorId
+        v_id: this.vendorProfile.vendorId,
+        tab_code :FinancialVendorProviderTabCode.InsuranceVendors
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)

@@ -15,12 +15,12 @@
           <kendo-textarea-suffix class="justify-content-end">
             <span class="counter">{{ FundingSourceCounter }}</span>
           </kendo-textarea-suffix>
-          <kendo-formerror *ngIf="fundingSourceForm.hasError('required','fundingSourceCode') && isSubmitted">Funding source is required.
+          <kendo-formerror *ngIf="fundingSourceForm.hasError('required','fundingSourceCode') && isSubmitted">Funding Source is required.
           </kendo-formerror>
         </div>
         <div class="flex-col mb-1">
-          <kendo-floatinglabel  text="Funding Source Name">
-            <kendo-textbox     aria-label="Funding Source" 
+          <kendo-floatinglabel  text="Funding Name">
+            <kendo-textbox     aria-label="Funding Name" 
             [fillMode]="formUiStyle.inputFillMode"   
             formControlName="fundingDesc"
             (valueChange)="onFundingDescValueChange($event)"

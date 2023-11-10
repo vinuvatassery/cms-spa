@@ -17,7 +17,7 @@
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab *ngIf="tabCode !== financeManagementTabs.Manufacturers" title="Payment Addresses">
+    <kendo-tabstrip-tab title="{{tabCode !== financeManagementTabs.Manufacturers ? 'Payment Addresses' : 'Addresses and Contacts'}}">     
       <ng-template kendoTabContent>
         <div class="block-section">
 
@@ -43,6 +43,7 @@
             [sortType]="sortType"
             [sort]="sort"
             [gridSkipCount]="gridSkipCount"
+            [hasCreateUpdatePermission]="hasDrugCreateUpdatePermission"
             [vendorDetails$]="vendorDetails$"></cms-financial-drugs>
           </div>
         </div>
@@ -94,7 +95,7 @@
 
           <div class="client-profile-outlet">
             <cms-invoices [tabCode]="tabCode" [vendorId]="vendorId" 
-            (loadInvoiceServiceEvent)="loadInvoiceServices($event)"></cms-invoices>
+            (loadInvoiceServiceEvent)="loadInvoiceServices($event)" [vendorName]="vendorName" [vendorTypeCode]="vendorTypeCode"></cms-invoices>
           </div>
         </div>
       </ng-template>

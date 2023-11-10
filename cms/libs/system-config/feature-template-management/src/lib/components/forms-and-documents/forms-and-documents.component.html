@@ -9,7 +9,7 @@
     Forms and Document
   </kendo-dialog-titlebar>
 
-  <section class="k-dialog-body mb-2 pd-2" kendoTooltip>
+  <section class="k-dialog-body mb-2 pd-2">
     <kendo-treeview [nodes]="foldersTree" textField="name" TreeViewSize="large" kendoTreeViewExpandable
       [hasChildren]="hasFiles" [children]="fetchSubfolders" childrenField="items" >
       <ng-template kendoTreeViewNodeTemplate let-dataItem>

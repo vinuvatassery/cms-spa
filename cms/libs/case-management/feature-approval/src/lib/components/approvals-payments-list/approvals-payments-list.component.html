@@ -79,7 +79,7 @@
   <kendo-grid [resizable]="true" [loading]="isApprovalPaymentsGridLoaderShow" [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
     [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
-    (filterChange)="filterChange($event)" [selectable]="true" [data]="pendingApprovalGridDataResult"
+    (filterChange)="filterChange($event)" [data]="pendingApprovalGridDataResult"
     [isDetailExpanded]="expandSendBackNotes" (columnVisibilityChange)="columnChange($event)" (columnReorder)="onColumnReorder($event)">
     <kendo-grid-column [sortable]="false" field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -117,24 +117,24 @@
       field="providerCount"
       title="Carrier Count"
       [width]="120"
-      *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'"
+      *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
     ></kendo-grid-column>
     <kendo-grid-column field="totalPayments" title="Pmt Count" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="paymentRequestSubTypeCode" title="Claim Type" [width]="120"
-      *ngIf="selectedPaymentType === 'TPA_CLAIM'">
+      *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="paymentRequestSubTypeCode" title="Premium Type" [width]="120"
-      *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'">
+      *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium">
       <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="paymentRequestSubTypeCode" title="Pharmacy Type" [width]="120"
-      *ngIf="selectedPaymentType === 'PHARMACY_CLAIM'">
+      *ngIf="selectedPaymentType === paymentTypeCode.PharmacyClaim">
       <ng-template kendoGridCellTemplate let-dataItem>
           {{ dataItem.paymentRequestSubTypeCode?.split('_')[0] | titlecase }}
       </ng-template>
@@ -143,7 +143,7 @@
       field="premiumCount"
       title="Premium Count"
       [width]="100"
-      *ngIf="selectedPaymentType === 'INSURANCE_PREMIUM'"
+      *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
     >
     </kendo-grid-column>
     <kendo-grid-column field="creationTime" title="Date Approval Requested" [width]="150">
@@ -159,8 +159,7 @@
         </button>
         <kendo-popover #userCard width="330" position="left">
           <ng-template kendoPopoverBodyTemplate>
-            <common-user-profile-card [userId]="dataItem.firstApprovalById"
-              [reassign]="true"></common-user-profile-card>
+            <common-user-profile-card [userId]="dataItem.firstApprovalById"></common-user-profile-card>
           </ng-template>
         </kendo-popover>
       </ng-template>
@@ -212,11 +211,11 @@
     </kendo-grid-column>
     <kendo-grid-column [sortable]="false" field="sendBackNotes" title="Send Back Notes" [width]="280">
       <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-        <div kendoTooltip>
+        <div >
           <kendo-textarea
             #tareaCessation
             [fillMode]="formUiStyle.inputFillMode"
-            [maxlength]="tAreaCessationMaxLength"  
+            [maxlength]="tAreaCessationMaxLength"
             [(ngModel)]="dataItem.sendBackNotes"
             (valueChange)="sendBackNotesChange(dataItem)"
             class="table-text-area textarea"
@@ -314,8 +313,9 @@
   </button>
 </div>
 
-<kendo-dialog *ngIf="isSubmitApprovalPaymentItems" (close)="onCloseSubmitApprovalPaymentItemsClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Submit item(s)?" kendoTooltip>
+<kendo-dialog *ngIf="isSubmitApprovalPaymentItems" class="app-c-modal app-c-modal-sm app-c-modal-np"  >
+  <kendo-dialog-titlebar (close)="onCloseSubmitApprovalPaymentItemsClicked()">
+    Submit Item(s)?</kendo-dialog-titlebar>
   <section class="k-dialog-body newcase">
     <p class="mb-2">
       {{
@@ -362,7 +362,7 @@
   (close)="onCloseViewPaymentsBatchClicked()"
   class="app-c-modal app-c-modal-xlg app-c-modal-np_0"
   title="View Payments in Each Batch"
-  kendoTooltip
+  
 >
   <productivity-tools-approval-batch-lists
     [approvalId]="selectedApprovalId"

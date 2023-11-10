@@ -15,11 +15,9 @@ import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { PanelBarCollapseEvent } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
-  PendingApprovalGeneralTypeCode,
-  PendingApprovalPaymentTypeCode,
+  PendingApprovalGeneralTypeCode
 } from '@cms/case-management/domain';
 import {
   UserDataService,
@@ -47,17 +45,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() approvalsGeneralLists$: any;
   @Input() clientsSubjects$: any;
   @Input() casereassignmentExpandedInfo$: any;
-  @Input() approvalsExceptionCard$: any;
-  @Input() invoiceData$: any;
-  @Input() isInvoiceLoading$: any;
   @Input() submitGenerealRequest$: any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
-  @Output() loadCasereassignmentExpanedInfoParentEvent =
-    new EventEmitter<any>();
-  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
+  @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
-
+  @Output() onVendorClickedEvent = new EventEmitter<any>();
   pendingApprovalGeneralTypeCode: any;
   public state!: State;
   sortColumn = 'batch';
@@ -94,8 +86,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedIndex: any;
   @ViewChild('editListItemDialogModal') editModalTemplate!: TemplateRef<any>;
   @Input() usersByRole$: any;
-  @Output() getVendorDetailEvent = new EventEmitter<any>();
-  @Input() selectedVendor$: any;
+  @Output() getMasterDetailsEvent = new EventEmitter<any>();
+  @Input() selectedMasterDetail$: any;
   selectedSubtypeCode: any;
 
   /** Constructor **/
@@ -246,7 +238,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         subTypeCode: item.subTypeCode,
       };
       this.selectedSubtypeCode = item.subTypeCode;
-      this.getVendorDetailEvent.emit(userObject);
+      this.getMasterDetailsEvent.emit(userObject);    
       this.isPanelExpanded = true;
       this.cd.detectChanges();
     }
@@ -271,7 +263,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   onSubmitClicked(template: TemplateRef<unknown>): void {
     this.submitRequestDialogService = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
 
@@ -312,19 +304,17 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         return 'Request to add Insurance Providers To Master List';
       case PendingApprovalGeneralTypeCode.Pharmacy:
         return 'Request to add Pharmacies To Master List';
+      case PendingApprovalGeneralTypeCode.Drug:
+        return 'Request to add Drugs To Master List';
+      case PendingApprovalGeneralTypeCode.InsurancePlan:
+        return 'Request to add Insurance Plans To Master List';
     }
     return null;
   }
   loadCasereassignmentExpanedInfoEvent(approvalId: any) {
     this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
   }
-  loadApprovalsExceptionCard($event: any) {
-    this.loadApprovalsExceptionCardEvent.emit($event);
-  }
-  loadApprovalsExceptionInvoice($event: any) {
-    this.loadApprovalsExceptionInvoiceEvent.emit($event);
-  }
-
+  
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
     let inValid = false;
 
@@ -627,5 +617,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
   submit(data: any) {
     this.submitGeneralRequestsEvent.emit(data);
+  }
+
+  onProviderNameClick(paymentRequestId: any) {
+    this.onVendorClickedEvent.emit(paymentRequestId);
   }
 }

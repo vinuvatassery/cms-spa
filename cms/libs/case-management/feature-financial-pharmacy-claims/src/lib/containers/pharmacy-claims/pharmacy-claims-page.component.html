@@ -11,7 +11,7 @@
                     <kendo-tabstrip-tab title="Process" [selected]="true">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-process-list 
+                                <cms-pharmacy-claims-process-list
                                 [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
                                 [pharmacyClaimsProcessGridLoader$]="pharmacyClaimsProcessLoader$"
                                 [deliveryMethodLov$]="deliveryMethodLov$"
@@ -27,7 +27,7 @@
                                 [searchDrugsLoader$]="searchDrugsLoader$"
                                 [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsProcess"
-                                [sortType]="sortType" [sort]="sortProcessList" 
+                                [sortType]="sortType" [sort]="sortProcessList"
                                 (addPharmacyClaimEvent)="addPharmacyClaim($event)"
                                 (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
                                 (getPharmacyClaimEvent)="getPharmacyClaim($event)"
@@ -47,20 +47,27 @@
                     <kendo-tabstrip-tab title="Batches">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-batches-list   [pharmacyClaimsBatchGridLists$]="pharmacyClaimsBatchGridLists$"
+                                <cms-pharmacy-claims-batches-list
+                                [PharmacyBatchGridLoader$]="pharmacyClaimsBatchGridLoader$"
+                                [pharmacyClaimsBatchGridLists$]="pharmacyClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsBatch"
-                                [sortType]="sortType" [sort]="sortBatchList" 
-                                (loadPharmacyClaimsBatchListEvent)="loadPharmacyClaimsBatchListGrid($event)"></cms-pharmacy-claims-batches-list>
+                                [sortType]="sortType" [sort]="sortBatchList"
+                                (loadPharmacyClaimsBatchListEvent)="loadPharmacyClaimsBatchListGrid($event)"
+                                (exportPharmacyClaimsBatchListEvent)="onExportClaimsInBatch($event)"
+                                ></cms-pharmacy-claims-batches-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
                     <kendo-tabstrip-tab title="All Payments">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-all-payments-list  [pharmacyClaimsAllPaymentsGridLists$]="pharmacyClaimsAllPaymentsGridLists$"
+                                <cms-pharmacy-claims-all-payments-list
+                                [pharmacyClaimsAllPaymentsGridLists$]="pharmacyClaimsAllPaymentsGridLists$"
+                                [pharmacyClaimsAllPaymentsGridLoader$]="pharmacyClaimsAllPaymentsGridLoader$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsPayments"
-                                [sortType]="sortType" [sort]="sortPaymentsList" 
-                                (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"></cms-pharmacy-claims-all-payments-list>
+                                [sortType]="sortType" [sort]="sortPaymentsList"
+                                (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"
+                                (exportGridEvent$)="onExportAllPayments($event)"></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

@@ -28,6 +28,10 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
   reconcileGridLists$ = this.financialPremiumsFacade.reconcileDataList$;
   reconcileBreakoutSummary$ = this.financialPremiumsFacade.reconcileBreakoutSummary$;
   reconcileBreakoutList$ = this.financialPremiumsFacade.reconcileBreakoutList$;
+  warrantNumberChange$ = this.financialPremiumsFacade.warrantNumberChange$;
+  warrantNumberChangeLoader$ = this.financialPremiumsFacade.warrantNumberChangeLoader$;
+  letterContentList$ = this.financialPremiumsFacade.letterContentList$;
+  letterContentLoader$ = this.financialPremiumsFacade.letterContentLoader$;
   batchId:any;
   premiumType: any;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$
@@ -144,5 +148,13 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
       const fileName = (this.premiumType[0].toUpperCase() + this.premiumType.substr(1).toLowerCase())  +' Premium Reconciling Payment'
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`premium/${this.premiumType}/payment-batches/${this.batchId}/reconcile-payments` , fileName)
     }
+  }
+
+  warrantNumberChange(data:any){
+    this.financialPremiumsFacade.checkWarrantNumber(data.batchId, data.checkNbr, data.vendorId);   
+  }
+
+  loadEachLetterTemplate(event:any){
+    this.financialPremiumsFacade.loadEachLetterTemplate(this.premiumType, event);  
   }
 }

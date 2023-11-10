@@ -4,7 +4,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {FinancialClaimsFacade, PaymentsFacade } from '@cms/case-management/domain';
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
-import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
+import { StatusFlag } from '@cms/shared/ui-common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-print-authorization',
@@ -40,6 +41,8 @@ export class FinancialClaimsPrintAuthorizationComponent {
   @Output() loadTemplateEvent  = new EventEmitter<any>();
   @Output() loadTemplateEventLog  = new EventEmitter<any>();
   @Output() onReconcileRecordEvent = new EventEmitter<any>();
+  letterContentSubscription!: Subscription;
+  letterContentListItemSubscription!: Subscription;
 
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,
@@ -59,15 +62,22 @@ export class FinancialClaimsPrintAuthorizationComponent {
       this.printAdviceLetterData = this.loadPrintLetterModelData();
       this.loadPrintLetterContent(this.printAdviceLetterData);
     }
-    this.letterContentList$?.subscribe((response:any)=>{
+    this.letterContentListSubscription();
+    this.letterContentLoaderSubscription();    
+  }
+  
+  letterContentLoaderSubscription() {
+    this.letterContentSubscription = this.letterContentLoader$?.subscribe((response:any)=>{
+      this.letterContentLoader = response;
+      this.ref.detectChanges();
+    });
+  }
+
+  letterContentListSubscription() {
+    this.letterContentListItemSubscription = this.letterContentList$?.subscribe((response:any)=>{
       this.letterContent = response.letterContent;
       this.ref.detectChanges();
     });
-    this.letterContentLoader$?.subscribe((response:any)=>{
-      this.letterContentLoader = response;
-      this.ref.detectChanges();
-    })
-    
   }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -81,6 +91,15 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   hideLoader() {
     this.loaderService.hide();
+  }
+
+  ngOnDestroy(): void {
+    if(this.letterContentListItemSubscription){
+    this.letterContentListItemSubscription.unsubscribe();
+    }
+    if(this.letterContentSubscription){
+    this.letterContentSubscription.unsubscribe();
+    }
   }
 
   loadPrintLetterContent(request:any) {
@@ -165,7 +184,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
 
   generateAndPrintAdviceLetter(request:any) {
     this.loaderService.show();
-    this.financialClaimsFacade.viewAdviceLetterData(this.batchId,request,this.claimsType)
+    this.financialClaimsFacade.viewAdviceLetterData(request,this.claimsType)
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -206,7 +225,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
           paymentSentDate :payments[0].paymentSentDate,
           checkNbr :payments[0].checkNbr,
           comments :payments[0].comments,
-          printFlag: this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter == true ? StatusFlag.Yes : StatusFlag.No
+          printFlag: this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter ? StatusFlag.Yes : StatusFlag.No
       });
       if(this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter){
         this.returnResultFinalPrintList[this.currentIndex].printFlag = StatusFlag.Yes;
@@ -220,6 +239,12 @@ export class FinancialClaimsPrintAuthorizationComponent {
           if (data) {
             if(this.reconcileArray[0].printFlag === StatusFlag.Yes){
             this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
+            }
+            this.returnResultFinalPrintList[this.currentIndex].warrantNumberChange = false;
+            this.onReconcileRecordEvent.emit(this.returnResultFinalPrintList[this.currentIndex]);
+          }
+          if(this.reconcileArray[0].printFlag === StatusFlag.Yes){
+            this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
             }else if(this.currentIndex == this.returnResultFinalPrintList.length - 1){
               this.onClosePrintAdviceLetterClicked();
               }else{
@@ -228,9 +253,6 @@ export class FinancialClaimsPrintAuthorizationComponent {
                 };
                 this.onItemChange(event);
             }
-            this.returnResultFinalPrintList[this.currentIndex].warrantNumberChange = false;
-            this.onReconcileRecordEvent.emit(this.returnResultFinalPrintList[this.currentIndex]);
-          }
         this.ref.detectChanges();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!");
         },
