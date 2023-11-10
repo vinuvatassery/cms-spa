@@ -36,7 +36,6 @@ export class PharmacyClaimsBatchPageComponent {
   loadBatchLogListGrid(event: any) {
     this.dataExportParameters = event
      this.batchId = this.route.snapshot.queryParams['bid'];
-    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
     }
   exportPharmacyBatchesGridData(){
     const data = this.dataExportParameters
