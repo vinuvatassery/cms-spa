@@ -142,6 +142,7 @@
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="totalAdjustmentsAmount" title="Total Amount of Adjs." [width]="140">
+       
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">

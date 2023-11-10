@@ -63,8 +63,7 @@
     [resizable]="true"
     [columnMenu]="{ filter: true }" 
     [sort]="state.sort" 
-    [navigable]="isProcessGridExpand"
-    [selectable]="true"
+    [navigable]="isProcessGridExpand" 
     [filter]="state.filter"
     [data]="pharmacyClaimsProcessGridLists$ | async"
     (dataStateChange)="dataStateChange($event)" 
@@ -347,7 +346,7 @@
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  Recent Claims for Donna Summer </h4></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR Donna Summer </h4></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-pharmacy-claims-recent-claims-list
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-pharmacy-claims-recent-claims-list>

@@ -292,7 +292,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'ALL', dir: 'desc' }],
+      sort: [{ field: 'creationTime', dir: 'desc' }],
     };
   }
 

@@ -74,7 +74,7 @@
       <div class="app-c-table">
         <kendo-grid [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [columnMenu]="{ filter: true }"
-          [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+          [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  
           [data]="batchLogGridLists$ | async" (filterChange)="filterChange($event)" filterable="menu"
           [filter]="state.filter">
           <kendo-grid-column  *ngIf="isPrintAdviceLetterClicked" [sortable]="false" field="add" [width]="40"  class="text-center"
@@ -381,7 +381,7 @@
 
 
 <ng-template #PrintAuthorizationDialogTemplate>
-  <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Advice Letter(s)</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar  (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Advice Letter(s)</kendo-dialog-titlebar>
   <cms-financial-claims-print-authorization
   [printOption]="true"
   [items]="selectedDataRows"
