@@ -314,12 +314,12 @@
 
 <kendo-dialog *ngIf="isContactDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
 class="app-c-modal app-c-modal-md app-c-modal-np">
-<kendo-dialog-titlebar class="text-normal" (close)="clickCloseAddContactDetails()"> Add Contact(s) </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="clickCloseAddContactDetails()"> Add Contact(s) </kendo-dialog-titlebar>
 <cms-contact-address-details [vendorId]="vendorId" (isContactDetailPopupClose)="onClose($event)"></cms-contact-address-details>
 </kendo-dialog>
 <kendo-dialog *ngIf="isContactAddressDeactivateShow" (close)="clickCloseDeactivateContactAddress()"
 class="app-c-modal app-c-modal-sm app-c-modal-np">
-<kendo-dialog-titlebar> Deactivate contact?</kendo-dialog-titlebar>
+<kendo-dialog-titlebar> Deactivate Contact?</kendo-dialog-titlebar>
 <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)"
   [VendorContactId]="vendorId"> </cms-contacts-deactivate>
 </kendo-dialog>

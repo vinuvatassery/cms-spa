@@ -21,6 +21,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
   @Output() searchClinicVendorClicked = new EventEmitter<any>();
   @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
   @Output() close = new EventEmitter<any>();
+  @Input() selectedMasterDetail$!: Observable<any>;
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
   clinicSearchSubscription!: Subscription;
   clinicVendorListLocal!: any;

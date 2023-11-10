@@ -1,6 +1,9 @@
 <div class="flex-col flex-col-10">
   <p class="mt-1 mb-1" *ngIf="approvalsExceptionCard$ != null">
-    Regarding <a>{{ approvalsExceptionCard$?.clientName }}</a>
+    Regarding <button [attr.aria-label]="approvalsExceptionCard$.clientName" kendoButton look="flat" class="card-link-button"
+    (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, approvalsExceptionCard$)">
+    {{ approvalsExceptionCard$.clientName }}
+  </button>
   </p>
   <i *ngIf="approvalsExceptionCard$?.exceptionReason != null">{{
     approvalsExceptionCard$?.exceptionReason
@@ -20,9 +23,7 @@
         [attr.aria-label]="approvalsExceptionCard$?.vendorName"
         kendoButton
         look="flat"
-        (click)="
-          onViewProviderDetailClicked(approvalsExceptionCard$?.paymentRequestId)
-        "
+        (click)="onProviderNameClick(approvalsExceptionCard$?.paymentRequestId)"
         class="card-link-button"
       >
         {{ approvalsExceptionCard$?.vendorName }}
@@ -53,16 +54,24 @@
   </p>
 </div>
 <div>
-  <productivity-tools-approval-invoice
-    [exceptionId]="exceptionId"
-    [pageSizes]="pageSizes"
-    [sortValue]="sortValue"
-    [sortType]="sortType"
-    [sort]="sort"
-    [gridSkipCount]="gridSkipCount"
-    [invoiceData$]="invoiceData$"
-    [isInvoiceLoading$]="isInvoiceLoading$"
-    (loadApprovalsExceptionInvoiceEvent)="loadApprovalsExceptionInvoice($event)"
-  >
+  <productivity-tools-approval-invoice [exceptionId]="exceptionId">
   </productivity-tools-approval-invoice>
 </div>
+<ng-template #clientRecentClaimsDialog>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"> <h4 class="text-upper">  Recent Claims for {{clientName}} </h4> </kendo-dialog-titlebar>
+  <section class="k-dialog-body-padding">
+    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
+      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1">
+            chevron_right
+          </span>
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</ng-template>

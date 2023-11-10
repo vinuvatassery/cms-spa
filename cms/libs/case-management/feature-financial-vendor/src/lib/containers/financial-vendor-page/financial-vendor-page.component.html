@@ -115,7 +115,7 @@
 
 <!-- medical -->
 <kendo-dialog kendoRippleContainer *ngIf="isShowMedicalProvider" (close)="closeVendorDetailModal(vendorTypes.MedicalProviders)"
-  class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
+  class="app-c-modal app-c-modal-lg app-c-modal-np" title="{{hasMedicalAndDentalCreateUpdatePermission ? 'Add New Medical Provider' : 'Request New Medical Provider'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.MedicalProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.MedicalProviders)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList"
@@ -126,7 +126,7 @@
 
 <!-- dental -->
 <kendo-dialog kendoRippleContainer *ngIf="isShowDentalProvider" (close)="closeVendorDetailModal(vendorTypes.DentalProviders)"
-  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Provider" kendoTooltip>
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{hasMedicalAndDentalCreateUpdatePermission ? 'Add New Dental Provider' : 'Request New Dental Provider'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.DentalProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.DentalProviders)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
@@ -164,9 +164,11 @@
 </kendo-dialog>
 
 <kendo-dialog kendoRippleContainer *ngIf="isShowManufacturers" (close)="closeVendorDetailModal()"
-  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Manufacture" kendoTooltip>
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{ hasManufacturerCreateUpdatePermission == true ? 
+    'Add New Manufacturer' : 'Request New Manufacturer'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Manufacturers"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasManufacturerCreateUpdatePermission"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>

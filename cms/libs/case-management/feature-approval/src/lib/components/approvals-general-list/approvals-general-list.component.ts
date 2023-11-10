@@ -16,9 +16,7 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import {
-  PendingApprovalGeneralTypeCode,
-} from '@cms/case-management/domain';
+import { PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 import {
   UserDataService,
   UserManagementFacade,
@@ -46,17 +44,12 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() approvalsGeneralLists$: any;
   @Input() clientsSubjects$: any;
   @Input() casereassignmentExpandedInfo$: any;
-  @Input() approvalsExceptionCard$: any;
-  @Input() invoiceData$: any;
-  @Input() isInvoiceLoading$: any;
   @Input() submitGenerealRequest$: any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
-  @Output() loadCasereassignmentExpanedInfoParentEvent =
-    new EventEmitter<any>();
-  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
+  @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
   @Input() clinicVendorLoader$!: Observable<any>;
+  @Output() onVendorClickedEvent = new EventEmitter<any>();
 
   pendingApprovalGeneralTypeCode: any;
   public state!: State;
@@ -288,7 +281,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   onSubmitClicked(template: TemplateRef<unknown>): void {
     this.submitRequestDialogService = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
 
@@ -340,13 +333,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   loadCasereassignmentExpanedInfoEvent(approvalId: any) {
     this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
   }
-  loadApprovalsExceptionCard($event: any) {
-    this.loadApprovalsExceptionCardEvent.emit($event);
-  }
-  loadApprovalsExceptionInvoice($event: any) {
-    this.loadApprovalsExceptionInvoiceEvent.emit($event);
-  }
-
+  
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
     let inValid = false;
 
@@ -647,13 +634,20 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     requests.splice(0, 1);
     this.submit(requests);
   }
+  
   submit(data: any) {
     this.submitGeneralRequestsEvent.emit(data);
   }
-  searchClinicClicked(event: any){
+
+  searchClinicClicked(event: any) {
     this.searchClinicVendorClicked.emit(event);
   }
-  updateMasterDetailsClicked(event:any){
+
+  updateMasterDetailsClicked(event:any) {
     this.updateMasterDetailsClickedEvent.emit(event);
+  }
+
+  onProviderNameClick(paymentRequestId: any) {
+    this.onVendorClickedEvent.emit(paymentRequestId);
   }
 }

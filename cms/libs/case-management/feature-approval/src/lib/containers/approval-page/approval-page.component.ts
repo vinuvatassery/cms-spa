@@ -30,7 +30,8 @@ import {
   UserManagementFacade,
   UserDataService,
   UserDefaultRoles,
-  UserLevel
+  UserLevel,
+  LovFacade
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -103,6 +104,9 @@ export class ApprovalPageComponent implements OnInit {
   ddlStates$ = this.contactFacade.ddlStates$;
   healthCareForm!: FormGroup;  
   clinicVendorLoader$ = this.financialVendorFacade.clinicVendorLoader$;
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -113,14 +117,17 @@ export class ApprovalPageComponent implements OnInit {
     private documentFacade: DocumentFacade,
     private readonly userDataService: UserDataService,
     private readonly pendingApprovalGeneralFacade: PendingApprovalGeneralFacade,
-    private dialogService: DialogService,
     private readonly cd: ChangeDetectorRef,
-    private financialVendorFacade: FinancialVendorFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade,
     private contactFacade: ContactFacade,
-    private readonly formBuilder: FormBuilder,
+    private formBuilder: FormBuilder,
+    public lovFacade: LovFacade,
+    private dialogService: DialogService,
+
   ) {
     this.healthCareForm = this.formBuilder.group({});
   }
+
   ngOnInit(): void {
     this.getUserRole();
     this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
@@ -247,14 +254,7 @@ export class ApprovalPageComponent implements OnInit {
       approvalId
     );
   }
-
-  loadApprovalsExceptionCard(data: any) {
-    this.pendingApprovalGeneralFacade.loadExceptionCard(data);
-  }
-
-  loadApprovalsExceptionInvoice(data: any) {
-    this.pendingApprovalGeneralFacade.loadInvoiceListGrid(data);
-  }
+  
   submitGeneralRequests(requests: any) {
     this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
   }
@@ -286,6 +286,7 @@ export class ApprovalPageComponent implements OnInit {
         this.pendingApprovalGeneralFacade.selectedMasterDetail$;
     }
   }
+  
   buildVendorForm() {
   let form = this.formBuilder.group({
       providerName: [''],
@@ -308,16 +309,52 @@ export class ApprovalPageComponent implements OnInit {
     });
     this.healthCareForm = form;
   }
+
   editClicked(event : any){
     if(event)
     {
       this.buildVendorForm();
     }
   }
+
   searchClinicVendorClicked(clientName: any) {
     this.financialVendorFacade.searchClinicVendor(clientName);
   }
+
   updateMasterDetailsClicked(event: any){
     this.financialVendorFacade.updateProviderPanel(event);
   }
+
+  onProviderNameClick(event: any) {
+    this.paymentRequestId = event;
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation: {
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  }
+
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
+  }
+
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanel(event);
+  }
+
+  updateProviderProfile(event: any) {
+    console.log(event);
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+
+  onEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
+  }
+
 }
