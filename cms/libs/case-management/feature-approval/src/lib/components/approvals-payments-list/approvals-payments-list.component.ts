@@ -685,12 +685,12 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
         (this.approvalsPaymentsGridUpdatedResult[index].paymentRequestIds != null && this.approvalsPaymentsGridUpdatedResult[index].paymentRequestIds.length < 1)
       )
       {
-        this.approvalsPaymentsGridUpdatedResult[index].atleastOnePaymentInValidMsg=true;
-        this.approvalsPaymentsGridUpdatedResult[index].atleastOnePaymentInValid = this.atleastOnePaymentRequireMessage;
+        this.approvalsPaymentsGridUpdatedResult[index].atleastOnePaymentInValidMsg = this.atleastOnePaymentRequireMessage;
+        this.approvalsPaymentsGridUpdatedResult[index].atleastOnePaymentInValid = true;
       }
       else
       {
-        this.approvalsPaymentsGridUpdatedResult[index].atleastOnePaymentInValidMsg=null;
+        this.approvalsPaymentsGridUpdatedResult[index].atleastOnePaymentInValidMsg = null;
         this.approvalsPaymentsGridUpdatedResult[index].atleastOnePaymentInValid = false;
       }
   }
