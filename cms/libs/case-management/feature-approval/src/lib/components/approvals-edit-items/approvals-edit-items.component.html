@@ -34,7 +34,7 @@
         </kendo-formhint>
       </div>
     </div>
-    <div class="flex-col flex-col-6">
+    <div class="flex-col flex-col-6" *ngIf="selectedMasterData.firstName !== '' ">
       <kendo-floatinglabel text="Provider First Name">
         <kendo-textbox aria-label="Provider First Name" placeholder="Provider First Name"
           [fillMode]="formUiStyle.inputFillMode" formControlName="firstName" [maxlength]="50">
@@ -44,7 +44,7 @@
         First Name is required
       </kendo-formerror>
     </div>
-    <div class="flex-col flex-col-6">
+    <div class="flex-col flex-col-6" *ngIf="selectedMasterData.lastName !== '' ">
       <kendo-floatinglabel text="Provider Last Name">
         <kendo-textbox aria-label="Provider Last Name" placeholder="Provider Last Name"
           [fillMode]="formUiStyle.inputFillMode" formControlName="lastName" [maxlength]="50">
@@ -397,7 +397,7 @@
   <div class="justify-content-between">
     <div class="justify-content-start">
       <button aria-label="Update" kendoButton [primary]="true" (click)="onUpdateClicked()">Update</button>
-      <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel">
+      <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" (click)="onCancel()">
         Cancel
       </button>
     </div>

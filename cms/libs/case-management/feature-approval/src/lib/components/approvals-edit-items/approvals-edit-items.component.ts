@@ -20,6 +20,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
   @Input() clinicVendorLoader$!: Observable<any>;
   @Output() searchClinicVendorClicked = new EventEmitter<any>();
   @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
+  @Output() close = new EventEmitter<any>();
   readonly subTypeConst = PendingApprovalGeneralTypeCode;
   clinicSearchSubscription!: Subscription;
   clinicVendorListLocal!: any;
@@ -109,7 +110,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
       this.selectedMasterData?.address1
     );
     this.healthCareForm.controls['addressLine2'].setValue(
-      this.selectedMasterData?.addressLine2
+      this.selectedMasterData.addressLine2 ?  this.selectedMasterData.addressLine2 : ''
     );
     this.healthCareForm.controls['city'].setValue(
       this.selectedMasterData?.cityCode
@@ -148,16 +149,21 @@ export class ApprovalsEditItemsComponent implements OnInit {
         Validators.required
       );
       this.healthCareForm.controls['providerName'].updateValueAndValidity();
-
-      this.healthCareForm.controls['firstName'].setValidators(
-        Validators.required
-      );
-      this.healthCareForm.controls['firstName'].updateValueAndValidity();
-
-      this.healthCareForm.controls['lastName'].setValidators(
-        Validators.required
-      );
-      this.healthCareForm.controls['lastName'].updateValueAndValidity();
+      
+      if(this.selectedMasterData.firstName != '')
+      {
+        this.healthCareForm.controls['firstName'].setValidators(
+          Validators.required
+        );
+        this.healthCareForm.controls['firstName'].updateValueAndValidity();
+      }
+      if(this.selectedMasterData.lastName != '')
+      {
+        this.healthCareForm.controls['lastName'].setValidators(
+          Validators.required
+        );
+        this.healthCareForm.controls['lastName'].updateValueAndValidity();
+      }
 
       this.healthCareForm.controls['addressLine1'].setValidators(
         Validators.required
@@ -178,12 +184,53 @@ export class ApprovalsEditItemsComponent implements OnInit {
   onUpdateClicked() {
     this.validateForm();
     this.isValidateForm = true;
-    if (this.healthCareForm.valid) {
-      this.updateMasterDetailsClickedEvent.emit(this.healthCareForm.value);
+    if (!this.healthCareForm.valid) {
+      return;
     }
+    let contact = [];
+    let email = [];
+    let phone = [];
+    email.push({
+      emailAddress: this.healthCareForm.controls['contactEmail']?.value,
+      VendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
+      vendorContactId: this.selectedMasterData.vendorContactId
+    })
+    phone.push({
+      PhoneNbr: this.healthCareForm.controls['contactPhone']?.value,
+      VendorContactPhoneId: this.selectedMasterData.vendorContactPhoneId,
+      vendorContactId: this.selectedMasterData.vendorContactId
+    })
+    contact.push(
+      {
+        contactName: this.healthCareForm.controls['contactFirstName']?.value,
+        vendorContactId: this.selectedMasterData.vendorContactId,
+        email,
+        phone
+      }
+    )
+    let masterData = {
+      vendorId: this.selectedMasterData.vendorId,
+      tin: this.healthCareForm?.controls['tinNumber'].value,
+      Address: {
+        vendorAddressId: this.selectedMasterData.vendorAddressId, // need to send this in response
+        specialHandlingDesc: this.healthCareForm?.controls['specialHandlingDesc']?.value ? this.healthCareForm?.controls['specialHandlingDesc']?.value : '',
+        paymentMethodCode: this.healthCareForm?.controls['paymentMethod']?.value ? this.healthCareForm?.controls['paymentMethod']?.value : '',
+        address1: this.healthCareForm?.controls['addressLine1']?.value,
+        address2: this.healthCareForm?.controls['addressLine2']?.value,
+        cityCode: this.healthCareForm?.controls['city']?.value,
+        stateCode: this.healthCareForm?.controls['state']?.value,
+        zip: this.healthCareForm?.controls['zip']?.value,
+        contacts: contact
+      }
+    }
+    this.updateMasterDetailsClickedEvent.emit(masterData);
   }
 
   get healthCareFormControls() {
     return this.healthCareForm.controls as any;
+  }
+
+  onCancel(){
+    this.close.emit();
   }
 }

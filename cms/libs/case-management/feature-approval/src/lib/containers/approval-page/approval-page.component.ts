@@ -318,6 +318,6 @@ export class ApprovalPageComponent implements OnInit {
     this.financialVendorFacade.searchClinicVendor(clientName);
   }
   updateMasterDetailsClicked(event: any){
-  
+    this.financialVendorFacade.updateProviderPanel(event);
   }
 }
