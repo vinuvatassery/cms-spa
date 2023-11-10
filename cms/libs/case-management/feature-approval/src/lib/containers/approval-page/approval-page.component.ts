@@ -310,7 +310,7 @@ export class ApprovalPageComponent implements OnInit {
     this.financialVendorFacade.updateProviderPanel(event);
   }
 
-  OnEditProviderProfileClick() {
+  onEditProviderProfileClick() {
     this.contactFacade.loadDdlStates();
     this.lovFacade.getPaymentMethodLov();
   }
