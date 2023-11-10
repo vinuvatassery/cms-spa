@@ -548,6 +548,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.batchStatus = this.sendbackStatus;
       dataItem.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       dataItem.sendBackNotesInValid = true;
+      dataItem.atleastOnePaymentInValidMsg = this.atleastOnePaymentRequireMessage;
+      dataItem.atleastOnePaymentInValid = true;
+      dataItem.paymentRequestIds = [];
       this.onOpenViewPaymentsBatchClicked(dataItem,true);
     } else if (dataItem.batchStatus == this.sendbackStatus) {
       this.isSendbackMode=false;
