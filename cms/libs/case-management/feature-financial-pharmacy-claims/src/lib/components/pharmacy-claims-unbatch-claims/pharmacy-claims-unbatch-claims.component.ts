@@ -11,14 +11,14 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyClaimsUnbatchClaimsComponent { 
-  @Output() UnBatchCloseClickedEvent = new EventEmitter();
+  @Output() unBatchCloseClickedEvent = new EventEmitter();
   @Input() isBulkUnBatchOpened = false;
  
   closeUnBatchClicked() {
-    this.UnBatchCloseClickedEvent.emit(false);
+    this.unBatchCloseClickedEvent.emit(false);
   }
 
   unBatchClicked() {
-    this.UnBatchCloseClickedEvent.emit(true);
+    this.unBatchCloseClickedEvent.emit(true);
   }
 }
