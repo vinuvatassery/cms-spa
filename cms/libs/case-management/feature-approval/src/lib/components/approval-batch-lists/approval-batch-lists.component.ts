@@ -33,6 +33,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   @Input() selectedPaymentType: any;
   @Input() paymentStatusLovList: any;
   @Input() paymentMethodLovList: any;
+  @Input() isSendBackMode: any;
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
   @Output() batchModalSaveClickedEvent = new EventEmitter<any>();
@@ -141,8 +142,10 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     );
     if (index >= 0) {
       this.index = index;
-      this.batchId =
-        this.batchDetailModalSourceList[index].paymentRequestBatchId;
+      this.batchId = this.batchDetailModalSourceList[index].paymentRequestBatchId;
+      if(this.isSendBackMode){
+        this.onSendbackClicked(this.batchDetailModalSourceList[index], index);
+      }
     }
   }
 

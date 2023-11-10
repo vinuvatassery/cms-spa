@@ -108,6 +108,20 @@
                 </div>
               </ng-template>
             </kendo-grid-column> -->
+            <kendo-grid-column field="" title="Send Back" [width]="150" [sortable]="false">
+              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <div class="cms-button-group">
+                  <button kendoButton 
+                    [selected]="dataItem.batchStatus == sendbackStatus"
+                    aria-label="Send Back"
+                    id="approve{{ rowIndex }}"
+                    [toggleable]="true"
+                  >
+                    Send Back
+                  </button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
               <kendo-grid-column
                 field="paymentNbr"
                 title="Item #"
