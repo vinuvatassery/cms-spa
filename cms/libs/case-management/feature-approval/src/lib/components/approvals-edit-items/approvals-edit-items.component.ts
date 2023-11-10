@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { FinancialVendorFacade, PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
+import { PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
