@@ -244,7 +244,7 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   closeVendorDetailModal(data?: any) {
-    if (data == this.vendorTypes.Clinic) {
+    if (this.ShowClinicProvider) {
       this.ShowClinicProvider = false;
     } else {
       this.isShowMedicalProvider = false;
