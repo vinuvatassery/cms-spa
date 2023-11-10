@@ -11,7 +11,7 @@
             <section class="app-l-wrapper">
                   <div>
                   <p> <button aria-label="Very Nice Provider"
-                              (click)="onViewProviderDetailClicked(providerDetailsTemplate)" kendoButton look="flat"
+                        (click)="onViewProviderDetailClicked()" kendoButton look="flat"
                               class="mr-3 card-link-button">
                               Very Nice Provider
                         </button> 
@@ -81,7 +81,7 @@
                         <kendo-grid [resizable]="true" [loading]="isBatchLogItemsGridLoaderShow" [pageSize]="state.take"
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
                               [data]="batchItemsGridLists$ | async">
                               <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
                                     [width]="40"></kendo-grid-checkbox-column>

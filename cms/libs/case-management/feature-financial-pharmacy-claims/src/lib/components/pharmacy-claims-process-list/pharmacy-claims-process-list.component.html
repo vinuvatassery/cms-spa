@@ -1,6 +1,6 @@
 <!-- Table Top Filter, Search and Export -->
 
-<p class="mt-2"> Click “+ New Claim” to add new claims for a provider, then “Batch Claims” to create a batch.</p>
+<p class="mt-2"> Click “+ New Claim” to add new claims for a pharmacy, then “Batch Claims” to create a batch.</p>
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
@@ -43,7 +43,7 @@
   <span class="sort-items"  *ngIf="!filteredByColumnDesc">No Filters</span>
   <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
   <span class="sort-items">{{columnChangeDesc}}</span>
-  <span class="sort-items" *ngIf="isColumnsReordered">Columns Re-ordered</span>
+  <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
   <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetGrid()">
     <a>Set to Default</a>
   </button>
@@ -63,8 +63,7 @@
     [resizable]="true"
     [columnMenu]="{ filter: true }" 
     [sort]="state.sort" 
-    [navigable]="isProcessGridExpand"
-    [selectable]="true"
+    [navigable]="isProcessGridExpand" 
     [filter]="state.filter"
     [data]="pharmacyClaimsProcessGridLists$ | async"
     (dataStateChange)="dataStateChange($event)" 
@@ -93,6 +92,16 @@
      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="paymentMethodCode" title="Payment Method" [width]="175"> 
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-dropdownlist 
+        textField="lovDesc" 
+        valueField="lovCode"
+        [data]="paymentMethodType$ | async" 
+        [value]="paymentMethodFilter" 
+        [valuePrimitive]="true"
+        (valueChange)="dropdownFilterChange('paymentMethodCode',$event, filterService)">
+        </kendo-dropdownlist>
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
              <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
@@ -134,19 +143,9 @@
          </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="paymentType" title="Payment Type" [width]="150"> 
-      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
-             <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-             <kendo-filter-eq-operator></kendo-filter-eq-operator>
-             <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-             <kendo-filter-contains-operator></kendo-filter-contains-operator>
-         </kendo-grid-string-filter-menu>
-     </ng-template>
-    </kendo-grid-column>
       <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="150"> 
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> {{dataItem.amountPaid | currency}}</span>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid | kendoNumber: 'n2'}}</span>
         </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq">
@@ -188,8 +187,17 @@
          </kendo-grid-string-filter-menu>
      </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="170" [filterable]="false"> 
-      <!--add filter-->
+    <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="170"> 
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-dropdownlist
+          textField="lovDesc" 
+          valueField="lovCode" 
+          [data]="paymentStatus$ | async" 
+          [value]="paymentStatusFilter" 
+          [valuePrimitive]="true"
+          (valueChange)="dropdownFilterChange('paymentStatus',$event, filterService)">
+        </kendo-dropdownlist>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="creationTime" title="Entry Date" [width]="135"> 
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -227,7 +235,7 @@
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem,dataItem.paymentRequestId)">
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
               </button>
@@ -290,9 +298,9 @@
   <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="claimsProcessMore"
     class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-    <div class="btn-inner-block" (click)="onClickOpenAddEditClaimsFromModal(addEditClaimsDialog)">
+    <div class="btn-inner-block" (click)="onClickOpenAddEditClaimsFromModal(addEditClaimsDialog,'')">
       <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span>
-      New Claims
+      New Claim
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
@@ -329,7 +337,6 @@
   [searchDrugsLoader$]="searchDrugsLoader$"
   (addPharmacyClaimEvent)="addPharmacyClaim($event)"
   (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
-  (getPharmacyClaimEvent)="getPharmacyClaim($event)"
   (searchPharmaciesEvent)="searchPharmacies($event)"
   (searchClientsEvent)="searchClients($event)"
   (searchDrugEvent)="searchDrug($event)"
@@ -339,7 +346,7 @@
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  Recent Claims for Donna Summer </h4></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR Donna Summer </h4></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-pharmacy-claims-recent-claims-list
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-pharmacy-claims-recent-claims-list>

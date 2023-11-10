@@ -8,11 +8,11 @@
       aria-label="edit"
       title="Edit List Item"
       (click)="onEditListItemsDetailClicked()"
-      *ngIf="selectedVendor$ | async as item"
+      *ngIf="selectedMasterDetail$ | async as item"
     ></button>
     <table
       class="info-table-custom nobg-left"
-      *ngIf="selectedVendor$ | async as item"
+      *ngIf="selectedMasterDetail$ | async as item"
     >
       <caption hidden>
         Vendor Info
@@ -63,7 +63,7 @@
       <tbody *ngIf="subTypeCode === subTypeConst.Drug">
         <tr>
           <td>Manufacturer</td>
-          <td>{{ vendorData.manufacturer }}</td>
+          <td>{{ vendorData.manufacturerName }}</td>
         </tr>
         <tr>
           <td>Drug Name</td>
@@ -97,87 +97,99 @@
       <tbody *ngIf="subTypeCode === subTypeConst.InsuranceVendor">
         <tr>
           <td>Vendor Name</td>
-          <td>Nice VEndor</td>
+          <td>{{vendorData.vendorName}}</td>
         </tr>
         <tr>
           <td>TIN</td>
-          <td>XXXXXXXX</td>
+          <td>{{vendorData.tin}}</td>
           <td></td>
         </tr>
 
         <tr>
           <td>Accepts Combined Payments</td>
-          <td>Nice Brand</td>
+          <td>{{vendorData.acceptsCombinedPaymentsFlag}}</td>
         </tr>
         <tr>
           <td>Accepts Reports</td>
-          <td>XXXXXXXX</td>
+          <td>{{vendorData.acceptsReportsFlag}}</td>
         </tr>
         <tr>
           <td>Payment Method</td>
-          <td>XXXXXXXX</td>
+          <td>{{vendorData.paymentMethodCode}}</td>
         </tr>
         <tr>
           <td>Payment Run Date</td>
-          <td>dd/mm/yyyy</td>
+          <td>{{vendorData.paymentRunDateMonthly}}</td>
         </tr>
         <tr>
           <td>Name on Check</td>
-          <td>Yes</td>
+          <td>{{vendorData.nameOnCheck}}</td>
         </tr>
         <tr>
           <td>Name on Envelope</td>
-          <td>Abc street</td>
+          <td>{{vendorData.nameOnEnvelope}}</td>
         </tr>
         <tr>
           <td>Billing Email</td>
-          <td>Abc street</td>
+          <td>{{vendorData.email}}</td>
         </tr>
         <tr>
           <td>Billing Address</td>
-          <td>Abc street</td>
+          <td>{{vendorData.address1}}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.InsurancePlan">
         <tr>
           <td>Insurance Provider</td>
-          <td>Nice Manufacturer</td>
+          <td>{{vendorData.providerName}}</td>
         </tr>
         <tr>
           <td>Insurance Plan Name</td>
-          <td>Nice Drug</td>
+          <td>{{vendorData.insurancePlanName}}</td>
         </tr>
         <tr>
           <td>Health Insurance Type</td>
-          <td>Nice Brand</td>
+          <td>{{vendorData.healthInsuranceTypeCode}}</td>
         </tr>
         <tr>
           <td>Can pay for medication</td>
-          <td>XXXXXXXX</td>
+          <td>{{vendorData.canPayForMedicationFlag}}</td>
         </tr>
         <tr>
           <td>Is a dental plan</td>
-          <td>XXXXXXXX</td>
+          <td>{{vendorData.dentalPlanFlag}}</td>
         </tr>
         <tr>
           <td>Start Date</td>
-          <td>abc@gmail.com</td>
+          <td>{{vendorData.startDate | date : 'MM/dd/YYYY'}}</td>
         </tr>
         <tr>
           <td>Term Date</td>
-          <td>Yes</td>
+          <td>{{vendorData.termDate | date : 'MM/dd/YYYY'}}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.InsuranceProvider">
         <tr>
           <td>Provider Name</td>
-          <td>Nice Manufacturer</td>
+          <td>{{vendorData.vendorName}}</td>
+        </tr>
+        <tr>
+          <td>Tin</td>
+          <td>{{vendorData.tin}}</td>
+        </tr>
+        <tr>
+          <td>NPI </td>
+          <td>{{vendorData.npi}}</td>
+        </tr>
+        <tr>
+          <td>Preferred Pharmacy</td>
+          <td>{{vendorData.preferredFlag}}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
-        <tr hidden>
+        <tr>
           <td>Pharmacy</td>
-          <td>Very nice pharmacy</td>
+          <td>vendorData.vendorName</td>
         </tr>
       </tbody>
     </table>

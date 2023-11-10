@@ -24,7 +24,7 @@ export class PendingApprovalGeneralFacade {
   private invoiceDataSubject = new Subject<any>();
   private serviceDataSubject = new Subject<any>();
   private isInvoiceLoadingSubject = new Subject<boolean>();
-  private selectedVendorSubject = new Subject<any>();
+  private selectedMasterDetailSubject = new Subject<any>();
   private submitGenerealRequestSubject = new Subject<any>();
 
   /** Public properties **/
@@ -34,7 +34,7 @@ export class PendingApprovalGeneralFacade {
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
   submitGenerealRequest$ = this.submitGenerealRequestSubject.asObservable();
-  selectedVendor$ = this.selectedVendorSubject.asObservable();
+  selectedMasterDetail$ = this.selectedMasterDetailSubject.asObservable();
 
 
 
@@ -89,15 +89,8 @@ export class PendingApprovalGeneralFacade {
     });
   }
 
-  loadExceptionCard(data:any): void {
-    this.pendingApprovalGeneralService.loadExceptionCard(data).subscribe({
-      next: (dataResponse) => {
-        this.approvalsGeneralExceptionCardSubject.next(dataResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
+  loadExceptionCard(data:any) {
+    return this.pendingApprovalGeneralService.loadExceptionCard(data);
   }
 
   /** Public methods **/
@@ -143,11 +136,11 @@ export class PendingApprovalGeneralFacade {
       }
     );
   }
-  getVendorDetails(vendorId: string,subTypeCode: string) {
+  getMasterDetails(masterDetailId: string,subTypeCode: string) {
     this.showLoader();
-    this.pendingApprovalGeneralService.getVendorDetails(vendorId, subTypeCode).subscribe({
+    this.pendingApprovalGeneralService.getMasterDetails(masterDetailId, subTypeCode).subscribe({
       next: (vendorDetail: any) => {    
-        this.selectedVendorSubject.next(vendorDetail);
+        this.selectedMasterDetailSubject.next(vendorDetail);
         this.hideLoader();
       },
       error: (err) => {

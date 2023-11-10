@@ -17,6 +17,9 @@
  (deletePaymentEvent)="deletePayment($event)"
  (onProviderNameClickEvent)="onProviderNameClick($event)"
  [paymentByBatchGridLoader$]="paymentByBatchGridLoader$"
+ (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+ [letterContentList$]="letterContentList$"
+ [letterContentLoader$]="letterContentLoader$"
  ></cms-financial-premiums-batches-log-lists>
 
  <ng-template #providerDetailsTemplate>

@@ -36,6 +36,7 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
   @Input() sort: any;
   @Input() batchItemsGridLists$: any;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -172,19 +173,6 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
   backToBatchLog(event : any){  
     this.route.navigate(['/financial-management/pharmacy-claims/batch'] );
   }
-
-
-  onViewProviderDetailClicked(  template: TemplateRef<unknown>): void {   
-    this.providerDetailsDialog = this.dialogService.open({
-      content: template,
-      animation:{
-        direction: 'left',
-        type: 'slide',  
-      }, 
-      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
-    });
-  }
-
   onCloseViewProviderDetailClicked(result: any){
     if(result){
       this.providerDetailsDialog.close();
@@ -203,5 +191,8 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
     if(result){
       this.paymentDetailsDialog.close();
     }
+  }
+  onViewProviderDetailClicked(): void {   
+    this.onProviderNameClickEvent.emit();
   }
 }

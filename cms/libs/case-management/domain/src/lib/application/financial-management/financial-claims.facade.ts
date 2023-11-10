@@ -703,8 +703,8 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData,claimsType);
 }
 
-viewAdviceLetterData(batchId:any,printAdviceLetterData: any, claimsType:any) {
-  return this.financialClaimsDataService.viewPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
+viewAdviceLetterData(printAdviceLetterData: any, claimsType:any) {
+  return this.financialClaimsDataService.viewPrintAdviceLetterData(printAdviceLetterData,claimsType);
 }
 loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string,clientCaseEligibilityId : string){
   this.showLoader();

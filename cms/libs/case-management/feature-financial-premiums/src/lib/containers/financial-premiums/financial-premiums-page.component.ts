@@ -59,15 +59,19 @@ export class FinancialPremiumsPageComponent implements OnInit {
   financialPremiumPaymentLoader$ = this.financialPremiumsFacade.financialPremiumPaymentLoader$;
   insurancePremium$ = this.financialPremiumsFacade.insurancePremium$;
   premiumType: any;
-  vendorProfile$ = this.financialVendorFacade.providePanelSubject$
-  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
+  letterContentList$ = this.financialPremiumsFacade.letterContentList$;
+  letterContentLoader$ = this.financialPremiumsFacade.letterContentLoader$;
   ddlStates$ = this.contactFacade.ddlStates$;
-  paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
   providerDetailsDialog: any
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
+  tab = 1;
+
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
     private readonly router: Router,
@@ -85,6 +89,10 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.activatedRoute.params.subscribe(
       (data) => (this.premiumType = data['type'])
     );
+    this.activatedRoute.queryParams.subscribe(
+      (data) => (this.tab = +(data['tab'] ?? 1))
+    );
+    this.tab = this.financialPremiumsFacade.selectedClaimsTab;
     this.addNavigationSubscription();
   }
   private addNavigationSubscription() {
@@ -110,6 +118,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
   }
   loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
+    this.financialPremiumsFacade.selectedClaimsTab = 1;
+    this.tab = this.financialPremiumsFacade.selectedClaimsTab;
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       pagesize: gridDataRefinerValue.pagesize,
@@ -127,6 +137,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
   }
 
   loadFinancialPremiumsBatchListGrid(data: GridFilterParam) {
+    this.financialPremiumsFacade.selectedClaimsTab = 2;
+    this.tab = this.financialPremiumsFacade.selectedClaimsTab;
     this.financialPremiumsFacade.loadFinancialPremiumsBatchListGrid(
       data,
       this.premiumType
@@ -134,6 +146,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
   }
 
   loadFinancialPremiumsAllPaymentsListGrid(data: GridFilterParam) {
+    this.financialPremiumsFacade.selectedClaimsTab = 3;
+    this.tab = this.financialPremiumsFacade.selectedClaimsTab;
     this.dataExportParameters = data
     this.financialPremiumsFacade.loadFinancialPremiumsAllPaymentsListGrid(data, this.premiumType);
 
@@ -225,4 +239,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
     }
   }
 
+  loadEachLetterTemplate(event:any){
+    this.financialPremiumsFacade.loadEachLetterTemplate(this.premiumType, event);  
+  }
 }

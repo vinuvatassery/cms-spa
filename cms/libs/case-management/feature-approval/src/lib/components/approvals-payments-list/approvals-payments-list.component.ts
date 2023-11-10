@@ -309,7 +309,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isApprovalPaymentsGridLoaderShow = false;
+    this.isApprovalPaymentsGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
@@ -341,17 +341,16 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
 
   onApprovalSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    this.showDateSearchWarning =
-      isDateSearch || this.selectedColumn === 'DateApprovalRequested';
-    searchValue = this.formatSearchValue(
-      searchValue,
-      this.showDateSearchWarning
-    );
+    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'DateApprovalRequested';
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.onChange(searchValue);
   }
 
   setGridValues(data: any) {
+    if (this.selectedColumn === 'DateApprovalRequested' && (!this.isValidDate(data) && data !== '')) {
+      return;
+    }
     this.filterData = {
       logic: 'and',
       filters: [
@@ -438,7 +437,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
         this.isApprovalPaymentsGridLoaderShow = false;
       }
     });
-    this.isApprovalPaymentsGridLoaderShow = false;
   }
 
   onDepositDetailClicked(template: TemplateRef<unknown>): void {
@@ -607,8 +605,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
         this.cd.detectChanges();
       }
     });
-    this.isApprovalPaymentsGridLoaderShow = false;
-    this.cd.detectChanges();
   }
 
   assignDataFromUpdatedResultToPagedResult(itemResponse: any) {

@@ -199,7 +199,7 @@
   <div class="flex-col mt-1">
     <button kendoButton [primary]="true" icon="add" aria-label="Drug"
       (click)="clickOpenAddEditFinancialDrugsDetails('Add New')">
-      {{hasCreateUpdatePermission == true ? 'add drug' : 'request drug'}}
+      drug
     </button>
   </div>
 </div>
@@ -221,6 +221,6 @@
 </kendo-dialog>
 <kendo-dialog *ngIf="isFinancialDrugsDeactivateShow" (close)="clickCloseDeactivateFinancialDrugs()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Deactivate contacts?</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> Deactivate Contacts?</kendo-dialog-titlebar>
   <cms-financial-drugs-deactivate> </cms-financial-drugs-deactivate>
 </kendo-dialog>

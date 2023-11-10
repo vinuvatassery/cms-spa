@@ -18,7 +18,7 @@ import { CompositeFilterDescriptor, State, } from '@progress/kendo-data-query';
 import { Subject, first, Subscription, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
-import { PaymentStatusCode } from 'libs/case-management/domain/src/lib/enums/payment-status-code.enum';
+import { BatchStatusCode, PaymentStatusCode } from 'libs/case-management/domain/src/lib/enums/payment-status-code.enum';
 import { PaymentBatchName } from '@cms/case-management/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -63,11 +63,21 @@ export class FinancialPremiumsBatchesLogListsComponent
   isBulkUnBatchOpened = false;
   @Input() unbatchPremiums$ :any
   @Input() unbatchEntireBatch$ :any
+  @Input() letterContentList$ :any;
+  @Input() letterContentLoader$ :any;
   @Input() paymentByBatchGridLoader$!: Observable<boolean>;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Output() loadTemplateEvent = new EventEmitter<any>();
   selected:any
   currentPrintAdviceLetterGridFilter: any;
   isPrintAdviceLetterClicked = false;
+  selectAll:boolean=false;
+  unCheckedPaymentRequest:any=[];
+  selectedDataIfSelectAllUnchecked:any=[];
+  currentGridFilter:any;
+  totalRecord:any;
+  noOfRecordToPrint:any = 0;
+  batchLogPrintAdviceLetterPagedList:any;
  
   public bulkMore = [
     {
@@ -92,13 +102,14 @@ export class FinancialPremiumsBatchesLogListsComponent
       text: 'Unbatch Entire Batch',
       icon: 'undo',
       click: (data: any): void => {
-        if (!this.isBulkUnBatchOpened) {
+        if (!this.isBulkUnBatchOpened && !this.disableBtnUnbatchEntireBatch) {
           this.isBulkUnBatchOpened = true;
           this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
         }
       },
     }
   ];
+  disableBtnUnbatchEntireBatch= true;
 
   public batchLogGridActions(dataItem:any){
    return [
@@ -108,13 +119,11 @@ export class FinancialPremiumsBatchesLogListsComponent
       icon: 'undo',
       disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {
-        if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
-        {
-        if (!this.isUnBatchPaymentPremiumsClosed) {
+        if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode) && !this.isUnBatchPaymentPremiumsClosed)
+      {
           this.isUnBatchPaymentPremiumsClosed = true;
           this.selected = data;
           this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
-        }
       }
       },
     },
@@ -168,7 +177,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       columnDesc: 'Pmt. Method',
     },
     {
-      columnCode: 'paymentStatusCode',
+      columnCode: 'paymentStatusCodeDesc',
       columnDesc: 'Pmt. Status',
     },
     {
@@ -189,7 +198,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     paymentRequestedDate: "Date Pmt. Requested",
     paymentSentDate: "Date Pmt. Sent",
     paymentMethodCode: "Pmt. Method",
-    paymentStatusCode: "Pmt. Status",
+    paymentStatusCodeDesc: "Pmt. Status",
     pca: "PCA",
     mailCode: "Mail Code"
   }
@@ -232,6 +241,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   sendReportDialog: any;
   selectedCount: number = 0;
   disablePrwButton:boolean= true;
+  batchLogListSubscription!: Subscription;
 
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,
@@ -245,6 +255,23 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.lovFacade.getYesOrNoLovs();
     this.loadYesOrNoLovs();
     this.addActionRespSubscription();
+    this.batchLogListItemsSubscription();
+    this.batchLogGridLists$.subscribe((data:GridDataResult) =>{
+        data.data.forEach(item =>{
+          if(!([BatchStatusCode.Paid, BatchStatusCode.PaymentRequested, BatchStatusCode.ManagerApproved].includes(item.batchStatusCode))){
+            this.disableBtnUnbatchEntireBatch = false
+          }
+        })
+    })
+  }
+  batchLogListItemsSubscription() {
+    this.batchLogListSubscription = this.batchLogGridLists$.subscribe((response:any) =>{
+      this.totalRecord = response?.acceptsReportsCount;
+      if(this.selectAll){
+      this.markAsChecked(response.data);
+      }
+      this.batchLogPrintAdviceLetterPagedList = response;
+    })
   }
   ngOnChanges(): void {
     this.state = {
@@ -255,6 +282,14 @@ export class FinancialPremiumsBatchesLogListsComponent
 
     this.loadBatchLogListGrid();
     this.unsubscribeFromActionResponse();
+  }
+
+  ngOnDestroy(): void {
+    this.batchLogListSubscription.unsubscribe();
+  }
+
+  setDisablePropertyOfBulkMore(dataItem : any){
+  return dataItem.text=='Unbatch Entire Batch' && this.disableBtnUnbatchEntireBatch
   }
 
   loadFinancialPremiumBatchInvoiceList(data: any) {
@@ -285,7 +320,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       filter: this.state?.['filter']?.['filters'] ?? [],
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
-    this.currentPrintAdviceLetterGridFilter = this.filter;
+    this.currentPrintAdviceLetterGridFilter = this.state?.['filter']?.['filters'] ?? [];
     this.gridDataHandle();
   }
 
@@ -485,10 +520,18 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   }
 
   onBulkOptionCancelClicked() {
+    this.selectAll = false;
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
     this.isSendReportOpened = false;
     this.selectedCount = 0;
+    this.noOfRecordToPrint = 0;
+    this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
+    this.markAsUnChecked(this.selectedDataIfSelectAllUnchecked);
+    this.selectedDataRows.PrintAdviceLetterSelected = [];
+    this.selectedDataRows.PrintAdviceLetterUnSelected = [];
+    this.unCheckedPaymentRequest=[];
+    this.selectedDataIfSelectAllUnchecked=[];
     this.loadBatchLogListGrid();
   }
 
@@ -738,7 +781,6 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
         if (exist === 0) {
           this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
         }
-
     }
   }
 
@@ -760,5 +802,79 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
 
   setNoOfRecordToBePrint(NoOfRecordToBePrint:any){
     this.selectedCount = NoOfRecordToBePrint;
+  }
+
+  selectionAllChange(){
+    this.unCheckedPaymentRequest=[];
+    this.selectedDataIfSelectAllUnchecked=[];
+    if(this.selectAll){
+      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.noOfRecordToPrint = this.totalRecord;
+      this.selectedCount = this.noOfRecordToPrint;
+    }
+    else{
+      this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.noOfRecordToPrint = 0;
+      this.selectedCount = this.noOfRecordToPrint
+    }
+    let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
+    this.disablePreviewButton(returnResult);
+  }
+
+  selectionChange(dataItem:any,selected:boolean){
+    if(!selected){
+      this.noOfRecordToPrint = this.noOfRecordToPrint - 1;
+      this.selectedCount = this.noOfRecordToPrint
+      this.unCheckedPaymentRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
+      if(!this.selectAll){
+      this.selectedDataIfSelectAllUnchecked = this.selectedDataIfSelectAllUnchecked.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
+
+      }
+    }
+    else{
+      this.noOfRecordToPrint = this.noOfRecordToPrint + 1;
+      this.selectedCount = this.noOfRecordToPrint
+      this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
+      if(!this.selectAll){
+      this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
+      }          
+    }
+    let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
+    this.disablePreviewButton(returnResult);
+  }
+
+  markAsUnChecked(data:any){
+    data.forEach((element:any) => {     
+      element.selected = false;    
+   });
+  }
+
+  markAsChecked(data:any){
+    data.forEach((element:any) => { 
+      if(this.selectAll){
+        element.selected = true; 
+      } 
+      else{
+        element.selected = false; 
+      }
+      if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
+        let itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
+          element.selected = false;    
+        }
+        let itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
+          element.selected = true;   
+        }
+      }
+    });
+  }
+
+  loadEachLetterTemplate(event:any){
+    this.loadTemplateEvent.emit(event);
   }
 }
