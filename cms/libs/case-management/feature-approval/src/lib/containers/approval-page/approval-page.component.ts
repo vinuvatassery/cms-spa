@@ -30,9 +30,11 @@ import {
   UserManagementFacade,
   UserDataService,
   UserDefaultRoles,
-  UserLevel
+  UserLevel,
+  LovFacade
 } from '@cms/system-config/domain';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -100,7 +102,10 @@ export class ApprovalPageComponent implements OnInit {
   selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
   clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
   ddlStates$ = this.contactFacade.ddlStates$;
-  healthCareForm!: FormGroup;
+  healthCareForm!: FormGroup;  
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -114,7 +119,10 @@ export class ApprovalPageComponent implements OnInit {
     private readonly cd: ChangeDetectorRef,
     private readonly financialVendorFacade: FinancialVendorFacade,
     private contactFacade: ContactFacade,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    public lovFacade: LovFacade,
+    private dialogService: DialogService,
+
   ) {}
   ngOnInit(): void {
     this.getUserRole();
@@ -275,4 +283,35 @@ export class ApprovalPageComponent implements OnInit {
     }
   }
 
+  onProviderNameClick(event: any) {
+    this.paymentRequestId = event;
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation: {
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  }
+
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
+  }
+
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanel(event);
+  }
+
+  updateProviderProfile(event: any) {
+    console.log(event);
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+
+  OnEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
+  }
 }

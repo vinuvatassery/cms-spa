@@ -15,11 +15,9 @@ import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { PanelBarCollapseEvent } from '@progress/kendo-angular-layout';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
-  PendingApprovalGeneralTypeCode,
-  PendingApprovalPaymentTypeCode,
+  PendingApprovalGeneralTypeCode
 } from '@cms/case-management/domain';
 import {
   UserDataService,
@@ -47,17 +45,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() approvalsGeneralLists$: any;
   @Input() clientsSubjects$: any;
   @Input() casereassignmentExpandedInfo$: any;
-  @Input() approvalsExceptionCard$: any;
-  @Input() invoiceData$: any;
-  @Input() isInvoiceLoading$: any;
   @Input() submitGenerealRequest$: any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
-  @Output() loadCasereassignmentExpanedInfoParentEvent =
-    new EventEmitter<any>();
-  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
+  @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
-
+  @Output() onVendorClickedEvent = new EventEmitter<any>();
   pendingApprovalGeneralTypeCode: any;
   public state!: State;
   sortColumn = 'batch';
@@ -322,13 +314,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   loadCasereassignmentExpanedInfoEvent(approvalId: any) {
     this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
   }
-  loadApprovalsExceptionCard($event: any) {
-    this.loadApprovalsExceptionCardEvent.emit($event);
-  }
-  loadApprovalsExceptionInvoice($event: any) {
-    this.loadApprovalsExceptionInvoiceEvent.emit($event);
-  }
-
+  
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
     let inValid = false;
 
@@ -631,5 +617,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
   submit(data: any) {
     this.submitGeneralRequestsEvent.emit(data);
+  }
+
+  onProviderNameClick(paymentRequestId: any) {
+    this.onVendorClickedEvent.emit(paymentRequestId);
   }
 }
