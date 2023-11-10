@@ -60,7 +60,21 @@
     [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
     (columnReorder)="onColumnReorder($event)"
     (filterChange)="filterChange($event)" [data]="financialPremiumsAllPaymentsGridLists$ | async">
-
+    <kendo-grid-column  *ngIf="isPrintAdviceLetterClicked" [sortable]="false" field="add" [width]="40"  class="text-center" 
+    [sticky]="true" [sortable]="false"  [columnMenu]="false"  >
+      <ng-template kendoGridHeaderTemplate let-dataItem >
+          <input kendoCheckBox
+              type="checkbox" 
+              name="selectAll"
+              [(ngModel)]="selectAll"
+              (change)="selectionAllChange()"/>
+      </ng-template> 
+      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
+          <input kendoCheckBox *ngIf="dataItem.acceptsReportsFlag === 'Y'"
+              type="checkbox"  [(ngModel)]="dataItem.selected" 
+              (change)="selectionChange(dataItem, dataItem.selected)"/>
+      </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column field="itemNumber" title="Item #" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -111,6 +125,10 @@
     </kendo-grid-column>
 
     <kendo-grid-column format="{0:c}" field="totalDue" title="Total Amount" [width]="160">
+      <ng-template kendoGridCellTemplate
+      let-dataItem>
+      <span class="tableamountview"> <strong>$</strong> {{dataItem.totalDue}}</span>
+    </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -270,15 +288,17 @@
 
 </div>
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="">0 claims(s) to be deleted</span>
+  <span *ngIf="previewText" class="">{{selectedCount}} premium(s) to be previewed</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
-    *ngIf="isRequestPaymentClicked || isSendReportOpened" (click)="onBulkOptionCancelClicked()"> Cancel </button>
+    *ngIf="isRequestPaymentClicked || isSendReportOpened || isPrintAdviceLetterClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
   <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked"
     (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
+    <button kendoButton [primary]="true" aria-label="Preview" class="" *ngIf="isPrintAdviceLetterClicked" 
+    [disabled]="selectedCount == 0" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
   <button kendoButton [primary]="true" aria-label="Send Report" class="" *ngIf="isSendReportOpened"
     (click)="onSendReportOpenClicked(sendReportDialogTemplate)"> Send Report </button>
   <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button"
-    [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isSendReportOpened"
+    [tabindex]="0" *ngIf="!isPrintAdviceLetterClicked"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
     <div class="btn-inner-block">
       Bulk
@@ -298,6 +318,19 @@
   </kendo-dialog-titlebar>
 
   <cms-financial-premiums-preview-payment-request></cms-financial-premiums-preview-payment-request>
+</ng-template>
+
+<ng-template #PrintAuthorizationDialogTemplate>
+  <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization(s)</kendo-dialog-titlebar>
+<cms-financial-premiums-print-authorization
+[printOption]="true"
+[items]="selectedAllPaymentsList"
+[premiumsType] ="premiumsType"
+(onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+[letterContentList$]="letterContentList$"
+[letterContentLoader$]="letterContentLoader$"
+(loadTemplateEvent)="loadEachLetterTemplate($event)">
+</cms-financial-premiums-print-authorization>
 </ng-template>
 
 <ng-template #sendReportDialogTemplate>

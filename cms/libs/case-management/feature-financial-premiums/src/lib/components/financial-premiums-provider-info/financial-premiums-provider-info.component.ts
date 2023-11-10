@@ -259,10 +259,12 @@ emailscount:number=0;
     return FinancialVendorTypeCode;
   }
 
-  onVendorProfileViewClicked() {
+  onVendorProfileViewClicked() {  
+      
     const query = {
       queryParams: {
-        v_id: this.vendorProfile.vendorId
+        v_id: this.vendorProfile.vendorId,
+        tab_code :FinancialVendorProviderTabCode.InsuranceVendors
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)
