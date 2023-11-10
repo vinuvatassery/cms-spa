@@ -31,7 +31,7 @@ export class FinancialVendorPageComponent implements OnInit {
   hasMedicalAndDentalCreateUpdatePermission = false;
 
   inputProviderTypeForClinic = '';
-  selectedClinicType: string = this.financeVendorTypeCodes.MedicalClinic;
+  selectedClinicType : string = this.financeVendorTypeCodes.MedicalClinic;
   hasinsuranceVendorCreateUpdatePermission: boolean = false;
   hasPharmacyCreateUpdatePermission: boolean = false;
   hasManufacturerCreateUpdatePermission: boolean = false;
