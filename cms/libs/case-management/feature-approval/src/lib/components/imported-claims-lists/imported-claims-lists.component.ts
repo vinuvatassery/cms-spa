@@ -134,7 +134,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     },
   ];
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router, private dialogService: DialogService,private readonly router: Router) {}
 
   ngOnInit(): void {
     this.loadImportedClaimsListGrid();
@@ -252,7 +252,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       }
     }); 
   }
+  onClientClicked(clientId: any) {
+    this.router.navigate([`/case-management/cases/case360/${clientId}`]);
 
+  }
   onSearchClientsDialogClicked(template: TemplateRef<unknown>): void {
     this.searchCaseDialog = this.dialogService.open({
       content: template,
