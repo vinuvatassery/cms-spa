@@ -363,9 +363,20 @@
     top: -80px !important;
   }
 }
+
+.add_refund_modal,
+.add_claims_modal{
+  .k-window-actions{
+    > .justify-content-between{
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+}
 }
 
 @media (max-width: $breakpoint-md) {
+
   .client-header-wrapper-stickey{
     position: unset;
   }
@@ -442,6 +453,28 @@
 }
 
 @media (max-width: $breakpoint-lg) {
+
+
+ 
+  .add_refund_modal,
+  .add_claims_modal{
+    .add_new_top_section{
+      .flex-col-6{
+        flex: 100%;
+      max-width: 100%;
+      }
+    }
+    .add_new_bottom_section,
+    .confirm-container{
+      > .flex-row{
+        > .flex-col-6{
+          flex: 100%;
+          max-width: 100%;
+        }
+      }
+    }
+  }
+
   .add-client-wrapper .add-client_right {
     .flex-row {
       .flex-col-4 {

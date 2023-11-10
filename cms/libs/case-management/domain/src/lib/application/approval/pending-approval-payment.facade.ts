@@ -66,7 +66,6 @@ export class PendingApprovalPaymentFacade {
   }
 
   getPendingApprovalPaymentGrid(gridSetupData: any, serviceSubType: string, level: number) {
-    this.showLoader();
     this.PendingApprovalPaymentService.getPendingApprovalPaymentGrid(gridSetupData ,serviceSubType, level).subscribe(
       {
         next: (dataResponse: any) => {
@@ -84,12 +83,10 @@ export class PendingApprovalPaymentFacade {
             sendBackCount:this.sendBackCount,
           };
             this.pendingApprovalGridSubject.next(gridViewData);
-            this.approverCount = this.sendBackCount = 0
-            this.hideLoader();
+            this.approverCount = this.sendBackCount = 0;
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         },
       }
     );
@@ -106,7 +103,7 @@ export class PendingApprovalPaymentFacade {
           this.pendingApprovalMainListSubject.next(gridView);
         },
         error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         },
       }
     );
@@ -138,7 +135,7 @@ export class PendingApprovalPaymentFacade {
           this.pendingApprovalBatchDetailPaymentsGridSubject.next(gridView);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
   }

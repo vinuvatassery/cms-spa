@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { GridFilterParam } from '../../entities/grid-filter-param';
 import { BatchPharmacyClaims } from '../../entities/financial-management/batch-pharmacy-claims';
 
@@ -14,9 +14,9 @@ export class FinancialPharmacyClaimsDataService {
     private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider
   ) {}
- 
 
- 
+
+
   loadPharmacyClaimsProcessListService(params: GridFilterParam) {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`, params);
   }
@@ -28,147 +28,27 @@ export class FinancialPharmacyClaimsDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/batch`, batchPharmacyClaims);
   }
 
-  loadPharmacyClaimsBatchListService( ) {
-    return of([
-      {
-        id:1,
-        item:1,
-        PharmacyName: 'XXXXXX XXXXXX',  
-        paymentMethod: 'paymentMethod',
-        clientName:'XXXXXX XXXXXX XXXX', 
-        nameOnPrimaryInsuranceCard:'address2', 
-        memberID:'XXXXXX', 
-        RXNumber:'XXXXXX', 
-        FillDate:'XX/XX/XXXX', 
-        ndcCode:'XXXXXX', 
-        brandName:'XXXXXX', 
-        drugName: 'XXXXXX',
-        paymentType: 'XXXXXX',
-        amountPaid: 'xx.xx',
-        rxQty: 'XX',
-        rxType: 'XX',
-        rxDaysSupply: 'XX',
-        indexCode: 'XXXX',
-        pcaCode: 'XXXX',
-        objectCode: 'XXXX',
-        paymentStatus: 'XXXX',
-        warrantNumber: 'XXXXXX',
-        entryDate: 'XX/XX/XXXX',
-        by: 'by',
-      },
-      
-    ]);
+  loadPharmacyClaimsBatchListService(params: GridFilterParam) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/batches`, params);
   }
-  loadPharmacyClaimsAllPaymentsListService( ) {
-    return of([
-      {
-        id:1,
-      Item: '123213',
-      batch:'23213123',
-      PharmacyName: 'XXXXXX',  
-      clientName:'XXXXXX', 
-      paymentMethod:'XXXXXX', 
-      nameOnPrimaryInsuranceCard:'address2', 
-      memberID:'XXXXXX', 
-      RXNumber:'XXXXXX', 
-      FillDate:'XX/XX/XXXX', 
-      ndcCode:'XXXXXX', 
-      brandName:'XXXXXX', 
-      drugName: 'XXXXXX',
-      paymentType: 'XXXXXX',
-      amountPaid: 'xx.xx',
-      rxQty: 'XX',
-      rxType: 'XX',
-      rxDaysSupply: 'XX',
-      indexCode: 'XXXX',
-      pcaCode: 'XXXX',
-      objectCode: 'XXXX',
-      paymentStatus: 'XXXX',
-      warrantNumber: 'XXXXXX',
-      entryDate: 'XX/XX/XXXX',
-      by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
-        by: 'by',
-      },
-    ]);
+  loadPharmacyClaimsAllPaymentsListService(params: GridFilterParam) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`, params);
   }
-
 
   loadBatchLogListService( ) {
     return of([
       {
         id:1,
         item:1,
-        PharmacyName: 'XXXXXX XXXXXX',  
+        PharmacyName: 'XXXXXX XXXXXX',
         paymentMethod: 'paymentMethod',
-        clientName:'XXXXXX XXXXXX', 
-        nameOnPrimaryInsuranceCard:'XXXXXXX XXXXXXXXXXX', 
-        memberID:'XXXXXX', 
-        RXNumber:'XXXXXX', 
-        FillDate:'XX/XX/XXXX', 
-        ndcCode:'XXXXXX', 
-        brandName:'XXXXXX', 
+        clientName:'XXXXXX XXXXXX',
+        nameOnPrimaryInsuranceCard:'XXXXXXX XXXXXXXXXXX',
+        memberID:'XXXXXX',
+        RXNumber:'XXXXXX',
+        FillDate:'XX/XX/XXXX',
+        ndcCode:'XXXXXX',
+        brandName:'XXXXXX',
         drugName: 'XXXXXX',
         paymentType: 'XXXXXX',
         amountPaid: 'xx.xx',
@@ -183,7 +63,7 @@ export class FinancialPharmacyClaimsDataService {
         entryDate: 'XX/XX/XXXX',
         by: 'by',
       },
-     
+
     ]);
   }
   loadBatchItemsListService(){
@@ -191,38 +71,38 @@ export class FinancialPharmacyClaimsDataService {
       {
         id:101,
         vendorName: 'vendorName',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
+        type:'address2',
+        clientName:'address2',
+        refundWarrant:'address2',
+        refundAmount:'address2',
+        depositDate:'address2',
+        depositMethod:'address2',
+        indexCode:'address2',
+        pca:'address2',
+        grant:'address2',
+        vp:'address2',
+        refundNote:'address2',
+        entryDate:'address2',
         by: 'by',
       },
       {
         id:102,
         vendorName: 'vendorName',
-        type:'address2', 
-        clientName:'address2', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'address2',  
+        type:'address2',
+        clientName:'address2',
+        refundWarrant:'address2',
+        refundAmount:'address2',
+        depositDate:'address2',
+        depositMethod:'address2',
+        indexCode:'address2',
+        pca:'address2',
+        grant:'address2',
+        vp:'address2',
+        refundNote:'address2',
+        entryDate:'address2',
         by: 'by',
       },
-     
+
     ]);
   }
 
@@ -231,15 +111,15 @@ export class FinancialPharmacyClaimsDataService {
       {
         id:1,
       pharmacyName: 'Vendor Name',
-      TIN:'XXXXXX', 
-      pmtMethod:'pmtMethod', 
-      datePmtReconciled:'XX/XX/XXXX', 
-      datePmtSend:'XX/XX/XXXX', 
-      pmtAmount:'XX.XX', 
-      note:'XXXX XXXXXX XXXXXX', 
+      TIN:'XXXXXX',
+      pmtMethod:'pmtMethod',
+      datePmtReconciled:'XX/XX/XXXX',
+      datePmtSend:'XX/XX/XXXX',
+      pmtAmount:'XX.XX',
+      note:'XXXX XXXXXX XXXXXX',
       },
-      
-     
+
+
     ]);
   }
   addPharmacyClaim(data: any) {

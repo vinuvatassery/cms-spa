@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain'; 
+import { FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-pharmacy-claims-page',
@@ -10,11 +10,11 @@ import { LovFacade } from '@cms/system-config/domain';
 export class PharmacyClaimsPageComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
- 
+
   paymentRequestType$ = this.lovFacade.paymentRequestType$;
   deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
   batchingClaims$ = this.financialPharmacyClaimsFacade.batchClaims$;
-  
+
    sortType = this.financialPharmacyClaimsFacade.sortType;
    pageSizes = this.financialPharmacyClaimsFacade.gridPageSizes;
    gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
@@ -25,15 +25,16 @@ export class PharmacyClaimsPageComponent {
    sortBatchList = this.financialPharmacyClaimsFacade.sortBatchList;
    sortValuePharmacyClaimsPayments = this.financialPharmacyClaimsFacade.sortValuePharmacyClaimsPayments;
    sortPaymentsList = this.financialPharmacyClaimsFacade.sortPaymentsList;
-   
+
 
    state!: State;
   pharmacyClaimsProcessGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessData$;
   pharmacyClaimsProcessLoader$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessLoader$;
   pharmacyClaimsBatchGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsBatchData$;
+  pharmacyClaimsBatchGridLoader$ = this.financialPharmacyClaimsFacade.pharmacyClaimsBatchLoader$;
 
   pharmacyClaimsAllPaymentsGridLists$ = this.financialPharmacyClaimsFacade.pharmacyClaimsAllPaymentsData$;
-
+  pharmacyClaimsAllPaymentsGridLoader$ = this.financialPharmacyClaimsFacade.pharmacyClaimsAllPaymentsLoader$;
 
   addPharmacyClaim$ = this.financialPharmacyClaimsFacade.addPharmacyClaim$;
   editPharmacyClaim$ = this.financialPharmacyClaimsFacade.editPharmacyClaim$;
@@ -46,7 +47,7 @@ export class PharmacyClaimsPageComponent {
   searchClientLoader$ = this.financialPharmacyClaimsFacade.searchClientLoader$;
   searchDrugsLoader$ = this.financialPharmacyClaimsFacade.searchDrugsLoader$;
 
-  constructor( 
+  constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade ,
     private lovFacade: LovFacade,
   ) {}
@@ -65,16 +66,13 @@ export class PharmacyClaimsPageComponent {
   loadPharmacyClaimsProcessListGrid(event: any) {
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsProcessListGrid(event);
   }
-  
 
   loadPharmacyClaimsBatchListGrid(event: any) {
- 
-    this.financialPharmacyClaimsFacade.loadPharmacyClaimsBatchListGrid();
+    this.financialPharmacyClaimsFacade.loadPharmacyClaimsBatchListGrid(event);
   }
 
-  loadPharmacyClaimsAllPaymentsListGrid(event: any) {
-  
-    this.financialPharmacyClaimsFacade.loadPharmacyClaimsAllPaymentsListGrid();
+  loadPharmacyClaimsAllPaymentsListGrid(params: GridFilterParam) {
+    this.financialPharmacyClaimsFacade.loadPharmacyClaimsAllPaymentsListGrid(params);
   }
 
   addPharmacyClaim(data: any) {
@@ -102,6 +100,13 @@ export class PharmacyClaimsPageComponent {
 
   onExportClaimsInProcess(event: any){
     this.financialPharmacyClaimsFacade.exportPharmacyClaimsProcessListGrid(event);
+  }
+
+  onExportClaimsInBatch(event: any){
+    this.financialPharmacyClaimsFacade.exportPharmacyClaimsBatchListGrid(event);
+  }
+
+  onExportAllPayments(event: any){
   }
 
   onbatchClaimsClicked(event:any){

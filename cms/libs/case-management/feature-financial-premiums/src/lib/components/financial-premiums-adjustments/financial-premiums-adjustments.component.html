@@ -21,7 +21,7 @@
          </kendo-grid-column>
       <kendo-grid-column field="adjustmentAmount" title="Amount" [width]="60"> 
         <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"> <strong></strong> {{dataItem.adjustmentAmount | kendoNumber : "c"}}</span>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.adjustmentAmount}}</span>
       </ng-template> 
       </kendo-grid-column>
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
