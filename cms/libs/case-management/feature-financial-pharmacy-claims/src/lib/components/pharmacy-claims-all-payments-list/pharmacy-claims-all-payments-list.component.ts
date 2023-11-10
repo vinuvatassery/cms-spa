@@ -1,6 +1,7 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -45,8 +46,11 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   @Input() pharmacyClaimsAllPaymentsGridLists$: any;
   @Input() pharmacyClaimsAllPaymentsGridLoader$!: Observable<boolean>;
   @Input() exportLoader$!: Observable<boolean>;
+  @Input() letterContentList$ :any;
+  @Input() letterContentLoader$ :any;
   @Output() exportGridEvent$ = new EventEmitter<any>();
   @Output() loadPharmacyClaimsAllPaymentsListEvent = new EventEmitter<any>();
+  @Output() loadTemplateEvent = new EventEmitter<any>();
   public state!: State;
   columnsReordered = false;
   filteredBy = '';
@@ -84,6 +88,20 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  paymentMethodFilter = '';
  paymentTypeFilter = '';
  paymentStatusFilter = '';
+ selectAll:boolean=false;
+ unCheckedPaymentRequest:any=[];
+ selectedDataIfSelectAllUnchecked:any=[];
+ financialClaimsAllPaymentsGridLists: any = [];
+ currentPageRecords: any = [];
+ selectedAllPaymentsList!: any;
+ isPageCountChanged: boolean = false;
+ isPageChanged: boolean = false;
+ unCheckedProcessRequest:any=[];
+ checkedAndUncheckedRecordsFromSelectAll:any=[];
+ recordCountWhenSelectallClicked: number = 0;
+ totalGridRecordsCount: number = 0;
+ sendReportCount: number = 0;
+ 
  
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
@@ -152,17 +170,6 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Request Payments',
-      icon: 'local_atm',
-      click: (data: any): void => {
-      this.isRequestPaymentClicked = true;
-      this.isPrintAuthorizationClicked = false;
-        
-      },  
-    },
-    
-    {
-      buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
       icon: 'edit',
       click: (data: any): void => {
@@ -172,7 +179,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Authorizations',
+      text: 'Print Authorization(s)',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
@@ -184,7 +191,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   
   constructor(private route: Router, 
     private dialogService: DialogService,
-    private readonly lovFacade: LovFacade) {}
+    private readonly lovFacade: LovFacade,
+    private readonly cdr: ChangeDetectorRef,) {}
 
   ngOnInit(): void {
     this.addSearchSubjectSubscription();
@@ -516,5 +524,127 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+  }
+
+  selectionChange(dataItem:any, selected:boolean){
+    if(!selected){
+      this.onRecordSelectionChecked(dataItem);
+    }
+    else{
+      this.onRecordSelectionUnChecked(dataItem);
+    }
+      this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
+      'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
+      'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'};
+    if(this.selectAll){
+      if(this.unCheckedProcessRequest?.length > 0){
+        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
+      }else{
+      this.recordCountWhenSelectallClicked = selected ? this.recordCountWhenSelectallClicked + 1 : this.recordCountWhenSelectallClicked - 1;
+      this.sendReportCount = this.recordCountWhenSelectallClicked;
+      }
+    }else{
+      this.sendReportCount = this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.filter((item: any) => item.selected).length;
+   }
+    this.cdr.detectChanges();
+}
+
+  onRecordSelectionUnChecked(dataItem: any) {
+    this.unCheckedProcessRequest = this.unCheckedProcessRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
+      this.currentPageRecords?.forEach((element: any) => {
+        if (element.paymentRequestId === dataItem.paymentRequestId) {
+          element.selected = true;
+        }
+      });
+      const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+      if (exist === 0) {
+        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true, 'batchId': dataItem.batchId });
+      }else{
+        const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+        if (recordIndex !== -1) {
+          this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+        }
+      }
+  }
+
+  onRecordSelectionChecked(dataItem: any) {
+    this.unCheckedProcessRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
+        this.currentPageRecords?.forEach((element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        });
+        const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+        if (exist === 0) {
+          this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': false, 'batchId': dataItem.batchId });
+        }else{
+          const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+          if (recordIndex !== -1) {
+            this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+          }
+        }
+  }
+
+  selectionAllChange(){
+    this.unCheckedProcessRequest=[];
+    this.checkedAndUncheckedRecordsFromSelectAll=[];
+    if(this.selectAll){
+      this.markAsChecked(this.financialClaimsAllPaymentsGridLists);
+    }
+    else{
+      this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists);
+    }
+    this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
+    'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'};
+    this.cdr.detectChanges();
+    if(this.selectAll){
+      if(this.unCheckedProcessRequest?.length > 0){
+        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
+      }else{
+        this.sendReportCount = this.totalGridRecordsCount;
+      }
+    }else{
+    this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+  }
+  }
+
+  markAsChecked(data:any){
+    data.forEach((element:any) => {
+      if(this.selectAll){
+        element.selected = true;
+      }
+      else{
+        element.selected = false;
+      }
+      if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
+        const itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
+          element.selected = false;
+        }
+        const itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
+          element.selected = true;
+        }
+      }
+
+    });
+
+  }
+
+  markAsUnChecked(data:any){
+    data.forEach((element:any) => {
+      element.selected = false;
+  });
+  }
+
+  getSelectedReportCount(selectedSendReportList : []){
+    this.sendReportCount = selectedSendReportList.length;
+  }
+
+    loadEachLetterTemplate(event:any){
+      this.loadTemplateEvent.emit(event);
   }
 }

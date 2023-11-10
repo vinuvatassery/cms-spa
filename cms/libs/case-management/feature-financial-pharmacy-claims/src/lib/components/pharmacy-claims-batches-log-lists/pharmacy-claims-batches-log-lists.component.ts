@@ -18,7 +18,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
@@ -40,7 +40,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
   isRequestPaymentClicked = false;
-  isPrintAuthorizationClicked = false;
+  isPrintVisaAuthorizationClicked = false;
   isUnBatchClaimsClosed = false;
   isDeleteClaimClosed = false;
   reverseClaimsDialogClosed = false;
@@ -50,21 +50,10 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   printAuthorizationDialog: any;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
-reverseClaimsDialog: any;
+  reverseClaimsDialog: any;
   addClientRecentClaimsDialog: any;
   addEditClaimsFormDialog: any;
   public bulkMore = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Request Payments',
-      icon: 'local_atm',
-      click: (data: any): void => {
-      this.isRequestPaymentClicked = true;
-      this.isPrintAuthorizationClicked = false;
-        
-      },  
-    },
-    
     {
       buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',
@@ -76,11 +65,11 @@ reverseClaimsDialog: any;
 
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Authorizations',
+      text: 'Print Visa Authorizations',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
-        this.isPrintAuthorizationClicked = true;
+        this.isPrintVisaAuthorizationClicked = true;
           
         },
     },
@@ -144,7 +133,12 @@ reverseClaimsDialog: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
+  @Input() batchId: any;
+  @Input() claimsType: any;
+  @Input() letterContentList$ :any;
+  @Input() letterContentLoader$ :any;
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
+  @Output() loadTemplateEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
@@ -160,6 +154,21 @@ reverseClaimsDialog: any;
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  batchLogGridLists!: any;
+  selectAll:boolean=false;
+  unCheckedPaymentRequest:any=[];
+  selectedDataIfSelectAllUnchecked:any=[];
+  noOfRecordToPrint:any = 0;
+  totalRecord:any;
+  batchLogPrintAdviceLetterPagedList:any;
+  isEdit!: boolean;
+  paymentRequestId!: string;
+  selectedCount = 0;
+  selected: any;
+  selectedDataRows: any;
+  disablePrwButton = true;
+  currentPrintAdviceLetterGridFilter: any;
+  batchLogListItemsSubscription!:Subscription;
     
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService ) {}
@@ -303,10 +312,13 @@ reverseClaimsDialog: any;
 
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
-    this.isPrintAuthorizationClicked = false;
+    this.isPrintVisaAuthorizationClicked = false;
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.selectedDataRows.currentPrintAdviceLetterGridFilter = JSON.stringify(
+      this.currentPrintAdviceLetterGridFilter
+    );
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-96full pharmacy_print_auth',
@@ -411,5 +423,130 @@ reverseClaimsDialog: any;
       this.isAddEditClaimMoreClose = false;
       this.addEditClaimsFormDialog.close();
     }
+  }
+
+  selectionAllChange(){
+    this.unCheckedPaymentRequest=[];
+    this.selectedDataIfSelectAllUnchecked=[];
+    if(this.selectAll){
+      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList);
+      this.noOfRecordToPrint = this.totalRecord;
+      this.selectedCount = this.noOfRecordToPrint;
+    }
+    else{
+      this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList);
+      this.noOfRecordToPrint = 0;
+      this.selectedCount = this.noOfRecordToPrint
+    }
+    let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
+    this.disablePreviewButton(returnResult);
+  }
+
+  markAsUnChecked(data:any){
+    data.forEach((element:any) => {
+      element.selected = false;
+  });
+  }
+  markAsChecked(data:any){
+    data.forEach((element:any) => {
+      if(this.selectAll){
+        element.selected = true;
+      }
+      else{
+        element.selected = false;
+      }
+      if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
+        let itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
+          element.selected = false;
+        }
+        let itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
+          element.selected = true;
+        }
+      }
+
+    });
+
+  }
+  selectionChange(dataItem:any,selected:boolean){
+    if(!selected){
+      this.noOfRecordToPrint = this.noOfRecordToPrint - 1;
+      this.selectedCount = this.noOfRecordToPrint
+      this.unCheckedPaymentRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
+      if(!this.selectAll){
+      this.selectedDataIfSelectAllUnchecked = this.selectedDataIfSelectAllUnchecked.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
+
+      }
+    }
+    else{
+      this.noOfRecordToPrint = this.noOfRecordToPrint + 1;
+      this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
+      if(!this.selectAll){
+      this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
+      }
+    }
+    let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
+    this.disablePreviewButton(returnResult);
+  }
+
+  disablePreviewButton(result: any) {
+    this.selectedDataRows = result;
+    this.selectedDataRows.batchId = this.batchId;
+    if (result.selectAll) {
+      this.disablePrwButton = false;
+    } else if (result.PrintAdviceLetterSelected.length > 0) {
+      this.disablePrwButton = false;
+    } else {
+      this.disablePrwButton = true;
+    }
+  }
+
+  selectUnSelectPayment(dataItem: any) {
+    if (!dataItem.selected) {
+      const exist = this.selectedDataRows.PrintAdviceLetterUnSelected.filter(
+        (x: any) => x.vendorAddressId === dataItem.vendorAddressId
+      ).length;
+      if (exist === 0) {
+        this.selectedDataRows.PrintAdviceLetterUnSelected.push({
+          paymentRequestId: dataItem.paymentRequestId,
+          vendorAddressId: dataItem.vendorAddressId,
+          selected: true,
+        });
+      }
+      this.selectedDataRows?.PrintAdviceLetterSelected?.forEach(
+        (element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        }
+      );
+    } else {
+      this.selectedDataRows.PrintAdviceLetterUnSelected.forEach(
+        (element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        }
+      );
+      const exist = this.selectedDataRows.PrintAdviceLetterSelected.filter(
+        (x: any) => x.vendorAddressId === dataItem.vendorAddressId
+      ).length;
+      if (exist === 0) {
+        this.selectedDataRows.PrintAdviceLetterSelected.push({
+          paymentRequestId: dataItem.paymentRequestId,
+          vendorAddressId: dataItem.vendorAddressId,
+          selected: true,
+        });
+      }
+    }
+   }
+
+   loadEachLetterTemplate(event:any){
+    this.loadTemplateEvent.emit(event);
   }
 }

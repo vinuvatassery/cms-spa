@@ -63,7 +63,7 @@ export class FinancialPharmacyClaimsDataService {
         entryDate: 'XX/XX/XXXX',
         by: 'by',
       },
-
+      
     ]);
   }
   loadBatchItemsListService(){
@@ -150,5 +150,24 @@ export class FinancialPharmacyClaimsDataService {
   searchDrug(searchText: string) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/drugs/ndcCode=${searchText}`);
+  }
+
+  loadEachLetterTemplate(templateParams:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/drugs/print-advice-letter`,templateParams);
+  }
+
+  getPrintAdviceLetterData(selectedProviders: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/print-advice-letter-summary`,selectedProviders);
+  }
+
+  viewPrintAdviceLetterData(printAdviceLetterData: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/payments/download-advice-letter`, printAdviceLetterData,
+      { responseType: 'blob' }
+    );
+  }
+
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/payments/all/reconcile-payments`,reconcileData);
   }
 }

@@ -19,6 +19,7 @@ import { BatchPharmacyClaims } from '../../entities/financial-management/batch-p
 import { Vendor } from '../../entities/vendor';
 import { Client } from '../../entities/client';
 import { PharmacyClaims } from '../../entities/financial-management/pharmacy-claim';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsFacade {
@@ -133,6 +134,12 @@ export class FinancialPharmacyClaimsFacade {
 
   private searchDrugsLoaderDataSubject = new Subject<any>();
   searchDrugsLoader$ = this.searchDrugsLoaderDataSubject.asObservable();
+
+  private letterContentSubject = new Subject<any>();
+  letterContentList$ = this.letterContentSubject.asObservable();
+
+  private letterContentLoaderSubject = new Subject<any>();
+  letterContentLoader$ = this.letterContentLoaderSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -427,5 +434,29 @@ export class FinancialPharmacyClaimsFacade {
     });
 }
 
+loadEachLetterTemplate(templateParams:any){
+  this.letterContentLoaderSubject.next(true);
+  this.financialPharmacyClaimsDataService.loadEachLetterTemplate(templateParams).subscribe({
+    next: (dataResponse:any) => {
+      this.letterContentSubject.next(dataResponse);
+      this.letterContentLoaderSubject.next(false);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+      this.letterContentLoaderSubject.next(false);
+    },
+  });
+}
 
+loadPrintAdviceLetterData(printAdviceLetterData: any) {
+  return this.financialPharmacyClaimsDataService.getPrintAdviceLetterData(printAdviceLetterData);
+}
+
+viewAdviceLetterData(printAdviceLetterData: any) {
+  return this.financialPharmacyClaimsDataService.viewPrintAdviceLetterData(printAdviceLetterData);
+}
+
+reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any) {
+  return this.financialPharmacyClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData);
+}
 }

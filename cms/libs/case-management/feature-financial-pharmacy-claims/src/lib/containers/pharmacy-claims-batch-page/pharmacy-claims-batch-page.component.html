@@ -1,7 +1,11 @@
 
  <cms-pharmacy-claims-batches-log-lists [batchLogGridLists$]="batchLogGridLists$"
+ [batchId]="batchId"
  [pageSizes]="pageSizes" [sortValue]="sortValue"
  [sortType]="sortType" [sort]="sort" 
- (loadBatchLogListEvent)="loadBatchLogListGrid($event)"></cms-pharmacy-claims-batches-log-lists>
+ (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
+ (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+ [letterContentList$]="letterContentList$"      
+ [letterContentLoader$]="letterContentLoader$"></cms-pharmacy-claims-batches-log-lists>
 
  
