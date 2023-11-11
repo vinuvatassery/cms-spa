@@ -30,9 +30,9 @@ export class FinancialVendorDataService {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors`, VendorPageAndSortedRequest);
   }
 
-  getVendorDetails(vendorId: string) {
+  getVendorDetails(vendorId: string, isActive: boolean) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/${vendorId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/vendorDetail?vendorId=${vendorId}&isActive=${isActive}`
     );
   }
   searchInsurnaceVendor(searchText: string) {
