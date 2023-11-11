@@ -31,7 +31,7 @@
                 [toggleable]="true"
                 [selected]="item.batchStatus == approveStatus"
                 aria-label="Approve"
-                (selectedChange)="onBatchApproveClicked(item, index)"
+                (selectedChange)="onBatchApproveClicked(item)"
               >
                 Approve
               </button>
@@ -41,7 +41,7 @@
                 [toggleable]="true"
                 [selected]="item.batchStatus == 'SEND_BACK'"
                 aria-label="Send Back"
-                (selectedChange)="onBatchSendbackClicked(item, index)"
+                (selectedChange)="onBatchSendbackClicked(item)"
               >
                 Send Back
               </button>
@@ -81,7 +81,7 @@
               [columnMenu]="{ filter: true }"
               [sort]="state.sort"
               (dataStateChange)="dataStateChange($event)" 
-              [data]="batchDetailPaymentsList$ | async"
+              [data]="batchDetailPaymentsList"
               (filterChange)="filterChange($event)"
               [filter]="state.filter"
             >
@@ -112,10 +112,10 @@
                   <button kendoButton (selectedChange)="
                     onPaymentSendbackClicked(
                       $event,
-                      dataItem,
-                      rowIndex
+                      dataItem
                     )
                   "
+                  [selected]="dataItem.isSendBack"
                   aria-label="Send Back"
                   id="sendback{{ rowIndex }}"
                   [toggleable]="true"
