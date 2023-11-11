@@ -12,10 +12,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
-  SelectableSettings,
-  SelectableMode,
-} from "@progress/kendo-angular-grid";
-import {
   CompositeFilterDescriptor,
   State,
   filterBy
@@ -23,7 +19,6 @@ import {
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DrugsDataService } from '../../../../../domain/src/lib/infrastructure/financial-management/drugs.data.service';
-import { DrugDataService } from '../../../../../domain/src/lib/infrastructure/drug.data.service';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 @Component({
@@ -90,7 +85,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   dataListApi:any;
   ngOnInit(): void {
     
-    this.loadVendorRefundAllPaymentsListGrid();
+    //this.loadVendorRefundAllPaymentsListGrid();
     this.tempService.loadTempRefundList().subscribe((data: any) => {
       // alert(JSON.stringify(data));
       this.dataListApi = data;
