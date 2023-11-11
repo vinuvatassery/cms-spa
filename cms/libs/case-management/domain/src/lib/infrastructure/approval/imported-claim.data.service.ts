@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { PendingApprovalGeneralTypeCode } from '../../enums/pending-approval-general-type-code.enum';
-import { of } from 'rxjs';
 /** External libraries **/
 
 @Injectable({ providedIn: 'root' })
