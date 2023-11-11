@@ -18,6 +18,7 @@ import {
   UserRoleType,
   FinancialVendorFacade,
   ContactFacade,
+  ImportedClaimFacade,
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
@@ -34,7 +35,6 @@ import {
   LovFacade
 } from '@cms/system-config/domain';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ImportedClaimFacade } from '@cms/productivity-tools/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'productivity-tools-approval-page',
