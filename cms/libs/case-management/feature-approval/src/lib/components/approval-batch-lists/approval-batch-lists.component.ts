@@ -224,34 +224,37 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     item.approveButtonDisabled = true;
     item.sendBackButtonDisabled = false;
     item.sendBackNotes = '';
-    if (
+    if(
       item.batchStatus === undefined ||
       item.batchStatus === '' ||
-      item.batchStatus === null
-    ) {
+      item.batchStatus === null ||
+      item.batchStatus === this.approveStatus
+    ){
       item.batchStatus = this.sendbackStatus;
       item.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       item.sendBackNotesInValid = true;
-      item.atleastOnePaymentInValidMsg = this.atleastOnePaymentRequireMessage;
-      item.atleastOnePaymentInValid = true;
-      item.paymentRequestIds = [];
+      if(this.batchDetailPaymentsList && this.batchDetailPaymentsList.data.length == 1){
+        this.batchDetailPaymentsList.data.forEach((paymentItem: any) => {
+          paymentItem.isSendBack = true;
+          item.paymentRequestIds.push(paymentItem.paymentRequestId);
+        });
+        item.atleastOnePaymentInValidMsg = null;
+        item.atleastOnePaymentInValid = false;
+      }
+      else{
+        item.atleastOnePaymentInValidMsg = this.atleastOnePaymentRequireMessage;
+        item.atleastOnePaymentInValid = true;
+        item.paymentRequestIds = [];
+      }
     } else if (item.batchStatus == this.sendbackStatus) {
       item.batchStatus = '';
       item.sendBackNotesInValidMsg = '';
       item.sendBackNotesInValid = false;
       item.sendBackButtonDisabled = true;
-      item.atleastOnePaymentInValidMsg=null;
+      item.atleastOnePaymentInValidMsg = null;
       item.atleastOnePaymentInValid = false;
       item.paymentRequestIds = [];
-    } else {
-      item.batchStatus = this.sendbackStatus;
-      item.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
-      item.sendBackNotesInValid = true;
-      item.sendBackButtonDisabled = false;
-      item.atleastOnePaymentInValidMsg = this.atleastOnePaymentRequireMessage;
-      item.atleastOnePaymentInValid = true;
     }
-
     this.sendBackNotesChange(item);
     this.approveAndSendbackCount();
   }
@@ -345,9 +348,17 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       };
       this.batchDetailPaymentsList = gridData;
       if(response.data.length > 0){
-        this.batchDetailPaymentsList.data.forEach((item: any) => {
-          item.isSendBack = this.batch.paymentRequestIds.some((id:any) => id === item.paymentRequestId);
-        });
+          if(this.batchDetailPaymentsList.data.length == 1 && this.batch.batchStatus == this.sendbackStatus){
+            this.batchDetailPaymentsList.data.forEach((item: any) => {
+              item.isSendBack = true;
+              this.batch.paymentRequestIds = [item.paymentRequestId];
+            });
+          }
+          else{
+            this.batchDetailPaymentsList.data.forEach((item: any) => {
+              item.isSendBack = this.batch.paymentRequestIds.some((id:any) => id === item.paymentRequestId);
+            });
+          }
         this.gridBatchDetailPaymentsDataSubject.next(this.batchDetailPaymentsList);
         if (response?.total >= 0 || response?.total === -1) {
           this.isBatchDetailPaymentsGridLoaderShow.next(false);
@@ -371,10 +382,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       filter: { logic: 'and', filters: [] },
     };
   }
-
-  // onColumnReorder($event: any) {
-  //   this.columnsReordered = true;
-  // }
 
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;

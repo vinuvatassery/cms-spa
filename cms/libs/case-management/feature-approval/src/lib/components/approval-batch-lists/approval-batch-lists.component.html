@@ -85,28 +85,7 @@
               (filterChange)="filterChange($event)"
               [filter]="state.filter"
             >
-            <!-- <kendo-grid-column field="" title="Send Back" [width]="150" [sortable]="false">
-              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                <div class="cms-button-group">
-                  <button kendoButton (selectedChange)="
-                      onRowLevelSendbackClicked(
-                        $event,
-                        dataItem,
-                        'sendBackNotes',
-                        rowIndex
-                      )
-                    "
-                    [selected]="dataItem.batchStatus == sendbackStatus"
-                    aria-label="Send Back"
-                    id="approve{{ rowIndex }}"
-                    [toggleable]="true"
-                  >
-                    Send Back
-                  </button>
-                </div>
-              </ng-template>
-            </kendo-grid-column> -->
-            <kendo-grid-column *ngIf="userLevel===UserLevel.Level1Value" field="" title="Send Back" [width]="150" [sortable]="false">
+            <kendo-grid-column *ngIf="userLevel === UserLevel.Level1Value" title="Send Back" [width]="150" [sortable]="false">
               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                 <div class="cms-button-group">
                   <button kendoButton (selectedChange)="
