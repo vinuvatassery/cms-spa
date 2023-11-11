@@ -331,4 +331,24 @@ export class FinancialVendorFacade {
       },
     });
   }
+
+  updateVendorProfile(ProviderPanelDto: any) {
+    this.showLoader();
+    return this.financialVendorDataService.updateVendorProfile(ProviderPanelDto).subscribe({
+      next: (updatedResponse: any) => {
+        if (updatedResponse) {
+          this.updateProviderPanelSubject.next(updatedResponse);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Updated successfully')
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
+
+
+
 }

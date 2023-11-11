@@ -75,7 +75,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
           this.clinicSearchSubscription?.unsubscribe();
         }
       }
-    );
+    );    
     this.selectedClinicVendorId = null;
     this.searchClinicVendorClicked.emit(clinicName);
   }
@@ -88,6 +88,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
       },
     ];
     this.selectedVendor = this.clinicVendorListLocal[0];
+    this.selectedVendor = this.selectedMasterData.vendorId;
     this.healthCareForm.controls['providerName'].setValue(
       this.selectedMasterData?.vendorName
     );
@@ -151,14 +152,14 @@ export class ApprovalsEditItemsComponent implements OnInit {
       );
       this.healthCareForm.controls['providerName'].updateValueAndValidity();
       
-      if(this.selectedMasterData.firstName != '')
+      if(this.selectedMasterData.firstName)
       {
         this.healthCareForm.controls['firstName'].setValidators(
           Validators.required
         );
         this.healthCareForm.controls['firstName'].updateValueAndValidity();
       }
-      if(this.selectedMasterData.lastName != '')
+      if(this.selectedMasterData.lastName)
       {
         this.healthCareForm.controls['lastName'].setValidators(
           Validators.required
@@ -189,32 +190,35 @@ export class ApprovalsEditItemsComponent implements OnInit {
       return;
     }
     let contact = [];
-    let email = [];
-    let phone = [];
-    email.push({
-      emailAddress: this.healthCareForm.controls['contactEmail']?.value,
-      VendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
+    let emails = [];
+    let phones = [];    
+    var abc = this.selectedVendor;
+    debugger;
+    emails.push({
+      emailAddress: this.healthCareForm.controls['email']?.value,
+      vendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
       vendorContactId: this.selectedMasterData.vendorContactId
     })
-    phone.push({
-      PhoneNbr: this.healthCareForm.controls['contactPhone']?.value,
-      VendorContactPhoneId: this.selectedMasterData.vendorContactPhoneId,
+    phones.push({
+      phoneNbr: this.healthCareForm?.controls['phoneNumber']?.value,
+      faxNbr: this.healthCareForm?.controls['fax']?.value,
+      vendorContactPhoneId: this.selectedMasterData.vendorContactPhoneId,
       vendorContactId: this.selectedMasterData.vendorContactId
     })
     contact.push(
       {
         contactName: this.healthCareForm.controls['contactFirstName']?.value,
         vendorContactId: this.selectedMasterData.vendorContactId,
-        email,
-        phone
+        emails,
+        phones
       }
     )
     let masterData = {
+      vendorName: this.selectedMasterData.vendorName,
       vendorId: this.selectedMasterData.vendorId,
       tin: this.healthCareForm?.controls['tinNumber'].value,
-      Address: {
-        vendorAddressId: this.selectedMasterData.vendorAddressId, // need to send this in response
-        specialHandlingDesc: this.healthCareForm?.controls['specialHandlingDesc']?.value ? this.healthCareForm?.controls['specialHandlingDesc']?.value : '',
+      address: {
+        vendorAddressId: this.selectedMasterData.vendorAddressId,
         paymentMethodCode: this.healthCareForm?.controls['paymentMethod']?.value ? this.healthCareForm?.controls['paymentMethod']?.value : '',
         address1: this.healthCareForm?.controls['addressLine1']?.value,
         address2: this.healthCareForm?.controls['addressLine2']?.value,

@@ -160,4 +160,11 @@ export class FinancialVendorDataService {
   {   
     return this.http.patch(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors`,provider);
   }
+
+  updateVendorProfile (providePanelDto:any){
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/vendorprofile`,providePanelDto
+    );
+  }
 }

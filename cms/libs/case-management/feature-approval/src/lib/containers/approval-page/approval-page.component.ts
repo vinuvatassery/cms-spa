@@ -273,7 +273,7 @@ export class ApprovalPageComponent implements OnInit {
         PendingApprovalGeneralTypeCode.InsuranceVendor ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Pharmacy
     ) {
-      this.financialVendorFacade.getVendorDetails(userObject.approvalEntityId, false);
+      this.financialVendorFacade.getVendorDetails("64076EE9-E012-4161-A0E3-327745ADBB20", false);
     } else if (
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Drug ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan
@@ -286,7 +286,7 @@ export class ApprovalPageComponent implements OnInit {
         this.pendingApprovalGeneralFacade.selectedMasterDetail$;
     }
   }
-  
+
   buildVendorForm() {
   let form = this.formBuilder.group({
       providerName: [''],
@@ -322,7 +322,7 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   updateMasterDetailsClicked(event: any){
-    this.financialVendorFacade.updateProviderPanel(event);
+    this.financialVendorFacade.updateVendorProfile(event);
   }
 
   onProviderNameClick(event: any) {

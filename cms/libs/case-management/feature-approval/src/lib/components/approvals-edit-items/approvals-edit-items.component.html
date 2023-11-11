@@ -16,12 +16,23 @@
         <span *ngIf="clinicVendorLoader$ | async"
           class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Clinic Name">
-          <kendo-combobox placeholder="Clinic Name" [fillMode]="formUiStyle.dropDownFillMode"
-            [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-            (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" formControlName="providerName"
-            [valuePrimitive]="true" valueField="vendorId" textField="vendorName"
-            [value]="selectedVendor"
-            [allowCustom]="true">
+          <kendo-combobox 
+          #vendor
+          [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }"
+          placeholder="Clinic Name" 
+          [fillMode]="formUiStyle.dropDownFillMode"          
+          [filterable]="true"
+          (filterChange)="searchClinic($event)" 
+          [data]="clinicVendorListLocal" 
+          [formControlName]="'providerName'"
+          [valuePrimitive]="true" 
+          [valueField]="'vendorId'" 
+          [textField]="'vendorName'"
+          [valuePrimitive]="true"
+          [(ngModel)]="selectedVendor">
+          <ng-template kendoComboBoxItemTemplate let-dataItem>
+            <span>{{ dataItem.vendorName }}</span>
+          </ng-template>
             <button kendoButton
               fillMode="clear" icon="image"></button>
           </kendo-combobox>
@@ -34,7 +45,7 @@
         </kendo-formhint>
       </div>
     </div>
-    <div class="flex-col flex-col-6" *ngIf="selectedMasterData.firstName !== '' ">
+    <div class="flex-col flex-col-6" *ngIf="selectedMasterData.firstName">
       <kendo-floatinglabel text="Provider First Name">
         <kendo-textbox aria-label="Provider First Name" placeholder="Provider First Name"
           [fillMode]="formUiStyle.inputFillMode" formControlName="firstName" [maxlength]="50">
@@ -44,7 +55,7 @@
         First Name is required
       </kendo-formerror>
     </div>
-    <div class="flex-col flex-col-6" *ngIf="selectedMasterData.lastName !== '' ">
+    <div class="flex-col flex-col-6" *ngIf="selectedMasterData.lastName">
       <kendo-floatinglabel text="Provider Last Name">
         <kendo-textbox aria-label="Provider Last Name" placeholder="Provider Last Name"
           [fillMode]="formUiStyle.inputFillMode" formControlName="lastName" [maxlength]="50">
