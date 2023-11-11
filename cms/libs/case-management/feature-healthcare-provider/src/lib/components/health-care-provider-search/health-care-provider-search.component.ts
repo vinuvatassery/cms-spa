@@ -151,13 +151,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   }
   onOpenBusinessLogicClicked()
   {
-    if(this.existHealthProvderForm.valid)
-      {
-        this.onExistHealthProvderSubmit();
-      }
-       else{
         this.businessLogicEvent.emit();
-       }
   }
 
   onsearchTextChange(text : string)

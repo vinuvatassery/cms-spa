@@ -52,10 +52,8 @@ export class PendingApprovalGeneralService {
   
   getMasterDetails(masterDetailId: string, subTypeCode: string) {
     if (subTypeCode == PendingApprovalGeneralTypeCode.Drug) {
-      return this.http.post<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs/${masterDetailId}`,
-        null
-      );
+      return this.http.get<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs?drugId=${masterDetailId}`);
     } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsurancePlan) {
       return this.http.get<any>(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans?insurancePlanId=${masterDetailId}`);

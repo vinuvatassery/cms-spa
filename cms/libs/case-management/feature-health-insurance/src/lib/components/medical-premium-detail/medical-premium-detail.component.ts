@@ -1232,6 +1232,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     }
   }
   insuranceCarrierNameChange(value: string) {
+    if (value == null) {
+      return;
+    }
     let insuranceType = null;
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
       insuranceType = InsuranceStatusType.dentalInsurance;

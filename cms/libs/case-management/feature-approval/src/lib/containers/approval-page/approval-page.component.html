@@ -31,13 +31,19 @@
             [approvalsGeneralLists$]="approvalsGeneralLists$"
             [submitGenerealRequest$]="submitGenerealRequest$"            
             (loadApprovalsGeneralGridEvent)="loadApprovalsGeneralGrid($event)"
-            (loadCasereassignmentExpanedInfoParentEvent)="
-              loadCasereassignmentExpanedInfoParentEvent($event)
-            "
+            (loadCasereassignmentExpanedInfoParentEvent)="loadCasereassignmentExpanedInfoParentEvent($event)"
             (submitGeneralRequestsEvent)="submitGeneralRequests($event)"
             [usersByRole$]="usersByRole$"
             (getMasterDetailsEvent)="getMasterDetails($event)"
             [selectedMasterDetail$]="selectedMasterDetail$"
+            [clinicVendorList$]="clinicVendorList$"
+            [ddlStates$]="ddlStates$"
+            (editClickedEvent)="editClicked($event)"
+            [healthCareForm]="healthCareForm"
+            (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
+            [clinicVendorLoader$]="clinicVendorLoader$"
+            (updateMasterDetailsClickedEvent)="updateMasterDetailsClicked($event)"
+            (onVendorClickedEvent)="onProviderNameClick($event)"
           >
           </productivity-tools-approvals-general-list>
         </div>
@@ -55,9 +61,7 @@
           <productivity-tools-approvals-payments-list
             [approvalsPaymentsLists$]="approvalsPaymentsLists$"
             [approvalsPaymentsMainLists$]="approvalsPaymentsMainLists$"
-            [pendingApprovalSubmittedSummary$]="
-              pendingApprovalSubmittedSummary$
-            "
+            [pendingApprovalSubmittedSummary$]="pendingApprovalSubmittedSummary$"
             [pendingApprovalSubmit$]="pendingApprovalSubmit$"
             [batchDetailPaymentsList$]="batchDetailPaymentsList$"
             [pageSizes]="pageSizes"
@@ -100,4 +104,14 @@
       </ng-template>
     </kendo-tabstrip-tab>
   </kendo-tabstrip>
+
+  <ng-template #providerDetailsTemplate>
+    <cms-financial-claims-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="onEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+</ng-template>
 </div>
