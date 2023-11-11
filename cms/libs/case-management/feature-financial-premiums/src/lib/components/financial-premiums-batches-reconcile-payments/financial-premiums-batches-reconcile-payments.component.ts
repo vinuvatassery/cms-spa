@@ -168,7 +168,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     public activeRoute: ActivatedRoute) {}
   
   ngOnInit(): void {
-    debugger;
     this.loadQueryParams();
     if(this.loadType === LoadTypes.allPayments){
       this.columns.batchName ='Batch #';
