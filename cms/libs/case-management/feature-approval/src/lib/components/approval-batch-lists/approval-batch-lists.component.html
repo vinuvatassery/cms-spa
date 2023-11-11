@@ -31,7 +31,7 @@
                 [toggleable]="true"
                 [selected]="item.batchStatus == approveStatus"
                 aria-label="Approve"
-                (selectedChange)="onApproveClicked(item, index)"
+                (selectedChange)="onBatchApproveClicked(item, index)"
               >
                 Approve
               </button>
@@ -41,7 +41,7 @@
                 [toggleable]="true"
                 [selected]="item.batchStatus == 'SEND_BACK'"
                 aria-label="Send Back"
-                (selectedChange)="onSendbackClicked(item, index)"
+                (selectedChange)="onBatchSendbackClicked(item, index)"
               >
                 Send Back
               </button>
@@ -109,11 +109,16 @@
             <kendo-grid-column *ngIf="userLevel===UserLevel.Level1Value" field="" title="Send Back" [width]="150" [sortable]="false">
               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                 <div class="cms-button-group">
-                  <button kendoButton 
-                    [selected]="dataItem.batchStatus == sendbackStatus"
-                    aria-label="Send Back"
-                    id="approve{{ rowIndex }}"
-                    [toggleable]="true"
+                  <button kendoButton (selectedChange)="
+                    onPaymentSendbackClicked(
+                      $event,
+                      dataItem,
+                      rowIndex
+                    )
+                  "
+                  aria-label="Send Back"
+                  id="sendback{{ rowIndex }}"
+                  [toggleable]="true"
                   >
                     Send Back
                   </button>

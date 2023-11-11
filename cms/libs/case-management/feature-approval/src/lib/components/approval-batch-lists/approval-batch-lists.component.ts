@@ -55,6 +55,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   gridDataResult!: GridDataResult;
   batchId?: string | null;
   index: number = 0;
+  batch: any;
   tAreaSendBackNotesMaxLength: any = 200;
   approveBatchCount: any = 0;
   sendbackBatchCount: any = 0;
@@ -147,8 +148,9 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     if (index >= 0) {
       this.index = index;
       this.batchId = this.batchDetailModalSourceList[index].paymentRequestBatchId;
+      this.batch = this.batchDetailModalSourceList[index];
       if(this.isSendBackMode){
-        this.onSendbackClicked(this.batchDetailModalSourceList[index], index);
+        this.onBatchSendbackClicked(this.batchDetailModalSourceList[index], index);
       }
     }
   }
@@ -156,6 +158,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   onScrollViewItemChanged(args: any) {
     this.index = args.index;
     this.batchId = args.item.paymentRequestBatchId;
+    this.approvalId = args.item.approvalId;
     this.loadBatchPaymentListGrid();
   }
 
@@ -190,7 +193,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     });
   }
 
-  onApproveClicked(item: any, index: any) {
+  onBatchApproveClicked(item: any, index: any) {
     item.approveButtonDisabled = false;
     item.sendBackButtonDisabled = true;
     item.sendBackNotes = '';
@@ -207,21 +210,14 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       item.batchStatus = this.approveStatus;
     } else if (item.batchStatus == this.approveStatus) {
       item.batchStatus = '';
-      // item.sendBackNotesInValidMsg = '';
-      // item.sendBackNotesInValid = false;
-      // item.sendBackButtonDisabled = true;
     } else if (item.batchStatus == this.sendbackStatus) {
       item.batchStatus = this.approveStatus;
-      // item.sendBackNotesInValidMsg = '';
-      // item.sendBackNotesInValid = false;
-      // item.sendBackButtonDisabled = true;
     }
     this.sendBackNotesChange(item);
-    //this.assignDataToSourceList(item, index);
     this.approveAndSendbackCount();
   }
 
-  onSendbackClicked(item: any, index: any) {
+  onBatchSendbackClicked(item: any, index: any) {
     item.approveButtonDisabled = true;
     item.sendBackButtonDisabled = false;
     item.sendBackNotes = '';
@@ -249,11 +245,33 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       item.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       item.sendBackNotesInValid = true;
       item.sendBackButtonDisabled = false;
+      item.atleastOnePaymentInValidMsg = this.atleastOnePaymentRequireMessage;
+      item.atleastOnePaymentInValid = true;
     }
 
     this.sendBackNotesChange(item);
-    //this.assignDataToSourceList(item, index);
     this.approveAndSendbackCount();
+  }
+
+  onPaymentSendbackClicked(selected: any, item: any, index: any) {debugger;
+    const batch = this.batchDetailModalSourceList[this.index];
+    if(selected){
+      if(batch.batchStatus != this.sendbackStatus){
+        this.onBatchSendbackClicked(batch, this.index);
+      }
+      batch.paymentRequestIds.push(item.paymentRequestId);
+      batch.atleastOnePaymentInValidMsg = null;
+      batch.atleastOnePaymentInValid = false;
+    }
+    else{
+      const arrayIndex = batch.paymentRequestIds.indexOf(item.paymentRequestId);
+      batch.paymentRequestIds.splice(arrayIndex, 1);
+      if(batch.paymentRequestIds.length <= 0){
+        if(batch.batchStatus == this.sendbackStatus){
+          this.onBatchSendbackClicked(batch, this.index);
+        }
+      }
+    }
   }
 
   assignDataToSourceList(dataItem: any, index: any) {
