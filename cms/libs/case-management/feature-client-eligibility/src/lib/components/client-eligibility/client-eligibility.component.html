@@ -129,7 +129,7 @@
 
 <!-- Application Deny Modal Html-->
 <kendo-dialog *ngIf="isOpenDeny" (close)="isCloseDenyClicked()" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Deny application? </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> Deny Application? </kendo-dialog-titlebar>
   <case-management-reject-application (isCloseDenyModal)="handleClosAfterDeny($event)"
     [clientCaseId]="clientCaseId" [clientCaseEligibilityId]="clientCaseEligibilityId"></case-management-reject-application>
 </kendo-dialog>
@@ -160,6 +160,6 @@
 
   <!-- Application Disenroll Modal Html-->
 <kendo-dialog *ngIf="isOpenDisenroll" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="isCloseDisenrollClicked()" > Disenroll client? </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="isCloseDisenrollClicked()" > Disenroll Client? </kendo-dialog-titlebar>
   <case-management-disenroll-client (isCloseDisenrollModal)="handleClosAfterDisEnroll($event)"></case-management-disenroll-client>
 </kendo-dialog>

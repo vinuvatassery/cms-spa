@@ -6,6 +6,7 @@ import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core'
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'cms-financial-vendor-page',
@@ -228,7 +229,11 @@ export class FinancialVendorPageComponent implements OnInit {
       next: (response: any) => {
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal(this.providerTypeCode);
-        let notificationMessage = "Vendor profile added successfully";
+
+        let notificationMessage = "Vendor profile added successfully.";
+        if (vendorProfile.activeFlag === StatusFlag.No)
+          notificationMessage = "Vendor profile requested successfully.";
+
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
       },
@@ -239,7 +244,7 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   closeVendorDetailModal(data?: any) {
-    if (data == this.vendorTypes.Clinic) {
+    if (this.ShowClinicProvider) {
       this.ShowClinicProvider = false;
     } else {
       this.isShowMedicalProvider = false;

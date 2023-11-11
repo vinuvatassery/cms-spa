@@ -92,7 +92,7 @@
                         <kendo-grid [resizable]="true" [loading]="(itemsListGridLoader$ | async) ?? false" [pageSize]="state.take"
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
                               [data]="batchItemsGridLists$ | async" (filterChange)="filterChange($event)" filterable="menu" [filter]="state.filter">
                                     <kendo-grid-column field="clientFullName" title="Client Name" [width]="250"> 
                                           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -156,7 +156,7 @@
                                     </kendo-grid-column>  
                                     <kendo-grid-column field="premiumAmt" title="Premium Amount" [width]="180" > 
                                           <ng-template kendoGridCellTemplate let-dataItem>
-                                              <p><span class="tableamountview"><strong></strong> {{dataItem.premiumAmt| kendoNumber : "c"}}</span></p>
+                                              <p><span class="tableamountview"><strong>$</strong> {{dataItem.premiumAmt}}</span></p>
                                           </ng-template> 
                                     </kendo-grid-column>  
                             

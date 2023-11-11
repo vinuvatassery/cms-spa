@@ -60,11 +60,11 @@
                     onRowLevelDenyClicked($event, item, 'sendBackNotes', i)
                   "
                   [selected]="item.status == denyStatus"
-                  aria-label="Send Back"
+                  aria-label="Deny"
                   id="deny{{ i }}"
                   [toggleable]="true"
                 >
-                  Send Back
+                  Deny
                 </button>
               </div>
               <div
@@ -167,7 +167,7 @@
                 [approvalId]="item.generalPendingApprovalId"
                 (openEditModal)="openEditModal($event)"
                 [subTypeCode]="item.subTypeCode"
-                [selectedVendor$]="selectedVendor$"
+                [selectedMasterDetail$]="selectedMasterDetail$"
               >
               </productivity-tools-approvals-general-list-detail-addtomasterlist>
             </ng-template>
@@ -178,7 +178,8 @@
             >
               <productivity-tools-approvals-general-list-detail-exceptions
                 [approvalId]="item.generalPendingApprovalId"
-                [exceptionId]="item.approvalEntityId"               
+                [exceptionId]="item.approvalEntityId"       
+                (onVendorClickedEvent)="onProviderNameClick($event)"        
               >
               </productivity-tools-approvals-general-list-detail-exceptions>
             </ng-template>
@@ -210,15 +211,15 @@
   >
   <productivity-tools-approvals-edit-items
     [selectedSubtypeCode]="selectedSubtypeCode"
-    [selectedVendor$]="selectedVendor$"
+    [selectedMasterDetail$]="selectedMasterDetail$"
   >
   </productivity-tools-approvals-edit-items>
 </ng-template>
 
 <ng-template #submitRequestModalDialog>
  
-  <kendo-dialog-titlebar class="text-normal" (close)="onCloseSubmitGeneralRequestClicked()">
-    Submit item(s)</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onCloseSubmitGeneralRequestClicked()">
+    Submit Item(s)</kendo-dialog-titlebar>
     <section class="k-dialog-body newcase"> 
       <p *ngIf="caseReassignmentsCount > 0" class="mb-1">
         Case re-assignments to be submitted:

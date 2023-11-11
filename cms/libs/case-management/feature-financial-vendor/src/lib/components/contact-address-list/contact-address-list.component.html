@@ -113,7 +113,7 @@
       </kendo-popover>
     </ng-template>
   </kendo-grid-column>
-  <kendo-grid-column [sticky]="true" field="" title="Options" [columnMenu]="false" [width]="60" class="text-center">
+  <kendo-grid-column [sticky]="true" field="" title="Options" [columnMenu]="false" [width]="70" class="text-center">
     <ng-template kendoGridCellTemplate let-dataItem>
       <kendo-dropdownbutton [data]="contactAddressActions" icon="more-vertical"
         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -152,20 +152,20 @@
 </kendo-grid>
 <kendo-dialog *ngIf="isContactAddressDeactivateShow" (close)="clickCloseDeactivateContactAddress()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Deactivate contact?</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> Deactivate Contact?</kendo-dialog-titlebar>
   <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)"
     [VendorContactId]="VendorContactId" [vendorId]="vendorId"> </cms-contacts-deactivate>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isContactAddressDeleteShow" (close)="clickCloseDeleteContactAddress()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Delete contact?</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> Delete Contact?</kendo-dialog-titlebar>
   <cms-contacts-delete (closeDeleteContactAddress)="onCancelPopup($event)" [VendorContactId]="VendorContactId" [vendorId]="vendorId">
   </cms-contacts-delete>
 </kendo-dialog>
 <kendo-dialog *ngIf="isContactsDetailShow" (close)="clickCloseAddEditContactsDetails()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="clickCloseAddEditContactsDetails()">Edit contact
+  <kendo-dialog-titlebar (close)="clickCloseAddEditContactsDetails()">Edit Contact
   </kendo-dialog-titlebar>
   <cms-contact-address-details [VendorContactId]="VendorContactId" [isEdit]="isEdit"  [vendorId]="vendorId" (editDeactivateContactClicked)="onEditDeactivateContactClicked($event)"
     (isContactDetailPopupClose)="clickCloseAddEditContactsDetails()"  (ContactUpdated)=contactUpdated($event)> </cms-contact-address-details>

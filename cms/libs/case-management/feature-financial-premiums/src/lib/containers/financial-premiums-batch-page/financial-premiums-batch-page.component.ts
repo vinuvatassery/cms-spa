@@ -30,6 +30,8 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   unbatchEntireBatch$ = this.financialPremiumsFacade.unbatchEntireBatch$;
   actionResponse$ = this.financialPremiumsFacade.premiumActionResponse$;
   paymentBatchName$= this.financialPremiumsFacade.paymentBatchName$;
+  letterContentList$ = this.financialPremiumsFacade.letterContentList$;
+  letterContentLoader$ = this.financialPremiumsFacade.letterContentLoader$;
   batchId!:string;
   dataExportParameters! : any
   premiumType: any;
@@ -159,5 +161,7 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
     this.lovFacade.getPaymentMethodLov()
   }
 
-
+  loadEachLetterTemplate(event:any){
+    this.financialPremiumsFacade.loadEachLetterTemplate(this.premiumType, event);  
+  }
 }
