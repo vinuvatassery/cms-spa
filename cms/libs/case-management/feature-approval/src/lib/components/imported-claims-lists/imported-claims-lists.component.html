@@ -89,9 +89,6 @@
     <kendo-grid-column field="policyId" title="Policy ID" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="amountDue" title="Amount Due" [width]="160">
-      <ng-template kendoGridCellTemplate let-dataItem>
-        {{ dataItem?.amountDue | currency:'USD':'$'}}
-      </ng-template> 
     </kendo-grid-column>
     <kendo-grid-column
       field="dateOfService"

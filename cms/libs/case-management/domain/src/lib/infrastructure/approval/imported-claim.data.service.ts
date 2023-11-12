@@ -22,7 +22,7 @@ export class ImportedClaimService {
       Filter: JSON.stringify(data.filter),
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/importedclaims/`,
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/`,
       importedClaimsRequestDto
     );
   }
