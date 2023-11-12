@@ -34,8 +34,8 @@ import {
   UserLevel,
   LovFacade
 } from '@cms/system-config/domain';
-import { FormBuilder, FormGroup } from '@angular/forms';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -104,6 +104,7 @@ export class ApprovalPageComponent implements OnInit {
   clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
   ddlStates$ = this.contactFacade.ddlStates$;
   healthCareForm!: FormGroup;  
+  clinicVendorLoader$ = this.financialVendorFacade.clinicVendorLoader$;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
@@ -125,7 +126,10 @@ export class ApprovalPageComponent implements OnInit {
     public lovFacade: LovFacade,
     private dialogService: DialogService,
 
-  ) {}
+  ) {
+    this.healthCareForm = this.formBuilder.group({});
+  }
+
   ngOnInit(): void {
     this.getUserRole();
     this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
@@ -144,6 +148,7 @@ export class ApprovalPageComponent implements OnInit {
       }
       this.cd.detectChanges();
     });
+    this.contactFacade.loadDdlStates();
   }
 
   loadApprovalsGeneralGrid(event: any): void {
@@ -270,8 +275,7 @@ export class ApprovalPageComponent implements OnInit {
         PendingApprovalGeneralTypeCode.InsuranceVendor ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Pharmacy
     ) {
-      this.financialVendorFacade.getVendorDetails(userObject.approvalEntityId);
-      this.selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
+      this.financialVendorFacade.getVendorDetails(userObject.approvalEntityId, false);
     } else if (
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Drug ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan
@@ -283,6 +287,44 @@ export class ApprovalPageComponent implements OnInit {
       this.selectedMasterDetail$ =
         this.pendingApprovalGeneralFacade.selectedMasterDetail$;
     }
+  }
+  
+  buildVendorForm() {
+  let form = this.formBuilder.group({
+      providerName: [''],
+      firstName: [''],
+      lastName: [],
+      tinNumber: [''],
+      phoneNumber: [''],
+      email:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)],
+      fax:[''],
+      addressLine1: [''],
+      addressLine2: [''],
+      city: [''],
+      state: [''],
+      zip: [''],
+      contactFirstName:[''],
+      contactLastName: [''],
+      contactPhone:[''],
+      contactFax:[''],
+      contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
+    });
+    this.healthCareForm = form;
+  }
+
+  editClicked(event : any){
+    if(event)
+    {
+      this.buildVendorForm();
+    }
+  }
+
+  searchClinicVendorClicked(clientName: any) {
+    this.financialVendorFacade.searchClinicVendor(clientName);
+  }
+
+  updateMasterDetailsClicked(event: any){
+    this.financialVendorFacade.updateProviderPanel(event);
   }
 
   onProviderNameClick(event: any) {
@@ -316,4 +358,5 @@ export class ApprovalPageComponent implements OnInit {
     this.contactFacade.loadDdlStates();
     this.lovFacade.getPaymentMethodLov();
   }
+
 }

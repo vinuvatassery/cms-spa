@@ -211,6 +211,14 @@
   >
   <productivity-tools-approvals-edit-items
     [selectedSubtypeCode]="selectedSubtypeCode"
+    [clinicVendorList$]="clinicVendorList$"
+    [ddlStates$]="ddlStates$"
+    [healthCareForm]="healthCareForm"
+    (searchClinicVendorClicked)="searchClinicClicked($event)"
+    [clinicVendorLoader$]="clinicVendorLoader$"
+    [selectedMasterData]="selectedMasterData"
+    (updateMasterDetailsClickedEvent)="updateMasterDetailsClicked($event)"
+    (close)="onCloseEditListItemsDetailClicked()"
     [selectedMasterDetail$]="selectedMasterDetail$"
   >
   </productivity-tools-approvals-edit-items>
