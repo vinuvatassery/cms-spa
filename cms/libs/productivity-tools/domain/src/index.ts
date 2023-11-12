@@ -19,4 +19,5 @@ export * from './lib/application/event-log.facade';
 export * from './lib/application/notification.facade';
 export * from './lib/application/direct-message.facade';
 export * from './lib/application/reminder.facade';
+
 /** Enums **/
