@@ -345,7 +345,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.sortColumn = 'Vendor Name';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'VendorName',
+    this.selectedColumn = 'VendorName';
     this.isFiltered = false;
     this.columnsReordered = false;
     this.sortValue = 'VendorName';
