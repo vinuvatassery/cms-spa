@@ -379,6 +379,11 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     );
   }
 
+  loadRecentPremiumsByClient(data:any, clientId:any){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients-recent-premiums/${clientId}`,data);
+  }
+
   loadPremium(type: string, premiumId: string): Observable<InsurancePremiumDetails> {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/${type}/premiums/${premiumId}`

@@ -294,114 +294,15 @@
                         </div>
                     </div>
                 </div>
-            <div class="flex-row">
-                
-                <div class="flex-col flex-col-6">
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-4 align-items-center justify-content-start">
-                            <h5>Refund Information </h5>
-                        </div>
-                        <div class="flex-col flex-col-8 align-items-center justify-content-start">
-                            <span class="app-checkboxwidtext-wrapper">
-                                <input kendoCheckBox type="checkbox" id="spots-payment" name="spots-payment"
-                                    aria-labelledby="spots-payment" />
-                                <label class="k-checkbox-label" for="spots-payment">This is a SPOTS payment</label>
-                            </span>
-                        </div>
-                    </div>
-                        <div class="flex-row  mb-3">
-                            <div class="flex-col">
-                            <table class=" info-table-custom left_right_align">
-                                <caption hidden> Refund Information</caption>
-                                <tr hidden>
-                                    <th scope="col">Fields</th>
-                                    <th scope="col">Details</th>
 
-                                </tr>
-                                <tbody>
-                                    <tr>
-                                        <td>Index Code</td>
-                                        <td>XXXXXXXXXX</td>
-                                    </tr>
-                                    <tr>
-                                        <td>PCA Code</td>
-                                        <td>XXXXXXXXXX</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Grant #</td>
-                                        <td>XXXXXXXXXX</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Policy ID</td>
-                                        <td>XXXXXXXXXX</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Group ID</td>
-                                        <td>XXXXXXXXXX</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Payment ID</td>
-                                        <td>XXXXXXXXXX</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            </div>
-                        </div>
-                    
-                </div>
-            </div>
-            <div class="flex-row  mb-3">
-                <div class="flex-col  add_grid_section">
-                    <h5>Enter refund amount for selected premium:</h5>
-                    <cms-vendor-refund-selected-premium-list></cms-vendor-refund-selected-premium-list>
-                </div>
-            </div>
-            <div class="flex-row">
-                <div class="flex-col">
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text=" VP">
-                                <kendo-textbox aria-label="VP" [disabled]="true" [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text="VP Suffix (optional)">
-                                <kendo-textbox aria-label="VP Suffix (optional)" [disabled]="true"
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                        </div>
-                    </div>
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text="Refund Warrant #">
-                                <kendo-textbox aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                        </div>
-                    </div>
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text="Deposit Date">
-                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Deposit Date"
-                                    format="MM/dd/yyyy" formatPlaceholder="formatPattern">
-                                </kendo-datepicker>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text="Refund Note (optional)">
-                                <kendo-textbox aria-label="Refund Note (optional)"
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                                <kendo-formhint class="justify-content-end"><span class="counter">
-                                        0/100</span></kendo-formhint>
-                            </kendo-floatinglabel>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="mt-3" id="InsurancePremiumPaymentsList">
+            <cms-vendor-refund-selected-premium-list [insuranceRefundInformation$]="insuranceRefundInformation$" [gridDataResult]="financialPremiumsRefundGridLists"
+                     [refundInformationLoader$]="insuranceRefundInformationLoader$"
+                     [pageSizes]="pageSizes" [sortValue]="sortValueRefundInformationGrid"
+                     (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"
+            [sortType]="sortType" [sort]="sortRefundInformationGrid" (insuranceRefundInformationConfirmClicked)="getInsuranceRefundInformation($event)"></cms-vendor-refund-selected-premium-list>
+              
+        
+            <div class="mt-3" id="InsurancePremiumPaymentsList" *ngIf="!isConfirmationClicked">
                 <h5>Select all premium included in this refund</h5>
                 
                     <cms-vendor-refund-insurance-premium-list [premiumsListData$]="premiumsListData$"
@@ -640,3 +541,13 @@
     </div>
 
 </kendo-dialog-actions>
+
+<ng-template #providerDetailsTemplate>
+    <cms-financial-premiums-provider-info
+    [paymentRequestId]="paymentRequestId"
+    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+    (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+    [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+    [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+</ng-template>

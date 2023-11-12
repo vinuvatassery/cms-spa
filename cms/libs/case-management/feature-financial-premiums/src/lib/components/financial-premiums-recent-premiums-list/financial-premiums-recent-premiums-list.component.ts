@@ -89,6 +89,7 @@ export class FinancialPremiumsRecentPremiumsListComponent {
   selectedStatus = 'Active';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   columnChangeDesc = 'Default Columns';
+  @Input() isFromAddRefundPanel=false;
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -172,7 +173,11 @@ export class FinancialPremiumsRecentPremiumsListComponent {
   }
 
   loadRecentPremiumsGrid(data: any) {
+    if(!this.isFromAddRefundPanel){
     this.financialPremiumsFacade.loadRecentPremiumListGrid(data);
+    }else{
+      this.financialPremiumsFacade.loadRecentPremiumsByClient(data,this.clientId);
+    }
   }
 
     //Column Options Standard Implementation
