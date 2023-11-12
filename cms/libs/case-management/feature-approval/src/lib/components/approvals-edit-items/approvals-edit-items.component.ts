@@ -301,7 +301,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
       } else if (this.selectedSubtypeCode ===  PendingApprovalGeneralTypeCode.Drug) {
         let drugData = {
           DrugId: this.selectedMasterData.drugId,
-          ManufacturerId : this.selectedVendor,
+          ManufacturerId : this.selectedMasterData.vendorId,
           NdcNbr : this.drugForm.controls['ndcCode'].value,
           BrandName : this.drugForm.controls['brandName'].value,
           DrugName : this.drugForm.controls['drugName'].value,
