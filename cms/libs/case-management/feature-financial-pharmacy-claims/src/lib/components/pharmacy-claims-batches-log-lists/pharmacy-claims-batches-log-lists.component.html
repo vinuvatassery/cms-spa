@@ -56,7 +56,7 @@
         </kendo-grid-column>
 
 
-        <kendo-grid-column field="PharmacyName" title="Pharmacy Name" [width]="160">
+        <kendo-grid-column field="PharmacyName" title="Pharmacy Name1" [width]="160">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button [attr.aria-label]="dataItem.PharmacyName" kendoButton look="flat" class="card-link-button" (click)="onViewProviderDetailClicked(providerDetailsTemplate)">
               {{ dataItem.PharmacyName }}
@@ -66,7 +66,7 @@
         <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="160"> </kendo-grid-column>
                 <kendo-grid-column field="clientName" title="Client Name" [width]="160">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog)">
+            <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
               {{ dataItem.clientName }}
             </button>
           </ng-template>
@@ -210,9 +210,10 @@
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR Donna Summer </h4></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}}  </h4></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-pharmacy-claims-recent-claims-list
+
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-pharmacy-claims-recent-claims-list>
   </section>
   <kendo-dialog-actions>

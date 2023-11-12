@@ -11,6 +11,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
@@ -72,7 +73,10 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   isPharmacyClaimsProcessGridLoaderShow = false;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
-
+  vendorId: any;
+  clientId: any;
+ clientName: any;
+ claimsType:any;
   @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
   @Input() getPharmacyClaim$: any;
@@ -207,6 +211,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     private dialogService: DialogService,
     private readonly lovFacade: LovFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private route: Router,
+
   ) { 
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -412,8 +418,9 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   }
 
   clientRecentClaimsModalClicked(
-    template: TemplateRef<unknown>
-  ): void {
+    template: TemplateRef<unknown>,
+  data:any): void {
+    
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
@@ -423,6 +430,9 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
         duration: 200,
       },
     });
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientFullName;
   }
 
   closeRecentClaimsModal(result: any) {
@@ -559,5 +569,10 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       ],
       logic: 'or',
     });
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.addClientRecentClaimsDialog.close();
   }
 }

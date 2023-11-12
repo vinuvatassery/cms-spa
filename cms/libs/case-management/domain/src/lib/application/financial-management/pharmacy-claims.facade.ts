@@ -80,6 +80,12 @@ export class FinancialPharmacyClaimsFacade {
       field: this.sortValueReconcile,
     },
   ];
+  public sortValueRecentClaimList = 'fillDate';
+  public sortRecentClaimList: SortDescriptor[] = [{
+    field: this.sortValueRecentClaimList,
+  }];
+  public showDuplicatePaymentHighlightSubject = new Subject<any>();
+  showDuplicatePaymentExceptionHighlight$ = this.showDuplicatePaymentHighlightSubject.asObservable();
 
   private pharmacyClaimsProcessDataSubject = new Subject<any>();
   pharmacyClaimsProcessData$ = this.pharmacyClaimsProcessDataSubject.asObservable();
@@ -136,6 +142,10 @@ export class FinancialPharmacyClaimsFacade {
 
   private searchDrugsLoaderDataSubject = new Subject<any>();
   searchDrugsLoader$ = this.searchDrugsLoaderDataSubject.asObservable();
+
+  
+  private recentClaimListDataSubject =  new Subject<any>();
+  recentClaimsGridLists$ = this.recentClaimListDataSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -450,6 +460,23 @@ export class FinancialPharmacyClaimsFacade {
       },
     });
 }
-
+loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
+  recentClaimsPageAndSortedRequestDto.filter = JSON.stringify(recentClaimsPageAndSortedRequestDto.filter);
+  this.financialPharmacyClaimsDataService.loadRecentClaimListService(recentClaimsPageAndSortedRequestDto).subscribe({
+    next: (dataResponse) => {
+      this.recentClaimListDataSubject.next(dataResponse);
+      if (dataResponse) {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.recentClaimListDataSubject.next(gridView);
+      }
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+    },
+  });
+}
 
 }

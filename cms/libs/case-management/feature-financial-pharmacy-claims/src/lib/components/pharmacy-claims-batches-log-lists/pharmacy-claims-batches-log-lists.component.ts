@@ -53,6 +53,9 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
 reverseClaimsDialog: any;
   addClientRecentClaimsDialog: any;
   addEditClaimsFormDialog: any;
+  vendorId: any;
+  clientId: any;
+ clientName: any;
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -350,8 +353,8 @@ reverseClaimsDialog: any;
 
   
   clientRecentClaimsModalClicked(
-    template: TemplateRef<unknown> 
-  ): void {
+    template: TemplateRef<unknown> ,
+    data:any): void {
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
@@ -361,6 +364,10 @@ reverseClaimsDialog: any;
         duration: 200,
       },
     });
+    
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientFullName;
   }
 
   closeRecentClaimsModal(result: any) {
