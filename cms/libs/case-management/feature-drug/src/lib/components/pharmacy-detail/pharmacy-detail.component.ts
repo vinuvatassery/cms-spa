@@ -152,7 +152,7 @@ export class PharmacyDetailComponent implements OnInit {
       next: (response: any) => {
         this.financialVendorFacade.hideLoader();
         this.onCloseNewPharmacyClicked(); 
-        var notificationMessage = response.message;
+        let notificationMessage = response.message;
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
       },

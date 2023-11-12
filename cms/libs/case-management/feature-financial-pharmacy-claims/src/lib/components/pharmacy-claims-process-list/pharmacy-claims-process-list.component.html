@@ -69,6 +69,7 @@
     (dataStateChange)="dataStateChange($event)" 
     (filterChange)="filterChange($event)"
     (columnReorder)="onColumnReorder($event)"
+    [selectable]="selectableSettings"
     (columnVisibilityChange)="columnChange($event)"
     kendoGridSelectBy="paymentRequestId"
     (selectedKeysChange)="selectedKeysChange($event)"
