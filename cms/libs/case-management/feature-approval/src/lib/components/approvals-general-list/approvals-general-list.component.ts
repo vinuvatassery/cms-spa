@@ -45,6 +45,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() clientsSubjects$: any;
   @Input() casereassignmentExpandedInfo$: any;
   @Input() submitGenerealRequest$: any;
+  @Input() drugForm!:  FormGroup<any>;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
   @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
@@ -125,7 +126,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   private getMasterData() {
-    this.selectedMasterDetail$.subscribe((value: any) => this.selectedMasterData = value);
+    this.selectedMasterDetail$.subscribe((value: any) => {
+      this.selectedMasterData = value
+    });
   }
 
   ngOnChanges(): void {
@@ -136,6 +139,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     };
 
     this.loadApprovalGeneralListGrid();
+    this.getMasterData();
   }
 
   private loadApprovalGeneralListGrid(): void {
@@ -302,7 +306,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
   openEditModal(event: any) {
     if (event) {
-      this.editClickedEvent.emit(true);
+      this.selectedMasterData = event.vendorData;
+      this.editClickedEvent.emit(event.subTypeCode);
       this.onEditListItemsDetailClicked(this.editModalTemplate);
     }
   }

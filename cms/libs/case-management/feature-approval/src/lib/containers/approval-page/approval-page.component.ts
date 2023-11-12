@@ -18,6 +18,7 @@ import {
   UserRoleType,
   FinancialVendorFacade,
   ContactFacade,
+  DrugsFacade,
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
@@ -107,6 +108,7 @@ export class ApprovalPageComponent implements OnInit {
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  drugForm!:  FormGroup<any>;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -123,7 +125,7 @@ export class ApprovalPageComponent implements OnInit {
     private formBuilder: FormBuilder,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
-
+    private drugService: DrugsFacade
   ) {
     this.healthCareForm = this.formBuilder.group({});
   }
@@ -273,7 +275,8 @@ export class ApprovalPageComponent implements OnInit {
         PendingApprovalGeneralTypeCode.InsuranceVendor ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Pharmacy
     ) {
-      this.financialVendorFacade.getVendorDetails("64076EE9-E012-4161-A0E3-327745ADBB20", false);
+      this.financialVendorFacade.getVendorDetails(userObject.approvalEntityId, false);
+       this.selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
     } else if (
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Drug ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan
@@ -284,11 +287,12 @@ export class ApprovalPageComponent implements OnInit {
       );
       this.selectedMasterDetail$ =
         this.pendingApprovalGeneralFacade.selectedMasterDetail$;
+
     }
   }
 
   buildVendorForm() {
-  let form = this.formBuilder.group({
+    let form = this.formBuilder.group({
       providerName: [''],
       firstName: [''],
       lastName: [],
@@ -310,10 +314,16 @@ export class ApprovalPageComponent implements OnInit {
     this.healthCareForm = form;
   }
 
-  editClicked(event : any){
-    if(event)
+  editClicked(subTypeCode : any){
+    if(subTypeCode == PendingApprovalGeneralTypeCode.DentalClinic ||
+      subTypeCode == PendingApprovalGeneralTypeCode.MedicalClinic ||
+      subTypeCode ==  PendingApprovalGeneralTypeCode.DentalProvider ||
+      subTypeCode ==  PendingApprovalGeneralTypeCode.MedicalProvider)
     {
       this.buildVendorForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.Drug)
+    {
+      this.buildDrugForm();
     }
   }
 
@@ -322,7 +332,14 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   updateMasterDetailsClicked(event: any){
-    this.financialVendorFacade.updateVendorProfile(event);
+    if(event.subTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.DentalProvider) {
+        this.financialVendorFacade.updateVendorProfile(event.form);
+      } else if (event.subTypeCode === PendingApprovalGeneralTypeCode.Drug) {
+        this.drugService.updateDrugVendor(event.form);
+      }
   }
 
   onProviderNameClick(event: any) {
@@ -355,6 +372,18 @@ export class ApprovalPageComponent implements OnInit {
   onEditProviderProfileClick() {
     this.contactFacade.loadDdlStates();
     this.lovFacade.getPaymentMethodLov();
+  }
+
+  buildDrugForm() {
+    let form = this.formBuilder.group({
+      providerName: [''],
+      drugName:[''],
+      brandName :[''],
+      ndcCode : [''],
+      drugType: [''],
+      deliveryMethod : ['']
+    })
+    this.drugForm = form;
   }
 
 }

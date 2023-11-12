@@ -30,4 +30,10 @@ export class DrugsDataService {
     );
   }
 
+  updateDrugVendor(drugDto:any){
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/drugs`,drugDto
+    );
+  }
 }
