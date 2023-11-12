@@ -39,7 +39,7 @@
                 kendoButton
                 id="sendBackBatch{{ index }}"
                 [toggleable]="true"
-                [selected]="item.batchStatus == 'SEND_BACK'"
+                [selected]="item.batchStatus == sendbackStatus"
                 aria-label="Send Back"
                 (selectedChange)="onBatchSendbackClicked(item)"
               >
@@ -66,7 +66,11 @@
             </kendo-textarea-suffix>
           </kendo-textarea>
           </kendo-floatinglabel>
-
+          <div *ngIf="item.batchStatus == sendbackStatus" class="mt-2">
+            <span class="mr-1"
+              >{{ sendBackPaymentCount }} of selected payments to be sent back</span
+            >
+          </div>
           <div class="app-c-table mt-2 mb-2" (click)="$event.stopPropagation()">
             <kendo-grid
               [resizable]="true"
