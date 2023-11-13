@@ -25,7 +25,7 @@ export class FinancialVendorRefundFacade {
     field: this.sortValueRefundBatch,
   }];
 
-  public sortValueRefundPayments = 'entryDate';
+  public sortValueRefundPayments = 'batchNumber';
   public sortPaymentsList: SortDescriptor[] = [{
     field: this.sortValueRefundPayments,
   }];
