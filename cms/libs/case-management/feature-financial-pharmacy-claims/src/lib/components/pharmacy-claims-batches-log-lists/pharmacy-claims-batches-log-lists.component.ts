@@ -19,7 +19,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, first } from 'rxjs';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -61,7 +61,17 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
 reverseClaimsDialog: any;
   addClientRecentClaimsDialog: any;
   addEditClaimsFormDialog: any;
+  vendorId: any;
+  clientId: any;
+ clientName: any;
   isLogGridExpand = true;
+  isBulkUnBatchOpened =false;
+  @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
+  @Output() unBatchClaimsEvent = new EventEmitter<any>();
+  @Input() batchId:any
+  @Input() unbatchClaim$ :any
+  @Input() unbatchEntireBatch$ :any
+  @Input() exportButtonShow$ :any
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -82,7 +92,6 @@ reverseClaimsDialog: any;
         this.navToReconcilePayments(data);
       },  
     },
-
     {
       buttonType: 'btn-h-primary',
       text: 'Print Authorizations',
@@ -92,10 +101,24 @@ reverseClaimsDialog: any;
         this.isPrintAuthorizationClicked = true;
           
         },
-    },
-  ];
 
-  public batchLogGridActions = [
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Unbatch Entire Batch',
+      icon: 'undo',
+      click: (data: any): void => {
+        if (!this.isBulkUnBatchOpened) {
+          this.isBulkUnBatchOpened = true;
+          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+        }
+      },
+    }
+  ];
+  selected: any;
+
+  public batchLogGridActions(dataItem:any){ 
+   return  [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Claim',
@@ -113,11 +136,16 @@ reverseClaimsDialog: any;
       buttonType: 'btn-h-primary',
       text: 'Unbatch Claim',
       icon: 'undo',
+      disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {
+        if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+        {
         if (!this.isUnBatchClaimsClosed) {
           this.isUnBatchClaimsClosed = true;
+          this.selected = data;
           this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
         }
+      }
        
       }      
     },
@@ -147,7 +175,8 @@ reverseClaimsDialog: any;
 
       
     },
-  ];
+  ]
+}
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -550,12 +579,49 @@ reverseClaimsDialog: any;
     });
   }
 
- 
-  onUnBatchCloseClicked(result: any) {
-    if (result) { 
-      this.isUnBatchClaimsClosed = false;
-      this.UnBatchDialog.close();
+
+  onUnBatchPaymentCloseClicked(result: any) {
+    if (result) {
+      if (this.isBulkUnBatchOpened) {
+        this.handleUnbatchEntireBatch();
+        this.unBatchEntireBatchEvent.emit({
+         batchId: this.batchId
+      });
+      } else {
+        this.handleUnbatchClaims();
+        this.unBatchClaimsEvent.emit({
+          paymentId : this.selected.paymentRequestId,
+        })
+      }
     }
+    this.isBulkUnBatchOpened = false;
+    this.isUnBatchClaimsClosed = false;
+    this.UnBatchDialog.close();
+  }
+
+  handleUnbatchClaims() {
+    this.unbatchClaim$
+      .pipe(first((unbatchResponse: any) => unbatchResponse != null))
+      .subscribe((unbatchResponse: any) => {
+        if (unbatchResponse ?? false) {
+          this.loadBatchLogListGrid();
+        }
+      });
+  }
+
+  handleUnbatchEntireBatch() {
+    this.unbatchEntireBatch$
+      .pipe(
+        first(
+          (unbatchEntireBatchResponse: any) =>
+            unbatchEntireBatchResponse != null
+        )
+      )
+      .subscribe((unbatchEntireBatchResponse: any) => {
+        if (unbatchEntireBatchResponse ?? false) {
+          this.loadBatchLogListGrid();
+        }
+      });
   }
 
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
@@ -572,8 +638,8 @@ reverseClaimsDialog: any;
 
   
   clientRecentClaimsModalClicked(
-    template: TemplateRef<unknown> 
-  ): void {
+    template: TemplateRef<unknown> ,
+    data:any): void {
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
@@ -583,6 +649,10 @@ reverseClaimsDialog: any;
         duration: 200,
       },
     });
+    
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientFullName;
   }
 
   closeRecentClaimsModal(result: any) {

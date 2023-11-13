@@ -21,14 +21,17 @@ export class PharmacyClaimsBatchPageComponent {
   sort = this.financialPharmacyClaimsFacade.sortBatchLogList;
   state!: State;
   batchLogGridLists$ = this.financialPharmacyClaimsFacade.batchLogData$;
-  paymentByBatchGridLoader$ =  this.financialPharmacyClaimsFacade.paymentByBatchGridLoader$;
+  unbatchEntireBatch$ = this.financialPharmacyClaimsFacade.unbatchEntireBatch$;
+  unbatchClaim$ = this.financialPharmacyClaimsFacade.unbatchClaims$
+  paymentByBatchGridLoader$ = this.financialPharmacyClaimsFacade.paymentByBatchGridLoader$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$
   claimsType= 'pharmacies';
   batchId!:string;
   dataExportParameters! : any
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
-    private readonly route: ActivatedRoute, private documentFacade :  DocumentFacade,
+    private readonly route : ActivatedRoute,
+    private readonly documentFacade : DocumentFacade
   ) {}
 
   loadBatchLogListGrid(event: any) {
@@ -56,5 +59,10 @@ export class PharmacyClaimsBatchPageComponent {
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`payment-batches/${batchId}/payments` , fileName)
     }
   }
-  
+  unBatchEntireBatchClick(event: any) {
+     this.financialPharmacyClaimsFacade.unbatchEntireBatch(event.batchId)
+  }
+  unBatchClaimClick(event: any) {
+     this.financialPharmacyClaimsFacade.unbatchPremiums(event.paymentId)
+  }
 }

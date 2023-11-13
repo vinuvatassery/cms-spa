@@ -11,7 +11,8 @@ export class VendorRefundPageComponent    {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-
+   tab = 1
+   dataExportParameters = null
    sortType = this.financialVendorRefundFacade.sortType;
    pageSizes = this.financialVendorRefundFacade.gridPageSizes;
    gridSkipCount = this.financialVendorRefundFacade.skipCount;
@@ -46,8 +47,10 @@ export class VendorRefundPageComponent    {
     this.financialVendorRefundFacade.loadVendorRefundBatchListGrid();
   }
 
-  loadVendorRefundAllPaymentsListGrid(event: any) {
-  
-    this.financialVendorRefundFacade.loadVendorRefundAllPaymentsListGrid();
+  loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto : any) {
+    this.financialVendorRefundFacade.selectedRefundsTab = 1;
+    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;   
+    this.dataExportParameters = recentClaimsPageAndSortedRequestDto;    
+    this.financialVendorRefundFacade.loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto);
   }
 }
