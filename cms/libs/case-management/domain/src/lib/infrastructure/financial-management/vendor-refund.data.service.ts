@@ -104,93 +104,12 @@ export class FinancialVendorRefundDataService {
       },
     ]);
   }
-  loadVendorRefundAllPaymentsListService( ) {
-    return of([
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
-        by: 'by',
-      },
-      {
-        batch: 'MMDDYYYY_XXX',
-        vendor: 'Provider Name',
-        type:'TPA', 
-        clientName:'FName LName', 
-        primaryInsurance:'FName LName', 
-        memberID:'FName LName', 
-        refundWarrant:'address2', 
-        refundAmount:'address2', 
-        depositDate:'address2', 
-        depositMethod:'address2', 
-        originalWarranty:'XXXXXX', 
-        originalAmount:'XXXXXX', 
-        indexCode:'address2', 
-        pca:'address2', 
-        grant:'address2', 
-        vp:'address2', 
-        refundNote:'address2', 
-        entryDate:'XX-XX-XXXX',  
-        by: 'by',
-      },
-    ]);
+
+
+  loadVendorRefundAllPaymentsListService(recentClaimsPageAndSortedRequestDto : any) {
+       return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/all`,recentClaimsPageAndSortedRequestDto
+    );
   }
 
 
@@ -546,7 +465,7 @@ export class FinancialVendorRefundDataService {
       Filter : filter
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/refund/list`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/refund`,
       RefundPageAndSortedRequestDto
     );
   }

@@ -112,4 +112,7 @@ export class PharmacyClaimsPageComponent {
   onbatchClaimsClicked(event:any){
     this.financialPharmacyClaimsFacade.batchClaims(event);
   }
+  ondeleteClaimsClicked(event:any){
+    this.financialPharmacyClaimsFacade.deleteClaims(event);
+  }
 }
