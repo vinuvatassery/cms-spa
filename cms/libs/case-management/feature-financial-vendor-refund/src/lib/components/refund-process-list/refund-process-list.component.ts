@@ -134,14 +134,13 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
 
   public selectedProcessRefunds: any[] = [];
   isProcessGridExpand = true;
-
   public refundProcessMore = [
     {
       buttonType: 'btn-h-primary',
       text: 'BATCH REFUNDS',
       icon: 'check',
       click: (data: any): void => {
-        if (!this.isProcessBatchClosed) {
+        if (!this.isProcessBatchClosed && this.isDataAvailable) {
           this.isProcessBatchClosed = true;
           this.onBatchRefundsGridSelectedClicked();
         }
@@ -153,7 +152,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       text: 'DELETE REFUNDS',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteBatchClosed) {
+        if (!this.isDeleteBatchClosed && this.isDataAvailable) {
           this.isDeleteBatchClosed = true;
           this.onBatchRefundsGridSelectedClicked();
         }

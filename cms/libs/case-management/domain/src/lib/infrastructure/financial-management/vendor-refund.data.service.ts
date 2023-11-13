@@ -465,7 +465,7 @@ export class FinancialVendorRefundDataService {
       Filter : filter
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/refund`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds`,
       RefundPageAndSortedRequestDto
     );
   }
@@ -490,5 +490,4 @@ export class FinancialVendorRefundDataService {
   unbatchRefunds(paymentRequestIds: string[]) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/unbatch`, paymentRequestIds);
   }
-
 }

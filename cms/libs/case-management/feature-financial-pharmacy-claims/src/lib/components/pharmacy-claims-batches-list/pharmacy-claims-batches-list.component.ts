@@ -34,6 +34,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  claimsType= 'pharmacy-claims';
   @Input() pharmacyClaimsBatchGridLists$: any;
   @Input() PharmacyBatchGridLoader$: any;
   @Output() loadPharmacyClaimsBatchListEvent = new EventEmitter<any>();
