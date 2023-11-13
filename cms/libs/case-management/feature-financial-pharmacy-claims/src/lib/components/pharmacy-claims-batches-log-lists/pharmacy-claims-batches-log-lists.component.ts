@@ -24,6 +24,9 @@ import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import {
+  PaymentStatusCode,PaymentType, PaymentMethodCode
+} from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
@@ -195,17 +198,17 @@ reverseClaimsDialog: any;
     checkNbr :'Warrant Number'
   };
 
-  paymentMethods = ['CHECK', 'ACH', 'SPOTS'];
-  paymentTypes = ['COINSURANCE', 'COPAYMENT', 'DEDUCTIBLE', 'FULL PAY'];
+  paymentMethods = [PaymentMethodCode.CHECK, PaymentMethodCode.ACH, PaymentMethodCode.SPOTS];
+  paymentTypes = [PaymentType.Coinsurance, PaymentType.Copayment, PaymentType.Deductible, PaymentType.FullPay];
   paymentStatusList = [
-    'SUBMITTED',
-    'PENDING_APPROVAL',
-    'DENIED',
-    'MANAGER_APPROVED',
-    'PAYMENT_REQUESTED',
-    'ONHOLD',
-    'FAILED',
-    'PAID',
+    PaymentStatusCode.Submitted,
+    PaymentStatusCode.PendingApproval,
+    PaymentStatusCode.Denied,
+    PaymentStatusCode.ManagerApproved,
+    PaymentStatusCode.PaymentRequested,
+    PaymentStatusCode.Hold,
+    PaymentStatusCode.Failed,
+    PaymentStatusCode.Paid,
   ];
 
   paymentMethodFilter = '';
