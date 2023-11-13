@@ -408,9 +408,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     };
 
     this.handleBatchRefunds();
-    // this.financialVendorRefundFacade.batchRefunds(input);
-    console.log(this.selectedProcessRefunds, 'onModalBatchRefundsButtonClicked')
-
+    this.financialVendorRefundFacade.batchRefunds(input);
   }
 
   handleBatchRefunds() {
@@ -466,10 +464,9 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   onModalBatchDeletingRefundsButtonClicked(action: any) {
     if (action) {
       this.handleDeleteRefunds();
-      console.log(this.selectedProcessRefunds, 'onModalBatchDeletingRefundsButtonClicked')
-      // this.financialVendorRefundFacade.deleteRefunds(
-      //   this.selectedProcessRefunds
-      // );
+      this.financialVendorRefundFacade.deleteRefunds(
+        this.selectedProcessRefunds
+      );
     }
   }
 
