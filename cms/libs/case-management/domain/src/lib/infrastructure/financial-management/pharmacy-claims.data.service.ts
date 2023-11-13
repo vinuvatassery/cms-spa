@@ -173,4 +173,8 @@ export class FinancialPharmacyClaimsDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/recent-claims`,recentClaimsPageAndSortedRequestDto
     );
   }
+
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
+  }
 }

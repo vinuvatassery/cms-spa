@@ -5,7 +5,6 @@ import {
   EventEmitter,
   Input,
   OnInit,
-  OnChanges,
   Output,
   TemplateRef,
   ViewChild,
@@ -16,7 +15,6 @@ import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -40,7 +38,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   providerDetailsDialog: any;
   isReconcileGridLoaderShow = false;
   printAuthorizationDialog : any;
-  @Input() claimsType: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -103,7 +100,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   paymentMethodType:any;
   pageValidationMessageFlag:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  providerTitle:any = 'Medical Provider';
+  providerTitle:any = 'Pharmacy Provider';
   checkingPaymentRequest!:any;
   public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
     datePaymentReconciled: new FormControl('', []),
@@ -179,11 +176,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     }
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodSubscription();
-    if(this.claimsType === 'dental'){
-      this.providerTitle = 'Dental Provider';
-      this.sortColumn = this.providerTitle;
-      this.dropDropdownColumns[0].columnDesc = this.providerTitle;
-    }
     this.state = {
       skip: 0,
       take: this.pageSizes[2]?.value,
@@ -196,7 +188,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       {
         batchId : this.batchId,
         entityId : this.entityId,
-        claimsType: this.claimsType,
         amountTotal : 0,
         warrantTotal : 0,
         warrantNbr : "",
@@ -210,16 +201,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         this.warrantNumberChanged = response
       )
   }
-  // ngOnChanges(): void {
-  //   this.state = {
-  //     skip: 0,
-  //     take: this.pageSizes[0]?.value,
-  //     sort: this.sort,
-  //   };
-
-  //   this.loadReconcileListGrid();
-  // }
-
 
   ngOnDestroy(): void {
     this.paymentMethodLovSubscription.unsubscribe();
@@ -367,6 +348,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
   dataStateChange(stateData: any): void {
     this.sortBatch = stateData.sort;
+    debugger;
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
@@ -920,7 +902,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     }
   }
   navToBatchDetails(event: any) {
-    this.route.navigate(['/financial-management/claims/' + this.claimsType]);
+    this.route.navigate(['/financial-management/claims/pharmacy']);
 
   }
 
@@ -954,7 +936,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       {
         batchId : this.batchId,
         entityId : data.entityId,
-        claimsType: this.claimsType,
         amountTotal : data.amountTotal,
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
@@ -994,11 +975,11 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   navToReconcilePayments(){
     this.reconcilePaymentGridUpdatedResult = [];
     if(this.loadType === null || this.loadType === undefined){
-      this.route.navigate([`/financial-management/claims/${this.claimsType}/batch`],
+      this.route.navigate([`/financial-management/claims/pharmacy/batch`],
       { queryParams :{bid: this.batchId}});
     }
     else{
-      this.route.navigate([`/financial-management/claims/${this.claimsType}`]);
+      this.route.navigate([`/financial-management/claims/pharmacy`]);
     }
   }
 

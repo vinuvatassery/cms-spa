@@ -155,6 +155,12 @@ export class FinancialPharmacyClaimsFacade {
   
   private recentClaimListDataSubject =  new Subject<any>();
   recentClaimsGridLists$ = this.recentClaimListDataSubject.asObservable();
+
+  private warrantNumberChangeLoaderSubject = new Subject<any>();
+  warrantNumberChangeLoader$ = this.warrantNumberChangeLoaderSubject.asObservable();
+
+  private warrantNumberChangeSubject = new Subject<any>();
+  warrantNumberChange$ = this.warrantNumberChangeSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -427,6 +433,21 @@ export class FinancialPharmacyClaimsFacade {
     });
   }
   
+  
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    this.warrantNumberChangeLoaderSubject.next(true);
+    this.financialPharmacyClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+      next: (dataResponse:any) => {       
+        this.warrantNumberChangeSubject.next(dataResponse);
+        this.warrantNumberChangeLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.warrantNumberChangeLoaderSubject.next(false);
+      },
+    });
+  }
+
   unbatchEntireBatch(paymentRequestBatchIds: string) {
     this.showLoader();
     return this.financialPharmacyClaimsDataService
