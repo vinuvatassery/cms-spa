@@ -187,7 +187,6 @@ reverseClaimsDialog: any;
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>(); 
   @Input() claimsType: any;
-  @Input() exportButtonShow$: any
   public state!: State;
   showExportLoader = false;
   sortColumn = 'paymentNbr';
