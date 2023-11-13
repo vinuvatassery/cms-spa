@@ -93,7 +93,10 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       columnCode: 'VendorName',
       columnDesc: 'Vendor Name',
     },
-   
+    {
+      columnCode: 'type',
+      columnDesc: 'Type',
+    },
     {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
@@ -104,7 +107,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     },
     {
       columnCode: 'refundAmount',
-      columnDesc: 'Refund Amount"',
+      columnDesc: 'Refund Amount',
     },
   
     {
@@ -123,12 +126,11 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     },
  
     {
-      columnCode: 'refunfNotes',
+      columnCode: 'refundNotes',
       columnDesc: 'Refund Note',
     },
   ]
   
-
   public refundProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -170,7 +172,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'vendorFullName', dir: 'asc' }]
+      sort: [{ field: 'VendorName', dir: 'asc' }]
     };
     this.loadVendorRefundProcessListGrid();
   }
@@ -246,7 +248,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
 
   onChange(data: any) {
     this.defaultGridState();
-    let operator = 'startswith';
+    let operator = 'contains';
     if (
       this.selectedColumn === 'refundAmount' ||
       this.selectedColumn === 'refundWarrentnbr' ||
@@ -354,5 +356,4 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.searchValue =''
     this.loadVendorRefundProcessListGrid();
   }
-  
 }
