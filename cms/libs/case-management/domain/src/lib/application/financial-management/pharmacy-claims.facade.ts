@@ -30,6 +30,9 @@ export class FinancialPharmacyClaimsFacade {
   batchClaimsSubject  =  new Subject<any>();
   batchClaims$ = this.batchClaimsSubject.asObservable();
 
+  deleteClaimsSubject  =  new Subject<any>();
+  deleteClaims$ = this.deleteClaimsSubject.asObservable();
+
   private unbatchEntireBatchSubject =  new Subject<any>();
   unbatchEntireBatch$ = this.unbatchEntireBatchSubject.asObservable();
  
@@ -85,6 +88,12 @@ export class FinancialPharmacyClaimsFacade {
       field: this.sortValueReconcile,
     },
   ];
+  public sortValueRecentClaimList = 'fillDate';
+  public sortRecentClaimList: SortDescriptor[] = [{
+    field: this.sortValueRecentClaimList,
+  }];
+  public showDuplicatePaymentHighlightSubject = new Subject<any>();
+  showDuplicatePaymentExceptionHighlight$ = this.showDuplicatePaymentHighlightSubject.asObservable();
 
   private pharmacyClaimsProcessDataSubject = new Subject<any>();
   pharmacyClaimsProcessData$ = this.pharmacyClaimsProcessDataSubject.asObservable();
@@ -141,6 +150,10 @@ export class FinancialPharmacyClaimsFacade {
 
   private searchDrugsLoaderDataSubject = new Subject<any>();
   searchDrugsLoader$ = this.searchDrugsLoaderDataSubject.asObservable();
+
+  
+  private recentClaimListDataSubject =  new Subject<any>();
+  recentClaimsGridLists$ = this.recentClaimListDataSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -480,6 +493,44 @@ export class FinancialPharmacyClaimsFacade {
       },
     });
 }
-
+ deleteClaims(batchPharmacyClaims: BatchPharmacyClaims) {
+  this.showLoader();
+  return this.financialPharmacyClaimsDataService
+    .deleteClaims(batchPharmacyClaims)
+    .subscribe({
+      next: (response:any) => {
+        this.deleteClaimsSubject.next(response);
+        if (response.status) {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+}
+loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
+  recentClaimsPageAndSortedRequestDto.filter = JSON.stringify(recentClaimsPageAndSortedRequestDto.filter);
+  this.financialPharmacyClaimsDataService.loadRecentClaimListService(recentClaimsPageAndSortedRequestDto).subscribe({
+    next: (dataResponse) => {
+      this.recentClaimListDataSubject.next(dataResponse);
+      if (dataResponse) {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.recentClaimListDataSubject.next(gridView);
+      }
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+    },
+  });
+}
 
 }

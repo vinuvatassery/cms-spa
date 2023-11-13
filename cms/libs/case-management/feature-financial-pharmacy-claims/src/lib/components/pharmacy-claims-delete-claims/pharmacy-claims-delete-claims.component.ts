@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Output, 
   EventEmitter,
+  Input,
 } from '@angular/core';
 @Component({
   selector: 'cms-pharmacy-claims-delete-claims',
@@ -11,9 +12,15 @@ import {
 })
 export class PharmacyClaimsDeleteClaimsComponent {
   @Output() isModalDeleteClaimsCloseClicked = new EventEmitter();
-
- 
+  @Output() isModalDeletedClaimsButtonClicked = new EventEmitter<boolean>();
+  @Input() selectedProcessClaimsCount = 0;
+  @Input() deletemodelbody = "";
+  
   closeDeleteClaimsClicked() {
+    
     this.isModalDeleteClaimsCloseClicked.emit(true);
+  }
+  deleteClaimsClicked(){
+    this.isModalDeletedClaimsButtonClicked.emit(true);
   }
 }
