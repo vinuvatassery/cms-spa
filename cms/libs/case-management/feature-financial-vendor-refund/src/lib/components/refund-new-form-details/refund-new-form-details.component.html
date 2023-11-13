@@ -22,7 +22,7 @@
                             valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
                             placeholder="Search Client Name, ID, or SSN"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                            >
+                            [disabled]="disableFeildsOnConfirmSelection">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -53,7 +53,7 @@
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Refund Type">
-                        <kendo-dropdownlist aria-label="Refund Type" [(ngModel)]="selectedRefundType"
+                        <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Refund Type" [(ngModel)]="selectedRefundType"
                             [data]="refundType" [fillMode]="formUiStyle.dropDownFillMode"  (selectionChange)="selectionChange($event)">
                         </kendo-dropdownlist>
                     </kendo-floatinglabel>
@@ -70,8 +70,8 @@
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'INS'">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel text="Insurance Carrier and Plan">
-                        <kendo-dropdownlist aria-label="Insurance Carrier and Plan"
+                    <kendo-floatinglabel  text="Insurance Carrier and Plan">
+                        <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Insurance Carrier and Plan"
                             [fillMode]="formUiStyle.dropDownFillMode">
                         </kendo-dropdownlist>
                     </kendo-floatinglabel> 

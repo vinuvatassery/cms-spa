@@ -93,6 +93,7 @@ export class RefundNewFormDetailsComponent{
   filterData: any;
   paymentRequestId: any;
   insurancePremiumsRequestIds: any;
+  disableFeildsOnConfirmSelection = false
 
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
@@ -105,6 +106,7 @@ export class RefundNewFormDetailsComponent{
   confirmationClicked (){
     this.isConfirmationClicked = true
     if(this.selectedRefundType==='INS'){
+      this.disableFeildsOnConfirmSelection = true
     }
 
   } 
@@ -113,7 +115,7 @@ export class RefundNewFormDetailsComponent{
   getInsuranceRefundInformation(data:any){
     const param ={
       ...data,
-      paymentRequestsId : this.insurancePremiumsRequestIds
+      paymentRequestsId : this.paymentRequestId
     }
     this.financialVendorRefundFacade.getInsuranceRefundInformation(param);
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
