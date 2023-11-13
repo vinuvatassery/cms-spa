@@ -1232,6 +1232,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     }
   }
   insuranceCarrierNameChange(value: string) {
+    if (value == null) {
+      return;
+    }
     let insuranceType = null;
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
       insuranceType = InsuranceStatusType.dentalInsurance;
@@ -1297,7 +1300,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
             next: (data: any) => {
               this.insurancePolicyFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
-                'Insurance plan updated successfully.'
+                'Insurance Policy has been added successfully'
               );
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
@@ -1323,7 +1326,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
             next: (data: any) => {
               this.insurancePolicyFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
-                'Insurance plan saved Successfully.'
+                'Insurance Policy has been added successfully'
               );
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();

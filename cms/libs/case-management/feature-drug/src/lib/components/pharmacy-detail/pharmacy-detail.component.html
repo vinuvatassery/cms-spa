@@ -106,7 +106,7 @@
 </kendo-dialog-actions>
 
 <kendo-dialog kendoRippleContainer *ngIf="isOpenNewPharmacyClicked" (close)="onCloseNewPharmacyClicked()"
-  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{ hasPharmacyCreateUpdatePermission == true ? 'Add Pharmacy' : 'Request Pharmacy'}}" kendoTooltip>
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{ hasPharmacyCreateUpdatePermission == true ? 'Add New Pharmacy' : 'Request New Pharmacy'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Pharmacy"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="onCloseNewPharmacyClicked()"
     [ddlStates$]="ddlStates" [hasCreateUpdatePermission]="hasPharmacyCreateUpdatePermission"
