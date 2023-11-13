@@ -251,6 +251,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       })
       this.groupedPaymentRequestTypes = groupBy(refactoredPaymentRequestTypeArray, [{ field: "parentCode" }]);
     });
+    this.cd.detectChanges()
   }
 
   onCloseViewProviderDetailClicked(result: any){
