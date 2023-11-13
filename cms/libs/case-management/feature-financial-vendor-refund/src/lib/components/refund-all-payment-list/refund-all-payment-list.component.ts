@@ -75,7 +75,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'UnAllPayments Refund',
+      text: 'Unbatch Refund',
       icon: 'undo',
       click: (data: any) =>{
         if (!this.isUnBatchRefundsClosed) {

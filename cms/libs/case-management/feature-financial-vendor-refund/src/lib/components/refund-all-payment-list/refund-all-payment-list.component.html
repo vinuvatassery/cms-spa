@@ -299,7 +299,11 @@
 
   </div>
 
-  <ng-template #deleteRefundConfirmationDialog>
+  <ng-template #unBatchRefundsDialogTemplate>
+    <cms-unbatch-refund-confirmation (UnBatchCloseClickedEvent)="onUnBatchCloseClicked($event)" [isBulkUnBatchOpened]="false"></cms-unbatch-refund-confirmation>
+  </ng-template>
+
+  <ng-template #deleteRefundsConfirmationDialogTemplate>
     <cms-delete-refund-confirmation
         (isModalDeleteRefundsCloseClicked)="onModalDeleteRefundsModalClose($event)"
         (isModalDeletedRefundsButtonClicked)="onModalBatchDeletingRefundsButtonClicked($event)"

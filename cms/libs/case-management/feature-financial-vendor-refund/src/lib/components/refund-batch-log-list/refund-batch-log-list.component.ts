@@ -7,47 +7,76 @@ import {
   OnInit,
   OnChanges,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, first } from 'rxjs';
 import { Router } from '@angular/router';
+import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-refund-batch-log-list',
-  templateUrl: './refund-batch-log-list.component.html', 
+  templateUrl: './refund-batch-log-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RefundBatchLogListComponent implements OnInit, OnChanges{
+  @ViewChild('unBatchRefundsDialogTemplate', { read: TemplateRef })
+  unBatchRefundsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
+  deleteRefundsConfirmationDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
-  
+
+  isUnBatchRefundsClosed = false;
+  isDeleteClaimClosed = false;
+  UnBatchDialog: any;
+  deleteRefundsDialog: any;
+  selected: any;
+  deletemodelbody = 'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
+
   public batchLogGridActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Refund',
       icon: 'edit',
-      
+
     },
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Refund',
       icon: 'undo',
-     
+      click: (data: any) =>{
+        if (!this.isUnBatchRefundsClosed) {
+          this.isUnBatchRefundsClosed = true;
+          this.selected = data;
+          this.onUnBatchOpenClicked(this.unBatchRefundsDialogTemplate);
+        }
+      }
     },
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Refund',
       icon: 'delete',
-      
+      click: (data: any): void => {
+        this.isUnBatchRefundsClosed = false;
+        this.isDeleteClaimClosed = true;
+        this.onSingleClaimDelete(data.paymentRequestId.split(','));
+        this.onDeleteRefundsOpenClicked(
+          this.deleteRefundsConfirmationDialogTemplate
+        );
+      },
+
     },
   ];
- 
+
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -70,11 +99,15 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
-  
+  isBulkUnBatchOpened: any;
+  batchId = '';
+
+
   /** Constructor **/
-  constructor(private route: Router, ) {}
-  
+  constructor(private route: Router,
+    private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
+    private dialogService: DialogService) {}
+
   ngOnInit(): void {
     this.loadBatchLogListGrid();
   }
@@ -113,8 +146,8 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
     this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
- 
-  
+
+
   onChange(data: any) {
     this.defaultGridState();
 
@@ -133,7 +166,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
@@ -179,14 +212,105 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
         this.filterData
       );
       this.gridVendorsBatchLogDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
+      if (data?.total >= 0 || data?.total === -1) {
         this.isBatchLogGridLoaderShow = false;
       }
     });
     this.isBatchLogGridLoaderShow = false;
   }
- 
+
   onBackClicked(){
     this.route.navigate(['financial-management/vendor-refund']);
+  }
+
+  onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
+    this.UnBatchDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onUnBatchCloseClicked(result: any) {
+    if (result) {
+      if (this.isBulkUnBatchOpened) {
+        this.handleUnbatchEntireBatch();
+        this.financialVendorRefundFacade.unbatchEntireBatch(
+          [this.batchId],
+        );
+      } else {
+        this.handleUnbatchRefunds();
+        this.financialVendorRefundFacade.unbatchRefund(
+          [this.selected.paymentRequestId]
+        );
+      }
+    }
+    this.isUnBatchRefundsClosed = false;
+    this.isBulkUnBatchOpened = false;
+    this.UnBatchDialog.close();
+  }
+
+  handleUnbatchRefunds() {
+    this.financialVendorRefundFacade.unbatchRefunds$
+      .pipe(first((unbatchResponse: any) => unbatchResponse != null))
+      .subscribe((unbatchResponse: any) => {
+        if (unbatchResponse ?? false) {
+          this.loadBatchLogListGrid();
+        }
+      });
+  }
+
+  handleUnbatchEntireBatch() {
+    this.financialVendorRefundFacade.unbatchEntireBatch$
+      .pipe(
+        first(
+          (unbatchEntireBatchResponse: any) =>
+            unbatchEntireBatchResponse != null
+        )
+      )
+      .subscribe((unbatchEntireBatchResponse: any) => {
+        if (unbatchEntireBatchResponse ?? false) {
+          // this.route.navigateByUrl(
+          //   `financial-management/claims/${this.claimsType}?tab=2`
+          // );
+          this.loadBatchLogListGrid();
+        }
+      });
+  }
+
+  public onDeleteRefundsOpenClicked(template: TemplateRef<unknown>): void {
+    this.deleteRefundsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onModalDeleteRefundsModalClose(result: any) {
+    if (result) {
+      this.isDeleteClaimClosed = false;
+      this.deleteRefundsDialog.close();
+    }
+  }
+
+  onSingleClaimDelete(selection: any) {
+    this.selected = selection;
+  }
+
+  onModalBatchDeletingRefundsButtonClicked(action: any) {
+    if (action) {
+      this.handleDeleteRefunds();
+      this.financialVendorRefundFacade.deleteRefunds(this.selected);
+    }
+  }
+
+  handleDeleteRefunds() {
+    this.financialVendorRefundFacade.deleteRefunds$
+      .pipe(first((deleteResponse: any) => deleteResponse != null))
+      .subscribe((deleteResponse: any) => {
+        if (deleteResponse != null) {
+          this.isDeleteClaimClosed = false;
+          this.deleteRefundsDialog.close();
+          this.loadBatchLogListGrid();
+        }
+      });
   }
 }
