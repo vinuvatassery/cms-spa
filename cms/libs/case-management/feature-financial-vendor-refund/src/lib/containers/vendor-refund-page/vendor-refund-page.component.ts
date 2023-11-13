@@ -68,6 +68,20 @@ export class VendorRefundPageComponent {
     );
   }
 
+  loadRefundPaymentsListGrid(data: any) {
+    this.financialVendorRefundFacade.selectedClaimsTab = 1;
+    this.tab = this.financialVendorRefundFacade.selectedClaimsTab;
+    this.dataExportParameters = data;
+    this.financialVendorRefundFacade.loadRefundReceiptLogListService(
+      data?.skipCount,
+      data?.pagesize,
+      data?.sortColumn,
+      data?.sortType,
+      data?.filter,
+      
+    );
+  }
+  
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
 
   exportClaimsPaymentsGridData(data: any) {

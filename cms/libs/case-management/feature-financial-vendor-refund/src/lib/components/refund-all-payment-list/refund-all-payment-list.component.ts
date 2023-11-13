@@ -37,6 +37,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Input() sortValueRefunds: any;
   @Input() vendorRefundAllPaymentsGridLists$: any;
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
+  
   public state!: State;
   sortColumn = 'entryDate';
   sortDir = 'Ascending';
@@ -54,6 +55,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
+  searchColumnChangeHandler(data:any){
+    this.onChange(data)
+  }
+  
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -83,20 +88,73 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
   ) { }
 
+  isColumnsReordered = false;
+  columnChangeDesc = 'Default Columns';
+  filteredByColumnDesc = '';
+  sortColumnDesc = 'Vendor Name';
+  @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   dataListApi:any;
+  
+  setToDefault() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+    this.sortColumn = 'Vendor Name';
+    this.sortDir = 'Ascending';
+    this.filter = '';
+    this.selectedColumn = 'vendorName';
+    this.isFiltered = false;
+    this.columnsReordered = false;
+    this.sortValue = 'vendorName';
+    this.sortType = 'asc';
+    this.sort = this.sortColumn;
+    this.searchValue =''
+    this.loadVendorRefundAllPaymentsListGrid();
+  }
+
   ngOnInit(): void {
-    
+    this.loadVendorRefundReceiptLogListGrid();
     // this.loadVendorRefundAllPaymentsListGrid();
     // this.tempService.loadTempRefundList().subscribe((data: any) => {
     //   // alert(JSON.stringify(data));
     //   this.dataListApi = data;
     // })
   }
+
+  private loadVendorRefundReceiptLogListGrid(): void {
+    this.loadRefundProcess(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
+  }
+
+  loadRefundProcess(
+    skipCountValue: number,
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string
+  ) {
+    this.isVendorRefundAllPaymentsGridLoaderShow = true;
+    const gridDataRefinerValue = {
+      skipCount: skipCountValue,
+      pagesize: maxResultCountValue,
+      sortColumn: sortValue,
+      sortType: sortTypeValue,
+      filter: this.state?.['filter']?.['filters'] ?? [],
+    };
+    this.loadVendorRefundAllPaymentsListEvent.emit(gridDataRefinerValue);
+    this.gridDataHandle();
+  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: [{ field: 'vendorName', dir: 'asc' }]
     };
 
     this.loadVendorRefundAllPaymentsListGrid();
@@ -129,10 +187,17 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.gridDataHandle();
   }
 
-
-
   onChange(data: any) {
     this.defaultGridState();
+    let operator = 'startswith';
+    if (
+      this.selectedColumn === 'refundAmount' ||
+      this.selectedColumn === 'refundWarrentnbr'||
+      this.selectedColumn === 'grantNumber' ||
+      this.selectedColumn === 'indexCode' 
+    ) {
+      operator = 'eq';
+    }
 
     this.filterData = {
       logic: 'and',
@@ -140,8 +205,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendor',
-              operator: 'startswith',
+              field: this.selectedColumn ?? 'vendorName',
+              operator: operator,
               value: data,
             },
           ],
@@ -149,7 +214,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
@@ -173,6 +238,20 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
     this.loadVendorRefundAllPaymentsListGrid();
   }
 
@@ -187,6 +266,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.filterData = filter;
   }
 
+  isDataAvailable=true;
   gridDataHandle() {
     this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
@@ -198,22 +278,26 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       if (data?.total >= 0 || data?.total === -1) {
         this.isVendorRefundAllPaymentsGridLoaderShow = false;
       }
+      if(data?.total < 1)
+      {
+        this.isDataAvailable=false;
+      }
     });
    
   }
 
   public selectedPayments: any[] = [];
-  isProcessGridExpand = false;
+  isLogGridExpanded = false;
   hideActionButton = false;
   RefundLogMode = false
   receptingLogClicked() {
-    this.isProcessGridExpand = !this.isProcessGridExpand;
+    this.isLogGridExpanded = !this.isLogGridExpanded;
     this.RefundLogMode = !this.RefundLogMode;
     this.hideActionButton = !this.hideActionButton;
   }
 
   cancelActions() {
-    this.isProcessGridExpand = !this.isProcessGridExpand;
+    this.isLogGridExpanded = !this.isLogGridExpanded;
     this.hideActionButton = !this.hideActionButton;
     this.RefundLogMode = !this.RefundLogMode;
   }
@@ -509,25 +593,44 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     //this.searchSubject.next(searchValue);
   }
 
+  gridColumns: { [key: string]: string }  = {
+    ALL: 'All Columns',
+    VendorName: "Vendor Name",
+  };
+
+  columns: any = {
+    VendorName: 'Vendor Name',
+    type: 'Type' ,
+    clientFullName: 'Client Name',
+    refundWarrentnbr: 'Refund Warrant #',
+    refundAmount:'Refund Amount',
+    indexCode: 'Index Code',
+    pcaCode:'PCA',
+    vp:'VP',
+    refunfNotes:'Refund Note',
+  
+    
+  };
+
   searchColumnList: { columnName: string; columnDesc: string }[] = [
     {
       columnName: 'dateReceived',
       columnDesc: 'Date Received',
     },
     {
-      columnName: 'vendor',
+      columnName: 'vendorName',
       columnDesc: 'Vendor',
     },
     {
-      columnName: 'clientID',
-      columnDesc: 'Client ID',
+      columnName: 'clientId',
+      columnDesc: 'Client',
     },
     {
-      columnName: 'refundType',
+      columnName: 'type',
       columnDesc: 'Refund Type',
     },
     {
-      columnName: 'refundWarrantNumber',
+      columnName: 'refundWarrentnbr',
       columnDesc: 'Refund Warrant Number',
     },
     {
@@ -539,11 +642,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       columnDesc: 'Deposit Date',
     },
     {
-      columnName: 'vpSuffix',
+      columnName: 'vp',
       columnDesc: 'Vp Suffix',
     },
     {
-      columnName: 'creditSuffix',
+      columnName: 'credit',
       columnDesc: 'Credit Suffix',
     },
     {
@@ -555,7 +658,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       columnDesc: 'Grant #',
     },
     {
-      columnName: 'refundNote',
+      columnName: 'refundNotes',
       columnDesc: 'Refund Note',
     },
     {

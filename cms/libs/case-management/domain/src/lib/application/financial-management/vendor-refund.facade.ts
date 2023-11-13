@@ -25,7 +25,7 @@ export class FinancialVendorRefundFacade {
     field: this.sortValueRefundBatch,
   }];
 
-  public sortValueRefundPayments = 'entryDate';
+  public sortValueRefundPayments = 'CreationTime';
   public sortPaymentsList: SortDescriptor[] = [{
     field: this.sortValueRefundPayments,
   }];
@@ -222,6 +222,7 @@ export class FinancialVendorRefundFacade {
       },
     });  
   }
+
   loadFinancialRefundProcessListGrid(
     skipcount: number,
     maxResultCount: number,
@@ -237,6 +238,23 @@ export class FinancialVendorRefundFacade {
           total: dataResponse["totalCount"]
         };
         this.vendorRefundProcessDataSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
+
+  
+  loadRefundReceiptLogListService( skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: string) {
+    filter = JSON.stringify(filter);
+    this.financialVendorRefundDataService.loadRefundReceiptLogListService(skipcount,  maxResultCount,  sort,  sortType, filter).subscribe({
+      next: (dataResponse) => {
+        const gridView = { data: dataResponse["items"], total: dataResponse["totalCount"]
+        };
+        this.vendorRefundAllPaymentsDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
