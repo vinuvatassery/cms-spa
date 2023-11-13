@@ -30,10 +30,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  @Input() sortValueRefunds: any;
   @Input() vendorRefundAllPaymentsGridLists$: any;
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'entryDate';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -102,10 +103,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
   ) {
     this.isVendorRefundAllPaymentsGridLoaderShow = true;
     const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
+      SkipCount: skipCountValue,
+      MaxResultCount: maxResultCountValue,
+      Sorting: sortValue,
+      SortType: sortTypeValue,
+      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? [])
     };
     this.loadVendorRefundAllPaymentsListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -122,7 +124,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
+              field: this.selectedColumn ?? 'entryDate',
               operator: 'startswith',
               value: data,
             },
@@ -176,12 +178,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
         this.gridDataResult.data,
         this.filterData
       );
-      this.gridVendorsAllPaymentsDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
-        this.isVendorRefundAllPaymentsGridLoaderShow = false;
-      }
+      this.gridVendorsAllPaymentsDataSubject.next(this.gridDataResult);      
+        this.isVendorRefundAllPaymentsGridLoaderShow = false;     
     });
-    this.isVendorRefundAllPaymentsGridLoaderShow = false;
+   
   }
  
 }

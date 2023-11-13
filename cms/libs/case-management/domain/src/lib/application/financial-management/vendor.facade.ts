@@ -163,9 +163,9 @@ export class FinancialVendorFacade {
     });
   }
 
-  getVendorDetails(vendorId: string) {
+  getVendorDetails(vendorId: string, isActive: boolean = true) {
     this.showLoader();
-    this.financialVendorDataService.getVendorDetails(vendorId).subscribe({
+    this.financialVendorDataService.getVendorDetails(vendorId, isActive).subscribe({
       next: (vendorDetail: any) => {
         this.selectedVendorSubject.next(vendorDetail);
         this.hideLoader();

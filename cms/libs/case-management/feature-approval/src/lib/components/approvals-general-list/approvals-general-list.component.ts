@@ -14,15 +14,14 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import {
-  PendingApprovalGeneralTypeCode
-} from '@cms/case-management/domain';
+import { PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 import {
   UserDataService,
   UserManagementFacade,
 } from '@cms/system-config/domain';
+import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html',
@@ -49,7 +48,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
   @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
+  @Input() clinicVendorLoader$!: Observable<any>;
   @Output() onVendorClickedEvent = new EventEmitter<any>();
+
   pendingApprovalGeneralTypeCode: any;
   public state!: State;
   sortColumn = 'batch';
@@ -89,6 +90,13 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Output() getMasterDetailsEvent = new EventEmitter<any>();
   @Input() selectedMasterDetail$: any;
   selectedSubtypeCode: any;
+  @Input() clinicVendorList$:any;
+  @Input() ddlStates$ : any;
+  @Output() editClickedEvent = new EventEmitter<any>();
+  @Input() healthCareForm!: FormGroup;
+  @Output() searchClinicVendorClicked = new EventEmitter<any>();
+  @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
+  selectedMasterData!:any;
 
   /** Constructor **/
   constructor(
@@ -100,9 +108,14 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
+    this.getMasterData();
     this.loadApprovalGeneralListGrid();
     this.pendingApprovalGeneralTypeCode = PendingApprovalGeneralTypeCode;
     this.getLoggedInUserProfile();
+    this.subscribeToSubmitGeneralRequest();
+  }
+
+  subscribeToSubmitGeneralRequest(){
     this.submitGenerealRequest$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.onCloseSubmitGeneralRequestClicked();
@@ -110,6 +123,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       }
     });
   }
+
+  private getMasterData() {
+    this.selectedMasterDetail$.subscribe((value: any) => this.selectedMasterData = value);
+  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -284,6 +302,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
   openEditModal(event: any) {
     if (event) {
+      this.editClickedEvent.emit(true);
       this.onEditListItemsDetailClicked(this.editModalTemplate);
     }
   }
@@ -615,8 +634,17 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     requests.splice(0, 1);
     this.submit(requests);
   }
+  
   submit(data: any) {
     this.submitGeneralRequestsEvent.emit(data);
+  }
+
+  searchClinicClicked(event: any) {
+    this.searchClinicVendorClicked.emit(event);
+  }
+
+  updateMasterDetailsClicked(event:any) {
+    this.updateMasterDetailsClickedEvent.emit(event);
   }
 
   onProviderNameClick(paymentRequestId: any) {

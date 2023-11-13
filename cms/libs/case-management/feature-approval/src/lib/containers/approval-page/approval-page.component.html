@@ -36,6 +36,13 @@
             [usersByRole$]="usersByRole$"
             (getMasterDetailsEvent)="getMasterDetails($event)"
             [selectedMasterDetail$]="selectedMasterDetail$"
+            [clinicVendorList$]="clinicVendorList$"
+            [ddlStates$]="ddlStates$"
+            (editClickedEvent)="editClicked($event)"
+            [healthCareForm]="healthCareForm"
+            (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
+            [clinicVendorLoader$]="clinicVendorLoader$"
+            (updateMasterDetailsClickedEvent)="updateMasterDetailsClicked($event)"
             (onVendorClickedEvent)="onProviderNameClick($event)"
           >
           </productivity-tools-approvals-general-list>
