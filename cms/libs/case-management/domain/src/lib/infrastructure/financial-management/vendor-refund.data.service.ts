@@ -546,7 +546,7 @@ export class FinancialVendorRefundDataService {
       Filter : filter
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/refund/list`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/refund`,
       RefundPageAndSortedRequestDto
     );
   }
