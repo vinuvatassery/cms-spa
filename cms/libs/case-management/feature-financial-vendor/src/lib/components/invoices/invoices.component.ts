@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 
 /** External libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, Subscription, debounceTime } from 'rxjs';
 
 /** Facade **/

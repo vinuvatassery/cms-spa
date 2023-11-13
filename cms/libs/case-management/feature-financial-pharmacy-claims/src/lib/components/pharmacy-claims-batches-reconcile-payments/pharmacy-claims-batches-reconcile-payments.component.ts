@@ -48,8 +48,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Input() reconcileBreakoutSummary$:any;
   @Input() reconcilePaymentBreakoutList$ :any;
   @Input() batchId: any;
-  @Input() exportButtonShow$ : any
-  @Input() warrantNumberChange$: any;
+  @Input() exportButtonShow$ : any;
   @Input() warrantNumberChangeLoader$: any;
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
@@ -194,7 +193,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         paymentToReconcileCount : 0
       }
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
-      this.warrantNumberChangeSubscription();
       this.calculateCharacterCountBulkNote(null);
 
       this.warrantNumberChangeLoader$.subscribe((response: any) =>
@@ -348,7 +346,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
   dataStateChange(stateData: any): void {
     this.sortBatch = stateData.sort;
-    debugger;
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
@@ -422,8 +419,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
           this.reconcilePaymentGridUpdatedResult[index].amountPaid = dataItem?.amountPaid;
           this.reconcilePaymentGridUpdatedResult[index].paymentMethodCode = dataItem?.paymentMethodCode;
           this.reconcilePaymentGridUpdatedResult[index].batchId = dataItem?.batchId;
-          this.reconcilePaymentGridUpdatedResult[index].warrantNumberInValid = dataItem?.warrantNumberInValid;
-          this.reconcilePaymentGridUpdatedResult[index].warrantNumberInValidMsg = dataItem?.warrantNumberInValidMsg; 
         }
       });
     }
@@ -488,8 +483,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         itemResponse.data[index].isPrintAdviceLetter = ifExist?.isPrintAdviceLetter;
         itemResponse.data[index].tAreaCessationCounter = ifExist?.tAreaCessationCounter;
         itemResponse.data[index].batchId = ifExist?.batchId;       
-        itemResponse.data[index].warrantNumberInValid = ifExist?.warrantNumberInValid;
-        itemResponse.data[index].warrantNumberInValidMsg = ifExist?.warrantNumberInValidMsg; 
       }
       else {
         itemResponse.data[index].paymentReconciledDate = itemResponse.data[index].paymentReconciledDate !== null ? new Date(itemResponse.data[index].paymentReconciledDate) : itemResponse.data[index].paymentReconciledDate;
@@ -739,34 +732,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     else{
       dataItem.warrantNumberChanged = false;
     }
-    let isCheckNumberAlreadyExist = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr === dataItem.checkNbr 
-    && (x.vendorId !== dataItem.vendorId || x.batchId !== dataItem.batchId));
-    if (isCheckNumberAlreadyExist.length > 0) {
-      dataItem.warrantNumberInValid = true;
-      dataItem.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
-    }
-    else {
-      dataItem.warrantNumberInValidMsg = null;
-      dataItem.warrantNumberInValid = false;
-    }
-    if (dataItem.checkNbr === null || dataItem.checkNbr === '') {
-      dataItem.warrantNumberInValidMsg = null;
-      dataItem.warrantNumberInValid = false;
-    }
   }
- warrantNumberChangeSubscription(){
-  this.warrantNumberChange$.subscribe((response:any) =>{
-    if(response.length>0){
-      let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === this.checkingPaymentRequest);
-      if (ifExist !== undefined) {
-        ifExist.warrantNumberInValid = true;
-        ifExist.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
-        this.assignUpdatedItemToPagedList();
-        this.cd.detectChanges();
-      }
-    }
-  })
- }
 
   validateReconcileGridRecord() {
     this.reconcilePaymentGridUpdatedResult.forEach((currentPage: any, index: number) => {
@@ -813,8 +779,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
           item.amountPaid = dataItem?.amountPaid;
           item.paymentMethodCode = dataItem?.paymentMethodCode;
           item.batchId = dataItem?.batchId;
-          item.warrantNumberInValid = dataItem?.warrantNumberInValid;
-          item.warrantNumberInValidMsg = dataItem?.warrantNumberInValidMsg;
         }
       }
     })
@@ -827,9 +791,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     }
     if (control === 'paymentSentDate') {
       inValid = dataItem.datePaymentSentInValid;
-    }
-    if (control === 'checkNbr') {
-      inValid = dataItem.warrantNumberInValid;
     }
     if (inValid) {
       document.getElementById(control + rowIndex)?.classList.remove('ng-valid');
@@ -865,11 +826,10 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     this.reconcileAssignValueBatchForm.controls['datePaymentSend'].updateValueAndValidity();
     this.isSaveClicked = true;
     this.validateReconcileGridRecord();
-    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid || x.warrantNumberInValid);
+    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
     const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
     const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
-    const warrantNumberInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberInValid);
-    const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length + warrantNumberInValidCount.length;
+    const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length ;
     if (isValid.length > 0) {
       this.pageValidationMessageFlag = true;
       this.pageValidationMessage = totalCount +" validation errors found, please review each page for errors. " ;
@@ -975,11 +935,11 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   navToReconcilePayments(){
     this.reconcilePaymentGridUpdatedResult = [];
     if(this.loadType === null || this.loadType === undefined){
-      this.route.navigate([`/financial-management/claims/pharmacy/batch`],
+      this.route.navigate([`/financial-management/pharmacy-claims/batch`],
       { queryParams :{bid: this.batchId}});
     }
     else{
-      this.route.navigate([`/financial-management/claims/pharmacy`]);
+      this.route.navigate([`/financial-management/pharmacy-claims`]);
     }
   }
 

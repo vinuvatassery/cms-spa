@@ -2,7 +2,7 @@
       <section class="app-l-mainTittle">
             <div class="d-flex">
                   <button aria-label="back to vendor refund" kendoButton look="flat" class="mr-1"
-                        (click)="navToBatchDetails($event)" title="Go Back"> <span class="material-icons">
+                  (click)="navToReconcilePayments()" title="Go Back"> <span class="material-icons">
                               arrow_back </span> </button>
                   <h1 class="maintitle_withicon text-bold">Reconcile Payments</h1>
             </div>
@@ -365,7 +365,7 @@
             </div>
             <div class="text-right flex-gap">
                   
-                  <button kendoButton [primary]="true" look="outline"  aria-label="Close"> Close </button>
+                  <button kendoButton [primary]="true" look="outline"  aria-label="Close"(click)="navToReconcilePayments()" > Close </button>
                   <button kendoButton [primary]="true" aria-label="Save"  (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
             </div>
       

@@ -55,9 +55,6 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
     const params = new GridFilterParam(event.skipCount, event.pageSize, event.sortColumn, event.sortType, JSON.stringify(event.filter)); 
     this.financialPharmacyClaimsFacade.loadReconcileListGrid(this.batchId,params);
   }
-  warrantNumberChange(data:any){
-    this.financialPharmacyClaimsFacade.CheckWarrantNumber(data.batchId,data.checkNbr,data.vendorId);   
-  }
   exportClaimBatchesGridData(){
     const data = this.dataExportParameters
     if(data){

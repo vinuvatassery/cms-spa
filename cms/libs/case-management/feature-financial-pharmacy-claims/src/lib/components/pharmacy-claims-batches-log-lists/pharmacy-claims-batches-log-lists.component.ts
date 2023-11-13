@@ -69,17 +69,7 @@ reverseClaimsDialog: any;
   @Input() unbatchClaim$ :any
   @Input() unbatchEntireBatch$ :any
   @Input() exportButtonShow$ :any
-  public bulkMore = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Request Payments',
-      icon: 'local_atm',
-      click: (data: any): void => {
-      this.isRequestPaymentClicked = true;
-      this.isPrintAuthorizationClicked = false;
-        
-      },  
-    },
+  public bulkMore = [ 
     
     {
       buttonType: 'btn-h-primary',
@@ -91,7 +81,7 @@ reverseClaimsDialog: any;
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Authorizations',
+      text: 'Print Advice Letter',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
