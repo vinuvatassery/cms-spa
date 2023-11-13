@@ -6,6 +6,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { GridFilterParam } from '../../entities/grid-filter-param';
 import { BatchPharmacyClaims } from '../../entities/financial-management/batch-pharmacy-claims';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsDataService {
@@ -26,6 +27,14 @@ export class FinancialPharmacyClaimsDataService {
   }
   batchClaims(batchPharmacyClaims: BatchPharmacyClaims) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/batch`, batchPharmacyClaims);
+  }
+  deleteClaims(batchPharmacyClaims: BatchPharmacyClaims) {
+      const options = {
+        body: {
+          paymentRequestIds: batchPharmacyClaims,
+        }      
+   }
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments`, options);
   }
 
   loadPharmacyClaimsBatchListService(params: GridFilterParam) {
@@ -137,6 +146,15 @@ export class FinancialPharmacyClaimsDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/${paymentRequestId}`);
   }
 
+  unbatchEntireBatch(paymentRequestBatchId: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/${paymentRequestBatchId}/unbatch`, null);
+  }
+
+  unbatchClaim(paymentRequestId: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/payment-requests/${paymentRequestId}/unbatch`, null);
+  }
+
+
   searchPharmacies(searchText: string) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/searchText=${searchText}`);
@@ -150,5 +168,21 @@ export class FinancialPharmacyClaimsDataService {
   searchDrug(searchText: string) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/drugs/ndcCode=${searchText}`);
+  }
+  loadRecentClaimListService(data:any): Observable<any> {
+    
+    const recentClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/recent-claims`,recentClaimsPageAndSortedRequestDto
+    );
   }
 }
