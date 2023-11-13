@@ -24,8 +24,6 @@ export class VendorRefundPageComponent    {
    sortValueRefundPayments = this.financialVendorRefundFacade.sortValueRefundPayments;
    sortPaymentsList = this.financialVendorRefundFacade.sortPaymentsList;
    state!: State;
-   tab = 1;
-   dataExportParameters!: any;
    selectedClaimsTab = 1;
   vendorRefundProcessGridLists$ =
   this.financialVendorRefundFacade.vendorRefundProcessData$;
