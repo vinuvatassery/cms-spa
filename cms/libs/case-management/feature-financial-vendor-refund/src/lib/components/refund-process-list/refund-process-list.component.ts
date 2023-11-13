@@ -164,10 +164,6 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService, 
   ) {}
-
-  ngOnInit(): void {
-    this.loadVendorRefundProcessListGrid();
-  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
