@@ -34,10 +34,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  @Input() sortValueRefunds: any;
   @Input() vendorRefundAllPaymentsGridLists$: any;
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'entryDate';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -118,10 +119,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   ) {
     this.isVendorRefundAllPaymentsGridLoaderShow = true;
     const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
+      SkipCount: skipCountValue,
+      MaxResultCount: maxResultCountValue,
+      Sorting: sortValue,
+      SortType: sortTypeValue,
+      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? [])
     };
     this.loadVendorRefundAllPaymentsListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -197,7 +199,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
         this.isVendorRefundAllPaymentsGridLoaderShow = false;
       }
     });
-    this.isVendorRefundAllPaymentsGridLoaderShow = false;
+   
   }
 
   public selectedPayments: any[] = [];

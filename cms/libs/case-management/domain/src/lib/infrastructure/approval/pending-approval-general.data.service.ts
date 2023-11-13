@@ -50,21 +50,13 @@ export class PendingApprovalGeneralService {
     );
   }
   
-  getVendorDetails(vendorId: string, subTypeCode: string) {
-    if (
-      subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
-      subTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
-      subTypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
-      subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider
-    ) {
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/temp`
-      );
-    } else if (subTypeCode == PendingApprovalGeneralTypeCode.Drug) {
-      return this.http.post<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/drugs`,
-        null
-      );
+  getMasterDetails(masterDetailId: string, subTypeCode: string) {
+    if (subTypeCode == PendingApprovalGeneralTypeCode.Drug) {
+      return this.http.get<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/drugs?drugId=${masterDetailId}`);
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsurancePlan) {
+      return this.http.get<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans?insurancePlanId=${masterDetailId}`);
     }
     return of();
   }

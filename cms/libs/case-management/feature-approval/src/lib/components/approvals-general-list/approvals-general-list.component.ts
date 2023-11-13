@@ -14,17 +14,14 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
-import { PanelBarCollapseEvent } from '@progress/kendo-angular-layout';
+import { Observable, Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import {
-  PendingApprovalGeneralTypeCode,
-  PendingApprovalPaymentTypeCode,
-} from '@cms/case-management/domain';
+import { PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 import {
   UserDataService,
   UserManagementFacade,
 } from '@cms/system-config/domain';
+import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'productivity-tools-approvals-general-list',
   templateUrl: './approvals-general-list.component.html',
@@ -47,16 +44,12 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() approvalsGeneralLists$: any;
   @Input() clientsSubjects$: any;
   @Input() casereassignmentExpandedInfo$: any;
-  @Input() approvalsExceptionCard$: any;
-  @Input() invoiceData$: any;
-  @Input() isInvoiceLoading$: any;
   @Input() submitGenerealRequest$: any;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
-  @Output() loadCasereassignmentExpanedInfoParentEvent =
-    new EventEmitter<any>();
-  @Output() loadApprovalsExceptionCardEvent = new EventEmitter<any>();
-  @Output() loadApprovalsExceptionInvoiceEvent = new EventEmitter<any>();
+  @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
+  @Input() clinicVendorLoader$!: Observable<any>;
+  @Output() onVendorClickedEvent = new EventEmitter<any>();
 
   pendingApprovalGeneralTypeCode: any;
   public state!: State;
@@ -94,9 +87,16 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedIndex: any;
   @ViewChild('editListItemDialogModal') editModalTemplate!: TemplateRef<any>;
   @Input() usersByRole$: any;
-  @Output() getVendorDetailEvent = new EventEmitter<any>();
-  @Input() selectedVendor$: any;
+  @Output() getMasterDetailsEvent = new EventEmitter<any>();
+  @Input() selectedMasterDetail$: any;
   selectedSubtypeCode: any;
+  @Input() clinicVendorList$:any;
+  @Input() ddlStates$ : any;
+  @Output() editClickedEvent = new EventEmitter<any>();
+  @Input() healthCareForm!: FormGroup;
+  @Output() searchClinicVendorClicked = new EventEmitter<any>();
+  @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
+  selectedMasterData!:any;
 
   /** Constructor **/
   constructor(
@@ -108,9 +108,14 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit(): void {
+    this.getMasterData();
     this.loadApprovalGeneralListGrid();
     this.pendingApprovalGeneralTypeCode = PendingApprovalGeneralTypeCode;
     this.getLoggedInUserProfile();
+    this.subscribeToSubmitGeneralRequest();
+  }
+
+  subscribeToSubmitGeneralRequest(){
     this.submitGenerealRequest$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.onCloseSubmitGeneralRequestClicked();
@@ -118,6 +123,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       }
     });
   }
+
+  private getMasterData() {
+    this.selectedMasterDetail$.subscribe((value: any) => this.selectedMasterData = value);
+  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -246,7 +256,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         subTypeCode: item.subTypeCode,
       };
       this.selectedSubtypeCode = item.subTypeCode;
-      this.getVendorDetailEvent.emit(userObject);
+      this.getMasterDetailsEvent.emit(userObject);    
       this.isPanelExpanded = true;
       this.cd.detectChanges();
     }
@@ -271,7 +281,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   onSubmitClicked(template: TemplateRef<unknown>): void {
     this.submitRequestDialogService = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
 
@@ -292,6 +302,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
   openEditModal(event: any) {
     if (event) {
+      this.editClickedEvent.emit(true);
       this.onEditListItemsDetailClicked(this.editModalTemplate);
     }
   }
@@ -312,19 +323,17 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         return 'Request to add Insurance Providers To Master List';
       case PendingApprovalGeneralTypeCode.Pharmacy:
         return 'Request to add Pharmacies To Master List';
+      case PendingApprovalGeneralTypeCode.Drug:
+        return 'Request to add Drugs To Master List';
+      case PendingApprovalGeneralTypeCode.InsurancePlan:
+        return 'Request to add Insurance Plans To Master List';
     }
     return null;
   }
   loadCasereassignmentExpanedInfoEvent(approvalId: any) {
     this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
   }
-  loadApprovalsExceptionCard($event: any) {
-    this.loadApprovalsExceptionCardEvent.emit($event);
-  }
-  loadApprovalsExceptionInvoice($event: any) {
-    this.loadApprovalsExceptionInvoiceEvent.emit($event);
-  }
-
+  
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
     let inValid = false;
 
@@ -625,7 +634,20 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     requests.splice(0, 1);
     this.submit(requests);
   }
+  
   submit(data: any) {
     this.submitGeneralRequestsEvent.emit(data);
+  }
+
+  searchClinicClicked(event: any) {
+    this.searchClinicVendorClicked.emit(event);
+  }
+
+  updateMasterDetailsClicked(event:any) {
+    this.updateMasterDetailsClickedEvent.emit(event);
+  }
+
+  onProviderNameClick(paymentRequestId: any) {
+    this.onVendorClickedEvent.emit(paymentRequestId);
   }
 }

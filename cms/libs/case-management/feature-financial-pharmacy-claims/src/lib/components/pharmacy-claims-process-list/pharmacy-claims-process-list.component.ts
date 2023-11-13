@@ -11,10 +11,12 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { GridFilterParam } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
+import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { ColumnVisibilityChangeEvent, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent, FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -41,6 +43,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   @Output() exportPharmacyClaimsProcessListEvent = new EventEmitter<any>();
   @Input() batchingClaims$: any; 
   @Output() onbatchClaimsClickedEvent = new EventEmitter<any>();
+  @Output() ondeleteClaimsClickedEvent = new EventEmitter<any>();
   public selectedProcessClaims: any[] = [];
   public selectableSettings: SelectableSettings;
   public checkboxOnly = true;
@@ -68,7 +71,12 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isProcessGridExpand = true;
   isPharmacyClaimsProcessGridLoaderShow = false;
-
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  vendorId: any;
+  clientId: any;
+ clientName: any;
+ claimsType:any;
   @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
   @Input() getPharmacyClaim$: any;
@@ -152,14 +160,14 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteBatchMoreOptionClosed) {
-          this.isDeleteBatchMoreOptionClosed = true;
-          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
-        }
+        this.onSingleClaimDelete(data.paymentRequestId.split(','));
+        this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
       },
     },
   ];
-
+  onSingleClaimDelete(selection: any) {
+    this.selectedKeysChange(selection);
+  }
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     pharmacyName: 'Pharmacy Name',
@@ -192,10 +200,19 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     { columnName: 'creationTime', columnDesc: 'Entry Date' }
   ];
 
+  paymentMethodFilter = '';
+  paymentTypeFilter = '';
+  paymentStatusFilter = '';
+  deletemodelbody =
+  'This action cannot be undone, but you may add a claim at any time.';
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private dialogService: DialogService,
+    private readonly lovFacade: LovFacade,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private route: Router,
+
   ) { 
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -208,6 +225,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadPharmacyClaimsProcessListGrid();
     this.addSearchSubjectSubscription();
+    this.lovFacade.getPaymentStatusLov();
+    this.lovFacade.getPaymentMethodLov();
   }
 
   ngOnChanges(): void {
@@ -248,7 +267,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
@@ -259,8 +278,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   searchColumnChangeHandler(value: string) {
     this.filter = [];
-    //this.showNumberSearchWarning = (['pcaCode', 'appropriationYear']).includes(value);
-    //this.showDateSearchWarning = value === 'closeDate';
     if (this.searchText) {
       this.onSearch(this.searchText);
     }
@@ -268,8 +285,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   onSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    // this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'closeDate';
-    //searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
     this.searchSubject.next(searchValue);
@@ -303,7 +318,16 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   }
 
   resetGrid() {
-
+    this.defaultGridState();
+    this.sortValue = 'creationTime';
+    this.sortType = 'desc';
+    this.sortDir = this.sortType === 'desc' ? 'Descending' : "";
+    this.filter = [];
+    this.searchText = '';
+    this.selectedSearchColumn = 'ALL';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.loadPharmacyClaimsProcessListGrid();
   }
 
   performSearch(data: any) {
@@ -350,12 +374,18 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   }
 
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
+    if (!this.selectedProcessClaims.length)
+    {
+      this.financialClaimsFacade.errorShowHideSnackBar("Select a claim to delete")
+      return;
+    }
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
+    
     if (result) {
       this.isDeleteBatchMoreOptionClosed = false;
       this.deleteClaimsDialog.close();
@@ -388,8 +418,9 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   }
 
   clientRecentClaimsModalClicked(
-    template: TemplateRef<unknown>
-  ): void {
+    template: TemplateRef<unknown>,
+  data:any): void {
+    
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
@@ -399,6 +430,9 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
         duration: 200,
       },
     });
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientFullName;
   }
 
   closeRecentClaimsModal(result: any) {
@@ -502,5 +536,43 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       this.onBatchClaimsGridSelectedCancelClicked()
     })
     this.onbatchClaimsClickedEvent.emit(input)
+  }
+  onModalBatchDeletingClaimsButtonClicked(action: any) {
+    this.batchingClaims$.subscribe((_:any) =>{
+      this.isDeleteBatchMoreOptionClosed = false;
+      this.deleteClaimsDialog.close();
+      this.loadPharmacyClaimsProcessListGrid();
+      this.onBatchClaimsGridSelectedCancelClicked()
+    })
+    
+    this.ondeleteClaimsClickedEvent.emit(this.selectedProcessClaims)
+  }
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentMethodCode') {
+      this.paymentMethodFilter = value;
+    } else if (field === 'paymentTypeCode') {
+      this.paymentTypeFilter = value;
+    } else if (field === 'paymentStatus') {
+      this.paymentStatusFilter = value;
+    }
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.addClientRecentClaimsDialog.close();
   }
 }

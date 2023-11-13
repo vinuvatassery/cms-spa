@@ -42,7 +42,7 @@
   <div class="app-c-table">
     <kendo-grid (columnReorder)="onColumnReorder($event)" [filter]="state.filter" [loading]="(financialClaimsAllPaymentsGridLoader$ | async) ?? true"  [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
+    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" 
     [data]="financialClaimsAllPaymentsGridLists$ | async"
     [navigable]="!isGridExpand"
     [selectable]="selectableSettings"
@@ -230,11 +230,11 @@
 
       <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center" >
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor *ngIf="dataItem.creatorId"
             [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
             <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
           </button>
-          <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+          <kendo-popover #onUserProfileDetailsHovered width="330" position="left" >
             <ng-template kendoPopoverBodyTemplate>
               <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
             </ng-template>
@@ -310,7 +310,7 @@
     <div class="bottom-fixed-wrapper text-right flex-gap">
       <span *ngIf="previewText" class="">{{sendReportCount}} claims(s) to be previewed</span>
       <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" *ngIf="isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
-      <button kendoButton [primary]="true" aria-label="Review" [disabled]="sendReportCount === 0" class="" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
+      <button kendoButton [primary]="true" aria-label="Preview" [disabled]="sendReportCount === 0" class="" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
       <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
         buttonClass="k-split-button" [tabindex]="0" *ngIf="!isPrintAuthorizationClicked"
         [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">

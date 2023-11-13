@@ -122,8 +122,9 @@
               <kendo-filter-eq-operator></kendo-filter-eq-operator>
             </kendo-grid-numeric-filter-menu>
           </ng-template>
+          
           <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview">{{dataItem.amountPaid | kendoNumber : "c"}}</span>
+            <span class="tableamountview"><strong>$</strong> {{dataItem.amountPaid}}</span>
           </ng-template>
         </kendo-grid-column>
 

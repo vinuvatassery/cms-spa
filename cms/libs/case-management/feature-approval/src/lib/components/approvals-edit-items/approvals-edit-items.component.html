@@ -4,183 +4,169 @@
     Back” batches will be sent back to the user who submitted them.
   </p>
 
-  <div
-    class="flex-row"
-    *ngIf="
+  <div class="flex-row" *ngIf="
       selectedSubtypeCode === subTypeConst.DentalClinic ||
       selectedSubtypeCode === subTypeConst.MedicalClinic ||
       selectedSubtypeCode === subTypeConst.MedicalProvider ||
       selectedSubtypeCode === subTypeConst.DentalProvider
-    "
-  >
-    <div class="flex-col">
+    " [formGroup]="healthCareForm">
+    <div *ngIf="selectedSubtypeCode == subTypeConst.MedicalClinic || subTypeConst.DentalClinic"
+      class="flex-col flex-col-8 inlineloaderwrapper hidedropicon">
       <div class="k-auto-complete-box">
+        <span *ngIf="clinicVendorLoader$ | async"
+          class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Clinic Name">
-          <span
-            class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
-          ></span>
-          <kendo-autocomplete
-            [fillMode]="formUiStyle.dropDownFillMode"
-            placeholder="Clinic Name"
-            [filterable]="true"
-            [popupSettings]="{
-              popupClass: 'healthcaresearch-list auto-complete-with-template',
-              animate: true,
-              appendTo: 'component'
-            }"
-          >
-          </kendo-autocomplete>
+          <kendo-combobox placeholder="Clinic Name" [fillMode]="formUiStyle.dropDownFillMode"
+            [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
+            (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" formControlName="providerName"
+            [valuePrimitive]="true" valueField="vendorId" textField="vendorName"
+            [value]="selectedVendor"
+            [allowCustom]="true">
+            <button kendoButton
+              fillMode="clear" icon="image"></button>
+          </kendo-combobox>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">
+          Clinic Name is required
+        </kendo-formerror>
         <kendo-formhint>
           Start typing to choose an existing clinic, or enter a new one
         </kendo-formhint>
       </div>
     </div>
-    <div class="flex-col flex-col-6">
+    <div class="flex-col flex-col-6" *ngIf="selectedMasterData.firstName !== '' ">
       <kendo-floatinglabel text="Provider First Name">
-        <kendo-textbox
-          aria-label="Provider First Name"
-          placeholder="Provider First Name"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Provider First Name" placeholder="Provider First Name"
+          [fillMode]="formUiStyle.inputFillMode" formControlName="firstName" [maxlength]="50">
         </kendo-textbox>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="healthCareFormControls?.firstName.errors?.required && isValidateForm">
+        First Name is required
+      </kendo-formerror>
     </div>
-    <div class="flex-col flex-col-6">
+    <div class="flex-col flex-col-6" *ngIf="selectedMasterData.lastName !== '' ">
       <kendo-floatinglabel text="Provider Last Name">
-        <kendo-textbox
-          aria-label="Provider Last Name"
-          placeholder="Provider Last Name"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Provider Last Name" placeholder="Provider Last Name"
+          [fillMode]="formUiStyle.inputFillMode" formControlName="lastName" [maxlength]="50">
         </kendo-textbox>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="healthCareFormControls?.lastName.errors?.required && isValidateForm">
+        Last Name is required
+      </kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Tin">
-        <kendo-textbox
-          aria-label="Phone"
-          placeholder="Tin"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
-        </kendo-textbox>
+        <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
+          placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
+        </kendo-maskedtextbox>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="healthCareFormControls?.tinNumber.errors?.required && isValidateForm">
+        Tin Name is required
+      </kendo-formerror>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="Phone">
-        <kendo-textbox
-          aria-label="Phone"
-          placeholder="Phone"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
-        </kendo-textbox>
+      <kendo-floatinglabel text="Phone Number (optional)">
+        <kendo-maskedtextbox aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="phoneNumber" mask="(999) 000-0000">
+        </kendo-maskedtextbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Email (optional)">
-        <kendo-textbox
-          aria-label="Email (optional)"
-          placeholder="Email (optional)"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Email (optional)" placeholder="Email (optional)"
+          [fillMode]="formUiStyle.inputFillMode" formControlName="email" [maxlength]="200">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
 
     <div class="flex-col">
       <kendo-floatinglabel text="Fax (optional)">
-        <kendo-textbox
-          aria-label="Fax (optional)"
-          placeholder="Fax (optional)"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
-        </kendo-textbox>
+        <kendo-maskedtextbox aria-label="Fax (optional)" [fillMode]="formUiStyle.inputFillMode" formControlName="fax"
+          mask="(999) 000-0000">
+        </kendo-maskedtextbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Address line 1">
-        <kendo-textbox
-          aria-label="address line 1"
-          placeholder="Address line 1"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="address line 1" placeholder="Address line 1" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="addressLine1" [maxlength]="200">
         </kendo-textbox>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="healthCareFormControls?.addressLine1.errors?.required && isValidateForm">
+        Address line 1 is required
+      </kendo-formerror>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="Address line 2">
-        <kendo-textbox
-          aria-label="address line 2"
-          placeholder="Address line 2"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+      <kendo-floatinglabel text="Address Line 2 (optional)">
+        <kendo-textbox aria-label="Address Line 2 (optional)" placeholder="Address Line 2 (optional)"
+          [fillMode]="formUiStyle.inputFillMode" formControlName="addressLine2" [maxlength]="50">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="City">
-        <kendo-textbox
-          aria-label="city"
-          placeholder="City"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="city" placeholder="City" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="city" [maxlength]="50">
         </kendo-textbox>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="healthCareFormControls?.city.errors?.required && isValidateForm">
+        City Name is required
+      </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="State" class="inline-search-loader">
-        <span
-          class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
-        ></span>
-        <kendo-dropdownlist
-          aria-label="State"
-          [fillMode]="formUiStyle.dropDownFillMode"
-          placeholder="State"
-        >
+      <kendo-floatinglabel text="State">
+        <kendo-dropdownlist aria-label="State" [fillMode]="formUiStyle.dropDownFillMode" formControlName="state"
+          [data]="ddlStates$| async" textField="stateName" valueField="stateCode" [valuePrimitive]="true"
+          placeholder="State">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="healthCareFormControls?.state.errors?.required && isValidateForm">
+        State is required
+      </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Zip">
-        <kendo-textbox
-          aria-label="Zip"
-          placeholder="Zip"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Zip" placeholder="Zip" [fillMode]="formUiStyle.inputFillMode" formControlName="zip"
+          [maxlength]="10">
+        </kendo-textbox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="healthCareFormControls?.zip.errors?.required && isValidateForm">
+        Zip is required
+      </kendo-formerror>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Contact First Name (optional)">
+        <kendo-textbox aria-label="Contact First Name (optional)" placeholder="Contact First Name (optional)"
+          [fillMode]="formUiStyle.inputFillMode" formControlName="contactFirstName" [maxlength]="40">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col">
-      <span class="app-c-badge mt-3">
-        <span
-          class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
-        ></span>
-        <span> Validating address...</span>
-      </span>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Contact Last Name (optional)">
+        <kendo-textbox aria-label="Contact Last Name (optional)" placeholder="Contact Last Name (optional)"
+          [fillMode]="formUiStyle.inputFillMode" formControlName="contactLastName" [maxlength]="40">
+        </kendo-textbox>
+      </kendo-floatinglabel>
     </div>
-    <div class="flex-col">
-      <span class="app-c-badge badge-warn-light mt-3">
-        <span
-          class="material-icons"
-          aria-label="income Information"
-          aria-hidden="true"
-        >
-          info
-        </span>
-        USPS can't validate this address.
-      </span>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Contact Phone (optional)">
+        <kendo-maskedtextbox aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="contactPhone" mask="(999) 000-0000">
+        </kendo-maskedtextbox>
+      </kendo-floatinglabel>
     </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="County" class="inline-search-loader">
-        <span
-          class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
-        ></span>
-        <kendo-dropdownlist
-          aria-label="County"
-          [fillMode]="formUiStyle.dropDownFillMode"
-          placeholder="County"
-        >
-        </kendo-dropdownlist>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Contact Fax (optional)">
+        <kendo-maskedtextbox aria-label="Fax (optional)" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="contactFax" mask="(999) 000-0000">
+        </kendo-maskedtextbox>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6">
+      <kendo-floatinglabel text="Contact Email (optional)">
+        <kendo-textbox aria-label="Contact Email (optional)" placeholder="Contact Email (optional)"
+          [fillMode]="formUiStyle.inputFillMode" formControlName="contactEmail" [maxlength]="200">
+        </kendo-textbox>
       </kendo-floatinglabel>
     </div>
   </div>
@@ -188,19 +174,13 @@
     <div class="flex-col">
       <div class="k-auto-complete-box">
         <kendo-floatinglabel text="Manufacturer">
-          <span
-            class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
-          ></span>
-          <kendo-autocomplete
-            [fillMode]="formUiStyle.dropDownFillMode"
-            placeholder="Manufacturer"
-            [filterable]="true"
+          <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+          <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" placeholder="Manufacturer" [filterable]="true"
             [popupSettings]="{
               popupClass: 'healthcaresearch-list auto-complete-with-template',
               animate: true,
               appendTo: 'component'
-            }"
-          >
+            }">
           </kendo-autocomplete>
         </kendo-floatinglabel>
         <kendo-formhint>
@@ -210,96 +190,62 @@
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Drug Name">
-        <kendo-textbox
-          aria-label="Drug Name"
-          placeholder="Drug Name"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Drug Name" placeholder="Drug Name" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Brand Name">
-        <kendo-textbox
-          aria-label="Brand Name"
-          placeholder="Brand Name"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Brand Name" placeholder="Brand Name" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="NDC Code">
-        <kendo-textbox
-          aria-label="NDC Code"
-          placeholder="Tin"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="NDC Code" placeholder="Tin" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="HIV Drug?">
-        <kendo-textbox
-          aria-label="HIV Drug?"
-          placeholder="HIV Drug?"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="HIV Drug?" placeholder="HIV Drug?" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Hepatitus Drug?">
-        <kendo-textbox
-          aria-label="Hepatitus Drug?"
-          placeholder="Hepatitus Drug?"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Hepatitus Drug?" placeholder="Hepatitus Drug?"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
 
     <div class="flex-col">
       <kendo-floatinglabel text="Opportunistic infection drug?">
-        <kendo-textbox
-          aria-label="Opportunistic infection drug?"
-          placeholder="Opportunistic infection drug?"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Opportunistic infection drug?" placeholder="Opportunistic infection drug?"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Delivery Method">
-        <kendo-textbox
-          aria-label="Delivery Method"
-          placeholder="Delivery Method"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Delivery Method" placeholder="Delivery Method"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
   </div>
-  <div
-    class="flex-row"
-    *ngIf="selectedSubtypeCode === subTypeConst.InsuranceVendor"
-  >
+  <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsuranceVendor">
     <div class="flex-col">
       <div class="k-auto-complete-box">
         <kendo-floatinglabel text="Vendor Name">
-          <span
-            class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
-          ></span>
-          <kendo-autocomplete
-            [fillMode]="formUiStyle.dropDownFillMode"
-            placeholder="Vendor Name"
-            [filterable]="true"
+          <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+          <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" placeholder="Vendor Name" [filterable]="true"
             [popupSettings]="{
               popupClass: 'healthcaresearch-list auto-complete-with-template',
               animate: true,
               appendTo: 'component'
-            }"
-          >
+            }">
           </kendo-autocomplete>
         </kendo-floatinglabel>
         <kendo-formhint>
@@ -309,115 +255,75 @@
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="TIN">
-        <kendo-textbox
-          aria-label="TIN"
-          placeholder="TIN"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="TIN" placeholder="TIN" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Accepts Combined Payments">
-        <kendo-textbox
-          aria-label="Accepts Combined Payments"
-          placeholder="Accepts Combined Payments"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Accepts Combined Payments" placeholder="Accepts Combined Payments"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Accepts Reports">
-        <kendo-textbox
-          aria-label="Accepts Reports"
-          placeholder="Accepts Reports"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Accepts Reports" placeholder="Accepts Reports"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Payment Method">
-        <kendo-textbox
-          aria-label="Payment Method"
-          placeholder="Payment Method"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Payment Method" placeholder="Payment Method" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Payment Run Date">
-        <kendo-textbox
-          aria-label="Payment Run Date"
-          placeholder="Payment Run Date"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Payment Run Date" placeholder="Payment Run Date"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Name on Check">
-        <kendo-textbox
-          aria-label="Name on Check"
-          placeholder="Name on Check"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Name on Check" placeholder="Name on Check" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Name on Envelope">
-        <kendo-textbox
-          aria-label="Name on Envelope"
-          placeholder="Name on Envelope"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Name on Envelope" placeholder="Name on Envelope"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Billing Email">
-        <kendo-textbox
-          aria-label="Billing Email"
-          placeholder="Billing Email"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Billing Email" placeholder="Billing Email" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Billing Address">
-        <kendo-textbox
-          aria-label="Billing Address"
-          placeholder="Billing Address"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Billing Address" placeholder="Billing Address"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
   </div>
-  <div
-    class="flex-row"
-    *ngIf="selectedSubtypeCode === subTypeConst.InsuranceProvider"
-  >
+  <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsuranceProvider">
     <div class="flex-col">
       <div class="k-auto-complete-box">
         <kendo-floatinglabel text="Provider Name">
-          <span
-            class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
-          ></span>
-          <kendo-autocomplete
-            [fillMode]="formUiStyle.dropDownFillMode"
-            placeholder="Provider Name"
-            [filterable]="true"
+          <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+          <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" placeholder="Provider Name" [filterable]="true"
             [popupSettings]="{
               popupClass: 'healthcaresearch-list auto-complete-with-template',
               animate: true,
               appendTo: 'component'
-            }"
-          >
+            }">
           </kendo-autocomplete>
         </kendo-floatinglabel>
         <kendo-formhint>
@@ -426,26 +332,17 @@
       </div>
     </div>
   </div>
-  <div
-    class="flex-row"
-    *ngIf="selectedSubtypeCode === subTypeConst.InsurancePlan"
-  >
+  <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsurancePlan">
     <div class="flex-col">
       <div class="k-auto-complete-box">
         <kendo-floatinglabel text="Insurance Provider">
-          <span
-            class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
-          ></span>
-          <kendo-autocomplete
-            [fillMode]="formUiStyle.dropDownFillMode"
-            placeholder="Insurance Provider"
-            [filterable]="true"
-            [popupSettings]="{
+          <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+          <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" placeholder="Insurance Provider"
+            [filterable]="true" [popupSettings]="{
               popupClass: 'healthcaresearch-list auto-complete-with-template',
               animate: true,
               appendTo: 'component'
-            }"
-          >
+            }">
           </kendo-autocomplete>
         </kendo-floatinglabel>
         <kendo-formhint>
@@ -455,81 +352,52 @@
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Insurance Plan Name">
-        <kendo-textbox
-          aria-label="Insurance Plan Name"
-          placeholder="Insurance Plan Name"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Insurance Plan Name" placeholder="Insurance Plan Name"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Health Insurance Type">
-        <kendo-textbox
-          aria-label="Health Insurance Type"
-          placeholder="Health Insurance Type"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Health Insurance Type" placeholder="Health Insurance Type"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Can pay for medication">
-        <kendo-textbox
-          aria-label="Can pay for medication"
-          placeholder="Can pay for medication"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Can pay for medication" placeholder="Can pay for medication"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Is a dental plan">
-        <kendo-textbox
-          aria-label="Is a dental plan"
-          placeholder="Is a dental plan"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Is a dental plan" placeholder="Is a dental plan"
+          [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Start Date">
-        <kendo-textbox
-          aria-label="Start Date"
-          placeholder="Start Date"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Start Date" placeholder="Start Date" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Term Date">
-        <kendo-textbox
-          aria-label="Term Date"
-          placeholder="Term Date"
-          [fillMode]="formUiStyle.inputFillMode"
-        >
+        <kendo-textbox aria-label="Term Date" placeholder="Term Date" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
   </div>
-  <div
-    class="flex-row"
-    *ngIf="selectedSubtypeCode === subTypeConst.Pharmacy"
-  ></div>
+  <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.Pharmacy"></div>
 </section>
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div class="justify-content-start">
-      <button aria-label="Update" kendoButton [primary]="true">Update</button>
-      <button
-        kendoButton
-        [primary]="true"
-        look="outline"
-        class=""
-        aria-label="Cancel"
-      >
+      <button aria-label="Update" kendoButton [primary]="true" (click)="onUpdateClicked()">Update</button>
+      <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" (click)="onCancel()">
         Cancel
       </button>
     </div>

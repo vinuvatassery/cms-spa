@@ -17,7 +17,7 @@
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab *ngIf="tabCode !== financeManagementTabs.Manufacturers" title="Payment Addresses">
+    <kendo-tabstrip-tab title="{{tabCode !== financeManagementTabs.Manufacturers ? 'Payment Addresses' : 'Addresses and Contacts'}}">     
       <ng-template kendoTabContent>
         <div class="block-section">
 

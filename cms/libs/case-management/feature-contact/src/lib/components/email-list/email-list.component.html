@@ -185,7 +185,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
   <kendo-dialog-titlebar>{{
-    isEditEmailAddress ? 'Edit email address' : 'Add email address'
+    isEditEmailAddress ? 'Edit Email Address' : 'Add Email Address'
   }}</kendo-dialog-titlebar>
   <case-management-email-detail
     [isEditValue]="isEditEmailAddress"   
@@ -216,7 +216,7 @@
  
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
-<kendo-dialog-titlebar  (close)="onDeleteConfirmCloseClicked()"> Delete Email address? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar  (close)="onDeleteConfirmCloseClicked()"> Delete Email Address? </kendo-dialog-titlebar>
  <case-management-delete-email-confirmation 
  (deleteConfimEvent)="handleAcceptEmailRemove($event)"
  >
