@@ -337,7 +337,22 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       }
     });
   }
-  
+  public processGridActions = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Refund',
+      icon: 'edit',
+      click: (claim: any): void => {
+      },
+    },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Delete Refund',
+      icon: 'delete',
+      click: (data: any): void => {
+      },
+    },
+  ];
   setToDefault() {
     this.state = {
       skip: 0,
