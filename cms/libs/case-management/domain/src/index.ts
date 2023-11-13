@@ -63,6 +63,7 @@ export * from './lib/entities/financial-management/Payment-details';
 export * from './lib/entities/financial-management/pca-details';
 export * from './lib/entities/financial-management/client-insurance-plan';
 export * from './lib/entities/approval/approval';
+export * from './lib/entities/financial-management/pharmacy-claim';
 
 
 /** Enums **/

@@ -375,7 +375,7 @@
 
 
 <ng-template #PrintAuthorizationDialog>
-      <kendo-dialog-titlebar  class="text-normal" (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
+      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
     <cms-pharmacy-claims-print-authorization></cms-pharmacy-claims-print-authorization>
     </ng-template>
 

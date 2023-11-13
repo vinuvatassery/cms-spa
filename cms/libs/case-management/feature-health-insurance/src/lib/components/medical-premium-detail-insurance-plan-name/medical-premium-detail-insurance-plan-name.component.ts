@@ -60,7 +60,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
 
     this.newhealthInsuranceForm = this.formBuilder.group({
       insuranceCarrierName: ['', Validators.required],
-      insurancePlanName: ['', Validators.required],
+      insurancePlanName: ['', Validators.required, Validators.maxLength(500)],
       insuranceType: ['', Validators.required],
       startDate: ['', Validators.required],
       termDate: [''],

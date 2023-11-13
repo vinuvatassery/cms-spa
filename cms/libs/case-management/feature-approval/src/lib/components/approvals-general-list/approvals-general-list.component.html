@@ -178,7 +178,8 @@
             >
               <productivity-tools-approvals-general-list-detail-exceptions
                 [approvalId]="item.generalPendingApprovalId"
-                [exceptionId]="item.approvalEntityId"               
+                [exceptionId]="item.approvalEntityId"       
+                (onVendorClickedEvent)="onProviderNameClick($event)"        
               >
               </productivity-tools-approvals-general-list-detail-exceptions>
             </ng-template>
@@ -210,6 +211,14 @@
   >
   <productivity-tools-approvals-edit-items
     [selectedSubtypeCode]="selectedSubtypeCode"
+    [clinicVendorList$]="clinicVendorList$"
+    [ddlStates$]="ddlStates$"
+    [healthCareForm]="healthCareForm"
+    (searchClinicVendorClicked)="searchClinicClicked($event)"
+    [clinicVendorLoader$]="clinicVendorLoader$"
+    [selectedMasterData]="selectedMasterData"
+    (updateMasterDetailsClickedEvent)="updateMasterDetailsClicked($event)"
+    (close)="onCloseEditListItemsDetailClicked()"
     [selectedMasterDetail$]="selectedMasterDetail$"
   >
   </productivity-tools-approvals-edit-items>
@@ -217,8 +226,8 @@
 
 <ng-template #submitRequestModalDialog>
  
-  <kendo-dialog-titlebar class="text-normal" (close)="onCloseSubmitGeneralRequestClicked()">
-    Submit item(s)</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onCloseSubmitGeneralRequestClicked()">
+    Submit Item(s)</kendo-dialog-titlebar>
     <section class="k-dialog-body newcase"> 
       <p *ngIf="caseReassignmentsCount > 0" class="mb-1">
         Case re-assignments to be submitted:

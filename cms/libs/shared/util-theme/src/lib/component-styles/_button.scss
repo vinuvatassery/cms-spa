@@ -53,7 +53,7 @@
     &.k-state-disabled,
     &.k-disabled {
       background: var(--hive-neutral-palette-50) !important;
-      color: $black-30 !important;
+      color: rgba($black-3, 0.60) !important;
     }
 
     &.k-outline {
@@ -65,7 +65,7 @@
       &.k-state-disabled,
       &.k-disabled {
         background: $white !important;
-        color: $black-30 !important;
+        color: rgba($black-3, 0.60) !important;
         border-color: $black-12 !important;
       }
     }
@@ -241,12 +241,13 @@
     background: var(--hive-error-palette-800);
     background-color: var(--hive-error-palette-800);
     color: $white;
-    font-family: $font-family-medium;
+    font-family: $font-family-medium;_
 
-    &.k-state-disabled {
+    &.k-state-disabled,
+    &.k-disabled {
       background: var(--hive-neutral-palette-50) !important;
       background-color: var(--hive-neutral-palette-50) !important;
-      color: $black-30 !important;
+      color: rgba($black-3, 0.60) !important;
     }
   }
 
@@ -320,9 +321,10 @@
       color: $white !important;
     }
 
-    &.k-state-disabled {
+    &.k-state-disabled,
+    &.k-disabled {
       background: var(--hive-neutral-palette-50) !important;
-      color: $black-30 !important;
+      color: rgba($black-3, 0.60) !important;
     }
   }
 }
@@ -408,10 +410,10 @@
 
     &.k-disabled {
       background: var(--hive-neutral-palette-50) !important;
-      color: $black-30 !important;
+      color: rgba($black-3, 0.60) !important;
 
       .k-icon {
-        color: $black-30 !important;
+        color: rgba($black-3, 0.60) !important;
       }
     }
 
@@ -432,10 +434,10 @@
 
       &.k-disabled {
         background: var(--hive-neutral-palette-50) !important;
-        color: $black-30 !important;
+        color: rgba($black-3, 0.60) !important;
 
         .k-icon {
-          color: $black-30 !important;
+          color: rgba($black-3, 0.60) !important;
         }
       }
     }

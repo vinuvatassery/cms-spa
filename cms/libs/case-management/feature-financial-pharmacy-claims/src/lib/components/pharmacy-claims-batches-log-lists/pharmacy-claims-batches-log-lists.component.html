@@ -47,7 +47,7 @@
     <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
         [data]="batchLogGridLists$ | async"  [rowClass]="rowClass">
         <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
           [width]="40"></kendo-grid-checkbox-column>
@@ -56,7 +56,7 @@
         </kendo-grid-column>
 
 
-        <kendo-grid-column field="PharmacyName" title="Pharmacy Name" [width]="160">
+        <kendo-grid-column field="PharmacyName" title="Pharmacy Name1" [width]="160">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button [attr.aria-label]="dataItem.PharmacyName" kendoButton look="flat" class="card-link-button" (click)="onViewProviderDetailClicked(providerDetailsTemplate)">
               {{ dataItem.PharmacyName }}
@@ -66,7 +66,7 @@
         <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="160"> </kendo-grid-column>
                 <kendo-grid-column field="clientName" title="Client Name" [width]="160">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog)">
+            <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
               {{ dataItem.clientName }}
             </button>
           </ng-template>
@@ -110,7 +110,7 @@
 
         <kendo-grid-column field="Option" title=" "  [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton [data]="batchLogGridActions" icon="more-vertical"
+            <kendo-dropdownbutton [data]="batchLogGridActions(dataItem)" icon="more-vertical"
               class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
               aria-label="more actions" title="More option"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -201,7 +201,8 @@
   </ng-template>
 
   <ng-template #unBatchClaimsDialogTemplate>
-  <cms-pharmacy-claims-unbatch-claims (UnBatchCloseClickedEvent)="onUnBatchCloseClicked($event)"></cms-pharmacy-claims-unbatch-claims>
+  <cms-pharmacy-claims-unbatch-claims (unBatchCloseClickedEvent)="onUnBatchPaymentCloseClicked($event)"
+  [isBulkUnBatchOpened]="isBulkUnBatchOpened" ></cms-pharmacy-claims-unbatch-claims>
 </ng-template>
 
 <ng-template #deleteClaimsConfirmationDialogTemplate>
@@ -210,9 +211,10 @@
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  Recent Claims for Donna Summer </h4></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}}  </h4></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-pharmacy-claims-recent-claims-list
+
       (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-pharmacy-claims-recent-claims-list>
   </section>
   <kendo-dialog-actions>
