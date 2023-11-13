@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
-import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
+import { DocumentFacade} from '@cms/shared/util-core';
 @Component({
   selector: 'cms-vendor-refund-page',
   templateUrl: './vendor-refund-page.component.html',
@@ -13,7 +13,6 @@ export class VendorRefundPageComponent {
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
    tab = 1
-   dataExportParameters = null
    sortType = this.financialVendorRefundFacade.sortType;
    pageSizes = this.financialVendorRefundFacade.gridPageSizes;
    gridSkipCount = this.financialVendorRefundFacade.skipCount;
@@ -26,10 +25,7 @@ export class VendorRefundPageComponent {
    sortPaymentsList = this.financialVendorRefundFacade.sortPaymentsList;
    state!: State;
    selectedClaimsTab = 1;
-   selectedClaimsTab = 1;
-   tab = 1;
    dataExportParameters!: any;
-   selectedClaimsTab = 1;
   vendorRefundProcessGridLists$ =
     this.financialVendorRefundFacade.vendorRefundProcessData$;
   vendorRefundBatchGridLists$ = this.financialVendorRefundFacade.vendorRefundBatchData$;
@@ -72,7 +68,6 @@ export class VendorRefundPageComponent {
     );
   }
 
-  dataExportParameters!: any;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
 
   exportClaimsPaymentsGridData(data: any) {
