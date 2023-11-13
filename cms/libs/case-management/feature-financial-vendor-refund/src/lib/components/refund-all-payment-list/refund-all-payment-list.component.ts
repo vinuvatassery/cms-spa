@@ -85,11 +85,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   dataListApi:any;
   ngOnInit(): void {
     
-    //this.loadVendorRefundAllPaymentsListGrid();
-    this.tempService.loadTempRefundList().subscribe((data: any) => {
-      // alert(JSON.stringify(data));
-      this.dataListApi = data;
-    })
+    // this.loadVendorRefundAllPaymentsListGrid();
+    // this.tempService.loadTempRefundList().subscribe((data: any) => {
+    //   // alert(JSON.stringify(data));
+    //   this.dataListApi = data;
+    // })
   }
   ngOnChanges(): void {
     this.state = {
@@ -138,7 +138,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
+              field: this.selectedColumn ?? 'vendor',
               operator: 'startswith',
               value: data,
             },
@@ -203,17 +203,17 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   public selectedPayments: any[] = [];
   isProcessGridExpand = false;
   hideActionButton = false;
-  hideReceiptingLogActionButtons = true
+  RefundLogMode = false
   receptingLogClicked() {
     this.isProcessGridExpand = !this.isProcessGridExpand;
-    this.hideReceiptingLogActionButtons = !this.hideReceiptingLogActionButtons;
+    this.RefundLogMode = !this.RefundLogMode;
     this.hideActionButton = !this.hideActionButton;
   }
 
   cancelActions() {
     this.isProcessGridExpand = !this.isProcessGridExpand;
     this.hideActionButton = !this.hideActionButton;
-    this.hideReceiptingLogActionButtons = !this.hideReceiptingLogActionButtons;
+    this.RefundLogMode = !this.RefundLogMode;
   }
 
   @Output() exportGridDataEvent = new EventEmitter<any>();
@@ -230,6 +230,139 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       }
     });
   }
+
+  refundGridData = [
+    {
+        "dateReceived": "2023-11-11T18:57:32.0225408+05:00",
+        "vendorId": "00000000-0000-0000-0000-000000000000",
+        "vendorName": "Vendor 100",
+        "paymentRequestId": "00000000-0000-0000-0000-000000000000",
+        "checkRequestId": "00000000-0000-0000-0000-000000000000",
+        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
+        "refundWarrentnbr": "Warrant #1",
+        "vp": "VP1",
+        "clientId": 0,
+        "clientFullName": "Client 1",
+        "type": null,
+        "refundAmount": 100.50,
+        "depositDate": "2023-11-11T18:57:32.0232501+05:00",
+        "pcaCode": null,
+        "indexCode": null,
+        "refundNotes": "Note 1",
+        "creatorId": null,
+        "creationTime": "0001-01-01T00:00:00",
+        "refundType": "Type A",
+        "credit": "Credit1",
+        "addedField": null,
+        "grantNumber": "Grant #1",
+        "entryDate": "2023-11-11T18:57:32.0235538+05:00",
+        "enteredBy": "User 1"
+    },
+    {
+        "dateReceived": "2023-11-11T18:57:32.0239411+05:00",
+        "vendorId": "00000000-0000-0000-0000-000000000000",
+        "vendorName": "Vendor 100",
+        "paymentRequestId": "00000000-0000-0000-0000-000000000000",
+        "checkRequestId": "00000000-0000-0000-0000-000000000000",
+        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
+        "refundWarrentnbr": "Warrant #1",
+        "vp": "VP1",
+        "clientId": 0,
+        "clientFullName": "Client 1",
+        "type": null,
+        "refundAmount": 100.50,
+        "depositDate": "2023-11-11T18:57:32.0239454+05:00",
+        "pcaCode": null,
+        "indexCode": null,
+        "refundNotes": "Note 1",
+        "creatorId": null,
+        "creationTime": "0001-01-01T00:00:00",
+        "refundType": "Type A",
+        "credit": "Credit1",
+        "addedField": null,
+        "grantNumber": "Grant #1",
+        "entryDate": "2023-11-11T18:57:32.0239465+05:00",
+        "enteredBy": "User 1"
+    },
+    {
+        "dateReceived": "0001-01-01T00:00:00",
+        "vendorId": "00000000-0000-0000-0000-000000000000",
+        "vendorName": "Vendor 100",
+        "paymentRequestId": "00000000-0000-0000-0000-000000000000",
+        "checkRequestId": "00000000-0000-0000-0000-000000000000",
+        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
+        "refundWarrentnbr": "Warrant #1",
+        "vp": "VP1",
+        "clientId": 0,
+        "clientFullName": "Client 1",
+        "type": null,
+        "refundAmount": 100.50,
+        "depositDate": "2023-11-11T18:57:32.0239469+05:00",
+        "pcaCode": null,
+        "indexCode": null,
+        "refundNotes": "Note 1",
+        "creatorId": null,
+        "creationTime": "0001-01-01T00:00:00",
+        "refundType": "Type A",
+        "credit": "Credit1",
+        "addedField": null,
+        "grantNumber": "Grant #1",
+        "entryDate": "2023-11-11T18:57:32.023947+05:00",
+        "enteredBy": "User 1"
+    },
+    {
+        "dateReceived": "0001-01-01T00:00:00",
+        "vendorId": "00000000-0000-0000-0000-000000000000",
+        "vendorName": "Vendor 100",
+        "paymentRequestId": "00000000-0000-0000-0000-000000000000",
+        "checkRequestId": "00000000-0000-0000-0000-000000000000",
+        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
+        "refundWarrentnbr": "Warrant #1",
+        "vp": "VP1",
+        "clientId": 0,
+        "clientFullName": "Client 1",
+        "type": null,
+        "refundAmount": 100.50,
+        "depositDate": "2023-11-11T18:57:32.0239472+05:00",
+        "pcaCode": null,
+        "indexCode": null,
+        "refundNotes": "Note 1",
+        "creatorId": null,
+        "creationTime": "0001-01-01T00:00:00",
+        "refundType": "Type A",
+        "credit": "Credit1",
+        "addedField": null,
+        "grantNumber": "Grant #1",
+        "entryDate": "2023-11-11T18:57:32.0239473+05:00",
+        "enteredBy": "User 1"
+    },
+    {
+        "dateReceived": "0001-01-01T00:00:00",
+        "vendorId": "00000000-0000-0000-0000-000000000000",
+        "vendorName": "Vendor 100",
+        "paymentRequestId": "00000000-0000-0000-0000-000000000000",
+        "checkRequestId": "00000000-0000-0000-0000-000000000000",
+        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
+        "refundWarrentnbr": "Warrant #1",
+        "vp": "VP1",
+        "clientId": 0,
+        "clientFullName": "Client 1",
+        "type": null,
+        "refundAmount": 100.50,
+        "depositDate": "2023-11-11T18:57:32.0239475+05:00",
+        "pcaCode": null,
+        "indexCode": null,
+        "refundNotes": "Note 1",
+        "creatorId": null,
+        "creationTime": "0001-01-01T00:00:00",
+        "refundType": "Type A",
+        "credit": "Credit1",
+        "addedField": null,
+        "grantNumber": "Grant #1",
+        "entryDate": "2023-11-11T18:57:32.0239477+05:00",
+        "enteredBy": "User 1"
+    }
+]
 
   vendorRefundAllPaymentsGridData = [
     {

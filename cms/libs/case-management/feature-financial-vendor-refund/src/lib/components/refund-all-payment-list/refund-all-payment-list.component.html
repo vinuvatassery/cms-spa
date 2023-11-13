@@ -35,7 +35,7 @@
 
 <!-- Case List table -->
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [data]="dataListApi" kendoGridSelectBy="refundAmount"
+  <kendo-grid [resizable]="true" [data]="refundGridData" kendoGridSelectBy="refundAmount"
     [loading]="isVendorRefundAllPaymentsGridLoaderShow" [pageSize]="state.take" [pageable]="true" [sortable]="true"
     [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
     [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
@@ -51,17 +51,18 @@
         </button>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="vendor" title="Vendor" [width]="180">
+
+    <kendo-grid-column field="vendorName" title="Vendor" [width]="180">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.vendor" kendoButton look="flat" class="card-link-button">
-          {{ dataItem.vendor }}
+          {{ dataItem.vendorName }}
         </button>
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="clientID" title="Client ID" [width]="180"> </kendo-grid-column>
+    <kendo-grid-column field="clientFullName" title="client" [width]="180"> </kendo-grid-column>
     <kendo-grid-column field="refundType" title="Refund Type" [width]="180"> </kendo-grid-column>
-    <kendo-grid-column field="refundWarrantNumber" title="Refund Warrant Number" [width]="160">
+    <kendo-grid-column field="refundWarrentnbr" title="Refund Warrant Number" [width]="160">
     </kendo-grid-column>
 
     <kendo-grid-column field="refundAmount" title="Refund Amount" [width]="180"> <ng-template kendoGridCellTemplate
@@ -70,16 +71,32 @@
           {{ dataItem.refundAmount }}
         </button>
       </ng-template> </kendo-grid-column>
-    <kendo-grid-column field="depositDate | date:'MM/dd/yyyy'" title="Deposit Date" [width]="140"> </kendo-grid-column>
-    <kendo-grid-column field="vpSuffix" title="Vp Suffix" [width]="180"> </kendo-grid-column>
-    <kendo-grid-column field="creditSuffix" title="Credit Suffix" [width]="160"> </kendo-grid-column>
+    <kendo-grid-column field="depositDate" title="Deposit Date" [width]="160">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button [attr.aria-label]="dataItem.depositDate" kendoButton look="flat" class="card-link-button">
+          {{ dataItem.depositDate | date:'MM/dd/yyyy'}}
+        </button>
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="vp" title="Vp Suffix" [width]="180"> </kendo-grid-column>
+    <kendo-grid-column field="credit" title="Credit Suffix" [width]="160"> </kendo-grid-column>
     <kendo-grid-column field="addedField" title="Added Field" [width]="150"> </kendo-grid-column>
     <kendo-grid-column field="grantNumber" title="Grant #" [width]="180"> </kendo-grid-column>
-    <kendo-grid-column field="refundNote" title="Refund Note" [width]="200"> <ng-template kendoGridCellTemplate
+    <kendo-grid-column field="refundNotes" title="Refund Note" [width]="200"> <ng-template kendoGridCellTemplate
         let-dataItem>
-        <span class="grid-line-clip"> {{ dataItem.refundNote }}</span>
+        <span class="grid-line-clip"> {{ dataItem.refundNotes }}</span>
       </ng-template> </kendo-grid-column>
-    <kendo-grid-column field="entryDate | date:'MM/dd/yyyy'" title="Entry Date" [width]="140"> </kendo-grid-column>
+
+      <kendo-grid-column field="entryDate" title="Entry Date" [width]="160">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button [attr.aria-label]="dataItem.dateReceived" kendoButton look="flat" class="card-link-button">
+            {{ dataItem.entryDate | date:'MM/dd/yyyy'}}
+          </button>
+        </ng-template>
+      </kendo-grid-column>
+        
+
     <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
@@ -153,7 +170,7 @@
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
 
-  <div [hidden]="hideReceiptingLogActionButtons">
+  <div [hidden]="!RefundLogMode">
     <span *ngIf="selectedPayments" class="">{{selectedPayments.length}} payment(s) selected</span>
     <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="cancelActions()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Download" icon="download" (click)="onClickedExport()"> Download </button>
