@@ -144,7 +144,6 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
         if (!this.isProcessBatchClosed) {
           this.isProcessBatchClosed = true;
           this.onBatchRefundsGridSelectedClicked();
-          // this.onBatchRefundClicked(this.batchRefundConfirmationDialog, data);
         }
       },
     },
@@ -157,10 +156,6 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
         if (!this.isDeleteBatchClosed) {
           this.isDeleteBatchClosed = true;
           this.onBatchRefundsGridSelectedClicked();
-          // this.onDeleteRefundOpenClicked(
-          //   this.deleteRefundConfirmationDialog,
-          //   data
-          // );
         }
       },
     },
@@ -232,12 +227,6 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.gridDataHandle();
   }
 
-  public onBatchRefundClicked(template: TemplateRef<unknown>, data: any): void {
-    this.batchConfirmRefundDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
   onModalBatchRefundModalClose(result: any) {
     if (result) {
       this.isProcessBatchClosed = false;
@@ -397,7 +386,6 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
 
   onModalBatchRefundsModalClose(result: any) {
     if(result){
-      // this.isProcessBatchClosed = false;
       this.batchConfirmRefundDialog.close();
     }
   }
@@ -484,7 +472,6 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
 
   onModalDeleteRefundsModalClose(result: any) {
     if (result) {
-      // this.isDeleteBatchClosed = false;
       this.singleRefundDelete = false;
       this.deleteRefundDialog.close();
     }

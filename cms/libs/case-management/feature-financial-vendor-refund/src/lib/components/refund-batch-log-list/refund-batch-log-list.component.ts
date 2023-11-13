@@ -269,9 +269,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
       )
       .subscribe((unbatchEntireBatchResponse: any) => {
         if (unbatchEntireBatchResponse ?? false) {
-          // this.route.navigateByUrl(
-          //   `financial-management/claims/${this.claimsType}?tab=2`
-          // );
           this.loadBatchLogListGrid();
         }
       });
