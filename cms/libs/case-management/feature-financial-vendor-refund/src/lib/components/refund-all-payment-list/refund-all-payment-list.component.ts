@@ -115,12 +115,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.loadVendorRefundReceiptLogListGrid();
-    // this.loadVendorRefundAllPaymentsListGrid();
-    // this.tempService.loadTempRefundList().subscribe((data: any) => {
-    //   // alert(JSON.stringify(data));
-    //   this.dataListApi = data;
-    // })
   }
 
   private loadVendorRefundReceiptLogListGrid(): void {
