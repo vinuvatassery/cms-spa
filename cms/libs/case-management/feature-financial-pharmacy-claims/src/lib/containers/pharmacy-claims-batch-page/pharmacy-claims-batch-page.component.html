@@ -3,9 +3,18 @@
  [batchId]="batchId"
  [pageSizes]="pageSizes" [sortValue]="sortValue"
  [sortType]="sortType" [sort]="sort" 
+ (exportGridDataEvent)="exportPharmacyBatchesGridData()"
+ [exportButtonShow$]="exportButtonShow$" 
+ (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
+ [batchId]="batchId"
+ (unBatchEntireBatchEvent)="unBatchEntireBatchClick($event)"
+ (unBatchClaimsEvent)="unBatchClaimClick($event)"
+ [unbatchClaim$]="unbatchClaim$"
+ [unbatchEntireBatch$]="unbatchEntireBatch$"
  (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
  (loadTemplateEvent) = "loadEachLetterTemplate($event)"
  [letterContentList$]="letterContentList$"      
- [letterContentLoader$]="letterContentLoader$"></cms-pharmacy-claims-batches-log-lists>
+ [letterContentLoader$]="letterContentLoader$">
+</cms-pharmacy-claims-batches-log-lists>
 
  

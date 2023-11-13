@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
+import { FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DocumentFacade } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-pharmacy-claims-batch-page',
@@ -20,13 +21,19 @@ export class PharmacyClaimsBatchPageComponent {
   sort = this.financialPharmacyClaimsFacade.sortBatchLogList;
   state!: State;
   batchLogGridLists$ = this.financialPharmacyClaimsFacade.batchLogData$;
-  batchId!:string;
+  unbatchEntireBatch$= this.financialPharmacyClaimsFacade.unbatchEntireBatch$;
+  unbatchClaim$ = this.financialPharmacyClaimsFacade.unbatchClaims$;
   letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
   letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
+  claimsType= 'pharmacies';
+  batchId!:string;
+  dataExportParameters! : any
+  exportButtonShow$ :any
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
-    private readonly route: ActivatedRoute,
-    private readonly router: Router,
+    private readonly route : ActivatedRoute,
+      private readonly documentFacade: DocumentFacade,
+      private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -34,10 +41,39 @@ export class PharmacyClaimsBatchPageComponent {
   }
 
   loadBatchLogListGrid(event: any) {
-    this.financialPharmacyClaimsFacade.loadBatchLogListGrid();
-  }
+    this.dataExportParameters = event
+     this.batchId = this.route.snapshot.queryParams['bid'];
+    }
 
-  loadEachLetterTemplate(event:any){
-    this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);  
+  exportPharmacyBatchesGridData(){
+    const data = this.dataExportParameters
+    if(data){
+    const  filter = JSON.stringify(data?.filter);
+
+      const vendorPageAndSortedRequest =
+      {
+        SortType : data?.sortType,
+        Sorting : data?.sortColumn,
+        SkipCount : data?.skipcount,
+        MaxResultCount : data?.maxResultCount,
+        Filter : filter
+      }
+      const batchId = this.route.snapshot.queryParams['bid'];
+      const fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase())  +' Pharmacy Batch Payments'
+
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`payment-batches/${batchId}/payments` , fileName)
+    }
   }
+  
+  unBatchEntireBatchClick(event:any){
+    this.financialPharmacyClaimsFacade.unbatchEntireBatch(event.batchId)
+    }
+
+   unBatchClaimClick(event:any){
+     this.financialPharmacyClaimsFacade.unbatchPremiums(event.paymentId)
+    }
+
+  loadEachLetterTemplate(event: any) {
+    this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);
+   }
 }
