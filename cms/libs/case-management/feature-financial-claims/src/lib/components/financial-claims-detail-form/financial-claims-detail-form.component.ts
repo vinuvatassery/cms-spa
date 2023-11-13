@@ -771,7 +771,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       serviceStartDate: minServiceStartDate,
       serviceEndDate: maxServiceEndDate,
       paymentRequestId: this.isEdit ? claim.paymentRequestId : null,
-      objectLedgerName : 'TPA'
+      objectLedgerName : 'Third Party(TPA)'
     };
     this.loaderService.show();
     this.financialClaimsFacade.getPcaCode(request)
