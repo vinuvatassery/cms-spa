@@ -26,8 +26,6 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
    batchId:any;
    sortValueBatch = this.financialPharmacyClaimsFacade.sortValueReconcile;
    sortBatch = this.financialPharmacyClaimsFacade.sortReconcileList;
-   warrantNumberChange$ = this.financialPharmacyClaimsFacade.warrantNumberChange$;
-   warrantNumberChangeLoader$ = this.financialPharmacyClaimsFacade.warrantNumberChangeLoader$;
    exportButtonShow$ = this.documentFacade.exportButtonShow$;
    dataExportParameters! : any
 
