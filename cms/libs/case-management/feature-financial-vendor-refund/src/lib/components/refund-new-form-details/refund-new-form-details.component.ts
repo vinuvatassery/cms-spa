@@ -92,6 +92,7 @@ export class RefundNewFormDetailsComponent{
   financialPremiumsRefundGridLists: any;
   filterData: any;
   paymentRequestId: any;
+  insurancePremiumsRequestIds: any;
 
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
@@ -112,33 +113,17 @@ export class RefundNewFormDetailsComponent{
   getInsuranceRefundInformation(data:any){
     const param ={
       ...data,
-      paymentRequestsId :[
-        "EFF3DC55-5F86-41FA-AF6B-1098BA4E3055",
-'16BEFAE1-6F4A-46B0-9703-19C00F49FA48'
-      ]
+      paymentRequestsId : this.insurancePremiumsRequestIds
     }
     this.financialVendorRefundFacade.getInsuranceRefundInformation(param);
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
-      console.log(res);
-    //  this.gridDataResult = res;
-    //  this.financialPremiumsRefundGridLists = this.gridDataResult?.items;
     this.financialPremiumsRefundGridLists =  res;
       console.log(this.financialPremiumsRefundGridLists)
     })
   }
 
 
-onProviderNameClick(event:any){
-  this.providerDetailsDialog = this.dialogService.open({
-    content: this.providerDetailsTemplate,
-    animation:{
-      direction: 'left',
-      type: 'slide',  
-    }, 
-    cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
-  });
-  
-}
+
 
 onCloseViewProviderDetailClicked(result: any){
   if(result){

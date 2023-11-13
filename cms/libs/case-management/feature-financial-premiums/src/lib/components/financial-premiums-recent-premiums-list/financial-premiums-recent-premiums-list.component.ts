@@ -319,6 +319,6 @@ export class FinancialPremiumsRecentPremiumsListComponent {
     }
 
     onProviderNameClick(event:any){
-      this.onProviderNameClickEvent.emit(this.paymentRequestId)
+      this.onProviderNameClickEvent.emit(this.paymentRequestId ? this.paymentRequestId : event)
     }
 }

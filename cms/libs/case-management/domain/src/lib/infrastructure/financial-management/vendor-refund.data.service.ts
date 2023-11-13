@@ -15,7 +15,7 @@ export class FinancialVendorRefundDataService {
  
 
   getInsurnaceRefundInformation(insuranceRefundInformation:any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/refund-information`, insuranceRefundInformation);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums-Information`, insuranceRefundInformation);
   }
   loadVendorRefundProcessListService( ) {
     return of([

@@ -380,8 +380,13 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
   }
 
   loadRecentPremiumsByClient(data:any, clientId:any){
+    const recentPremiumsPageAndSortedRequestDto =
+    {
+     ...data,
+      MaxResultCount : data.pageSize
+    }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients-recent-premiums/${clientId}`,data);
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/${clientId}/recent-premiums`,recentPremiumsPageAndSortedRequestDto);
   }
 
   loadPremium(type: string, premiumId: string): Observable<InsurancePremiumDetails> {

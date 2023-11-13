@@ -1,9 +1,9 @@
 <div class="flex-row" *ngFor="let item of financialPremiumsRefundGridLists;let i = index">
                 
-    <div class="flex-col flex-col-6">
+    <div class="flex-col flex-col-6" *ngIf="i===0">
         <div class="flex-row">
             <div class="flex-col flex-col-4 align-items-center justify-content-start">
-                <h5>Refund Information </h5>
+                <h5>Refund Information  </h5>
             </div>
             <div class="flex-col flex-col-8 align-items-center justify-content-start">
                 <span class="app-checkboxwidtext-wrapper">
@@ -16,7 +16,7 @@
             <div class="flex-row  mb-3" >
                 <div class="flex-col">
                 <table class=" info-table-custom left_right_align">
-                    <caption hidden> Refund Information {{i+1}}</caption>
+                    <caption hidden> Refund Information</caption>
                     <tr hidden>
                         <th scope="col">Fields</th>
                         <th scope="col">Details</th>
@@ -115,8 +115,8 @@
       </kendo-grid-numeric-filter-menu>
      </ng-template>
   </kendo-grid-column>
-  <kendo-grid-column field="paymentMethod" title="Pmt. Method" [width]="140"> </kendo-grid-column>
-  <kendo-grid-column field="paymentStatus" title="Pmt. Status" [width]="130">
+  <kendo-grid-column field="paymentMethodDescription" title="Pmt. Method" [width]="140"> </kendo-grid-column>
+  <kendo-grid-column field="paymentStatusDescription" title="Pmt. Status" [width]="130">
     <ng-template kendoGridFilterMenuTemplate
     let-column="column"
     let-filter="filter"
