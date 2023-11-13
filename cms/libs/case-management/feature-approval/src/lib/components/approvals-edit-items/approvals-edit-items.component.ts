@@ -118,7 +118,6 @@ export class ApprovalsEditItemsComponent implements OnInit {
         vendorName: this.getVendorName(),
       },
     ];
-    //this.selectedVendor = this.clinicVendorListLocal[0];
     if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.InsurancePlan) {
       this.selectedVendor = this.selectedMasterData.providerId;
     } else {
