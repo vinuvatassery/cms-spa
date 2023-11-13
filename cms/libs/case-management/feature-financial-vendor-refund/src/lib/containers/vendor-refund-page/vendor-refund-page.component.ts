@@ -25,9 +25,8 @@ export class VendorRefundPageComponent    {
    sortBatchList = this.financialVendorRefundFacade.sortBatchList;
    sortValueRefundPayments = this.financialVendorRefundFacade.sortValueRefundPayments;
    sortPaymentsList = this.financialVendorRefundFacade.sortPaymentsList;
-   
-
    state!: State;
+   selectedClaimsTab = 1;
   vendorRefundProcessGridLists$ =
   this.financialVendorRefundFacade.vendorRefundProcessData$;
   vendorRefundBatchGridLists$ = this.financialVendorRefundFacade.vendorRefundBatchData$;
@@ -55,6 +54,19 @@ export class VendorRefundPageComponent    {
     this.tab = this.financialVendorRefundFacade.selectedRefundsTab;   
     this.dataExportParameters = recentClaimsPageAndSortedRequestDto;    
     this.financialVendorRefundFacade.loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto);
+  }
+  loadFinancialRefundProcessListGrid(data: any) {
+    this.financialVendorRefundFacade.selectedClaimsTab = 1;
+    this.tab = this.financialVendorRefundFacade.selectedClaimsTab;
+    this.dataExportParameters = data;
+    this.financialVendorRefundFacade.loadFinancialRefundProcessListGrid(
+      data?.skipCount,
+      data?.pagesize,
+      data?.sortColumn,
+      data?.sortType,
+      data?.filter,
+      
+    );
   }
 
   exportAllRefundsGridData() {   

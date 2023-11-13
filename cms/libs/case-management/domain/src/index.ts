@@ -251,6 +251,6 @@ export * from './lib/application/approval/productivity-invoice.facade';
 export * from './lib/application/approval/pending-approval-payment.facade';
 export * from './lib/application/approval/pending-approval-general.facade';
 export * from './lib/application/approval/approval.facade';
-
+export * from './lib/application/approval/imported-claim.facade';
 
 
