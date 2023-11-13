@@ -126,7 +126,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     },
  
     {
-      columnCode: 'refunfNotes',
+      columnCode: 'refundNotes',
       columnDesc: 'Refund Note',
     },
   ]
