@@ -42,7 +42,9 @@
                                 [vendorRefundAllPaymentsGridLists$]="vendorRefundAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList" 
-                                (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"></cms-refund-all-payment-list>
+                                (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"
+                                [exportButtonShow$]="exportButtonShow$"                              
+                                (exportGridDataEvent)="exportAllRefundsGridData()"></cms-refund-all-payment-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

@@ -1,6 +1,7 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -32,7 +33,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
   @Input() sort: any;
   @Input() sortValueRefunds: any;
   @Input() vendorRefundAllPaymentsGridLists$: any;
+  @Input() exportButtonShow$: any;
+
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+
   public state!: State;
   sortColumn = 'entryDate';
   sortDir = 'Ascending';
@@ -68,10 +73,30 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
       icon: 'delete', 
     },
   ];
+
+  columns: any = {
+    batchNumber: 'Batch #',
+    providerName: 'Vendor',
+    paymentType: 'Type',
+    clientFullName: 'Client Name',
+    insuranceName: 'Name on Primary Insurance Card',
+    clientId: 'Client ID',
+    warrantNumber: 'Refund Warrant #',
+    refundAmount: 'Refund Amount',
+    depositDate: 'Deposit Date',
+    originalWarrantNumber: 'Original Warrant #',
+    originalAmount: 'Original Amount',
+    indexCode: 'Index Code',
+    pcaCode :'PCA',
+    voucherPayable :'VP',
+    refundNote:'Refund Note',
+    entryDate : 'Entry Date'
+  };
+  showExportLoader = false;
  
   
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router,  private readonly cdr: ChangeDetectorRef ) {}
 
   ngOnInit(): void {
     this.loadVendorRefundAllPaymentsListGrid();
@@ -157,6 +182,22 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
     this.loadVendorRefundAllPaymentsListGrid();
   }
 
@@ -183,5 +224,39 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
     });
    
   }
+
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  setToDefault() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+
+    this.sortColumn = 'Batch #';
+    this.sortDir = 'Ascending';
+    this.filter = '';
+    this.selectedColumn = 'batchNumber';
+    this.isFiltered = false;
+    this.columnsReordered = false;
+
+    this.sortValue = 'batchNumber';
+    this.sortType = 'asc';
+    this.sort = this.sortColumn;
+    this.searchValue =''
+
+    this.loadVendorRefundAllPaymentsListGrid();
+  }
+
  
 }
