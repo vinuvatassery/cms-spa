@@ -2,7 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { FinancialPharmacyClaimsFacade, PaymentsFacade } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserDataService } from '@cms/system-config/domain';
+import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'cms-pharmacy-claims-print-authorization',
@@ -27,6 +29,13 @@ export class PharmacyClaimsPrintAuthorizationComponent {
   reconcileArray:any=[]; 
   finalPrintList!: any[];
   returnResultFinalPrintList!: any[];
+  last4OfVisaCard!: any;
+  cardExpirationDate!: any;
+  cardExpirationMonth!: any;
+  cardExpirationYear!: any;
+  authorizedDate!: any;
+  loginUserName!:any;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   /** Input properties  **/
   @Input() items!: any;
   @Input() printOption: boolean = false;
@@ -49,7 +58,11 @@ export class PharmacyClaimsPrintAuthorizationComponent {
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly ref: ChangeDetectorRef,
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
-    private elementRef: ElementRef) { }
+    private elementRef: ElementRef,
+    private readonly userDataService: UserDataService,
+    public intl: IntlService,
+    private configurationProvider: ConfigurationProvider,
+    ) { }
 
   ngOnInit(): void {
     if(this.items['print']){
@@ -62,7 +75,9 @@ export class PharmacyClaimsPrintAuthorizationComponent {
       this.loadPrintLetterContent(this.printAdviceLetterData);
     }
     this.letterContentListSubscription();
-    this.letterContentLoaderSubscription();    
+    this.letterContentLoaderSubscription();
+    this.getLoggedInUserProfile(); 
+    this.authorizedDate = new Date();
   }
 
   letterContentLoaderSubscription() {
@@ -146,6 +161,11 @@ export class PharmacyClaimsPrintAuthorizationComponent {
 
   onPrintAdviceLetterClicked(buttonText: string) {
     if (buttonText == 'PRINT') {
+      this.returnResultFinalPrintList[this.currentIndex].last4OfVisaCard = this.last4OfVisaCard;
+      this.returnResultFinalPrintList[this.currentIndex].cardExpirationMonth = this.cardExpirationMonth;
+      this.returnResultFinalPrintList[this.currentIndex].cardExpirationYear = this.cardExpirationYear;
+      this.returnResultFinalPrintList[this.currentIndex].loginUserName = this.loginUserName;
+      this.returnResultFinalPrintList[this.currentIndex].authorizedDate = this.intl.formatDate(this.authorizedDate, this.dateFormat);
       this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
     } else {
       this.reconcilePaymentsAndPrintAdviceLetter();
@@ -244,13 +264,43 @@ export class PharmacyClaimsPrintAuthorizationComponent {
     this.onClosePrintAdviceLetterEvent.emit('Close');
   }
 
-  onClientNameClicked(event: any){
-    alert('Clicked!');
+ onCheckboxChange(event: any, item: any): void {
+  item.isPrintAdviceLetter = event.target.checked;
+  this.printCount = this.returnResultFinalPrintList.filter(x => x.isPrintAdviceLetter === true).length;
+  if (!this.items['print']) {
+    this.printAdviceLetterData.PrintAdviceLetterGenerateInfo.forEach((value: any) => {
+      if (item.vendorId === value.vendorId) {
+        value.isPrintAdviceLetter = event.target.checked;
+      }
+    });
   }
+  if (this.items['print']) {
+    this.selectUnSelectPayment.emit({'selected':event.target.checked,'vendorAddressId':item.vendorAddressId});
+  }
+}
 
-  ngAfterViewChecked (){
-    if(this.elementRef.nativeElement.querySelector('#my-button')){
-      this.elementRef.nativeElement.querySelector('#my-button').addEventListener('click', this.onClientNameClicked.bind(this));
+onAccountNumberChange(event: any){
+  this.last4OfVisaCard = event;
+}
+
+onExpirationDateChange(event: any){
+  this.cardExpirationDate = event;
+  this.cardExpirationMonth = event.getMonth() + 1; 
+  let fullYear = event.getFullYear().toString();
+  this.cardExpirationYear = fullYear.slice(-2);
+}
+
+onAuthorizationDateChange(event: any){
+this.authorizedDate = this.intl.formatDate(event, this.dateFormat);
+}
+
+getLoggedInUserProfile(){
+  this.loaderService.show();
+  this.userDataService.getProfile$.subscribe((profile:any)=>{
+    if(profile?.length>0){
+     this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
     }
- }
+  })
+  this.loaderService.hide();
+}
 }

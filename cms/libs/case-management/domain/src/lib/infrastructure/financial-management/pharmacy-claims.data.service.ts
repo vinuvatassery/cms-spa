@@ -187,16 +187,16 @@ export class FinancialPharmacyClaimsDataService {
   }
 
   loadEachLetterTemplate(templateParams:any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/drugs/print-advice-letter`,templateParams);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/print-advice-letter`,templateParams);
   }
 
   getPrintAdviceLetterData(selectedProviders: any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/print-advice-letter-summary`,selectedProviders);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/print-advice-letter-summary`,selectedProviders);
   }
 
   viewPrintAdviceLetterData(printAdviceLetterData: any) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/payments/download-advice-letter`, printAdviceLetterData,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/download-advice-letter`, printAdviceLetterData,
       { responseType: 'blob' }
     );
   }

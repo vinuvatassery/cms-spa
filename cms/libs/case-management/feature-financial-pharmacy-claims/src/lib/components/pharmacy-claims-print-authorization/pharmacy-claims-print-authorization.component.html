@@ -1,21 +1,20 @@
 <section class="k-dialog-body">
-      <p>Review the authorizations and confirm which ones to print. Click “Reconcile & Print” when you’re done.</p>
-
+      <p>{{printOption ? 'Review the authorization(s) and confirm which ones to print. Click "Print" when you\'re done.':'Review the advice letters and confirm which ones to print. Click Reconcile & Print" when you\'re done.'}}</p>
       <div class="custom_scroll_view mt-2">
-            <kendo-scrollview [data]="items" [width]="width" [height]="height" [arrows]="true" [pageable]="false">
-                  <ng-template let-item="item">
-                        <div>
+            <kendo-scrollview [data]="returnResultFinalPrintList" [width]="width" [height]="height" [arrows]="true" [pageable]="false" 
+            (itemChanged)="onItemChange($event)" [activeIndex]="currentIndex">
+                  <ng-template let-item="item">                      
+                        <div *ngIf="!letterContentLoader && returnResultFinalPrintList != null">
                               <div class="slidertitle-bar">
-                                    <p><strong>1) Nice Provider </strong> <label class="ml-1 text-muted">$100.00</label>
-                                          <label class="ml-1 text-muted"> Check</label>
-                                    </p>
+                                    <p><strong>{{item.paymentNbr}}) {{item.vendorName}} </strong> <label class="ml-1 text-muted">${{item.totalBatchAmount}}</label>
+                                          <label class="ml-1 text-muted"> {{item.paymentMethodCode}}</label></p>
                               </div>
-                              <div class="text-right mt-1">
+                              <div class="text-right mt-1 pr-2">
                                     <span class="app-checkboxwidtext-wrapper">
-                                          <input type="checkbox" kendoCheckBox aria-labelledby="Printauthorization"
-                                                id="Printauthorization" />
-                                          <label class="k-checkbox-label" for="Printauthorization">Print
-                                                authorization</label>
+                                          <label *ngIf="(returnResultFinalPrintList[currentIndex].checkNbr != null && returnResultFinalPrintList[currentIndex].warrantNumberChange === false  && returnResultFinalPrintList[currentIndex].printFlag ==='Y')" 
+                                          style="padding-right: 15px;" class="k-checkbox-label" for="Printauthorization"><b>Reconciled & Printed</b></label>
+                                          <input type="checkbox" [checked]="item.isPrintAdviceLetter" (change)="onCheckboxChange($event, item)" kendoCheckBox aria-labelledby="Printauthorization" id="Printauthorization" />
+                                          <label class="k-checkbox-label" for="Printauthorization">Print letter</label>
                                     </span>
                               </div>
                               <div>
@@ -26,24 +25,25 @@
                                     <div class="flex-row align-items-end">
                                           <div class="flex-col flex-col-3">
                                                 <kendo-floatinglabel text="Account Number">
-                                                      <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+                                                      <kendo-textbox [fillMode]="formUiStyle.inputFillMode"  
+                                                       (valueChange)="onAccountNumberChange($event)">
                                                       </kendo-textbox>
                                                 </kendo-floatinglabel>
                                           </div>
                                           <div class="flex-col flex-col-3">
                                                 <kendo-floatinglabel text="Expiration Date">
-                                                      <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                                            format="MM/dd/yyyy" formatPlaceholder="formatPattern">
+                                                      <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" (valueChange)="onExpirationDateChange($event)"
+                                                      [(ngModel)]="cardExpirationDate" format="MM/yyyy" formatPlaceholder="formatPattern">
                                                       </kendo-datepicker>
                                                 </kendo-floatinglabel>
                                           </div>
 
                                           <div class="flex-col flex-col-6">
                                                 <div class="grey-cards-banner">For a total amount of
-                                                      <strong>234234</strong> may be charged to the CAREAssist VISA
+                                                      <strong>$ {{item.totalBatchAmount}}</strong> may be charged to the CAREAssist VISA
                                                       Account Ending
-                                                      <strong> 234234 </strong> expiration date
-                                                      <strong>23/2334</strong>.
+                                                      <strong> {{last4OfVisaCard}} </strong> expiration date
+                                                      <strong>{{cardExpirationMonth}}/{{cardExpirationYear}}</strong>.
                                                 </div>
                                           </div>
                                     </div>
@@ -54,13 +54,13 @@
                                                 <kendo-floatinglabel text="Authorized By">
                                                       <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
                                                       </kendo-textbox>
-                                                      <kendo-formhint>John Smith</kendo-formhint>
+                                                      <kendo-formhint>{{loginUserName}}</kendo-formhint>
                                                 </kendo-floatinglabel>
                                           </div>
                                           <div class="flex-col flex-col-3">
                                                 <kendo-floatinglabel text="Date">
-                                                      <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                                            aria-label="Date" format="MM/dd/yyyy"
+                                                      <kendo-datepicker [(ngModel)]="authorizedDate" [fillMode]="formUiStyle.dateInputFillMode"
+                                                            aria-label="Date" format="MM/dd/yyyy" (valueChange)="onAuthorizationDateChange($event)"
                                                             formatPlaceholder="formatPattern">
                                                       </kendo-datepicker>
                                                 </kendo-floatinglabel>
@@ -81,8 +81,8 @@
       <div class="justify-content-between align-items-center">
             <div class="justify-content-end align-items-center">
                   <span class="mr-1">{{ printOption
-                        ? printCount + ' advice letter(s) to be printed'
-                        : claimReconcileCount + ' payment(s) to reconcile, ' + printCount + ' advice letter(s) to be printed' }}</span>
+                        ? printCount + ' authorization letter(s) to be printed'
+                        : claimReconcileCount + ' payment(s) to reconcile, ' + printCount + ' authorization letter(s) to be printed' }}</span>
 
                   <button kendoButton (click)="onClosePrintAdviceLetterClicked()" [primary]="true" look="outline" aria-label="Cancel">
                         Cancel
