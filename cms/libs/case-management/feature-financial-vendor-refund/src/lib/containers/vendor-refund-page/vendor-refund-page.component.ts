@@ -17,15 +17,15 @@ export class VendorRefundPageComponent {
   pageSizes = this.financialVendorRefundFacade.gridPageSizes;
   gridSkipCount = this.financialVendorRefundFacade.skipCount;
 
-  sortValueRefundProcess = this.financialVendorRefundFacade.sortValueRefundProcess;
-  sortProcessList = this.financialVendorRefundFacade.sortProcessList;
-  sortValueRefundBatch = this.financialVendorRefundFacade.sortValueRefundBatch;
-  sortBatchList = this.financialVendorRefundFacade.sortBatchList;
-  sortValueRefundPayments = this.financialVendorRefundFacade.sortValueRefundPayments;
-  sortPaymentsList = this.financialVendorRefundFacade.sortPaymentsList;
-
-
-  state!: State;
+   sortValueRefundProcess = this.financialVendorRefundFacade.sortValueRefundProcess;
+   sortProcessList = this.financialVendorRefundFacade.sortProcessList;
+   sortValueRefundBatch = this.financialVendorRefundFacade.sortValueRefundBatch;
+   sortBatchList = this.financialVendorRefundFacade.sortBatchList;
+   sortValueRefundPayments = this.financialVendorRefundFacade.sortValueRefundPayments;
+   sortPaymentsList = this.financialVendorRefundFacade.sortPaymentsList;
+   state!: State;
+   selectedClaimsTab = 1;
+   selectedClaimsTab = 1;
   vendorRefundProcessGridLists$ =
     this.financialVendorRefundFacade.vendorRefundProcessData$;
   vendorRefundBatchGridLists$ = this.financialVendorRefundFacade.vendorRefundBatchData$;
