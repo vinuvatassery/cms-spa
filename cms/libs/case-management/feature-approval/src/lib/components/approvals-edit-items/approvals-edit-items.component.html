@@ -185,13 +185,11 @@
     <div class="k-auto-complete-box">
       <span *ngIf="clinicVendorLoader$ | async"
         class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-      <span *ngIf="clinicVendorLoader$ | async"
-        class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
       <kendo-floatinglabel text="Manufacturer Name">
         <kendo-combobox #vendor [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }"
           placeholder="Manufacturer Name" [fillMode]="formUiStyle.dropDownFillMode" [filterable]="true"
           (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" [formControlName]="'providerName'"
-          [valuePrimitive]="true" [valueField]="'vendorName'" [textField]="'vendorName'" [valuePrimitive]="true"
+          [valuePrimitive]="true" [valueField]="'vendorId'" [textField]="'vendorName'" [valuePrimitive]="true"
           [(ngModel)]="selectedVendor">
           <ng-template kendoComboBoxItemTemplate let-dataItem>
             <span>{{ dataItem.vendorName }}</span>
@@ -241,19 +239,19 @@
   
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
-            <input type="radio" kendoRadioButton aria-labelledby="hiv" name="drugType" id="hiv" value="hiv"
+            <input type="radio" kendoRadioButton aria-labelledby="HIV" name="drugType" id="HIV" value="HIV"
               formControlName="drugType" />
-            <kendo-label class="k-radio-label" text="HIV Drug?" for="hiv"></kendo-label>
+            <kendo-label class="k-radio-label" text="HIV Drug?" for="HIV"></kendo-label>
           </span>
           <span class="app-radiobtnwidtext-wrapper">
-            <input type="radio" kendoRadioButton name="drugType" id="hepatitis" aria-labelledby="hepatitis"
-              value="hepatitis" formControlName="drugType" />
-            <kendo-label class="k-radio-label" text="Hepatitis Drug?" for="hepatitis"></kendo-label>
+            <input type="radio" kendoRadioButton name="drugType" id="HEPATITIS" aria-labelledby="HEPATITIS"
+              value="HEPA" formControlName="drugType" />
+            <kendo-label class="k-radio-label" text="Hepatitis Drug?" for="HEPATITIS"></kendo-label>
           </span>
           <span class="app-radiobtnwidtext-wrapper">
-            <input type="radio" kendoRadioButton name="drugType" id="opportunisticInfection" aria-labelledby="opportunisticInfection" value="opportunisticInfection"
+            <input type="radio" kendoRadioButton name="drugType" id="OPPORTUNISTICINFECTION" aria-labelledby="OPPORTUNISTICINFECTION" value="OPINF"
               formControlName="drugType" />
-            <kendo-label class="k-radio-label" text="Opportunistic Drug?" for="opportunisticInfection"></kendo-label>
+            <kendo-label class="k-radio-label" text="Opportunistic Drug?" for="OPPORTUNISTICINFECTION"></kendo-label>
           </span>
   
         </div>
@@ -292,82 +290,111 @@
       </fieldset>
     </div>
   </div>
-  <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsuranceVendor">
-    <div class="flex-col">
-      <div class="k-auto-complete-box">
-        <kendo-floatinglabel text="Vendor Name">
-          <span class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-          <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode" placeholder="Vendor Name" [filterable]="true"
-            [popupSettings]="{
-              popupClass: 'healthcaresearch-list auto-complete-with-template',
-              animate: true,
-              appendTo: 'component'
-            }">
-          </kendo-autocomplete>
-        </kendo-floatinglabel>
-        <kendo-formhint>
-          Start typing to choose an existing clinic, or enter a new one
-        </kendo-formhint>
-      </div>
+  <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsurancePlan" [formGroup]="insurancePlanForm">
+    <div class="k-auto-complete-box">
+      <span *ngIf="clinicVendorLoader$ | async"
+        class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+      <kendo-floatinglabel text="Insurance Provider Name">
+        <kendo-combobox #vendor [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }"
+          placeholder="Insurance Provider Name" [fillMode]="formUiStyle.dropDownFillMode" [filterable]="true"
+          (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" [formControlName]="'providerName'"
+          [valuePrimitive]="true" [valueField]="'vendorId'" [textField]="'vendorName'" [valuePrimitive]="true"
+          [(ngModel)]="selectedVendor" 
+          (selectionChange)="selectionChange($event)">
+          <ng-template kendoComboBoxItemTemplate let-dataItem>
+            <span>{{ dataItem.vendorName }}</span>
+          </ng-template>
+          <button kendoButton fillMode="clear" icon="image"></button>
+        </kendo-combobox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="insurancePlanFormControls?.providerName.errors?.required && isValidateForm">
+        Manufacturer Name is required
+      </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="TIN">
-        <kendo-textbox aria-label="TIN" placeholder="TIN" [fillMode]="formUiStyle.inputFillMode">
+      <kendo-floatinglabel text="Insurance Plan Name">
+        <kendo-textbox aria-label="Insurance Plan Name" placeholder="Insurance Plan Name" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="insurancePlanName" [maxlength]="50">
         </kendo-textbox>
+        <kendo-formerror *ngIf="insurancePlanFormControls?.insurancePlanName.errors?.required && isValidateForm">
+          Insurance Plan Name is required
+        </kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Accepts Combined Payments">
-        <kendo-textbox aria-label="Accepts Combined Payments" placeholder="Accepts Combined Payments"
-          [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox>
+      <legend class="k-form-legend">
+        <h5 class="mb-0"> Health Insurance Type </h5>
+      </legend>
+      <kendo-floatinglabel text="Health Insurance Type">
+        <kendo-dropdownlist aria-label="Health Insurance Type" [fillMode]="formUiStyle.dropDownFillMode" formControlName="healthInsuranceTypeCode"
+          [data]="insuranceTypelovForPlan$ | async" textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+          placeholder="State">
+        </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="insurancePlanFormControls?.healthInsuranceTypeCode.errors?.required && isValidateForm">
+        State is required
+      </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Accepts Reports">
-        <kendo-textbox aria-label="Accepts Reports" placeholder="Accepts Reports"
-          [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox>
-      </kendo-floatinglabel>
+      <legend class="k-form-legend">
+        <h5 class="mb-0"> This insurance plan can pay for medication? </h5>
+      </legend>
+      <fieldset class="k-form-fieldset">
+        <div class="component-list-h">
+          <span class="app-radiobtnwidtext-wrapper">
+            <input type="radio" kendoRadioButton aria-labelledby="canPayForMedicationFlag" name="canPayForMedicationFlag" id="canPayForMedicationFlag" value="YES"
+              formControlName="canPayForMedicationFlag" />
+            <kendo-label class="k-radio-label" text="YES" for="canPayForMedicationFlag"></kendo-label>
+          </span>
+          <span class="app-radiobtnwidtext-wrapper">
+            <input type="radio" kendoRadioButton aria-labelledby="canPayForMedicationFlag" name="canPayForMedicationFlag" id="canPayForMedicationFlag" value="NO"
+              formControlName="canPayForMedicationFlag" />
+            <kendo-label class="k-radio-label" text="NO" for="canPayForMedicationFlag"></kendo-label>
+          </span>
+        </div>
+      </fieldset>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Payment Method">
-        <kendo-textbox aria-label="Payment Method" placeholder="Payment Method" [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox>
-      </kendo-floatinglabel>
+      <legend class="k-form-legend">
+        <h5 class="mb-0"> This is a Dental Plan? </h5>
+      </legend>
+      <fieldset class="k-form-fieldset">
+        <div class="component-list-h">
+          <span class="app-radiobtnwidtext-wrapper">
+            <input type="radio" kendoRadioButton aria-labelledby="dentalPlanFlag" name="dentalPlanFlag" id="dentalPlanFlag" value="YES"
+              formControlName="dentalPlanFlag" />
+            <kendo-label class="k-radio-label" text="YES" for="dentalPlanFlag"></kendo-label>
+          </span>
+          <span class="app-radiobtnwidtext-wrapper">
+            <input type="radio" kendoRadioButton aria-labelledby="dentalPlanFlag" name="dentalPlanFlag" id="dentalPlanFlag" value="NO"
+              formControlName="dentalPlanFlag" />
+            <kendo-label class="k-radio-label" text="NO" for="dentalPlanFlag"></kendo-label>
+          </span>
+        </div>
+      </fieldset>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Payment Run Date">
-        <kendo-textbox aria-label="Payment Run Date" placeholder="Payment Run Date"
-          [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox>
-      </kendo-floatinglabel>
+      <kendo-floatinglabel text="Start Date">
+        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+            aria-label="Start Date" format="MM/dd/yyyy"
+            formatPlaceholder="formatPattern"
+            formControlName="startDate" placeholder=""
+            >
+        </kendo-datepicker>
+    </kendo-floatinglabel>
+    <kendo-formerror *ngIf="insurancePlanFormControls?.startDate.errors?.required && isValidateForm">
+      Start Date is required
+    </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Name on Check">
-        <kendo-textbox aria-label="Name on Check" placeholder="Name on Check" [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Name on Envelope">
-        <kendo-textbox aria-label="Name on Envelope" placeholder="Name on Envelope"
-          [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Billing Email">
-        <kendo-textbox aria-label="Billing Email" placeholder="Billing Email" [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Billing Address">
-        <kendo-textbox aria-label="Billing Address" placeholder="Billing Address"
-          [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox>
-      </kendo-floatinglabel>
+      <kendo-floatinglabel text="Term Date (optional)">
+        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+            aria-label="Term Date (optional)" format="MM/dd/yyyy"
+            formatPlaceholder="formatPattern"
+            formControlName="termDate" placeholder=""
+            >
+        </kendo-datepicker>
+    </kendo-floatinglabel>
     </div>
   </div>
   <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsuranceProvider">
@@ -389,7 +416,7 @@
       </div>
     </div>
   </div>
-  <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsurancePlan">
+  <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsuranceVendor">
     <div class="flex-col">
       <div class="k-auto-complete-box">
         <kendo-floatinglabel text="Insurance Provider">

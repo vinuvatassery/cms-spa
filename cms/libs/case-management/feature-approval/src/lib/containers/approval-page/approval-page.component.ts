@@ -19,6 +19,7 @@ import {
   FinancialVendorFacade,
   ContactFacade,
   DrugsFacade,
+  InsurancePlanFacade,
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
@@ -108,7 +109,9 @@ export class ApprovalPageComponent implements OnInit {
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
-  drugForm!:  FormGroup<any>;
+  drugForm!:  FormGroup;
+  insurancePlanForm!: FormGroup;
+  insuranceTypelovForPlan$ = this.lovFacade.insuranceTypelovForPlan$;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -125,9 +128,12 @@ export class ApprovalPageComponent implements OnInit {
     private formBuilder: FormBuilder,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
-    private drugService: DrugsFacade
+    private drugService: DrugsFacade,
+    private insurancePlanFacade : InsurancePlanFacade
   ) {
     this.healthCareForm = this.formBuilder.group({});
+    this.drugForm = this.formBuilder.group({});
+    this.insurancePlanForm = this.formBuilder.group({});
   }
 
   ngOnInit(): void {
@@ -149,6 +155,7 @@ export class ApprovalPageComponent implements OnInit {
       this.cd.detectChanges();
     });
     this.contactFacade.loadDdlStates();
+    this.lovFacade.getHealthInsuranceTypeLovsForPlan();
   }
 
   loadApprovalsGeneralGrid(event: any): void {
@@ -324,6 +331,8 @@ export class ApprovalPageComponent implements OnInit {
     } else if (subTypeCode == PendingApprovalGeneralTypeCode.Drug)
     {
       this.buildDrugForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsurancePlan) {
+      this.buildInsurancePlanForm();
     }
   }
 
@@ -339,7 +348,9 @@ export class ApprovalPageComponent implements OnInit {
         this.financialVendorFacade.updateVendorProfile(event.form);
       } else if (event.subTypeCode === PendingApprovalGeneralTypeCode.Drug) {
         this.drugService.updateDrugVendor(event.form);
-      }
+    } else if (event.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
+      this.insurancePlanFacade.updateInsurancePlan(event.form);
+    }
   }
 
   onProviderNameClick(event: any) {
@@ -384,6 +395,19 @@ export class ApprovalPageComponent implements OnInit {
       deliveryMethod : ['']
     })
     this.drugForm = form;
+  }
+
+  buildInsurancePlanForm() {
+    let form = this.formBuilder.group({
+      providerName: [''],
+      termDate: [''],
+      startDate: [''],
+      dentalPlanFlag: [''],
+      canPayForMedicationFlag: [''],
+      healthInsuranceTypeCode: [''],
+      insurancePlanName: ['']
+    })
+    this.insurancePlanForm = form
   }
 
 }
