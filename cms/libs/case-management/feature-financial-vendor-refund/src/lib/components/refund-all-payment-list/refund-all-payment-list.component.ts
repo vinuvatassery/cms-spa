@@ -189,7 +189,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
   onChange(data: any) {
     this.defaultGridState();
-    let operator = 'startswith';
+    let operator = 'contains';
     if (
       this.selectedColumn === 'refundAmount' ||
       this.selectedColumn === 'refundWarrentnbr'||
