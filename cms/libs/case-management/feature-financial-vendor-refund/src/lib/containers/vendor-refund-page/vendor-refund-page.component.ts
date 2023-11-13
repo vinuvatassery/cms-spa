@@ -71,7 +71,7 @@ export class VendorRefundPageComponent    {
 
   exportAllRefundsGridData() {   
     if (this.dataExportParameters) {       
-      this.documentFacade.getExportFile(this.dataExportParameters, `vendor-refunds/all`,'All Refunds');
+      this.documentFacade.getExportFile(this.dataExportParameters, `vendor-refunds/payments`,'All Refunds');
     }
   }
 }

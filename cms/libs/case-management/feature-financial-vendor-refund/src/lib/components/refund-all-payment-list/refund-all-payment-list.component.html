@@ -2,21 +2,21 @@
  
 <p class="mt-2"> Edit, unbatch or delete refunds and print receipting logs.</p>
 <section class="table-filter-section mat-form-no-b-space">
-    <span class="filter-section_items filter--select">
-      <kendo-floatinglabel>
-        <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"  
-        textField="columnDesc" valueField="columnCode"  >
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </span>
-    <span class="filter-section_items filter--search">
-      <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
-      <kendo-floatinglabel text="Search">
-        <kendo-textbox   aria-label="Search case"
-          rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-  
-      </kendo-floatinglabel>
-    </span>
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel>
+      <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
+      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"  (valueChange)="searchColumnChangeHandler($event)">
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
+    <kendo-floatinglabel text="Search">
+      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)"  aria-label="Search case" rounded="medium"
+      [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+
+    </kendo-floatinglabel>
+  </span>
     <span class="right-overlay-export">
       <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"  [disabled]="showExportLoader">
         <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
@@ -42,10 +42,11 @@
   <div class="app-c-table">
     <kendo-grid [resizable]="true" [loading]="isVendorRefundAllPaymentsGridLoaderShow"  [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [data]="vendorRefundAllPaymentsGridLists$ | async">
+    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
+     [data]="gridVendorsAllPaymentsData$ | async">
     <kendo-grid-checkbox-column  [sticky]="true"  [columnMenu]="false" [showSelectAll]="true"  [width]="40"></kendo-grid-checkbox-column>
       
-    <kendo-grid-column field="entryDate" title="Batch #" [width]="160">
+    <kendo-grid-column field="batchNumber" title="Batch #" [width]="160">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.batch" kendoButton look="flat" class="card-link-button" >
             {{ dataItem.batchNumber }}

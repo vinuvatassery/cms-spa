@@ -39,14 +39,14 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
   @Output() exportGridDataEvent = new EventEmitter<any>();
 
   public state!: State;
-  sortColumn = 'entryDate';
-  sortDir = 'Ascending';
+  sortColumn = 'Batch #';
+  sortDir = 'Descending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn ='batchNumber'
   gridDataResult!: GridDataResult;
 
   gridVendorsAllPaymentsDataSubject = new Subject<any>();
@@ -92,6 +92,41 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
     refundNote:'Refund Note',
     entryDate : 'Entry Date'
   };
+
+  dropDowncolumns: any = [
+    {
+      columnCode: 'batchNumber',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnCode: 'providerName',
+      columnDesc: 'Vendor',
+    },
+    {
+      columnCode: 'paymentType',
+      columnDesc: 'Type',
+    },
+    {
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+    },   
+    {
+      columnCode: 'insuranceName',
+      columnDesc: 'Name on Primary Insurance Card',
+    },
+    {
+      columnCode: 'clientId',
+      columnDesc: 'Client ID',
+    },
+    {
+      columnCode: 'warrantNumber',
+      columnDesc: 'Refund Warrant #',
+    },
+    {
+      columnCode: 'refundAmount',
+      columnDesc: 'Refund Amount',
+    }   
+  ];
   showExportLoader = false;
  
   
@@ -99,9 +134,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
   constructor(private route: Router,  private readonly cdr: ChangeDetectorRef ) {}
 
   ngOnInit(): void {
+    this.sortType = 'desc'
     this.loadVendorRefundAllPaymentsListGrid();
   }
   ngOnChanges(): void {
+    this.sortType = 'desc'
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -127,6 +164,12 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
     sortTypeValue: string
   ) {
     this.isVendorRefundAllPaymentsGridLoaderShow = true;
+
+    if(sortValue  === 'batchNumber')
+    {
+      sortValue = 'entryDate'  
+    }  
+
     const gridDataRefinerValue = {
       SkipCount: skipCountValue,
       MaxResultCount: maxResultCountValue,
@@ -138,10 +181,22 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
     this.gridDataHandle();
   }
 
-  
+  searchColumnChangeHandler(data:any){      
+    this.onChange('')    
+  }
+
   
   onChange(data: any) {
     this.defaultGridState();
+    let operator = 'startswith';
+
+    if (
+      this.selectedColumn === 'clientId' ||
+      this.selectedColumn === 'refundAmount' ||
+      this.selectedColumn === 'originalAmount'     
+    ) {
+      operator = 'eq';
+    }
 
     this.filterData = {
       logic: 'and',
@@ -149,8 +204,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'entryDate',
-              operator: 'startswith',
+              field: this.selectedColumn ?? 'batchNumber',
+              operator: operator,
               value: data,
             },
           ],
@@ -158,7 +213,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
@@ -214,11 +269,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
 
   gridDataHandle() {
     this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
+      this.gridDataResult = data;     
       this.gridVendorsAllPaymentsDataSubject.next(this.gridDataResult);      
         this.isVendorRefundAllPaymentsGridLoaderShow = false;     
     });
@@ -256,7 +307,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
     this.searchValue =''
 
     this.loadVendorRefundAllPaymentsListGrid();
-  }
+  } 
 
  
 }
