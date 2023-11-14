@@ -21,12 +21,13 @@ export class PharmacyClaimsBatchPageComponent {
   sort = this.financialPharmacyClaimsFacade.sortBatchLogList;
   state!: State;
   batchLogGridLists$ = this.financialPharmacyClaimsFacade.batchLogData$;
-  unbatchEntireBatch$= this.financialPharmacyClaimsFacade.unbatchEntireBatch$;
-  unbatchClaim$=this.financialPharmacyClaimsFacade.unbatchClaims$
+  unbatchEntireBatch$ = this.financialPharmacyClaimsFacade.unbatchEntireBatch$;
+  unbatchClaim$ = this.financialPharmacyClaimsFacade.unbatchClaims$
+  paymentByBatchGridLoader$ = this.financialPharmacyClaimsFacade.paymentByBatchGridLoader$;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$
   claimsType= 'pharmacies';
   batchId!:string;
   dataExportParameters! : any
-  exportButtonShow$ :any
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private readonly route : ActivatedRoute,
@@ -35,8 +36,10 @@ export class PharmacyClaimsBatchPageComponent {
 
   loadBatchLogListGrid(event: any) {
     this.dataExportParameters = event
-     this.batchId = this.route.snapshot.queryParams['bid'];
-    }
+    const batchId = this.route.snapshot.queryParams['bid'];
+    const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
+    this.financialPharmacyClaimsFacade.loadBatchLogListGrid(batchId, params, this.claimsType);
+  }
   exportPharmacyBatchesGridData(){
     const data = this.dataExportParameters
     if(data){
@@ -56,12 +59,11 @@ export class PharmacyClaimsBatchPageComponent {
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`payment-batches/${batchId}/payments` , fileName)
     }
   }
-  
-  unBatchEntireBatchClick(event:any){
-    this.financialPharmacyClaimsFacade.unbatchEntireBatch(event.batchId)
-   }
-   unBatchClaimClick(event:any){
+  unBatchEntireBatchClick() { 
+     const batchId = this.route.snapshot.queryParams['bid'];
+     this.financialPharmacyClaimsFacade.unbatchEntireBatch(batchId)
+  }
+  unBatchClaimClick(event: any) {
      this.financialPharmacyClaimsFacade.unbatchPremiums(event.paymentId)
-   }
-
+  }
 }

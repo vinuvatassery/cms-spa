@@ -36,17 +36,19 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Input() sortValueRefunds: any;
   @Input() vendorRefundAllPaymentsGridLists$: any;
+  @Input() exportButtonShow$: any;
+
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
   
   public state!: State;
-  sortColumn = 'entryDate';
-  sortDir = 'Ascending';
+  sortColumn = 'Batch #';
+  sortDir = 'Descending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn ='batchNumber'
   gridDataResult!: GridDataResult;
 
   gridVendorsAllPaymentsDataSubject = new Subject<any>();
@@ -145,6 +147,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(): void {
+    this.sortType = 'desc'
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -170,6 +173,12 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     sortTypeValue: string
   ) {
     this.isVendorRefundAllPaymentsGridLoaderShow = true;
+
+    if(sortValue  === 'batchNumber')
+    {
+      sortValue = 'entryDate'  
+    }  
+
     const gridDataRefinerValue = {
       SkipCount: skipCountValue,
       MaxResultCount: maxResultCountValue,

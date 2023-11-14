@@ -16,6 +16,7 @@ export class VendorRefundPageComponent {
    sortType = this.financialVendorRefundFacade.sortType;
    pageSizes = this.financialVendorRefundFacade.gridPageSizes;
    gridSkipCount = this.financialVendorRefundFacade.skipCount;
+   exportButtonShow$ = this.documentFacade.exportButtonShow$;
 
    sortValueRefundProcess = this.financialVendorRefundFacade.sortValueRefundProcess;
    sortProcessList = this.financialVendorRefundFacade.sortProcessList;
@@ -31,10 +32,10 @@ export class VendorRefundPageComponent {
   vendorRefundBatchGridLists$ = this.financialVendorRefundFacade.vendorRefundBatchData$;
 
   vendorRefundAllPaymentsGridLists$ = this.financialVendorRefundFacade.vendorRefundAllPaymentsData$;
-  constructor(
-    private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
+  constructor( 
+    private readonly financialVendorRefundFacade: FinancialVendorRefundFacade ,
     private documentFacade: DocumentFacade,
-  ) { }
+  ) {}
 
 
   loadVendorRefundProcessListGrid(event: any) {
