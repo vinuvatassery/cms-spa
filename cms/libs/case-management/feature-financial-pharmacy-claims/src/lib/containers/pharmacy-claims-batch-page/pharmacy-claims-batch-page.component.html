@@ -10,7 +10,10 @@
  (unBatchEntireBatchEvent)="unBatchEntireBatchClick()"
  (unBatchClaimsEvent)="unBatchClaimClick($event)"
  [unbatchClaim$]="unbatchClaim$"
- [unbatchEntireBatch$]="unbatchEntireBatch$">
+ [unbatchEntireBatch$]="unbatchEntireBatch$"
+ [deleteClaims$]="deleteClaims$"
+ (ondeletebatchesClickedEvent)="ondeletebatchesClicked($event)"
+ >
 </cms-pharmacy-claims-batches-log-lists>
 
  

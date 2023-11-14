@@ -510,6 +510,29 @@ export class FinancialPharmacyClaimsFacade {
     .deleteClaims(batchPharmacyClaims)
     .subscribe({
       next: (response:any) => {
+        this.batchClaimsSubject.next(response);
+        if (response.status) {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+        }
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+}
+deletebatches(batchPharmacyClaims: BatchPharmacyClaims) {
+  this.showLoader();
+  
+  return this.financialPharmacyClaimsDataService
+    .deleteClaims(batchPharmacyClaims)
+    .subscribe({
+      next: (response:any) => {
+        debugger
         this.deleteClaimsSubject.next(response);
         if (response.status) {
           this.notificationSnackbarService.manageSnackBar(

@@ -210,7 +210,6 @@
           </section>
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span class="">0 claims(s) to be deleted</span>
     <button (click)="goToBatchItems($event)">Batch Log items</button>
     <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Preview Requests" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
@@ -250,7 +249,10 @@
 
 <ng-template #deleteClaimsConfirmationDialogTemplate>
   <cms-pharmacy-claims-delete-claims
-    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"></cms-pharmacy-claims-delete-claims>
+  (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"
+  (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked($event)"
+ 
+  [deletemodelbody]="deletemodelbody"></cms-pharmacy-claims-delete-claims>
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
