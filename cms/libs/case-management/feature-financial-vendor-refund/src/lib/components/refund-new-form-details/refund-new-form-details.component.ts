@@ -141,10 +141,15 @@ export class RefundNewFormDetailsComponent{
   }
   confirmationClicked (){
     this.isSubmitted=true
-    this.isConfirmationClicked = true
+
     this.disableFeildsOnConfirmSelection = true
-  
-      this.paymentRequestIds = this.InsurancePremiumSelection.selectedInsurancePremiums
+    if(this.selectedRefundType ==='INS' && this.InsurancePremiumSelection.selectedInsurancePremiums
+    && this.pharmacyClaimForm.valid){
+    this.paymentRequestIds = this.InsurancePremiumSelection.selectedInsurancePremiums
+    this.isConfirmationClicked = true
+    }else{
+      return;
+    }
   } 
 
   onAddRefundClicked(){
