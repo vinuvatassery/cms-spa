@@ -1,11 +1,10 @@
 /** Angular **/
 import {  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { GridFilterParam, IncomeFacade } from '@cms/case-management/domain';
+import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
-import { AggregateDescriptor, AggregateResult, CompositeFilterDescriptor, State, aggregateBy } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
  
 
@@ -18,7 +17,6 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
 
   
    paymentStatusCode =null
-   paymentStatuses$ = this.lovFacade.paymentStatus$
    paymentStatusLovSubscription!:Subscription;
    paymentStatusType:any;
    @Input() refundInformationLoader$:any
@@ -49,15 +47,13 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
     depositDate: ['', Validators.required],
     refundNote:['']
   })
-  public constructor(  private readonly lovFacade : LovFacade, private formBuilder : FormBuilder,
+  public constructor(private formBuilder : FormBuilder,
     private readonly changeDetectorRef: ChangeDetectorRef){
     
   }
 
  
  ngOnInit(): void {
-  this.lovFacade.getPaymentStatusLov()
-  this.paymentStatusSubscription();
   this.initializeRefunInformationGrid()
   this.insuraceAddRefundClick$.subscribe((res:any) =>{
     this.changeDetectorRef.markForCheck()
@@ -68,12 +64,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   })
 }
 
-paymentStatusSubscription()
-{
-  this.paymentStatusLovSubscription = this.paymentStatuses$.subscribe(data=>{
-    this.paymentStatusType = data;
-  });
-}
+
 
   refundAmountChange(dataItem:any){
    if(dataItem.amountDue < dataItem.refundAmount ){
