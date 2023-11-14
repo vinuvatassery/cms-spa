@@ -19,7 +19,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, debounceTime } from 'rxjs';
+import { Observable, Subject, Subscription, debounceTime } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
 
@@ -101,6 +101,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  recordCountWhenSelectallClicked: number = 0;
  totalGridRecordsCount: number = 0;
  sendReportCount: number = 0;
+ allPaymentsListSubscription!: Subscription;
  
  
  gridColumns: { [key: string]: string } = {
@@ -196,7 +197,19 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
   ngOnInit(): void {
     this.addSearchSubjectSubscription();
+    this.allPaymentsGridListSubscription();
   }
+
+  allPaymentsGridListSubscription() {
+      this.allPaymentsListSubscription = this.pharmacyClaimsAllPaymentsGridLists$.subscribe((response:any) =>{
+      this.totalGridRecordsCount = response.total;
+      if(this.selectAll){
+      this.markAsChecked(response.data);
+      }
+      this.financialClaimsAllPaymentsGridLists = response;
+    });
+  }
+
   ngOnChanges(): void {
     this.sortType = 'desc';
     this.state = {
@@ -206,6 +219,11 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     };
 
     this.loadPharmacyClaimsAllPaymentsListGrid();
+  }
+
+  
+  ngOnDestroy(): void {
+    this.allPaymentsListSubscription.unsubscribe();
   }
 
   resetGrid(){
@@ -417,7 +435,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-96full pharmacy_print_auth',
     });
   }
 
@@ -590,10 +608,10 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.unCheckedProcessRequest=[];
     this.checkedAndUncheckedRecordsFromSelectAll=[];
     if(this.selectAll){
-      this.markAsChecked(this.financialClaimsAllPaymentsGridLists);
+      this.markAsChecked(this.financialClaimsAllPaymentsGridLists.data);
     }
     else{
-      this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists);
+      this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists.data);
     }
     this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
     'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,

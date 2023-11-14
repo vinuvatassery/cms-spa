@@ -48,7 +48,7 @@
     <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take" [loading]="(loader$ | async) ?? false"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
         (columnReorder)="onColumnReorder($event)"
         [data]="batchLogGridLists$| async"  [rowClass]="rowClass">
         <kendo-grid-column  *ngIf="isPrintVisaAuthorizationClicked" [sortable]="false" field="add" [width]="40"  class="text-center"
@@ -61,11 +61,12 @@
                     (change)="selectionAllChange()"/>
             </ng-template>
             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
-                <input   kendoCheckBox
+                <input kendoCheckBox
                     type="checkbox"  [(ngModel)]="dataItem.selected"
                     (change)="selectionChange(dataItem,dataItem.selected)"/>
             </ng-template>
           </kendo-grid-column>
+
         <kendo-grid-column field="itemNbr" title="Item #" [width]="100">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
@@ -182,7 +183,7 @@
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
-       <ng-container *ngIf="isLogGridExpand">
+       <ng-container *ngIf="isLogGridExpand && !isPrintVisaAuthorizationClicked">
           <div *kendoGridDetailTemplate="let dataItem">
       <cms-pharmacy-claims-prescriptions-services [paymentId] = "dataItem.paymentRequestId" [claimType] = "claimsType"></cms-pharmacy-claims-prescriptions-services>
           </div>
@@ -255,6 +256,7 @@
   <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Preview and Print Authorization(s)</kendo-dialog-titlebar>
   <cms-pharmacy-claims-print-authorization
   [printOption]="true"
+  [batchId]="batchId"
   [items]="selectedDataRows"
   (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
   (selectUnSelectPayment)="selectUnSelectPayment($event)"

@@ -18,12 +18,13 @@ export class PharmacyClaimsPrintAuthorizationComponent {
   item = [
     {},{}
   ]
-  letterContent!: any;
+
   letterContentSubscription!: Subscription;
   letterContentListItemSubscription!: Subscription;
   printCount: number = 0;
   reconcileCount: number = 0;
   printAdviceLetterData: any
+  letterContent:any;
   letterContentLoader:boolean= false;
   currentIndex:any=0;
   reconcileArray:any=[]; 
@@ -38,6 +39,7 @@ export class PharmacyClaimsPrintAuthorizationComponent {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   /** Input properties  **/
   @Input() items!: any;
+  @Input() batchId!: any;
   @Input() printOption: boolean = false;
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
@@ -78,6 +80,11 @@ export class PharmacyClaimsPrintAuthorizationComponent {
     this.letterContentLoaderSubscription();
     this.getLoggedInUserProfile(); 
     this.authorizedDate = new Date();
+  }
+
+  ngOnDestroy(): void {
+    this.letterContentSubscription.unsubscribe();
+    this.letterContentListItemSubscription.unsubscribe();
   }
 
   letterContentLoaderSubscription() {
@@ -149,10 +156,11 @@ export class PharmacyClaimsPrintAuthorizationComponent {
   loadPrintLetterModelData() {
     let PrintAdviceLetterInfo: any = [];
     this.finalPrintList.forEach(item => {
-      this.printAdviceLetterData = { 
+      this.printAdviceLetterData = {       
+      batchId:this.batchId,
       PrintAdviceLetterGenerateInfo:[]
     };
-    PrintAdviceLetterInfo.push({'vendorId':item.vendorId,'paymentRequestId':item.paymentRequestId, 'warrantNumberChange': item.warrantNumberChanged,
+    PrintAdviceLetterInfo.push({'vendorId':item.vendorId,'paymentRequestId':item.paymentRequestId,'batchId':item.batchId, 'warrantNumberChange': item.warrantNumberChanged,
     'vendorAddressId':item.entityId,'clientId':item.clientId,'isPrintAdviceLetter':item.isPrintAdviceLetter, 'checkNbr':item.checkNbr});
     });
     this.printAdviceLetterData.PrintAdviceLetterGenerateInfo = PrintAdviceLetterInfo;
@@ -255,6 +263,10 @@ export class PharmacyClaimsPrintAuthorizationComponent {
   }
 
   onItemChange(event:any){
+    this.last4OfVisaCard = null;
+    this.cardExpirationDate = null;
+    this.cardExpirationMonth = null;
+    this.cardExpirationYear = null;
     this.loadTemplateEvent.emit(this.returnResultFinalPrintList[event.index]);
     this.currentIndex = event.index;
     this.ref.detectChanges();
@@ -284,7 +296,7 @@ onAccountNumberChange(event: any){
 }
 
 onExpirationDateChange(event: any){
-  this.cardExpirationDate = event;
+  this.cardExpirationDate = this.intl.formatDate(event, this.dateFormat);
   this.cardExpirationMonth = event.getMonth() + 1; 
   let fullYear = event.getFullYear().toString();
   this.cardExpirationYear = fullYear.slice(-2);

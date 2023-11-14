@@ -49,6 +49,8 @@ export class PharmacyClaimsPageComponent {
   searchClientLoader$ = this.financialPharmacyClaimsFacade.searchClientLoader$;
   searchDrugsLoader$ = this.financialPharmacyClaimsFacade.searchDrugsLoader$;
 
+  letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
+  letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade ,
     private lovFacade: LovFacade,private readonly configProvider: ConfigurationProvider,
@@ -176,5 +178,9 @@ export class PharmacyClaimsPageComponent {
   }
   ondeleteClaimsClicked(event:any){
     this.financialPharmacyClaimsFacade.deleteClaims(event);
+  }
+
+  loadEachLetterTemplate(event:any){
+    this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);  
   }
 }

@@ -11,66 +11,62 @@
                               </div>
                               <div class="text-right mt-1 pr-2">
                                     <span class="app-checkboxwidtext-wrapper">
-                                          <label *ngIf="(returnResultFinalPrintList[currentIndex].checkNbr != null && returnResultFinalPrintList[currentIndex].warrantNumberChange === false  && returnResultFinalPrintList[currentIndex].printFlag ==='Y')" 
+                                          <label *ngIf="(returnResultFinalPrintList[currentIndex]?.checkNbr != null && returnResultFinalPrintList[currentIndex]?.warrantNumberChange === false  && returnResultFinalPrintList[currentIndex]?.printFlag ==='Y')" 
                                           style="padding-right: 15px;" class="k-checkbox-label" for="Printauthorization"><b>Reconciled & Printed</b></label>
                                           <input type="checkbox" [checked]="item.isPrintAdviceLetter" (change)="onCheckboxChange($event, item)" kendoCheckBox aria-labelledby="Printauthorization" id="Printauthorization" />
                                           <label class="k-checkbox-label" for="Printauthorization">Print letter</label>
                                     </span>
                               </div>
-                              <div>
-                                    <div [innerHTML]="letterContent" class="view-auth-port">
-                                    </div>
-                                    <common-grid-loader-component *ngIf="letterContentLoader">
-                                    </common-grid-loader-component>
-                                    <div class="flex-row align-items-end">
-                                          <div class="flex-col flex-col-3">
-                                                <kendo-floatinglabel text="Account Number">
-                                                      <kendo-textbox [fillMode]="formUiStyle.inputFillMode"  
-                                                       (valueChange)="onAccountNumberChange($event)">
-                                                      </kendo-textbox>
-                                                </kendo-floatinglabel>
-                                          </div>
-                                          <div class="flex-col flex-col-3">
-                                                <kendo-floatinglabel text="Expiration Date">
-                                                      <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" (valueChange)="onExpirationDateChange($event)"
-                                                      [(ngModel)]="cardExpirationDate" format="MM/yyyy" formatPlaceholder="formatPattern">
-                                                      </kendo-datepicker>
-                                                </kendo-floatinglabel>
-                                          </div>
-
-                                          <div class="flex-col flex-col-6">
-                                                <div class="grey-cards-banner">For a total amount of
-                                                      <strong>$ {{item.totalBatchAmount}}</strong> may be charged to the CAREAssist VISA
-                                                      Account Ending
-                                                      <strong> {{last4OfVisaCard}} </strong> expiration date
-                                                      <strong>{{cardExpirationMonth}}/{{cardExpirationYear}}</strong>.
-                                                </div>
-                                          </div>
-                                    </div>
-
-                                    <div class="flex-row">
-
-                                          <div class="flex-col flex-col-3">
-                                                <kendo-floatinglabel text="Authorized By">
-                                                      <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-                                                      </kendo-textbox>
-                                                      <kendo-formhint>{{loginUserName}}</kendo-formhint>
-                                                </kendo-floatinglabel>
-                                          </div>
-                                          <div class="flex-col flex-col-3">
-                                                <kendo-floatinglabel text="Date">
-                                                      <kendo-datepicker [(ngModel)]="authorizedDate" [fillMode]="formUiStyle.dateInputFillMode"
-                                                            aria-label="Date" format="MM/dd/yyyy" (valueChange)="onAuthorizationDateChange($event)"
-                                                            formatPlaceholder="formatPattern">
-                                                      </kendo-datepicker>
-                                                </kendo-floatinglabel>
-                                          </div>
-
-                                    </div>
+                              <div [innerHTML]="letterContent" class="view-auth-port">
+                              </div>
+                        </div>
+                        <common-grid-loader-component *ngIf="letterContentLoader">
+                        </common-grid-loader-component>
+                        <div class="flex-row align-items-end">
+                              <div class="flex-col flex-col-3">
+                                    <kendo-floatinglabel text="Account Number">
+                                          <kendo-textbox [fillMode]="formUiStyle.inputFillMode"  
+                                                (valueChange)="onAccountNumberChange($event)">
+                                          </kendo-textbox>
+                                    </kendo-floatinglabel>
+                              </div>
+                              <div class="flex-col flex-col-3">
+                                    <kendo-floatinglabel text="Expiration Date">
+                                          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" (valueChange)="onExpirationDateChange($event)"
+                                          format="MM/yyyy" formatPlaceholder="formatPattern" placeholder="" bottomView="year">
+                                          </kendo-datepicker>
+                                    </kendo-floatinglabel>
                               </div>
 
+                              <div class="flex-col flex-col-6">
+                                    <div class="grey-cards-banner">For a total amount of
+                                          <strong>$ {{item.totalBatchAmount}}</strong> may be charged to the CAREAssist VISA
+                                          Account Ending
+                                          <strong *ngIf="last4OfVisaCard"> {{last4OfVisaCard}} </strong> 
+                                          <strong *ngIf="!last4OfVisaCard"> #XXXX </strong> expiration date
+                                          <strong *ngIf="cardExpirationMonth">{{cardExpirationMonth}}/{{cardExpirationYear}}</strong>
+                                          <strong *ngIf="!cardExpirationMonth">MM/YY</strong>.
+                                    </div>
+                              </div>
                         </div>
 
+                        <div class="flex-row">
+                              <div class="flex-col flex-col-3">
+                                    <kendo-floatinglabel text="Authorized By">
+                                          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+                                          </kendo-textbox>
+                                          <kendo-formhint>{{loginUserName}}</kendo-formhint>
+                                    </kendo-floatinglabel>
+                              </div>
+                              <div class="flex-col flex-col-3">
+                                    <kendo-floatinglabel text="Date">
+                                          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+                                          [(ngModel)]="authorizedDate" aria-label="Date" format="MM/dd/yyyy" (valueChange)="onAuthorizationDateChange($event)"
+                                                formatPlaceholder="formatPattern" placeholder="">
+                                          </kendo-datepicker>
+                                    </kendo-floatinglabel>
+                              </div>
+                        </div>
                   </ng-template>
             </kendo-scrollview>
 
@@ -83,7 +79,6 @@
                   <span class="mr-1">{{ printOption
                         ? printCount + ' authorization letter(s) to be printed'
                         : claimReconcileCount + ' payment(s) to reconcile, ' + printCount + ' authorization letter(s) to be printed' }}</span>
-
                   <button kendoButton (click)="onClosePrintAdviceLetterClicked()" [primary]="true" look="outline" aria-label="Cancel">
                         Cancel
                   </button>

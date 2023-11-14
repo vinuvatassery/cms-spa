@@ -68,7 +68,10 @@
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList"
                                 (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"
-                                (exportGridEvent$)="onExportAllPayments($event)"></cms-pharmacy-claims-all-payments-list>
+                                (exportGridEvent$)="onExportAllPayments($event)"
+                                (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+                                [letterContentList$]="letterContentList$"
+                                [letterContentLoader$]="letterContentLoader$"></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

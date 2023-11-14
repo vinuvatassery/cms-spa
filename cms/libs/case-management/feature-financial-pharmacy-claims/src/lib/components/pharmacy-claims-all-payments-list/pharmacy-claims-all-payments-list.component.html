@@ -253,11 +253,11 @@
           </kendo-dropdownbutton>
         </ng-template>
       </kendo-grid-column>
-      
+      <ng-container *ngIf="!isPrintAuthorizationClicked">
       <div *kendoGridDetailTemplate="let dataItem" [ngStyle]="{width:'75%'}">
         <cms-financial-pharmacy-prescription [paymentId]="dataItem.paymentRequestId"></cms-financial-pharmacy-prescription>       
       </div>
-
+    </ng-container>
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">

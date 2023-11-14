@@ -324,79 +324,17 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   }
 
   pharmacyBatchLogListSubscription(){
-    // this.batchLogListItemsSubscription = this.batchLogGridLists$.subscribe((response:any) =>{
-    //   this.totalRecord = response.total;
-    //   if(this.selectAll){
-    //   this.markAsChecked(response.data);
-    //   }
-    //   this.batchLogPrintAdviceLetterPagedList = response;
-    // });
-    this.loadDummyGridData();
-    this.batchLogPrintAdviceLetterPagedList = this.batchLogGridLists;
-    this.totalRecord = this.batchLogGridLists?.length;
+    this.batchLogListItemsSubscription = this.batchLogGridLists$.subscribe((response:any) =>{
+      this.totalRecord = response.total;
+      if(this.selectAll){
+      this.markAsChecked(response.data);
+      }
+      this.batchLogPrintAdviceLetterPagedList = response;
+    });
   }
 
   ngOnDestroy(): void {
     this.batchLogListItemsSubscription.unsubscribe();
-  }
-
-  loadDummyGridData() {
-    this.batchLogGridLists = [
-      {
-        id:1,
-        item:1,
-        PharmacyName: 'Carol E. Blenning',
-        paymentMethod: 'Check',
-        clientName:'joseph john',
-        nameOnPrimaryInsuranceCard:'Marci Campbell',
-        memberID:'299330',
-        RXNumber:'45343',
-        FillDate:'2023-10-27',
-        ndcCode:'53e432',
-        brandName:'Brand',
-        drugName: 'Drug',
-        paymentType: 'PAYMENT',
-        amountPaid: '1424.00',
-        rxQty: '4',
-        rxType: 'Tablet',
-        rxDaysSupply: '7',
-        indexCode: '50403',
-        pcaCode: 'XXXX',
-        objectCode: '4957',
-        paymentStatus: 'Submitted',
-        warrantNumber: 'null',
-        entryDate: '2023-10-27',
-        by: 'by',
-        paymentRequestId: "db690385-8631-49e5-a183-ffa2d7e5182a",
-      },
-      {
-        id:2,
-        item:2,
-        PharmacyName: 'new pharma',
-        paymentMethod: 'Check',
-        clientName:'joseph john',
-        nameOnPrimaryInsuranceCard:'Bugsy Bunny',
-        memberID:'815019',
-        RXNumber:'54343',
-        FillDate:'2023-10-28',
-        ndcCode:'64434',
-        brandName:'Brand',
-        drugName: 'Drug',
-        paymentType: 'PAYMENT',
-        amountPaid: '54432.00',
-        rxQty: '4',
-        rxType: 'Tablet',
-        rxDaysSupply: '4',
-        indexCode: '64532',
-        pcaCode: 'XXXX',
-        objectCode: '5343',
-        paymentStatus: 'Submitted',
-        warrantNumber: 'null',
-        entryDate: '2023-10-28',
-        by: 'by',
-        paymentRequestId: "2e208fef-ff25-47fb-8e03-fe580f2769bc",
-      },
-    ];
   }
 
   private loadBatchLogListGrid(): void {
@@ -807,12 +745,12 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.unCheckedPaymentRequest=[];
     this.selectedDataIfSelectAllUnchecked=[];
     if(this.selectAll){
-      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList);
+      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList.data);
       this.noOfRecordToPrint = this.totalRecord;
       this.selectedCount = this.noOfRecordToPrint;
     }
     else{
-      this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList);
+      this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
       this.noOfRecordToPrint = 0;
       this.selectedCount = this.noOfRecordToPrint
     }
