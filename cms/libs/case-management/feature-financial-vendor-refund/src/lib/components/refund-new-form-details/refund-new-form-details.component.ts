@@ -1,4 +1,4 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef} from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, filterBy } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam } from '@cms/case-management/domain'; 
@@ -20,6 +20,7 @@ export class RefundNewFormDetailsComponent{
     "RX",
   ];
 
+  @Input() isEdit = false
   sortType = this.financialVendorRefundFacade.sortType;
   pageSizes = this.financialVendorRefundFacade.gridPageSizes;
   gridSkipCount = this.financialVendorRefundFacade.skipCount;
@@ -116,7 +117,7 @@ export class RefundNewFormDetailsComponent{
   confirmationClicked (){
   
     if(this.selectedRefundType=="INS" 
-    //&& this.insurancePremiumsRequestIds && this.insurancePremiumsRequestIds.length>0
+    && this.insurancePremiumsRequestIds && this.insurancePremiumsRequestIds.length>0
     ){
     this.insurancePremiumPaymentReqIds = this.insurancePremiumsRequestIds
     this.isConfirmationClicked = true
@@ -129,11 +130,17 @@ export class RefundNewFormDetailsComponent{
   getInsuranceRefundInformation(data:any){
     const param ={
       ...data,
-      paymentRequestsId : this.insurancePremiumPaymentReqIds
+      paymentRequestsId : [
+        "B1452EB8-D4C1-42FD-8889-0F88ED5FF4B8",
+        "7814ACE3-BADC-470E-8791-5FBC2D0B6EEB",
+        "359EF38B-DD74-4265-97AD-764CEA5CAFE7",
+        "86D127CF-F870-4A16-BA0E-7BCDEFEDC638"
+      ]
     }
     this.financialVendorRefundFacade.getInsuranceRefundInformation(param);
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
     this.financialPremiumsRefundGridLists =  res;
+      console.log(this.financialPremiumsRefundGridLists)
     })
   }
 

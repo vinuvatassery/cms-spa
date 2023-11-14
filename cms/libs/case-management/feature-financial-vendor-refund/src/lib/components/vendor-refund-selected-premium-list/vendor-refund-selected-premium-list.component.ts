@@ -37,7 +37,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
  @Input() clientId :any =30104
 
  public formUiStyle: UIFormStyle = new UIFormStyle();
-  RefundNoteValueLength = 0
+  refundNoteValueLength = 0
   isSubmitted = false;
   @Input() insuraceAddRefundClick$:any
   refundForm = this.formBuilder.group({
@@ -134,6 +134,6 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
 
   
   onRefundNoteValueChange(event: any) {
-    this.RefundNoteValueLength = event.length
+    this.refundNoteValueLength = event.length
   }
 }
