@@ -8,6 +8,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
+
 @Component({
   selector: 'cms-pharmacy-claims-page',
   templateUrl: './pharmacy-claims-page.component.html',
