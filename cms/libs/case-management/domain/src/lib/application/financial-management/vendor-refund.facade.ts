@@ -211,7 +211,7 @@ export class FinancialVendorRefundFacade {
     sort: any,
     sortType: string,
     filter:string){
-      debugger
+      
     
     this.financialVendorRefundDataService.loadMedicalPremiumList( skipcount,
       maxResultCount,
@@ -234,7 +234,7 @@ export class FinancialVendorRefundFacade {
   }
 
   loadClientBySearchText(text : string): void {
-    debugger;
+    
     this.clientSearchLoaderVisibilitySubject.next(true);
     if(text){
       this.financialVendorRefundDataService.loadClientBySearchText(text).subscribe({
@@ -256,7 +256,7 @@ export class FinancialVendorRefundFacade {
     }
   }
   loadPharmacyBySearchText(searchText: string,) {
-    debugger;
+    
    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
     return this.financialVendorRefundDataService.loadPharmacyBySearchText(searchText).subscribe({
       next: (response: Pharmacy[]) => {
@@ -273,12 +273,12 @@ export class FinancialVendorRefundFacade {
     });
   }
   loadvendorBySearchText(searchText: string,) {
-    debugger;
+    
    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
     return this.financialVendorRefundDataService.loadvendorBySearchText(searchText).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor:any) => {
-          debugger
+          
           vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
         });
         this.vendorsSubject.next(response);

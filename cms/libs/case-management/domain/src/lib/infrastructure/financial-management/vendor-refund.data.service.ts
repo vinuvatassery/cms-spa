@@ -517,7 +517,7 @@ export class FinancialVendorRefundDataService {
     sort: any,
     sortType: string,
     filter:string) {
-      debugger
+      
       const filterRequestBody = {
         skipcount:skipcount,
         maxResultCount:maxResultCount,
