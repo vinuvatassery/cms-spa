@@ -129,17 +129,11 @@ export class RefundNewFormDetailsComponent{
   getInsuranceRefundInformation(data:any){
     const param ={
       ...data,
-      paymentRequestsId : [
-        "B1452EB8-D4C1-42FD-8889-0F88ED5FF4B8",
-        "7814ACE3-BADC-470E-8791-5FBC2D0B6EEB",
-        "359EF38B-DD74-4265-97AD-764CEA5CAFE7",
-        "86D127CF-F870-4A16-BA0E-7BCDEFEDC638"
-      ]
+      paymentRequestsId : this.insurancePremiumPaymentReqIds
     }
     this.financialVendorRefundFacade.getInsuranceRefundInformation(param);
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
     this.financialPremiumsRefundGridLists =  res;
-      console.log(this.financialPremiumsRefundGridLists)
     })
   }
 
