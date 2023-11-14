@@ -110,7 +110,7 @@ export class FinancialVendorRefundDataService {
 
   loadVendorRefundAllPaymentsListService(recentClaimsPageAndSortedRequestDto : any) {
        return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/all`,recentClaimsPageAndSortedRequestDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payments`,recentClaimsPageAndSortedRequestDto
     );
   }
 
@@ -455,6 +455,21 @@ export class FinancialVendorRefundDataService {
       
       
     ]);
+  }
+
+  loadFinancialRefundProcessListService(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, filter : string) {
+    const RefundPageAndSortedRequestDto =
+    {
+      sortType : sortType,
+      sorting : sort,
+      skipCount : skipcount,
+      maxResultCount : maxResultCount,
+      Filter : filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds`,
+      RefundPageAndSortedRequestDto
+    );
   }
 
 }
