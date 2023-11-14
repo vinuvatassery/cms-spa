@@ -66,7 +66,7 @@
             </kendo-textarea-suffix>
           </kendo-textarea>
           </kendo-floatinglabel>
-          <div *ngIf="item.batchStatus == sendbackStatus" class="mt-2">
+          <div *ngIf="userLevel === UserLevel.Level1Value && item.batchStatus == sendbackStatus" class="mt-2">
             <span class="mr-1"
               >{{ sendBackPaymentCount }} of selected payments to be sent back</span
             >

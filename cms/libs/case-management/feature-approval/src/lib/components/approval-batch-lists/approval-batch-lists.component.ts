@@ -12,6 +12,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
   CompositeFilterDescriptor,
   State,
+  SortDescriptor
 } from '@progress/kendo-data-query';
 import { Subject, BehaviorSubject, first} from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
@@ -27,7 +28,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
-  @Input() sort: any;
   @Input() batchDetailPaymentsList$: any;
   @Input() batchDetailModalSourceList: any;
   @Input() selectedPaymentType: any;
@@ -43,7 +43,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   public state!: State;
   isBatchDetailPaymentsGridLoaderShow = new BehaviorSubject<boolean>(true);
   sortColumn = 'paymentNbr';
-  sortDir = 'Ascending';
+  sortDir = 'Descending';
   sortColumnName = '';
   columnsReordered = false;
   filteredBy = '';
@@ -51,6 +51,10 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
+  sort: SortDescriptor[] = [{
+    field: this.sortColumn,
+    dir: 'desc',
+  }];
   batchDetailPaymentsList: any;
   batchId?: string | null;
   index: number = 0;
@@ -156,6 +160,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     this.batchId = args.item.paymentRequestBatchId;
     this.approvalId = args.item.approvalId;
     this.batch = this.batchDetailModalSourceList[this.index];
+    this.defaultGridState();
     this.loadBatchPaymentListGrid();
   }
 
@@ -374,6 +379,9 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
         total: response.total,
       };
       this.batchDetailPaymentsList = gridData;
+      if (response?.total >= 0 || response?.total === -1) {
+        this.isBatchDetailPaymentsGridLoaderShow.next(false);
+      }
       if(response.data.length > 0){
       if(this.batch.totalPayments == 1 && this.batch.batchStatus == this.sendbackStatus){
         this.batchDetailPaymentsList.data.forEach((item: any) => {
@@ -386,10 +394,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
         });
       }
       this.calculateSendBackPaymentCount();       
-        this.gridBatchDetailPaymentsDataSubject.next(this.batchDetailPaymentsList);
-        if (response?.total >= 0 || response?.total === -1) {
-          this.isBatchDetailPaymentsGridLoaderShow.next(false);
-        }
+      this.gridBatchDetailPaymentsDataSubject.next(this.batchDetailPaymentsList);
       }
     });
   }
@@ -410,14 +415,12 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     });
   }
 
-  onChange(data: any) {
-    this.defaultGridState();
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
-  }
-
   defaultGridState() {
+    this.sortColumn = 'paymentNbr';
+    this.sort = [{
+      field: this.sortColumn,
+      dir: 'desc',
+    }];
     this.state = {
       skip: 0,
       take: this.pageSizes[2]?.value,
