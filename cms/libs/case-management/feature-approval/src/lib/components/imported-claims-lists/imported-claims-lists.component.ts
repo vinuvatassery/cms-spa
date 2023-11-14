@@ -33,6 +33,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Input() approvalsImportedClaimsLists$: any;
   @Output() loadImportedClaimsGridEvent = new EventEmitter<any>();
+  importedClaimId:any;
+  clientName:any;
+  dateOfBirth:any;
+  policyId:any;
   public state!: State;
   sortColumn = 'clientName';
   sortDir = 'Ascending';
@@ -70,13 +74,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.loadImportedClaimsListGrid();
   }
   public expandInClaimException({ dataItem }: RowArgs): boolean {
-    debugger;
-    //return dataItem.subRow.expand === 1;
     return true;
   }
 
   private loadImportedClaimsListGrid(): void {
-    debugger;
     this.loadImportedClaims(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -158,7 +159,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    debugger;
     this.approvalsImportedClaimsLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
@@ -197,13 +197,17 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.expectationDialog.close();
   }
 
-  onReviewPossibleMatchesDialogClicked(template: TemplateRef<unknown>): void {
+  onReviewPossibleMatchesDialogClicked(template: TemplateRef<unknown>,dataItem:any): void {
     this.reviewPossibleMatchesDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
+    this.importedClaimId=dataItem.importedClaimId;
+    this.clientName=dataItem.clientName;
+    this.policyId=dataItem.policyId;
+    this.dateOfBirth=dataItem.dateOfBirth;
   }
   onCloseReviewPossibleMatchesDialogClicked() {
     this.reviewPossibleMatchesDialog.close();
-  }
+  }  
 }
