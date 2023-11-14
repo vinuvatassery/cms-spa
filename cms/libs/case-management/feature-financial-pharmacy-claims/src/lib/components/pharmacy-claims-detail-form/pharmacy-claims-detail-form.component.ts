@@ -138,9 +138,13 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
       paymentTypeCode : ['' , Validators.required],
       brandName : [{value: '', disabled: true}],
       drugName : [{value: '', disabled: true}],
-      objectCode :[{value: this.objectCode, disabled: true}],
+      objectCode :[{value: '', disabled: true}],
       pcaCode : [{value: '', disabled: true}]
     });
+   
+    pharmacyClaimService.controls['objectCode']?.enable()
+    pharmacyClaimService.controls['objectCode'].setValue(this.objectCode);   
+    pharmacyClaimService.controls['objectCode']?.disable()
 
     this.addClaimServicesForm.push(pharmacyClaimService) 
     this.cd.markForCheck()
@@ -296,7 +300,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
         this.isEdit = true
       const fullVendorCustomName = existClaimData?.vendorName + ' '+ existClaimData?.tin + ' '+ existClaimData?.mailCode + ' '+ existClaimData?.address 
       const fullClientCustomName = existClaimData?.clientFullName + ' '+ existClaimData?.clientId + ' '+ existClaimData?.ssn + ' '+ existClaimData?.dob   
-      
+      this.objectCode = existClaimData?.objectCode
         const client =[
           {             
             fullCustomName: fullClientCustomName,
@@ -349,8 +353,19 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
       serviceForm.controls['dispensingQty'].setValue(service?.dispensingQty);
       serviceForm.controls['daySupply'].setValue(service?.daySupply);
       serviceForm.controls['paymentTypeCode'].setValue(service?.paymentTypeCode);
-      serviceForm.controls['brandName'].setValue(service?.brandName);
-      serviceForm.controls['drugName'].setValue(service?.drugName);
+
+      serviceForm.controls['brandName']?.enable()
+      serviceForm.controls['drugName']?.enable()
+      serviceForm.controls['objectCode']?.enable()
+  
+      serviceForm.controls['brandName'].setValue(service?.brandName ?? '');
+      serviceForm.controls['drugName'].setValue(service?.drugName ?? '');
+      serviceForm.controls['objectCode'].setValue(this.objectCode);
+  
+      serviceForm.controls['brandName']?.disable()
+      serviceForm.controls['drugName']?.disable()
+      serviceForm.controls['objectCode']?.disable()
+     
     }
    
   }
