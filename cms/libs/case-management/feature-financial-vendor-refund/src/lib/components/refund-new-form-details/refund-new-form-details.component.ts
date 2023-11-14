@@ -4,6 +4,8 @@ import { State, filterBy } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam } from '@cms/case-management/domain'; 
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { Subject } from 'rxjs';
+import { VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -53,6 +55,14 @@ export class RefundNewFormDetailsComponent{
   sortPharmacyPayment = this.financialVendorRefundFacade.sortValuePharmacyPayment;
   pharmacyPaymentsListData$ =   this.financialVendorRefundFacade.pharmacyPaymentsListData$;
   isConfirmationClicked = false;
+  
+  insuraceAddRefundClickSubject = new Subject<any>();
+  insuraceAddRefundClick$ = this.insuraceAddRefundClickSubject.asObservable()
+
+  @ViewChild('InsurancePremiumSelection', { static: false })
+  insurancePremiumSelection!: VendorRefundInsurancePremiumListComponent;
+  insurancePremiumPaymentReqIds :any[] =[]
+
   clientSearchResult =[
 
     {
@@ -104,18 +114,27 @@ export class RefundNewFormDetailsComponent{
     this.isConfirmationClicked = false
   }
   confirmationClicked (){
+  
+    if(this.selectedRefundType=="INS" 
+    //&& this.insurancePremiumsRequestIds && this.insurancePremiumsRequestIds.length>0
+    ){
+    this.insurancePremiumPaymentReqIds = this.insurancePremiumsRequestIds
     this.isConfirmationClicked = true
-    if(this.selectedRefundType==='INS'){
-      this.disableFeildsOnConfirmSelection = true
-    }
-
+    this.disableFeildsOnConfirmSelection = true
   } 
+}
+
 
   /*** refund INS */
   getInsuranceRefundInformation(data:any){
     const param ={
       ...data,
-      paymentRequestsId : this.paymentRequestId
+      paymentRequestsId : [
+        "B1452EB8-D4C1-42FD-8889-0F88ED5FF4B8",
+        "7814ACE3-BADC-470E-8791-5FBC2D0B6EEB",
+        "359EF38B-DD74-4265-97AD-764CEA5CAFE7",
+        "86D127CF-F870-4A16-BA0E-7BCDEFEDC638"
+      ]
     }
     this.financialVendorRefundFacade.getInsuranceRefundInformation(param);
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
@@ -159,10 +178,14 @@ OnEditProviderProfileClick(){
   this.lovFacade.getPaymentMethodLov()
 }
 
+onAddRefundClick(){
+this.insuraceAddRefundClickSubject.next(true);
+}
 
   /******  */
   selectDiffPayments(){
     this.isConfirmationClicked = false;
+    this.disableFeildsOnConfirmSelection = false;
   }
   closeAddEditRefundFormModalClicked(){
     this.modalCloseAddEditRefundFormModal.emit(true);  

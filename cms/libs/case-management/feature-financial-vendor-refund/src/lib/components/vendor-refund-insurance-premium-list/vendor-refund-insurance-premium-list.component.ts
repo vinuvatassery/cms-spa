@@ -50,7 +50,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+  selectedInsuranceClaims :any[] =[]
  
   ngOnInit(): void {
     this.loadPremiumListGrid();
