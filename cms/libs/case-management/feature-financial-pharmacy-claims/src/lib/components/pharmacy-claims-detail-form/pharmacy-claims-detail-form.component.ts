@@ -69,6 +69,10 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   groupedPaymentRequestTypes: any;
   objectCode! : any
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  vendorId: any;
+  clientId: any;
+  claimsType:any;
+  IsEdit:boolean=false;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private formBuilder: FormBuilder,private cd: ChangeDetectorRef,
@@ -111,6 +115,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   }
 
   initClaimForm() {
+    debugger
     this.pharmacyClaimForm = this.formBuilder.group({     
       paymentRequestId :['00000000-0000-0000-0000-000000000000'] ,
       clientCaseEligibilityId: ['', Validators.required],
@@ -258,6 +263,8 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   }
   pharmacySelectionChange(data : any)
   {
+    debugger
+    this.vendorId=data?.vendorId
     this.pharmacyClaimForm.controls['vendorId'].setValue(data?.vendorId);    
     this.cd.detectChanges();
  
@@ -266,10 +273,12 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
 
   clientSelectionChange(data : any)
   {  
+    debugger
     this.pharmacyClaimForm.controls['clientCaseEligibilityId'].setValue(data?.clientCaseEligibilityId);
     this.isClientRestricted = data?.caseStatus === CaseStatusCode.restricted
     this.isClientInEligible = (data?.caseStatus !== CaseStatusCode.accept && data?.caseStatus !== CaseStatusCode.restricted)
-    this.objectCode = data?.objectCode
+    this.objectCode = data?.objectCode;
+    this.clientId=data.clientId;
     this.cd.detectChanges();
     this.clientTotalPayments = data?.TotalPayments ?? 0    
  
@@ -291,12 +300,15 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
    this.getPharmacyClaim$?.pipe(first((existClaimData: any ) => existClaimData?.paymentRequestId != null))
    .subscribe((existClaimData: any) =>
    {  
+    debugger
        if(existClaimData?.paymentRequestId)
        {   
         this.isEdit = true
       const fullVendorCustomName = existClaimData?.vendorName + ' '+ existClaimData?.tin + ' '+ existClaimData?.mailCode + ' '+ existClaimData?.address 
       const fullClientCustomName = existClaimData?.clientFullName + ' '+ existClaimData?.clientId + ' '+ existClaimData?.ssn + ' '+ existClaimData?.dob   
-      
+      this.clientId=existClaimData.clientId;
+      this.vendorId=existClaimData.vendorId;
+      this.IsEdit=true;
         const client =[
           {             
             fullCustomName: fullClientCustomName,

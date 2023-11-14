@@ -98,7 +98,9 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   warrantNumber: 'Warrant Number',
   creationTime: 'Entry Date'
 };
-
+vendorId: any;
+  clientId: any;
+  claimsType:any;
 searchColumnList: { columnName: string, columnDesc: string }[] = [
   { columnName: 'ALL', columnDesc: 'All Columns' },
   { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
@@ -423,7 +425,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
   
   clientRecentClaimsModalClicked(
-    template: TemplateRef<unknown> 
+    template: TemplateRef<unknown> ,data:any
   ): void {
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
@@ -434,6 +436,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
         duration: 200,
       },
     });
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
   }
 
   closeRecentClaimsModal(result: any) {
