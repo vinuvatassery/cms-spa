@@ -62,7 +62,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
   isUnBatchRefundsClosed = false;
   isDeleteClaimClosed = false;
-  UnBatchDialog: any;
+  unBatchDialog: any;
   deleteRefundsDialog: any;
   selected: any;
   deletemodelbody = 'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
@@ -214,7 +214,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
-    this.UnBatchDialog = this.dialogService.open({
+    this.unBatchDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
@@ -228,7 +228,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       );
     }
     this.isUnBatchRefundsClosed = false;
-    this.UnBatchDialog.close();
+    this.unBatchDialog.close();
   }
 
   handleUnbatchRefunds() {

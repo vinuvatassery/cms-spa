@@ -8,14 +8,14 @@ import { Component, ChangeDetectionStrategy, Output , EventEmitter, Input} from 
 export class UnbatchRefundConfirmationComponent  {
 
   @Input() isBulkUnBatchOpened = false;
-  @Output() UnBatchCloseClickedEvent = new EventEmitter();
+  @Output() unBatchCloseClickedEvent = new EventEmitter();
 
 
   closeUnBatchClicked() {
-    this.UnBatchCloseClickedEvent.emit(false);
+    this.unBatchCloseClickedEvent.emit(false);
   }
 
   UnBatchClicked() {
-    this.UnBatchCloseClickedEvent.emit(true);
+    this.unBatchCloseClickedEvent.emit(true);
   }
 }
