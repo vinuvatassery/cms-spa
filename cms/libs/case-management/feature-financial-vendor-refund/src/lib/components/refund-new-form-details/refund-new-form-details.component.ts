@@ -5,7 +5,9 @@ import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, Grid
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject } from 'rxjs';
-import { VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
+import { VendorRefundClaimsListComponent, VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
+import { VendorRefundClientClaimsListComponent } from '../vendor-refund-client-claims-list/vendor-refund-client-claims-list.component';
+import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -60,9 +62,18 @@ export class RefundNewFormDetailsComponent{
   insuraceAddRefundClickSubject = new Subject<any>();
   insuraceAddRefundClick$ = this.insuraceAddRefundClickSubject.asObservable()
 
-  @ViewChild('InsurancePremiumSelection', { static: false })
-  insurancePremiumSelection!: VendorRefundInsurancePremiumListComponent;
+  @ViewChild('insClaims', { static: false })
+  insClaims!: VendorRefundInsurancePremiumListComponent;
+
+  @ViewChild('tpaClaims', { static: false })
+  tpaClaims!: VendorRefundClaimsListComponent;
+
+  @ViewChild('rxClaims', { static: false })
+  rxClaims!: VendorRefundPharmacyPaymentsListComponent;
+
   insurancePremiumPaymentReqIds :any[] =[]
+  tpaPaymentReqIds :any[] =[]
+  rxPaymentReqIds :any[] =[]
 
   clientSearchResult =[
 
@@ -116,13 +127,22 @@ export class RefundNewFormDetailsComponent{
   }
   confirmationClicked (){
   
-    if(this.selectedRefundType=="INS" 
-    && this.insurancePremiumsRequestIds && this.insurancePremiumsRequestIds.length>0
-    ){
-    this.insurancePremiumPaymentReqIds = this.insurancePremiumsRequestIds
     this.isConfirmationClicked = true
     this.disableFeildsOnConfirmSelection = true
+
+    if(this.selectedRefundType=== "INS" 
+    && this.insClaims.selectedInsuranceClaims &&  this.insClaims.selectedInsuranceClaims.length>0
+    ){
+    this.insurancePremiumPaymentReqIds =  this.insClaims.selectedInsuranceClaims
+   
   } 
+
+  if(this.selectedRefundType === 'TPA'){
+    this.tpaPaymentReqIds = this.tpaClaims.selectedTpaClaims
+  }
+  if(this.selectedRefundType === 'RX'){
+    this.rxPaymentReqIds = this.rxClaims.selectedPharmacyClaims
+  }
 }
 
 

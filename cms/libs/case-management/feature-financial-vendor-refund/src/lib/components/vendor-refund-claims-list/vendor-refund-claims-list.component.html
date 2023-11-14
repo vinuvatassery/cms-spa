@@ -2,7 +2,9 @@
     <kendo-grid [resizable]="true" [loading]="isClaimsLoaderShow" [pageSize]="state.take"
       [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  
-      [data]="claimsListData$ | async">
+      [data]="claimsListData$ | async"
+      kendoGridSelectBy="paymentRequestId"
+      [(selectedKeys)]="selectedTpaClaims">
       <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
         [width]="40"></kendo-grid-checkbox-column>
       <kendo-grid-column title="Invoice ID" field="invoiceId" [width]="160">

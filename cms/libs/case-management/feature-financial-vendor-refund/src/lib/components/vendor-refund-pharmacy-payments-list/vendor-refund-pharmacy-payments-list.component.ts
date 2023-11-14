@@ -43,7 +43,7 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+  selectedPharmacyClaims:any[]=[]
   gridClaimsDataSubject = new Subject<any>();
   gridClaimsData$ = this.gridClaimsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();

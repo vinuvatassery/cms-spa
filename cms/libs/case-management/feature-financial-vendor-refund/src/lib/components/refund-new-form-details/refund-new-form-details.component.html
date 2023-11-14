@@ -95,7 +95,7 @@
             <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select claims to refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-claims-list [claimsListData$]="claimsListData$" [pageSizes]="pageSizes"
+                    <cms-vendor-refund-claims-list  #tpaClaims  [claimsListData$]="claimsListData$" [pageSizes]="pageSizes"
                         [sortValue]="sortValueClaims" [sortType]="sortType" [sort]="sortClaims"
                         (loadClaimsListEvent)="loadClaimsListGrid($event)"></cms-vendor-refund-claims-list>
                 </div>
@@ -278,7 +278,7 @@
             <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all premium included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-insurance-premium-list  #InsurancePremiumSelection [premiumsListData$]="premiumsListData$"
+                    <cms-vendor-refund-insurance-premium-list  #insClaims [premiumsListData$]="premiumsListData$"
                         [pageSizes]="pageSizes" [sortValue]="sortValuePremiums" [sortType]="sortType"
                         [sort]="sortPremiums"
                         (loadPremiumsListEvent)="loadPremiumsListGrid($event)"></cms-vendor-refund-insurance-premium-list>
@@ -310,7 +310,7 @@
             <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all claims included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-client-claims-list [clientClaimsListData$]="clientClaimsListData$" [pageSizes]="pageSizes"
+                    <cms-vendor-refund-client-claims-list #rxClaims [clientClaimsListData$]="clientClaimsListData$" [pageSizes]="pageSizes"
                         [sortValue]="sortValueClientClaims" [sortType]="sortType" [sort]="sortClientClaims"
                         (loadClientClaimsListEvent)="loadClientClaimsListGrid($event)"></cms-vendor-refund-client-claims-list>
                 </div>
