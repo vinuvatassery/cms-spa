@@ -548,9 +548,6 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.batchStatus = this.sendbackStatus;
       dataItem.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       dataItem.sendBackNotesInValid = true;
-      dataItem.atleastOnePaymentInValidMsg = this.atleastOnePaymentRequireMessage;
-      dataItem.atleastOnePaymentInValid = true;
-      dataItem.paymentRequestIds = [];
       this.onOpenViewPaymentsBatchClicked(dataItem,true);
     } else if (dataItem.batchStatus == this.sendbackStatus) {
       this.isSendbackMode=false;
@@ -714,7 +711,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.validateApprovalsPaymentsGridRecord();
     const atleastOnePaymentInValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.atleastOnePaymentInValid);
     const isValid = this.approvalsPaymentsGridUpdatedResult.filter((x: any) => x.sendBackNotesInValid);    
-    const totalCount = isValid.length + atleastOnePaymentInValid.length;
+    const totalCount = isValid.length + (this.userLevel == UserLevel.Level1Value ? atleastOnePaymentInValid.length : 0);
     if (totalCount > 0) {
       this.pageValidationMessage = totalCount + ' Validation error(s) found, please review each page for errors.';
     } 
@@ -999,6 +996,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
         approvalStatusCode: element.batchStatus,
         sendBackNote: element.sendBackNotes ? element.sendBackNotes : null,
         userId: this.loginUserId,
+        paymentRequestIds: element.paymentRequestIds,
       };
       bodyData.payments.push(payment);
     }

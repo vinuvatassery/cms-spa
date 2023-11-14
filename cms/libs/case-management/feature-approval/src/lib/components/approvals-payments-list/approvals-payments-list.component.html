@@ -233,7 +233,7 @@
           <kendo-formerror *ngIf="dataItem.sendBackNotesInValid">{{
             dataItem.sendBackNotesInValidMsg
             }}</kendo-formerror>
-          <kendo-formerror *ngIf="dataItem.atleastOnePaymentInValid">{{
+          <kendo-formerror *ngIf="dataItem.atleastOnePaymentInValid && userLevel == UserLevel.Level1Value">{{
             dataItem.atleastOnePaymentInValidMsg
             }}</kendo-formerror>
         </div>
