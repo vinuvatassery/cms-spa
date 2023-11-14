@@ -650,7 +650,7 @@ reverseClaimsDialog: any;
   
     this.ondeletebatchesClickedEvent.emit(this.selected)
     this.deleteClaims$.subscribe((_:any) =>{
-      debugger
+      
       this.isDeleteClaimClosed = false;
       this.deleteClaimsDialog.close();
       this.loadBatchLogListGrid();

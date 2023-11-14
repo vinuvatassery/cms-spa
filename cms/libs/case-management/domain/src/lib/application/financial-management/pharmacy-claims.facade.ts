@@ -532,7 +532,7 @@ deletebatches(batchPharmacyClaims: BatchPharmacyClaims) {
     .deleteClaims(batchPharmacyClaims)
     .subscribe({
       next: (response:any) => {
-        debugger
+        
         this.deleteClaimsSubject.next(response);
         if (response.status) {
           this.notificationSnackbarService.manageSnackBar(
