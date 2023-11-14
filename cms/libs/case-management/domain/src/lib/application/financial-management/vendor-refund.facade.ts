@@ -239,6 +239,26 @@ export class FinancialVendorRefundFacade {
     });  
   }
 
+  getInsuranceRefundInformation(insuranceRefundInformation :any){
+    this.insuranceRefundInformationLoaderSubject.next(true)
+    this.financialVendorRefundDataService.getInsurnaceRefundInformation(insuranceRefundInformation).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse.items,
+          total: dataResponse.totalCount,
+        };
+        this.insuranceRefundInformationSubject.next(gridView);
+        this.hideLoader();
+        this.insuranceRefundInformationLoaderSubject.next(false)
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+        this.insuranceRefundInformationLoaderSubject.next(false)
+      },
+    });  
+  }
+
   loadFinancialRefundProcessListGrid(
     skipcount: number,
     maxResultCount: number,
@@ -263,7 +283,6 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-  
   loadRefundReceiptLogListService( skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: string) {
     filter = JSON.stringify(filter);
     this.financialVendorRefundDataService.loadFinancialRefundProcessListService(skipcount,  maxResultCount,  sort,  sortType, filter).subscribe({
