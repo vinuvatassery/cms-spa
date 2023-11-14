@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -15,6 +15,13 @@ export class FinancialVendorRefundFacade {
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
+
+  public sortValueRefundInformationGrid = 'CreatedDate';
+  public sortRefundInformationGrid: SortDescriptor[] = [{
+    field: this.sortValueRefundInformationGrid,
+  }];
+
+
   public sortValueRefundProcess = 'creationTime';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueRefundProcess,
@@ -52,6 +59,7 @@ export class FinancialVendorRefundFacade {
   }];
 
   public sortValuePharmacyPayment = 'clientId';
+
   public sortPharmacyPaymentList: SortDescriptor[] = [{
     field: this.sortValuePharmacyPayment,
   }];
@@ -81,6 +89,14 @@ export class FinancialVendorRefundFacade {
   
   private pharmacyPaymentsListDataSubject =  new Subject<any>();
   pharmacyPaymentsListData$ = this.pharmacyPaymentsListDataSubject.asObservable();
+
+  private insuranceRefundInformationSubject =  new Subject<any>();
+  insuranceRefundInformation$ = this.insuranceRefundInformationSubject.asObservable();
+
+  
+  private insuranceRefundInformationLoaderSubject = new BehaviorSubject<any>(false);
+  insuranceRefundInformationLoader$ = this.insuranceRefundInformationLoaderSubject.asObservable();
+
   /** Private properties **/
  
   /** Public properties **/
@@ -222,6 +238,7 @@ export class FinancialVendorRefundFacade {
       },
     });  
   }
+  
   loadFinancialRefundProcessListGrid(
     skipcount: number,
     maxResultCount: number,
@@ -244,5 +261,25 @@ export class FinancialVendorRefundFacade {
         this.hideLoader();
       },
     });
+  }
+
+  getInsuranceRefundInformation(insuranceRefundInformation :any){
+    this.insuranceRefundInformationLoaderSubject.next(true)
+    this.financialVendorRefundDataService.getInsurnaceRefundInformation(insuranceRefundInformation).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse.items,
+          total: dataResponse.totalCount,
+        };
+        this.insuranceRefundInformationSubject.next(gridView);
+        this.hideLoader();
+        this.insuranceRefundInformationLoaderSubject.next(false)
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+        this.insuranceRefundInformationLoaderSubject.next(false)
+      },
+    });  
   }
 }
