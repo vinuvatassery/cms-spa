@@ -789,13 +789,19 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     }
     }
 
-    this.exportButtonShow$
-    .subscribe((response: any) => {
-        if (response) {
+    onClickedExport() {
+      this.showExportLoader = true
+      this.exportGridDataEvent.emit()
+  
+      this.exportButtonShow$
+        .subscribe((response: any) => {
+          if (response) {
             this.showExportLoader = false
             this.cdr.detectChanges()
-        }
-    })
+          }
+  
+        })
+    }
 
   selectionAllChange(){
     this.unCheckedPaymentRequest=[];
@@ -821,6 +827,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       element.selected = false;
   });
   }
+
   markAsChecked(data:any){
     data.forEach((element:any) => {
       if(this.selectAll){
@@ -841,8 +848,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       }
 
     });
-
   }
+
   selectionChange(dataItem:any,selected:boolean){
     if(!selected){
       this.noOfRecordToPrint = this.noOfRecordToPrint - 1;
@@ -920,6 +927,5 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
 
    loadEachLetterTemplate(event:any){
     this.loadTemplateEvent.emit(event);
-  }
-  
+  } 
 }
