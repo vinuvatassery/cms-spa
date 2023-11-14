@@ -100,6 +100,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
         } else {
           this.clinicVendorListLocal = data;
         }
+        this.clinicVendorListLocal = data.filter((item: any) => item.vendorName.includes(clinicName));
+
         this.clinicSearchSubscription?.unsubscribe();
       }
     });
