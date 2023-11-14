@@ -105,10 +105,7 @@ export class RefundNewFormDetailsComponent{
   }
   confirmationClicked (){
     this.isConfirmationClicked = true
-    if(this.selectedRefundType==='INS'){
-      this.disableFeildsOnConfirmSelection = true
-    }
-
+    this.disableFeildsOnConfirmSelection = true
   } 
 
   /*** refund INS */
@@ -163,6 +160,7 @@ OnEditProviderProfileClick(){
   /******  */
   selectDiffPayments(){
     this.isConfirmationClicked = false;
+    this.disableFeildsOnConfirmSelection = false
   }
   closeAddEditRefundFormModalClicked(){
     this.modalCloseAddEditRefundFormModal.emit(true);  

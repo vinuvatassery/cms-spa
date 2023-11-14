@@ -62,7 +62,9 @@
             <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Medical Provider">
-                        <kendo-dropdownlist aria-label="Medical Provider" [fillMode]="formUiStyle.dropDownFillMode">
+                        <kendo-dropdownlist aria-label="Medical Provider"
+                        [disabled]="disableFeildsOnConfirmSelection" 
+                         [fillMode]="formUiStyle.dropDownFillMode">
                         </kendo-dropdownlist>
                     </kendo-floatinglabel> 
                 </div>
@@ -81,7 +83,9 @@
             <div class="flex-row" *ngIf="selectedRefundType === 'RX'">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Pharmacy">
-                        <kendo-dropdownlist aria-label="Pharmacy" [fillMode]="formUiStyle.dropDownFillMode">
+                        <kendo-dropdownlist 
+                        [disabled]="disableFeildsOnConfirmSelection" 
+                        aria-label="Pharmacy" [fillMode]="formUiStyle.dropDownFillMode">
                         </kendo-dropdownlist>
                     </kendo-floatinglabel> 
                 </div>
