@@ -139,7 +139,7 @@ export * from './lib/enums/approval-limit-permission-code.enum';
 export * from './lib/enums/pending-approval-payment-type-code.enum';
 export * from './lib/enums/user-role-type-enum';
 export * from './lib/enums/pending-approval-general-type-code.enum';
-export * from './lib/enums/general-approval-approve-deny.enum'
+export * from './lib/enums/general-approval-approve-deny.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';

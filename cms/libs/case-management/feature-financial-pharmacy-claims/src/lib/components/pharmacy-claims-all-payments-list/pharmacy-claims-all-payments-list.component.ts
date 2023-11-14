@@ -21,6 +21,7 @@ import {
 import { Observable, Subject, debounceTime } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
+import { LoadTypes } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-all-payments-list',
@@ -149,17 +150,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   ];
 
 
-  public bulkMore = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Request Payments',
-      icon: 'local_atm',
-      click: (data: any): void => {
-      this.isRequestPaymentClicked = true;
-      this.isPrintAuthorizationClicked = false;
-        
-      },  
-    },
+  public bulkMore = [  
     
     {
       buttonType: 'btn-h-primary',
@@ -172,7 +163,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Authorizations',
+      text: 'Print Advice Letter',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
@@ -384,7 +375,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.isPharmacyClaimsAllPaymentsGridLoaderShow = false;
   }
   navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/pharmacy-claims/payments/reconcile-payments'] );
+    this.route.navigate(['/financial-management/pharmacy-claims/payments/reconcile-payments'],
+     { queryParams :{loadType: LoadTypes.allPayments}});
   }
   
  

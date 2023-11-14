@@ -27,6 +27,7 @@ export class FinancialPharmacyClaimsFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
+  public selectedClaimsTab = 1
   batchClaimsSubject  =  new Subject<any>();
   batchClaims$ = this.batchClaimsSubject.asObservable();
 
@@ -156,6 +157,7 @@ export class FinancialPharmacyClaimsFacade {
   paymentByBatchGridLoader$ = this.paymentByBatchGridLoaderSubject.asObservable();
   private recentClaimListDataSubject =  new Subject<any>();
   recentClaimsGridLists$ = this.recentClaimListDataSubject.asObservable();
+
   /** Private properties **/
 
   /** Public properties **/
@@ -198,7 +200,7 @@ export class FinancialPharmacyClaimsFacade {
   ) { }
 
   /** Public methods **/
-  loadPharmacyClaimsProcessListGrid(params: GridFilterParam){
+   loadPharmacyClaimsProcessListGrid(params: GridFilterParam){
     this.pharmacyClaimsProcessLoaderSubject.next(true);
     this.financialPharmacyClaimsDataService.loadPharmacyClaimsProcessListService(params).subscribe({
       next: (dataResponse) => {
@@ -416,10 +418,14 @@ export class FinancialPharmacyClaimsFacade {
         },
       });
   }
-  loadReconcileListGrid(){
-    this.financialPharmacyClaimsDataService.loadReconcileListService().subscribe({
-      next: (dataResponse) => {
-        this.batchReconcileDataSubject.next(dataResponse);
+  loadReconcileListGrid(batchId:any,paginationParameters:any){
+    this.financialPharmacyClaimsDataService.loadReconcileListService(batchId,paginationParameters).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount'],
+        };
+        this.batchReconcileDataSubject.next(gridView);
         this.hideLoader();
       },
       error: (err) => {
@@ -427,8 +433,8 @@ export class FinancialPharmacyClaimsFacade {
         this.hideLoader();
       },
     });
-  }
-  
+  } 
+
   unbatchEntireBatch(paymentRequestBatchIds: string) {
     this.showLoader();
     return this.financialPharmacyClaimsDataService
