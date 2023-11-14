@@ -1,7 +1,8 @@
-import { Component , Output, EventEmitter} from '@angular/core';
+import { Component , Output, EventEmitter, Input} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain'; 
+import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -12,34 +13,47 @@ export class RefundNewFormDetailsComponent{
   selectedRefundType : any;
   public refundType  = [
     "TPA",
-    "INS", 
+    "INS",
     "RX",
   ];
-
+  clientCaseEligibilityId: any = null;
+  clientId: any;
+  clientName: any;
+  vendorId: any;
+  isRecentGridClaimShow = false;
+  isShowReasonForException = false;
+  showServicesListForm: boolean =false;
+  selectedMedicalProvider: any;
+  tab = 1;
+  dataExportParameters!: any;
+  currentFormControl!: FormGroup<any>;
   sortType = this.financialVendorRefundFacade.sortType;
   pageSizes = this.financialVendorRefundFacade.gridPageSizes;
   gridSkipCount = this.financialVendorRefundFacade.skipCount;
- 
   state!: State;
-
+  providerTin: any;
+  selectedClient: any;
+  refundClaimForm!: FormGroup;
+  vendorName: any;
   sortValueClaims = this.financialVendorRefundFacade.sortValueClaims;
   sortClaims = this.financialVendorRefundFacade.sortClaimsList;
   claimsListData$ =   this.financialVendorRefundFacade.claimsListData$;
-
   sortValuePremiums = this.financialVendorRefundFacade.sortValuePremiums;
   sortPremiums = this.financialVendorRefundFacade.sortPremiumsList;
   premiumsListData$ =   this.financialVendorRefundFacade.premiumsListData$;
-
   sortValueClientClaims = this.financialVendorRefundFacade.sortValueClientClaims;
   sortClientClaims = this.financialVendorRefundFacade.sortClientClaimsList;
   clientClaimsListData$ =   this.financialVendorRefundFacade.clientClaimsListData$;
-  
   sortValuePharmacyPayment = this.financialVendorRefundFacade.sortValuePharmacyPayment;
   sortPharmacyPayment = this.financialVendorRefundFacade.sortValuePharmacyPayment;
   pharmacyPaymentsListData$ =   this.financialVendorRefundFacade.pharmacyPaymentsListData$;
+  clientSearchLoaderVisibility$ =
+  this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
+  clientSearchResult$ = this.financialVendorRefundFacade.clients$;
+  pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
   isConfirmationClicked = false;
+  isSubmitted: boolean = false;
   clientSearchResult =[
-
     {
       clientId: '12',
       clientFullName: 'Fname Lname',
@@ -71,17 +85,20 @@ export class RefundNewFormDetailsComponent{
       dob: '23/12/2023',
     },
   ];
-
   @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
-
-  constructor(  private readonly financialVendorRefundFacade: FinancialVendorRefundFacade) {}
+  constructor(  private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
+    private formBuilder: FormBuilder,) {
+ 
+    }
+    ngOnInit(){
+      this.initRefundForm()
+    }
   selectionChange(event: any){
     this.isConfirmationClicked = false
   }
   confirmationClicked (){
     this.isConfirmationClicked = true
-
-  } 
+  }
   selectDiffPayments(){
     this.isConfirmationClicked = false;
   }
@@ -89,22 +106,68 @@ export class RefundNewFormDetailsComponent{
     this.modalCloseAddEditRefundFormModal.emit(true);  
   }
   loadVendorRefundProcessListGrid(event: any) {
-  
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();
   }
-  
-
-  loadClaimsListGrid(event: any) { 
+  loadClaimsListGrid(event: any) {
     this.financialVendorRefundFacade.loadClaimsListGrid();
   }
-
-  loadPremiumsListGrid(event: any) { 
+  loadPremiumsListGrid(event: any) {
     this.financialVendorRefundFacade.loadPremiumsListGrid();
   }
-  loadClientClaimsListGrid(event: any) { 
+  loadClientClaimsListGrid(event: any) {
     this.financialVendorRefundFacade.loadClientClaimsListGrid();
   }
-  loadPharmacyPaymentsListGrid(event: any) { 
+  loadPharmacyPaymentsListGrid(event: any) {
     this.financialVendorRefundFacade.loadPharmacyPaymentsListGrid();
+  }
+  loadClientBySearchText(clientSearchText: any) {
+    if (!clientSearchText || clientSearchText.length == 0) {
+      return
+    }
+    clientSearchText = clientSearchText.replace("/", "-");
+    clientSearchText = clientSearchText.replace("/", "-");
+    this.financialVendorRefundFacade.loadClientBySearchText(clientSearchText)
+  }
+  onClientValueChange(client: any) {
+    if (client != undefined) {
+      this.clientCaseEligibilityId = client.clientCaseEligibilityId;
+      this.clientId = client.clientId;
+      this.clientName = client.clientFullName;
+      if (this.clientId != null && this.vendorId != null) {
+        this. isRecentGridClaimShow = true;
+      }
+      this.showServicesListForm= true ;
+    }
+  }
+  showHideServicesListForm(){
+    if(this.refundClaimForm.controls['medicalProvider'].value &&  this.refundClaimForm.controls['client'].value)
+    {
+      this.showServicesListForm = true;
+    }
+    else
+    {
+      this.showServicesListForm= false;
+      this.isRecentGridClaimShow =false;
+    }
+  }
+  searchPharmacy(searchText: any) {
+    if (!searchText || searchText.length == 0) {
+      return;
+    }
+    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText);
+  }
+  onProviderValueChange($event: any) {
+    this.vendorId = $event.vendorId;
+    this.vendorName = $event.vendorName;
+    this.providerTin = $event;
+    if (this.clientId != null && this.vendorId != null) {
+      this.isRecentGridClaimShow = true;
+    }
+  }
+  initRefundForm() {
+    this.refundClaimForm = this.formBuilder.group({
+      medicalProvider: [this.selectedMedicalProvider, Validators.required],
+      client: [this.selectedClient, Validators.required],
+    });
   }
 }

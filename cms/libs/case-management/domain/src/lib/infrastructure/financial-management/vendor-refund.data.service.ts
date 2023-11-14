@@ -1,9 +1,13 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ClientCase } from '../../entities/client-case';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { Pharmacy } from '../../entities/client-pharmacy';
+import { Observable } from 'rxjs';
+ 
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundDataService {
@@ -12,8 +16,6 @@ export class FinancialVendorRefundDataService {
     private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider
   ) {}
- 
-
  
   loadVendorRefundProcessListService( ) {
     return of([
@@ -469,5 +471,36 @@ export class FinancialVendorRefundDataService {
       RefundPageAndSortedRequestDto
     );
   }
+  loadClientBySearchText(text: string) {
+    return this.http.get<ClientCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/claims/medical/clients/SearchText=${text}`
+    );
+  }
+  loadPharmacyBySearchText(searchText: string,) {
+    return this.http.get<Pharmacy[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/claims/pharmacies/SearchText=${searchText}`
+    );
+  }
 
+ loadRefundClaimsService(data:any): Observable<any> {
+    const ClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      refundType:data.refundType,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/refund_claims`,
+      ClaimsPageAndSortedRequestDto
+    );
+  }
+  
 }
