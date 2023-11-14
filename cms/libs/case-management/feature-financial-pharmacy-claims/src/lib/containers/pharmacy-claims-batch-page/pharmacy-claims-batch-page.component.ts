@@ -36,9 +36,9 @@ export class PharmacyClaimsBatchPageComponent {
 
   loadBatchLogListGrid(event: any) {
     this.dataExportParameters = event
-    const batchId = this.route.snapshot.queryParams['bid'];
+    this.batchId = this.route.snapshot.queryParams['bid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
-    this.financialPharmacyClaimsFacade.loadBatchLogListGrid(batchId, params, this.claimsType);
+    this.financialPharmacyClaimsFacade.loadBatchLogListGrid(this.batchId, params, this.claimsType);
   }
   exportPharmacyBatchesGridData(){
     const data = this.dataExportParameters
@@ -60,7 +60,7 @@ export class PharmacyClaimsBatchPageComponent {
     }
   }
   unBatchEntireBatchClick(event: any) {
-     this.financialPharmacyClaimsFacade.unbatchEntireBatch(event.batchId)
+     this.financialPharmacyClaimsFacade.unbatchEntireBatch(this.batchId)
   }
   unBatchClaimClick(event: any) {
      this.financialPharmacyClaimsFacade.unbatchPremiums(event.paymentId)
