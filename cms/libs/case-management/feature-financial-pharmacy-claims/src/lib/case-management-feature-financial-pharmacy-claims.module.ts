@@ -28,7 +28,8 @@ import { PharmacyClaimsAllPaymentsListComponent } from './components/pharmacy-cl
 import { PharmacyClaimsBatchItemsPageComponent } from './containers/pharmacy-claims-batch-items-page/pharmacy-claims-batch-items-page.component';
 import { PharmacyClaimsReverseClaimsComponent } from './components/pharmacy-claims-reverse-claims/pharmacy-claims-reverse-claims.component';
 import { PharmacyClaimsPrescriptionListComponent } from './components/pharmacy-claims-prescription-list/pharmacy-claims-prescription-list.component';
- 
+import { PharmacyClaimsPrescriptionsServicesComponent } from './components/pharmacy-claims-prescriptions-services/pharmacy-claims-prescriptions-services.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -63,7 +64,8 @@ import { PharmacyClaimsPrescriptionListComponent } from './components/pharmacy-c
     PharmacyClaimsPrintDenialLetterComponent,
     PharmacyClaimsBatchItemsPageComponent,
     PharmacyClaimsReverseClaimsComponent,
-    PharmacyClaimsPrescriptionListComponent
+    PharmacyClaimsPrescriptionListComponent,
+    PharmacyClaimsPrescriptionsServicesComponent,
   ],
   exports: [
     PharmacyClaimsProcessListComponent,
@@ -90,7 +92,7 @@ import { PharmacyClaimsPrescriptionListComponent } from './components/pharmacy-c
     PharmacyClaimsPrintDenialLetterComponent,
     PharmacyClaimsBatchItemsPageComponent,
     PharmacyClaimsReverseClaimsComponent,
-    PharmacyClaimsPrescriptionListComponent
+    PharmacyClaimsPrescriptionListComponent,
   ],
 })
 export class CaseManagementFeatureFinancialPharmacyClaimsModule {}
