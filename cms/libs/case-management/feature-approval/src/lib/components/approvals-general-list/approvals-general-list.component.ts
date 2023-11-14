@@ -48,6 +48,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() drugForm!:  FormGroup;
   @Input() insurancePlanForm! : FormGroup;
   @Input() insuranceTypelovForPlan$:any;
+  @Input() pharmacyForm!:FormGroup;
+  @Input() insuranceVendorForm!:FormGroup;
+  @Input() insuranceProviderForm!:FormGroup;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
   @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();

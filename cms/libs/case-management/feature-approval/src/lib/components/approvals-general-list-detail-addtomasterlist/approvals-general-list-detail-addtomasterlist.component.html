@@ -172,6 +172,12 @@
           <td>Provider Name</td>
           <td>{{vendorData.vendorName}}</td>
         </tr>
+      </tbody>
+      <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
+        <tr>
+          <td>Pharmacy</td>
+          <td>{{vendorData.vendorName}}</td>
+        </tr>
         <tr>
           <td>Tin</td>
           <td>{{vendorData.tin}}</td>
@@ -183,12 +189,6 @@
         <tr>
           <td>Preferred Pharmacy</td>
           <td>{{vendorData.preferredFlag}}</td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
-        <tr>
-          <td>Pharmacy</td>
-          <td>{{vendorData.vendorName}}</td>
         </tr>
       </tbody>
     </table>
