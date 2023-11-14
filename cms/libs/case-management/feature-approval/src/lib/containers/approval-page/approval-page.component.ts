@@ -95,6 +95,8 @@ export class ApprovalPageComponent implements OnInit {
   submitGenerealRequest$ =
     this.pendingApprovalGeneralFacade.submitGenerealRequest$;
 
+  submitImportedClaims$ = this.importedClaimFacade.submitImportedClaims$;
+
   providerDetailsDialog: any;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
@@ -103,7 +105,7 @@ export class ApprovalPageComponent implements OnInit {
   selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
   clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
   ddlStates$ = this.contactFacade.ddlStates$;
-  healthCareForm!: FormGroup;  
+  healthCareForm!: FormGroup;
   clinicVendorLoader$ = this.financialVendorFacade.clinicVendorLoader$;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
@@ -256,7 +258,7 @@ export class ApprovalPageComponent implements OnInit {
       approvalId
     );
   }
-  
+
   submitGeneralRequests(requests: any) {
     this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
   }
@@ -288,7 +290,7 @@ export class ApprovalPageComponent implements OnInit {
         this.pendingApprovalGeneralFacade.selectedMasterDetail$;
     }
   }
-  
+
   buildVendorForm() {
   let form = this.formBuilder.group({
       providerName: [''],
@@ -357,6 +359,11 @@ export class ApprovalPageComponent implements OnInit {
   onEditProviderProfileClick() {
     this.contactFacade.loadDdlStates();
     this.lovFacade.getPaymentMethodLov();
+  }
+
+  submitImportedClaims(claims : any)
+  {
+    this.importedClaimFacade.submitImportedClaims(claims);
   }
 
 }

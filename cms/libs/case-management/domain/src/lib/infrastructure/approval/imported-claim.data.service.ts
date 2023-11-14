@@ -26,4 +26,12 @@ export class ImportedClaimService {
       importedClaimsRequestDto
     );
   }
+
+  submitImportedClaimsServices(claims: any) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/submit`,
+      claims
+    );
+  }
+
 }

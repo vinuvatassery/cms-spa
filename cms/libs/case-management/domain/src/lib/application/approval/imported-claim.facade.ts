@@ -12,10 +12,12 @@ export class ImportedClaimFacade {
     field: this.sortValueImportedClaimsAPproval,
   }];
 
-  /** Private properties **/ 
+  /** Private properties **/
   private ImportedClaimsSubject =  new Subject<any>();
+  private submitImportedClaimsSubject = new Subject<any>();
   /** Public properties **/
   approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
+  submitImportedClaims$ = this.submitImportedClaimsSubject.asObservable();
 
   constructor(
     private readonly ImportedClaimService: ImportedClaimService,
@@ -47,7 +49,7 @@ export class ImportedClaimFacade {
     this.loaderService.hide();
   }
 
-  loadImportedClaimsLists(gridSetupData: any) { 
+  loadImportedClaimsLists(gridSetupData: any) {
     this.ImportedClaimService.loadImportedClaimsListServices(gridSetupData).subscribe(
       {
         next: (dataResponse: any) => {
@@ -58,6 +60,26 @@ export class ImportedClaimFacade {
             this.ImportedClaimsSubject.next(gridView);
         },
         error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      }
+    );
+  }
+
+  submitImportedClaims(claims: any) {
+    this.showLoader();
+    this.ImportedClaimService.submitImportedClaimsServices(claims).subscribe(
+      {
+        next: (response: any) => {
+          this.hideLoader();
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+            this.submitImportedClaimsSubject.next(response);
+        },
+        error: (err) => {
+          this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }
