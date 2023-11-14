@@ -32,7 +32,7 @@ export class FinancialVendorDataService {
 
   getVendorDetails(vendorId: string, isActive: boolean) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/vendorDetail?vendorId=${vendorId}&isActive=${isActive}`
+      `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/vendor-details?vendorId=${vendorId}&isActive=${isActive}`
     );
   }
   searchInsurnaceVendor(searchText: string) {
@@ -164,7 +164,7 @@ export class FinancialVendorDataService {
   updateVendorProfile (providePanelDto:any){
     return this.http.put<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/vendors/vendorprofile`,providePanelDto
+        `/financial-management/vendors/vendor-profile`,providePanelDto
     );
   }
 }
