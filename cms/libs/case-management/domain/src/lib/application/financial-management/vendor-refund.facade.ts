@@ -282,4 +282,20 @@ export class FinancialVendorRefundFacade {
       },
     });  
   }
+  
+  loadRefundReceiptLogListService( skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: string) {
+    filter = JSON.stringify(filter);
+    this.financialVendorRefundDataService.loadFinancialRefundProcessListService(skipcount,  maxResultCount,  sort,  sortType, filter).subscribe({
+      next: (dataResponse) => {
+        const gridView = { data: dataResponse["items"], total: dataResponse["totalCount"]
+        };
+        this.vendorRefundAllPaymentsDataSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
 }
