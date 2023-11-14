@@ -39,7 +39,7 @@
           [kendoDropDownFilter]="caseOwnerfilterSettings" (valueChange)="insuranceCarrierNameChangeValue($event)">
         </kendo-combobox>
         <kendo-formerror
-          *ngIf="!newhealthInsuranceForm.controls['insuranceCarrierName'].valid &&  isValidateForm">Insurance Provider
+          *ngIf="!newhealthInsuranceForm.controls['insuranceCarrierName'].valid && isValidateForm">Insurance Provider
           is required.</kendo-formerror>
       </kendo-floatinglabel>
 
@@ -48,8 +48,7 @@
           formControlName="insurancePlanName" [maxlength]="500" [fillMode]="formUiStyle.inputFillMode">
         </kendo-textbox>
         <kendo-formerror
-          *ngIf="!newhealthInsuranceForm.controls['insurancePlanName'].valid &&  isValidateForm">Insurance Plan Name is
-          required.</kendo-formerror>
+          *ngIf="!newhealthInsuranceForm.controls['insurancePlanName'].valid && isValidateForm">Insurance Plan Name is required.</kendo-formerror>
       </kendo-floatinglabel>
 
       <div class="flex-row">
