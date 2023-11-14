@@ -389,7 +389,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
   }
-  
   onModalBatchClaimsModalClose() {
     this.batchConfirmClaimsDialog.close();
   }
