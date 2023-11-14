@@ -215,7 +215,24 @@
         </p>
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.policyIdMatch == 'Yes'"
+          *ngIf="dataItem.eligibilityMatch === 'No'"
+        >
+          <span class="material-icons">info</span>
+          The client was not eligible for the date of service. Deny the claim, 
+          or update the client's eligibility dates in their profile.
+          <button
+            aria-label="GO TO PROFILE"
+            kendoButton
+            look="flat"
+            class="card-link-button"
+            (click)="onClientClicked(dataItem.clientId)"
+          >
+            GO TO PROFILE
+          </button>
+        </p>
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.isPossibleMatch"
         >
           <span class="material-icons">info</span>
           The  system could not match the Policy ID to a client. Delete the claim or match it to a client.

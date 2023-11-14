@@ -230,11 +230,11 @@
 
       <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center" >
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor *ngIf="dataItem.creatorId"
             [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
             <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
           </button>
-          <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+          <kendo-popover #onUserProfileDetailsHovered width="330" position="left" >
             <ng-template kendoPopoverBodyTemplate>
               <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
             </ng-template>

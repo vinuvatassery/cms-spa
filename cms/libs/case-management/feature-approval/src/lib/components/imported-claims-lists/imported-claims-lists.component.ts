@@ -62,7 +62,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   constructor(private route: Router, private dialogService: DialogService,private readonly router: Router) {}
 
   ngOnInit(): void {
-    this.loadImportedClaimsListGrid();
   }
   ngOnChanges(): void {
     this.state = {
@@ -70,7 +69,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
     this.loadImportedClaimsListGrid();
   }
   public expandInClaimException({ dataItem }: RowArgs): boolean {
@@ -78,6 +76,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   private loadImportedClaimsListGrid(): void {
+    debugger;
     this.loadImportedClaims(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -159,6 +158,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
+    debugger;
     this.approvalsImportedClaimsLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
