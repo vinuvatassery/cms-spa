@@ -16,7 +16,7 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
+import { InsurancePlanFacade, PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 import {
   UserDataService,
   UserManagementFacade,
@@ -107,7 +107,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     private dialogService: DialogService,
     private readonly cd: ChangeDetectorRef,
     private readonly userDataService: UserDataService,
-    private readonly loginUserFacade: UserManagementFacade
+    private readonly loginUserFacade: UserManagementFacade,
+    private readonly insurancePlanFacade: InsurancePlanFacade
   ) {}
 
   ngOnInit(): void {
@@ -656,5 +657,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   onProviderNameClick(paymentRequestId: any) {
     this.onVendorClickedEvent.emit(paymentRequestId);
+  }
+
+  recordUpdate(event:any){
+      this.onCloseEditListItemsDetailClicked();
   }
 }

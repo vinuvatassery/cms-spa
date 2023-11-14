@@ -223,6 +223,7 @@
     [drugForm]="drugForm"
     [insurancePlanForm]="insurancePlanForm"
     [insuranceTypelovForPlan$]="insuranceTypelovForPlan$"
+    (recordUpdatedEvent)="recordUpdate($event)"
   >
   </productivity-tools-approvals-edit-items>
 </ng-template>

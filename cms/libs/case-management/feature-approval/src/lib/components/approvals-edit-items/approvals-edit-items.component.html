@@ -29,7 +29,7 @@
           [valueField]="'vendorId'" 
           [textField]="'vendorName'"
           [valuePrimitive]="true"
-          [(ngModel)]="selectedVendor">
+          [(ngModel)]="selectedVendor" (selectionChange)="selectionChange($event)">
           <ng-template kendoComboBoxItemTemplate let-dataItem>
             <span>{{ dataItem.vendorName }}</span>
           </ng-template>
@@ -190,7 +190,7 @@
           placeholder="Manufacturer Name" [fillMode]="formUiStyle.dropDownFillMode" [filterable]="true"
           (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" [formControlName]="'providerName'"
           [valuePrimitive]="true" [valueField]="'vendorId'" [textField]="'vendorName'" [valuePrimitive]="true"
-          [(ngModel)]="selectedVendor">
+          [(ngModel)]="selectedVendor" (selectionChange)="selectionChange($event)">
           <ng-template kendoComboBoxItemTemplate let-dataItem>
             <span>{{ dataItem.vendorName }}</span>
           </ng-template>
@@ -341,16 +341,19 @@
       </legend>
       <fieldset class="k-form-fieldset">
         <div class="component-list-h">
-          <span class="app-radiobtnwidtext-wrapper">
+          <!-- <span class="app-radiobtnwidtext-wrapper">
             <input type="radio" kendoRadioButton aria-labelledby="canPayForMedicationFlag" name="canPayForMedicationFlag" id="canPayForMedicationFlag" value="YES"
               formControlName="canPayForMedicationFlag" />
             <kendo-label class="k-radio-label" text="YES" for="canPayForMedicationFlag"></kendo-label>
           </span>
           <span class="app-radiobtnwidtext-wrapper">
-            <input type="radio" kendoRadioButton aria-labelledby="canPayForMedicationFlag" name="canPayForMedicationFlag" id="canPayForMedicationFlag" value="NO"
+            <input type="radio" kendoRadioButton aria-labelledby="canPayForMedicationFlag" name="canPayForMedicationFlag" id="canPayForMedicationFlag" value="No"
               formControlName="canPayForMedicationFlag" />
             <kendo-label class="k-radio-label" text="NO" for="canPayForMedicationFlag"></kendo-label>
-          </span>
+          </span> -->
+
+          <!-- ---------------------------------------------------------------------- -->
+            <input type="checkbox" kendoCheckBox formControlName="canPayForMedicationFlag" #terms />
         </div>
       </fieldset>
     </div>
@@ -366,7 +369,7 @@
             <kendo-label class="k-radio-label" text="YES" for="dentalPlanFlag"></kendo-label>
           </span>
           <span class="app-radiobtnwidtext-wrapper">
-            <input type="radio" kendoRadioButton aria-labelledby="dentalPlanFlag" name="dentalPlanFlag" id="dentalPlanFlag" value="NO"
+            <input type="radio" kendoRadioButton aria-labelledby="dentalPlanFlag" name="dentalPlanFlag" id="dentalPlanFlag" value="No"
               formControlName="dentalPlanFlag" />
             <kendo-label class="k-radio-label" text="NO" for="dentalPlanFlag"></kendo-label>
           </span>
