@@ -306,7 +306,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   @Output() exportGridDataEvent = new EventEmitter<any>();
-  @Input() exportButtonShow$: any;
 
   showExportLoader = false;
   onClickedExport() {

@@ -83,7 +83,7 @@ export class VendorRefundPageComponent {
     );
   }
   
-  exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  //exportButtonShow$ = this.documentFacade.exportButtonShow$;
 
   exportClaimsPaymentsGridData(data: any) {
     // const data = this.dataExportParameters;

@@ -1,7 +1,7 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef} from '@angular/core';
+import { Component, ViewChild, TemplateRef} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State, filterBy } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam } from '@cms/case-management/domain'; 
+import { State} from '@progress/kendo-data-query';
+import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade} from '@cms/case-management/domain'; 
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
@@ -87,7 +87,7 @@ export class RefundNewFormDetailsComponent{
     },
   ];
 
-  @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
+  // @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
   sortValue: string | undefined;
   financialPremiumsRefundGridLists: any;
   filterData: any;
@@ -117,7 +117,7 @@ export class RefundNewFormDetailsComponent{
       ...data,
       paymentRequestsId : this.paymentRequestId
     }
-    this.financialVendorRefundFacade.getInsuranceRefundInformation(param);
+    //this.financialVendorRefundFacade.getInsuranceRefundInformation(param);
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
     this.financialPremiumsRefundGridLists =  res;
       console.log(this.financialPremiumsRefundGridLists)
@@ -165,7 +165,7 @@ OnEditProviderProfileClick(){
     this.isConfirmationClicked = false;
   }
   closeAddEditRefundFormModalClicked(){
-    this.modalCloseAddEditRefundFormModal.emit(true);  
+    //this.modalCloseAddEditRefundFormModal.emit(true);  
   }
   loadVendorRefundProcessListGrid(event: any) {
   
