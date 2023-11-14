@@ -12,11 +12,10 @@
                         <ng-template kendoTabContent>
                             <div class="block-section ">
                                 <cms-refund-process-list
-                                
                                 [vendorRefundProcessGridLists$]="vendorRefundProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundProcess"
                                 [sortType]="sortType" [sort]="sortProcessList" 
-                                (loadVendorRefundProcessListEvent)="loadVendorRefundProcessListGrid($event)"
+                                (loadVendorRefundProcessListEvent)="loadFinancialRefundProcessListGrid($event)"
                                 > </cms-refund-process-list>
                             </div>
                         </ng-template>
@@ -42,7 +41,9 @@
                                 [vendorRefundAllPaymentsGridLists$]="vendorRefundAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList" 
-                                (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"></cms-refund-all-payment-list>
+                                (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"
+                                [exportButtonShow$]="exportButtonShow$"                              
+                                (exportGridDataEvent)="exportAllRefundsGridData()"></cms-refund-all-payment-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

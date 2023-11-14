@@ -1,6 +1,7 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -32,16 +33,20 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
   @Input() sort: any;
   @Input() sortValueRefunds: any;
   @Input() vendorRefundAllPaymentsGridLists$: any;
+  @Input() exportButtonShow$: any;
+
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+
   public state!: State;
-  sortColumn = 'entryDate';
-  sortDir = 'Ascending';
+  sortColumn = 'Batch #';
+  sortDir = 'Descending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn ='batchNumber'
   gridDataResult!: GridDataResult;
 
   gridVendorsAllPaymentsDataSubject = new Subject<any>();
@@ -68,15 +73,72 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
       icon: 'delete', 
     },
   ];
+
+  columns: any = {
+    batchNumber: 'Batch #',
+    providerName: 'Vendor',
+    paymentType: 'Type',
+    clientFullName: 'Client Name',
+    insuranceName: 'Name on Primary Insurance Card',
+    clientId: 'Client ID',
+    warrantNumber: 'Refund Warrant #',
+    refundAmount: 'Refund Amount',
+    depositDate: 'Deposit Date',
+    originalWarrantNumber: 'Original Warrant #',
+    originalAmount: 'Original Amount',
+    indexCode: 'Index Code',
+    pcaCode :'PCA',
+    voucherPayable :'VP',
+    refundNote:'Refund Note',
+    entryDate : 'Entry Date'
+  };
+
+  dropDowncolumns: any = [
+    {
+      columnCode: 'batchNumber',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnCode: 'providerName',
+      columnDesc: 'Vendor',
+    },
+    {
+      columnCode: 'paymentType',
+      columnDesc: 'Type',
+    },
+    {
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+    },   
+    {
+      columnCode: 'insuranceName',
+      columnDesc: 'Name on Primary Insurance Card',
+    },
+    {
+      columnCode: 'clientId',
+      columnDesc: 'Client ID',
+    },
+    {
+      columnCode: 'warrantNumber',
+      columnDesc: 'Refund Warrant #',
+    },
+    {
+      columnCode: 'refundAmount',
+      columnDesc: 'Refund Amount',
+    }   
+  ];
+  showExportLoader = false;
  
   
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router,  private readonly cdr: ChangeDetectorRef ) {}
 
   ngOnInit(): void {
+    this.sortType = 'desc'
     this.loadVendorRefundAllPaymentsListGrid();
   }
   ngOnChanges(): void {
+    this.sortType = 'desc'
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -102,6 +164,12 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
     sortTypeValue: string
   ) {
     this.isVendorRefundAllPaymentsGridLoaderShow = true;
+
+    if(sortValue  === 'batchNumber')
+    {
+      sortValue = 'entryDate'  
+    }  
+
     const gridDataRefinerValue = {
       SkipCount: skipCountValue,
       MaxResultCount: maxResultCountValue,
@@ -113,10 +181,22 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
     this.gridDataHandle();
   }
 
-  
+  searchColumnChangeHandler(data:any){      
+    this.onChange('')    
+  }
+
   
   onChange(data: any) {
     this.defaultGridState();
+    let operator = 'startswith';
+
+    if (
+      this.selectedColumn === 'clientId' ||
+      this.selectedColumn === 'refundAmount' ||
+      this.selectedColumn === 'originalAmount'     
+    ) {
+      operator = 'eq';
+    }
 
     this.filterData = {
       logic: 'and',
@@ -124,8 +204,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'entryDate',
-              operator: 'startswith',
+              field: this.selectedColumn ?? 'batchNumber',
+              operator: operator,
               value: data,
             },
           ],
@@ -133,7 +213,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
@@ -157,6 +237,22 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
     this.loadVendorRefundAllPaymentsListGrid();
   }
 
@@ -173,15 +269,45 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges{
 
   gridDataHandle() {
     this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
+      this.gridDataResult = data;     
       this.gridVendorsAllPaymentsDataSubject.next(this.gridDataResult);      
         this.isVendorRefundAllPaymentsGridLoaderShow = false;     
     });
    
   }
+
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  setToDefault() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+
+    this.sortColumn = 'Batch #';
+    this.sortDir = 'Ascending';
+    this.filter = '';
+    this.selectedColumn = 'batchNumber';
+    this.isFiltered = false;
+    this.columnsReordered = false;
+
+    this.sortValue = 'batchNumber';
+    this.sortType = 'asc';
+    this.sort = this.sortColumn;
+    this.searchValue =''
+
+    this.loadVendorRefundAllPaymentsListGrid();
+  } 
+
  
 }
