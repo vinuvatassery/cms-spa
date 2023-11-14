@@ -321,20 +321,11 @@
                      (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"
             [sortType]="sortType" [sort]="sortRefundInformationGrid" (insuranceRefundInformationConfirmClicked)="getInsuranceRefundInformation($event)"
             [insuraceAddRefundClick$]="insuraceAddRefundClick$"></cms-vendor-refund-selected-premium-list>
-              
-        
-            <div class="mt-3" id="InsurancePremiumPaymentsList" *ngIf="!isConfirmationClicked">
-                <h5>Select all premium included in this refund</h5>
-                
-                    <cms-vendor-refund-insurance-premium-list [premiumsListData$]="premiumsListData$"
-                        [pageSizes]="pageSizes" [sortValue]="sortValuePremiums" [sortType]="sortType"
-                        [sort]="sortPremiums"
-                        (loadPremiumsListEvent)="loadPremiumsListGrid($event)"></cms-vendor-refund-insurance-premium-list>
-                 
-            </div>
             </div>
         </div>
- 
+        </div>
+ </div>
+
         <!-- RX Content -->
         <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'RX'">
             <div class="mt-1" *ngIf="!isConfirmationClicked">
@@ -533,7 +524,9 @@
                 </div>
           </div>
         </div>
-      </div>
+           </div>
+        
+          
     </section>
 </section>
  
