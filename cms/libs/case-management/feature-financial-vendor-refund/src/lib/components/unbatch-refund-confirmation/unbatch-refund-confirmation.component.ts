@@ -15,7 +15,7 @@ export class UnbatchRefundConfirmationComponent  {
     this.unBatchCloseClickedEvent.emit(false);
   }
 
-  UnBatchClicked() {
+  unBatchClicked() {
     this.unBatchCloseClickedEvent.emit(true);
   }
 }
