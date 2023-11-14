@@ -4,7 +4,6 @@ import { DrugsFacade, FinancialVendorFacade, InsurancePlanFacade, PendingApprova
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
-import { PendingApprovalGeneralFacade } from '../../../../../domain/src';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoaderService } from '@cms/shared/util-core';
 @Component({
