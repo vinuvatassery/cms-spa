@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPcaFacade, FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
+import { ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
@@ -55,7 +57,9 @@ export class PharmacyClaimsPageComponent implements OnInit {
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade ,
     private lovFacade: LovFacade, private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,private readonly cdr: ChangeDetectorRef,
-    private loggingService: LoggingService,
+    private loggingService: LoggingService,private readonly configProvider: ConfigurationProvider,
+    private readonly intl: IntlService,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
   ) {}
 
   ngOnInit(): void {
@@ -112,12 +116,70 @@ export class PharmacyClaimsPageComponent implements OnInit {
   }
 
   addPharmacyClaim(data: any) {
-    this.financialPharmacyClaimsFacade.addPharmacyClaim(data);
+    this.getPcaCode(data,false);
+   
   }
 
   updatePharmacyClaim(data: any) {
-    this.financialPharmacyClaimsFacade.updatePharmacyClaim(data);
+   
+    this.getPcaCode(data,true);
   }
+
+  private getPcaCode(claim: any,edit : any) {
+    const totalAmountDue = (claim.prescriptionFillDto as []).reduce((acc, cur) => acc + (cur as any)?.copayAmountPaid ?? 0, 0);
+    const minServiceStartDate = this.getMinServiceStartDate(claim.prescriptionFillDto);
+    const maxServiceEndDate = this.getMaxServiceEndDate(claim.prescriptionFillDto);
+    const request = {
+      clientCaseEligibilityId: claim.clientCaseEligibilityId,
+      claimAmount: totalAmountDue,
+      serviceStartDate: minServiceStartDate,
+      serviceEndDate: maxServiceEndDate,
+      paymentRequestId: claim.paymentRequestId,
+      objectLedgerName : 'Pharmaceutical Drugs(ADAP)'
+    };
+    this.financialClaimsFacade.showLoader();
+    this.financialClaimsFacade.getPcaCode(request) .subscribe({
+      next: (response: any) => {
+        this.financialClaimsFacade.hideLoader()
+        if (response) {
+          if (response?.isReAssignmentNeeded ?? true) {
+            //this.chosenPcaForReAssignment = response;
+            //this.onPcaReportAlertClicked(this.pcaExceptionDialogTemplate);
+            return;
+          }
+          claim.pcaSelectionResponseDto = response;
+        
+          if(edit === true)
+          {
+            this.financialPharmacyClaimsFacade.updatePharmacyClaim(claim);
+          }
+          else
+          {
+            this.financialPharmacyClaimsFacade.addPharmacyClaim(claim);
+          }
+        
+        }
+      },
+      error: (error: any) => {
+        this.financialClaimsFacade.hideLoader()
+        this.financialClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+          error
+        );
+      },
+    });
+  }
+
+  getMinServiceStartDate(arr: any) {
+    const timestamps = arr.map((a: any) => new Date(a.prescriptionFillDate));
+    return this.intl.formatDate(new Date(Math.min(...timestamps)), this.configProvider?.appSettings?.dateFormat);
+  };
+
+  getMaxServiceEndDate(arr: any) {
+    const timestamps = arr.map((a: any) => new Date(a.prescriptionFillDate));
+    return this.intl.formatDate(new Date(Math.max(...timestamps)), this.configProvider?.appSettings?.dateFormat);
+  };
+
 
   getPharmacyClaim(paymentRequestId: string) {
     this.financialPharmacyClaimsFacade.getPharmacyClaim(paymentRequestId);

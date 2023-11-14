@@ -9,6 +9,7 @@ import {
   Output,
   TemplateRef,
   ViewChild,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -18,12 +19,14 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject, first } from 'rxjs';
+import { Observable, Subject, first } from 'rxjs';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { PaymentStatusCode } from '@cms/case-management/domain';
+import {
+  PaymentStatusCode,PaymentType, PaymentMethodCode
+} from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
@@ -169,27 +172,128 @@ reverseClaimsDialog: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
+  @Input() loader$!: Observable<boolean>;
+  @Output() loadBatchLogListEvent = new EventEmitter<any>();
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>(); 
+  @Input() claimsType: any;
   public state!: State;
-  sortColumn = 'batch';
+  showExportLoader = false;
+  sortColumn = 'paymentNbr';
   sortDir = 'Ascending';
   columnsReordered = false;
+  sortColumnName = '';
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
+  showDateSearchWarning = false
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn= 'itemNbr';
   gridDataResult!: GridDataResult;
   gridClaimsBatchLogDataSubject = new Subject<any>();
   gridClaimsBatchLogData$ = this.gridClaimsBatchLogDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  gridColumns: { [key: string]: string } = {
+    itemNbr: 'Item #',
+    vendorName: 'Pharmacy Name',
+    clientFullName: 'Client Name',
+    nameOnInsuranceCard: 'Name on Primary Insurance Card',
+    clientId: 'Client ID',
+    paymentMethodCode: 'Payment Method',
+    paymentTypeCode: 'Payment Type',
+    creationTime : 'Entry Date',
+    paymentStatusCode: 'Payment Status',
+    serviceCount: 'Service Count',
+    serviceCost: 'Total Cost',
+    amountPaid: 'Amount Paid',
+    clientMaximum: 'Client Annual Total',
+    balanceAmount: 'Client Balance',
+    indexCode: 'Index Code',
+    pcaCode : 'PCA Code',
+    objectCode: 'Object Code',
+    checkNbr :'Warrant Number'
+  };
+
+  paymentMethods = [PaymentMethodCode.CHECK, PaymentMethodCode.ACH, PaymentMethodCode.SPOTS];
+  paymentTypes = [PaymentType.Coinsurance, PaymentType.Copayment, PaymentType.Deductible, PaymentType.FullPay];
+  paymentStatusList = [
+    PaymentStatusCode.Submitted,
+    PaymentStatusCode.PendingApproval,
+    PaymentStatusCode.Denied,
+    PaymentStatusCode.ManagerApproved,
+    PaymentStatusCode.PaymentRequested,
+    PaymentStatusCode.Hold,
+    PaymentStatusCode.Failed,
+    PaymentStatusCode.Paid,
+  ];
+
+  paymentMethodFilter = '';
+  paymentTypeFilter = '';
+  paymentStatusFilter = '';
     
+  dropDowncolumns: any = [
+    {
+      columnCode: 'itemNbr',
+      columnDesc: 'Item #',
+    },
+    {
+      columnCode: 'vendorName',
+      columnDesc: 'Pharmacy Name',
+    },
+    {
+      columnCode: 'clientFullName',
+      columnDesc: 'Client Name',
+    },
+    {
+      columnCode: 'clientId',
+      columnDesc: 'Client ID',
+    },
+    {
+      columnCode: 'paymentMethodCode',
+      columnDesc: 'Payment Method',
+    },
+    {
+      columnCode: 'paymentTypeCode',
+      columnDesc: 'Payment Type',
+    },
+    {
+      columnCode: 'creationTime',
+      columnDesc: 'Entry Date',
+    },
+    {
+      columnCode: 'paymentStatusCode',
+      columnDesc: 'Payment Status',
+    },
+    {
+      columnCode: 'indexCode',
+      columnDesc: 'Index Code',
+    },
+    {
+      columnCode: 'pca',
+      columnDesc: 'PCA',
+    },
+    {
+      columnCode: 'objectCode',
+      columnDesc: 'Ojbect Code',
+    },
+    {
+      columnCode: 'checkNbr',
+      columnDesc: 'Warrant Number',
+    },
+    {
+      columnCode: 'amountPaid',
+      columnDesc: 'Amount Paid',
+    },
+  ]
   /** Constructor **/
-  constructor(private route: Router,private dialogService: DialogService ) {}
+  constructor(private route: Router,private dialogService: DialogService,  private readonly cdr: ChangeDetectorRef,
+    private readonly configProvider: ConfigurationProvider,
+    private readonly intl: IntlService, ) {}
   
   ngOnInit(): void {
+    this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
   }
   ngOnChanges(): void {
@@ -221,16 +325,37 @@ reverseClaimsDialog: any;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
+      sortColumn: this.sortColumn ?? 'itemNbr',
+      sortType: sortTypeValue ?? 'asc',
+      filter: this.filter,
     };
-    this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
+    this.loadBatchLogListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
  
-  
   onChange(data: any) {
     this.defaultGridState();
+
+    const isDateSearch = data.includes('/');
+    
+    data = this.formatSearchValue(data, isDateSearch);
+    if (isDateSearch && !data) return;
+
+    let operator = 'startswith';
+    if (
+      this.selectedColumn === 'itemNbr' ||
+      this.selectedColumn === 'serviceCount' ||
+      this.selectedColumn === 'serviceCost' ||
+      this.selectedColumn === 'clientId' ||
+      this.selectedColumn === 'amountPaid' ||
+      this.selectedColumn === 'indexCode' ||
+      this.selectedColumn === 'pcaCode' ||
+      this.selectedColumn === 'objectCode' ||
+      this.selectedColumn === 'checkNbr' ||
+      this.selectedColumn === 'balanceAmount'     
+    ) {
+      operator = 'eq';
+    }
 
     this.filterData = {
       logic: 'and',
@@ -238,8 +363,8 @@ reverseClaimsDialog: any;
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedColumn ?? 'itemNbr',
+              operator: operator,
               value: data,
             },
           ],
@@ -247,11 +372,42 @@ reverseClaimsDialog: any;
         },
       ],
     };
+
+    if( this.selectedColumn === 'creationTime')
+    {
+      
+      this.filterData = {
+        logic: 'and',
+        filters: [
+          {
+            filters: [
+              {
+                field: this.selectedColumn ?? 'itemNbr',
+                operator: 'gte',
+                value: data+'T01:01:00.000Z',
+              },
+            ],
+            logic: 'and',
+          },
+          {
+            filters: [
+              {
+                field: this.selectedColumn ?? 'itemNbr',
+                operator: 'lte',
+                value: data+'T23:59:00.000Z',
+              },
+            ],
+            logic: 'and',
+          }
+        ],
+      };
+    } 
+
+   
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
-
   defaultGridState() {
     this.state = {
       skip: 0,
@@ -259,6 +415,23 @@ reverseClaimsDialog: any;
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
     };
+  }
+  private isValidDate = (searchValue: any) =>
+  isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configProvider?.appSettings?.dateFormat
+        );
+      } else {
+        return '';
+      }
+    }
+  
+    return searchValue;
   }
 
   onColumnReorder($event: any) {
@@ -271,7 +444,49 @@ reverseClaimsDialog: any;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = stateData.sort[0]?.field;
+    this.sortColumnName = this.gridColumns[this.sortColumn];
+    this.filter = stateData?.filter?.filters;
     this.loadBatchLogListGrid();
+  }
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentMethodCode') {
+      this.paymentMethodFilter = value;
+    } else if (field === 'paymentTypeCode') {
+      this.paymentTypeFilter = value;
+    } else if (field === 'paymentStatusCode') {
+      this.paymentStatusFilter = value;
+    }
+
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+  }
+  searchColumnChangeHandler(value: string) {
+    if(value === 'creationTime')
+    {
+      this.showDateSearchWarning = true
+    }
+    else
+    {
+      this.showDateSearchWarning = false
+    }
+    this.filter = [];
+   
+    if (this.searchValue) {
+      this.onChange(this.searchValue);
+    }
   }
 
   // updating the pagination infor based on dropdown selection
@@ -478,4 +693,18 @@ reverseClaimsDialog: any;
       this.addEditClaimsFormDialog.close();
     }
   }
+  onClickedExport() {
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()
+
+    this.exportButtonShow$
+      .subscribe((response: any) => {
+        if (response) {
+          this.showExportLoader = false
+          this.cdr.detectChanges()
+        }
+
+      })
+  }
+  
 }

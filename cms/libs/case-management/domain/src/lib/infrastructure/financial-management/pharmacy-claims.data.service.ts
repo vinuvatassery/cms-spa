@@ -157,6 +157,15 @@ export class FinancialPharmacyClaimsDataService {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/drugs/ndcCode=${searchText}`);
   }
+    loadPaymentsByBatch(batchId: string, params:GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments`, params);
+  }
+  loadPharmacyPrescriptionsServices(batchId: string, params:GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payments/${batchId}/prescriptions`, params);
+  }
+  
   loadRecentClaimListService(data:any): Observable<any> {
     
     const recentClaimsPageAndSortedRequestDto =

@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, groupBy } from '@progress/kendo-data-query';
-import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
+import { CaseStatusCode, FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Lov } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -37,7 +37,8 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   state!: State;
   brandName =""
   drugName = ""
-  
+  isEdit = false
+  serviceCount = 0
 
   @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
@@ -66,6 +67,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   selectedNDCCode! :any
   isSubmitted = false
   groupedPaymentRequestTypes: any;
+  objectCode! : any
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
@@ -116,7 +118,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
       pharmacy: [this.selectedVendor, Validators.required],
       client: [this.selectedClient, Validators.required],
       prescriptionFillDto: new FormArray([]),      
-      paymentMethodCode: [false]
+      paymentMethodCode: [true,false]
      
     });
     this.onExistClaimFormLoad()
@@ -134,13 +136,16 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
       dispensingQty  : ['', Validators.required],
       daySupply  : ['', Validators.required],
       paymentTypeCode : ['' , Validators.required],
-      brandName : [''],
-      drugName : ['']
+      brandName : [{value: '', disabled: true}],
+      drugName : [{value: '', disabled: true}],
+      objectCode :[{value: this.objectCode, disabled: true}],
+      pcaCode : [{value: '', disabled: true}]
     });
 
     this.addClaimServicesForm.push(pharmacyClaimService) 
     this.cd.markForCheck()
     this.isSubmitted = false
+    this.serviceCount = this.addClaimServicesForm.length
   }
   
   isControlValid(controlName: string, index: any) {
@@ -197,6 +202,20 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
     
   }
 
+  removeService(i: number) {
+    if(this.isEdit && this.addClaimServicesForm.length == 1)
+    {
+       this.addClaimServicesForm.reset();
+    }
+    if(this.addClaimServicesForm.length > 1 ){
+    let form = this.addClaimServicesForm.value[i]
+   
+    this.addClaimServicesForm.removeAt(i);
+    
+    this.serviceCount = this.addClaimServicesForm.length
+    }
+  }
+
   closeAddEditClaimsFormModalClicked() {
     this.modalCloseAddEditClaimsFormModal.emit(true);
   }
@@ -232,7 +251,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
 
     this.addClaimServicesForm.at(index).get('brandName')?.setValue(data?.brandName)
     this.addClaimServicesForm.at(index).get('drugName')?.setValue(data?.drugName)
-    this.addClaimServicesForm.at(index).get('brandName')?.setValue(data?.qntType)
+    this.addClaimServicesForm.at(index).get('qntType')?.setValue(data?.deliveryMethodCode)
 
     this.addClaimServicesForm.at(index).get('brandName')?.disable()
     this.addClaimServicesForm.at(index).get('drugName')?.disable()
@@ -248,14 +267,18 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   clientSelectionChange(data : any)
   {  
     this.pharmacyClaimForm.controls['clientCaseEligibilityId'].setValue(data?.clientCaseEligibilityId);
+    this.isClientRestricted = data?.caseStatus === CaseStatusCode.restricted
+    this.isClientInEligible = (data?.caseStatus !== CaseStatusCode.accept && data?.caseStatus !== CaseStatusCode.restricted)
+    this.objectCode = data?.objectCode
     this.cd.detectChanges();
-  this.clientTotalPayments = data?.TotalPayments ?? 0    
+    this.clientTotalPayments = data?.TotalPayments ?? 0    
  
   }
 
   showHideServiceList()
   {      
-    if(this.pharmacyClaimForm.controls["pharmacy"].value && this.pharmacyClaimForm.controls["client"].value?.clientId > 0)
+    if(this.pharmacyClaimForm.controls["pharmacy"].value && this.pharmacyClaimForm.controls["client"].value?.clientId > 0 
+    && this.addClaimServicesForm.length == 0)
     {
     this.addClaimServiceGroup()
     this.showServicesListForm = true
@@ -270,7 +293,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
    {  
        if(existClaimData?.paymentRequestId)
        {   
-
+        this.isEdit = true
       const fullVendorCustomName = existClaimData?.vendorName + ' '+ existClaimData?.tin + ' '+ existClaimData?.mailCode + ' '+ existClaimData?.address 
       const fullClientCustomName = existClaimData?.clientFullName + ' '+ existClaimData?.clientId + ' '+ existClaimData?.ssn + ' '+ existClaimData?.dob   
       

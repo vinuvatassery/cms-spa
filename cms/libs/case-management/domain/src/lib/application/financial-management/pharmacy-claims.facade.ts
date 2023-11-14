@@ -113,9 +113,6 @@ export class FinancialPharmacyClaimsFacade {
   private pharmacyClaimsAllPaymentsLoaderSubject = new BehaviorSubject<any>(false);
   pharmacyClaimsAllPaymentsLoader$ = this.pharmacyClaimsAllPaymentsLoaderSubject.asObservable();
 
-  private batchLogDataSubject = new Subject<any>();
-  batchLogData$ = this.batchLogDataSubject.asObservable();
-
   private batchReconcileDataSubject = new Subject<any>();
   reconcileDataList$ = this.batchReconcileDataSubject.asObservable();
 
@@ -152,7 +149,12 @@ export class FinancialPharmacyClaimsFacade {
   private searchDrugsLoaderDataSubject = new Subject<any>();
   searchDrugsLoader$ = this.searchDrugsLoaderDataSubject.asObservable();
 
-  
+
+  private paymentsByBatchDataSubject =  new Subject<any>();
+  private paymentByBatchGridLoaderSubject =  new BehaviorSubject<boolean>(false);
+    batchLogData$ = this.paymentsByBatchDataSubject.asObservable();
+
+  paymentByBatchGridLoader$ = this.paymentByBatchGridLoaderSubject.asObservable();
   private recentClaimListDataSubject =  new Subject<any>();
   recentClaimsGridLists$ = this.recentClaimListDataSubject.asObservable();
 
@@ -290,8 +292,8 @@ export class FinancialPharmacyClaimsFacade {
 
         Object.values(dataResponse).forEach((key) => {
 
-          key.fullCustomName = key?.vendorName + ' '+ key?.tin + ' '+ key?.mailCode + ' '+ key?.address
-
+          key.fullCustomName = key?.vendorName + ' '+ key?.tin ?? ''+ ' '+ key?.mailCode ?? '' + ' '+ key?.address
+       
         });
           this.searchPharmaciesDataSubject.next(dataResponse);
           this.searchPharmaciesLoaderDataSubject.next(false);
@@ -311,8 +313,8 @@ export class FinancialPharmacyClaimsFacade {
       next: (dataResponse : Client) => {
         Object.values(dataResponse).forEach((key) => {
 
-          key.fullCustomName = key?.clientFullName + ' '+ key?.clientId + ' '+ key?.ssn + ' '+ key?.dob
-
+          key.fullCustomName = key?.clientFullName + ' '+ key?.clientId + ' '+ (key?.ssn ?? '') + ' '+ key?.dob
+       
         });
         this.searchClientsDataSubject.next(dataResponse);
         this.searchClientLoaderDataSubject.next(false);
@@ -383,20 +385,25 @@ export class FinancialPharmacyClaimsFacade {
       });
   }
 
-  loadBatchLogListGrid() {
-    this.financialPharmacyClaimsDataService
-      .loadBatchLogListService()
-      .subscribe({
-        next: (dataResponse) => {
-          this.batchLogDataSubject.next(dataResponse);
-          this.hideLoader();
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.hideLoader();
-        },
-      });
-  }
+
+    loadBatchLogListGrid(batchId: string, params: GridFilterParam, claimType: string) {
+        this.paymentByBatchGridLoaderSubject.next(true);
+        this.financialPharmacyClaimsDataService.loadPaymentsByBatch(batchId, params, claimType).subscribe({
+            next: (dataResponse) => {
+                const gridView: any = {
+                    data: dataResponse['items'],
+                    total: dataResponse?.totalCount,
+                };
+
+                this.paymentsByBatchDataSubject.next(gridView);
+                this.paymentByBatchGridLoaderSubject.next(false);
+            },
+            error: (err) => {
+                this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+                this.paymentByBatchGridLoaderSubject.next(false);
+            },
+        });
+    }
   loadBatchItemsListGrid() {
     this.financialPharmacyClaimsDataService
       .loadBatchItemsListService()
@@ -499,6 +506,10 @@ export class FinancialPharmacyClaimsFacade {
       },
     });
 }
+
+    loadPharmacyPrescriptionsServices(batchId: string, params: GridFilterParam, claimType: string) {
+        return this.financialPharmacyClaimsDataService.loadPharmacyPrescriptionsServices(batchId, params, claimType);
+    }
  deleteClaims(batchPharmacyClaims: BatchPharmacyClaims) {
   this.showLoader();
   return this.financialPharmacyClaimsDataService
