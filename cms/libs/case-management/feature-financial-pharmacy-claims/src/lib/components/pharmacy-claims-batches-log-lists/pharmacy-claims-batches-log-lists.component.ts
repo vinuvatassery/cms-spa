@@ -72,7 +72,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   @Input() unbatchClaim$ :any
   @Input() unbatchEntireBatch$ :any
   @Input() exportButtonShow$ :any
-  public bulkMore = [
+  public bulkMore = [ 
+    
     {
       buttonType: 'btn-h-primary',
       text: 'Reconcile Payments',

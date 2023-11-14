@@ -115,22 +115,10 @@ export class FinancialPharmacyClaimsDataService {
     ]);
   }
 
-  loadReconcileListService(){
-    return of([
-      {
-        id:1,
-      pharmacyName: 'Vendor Name',
-      TIN:'XXXXXX',
-      pmtMethod:'pmtMethod',
-      datePmtReconciled:'XX/XX/XXXX',
-      datePmtSend:'XX/XX/XXXX',
-      pmtAmount:'XX.XX',
-      note:'XXXX XXXXXX XXXXXX',
-      },
-
-
-    ]);
+  loadReconcileListService(batchId:any,paginationParameters:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/${batchId}/reconcile-payments`,paginationParameters);
   }
+
   addPharmacyClaim(data: any) {
     return this.http.put<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`,      data    );
