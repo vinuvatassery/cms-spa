@@ -85,7 +85,9 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  paymentMethodFilter = '';
  paymentTypeFilter = '';
  paymentStatusFilter = '';
- 
+ vendorId: any;
+  clientId: any;
+  claimsType:any;
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
   pharmacyName: 'Pharmacy Name',
@@ -411,11 +413,14 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       this.printAuthorizationDialog.close();
     }
   }
-
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.addClientRecentClaimsDialog.close();
+  }
 
   
   clientRecentClaimsModalClicked(
-    template: TemplateRef<unknown> 
+    template: TemplateRef<unknown> ,data:any
   ): void {
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
@@ -426,6 +431,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
         duration: 200,
       },
     });
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
   }
 
   closeRecentClaimsModal(result: any) {

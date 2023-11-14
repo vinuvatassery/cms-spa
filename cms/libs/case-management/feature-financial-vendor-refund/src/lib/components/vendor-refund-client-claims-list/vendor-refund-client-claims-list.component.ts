@@ -8,8 +8,9 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -26,10 +27,14 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isClientClaimsLoaderShow = false;
   /** Constructor **/
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
+  public sortValue = this.financialVendorRefundFacade.sortValueRefundProcess;
+  public sortType = this.financialVendorRefundFacade.sortType;
+  public pageSizes = this.financialVendorRefundFacade.gridPageSizes;
+  public gridSkipCount = this.financialVendorRefundFacade.skipCount;
+  public sort = this.financialVendorRefundFacade.sortProcessList;
+ 
+  @Input() vendorId: any;
+  @Input() clientId: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
   @Input() clientClaimsListData$: any;
@@ -38,6 +43,9 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
+  paymentStatusType:any;
+  public selectedClaims: any[] = [];
+  paymentStatusCode =null
   searchValue = '';
   isFiltered = false;
   filter!: any;
@@ -49,7 +57,32 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-   
+  financialPremiumsProcessData$ = this.financialVendorRefundFacade.financialPremiumsProcessData$;
+  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,)
+  {
+    this.filter=null,
+    this.isClientClaimsLoaderShow = true;
+    this.gridDataHandle();
+    this.financialVendorRefundFacade.loadMedicalPremiumList( 
+      this.state.skip??0,this.state.take??0,"",this.sortType,this.filter);  
+    
+  }
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value:value.lovCode
+    }],
+      logic: "or"
+  });
+    if(field == "paymentStatusCode"){
+      this.paymentStatusCode = value;
+    }
+  }
+  selectedKeysChange(selection: any) {
+    this.selectedClaims = selection;
+  }
   ngOnInit(): void {
     this.state = {
       skip: 0,
@@ -112,7 +145,7 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   }
 
   gridDataHandle() { 
-    this.clientClaimsListData$.subscribe((data: GridDataResult) => {
+    this.financialPremiumsProcessData$.subscribe((data: GridDataResult) => {     
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,

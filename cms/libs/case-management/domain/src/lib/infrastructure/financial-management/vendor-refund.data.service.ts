@@ -4,6 +4,8 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ClientCase } from '../../entities/client-case';
+import { Pharmacy } from '../../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundDataService {
@@ -491,5 +493,38 @@ export class FinancialVendorRefundDataService {
 
   unbatchRefunds(paymentRequestIds: string[]) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/unbatch`, paymentRequestIds);
+  }
+  loadClientBySearchText(text: string) {
+    return this.http.get<ClientCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/claims/medical/clients/SearchText=${text}`
+    );
+  }
+  loadPharmacyBySearchText(searchText: string,) {
+    return this.http.get<Pharmacy[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/claims/pharmacies/SearchText=${searchText}`
+    );
+  }
+  loadvendorBySearchText(searchText: string,) {
+    return this.http.get<Pharmacy[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}`
+    );
+  }
+  loadMedicalPremiumList( skipcount: number,
+    maxResultCount: number,
+    sort: any,
+    sortType: string,
+    filter:string) {
+      debugger
+      const filterRequestBody = {
+        skipcount:skipcount,
+        maxResultCount:maxResultCount,
+        sorting:sort,
+        sortType:sortType,
+        filter:filter
+      }
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/list-premiums`,filterRequestBody);
   }
 }
