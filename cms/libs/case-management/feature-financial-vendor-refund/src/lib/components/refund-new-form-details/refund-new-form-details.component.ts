@@ -1,7 +1,7 @@
-import { Component Output, EventEmitter, ViewChild, TemplateRef} from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State} from '@progress/kendo-data-query';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade} from '@cms/case-management/domain'; 
+import { State, filterBy } from '@progress/kendo-data-query';
+import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam } from '@cms/case-management/domain'; 
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
