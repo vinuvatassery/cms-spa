@@ -59,8 +59,9 @@ export class PharmacyClaimsBatchPageComponent {
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`payment-batches/${batchId}/payments` , fileName)
     }
   }
-  unBatchEntireBatchClick(event: any) {
-     this.financialPharmacyClaimsFacade.unbatchEntireBatch(event.batchId)
+  unBatchEntireBatchClick() { 
+     const batchId = this.route.snapshot.queryParams['bid'];
+     this.financialPharmacyClaimsFacade.unbatchEntireBatch(batchId)
   }
   unBatchClaimClick(event: any) {
      this.financialPharmacyClaimsFacade.unbatchPremiums(event.paymentId)
