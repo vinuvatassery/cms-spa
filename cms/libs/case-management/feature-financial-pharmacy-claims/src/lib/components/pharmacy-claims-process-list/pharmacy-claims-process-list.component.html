@@ -60,7 +60,6 @@
     [skip]="state.skip" 
     [groupable]="false" 
     [reorderable]="true" 
-    [resizable]="true"
     [columnMenu]="{ filter: true }" 
     [sort]="state.sort" 
     [navigable]="isProcessGridExpand" 
@@ -75,7 +74,7 @@
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedProcessClaims">
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
-      [width]="40"></kendo-grid-checkbox-column>
+      [width]="40" ></kendo-grid-checkbox-column>
     <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="250">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.PharmacyName" kendoButton look="flat" class="card-link-button"
@@ -284,7 +283,7 @@
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span *ngIf="isDeleteBatchClosed" class="">{{selectedProcessClaims.length}} claims(s) to be deleted</span>
-  <span class="" *ngIf="!isProcessGridExpand">{{ selectedProcessClaims.length}} payment(s) selected</span>
+  <span class="" *ngIf="!isProcessGridExpand &&!isDeleteBatchClosed">{{ selectedProcessClaims.length}} payment(s) selected</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
@@ -320,7 +319,7 @@
 </ng-template>
 <ng-template #deleteClaimsConfirmationDialog>
   <cms-pharmacy-claims-delete-claims
-  (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)" (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked($event)" [selectedProcessClaimsCount] = "selectedProcessClaims.length" [deletemodelbody]="deletemodelbody"></cms-pharmacy-claims-delete-claims>
+  (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)" (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked()" [selectedProcessClaimsCount] = "selectedProcessClaims.length" [deletemodelbody]="deletemodelbody"></cms-pharmacy-claims-delete-claims>
 </ng-template>
 <ng-template #addEditClaimsDialog>
   <cms-pharmacy-claims-detail-form

@@ -22,7 +22,7 @@ import {
 import { Observable, Subject, first } from 'rxjs';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {
   PaymentStatusCode,PaymentType, PaymentMethodCode
@@ -66,11 +66,14 @@ reverseClaimsDialog: any;
  clientName: any;
   isLogGridExpand = true;
   isBulkUnBatchOpened =false;
+  deletemodelbody='This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
   @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
   @Output() unBatchClaimsEvent = new EventEmitter<any>();
+  @Output() ondeletebatchesClickedEvent = new EventEmitter<any>();
   @Input() batchId:any
   @Input() unbatchClaim$ :any
   @Input() unbatchEntireBatch$ :any
+  @Input() deleteClaims$ :any
   @Input() exportButtonShow$ :any
   public bulkMore = [ 
     
@@ -156,9 +159,26 @@ reverseClaimsDialog: any;
       text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteClaimClosed) {
+            
+        if (
+          [
+            PaymentStatusCode.Paid,
+            PaymentStatusCode.PaymentRequested,
+            PaymentStatusCode.ManagerApproved,
+          ].includes(data.paymentStatusCode)
+        ) {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.ERROR,
+            'This claim cannot be deleted',
+            NotificationSource.UI
+          );
+        } else {
+          this.isUnBatchClaimsClosed = false;
           this.isDeleteClaimClosed = true;
-          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialogTemplate);
+          this.onSingleClaimDelete(data.paymentRequestId.split(','));
+          this.onDeleteClaimsOpenClicked(
+            this.deleteClaimsConfirmationDialogTemplate
+          );
         }
        
       }
@@ -290,7 +310,8 @@ reverseClaimsDialog: any;
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService,  private readonly cdr: ChangeDetectorRef,
     private readonly configProvider: ConfigurationProvider,
-    private readonly intl: IntlService, ) {}
+    private readonly intl: IntlService,
+    private readonly notificationSnackbarService: NotificationSnackbarService ) {}
   
   ngOnInit(): void {
     this.sortColumnName = 'Item #';
@@ -473,6 +494,9 @@ reverseClaimsDialog: any;
       logic: 'or',
     });
   }
+  onSingleClaimDelete(selection: any) {
+    this.selected = selection;
+  }
   searchColumnChangeHandler(value: string) {
     if(value === 'creationTime')
     {
@@ -612,6 +636,19 @@ reverseClaimsDialog: any;
         }
       });
   }
+  onModalBatchDeletingClaimsButtonClicked(action: any) {
+  
+    this.ondeletebatchesClickedEvent.emit(this.selected)
+    this.deleteClaims$.subscribe((_:any) =>{
+      
+      this.isDeleteClaimClosed = false;
+      this.deleteClaimsDialog.close();
+      this.loadBatchLogListGrid();
+    })
+  
+    
+  }
+
 
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
     this.deleteClaimsDialog = this.dialogService.open({
