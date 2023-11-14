@@ -54,6 +54,11 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   ngOnInit(): void {
     this.loadClaimsListGrid();
   }
+  
+  selectedKeysChange(selection: any) {
+    this.selectedPharmacyClaims = selection;
+  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,

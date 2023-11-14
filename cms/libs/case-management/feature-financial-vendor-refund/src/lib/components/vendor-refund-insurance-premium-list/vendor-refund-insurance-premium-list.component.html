@@ -2,7 +2,7 @@
       <kendo-grid [resizable]="true" [loading]="isPremiumLoaderShow" [pageSize]="state.take"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
         [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
-        [data]="premiumsListData$ | async" kendoGridSelectBy="paymentRequestId"
+        [data]="premiumsListData$ | async"   (selectedKeysChange)="selectedKeysChange($event)" kendoGridSelectBy="paymentRequestId"
         [(selectedKeys)]="selectedInsuranceClaims">
         <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
           [width]="40"   ></kendo-grid-checkbox-column>

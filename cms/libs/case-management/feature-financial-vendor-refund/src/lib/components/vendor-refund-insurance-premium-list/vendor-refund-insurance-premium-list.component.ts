@@ -55,6 +55,11 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   ngOnInit(): void {
     this.loadPremiumListGrid();
   }
+  
+  selectedKeysChange(selection: any) {
+    this.selectedInsuranceClaims = selection;
+  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
