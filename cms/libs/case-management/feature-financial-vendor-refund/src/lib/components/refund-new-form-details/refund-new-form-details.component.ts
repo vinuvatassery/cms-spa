@@ -6,6 +6,7 @@ import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { VendorRefundInsurancePremiumListComponent } from '../vendor-refund-insurance-premium-list/vendor-refund-insurance-premium-list.component';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -75,6 +76,10 @@ export class RefundNewFormDetailsComponent{
   vendors$ = this.financialVendorRefundFacade.vendors$;
   isConfirmationClicked = false;
   isSubmitted: boolean = false;
+  
+  insuraceAddRefundClickSubject = new Subject<any>();
+  insuraceAddRefundClick$ = this.insuraceAddRefundClickSubject.asObservable()
+
   clientSearchResult =[
  
     {
@@ -137,12 +142,9 @@ export class RefundNewFormDetailsComponent{
   confirmationClicked (){
     this.isSubmitted=true
     this.isConfirmationClicked = true
-    if(this.selectedRefundType==='INS'){
-      this.disableFeildsOnConfirmSelection = true
+    this.disableFeildsOnConfirmSelection = true
   
       this.paymentRequestIds = this.InsurancePremiumSelection.selectedInsurancePremiums
-    }
-
   } 
 
   onAddRefundClicked(){
@@ -196,8 +198,14 @@ OnEditProviderProfileClick(){
   this.lovFacade.getPaymentMethodLov()
 }
 
+onAddRefundClick(){
+this.insuraceAddRefundClickSubject.next(true);
+}
+
+  /******  */
   selectDiffPayments(){
     this.isConfirmationClicked = false;
+    this.disableFeildsOnConfirmSelection = false;
   }
   closeAddEditRefundFormModalClicked(){
     this.modalCloseAddEditRefundFormModal.emit(true);  

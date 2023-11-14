@@ -66,7 +66,7 @@ export class FinancialVendorRefundFacade {
  
   private vendorRefundProcessDataSubject = new Subject<any>();
   vendorRefundProcessData$ = this.vendorRefundProcessDataSubject.asObservable();
- 
+
   private vendorRefundBatchDataSubject =  new Subject<any>();
   vendorRefundBatchData$ = this.vendorRefundBatchDataSubject.asObservable();  
  
