@@ -3,6 +3,7 @@ import {  Component } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain'; 
+import { DocumentFacade } from 'libs/shared/util-core/src/lib/application/document-facade';
 @Component({
   selector: 'cms-vendor-refund-page',
   templateUrl: './vendor-refund-page.component.html', 
@@ -16,6 +17,7 @@ export class VendorRefundPageComponent    {
    sortType = this.financialVendorRefundFacade.sortType;
    pageSizes = this.financialVendorRefundFacade.gridPageSizes;
    gridSkipCount = this.financialVendorRefundFacade.skipCount;
+   exportButtonShow$ = this.documentFacade.exportButtonShow$;
 
    sortValueRefundProcess = this.financialVendorRefundFacade.sortValueRefundProcess;
    sortProcessList = this.financialVendorRefundFacade.sortProcessList;
@@ -31,7 +33,8 @@ export class VendorRefundPageComponent    {
 
   vendorRefundAllPaymentsGridLists$ = this.financialVendorRefundFacade.vendorRefundAllPaymentsData$;
   constructor( 
-    private readonly financialVendorRefundFacade: FinancialVendorRefundFacade 
+    private readonly financialVendorRefundFacade: FinancialVendorRefundFacade ,
+    private documentFacade: DocumentFacade,
   ) {}
 
 
@@ -64,5 +67,11 @@ export class VendorRefundPageComponent    {
       data?.filter,
       
     );
+  }
+
+  exportAllRefundsGridData() {   
+    if (this.dataExportParameters) {       
+      this.documentFacade.getExportFile(this.dataExportParameters, `vendor-refunds/payments`,'All Refunds');
+    }
   }
 }

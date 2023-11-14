@@ -14,7 +14,9 @@ export class FinancialVendorRefundDataService {
   ) {}
 
 
-
+  getInsurnaceRefundInformation(insuranceRefundInformation:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums`, insuranceRefundInformation);
+  }
   loadVendorRefundProcessListService( ) {
     return of([
       {
@@ -108,7 +110,7 @@ export class FinancialVendorRefundDataService {
 
   loadVendorRefundAllPaymentsListService(recentClaimsPageAndSortedRequestDto : any) {
        return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/all`,recentClaimsPageAndSortedRequestDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payments`,recentClaimsPageAndSortedRequestDto
     );
   }
 

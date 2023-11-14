@@ -547,6 +547,29 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
       });
     }
 
+    loadRecentPremiumsByClient(data:any,clientId:any){
+      this.recentPremiumLoaderSubject.next(true);
+      data.filter = JSON.stringify(data.filter);
+ 
+      this.financialPremiumsDataService.loadRecentPremiumsByClient(data,clientId).subscribe({
+        next: (dataResponse) => {
+          this.recentPremiumListDataSubject.next(dataResponse);
+          if (dataResponse) {
+            const gridView = {
+              data: dataResponse['items'],
+              total: dataResponse['totalCount'],
+            };
+            this.recentPremiumListDataSubject.next(gridView);
+          }
+          this.recentPremiumLoaderSubject.next(false);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+          this.recentPremiumLoaderSubject.next(false);
+        },
+      });
+    }
+    
     loadPremium(type: string, premiumId: string){
       this.financialPremiumsDataService.loadPremium(type, premiumId)
       .subscribe({
