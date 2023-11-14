@@ -386,7 +386,7 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
       MaxResultCount : data.pageSize
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/${clientId}/recent-premiums`,recentPremiumsPageAndSortedRequestDto);
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/insurance-premiums/clients/${clientId}/recent-premiums`,recentPremiumsPageAndSortedRequestDto);
   }
 
   loadPremium(type: string, premiumId: string): Observable<InsurancePremiumDetails> {
