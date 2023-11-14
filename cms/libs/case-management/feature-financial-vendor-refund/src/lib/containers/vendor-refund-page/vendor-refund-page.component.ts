@@ -111,7 +111,7 @@ export class VendorRefundPageComponent {
       // );
       this.documentFacade.getExportFile(
         vendorPageAndSortedRequest,
-        `claims/test/payments`,
+        `refund/logs`,
         fileName
       );
     }
