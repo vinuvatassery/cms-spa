@@ -1,7 +1,6 @@
 <section class="k-dialog-body">
   <p>
-    Click on the left and right navigational arrows to browse batches. Select
-    whether to approve or send them back to the user who submitted them.
+    Click on the left and right navigational arrows to browse batches. Select whether to approve or send them back to the user who submitted them. Enter the send back notes and select the payments to send back.
   </p>
   <div class="custom_scroll_view mt-2">
     <kendo-scrollview
@@ -32,7 +31,7 @@
                 [toggleable]="true"
                 [selected]="item.batchStatus == approveStatus"
                 aria-label="Approve"
-                (selectedChange)="onApproveClicked(item, index)"
+                (selectedChange)="onBatchApproveClicked(item)"
               >
                 Approve
               </button>
@@ -40,9 +39,9 @@
                 kendoButton
                 id="sendBackBatch{{ index }}"
                 [toggleable]="true"
-                [selected]="item.batchStatus == 'SEND_BACK'"
+                [selected]="item.batchStatus == sendbackStatus"
                 aria-label="Send Back"
-                (selectedChange)="onSendbackClicked(item, index)"
+                (selectedChange)="onBatchSendbackClicked(item)"
               >
                 Send Back
               </button>
@@ -67,7 +66,11 @@
             </kendo-textarea-suffix>
           </kendo-textarea>
           </kendo-floatinglabel>
-
+          <div *ngIf="userLevel === UserLevel.Level1Value && item.batchStatus == sendbackStatus" class="mt-2">
+            <span class="mr-1"
+              >{{ sendBackPaymentCount }} of selected payments to be sent back</span
+            >
+          </div>
           <div class="app-c-table mt-2 mb-2" (click)="$event.stopPropagation()">
             <kendo-grid
               [resizable]="true"
@@ -82,10 +85,29 @@
               [columnMenu]="{ filter: true }"
               [sort]="state.sort"
               (dataStateChange)="dataStateChange($event)" 
-              [data]="batchDetailPaymentsList$ | async"
+              [data]="batchDetailPaymentsList"
               (filterChange)="filterChange($event)"
               [filter]="state.filter"
             >
+            <kendo-grid-column *ngIf="userLevel === UserLevel.Level1Value" title="Send Back" [width]="150" [sortable]="false">
+              <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                <div class="cms-button-group">
+                  <button kendoButton (selectedChange)="
+                    onPaymentSendbackClicked(
+                      $event,
+                      dataItem
+                    )
+                  "
+                  [selected]="dataItem.isSendBack"
+                  aria-label="Send Back"
+                  id="sendback{{ rowIndex }}"
+                  [toggleable]="true"
+                  >
+                    Send Back
+                  </button>
+                </div>
+              </ng-template>
+            </kendo-grid-column>
               <kendo-grid-column
                 field="paymentNbr"
                 title="Item #"
