@@ -40,8 +40,8 @@ export class FinancialPharmacyClaimsDataService {
   loadPharmacyClaimsBatchListService(params: GridFilterParam) {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/batches`, params);
   }
-  loadPharmacyClaimsAllPaymentsListService(params: GridFilterParam) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`, params);
+  loadPharmacyClaimsAllPaymentsListService(params: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/payments`, params);
   }
 
   loadBatchLogListService( ) {

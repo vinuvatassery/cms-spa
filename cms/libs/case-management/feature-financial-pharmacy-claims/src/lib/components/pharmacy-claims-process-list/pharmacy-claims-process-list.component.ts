@@ -193,17 +193,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     { columnName: 'ALL', columnDesc: 'All Columns' },
     { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
-    { columnName: 'paymentMethodCode', columnDesc: 'Payment Method' },
     { columnName: 'clientFullName', columnDesc: 'Client Name' },
-    { columnName: 'insuranceName', columnDesc: 'Name on Primary Insurance Card' },
     { columnName: 'clientId', columnDesc: 'Client ID' },
-    { columnName: 'paymentType', columnDesc: 'Payment Type' },
-    { columnName: 'amountPaid', columnDesc: 'Amount Paid' },
-    { columnName: 'indexCode', columnDesc: 'Index Code' },
-    { columnName: 'pcaCode', columnDesc: 'PCA Code' },
-    { columnName: 'objectCode', columnDesc: 'Object Code' },
-    { columnName: 'paymentStatus', columnDesc: 'Payment Status' },
-    { columnName: 'creationTime', columnDesc: 'Entry Date' }
   ];
 
   paymentMethodFilter = '';
@@ -338,7 +329,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   performSearch(data: any) {
     this.defaultGridState();
-    const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
+    const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'contains';
     this.filterData = {
       logic: 'and',
       filters: [
