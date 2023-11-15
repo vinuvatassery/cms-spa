@@ -310,8 +310,7 @@
             <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all claims included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-client-claims-list #rxClaims [clientClaimsListData$]="clientClaimsListData$" [pageSizes]="pageSizes"
-                        [sortValue]="sortValueClientClaims" [sortType]="sortType" [sort]="sortClientClaims"
+                    <cms-vendor-refund-client-claims-list #rxClaims [clientClaimsListData$]="clientClaimsListData$" 
                         (loadClientClaimsListEvent)="loadClientClaimsListGrid($event)"></cms-vendor-refund-client-claims-list>
                 </div>
             </div>

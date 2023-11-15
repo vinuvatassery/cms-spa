@@ -104,7 +104,9 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  totalGridRecordsCount: number = 0;
  sendReportCount: number = 0;
  allPaymentsListSubscription!: Subscription;
- 
+ vendorId: any;
+ clientId: any;
+ claimsType: any;
  
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
@@ -451,11 +453,14 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       this.printAuthorizationDialog.close();
     }
   }
-
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.addClientRecentClaimsDialog.close();
+  }
 
   
   clientRecentClaimsModalClicked(
-    template: TemplateRef<unknown> 
+    template: TemplateRef<unknown> ,data:any
   ): void {
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
@@ -466,6 +471,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
         duration: 200,
       },
     });
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
   }
 
   closeRecentClaimsModal(result: any) {

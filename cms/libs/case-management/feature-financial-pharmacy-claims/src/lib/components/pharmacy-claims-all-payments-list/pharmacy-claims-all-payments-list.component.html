@@ -147,7 +147,7 @@
       </kendo-grid-column>
       <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog)">
+          <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
             {{ dataItem.clientFullName }}
           </button>
         </ng-template>
@@ -360,14 +360,14 @@
       <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"> <h4 class="text-upper">  RECENT CLAIMS FOR Donna Summer payment </h4> </kendo-dialog-titlebar>
       <section class="k-dialog-body">
         <cms-pharmacy-claims-recent-claims-list
-          (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-pharmacy-claims-recent-claims-list>
+          (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
       </section>
       <kendo-dialog-actions>
         <div class="justify-content-between">
-          <div class="justify-content-end">
+          <div class="justify-content-end" (click)="onClientClicked(clientId)">
             <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
               Client Profile <span class="material-icons ml-1">
-                chevron_right
+                chevron_right 
               </span>
             </button>
 
