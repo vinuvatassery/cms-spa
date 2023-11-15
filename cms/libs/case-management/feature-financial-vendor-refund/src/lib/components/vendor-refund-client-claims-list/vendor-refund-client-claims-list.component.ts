@@ -156,6 +156,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
     };
     this. loadRefundClaimsGrid(gridDataRefinerValue);
     this.gridDataHandle();
+  
   }
 
   loadRefundClaimsGrid(data: any) {
