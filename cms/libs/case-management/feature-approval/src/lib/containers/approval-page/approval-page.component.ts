@@ -18,6 +18,8 @@ import {
   UserRoleType,
   FinancialVendorFacade,
   ContactFacade,
+  DrugsFacade,
+  InsurancePlanFacade,
   ImportedClaimFacade,
 } from '@cms/case-management/domain';
 import {
@@ -108,6 +110,12 @@ export class ApprovalPageComponent implements OnInit {
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  drugForm!:  FormGroup;
+  insurancePlanForm!: FormGroup;
+  insuranceTypelovForPlan$ = this.lovFacade.insuranceTypelovForPlan$;
+  pharmacyForm!: FormGroup;
+  insuranceVendorForm: FormGroup;
+  insuranceProviderForm: FormGroup;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -125,9 +133,15 @@ export class ApprovalPageComponent implements OnInit {
     private readonly importedClaimFacade:ImportedClaimFacade,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
-
+    private drugService: DrugsFacade,
+    private insurancePlanFacade : InsurancePlanFacade
   ) {
     this.healthCareForm = this.formBuilder.group({});
+    this.drugForm = this.formBuilder.group({});
+    this.insurancePlanForm = this.formBuilder.group({});
+    this.pharmacyForm = this.formBuilder.group({});
+    this.insuranceVendorForm = this.formBuilder.group({});
+    this.insuranceProviderForm = this.formBuilder.group({});
   }
 
   ngOnInit(): void {
@@ -149,6 +163,7 @@ export class ApprovalPageComponent implements OnInit {
       this.cd.detectChanges();
     });
     this.contactFacade.loadDdlStates();
+    this.lovFacade.getHealthInsuranceTypeLovsForPlan();
   }
 
   loadApprovalsGeneralGrid(event: any): void {
@@ -276,6 +291,7 @@ export class ApprovalPageComponent implements OnInit {
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Pharmacy
     ) {
       this.financialVendorFacade.getVendorDetails(userObject.approvalEntityId, false);
+       this.selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
     } else if (
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Drug ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan
@@ -286,11 +302,12 @@ export class ApprovalPageComponent implements OnInit {
       );
       this.selectedMasterDetail$ =
         this.pendingApprovalGeneralFacade.selectedMasterDetail$;
+
     }
   }
-  
+
   buildVendorForm() {
-  let form = this.formBuilder.group({
+    let form = this.formBuilder.group({
       providerName: [''],
       firstName: [''],
       lastName: [],
@@ -312,21 +329,47 @@ export class ApprovalPageComponent implements OnInit {
     this.healthCareForm = form;
   }
 
-  editClicked(event : any){
-    if(event)
+  editClicked(subTypeCode : any){
+    if(subTypeCode == PendingApprovalGeneralTypeCode.DentalClinic ||
+      subTypeCode == PendingApprovalGeneralTypeCode.MedicalClinic ||
+      subTypeCode ==  PendingApprovalGeneralTypeCode.DentalProvider ||
+      subTypeCode ==  PendingApprovalGeneralTypeCode.MedicalProvider)
     {
       this.buildVendorForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.Drug)
+    {
+      this.buildDrugForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsurancePlan) {
+      this.buildInsurancePlanForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.Pharmacy) {
+      this.buildPharmacyForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsuranceVendor) {
+      this.buildInsuranceVendorForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsuranceProvider) {
+      this.buildInsuranceProviderForm();
     }
   }
-
+  
   searchClinicVendorClicked(clientName: any) {
     this.financialVendorFacade.searchClinicVendor(clientName);
   }
 
   updateMasterDetailsClicked(event: any){
-    this.financialVendorFacade.updateProviderPanel(event);
+    if(event.subTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.Pharmacy ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.InsuranceVendor ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.InsuranceProvider) {
+        this.financialVendorFacade.updateVendorProfile(event.form);
+      } else if (event.subTypeCode === PendingApprovalGeneralTypeCode.Drug) {
+        this.drugService.updateDrugVendor(event.form);
+    } else if (event.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
+      this.insurancePlanFacade.updateInsurancePlan(event.form);
+    }
   }
-
+  
   onProviderNameClick(event: any) {
     this.paymentRequestId = event;
     this.providerDetailsDialog = this.dialogService.open({
@@ -357,6 +400,75 @@ export class ApprovalPageComponent implements OnInit {
   onEditProviderProfileClick() {
     this.contactFacade.loadDdlStates();
     this.lovFacade.getPaymentMethodLov();
+  }
+
+  buildDrugForm() {
+    let form = this.formBuilder.group({
+      providerName: [''],
+      drugName:[''],
+      brandName :[''],
+      ndcCode : [''],
+      drugType: [''],
+      deliveryMethod : ['']
+    })
+    this.drugForm = form;
+  }
+
+  buildInsurancePlanForm() {
+    let form = this.formBuilder.group({
+      providerName: [''],
+      termDate: [''],
+      startDate: [''],
+      dentalPlanFlag: [''],
+      canPayForMedicationFlag: [''],
+      healthInsuranceTypeCode: [''],
+      insurancePlanName: ['']
+    })
+    this.insurancePlanForm = form
+  }
+
+  buildPharmacyForm() {
+    let form = this.formBuilder.group({
+      pharmacyName : [''],
+      tin:[''],
+      npi:[''],
+      preferredPharmacy: [''],
+      mailCode:[''],
+      paymentMethod:[''],
+      contactFirstName: [''],
+      contactLastName:[''],
+      contactPhone: [''],
+      contactFax:[''],
+      contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
+    });
+    this.pharmacyForm = form;
+  }
+
+  buildInsuranceVendorForm() {
+    let form = this.formBuilder.group({
+      vendorName:[''],
+      nameOnCheck:[''],
+      nameOnEnvelop:[''],
+      tin:[''],
+      mailCode:[''],
+      paymentMethod:[''],
+      acceptsCombinedPayments:[''],
+      acceptsReport:[''],
+      paymentRunDate:[''],
+      contactFirstName: [''],
+      contactLastName:[''],
+      contactPhone: [''],
+      contactFax:[''],
+      contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
+    });
+    this.insuranceVendorForm = form;
+  }
+
+  buildInsuranceProviderForm() {
+    let form = this.formBuilder.group({
+      providerName : ['']
+    });
+    this.insuranceProviderForm = form;
   }
 
 }
