@@ -1,10 +1,12 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -25,7 +27,13 @@ import { Subject } from 'rxjs';
 export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isClientClaimsLoaderShow = false;
+  vendorRefundlistData!: [];
+  public selectedVendorRefunds: any[] = [];
+  gridData!: any;
+  myData: any;
   /** Constructor **/
+  constructor(private readonly cdr: ChangeDetectorRef,){}
+
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -49,14 +57,19 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-   
+  @Input() confirmClicked: any;
+  @Output() selectedVendorRefundsListEvent = new EventEmitter<any>();
   ngOnInit(): void {
+
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
     this.loadClientClaimsListGrid();
+    this.clientClaimsListData$.subscribe((value:any)=>{
+      this.myData = value.items;
+    });
   }
   ngOnChanges(): void {
     this.state = {
@@ -64,7 +77,10 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    this.loadClientClaimsListGrid();
+    if(this.confirmClicked == true) {
+      this.selectedVendorRefundsListEvent.emit(this.selectedVendorRefunds)
+    }
+    this.cdr.detectChanges();
   }
 
   private loadClientClaimsListGrid(): void {
@@ -113,6 +129,7 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
 
   gridDataHandle() { 
     this.clientClaimsListData$.subscribe((data: GridDataResult) => {
+      this.gridData = data
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
@@ -126,4 +143,12 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
     this.isClientClaimsLoaderShow = false;
 
   }
+
+  selectedKeysChange(selection: any) {
+    let selectedRowData = this.gridData.filter((i: any) => i.id == selection);
+    this.selectedVendorRefunds = selectedRowData;
+  console.log(this.selectedVendorRefunds);
+   
+  }
+ 
 }

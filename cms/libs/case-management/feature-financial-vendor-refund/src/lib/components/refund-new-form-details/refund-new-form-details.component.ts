@@ -73,14 +73,15 @@ export class RefundNewFormDetailsComponent{
   ];
 
   @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
+  inputConfirmationClicked!: boolean;
 
   constructor(  private readonly financialVendorRefundFacade: FinancialVendorRefundFacade) {}
   selectionChange(event: any){
     this.isConfirmationClicked = false
   }
   confirmationClicked (){
-    this.isConfirmationClicked = true
-
+    this.inputConfirmationClicked = true;
+    
   } 
   selectDiffPayments(){
     this.isConfirmationClicked = false;
@@ -98,13 +99,20 @@ export class RefundNewFormDetailsComponent{
     this.financialVendorRefundFacade.loadClaimsListGrid();
   }
 
-  loadPremiumsListGrid(event: any) { 
+  loadPremiumsListGrid(data?: any) { 
     this.financialVendorRefundFacade.loadPremiumsListGrid();
   }
-  loadClientClaimsListGrid(event: any) { 
-    this.financialVendorRefundFacade.loadClientClaimsListGrid();
+  loadClientClaimsListGrid(data?: any) { 
+    this.financialVendorRefundFacade.loadClientClaimsListGrid(data);
   }
   loadPharmacyPaymentsListGrid(event: any) { 
     this.financialVendorRefundFacade.loadPharmacyPaymentsListGrid();
+  }
+  selectedVendorRefundsList: any[] = [];
+  getSelectedVendorRefundsList(selectedVendorRefundsList : any){
+    this.selectedVendorRefundsList = selectedVendorRefundsList;
+    console.log(this.selectedVendorRefundsList);
+    this.isConfirmationClicked = true;
+
   }
 }

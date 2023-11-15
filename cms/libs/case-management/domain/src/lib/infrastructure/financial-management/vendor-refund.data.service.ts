@@ -390,10 +390,36 @@ export class FinancialVendorRefundDataService {
       
     ]);
   }
-  loadClientClaimsListService( ) {
+  loadClientClaimsListServiceS( ) {
     return of([
       {
         id:1,
+        item:1,
+        PharmacyName: 'XXXXXX XXXXXX',  
+        paymentMethod: 'paymentMethod',
+        clientName:'XXXXXX XXXXXX XXXX', 
+        nameOnPrimaryInsuranceCard:'name on ', 
+        clientId:'XXXXXX', 
+        RXNumber:'XXXXXX', 
+        FillDate:'XX/XX/XXXX', 
+        ndcCode:'XXXXXX', 
+        brandName:'XXXXXX', 
+        drugName: 'XXXXXX',
+        paymentType: 'XXXXXX',
+        amountPaid: 'xx.xx',
+        rxQty: 'XX',
+        rxType: 'XX',
+        rxDaysSupply: 'XX',
+        indexCode: 'XXXX',
+        pcaCode: 'XXXX',
+        objectCode: 'XXXX',
+        paymentStatus: 'XXXX',
+        warrantNumber: 'XXXXXX',
+        entryDate: 'XX/XX/XXXX',
+        by: 'by',
+      },
+      {
+        id:2,
         item:1,
         PharmacyName: 'XXXXXX XXXXXX',  
         paymentMethod: 'paymentMethod',
@@ -453,6 +479,10 @@ export class FinancialVendorRefundDataService {
       
       
     ]);
+  }
+  loadClientClaimsListService(param:any){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/refund-information`,param);
   }
 
 }
