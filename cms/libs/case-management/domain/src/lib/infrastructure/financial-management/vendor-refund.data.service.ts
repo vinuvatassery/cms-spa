@@ -390,7 +390,7 @@ export class FinancialVendorRefundDataService {
       
     ]);
   }
-  loadClientClaimsListServiceS( ) {
+  loadClientClaimsListService( ) {
     return of([
       {
         id:1,
@@ -477,12 +477,8 @@ export class FinancialVendorRefundDataService {
         by: 'by',
       },
       
-      
     ]);
   }
-  loadClientClaimsListService(param:any){
-    return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/refund-information`,param);
-  }
+
 
 }
