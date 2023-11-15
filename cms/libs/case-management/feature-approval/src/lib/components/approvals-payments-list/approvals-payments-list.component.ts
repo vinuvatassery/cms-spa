@@ -262,7 +262,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   onOpenViewPaymentsBatchClicked(data?: any,isSendbackMode?:any) {
-    this.isSendbackMode=isSendbackMode;    
+    if(this.userLevel == UserLevel.Level1Value){
+      this.isSendbackMode = isSendbackMode;
+    }    
     this.isViewPaymentsBatchDialog = true;
     this.selectedApprovalId = data?.approvalId;
     this.dataItem=data;
@@ -272,7 +274,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
 
   onCloseViewPaymentsBatchClicked() {
     this.isViewPaymentsBatchDialog = false;
-    if(this.isSendbackMode)
+    if(this.isSendbackMode && this.userLevel == UserLevel.Level1Value)
     {
       this.dataItem.batchStatus="";
       this.assignRowDataToMainList(this.dataItem);
@@ -548,20 +550,44 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.batchStatus = this.sendbackStatus;
       dataItem.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       dataItem.sendBackNotesInValid = true;
-      this.onOpenViewPaymentsBatchClicked(dataItem,true);
-    } else if (dataItem.batchStatus == this.sendbackStatus) {
-      this.isSendbackMode=false;
-      this.onOpenSendbackDeselectingWarningDialogClicked(dataItem);
-    } else {
+      if(this.userLevel == UserLevel.Level1Value){
+        this.onOpenViewPaymentsBatchClicked(dataItem,true);
+      }
+    } 
+    else if (dataItem.batchStatus == this.sendbackStatus) {
+      if(this.userLevel == UserLevel.Level1Value){
+        this.isSendbackMode=false;
+        this.onOpenSendbackDeselectingWarningDialogClicked(dataItem);
+      }
+      else{
+        dataItem.batchStatus = '';
+        dataItem.sendBackNotesInValidMsg = '';
+        dataItem.sendBackNotes = '';
+        dataItem.sendBackNotesInValid = false;
+        dataItem.sendBackButtonDisabled = true;
+      }
+    } 
+    else {
       dataItem.batchStatus = this.sendbackStatus;
       dataItem.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       dataItem.sendBackNotesInValid = true;
       dataItem.sendBackButtonDisabled = false;
-      this.onOpenViewPaymentsBatchClicked(dataItem,true);
+      if(this.userLevel == UserLevel.Level1Value){
+        this.onOpenViewPaymentsBatchClicked(dataItem,true);
+      }
     }
     this.cd.detectChanges();
     this.sendBackNotesChange(dataItem);
-    dataItem.batchStatus="";
+    if(this.userLevel == UserLevel.Level1Value){
+      dataItem.batchStatus="";
+    }
+    else{
+      this.assignRowDataToMainList(dataItem);
+      this.ngDirtyInValid(dataItem, control, rowIndex);
+      this.isApproveAllClicked = false;
+      this.approveAndSendbackCount();
+      this.enableSubmitButtonMain();   
+    }
   }
 
   private tAreaVariablesInitiation(dataItem: any) {
@@ -935,7 +961,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
 
   loadSubmittedSummaryData() {
     this.selectedApprovalSendbackDataRows
-      .filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus)
+      .filter((x: any) => x.batchStatus == this.approveStatus)
       .forEach((currentPage: any, index: number) => {
         this.selectedBatchIds.push(currentPage.paymentRequestBatchId);
       });
