@@ -122,18 +122,6 @@ export class FinancialVendorRefundFacade {
   private unbatchRefundsSubject =  new Subject<any>();
   unbatchRefunds$ = this.unbatchRefundsSubject.asObservable();
 
-  private medicalProviderSearchLoaderVisibilitySubject = new Subject<boolean>;
-  medicalProviderSearchLoaderVisibility$= this.medicalProviderSearchLoaderVisibilitySubject.asObservable(); 
-
-  private clientSearchLoaderVisibilitySubject = new Subject<boolean>;
-  clientSearchLoaderVisibility$= this.clientSearchLoaderVisibilitySubject.asObservable();
-
-  public clientSubject = new BehaviorSubject<any>([]);
-  clients$ = this.clientSubject.asObservable();
- 
-  public pharmaciesSubject = new Subject<any>;
-  pharmacies$ = this.pharmaciesSubject.asObservable();
-
   public vendorsSubject = new Subject<any>;
   vendors$ = this.vendorsSubject.asObservable();
   /** Private properties **/
@@ -240,46 +228,6 @@ export class FinancialVendorRefundFacade {
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
-    });
-  }
-
-  loadClientBySearchText(text : string): void {
-    
-    this.clientSearchLoaderVisibilitySubject.next(true);
-    if(text){
-      this.financialVendorRefundDataService.loadClientBySearchText(text).subscribe({
-        next: (caseBySearchTextResponse) => {
-          caseBySearchTextResponse?.forEach((client:any) => {
-            client.clientNames = `${client.clientFullName ?? ''} ${client.clientId?? ''}  ${client.ssn?? ''}`;
-          });
-          this.clientSubject.next(caseBySearchTextResponse);
-          this.clientSearchLoaderVisibilitySubject.next(false);
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-        },
-      });
-    }
-    else{
-      this.clientSubject.next(null);
-      this.clientSearchLoaderVisibilitySubject.next(false);
-    }
-  }
-  loadPharmacyBySearchText(searchText: string,) {
-    
-   this.medicalProviderSearchLoaderVisibilitySubject.next(true);
-    return this.financialVendorRefundDataService.loadPharmacyBySearchText(searchText).subscribe({
-      next: (response: Pharmacy[]) => {
-        response?.forEach((vendor:any) => {
-          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
-        });
-        this.pharmaciesSubject.next(response);
-        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
-      },
-      error: (err) => {
-        this.medicalProviderSearchLoaderVisibilitySubject.next(false);
-        this.loggingService.logException(err);
-      }
     });
   }
   loadvendorBySearchText(searchText: string,) {
