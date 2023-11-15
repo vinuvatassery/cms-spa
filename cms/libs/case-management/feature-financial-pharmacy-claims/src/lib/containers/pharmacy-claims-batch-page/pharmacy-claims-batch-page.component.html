@@ -1,15 +1,19 @@
 
  <cms-pharmacy-claims-batches-log-lists [batchLogGridLists$]="batchLogGridLists$"
- [pageSizes]="pageSizes" [sortValue]="sortValue"
+ [loader$]="paymentByBatchGridLoader$"
+ [pageSizes]="pageSizes" [sortValue]="sortValue" [claimsType]="claimsType"
  [sortType]="sortType" [sort]="sort" 
  (exportGridDataEvent)="exportPharmacyBatchesGridData()"
  [exportButtonShow$]="exportButtonShow$" 
  (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
  [batchId]="batchId"
- (unBatchEntireBatchEvent)="unBatchEntireBatchClick($event)"
+ (unBatchEntireBatchEvent)="unBatchEntireBatchClick()"
  (unBatchClaimsEvent)="unBatchClaimClick($event)"
  [unbatchClaim$]="unbatchClaim$"
- [unbatchEntireBatch$]="unbatchEntireBatch$">
+ [unbatchEntireBatch$]="unbatchEntireBatch$"
+ [deleteClaims$]="deleteClaims$"
+ (ondeletebatchesClickedEvent)="ondeletebatchesClicked($event)"
+ >
 </cms-pharmacy-claims-batches-log-lists>
 
  

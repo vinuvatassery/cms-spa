@@ -6,6 +6,7 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { GridFilterParam } from '../../entities/grid-filter-param';
 import { BatchPharmacyClaims } from '../../entities/financial-management/batch-pharmacy-claims';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsDataService {
@@ -26,6 +27,14 @@ export class FinancialPharmacyClaimsDataService {
   }
   batchClaims(batchPharmacyClaims: BatchPharmacyClaims) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/batch`, batchPharmacyClaims);
+  }
+  deleteClaims(batchPharmacyClaims: BatchPharmacyClaims) {
+      const options = {
+        body: {
+          paymentRequestIds: batchPharmacyClaims,
+        }      
+   }
+    return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments`, options);
   }
 
   loadPharmacyClaimsBatchListService(params: GridFilterParam) {
@@ -106,22 +115,10 @@ export class FinancialPharmacyClaimsDataService {
     ]);
   }
 
-  loadReconcileListService(){
-    return of([
-      {
-        id:1,
-      pharmacyName: 'Vendor Name',
-      TIN:'XXXXXX',
-      pmtMethod:'pmtMethod',
-      datePmtReconciled:'XX/XX/XXXX',
-      datePmtSend:'XX/XX/XXXX',
-      pmtAmount:'XX.XX',
-      note:'XXXX XXXXXX XXXXXX',
-      },
-
-
-    ]);
+  loadReconcileListService(batchId:any,paginationParameters:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/${batchId}/reconcile-payments`,paginationParameters);
   }
+
   addPharmacyClaim(data: any) {
     return this.http.put<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`,      data    );
@@ -160,4 +157,30 @@ export class FinancialPharmacyClaimsDataService {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/drugs/ndcCode=${searchText}`);
   }
+    loadPaymentsByBatch(batchId: string, params:GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments`, params);
+  }
+  loadPharmacyPrescriptionsServices(batchId: string, params:GridFilterParam, claimType:string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payments/${batchId}/prescriptions`, params);
+  }
+  
+  loadRecentClaimListService(data:any): Observable<any> {
+    
+    const recentClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/recent-claims`,recentClaimsPageAndSortedRequestDto
+    );
+  }
+
 }

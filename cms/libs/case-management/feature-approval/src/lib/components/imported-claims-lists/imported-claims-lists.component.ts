@@ -26,7 +26,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isImportedClaimsGridLoaderShow = false;
+  isImportedClaimsGridLoaderShow = true;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -34,7 +34,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   @Input() approvalsImportedClaimsLists$: any;
   @Output() loadImportedClaimsGridEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'clientName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -54,90 +54,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   private expectationDialog: any;
   private reviewPossibleMatchesDialog: any;
 
-  // Note to Developer: Please remove below when implementing API call and use this variable in data grid "approvalsImportedClaimsLists$""
-  claimsGridLists = [
-    {
-      id: 1,
-      clientName: 'Attention',
-      namePrimaryInsuranceCard: 'Attention',
-      claimSource: 'Attention',
-      policyID: 'xxxx',
-      amountDue: 'xxxx',
-      dateService: 'xxx',
-      policyIDMatch: 'xx/xx/xxxx',
-      eligibilityMatch: '12/2019',
-      validInsurance: 'Immediate',
-      belowMaxBenefits: 'Expense',
-      entryDate: 'Rent Deposit',
-      isDelete: 'Y',
-      subRow: {
-        type: '01',
-        expand: 1,
-      },
-    },
-    {
-      id: 2,
-      clientName: 'Attention',
-      namePrimaryInsuranceCard: 'Attention',
-      claimSource: 'Attention',
-      policyID: 'xxxx',
-      amountDue: 'xxxx',
-      dateService: 'xxx',
-      policyIDMatch: 'xx/xx/xxxx',
-      eligibilityMatch: '12/2019',
-      validInsurance: 'Immediate',
-      belowMaxBenefits: 'Expense',
-      entryDate: 'Rent Deposit',
-      isDelete: 'N',
-      subRow: {
-        type: '02',
-        expand: 1,
-      },
-    },
-    {
-      id: 3,
-      clientName: 'Attention',
-      namePrimaryInsuranceCard: 'Attention',
-      claimSource: 'Attention',
-      policyID: 'xxxx',
-      amountDue: 'xxxx',
-      dateService: 'xxx',
-      policyIDMatch: 'xx/xx/xxxx',
-      eligibilityMatch: '12/2019',
-      validInsurance: 'Immediate',
-      belowMaxBenefits: 'Expense',
-      entryDate: 'Rent Deposit',
-      isDelete: 'N',
-      subRow: {
-        type: '03',
-        expand: 1,
-      },
-    },
-    {
-      id: 4,
-      clientName: 'Attention',
-      namePrimaryInsuranceCard: 'Attention',
-      claimSource: 'Attention',
-      policyID: 'xxxx',
-      amountDue: 'xxxx',
-      dateService: 'xxx',
-      policyIDMatch: 'xx/xx/xxxx',
-      eligibilityMatch: '12/2019',
-      validInsurance: 'Immediate',
-      belowMaxBenefits: 'Expense',
-      entryDate: 'Rent Deposit',
-      isDelete: 'N',
-      subRow: {
-        type: '04',
-        expand: 1,
-      },
-    },
-  ];
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router, private dialogService: DialogService,private readonly router: Router) {}
 
   ngOnInit(): void {
-    this.loadImportedClaimsListGrid();
   }
   ngOnChanges(): void {
     this.state = {
@@ -145,11 +65,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
     this.loadImportedClaimsListGrid();
   }
-  public expandInStockProducts({ dataItem }: RowArgs): boolean {
-    return dataItem.subRow.expand === 1;
+  public expandInClaimException({ dataItem }: RowArgs): boolean { 
+    return true;
   }
 
   private loadImportedClaimsListGrid(): void {
@@ -167,10 +86,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     sortTypeValue: string
   ) {
     this.isImportedClaimsGridLoaderShow = true;
-    const gridDataRefinerValue = {
+    const gridDataRefinerValue = { 
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
+      pageSize: maxResultCountValue,
+      sort: sortValue,
       sortType: sortTypeValue,
     };
     this.loadImportedClaimsGridEvent.emit(gridDataRefinerValue);
@@ -234,6 +153,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
+    ;
     this.approvalsImportedClaimsLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
@@ -243,11 +163,15 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       this.gridImportedClaimsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isImportedClaimsGridLoaderShow = false;
+      } else {
+        this.isImportedClaimsGridLoaderShow = false;
       }
-    });
-    this.isImportedClaimsGridLoaderShow = false;
+    }); 
   }
+  onClientClicked(clientId: any) {
+    this.router.navigate([`/case-management/cases/case360/${clientId}`]);
 
+  }
   onSearchClientsDialogClicked(template: TemplateRef<unknown>): void {
     this.searchCaseDialog = this.dialogService.open({
       content: template,

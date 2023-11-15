@@ -18,6 +18,7 @@ import {
   UserRoleType,
   FinancialVendorFacade,
   ContactFacade,
+  ImportedClaimFacade,
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
@@ -60,9 +61,9 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
   sortValueApprovalPaymentsApproval =
     this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
-  sortImportedClaimsList = this.approvalFacade.sortImportedClaimsList;
+  sortImportedClaimsList = this.importedClaimFacade.sortImportedClaimsList;
   sortValueImportedClaimsAPproval =
-    this.approvalFacade.sortValueImportedClaimsAPproval;
+    this.importedClaimFacade.sortValueImportedClaimsAPproval;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
   pendingApprovalPaymentsCount$ =
     this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
@@ -73,7 +74,7 @@ export class ApprovalPageComponent implements OnInit {
   approvalsGeneralLists$ =
     this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ =
-    this.approvalFacade.approvalsImportedClaimsLists$;
+    this.importedClaimFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
   approvalsPaymentsLists$ =
     this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
@@ -121,6 +122,7 @@ export class ApprovalPageComponent implements OnInit {
     private readonly financialVendorFacade: FinancialVendorFacade,
     private contactFacade: ContactFacade,
     private formBuilder: FormBuilder,
+    private readonly importedClaimFacade:ImportedClaimFacade,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
 
@@ -184,7 +186,7 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   loadImportedClaimsGrid(event: any): void {
-    this.approvalFacade.loadImportedClaimsLists();
+    this.importedClaimFacade.loadImportedClaimsLists(event);
   }
   notificationTriger() {
     this.approvalFacade.NotifyShowHideSnackBar(

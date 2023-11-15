@@ -60,7 +60,6 @@
     [skip]="state.skip" 
     [groupable]="false" 
     [reorderable]="true" 
-    [resizable]="true"
     [columnMenu]="{ filter: true }" 
     [sort]="state.sort" 
     [navigable]="isProcessGridExpand" 
@@ -75,7 +74,7 @@
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedProcessClaims">
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
-      [width]="40"></kendo-grid-checkbox-column>
+      [width]="40" ></kendo-grid-checkbox-column>
     <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="250">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.PharmacyName" kendoButton look="flat" class="card-link-button"
@@ -114,7 +113,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="200">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog)">
+        <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
           {{ dataItem.clientFullName }}
         </button>
       </ng-template>
@@ -283,12 +282,11 @@
 
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="" *ngIf="isProcessGridExpand">0 claims(s) to be deleted</span>
-  <span class="" *ngIf="!isProcessGridExpand">{{ selectedProcessClaims.length}} payment(s) selected</span>
+  <span *ngIf="isDeleteBatchClosed" class="">{{selectedProcessClaims.length}} claims(s) to be deleted</span>
+  <span class="" *ngIf="!isProcessGridExpand &&!isDeleteBatchClosed">{{ selectedProcessClaims.length}} payment(s) selected</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
-
   <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed"
     (click)="onDeleteClaimsOpenClicked(deleteClaimsConfirmationDialog)"> <span class="material-icons mr-1"
       aria-label="Delete"> delete</span> Delete </button>
@@ -299,7 +297,7 @@
   <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="claimsProcessMore"
     class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-    <div class="btn-inner-block" (click)="onClickOpenAddEditClaimsFromModal(addEditClaimsDialog,'')">
+    <div class="btn-inner-block" (click)="onClickOpenAddEditClaimsFromModal(addEditClaimsDialog,'00000000-0000-0000-0000-000000000000')">
       <span class="material-icons" aria-label="New Claims" aria-hidden="false">add</span>
       New Claim
     </div>
@@ -321,7 +319,7 @@
 </ng-template>
 <ng-template #deleteClaimsConfirmationDialog>
   <cms-pharmacy-claims-delete-claims
-    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"></cms-pharmacy-claims-delete-claims>
+  (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)" (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked()" [selectedProcessClaimsCount] = "selectedProcessClaims.length" [deletemodelbody]="deletemodelbody"></cms-pharmacy-claims-delete-claims>
 </ng-template>
 <ng-template #addEditClaimsDialog>
   <cms-pharmacy-claims-detail-form
@@ -347,14 +345,14 @@
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
-  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR Donna Summer </h4></kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}} </h4></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-pharmacy-claims-recent-claims-list
-      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-pharmacy-claims-recent-claims-list>
+      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
   </section>
   <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
+    <div class="justify-content-between" >
+      <div class="justify-content-end" (click)="onClientClicked(clientId)">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
           Client Profile <span class="material-icons ml-1">
             chevron_right
