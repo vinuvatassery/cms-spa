@@ -26,7 +26,6 @@ export class PharmacyClaimsBatchPageComponent {
   deleteClaims$ = this.financialPharmacyClaimsFacade.deleteClaims$;
   paymentByBatchGridLoader$ = this.financialPharmacyClaimsFacade.paymentByBatchGridLoader$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
-  exportButtonShow$ = this.documentFacade.exportButtonShow$;
   letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
   letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
   claimsType= 'pharmacies';
@@ -77,9 +76,9 @@ export class PharmacyClaimsBatchPageComponent {
   }
   ondeletebatchesClicked(event:any){
     this.financialPharmacyClaimsFacade.deletebatches(event);
-    }
+  }
 
   loadEachLetterTemplate(event: any) {
-        this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);
-    }
+    this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);
+  }
 }

@@ -22,18 +22,18 @@
                         </div>
                         <common-grid-loader-component *ngIf="letterContentLoader">
                         </common-grid-loader-component>
-                        <div class="flex-row align-items-end">
+                        <div class="flex-row align-items-end" *ngIf="!letterContentLoader">
                               <div class="flex-col flex-col-3">
                                     <kendo-floatinglabel text="Account Number">
                                           <kendo-textbox [fillMode]="formUiStyle.inputFillMode"  
-                                                (valueChange)="onAccountNumberChange($event)">
+                                          [(ngModel)]="last4OfVisaCard" (valueChange)="onAccountNumberChange($event)">
                                           </kendo-textbox>
                                     </kendo-floatinglabel>
                               </div>
                               <div class="flex-col flex-col-3">
                                     <kendo-floatinglabel text="Expiration Date">
                                           <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" (valueChange)="onExpirationDateChange($event)"
-                                          format="MM/yyyy" formatPlaceholder="formatPattern" placeholder="" bottomView="year">
+                                          [(ngModel)]="cardExpirationDate" format="MM/yyyy" formatPlaceholder="formatPattern" placeholder="" bottomView="year">
                                           </kendo-datepicker>
                                     </kendo-floatinglabel>
                               </div>
@@ -50,7 +50,7 @@
                               </div>
                         </div>
 
-                        <div class="flex-row">
+                        <div class="flex-row" *ngIf="!letterContentLoader">
                               <div class="flex-col flex-col-3">
                                     <kendo-floatinglabel text="Authorized By">
                                           <kendo-textbox [fillMode]="formUiStyle.inputFillMode">

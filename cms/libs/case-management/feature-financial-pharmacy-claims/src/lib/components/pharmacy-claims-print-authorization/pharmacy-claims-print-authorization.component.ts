@@ -30,8 +30,8 @@ export class PharmacyClaimsPrintAuthorizationComponent {
   reconcileArray:any=[]; 
   finalPrintList!: any[];
   returnResultFinalPrintList!: any[];
-  last4OfVisaCard!: any;
-  cardExpirationDate!: any;
+  last4OfVisaCard: any = null;
+  cardExpirationDate!: Date;
   cardExpirationMonth!: any;
   cardExpirationYear!: any;
   authorizedDate!: any;
@@ -80,11 +80,6 @@ export class PharmacyClaimsPrintAuthorizationComponent {
     this.letterContentLoaderSubscription();
     this.getLoggedInUserProfile(); 
     this.authorizedDate = new Date();
-  }
-
-  ngOnDestroy(): void {
-    this.letterContentSubscription.unsubscribe();
-    this.letterContentListItemSubscription.unsubscribe();
   }
 
   letterContentLoaderSubscription() {
@@ -169,11 +164,6 @@ export class PharmacyClaimsPrintAuthorizationComponent {
 
   onPrintAdviceLetterClicked(buttonText: string) {
     if (buttonText == 'PRINT') {
-      this.returnResultFinalPrintList[this.currentIndex].last4OfVisaCard = this.last4OfVisaCard;
-      this.returnResultFinalPrintList[this.currentIndex].cardExpirationMonth = this.cardExpirationMonth;
-      this.returnResultFinalPrintList[this.currentIndex].cardExpirationYear = this.cardExpirationYear;
-      this.returnResultFinalPrintList[this.currentIndex].loginUserName = this.loginUserName;
-      this.returnResultFinalPrintList[this.currentIndex].authorizedDate = this.intl.formatDate(this.authorizedDate, this.dateFormat);
       this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
     } else {
       this.reconcilePaymentsAndPrintAdviceLetter();
@@ -182,6 +172,13 @@ export class PharmacyClaimsPrintAuthorizationComponent {
 
   generateAndPrintAdviceLetter(request:any) {
     this.loaderService.show();
+    request.last4OfVisaCard = this.last4OfVisaCard;
+    request.cardExpirationDate = this.cardExpirationDate;
+    request.cardExpirationMonth = this.cardExpirationMonth;
+    request.cardExpirationYear = this.cardExpirationYear;
+    request.loginUserName = this.loginUserName;
+    request.isPrintLetter = StatusFlag.Yes;
+    request.authorizedDate = this.intl.formatDate(this.authorizedDate, this.dateFormat);
     this.financialPharmacyClaimsFacade.viewAdviceLetterData(request)
       .subscribe({
         next: (data: any) => {
@@ -289,7 +286,7 @@ onAccountNumberChange(event: any){
 }
 
 onExpirationDateChange(event: any){
-  this.cardExpirationDate = this.intl.formatDate(event, this.dateFormat);
+  this.cardExpirationDate = new Date(this.intl.formatDate(event, this.dateFormat));
   this.cardExpirationMonth = event.getMonth() + 1; 
   let fullYear = event.getFullYear().toString();
   this.cardExpirationYear = fullYear.slice(-2);

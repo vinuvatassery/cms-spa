@@ -173,7 +173,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     
     {
       buttonType: 'btn-h-primary',
-      text: 'Reconcile Payments',
+      text: 'RECONCILE PAYMENTS',
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
@@ -182,7 +182,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Authorization(s)',
+      text: 'PRINT VISA AUTHORIZATIONS',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
@@ -433,6 +433,15 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAuthorizationClicked = false;
+    this.markAsUnChecked(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+    this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists?.data);
+    this.unCheckedProcessRequest = [];
+    this.checkedAndUncheckedRecordsFromSelectAll = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterUnSelected = [];
+    this.selectAll = false;
+    this.recordCountWhenSelectallClicked = 0;
+    this.sendReportCount = 0;
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {

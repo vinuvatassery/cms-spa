@@ -41,7 +41,11 @@ export class FinancialPharmacyClaimsFacade {
   private unbatchClaimSubject =  new Subject<any>();
   unbatchClaims$ = this.unbatchClaimSubject.asObservable();
  
- 
+  private warrantNumberChangeSubject = new Subject<any>();
+  warrantNumberChange$ = this.warrantNumberChangeSubject.asObservable();
+
+  private warrantNumberChangeLoaderSubject = new Subject<any>();
+  warrantNumberChangeLoader$ = this.warrantNumberChangeLoaderSubject.asObservable();
   
 
   public sortValuePharmacyClaimsProcess = 'creationTime';
@@ -604,4 +608,5 @@ viewAdviceLetterData(printAdviceLetterData: any) {
 reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any) {
   return this.financialPharmacyClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData);
 }
+
 }

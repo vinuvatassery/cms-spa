@@ -79,7 +79,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     
     {
       buttonType: 'btn-h-primary',
-      text: 'Reconcile Payments',
+      text: 'RECONCILE PAYMENTS',
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
@@ -87,7 +87,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Visa Authorizations',
+      text: 'PRINT VISA AUTHORIZATIONS',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
@@ -599,6 +599,17 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintVisaAuthorizationClicked = false;
+    this.selectAll = false;
+    this.selectedDataRows = [];
+    this.selectedCount = 0;
+    this.noOfRecordToPrint = 0;
+    this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
+    this.markAsUnChecked(this.selectedDataIfSelectAllUnchecked);
+    this.selectedDataRows.PrintAdviceLetterSelected = [];
+    this.selectedDataRows.PrintAdviceLetterUnSelected = [];
+    this.unCheckedPaymentRequest=[];
+    this.selectedDataIfSelectAllUnchecked=[];
+    this.loadBatchLogListGrid();
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {

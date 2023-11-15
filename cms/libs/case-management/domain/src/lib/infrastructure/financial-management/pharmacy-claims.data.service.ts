@@ -199,6 +199,6 @@ export class FinancialPharmacyClaimsDataService {
   }
 
   reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/payments/all/reconcile-payments`,reconcileData);
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/all/reconcile-payments`,reconcileData);
   }
 }
