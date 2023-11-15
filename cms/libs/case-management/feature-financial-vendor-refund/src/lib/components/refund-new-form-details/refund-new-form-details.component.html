@@ -18,7 +18,7 @@
                         valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
                         placeholder="Search Client Name, ID, SSN or DOB"
                         [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                        [filterable]="true" formControlName="client"
+                        [filterable]="true"
                         (filterChange)="loadClientBySearchText($event)"
                         (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient"
                         [disabled]="disableFeildsOnConfirmSelection">
@@ -87,7 +87,7 @@
                     [fillMode]="formUiStyle.dropDownFillMode"
                     placeholder="Search pharmacy"
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                    [filterable]="true" formControlName="medicalProvider"
+                    [filterable]="true" 
                     (filterChange)="searchPharmacy($event)" [data]="pharmacySearchResult$ | async"
                     [(ngModel)]="selectedMedicalProvider" (valueChange)="onProviderValueChange($event)"
                     >

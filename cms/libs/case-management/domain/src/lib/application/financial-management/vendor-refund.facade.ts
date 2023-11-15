@@ -238,6 +238,7 @@ export class FinancialVendorRefundFacade {
         response?.forEach((vendor:any) => {
           
           vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+       
         });
         this.vendorsSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
