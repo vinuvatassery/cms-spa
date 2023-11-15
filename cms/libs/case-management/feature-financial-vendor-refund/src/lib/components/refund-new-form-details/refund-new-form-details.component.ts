@@ -137,43 +137,38 @@ export class RefundNewFormDetailsComponent{
       if (this.clientId != null && this.vendorId != null) {
         this.isRefundGridClaimShow = true;
       } 
-        
-      else{
-        this.isRefundGridClaimShow = false;
-      }
     }
+    else{
+      this.clientId=null;
+    }
+    
   }
   showHideServicesListForm(){
-    if(this.refundClaimForm.controls['selectedMedicalProvider'].value &&  this.refundClaimForm.controls['client'].value)
+    if(this.refundClaimForm.controls['medicalProvider'].value &&  this.refundClaimForm.controls['selectedClient'].value )
     {
-      
       this.showServicesListForm = true;
-    
     }
     else
     {
-      
       this.showServicesListForm = false;
-      this.isRefundGridClaimShow = false;
-   
     }
   }
-  searchPharmacy(searchText: any) {
+  searchPharmacy(searchText: any) {;
     if (!searchText || searchText.length == 0) {
       return;
     }
     this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText);
   }
   onProviderValueChange($event: any) {
+    if($event==undefined){ 
+      this.vendorId=null;
+    }
     this.vendorId = $event.vendorId;
     this.vendorName = $event.vendorName;
     this.providerTin = $event;
     if (this.clientId != null && this.vendorId != null){
       this.isRefundGridClaimShow = true;
     } 
-    else{
-      this.isRefundGridClaimShow = false;
-    }
   }
   initRefundForm() {
     this.refundClaimForm = this.formBuilder.group({

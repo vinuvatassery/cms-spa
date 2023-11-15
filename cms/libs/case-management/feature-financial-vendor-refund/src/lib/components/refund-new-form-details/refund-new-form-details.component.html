@@ -22,7 +22,7 @@
                         [filterable]="true" formControlName="client"
                         (filterChange)="loadClientBySearchText($event)"
                         (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient"
-                        (blur)="showHideServicesListForm()">
+                        >
                             <button kendoButton fillMode="clear" icon="image"></button>
                             <kendo-combobox-column>
                                 <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
@@ -91,7 +91,7 @@
                     [filterable]="true" formControlName="medicalProvider"
                     (filterChange)="searchPharmacy($event)" [data]="pharmacySearchResult$ | async"
                     [(ngModel)]="selectedMedicalProvider" (valueChange)="onProviderValueChange($event)"
-                    (blur)="showHideServicesListForm()">
+                    >
                         <kendo-combobox-column>
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                 <span>{{ dataItem.vendorName }}</span>
@@ -431,7 +431,7 @@
             </div>
         </div>
         <!-- RX Content -->
-  <div class="add_new_bottom_section" *ngIf="isRefundGridClaimShow" id="isRefundGridClaimShow">
+  <div class="add_new_bottom_section" *ngIf="vendorId && clientId">
             <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all claims included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
