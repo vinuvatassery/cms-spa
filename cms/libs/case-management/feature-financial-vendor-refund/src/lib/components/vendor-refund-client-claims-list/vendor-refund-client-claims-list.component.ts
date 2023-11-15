@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -42,6 +42,9 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
+  paymentStatusType:any;
+  public selectedClaims: any[] = [];
+  paymentStatusCode =null
   searchValue = '';
   isFiltered = false;
   filter!: any;
