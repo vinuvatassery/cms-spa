@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { DrugsFacade, FinancialVendorFacade, InsurancePlanFacade, PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
+import { DrugType, DrugsFacade, FinancialVendorFacade, InsurancePlanFacade, PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
@@ -63,11 +63,11 @@ export class ApprovalsEditItemsComponent implements OnInit {
   private getDrugType() {
     if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.Drug) {
       if (this.selectedMasterData.hiv == 'YES') {
-        this.drugType = 'HIV';
+        this.drugType = DrugType.Hiv;
       } else if (this.selectedMasterData.hepatitis == 'YES') {
-        this.drugType = 'HEPA';
+        this.drugType = DrugType.Hepatitis;
       } else if (this.selectedMasterData.opportunisticInfection == 'YES') {
-        this.drugType = 'OPINF';
+        this.drugType = DrugType.OpportunisticInfection;
       }
     }
   }
