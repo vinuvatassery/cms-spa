@@ -204,7 +204,7 @@
 
   <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="70" class="text-center" [sortable]="false" >
     <ng-template kendoGridCellTemplate let-dataItem>
-      <kendo-dropdownbutton [data]="processGridActions" icon="more-vertical"
+      <kendo-dropdownbutton [data]="processGridActions(dataItem)" icon="more-vertical"
         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
         aria-label="more actions" title="More option"
         [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -300,5 +300,5 @@
 </ng-template>
 
 <ng-template #addEditRefundDialog>
-  <cms-refund-new-form-details (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"></cms-refund-new-form-details>
+  <cms-refund-new-form-details [isEdit]="isEditRefund" (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"></cms-refund-new-form-details>
 </ng-template>

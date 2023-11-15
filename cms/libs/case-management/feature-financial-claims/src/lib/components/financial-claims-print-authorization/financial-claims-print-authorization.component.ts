@@ -237,9 +237,6 @@ export class FinancialClaimsPrintAuthorizationComponent {
       .subscribe({
         next: (data: any) => {
           if (data) {
-            if(this.reconcileArray[0].printFlag === StatusFlag.Yes){
-            this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
-            }
             this.returnResultFinalPrintList[this.currentIndex].warrantNumberChange = false;
             this.onReconcileRecordEvent.emit(this.returnResultFinalPrintList[this.currentIndex]);
           }

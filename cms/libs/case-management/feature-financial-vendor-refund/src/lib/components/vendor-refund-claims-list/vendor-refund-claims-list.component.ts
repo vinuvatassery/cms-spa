@@ -25,6 +25,7 @@ import { Subject } from 'rxjs';
 export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isClaimsLoaderShow = false;
+  selectedTpaClaims:any[] =[]
   /** Constructor **/
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -97,6 +98,10 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.loadClaimsListGrid();
   }
 
+  selectedKeysChange(selection: any) {
+    this.selectedTpaClaims = selection;
+  }
+  
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
