@@ -19,7 +19,6 @@ import { BatchPharmacyClaims } from '../../entities/financial-management/batch-p
 import { Vendor } from '../../entities/vendor';
 import { Client } from '../../entities/client';
 import { PharmacyClaims } from '../../entities/financial-management/pharmacy-claim';
-import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsFacade {
