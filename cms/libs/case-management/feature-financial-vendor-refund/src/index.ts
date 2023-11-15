@@ -4,6 +4,7 @@ export * from './lib/containers/refund-batch-page/refund-batch-page.component';
 export * from './lib/containers/vendor-refund-page/vendor-refund-page.component';
 
 export * from './lib/components/batch-refund-confirmation/batch-refund-confirmation.component';
+export * from './lib/components/unbatch-refund-confirmation/unbatch-refund-confirmation.component';
 export * from './lib/components/delete-refund-confirmation/delete-refund-confirmation.component';
 export * from './lib/components/refund-all-payment-list/refund-all-payment-list.component';
 export * from './lib/components/refund-batch-log-list/refund-batch-log-list.component';

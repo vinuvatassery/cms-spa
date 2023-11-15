@@ -419,7 +419,7 @@ pageselectionchange(data: any) {
       next:(response:any)=>{
         this.financialVendorFacade.hideLoader();
         this.onBusinessInfoCloseClicked();
-        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Vendor profile added successfully");
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
         this.cdr.detectChanges();
       },
       error:(err:any)=>{

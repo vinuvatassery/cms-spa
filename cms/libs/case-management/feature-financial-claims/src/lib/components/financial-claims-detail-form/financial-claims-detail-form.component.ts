@@ -251,6 +251,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       })
       this.groupedPaymentRequestTypes = groupBy(refactoredPaymentRequestTypeArray, [{ field: "parentCode" }]);
     });
+    this.cd.detectChanges()
   }
 
   onCloseViewProviderDetailClicked(result: any){
@@ -770,7 +771,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       serviceStartDate: minServiceStartDate,
       serviceEndDate: maxServiceEndDate,
       paymentRequestId: this.isEdit ? claim.paymentRequestId : null,
-      objectLedgerName : 'TPA'
+      objectLedgerName : 'Third Party(TPA)'
     };
     this.loaderService.show();
     this.financialClaimsFacade.getPcaCode(request)

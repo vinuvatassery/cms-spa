@@ -12,6 +12,7 @@ import { LoaderService } from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApprovalsEditItemsComponent implements OnInit {
+export class ApprovalsEditItemsComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Input() selectedSubtypeCode: any;
   @Input() selectedVendor$!: Observable<any>;

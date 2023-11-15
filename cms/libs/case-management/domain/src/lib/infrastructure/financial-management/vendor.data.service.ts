@@ -31,6 +31,7 @@ export class FinancialVendorDataService {
   }
 
   getVendorDetails(vendorId: string, isActive: boolean) {
+  getVendorDetails(vendorId: string, isActive: boolean) {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/vendor-details?vendorId=${vendorId}&isActive=${isActive}`
     );

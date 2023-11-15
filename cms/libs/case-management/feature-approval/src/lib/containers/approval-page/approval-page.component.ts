@@ -20,6 +20,7 @@ import {
   ContactFacade,
   DrugsFacade,
   InsurancePlanFacade,
+  ImportedClaimFacade,
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
@@ -62,20 +63,20 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
   sortValueApprovalPaymentsApproval =
     this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
-  sortImportedClaimsList = this.approvalFacade.sortImportedClaimsList;
+  sortImportedClaimsList = this.importedClaimFacade.sortImportedClaimsList;
   sortValueImportedClaimsAPproval =
-    this.approvalFacade.sortValueImportedClaimsAPproval;
+    this.importedClaimFacade.sortValueImportedClaimsAPproval;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
   pendingApprovalPaymentsCount$ =
     this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
 
-  userLevel = 1;
+  userLevel = UserLevel.Level1Value;
   pendingApprovalCount = 0;
   state!: State;
   approvalsGeneralLists$ =
     this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ =
-    this.approvalFacade.approvalsImportedClaimsLists$;
+    this.importedClaimFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
   approvalsPaymentsLists$ =
     this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
@@ -129,6 +130,7 @@ export class ApprovalPageComponent implements OnInit {
     private readonly financialVendorFacade: FinancialVendorFacade,
     private contactFacade: ContactFacade,
     private formBuilder: FormBuilder,
+    private readonly importedClaimFacade:ImportedClaimFacade,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
     private drugService: DrugsFacade,
@@ -199,7 +201,7 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   loadImportedClaimsGrid(event: any): void {
-    this.approvalFacade.loadImportedClaimsLists();
+    this.importedClaimFacade.loadImportedClaimsLists(event);
   }
   notificationTriger() {
     this.approvalFacade.NotifyShowHideSnackBar(
@@ -366,6 +368,44 @@ export class ApprovalPageComponent implements OnInit {
     } else if (event.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
       this.insurancePlanFacade.updateInsurancePlan(event.form);
     }
+  }
+  
+  buildVendorForm() {
+  let form = this.formBuilder.group({
+      providerName: [''],
+      firstName: [''],
+      lastName: [],
+      tinNumber: [''],
+      phoneNumber: [''],
+      email:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)],
+      fax:[''],
+      addressLine1: [''],
+      addressLine2: [''],
+      city: [''],
+      state: [''],
+      zip: [''],
+      contactFirstName:[''],
+      contactLastName: [''],
+      contactPhone:[''],
+      contactFax:[''],
+      contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
+    });
+    this.healthCareForm = form;
+  }
+
+  editClicked(event : any){
+    if(event)
+    {
+      this.buildVendorForm();
+    }
+  }
+
+  searchClinicVendorClicked(clientName: any) {
+    this.financialVendorFacade.searchClinicVendor(clientName);
+  }
+
+  updateMasterDetailsClicked(event: any){
+    this.financialVendorFacade.updateProviderPanel(event);
   }
 
   onProviderNameClick(event: any) {
