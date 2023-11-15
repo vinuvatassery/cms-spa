@@ -126,6 +126,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       click: (data: any,paymentRequestId : any): void => {
         if (!this.isProcessBatchClosed) {
           this.isProcessBatchClosed = true;
+          this.isDeleteBatchClosed = false;
           this.onBatchClaimsGridSelectedClicked();
         }
       },
@@ -137,6 +138,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       icon: 'delete',
       click: (data: any,paymentRequestId : any): void => {
         if (!this.isDeleteBatchClosed) {
+          this.isProcessBatchClosed=false;
           this.isDeleteBatchClosed = true;
           this.onBatchClaimsGridSelectedClicked();
         }
@@ -160,8 +162,12 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
-        this.onSingleClaimDelete(data.paymentRequestId.split(','));
-        this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
+        if(data.paymentRequestId)
+        {
+          this.onSingleClaimDelete(data.paymentRequestId.split(','));
+          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
+        }
+      
       },
     },
   ];
@@ -387,6 +393,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   onModalDeleteClaimsModalClose(result: any) {
     
     if (result) {
+      
       this.isDeleteBatchMoreOptionClosed = false;
       this.deleteClaimsDialog.close();
     }
@@ -540,15 +547,17 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     })
     this.onbatchClaimsClickedEvent.emit(input)
   }
-  onModalBatchDeletingClaimsButtonClicked(action: any) {
+  onModalBatchDeletingClaimsButtonClicked() {
+    this.ondeleteClaimsClickedEvent.emit(this.selectedProcessClaims)
     this.batchingClaims$.subscribe((_:any) =>{
+      
       this.isDeleteBatchMoreOptionClosed = false;
       this.deleteClaimsDialog.close();
       this.loadPharmacyClaimsProcessListGrid();
       this.onBatchClaimsGridSelectedCancelClicked()
     })
     
-    this.ondeleteClaimsClickedEvent.emit(this.selectedProcessClaims)
+   
   }
   dropdownFilterChange(
     field: string,

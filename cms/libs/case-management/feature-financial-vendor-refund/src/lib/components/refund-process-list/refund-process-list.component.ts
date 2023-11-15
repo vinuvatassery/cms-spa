@@ -35,6 +35,9 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   private deleteRefundDialog: any;
   private batchConfirmRefundDialog: any;
   private addEditRefundFormDialog: any;
+  @ViewChild('addEditRefundDialog', { read: TemplateRef })
+  addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
+  
   isDeleteBatchClosed = false;
   isDataAvailable=true;
   isProcessBatchClosed = false;
@@ -159,13 +162,21 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       },
     },
   ];
+  isAddRefundModalOpen = false;
+  isEditRefund = false;
 
-  public processGridActions = [
+  public processGridActions(dataItem:any){
+     return [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Refund',
       icon: 'edit',
       click: (refund: any): void => {
+        if(!this.isAddRefundModalOpen){
+          this.isAddRefundModalOpen = true;
+          this.isEditRefund = true
+        this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
+        }
       },
     },
     {
@@ -180,6 +191,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       },
     },
   ];
+}
 
   deletemodelbody = 'This action cannot be undone, but you may add a refund at any time.';
   singleRefundDelete = false;
@@ -257,6 +269,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   }
   modalCloseAddEditRefundFormModal(result: any) {
     if (result) {
+      this.isAddRefundModalOpen = false;
       this.addEditRefundFormDialog.close();
     }
   }
@@ -475,4 +488,12 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       this.deleteRefundDialog.close();
     }
   }
+
+  onEditRefundClaimClicked(template: TemplateRef<unknown>): void {
+    this.addEditRefundFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-96full add_refund_modal',
+    });
+  }
+
 }

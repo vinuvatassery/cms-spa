@@ -22,8 +22,10 @@ export class PharmacyClaimsBatchPageComponent {
   state!: State;
   batchLogGridLists$ = this.financialPharmacyClaimsFacade.batchLogData$;
   unbatchEntireBatch$ = this.financialPharmacyClaimsFacade.unbatchEntireBatch$;
-  unbatchClaim$ = this.financialPharmacyClaimsFacade.unbatchClaims$
+  unbatchClaim$ = this.financialPharmacyClaimsFacade.unbatchClaims$;
+  deleteClaims$ = this.financialPharmacyClaimsFacade.deleteClaims$;
   paymentByBatchGridLoader$ = this.financialPharmacyClaimsFacade.paymentByBatchGridLoader$;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
   letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
   letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
@@ -72,10 +74,12 @@ export class PharmacyClaimsBatchPageComponent {
   }
   unBatchClaimClick(event: any) {
      this.financialPharmacyClaimsFacade.unbatchPremiums(event.paymentId)
+  }
+  ondeletebatchesClicked(event:any){
+    this.financialPharmacyClaimsFacade.deletebatches(event);
     }
 
-    loadEachLetterTemplate(event: any) {
+  loadEachLetterTemplate(event: any) {
         this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);
     }
-
 }

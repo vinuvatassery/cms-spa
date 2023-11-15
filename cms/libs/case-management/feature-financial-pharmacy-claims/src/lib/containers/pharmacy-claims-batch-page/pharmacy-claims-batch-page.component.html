@@ -12,10 +12,13 @@
  (unBatchClaimsEvent)="unBatchClaimClick($event)"
  [unbatchClaim$]="unbatchClaim$"
  [unbatchEntireBatch$]="unbatchEntireBatch$"
+ [deleteClaims$]="deleteClaims$"
+ (ondeletebatchesClickedEvent)="ondeletebatchesClicked($event)"
  (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
  (loadTemplateEvent) = "loadEachLetterTemplate($event)"
  [letterContentList$]="letterContentList$"      
- [letterContentLoader$]="letterContentLoader$">
+ [letterContentLoader$]="letterContentLoader$"
+ >
 </cms-pharmacy-claims-batches-log-lists>
 
  
