@@ -145,7 +145,6 @@ export class RefundNewFormDetailsComponent{
     private dialogService: DialogService,
     private formBuilder: FormBuilder,) {}
   selectionChange(event: any){
-    debugger
     this.isConfirmationClicked = false
     this.vendorId=null;
   }
