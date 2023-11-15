@@ -198,12 +198,9 @@ export class FinancialVendorRefundFacade {
     });  
   }
 
-  loadClientClaimsListGrid(data:any){
-    debugger
-    this.showLoader();
-    this.financialVendorRefundDataService.loadClientClaimsListService(data).subscribe({
+  loadClientClaimsListGrid(){
+    this.financialVendorRefundDataService.loadClientClaimsListService().subscribe({
       next: (dataResponse) => {
-        console.log(dataResponse)
         this.clientClaimsListDataSubject.next(dataResponse);
         this.hideLoader();
       },

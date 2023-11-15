@@ -103,7 +103,7 @@ export class RefundNewFormDetailsComponent{
     this.financialVendorRefundFacade.loadPremiumsListGrid();
   }
   loadClientClaimsListGrid(data?: any) { 
-    this.financialVendorRefundFacade.loadClientClaimsListGrid(data);
+    this.financialVendorRefundFacade.loadClientClaimsListGrid();
   }
   loadPharmacyPaymentsListGrid(event: any) { 
     this.financialVendorRefundFacade.loadPharmacyPaymentsListGrid();
