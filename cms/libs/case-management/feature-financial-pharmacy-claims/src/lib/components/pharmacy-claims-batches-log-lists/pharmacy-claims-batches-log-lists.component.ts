@@ -649,7 +649,10 @@ reverseClaimsDialog: any;
     
   }
 
-
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.addClientRecentClaimsDialog.close();
+  }
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,

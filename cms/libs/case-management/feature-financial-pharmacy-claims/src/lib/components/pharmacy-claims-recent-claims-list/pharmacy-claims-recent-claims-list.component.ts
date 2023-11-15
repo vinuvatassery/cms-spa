@@ -58,6 +58,7 @@ export class PharmacyClaimsRecentClaimsListComponent {
   paymentRequestTypes: any = [];
   
   paymentTypeFilter = '';
+  iseditView:string="";
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
