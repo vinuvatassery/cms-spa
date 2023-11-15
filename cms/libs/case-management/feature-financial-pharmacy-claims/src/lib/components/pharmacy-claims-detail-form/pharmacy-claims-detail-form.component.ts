@@ -299,7 +299,6 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
    {  
     this.clientId=existClaimData.clientId;
     this.vendorId=existClaimData.vendorId;
-    this.IsEdit=true;
        if(existClaimData?.paymentRequestId)
        {   
         this.isEdit = true

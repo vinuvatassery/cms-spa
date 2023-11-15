@@ -525,6 +525,6 @@ export class FinancialVendorRefundDataService {
         sortType:sortType,
         filter:filter
       }
-      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/list-premiums`,filterRequestBody);
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/premiums-list`,filterRequestBody);
   }
 }
