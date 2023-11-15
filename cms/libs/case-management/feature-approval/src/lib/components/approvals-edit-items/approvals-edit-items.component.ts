@@ -272,6 +272,18 @@ export class ApprovalsEditItemsComponent implements OnInit {
       this.insuranceProviderForm.controls['providerName'].setValue(
         this.selectedMasterData?.vendorName
       );
+    } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.Pharmacy) {
+      this.pharmacyForm.controls['pharmacyName'].setValue(this.selectedMasterData?.vendorName);
+      this.pharmacyForm.controls['tin'].setValue(this.selectedMasterData?.tin);
+      this.pharmacyForm.controls['npi'].setValue(this.selectedMasterData?.npiNbr);
+      this.pharmacyForm.controls['preferredPharmacy'].setValue(this.selectedMasterData?.preferredFlag);
+      this.pharmacyForm.controls['mailCode'].setValue(this.selectedMasterData?.mailCode);
+      this.pharmacyForm.controls['paymentMethod'].setValue(this.selectedMasterData?.paymentMethodCode.toUpperCase());
+      this.pharmacyForm.controls['contactFirstName'].setValue(this.selectedMasterData?.contact1FirstName);
+      this.pharmacyForm.controls['contactLastName'].setValue(this.selectedMasterData?.contact1LastName);
+      this.pharmacyForm.controls['contactPhone'].setValue(this.selectedMasterData?.phoneNumber);
+      this.pharmacyForm.controls['contactFax'].setValue(this.selectedMasterData?.fax);
+      this.pharmacyForm.controls['contactEmail'].setValue(this.selectedMasterData?.email);
     }
     this.changeDetector.detectChanges();
   }
@@ -383,7 +395,8 @@ export class ApprovalsEditItemsComponent implements OnInit {
       this.insuranceVendorForm.controls['paymentRunDate'].setValidators(Validators.required)
       this.insuranceVendorForm.controls['paymentRunDate'].updateValueAndValidity();
     } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.InsuranceProvider) {
-
+      this.insuranceProviderForm.controls['providerName'].setValidators(Validators.required);
+      this.insuranceProviderForm.controls['providerName'].updateValueAndValidity();
     } 
   }
 
@@ -482,6 +495,122 @@ export class ApprovalsEditItemsComponent implements OnInit {
         subTypeCode: this.selectedSubtypeCode
       }
       this.updateMasterDetailsClickedEvent.emit(formData);
+    } else if (this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.Pharmacy) {
+      this.updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
+        let contact = [];
+        let emails = [];
+        let phones = [];    
+        emails.push({
+          emailAddress: this.pharmacyForm.controls['contactEmail']?.value,
+          vendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
+          vendorContactId: this.selectedMasterData.vendorContactId
+        })
+        phones.push({
+          phoneNbr: this.pharmacyForm?.controls['contactPhone']?.value,
+          faxNbr: this.pharmacyForm?.controls['contactFax']?.value,
+          vendorContactPhoneId: this.selectedMasterData.vendorContactPhoneId,
+          vendorContactId: this.selectedMasterData.vendorContactId
+        })
+        contact.push(
+          {
+            contactName: this.pharmacyForm.controls['contactFirstName']?.value,
+            vendorContactId: this.selectedMasterData.vendorContactId,
+            emails,
+            phones
+          }
+        )
+        let pharmacyData = {
+          vendorName: this.pharmacyForm?.controls['pharmacyName'].value,
+          vendorId: this.selectedMasterData.vendorId,
+          tin: this.pharmacyForm?.controls['tin'].value,
+          NpiNbr: this.pharmacyForm?.controls['npi'].value,
+          preferredFlag : this.pharmacyForm?.controls['preferredPharmacy'].value,
+          address: {
+            vendorAddressId: this.selectedMasterData.vendorAddressId,
+            paymentMethodCode: this.pharmacyForm?.controls['paymentMethod']?.value ? this.pharmacyForm?.controls['paymentMethod']?.value : '',
+            MailCode: this.pharmacyForm.controls['mailCode'].value,
+            contacts: contact
+          }
+        }
+        formData = {
+          form : pharmacyData,
+          subTypeCode: this.selectedSubtypeCode
+        }
+        this.updateMasterDetailsClickedEvent.emit(formData);
+    } else if (this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsuranceVendor) {
+      this.updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
+        let contact = [];
+        let emails = [];
+        let phones = [];    
+        emails.push({
+          emailAddress: this.insuranceVendorForm.controls['contactEmail']?.value,
+          vendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
+          vendorContactId: this.selectedMasterData.vendorContactId
+        })
+        phones.push({
+          phoneNbr: this.insuranceVendorForm?.controls['contactPhone']?.value,
+          faxNbr: this.insuranceVendorForm?.controls['contactFax']?.value,
+          vendorContactPhoneId: this.selectedMasterData.vendorContactPhoneId,
+          vendorContactId: this.selectedMasterData.vendorContactId
+        })
+        contact.push({
+            contactName: this.insuranceVendorForm.controls['contactFirstName']?.value,
+            vendorContactId: this.selectedMasterData.vendorContactId,
+            emails,
+            phones
+        })
+        let insuraceVendorData = {
+          vendorName: this.insuranceVendorForm?.controls['vendorName'].value,
+          vendorId: this.selectedMasterData.vendorId,
+          tin: this.insuranceVendorForm?.controls['tin'].value,
+          address: {
+            vendorAddressId: this.selectedMasterData.vendorAddressId,
+            nameOnCheck: this.insuranceVendorForm?.controls['nameOnCheck']?.value,
+            MailCode: this.insuranceVendorForm.controls['mailCode'].value,
+            paymentMethodCode: this.insuranceVendorForm?.controls['paymentMethod']?.value ? this.insuranceVendorForm?.controls['paymentMethod']?.value : '',
+            nameOnEnvelope: this.insuranceVendorForm?.controls['nameOnEnvelop']?.value,
+            acceptsCombinedPaymentsFlag: this.insuranceVendorForm?.controls['acceptsCombinedPayments']?.value,
+            acceptsReportsFlag: this.insuranceVendorForm?.controls['acceptsReport']?.value,
+            paymentRunDateMonthly: this.insuranceVendorForm?.controls['paymentRunDate']?.value,
+            contacts: contact
+          }
+        }
+        formData = {
+          form : insuraceVendorData,
+          subTypeCode: this.selectedSubtypeCode
+        }
+        this.updateMasterDetailsClickedEvent.emit(formData);
+    } else if (this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsuranceProvider) {
+      this.updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
+        let contact = [];
+        let emails = [];
+        let phones = [];    
+        emails.push({
+          vendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
+          vendorContactId: this.selectedMasterData.vendorContactId
+        })
+        phones.push({
+          vendorContactPhoneId: this.selectedMasterData.vendorContactPhoneId,
+          vendorContactId: this.selectedMasterData.vendorContactId
+        })
+        contact.push({
+            vendorContactId: this.selectedMasterData.vendorContactId,
+            emails,
+            phones
+        })
+        let insuraceProviderData = {
+          vendorName: this.insuranceProviderForm?.controls['providerName'].value,
+          vendorId: this.selectedMasterData.vendorId,
+          address: {
+            vendorAddressId: this.selectedMasterData.vendorAddressId,
+            contacts: contact
+          }
+        }
+        formData = {
+          form : insuraceProviderData,
+          subTypeCode: this.selectedSubtypeCode
+        }
+        this.updateMasterDetailsClickedEvent.emit(formData);
     }
     this.closeEditModal();
   }

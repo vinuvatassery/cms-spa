@@ -49,7 +49,7 @@ export class InsurancePlanFacade {
       next: (updatedResponse: any) => {
         if (updatedResponse) {
           this.updateProviderPanelSubject.next(updatedResponse);
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Updated successfully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse);
           this.hideLoader();
         }
       },

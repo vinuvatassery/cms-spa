@@ -52,7 +52,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.firstName.errors?.required && isValidateForm">
-        First Name is required
+        Provider First Name is required
       </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6" *ngIf="selectedMasterData.lastName">
@@ -62,7 +62,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.lastName.errors?.required && isValidateForm">
-        Last Name is required
+        Provider Last Name is required
       </kendo-formerror>
     </div>
     <div class="flex-col">
@@ -71,9 +71,6 @@
           placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
         </kendo-maskedtextbox>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="healthCareFormControls?.tinNumber.errors?.required && isValidateForm">
-        Tin Name is required
-      </kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Phone Number (optional)">
@@ -161,14 +158,14 @@
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Contact Phone (optional)">
-        <kendo-maskedtextbox aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
+        <kendo-maskedtextbox aria-label="Contact Phone (optional)" [fillMode]="formUiStyle.inputFillMode"
           formControlName="contactPhone" mask="(999) 000-0000">
         </kendo-maskedtextbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Contact Fax (optional)">
-        <kendo-maskedtextbox aria-label="Fax (optional)" [fillMode]="formUiStyle.inputFillMode"
+        <kendo-maskedtextbox aria-label="Contact Fax (optional)" [fillMode]="formUiStyle.inputFillMode"
           formControlName="contactFax" mask="(999) 000-0000">
         </kendo-maskedtextbox>
       </kendo-floatinglabel>
@@ -328,11 +325,11 @@
       <kendo-floatinglabel text="Health Insurance Type">
         <kendo-dropdownlist aria-label="Health Insurance Type" [fillMode]="formUiStyle.dropDownFillMode" formControlName="healthInsuranceTypeCode"
           [data]="insuranceTypelovForPlan$ | async" textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
-          placeholder="State">
+          placeholder="Health Insurance Type">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="insurancePlanFormControls?.healthInsuranceTypeCode.errors?.required && isValidateForm">
-        State is required
+        Health Insurance Type
       </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
@@ -418,7 +415,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="insuranceVendorFormControls?.nameOnCheck.errors?.required && isValidateForm">
-         Name on check is required
+        Name on check is required
       </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
@@ -428,7 +425,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="insuranceVendorFormControls?.nameOnEnvelop.errors?.required && isValidateForm">
-         Name on envelope is required
+        Name on envelope is required
       </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6">
@@ -471,7 +468,7 @@
           </span>
         </div>
         <kendo-formerror *ngIf="insuranceVendorFormControls?.paymentMethod.errors?.required && isValidateForm">
-          Payment method code is required
+          Payment Method is required
         </kendo-formerror>
       </fieldset>
     </div>
@@ -496,21 +493,14 @@
       </fieldset>
     </div>
     <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Payment Run Date">
+      <kendo-floatinglabel text="Payment run date">
         <kendo-dropdownlist [data]="paymentRunDateList" [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
           valueField="lovCode" [valuePrimitive]="true" formControlName="paymentRunDate">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="insuranceVendorFormControls?.paymentRunDate.errors?.required && isValidateForm">
-        Payment method code is required
+        Payment run date is required
       </kendo-formerror>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Contact First Name (optional)">
-        <kendo-textbox aria-label="Contact First Name (optional)" placeholder="Contact First Name (optional)" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="contactFirstName" [maxlength]="50">
-        </kendo-textbox>
-      </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Contact First Name (optional)">
@@ -535,7 +525,7 @@
     </div>
     <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Contact Fax (optional)">
-          <kendo-maskedtextbox aria-label="Fax (optional)" [fillMode]="formUiStyle.inputFillMode" formControlName="contactFax"
+          <kendo-maskedtextbox aria-label="Contact Fax (optional)" [fillMode]="formUiStyle.inputFillMode" formControlName="contactFax"
             mask="(999) 000-0000">
           </kendo-maskedtextbox>
         </kendo-floatinglabel>
@@ -616,16 +606,9 @@
           </span>
         </div>
         <kendo-formerror *ngIf="pharmacyFormControl?.paymentMethod.errors?.required && isValidateForm">
-          Payment Code is required
+          Payment Method is required
         </kendo-formerror>
       </fieldset>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Contact First Name (optional)">
-        <kendo-textbox aria-label="Contact First Name (optional)" placeholder="Contact First Name (optional)" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="contactFirstName" [maxlength]="50">
-        </kendo-textbox>
-      </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Contact First Name (optional)">
@@ -650,7 +633,7 @@
     </div>
     <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Contact Fax (optional)">
-          <kendo-maskedtextbox aria-label="Fax (optional)" [fillMode]="formUiStyle.inputFillMode" formControlName="contactFax"
+          <kendo-maskedtextbox aria-label="Contact Fax (optional)" [fillMode]="formUiStyle.inputFillMode" formControlName="contactFax"
             mask="(999) 000-0000">
           </kendo-maskedtextbox>
         </kendo-floatinglabel>
