@@ -23,6 +23,7 @@ import { Observable, Subject, Subscription, debounceTime } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoadTypes } from '@cms/case-management/domain';
+import { GridFilterParam } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-all-payments-list',
@@ -121,17 +122,10 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
 
 searchColumnList: { columnName: string, columnDesc: string }[] = [
   { columnName: 'ALL', columnDesc: 'All Columns' },
+  { columnName: 'batchName', columnDesc: 'Batch #' },
   { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
-  { columnName: 'paymentMethodCode', columnDesc: 'Payment Method' },
   { columnName: 'clientFullName', columnDesc: 'Client Name' },
-  { columnName: 'insuranceName', columnDesc: 'Name on Primary Insurance Card' },
   { columnName: 'clientId', columnDesc: 'Client ID' },
-  { columnName: 'paymentType', columnDesc: 'Payment Type' },
-  { columnName: 'amountPaid', columnDesc: 'Amount Paid' },
-  { columnName: 'indexCode', columnDesc: 'Index Code' },
-  { columnName: 'paymentStatus', columnDesc: 'Payment Status' },
-  { columnName: 'warrantNumber', columnDesc: 'Warrant Number' },
-  { columnName: 'creationTime', columnDesc: 'Entry Date' }
 ];
    
   public allPaymentsGridActions = [
@@ -169,8 +163,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   ];
 
 
-  public bulkMore = [  
-    
+  public bulkMore = [
     {
       buttonType: 'btn-h-primary',
       text: 'RECONCILE PAYMENTS',
@@ -294,7 +287,12 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
   performSearch(data: any) {
     this.defaultGridState();
-    const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
+    let operator = 'contains'
+    const isClientId = (['clientId']).includes(this.selectedSearchColumn);
+    if(isClientId){
+      operator = 'eq';
+      data = !isNaN(data) && !isNaN(parseFloat(data)) ? data: '0';
+    }
     this.filterData = {
       logic: 'and',
       filters: [
@@ -316,12 +314,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   }
 
   private loadPharmacyClaimsAllPaymentsListGrid(): void {
-    this.loadClaimsAllPayments(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
+    const params = new GridFilterParam(this.state.skip, this.state.take, this.sortValue, this.sortType, JSON.stringify(this.filter))
+    this.loadPharmacyClaimsAllPaymentsListEvent.emit(params);
   }
   loadClaimsAllPayments(
     skipCountValue: number,
@@ -335,9 +329,9 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter: JSON.stringify(this.filter)
     };
-    this.loadPharmacyClaimsAllPaymentsListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+        //this.gridDataHandle();
   }
 
   
@@ -397,20 +391,20 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.filterData = filter;
   }
 
-  gridDataHandle() {
-    this.pharmacyClaimsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridPharmacyClaimsAllPaymentsDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
-        this.isPharmacyClaimsAllPaymentsGridLoaderShow = false;
-      }
-    });
-    this.isPharmacyClaimsAllPaymentsGridLoaderShow = false;
-  }
+  // gridDataHandle() {
+  //   this.pharmacyClaimsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
+  //     this.gridDataResult = data;
+  //     this.gridDataResult.data = filterBy(
+  //       this.gridDataResult.data,
+  //       this.filterData
+  //     );
+  //     this.gridPharmacyClaimsAllPaymentsDataSubject.next(this.gridDataResult);
+  //     if (data?.total >= 0 || data?.total === -1) { 
+  //       this.isPharmacyClaimsAllPaymentsGridLoaderShow = false;
+  //     }
+  //   });
+  //   this.isPharmacyClaimsAllPaymentsGridLoaderShow = false;
+  // }
   navToReconcilePayments(event : any){  
     this.route.navigate(['/financial-management/pharmacy-claims/payments/reconcile-payments'],
      { queryParams :{loadType: LoadTypes.allPayments}});
@@ -676,5 +670,26 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
     loadEachLetterTemplate(event:any){
       this.loadTemplateEvent.emit(event);
-  }
+    }
+
+    onitemNumberClick(dataItem: any) {
+        this.route.navigate(
+            [`/financial-management/pharmacy-claims/batch/items`],
+            {
+                queryParams:
+                {
+                    bid: dataItem?.batchId,
+                    pid: dataItem.paymentRequestId,
+                    eid: dataItem.vendorId,
+                }
+            }
+        );
+    }
+
+    onbatchNumberClick(dataItem: any) {
+        this.route.navigate(
+            [`/financial-management/pharmacy-claims/batch`],
+            { queryParams: { bid: dataItem?.batchId } }
+        );
+    }
 }

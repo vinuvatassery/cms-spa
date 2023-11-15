@@ -111,7 +111,7 @@ export class PharmacyClaimsPageComponent implements OnInit {
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsBatchListGrid(event);
   }
 
-  loadPharmacyClaimsAllPaymentsListGrid(params: GridFilterParam) {
+  loadPharmacyClaimsAllPaymentsListGrid(params: any) {
     this.financialPharmacyClaimsFacade.selectedClaimsTab = 3;
     this.tab = this.financialPharmacyClaimsFacade.selectedClaimsTab;
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsAllPaymentsListGrid(params);
@@ -196,15 +196,16 @@ export class PharmacyClaimsPageComponent implements OnInit {
     this.financialPharmacyClaimsFacade.searchDrug(searchText);
   }
 
+  onExportAllPayments(event: any){
+    this.financialPharmacyClaimsFacade.exportPharmacyClaimAllPayments(event);
+  }
+
   onExportClaimsInProcess(event: any){
     this.financialPharmacyClaimsFacade.exportPharmacyClaimsProcessListGrid(event);
   }
 
   onExportClaimsInBatch(event: any){
     this.financialPharmacyClaimsFacade.exportPharmacyClaimsBatchListGrid(event);
-  }
-
-  onExportAllPayments(event: any){
   }
 
   onbatchClaimsClicked(event:any){

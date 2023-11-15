@@ -244,6 +244,10 @@ export class FinancialPharmacyClaimsFacade {
     });
   }
 
+  exportPharmacyClaimAllPayments(params: any){
+    const fileName = 'pharmacy-claims-all-payments'
+    this.documentFacade.getExportFile(params,`claims/pharmacies/payments`, fileName);
+  }
 
   exportPharmacyClaimsProcessListGrid(params: any){
     const fileName = 'pharmacy-claims-process'
@@ -372,7 +376,7 @@ export class FinancialPharmacyClaimsFacade {
     });
   }
 
-  loadPharmacyClaimsAllPaymentsListGrid(params: GridFilterParam) {
+  loadPharmacyClaimsAllPaymentsListGrid(params: any) {
     this.pharmacyClaimsAllPaymentsLoaderSubject.next(true);
     this.financialPharmacyClaimsDataService
       .loadPharmacyClaimsAllPaymentsListService(params)
