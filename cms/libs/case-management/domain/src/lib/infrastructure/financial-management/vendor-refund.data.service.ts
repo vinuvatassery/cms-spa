@@ -520,7 +520,7 @@ export class FinancialVendorRefundDataService {
       Filter : data.filter
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/${data.clientId}/${data.vendorId}/claims`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/${data.clientId}/${data.vendorId}`,
       ClaimsPageAndSortedRequestDto
     );
   }
