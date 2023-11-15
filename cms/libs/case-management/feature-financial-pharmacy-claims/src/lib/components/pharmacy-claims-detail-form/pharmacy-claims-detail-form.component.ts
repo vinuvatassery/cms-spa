@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, groupBy } from '@progress/kendo-data-query';
-import { CaseStatusCode, FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
+import { CaseStatusCode, FinancialPharmacyClaimsFacade, PaymentMethodCode } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Lov } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -68,6 +68,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   isSubmitted = false
   groupedPaymentRequestTypes: any;
   objectCode! : any
+  pcaCode! :any
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
@@ -173,7 +174,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
       vendorAddressId: this.pharmacyClaimForm.controls["pharmacy"].value.vendorAddressId , 
       vendorId : this.pharmacyClaimForm.controls["vendorId"].value , 
       clientId: this.pharmacyClaimForm.controls["client"].value.clientId , 
-      paymentMethodCode: this.pharmacyClaimForm.controls["paymentMethodCode"].value ===true ? 'SPOTS' : '' , 
+      paymentMethodCode: this.pharmacyClaimForm.controls["paymentMethodCode"].value ===true ? PaymentMethodCode.SPOTS : '' , 
       prescriptionFillDto: [{}]     
     };
     
@@ -245,7 +246,11 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.searchDrugEvent.emit(searchText)
+    const ndcCodeSearch ={
+      isClientRestricted : this.isClientRestricted,
+      searchText : searchText
+    }
+    this.searchDrugEvent.emit(ndcCodeSearch)
   }
 
   onNdcCodeValueChange(data : any , index : any)
@@ -262,6 +267,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   }
   pharmacySelectionChange(data : any)
   {
+    this.pharmacyClaimForm.controls['prescriptionFillDto'].reset()
     this.pharmacyClaimForm.controls['vendorId'].setValue(data?.vendorId);    
     this.cd.detectChanges();
  
@@ -270,6 +276,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
 
   clientSelectionChange(data : any)
   {  
+    this.pharmacyClaimForm.controls['prescriptionFillDto'].reset()
     this.pharmacyClaimForm.controls['clientCaseEligibilityId'].setValue(data?.clientCaseEligibilityId);
     this.isClientRestricted = data?.caseStatus === CaseStatusCode.restricted
     this.isClientInEligible = (data?.caseStatus !== CaseStatusCode.accept && data?.caseStatus !== CaseStatusCode.restricted)
@@ -301,6 +308,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
       const fullVendorCustomName = existClaimData?.vendorName + ' '+ existClaimData?.tin + ' '+ existClaimData?.mailCode + ' '+ existClaimData?.address 
       const fullClientCustomName = existClaimData?.clientFullName + ' '+ existClaimData?.clientId + ' '+ existClaimData?.ssn + ' '+ existClaimData?.dob   
       this.objectCode = existClaimData?.objectCode
+      this.pcaCode = existClaimData?.pcaCode
         const client =[
           {             
             fullCustomName: fullClientCustomName,
@@ -326,7 +334,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
               paymentRequestId : existClaimData?.paymentRequestId ,
               clientCaseEligibilityId: existClaimData?.clientCaseEligibilityId,                
               vendorId : existClaimData?.vendorId,
-              paymentMethodCode : existClaimData?.paymentMethodCode === 'SPOTS'
+              paymentMethodCode : existClaimData?.paymentMethodCode === PaymentMethodCode.SPOTS
              }
            )
            
@@ -352,20 +360,22 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
       serviceForm.controls['qntType'].setValue(service.qntType);
       serviceForm.controls['dispensingQty'].setValue(service?.dispensingQty);
       serviceForm.controls['daySupply'].setValue(service?.daySupply);
-      serviceForm.controls['paymentTypeCode'].setValue(service?.paymentTypeCode);
+      serviceForm.controls['paymentTypeCode'].setValue(service?.paymentTypeCode);     
 
       serviceForm.controls['brandName']?.enable()
       serviceForm.controls['drugName']?.enable()
       serviceForm.controls['objectCode']?.enable()
+      serviceForm.controls['pcaCode']?.enable()
   
       serviceForm.controls['brandName'].setValue(service?.brandName ?? '');
       serviceForm.controls['drugName'].setValue(service?.drugName ?? '');
       serviceForm.controls['objectCode'].setValue(this.objectCode);
+      serviceForm.controls['pcaCode'].setValue(this.pcaCode);
   
       serviceForm.controls['brandName']?.disable()
       serviceForm.controls['drugName']?.disable()
       serviceForm.controls['objectCode']?.disable()
-     
+      serviceForm.controls['pcaCode']?.disable()
     }
    
   }

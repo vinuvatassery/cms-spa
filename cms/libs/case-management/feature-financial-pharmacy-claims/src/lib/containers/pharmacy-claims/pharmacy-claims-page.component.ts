@@ -193,8 +193,8 @@ export class PharmacyClaimsPageComponent implements OnInit {
   searchClients(searchText: string) {
     this.financialPharmacyClaimsFacade.searchClients(searchText);
   }
-  searchDrug(searchText: string) {
-    this.financialPharmacyClaimsFacade.searchDrug(searchText);
+  searchDrug(ndcCodeSearch: any) {
+    this.financialPharmacyClaimsFacade.searchDrug(ndcCodeSearch?.searchText , ndcCodeSearch?.isClientRestricted);
   }
 
   onExportClaimsInProcess(event: any){
