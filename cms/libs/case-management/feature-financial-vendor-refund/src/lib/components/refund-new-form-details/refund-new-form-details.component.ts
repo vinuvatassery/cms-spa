@@ -20,10 +20,11 @@ export class RefundNewFormDetailsComponent{
   clientId: any;
   clientName: any;
   vendorId: any;
-  isRecentGridClaimShow = false;
+  isRefundGridClaimShow = false;
   isShowReasonForException = false;
   showServicesListForm: boolean =false;
   selectedMedicalProvider: any;
+  showGrid: boolean = false;
   tab = 1;
   dataExportParameters!: any;
   currentFormControl!: FormGroup<any>;
@@ -134,20 +135,27 @@ export class RefundNewFormDetailsComponent{
       this.clientId = client.clientId;
       this.clientName = client.clientFullName;
       if (this.clientId != null && this.vendorId != null) {
-        this. isRecentGridClaimShow = true;
+        this.isRefundGridClaimShow = true;
+      } 
+        
+      else{
+        this.isRefundGridClaimShow = false;
       }
-      this.showServicesListForm= true ;
     }
   }
   showHideServicesListForm(){
-    if(this.refundClaimForm.controls['medicalProvider'].value &&  this.refundClaimForm.controls['client'].value)
+    if(this.refundClaimForm.controls['selectedMedicalProvider'].value &&  this.refundClaimForm.controls['client'].value)
     {
+      
       this.showServicesListForm = true;
+    
     }
     else
     {
-      this.showServicesListForm= false;
-      this.isRecentGridClaimShow =false;
+      
+      this.showServicesListForm = false;
+      this.isRefundGridClaimShow = false;
+   
     }
   }
   searchPharmacy(searchText: any) {
@@ -160,8 +168,11 @@ export class RefundNewFormDetailsComponent{
     this.vendorId = $event.vendorId;
     this.vendorName = $event.vendorName;
     this.providerTin = $event;
-    if (this.clientId != null && this.vendorId != null) {
-      this.isRecentGridClaimShow = true;
+    if (this.clientId != null && this.vendorId != null){
+      this.isRefundGridClaimShow = true;
+    } 
+    else{
+      this.isRefundGridClaimShow = false;
     }
   }
   initRefundForm() {

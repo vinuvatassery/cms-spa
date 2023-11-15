@@ -5,7 +5,7 @@
 </kendo-dialog-titlebar>
 <section class="k-dialog-body">
     <section class="add_main_popup_screen" >
-        <div >
+        <div>
         <div class="add_new_top_section">
             <p class="mb-3"> Search for a client to add insurance, provider, prescription, or tax refunds.</p>
             <div class="flex-row">
@@ -84,7 +84,7 @@
                         <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>
                         <span></span>
-                    <kendo-multicolumncombobox textField="providerFullName" valueField="vendorAddressId"
+                    <kendo-multicolumncombobox textField="providerFullName" valueField="vendorId"
                     [fillMode]="formUiStyle.dropDownFillMode"
                     placeholder="Search pharmacy"
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
@@ -431,7 +431,7 @@
             </div>
         </div>
         <!-- RX Content -->
-        <div class="add_new_bottom_section" *ngIf=" isRecentGridClaimShow" id=" isRecentGridClaimShow">
+  <div class="add_new_bottom_section" *ngIf="isRefundGridClaimShow" id="isRefundGridClaimShow">
             <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all claims included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
@@ -636,7 +636,7 @@
         <button kendoButton [primary]="true" aria-label="Add" class=""> Add </button>
     </div>
 </div>
-    <div class="justify-content-end align-items-center" *ngIf="!isConfirmationClicked && isRecentGridClaimShow">
+    <div class="justify-content-end align-items-center">
         <span class="mr-2">2 refund(s) to be added</span>
         <button kendoButton [primary]="true" aria-label="Confirm Selections"  (click)="confirmationClicked()"> Confirm Selections
         </button>

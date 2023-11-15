@@ -47,6 +47,7 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  isRefundGridClaimShow=false;
 private clientClaimsListDataSubject =  new Subject<any>();
   clientClaimListData$ = this.clientClaimsListDataSubject.asObservable();
   clientclaimsData$=this.financialVendorRefundFacade.clientClaimsListData$
