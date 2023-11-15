@@ -121,7 +121,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Batch Claims',
+      text: 'BATCH CLAIMS',
       icon: 'check',
       click: (data: any,paymentRequestId : any): void => {
         if (!this.isProcessBatchClosed) {
@@ -134,7 +134,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
+      text: 'DELETE CLAIMS',
       icon: 'delete',
       click: (data: any,paymentRequestId : any): void => {
         if (!this.isDeleteBatchClosed) {
