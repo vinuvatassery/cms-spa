@@ -235,9 +235,6 @@ export class PharmacyClaimsPrintAuthorizationComponent {
       .subscribe({
         next: (data: any) => {
           if (data) {
-            if(this.reconcileArray[0].printFlag === StatusFlag.Yes){
-            this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
-            }
             this.returnResultFinalPrintList[this.currentIndex].warrantNumberChange = false;
             this.onReconcileRecordEvent.emit(this.returnResultFinalPrintList[this.currentIndex]);
           }
@@ -263,10 +260,6 @@ export class PharmacyClaimsPrintAuthorizationComponent {
   }
 
   onItemChange(event:any){
-    this.last4OfVisaCard = null;
-    this.cardExpirationDate = null;
-    this.cardExpirationMonth = null;
-    this.cardExpirationYear = null;
     this.loadTemplateEvent.emit(this.returnResultFinalPrintList[event.index]);
     this.currentIndex = event.index;
     this.ref.detectChanges();
