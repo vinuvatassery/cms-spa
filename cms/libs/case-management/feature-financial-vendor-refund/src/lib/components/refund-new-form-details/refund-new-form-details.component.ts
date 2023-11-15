@@ -8,6 +8,7 @@ import { Subject } from 'rxjs';
 import { VendorRefundClaimsListComponent, VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 import { VendorRefundClientClaimsListComponent } from '../vendor-refund-client-claims-list/vendor-refund-client-claims-list.component';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -23,6 +24,21 @@ export class RefundNewFormDetailsComponent{
   ];
 
   @Input() isEdit = false
+  clientCaseEligibilityId: any = null;
+  clientId: any;
+  clientName: any;
+  vendorId: any;
+  isRefundGridClaimShow = false;
+  isShowReasonForException = false;
+  showServicesListForm: boolean =false;
+  selectedMedicalProvider: any;
+  showGrid: boolean = false;
+  tab = 1;
+  dataExportParameters!: any;
+  providerTin: any;
+  selectedClient: any;
+  refundClaimForm!: FormGroup;
+  vendorName: any;
   sortType = this.financialVendorRefundFacade.sortType;
   pageSizes = this.financialVendorRefundFacade.gridPageSizes;
   gridSkipCount = this.financialVendorRefundFacade.skipCount;
@@ -61,6 +77,11 @@ export class RefundNewFormDetailsComponent{
   
   insuraceAddRefundClickSubject = new Subject<any>();
   insuraceAddRefundClick$ = this.insuraceAddRefundClickSubject.asObservable()
+
+  clientSearchLoaderVisibility$ =
+  this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
+  clientSearchResult$ = this.financialVendorRefundFacade.clients$;
+  pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
 
   @ViewChild('insClaims', { static: false })
   insClaims!: VendorRefundInsurancePremiumListComponent;
@@ -121,9 +142,12 @@ export class RefundNewFormDetailsComponent{
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
     public financialVendorFacade :FinancialVendorFacade,   
-    private dialogService: DialogService) {}
+    private dialogService: DialogService,
+    private formBuilder: FormBuilder,) {}
   selectionChange(event: any){
+    debugger
     this.isConfirmationClicked = false
+    this.vendorId=null;
   }
   confirmationClicked (){
   
@@ -224,5 +248,59 @@ this.insuraceAddRefundClickSubject.next(true);
   }
   loadPharmacyPaymentsListGrid(event: any) { 
     this.financialVendorRefundFacade.loadPharmacyPaymentsListGrid();
+  }
+  loadClientBySearchText(clientSearchText: any) {
+    if (!clientSearchText || clientSearchText.length == 0) {
+      return
+    }
+    clientSearchText = clientSearchText.replace("/", "-");
+    clientSearchText = clientSearchText.replace("/", "-");
+    this.financialVendorRefundFacade.loadClientBySearchText(clientSearchText)
+  }
+  onClientValueChange(client: any) {
+    if (client != undefined) {
+      this.clientCaseEligibilityId = client.clientCaseEligibilityId;
+      this.clientId = client.clientId;
+      this.clientName = client.clientFullName;
+      if (this.clientId != null && this.vendorId != null) {
+        this.isRefundGridClaimShow = true;
+      } 
+    }
+    else{
+      this.clientId=null;
+    }
+  }
+  searchPharmacy(searchText: any) {;
+    if (!searchText || searchText.length == 0) {
+      return;
+    }
+    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText);
+  }
+  onProviderValueChange($event: any) {
+    if($event==undefined){ 
+      this.vendorId=null;
+    }
+    this.vendorId = $event.vendorId;
+    this.vendorName = $event.vendorName;
+    this.providerTin = $event;
+    if (this.clientId != null && this.vendorId != null){
+      this.isRefundGridClaimShow = true;
+    } 
+  }
+  initRefundForm() {
+    this.refundClaimForm = this.formBuilder.group({
+      medicalProvider: [this.selectedMedicalProvider, Validators.required],
+      client: [this.selectedClient, Validators.required],
+    });
+  }
+  showHideServicesListForm(){
+    if(this.refundClaimForm.controls['medicalProvider'].value &&  this.refundClaimForm.controls['selectedClient'].value )
+    {
+      this.showServicesListForm = true;
+    }
+    else
+    {
+      this.showServicesListForm = false;
+    }
   }
 }

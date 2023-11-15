@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ClientCase } from '../../entities/client-case';
+import { Pharmacy } from '../../entities/client-pharmacy';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundDataService {
@@ -491,5 +494,34 @@ export class FinancialVendorRefundDataService {
 
   unbatchRefunds(paymentRequestIds: string[]) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/unbatch`, paymentRequestIds);
+  }
+  loadClientBySearchText(text: string) {
+    return this.http.get<ClientCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/claims/medical/clients/SearchText=${text}`
+    );
+  }
+  loadPharmacyBySearchText(searchText: string,) {
+    return this.http.get<Pharmacy[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/claims/pharmacies/SearchText=${searchText}`
+    );
+  }
+  loadRefundClaimsService(data:any): Observable<any> {
+    const ClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      refundType:data.refundType,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/refund_claims`,
+      ClaimsPageAndSortedRequestDto
+    );
   }
 }
