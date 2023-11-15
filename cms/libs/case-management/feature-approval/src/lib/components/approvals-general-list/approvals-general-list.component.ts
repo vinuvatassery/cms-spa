@@ -15,14 +15,12 @@ import { Router } from '@angular/router';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
-import { Observable, Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { InsurancePlanFacade, PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 import {
   UserDataService,
   UserManagementFacade,
 } from '@cms/system-config/domain';
-import { FormGroup } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 @Component({
   selector: 'productivity-tools-approvals-general-list',

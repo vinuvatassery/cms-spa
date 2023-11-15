@@ -370,44 +370,6 @@ export class ApprovalPageComponent implements OnInit {
     }
   }
   
-  buildVendorForm() {
-  let form = this.formBuilder.group({
-      providerName: [''],
-      firstName: [''],
-      lastName: [],
-      tinNumber: [''],
-      phoneNumber: [''],
-      email:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)],
-      fax:[''],
-      addressLine1: [''],
-      addressLine2: [''],
-      city: [''],
-      state: [''],
-      zip: [''],
-      contactFirstName:[''],
-      contactLastName: [''],
-      contactPhone:[''],
-      contactFax:[''],
-      contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
-    });
-    this.healthCareForm = form;
-  }
-
-  editClicked(event : any){
-    if(event)
-    {
-      this.buildVendorForm();
-    }
-  }
-
-  searchClinicVendorClicked(clientName: any) {
-    this.financialVendorFacade.searchClinicVendor(clientName);
-  }
-
-  updateMasterDetailsClicked(event: any){
-    this.financialVendorFacade.updateProviderPanel(event);
-  }
-
   onProviderNameClick(event: any) {
     this.paymentRequestId = event;
     this.providerDetailsDialog = this.dialogService.open({

@@ -5,7 +5,6 @@
   </p>
 
   <div class="flex-row" *ngIf="
-  <div class="flex-row" *ngIf="
       selectedSubtypeCode === subTypeConst.DentalClinic ||
       selectedSubtypeCode === subTypeConst.MedicalClinic ||
       selectedSubtypeCode === subTypeConst.MedicalProvider ||
@@ -13,12 +12,7 @@
     " [formGroup]="healthCareForm">
     <div *ngIf="selectedSubtypeCode == subTypeConst.MedicalClinic || subTypeConst.DentalClinic"
       class="flex-col flex-col-8 inlineloaderwrapper hidedropicon">
-    " [formGroup]="healthCareForm">
-    <div *ngIf="selectedSubtypeCode == subTypeConst.MedicalClinic || subTypeConst.DentalClinic"
-      class="flex-col flex-col-8 inlineloaderwrapper hidedropicon">
       <div class="k-auto-complete-box">
-        <span *ngIf="clinicVendorLoader$ | async"
-          class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <span *ngIf="clinicVendorLoader$ | async"
           class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Clinic Name">
@@ -46,9 +40,6 @@
         <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">
           Clinic Name is required
         </kendo-formerror>
-        <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">
-          Clinic Name is required
-        </kendo-formerror>
         <kendo-formhint>
           Start typing to choose an existing clinic, or enter a new one
         </kendo-formhint>
@@ -58,13 +49,8 @@
       <kendo-floatinglabel text="Provider First Name">
         <kendo-textbox aria-label="Provider First Name" placeholder="Provider First Name"
           [fillMode]="formUiStyle.inputFillMode" formControlName="firstName" [maxlength]="50">
-        <kendo-textbox aria-label="Provider First Name" placeholder="Provider First Name"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="firstName" [maxlength]="50">
         </kendo-textbox>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="healthCareFormControls?.firstName.errors?.required && isValidateForm">
-        First Name is required
-      </kendo-formerror>
       <kendo-formerror *ngIf="healthCareFormControls?.firstName.errors?.required && isValidateForm">
         First Name is required
       </kendo-formerror>
@@ -73,13 +59,8 @@
       <kendo-floatinglabel text="Provider Last Name">
         <kendo-textbox aria-label="Provider Last Name" placeholder="Provider Last Name"
           [fillMode]="formUiStyle.inputFillMode" formControlName="lastName" [maxlength]="50">
-        <kendo-textbox aria-label="Provider Last Name" placeholder="Provider Last Name"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="lastName" [maxlength]="50">
         </kendo-textbox>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="healthCareFormControls?.lastName.errors?.required && isValidateForm">
-        Last Name is required
-      </kendo-formerror>
       <kendo-formerror *ngIf="healthCareFormControls?.lastName.errors?.required && isValidateForm">
         Last Name is required
       </kendo-formerror>
@@ -89,22 +70,12 @@
         <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
           placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
         </kendo-maskedtextbox>
-        <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
-          placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat">
-        </kendo-maskedtextbox>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="healthCareFormControls?.tinNumber.errors?.required && isValidateForm">
-        Tin Name is required
-      </kendo-formerror>
       <kendo-formerror *ngIf="healthCareFormControls?.tinNumber.errors?.required && isValidateForm">
         Tin Name is required
       </kendo-formerror>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="Phone Number (optional)">
-        <kendo-maskedtextbox aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="phoneNumber" mask="(999) 000-0000">
-        </kendo-maskedtextbox>
       <kendo-floatinglabel text="Phone Number (optional)">
         <kendo-maskedtextbox aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
           formControlName="phoneNumber" mask="(999) 000-0000">
@@ -113,8 +84,6 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Email (optional)">
-        <kendo-textbox aria-label="Email (optional)" placeholder="Email (optional)"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="email" [maxlength]="200">
         <kendo-textbox aria-label="Email (optional)" placeholder="Email (optional)"
           [fillMode]="formUiStyle.inputFillMode" formControlName="email" [maxlength]="200">
         </kendo-textbox>
@@ -126,15 +95,10 @@
         <kendo-maskedtextbox aria-label="Fax (optional)" [fillMode]="formUiStyle.inputFillMode" formControlName="fax"
           mask="(999) 000-0000">
         </kendo-maskedtextbox>
-        <kendo-maskedtextbox aria-label="Fax (optional)" [fillMode]="formUiStyle.inputFillMode" formControlName="fax"
-          mask="(999) 000-0000">
-        </kendo-maskedtextbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Address line 1">
-        <kendo-textbox aria-label="address line 1" placeholder="Address line 1" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="addressLine1" [maxlength]="200">
         <kendo-textbox aria-label="address line 1" placeholder="Address line 1" [fillMode]="formUiStyle.inputFillMode"
           formControlName="addressLine1" [maxlength]="200">
         </kendo-textbox>
@@ -142,14 +106,8 @@
       <kendo-formerror *ngIf="healthCareFormControls?.addressLine1.errors?.required && isValidateForm">
         Address line 1 is required
       </kendo-formerror>
-      <kendo-formerror *ngIf="healthCareFormControls?.addressLine1.errors?.required && isValidateForm">
-        Address line 1 is required
-      </kendo-formerror>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="Address Line 2 (optional)">
-        <kendo-textbox aria-label="Address Line 2 (optional)" placeholder="Address Line 2 (optional)"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="addressLine2" [maxlength]="50">
       <kendo-floatinglabel text="Address Line 2 (optional)">
         <kendo-textbox aria-label="Address Line 2 (optional)" placeholder="Address Line 2 (optional)"
           [fillMode]="formUiStyle.inputFillMode" formControlName="addressLine2" [maxlength]="50">
@@ -160,13 +118,8 @@
       <kendo-floatinglabel text="City">
         <kendo-textbox aria-label="city" placeholder="City" [fillMode]="formUiStyle.inputFillMode"
           formControlName="city" [maxlength]="50">
-        <kendo-textbox aria-label="city" placeholder="City" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="city" [maxlength]="50">
         </kendo-textbox>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="healthCareFormControls?.city.errors?.required && isValidateForm">
-        City Name is required
-      </kendo-formerror>
       <kendo-formerror *ngIf="healthCareFormControls?.city.errors?.required && isValidateForm">
         City Name is required
       </kendo-formerror>
@@ -176,15 +129,8 @@
         <kendo-dropdownlist aria-label="State" [fillMode]="formUiStyle.dropDownFillMode" formControlName="state"
           [data]="ddlStates$| async" textField="stateName" valueField="stateCode" [valuePrimitive]="true"
           placeholder="State">
-      <kendo-floatinglabel text="State">
-        <kendo-dropdownlist aria-label="State" [fillMode]="formUiStyle.dropDownFillMode" formControlName="state"
-          [data]="ddlStates$| async" textField="stateName" valueField="stateCode" [valuePrimitive]="true"
-          placeholder="State">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="healthCareFormControls?.state.errors?.required && isValidateForm">
-        State is required
-      </kendo-formerror>
       <kendo-formerror *ngIf="healthCareFormControls?.state.errors?.required && isValidateForm">
         State is required
       </kendo-formerror>
@@ -210,34 +156,9 @@
       <kendo-floatinglabel text="Contact Last Name (optional)">
         <kendo-textbox aria-label="Contact Last Name (optional)" placeholder="Contact Last Name (optional)"
           [fillMode]="formUiStyle.inputFillMode" formControlName="contactLastName" [maxlength]="40">
-        <kendo-textbox aria-label="Zip" placeholder="Zip" [fillMode]="formUiStyle.inputFillMode" formControlName="zip"
-          [maxlength]="10">
-        </kendo-textbox>
-      </kendo-floatinglabel>
-      <kendo-formerror *ngIf="healthCareFormControls?.zip.errors?.required && isValidateForm">
-        Zip is required
-      </kendo-formerror>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Contact First Name (optional)">
-        <kendo-textbox aria-label="Contact First Name (optional)" placeholder="Contact First Name (optional)"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="contactFirstName" [maxlength]="40">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Contact Last Name (optional)">
-        <kendo-textbox aria-label="Contact Last Name (optional)" placeholder="Contact Last Name (optional)"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="contactLastName" [maxlength]="40">
-        </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Contact Phone (optional)">
-        <kendo-maskedtextbox aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="contactPhone" mask="(999) 000-0000">
-        </kendo-maskedtextbox>
-      </kendo-floatinglabel>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Contact Phone (optional)">
         <kendo-maskedtextbox aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
@@ -251,18 +172,7 @@
           formControlName="contactFax" mask="(999) 000-0000">
         </kendo-maskedtextbox>
       </kendo-floatinglabel>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Contact Fax (optional)">
-        <kendo-maskedtextbox aria-label="Fax (optional)" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="contactFax" mask="(999) 000-0000">
-        </kendo-maskedtextbox>
-      </kendo-floatinglabel>
     </div>
-    <div class="flex-col flex-col-6">
-      <kendo-floatinglabel text="Contact Email (optional)">
-        <kendo-textbox aria-label="Contact Email (optional)" placeholder="Contact Email (optional)"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="contactEmail" [maxlength]="200">
-        </kendo-textbox>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Contact Email (optional)">
         <kendo-textbox aria-label="Contact Email (optional)" placeholder="Contact Email (optional)"
@@ -757,8 +667,6 @@
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div class="justify-content-start">
-      <button aria-label="Update" kendoButton [primary]="true" (click)="onUpdateClicked()">Update</button>
-      <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" (click)="onCancel()">
       <button aria-label="Update" kendoButton [primary]="true" (click)="onUpdateClicked()">Update</button>
       <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel" (click)="onCancel()">
         Cancel
