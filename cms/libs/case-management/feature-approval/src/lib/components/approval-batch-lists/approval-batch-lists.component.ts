@@ -9,14 +9,15 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
+  SortDescriptor
 } from '@progress/kendo-data-query';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject, first} from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { PendingApprovalPaymentTypeCode } from '@cms/case-management/domain';
+import { UserLevel } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approval-batch-lists',
   templateUrl: './approval-batch-lists.component.html',
@@ -27,20 +28,22 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
-  @Input() sort: any;
   @Input() batchDetailPaymentsList$: any;
   @Input() batchDetailModalSourceList: any;
   @Input() selectedPaymentType: any;
   @Input() paymentStatusLovList: any;
   @Input() paymentMethodLovList: any;
+  @Input() isSendBackMode: any;
+  @Input() userLevel: any;
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
   @Output() batchModalSaveClickedEvent = new EventEmitter<any>();
   readonly paymentTypeCode = PendingApprovalPaymentTypeCode;
+  readonly UserLevel = UserLevel;
   public state!: State;
   isBatchDetailPaymentsGridLoaderShow = new BehaviorSubject<boolean>(true);
   sortColumn = 'paymentNbr';
-  sortDir = 'Ascending';
+  sortDir = 'Descending';
   sortColumnName = '';
   columnsReordered = false;
   filteredBy = '';
@@ -48,15 +51,22 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
-  gridDataResult!: GridDataResult;
+  sort: SortDescriptor[] = [{
+    field: this.sortColumn,
+    dir: 'desc',
+  }];
+  batchDetailPaymentsList: any;
   batchId?: string | null;
   index: number = 0;
-  tAreaSendBackNotesMaxLength: any = 100;
+  batch: any;
+  tAreaSendBackNotesMaxLength: any = 200;
   approveBatchCount: any = 0;
   sendbackBatchCount: any = 0;
+  sendBackPaymentCount: any = 0;
   approveStatus: string = 'APPROVED';
   sendbackStatus: string = 'SEND_BACK';
   sendbackNotesRequireMessage: string = 'Send Back Note is required.';
+  atleastOnePaymentRequireMessage: string = 'Selection of at least one payment is required.';
 
   gridBatchDetailPaymentsDataSubject = new Subject<any>();
   gridBatchDetailPaymentsData$ =
@@ -75,15 +85,14 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   constructor(private readonly cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[2]?.value,
-      sort: this.sort,
-    };
     this.loadColumnsData();
-    this.getCurrentBatchId();
-    this.tAreaVariablesInitiation(this.batchDetailModalSourceList[this.index]);
-    this.loadBatchPaymentListGrid();
+    this.tAreaVariablesInitiation(this.batch);
+    if(this.isSendBackMode){
+      this.onBatchSendbackClicked(this.batch);
+    }
+    this.loadBatchPaymentListGrid();    
+    this.gridDataHandle();
+    this.paymentSelectionDataHandle();
     this.approveAndSendbackCount();
   }
 
@@ -93,7 +102,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       take: this.pageSizes[2]?.value,
       sort: this.sort,
     };
-    this.loadBatchPaymentListGrid();
+    this.getCurrentBatchId();
   }
 
   private loadColumnsData(){
@@ -141,14 +150,17 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     );
     if (index >= 0) {
       this.index = index;
-      this.batchId =
-        this.batchDetailModalSourceList[index].paymentRequestBatchId;
+      this.batchId = this.batchDetailModalSourceList[index].paymentRequestBatchId;
+      this.batch = this.batchDetailModalSourceList[index];
     }
   }
 
   onScrollViewItemChanged(args: any) {
     this.index = args.index;
     this.batchId = args.item.paymentRequestBatchId;
+    this.approvalId = args.item.approvalId;
+    this.batch = this.batchDetailModalSourceList[this.index];
+    this.defaultGridState();
     this.loadBatchPaymentListGrid();
   }
 
@@ -171,7 +183,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   approveAndSendbackCount() {
     this.approveBatchCount = 0;
     this.sendbackBatchCount = 0;
-    this.batchDetailModalSourceList.forEach((item: any, index: number) => {
+    this.batchDetailModalSourceList.forEach((item: any) => {
       this.approveBatchCount =
         item.batchStatus == this.approveStatus
           ? this.approveBatchCount + 1
@@ -181,12 +193,22 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
           ? this.sendbackBatchCount + 1
           : this.sendbackBatchCount;
     });
+    this.calculateSendBackPaymentCount();
   }
 
-  onApproveClicked(item: any, index: any) {
+  calculateSendBackPaymentCount(){
+    this.sendBackPaymentCount = this.batch?.paymentRequestIds?.length;
+  }
+
+  onBatchApproveClicked(item: any) {
     item.approveButtonDisabled = false;
     item.sendBackButtonDisabled = true;
     item.sendBackNotes = '';
+    item.sendBackNotesInValidMsg = '';
+    item.sendBackNotesInValid = false;
+    item.atleastOnePaymentInValidMsg=null;
+    item.atleastOnePaymentInValid = false;
+    this.clearPaymentSelection();
     if (
       item.batchStatus === undefined ||
       item.batchStatus === '' ||
@@ -195,47 +217,100 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       item.batchStatus = this.approveStatus;
     } else if (item.batchStatus == this.approveStatus) {
       item.batchStatus = '';
-      item.sendBackNotesInValidMsg = '';
-      item.sendBackNotesInValid = false;
-      item.sendBackButtonDisabled = true;
     } else if (item.batchStatus == this.sendbackStatus) {
       item.batchStatus = this.approveStatus;
-      item.sendBackNotesInValidMsg = '';
-      item.sendBackNotesInValid = false;
-      item.sendBackButtonDisabled = true;
     }
     this.sendBackNotesChange(item);
-    this.assignDataToSourceList(item, index);
     this.approveAndSendbackCount();
   }
 
-  onSendbackClicked(item: any, index: any) {
+  onBatchSendbackClicked(item: any) {
     item.approveButtonDisabled = true;
     item.sendBackButtonDisabled = false;
     item.sendBackNotes = '';
-    if (
+    if(
       item.batchStatus === undefined ||
       item.batchStatus === '' ||
-      item.batchStatus === null
-    ) {
+      item.batchStatus === null ||
+      item.batchStatus === this.approveStatus
+    ){
       item.batchStatus = this.sendbackStatus;
       item.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       item.sendBackNotesInValid = true;
+      if(this.batch.totalPayments == 1){
+        this.selectAllPayments();
+      }
+      else{
+        item.atleastOnePaymentInValidMsg = this.atleastOnePaymentRequireMessage;
+        item.atleastOnePaymentInValid = true;
+        this.clearPaymentSelection();
+      }
     } else if (item.batchStatus == this.sendbackStatus) {
       item.batchStatus = '';
       item.sendBackNotesInValidMsg = '';
       item.sendBackNotesInValid = false;
       item.sendBackButtonDisabled = true;
-    } else {
-      item.batchStatus = this.sendbackStatus;
-      item.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
-      item.sendBackNotesInValid = true;
-      item.sendBackButtonDisabled = false;
+      item.atleastOnePaymentInValidMsg = null;
+      item.atleastOnePaymentInValid = false;
+      this.clearPaymentSelection();
     }
-
     this.sendBackNotesChange(item);
-    this.assignDataToSourceList(item, index);
     this.approveAndSendbackCount();
+  }
+
+  onPaymentSendbackClicked(selected: any, item: any) {
+    if(selected){
+      if(this.batch.batchStatus != this.sendbackStatus){
+        this.onBatchSendbackClicked(this.batch);
+      }
+      item.isSendBack = true;
+      let index = this.batch.paymentRequestIds.findIndex((x: any) => x == item.paymentRequestId);
+      if(index === -1){
+        this.batch.paymentRequestIds.push(item.paymentRequestId);
+      }
+      this.batch.atleastOnePaymentInValidMsg = null;
+      this.batch.atleastOnePaymentInValid = false;
+    }
+    else{
+      let index = this.batch.paymentRequestIds.findIndex((x: any) => x == item.paymentRequestId);
+      if(index >= 0){
+        this.batch.paymentRequestIds.splice(index, 1);
+      }
+      item.isSendBack = false;
+      if(this.batch.paymentRequestIds.length <= 0){
+        if(this.batch.batchStatus == this.sendbackStatus){
+          this.onBatchSendbackClicked(this.batch);
+        }
+      }
+    }
+    this.calculateSendBackPaymentCount();
+  }
+
+  clearPaymentSelection(){
+    if(this.batchDetailPaymentsList){
+      this.batchDetailPaymentsList.data.forEach((paymentItem: any) => {
+        paymentItem.isSendBack = false;
+      });
+    }
+    this.batch.paymentRequestIds = [];
+  }
+
+  selectAllPayments(){
+    let isValidSelection = false;
+    if(this.batchDetailPaymentsList){
+      this.batchDetailPaymentsList.data.forEach((paymentItem: any) => {
+        paymentItem.isSendBack = true;
+        let index = this.batch.paymentRequestIds.findIndex((x: any) => x == paymentItem.paymentRequestId);
+        if(index === -1){
+          this.batch.paymentRequestIds.push(paymentItem.paymentRequestId);
+        }
+        isValidSelection = true;
+      });
+    }  
+    if(isValidSelection){
+      this.batch.atleastOnePaymentInValidMsg = null;
+      this.batch.atleastOnePaymentInValid = false;
+    }
   }
 
   assignDataToSourceList(dataItem: any, index: any) {
@@ -248,6 +323,12 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     this.batchDetailModalSourceList[index].batchStatus = dataItem?.batchStatus;
     this.batchDetailModalSourceList[index].sendBackNotes =
       dataItem?.sendBackNotes;
+    this.batchDetailModalSourceList[index].atleastOnePaymentInValidMsg =
+      dataItem?.atleastOnePaymentInValidMsg;
+    this.batchDetailModalSourceList[index].atleastOnePaymentInValid =
+      dataItem?.atleastOnePaymentInValid;  
+    this.batchDetailModalSourceList[index].paymentRequestIds =
+      dataItem?.paymentRequestIds;  
   }
 
   onBatchModalSaveClicked() {
@@ -288,41 +369,64 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       batchId,
       selectedPaymentType,
     });
-    this.gridDataHandle();
   }
 
   gridDataHandle() {
-    this.batchDetailPaymentsList$.subscribe((response: any) => {
+    this.batchDetailPaymentsList$
+    .subscribe((response: any) => {
       let gridData = {
         data: response.data,
         total: response.total,
       };
-      this.gridDataResult = gridData;
-      this.gridBatchDetailPaymentsDataSubject.next(this.gridDataResult);
+      this.batchDetailPaymentsList = gridData;
       if (response?.total >= 0 || response?.total === -1) {
         this.isBatchDetailPaymentsGridLoaderShow.next(false);
+      }
+      if(response.data.length > 0){
+      if(this.batch.totalPayments == 1 && this.batch.batchStatus == this.sendbackStatus){
+        this.batchDetailPaymentsList.data.forEach((item: any) => {
+          item.isSendBack = true;
+        });
+      }
+      else{
+        this.batchDetailPaymentsList.data.forEach((item: any) => {
+          item.isSendBack = this.batch.paymentRequestIds.some((id:any) => id === item.paymentRequestId);
+        });
+      }
+      this.calculateSendBackPaymentCount();       
+      this.gridBatchDetailPaymentsDataSubject.next(this.batchDetailPaymentsList);
       }
     });
   }
 
-  onChange(data: any) {
-    this.defaultGridState();
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
+  paymentSelectionDataHandle(){
+    this.gridBatchDetailPaymentsData$
+    .pipe(first(response => response != null))
+    .subscribe((response: any) => {
+      if(this.batch.totalPayments == 1 && this.batch.batchStatus == this.sendbackStatus){
+        this.selectAllPayments();
+      }
+      else{
+        this.batchDetailPaymentsList.data.forEach((item: any) => {
+          item.isSendBack = this.batch.paymentRequestIds.some((id:any) => id === item.paymentRequestId);
+        });
+      }
+      this.calculateSendBackPaymentCount();
+    });
   }
 
   defaultGridState() {
+    this.sortColumn = 'paymentNbr';
+    this.sort = [{
+      field: this.sortColumn,
+      dir: 'desc',
+    }];
     this.state = {
       skip: 0,
       take: this.pageSizes[2]?.value,
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
     };
-  }
-
-  onColumnReorder($event: any) {
-    this.columnsReordered = true;
   }
 
   dataStateChange(stateData: any): void {

@@ -68,7 +68,7 @@ export class ApprovalPageComponent implements OnInit {
   pendingApprovalPaymentsCount$ =
     this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
 
-  userLevel = 1;
+  userLevel = UserLevel.Level1Value;
   pendingApprovalCount = 0;
   state!: State;
   approvalsGeneralLists$ =

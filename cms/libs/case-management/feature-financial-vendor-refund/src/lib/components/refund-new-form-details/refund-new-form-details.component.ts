@@ -1,9 +1,13 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef} from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, filterBy } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam } from '@cms/case-management/domain'; 
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { Subject } from 'rxjs';
+import { VendorRefundClaimsListComponent, VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
+import { VendorRefundClientClaimsListComponent } from '../vendor-refund-client-claims-list/vendor-refund-client-claims-list.component';
+import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -18,6 +22,7 @@ export class RefundNewFormDetailsComponent{
     "RX",
   ];
 
+  @Input() isEdit = false
   sortType = this.financialVendorRefundFacade.sortType;
   pageSizes = this.financialVendorRefundFacade.gridPageSizes;
   gridSkipCount = this.financialVendorRefundFacade.skipCount;
@@ -53,6 +58,23 @@ export class RefundNewFormDetailsComponent{
   sortPharmacyPayment = this.financialVendorRefundFacade.sortValuePharmacyPayment;
   pharmacyPaymentsListData$ =   this.financialVendorRefundFacade.pharmacyPaymentsListData$;
   isConfirmationClicked = false;
+  
+  insuraceAddRefundClickSubject = new Subject<any>();
+  insuraceAddRefundClick$ = this.insuraceAddRefundClickSubject.asObservable()
+
+  @ViewChild('insClaims', { static: false })
+  insClaims!: VendorRefundInsurancePremiumListComponent;
+
+  @ViewChild('tpaClaims', { static: false })
+  tpaClaims!: VendorRefundClaimsListComponent;
+
+  @ViewChild('rxClaims', { static: false })
+  rxClaims!: VendorRefundPharmacyPaymentsListComponent;
+
+  insurancePremiumPaymentReqIds :any[] =[]
+  tpaPaymentReqIds :any[] =[]
+  rxPaymentReqIds :any[] =[]
+
   clientSearchResult =[
 
     {
@@ -104,18 +126,31 @@ export class RefundNewFormDetailsComponent{
     this.isConfirmationClicked = false
   }
   confirmationClicked (){
+  
     this.isConfirmationClicked = true
-    if(this.selectedRefundType==='INS'){
-      this.disableFeildsOnConfirmSelection = true
-    }
+    this.disableFeildsOnConfirmSelection = true
 
+    if(this.selectedRefundType=== "INS" 
+    && this.insClaims.selectedInsuranceClaims &&  this.insClaims.selectedInsuranceClaims.length>0
+    ){
+    this.insurancePremiumPaymentReqIds =  this.insClaims.selectedInsuranceClaims
+   
   } 
+
+  if(this.selectedRefundType === 'TPA'){
+    this.tpaPaymentReqIds = this.tpaClaims.selectedTpaClaims
+  }
+  if(this.selectedRefundType === 'RX'){
+    this.rxPaymentReqIds = this.rxClaims.selectedPharmacyClaims
+  }
+}
+
 
   /*** refund INS */
   getInsuranceRefundInformation(data:any){
     const param ={
       ...data,
-      paymentRequestsId : this.paymentRequestId
+      paymentRequestsId : this.insurancePremiumPaymentReqIds
     }
     this.financialVendorRefundFacade.getInsuranceRefundInformation(param);
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
@@ -159,10 +194,14 @@ OnEditProviderProfileClick(){
   this.lovFacade.getPaymentMethodLov()
 }
 
+onAddRefundClick(){
+this.insuraceAddRefundClickSubject.next(true);
+}
 
   /******  */
   selectDiffPayments(){
     this.isConfirmationClicked = false;
+    this.disableFeildsOnConfirmSelection = false;
   }
   closeAddEditRefundFormModalClicked(){
     this.modalCloseAddEditRefundFormModal.emit(true);  
