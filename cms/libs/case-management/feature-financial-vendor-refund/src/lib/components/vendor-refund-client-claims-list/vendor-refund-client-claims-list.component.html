@@ -2,7 +2,7 @@
   <kendo-grid [resizable]="true" [loading]="isClientClaimsLoaderShow" [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
     [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
-    [data]="myData"
+    [data]="clientClaimsListData$ | async"
     kendoGridSelectBy="id"
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedVendorRefunds"

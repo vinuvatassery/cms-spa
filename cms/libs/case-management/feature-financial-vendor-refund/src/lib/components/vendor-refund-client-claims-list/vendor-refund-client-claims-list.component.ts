@@ -147,6 +147,7 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   selectedKeysChange(selection: any) {
     let selectedRowData = this.gridData.filter((i: any) => i.id == selection);
     this.selectedVendorRefunds = selectedRowData;
+    this.selectedVendorRefundsListEvent.emit(this.selectedVendorRefunds)
   console.log(this.selectedVendorRefunds);
    
   }
