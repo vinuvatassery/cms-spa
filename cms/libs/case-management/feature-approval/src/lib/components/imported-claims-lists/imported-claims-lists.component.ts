@@ -90,6 +90,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   subscribeToSubmitImportedClaims(){
     this.submitImportedClaims$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
+        this.importedClaimsGridUpdatedResult = [];
         this.onCloseSubmitClicked();
         this.loadImportedClaimsListGrid();
       }
