@@ -51,7 +51,11 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   }
 
   onEditListItemsDetailClicked(): void {
-    this.openEditModal.emit(this.approvalId);
+    var detailData = {
+      subTypeCode : this.subTypeCode,
+      vendorData : this.vendorData
+    }
+    this.openEditModal.emit(detailData);
   }
 
   onCloseEditListItemsDetailClicked() {}

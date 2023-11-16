@@ -4,7 +4,7 @@
   <span class="text-bold" for="eemploymentep flex-col">Payment Request Type:&nbsp;</span>
   <div class="fmly-epdorpdown flex-col flex-col-3">
     <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
-      [data]="pendingApprovalPaymentType$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
+      [data]="paymentType" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
       [loading]="(pendingApprovalPaymentType$ | async)?.length === 0"
       (valueChange)="onPaymentTypeCodeValueChange($event)" [(ngModel)]="selectedPaymentType">
     </kendo-dropdownlist>
@@ -374,7 +374,6 @@
     [paymentStatusLovList]="paymentStatusLovList"
     [paymentMethodLovList]="paymentMethodLovList"
     [pageSizes]="pageSizes"
-    [sortType]="sortType"
     [selectedPaymentType]="selectedPaymentType"
     [isSendBackMode]="isSendbackMode"
     [userLevel]="userLevel"

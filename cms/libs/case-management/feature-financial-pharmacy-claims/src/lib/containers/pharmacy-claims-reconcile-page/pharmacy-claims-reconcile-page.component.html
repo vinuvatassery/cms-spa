@@ -11,4 +11,7 @@
 [batchId] = "batchId"
 (loadReconcileListEvent)="loadReconcileListGrid($event)"
 [exportButtonShow$]="exportButtonShow$"
-(exportGridDataEvent)="exportClaimBatchesGridData()"></cms-pharmacy-claims-batches-reconcile-payments>
+(exportGridDataEvent)="exportClaimBatchesGridData()"
+(loadTemplateEvent) = "loadEachLetterTemplate($event)"
+[letterContentList$]="letterContentList$"
+[letterContentLoader$]="letterContentLoader$"></cms-pharmacy-claims-batches-reconcile-payments>

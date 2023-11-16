@@ -34,7 +34,7 @@ import {
   PendingApprovalPaymentTypeCode,
 } from '@cms/case-management/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-
+import { scan } from 'rxjs/operators';
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
   templateUrl: './approvals-payments-list.component.html',
@@ -70,7 +70,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   readonly UserLevel = UserLevel;
   public state!: State;
   sortColumn = 'batchName';
-  sortDir = 'Ascending';
+  sortDir = '';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -161,6 +161,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   paymentMethodLov$ = this.lovFacade.paymentMethodType$;
   paymentStatusLovSubscription!: Subscription;
   paymentMethodLovSubscription!: Subscription;
+  paymentType: any;
   isWarningDialogShow: boolean=false;
   /** Constructor **/
   constructor(
@@ -174,13 +175,20 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     private readonly configProvider: ConfigurationProvider
   ) {}
 
-  ngOnInit(): any {
+  ngOnInit(): any {    
+    this.getPaymentTypeCode();
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.lovFacade.getPandingApprovalPaymentTypeLov();
     this.defaultPaymentType();
     this.getLoggedInUserProfile();
     this.loadPaymentStatusLov();
     this.loadPaymentMethodLov();
+  }
+
+  private getPaymentTypeCode() {
+    this.pendingApprovalPaymentType$.subscribe((data) => {
+      this.paymentType = data.sort((a: any, b: any) => a.sequenceNbr - b.sequenceNbr);
+    });
   }
 
   private loadPaymentStatusLov(){
@@ -245,7 +253,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: [{ field: 'batchName', dir: 'desc' }],
     };
   }
 
@@ -394,7 +402,12 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    if (this.sort[0]?.dir === undefined) {
+      this.sortDir = '';
+    }
+    if (this.sort[0]?.dir !== undefined) {
+      this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    }
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     if (stateData.filter?.filters.length > 0) {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -1115,8 +1128,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.sortType = 'desc';
     this.setGridValueAndData();
     this.sortColumn = 'batchName';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "Descending";
     this.filter = [];
     this.searchValue = '';
     this.selectedColumn = 'ALL';
