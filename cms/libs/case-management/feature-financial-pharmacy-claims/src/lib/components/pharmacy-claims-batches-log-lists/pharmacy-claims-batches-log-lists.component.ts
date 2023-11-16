@@ -581,7 +581,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   }
 
   navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/pharmacy-claims/batch/reconcile-payments'] );
+    this.route.navigate(['/financial-management/pharmacy-claims/batch/reconcile-payments'],
+    { queryParams: { bid: this.batchId } });
   }
   public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({
