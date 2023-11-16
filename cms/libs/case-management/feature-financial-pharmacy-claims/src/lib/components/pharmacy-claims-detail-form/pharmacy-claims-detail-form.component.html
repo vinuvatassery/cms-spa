@@ -228,7 +228,7 @@
                                                         <div class="app-c-globalSearch app-c-globalSearch-footer p-0">
                                                           <div class="flex-row p-0">
                                                             <div class="flex-col p-0">                                                             
-                                                              <button  aria-label="ADD NEW/REQUEST NEW"
+                                                              <button  aria-label="ADD NEW/REQUEST NEW" (click)="clickOpenAddEditFinancialDrugsDetails()"
                                                                 kendoButton
                                                                 [primary]="true"
                                                                 class="btn-full-no-radius"                                                               
@@ -353,3 +353,14 @@
             <button kendoButton [primary]="true" aria-label="Add" class="" (click)="savePharmacyClaim()"> {{isEdit === true ? 'UPDATE' : 'ADD'}} </button>
     </div>
 </kendo-dialog-actions>
+
+
+<kendo-dialog *ngIf="isFinancialDrugsDetailShow" (close)="clickCloseAddEditFinancialDrugsDetails()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="clickCloseAddEditFinancialDrugsDetails()"> {{dialogTitle}} Drug
+  </kendo-dialog-titlebar>
+  <common-financial-drugs-details [hasCreateUpdatePermission]="hasDrugCreateUpdatePermission" [vendorId]="vendorId"
+    [dialogTitle]="dialogTitle" [vendorDetails$]="vendorDetails$" [deliveryMethodCodes]="deliveryMethodLovs"
+    [addDrug$]="addDrug$" (addDrugEvent)="addDrug($event)"
+    (close)="clickCloseAddEditFinancialDrugsDetails()"> </common-financial-drugs-details>
+</kendo-dialog>

@@ -25,6 +25,7 @@ export * from './lib/case-eligibility-periods/case-eligibility-periods.component
 export * from './lib/grid-cell-date-range-filter/grid-cell-date-range-filter.component';
 export * from './lib/reminder-notification-snack-bar/reminder-notification-snack-bar.component';
 export * from './lib/re-assign-case/re-assign-case.component';
+export * from './lib/financial-drugs-details/financial-drugs-details.component';
 /** Pipes **/
 export * from './lib/pipes/ssn.pipe';
 export * from './lib/pipes/fileSize.pipe';

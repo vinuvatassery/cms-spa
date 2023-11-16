@@ -25,6 +25,9 @@ export class DrugsFacade {
   drugsData$ = this.drugsDataSubject.asObservable();
   private drugDataLoaderSubject = new Subject<any>();
   drugDataLoader$ = this.drugDataLoaderSubject.asObservable();
+
+  private addDrugSubject = new Subject<any>();
+  addDrug$ = this.addDrugSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -86,5 +89,17 @@ export class DrugsFacade {
 
   addDrug(dto: any) {
     return this.drugsDataService.addDrug(dto);
+  }
+  addDrugData(dto: any) 
+    {
+      this.drugsDataService.addDrug(dto).subscribe({
+      next: (response: any) => {
+        this.addDrugSubject.next(response);
+       
+      },
+      error: (err: any) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      }
+    });
   }
 }
