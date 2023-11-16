@@ -35,7 +35,8 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   @Input() vendorId: any;
   @Input() clientId: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
-
+ @Input() isEdit = false
+ @Input() editPaymentRequestId:any
   @Input() clientClaimsListData$: any;
   @Output() loadClientClaimsListEvent = new EventEmitter<any>();
   paymentStatusType:any;
@@ -58,14 +59,14 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   financialPremiumsProcessData$ = this.financialVendorRefundFacade.financialPremiumsProcessData$;
   premiumsListData$ =   this.financialVendorRefundFacade.premiumsListData$;
- 
+  @Input() selectedInsurancePremiumIds:any[]  =[]
    
   constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,)
   {
  
   }
   selectedKeysChange(selection: any) {
-    this.selectedClaims = selection;
+    this.selectedInsuranceClaims = selection;
   }
   ngOnInit(): void {
     
@@ -74,6 +75,9 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+    this.selectedInsuranceClaims =  (this.selectedInsurancePremiumIds && this.selectedInsurancePremiumIds.length >0)?
+                                    this.selectedInsurancePremiumIds : this.selectedInsuranceClaims
+                                     
     this.loadRefundClaimsListGrid();
     
   }
@@ -100,7 +104,12 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   }
 
   loadRefundClaimsGrid(data: any) {
-    this.financialVendorRefundFacade.loadMedicalPremiumList(data);
+    if(this.isEdit){
+      this.financialVendorRefundFacade.getInsuranceRefundEditInformation(this.editPaymentRequestId,data)
+    }else{
+      this.financialVendorRefundFacade.loadMedicalPremiumList(data);
+
+    }
   }
   
   dataStateChange(stateData: any): void {

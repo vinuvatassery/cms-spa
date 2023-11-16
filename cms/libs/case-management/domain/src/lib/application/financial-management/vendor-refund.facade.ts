@@ -17,7 +17,7 @@ export class FinancialVendorRefundFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueRefundInformationGrid = 'CreatedDate';
+  public sortValueRefundInformationGrid = 'creationTime';
   public sortValueEntryInformationGrid = 'entryDate';
   public sortRefundInformationGrid: SortDescriptor[] = [{
     field: this.sortValueRefundInformationGrid,
@@ -106,6 +106,11 @@ export class FinancialVendorRefundFacade {
   insuranceRefundInformation$ = this.insuranceRefundInformationSubject.asObservable();
 
 
+  private addInsuranceRefundClaimSubject =  new Subject<any>();
+  addInsuranceRefundClaim$ = this.addInsuranceRefundClaimSubject.asObservable();
+
+
+
   private insuranceRefundInformationLoaderSubject = new BehaviorSubject<any>(false);
   insuranceRefundInformationLoader$ = this.insuranceRefundInformationLoaderSubject.asObservable();
 
@@ -115,9 +120,6 @@ export class FinancialVendorRefundFacade {
 
   private batchRefundsSubject =  new Subject<any>();
   batchRefunds$ = this.batchRefundsSubject.asObservable();
-
-  private unbatchEntireBatchSubject =  new Subject<any>();
-  unbatchEntireBatch$ = this.unbatchEntireBatchSubject.asObservable();
 
   private unbatchRefundsSubject =  new Subject<any>();
   unbatchRefunds$ = this.unbatchRefundsSubject.asObservable();
@@ -171,6 +173,52 @@ export class FinancialVendorRefundFacade {
     });
   }
 
+  addInsuranceRefundClaim(data:any,vendorId:any){
+   
+    this.financialVendorRefundDataService.addInsuranceRefundClaim(data,vendorId).subscribe({
+      next: (dataResponse:any) => {
+        this.addInsuranceRefundClaimSubject.next(dataResponse);
+        
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
+
+  getInsuranceRefundEditInformation(paymentRequestId:any, paginationSortingDto:any){  
+  this.loaderService.show();
+  paginationSortingDto.filter = JSON.stringify(paginationSortingDto.filter);
+    this.financialVendorRefundDataService.getInsuranceRefundEditInformation(paymentRequestId,paginationSortingDto).subscribe({
+      next: (dataResponse:any) => {
+          const gridView = {
+            data: dataResponse.items,
+            total: dataResponse.totalCount,
+          };
+        this.financialPremiumsProcessDataSubject.next(gridView); 
+          this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
+  loadVendorRefundBatchListGrid(){
+    this.financialVendorRefundDataService.loadVendorRefundBatchListService().subscribe({
+      next: (dataResponse) => {
+        this.vendorRefundBatchDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
 
 
   loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto : any){
@@ -394,28 +442,6 @@ this.loaderService.show();
       .subscribe({
         next: (response:any) => {
           this.batchRefundsSubject.next(response);
-          if (response.status) {
-            this.notificationSnackbarService.manageSnackBar(
-              SnackBarNotificationType.SUCCESS,
-              response.message
-            );
-          }
-          this.hideLoader();
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.hideLoader();
-        },
-      });
-  }
-
-  unbatchEntireBatch(paymentRequestBatchIds: string[]) {
-    this.showLoader();
-    return this.financialVendorRefundDataService
-      .unbatchEntireBatch(paymentRequestBatchIds)
-      .subscribe({
-        next: (response:any) => {
-          this.unbatchEntireBatchSubject.next(response);
           if (response.status) {
             this.notificationSnackbarService.manageSnackBar(
               SnackBarNotificationType.SUCCESS,

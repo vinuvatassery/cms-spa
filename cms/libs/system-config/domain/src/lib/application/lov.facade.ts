@@ -77,6 +77,7 @@ export class LovFacade {
   private paymentReversalSubject = new BehaviorSubject<Lov[]>([]);
   private premiumPaymentTypeSubject = new BehaviorSubject<Lov[]>([]);
   private paymentTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private paymentRequestsTypeSubject = new BehaviorSubject<Lov[]>([]);
   private premiumPaymentReversalSubject = new BehaviorSubject<Lov[]>([]);
   private lovAttachmentsDroplistSubject = new BehaviorSubject<Lov[]>([]);
   private documentTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
@@ -89,6 +90,8 @@ export class LovFacade {
   private lovYesOrNoSubject = new BehaviorSubject<Lov[]>([]);
   private pendingApprovalPaymentTypeSubject = new Subject<any>();
   private lovVendorTypeCodeSubject = new Subject<any>();
+
+  private serviceTypeSubject = new Subject<any>();
 
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
@@ -141,6 +144,7 @@ export class LovFacade {
   paymentRequestType$ = this.paymentRequestTypeSubject.asObservable();
   paymentReversal$ = this.paymentReversalSubject.asObservable();
   paymentType$ = this.paymentTypeSubject.asObservable();
+  paymentRequestsType$ = this.paymentRequestsTypeSubject.asObservable();
   premiumPaymentType$ = this.premiumPaymentTypeSubject.asObservable();
   premiumPaymentReversal$ = this.premiumPaymentReversalSubject.asObservable();
   attachmentTypeDroplistlov$ = this.lovAttachmentsDroplistSubject.asObservable();
@@ -150,6 +154,7 @@ export class LovFacade {
   paymentStatus$ = this.paymentStatusSubject.asObservable();
   paymentRunDates$ = this.paymentRunDateSubject.asObservable();
   pendingApprovalPaymentType$ = this.pendingApprovalPaymentTypeSubject.asObservable();
+  serviceType$ = this.serviceTypeSubject.asObservable();
 
 
 
@@ -698,6 +703,17 @@ export class LovFacade {
     });
   }
 
+  getPaymentRequestTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.PaymentRequestType).subscribe({
+      next: (lovResponse) => {
+        this.paymentRequestsTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
   getPremiumPaymentReversalLov(): void {
     this.lovDataService.getLovsbyType(LovType.PremiumPaymentReversal).subscribe({
       next: (lovResponse) => {
@@ -807,6 +823,17 @@ export class LovFacade {
     this.lovDataService.getLovsbyType(LovType.PendingApprovalPaymentType).subscribe({
       next: (lovResponse) => {
         this.pendingApprovalPaymentTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  getServiceTypeLov(){
+    this.lovDataService.getLovsbyType(LovType.ServiceType).subscribe({
+      next: (lovResponse) => {
+        this.serviceTypeSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)

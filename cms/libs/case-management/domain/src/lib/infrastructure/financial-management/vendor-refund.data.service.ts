@@ -16,6 +16,13 @@ export class FinancialVendorRefundDataService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
+  addInsuranceRefundClaim(data:any, vendorId :any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums`, data);
+  }
+
+  getInsuranceRefundEditInformation(paymentRequestId:any,paginationSortingDto:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums/${paymentRequestId}`, paginationSortingDto);
+  }
 
   getInsurnaceRefundInformation(insuranceRefundInformation:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums`, insuranceRefundInformation);
@@ -427,10 +434,6 @@ export class FinancialVendorRefundDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/batch`, batchId);
   }
 
-  unbatchEntireBatch(paymentRequestBatchIds: string[]) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/batches/unbatch`, paymentRequestBatchIds);
-  }
-
   unbatchRefunds(paymentRequestIds: string[]) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/unbatch`, paymentRequestIds);
   }
@@ -467,7 +470,7 @@ export class FinancialVendorRefundDataService {
   loadvendorBySearchText(searchText: string,) {
     return this.http.get<Pharmacy[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}`
+  `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}`
     );
   }
   loadMedicalPremiumList(data:any): Observable<any> {
