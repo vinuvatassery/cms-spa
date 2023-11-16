@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { DrugsFacade, ManufacturerDrugs } from '@cms/case-management/domain';
-import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Observable } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
+import { StatusFlag } from '../enums/status-flag.enum';
 
 @Component({
-  selector: 'cms-financial-drugs-details',
+  selector: 'common-financial-drugs-details',
   templateUrl: './financial-drugs-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -22,10 +21,12 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   @Input() deliveryMethodCodes: any;
   @Input() manufacturers: any;
   @Input() hasCreateUpdatePermission = false;
+  @Input() addDrug$ : any ;
 
   @Output() close = new EventEmitter<any>();
+  @Output() addDrugEvent = new EventEmitter<any>();
 
-  drug = new ManufacturerDrugs();
+  drug : any;
   drugForm!: FormGroup;
   isSubmitted: boolean = false;
   ndcMaskFormat: string = "00000-0000-00"
@@ -43,13 +44,13 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     private readonly lovFacade: LovFacade,
     private formBuilder: FormBuilder,
     private readonly loaderService: LoaderService,
-    private readonly drugsFacade: DrugsFacade,
     private cd: ChangeDetectorRef,
   ) {
     this.createDrugForm();
   }
 
   ngOnInit(): void {
+    this.hideLoader()
     this.drugForm.get('manufacturer')?.patchValue(this.vendorId);
     if (this.dialogTitle === "Add New") {
       this.saveButtonText = "Add"
@@ -62,13 +63,13 @@ export class FinancialDrugsDetailsComponent implements OnInit {
 
   createDrugForm() {
     this.drugForm = this.formBuilder.group({
-      manufacturer: [{ value: this.drug.manufacturer, disabled: false }],
-      ndcNbr: [this.drug.ndcNbr, [Validators.required, Validators.maxLength(13)]],
-      vendorId: [this.drug.vendorId],
-      deliveryMethodCode: [this.drug.deliveryMethodCode, Validators.required],
-      drugName: [this.drug.drugName, [Validators.required, Validators.maxLength(200)]],
-      brandName: [this.drug.brandName, [Validators.required, Validators.maxLength(200)]],
-      drugType: [this.drug.drugCategoryCode, Validators.required]
+      manufacturer: [{ value: this.drug?.manufacturer, disabled: false }],
+      ndcNbr: [this.drug?.ndcNbr, [Validators.required, Validators.maxLength(13)]],
+      vendorId: [this.drug?.vendorId],
+      deliveryMethodCode: [this.drug?.deliveryMethodCode, Validators.required],
+      drugName: [this.drug?.drugName, [Validators.required, Validators.maxLength(200)]],
+      brandName: [this.drug?.brandName, [Validators.required, Validators.maxLength(200)]],
+      drugType: [this.drug?.drugCategoryCode, Validators.required]
     });
   }
 
@@ -131,22 +132,22 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     if (this.drugForm.valid) {
       let finalData = this.mapFormValues();
       this.showLoader();
-
-      this.drugsFacade.addDrug(finalData).subscribe({
-        next: (response: any) => {
+       this.addDrugEvent.emit(finalData)
+      this.addDrug$
+      .subscribe((addResponse: any) =>
+      {
+        if(addResponse)
+        {      
           this.onCancelClick();
-          let notificationMessage = response.message;
+          let notificationMessage = addResponse.message;
           this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
           this.hideLoader();
           this.drugForm.reset();
           this.isValidateForm = false;
           this.cd.detectChanges();
-        },
-        error: (err: any) => {
-          this.hideLoader();
-          this.lovFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         }
-      });
+  
+      })     
     }
   }
 

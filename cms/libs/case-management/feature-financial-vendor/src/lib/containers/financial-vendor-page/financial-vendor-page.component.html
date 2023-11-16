@@ -29,9 +29,10 @@
                   <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Manufacturers"
                     [vendorTypeCode]="financeVendorTypeCodes.Manufacturers" [vendorsList$]="vendorsList$"
                     [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
-                    [exportButtonShow$]="exportButtonShow$"
+                    [exportButtonShow$]="exportButtonShow$" 
                     (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                    (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
+                    (exportGridDataEvent)="exportGridData()"
+                   ></cms-financial-vendors-list>
                 </div>
               </ng-template>
             </kendo-tabstrip-tab>

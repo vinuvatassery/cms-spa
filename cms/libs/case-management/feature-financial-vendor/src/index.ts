@@ -25,7 +25,6 @@ export * from './lib/components/contacts-delete/contacts-delete.component';
 export * from './lib/components/contacts-details/contacts-details.component';
 export * from './lib/components/financial-insurance-provider-list/financial-insurance-provider-list.component';
 export * from './lib/components/financial-pharmacy-claims/financial-pharmacy-claims.component';
-export * from './lib/components/financial-drugs-details/financial-drugs-details.component';
 export * from './lib/components/financial-drugs-deactivate/financial-drugs-deactivate.component';
 export * from './lib/components/financial-drugs-reassign/financial-drugs-reassign.component';
 export * from './lib/components/financial-insurance-provider/financial-insurance-provider.component';

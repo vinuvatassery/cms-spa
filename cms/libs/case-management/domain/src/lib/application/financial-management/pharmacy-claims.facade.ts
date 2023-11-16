@@ -19,6 +19,8 @@ import { BatchPharmacyClaims } from '../../entities/financial-management/batch-p
 import { Vendor } from '../../entities/vendor';
 import { Client } from '../../entities/client';
 import { PharmacyClaims } from '../../entities/financial-management/pharmacy-claim';
+import { Drug } from '../../entities/drug';
+import { DrugCategoryCode } from '../../enums/drug-category-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsFacade {
@@ -339,13 +341,33 @@ export class FinancialPharmacyClaimsFacade {
     });
   }
 
-  searchDrug(ndcCode: string) {
+  searchDrug(ndcCode: string, isClientRestricted :any) {
     this.searchDrugsLoaderDataSubject.next(true);
     this.financialPharmacyClaimsDataService
     .searchDrug(ndcCode)
     .subscribe({
-      next: (dataResponse) => {
-        this.searchDrugsDataSubject.next(dataResponse);
+      next: (dataResponse : Drug) => {
+        var drugs :any =[]
+      
+          Object.values(dataResponse).forEach((key) => {
+            if(isClientRestricted === true)
+            {
+              
+              if(key?.drugTypeCode === DrugCategoryCode.OpportunisticInfection  
+                || key?.drugTypeCode === DrugCategoryCode.Hepatitis 
+                || key?.drugTypeCode === DrugCategoryCode.Hiv)
+              {               
+                drugs.push(key)
+              }
+            }
+            else
+            {
+              drugs.push(key)
+            }
+          });
+        
+        
+        this.searchDrugsDataSubject.next(drugs);
         this.searchDrugsLoaderDataSubject.next(false);
       },
       error: (err) => {
