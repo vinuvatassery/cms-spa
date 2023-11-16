@@ -50,7 +50,8 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
+@Input() selectedpharmacyClaimsPaymentReqIds:any[]=[]
+selectedPharmacyClaims:any[]=[]
   isRefundGridClaimShow=false;
 private clientClaimsListDataSubject =  new Subject<any>();
   clientClaimListData$ = this.clientClaimsListDataSubject.asObservable();
@@ -71,8 +72,15 @@ private clientClaimsListDataSubject =  new Subject<any>();
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+    this.selectedPharmacyClaims =  (this.selectedpharmacyClaimsPaymentReqIds && this.selectedpharmacyClaimsPaymentReqIds.length >0)?
+    this.selectedpharmacyClaimsPaymentReqIds : this.selectedPharmacyClaims
     this.loadRefundClaimsListGrid();
   }
+
+  selectedKeysChange(selection: any) {
+    this.selectedPharmacyClaims = selection;
+  }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,

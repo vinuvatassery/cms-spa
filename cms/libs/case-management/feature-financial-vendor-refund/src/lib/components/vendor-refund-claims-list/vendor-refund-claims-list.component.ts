@@ -47,6 +47,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  @Input() tpaPaymentReqIds:any[]=[]
 
   gridClaimsDataSubject = new Subject<any>();
   gridClaimsData$ = this.gridClaimsDataSubject.asObservable();
@@ -59,6 +60,8 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
  
   }
   ngOnInit(): void {
+    this.selectedTpaClaims =  (this.tpaPaymentReqIds && this.tpaPaymentReqIds.length >0)?
+    this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
   }
   ngOnChanges(): void {
