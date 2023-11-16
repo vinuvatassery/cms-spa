@@ -42,8 +42,8 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   readonly UserLevel = UserLevel;
   public state!: State;
   isBatchDetailPaymentsGridLoaderShow = new BehaviorSubject<boolean>(true);
-  sortColumn = 'paymentNbr';
-  sortDir = 'Descending';
+  sortColumn = 'itemNbr';
+  sortDir = 'Ascending';
   sortColumnName = '';
   columnsReordered = false;
   filteredBy = '';
@@ -53,7 +53,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   selectedColumn!: any;
   sort: SortDescriptor[] = [{
     field: this.sortColumn,
-    dir: 'desc',
+    dir: 'asc',
   }];
   batchDetailPaymentsList: any;
   batchId?: string | null;
@@ -119,7 +119,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
     }
     
     this.columns = {
-      paymentNbr: 'Item #',
+      itemNbr: 'Item #',
       invoiceNbr: 'Invoice ID',
       vendorName: this.vendorNameField,
       premiumCount: 'Item Count',
@@ -416,10 +416,10 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   }
 
   defaultGridState() {
-    this.sortColumn = 'paymentNbr';
+    this.sortColumn = 'itemNbr';
     this.sort = [{
       field: this.sortColumn,
-      dir: 'desc',
+      dir: 'asc',
     }];
     this.state = {
       skip: 0,
