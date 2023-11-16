@@ -84,7 +84,10 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
         refundType:"insurance"
       }
 
-      this.Reqpayload.emit(this.financialPremiumsRefundGridLists)
+      this.Reqpayload.emit({
+        data: this.financialPremiumsRefundGridLists,
+        vendorId  : this.vendorId
+      })
     }
   })
 }

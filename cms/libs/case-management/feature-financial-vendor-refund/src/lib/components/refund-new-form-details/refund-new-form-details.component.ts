@@ -51,7 +51,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
   serviceTypes$ = this.lovFacade.serviceType$
-
+  onEditInitiallydontShowPremiumselection = false;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   
@@ -121,6 +121,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
     })
 if(this.isEdit){
   this.selectedRefundType = this.serviceType
+  this.onEditInitiallydontShowPremiumselection = true
   this.selectedClient={
     clientId: this.clientId,
     clientNames :this.clientName
@@ -137,7 +138,7 @@ if(this.isEdit){
   }
 
   addInsuranceRefundClaim(event:any){
-    this.financialVendorRefundFacade.addInsuranceRefundClaim(event)
+    this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data, event.vendorId)
   }
 
   selectionChange(event: any){
@@ -223,6 +224,7 @@ this.insuraceAddRefundClickSubject.next(true);
   selectDiffPayments(){
     this.isConfirmationClicked = false;
     this.disableFeildsOnConfirmSelection = false;
+    this.onEditInitiallydontShowPremiumselection = false
  
   }
   closeAddEditRefundFormModalClicked(){

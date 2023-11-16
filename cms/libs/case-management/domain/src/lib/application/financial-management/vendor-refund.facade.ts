@@ -176,10 +176,10 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-  addInsuranceRefundClaim(data:any){
+  addInsuranceRefundClaim(data:any,vendorId:any){
    
-    this.financialVendorRefundDataService.addInsuranceRefundClaim(data).subscribe({
-      next: (dataResponse) => {
+    this.financialVendorRefundDataService.addInsuranceRefundClaim(data,vendorId).subscribe({
+      next: (dataResponse:any) => {
         this.addInsuranceRefundClaimSubject.next(dataResponse);
         
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
