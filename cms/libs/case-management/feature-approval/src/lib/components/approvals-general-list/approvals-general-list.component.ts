@@ -103,6 +103,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Output() searchClinicVendorClicked = new EventEmitter<any>();
   @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
   selectedMasterData!:any;
+  currentlyExpandedPanelId: any;
 
   /** Constructor **/
   constructor(
@@ -265,6 +266,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         approvalEntityId: item.approvalEntityId,
         subTypeCode: item.subTypeCode,
       };
+      this.currentlyExpandedPanelId = item.approvalEntityId;
       this.selectedSubtypeCode = item.subTypeCode;
       this.getMasterDetailsEvent.emit(userObject);    
       this.isPanelExpanded = true;
@@ -664,5 +666,10 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   recordUpdate(event:any){
       this.onCloseEditListItemsDetailClicked();
+      const userObject = {
+        approvalEntityId: this.currentlyExpandedPanelId,
+        subTypeCode: this.selectedSubtypeCode,
+      };
+      this.getMasterDetailsEvent.emit(userObject);   
   }
 }
