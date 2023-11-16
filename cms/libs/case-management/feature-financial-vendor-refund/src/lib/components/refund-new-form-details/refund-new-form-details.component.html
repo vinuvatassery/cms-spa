@@ -125,6 +125,8 @@
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-claims-list [claimsListData$]="claimsListData$" [pageSizes]="pageSizes"
                         [sortValue]="sortValueClaims" [sortType]="sortType" [sort]="sortClaims"
+
+                        >
                         (loadClaimsListEvent)="loadClaimsListGrid($event)"></cms-vendor-refund-claims-list>
                 </div>
             </div>
@@ -437,6 +439,8 @@
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-client-claims-list  [vendorId]="vendorId" [clientId]="clientId" [pageSizes]="pageSizes"
                         [refundType]="refundType" [sortType]="sortType" [sort]="sortClientClaims"
+                        (loadClientClaimsListEvent)="loadClientClaimsListGrid($event)" [confirmClicked]="inputConfirmationClicked"
+                         (selectedVendorRefundsListEvent)="getSelectedVendorRefundsList($event)"
                         ></cms-vendor-refund-client-claims-list>
                 </div>
             </div>
@@ -470,26 +474,26 @@
                             <th scope="col">Fields</th>
                             <th scope="col">Details</th>
                         </tr>
-                        <tbody>
+                        <tbody *ngFor="let item of selectedVendorRefundsList">
                             <tr>
                                 <td>Index Code</td>
-                                <td>XXXXXXXXXX</td>
+                                <td>{{item.indexCode }}</td>
                             </tr>
                             <tr>
                                 <td>PCA Code</td>
-                                <td>XXXXXXXXXX</td>
+                                <td>{{item.pcaCode }}</td>
                             </tr>
                             <tr>
                                 <td>Grant #</td>
-                                <td>XXXXXXXXXX</td>
+                                <td>{{item.pcaCode }}</td>
                             </tr>
                             <tr>
                                 <td>Original Warrant #</td>
-                                <td>XXXXXXXXXX</td>
+                                <td>{{item.warrantNbr }}</td>
                             </tr>
                             <tr>
                                 <td>Original Payment Method</td>
-                                <td>XXXXXXXXXX</td>
+                                <td>{{item.paymentStatusCode}}</td>
                             </tr>
                         </tbody>
                     </table>

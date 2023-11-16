@@ -12,8 +12,7 @@ export class ImportedClaimService {
   ) {}
 
   /** Public methods **/
-  loadImportedClaimsListServices(data: any) {
-    debugger;
+  loadImportedClaimsListServices(data: any) {;
     const importedClaimsRequestDto = {
       SortType: data.sortType,
       Sorting: data.sort,

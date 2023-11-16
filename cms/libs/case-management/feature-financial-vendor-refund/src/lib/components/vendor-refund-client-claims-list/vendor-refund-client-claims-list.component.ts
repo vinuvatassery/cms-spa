@@ -1,6 +1,7 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -27,6 +28,7 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isClientClaimsLoaderShow = false;
   /** Constructor **/
+  
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -35,9 +37,14 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   @Input() clientId: any;
   @Input()refundType:any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
+  @Input() confirmClicked: any;
+  vendorRefundlistData!: [];
+  public selectedVendorRefunds: any = [];
   public state!: State;
   @Input() financialClaimsProcessGridLists$: any;
   @Output() loadClientClaimsListEvent = new EventEmitter<any>();
+  @Output() selectedVendorRefundsListEvent = new EventEmitter<any>();
+
   sortColumn = 'clientId';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -54,8 +61,9 @@ private clientClaimsListDataSubject =  new Subject<any>();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  gridData: any;
   constructor(
-    public financialVendorRefundFacade:FinancialVendorRefundFacade
+    public financialVendorRefundFacade:FinancialVendorRefundFacade,private readonly cdr: ChangeDetectorRef,
   ) { }
   ngOnInit(): void {
     this.state = {
@@ -70,8 +78,12 @@ private clientClaimsListDataSubject =  new Subject<any>();
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
+      
     };
-    this.loadRefundClaimsListGrid();
+    if(this.confirmClicked == true) {
+      this.selectedVendorRefundsListEvent.emit(this.selectedVendorRefunds)
+    }
+    this.cdr.detectChanges();
   }
   // private loadClientClaimsListGrid(): void {
   //   this.loadClientClaimsList(
@@ -116,6 +128,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   }
   gridDataHandle() { 
     this. clientclaimsData$.subscribe((data: GridDataResult) => {
+      this.gridData = data;
       this.gridDataResult = data;
       this.clientClaimsListDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
@@ -161,5 +174,8 @@ private clientClaimsListDataSubject =  new Subject<any>();
 
   loadRefundClaimsGrid(data: any) {
     this.financialVendorRefundFacade.loadRefundClaimsListGrid(data);
+  }
+  selectedKeysChange(selection: any[]) {
+    this.selectedVendorRefunds = this.gridData.data.filter((i: any) => selection.includes( i.prescriptionFillId));
   }
 }

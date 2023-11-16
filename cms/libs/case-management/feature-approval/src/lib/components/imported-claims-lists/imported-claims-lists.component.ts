@@ -72,7 +72,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   private loadImportedClaimsListGrid(): void {
-    debugger;
     this.loadImportedClaims(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -154,7 +153,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    debugger;
     this.approvalsImportedClaimsLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(

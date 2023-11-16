@@ -86,6 +86,8 @@ export class RefundNewFormDetailsComponent{
       dob: '23/12/2023',
     },
   ];
+  inputConfirmationClicked!: boolean;
+  selectedVendorRefundsList: any = [];
   @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
   constructor(  private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private formBuilder: FormBuilder,) {
@@ -98,7 +100,7 @@ export class RefundNewFormDetailsComponent{
     this.isConfirmationClicked = false
   }
   confirmationClicked (){
-    this.isConfirmationClicked = true
+    this.inputConfirmationClicked = true;
   }
   selectDiffPayments(){
     this.isConfirmationClicked = false;
@@ -180,5 +182,10 @@ export class RefundNewFormDetailsComponent{
       medicalProvider: [this.selectedMedicalProvider, Validators.required],
       client: [this.selectedClient, Validators.required],
     });
+  }
+
+  getSelectedVendorRefundsList(listData : any){
+    this.selectedVendorRefundsList = listData;
+    this.isConfirmationClicked = true;
   }
 }
