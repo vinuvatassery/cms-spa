@@ -20,6 +20,7 @@ import {
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { YesNoFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'productivity-tools-imported-claims-lists',
@@ -67,6 +68,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   deniedCount = 0;
   deletedCount = 0;
   private submitDialogService: any;
+  yesNoFlag: any = YesNoFlag;
 
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,private readonly router: Router,
@@ -334,8 +336,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     let claims = [{}];
     for (let element of this.selectedDeletedDeniedDataRows) {
       let claim = {
-        tpaInvoiceId: element.importedClaimId,
-        claimStatus: element.claimStatus
+        importedClaimId: element.importedClaimId,
+        claimStatus: element.claimStatus,
+        entityTypeCode: element.entityTypeCode
       };
       claims.push(claim);
     }

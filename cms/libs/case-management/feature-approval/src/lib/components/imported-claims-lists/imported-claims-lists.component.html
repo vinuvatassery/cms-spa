@@ -137,7 +137,7 @@
     >
       <ng-template kendoGridCellTemplate let-dataItem>
         <button
-          *ngIf="dataItem.isDelete === 'N'"
+          *ngIf="dataItem.policyIdMatch === yesNoFlag.Yes"
           kendoButton
           aria-label="Deny Claim"
           class="select-primary cc-fwc"
@@ -153,13 +153,14 @@
           Deny Claim
         </button>
         <button
-          *ngIf="dataItem.isDelete === 'Y'"
+          *ngIf="dataItem.policyIdMatch === yesNoFlag.No"
           kendoButton
           aria-label="Delete Claim"
           class="select-error cc-fwc"
           illMode="flat"
           [toggleable]="true"
           [selected]="dataItem.claimStatus === deletedStatus"
+          [disabled]="dataItem.policyIdMatch === yesNoFlag.No && dataItem.isPossibleMatch"
           (selectedChange)="
           onRowLevelDeleteClicked(
                 dataItem
@@ -174,7 +175,7 @@
       <section >
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.validInsurance === 'No'"
+          *ngIf="dataItem.validInsurance === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
           The client's insurance is not valid for the date of service. Deny the claim,
@@ -192,11 +193,29 @@
 
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.belowMaxBenefits === 'No'"
+          *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
           This claim puts the client $521.62 over their max benefits. Deny the
           claim, or make an exception.
+          <button
+          aria-label="Make an Exception"
+          kendoButton
+          look="flat"
+          class="card-link-button"
+          (click)="onMakeExpectationClicked(expectationReasonDialogModal)"
+        >
+          MAKE AN EXCEPTION
+        </button>
+        </p>
+
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="!dataItem.isPossibleMatch && dataItem.policyIdMatch === yesNoFlag.No"
+        >
+          <span class="material-icons">info</span>
+          The system could not match the Policy ID to a client. Delete the claim
+          or match it to a client.
           <button
             aria-label="Search Clients"
             kendoButton
@@ -207,27 +226,9 @@
             SEARCH CLIENTS
           </button>
         </p>
-
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.policyIdMatch === 'No'"
-        >
-          <span class="material-icons">info</span>
-          The system could not match the Policy ID to a client. Delete the claim
-          or match it to a client.
-          <button
-            aria-label="Make an Exception"
-            kendoButton
-            look="flat"
-            class="card-link-button"
-            (click)="onMakeExpectationClicked(expectationReasonDialogModal)"
-          >
-            MAKE AN EXCEPTION
-          </button>
-        </p>
-        <p
-          class="table_sub_row warning_info_row"
-          *ngIf="dataItem.eligibilityMatch === 'No'"
+          *ngIf="dataItem.eligibilityMatch === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
           The client was not eligible for the date of service. Deny the claim,
@@ -244,7 +245,7 @@
         </p>
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.isPossibleMatch"
+          *ngIf="dataItem.isPossibleMatch && dataItem.policyIdMatch === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
           The system could not match the Policy ID to a client. Delete the claim
@@ -314,24 +315,7 @@
     {{ deniedCount }} claim(s) to be denied,
     {{ deletedCount }} claim(s) to be delete
 </span>
-  <button
-    kendoButton
-    [primary]="true"
-    look="outline"
-    class=""
-    aria-label="Cancel"
-  >
-    Cancel
-  </button>
-  <button
-    kendoButton
-    [primary]="true"
-    look="flat"
-    class=""
-    aria-label="Approve All"
-  >
-    APPROVE ALL
-  </button>
+
   <button kendoButton [primary]="true" aria-label="Submit" class="" [disabled]="disableSubmit"
   (click)="onSubmitImportedClaimsClicked()">
     Submit
