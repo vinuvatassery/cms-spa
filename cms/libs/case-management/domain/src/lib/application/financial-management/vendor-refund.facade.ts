@@ -182,7 +182,7 @@ export class FinancialVendorRefundFacade {
       next: (dataResponse) => {
         this.addInsuranceRefundClaimSubject.next(dataResponse);
         
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , "added success fully") 
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
         this.hideLoader();
       },
       error: (err) => {
