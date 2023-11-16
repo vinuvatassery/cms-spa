@@ -23,7 +23,7 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
    sort = this.financialPharmacyClaimsFacade.sortReconcileList;
    state!: State;
    reconcileGridLists$ = this.financialPharmacyClaimsFacade.reconcileDataList$;
-   batchId:any;
+   batchId:any = null;
    sortValueBatch = this.financialPharmacyClaimsFacade.sortValueReconcile;
    sortBatch = this.financialPharmacyClaimsFacade.sortReconcileList;
    exportButtonShow$ = this.documentFacade.exportButtonShow$;
