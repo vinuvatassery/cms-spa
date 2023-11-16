@@ -8,6 +8,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
@@ -25,11 +26,14 @@ import { Subject } from 'rxjs';
 export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isClaimsLoaderShow = false;
+  selectedTpaClaims:any[] =[]
   /** Constructor **/
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  @Input() vendorId: any;
+  @Input() clientId: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
   @Input() claimsListData$: any;
@@ -49,9 +53,13 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  tpaData$ = this.financialVendorRefundFacade.tpaData$;
+  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,)
+  {
+ 
+  }
   ngOnInit(): void {
-    this.loadClaimsListGrid();
+    this.loadRefundClaimsListGrid();
   }
   ngOnChanges(): void {
     this.state = {
@@ -60,17 +68,10 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
       sort: this.sort,
     };
 
-    this.loadClaimsListGrid();
+    this.loadRefundClaimsListGrid();
   }
 
-  private loadClaimsListGrid(): void {
-    this.loadClaimsList(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
-  }
+
   loadClaimsList (   
     skipCountValue: number,
     maxResultCountValue: number,
@@ -94,22 +95,61 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadClaimsListGrid();
+    this.loadRefundClaimsListGrid();
   }
 
+  selectedKeysChange(selection: any) {
+    this.selectedTpaClaims = selection;
+  }
+  
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.loadClaimsListGrid();
+    this.loadRefundClaimsListGrid();
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-
+  loadRefundClaimsGrid(data: any) {
+    this.financialVendorRefundFacade.loadTPARefundList(data);
+  }
+  private loadRefundClaimsListGrid(): void {
+    this.loadClaimsProcess(
+      this.vendorId,
+      this.clientId,
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
+  }
+  loadClaimsProcess(
+    vendorId: string,
+    clientId: number,
+    skipCountValue: number,
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string
+  ) {
+   
+    const gridDataRefinerValue = {
+      vendorId: vendorId,
+      clientId: clientId,
+      skipCount: skipCountValue,
+      pageSize: maxResultCountValue,
+      sort: sortValue,
+      sortType: sortTypeValue,
+      filter : this.state?.["filter"]?.["filters"] ?? []
+    };
+    this. loadRefundClaimsGrid(gridDataRefinerValue);
+    this.gridDataHandle();
+  
+  }
   gridDataHandle() {
-    this.claimsListData$.subscribe((data: GridDataResult) => {
+    this.tpaData$.subscribe((data: GridDataResult) => {
+      
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,

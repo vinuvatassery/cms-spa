@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, Output, ChangeDetectorRef, EventEmitter } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 	/** Internal Libraries **/
 import {FinancialClaimsFacade, PaymentsFacade } from '@cms/case-management/domain';
@@ -237,9 +237,6 @@ export class FinancialClaimsPrintAuthorizationComponent {
       .subscribe({
         next: (data: any) => {
           if (data) {
-            if(this.reconcileArray[0].printFlag === StatusFlag.Yes){
-            this.generateAndPrintAdviceLetter(this.returnResultFinalPrintList[this.currentIndex]);
-            }
             this.returnResultFinalPrintList[this.currentIndex].warrantNumberChange = false;
             this.onReconcileRecordEvent.emit(this.returnResultFinalPrintList[this.currentIndex]);
           }

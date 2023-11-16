@@ -26,6 +26,14 @@ export class ImportedClaimService {
     );
   }
 
+  submitImportedClaimsServices(claims: any) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/submit`,
+      claims
+    );
+  }
+
+
   loadPossibleMatch(event:any) {
     return this.http.get(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match?firstName=${event.firstName}&lastName=${event.lastName}&dateOfBirth=${event.dateOfBirth}`

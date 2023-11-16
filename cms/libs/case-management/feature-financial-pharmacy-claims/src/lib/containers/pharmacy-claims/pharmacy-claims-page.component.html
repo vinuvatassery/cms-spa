@@ -8,7 +8,7 @@
             <section class="app-l-wrapper">
                 <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
                     class="app-c-tab case-360-tab">
-                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                    <kendo-tabstrip-tab title="Process" [selected]="tab===1">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-pharmacy-claims-process-list
@@ -45,7 +45,7 @@
                         </ng-template>
                     </kendo-tabstrip-tab>
 
-                    <kendo-tabstrip-tab title="Batches">
+                    <kendo-tabstrip-tab title="Batches"  [selected]="tab===2">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-pharmacy-claims-batches-list
@@ -59,7 +59,7 @@
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
-                    <kendo-tabstrip-tab title="All Payments">
+                    <kendo-tabstrip-tab title="All Payments"  [selected]="tab===3">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-pharmacy-claims-all-payments-list
@@ -68,7 +68,10 @@
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList"
                                 (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"
-                                (exportGridEvent$)="onExportAllPayments($event)"></cms-pharmacy-claims-all-payments-list>
+                                (exportGridEvent$)="onExportAllPayments($event)"
+                                (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+                                [letterContentList$]="letterContentList$"
+                                [letterContentLoader$]="letterContentLoader$"></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

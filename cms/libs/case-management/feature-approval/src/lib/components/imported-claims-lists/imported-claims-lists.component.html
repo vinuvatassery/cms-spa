@@ -137,22 +137,35 @@
     >
       <ng-template kendoGridCellTemplate let-dataItem>
         <button
-          *ngIf="dataItem.isDelete === 'N'"
+          *ngIf="dataItem.policyIdMatch === yesNoFlag.Yes"
           kendoButton
           aria-label="Deny Claim"
           class="select-primary cc-fwc"
           illMode="flat"
           [toggleable]="true"
+          [selected]="dataItem.claimStatus === deniedStatus"
+          (selectedChange)="
+          onRowLevelDenyClicked(
+                dataItem
+              )
+            "
         >
           Deny Claim
         </button>
         <button
-          *ngIf="dataItem.isDelete === 'Y'"
+          *ngIf="dataItem.policyIdMatch === yesNoFlag.No"
           kendoButton
           aria-label="Delete Claim"
           class="select-error cc-fwc"
           illMode="flat"
           [toggleable]="true"
+          [selected]="dataItem.claimStatus === deletedStatus"
+          [disabled]="dataItem.policyIdMatch === yesNoFlag.No && dataItem.isPossibleMatch === yesNoFlag.Yes"
+          (selectedChange)="
+          onRowLevelDeleteClicked(
+                dataItem
+              )
+            "
         >
           Delete Claim
         </button>
@@ -162,10 +175,10 @@
       <section >
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.validInsurance === 'No'"
+          *ngIf="dataItem.validInsurance === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
-          The client's insurance is not valid for the date of service. Deny the claim, 
+          The client's insurance is not valid for the date of service. Deny the claim,
           or update the client's insurance in their profile.
           <button
             aria-label="Go To Profile"
@@ -180,11 +193,29 @@
 
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.belowMaxBenefits === 'No'"
+          *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
           This claim puts the client $521.62 over their max benefits. Deny the
           claim, or make an exception.
+          <button
+          aria-label="Make an Exception"
+          kendoButton
+          look="flat"
+          class="card-link-button"
+          (click)="onMakeExpectationClicked(expectationReasonDialogModal)"
+        >
+          MAKE AN EXCEPTION
+        </button>
+        </p>
+
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.isPossibleMatch === yesNoFlag.No && dataItem.policyIdMatch === yesNoFlag.No"
+        >
+          <span class="material-icons">info</span>
+          The system could not match the Policy ID to a client. Delete the claim
+          or match it to a client.
           <button
             aria-label="Search Clients"
             kendoButton
@@ -195,30 +226,12 @@
             SEARCH CLIENTS
           </button>
         </p>
-
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.policyIdMatch === 'No'"
+          *ngIf="dataItem.eligibilityMatch === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
-          The system could not match the Policy ID to a client. Delete the claim
-          or match it to a client.
-          <button
-            aria-label="Make an Exception"
-            kendoButton
-            look="flat"
-            class="card-link-button"
-            (click)="onMakeExpectationClicked(expectationReasonDialogModal)"
-          >
-            MAKE AN EXCEPTION
-          </button>
-        </p>
-        <p
-          class="table_sub_row warning_info_row"
-          *ngIf="dataItem.eligibilityMatch === 'No'"
-        >
-          <span class="material-icons">info</span>
-          The client was not eligible for the date of service. Deny the claim, 
+          The client was not eligible for the date of service. Deny the claim,
           or update the client's eligibility dates in their profile.
           <button
             aria-label="GO TO PROFILE"
@@ -232,7 +245,7 @@
         </p>
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.eligibilityMatch"
+          *ngIf="dataItem.isPossibleMatch === yesNoFlag.Yes && dataItem.policyIdMatch === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
           The  system could not match the Policy ID to a client. Delete the claim or match it to a client.
@@ -312,29 +325,53 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="">0 claim(s) to be denied, 0 claim(s) to be deleted</span>
-  <button
-    kendoButton
-    [primary]="true"
-    look="outline"
-    class=""
-    aria-label="Cancel"
-  >
-    Cancel
-  </button>
-  <button
-    kendoButton
-    [primary]="true"
-    look="flat"
-    class=""
-    aria-label="Approve All"
-  >
-    APPROVE ALL
-  </button>
-  <button kendoButton [primary]="true" aria-label="Submit" class="">
+  <span class="">
+    {{ deniedCount }} claim(s) to be denied,
+    {{ deletedCount }} claim(s) to be delete
+</span>
+
+  <button kendoButton [primary]="true" aria-label="Submit" class="" [disabled]="disableSubmit"
+  (click)="onSubmitImportedClaimsClicked()">
     Submit
   </button>
 </div>
+
+<ng-template #submitModalDialog>
+
+  <kendo-dialog-titlebar (close)="onCloseSubmitClicked()">
+    Submit claims?</kendo-dialog-titlebar>
+    <section class="k-dialog-body newcase">
+      <p class="mb-1">
+        Claims to be denied:
+        <strong>{{ deniedCount }}</strong>
+      </p>
+      <p class="mb-1">
+        Claims to be deleted: <strong>{{ deletedCount }}</strong>
+      </p>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button
+            aria-label="Cancel"
+            kendoButton
+            look="outline"
+            (click)="onCloseSubmitClicked()"
+          >
+            Cancel
+          </button>
+          <button
+            aria-label="Submit"
+            kendoButton
+            [primary]="true"
+            (click)="makeRequestData()"
+          >
+            SUBMIT
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>
+</ng-template>
 
 <ng-template #searchClientsDialogModal>
   <productivity-tools-approvals-search-clients

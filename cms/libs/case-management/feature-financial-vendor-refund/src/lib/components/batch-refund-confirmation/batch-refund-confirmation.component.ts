@@ -1,18 +1,22 @@
-import { Component, ChangeDetectionStrategy, Output , EventEmitter} from '@angular/core';
- 
+import { Component, ChangeDetectionStrategy, Output , EventEmitter, Input} from '@angular/core';
+
 @Component({
   selector: 'cms-batch-refund-confirmation',
-  templateUrl: './batch-refund-confirmation.component.html', 
+  templateUrl: './batch-refund-confirmation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BatchRefundConfirmationComponent  {
 
-  
+  @Output() isModalBatchRefundsButtonClicked = new EventEmitter<string>();
+  @Output() isModalBatchRefundsCloseClicked = new EventEmitter();
+  @Input() selectedProcessRefundsCount = 0;
 
-  @Output() isModalBatchRefundCloseClicked = new EventEmitter();
- 
 
   closeBatchRefundClicked(){
-    this.isModalBatchRefundCloseClicked.emit(true);  
+    this.isModalBatchRefundsCloseClicked.emit(true);
+  }
+
+  batchClicked(){
+    this.isModalBatchRefundsButtonClicked.emit();
   }
 }
