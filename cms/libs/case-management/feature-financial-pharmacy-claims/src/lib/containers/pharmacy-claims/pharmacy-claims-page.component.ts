@@ -245,7 +245,7 @@ export class PharmacyClaimsPageComponent implements OnInit {
     });
   
   }
-  OnEditProviderProfileClick() {
+  onEditProviderProfileClick() {
     this.contactFacade.loadDdlStates();
     this.lovFacade.getPaymentMethodLov();
   }
