@@ -27,7 +27,6 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   @Input() approvalId?: string | null;
   @Input() pageSizes: any;
   @Input() sortValue: any;
-  @Input() sortType: any;
   @Input() batchDetailPaymentsList$: any;
   @Input() batchDetailModalSourceList: any;
   @Input() selectedPaymentType: any;
@@ -45,6 +44,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   sortColumn = 'itemNbr';
   sortDir = 'Ascending';
   sortColumnName = '';
+  sortType = 'asc';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
