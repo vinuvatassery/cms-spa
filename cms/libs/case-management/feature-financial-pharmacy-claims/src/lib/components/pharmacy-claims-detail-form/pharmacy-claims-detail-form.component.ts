@@ -79,7 +79,6 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   dialogTitle = "Add New"
   hasDrugCreateUpdatePermission = false
   vendorId! : any
-  vendorId: any;
   clientId: any;
   claimsType:any;
   IsEdit:boolean=false;
