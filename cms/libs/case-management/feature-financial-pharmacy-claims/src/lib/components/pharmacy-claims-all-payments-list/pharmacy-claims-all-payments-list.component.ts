@@ -1,6 +1,7 @@
 
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -18,7 +19,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, debounceTime } from 'rxjs';
+import { Observable, Subject, Subscription, debounceTime } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoadTypes } from '@cms/case-management/domain';
@@ -47,8 +48,11 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   @Input() pharmacyClaimsAllPaymentsGridLists$: any;
   @Input() pharmacyClaimsAllPaymentsGridLoader$!: Observable<boolean>;
   @Input() exportLoader$!: Observable<boolean>;
+  @Input() letterContentList$ :any;
+  @Input() letterContentLoader$ :any;
   @Output() exportGridEvent$ = new EventEmitter<any>();
   @Output() loadPharmacyClaimsAllPaymentsListEvent = new EventEmitter<any>();
+  @Output() loadTemplateEvent = new EventEmitter<any>();
   public state!: State;
   columnsReordered = false;
   filteredBy = '';
@@ -86,9 +90,24 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  paymentMethodFilter = '';
  paymentTypeFilter = '';
  paymentStatusFilter = '';
+ selectAll:boolean=false;
+ unCheckedPaymentRequest:any=[];
+ selectedDataIfSelectAllUnchecked:any=[];
+ financialClaimsAllPaymentsGridLists: any = [];
+ currentPageRecords: any = [];
+ selectedAllPaymentsList!: any;
+ isPageCountChanged: boolean = false;
+ isPageChanged: boolean = false;
+ unCheckedProcessRequest:any=[];
+ checkedAndUncheckedRecordsFromSelectAll:any=[];
+ recordCountWhenSelectallClicked: number = 0;
+ totalGridRecordsCount: number = 0;
+ sendReportCount: number = 0;
+ allPaymentsListSubscription!: Subscription;
  vendorId: any;
-  clientId: any;
-  claimsType:any;
+ clientId: any;
+ claimsType: any;
+ 
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
   pharmacyName: 'Pharmacy Name',
@@ -158,7 +177,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
     {
       buttonType: 'btn-h-primary',
-      text: 'PRINT AUTHORIZATION(S)',
+      text: 'PRINT VISA AUTHORIZATIONS',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
@@ -170,11 +189,24 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   
   constructor(private route: Router, 
     private dialogService: DialogService,
-    private readonly lovFacade: LovFacade) {}
+    private readonly lovFacade: LovFacade,
+    private readonly cdr: ChangeDetectorRef,) {}
 
   ngOnInit(): void {
     this.addSearchSubjectSubscription();
+    this.allPaymentsGridListSubscription();
   }
+
+  allPaymentsGridListSubscription() {
+      this.allPaymentsListSubscription = this.pharmacyClaimsAllPaymentsGridLists$.subscribe((response:any) =>{
+      this.totalGridRecordsCount = response.total;
+      if(this.selectAll){
+      this.markAsChecked(response.data);
+      }
+      this.financialClaimsAllPaymentsGridLists = response;
+    });
+  }
+
   ngOnChanges(): void {
     this.sortType = 'desc';
     this.state = {
@@ -184,6 +216,11 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     };
 
     this.loadPharmacyClaimsAllPaymentsListGrid();
+  }
+
+  
+  ngOnDestroy(): void {
+    this.allPaymentsListSubscription.unsubscribe();
   }
 
   resetGrid(){
@@ -392,12 +429,21 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAuthorizationClicked = false;
+    this.markAsUnChecked(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+    this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists?.data);
+    this.unCheckedProcessRequest = [];
+    this.checkedAndUncheckedRecordsFromSelectAll = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterUnSelected = [];
+    this.selectAll = false;
+    this.recordCountWhenSelectallClicked = 0;
+    this.sendReportCount = 0;
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-96full pharmacy_print_auth',
     });
   }
 
@@ -511,23 +557,146 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 
-  onitemNumberClick(dataItem: any) {
-    this.route.navigate(
-      [`/financial-management/pharmacy-claims/batch/items`],
-      { queryParams:
-        {
-          bid: dataItem?.batchId,
-          pid: dataItem.paymentRequestId,
-          eid: dataItem.vendorId,
+  selectionChange(dataItem:any, selected:boolean){
+    if(!selected){
+      this.onRecordSelectionChecked(dataItem);
+    }
+    else{
+      this.onRecordSelectionUnChecked(dataItem);
+    }
+      this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
+      'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
+      'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'};
+    if(this.selectAll){
+      if(this.unCheckedProcessRequest?.length > 0){
+        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
+      }else{
+      this.recordCountWhenSelectallClicked = selected ? this.recordCountWhenSelectallClicked + 1 : this.recordCountWhenSelectallClicked - 1;
+      this.sendReportCount = this.recordCountWhenSelectallClicked;
+      }
+    }else{
+      this.sendReportCount = this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.filter((item: any) => item.selected).length;
+   }
+    this.cdr.detectChanges();
+}
+
+  onRecordSelectionUnChecked(dataItem: any) {
+    this.unCheckedProcessRequest = this.unCheckedProcessRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
+      this.currentPageRecords?.forEach((element: any) => {
+        if (element.paymentRequestId === dataItem.paymentRequestId) {
+          element.selected = true;
+        }
+      });
+      const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+      if (exist === 0) {
+        this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true, 'batchId': dataItem.batchId });
+      }else{
+        const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+        if (recordIndex !== -1) {
+          this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
         }
       }
-    );
   }
 
-  onbatchNumberClick(dataItem: any) {
-    this.route.navigate(
-      [`/financial-management/pharmacy-claims/batch`],
-      { queryParams: { bid: dataItem?.batchId } }
-    );
+  onRecordSelectionChecked(dataItem: any) {
+    this.unCheckedProcessRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true});
+        this.currentPageRecords?.forEach((element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        });
+        const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+        if (exist === 0) {
+          this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': false, 'batchId': dataItem.batchId });
+        }else{
+          const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+          if (recordIndex !== -1) {
+            this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+          }
+        }
   }
+
+  selectionAllChange(){
+    this.unCheckedProcessRequest=[];
+    this.checkedAndUncheckedRecordsFromSelectAll=[];
+    if(this.selectAll){
+      this.markAsChecked(this.financialClaimsAllPaymentsGridLists.data);
+    }
+    else{
+      this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists.data);
+    }
+    this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
+    'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'};
+    this.cdr.detectChanges();
+    if(this.selectAll){
+      if(this.unCheckedProcessRequest?.length > 0){
+        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
+      }else{
+        this.sendReportCount = this.totalGridRecordsCount;
+      }
+    }else{
+    this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+  }
+  }
+
+  markAsChecked(data:any){
+    data.forEach((element:any) => {
+      if(this.selectAll){
+        element.selected = true;
+      }
+      else{
+        element.selected = false;
+      }
+      if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
+        const itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
+          element.selected = false;
+        }
+        const itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
+          element.selected = true;
+        }
+      }
+
+    });
+
+  }
+
+  markAsUnChecked(data:any){
+    data.forEach((element:any) => {
+      element.selected = false;
+  });
+  }
+
+  getSelectedReportCount(selectedSendReportList : []){
+    this.sendReportCount = selectedSendReportList.length;
+  }
+
+    loadEachLetterTemplate(event:any){
+      this.loadTemplateEvent.emit(event);
+    }
+
+    onitemNumberClick(dataItem: any) {
+        this.route.navigate(
+            [`/financial-management/pharmacy-claims/batch/items`],
+            {
+                queryParams:
+                {
+                    bid: dataItem?.batchId,
+                    pid: dataItem.paymentRequestId,
+                    eid: dataItem.vendorId,
+                }
+            }
+        );
+    }
+
+    onbatchNumberClick(dataItem: any) {
+        this.route.navigate(
+            [`/financial-management/pharmacy-claims/batch`],
+            { queryParams: { bid: dataItem?.batchId } }
+        );
+    }
 }

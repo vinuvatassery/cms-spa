@@ -72,7 +72,7 @@ export class FinancialPharmacyClaimsDataService {
         entryDate: 'XX/XX/XXXX',
         by: 'by',
       },
-
+      
     ]);
   }
   loadBatchItemsListService(){
@@ -183,4 +183,22 @@ export class FinancialPharmacyClaimsDataService {
     );
   }
 
+  loadEachLetterTemplate(templateParams:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/print-advice-letter`,templateParams);
+  }
+
+  getPrintAdviceLetterData(selectedProviders: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/print-advice-letter-summary`,selectedProviders);
+  }
+
+  viewPrintAdviceLetterData(printAdviceLetterData: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/download-advice-letter`, printAdviceLetterData,
+      { responseType: 'blob' }
+    );
+  }
+
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/all/reconcile-payments`,reconcileData);
+  }
 }

@@ -1,13 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade, FinancialPcaFacade, FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
-import { ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { LoggingService } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-pharmacy-claims-page',
@@ -54,6 +53,8 @@ export class PharmacyClaimsPageComponent implements OnInit {
   searchDrugsLoader$ = this.financialPharmacyClaimsFacade.searchDrugsLoader$;
   tab = 1;
 
+  letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
+  letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade ,
     private lovFacade: LovFacade, private readonly router: Router,
@@ -144,8 +145,6 @@ export class PharmacyClaimsPageComponent implements OnInit {
         this.financialClaimsFacade.hideLoader()
         if (response) {
           if (response?.isReAssignmentNeeded ?? true) {
-            //this.chosenPcaForReAssignment = response;
-            //this.onPcaReportAlertClicked(this.pcaExceptionDialogTemplate);
             return;
           }
           claim.pcaSelectionResponseDto = response;
@@ -214,5 +213,9 @@ export class PharmacyClaimsPageComponent implements OnInit {
   }
   ondeleteClaimsClicked(event:any){
     this.financialPharmacyClaimsFacade.deleteClaims(event);
+  }
+
+  loadEachLetterTemplate(event:any){
+    this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);  
   }
 }

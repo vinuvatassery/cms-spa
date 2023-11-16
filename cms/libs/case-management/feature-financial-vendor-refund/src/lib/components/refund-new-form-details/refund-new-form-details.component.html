@@ -4,11 +4,7 @@
     </section>
 </kendo-dialog-titlebar>
 <section class="k-dialog-body">
-
-
     <section class="add_main_popup_screen">
-
-
         <div class="add_new_top_section">
             <p class="mb-3"> Search for a client to add insurance, provider, prescription, or tax refunds.</p>
             <div class="flex-row">
@@ -18,11 +14,14 @@
                             aria-hidden="true">search</span>
                         <span *ngIf="isShownSearchLoader"
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                        <kendo-multicolumncombobox [data]="clientSearchResult" textField="clientFullName"
-                            valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                            placeholder="Search Client Name, ID, or SSN"
-                            [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                            [disabled]="disableFeildsOnConfirmSelection">
+                        <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField='clientNames'
+                        valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
+                        placeholder="Search Client Name, ID, SSN or DOB"
+                        [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                        [filterable]="true"
+                        (filterChange)="loadClientBySearchText($event)"
+                        (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient"
+                        [disabled]="disableFeildsOnConfirmSelection">
                             <button kendoButton fillMode="clear" icon="image"></button>
 
                             <kendo-combobox-column>
@@ -61,43 +60,131 @@
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel text="Medical Provider">
-                        <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Medical Provider" [fillMode]="formUiStyle.dropDownFillMode">
-                        </kendo-dropdownlist>
-                    </kendo-floatinglabel> 
+                    <kendo-floatinglabel  text="Medical/Dental  Provider ">
+                        <div class="combotable_search_list new_refund_Search">                           
+                                  <span *ngIf="isShownSearchLoader"
+                                      class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                                      <kendo-multicolumncombobox [data]="vendors$ | async" textField='providerFullName'
+                                      valueField="vendorName" [fillMode]="formUiStyle.dropDownFillMode"
+                                      placeholder="Search Vendor Name, ID"
+                                      [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                                      [filterable]="true" 
+                                      (filterChange)="searchVendors($event)"
+                                      (valueChange)="onProviderValueChange($event)" [(ngModel)]="selectedClient"
+                                     >
+                                      <button kendoButton fillMode="clear" icon="image"></button>
+          
+                                      <kendo-combobox-column>
+                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                              <span>Name :{{ dataItem.vendorName }}</span>
+                                          </ng-template>
+                                      </kendo-combobox-column>
+                                      <kendo-combobox-column [width]="100">
+                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                              <span class=" text-muted"> <em>Address:</em> {{dataItem.address}}</span>
+                                          </ng-template>
+                                      </kendo-combobox-column>
+                                      <kendo-combobox-column [width]="150">
+                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                              <span class="text-muted"><em>TIN:</em> {{ dataItem.tIN }}</span>
+                                          </ng-template>
+                                      </kendo-combobox-column>
+                                  
+                                  </kendo-multicolumncombobox>
+                              </div>
+                      </kendo-floatinglabel> 
                 </div>
 
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'INS'">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel  text="Insurance Carrier and Plan">
-                        <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Insurance Carrier and Plan"
-                            [fillMode]="formUiStyle.dropDownFillMode">
-                        </kendo-dropdownlist>
-                    </kendo-floatinglabel> 
+                    <kendo-floatinglabel  text="Medical/Dental  Provider ">
+                        <div class="combotable_search_list new_refund_Search">                           
+                                  <span *ngIf="isShownSearchLoader"
+                                      class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                                      <kendo-multicolumncombobox [data]="vendors$ | async" textField='providerFullName'
+                                      valueField="vendorName" [fillMode]="formUiStyle.dropDownFillMode"
+                                      placeholder="Search Vendor Name, ID"
+                                      [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                                      [filterable]="true" 
+                                      (filterChange)="searchVendors($event)"
+                                      (valueChange)="onProviderValueChange($event)" [(ngModel)]="selectedClient"
+                                      >
+                                      <button kendoButton fillMode="clear" icon="image"></button>
+          
+                                      <kendo-combobox-column>
+                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                              <span>Name :{{ dataItem.vendorName }}</span>
+                                          </ng-template>
+                                      </kendo-combobox-column>
+                                      <kendo-combobox-column [width]="100">
+                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                              <span class=" text-muted"> <em>Insurance Type:</em> {{dataItem.insuranceType}}</span>
+                                          </ng-template>
+                                      </kendo-combobox-column>
+                                      <kendo-combobox-column [width]="150">
+                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                              <span class="text-muted"><em> Insurance Name:</em> {{ dataItem.insuranceName }}</span>
+                                          </ng-template>
+                                      </kendo-combobox-column>
+                                      <kendo-combobox-column [width]="125">
+                                          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                              <span class=" text-muted"> <em>Coverage effective dates:</em> {{ dataItem.coverageStartDate|date:'MM/dd/YYYY'}} - {{ dataItem.coverageEndDate|date:'MM/dd/YYYY'}}</span>
+                                          </ng-template>
+                                      </kendo-combobox-column>
+                                  </kendo-multicolumncombobox>
+                              </div>
+                      </kendo-floatinglabel> 
                 </div>
 
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'RX'">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel text="Pharmacy">
-                        <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Pharmacy" [fillMode]="formUiStyle.dropDownFillMode">
-                        </kendo-dropdownlist>
-                    </kendo-floatinglabel> 
+                    <div class="combotable_search_list new_refund_Search">
+                        <span class="material-icons global-search-icon" aria-label="search"
+                            aria-hidden="true">search</span>
+                        <span></span>
+                    <kendo-multicolumncombobox textField="providerFullName" valueField="vendorId"
+                    [fillMode]="formUiStyle.dropDownFillMode"
+                    placeholder="Search pharmacy"
+                    [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                    [filterable]="true" 
+                    (filterChange)="searchPharmacy($event)" [data]="pharmacySearchResult$ | async"
+                    [(ngModel)]="selectedMedicalProvider" (valueChange)="onProviderValueChange($event)"
+                    >
+                        <kendo-combobox-column>
+                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                <span>{{ dataItem.vendorName }}</span>
+                            </ng-template>
+                        </kendo-combobox-column>
+                        <kendo-combobox-column>
+                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                <span class="text-muted"><em> TIN:</em> {{ dataItem.tin | tin }}</span>
+                            </ng-template>
+                        </kendo-combobox-column>
+ 
+                        <kendo-combobox-column>
+                            <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
+                            </ng-template>
+                        </kendo-combobox-column>
+                      </kendo-multicolumncombobox>
+                   </div>
                 </div>
 
             </div>
         </div>
 
         <!-- TPA Content -->
-        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'TPA'">
+        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'TPA'&& vendorId && clientId">
             <!-- TPA Claims Grid -->
-            <div class="mt-1" *ngIf="!isConfirmationClicked">
+            <div class="mt-1" >
                 <h5>Select claims to refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-claims-list  #tpaClaims  [claimsListData$]="claimsListData$" [pageSizes]="pageSizes"
-                        [sortValue]="sortValueClaims" [sortType]="sortType" [sort]="sortClaims"
-                        (loadClaimsListEvent)="loadClaimsListGrid($event)"></cms-vendor-refund-claims-list>
+                    <cms-vendor-refund-claims-list  #tpaClaims 
+                    [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
+                    [sortValue]="sortValueClientClaims" [sortType]="sortType"
+                        ></cms-vendor-refund-claims-list>
                 </div>
             </div>
             <div class="confirm-container" *ngIf="isConfirmationClicked"> 
@@ -274,14 +361,14 @@
         </div>
 
         <!-- INS Content -->
-        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'INS'">
-            <div class="mt-1" *ngIf="!isConfirmationClicked">
+        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'INS'&&vendorId&& clientId">
+            <div class="mt-1" >
                 <h5>Select all premium included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-insurance-premium-list  #insClaims [premiumsListData$]="premiumsListData$"
-                        [pageSizes]="pageSizes" [sortValue]="sortValuePremiums" [sortType]="sortType"
-                        [sort]="sortPremiums"
-                        (loadPremiumsListEvent)="loadPremiumsListGrid($event)"></cms-vendor-refund-insurance-premium-list>
+                    <cms-vendor-refund-insurance-premium-list  #insClaims 
+                    [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
+                        [sortValue]="sortValueClientClaims" [sortType]="sortType"
+                        ></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
             <div class="confirm-container" *ngIf="isConfirmationClicked"> 
@@ -306,11 +393,12 @@
         </div>
 
         <!-- RX Content -->
-        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'RX'"> 
+        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'RX' && vendorId && clientId"> 
             <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all claims included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-client-claims-list #rxClaims [clientClaimsListData$]="clientClaimsListData$" 
+                    <cms-vendor-refund-client-claims-list #rxClaims  [vendorId]="vendorId" [clientId]="clientId"  [refundType]="refundType" [pageSizes]="pageSizes"
+                        [sortValue]="sortValueClientClaims" [sortType]="sortType" [sort]="sortClientClaims"
                         (loadClientClaimsListEvent)="loadClientClaimsListGrid($event)"></cms-vendor-refund-client-claims-list>
                 </div>
             </div>
