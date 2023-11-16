@@ -30,7 +30,6 @@ import { ContactsDeleteComponent } from './components/contacts-delete/contacts-d
 import { ContactsDetailsComponent } from './components/contacts-details/contacts-details.component';
 import { FinancialInsuranceProviderListComponent } from './components/financial-insurance-provider-list/financial-insurance-provider-list.component';
 import { FinancialPharmacyClaimsComponent } from './components/financial-pharmacy-claims/financial-pharmacy-claims.component';
-import { FinancialDrugsDetailsComponent } from './components/financial-drugs-details/financial-drugs-details.component';
 import { FinancialDrugsDeactivateComponent } from './components/financial-drugs-deactivate/financial-drugs-deactivate.component';
 import { FinancialDrugsReassignComponent } from './components/financial-drugs-reassign/financial-drugs-reassign.component';
 import { FinancialInsuranceProviderComponent } from './components/financial-insurance-provider/financial-insurance-provider.component';
@@ -93,7 +92,6 @@ import { InvoiceServiceComponent } from './components/invoice-service/invoice-se
     ContactsDeactivateComponent,
     ContactsDeleteComponent,
     ContactsDetailsComponent,
-    FinancialDrugsDetailsComponent,
     FinancialDrugsDeactivateComponent,
     FinancialDrugsReassignComponent,
     FinancialInsuranceProviderComponent,
@@ -141,8 +139,7 @@ import { InvoiceServiceComponent } from './components/invoice-service/invoice-se
     BillingEmailAddressListComponent,
     ContactsDeactivateComponent,
     ContactsDeleteComponent,
-    ContactsDetailsComponent,
-    FinancialDrugsDetailsComponent,
+    ContactsDetailsComponent,  
     FinancialDrugsDeactivateComponent,
     FinancialDrugsReassignComponent,
     FinancialInsuranceProviderComponent,

@@ -1,10 +1,10 @@
 /** Angular **/
-import {  ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
-import { GridFilterParam, IncomeFacade } from '@cms/case-management/domain';
+import {  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
+import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
-import { AggregateDescriptor, AggregateResult, CompositeFilterDescriptor, State, aggregateBy } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subscription } from 'rxjs';
  
 
@@ -16,8 +16,7 @@ import { Subscription } from 'rxjs';
 export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
 
   
-  paymentStatusCode =null
-   paymentStatuses$ = this.lovFacade.paymentStatus$
+   paymentStatusCode =null
    paymentStatusLovSubscription!:Subscription;
    paymentStatusType:any;
    @Input() refundInformationLoader$:any
@@ -25,42 +24,47 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
    @Input() sortValue:any
    @Input() sort :any
    @Input() pageSizes :any
-@Input() sortType :any
+   @Input() sortType :any
      public state!: State;
      filter!: any;  
   @Output() insuranceRefundInformationConfirmClicked = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>()
-
   public totalAmountPaid =0;
   public totalRefundAmount=0
-  
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   financialPremiumsRefundGridLists!: any[];
-  
-
-
  @Input() gridDataResult! : GridDataResult
  @Input() clientId :any =30104
 
  public formUiStyle: UIFormStyle = new UIFormStyle();
- 
-  public constructor(  private readonly lovFacade : LovFacade){
+  refundNoteValueLength = 0
+  isSubmitted = false;
+  @Input() insuraceAddRefundClick$:any
+  refundForm = this.formBuilder.group({
+    vp: ['', Validators.required],
+    creditNumber: ['', Validators.required],
+    warantNumber: ['', Validators.required],
+    depositDate: ['', Validators.required],
+    refundNote:['']
+  })
+  public constructor(private formBuilder : FormBuilder,
+    private readonly changeDetectorRef: ChangeDetectorRef){
     
   }
 
  
  ngOnInit(): void {
-  this.lovFacade.getPaymentStatusLov()
-  this.paymentStatusSubscription();
   this.initializeRefunInformationGrid()
+  this.insuraceAddRefundClick$.subscribe((res:any) =>{
+    this.changeDetectorRef.markForCheck()
+    this.isSubmitted = true;
+    if (this.refundForm.invalid) {
+      return;
+    }
+  })
 }
 
-paymentStatusSubscription()
-{
-  this.paymentStatusLovSubscription = this.paymentStatuses$.subscribe(data=>{
-    this.paymentStatusType = data;
-  });
-}
+
 
   refundAmountChange(dataItem:any){
    if(dataItem.amountDue < dataItem.refundAmount ){
@@ -126,5 +130,10 @@ paymentStatusSubscription()
   
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event)
+  }
+
+  
+  onRefundNoteValueChange(event: any) {
+    this.refundNoteValueLength = event.length
   }
 }

@@ -48,11 +48,25 @@
     <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take" [loading]="(loader$ | async) ?? false"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
         (columnReorder)="onColumnReorder($event)"
         [data]="batchLogGridLists$| async"  [rowClass]="rowClass">
-        <kendo-grid-checkbox-column [sticky]="false" [columnMenu]="false" [showSelectAll]="true"
-          [width]="40"></kendo-grid-checkbox-column>
+        <kendo-grid-column  *ngIf="isPrintVisaAuthorizationClicked" [sortable]="false" field="add" [width]="40"  class="text-center"
+          [sticky]="true" [sortable]="false"  [columnMenu]="false"  >
+            <ng-template kendoGridHeaderTemplate let-dataItem >
+                <input kendoCheckBox
+                    type="checkbox"
+                    name="selectAll"
+                    [(ngModel)]="selectAll"
+                    (change)="selectionAllChange()"/>
+            </ng-template>
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
+                <input kendoCheckBox
+                    type="checkbox"  [(ngModel)]="dataItem.selected"
+                    (change)="selectionChange(dataItem,dataItem.selected)"/>
+            </ng-template>
+          </kendo-grid-column>
+
         <kendo-grid-column field="itemNbr" title="Item #" [width]="100">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
@@ -169,7 +183,7 @@
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
-       <ng-container *ngIf="isLogGridExpand">
+       <ng-container *ngIf="isLogGridExpand && !isPrintVisaAuthorizationClicked">
           <div *kendoGridDetailTemplate="let dataItem">
       <cms-pharmacy-claims-prescriptions-services [paymentId] = "dataItem.paymentRequestId" [claimType] = "claimsType"></cms-pharmacy-claims-prescriptions-services>
           </div>
@@ -210,13 +224,13 @@
           </section>
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-    <span class="">0 claims(s) to be deleted</span>
+    <span class="" *ngIf="isPrintVisaAuthorizationClicked">{{noOfRecordToPrint}} authorization letter(s) to be previewed.</span>
     <button (click)="goToBatchItems($event)">Batch Log items</button>
-    <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
+    <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintVisaAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Preview Requests" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-    <button kendoButton [primary]="true" aria-label="Review" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
+    <button kendoButton [primary]="true" aria-label="Preview" *ngIf="isPrintVisaAuthorizationClicked" [disabled]="disablePrwButton" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
     <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
-      buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAuthorizationClicked"
+      buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintVisaAuthorizationClicked"
       [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
       <div class="btn-inner-block" >
         Bulk
@@ -239,8 +253,16 @@
 
 
   <ng-template #PrintAuthorizationDialogTemplate>
-    <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization(s)</kendo-dialog-titlebar>
-  <cms-pharmacy-claims-print-authorization></cms-pharmacy-claims-print-authorization>
+  <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Preview and Print Authorization(s)</kendo-dialog-titlebar>
+  <cms-pharmacy-claims-print-authorization
+  [printOption]="true"
+  [batchId]="batchId"
+  [items]="selectedDataRows"
+  (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+  (selectUnSelectPayment)="selectUnSelectPayment($event)"
+  (loadTemplateEvent)="loadEachLetterTemplate($event)"
+  [letterContentList$]="letterContentList$"
+  [letterContentLoader$]="letterContentLoader$"></cms-pharmacy-claims-print-authorization>
   </ng-template>
 
   <ng-template #unBatchClaimsDialogTemplate>
@@ -250,19 +272,21 @@
 
 <ng-template #deleteClaimsConfirmationDialogTemplate>
   <cms-pharmacy-claims-delete-claims
-    (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"></cms-pharmacy-claims-delete-claims>
+  (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"
+  (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked($event)"
+ 
+  [deletemodelbody]="deletemodelbody"></cms-pharmacy-claims-delete-claims>
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}}  </h4></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-pharmacy-claims-recent-claims-list
-
-      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-pharmacy-claims-recent-claims-list>
-  </section>
+    (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
+</section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div class="justify-content-end">
+      <div class="justify-content-end" (click)="onClientClicked(clientId)">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
           Client Profile <span class="material-icons ml-1">
             chevron_right

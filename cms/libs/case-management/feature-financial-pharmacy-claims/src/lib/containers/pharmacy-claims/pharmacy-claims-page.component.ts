@@ -1,15 +1,18 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade, FinancialPcaFacade, FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
-import { ConfigurationProvider, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
+
 @Component({
   selector: 'cms-pharmacy-claims-page',
   templateUrl: './pharmacy-claims-page.component.html',
 })
-export class PharmacyClaimsPageComponent {
+export class PharmacyClaimsPageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
@@ -48,13 +51,42 @@ export class PharmacyClaimsPageComponent {
   searchPharmaciesLoader$ = this.financialPharmacyClaimsFacade.searchPharmaciesLoader$;
   searchClientLoader$ = this.financialPharmacyClaimsFacade.searchClientLoader$;
   searchDrugsLoader$ = this.financialPharmacyClaimsFacade.searchDrugsLoader$;
+  tab = 1;
 
+  letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
+  letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade ,
-    private lovFacade: LovFacade,private readonly configProvider: ConfigurationProvider,
+    private lovFacade: LovFacade, private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,private readonly cdr: ChangeDetectorRef,
+    private loggingService: LoggingService,private readonly configProvider: ConfigurationProvider,
     private readonly intl: IntlService,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
   ) {}
+
+  ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(
+      (data) => (this.tab = +(data['tab'] ?? 1))
+    );
+    this.tab = this.financialPharmacyClaimsFacade.selectedClaimsTab;
+    this.addNavigationSubscription();
+  }
+
+  private addNavigationSubscription() {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+
+      .subscribe({
+        next: () => {        
+          this.tab = 1;
+          this.cdr.detectChanges();
+        },
+
+        error: (err: any) => {
+          this.loggingService.logException(err);
+        },
+      });
+  }
 
   getCoPaymentRequestTypeLov()
   {
@@ -68,14 +100,20 @@ export class PharmacyClaimsPageComponent {
   }
 
   loadPharmacyClaimsProcessListGrid(event: any) {
+    this.financialPharmacyClaimsFacade.selectedClaimsTab = 1;
+    this.tab = this.financialPharmacyClaimsFacade.selectedClaimsTab;
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsProcessListGrid(event);
   }
 
   loadPharmacyClaimsBatchListGrid(event: any) {
+    this.financialPharmacyClaimsFacade.selectedClaimsTab = 2;
+    this.tab = this.financialPharmacyClaimsFacade.selectedClaimsTab;
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsBatchListGrid(event);
   }
 
-  loadPharmacyClaimsAllPaymentsListGrid(params: GridFilterParam) {
+  loadPharmacyClaimsAllPaymentsListGrid(params: any) {
+    this.financialPharmacyClaimsFacade.selectedClaimsTab = 3;
+    this.tab = this.financialPharmacyClaimsFacade.selectedClaimsTab;
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsAllPaymentsListGrid(params);
   }
 
@@ -107,8 +145,6 @@ export class PharmacyClaimsPageComponent {
         this.financialClaimsFacade.hideLoader()
         if (response) {
           if (response?.isReAssignmentNeeded ?? true) {
-            //this.chosenPcaForReAssignment = response;
-            //this.onPcaReportAlertClicked(this.pcaExceptionDialogTemplate);
             return;
           }
           claim.pcaSelectionResponseDto = response;
@@ -156,8 +192,12 @@ export class PharmacyClaimsPageComponent {
   searchClients(searchText: string) {
     this.financialPharmacyClaimsFacade.searchClients(searchText);
   }
-  searchDrug(searchText: string) {
-    this.financialPharmacyClaimsFacade.searchDrug(searchText);
+  searchDrug(ndcCodeSearch: any) {
+    this.financialPharmacyClaimsFacade.searchDrug(ndcCodeSearch?.searchText , ndcCodeSearch?.isClientRestricted);
+  }
+
+  onExportAllPayments(event: any){
+    this.financialPharmacyClaimsFacade.exportPharmacyClaimAllPayments(event);
   }
 
   onExportClaimsInProcess(event: any){
@@ -168,13 +208,14 @@ export class PharmacyClaimsPageComponent {
     this.financialPharmacyClaimsFacade.exportPharmacyClaimsBatchListGrid(event);
   }
 
-  onExportAllPayments(event: any){
-  }
-
   onbatchClaimsClicked(event:any){
     this.financialPharmacyClaimsFacade.batchClaims(event);
   }
   ondeleteClaimsClicked(event:any){
     this.financialPharmacyClaimsFacade.deleteClaims(event);
+  }
+
+  loadEachLetterTemplate(event:any){
+    this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);  
   }
 }
