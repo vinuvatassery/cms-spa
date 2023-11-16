@@ -531,19 +531,33 @@ export class FinancialVendorRefundDataService {
         `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}`
     );
   }
-  loadMedicalPremiumList( skipcount: number,
-    maxResultCount: number,
-    sort: any,
-    sortType: string,
-    filter:string) {
-      
-      const filterRequestBody = {
-        skipcount:skipcount,
-        maxResultCount:maxResultCount,
-        sorting:sort,
-        sortType:sortType,
-        filter:filter
-      }
-      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/premiums-list`,filterRequestBody);
+  loadMedicalPremiumList(data:any): Observable<any> {
+    
+    const ClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/refund-ins-list?vendorId=${data.vendorId}'&cliendId=${data.clientId}`,ClaimsPageAndSortedRequestDto);
+  }
+  loadTPARefundList(data:any): Observable<any> {
+    
+    const ClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/refund-tpa-list?vendorId='${data.vendorId}'&cliendId='${data.clientId}`,ClaimsPageAndSortedRequestDto);
   }
 }
