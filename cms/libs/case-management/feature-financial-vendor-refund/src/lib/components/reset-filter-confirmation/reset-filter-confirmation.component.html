@@ -1,0 +1,14 @@
+<kendo-dialog-titlebar (close)="closefilterResetClicked()">  Filter Grid? </kendo-dialog-titlebar>
+<section class="k-dialog-body mb-2">
+  <p class="text-muted mb-1"> Filtering the grid will remove any selections already made. Do you want to continue?</p>
+  
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton  aria-label="Cancel" (click)="closefilterResetClicked()">
+        Cancel </button>
+      <button kendoButton [primary]="true" aria-label="Yes" (click)="resetClicked()">YES </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

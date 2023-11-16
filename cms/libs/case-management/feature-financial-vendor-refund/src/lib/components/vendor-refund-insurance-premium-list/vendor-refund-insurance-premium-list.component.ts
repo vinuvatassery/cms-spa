@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -7,10 +8,14 @@ import {
   OnChanges,
   OnInit,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { SelectableDirective } from '@progress/kendo-angular-dropdowns';
+import { FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -23,7 +28,12 @@ import { Subject } from 'rxjs';
   templateUrl: './vendor-refund-insurance-premium-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnChanges{
+export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnChanges {
+  @ViewChild('filterResetConfirmationDialogTemplate', { read: TemplateRef })
+  filterResetConfirmationDialogTemplate!: TemplateRef<any>;
+ 
+  @ViewChild(GridComponent) grid!: GridComponent;
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isClientClaimsLoaderShow = false;
   /** Constructor **/
@@ -60,8 +70,8 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   financialPremiumsProcessData$ = this.financialVendorRefundFacade.financialPremiumsProcessData$;
   premiumsListData$ =   this.financialVendorRefundFacade.premiumsListData$;
   @Input() selectedInsurancePremiumIds:any[]  =[]
-   
-  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,)
+  filterResetDialog: any;
+  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService)
   {
  
   }
@@ -113,12 +123,14 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   }
   
   dataStateChange(stateData: any): void {
+    debugger
+    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadRefundClaimsListGrid();
+   
   }
 
   // updating the pagination infor based on dropdown selection
@@ -128,9 +140,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
     this.loadRefundClaimsListGrid();
   }
 
-  public filterChange(filter: CompositeFilterDescriptor): void {
-    this.filterData = filter;
-  }
+ 
   private loadRefundClaimsListGrid(): void {
     this.loadClaimsProcess(
       this.vendorId,
@@ -179,4 +189,37 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
     this.isClientClaimsLoaderShow = false;
 
   }
+  filterChange(filter: CompositeFilterDescriptor): void {  
+    this.filterData = filter;
+ 
+  }
+  openResetDialog( template: TemplateRef<unknown>)
+  {
+    this.filterResetDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  resetButtonClosed(result: any) {
+    if (result) {
+ 
+      this.filterResetDialog.close();
+    }
+  }
+  
+  resetFilterClicked(action: any,) {
+    if (action) {
+      this.selectedClaims=[]
+      this.clearSelection();
+      this.loadRefundClaimsListGrid();
+     this.filterResetDialog.close();
+    }
+  }
+  private clearSelection(): void {  
+    if (this.grid) {
+        this.selectedInsuranceClaims = [];
+    }
+  }
+  
+
 }
