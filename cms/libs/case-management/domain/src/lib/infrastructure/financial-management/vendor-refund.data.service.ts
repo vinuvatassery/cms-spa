@@ -4,6 +4,9 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ClientCase } from '../../entities/client-case';
+import { Pharmacy } from '../../entities/client-pharmacy';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundDataService {
@@ -13,6 +16,13 @@ export class FinancialVendorRefundDataService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
+  addInsuranceRefundClaim(data:any, vendorId :any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums`, data);
+  }
+
+  getInsuranceRefundEditInformation(paymentRequestId:any,paginationSortingDto:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums/${paymentRequestId}`, paginationSortingDto);
+  }
 
   getInsurnaceRefundInformation(insuranceRefundInformation:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums`, insuranceRefundInformation);
@@ -487,5 +497,70 @@ export class FinancialVendorRefundDataService {
 
   unbatchRefunds(paymentRequestIds: string[]) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/unbatch`, paymentRequestIds);
+  }
+
+  loadRefundClaimsService(data:any): Observable<any> {
+    const ClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      refundType:data.refundType,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/${data.clientId}/${data.vendorId}`,
+      ClaimsPageAndSortedRequestDto
+    );
+  }
+  loadClientBySearchText(text: string) {
+    return this.http.get<ClientCase[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/claims/medical/clients/SearchText=${text}`
+    );
+  }
+  loadPharmacyBySearchText(searchText: string,) {
+    return this.http.get<Pharmacy[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/claims/pharmacies/SearchText=${searchText}`
+    );
+  }
+  loadvendorBySearchText(searchText: string,) {
+    return this.http.get<Pharmacy[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+  `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}`
+    );
+  }
+  loadMedicalPremiumList(data:any): Observable<any> {
+    
+    const ClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/refund-ins-list?vendorId=${data.vendorId}'&cliendId=${data.clientId}`,ClaimsPageAndSortedRequestDto);
+  }
+  loadTPARefundList(data:any): Observable<any> {
+    
+    const ClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/refund-tpa-list?vendorId='${data.vendorId}'&cliendId='${data.clientId}`,ClaimsPageAndSortedRequestDto);
   }
 }

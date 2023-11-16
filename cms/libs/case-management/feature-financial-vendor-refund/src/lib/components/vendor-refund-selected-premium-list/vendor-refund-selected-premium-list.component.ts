@@ -35,11 +35,12 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   financialPremiumsRefundGridLists!: any[];
  @Input() gridDataResult! : GridDataResult
  @Input() clientId :any =30104
-
+@Input() vendorId :any 
  public formUiStyle: UIFormStyle = new UIFormStyle();
   refundNoteValueLength = 0
   isSubmitted = false;
   @Input() insuraceAddRefundClick$:any
+  @Output() Reqpayload = new EventEmitter<any>()
   refundForm = this.formBuilder.group({
     vp: ['', Validators.required],
     creditNumber: ['', Validators.required],
@@ -60,6 +61,33 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
     this.isSubmitted = true;
     if (this.refundForm.invalid) {
       return;
+    }else{
+       const refundRequests :any[] =[]
+      this.financialPremiumsRefundGridLists.forEach(x=>{
+        refundRequests.push({
+          paymentRequestId : x.paymentRequestId,
+          VendorId : this.vendorId,
+          clientId : this.clientId,
+          amountPaid : x.refundAmount
+        })
+      })
+
+      const payload ={
+        vendorId : this.vendorId,
+        clientId : this.clientId,
+        creditNumber:"0",
+        voucherPayable: this.refundForm.controls['vp']?.value,
+        warrantNumber: this.refundForm.controls['warantNumber']?.value,
+        depositDate:this.refundForm.controls['depositDate']?.value,
+        Notes:this.refundForm.controls['refundNote']?.value,
+        addRefundDto: refundRequests,
+        refundType:"insurance"
+      }
+
+      this.Reqpayload.emit({
+        data: this.financialPremiumsRefundGridLists,
+        vendorId  : this.vendorId
+      })
     }
   })
 }
@@ -67,8 +95,8 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
 
 
   refundAmountChange(dataItem:any){
-   if(dataItem.amountDue < dataItem.refundAmount ){
-     dataItem.refundAmountError="Refund Amount cannot be greater than claim amount"
+   if(dataItem.amountPaid < dataItem.refundAmount ){
+     dataItem.refundAmountError="Refund amount cannot be greater than claim amount"
    }
   }
 
@@ -91,7 +119,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   this.state = {
     skip: 0,
     take: this.pageSizes[0]?.value,
-    sort: [{ field: 'createdDate', dir: 'asc' }]
+    sort: [{ field: 'creationTime', dir: 'asc' }]
   };
   this.loadRefundInformationListGrid()
   }  

@@ -220,6 +220,13 @@
     (updateMasterDetailsClickedEvent)="updateMasterDetailsClicked($event)"
     (close)="onCloseEditListItemsDetailClicked()"
     [selectedMasterDetail$]="selectedMasterDetail$"
+    [drugForm]="drugForm"
+    [insurancePlanForm]="insurancePlanForm"
+    [insuranceTypelovForPlan$]="insuranceTypelovForPlan$"
+    (recordUpdatedEvent)="recordUpdate($event)"
+    [pharmacyForm]="pharmacyForm"
+    [insuranceVendorForm]="insuranceVendorForm"
+    [insuranceProviderForm]="insuranceProviderForm"
   >
   </productivity-tools-approvals-edit-items>
 </ng-template>

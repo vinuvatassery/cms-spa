@@ -23,11 +23,13 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
    sort = this.financialPharmacyClaimsFacade.sortReconcileList;
    state!: State;
    reconcileGridLists$ = this.financialPharmacyClaimsFacade.reconcileDataList$;
-   batchId:any;
+   batchId:any = null;
    sortValueBatch = this.financialPharmacyClaimsFacade.sortValueReconcile;
    sortBatch = this.financialPharmacyClaimsFacade.sortReconcileList;
    exportButtonShow$ = this.documentFacade.exportButtonShow$;
    dataExportParameters! : any
+   letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
+   letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
 
   constructor( 
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
@@ -68,5 +70,9 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
       const fileName ='Pharmacy Claims Reconciling Payment'
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`pharmacy/payment-batches/${this.batchId}/reconcile-payments` , fileName)
     }
+  }
+
+  loadEachLetterTemplate(event:any){
+    this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);  
   }
 }

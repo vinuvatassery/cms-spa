@@ -49,6 +49,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Input() reconcilePaymentBreakoutList$ :any;
   @Input() batchId: any;
   @Input() exportButtonShow$ : any;
+  @Input() warrantNumberChange$: any;
   @Input() warrantNumberChangeLoader$: any;
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
@@ -194,10 +195,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       }
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
       this.calculateCharacterCountBulkNote(null);
-
-      this.warrantNumberChangeLoader$.subscribe((response: any) =>
-        this.warrantNumberChanged = response
-      )
   }
 
   ngOnDestroy(): void {
@@ -851,7 +848,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     if (isValid.length <= 0 && this.selectedReconcileDataRows.length>0) {
       this.printAuthorizationDialog = this.dialogService.open({
         content: template,
-        cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+        cssClass: 'app-c-modal app-c-modal-96full pharmacy_print_auth',
       });
     }
   }

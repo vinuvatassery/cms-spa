@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentFacade } from '@cms/shared/util-core';
 
 @Component({
@@ -26,14 +26,21 @@ export class PharmacyClaimsBatchPageComponent {
   deleteClaims$ = this.financialPharmacyClaimsFacade.deleteClaims$;
   paymentByBatchGridLoader$ = this.financialPharmacyClaimsFacade.paymentByBatchGridLoader$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
+  letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
   claimsType= 'pharmacies';
   batchId!:string;
   dataExportParameters! : any
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private readonly route : ActivatedRoute,
-    private readonly documentFacade : DocumentFacade
+      private readonly documentFacade: DocumentFacade,
+      private readonly router: Router,
   ) {}
+
+  ngOnInit(): void {
+    this.batchId =   this.route.snapshot.queryParams['bid'];
+  }
 
   loadBatchLogListGrid(event: any) {
     this.dataExportParameters = event
@@ -68,7 +75,10 @@ export class PharmacyClaimsBatchPageComponent {
      this.financialPharmacyClaimsFacade.unbatchPremiums(event.paymentId)
   }
   ondeletebatchesClicked(event:any){
-    ;
     this.financialPharmacyClaimsFacade.deletebatches(event);
+  }
+
+  loadEachLetterTemplate(event: any) {
+    this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);
   }
 }
