@@ -19,6 +19,49 @@
   border: 1px solid #0000000F;
   border-radius: 4px;
   padding: 1rem;
+  border-left: 5px solid;
+  p{
+    letter-spacing: 0px;
+    color: #00000099;
+    text-transform: uppercase;
+  }
+  h3{
+    letter-spacing: 0px;
+color: #000000DE;
+  }
+
+
+  &.yellow_card{
+    border-left-color:$dash-yellow-1;
+    span{
+    color:$dash-yellow-1;
+
+    }
+  }
+  &.red_card{
+    border-left-color: $dash-red-1;
+    span{
+      color: $dash-red-1;
+    }
+  }
+  &.green_card{
+    border-left-color: $dash-green-1;
+    span{
+      color: $dash-green-1;
+    }
+  }
+  &.blue_card{
+    border-left-color: $dash-blue-1;
+    span{
+       color: $dash-blue-1;
+    }
+  }
+  &.purple_card{
+    border-left-color: $dash-purple-1;
+    span{
+     color: $dash-purple-1;
+    }
+  }
 }
 
 .dashboard-page-wrapper {
@@ -102,5 +145,29 @@
       //   }
       // }
     }
+  }
+}
+
+.card_Tail_wrapper{
+  .flex-row{
+    align-items: flex-end;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #0000000F;
+    margin-bottom: 10px;
+    &:last-child{
+      border-bottom: 0px;
+      margin-bottom: 0px;
+    }
+
+  }
+  h4{
+        font-size: 20px;
+        font-family: $font-family;
+        margin: 0;
+  }
+  h3{
+    font-size: 24px;
+    font-family: $font-family;
+    margin: 0;
   }
 }

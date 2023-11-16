@@ -1,5 +1,9 @@
+import { DashboardConfig } from './dashboard-config';
+import { DashboardContent } from './dashboard-content';
+
 export interface Dashboard {
-  id: number;
-  name: string;
-  description: string;
+  dashboardId: number;
+  dashboardName: string;
+  dashboardConfig: DashboardConfig;
+  dashboardContent: DashboardContent[];
 }

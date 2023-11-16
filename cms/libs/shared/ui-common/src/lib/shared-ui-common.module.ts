@@ -18,7 +18,7 @@ import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
 import { ReminderNotificationSnackBarComponent } from './reminder-notification-snack-bar/reminder-notification-snack-bar.component';
 import { ReAssignCaseComponent } from './re-assign-case/re-assign-case.component';
-
+import { ChartComponent } from './chart/chart.component';
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 
@@ -42,6 +42,7 @@ import { ClientsAttachmentComponent } from './clients-attachment/clients-attachm
 import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
 import { VendorDetailsComponent } from './vendor-details/vendor-details.component';
 import { TinPipe } from './pipes/tin.pipe';
+import { PlaceholderDirective } from './directives/placeholder.directive';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -76,7 +77,9 @@ import { TinPipe } from './pipes/tin.pipe';
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
     TinPipe,
-    ReAssignCaseComponent
+    ReAssignCaseComponent,
+    ChartComponent,
+    PlaceholderDirective
   ],
   exports: [
     LoginStatusComponent,
@@ -110,7 +113,9 @@ import { TinPipe } from './pipes/tin.pipe';
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
     TinPipe,
-    ReAssignCaseComponent
+    ReAssignCaseComponent,
+    ChartComponent,
+    PlaceholderDirective
   ],
 })
 export class SharedUiCommonModule {}

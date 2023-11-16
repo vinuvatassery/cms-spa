@@ -115,6 +115,12 @@
       "@cms/dashboard/feature-home": [
         "libs/dashboard/feature-home/src/index.ts"
       ],
+      "@cms/dashboard/feature-widget": [
+        "libs/dashboard/feature-widget/src/index.ts"
+      ],
+      "@cms/dashboard/ui": [
+        "libs/dashboard/ui/src/index.ts"
+      ],
       "@cms/productivity-tools/domain": [
         "libs/productivity-tools/domain/src/index.ts"
       ],
@@ -164,7 +170,8 @@
       ],
       "@cms/system-config/feature-user-management": [
         "libs/system-config/feature-user-management/src/index.ts"
-      ]
+      ],
+     
     }
   },
   "exclude": ["node_modules", "tmp"]

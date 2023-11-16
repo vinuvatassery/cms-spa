@@ -8,6 +8,9 @@ import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { DashboardFeatureDashboardRoutingModule } from './dashboard-feature-dashboard-routing.module';
 /** Components **/
 import { DashboardPageComponent } from './containers/dashboard-page/dashboard-page.component';
+// import { DashboardFeatureWidgetModule } from '@cms/dashboard/feature-widget'; 
+import { GridsterModule } from 'angular-gridster2';
+import { DynamicModule } from 'ng-dynamic-component';
 
 @NgModule({
   imports: [
@@ -15,7 +18,9 @@ import { DashboardPageComponent } from './containers/dashboard-page/dashboard-pa
     DashboardFeatureDashboardRoutingModule,
     DashboardDomainModule,
     SharedUiCommonModule,
-    SharedUiTpaModule,
+    SharedUiTpaModule,  
+    GridsterModule,
+    DynamicModule
   ],
   declarations: [DashboardPageComponent],
   exports: [DashboardPageComponent],

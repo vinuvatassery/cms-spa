@@ -13,7 +13,7 @@ export class DashboardDataService {
   constructor(private readonly http: HttpClient) {}
 
   /** Public methods **/
-  loadDashboard(): Observable<Dashboard[]> {
+  loadDashboard(): Observable<any[]> {
     return of([
       { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
       {

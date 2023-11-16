@@ -1,13 +1,13 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { CaseFacade, SearchHeaderType } from '@cms/case-management/domain';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'; 
 /** Facades **/
-import { DashboardFacade } from '@cms/dashboard/domain';
+import { DashboardFacade, DashboardWrapperFacade } from '@cms/dashboard/domain';
 /** Services **/
 import { LocalStorageService } from '@cms/shared/util-core';
 import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
 import { TileLayoutReorderEvent } from "@progress/kendo-angular-layout";
 import { TileLayoutResizeEvent } from "@progress/kendo-angular-layout";
+
 @Component({
   selector: 'dashboard-dashboard-page',
   templateUrl: './dashboard-page.component.html',
@@ -16,23 +16,46 @@ import { TileLayoutResizeEvent } from "@progress/kendo-angular-layout";
 })
 export class DashboardPageComponent implements OnInit {
   /** Public properties **/
+    //#region Variables
+ public dashboardContentList$ =  this.dashboardWrapperFacade.dashboardContentList$;
+  public dashboardConfiguration$ =  this.dashboardWrapperFacade.dashboardConfiguration$;
+
+  //#endregion
   dashboard$ = this.dashboardFacade.dashboard$;
   public events: string[] = [];
   isReorderEnable = false;
+  public areaList: Array<string> = [
+    "ORHIVE Case Worker Dashboard",
+    "ORHIVE Admin Dashboard",
+    "ORHIVE Manager Dashboard",
+    "ORHIVE Client Details Dashboard",
+  ];
+  public selectedValue = "ORHIVE Case Worker Dashboard";
   /** Constructor **/
   constructor(
     private readonly dashboardFacade: DashboardFacade,
-    private readonly localStorageService: LocalStorageService,
-    private readonly caseFacade: CaseFacade
+    private readonly localStorageService: LocalStorageService, 
+    private readonly dashboardWrapperFacade: DashboardWrapperFacade
   ) {}
 
   /** Lifecycle hooks **/
-  ngOnInit() {
-    this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
+  ngOnInit() { 
     this.loadDashboard();
+    this.ConfigureDashboard();
+    this.loadDashboadContent();
   }
   editDashboardClicked(){
     this.isReorderEnable = true;
+  }
+
+  //#region Other Methods
+
+  ConfigureDashboard() {
+    this.dashboardWrapperFacade.loadDashboardConfiguration();
+  }
+
+  loadDashboadContent() {
+    this.dashboardWrapperFacade.loadDashboardContent();
   }
 
   editDashboardCancelClicked(){
@@ -114,31 +137,14 @@ export class DashboardPageComponent implements OnInit {
   
   public pharmacyClaims = [
     {
-      kind: "Hydroelectric",
-      share: 0.175,
+      kind: "FULL PAY",
+      share: 68,
     },
     {
-      kind: "Nuclear",
-      share: 0.238,
-    },
-    {
-      kind: "Coal",
-      share: 0.118,
-    },
-    {
-      kind: "Solar",
-      share: 0.052,
-    },
-    {
-      kind: "Wind",
-      share: 0.225,
-    },
-    {
-      kind: "Other",
-      share: 0.192,
-    },
+      kind: "REGULAR PAY",
+      share: 32,
+    }, 
   ];
-  public pharmacyClaimsLabelContent(e: SeriesLabelsContentArgs): string {
-    return e.category;
-  } 
+ 
+  
 }

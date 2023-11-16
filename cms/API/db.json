@@ -1,0 +1,317 @@
+{
+  "dashboardMaster": [
+    {
+      "id": "yathish.kuntady@speridian.com",
+      "activeDashboardId": 3,
+      "dashboards": [
+        {
+          "dashboardId": 1,
+          "dashboardName": "Home Dashboard",
+          "dashboardConfig": {
+            "minRows": 5,
+            "minCols": 5,
+            "maxRows": 12,
+            "maxCols": 12
+          },
+          "dashboardContent": [
+            {
+              "cols": 5,
+              "rows": 3,
+              "x": 0,
+              "y": 0,
+              "name": "Program Expenses",
+              "component": "Program Expenses"
+            }
+          ]
+        },
+        {
+          "dashboardId": 2,
+          "dashboardName": "Client Dashboard",
+          "dashboardConfig": {
+            "minRows": 5,
+            "minCols": 5,
+            "maxRows": 12,
+            "maxCols": 12
+          },
+          "dashboardContent": [
+            {
+              "cols": 2,
+              "rows": 1,
+              "x": 4,
+              "y": 0,
+              "name": "Direct Messages",
+              "component": "Direct Messages"
+            },
+            {
+              "cols": 2,
+              "rows": 1,
+              "x": 2,
+              "y": 0,
+              "name": "Pending Approval",
+              "component": "Pending Approval"
+            },
+            {
+              "cols": 2,
+              "rows": 1,
+              "x": 0,
+              "y": 0,
+              "name": "To Do Items",
+              "component": "To Do Items"
+            },
+            {
+              "cols": 3,
+              "rows": 2,
+              "x": 0,
+              "y": 4,
+              "name": "New Applications",
+              "component": "New Applications"
+            },
+            {
+              "cols": 2,
+              "rows": 1,
+              "x": 6,
+              "y": 0,
+              "name": "New Notifications",
+              "component": "New Notifications"
+            },
+            {
+              "cols": 4,
+              "rows": 3,
+              "x": 0,
+              "y": 1,
+              "name": "Program Income",
+              "component": "Program Income"
+            },
+            {
+              "cols": 4,
+              "rows": 3,
+              "x": 4,
+              "y": 1,
+              "name": "Program Expenses",
+              "widgetConfig": {
+                "type": "bar",
+                "data": {
+                  "labels": [
+                    "Jan",
+                    "Feb",
+                    "Mar",
+                    "Apr",
+                    "May",
+                    "Jun",
+                    "Jul"
+                  ],
+                  "datasets": [
+                    {
+                      "label": "Med Claims",
+                      "data": [
+                        300,
+                        200,
+                        250,
+                        400,
+                        300,
+                        350,
+                        500
+                      ],
+                      "fill": false,
+                      "borderColor": "red",
+                      "tension": 0.1
+                    },
+                    {
+                      "label": "Med Prem",
+                      "data": [
+                        75,
+                        130,
+                        170,
+                        220,
+                        100,
+                        180,
+                        50
+                      ],
+                      "fill": false,
+                      "borderColor": "blue",
+                      "tension": 0.1
+                    },
+                    {
+                      "label": "Dental Claims",
+                      "data": [
+                        10,
+                        30,
+                        20,
+                        10,
+                        40,
+                        70,
+                        60
+                      ],
+                      "fill": false,
+                      "borderColor": "purple",
+                      "tension": 0.1
+                    },
+                    {
+                      "label": "Dental Prem",
+                      "data": [
+                        20,
+                        10,
+                        30,
+                        60,
+                        40,
+                        80,
+                        60
+                      ],
+                      "fill": false,
+                      "borderColor": "Orange",
+                      "tension": 0.1
+                    },
+                    {
+                      "label": "Pharm Claim",
+                      "data": [
+                        100,
+                        10,
+                        60,
+                        60,
+                        40,
+                        70,
+                        60
+                      ],
+                      "fill": false,
+                      "borderColor": "darkgreen",
+                      "tension": 0.1
+                    }
+                  ]
+                },
+                "options": {
+                  "plugins": {
+                    "legend": {
+                      "display": true,
+                      "labels": {
+                        "usePointStyle": true
+                      }
+                    },
+                    "title": {
+                      "display": true,
+                      "text": "Program Expense"
+                    }
+                  }
+                }
+              },
+              "component": "Program Expenses"
+            }
+          ]
+        },
+        {
+          "dashboardId": 3,
+          "dashboardName": "Admin2",
+          "dashboardConfig": {
+            "minRows": 12,
+            "maxRows": 12,
+            "minCols": 12,
+            "maxCols": 12
+          },
+          "dashboardContent": [
+            {
+              "cols": 2,
+              "rows": 1,
+              "x": 0,
+              "y": 0,
+              "name": "Direct Messages",
+              "component": "Direct Messages"
+            }
+          ]
+        },
+        {
+          "dashboardId": 4,
+          "dashboardName": "Admin3",
+          "dashboardConfig": {
+            "minRows": 5,
+            "maxRows": 5,
+            "minCols": 5,
+            "maxCols": 5
+          },
+          "dashboardContent": [
+            {
+              "cols": 2,
+              "rows": 1,
+              "x": 0,
+              "y": 0,
+              "name": "Direct Messages",
+              "component": "Direct Messages"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "widgetMaster": [
+    {
+      "widgetDetails": [
+        {
+          "moduleId": "All",
+          "groupName": "General",
+          "widgets": [
+            {
+              "name": "Direct Messages",
+              "identifier": "DM",
+              "type": "text"
+            },
+            {
+              "name": "New Notifications",
+              "identifier": "NN",
+              "type": "text"
+            },
+            {
+              "name": "Pending Approvals",
+              "identifier": "PA",
+              "type": "text"
+            },
+            {
+              "name": "Reminders Today",
+              "identifier": "RT",
+              "type": "text"
+            },
+            {
+              "name": "To Do Items",
+              "identifier": "TD",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "moduleId": "CAREAssist",
+          "groupName": "Client",
+          "widgets": [
+            {
+              "name": "New Applications",
+              "identifier": "NA",
+              "type": "text"
+            },
+            {
+              "name": "CERs",
+              "identifier": "CR",
+              "type": "text"
+            }
+          ]
+        },
+        {
+          "moduleId": "CAREAssist",
+          "groupName": "Fiscal",
+          "widgets": [
+            {
+              "name": "Financial Links",
+              "identifier": "FL",
+              "type": "text"
+            },
+            {
+              "name": "Program Income",
+              "identifier": "PI",
+              "type": "Chart"
+            },
+            {
+              "name": "Program Expenses",
+              "identifier": "PE",
+              "type": "Chart"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
