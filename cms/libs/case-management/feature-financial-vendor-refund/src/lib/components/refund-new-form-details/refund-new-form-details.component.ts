@@ -90,7 +90,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
 
   @ViewChild('rxClaims', { static: false })
   rxClaims!: VendorRefundPharmacyPaymentsListComponent;
-
+  showNoDataMessage: boolean = false;
   insurancePremiumPaymentReqIds :any[] =[]
   pharmacyClaimsPaymentReqIds :any[]=[]
   tpaClaimsPaymentReqIds :any[] =[]
@@ -144,6 +144,7 @@ if(this.isEdit){
   selectionChange(event: any){
     this.isConfirmationClicked = false
     this.vendorId=null;
+    this.selectedProvider=null;
   }
   confirmationClicked (){
   

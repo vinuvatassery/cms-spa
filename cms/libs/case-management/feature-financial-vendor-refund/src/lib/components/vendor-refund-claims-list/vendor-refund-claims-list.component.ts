@@ -7,16 +7,20 @@ import {
   OnChanges,
   OnInit,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-vendor-refund-claims-list',
@@ -24,6 +28,10 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
+  @ViewChild('filterResetConfirmationDialogTemplate', { read: TemplateRef })
+  filterResetConfirmationDialogTemplate!: TemplateRef<any>;
+  paymentStatusLovSubscription!:Subscription;
+  @ViewChild(GridComponent) grid!: GridComponent;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isClaimsLoaderShow = false;
   selectedTpaClaims:any[] =[]
@@ -55,11 +63,17 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   tpaData$ = this.financialVendorRefundFacade.tpaData$;
-  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,)
+  filterResetDialog: any;
+  paymentStatusCode =null;
+  paymentStatusType:any;
+  paymentStatuses$ = this.lovFacade.paymentStatus$
+  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade)
   {
  
   }
   ngOnInit(): void {
+    this.lovFacade.getPaymentStatusLov()
+    this.paymentStatusSubscription();
     this.selectedTpaClaims =  (this.tpaPaymentReqIds && this.tpaPaymentReqIds.length >0)?
     this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
@@ -93,12 +107,13 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   }
  
   dataStateChange(stateData: any): void {
+    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadRefundClaimsListGrid();
+
   }
 
   selectedKeysChange(selection: any) {
@@ -166,4 +181,49 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.isClaimsLoaderShow = false;
 
   }
+  openResetDialog( template: TemplateRef<unknown>)
+  {
+    this.filterResetDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  resetButtonClosed(result: any) {
+    if (result) {
+ 
+      this.filterResetDialog.close();
+    }
+  }
+  
+  resetFilterClicked(action: any,) {
+    if (action) {
+      this.selectedTpaClaims=[];    
+      this.loadRefundClaimsListGrid();
+     this.filterResetDialog.close();
+    }
+  }
+  paymentStatusSubscription()
+  {
+    this.paymentStatusLovSubscription = this.paymentStatuses$.subscribe(data=>{
+      this.paymentStatusType = data;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.paymentStatusLovSubscription.unsubscribe();
+  }
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value:value.lovCode
+    }],
+      logic: "or"
+  });
+    if(field == "paymentStatusCode"){
+      this.paymentStatusCode = value;
+    }
+  }
+ 
 }
