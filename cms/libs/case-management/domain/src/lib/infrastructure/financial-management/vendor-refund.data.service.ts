@@ -16,6 +16,13 @@ export class FinancialVendorRefundDataService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
+  addInsuranceRefundClaim(data:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/add-insurance-refund`, data);
+  }
+
+  getInsuranceRefundEditInformation(paymentRequestId:any,paginationSortingDto:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums/${paymentRequestId}`, paginationSortingDto);
+  }
 
   getInsurnaceRefundInformation(insuranceRefundInformation:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums`, insuranceRefundInformation);
@@ -528,7 +535,7 @@ export class FinancialVendorRefundDataService {
   loadvendorBySearchText(searchText: string,) {
     return this.http.get<Pharmacy[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}`
+  `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}`
     );
   }
   loadMedicalPremiumList(data:any): Observable<any> {

@@ -103,8 +103,11 @@
   </kendo-grid-column>
   <kendo-grid-column field="amountPaid" title="Original Amount Paid" [width]="180">
       <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex" let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid}} </span>
+          <span class="tableamountview"> <strong>$</strong> {{totalAmountPaid | kendoNumber:'n2' }} </span>
       </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid | kendoNumber:'n2'}}</span>     
+      </ng-template> 
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq">
         <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -114,6 +117,7 @@
         <kendo-filter-lte-operator></kendo-filter-lte-operator>
       </kendo-grid-numeric-filter-menu>
      </ng-template>
+
   </kendo-grid-column>
   <kendo-grid-column field="paymentMethodDescription" title="Pmt. Method" [width]="140"> </kendo-grid-column>
   <kendo-grid-column field="paymentStatusDescription" title="Pmt. Status" [width]="130">
