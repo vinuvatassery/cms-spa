@@ -203,25 +203,22 @@ export class FinancialVendorRefundFacade {
 
   private financialPremiumsProcessDataSubject = new Subject<any>();
   financialPremiumsProcessData$ = this.financialPremiumsProcessDataSubject.asObservable();
-  loadMedicalPremiumList(
-    skipcount: number,
-    maxResultCount: number,
-    sort: any,
-    sortType: string,
-    filter:string){
+  private financialTpaDataSubject = new Subject<any>();
+  tpaData$ = this.financialTpaDataSubject.asObservable();
+  
+  loadMedicalPremiumList(ClaimsPageAndSortedRequestDto:any){
       
-    
-    this.financialVendorRefundDataService.loadMedicalPremiumList( skipcount,
-      maxResultCount,
-      sort,
-      sortType,
-      filter).subscribe({
+    ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
+
+this.loaderService.show();
+    this.financialVendorRefundDataService.loadMedicalPremiumList(ClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
         if (dataResponse) {
+          
+          this.loaderService.hide();
           const gridView = {
             data: dataResponse['items'],
             total: dataResponse['totalCount'],
-            acceptsCombinedPaymentsCount: dataResponse['acceptsCombinedPaymentsQueryCount'],
           };
         this.financialPremiumsProcessDataSubject.next(gridView);
       }},
@@ -230,15 +227,39 @@ export class FinancialVendorRefundFacade {
       },
     });
   }
-  loadvendorBySearchText(searchText: string,) {
+  loadTPARefundList(ClaimsPageAndSortedRequestDto:any){
+      
+    ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
+   this.loaderService.show();
+    this.financialVendorRefundDataService.loadTPARefundList(ClaimsPageAndSortedRequestDto).subscribe({
+      next: (dataResponse) => {
+        if (dataResponse) {
+          this.loaderService.hide();
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+            acceptsCombinedPaymentsCount: dataResponse['acceptsCombinedPaymentsQueryCount'],
+          };
+        this.financialTpaDataSubject.next(gridView);
+      }},
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+  loadvendorBySearchText(searchText: string,refundType:string) {
     
    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
     return this.financialVendorRefundDataService.loadvendorBySearchText(searchText).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor:any) => {
           
-          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
-       
+          if(refundType=='INS')
+          {
+            vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.insuranceName ?? ''}${vendor.insuranceType ?? ''}`;
+          }else{
+            vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+          }         
         });
         this.vendorsSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);

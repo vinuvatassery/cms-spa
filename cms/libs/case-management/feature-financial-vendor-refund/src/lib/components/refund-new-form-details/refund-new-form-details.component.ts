@@ -82,6 +82,7 @@ export class RefundNewFormDetailsComponent{
   this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialVendorRefundFacade.clients$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
+  vendors$ = this.financialVendorRefundFacade.vendors$;
 
   @ViewChild('insClaims', { static: false })
   insClaims!: VendorRefundInsurancePremiumListComponent;
@@ -276,6 +277,7 @@ this.insuraceAddRefundClickSubject.next(true);
     this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText);
   }
   onProviderValueChange($event: any) {
+    
     if($event==undefined){ 
       this.vendorId=null;
     }
@@ -302,4 +304,11 @@ this.insuraceAddRefundClickSubject.next(true);
       this.showServicesListForm = false;
     }
   }
+  searchVendors(searchText: any) {
+    if (!searchText || searchText.length == 0) {
+      return;
+    }
+    this.financialVendorRefundFacade.loadvendorBySearchText(searchText,this.selectedRefundType);
+  }
+
 }
