@@ -14,6 +14,7 @@ export class VendorRefundPageComponent    {
 
    tab = 1
    dataExportParameters = null
+   batchesGridExportParameters = null
    sortType = this.financialVendorRefundFacade.sortType;
    pageSizes = this.financialVendorRefundFacade.gridPageSizes;
    gridSkipCount = this.financialVendorRefundFacade.skipCount;
@@ -44,9 +45,11 @@ export class VendorRefundPageComponent    {
   }
   
 
-  loadVendorRefundBatchListGrid(event: any) {
- 
-    this.financialVendorRefundFacade.loadVendorRefundBatchListGrid();
+  loadVendorRefundBatchListGrid(loadBatchListRequestDto : any) {
+    this.financialVendorRefundFacade.selectedRefundsTab = 2;
+    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;   
+    this.batchesGridExportParameters = loadBatchListRequestDto; 
+    this.financialVendorRefundFacade.loadVendorRefundBatchListGrid(loadBatchListRequestDto);
   }
 
   loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto : any) {
@@ -69,9 +72,16 @@ export class VendorRefundPageComponent    {
     );
   }
 
-  exportAllRefundsGridData() {   
+  exportAllRefundsGridData() 
+  {   
     if (this.dataExportParameters) {       
       this.documentFacade.getExportFile(this.dataExportParameters, `vendor-refunds/payments`,'All Refunds');
+    }
+  }
+  exportBatchesGridData()
+  {
+    if (this.batchesGridExportParameters) {       
+      this.documentFacade.getExportFile(this.batchesGridExportParameters, `vendor-refunds/batches`,'All Batches');
     }
   }
 }

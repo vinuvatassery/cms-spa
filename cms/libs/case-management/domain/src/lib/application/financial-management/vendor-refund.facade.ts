@@ -29,7 +29,7 @@ export class FinancialVendorRefundFacade {
     field: this.sortValueRefundProcess,
   }];
 
-  public sortValueRefundBatch = 'batch';
+  public sortValueRefundBatch = 'batchName';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueRefundBatch,
   }];
@@ -207,18 +207,6 @@ export class FinancialVendorRefundFacade {
       },
     });
   }
-  loadVendorRefundBatchListGrid(){
-    this.financialVendorRefundDataService.loadVendorRefundBatchListService().subscribe({
-      next: (dataResponse) => {
-        this.vendorRefundBatchDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader();
-      },
-    });
-  }
 
 
   loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto : any){
@@ -232,6 +220,40 @@ export class FinancialVendorRefundFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+      },
+    });
+  }
+
+  loadBatchLogListGrid(loadBatchLogListRequestDto : any){
+    this.financialVendorRefundDataService.loadBatchLogListService(loadBatchLogListRequestDto).subscribe({
+      next: (dataResponse) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount']
+        };
+        this.batchLogDataSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
+
+  loadVendorRefundBatchListGrid(loadBatchListRequestDto : any){
+    this.financialVendorRefundDataService.loadVendorRefundBatchListService(loadBatchListRequestDto).subscribe({
+      next: (dataResponse) => {
+        const gridView = {
+          data: dataResponse['items'],
+          total: dataResponse['totalCount']
+        };
+        this.vendorRefundBatchDataSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
       },
     });
   }
@@ -304,19 +326,7 @@ this.loaderService.show();
         this.loggingService.logException(err);
       }
     });
-  }
-  loadBatchLogListGrid(){
-    this.financialVendorRefundDataService.loadBatchLogListService().subscribe({
-      next: (dataResponse) => {
-        this.batchLogDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader();
-      },
-    });
-  }
+  } 
 
   loadClaimsListGrid(){
     this.financialVendorRefundDataService.loadClaimsListService().subscribe({
