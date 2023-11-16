@@ -385,7 +385,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     this.isFiltered = false;
     this.columnsReordered = false;
 
-    this.sortValue = 'vendorName';
+    this.sortValueBatch = 'vendorName';
     this.sortType = 'asc';
     this.sort = this.sortColumn;
 
@@ -874,25 +874,25 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
     onRowSelection(grid:any, selection:any)
     {
+      debugger;
      this.warrantCalculationArray=[];
       const data = selection.selectedRows[0].dataItem;    
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
       let warrantTotal=0; 
-     this.batchId=data.batchId;
-    
-      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==data.batchId).forEach((item: any) => {
-       
-     
+      this.batchId=data.batchId;    
+
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined 
+      && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==data.batchId).forEach((item: any) => {  
         let object={
           vendorId:item?.entityId,
           batchId:item?.batchId,
           paymentRequestId:item?.paymentRequestId,
-          warrantNumber:item?.checkNbr,
-  
+          warrantNumber:item?.checkNbr,  
         }
         this.warrantCalculationArray.push(object);
       });
+
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
@@ -902,8 +902,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
-      }
-      
+      }      
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
 

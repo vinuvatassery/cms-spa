@@ -16,7 +16,7 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-   sortValue = this.financialPharmacyClaimsFacade.sortValueReconcile;
+   sortValue = this.financialPharmacyClaimsFacade.sortValueReconcileBreakout;
    sortType = this.financialPharmacyClaimsFacade.sortType;
    pageSizes = this.financialPharmacyClaimsFacade.gridPageSizes;
    gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
@@ -30,6 +30,8 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
    dataExportParameters! : any
    letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
    letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
+   reconcileBreakoutSummary$ = this.financialPharmacyClaimsFacade.reconcileBreakoutSummary$;
+   reconcilePaymentBreakoutList$ = this.financialPharmacyClaimsFacade.reconcilePaymentBreakoutList$;
 
   constructor( 
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
@@ -74,5 +76,13 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
 
   loadEachLetterTemplate(event:any){
     this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);  
+  }
+
+  loadReconcileBreakoutSummary(event: any){
+    this.financialPharmacyClaimsFacade.loadReconcilePaymentBreakoutSummary(event);
+  }
+
+  loadReconcilePaymentBreakoutList(event: any){
+    this.financialPharmacyClaimsFacade.loadReconcilePaymentBreakoutListGrid(event);
   }
 }
