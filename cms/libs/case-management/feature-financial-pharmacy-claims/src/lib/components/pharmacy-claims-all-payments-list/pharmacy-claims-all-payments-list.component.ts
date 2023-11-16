@@ -53,6 +53,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   @Output() exportGridEvent$ = new EventEmitter<any>();
   @Output() loadPharmacyClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
   columnsReordered = false;
   filteredBy = '';
@@ -698,5 +699,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
             [`/financial-management/pharmacy-claims/batch`],
             { queryParams: { bid: dataItem?.batchId } }
         );
+    }
+    onProviderNameClick(event: any) {
+      this.onProviderNameClickEvent.emit(event);
     }
 }

@@ -18,7 +18,16 @@
  (loadTemplateEvent) = "loadEachLetterTemplate($event)"
  [letterContentList$]="letterContentList$"      
  [letterContentLoader$]="letterContentLoader$"
+ (onProviderNameClickEvent)="onProviderNameClick($event)"
  >
 </cms-pharmacy-claims-batches-log-lists>
 
- 
+<ng-template #providerDetailsTemplate>
+    <cms-pharmacy-claims-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
+</ng-template>

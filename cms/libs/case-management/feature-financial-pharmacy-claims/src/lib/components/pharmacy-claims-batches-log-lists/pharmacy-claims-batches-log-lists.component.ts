@@ -64,12 +64,14 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   vendorId: any;
   clientId: any;
   clientName: any;
+  paymentRequestId!: string;
   isLogGridExpand = true;
   isBulkUnBatchOpened =false;
   deletemodelbody='This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
   @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
   @Output() unBatchClaimsEvent = new EventEmitter<any>();
   @Output() ondeletebatchesClickedEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Input() batchId:any
   @Input() unbatchClaim$ :any
   @Input() unbatchEntireBatch$ :any
@@ -226,7 +228,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   totalRecord: any;
   batchLogPrintAdviceLetterPagedList: any;
   isEdit!: boolean;
-  paymentRequestId!: string;
   selectedCount = 0;
   selectedDataRows: any;
   disablePrwButton = true;
@@ -918,4 +919,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
    loadEachLetterTemplate(event:any){
     this.loadTemplateEvent.emit(event);
   } 
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
+  }
 }
