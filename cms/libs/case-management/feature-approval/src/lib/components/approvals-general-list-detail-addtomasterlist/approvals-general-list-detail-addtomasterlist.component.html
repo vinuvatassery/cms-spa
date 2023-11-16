@@ -148,7 +148,7 @@
         </tr>
         <tr>
           <td>Health Insurance Type</td>
-          <td>{{vendorData.healthInsuranceTypeCode}}</td>
+          <td>{{vendorData.healthInsuranceType}}</td>
         </tr>
         <tr>
           <td>Can pay for medication</td>
@@ -172,23 +172,19 @@
           <td>Provider Name</td>
           <td>{{vendorData.vendorName}}</td>
         </tr>
+      </tbody>
+      <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
+        <tr>
+          <td>Pharmacy</td>
+          <td>{{vendorData.vendorName}}</td>
+        </tr>
         <tr>
           <td>Tin</td>
           <td>{{vendorData.tin}}</td>
         </tr>
         <tr>
           <td>NPI </td>
-          <td>{{vendorData.npi}}</td>
-        </tr>
-        <tr>
-          <td>Preferred Pharmacy</td>
-          <td>{{vendorData.preferredFlag}}</td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
-        <tr>
-          <td>Pharmacy</td>
-          <td>{{vendorData.vendorName}}</td>
+          <td>{{vendorData.npiNbr}}</td>
         </tr>
       </tbody>
     </table>

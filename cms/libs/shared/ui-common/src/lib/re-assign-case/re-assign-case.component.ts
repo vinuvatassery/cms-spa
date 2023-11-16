@@ -90,7 +90,7 @@ export class ReAssignCaseComponent implements OnInit, OnChanges {
       newCaseWorkerId: this.hasReassignPermission ? formValues.newCaseWorkerId : null,
       reasonForReassign: formValues.reasonForReassign,
       clientCaseId: this.clientCaseId,
-      activeFlag: this.hasReassignPermission ? StatusFlag.Yes : StatusFlag.No,
+      hasPermission: this.hasReassignPermission,
     }
     return reassignData;
   }

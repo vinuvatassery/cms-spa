@@ -26,8 +26,9 @@ export class DrugsFacade {
   private drugDataLoaderSubject = new Subject<any>();
   drugDataLoader$ = this.drugDataLoaderSubject.asObservable();
   /** Private properties **/
-
+  private updateProviderPanelSubject = new Subject<any>();
   /** Public properties **/
+  updateProviderPanelSubject$ = this.updateProviderPanelSubject.asObservable();
 
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
@@ -86,5 +87,22 @@ export class DrugsFacade {
 
   addDrug(dto: any) {
     return this.drugsDataService.addDrug(dto);
+  }
+
+  updateDrugVendor(drugDto: any) {
+    this.showLoader();
+    return this.drugsDataService.updateDrugVendor(drugDto).subscribe({
+      next: (updatedResponse: any) => {
+        if (updatedResponse) {
+          this.updateProviderPanelSubject.next(updatedResponse);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse)
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
   }
 }

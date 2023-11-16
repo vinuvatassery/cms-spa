@@ -40,7 +40,11 @@ export class FinancialPharmacyClaimsFacade {
   private unbatchClaimSubject =  new Subject<any>();
   unbatchClaims$ = this.unbatchClaimSubject.asObservable();
  
- 
+  private warrantNumberChangeSubject = new Subject<any>();
+  warrantNumberChange$ = this.warrantNumberChangeSubject.asObservable();
+
+  private warrantNumberChangeLoaderSubject = new Subject<any>();
+  warrantNumberChangeLoader$ = this.warrantNumberChangeLoaderSubject.asObservable();
   
 
   public sortValuePharmacyClaimsProcess = 'creationTime';
@@ -158,6 +162,11 @@ export class FinancialPharmacyClaimsFacade {
   private recentClaimListDataSubject =  new Subject<any>();
   recentClaimsGridLists$ = this.recentClaimListDataSubject.asObservable();
 
+  private letterContentSubject = new Subject<any>();
+  letterContentList$ = this.letterContentSubject.asObservable();
+
+  private letterContentLoaderSubject = new Subject<any>();
+  letterContentLoader$ = this.letterContentLoaderSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -235,6 +244,10 @@ export class FinancialPharmacyClaimsFacade {
     });
   }
 
+  exportPharmacyClaimAllPayments(params: any){
+    const fileName = 'pharmacy-claims-all-payments'
+    this.documentFacade.getExportFile(params,`claims/pharmacies/payments`, fileName);
+  }
 
   exportPharmacyClaimsProcessListGrid(params: any){
     const fileName = 'pharmacy-claims-process'
@@ -363,7 +376,7 @@ export class FinancialPharmacyClaimsFacade {
     });
   }
 
-  loadPharmacyClaimsAllPaymentsListGrid(params: GridFilterParam) {
+  loadPharmacyClaimsAllPaymentsListGrid(params: any) {
     this.pharmacyClaimsAllPaymentsLoaderSubject.next(true);
     this.financialPharmacyClaimsDataService
       .loadPharmacyClaimsAllPaymentsListService(params)
@@ -571,6 +584,32 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
     },
   });
+}
+
+loadEachLetterTemplate(templateParams:any){
+  this.letterContentLoaderSubject.next(true);
+  this.financialPharmacyClaimsDataService.loadEachLetterTemplate(templateParams).subscribe({
+    next: (dataResponse:any) => {
+      this.letterContentSubject.next(dataResponse);
+      this.letterContentLoaderSubject.next(false);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+      this.letterContentLoaderSubject.next(false);
+    },
+  });
+}
+
+loadPrintAdviceLetterData(printAdviceLetterData: any) {
+  return this.financialPharmacyClaimsDataService.getPrintAdviceLetterData(printAdviceLetterData);
+}
+
+viewAdviceLetterData(printAdviceLetterData: any) {
+  return this.financialPharmacyClaimsDataService.viewPrintAdviceLetterData(printAdviceLetterData);
+}
+
+reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any) {
+  return this.financialPharmacyClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData);
 }
 
 }
