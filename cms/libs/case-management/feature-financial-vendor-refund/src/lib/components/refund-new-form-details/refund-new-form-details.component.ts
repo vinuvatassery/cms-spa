@@ -185,7 +185,63 @@ export class RefundNewFormDetailsComponent{
   }
 
   getSelectedVendorRefundsList(listData : any){
-    this.selectedVendorRefundsList = listData;
+     this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=> 
+    JSON.stringify(
+      {
+        indexCode : item.indexCode, 
+        pcaCode : item.pcaCode,
+        grantNo:"xx-xxxxx", 
+        warrantNbr : item.warrantNbr, 
+        paymentStatusCode : item.paymentStatusCode,
+        prescriptionsDetail : []
+      })))).map((str:any) => JSON.parse(str));
+      listData = listData.map((obj : any) => 
+        ({
+          ...obj,
+          qtyRefunded : null,
+          qtyRefundedValid : false,
+          daySupplyRefunded : null,
+          daySupplyRefundedValid : false,
+          refundedAmount : null,
+          refundedAmountValid : false
+        }));
+      this.selectedVendorRefundsList.forEach((element : any) => {
+        element.prescriptionsDetail = listData.filter(
+          (x : any)=> 
+          x.indexCode == element.indexCode 
+          && x.pcaCode == element.pcaCode
+          && x.warrantNbr == element.warrantNbr
+          && x.paymentStatusCode == element.paymentStatusCode
+          )
+      });
     this.isConfirmationClicked = true;
+  }
+  
+  ngDirtyInValid(dataItem: any, control: any, tblIndex: any, rowIndex: any) {
+    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
+    let inValid = false;
+    if (control === 'qtyRefunded') {
+      inValid = isTouched == true && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
+      dataItem.qtyRefundedValid = !inValid;
+    }
+    if (control === 'daySupplyRefunded') {
+      inValid = isTouched == true && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+      dataItem.daySupplyRefundedValid = !inValid;
+    }
+    if (control === 'refundedAmount') {
+      inValid = isTouched == true && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
+      dataItem.refundedAmountValid = !inValid;
+    }
+    if (inValid) {
+      document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.remove('ng-valid');
+      document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.add('ng-invalid');
+      document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.add('ng-dirty');
+    }
+    else {
+      document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.remove('ng-invalid');
+      document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.remove('ng-dirty');
+      document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.add('ng-valid');
+    }
+    return 'ng-dirty ng-invalid';
   }
 }
