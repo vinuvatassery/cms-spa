@@ -160,7 +160,7 @@
           illMode="flat"
           [toggleable]="true"
           [selected]="dataItem.claimStatus === deletedStatus"
-          [disabled]="dataItem.policyIdMatch === yesNoFlag.No && dataItem.isPossibleMatch"
+          [disabled]="dataItem.policyIdMatch === yesNoFlag.No && dataItem.isPossibleMatch === yesNoFlag.Yes"
           (selectedChange)="
           onRowLevelDeleteClicked(
                 dataItem
@@ -211,7 +211,7 @@
 
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="!dataItem.isPossibleMatch && dataItem.policyIdMatch === yesNoFlag.No"
+          *ngIf="dataItem.isPossibleMatch === yesNoFlag.No && dataItem.policyIdMatch === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
           The system could not match the Policy ID to a client. Delete the claim
@@ -245,7 +245,7 @@
         </p>
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.isPossibleMatch && dataItem.policyIdMatch === yesNoFlag.No"
+          *ngIf="dataItem.isPossibleMatch === yesNoFlag.Yes && dataItem.policyIdMatch === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
           The system could not match the Policy ID to a client. Delete the claim
