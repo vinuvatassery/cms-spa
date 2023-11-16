@@ -207,18 +207,6 @@ export class FinancialVendorRefundFacade {
       },
     });
   }
-  loadVendorRefundBatchListGrid(){
-    this.financialVendorRefundDataService.loadVendorRefundBatchListService().subscribe({
-      next: (dataResponse) => {
-        this.vendorRefundBatchDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader();
-      },
-    });
-  }
 
 
   loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto : any){
