@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DrugCategoryCode, FinancialVendorTypeCode, VendorFacade, FinancialVendorFacade } from '@cms/case-management/domain';
+import { DrugCategoryCode, DrugsFacade, FinancialVendorTypeCode, VendorFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -24,8 +24,10 @@ export class FinancialDrugsComponent {
   @Input() sort: any;
   @Input() gridSkipCount: any;
   @Input() hasCreateUpdatePermission: boolean = false;
+  
 
   @Output() loadDrugListEvent = new EventEmitter<any>();
+  @Output() addDrugEvent = new EventEmitter<any>();
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isFinancialDrugsDetailShow = false;
@@ -44,6 +46,7 @@ export class FinancialDrugsComponent {
   deliveryMethodLovs: any = [];
   manufacturers: any = [];
   deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
+  addDrug$ = this.drugsFacade.addDrug$
   manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
   hivValue = null;
   hepaValue = null;
@@ -128,6 +131,7 @@ export class FinancialDrugsComponent {
     private readonly ref: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
     private readonly vendorFacade: VendorFacade,
+    private readonly drugsFacade: DrugsFacade,
     private readonly financialVendorFacade: FinancialVendorFacade,
 
   ) { }
@@ -339,4 +343,11 @@ export class FinancialDrugsComponent {
       }
     }
   }
+
+ 
+  addDrug(data : any)
+  {    
+    this.drugsFacade.addDrugData(data)
+  }
+  
 }
