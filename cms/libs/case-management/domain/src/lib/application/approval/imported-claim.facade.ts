@@ -14,8 +14,10 @@ export class ImportedClaimFacade {
 
   /** Private properties **/ 
   private ImportedClaimsSubject =  new Subject<any>();
+  private possibleMatchSubject =  new Subject<any>();
   /** Public properties **/
   approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
+  possibleMatchData$ = this.possibleMatchSubject.asObservable();
 
   constructor(
     private readonly ImportedClaimService: ImportedClaimService,
@@ -62,5 +64,33 @@ export class ImportedClaimFacade {
         },
       }
     );
+  }
+
+  loadPossibleMatch(event:any) {
+    this.showLoader();
+    this.ImportedClaimService.loadPossibleMatch(event).subscribe({
+      next: (response: any) => {
+        this.possibleMatchSubject.next(response);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+
+  savePossibleMatch(event: any) {
+    this.showLoader();
+    this.ImportedClaimService.savePossibleMatch(event).subscribe({
+      next: (response: any) => {
+        this.possibleMatchSubject.next(response);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
   }
 }

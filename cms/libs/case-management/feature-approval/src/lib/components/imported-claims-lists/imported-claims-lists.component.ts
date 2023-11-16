@@ -32,11 +32,15 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() approvalsImportedClaimsLists$: any;
+  @Input() possibleMatchData$:any;
   @Output() loadImportedClaimsGridEvent = new EventEmitter<any>();
+  @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();
+  @Output() saveReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
   importedClaimId:any;
   clientName:any;
   dateOfBirth:any;
   policyId:any;
+  entityId:any;
   public state!: State;
   sortColumn = 'clientName';
   sortDir = 'Ascending';
@@ -57,6 +61,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   private searchCaseDialog: any;
   private expectationDialog: any;
   private reviewPossibleMatchesDialog: any;
+  claimData: any;
 
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,private readonly router: Router) {}
@@ -76,7 +81,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   private loadImportedClaimsListGrid(): void {
-    debugger;
     this.loadImportedClaims(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -158,7 +162,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    debugger;
     this.approvalsImportedClaimsLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
@@ -202,12 +205,18 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       content: template,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
-    this.importedClaimId=dataItem.importedClaimId;
-    this.clientName=dataItem.clientName;
-    this.policyId=dataItem.policyId;
-    this.dateOfBirth=dataItem.dateOfBirth;
+    this.claimData=dataItem;
   }
   onCloseReviewPossibleMatchesDialogClicked() {
     this.reviewPossibleMatchesDialog.close();
   }  
+
+  loadPossibleMatch(data?: any) {
+    this.loadPossibleMatchDataEvent.emit(data);
+  }
+
+  savePossibleMatch(data?:any)
+  {
+    this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
+  }
 }
