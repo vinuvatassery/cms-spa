@@ -121,11 +121,12 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Batch Claims',
+      text: 'BATCH CLAIMS',
       icon: 'check',
       click: (data: any,paymentRequestId : any): void => {
         if (!this.isProcessBatchClosed) {
           this.isProcessBatchClosed = true;
+          this.isDeleteBatchClosed = false;
           this.onBatchClaimsGridSelectedClicked();
         }
       },
@@ -133,10 +134,11 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
+      text: 'DELETE CLAIMS',
       icon: 'delete',
       click: (data: any,paymentRequestId : any): void => {
         if (!this.isDeleteBatchClosed) {
+          this.isProcessBatchClosed=false;
           this.isDeleteBatchClosed = true;
           this.onBatchClaimsGridSelectedClicked();
         }
@@ -160,8 +162,12 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
       text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
-        this.onSingleClaimDelete(data.paymentRequestId.split(','));
-        this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
+        if(data.paymentRequestId)
+        {
+          this.onSingleClaimDelete(data.paymentRequestId.split(','));
+          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialog);
+        }
+      
       },
     },
   ];
@@ -187,17 +193,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     { columnName: 'ALL', columnDesc: 'All Columns' },
     { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
-    { columnName: 'paymentMethodCode', columnDesc: 'Payment Method' },
     { columnName: 'clientFullName', columnDesc: 'Client Name' },
-    { columnName: 'insuranceName', columnDesc: 'Name on Primary Insurance Card' },
     { columnName: 'clientId', columnDesc: 'Client ID' },
-    { columnName: 'paymentType', columnDesc: 'Payment Type' },
-    { columnName: 'amountPaid', columnDesc: 'Amount Paid' },
-    { columnName: 'indexCode', columnDesc: 'Index Code' },
-    { columnName: 'pcaCode', columnDesc: 'PCA Code' },
-    { columnName: 'objectCode', columnDesc: 'Object Code' },
-    { columnName: 'paymentStatus', columnDesc: 'Payment Status' },
-    { columnName: 'creationTime', columnDesc: 'Entry Date' }
   ];
 
   paymentMethodFilter = '';
@@ -332,7 +329,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   performSearch(data: any) {
     this.defaultGridState();
-    const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
+    const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'contains';
     this.filterData = {
       logic: 'and',
       filters: [
@@ -387,6 +384,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   onModalDeleteClaimsModalClose(result: any) {
     
     if (result) {
+      
       this.isDeleteBatchMoreOptionClosed = false;
       this.deleteClaimsDialog.close();
     }
@@ -540,15 +538,17 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     })
     this.onbatchClaimsClickedEvent.emit(input)
   }
-  onModalBatchDeletingClaimsButtonClicked(action: any) {
+  onModalBatchDeletingClaimsButtonClicked() {
+    this.ondeleteClaimsClickedEvent.emit(this.selectedProcessClaims)
     this.batchingClaims$.subscribe((_:any) =>{
+      
       this.isDeleteBatchMoreOptionClosed = false;
       this.deleteClaimsDialog.close();
       this.loadPharmacyClaimsProcessListGrid();
       this.onBatchClaimsGridSelectedCancelClicked()
     })
     
-    this.ondeleteClaimsClickedEvent.emit(this.selectedProcessClaims)
+   
   }
   dropdownFilterChange(
     field: string,

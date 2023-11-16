@@ -19,6 +19,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   saveButtonText: any;
   @Input() vendorDetails$!: Observable<any>;
   @Input() deliveryMethodCodes: any;
+  @Input() manufacturers: any;
   @Input() hasCreateUpdatePermission = false;
   @Input() addDrug$ : any ;
 

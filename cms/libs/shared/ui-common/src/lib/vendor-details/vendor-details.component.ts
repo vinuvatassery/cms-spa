@@ -93,20 +93,17 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
       if (data && clinicName !== '') {
-        if (this.providerType === FinancialVendorTypeCode.MedicalProviders) {
+        if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders 
+          || this.providerType === FinancialVendorTypeCode.HealthcareProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
         } else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
-        } else {
-          this.clinicVendorListLocal = data;
-        }
-        this.clinicVendorListLocal = data.filter((item: any) => item.vendorName.toLowerCase().includes(clinicName.toLowerCase()));
+        } 
+        this.clinicVendorListLocal = this.clinicVendorListLocal.filter((item: any) => item.vendorName.toLowerCase().includes(clinicName.toLowerCase()));
         
-
         this.clinicSearchSubscription?.unsubscribe();
       }
     });
-
 
     this.selectedClinicVendorId = null;
     this.searchClinicVendorClicked.emit(clinicName);

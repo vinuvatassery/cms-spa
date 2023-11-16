@@ -34,7 +34,7 @@ import {
   PendingApprovalPaymentTypeCode,
 } from '@cms/case-management/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-
+import { scan } from 'rxjs/operators';
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
   templateUrl: './approvals-payments-list.component.html',
@@ -70,7 +70,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   readonly UserLevel = UserLevel;
   public state!: State;
   sortColumn = 'batchName';
-  sortDir = 'Ascending';
+  sortDir = '';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -161,6 +161,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   paymentMethodLov$ = this.lovFacade.paymentMethodType$;
   paymentStatusLovSubscription!: Subscription;
   paymentMethodLovSubscription!: Subscription;
+  paymentType: any;
   isWarningDialogShow: boolean=false;
   /** Constructor **/
   constructor(
@@ -174,13 +175,20 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     private readonly configProvider: ConfigurationProvider
   ) {}
 
-  ngOnInit(): any {
+  ngOnInit(): any {    
+    this.getPaymentTypeCode();
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.lovFacade.getPandingApprovalPaymentTypeLov();
     this.defaultPaymentType();
     this.getLoggedInUserProfile();
     this.loadPaymentStatusLov();
     this.loadPaymentMethodLov();
+  }
+
+  private getPaymentTypeCode() {
+    this.pendingApprovalPaymentType$.subscribe((data) => {
+      this.paymentType = data.sort((a: any, b: any) => a.sequenceNbr - b.sequenceNbr);
+    });
   }
 
   private loadPaymentStatusLov(){
@@ -245,7 +253,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: [{ field: 'batchName', dir: 'desc' }],
     };
   }
 
@@ -262,7 +270,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   }
 
   onOpenViewPaymentsBatchClicked(data?: any,isSendbackMode?:any) {
-    this.isSendbackMode=isSendbackMode;    
+    if(this.userLevel == UserLevel.Level1Value){
+      this.isSendbackMode = isSendbackMode;
+    }    
     this.isViewPaymentsBatchDialog = true;
     this.selectedApprovalId = data?.approvalId;
     this.dataItem=data;
@@ -272,7 +282,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
 
   onCloseViewPaymentsBatchClicked() {
     this.isViewPaymentsBatchDialog = false;
-    if(this.isSendbackMode)
+    if(this.isSendbackMode && this.userLevel == UserLevel.Level1Value)
     {
       this.dataItem.batchStatus="";
       this.assignRowDataToMainList(this.dataItem);
@@ -392,7 +402,12 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    if (this.sort[0]?.dir === undefined) {
+      this.sortDir = '';
+    }
+    if (this.sort[0]?.dir !== undefined) {
+      this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    }
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     if (stateData.filter?.filters.length > 0) {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -548,20 +563,44 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       dataItem.batchStatus = this.sendbackStatus;
       dataItem.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       dataItem.sendBackNotesInValid = true;
-      this.onOpenViewPaymentsBatchClicked(dataItem,true);
-    } else if (dataItem.batchStatus == this.sendbackStatus) {
-      this.isSendbackMode=false;
-      this.onOpenSendbackDeselectingWarningDialogClicked(dataItem);
-    } else {
+      if(this.userLevel == UserLevel.Level1Value){
+        this.onOpenViewPaymentsBatchClicked(dataItem,true);
+      }
+    } 
+    else if (dataItem.batchStatus == this.sendbackStatus) {
+      if(this.userLevel == UserLevel.Level1Value){
+        this.isSendbackMode=false;
+        this.onOpenSendbackDeselectingWarningDialogClicked(dataItem);
+      }
+      else{
+        dataItem.batchStatus = '';
+        dataItem.sendBackNotesInValidMsg = '';
+        dataItem.sendBackNotes = '';
+        dataItem.sendBackNotesInValid = false;
+        dataItem.sendBackButtonDisabled = true;
+      }
+    } 
+    else {
       dataItem.batchStatus = this.sendbackStatus;
       dataItem.sendBackNotesInValidMsg = this.sendbackNotesRequireMessage;
       dataItem.sendBackNotesInValid = true;
       dataItem.sendBackButtonDisabled = false;
-      this.onOpenViewPaymentsBatchClicked(dataItem,true);
+      if(this.userLevel == UserLevel.Level1Value){
+        this.onOpenViewPaymentsBatchClicked(dataItem,true);
+      }
     }
     this.cd.detectChanges();
     this.sendBackNotesChange(dataItem);
-    dataItem.batchStatus="";
+    if(this.userLevel == UserLevel.Level1Value){
+      dataItem.batchStatus="";
+    }
+    else{
+      this.assignRowDataToMainList(dataItem);
+      this.ngDirtyInValid(dataItem, control, rowIndex);
+      this.isApproveAllClicked = false;
+      this.approveAndSendbackCount();
+      this.enableSubmitButtonMain();   
+    }
   }
 
   private tAreaVariablesInitiation(dataItem: any) {
@@ -935,7 +974,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
 
   loadSubmittedSummaryData() {
     this.selectedApprovalSendbackDataRows
-      .filter((x: any) => x.batchStatus == this.approveStatus || x.batchStatus == this.sendbackStatus)
+      .filter((x: any) => x.batchStatus == this.approveStatus)
       .forEach((currentPage: any, index: number) => {
         this.selectedBatchIds.push(currentPage.paymentRequestBatchId);
       });
@@ -1089,8 +1128,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.sortType = 'desc';
     this.setGridValueAndData();
     this.sortColumn = 'batchName';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "Descending";
     this.filter = [];
     this.searchValue = '';
     this.selectedColumn = 'ALL';

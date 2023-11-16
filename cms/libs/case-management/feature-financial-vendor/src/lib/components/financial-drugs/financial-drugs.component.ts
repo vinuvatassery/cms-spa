@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DrugCategoryCode, DrugsFacade, FinancialVendorTypeCode, VendorFacade } from '@cms/case-management/domain';
+import { DrugCategoryCode, DrugsFacade, FinancialVendorTypeCode, VendorFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -44,8 +44,10 @@ export class FinancialDrugsComponent {
   yesOrNoLovs: any = [];
   yesOrNoLov$ = this.lovFacade.yesOrNoLov$;
   deliveryMethodLovs: any = [];
+  manufacturers: any = [];
   deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
   addDrug$ = this.drugsFacade.addDrug$
+  manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
   hivValue = null;
   hepaValue = null;
   oppoValue = null;
@@ -129,7 +131,8 @@ export class FinancialDrugsComponent {
     private readonly ref: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
     private readonly vendorFacade: VendorFacade,
-    private readonly drugsFacade: DrugsFacade
+    private readonly drugsFacade: DrugsFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade,
 
   ) { }
 
@@ -140,8 +143,10 @@ export class FinancialDrugsComponent {
   ngOnInit(): void {
     this.lovFacade.getYesOrNoLovs();
     this.lovFacade.getDeliveryMethodLovs();
+    this.financialVendorFacade.loadManufacturersList();
     this.loadYesOrNoLovs();
     this.loadDeliveryMethodLovs();
+    this.loadManufacturersLovs();
     this.vendorId = this.route.snapshot.queryParams['v_id'];
     this.loadManufacturer();
   }
@@ -251,6 +256,15 @@ export class FinancialDrugsComponent {
       .subscribe({
         next: (data: any) => {
           this.deliveryMethodLovs = data;
+        }
+      });
+  }
+
+  private loadManufacturersLovs() {
+    this.manufacturersLov$
+      .subscribe({
+        next: (data: any) => {
+          this.manufacturers = data;
         }
       });
   }

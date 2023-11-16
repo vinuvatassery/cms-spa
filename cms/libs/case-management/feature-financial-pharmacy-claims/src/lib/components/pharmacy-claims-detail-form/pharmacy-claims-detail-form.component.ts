@@ -79,6 +79,10 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   dialogTitle = "Add New"
   hasDrugCreateUpdatePermission = false
   vendorId! : any
+  vendorId: any;
+  clientId: any;
+  claimsType:any;
+  IsEdit:boolean=false;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private formBuilder: FormBuilder,private cd: ChangeDetectorRef,
@@ -283,6 +287,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   pharmacySelectionChange(data : any)
   {
     this.pharmacyClaimForm.controls['prescriptionFillDto'].reset()
+    this.vendorId=data?.vendorId
     this.pharmacyClaimForm.controls['vendorId'].setValue(data?.vendorId);    
     this.cd.detectChanges();
  
@@ -295,7 +300,8 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
     this.pharmacyClaimForm.controls['clientCaseEligibilityId'].setValue(data?.clientCaseEligibilityId);
     this.isClientRestricted = data?.caseStatus === CaseStatusCode.restricted
     this.isClientInEligible = (data?.caseStatus !== CaseStatusCode.accept && data?.caseStatus !== CaseStatusCode.restricted)
-    this.objectCode = data?.objectCode
+    this.objectCode = data?.objectCode;
+    this.clientId=data.clientId;
     this.cd.detectChanges();
     this.clientTotalPayments = data?.TotalPayments ?? 0    
  
@@ -317,6 +323,8 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
    this.getPharmacyClaim$?.pipe(first((existClaimData: any ) => existClaimData?.paymentRequestId != null))
    .subscribe((existClaimData: any) =>
    {  
+    this.clientId=existClaimData.clientId;
+    this.vendorId=existClaimData.vendorId;
        if(existClaimData?.paymentRequestId)
        {   
         this.isEdit = true
