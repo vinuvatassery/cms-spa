@@ -104,9 +104,6 @@ export class FinancialVendorRefundFacade {
   private batchRefundsSubject =  new Subject<any>();
   batchRefunds$ = this.batchRefundsSubject.asObservable();
 
-  private unbatchEntireBatchSubject =  new Subject<any>();
-  unbatchEntireBatch$ = this.unbatchEntireBatchSubject.asObservable();
-
   private unbatchRefundsSubject =  new Subject<any>();
   unbatchRefunds$ = this.unbatchRefundsSubject.asObservable();
 
@@ -303,28 +300,6 @@ export class FinancialVendorRefundFacade {
       .subscribe({
         next: (response:any) => {
           this.batchRefundsSubject.next(response);
-          if (response.status) {
-            this.notificationSnackbarService.manageSnackBar(
-              SnackBarNotificationType.SUCCESS,
-              response.message
-            );
-          }
-          this.hideLoader();
-        },
-        error: (err) => {
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-          this.hideLoader();
-        },
-      });
-  }
-
-  unbatchEntireBatch(paymentRequestBatchIds: string[]) {
-    this.showLoader();
-    return this.financialVendorRefundDataService
-      .unbatchEntireBatch(paymentRequestBatchIds)
-      .subscribe({
-        next: (response:any) => {
-          this.unbatchEntireBatchSubject.next(response);
           if (response.status) {
             this.notificationSnackbarService.manageSnackBar(
               SnackBarNotificationType.SUCCESS,

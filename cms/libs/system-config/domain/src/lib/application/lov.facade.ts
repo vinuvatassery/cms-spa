@@ -77,6 +77,7 @@ export class LovFacade {
   private paymentReversalSubject = new BehaviorSubject<Lov[]>([]);
   private premiumPaymentTypeSubject = new BehaviorSubject<Lov[]>([]);
   private paymentTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private paymentRequestsTypeSubject = new BehaviorSubject<Lov[]>([]);
   private premiumPaymentReversalSubject = new BehaviorSubject<Lov[]>([]);
   private lovAttachmentsDroplistSubject = new BehaviorSubject<Lov[]>([]);
   private documentTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
@@ -141,6 +142,7 @@ export class LovFacade {
   paymentRequestType$ = this.paymentRequestTypeSubject.asObservable();
   paymentReversal$ = this.paymentReversalSubject.asObservable();
   paymentType$ = this.paymentTypeSubject.asObservable();
+  paymentRequestsType$ = this.paymentRequestsTypeSubject.asObservable();
   premiumPaymentType$ = this.premiumPaymentTypeSubject.asObservable();
   premiumPaymentReversal$ = this.premiumPaymentReversalSubject.asObservable();
   attachmentTypeDroplistlov$ = this.lovAttachmentsDroplistSubject.asObservable();
@@ -691,6 +693,17 @@ export class LovFacade {
     this.lovDataService.getLovsbyType(LovType.PaymentType).subscribe({
       next: (lovResponse) => {
         this.paymentTypeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  getPaymentRequestTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.PaymentRequestType).subscribe({
+      next: (lovResponse) => {
+        this.paymentRequestsTypeSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
