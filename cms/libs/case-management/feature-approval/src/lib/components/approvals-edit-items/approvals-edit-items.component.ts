@@ -662,7 +662,8 @@ export class ApprovalsEditItemsComponent implements OnInit {
         this.paymentMethodList = paymentMethod;
         this.loaderService.hide();
       }
-    })
+    });
+    this.cd.detectChanges();
   }
 
   get pharmacyFormControl() {
@@ -682,6 +683,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
         this.loaderService.hide();
       }
     })
+    this.cd.detectChanges();
   }
 
   get insuranceProviderFormControls() {
