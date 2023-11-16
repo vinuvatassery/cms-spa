@@ -109,7 +109,7 @@ export class PharmacyClaimsBatchPageComponent {
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
   }
-  OnEditProviderProfileClick() {
+  onEditProviderProfileClick() {
     this.contactFacade.loadDdlStates();
     this.lovFacade.getPaymentMethodLov();
   }
