@@ -1,6 +1,6 @@
 {
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
+  "root": "libs/system-config/domain",
   "sourceRoot": "libs/system-config/domain/src",
   "prefix": "system-config",
   "targets": {
@@ -24,7 +24,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/system-config/domain"],
       "options": {
-        "jestConfig": "libs/system-config/domain/jest.config.ts",
+        "jestConfig": "libs/system-config/domain/jest.config.js",
         "passWithNoTests": true
       }
     },

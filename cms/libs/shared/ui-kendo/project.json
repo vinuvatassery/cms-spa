@@ -1,0 +1,26 @@
+{
+  "projectType": "library",
+  "root": "libs/shared/ui-kendo",
+  "sourceRoot": "libs/shared/ui-kendo/src",
+  "prefix": "cms",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/shared/ui-kendo"],
+      "options": {
+        "jestConfig": "libs/shared/ui-kendo/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/shared/ui-kendo/src/**/*.ts",
+          "libs/shared/ui-kendo/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

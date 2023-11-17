@@ -1,6 +1,6 @@
 {
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
+  "root": "libs/shared/util-oidc",
   "sourceRoot": "libs/shared/util-oidc/src",
   "prefix": "oidc",
   "targets": {
@@ -24,7 +24,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/shared/util-oidc"],
       "options": {
-        "jestConfig": "libs/shared/util-oidc/jest.config.ts",
+        "jestConfig": "libs/shared/util-oidc/jest.config.js",
         "passWithNoTests": true
       }
     },

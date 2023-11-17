@@ -1,657 +1,213 @@
-// /*Global Search*/
-.k-floating-label-container{
-    width: 100%;
+// Combobox - Global Search
+.k-combobox {
+  width: 100%;
+  .k-dropdown-wrap {
+    border: 1px solid $theme-border;
+    border-top: 1px solid $theme-border !important;
+    border-radius: $border-radius-sm;
+    &:hover {
+      border: 1px solid $black-3;
+      border-top: 1px solid $black-3 !important;
+    }
+    &.k-state-focused {
+      border: 1px solid $app-primary;
+      border-top: 1px solid $app-primary !important;
+    }
+    .k-input {
+      padding-left: 35px;
+      padding-top: 12px;
+    }
+    .k-select {
+      display: none;
+    }
+  }
 }
 
-// .k-combobox {
-//   width: 100%;
-//   .k-dropdown-wrap {
-//     border: 1px solid $theme-border;
-//     border-top: 1px solid $theme-border !important;
-//     border-radius: $border-radius-sm;
-//     &:hover {
-//       border: 1px solid $black-3;
-//       border-top: 1px solid $black-3 !important;
-//     }
-//     &.k-state-focused {
-//       border: 1px solid $app-primary;
-//       border-top: 1px solid $app-primary !important;
-//     }
-//     .k-input {
-//       padding-left: 35px;
-//       padding-top: 12px;
-//     }
-//     .k-select {
-//       display: none;
-//     }
-//   }
-// }
-// .option-with-check {
-//   display: flex;
-//   align-items: center;
-// }
-// .component-list-h {
-//   display: flex;
-//   flex-direction: column;
-//   gap: $size-xl * 2;
-// }
-
-// /*Info Banners*/
-// .info-banners {
-//   min-height: 30px;
-//   display: flex;
-//   align-items: center;
-//   font-family: $font-family-bold;
-//   font-size: $font-size-s;
-//   padding: $size-0 $size-xx;
-//   gap: $size-xx;
-//   border-radius: $border-radius-sm;
-//   transition: ease all 0.4s;
-//   &.red-banner {
-//     background: material-color($hive-error-palette, 100);
-//     color: material-color($hive-error-palette, 900);
-//   }
-//   &.canyon-banner {
-//     background: material-color($hive-canyon-palette, 100);
-//     color: material-color($hive-canyon-palette, 900);
-//   }
-//   &.orange-banner {
-//     background: material-color($hive-warn-palette, 200);
-//   }
-//   &.hover-link {
-//     cursor: pointer;
-//     &:hover {
-//       &.red-banner {
-//         background: material-color($hive-error-palette, 200);
-//       }
-//       &.canyon-banner {
-//         background: material-color($hive-canyon-palette, 200);
-//       }
-//       &.orange-banner {
-//         background: material-color($hive-warn-palette, 200);
-//       }
-//     }
-//   }
-// }
-// .k-input {
-//   font-size: $font-size;
-//   height: 38px;
-//   border-width: $size-0;
-//   background: $white;
-//   padding: ($size-xx + 2) $size-xl;
-// }
-// .k-textarea {
-//   .k-input {
-//     height: auto;
-//     resize: none !important;
-//     padding-bottom: $size-0 !important;
-//   }
-// }
-// .k-textarea-suffix {
-//   position: relative;
-//   bottom: -$size-xx * 2;
-//   right: -$size-xx;
-//   font-size: $font-size-s;
-// }
-// .k-select {
-//   padding: $size-xx;
-//   position: relative;
-//   z-index: 1;
-//   background: $white;
-// }
-// .k-picker-wrap {
-//   .k-input {
-//     padding-left: $size-0;
-//     padding-right: $size-0;
-//   }
-//   .k-select {
-//     right: -$size-xx;
-//   }
-// }
-// /*Floating Outline Text Box*/
-// .k-floating-label-container {
-//   .k-textbox,
-//   .k-picker-wrap,
-//   .k-textarea {
-//     border: 1px solid $theme-border !important;
-//     border-top-color: $theme-border !important;
-//     border-radius: $border-radius-sm;
-//     padding: $size-0 $size-xx;
-//     min-height: 40px;
-//     &.k-state-disabled {
-//       border-color: material-color($hive-neutral-palette, 50) !important;
-//     }
-//   }
-//   &:hover {
-//     .k-textbox,
-//     .k-picker-wrap,
-//     .k-textarea {
-//       border: 1px solid $black-3 !important;
-//       border-radius: $border-radius-sm;
-//       &.k-state-disabled,
-//       &:disabled {
-//         border: 1px solid material-color($hive-neutral-palette, 50) !important;
-//       }
-//     }
-//   }
-//   &.k-state-focused {
-//     .k-textbox,
-//     .k-picker-wrap {
-//       border: 1px solid $app-primary !important;
-//       border-top-color: $app-primary !important;
-//     }
-//     &:after {
-//       display: none !important;
-//     }
-//   }
-//   &.k-state-focused .k-textarea {
-//     border: 1px solid $app-primary !important;
-//     border-top-color: $app-primary !important;
-//     &:after {
-//       display: none !important;
-//     }
-//   }
-// }
-// .k-textbox-container,
-// .k-floating-label-container {
-//   padding-top: calc(1.125 * 10px);
-//   width: 100%;
-//   padding-bottom: 14px;
-// }
-// .k-textbox-container.k-state-empty > .k-label,
-// .k-floating-label-container.k-state-empty > .k-label {
-//   top: 24px !important;
-//   margin-left: 5px;
-//   font-size: 14px;
-//   padding: 0 5px;
-//   z-index: 2;
-// }
-
-// .k-textbox-container > .k-label,
-// .k-textbox-container.k-state-focused > .k-label,
-// .k-floating-label-container > .k-label,
-// .k-floating-label-container.k-state-focused > .k-label {
-//   top: 5px !important;
-//   &:after {
-//     content: '';
-//     position: absolute;
-//     left: 0;
-//     top: 5px;
-//     background: $white;
-//     width: 100%;
-//     height: 5px;
-//     z-index: -1;
-//     border-radius: $border-radius-md;
-//   }
-// }
-// .k-floating-label-container.k-state-empty > .k-label,
-// .k-textbox-container.k-state-empty > .k-label {
-//   &:after {
-//     display: none;
-//   }
-// }
-// .k-floating-label-container.k-state-empty.k-state-focused .k-label,
-// .textbox-container.k-state-empty.k-state-focused .k-label {
-//   &:after {
-//     display: inline-block;
-//     content: '';
-//     position: absolute;
-//     left: 0;
-//     top: 5px;
-//     background: $white;
-//     width: 100%;
-//     height: 5px;
-//     z-index: -1;
-//     border-radius: $border-radius-md;
-//   }
-// }
-// .k-textbox-container > .k-label,
-// .k-textarea-container > .k-label,
-// .k-floating-label-container > .k-label {
-//   transform: scale(0.75);
-//   margin-left: 5px;
-//   font-size: 14px;
-//   padding: 0 5px;
-// }
-// /*Floating Outline Dropdown*/
-// .k-dropdown .k-dropdown-wrap,
-// .k-dropdowntree .k-dropdown-wrap {
-//   border: 1px solid $theme-border !important;
-//   border-top-color: $theme-border !important;
-//   border-radius: $border-radius-sm;
-//   &:hover {
-//     .k-textbox {
-//       border: 1px solid $black-3 !important;
-//       border-top-color: $black-3 !important;
-//     }
-//   }
-//   &.k-state-focused {
-//     .k-textbox {
-//       border: 1px solid $app-primary !important;
-//       border-top-color: $app-primary !important;
-//     }
-//     &:after {
-//       display: none !important;
-//     }
-//   }
-// }
-// .k-floating-label-container {
-//   &.k-state-focused,
-//   &:hover {
-//     .k-dropdown .k-dropdown-wrap,
-//     .k-dropdowntree .k-dropdown-wrap {
-//       border: 1px solid $black-3 !important;
-//     }
-//   }
-// }
-// /* Check Box */
-// .k-checkbox {
-//   width: $font-size-xl;
-//   height: $font-size-xl;
-//   margin-right: $size-m;
-//   &:checked,
-//   &.k.checked {
-//     border-color: $app-primary;
-//     background-color: $app-primary;
-//   }
-// }
-// .k-checkbox-label {
-//   cursor: default;
-// }
-// /* Radio Button */
-// .k-radio {
-//   width: $font-size-xl;
-//   height: $font-size-xl;
-//   &.k-radio:checked,
-//   &.k-radio.k-checked {
-//     border-color: $app-primary;
-//     color: $app-primary;
-//   }
-// }
-// /* Picker */
-// .k-picker-wrap,
-// .k-dropdown-wrap,
-// .k-dateinput-wrap,
-// .k-multiselect-wrap,
-// .k-numeric-wrap {
-//   justify-content: space-between;
-// }
-// .k-multiselect-wrap {
-//   border: 1px solid $theme-border;
-//   border-radius: $border-radius-sm;
-//   &.k-state-focused,
-//   &:hover {
-//     border: 1px solid $black-3;
-//   }
-//   ul {
-//     display: flex;
-//     align-items: center;
-//     gap: $size-m;
-//     flex-wrap: wrap;
-//     padding: $size-xl $size-l $size-s $size-l;
-//     .k-button {
-//       text-transform: none;
-//       border-radius: $border-radius-xl;
-//       padding: $size-0 $size-xx;
-//       height: $size-xxxl;
-//       font-weight: normal;
-//       font-family: $font-family;
-//       background: material-color($hive-neutral-palette, 100);
-//       z-index: 1;
-//       .k-select {
-//         background: material-color($hive-neutral-palette, 600);
-//         height: $size-xl * 2;
-//         width: $size-xl * 2;
-//         padding: $size-0;
-//         border-radius: $border-radius-xl;
-//         color: $white;
-//         display: flex;
-//         align-items: center;
-//         justify-content: center;
-//         span {
-//           font-size: $font-size-s;
-//         }
-//       }
-//     }
-//   }
-//   .k-clear-value {
-//     margin-right: $size-xx;
-//   }
-// }
-// /* Small Input */
-// .small-input-form {
-//   margin-left: $size-xxx;
-//   max-width: 300px;
-//   padding: $size-0 !important;
-//   .mat-form-field-infix {
-//     padding: $size-0 $size-0 $size-l !important;
-//   }
-//   .mat-form-field-wrapper {
-//     margin: $size-0 !important;
-//   }
-//   .k-textbox,
-//   .k-picker-wrap,
-//   .k-textarea {
-//     min-height: 30px !important;
-//   }
-//   &.k-state-empty > .k-label {
-//     top: 7px !important;
-//   }
-//   .k-label {
-//     &:after {
-//       top: 8px !important;
-//     }
-//   }
-// }
-// .small-input-form > .k-label,
-// .small-input-form.k-state-focused > .k-label,
-// .small-input-form > .k-label,
-// .small-input-form.k-state-focused > .k-label {
-//   top: -9px !important;
-// }
-
-// /* medium Input */
-// .medium-input-form {
-//   max-width: 200px;
-//   padding: $size-0 !important;
-//   .mat-form-field-infix {
-//     padding: $size-0 $size-0 $size-l !important;
-//   }
-//   .mat-form-field-wrapper {
-//     margin: $size-0 !important;
-//   }
-//   .k-textbox,
-//   .k-picker-wrap,
-//   .k-textarea {
-//     min-height: 35px !important;
-//   }
-//   &.k-state-empty > .k-label {
-//     top: 9px !important;
-//   }
-// }
-// .medium-input-form > .k-label,
-// .medium-input-form.k-state-focused > .k-label,
-// .medium-input-form > .k-label,
-// .medium-input-form.k-state-focused > .k-label {
-//   top: -9px !important;
-// }
-
-.counter-label {
-  text-align: right;
-  opacity: 0.8;
-  position: relative;
-  top: -5px;
+.option-with-check {
+  display: flex;
+  align-items: center;
 }
+
+.small-input-form {
+  margin-left: $size-xxx;
+  max-width: 300px;
+  .mat-form-field-infix {
+    padding: $size-0 $size-0 $size-l !important;
+  }
+  .mat-form-field-wrapper {
+    margin: $size-0 !important;
+  }
+}
+
 .radio-column-list {
   display: flex;
-  gap: $size-xxx;
-}
-// /* Input Prefix*/
-.k-input-prefix {
-  position: absolute;
-  left: 10px;
-  top: 23px;
-  z-index: 1;
-  opacity: 0.5;
-}
-.input-right {
-  .k-input {
-    text-align: right;
-  }
-}
-/* Dropdown */
-.k-list .k-item {
-  padding: $size-xl $size-xx;
-  transition: ease-in all 0.4s;
-  &:hover {
-    background: material-color($hive-neutral-palette, 200);
-  }
-}
-.block-margin-tb {
-  margin: $size-xlg 0 -$size-xlg;
-}
-.mat-form-no-b-space {
-  .k-floating-label-container {
-    padding-bottom: $size-0;
-    margin-bottom: $size-0;
-  }
-}
-// /*Search-input*/
-.input-search {
-  position: relative;
-  .material-icons {
-    position: absolute;
-    left: $size-xx;
-    top: $size-xx * 2;
-    z-index: 1;
-    opacity: 0.5;
-  }
-  .k-floating-label-container {
-    .k-textbox {
-      padding-left: 40px;
-    }
-    .k-label {
-      left: 35px;
-    }
-  }
+  flex-direction: column;
+  gap: $size-xx;
 }
 
-// /* Floating action button*/
-.app-c-fab {
-  position: static !important;
-  margin-bottom: $size-xlg;
-  margin-right: $size-xlg;
-  width: 50px;
-  height: 50px;
-  border-radius: 100%;
-  .k-fab {
-    padding: $size-0;
-    width: 50px;
-    height: 50px;
-    font-size: $font-size-xxx;
-    border-radius: 100%;
-    background-color: $app-primary;
-    border: 0px;
-    overflow: visible;
-    position: relative;
-    .k-fab-icon,
-    .material-icons {
-      font-size: $font-size-xx;
-      color: $white;
-    }
-    &:hover {
-      background-color: material-color($hive-primary-palette, 900);
-    }
-  }
-}
-.k-fab-items {
-  margin-right: 10px;
-  .k-fab-item-icon {
-    border-color: $white;
-    color: $white;
-    background-color: $app-primary;
-    transition: ease-in all 0.4s;
-    &:hover,
-    &:focus {
-      background-color: material-color($hive-primary-palette, 900);
-      color: $white;
-    }
-  }
-  .k-fab-item-icon {
-    position: relative;
-    overflow: visible;
-  }
-}
-.k-autocomplete {
-  border: 1px solid $theme-border;
+// Info Banners
+.info-banners {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+  font-family: $font-family-bold;
+  font-size: $font-size-s;
+  padding: $size-0 $size-xx;
+  gap: $size-xx;
   border-radius: $border-radius-sm;
-  .k-input {
-    border-radius: $border-radius-sm;
+  transition: ease all 0.4s;
+  &.red-banner {
+    background: material-color($hive-error-palette, 100);
+    color: material-color($hive-error-palette, 900);
   }
-  .k-clear-value {
-    position: absolute;
-    right: $size-xx;
-    top: $size-xxxl - 2px;
+  &.canyon-banner {
+    background: material-color($hive-canyon-palette, 100);
+    color: material-color($hive-canyon-palette, 900);
   }
-  &:hover,
-  &.k-state-focused {
-    border: 1px solid $black-3 !important;
+  &.orange-banner {
+    background: material-color($hive-warn-palette, 200);
   }
-}
-
-// /* Disabled Form field styling */
-.k-textbox {
-  &:disabled {
-    pointer-events: none;
-    background: material-color($hive-neutral-palette, 50) !important;
-    border-color: material-color($hive-neutral-palette, 50) !important;
-  }
-}
-.k-dropdown {
-  .k-state-disabled,
-  .k-widget[disabled],
-  .k-disabled {
-    opacity: 1;
-    pointer-events: none;
-    background: material-color($hive-neutral-palette, 50) !important;
-    border-color: material-color($hive-neutral-palette, 50) !important;
-    .k-input,
-    .k-select {
-      background: material-color($hive-neutral-palette, 50) !important;
-      border-color: material-color($hive-neutral-palette, 50) !important;
-      .k-icon {
-        opacity: 0.3;
+  &.hover-link {
+    cursor: pointer;
+    &:hover {
+      &.red-banner {
+        background: material-color($hive-error-palette, 200);
+      }
+      &.canyon-banner {
+        background: material-color($hive-canyon-palette, 200);
+      }
+      &.orange-banner {
+        background: material-color($hive-warn-palette, 200);
       }
     }
   }
+}
+
+.k-input {
+  font-size: $font-size;
+  height: 38px;
+  border-width: $size-0;
+  background: $white;
+  padding: $size-xl $size-0;
 }
 .k-textarea {
-  &.k-state-disabled {
-    opacity: 1;
-    pointer-events: none;
-    background: material-color($hive-neutral-palette, 50) !important;
-    border-color: material-color($hive-neutral-palette, 50) !important;
-    .k-input:disabled,
-    .k-input[disabled],
-    .k-input.k-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;
-      border-color: material-color($hive-neutral-palette, 50) !important;
+  .k-input {
+    height: auto;
+    resize: none !important;
+  }
+}
+.k-select {
+  padding: $size-xx;
+}
+.k-picker-wrap {
+  .k-input {
+    padding-left: $size-0;
+    padding-right: $size-0;
+  }
+}
+// Floating Outline Text Box
+.k-floating-label-container {
+  .k-textbox,
+  .k-picker-wrap,
+  .k-textarea {
+    border: 1px solid $theme-border !important;
+    border-top-color: $theme-border !important;
+    border-radius: $border-radius-sm;
+    padding: $size-0 $size-xx;
+  }
+  &:hover {
+    .k-textbox,
+    .k-picker-wrap,
+    .k-textarea {
+      border: 1px solid $black-3 !important;
+      border-top-color: $black-3 !important;
+    }
+  }
+  &.k-state-focused {
+    .k-textbox,
+    .k-picker-wrap {
+      border: 1px solid $app-primary !important;
+      border-top-color: $app-primary !important;
+    }
+    &:after {
+      display: none !important;
+    }
+  }
+  &.k-state-focused .k-textarea {
+    border: 1px solid $app-primary !important;
+    border-top-color: $app-primary !important;
+    &:after {
+      display: none !important;
     }
   }
 }
-.k-upload {
-  &.k-disabled {
-    opacity: 1;
-    pointer-events: none;
-    .k-dropzone {
-      background: material-color($hive-neutral-palette, 50) !important;
-      border-color: material-color($hive-neutral-palette, 50) !important;
-      .k-button {
-        opacity: 0.5;
-      }
-      .k-dropzone-hint {
-        display: none;
-      }
-    }
-  }
+.k-textbox-container,
+.k-floating-label-container {
+  padding-top: calc(1.125 * 10px);
+  width: 100%;
+  padding-bottom: 14px;
 }
-kendo-datepicker {
-  + .k-label {
-    background: $white;
-  }
-  &.k-state-disabled {
-    background: material-color($hive-neutral-palette, 50);
-    opacity: 1;
-    .k-select {
-      background: material-color($hive-neutral-palette, 50);
-    }
-  }
-  &.k-state-disabled + .k-label {
-    background: material-color($hive-neutral-palette, 50);
-  }
+.k-textbox-container.k-state-empty > .k-label,
+.k-floating-label-container.k-state-empty > .k-label {
+  top: 24px !important;
+  margin-left: 5px;
+  font-size: 14px;
+  padding: 0 5px;
 }
-kendo-timepicker {
-  + .k-label {
-    background: $white;
-  }
-  &.k-state-disabled {
-    background: material-color($hive-neutral-palette, 50);
-    opacity: 1;
-    .k-select {
-      background: material-color($hive-neutral-palette, 50);
+.k-textbox-container > .k-label,
+.k-textbox-container.k-state-focused > .k-label,
+.k-floating-label-container > .k-label,
+.k-floating-label-container.k-state-focused > .k-label {
+  top: 5px !important;
+  background: $white;
+}
+.k-textbox-container > .k-label,
+.k-textarea-container > .k-label,
+.k-floating-label-container > .k-label {
+  transform: scale(0.75);
+  margin-left: 5px;
+  font-size: 14px;
+  padding: 0 5px;
+}
+
+// Floating Outline Dropdown
+.k-dropdown .k-dropdown-wrap,
+.k-dropdowntree .k-dropdown-wrap {
+  border: 1px solid $theme-border !important;
+  border-top-color: $theme-border !important;
+  border-radius: $border-radius-sm;
+  &:hover {
+    .k-textbox {
+      border: 1px solid $black-3 !important;
+      border-top-color: $black-3 !important;
     }
   }
-  &.k-state-disabled + .k-label {
-    background: material-color($hive-neutral-palette, 50);
+  &.k-state-focused {
+    .k-textbox {
+      border: 1px solid $app-primary !important;
+      border-top-color: $app-primary !important;
+    }
+    &:after {
+      display: none !important;
+    }
   }
 }
 
-.k-input:disabled,
-.k-input[disabled],
-.k-input.k-disabled {
-  background: material-color($hive-neutral-palette, 50);
-  border-color: material-color($hive-neutral-palette, 50);
-  opacity: 1;
-}
-// .k-floating-label-container > .k-label {
-//   transform-origin: 0 !important;
-// }
-// .small-dropdown-form {
-//   padding: $size-0;
-//   .k-dropdown-wrap {
-//     min-height: 30px !important;
-//     height: 30px !important;
-//     cursor: default;
-//     .k-input {
-//       min-height: 30px !important;
-//       height: 30px !important;
-//       padding: $size-xl - 1 $size-xl;
-//       font-size: $font-size-m;
-//     }
-//     .k-select {
-//       padding: $size-l;
-//     }
-//   }
-//   &.mw-210 {
-//     min-width: 210px;
-//   }
-// }
-// .amount-with-symbol {
-//   position: relative;
-//   .amount-prefix {
-//     position: absolute;
-//     left: 10px;
-//     top: 8px;
-//     color: $black-6;
-//   }
-//   .k-textbox {
-//     text-align: right;
-//     &.mw-100 {
-//       max-width: 100px;
-//     }
-//   }
-//   .k-label {
-//     display: none;
-//   }
-// }
- 
-.k-rounded-md{
-    border-radius: 4px;
-}
-
-.app-checkboxwidtext-wrapper, .app-radiobtnwidtext-wrapper{
-        display: inline-block;
-        margin: 6px;
-        width: 100%;
- }
- 
-
- .input-icon-left {
-  .k-input-prefix {
-      position: absolute;
-      left: 10px;
-      top: 10px;
-      z-index: 1;
-      opacity: 0.5;
+.k-checkbox {
+  width: $font-size-xl;
+  height: $font-size-xl;
+  margin-right: $size-m;
+  &:checked,
+  &.k.checked {
+    border-color: $app-primary;
+    background-color: $app-primary;
   }
+}
+
+.k-picker-wrap,
+.k-dropdown-wrap,
+.k-dateinput-wrap,
+.k-multiselect-wrap,
+.k-numeric-wrap {
+  justify-content: space-between;
 }

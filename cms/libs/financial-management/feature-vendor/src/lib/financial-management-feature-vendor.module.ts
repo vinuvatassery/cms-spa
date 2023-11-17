@@ -1,21 +1,24 @@
-/** Angular **/
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/** Modules **/
-import { SharedUiCommonModule } from '@cms/shared/ui-common';
-import { FinancialManagementDomainModule } from '@cms/financial-management/domain';
-import { FinancialManagementFeatureVendorRoutingModule } from './financial-management-feature-vendor-routing.module';
-/** Components **/
-import { VendorPageComponent } from './containers/vendor-page/vendor-page.component';
+import { RouterModule, Routes } from '@angular/router';
 
+import { FinancialManagementDomainModule } from '@cms/financial-management/domain';
+import { VendorComponent } from './vendor.component';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: VendorComponent,
+    data: { title: 'Todo' },
+  },
+];
 @NgModule({
   imports: [
     CommonModule,
-    FinancialManagementFeatureVendorRoutingModule,
+    RouterModule.forChild(routes),
     FinancialManagementDomainModule,
-    SharedUiCommonModule,
   ],
-  declarations: [VendorPageComponent],
-  exports: [VendorPageComponent],
+  declarations: [VendorComponent],
+  exports: [VendorComponent],
 })
 export class FinancialManagementFeatureVendorModule {}

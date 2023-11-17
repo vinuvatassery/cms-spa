@@ -2,22 +2,21 @@ app-sidenav {
   position: relative;
   z-index: 9;
 }
-cms-sidenav {
+cms-sidenav{
   position: relative;
   z-index: 9;
 }
 .app-l-sidebar {
   border-color: $theme-border;
   width: 220px;
-  transition: ease-in all 0.3s;
   .drawer-inner-container {
-    transition: ease-in all 0.3s;
     background-color: $app-primary;
+    height: 100%;
     max-height: calc(100vh - 70px);
     overflow-y: auto;
     overflow-x: hidden;
+    transition: ease-in all 0.3s;
     width: 220px;
-    height: 100%;
   }
   .sidebar-hamburger {
     display: flex;
@@ -33,11 +32,11 @@ cms-sidenav {
       justify-content: center;
       box-shadow: none;
       cursor: pointer;
-      transition: ease-in all 0.3s;
-      border: $size-0;
+      opacity: 0.5;
+      transition: ease-in all 0.4s;
       &:hover {
         opacity: 1;
-        transition: ease-in all 0.3s;
+        transition: ease-in all 0.4s;
       }
       .material-icons {
         color: $white;
@@ -60,13 +59,12 @@ cms-sidenav {
       display: flex;
       align-items: center;
       cursor: pointer;
-      transition: ease-in all 0.3s;
+      transition: ease-in all 0.4s;
       margin-bottom: 1px;
-      flex-wrap: nowrap;
       &:hover,
       &.active-item {
         background-color: $app-primary-darken;
-        transition: ease-in all 0.3s;
+        transition: ease-in all 0.4s;
       }
       .sidebar-menu_icon {
         color: $white;
@@ -79,10 +77,10 @@ cms-sidenav {
       }
       .sidebar-menu_label {
         color: $white;
+        padding-right: $size-xxx;
         transition: ease-in all 0.3s;
         font-size: $font-size-m;
         white-space: nowrap;
-        cursor: pointer;
         .sidebar-menu_label-badge {
           background: material-color($hive-warn-palette, 500);
           color: $white !important;
@@ -93,37 +91,17 @@ cms-sidenav {
           margin-left: $size-l;
         }
       }
-      &.with-sub-menu {
-        flex-direction: column;
-      }
-      .sidebar-sub-menu {
-        width: 100%;
-        white-space: nowrap;
-        .sidebar-sub-menu_items {
-          padding: 10px 10px 10px 55px;
-          cursor: pointer;
-          color: $white;
-          transition: ease-in all 0.3s;
-          margin-bottom: 1px;
-          font-size: $font-size-m;
-          &:hover,
-          &.active-item {
-            background-color: darken($app-primary-darken, 5%);
-            transition: ease-in all 0.3s;
-          }
-        }
-      }
     }
   }
-  .sidebar-last-visited-cases-container {
+  .sidebar-active-session-container {
     .active-menu-toggled {
       display: none;
     }
-    .sidebar-last-visited-cases {
+    .sidebar-active-sessions {
       padding: $size-xxx;
       color: $white;
       border-top: 1px solid $app-primary-darken;
-      .last-visited-cases_header {
+      .active-session_header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -135,9 +113,8 @@ cms-sidenav {
           font-size: $font-size-m;
         }
       }
-      .last-visited-case {
-        transition: ease-in all 0.3s;
-        background: material-color($hive-primary-palette, 600);
+      .active-session_items {
+        background: material-color( $hive-primary-palette, 600);
         border-radius: $border-radius-md;
         padding: $size-xx $size-xx $size-xx $size-xx * 4;
         position: relative;
@@ -145,9 +122,9 @@ cms-sidenav {
         cursor: pointer;
         min-width: 170px;
         &:hover {
-          background: material-color($hive-primary-palette, 700);
+          background: material-color( $hive-primary-palette, 700);
         }
-        .last-visited-case-close {
+        .active-session_items-close {
           position: absolute;
           left: $size-xl;
           top: 13px;
@@ -158,14 +135,14 @@ cms-sidenav {
             margin-right: $size-0;
           }
         }
-        .last-visited-case-heading {
+        .active-session_items-heading {
           margin: 0;
           line-height: normal;
           margin-bottom: $size-m;
           max-width: 150px;
           overflow: hidden;
           text-overflow: ellipsis;
-          white-space: nowrap;
+          white-space: nowrap;          
         }
         &.item-active {
           background: $white;
@@ -177,58 +154,30 @@ cms-sidenav {
   &.menuToggled {
     overflow: visible;
     position: relative;
-    z-index: 4;
+    z-index: 9;
     width: 50px;
     .drawer-inner-container {
       width: 55px;
       transition: ease-in all 0.3s;
       .sidebar-menu {
+        width: 55px;
         .sidebar-menu_items {
+          .sidebar-menu_label {
+            display: none;
+            transition: ease-in all 0.3s;
+          }
           &:hover {
             .sidebar-menu_label {
               display: block !important;
               position: absolute;
               left: 60px;
-              padding: $size-l $size-xx;
+              padding: 6px $size-xx;
               background: $black-3;
               border-radius: $border-radius-sm;
               white-space: nowrap;
-              transition: ease-in all 0s;
+              transition: ease-in all 0.3s;
             }
           }
-          &.with-sub-menu {
-            &:hover {
-              .sidebar-sub-menu {
-                display: block !important;
-                position: absolute;
-                left: $sidebar-width;
-                padding: $size-l $size-xx $size-l $size-l;
-                white-space: nowrap;
-                transition: ease-in all 0.3s;
-                width: auto;
-                background: $white;
-                border-radius: $size-0 $size-l $size-l $size-0;
-                .sidebar-sub-menu_items {
-                  padding: $size-l $size-xx !important;
-                  background: $black-3;
-                  border-radius: $border-radius-sm;
-                  white-space: nowrap;
-                  transition: ease-in all 0.3s;
-                  margin-bottom: $size-s;
-                }
-              }
-              .sidebar-menu_items {
-                &:hover {
-                  .sidebar-menu_label {
-                    display: none !important;
-                  }
-                }
-              }
-            }
-          }
-        }
-        .sidebar-sub-menu {
-          display: none;
         }
       }
       .sidebar-hamburger_icon-right {
@@ -237,7 +186,7 @@ cms-sidenav {
       .sidebar-hamburger_icon-left {
         display: none !important;
       }
-      .sidebar-last-visited-cases-container {
+      .sidebar-active-session-container {
         .active-menu-toggled {
           display: block;
           width: $sidebar-width;
@@ -247,10 +196,10 @@ cms-sidenav {
           align-items: center;
           justify-content: center;
           cursor: pointer;
-          transition: ease-in all 0.3s;
+          transition: ease-in all 0.4s;
           border-top: 1px solid $app-primary-darken;
           &:hover {
-            transition: ease-in all 0.3s;
+            transition: ease-in all 0.4s;
             background: $app-primary-darken;
           }
           .material-icons {
@@ -262,11 +211,11 @@ cms-sidenav {
             margin: 0;
           }
         }
-        .sidebar-last-visited-cases {
+        .sidebar-active-sessions {
           display: none;
         }
         &:hover {
-          .sidebar-last-visited-cases {
+          .sidebar-active-sessions {
             display: block;
             position: fixed;
             left: $sidebar-width;
@@ -275,17 +224,10 @@ cms-sidenav {
             height: 100%;
             max-height: calc(100% - 70px);
             overflow: auto;
-            border-left: 1px solid material-color($hive-primary-palette, 100);
+            border-left: 1px solid material-color( $hive-primary-palette, 100);
           }
         }
       }
     }
-  }
-}
-
-.activeCase{
-  .last-visited-case{
-    background: $white!important;
-    color: $app-primary-font-color;
   }
 }

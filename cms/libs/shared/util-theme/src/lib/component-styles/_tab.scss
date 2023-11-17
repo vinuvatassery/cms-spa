@@ -2,13 +2,11 @@
   background: $white !important;
   border-radius: $border-radius-md;
   border: 0 solid rgba(0, 0, 0, 0.125);
-  box-shadow: none;
+  box-shadow: 0px 2px 4px rgb(31 30 47 / 10%);
   .k-content {
     overflow: visible;
     padding: $size-0;
     box-shadow: none;
-    outline: none !important;
-    z-index: inherit;
   }
   .k-tabstrip-items {
     width: 100%;
@@ -23,11 +21,11 @@
       align-items: center;
       justify-content: center;
       &:after {
-        // bottom: 1px;
-        // width: 0px;
-        // display: none !important;
+        bottom: 1px;
+        width:0px;
+        display: none!important;
       }
-      &:before {
+      &:before{
         width: 0px;
         height: 2px;
         background: $app-primary;
@@ -42,9 +40,9 @@
         color: $app-primary;
         transition: ease-in all 0.2s;
         &:after {
-        //   display: none;
+          display: none;
         }
-        &:before {
+        &:before{
           width: 100%;
           transition: ease-in all 0.4s;
         }
@@ -78,34 +76,4 @@
       }
     }
   }
-  &.app-c-tab--color {
-    .k-tabstrip-items {
-      .k-item {
-        .material-icons {
-          font-size: $font-size-xlg;
-        }
-      }
-    }
-  }
-  .k-tabstrip-items .k-link{
-    padding: 10px 24px;
-  }
-
-//   &.app-c-sub-tab {
-//     .k-tabstrip-items-wrapper {
-//       box-shadow: 0px 4px 6px material-color($hive-neutral-palette, 200);
-//       border-bottom: 1px solid material-color($hive-neutral-palette, 200);
-//       .k-tabstrip-items {
-//         margin-left: $size-xxx;
-//         .k-link {
-//           padding: $size-xl $size-xlg;
-//         }
-//       }
-//     }
-//     .k-content.k-state-active {
-//       max-height: calc(100vh - 285px);
-//       overflow: auto;
-//       padding: $size-xx $size-xlg $size-xxxx * 2;
-//     }
-//   }
 }

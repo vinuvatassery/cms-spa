@@ -1,6 +1,6 @@
 {
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
+  "root": "libs/case-management/domain",
   "sourceRoot": "libs/case-management/domain/src",
   "prefix": "case-management",
   "targets": {
@@ -24,7 +24,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/case-management/domain"],
       "options": {
-        "jestConfig": "libs/case-management/domain/jest.config.ts",
+        "jestConfig": "libs/case-management/domain/jest.config.js",
         "passWithNoTests": true
       }
     },

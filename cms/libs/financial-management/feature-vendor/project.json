@@ -1,6 +1,6 @@
 {
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
+  "root": "libs/financial-management/feature-vendor",
   "sourceRoot": "libs/financial-management/feature-vendor/src",
   "prefix": "financial-management",
   "targets": {
@@ -24,7 +24,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/financial-management/feature-vendor"],
       "options": {
-        "jestConfig": "libs/financial-management/feature-vendor/jest.config.ts",
+        "jestConfig": "libs/financial-management/feature-vendor/jest.config.js",
         "passWithNoTests": true
       }
     },

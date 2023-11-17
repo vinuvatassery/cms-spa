@@ -1,28 +1,20 @@
-/** Angular **/
 import { Injectable } from '@angular/core';
-/** External libraries **/
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** Entities **/
+import { BehaviorSubject } from 'rxjs';
+
 import { Search } from '../entities/search';
-/** Data services **/
 import { SearchDataService } from '../infrastructure/search.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class SearchFacade {
-  /** Private properties **/
-  private searchSubject = new BehaviorSubject<Search[]>([]);
+  private searchListSubject = new BehaviorSubject<Search[]>([]);
+  searchList$ = this.searchListSubject.asObservable();
 
-  /** Public properties **/
-  search$ = this.searchSubject.asObservable();
+  constructor(private searchDataService: SearchDataService) {}
 
-  /** Constructor**/
-  constructor(private readonly searchDataService: SearchDataService) {}
-
-  /** Public methods **/
-  loadSearch(): void {
-    this.searchDataService.loadSearch().subscribe({
-      next: (searchResponse) => {
-        this.searchSubject.next(searchResponse);
+  load(): void {
+    this.searchDataService.load().subscribe({
+      next: (searchList) => {
+        this.searchListSubject.next(searchList);
       },
       error: (err) => {
         console.error('err', err);

@@ -1,9 +1,10 @@
-/* Start main reset style*/
 * {
-  box-sizing: border-box;
+  box-sizing: border-box;  
   text-rendering: optimizeLegibility !important;
-  -webkit-font-smoothing: antialiased !important;
+  -webkit-font-smoothing: antialiased !important;  
+  scroll-behavior: smooth;
 }
+
 body,
 html {
   height: 100%;
@@ -38,67 +39,16 @@ td {
   font-size: $font-size;
   scroll-behavior: smooth;
 }
+// span{
+//   font-family: $font-family;
+// }
 ul,
 li {
   margin: $size-0;
   padding: $size-0;
   list-style: none;
 }
-.cdk-global-scrollblock {
-  overflow: auto;
-}
-/* End main reset style*/
 
-/* Start layout styles*/
-.app-l-container {
-  position: relative;
-  top: $header-height !important;
-  background: $white;
-  min-height: calc(100vh - 70px);
-  display: flex;
-}
-.app-l-body {
-  transition: ease-in all 0.2s;
-  width: 100%;
-  max-height: calc(100vh - 70px);
+.cdk-global-scrollblock{
   overflow: auto;
-  overflow-x: hidden;
-}
-.app-l-wrapper {
-  padding: $size-xx $size-0;
-}
-.app-l-body-container {
-  width: 100%;
-  overflow-y: auto;
-  max-height: calc(100vh - 70px);
-}
-.app-l-inner-rapper {
-  padding: $size-xlg;
-}
-.border-box {
-  padding: $size-xlg;
-  border: 1px solid $theme-border;
-}
-.block-section {
-  display: block;
-  width: 100%;
-}
-/* End layout styles*/
-/* Scroll to top */
-.scroll-to-top {
-  background: material-color($hive-neutral-palette, 200);
-  padding: $size-s $size-l;
-  position: fixed;
-  bottom: $size-0;
-  right: $size-xxx;
-  display: flex;
-  align-items: center;
-  transition: ease-in all 0.4s;
-  color: material-color($hive-neutral-palette, 600);
-  cursor: pointer;
-  border-radius: $border-radius-sm $border-radius-sm $size-0 $size-0;
-  z-index: 999;
-  &:hover {
-    background: material-color($hive-neutral-palette, 100);
-  }
 }

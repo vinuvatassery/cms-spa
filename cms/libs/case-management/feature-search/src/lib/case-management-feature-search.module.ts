@@ -1,23 +1,29 @@
-/** Angular **/
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-/** Modules **/
-import { CaseManagementDomainModule } from '@cms/case-management/domain';
-import { CaseManagementFeatureSearchRoutingModule } from './case-management-feature-search-routing.module';
-/** Components **/
-import { SearchPageComponent } from './containers/search-page/search-page.component';
-import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
-import { SearchComponent } from './components/search/search.component';
+import { RouterModule, Routes } from '@angular/router';
 
+import { CaseManagementDomainModule } from '@cms/case-management/domain';
+import { SearchComponent } from './search.component';
+
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { SharedUiKendoModule } from 'libs/shared/ui-kendo/src';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: SearchComponent,
+    data: { title: 'Todo' },
+  },
+];
 @NgModule({
   imports: [
     CommonModule,
-    CaseManagementFeatureSearchRoutingModule,
+    RouterModule.forChild(routes),
     CaseManagementDomainModule,
-
-    SharedUiTpaModule,
+    SharedUiCommonModule,
+    SharedUiKendoModule
   ],
-  declarations: [SearchPageComponent, SearchComponent],
+  declarations: [SearchComponent],
   exports: [SearchComponent],
 })
 export class CaseManagementFeatureSearchModule {}

@@ -1,6 +1,6 @@
 {
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
+  "root": "libs/dashboard/domain",
   "sourceRoot": "libs/dashboard/domain/src",
   "prefix": "dashboard",
   "targets": {
@@ -24,7 +24,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/dashboard/domain"],
       "options": {
-        "jestConfig": "libs/dashboard/domain/jest.config.ts",
+        "jestConfig": "libs/dashboard/domain/jest.config.js",
         "passWithNoTests": true
       }
     },

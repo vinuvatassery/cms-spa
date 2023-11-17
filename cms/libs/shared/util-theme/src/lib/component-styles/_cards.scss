@@ -1,7 +1,6 @@
-/* Card */
 .app-c-card {
   box-shadow: none !important;
-  // padding-bottom: $size-xx !important;
+  padding-bottom: $size-xx !important;
   width: 100%;
   .app-c-card-header {
     display: flex;
@@ -24,7 +23,7 @@
     }
   }
   .app-c-card-footer {
-    padding: $size-xx !important;
+    padding-top: $size-xx !important;
   }
   .app-c-card-heading {
     font-size: $font-size;
@@ -41,107 +40,6 @@
       opacity: 0.6;
       margin-right: $size-l;
       font-size: $font-size-xlg;
-    }
-  }
-  &.app-c-card--border-box {
-    box-shadow: 0px 3px 6px material-color($hive-neutral-palette, 200) !important;
-    padding: $size-xlg;
-    border: 1px solid lighten($theme-border, 5%);
-  }
-}
-/* Card in popover */
-.k-popover {
-  border: 1px solid $theme-border;
-  background: $white;
-  .app-popover-body {
-    padding: $size-0 $size-xlg;
-    .app-card-heading {
-      margin: 0 0 10px;
-    }
-    .app-card-details {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-      line-height: 20px;
-      .material-icons {
-        opacity: 0.6;
-        margin-right: 10px;
-        font-size: 20px;
-      }
-    }
-  }
-  .app-popover-header {
-    display: flex;
-    gap: 12px;
-    padding: 14px;
-    align-items: center;
-    border-top: 1px solid $theme-border;
-    background: $white;
-    h5 {
-      margin: $size-0;
-      span {
-        font-family: $font-family;
-        font-weight: normal;
-      }
-    }
-  }
-  .k-popover-body {
-    padding: $size-0;
-  }
-  .k-popover-actions {
-    margin-top: $size-0;
-  }
-}
-
-/* Card Blocks */
-.card-list-search {
-  display: flex;
-  align-items: center;
-  gap: $size-xx;
-  .input-search {
-    width: 100%;
-  }
-  .k-button {
-    height: 40px;
-  }
-}
-.card-list-block {
-  max-height: calc(100vh - 190px);
-  overflow: auto;
-  .card-list_items {
-    background: $white;
-    display: flex;
-    gap: $size-xx;
-    border-left: $size-m solid $app-primary;
-    padding: $size-xx;
-    transition: ease-in all 0.4s;
-    &:hover {
-      box-shadow: $size-0 $size-0 $size-xx $black-12;
-    }
-    &-icon {
-      font-size: $font-size-xxx;
-      width: 30px;
-      span {
-        font-size: $font-size-xxx;
-      }
-    }
-    &-details {
-      width: 100%;
-      p {
-        margin-bottom: $size-s;
-      }
-      a {
-        margin-bottom: $size-m;
-        color: $app-primary-font-color;
-        display: inline-block;
-      }
-    }
-    &-buttons {
-      width: 150px;
-      text-align: right;
-      display: flex;
-      justify-content: flex-end;
-      gap: $size-xx;
     }
   }
 }

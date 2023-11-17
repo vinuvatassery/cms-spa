@@ -1,6 +1,6 @@
 {
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
+  "root": "libs/productivity-tools/feature-todo",
   "sourceRoot": "libs/productivity-tools/feature-todo/src",
   "prefix": "productivity-tools",
   "targets": {
@@ -24,7 +24,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/productivity-tools/feature-todo"],
       "options": {
-        "jestConfig": "libs/productivity-tools/feature-todo/jest.config.ts",
+        "jestConfig": "libs/productivity-tools/feature-todo/jest.config.js",
         "passWithNoTests": true
       }
     },

@@ -17,18 +17,15 @@
                 "onlyDependOnLibsWithTags": ["*"]
               },
               {
-                "sourceTag": "domain:dashboard",
-                "onlyDependOnLibsWithTags": [
-                  "domain:dashboard",
-                  "domain:shared"
-                ]
-              },
-              {
                 "sourceTag": "domain:case-management",
                 "onlyDependOnLibsWithTags": [
                   "domain:case-management",
                   "domain:shared"
                 ]
+              },
+              {
+                "sourceTag": "domain:auth",
+                "onlyDependOnLibsWithTags": ["domain:auth", "domain:shared"]
               },
               {
                 "sourceTag": "domain:financial-management",
@@ -41,6 +38,13 @@
                 "sourceTag": "domain:productivity-tools",
                 "onlyDependOnLibsWithTags": [
                   "domain:productivity-tools",
+                  "domain:shared"
+                ]
+              },
+              {
+                "sourceTag": "domain:dashboard",
+                "onlyDependOnLibsWithTags": [
+                  "domain:dashboard",
                   "domain:shared"
                 ]
               },

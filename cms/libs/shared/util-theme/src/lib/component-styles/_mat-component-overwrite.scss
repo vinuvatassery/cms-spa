@@ -1,9 +1,41 @@
-/* Calendar */
+// Expansion panel
+.app-c-expansion-panel {
+  margin: $size-0 !important;
+  padding-bottom: $size-0;
+  border: $size-0;
+  border-bottom: 1px solid lighten($theme-border, 5%);
+  width: 100%;
+  .k-expander-header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    cursor: pointer;
+    flex-direction: row-reverse;
+    cursor: pointer;
+    padding: $size-xx $size-xlg;
+    .k-expander-indicator {
+      margin-left: $size-0;
+    }
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: $size-xx;
+      margin-left: 10px;
+      .material-icons {
+        font-size: $font-size-xl;
+      }
+    }
+  }
+  .k-expander-content {
+    padding: 0px 0 10px 24px;
+  }
+  &.k-state-focus{
+    box-shadow: none;
+  }
+}
+/*  Calendar */
 .k-calendar {
   max-width: 300px;
-  &.k-calendar-infinite {
-    max-width: 350px;
-  }
 }
 .k-calendar .k-footer .k-nav-today,
 .k-calendar .k-calendar-header .k-today {
@@ -31,37 +63,22 @@
 .k-calendar td.k-state-hover .k-link,
 .k-calendar .k-calendar-td:hover .k-link,
 .k-calendar .k-calendar-td.k-state-hover .k-link {
-  background-color: $app-primary !important;
+  background-color: material-color($hive-primary-palette, 100);
   border: 1px solid $app-primary;
   font-family: $font-family-medium;
-  color: $white !important;
-  span,
-  .k-link {
-    color: $white !important;
-    background-color: $app-primary;
-  }
+  color: $app-primary !important;
 }
 .k-calendar .k-state-selected {
   color: $white !important;
-  span,
-  .k-link {
+  span {
     color: $white !important;
-    background-color: $app-primary;
   }
   &.k-state-focused {
-    color: $white !important;
-    span,
-    .k-link {
+    span {
       color: $white !important;
-      background-color: $app-primary;
     }
   }
 }
-.k-empty.k-calendar-td {
-  height: 2px;
-  line-height: 0;
-}
-
 /* Time Picker */
 .k-timeselector {
   .k-time-header .k-time-now {
@@ -81,21 +98,15 @@
     margin-top: 0;
   }
 }
-/*Global Search*/
+// Global Search
 .global-search {
   position: relative;
   .global-search-icon {
     position: absolute;
     left: 9px;
-    top: 8px;
+    top: 9px;
+    opacity: 0.4;
     z-index: 1;
-    color: material-color($hive-neutral-palette, 800);
-  }
-  .k-input-md .k-input-inner, .k-picker-md .k-input-inner{
-    padding-left: 38px;
-  }
-  .k-icon-button{
-    min-height: 36px;
   }
   .global-search-list {
     span {
@@ -103,100 +114,11 @@
     }
   }
   .k-clear-value {
-    height: 36px;
+    height: 38px;
     padding: $size-xlg;
   }
-  &.header-search {
-    position: fixed;
-    z-index: 9;
-    max-width: 475px;
-    width: 475px;
-    left: 50%;
-    top: 10px;
-    transform: translate(-50%, 0);
-    @media (max-width: $breakpoint-xlg) {
-      min-width: 300px;
-      max-width: 300px;
-    }
-  }
 }
-
-/* Dropdown Grid*/
 .k-dropdowngrid-popup .k-footer {
   padding: $size-0;
   border-color: transparent;
-}
-.k-dropdowngrid-popup {
-  .k-list-scroller {
-    max-height: 50vh !important;
-  }
-}
-
-/* Tooltip */
-.k-tooltip {
-  background: material-color($hive-neutral-palette, 900);
-  .k-tooltip-content {
-    font-size: $font-size-s;
-  }
-  .k-callout {
-    color: material-color($hive-neutral-palette, 900);
-    display: none;
-  }
-}
-
-/* Ripple */
-.k-ripple-focus {
-  border-color: $app-primary;
-  position: relative;
-  z-index: 2;
-  &:before {
-    content: '';
-    position: absolute;
-    width: 50px;
-    height: 50px;
-    border-radius: 100%;
-    -webkit-animation: click-wave 0.8s;
-    -moz-animation: click-wave 0.8s;
-    animation: click-wave 0.8s;
-    background: material-color($hive-primary-palette, 200);
-    z-index: -1;
-    content: '';
-    display: block;
-    position: relative;
-    z-index: 100;
-    left: -15px;
-    top: -15px;
-  }
-}
-@keyframes click-wave {
-  0% {
-    height: 40px;
-    width: 40px;
-    opacity: 0.4;
-    position: relative;
-  }
-  100% {
-    height: 50px;
-    width: 50px;
-    margin-left: -2px;
-    margin-top: -2px;
-    opacity: 0;
-  }
-}
-
-/* Kendo Icons*/
-.k-icon {
-  &.k-i-edit {
-    &:before {
-      content: '\e22b';
-      font-family: 'Material Icons' !important;
-    }
-  }
-}
-/* File Upload */
-.k-upload {
-  border-color: transparent;
-  .k-dropzone {
-    border: 1px solid $theme-border;
-  }
 }

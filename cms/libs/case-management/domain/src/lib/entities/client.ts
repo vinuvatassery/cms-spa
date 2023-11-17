@@ -3,9 +3,3 @@ export interface Client {
   name: string;
   description: string;
 }
-
-export interface SpecialHandling {
-  id: number;
-  specialHandling: string;
-  answer: string;
-}

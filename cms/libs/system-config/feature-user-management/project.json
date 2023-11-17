@@ -1,6 +1,6 @@
 {
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
+  "root": "libs/system-config/feature-user-management",
   "sourceRoot": "libs/system-config/feature-user-management/src",
   "prefix": "system-config",
   "targets": {
@@ -24,7 +24,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/system-config/feature-user-management"],
       "options": {
-        "jestConfig": "libs/system-config/feature-user-management/jest.config.ts",
+        "jestConfig": "libs/system-config/feature-user-management/jest.config.js",
         "passWithNoTests": true
       }
     },

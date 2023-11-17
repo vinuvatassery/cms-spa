@@ -1,0 +1,42 @@
+{
+  "projectType": "library",
+  "root": "libs/shared/auth/feature-authentication",
+  "sourceRoot": "libs/shared/auth/feature-authentication/src",
+  "prefix": "cms",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "outputs": ["dist/libs/shared/auth/feature-authentication"],
+      "options": {
+        "project": "libs/shared/auth/feature-authentication/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/shared/auth/feature-authentication/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/shared/auth/feature-authentication/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/shared/auth/feature-authentication"],
+      "options": {
+        "jestConfig": "libs/shared/auth/feature-authentication/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/shared/auth/feature-authentication/src/**/*.ts",
+          "libs/shared/auth/feature-authentication/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

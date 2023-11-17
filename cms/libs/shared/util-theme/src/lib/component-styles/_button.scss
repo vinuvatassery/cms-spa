@@ -1,380 +1,117 @@
- .k-button {
-   text-transform: uppercase;
-   font-family: $font-family-medium;
-   border-width: $size-0;
-   padding: $size-xl $size-xlg;
-   border-radius: $border-radius-sm;
-  //  height: 32px;
-
-   &.k-primary,
-   &.k-button-solid-primary {
-     background: $app-primary;
-     background-color: $app-primary;
-     color: $white;
-     font-family: $font-family-medium;
-
-     &:hover,
-     &:active {
-       background: material-color($hive-primary-palette, 800) !important;
-       background-color: material-color($hive-primary-palette, 800) !important;
-       color: $white !important;
-     }
-
-     &.k-state-disabled {
-       background: material-color($hive-neutral-palette, 50) !important;
-       color: $black-30 !important;
-     }
-
-     &.k-outline {
-       color: $app-primary;
-       border: 1px solid;
-       border-width: 1px;
-       background: $white;
-
-       &.k-state-disabled {
-         background: $white !important;
-         color: $black-30 !important;
-         border-color: $black-12 !important;
-       }
-     }
-
-     &.k-flat {
-       background: $white;
-       color: $app-primary;
-
-       &:hover {
-         color: $app-primary;
-       }
-     }
-   }
-
-   &.k-danger-link {
-     color: material-color($hive-error-palette, 800) !important;
-     background: transparent;
-   }
-
-   &.k-primary-link {
-     color: $app-primary;
-     background: transparent !important;
-     padding: $size-0;
-     height: auto;
-   }
-
-   &.k-warn-link {
-     color: material-color($hive-warn-palette, 800) !important;
-     background: transparent !important;
-   }
-
-   &.k-flat {
-
-
-     &:hover {
-       color: $app-primary;
-     }
-   }
-
-   &.card-link-button {
-     text-decoration: underline;
-     text-transform: capitalize;
-     line-height: 16px;
-     text-align: left;
-     color: $app-primary;
-     white-space: normal;
-     font-family: $font-family-medium;
-     padding: $size-0;
-     height: auto;
-
-     &.no-ul {
-       text-decoration: none;
-     }
-   }
-
-   .material-icons {
-     display: inline-flex;
-     width: $size-xxx;
-     height: $size-xxx;
-     align-items: center;
-     justify-content: center;
-     position: relative;
-     top: -1px;
-     font-size: $font-size-xlg;
-   }
-
-   &.k-icon-button {
-     align-items: center;
-     justify-content: center;
-     display: flex;
-     padding: $size-l;
-
-     &.small-i-btn {
-       width: $size-xxxx;
-       height: $size-xxxx;
-       line-height: $size-xxxx;
-       align-items: center;
-       justify-content: center;
-       display: flex;
-
-       .material-icons {
-         margin: 0px;
-         margin-right: $size-0;
-       }
-     }
-
-     &.icon-hover-primary {
-       color: material-color($hive-neutral-palette, 600);
-
-       span {
-         color: material-color($hive-neutral-palette, 600);
-       }
-
-       &:hover {
-         color: $app-primary;
-
-         span {
-           color: $app-primary;
-         }
-       }
-     }
-   }
-
-   &.avatar-sm-btn {
-     width: $size-xxx + $size-m;
-     height: $size-xxx + $size-m;
-     min-width: $size-xxx + $size-m;
-     min-height: $size-xxx + $size-m;
-     border-radius: $border-radius-xlg;
-     padding: $size-0;
-   }
-
-   &.btn-full-no-radius {
-     width: 100%;
-     border-radius: $size-0 !important;
-     padding: $size-xx;
-     justify-content: center;
-   }
-
-   &.k-error-button {
-     background: material-color($hive-error-palette, 800);
-     background-color: material-color($hive-error-palette, 800);
-     color: $white;
-     font-family: $font-family-medium;
-
-     &.k-state-disabled {
-       background: material-color($hive-neutral-palette, 50) !important;
-       background-color: material-color($hive-neutral-palette, 50) !important;
-       color: $black-30 !important;
-     }
-   }
-
-   &.k-split-button {
-     padding: $size-0;
-
-     .btn-inner-block {
-       display: flex;
-       align-items: center;
-       gap: 10px;
-       font-size: 13px;
-       height: 100%;
-       padding: $size-l $size-xlg;
-     }
-   }
-
-   &.btn-h-primary {
-     &:hover {
-       color: $app-primary !important;
-     }
-   }
-
-   &.btn-h-warn {
-     &:hover {
-       color: material-color($hive-warn-palette, 600) !important;
-     }
-   }
-
-   &.btn-h-danger {
-     &:hover {
-       color: material-color($hive-error-palette, 800) !important;
-       opacity: 1;
-     }
-   }
-   
-   &.btn-small {
-    padding: $size-l $size-l;
-    height: 25px;
+.k-button-primary, .k-button.k-primary {
+  background: $app-primary;
+  background-color: $app-primary;
+  color: $white;
+  font-family: $font-family-medium;
+  &:hover, &:active{
+    background: material-color( $hive-primary-palette, 800) !important;
+    background-color: material-color( $hive-primary-palette, 800) !important;
+    color: $white!important;
   }
- }
+}
+.k-primary{
+  &.k-outline{
+    color: $app-primary;
+    border:1px solid;
+    border-width: 1px;
+    background: $white;
+  }
+}
 
- .k-fab {
-   &.k-fab-solid-primary {
-     background: $app-primary;
-     background-color: $app-primary;
-     color: $white;
-
-     &:hover,
-     &:active {
-       background: material-color($hive-primary-palette, 800) !important;
-       background-color: material-color($hive-primary-palette, 800) !important;
-       color: $white !important;
-     }
-
-     &.k-state-disabled {
-       background: material-color($hive-neutral-palette, 50) !important;
-       color: $black-30 !important;
-     }
-   }
- }
-
-
- .k-button-group {
-   box-shadow: none;
-
-   .k-toggle-button {
-     background: material-color($hive-neutral-palette, 200);
-     text-transform: capitalize;
-
-     &.k-state-selected {
-       color: $white;
-       background: $app-primary;
-     }
-   }
-
-   &.full-width {
-     width: 100%;
-
-     .k-button {
-       width: 100%;
-     }
-   }
- }
-
- .btn-ico-spacer {
-   height: 5px;
-   width: 5px;
-   display: inline-block;
- }
-
- /*Split Button*/
- .k-split-button {
-   box-shadow: none;
-
-   .k-button {
-     background: $app-primary;
-     color: $white;
-
-     &.k-button-icon {
-       border-left: 1px solid $white;
-       margin-left: 0px;
-
-       span {
-         color: $white;
-       }
-     }
-   }
- }
-
- .app-c-split-button {
-   padding: $size-0;
-   max-width: 215px;
-
-   .k-list .k-item,
-   .k-list-optionlabel {
-     padding: $size-0;
-     background: $white;
-
-     .k-button {
-       padding: $size-xl $size-xlg;
-       justify-content: flex-start;
-       width: 100%;
-     }
-   }
- }
-
-
- // .k-dropdown-button{
- //   .k-button{
- //     box-shadow: none;
- //   }
- // }
-
- //  .more-action-dropdown, .TableActionPopup {
- //    .k-menu-link {
- //      padding: 8px;
- //      padding-inline-end: 8px;
- //    }
-
- //    .notification-list_more-btn-wrap {
- //      .k-button {
- //        display: block;
- //        width: 100%;
-
- //        .k-button-text {
- //          display: flex;
- //          align-items: center;
- //          justify-content: flex-start;
- //          gap: 10px;
- //        }
- //      }
- //    }
-
- //  }
-
-
- .k-button {
-   &.k-button-solid-base {
-     box-shadow: none;
-   }
-
-   .k-button-text {
-     display: inline-flex;
-     align-items: center;
-
-   }
- }
-
-.app-dropdown-action{
-  &.k-dropdown-button{
-    .k-icon-button{
-      &.k-button-solid-base{
-        background: transparent;
+.k-button {
+  text-transform: uppercase;
+  font-family: $font-family-medium;
+  border-width: $size-0;
+  padding:$size-xl $size-xlg;
+  border-radius: $border-radius-sm;
+  &.k-flat{
+    &:hover{
+      color: $app-primary;
+    }
+  }
+  &.card-link-button {
+    text-decoration: underline;
+    text-transform: capitalize;
+    padding: $size-m 1px;
+    line-height: 16px;
+    font-family: $font-family;
+    text-align: left;
+    &.no-ul{
+      text-decoration: none;
+    }
+    span{
+      font-family: $font-family;
+    }
+  }
+  .material-icons{
+    display: inline-flex;
+    width: $size-xxx;
+    height: $size-xxx;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    top: -1px;
+    font-size: $font-size-xlg;
+  }
+  &.k-icon-button {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    &.small-i-btn {
+      width: $size-xxxx;
+      height: $size-xxxx;
+      line-height: $size-xxxx;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      .material-icons{
+        margin: 0px;
+        margin-right: $size-0;
       }
     }
   }
 
+  &.avatar-sm-btn {
+    width: $size-xxx + $size-m;
+    height: $size-xxx + $size-m;
+    min-width: $size-xxx + $size-m;
+    min-height: $size-xxx + $size-m;
+    border-radius: $border-radius-xlg;
+    padding: $size-0;
+  }
+  &.btn-full-no-radius {
+    width: 100%;
+    border-radius: $size-0 !important;
+    padding: $size-xx;
+    justify-content: center;
+  }
 }
- .app-dropdown-action-list {
-  .k-menu-group {
-    padding: 8px;
-   }
-   .k-menu-item {
-    background: transparent;
-    &:hover{
-      background: transparent;
-     } 
-       .k-menu-link {
-        padding: 4px;
-        padding-inline-end: 0;
-        background: transparent;
-        text-transform: capitalize;
-         &:hover{
-          background: transparent;
-         } 
-         .k-button {
-           width: 100%;
-           text-transform: capitalize;
-           justify-content: flex-start;
-          .k-button-text{
-            
-          }
-           .k-menu-group {
-            padding: 8px;
-           }
-           label{
-            cursor: pointer;
-            margin-left: 8px;
-           }
-         }
-       }
-    
+.btn-ico-spacer {
+  height: 5px;
+  width: 5px;
+  display: inline-block;
+}
 
-   }
- }
+// Split Button
+.k-split-button{
+  .k-button{
+    background: $app-primary;
+    color: $white;
+    &.k-button-icon{
+      border-left: 1px solid $white;
+      span{
+        color: $white;
+      }
+    }
+  }
+}
+.splitButtonCaseSave{
+  padding: $size-0;
+  .k-list .k-item, .k-list-optionlabel{
+      padding:  $size-0;
+      background: $white;
+      .k-button{
+          padding: $size-xl ($size-xxx - 2)
+      }
+  }
+}

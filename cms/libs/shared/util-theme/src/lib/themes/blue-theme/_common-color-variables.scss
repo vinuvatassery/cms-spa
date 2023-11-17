@@ -1,18 +1,7 @@
-$white: #ffffff;
-$black: #000000;
-$black-3: #333333;
-$black-6: #666666;
-$black-9: #999999;
-$black-e: #eeeeee;
-$black-12: rgb(0 0 0 / 12%);
-$black-30: rgb(0 0 0 / 30%);
-$theme-border: $black-12;
-$app-primary-font-color: $black-3;
+$white:              #ffffff;
+$black:              #000000;
+$black-3:            #333333;
 
-/* Role Identifier Color Variables*/
-$role-color-1: #f56f7b;
-$role-color-2: #0087e0;
-$role-color-3: #9563b0;
-$role-color-4: #dea41d;
-$role-color-5: #fd8d5a;
-$role-color-6: #57bac3;
+$theme-border:       #0000001F;
+
+$app-primary-font-color: $black-3;

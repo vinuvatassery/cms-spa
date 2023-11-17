@@ -18,84 +18,19 @@
       "@cms/case-management/domain": [
         "libs/case-management/domain/src/index.ts"
       ],
-      "@cms/case-management/feature-authorization": [
-        "libs/case-management/feature-authorization/src/index.ts"
-      ],
-      "@cms/case-management/feature-case": [
-        "libs/case-management/feature-case/src/index.ts"
-      ],
-      "@cms/case-management/feature-cer-tracking": [
-        "libs/case-management/feature-cer-tracking/src/index.ts"
-      ],
       "@cms/case-management/feature-client": [
         "libs/case-management/feature-client/src/index.ts"
-      ],
-      "@cms/case-management/feature-client-eligibility": [
-        "libs/case-management/feature-client-eligibility/src/index.ts"
-      ],
-      "@cms/case-management/feature-communication": [
-        "libs/case-management/feature-communication/src/index.ts"
-      ],
-      "@cms/case-management/feature-contact": [
-        "libs/case-management/feature-contact/src/index.ts"
-      ],
-      "@cms/case-management/feature-dental-insurance": [
-        "libs/case-management/feature-dental-insurance/src/index.ts"
-      ],
-      "@cms/case-management/feature-document": [
-        "libs/case-management/feature-document/src/index.ts"
-      ],
-      "@cms/case-management/feature-drug": [
-        "libs/case-management/feature-drug/src/index.ts"
-      ],
-      "@cms/case-management/feature-employment": [
-        "libs/case-management/feature-employment/src/index.ts"
-      ],
-      "@cms/case-management/feature-family-and-dependent": [
-        "libs/case-management/feature-family-and-dependent/src/index.ts"
-      ],
-      "@cms/case-management/feature-health-insurance": [
-        "libs/case-management/feature-health-insurance/src/index.ts"
-      ],
-      "@cms/case-management/feature-healthcare-provider": [
-        "libs/case-management/feature-healthcare-provider/src/index.ts"
-      ],
-      "@cms/case-management/feature-home": [
-        "libs/case-management/feature-home/src/index.ts"
-      ],
-      "@cms/case-management/feature-income": [
-        "libs/case-management/feature-income/src/index.ts"
-      ],
-      "@cms/case-management/feature-management": [
-        "libs/case-management/feature-management/src/index.ts"
       ],
       "@cms/case-management/feature-search": [
         "libs/case-management/feature-search/src/index.ts"
       ],
-      "@cms/case-management/feature-smoking-cessation": [
-        "libs/case-management/feature-smoking-cessation/src/index.ts"
-      ],
-      "@cms/case-management/feature-verification": [
-        "libs/case-management/feature-verification/src/index.ts"
-      ],
       "@cms/dashboard/domain": ["libs/dashboard/domain/src/index.ts"],
-      "@cms/dashboard/feature-dashboard": [
-        "libs/dashboard/feature-dashboard/src/index.ts"
+      "@cms/dashboard/feature-widget": [
+        "libs/dashboard/feature-widget/src/index.ts"
       ],
-      "@cms/dashboard/feature-home": [
-        "libs/dashboard/feature-home/src/index.ts"
-      ],
+      "@cms/dashboard/ui": ["libs/dashboard/ui/src/index.ts"],
       "@cms/financial-management/domain": [
         "libs/financial-management/domain/src/index.ts"
-      ],
-      "@cms/financial-management/feature-expense": [
-        "libs/financial-management/feature-expense/src/index.ts"
-      ],
-      "@cms/financial-management/feature-home": [
-        "libs/financial-management/feature-home/src/index.ts"
-      ],
-      "@cms/financial-management/feature-income": [
-        "libs/financial-management/feature-income/src/index.ts"
       ],
       "@cms/financial-management/feature-vendor": [
         "libs/financial-management/feature-vendor/src/index.ts"
@@ -103,47 +38,19 @@
       "@cms/productivity-tools/domain": [
         "libs/productivity-tools/domain/src/index.ts"
       ],
-      "@cms/productivity-tools/feature-approval": [
-        "libs/productivity-tools/feature-approval/src/index.ts"
-      ],
-      "@cms/productivity-tools/feature-direct-message": [
-        "libs/productivity-tools/feature-direct-message/src/index.ts"
-      ],
-      "@cms/productivity-tools/feature-event-log": [
-        "libs/productivity-tools/feature-event-log/src/index.ts"
-      ],
-      "@cms/productivity-tools/feature-home": [
-        "libs/productivity-tools/feature-home/src/index.ts"
-      ],
-      "@cms/productivity-tools/feature-notification": [
-        "libs/productivity-tools/feature-notification/src/index.ts"
-      ],
       "@cms/productivity-tools/feature-todo": [
         "libs/productivity-tools/feature-todo/src/index.ts"
       ],
+      "@cms/shared/auth/domain": ["libs/shared/auth/domain/src/index.ts"],
+      "@cms/shared/auth/feature-authentication": [
+        "libs/shared/auth/feature-authentication/src/index.ts"
+      ],
       "@cms/shared/ui-common": ["libs/shared/ui-common/src/index.ts"],
-      "@cms/shared/ui-tpa": ["libs/shared/ui-tpa/src/index.ts"],
-      "@cms/shared/util-common": ["libs/shared/util-common/src/index.ts"],
+      "@cms/shared/ui-kendo": ["libs/shared/ui-kendo/src/index.ts"],
       "@cms/shared/util-core": ["libs/shared/util-core/src/index.ts"],
       "@cms/shared/util-oidc": ["libs/shared/util-oidc/src/index.ts"],
-      "@cms/shared/util-signalr": ["libs/shared/util-signalr/src/index.ts"],
       "@cms/shared/util-theme": ["libs/shared/util-theme/src/index.ts"],
       "@cms/system-config/domain": ["libs/system-config/domain/src/index.ts"],
-      "@cms/system-config/feature-client-profile-management": [
-        "libs/system-config/feature-client-profile-management/src/index.ts"
-      ],
-      "@cms/system-config/feature-home": [
-        "libs/system-config/feature-home/src/index.ts"
-      ],
-      "@cms/system-config/feature-housing-coordination-management": [
-        "libs/system-config/feature-housing-coordination-management/src/index.ts"
-      ],
-      "@cms/system-config/feature-lov": [
-        "libs/system-config/feature-lov/src/index.ts"
-      ],
-      "@cms/system-config/feature-template-management": [
-        "libs/system-config/feature-template-management/src/index.ts"
-      ],
       "@cms/system-config/feature-user-management": [
         "libs/system-config/feature-user-management/src/index.ts"
       ]

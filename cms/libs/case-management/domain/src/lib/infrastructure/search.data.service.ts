@@ -1,38 +1,34 @@
-/** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-/** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
-/** Entities **/
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { Search } from '../entities/search';
+
 @Injectable({ providedIn: 'root' })
 export class SearchDataService {
-  /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  // constructor(private http: HttpClient) {}
+  constructor() {}
 
-  /** Public methods **/
-  loadSearch(): Observable<Search[]> {
+  load(): Observable<Search[]> {
+    // Uncomment if needed
+    /*
+        const url = '...';
+        const params = new HttpParams().set('param', 'value');
+        const headers = new HttpHeaders().set('Accept', 'application/json');
+        return this.http.get<Search[]>(url, {params, headers});
+        */
+
     return of([
+      { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
       {
-        id: 10001,
-        name: 'Donna Summer',
-        dob: '09-01-1956',
-        ssn: '456-78-9876',
+        id: 2,
+        name: 'At vero eos',
+        description: 'At vero eos et accusam et justo duo dolores',
       },
       {
-        id: 10002,
-        name: 'David Miller',
-        dob: '10-11-1956',
-        ssn: '156-78-4576',
+        id: 3,
+        name: 'Duis autem',
+        description: 'Duis autem vel eum iriure dolor in hendrerit',
       },
-      {
-        id: 10003,
-        name: 'Philip David',
-        dob: '11-01-1996',
-        ssn: '766-08-5676',
-      },
-      { id: 10004, name: 'Mike Flex', dob: '12-23-1956', ssn: '456-78-9876' },
     ]);
   }
 }

@@ -1,0 +1,468 @@
+<!-- App Header Section -->
+<section class="app-l-header" kendoRippleContainer>
+    <!-- Logo Section -->
+    <div class="header-logo">
+      <img src="https://www.oregon.gov/portalimages/logos/oha.png" alt="Logo" />
+    </div>
+  
+    <!-- Global Search Section -->
+    <div class="global-search">
+      <span class="material-icons global-search-icon">search</span>
+      <kendo-multicolumncombobox [data]="products" textField="name" valueField="id"
+        placeholder="Search client Name, Member ID or SSN">
+        <kendo-combobox-column [width]="250">
+          <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+            <span class="pr-1">{{ dataItem.name }}</span> <span class="pr-1 text-muted">ID {{ dataItem.id }}</span> <span
+              class="pr-1 text-muted">DOB {{ dataItem.dob }}</span>
+            <span class="text-muted">SSN {{ dataItem.ssn }}</span>
+          </ng-template>
+        </kendo-combobox-column>
+      </kendo-multicolumncombobox>
+    </div>
+  
+    <!-- Right Menu Section -->
+    <div class="header-menu">
+      <!-- Forms & Documents -->
+      <span class="header-menu_notifications">
+        <button kendoButton icon="attachment" look="flat" (click)="openAttachment()" class="header-buttons"></button>
+      </span>
+  
+      <!-- Notifications -->
+      <span class="header-menu_notifications ml-1 mr-1">
+        <button kendoButton #anchor (click)="toggle()" look="flat" class="header-buttons user-button">
+          <span class="material-icons">notifications</span>
+          <span class="notification-badge">0</span>
+        </button>
+        <kendo-popup #popup [anchor]="$any(anchor)" popupClass="content" *ngIf="show" popupClass="notification-inner">
+          <div class="app-c-card">
+  
+            <!-- If no notifications -->
+            <div class="no-notification-container" hidden>
+              <span class="material-icons">notifications_off</span>
+              <p>No Notifications</p>
+            </div>
+  
+            <!-- Notification List -->
+            <ul class="notification-list">
+              <li class="notification-list_items message-type-notification">
+                <div class="notification-type-icon">
+                  <span class="material-icons">alarm</span>
+                </div>
+                <div class="notification-list_details">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod et ligula luctus</p>
+                  <p class="text-muted">09/30/2020</p>
+                </div>
+                <div class="notification-list_more">
+                  <kendo-dropdownbutton [data]="data" look="bare" class="header-buttons"
+                    [popupSettings]="{ popupClass: popupClass1, animate: true }">
+                    <!-- <button kendoButton icon="more-vertical" look="flat"></button> -->
+                    <span class="material-icons">more_vert</span>
+                    <ng-template kendoDropDownButtonItemTemplate>
+                      <div class="notification-list_more-btn-wrap">
+                        <button kendoButton look="flat">
+                          <span class="material-icons">done</span> Done
+                        </button>
+                        <button kendoButton look="flat">
+                          <span class="material-icons">edit</span> Edit
+                        </button>
+                        <button kendoButton look="flat">
+                          <span class="material-icons">delete</span> Delete
+                        </button>
+                      </div>
+                    </ng-template>
+                  </kendo-dropdownbutton>
+                </div>
+              </li>
+              <li class="notification-list_items message-type-notification">
+                <div class="notification-type-icon">
+                  <span class="material-icons">alarm</span>
+                </div>
+                <div class="notification-list_details">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod et ligula luctus</p>
+                  <p class="text-muted">09/30/2020</p>
+                </div>
+              </li>
+              <li class="notification-list_items message-type-reminder">
+                <div class="notification-type-icon">
+                  <span class="material-icons">notifications</span>
+                </div>
+                <div class="notification-list_details">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod et ligula luctus</p>
+                  <p class="text-muted">09/30/2020</p>
+                </div>
+              </li>
+              <li class="notification-list_items message-type-reminder">
+                <div class="notification-type-icon">
+                  <span class="material-icons">notifications</span>
+                </div>
+                <div class="notification-list_details">
+                  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod et ligula luctus</p>
+                  <p class="text-muted">09/30/2020</p>
+                </div>
+              </li>
+            </ul>
+  
+            <!-- Notification Footer Buttons -->
+            <div class="notification-footer">
+              <button kendoButton class="text-t-normal text-bold" look="flat">View All Notifications</button>
+              <button kendoButton look="flat" icon="" *ngIf="!opened" (click)="open()">
+                <span class="material-icons">add_alarm</span>
+              </button>
+            </div>
+          </div>
+        </kendo-popup>
+      </span>
+  
+      <!-- User Profile -->
+      <span class="header-menu_profile">
+        <kendo-dropdownbutton [data]="data" look="bare" class="header-buttons user-button"
+          [popupSettings]="{ popupClass: popupClass, animate: true }">
+          <div class="app-c-avatar">
+            <!-- <img src="../assets/images/avatar-1.png" alt="Profile Avatar" class="profile-avatar" hidden> -->
+            <span class="profile-text-avatar">JS</span>
+          </div>
+          <ng-template kendoDropDownButtonItemTemplate>
+            <div class="app-c-card">
+              <div class="app-c-card-header card-header-border-bottom">
+                <div class="app-c-avatar avatar-lg">
+                  <!-- <img src="../assets/images/avatar-1.png" alt="Profile Avatar" class="profile-avatar" hidden> -->
+                  <span class="profile-text-avatar">JS</span>
+                </div>
+                <div class="app-c-card-header-title">
+                  <h3 class="card-mainTitle">John Samuel</h3>
+                  <p class="card-subTitle">Program coordinator</p>
+                </div>
+              </div>
+              <div class="app-c-card-footer">
+                <button look="flat" kendoButton>
+                  <span class="material-icons">
+                    settings
+                  </span>
+                  <span>Account Settings</span>
+                </button>
+                <button look="flat" kendoButton>
+                  <span class="material-icons">
+                    logout
+                  </span>
+                  <span>Logout</span>
+                </button>
+              </div>
+            </div>
+          </ng-template>
+        </kendo-dropdownbutton>
+      </span>
+    </div>
+  
+  </section>
+  
+  <!-- App Body Section -->
+  <section class="app-l-container" kendoRippleContainer>
+    <!-- App Sidebar Section -->
+    <section mode="side" #sidenav opened position="start" class="app-l-sidebar" [class.menuToggled]="classToggled">
+      <div class="drawer-inner-container">
+        <div class="sidebar-hamburger">
+          <button (click)="toggleField()" class="sidebar-hamburger_button" kendoButton look="flat">
+            <span class="material-icons sidebar-hamburger_icon-right">
+              chevron_right
+            </span>
+            <span class="material-icons sidebar-hamburger_icon-left">
+              chevron_left
+            </span>
+          </button>
+        </div>
+        <ul class="sidebar-menu">
+          <li class="sidebar-menu_items active-item" [routerLink]="['/']">
+            <span class="material-icons sidebar-menu_icon"> home </span>
+            <label class="sidebar-menu_label">Home</label>
+          </li>
+          <li class="sidebar-menu_items" [routerLink]="['/case-management']">
+            <span class="material-icons sidebar-menu_icon"> people </span>
+            <label class="sidebar-menu_label">Cases</label>
+          </li>
+          <li class="sidebar-menu_items" [routerLink]="['/productivity-tools']">
+            <span class="material-icons sidebar-menu_icon"> task </span>
+            <label class="sidebar-menu_label">Productivity Tools <span class="sidebar-menu_label-badge">5</span>
+            </label>
+          </li>
+          <li class="sidebar-menu_items" [routerLink]="['/financial-management']">
+            <span class="material-icons sidebar-menu_icon">
+              monetization_on
+            </span>
+            <label class="sidebar-menu_label">Financial Management</label>
+          </li>
+          <li class="sidebar-menu_items" [routerLink]="['/system-config']">
+            <span class="material-icons sidebar-menu_icon"> settings </span>
+            <label class="sidebar-menu_label">System Configuration</label>
+          </li>
+        </ul>
+  
+        <!-- Active Sessions -->
+        <div class="sidebar-active-session-container">
+          <button class="active-menu-toggled" kendoButton look="flat">
+            <span class="material-icons">
+              bookmark
+            </span>
+          </button>
+          <div class="sidebar-active-sessions">
+            <div class="active-session_header">
+              <span class="ash-main">Active Sessions</span><span class="ash-sub">6 of 10</span>
+            </div>
+            <div class="active-session_items item-active">
+              <button kendoButton icon="close" look="flat" class="active-session_items-close"></button>
+              <h5 class="active-session_items-heading">Donna Summer</h5>
+              <p class="active-session_items-details">ID 1000655</p>
+            </div>
+            <div class="active-session_items">
+              <button kendoButton icon="close" look="flat" class="active-session_items-close"></button>
+              <h5 class="active-session_items-heading">Silva Denmark</h5>
+              <p class="active-session_items-details">ID 1000622</p>
+            </div>
+            <div class="active-session_items">
+              <button kendoButton icon="close" look="flat" class="active-session_items-close"></button>
+              <h5 class="active-session_items-heading">Sony Jeff</h5>
+              <p class="active-session_items-details">ID 1000633</p>
+            </div>
+          </div>
+        </div>
+  
+      </div>
+    </section>
+  
+    <!-- App Page Contents Section / Router-->
+    <section class="app-l-body-container">
+      <router-outlet></router-outlet>
+    </section>
+  </section>
+  
+  <!--  Forms and Attachments Dialog -->
+  <kendo-dialog kendoRippleContainer *ngIf="openedAttachment" (close)="closeAttachment()"
+    class="app-c-modal app-c-modal-lg">
+    <kendo-dialog-titlebar>
+      <span class="title-icons k-icon k-i-attachment mr-1"></span> Forms and Attachments
+    </kendo-dialog-titlebar>
+    <section>
+      <kendo-expansionpanel class="app-c-expansion-panel">
+        <ng-template kendoExpansionPanelTitleDirective>
+          <div class="header-content">
+            <span class="material-icons">folder</span>
+            <span>Folder Name 1</span>
+          </div>
+        </ng-template>
+        <div class="app-c-attachments">
+          <ul>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+          </ul>
+        </div>
+      </kendo-expansionpanel>
+      <kendo-expansionpanel class="app-c-expansion-panel">
+        <ng-template kendoExpansionPanelTitleDirective>
+          <div class="header-content">
+            <span class="material-icons">folder</span>
+            <span>Folder Name 2</span>
+          </div>
+        </ng-template>
+        <div class="app-c-attachments">
+          <ul>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+          </ul>
+        </div>
+      </kendo-expansionpanel>
+      <kendo-expansionpanel class="app-c-expansion-panel">
+        <ng-template kendoExpansionPanelTitleDirective>
+          <div class="header-content">
+            <span class="material-icons">folder</span>
+            <span>Folder Name 3</span>
+          </div>
+        </ng-template>
+        <div class="app-c-attachments">
+          <ul>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+            <li>
+              <span class="attachments-buttons-wrap">
+                <button kendoButton look="flat">
+                  <span class="material-icons">file_download</span>
+                </button>
+                <button kendoButton look="flat">
+                  <span class="material-icons">open_in_new</span>
+                </button>
+                <span>3.1.1_FDD_Module_Client_C.1_v1.4.pdf</span> <span class="text-muted file-size">2MB</span>
+              </span>
+              <span class="attachments-date">Last Updated 10/10/2021</span>
+            </li>
+          </ul>
+        </div>
+      </kendo-expansionpanel>
+    </section>
+  </kendo-dialog>
+  
+  <!--  Create New Reminder Dialog -->
+  <kendo-dialog kendoRippleContainer *ngIf="opened" (close)="close()" class="app-c-modal app-c-modal-md">
+    <kendo-dialog-titlebar>
+      Create New Reminder for Donna
+    </kendo-dialog-titlebar>
+    <section>
+      <p class="text-muted">All fields are required unless otherwise started.</p>
+      <section>
+        <div class="flex-row">
+          <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Date of Birth">
+              <kendo-datepicker format="dd/mm/yyyy" formatPlaceholder="formatPattern" [calendarType]="'classic'">
+              </kendo-datepicker>
+            </kendo-floatinglabel>
+          </div>
+          <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Time (Optional)">
+              <kendo-timepicker format="hh:mm" formatPlaceholder="formatPattern"></kendo-timepicker>
+            </kendo-floatinglabel>
+          </div>
+          <div class="flex-col">
+            <kendo-floatinglabel text="Description">
+              <kendo-textarea name="Description" [rows]="5" [cols]="40">
+              </kendo-textarea>
+              <kendo-formhint class="justify-content-end">0/200</kendo-formhint>
+            </kendo-floatinglabel>
+          </div>
+          <div class="flex-col mb-1">
+            <input type="checkbox" id="terms" kendoCheckBox />
+            <label class="k-checkbox-label" for="terms">Add to Outlook Calendar</label>
+          </div>
+        </div>
+      </section>
+    </section>
+    <kendo-dialog-actions>
+      <section class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline">Cancel</button>
+        <button kendoButton [primary]="true">Create</button>
+      </section>
+    </kendo-dialog-actions>
+  </kendo-dialog>
+  

@@ -1,0 +1,28 @@
+{
+  "root": "apps/productivity-tools-e2e",
+  "sourceRoot": "apps/productivity-tools-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/productivity-tools-e2e/cypress.json",
+        "devServerTarget": "productivity-tools:serve:development"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "productivity-tools:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/productivity-tools-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["productivity-tools"]
+}

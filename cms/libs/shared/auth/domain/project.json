@@ -1,0 +1,42 @@
+{
+  "projectType": "library",
+  "root": "libs/shared/auth/domain",
+  "sourceRoot": "libs/shared/auth/domain/src",
+  "prefix": "auth",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:ng-packagr-lite",
+      "outputs": ["dist/libs/shared/auth/domain"],
+      "options": {
+        "project": "libs/shared/auth/domain/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/shared/auth/domain/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/shared/auth/domain/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/shared/auth/domain"],
+      "options": {
+        "jestConfig": "libs/shared/auth/domain/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/shared/auth/domain/src/**/*.ts",
+          "libs/shared/auth/domain/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": ["domain:auth", "type:domain-logic"]
+}

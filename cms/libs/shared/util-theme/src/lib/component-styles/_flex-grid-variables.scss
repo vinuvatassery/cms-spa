@@ -1,0 +1,14 @@
+$flex-box-gap: $size-xlg;
+$flex-row-width: 100%;
+$flex-col-width-1: 8.33333333333%;
+$flex-col-width-2: 16.66666666666667%;
+$flex-col-width-3: 25%;
+$flex-col-width-4: 33.33333333333333%;
+$flex-col-width-5: $flex-row-width - ($flex-col-width-4 + $flex-col-width-3);
+$flex-col-width-6: $flex-col-width-3 * 2;
+$flex-col-width-7: $flex-row-width - $flex-col-width-5;
+$flex-col-width-8: $flex-row-width - $flex-col-width-4;
+$flex-col-width-9: $flex-row-width - $flex-col-width-3;
+$flex-col-width-10: $flex-row-width - $flex-col-width-2;
+$flex-col-width-11: $flex-row-width - $flex-col-width-1;
+$flex-col-width-12: $flex-row-width;

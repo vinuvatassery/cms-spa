@@ -1,6 +1,6 @@
 {
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
+  "root": "libs/productivity-tools/domain",
   "sourceRoot": "libs/productivity-tools/domain/src",
   "prefix": "productivity-tools",
   "targets": {
@@ -24,7 +24,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/productivity-tools/domain"],
       "options": {
-        "jestConfig": "libs/productivity-tools/domain/jest.config.ts",
+        "jestConfig": "libs/productivity-tools/domain/jest.config.js",
         "passWithNoTests": true
       }
     },

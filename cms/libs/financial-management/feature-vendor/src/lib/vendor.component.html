@@ -1,0 +1,9 @@
+<h1>financial-management-vendor</h1>
+
+<table class="table">
+  <tr *ngFor="let vendor of vendorList$ | async">
+    <td>{{ vendor.id }}</td>
+    <td>{{ vendor.name }}</td>
+    <td>{{ vendor.description }}</td>
+  </tr>
+</table>

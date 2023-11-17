@@ -1,0 +1,9 @@
+<h1>productivity-tools-todo</h1>
+
+<table class="table">
+  <tr *ngFor="let todo of todoList$ | async">
+    <td>{{ todo.id }}</td>
+    <td>{{ todo.name }}</td>
+    <td>{{ todo.description }}</td>
+  </tr>
+</table>

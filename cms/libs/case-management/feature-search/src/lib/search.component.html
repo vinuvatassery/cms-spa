@@ -1,0 +1,11 @@
+<h1>case-management-search</h1>
+<button>Warn</button>
+<button>Primary</button>
+
+<table class="table">
+  <tr *ngFor="let search of searchList$ | async">
+    <td>{{ search.id }}</td>
+    <td>{{ search.name }}</td>
+    <td>{{ search.description }}</td>
+  </tr>
+</table>

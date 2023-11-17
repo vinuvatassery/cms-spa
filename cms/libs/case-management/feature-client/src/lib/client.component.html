@@ -1,0 +1,9 @@
+<h1>case-management-client</h1>
+
+<table class="table">
+  <tr *ngFor="let client of clientList$ | async">
+    <td>{{ client.id }}</td>
+    <td>{{ client.name }}</td>
+    <td>{{ client.description }}</td>
+  </tr>
+</table>

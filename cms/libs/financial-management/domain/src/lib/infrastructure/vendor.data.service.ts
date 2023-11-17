@@ -1,19 +1,22 @@
-/** Angular **/
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-/** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
-import { of } from 'rxjs/internal/observable/of';
-/** Entities **/
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { Vendor } from '../entities/vendor';
 
 @Injectable({ providedIn: 'root' })
 export class VendorDataService {
-  /** Constructor **/
-  constructor(private readonly http: HttpClient) {}
+  // constructor(private http: HttpClient) {}
+  constructor() {}
 
-  /** Public methods **/
-  loadVendors(): Observable<Vendor[]> {
+  load(): Observable<Vendor[]> {
+    // Uncomment if needed
+    /*
+        const url = '...';
+        const params = new HttpParams().set('param', 'value');
+        const headers = new HttpHeaders().set('Accept', 'application/json');
+        return this.http.get<Vendor[]>(url, {params, headers});
+        */
+
     return of([
       { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
       {

@@ -1,42 +1,30 @@
 .text-muted {
-  color: $black-6;
+  color: material-color( $hive-neutral-palette, 600);
 }
-.bold-text,
-.text-bold,
-strong,
-b {
+.bold-text, .text-bold, strong, b {
   font-family: $font-family-bold;
 }
-.normal-text,
-.text-normal {
+.normal-text, .text-normal {
   font-family: $font-family;
-  font-weight: normal;
 }
-.text-primary {
+.text-primary{
   color: $app-primary;
 }
-.text-red-dark {
-  color: material-color($hive-error-palette, 900);
-}
-.text-canyon-dark {
-  color: material-color($hive-canyon-palette, 900);
-}
-.text-underline {
+.text-underline{
   text-decoration: underline;
 }
-.on-hover-t-primary {
-  &:hover {
+.on-hover-t-primary{
+  &:hover{
     color: $app-primary;
   }
 }
 a {
   color: $app-primary;
   text-decoration: underline;
-  cursor: pointer;
   &:hover,
   &.visited,
   &:focus {
-    color: darken($app-primary, 20%);
+    color: $app-primary-darken;
   }
 }
 .text-capital {
@@ -50,7 +38,6 @@ a {
 h1 {
   font-size: $font-size-xxx !important;
   font-family: $font-family-bold;
-  font-weight: normal;
 }
 .mat-h2,
 .mat-title,
@@ -59,7 +46,6 @@ h2 {
   font-family: $font-family-bold;
   display: flex;
   align-items: center;
-  font-weight: normal;
   &.title-md {
     font-size: $font-size-xlg !important;
   }
@@ -69,35 +55,26 @@ h2 {
 h3 {
   font-size: $font-size-xlg !important;
   font-family: $font-family-bold;
-  font-weight: normal;
 }
 .mat-h4,
 .mat-subheading-1,
 h4 {
   font-size: $font-size-l !important;
   font-family: $font-family-bold;
-  font-weight: normal;
 }
 .mat-h5,
 h5 {
   font-size: $font-size !important;
   font-family: $font-family-bold;
-  margin: $size-xx $size-0;
-  font-weight: normal;
 }
 .mat-body p,
 .mat-body-1 p,
 .mat-typography p {
   line-height: $size-xxx - $size-s;
 }
-.auto-group-heading {
-  margin: $size-xl $size-xlg !important;
+.auto-group-heading{
+  margin: $size-xl $size-xlg!important;
 }
-.mw-modal-p {
+.mw-modal-p{
   max-width: 550px;
-}
-.icon-size-md {
-  height: $size-xx * 2;
-  width: $size-xx * 2;
-  font-size: $font-size-xlg;
 }

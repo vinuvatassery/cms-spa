@@ -5,8 +5,8 @@
   src: local('Neue Helvetica Roman'),
     url('../assets/fonts/helvetica-neue/Helvetica Neue LT 55 Roman.woff')
       format('woff');
-  font-display: swap;
 }
+
 @font-face {
   font-family: 'Neue Helvetica Light';
   font-style: normal;
@@ -14,8 +14,8 @@
   src: local('Neue Helvetica Light'),
     url('../assets/fonts/helvetica-neue/Helvetica Neue LT 45 Light.woff')
       format('woff');
-  font-display: swap;
 }
+
 @font-face {
   font-family: 'Neue Helvetica Medium';
   font-style: normal;
@@ -23,8 +23,8 @@
   src: local('Neue Helvetica Medium'),
     url('../assets/fonts/helvetica-neue/Helvetica Neue LT 65 Medium.woff')
       format('woff');
-  font-display: swap;
 }
+
 @font-face {
   font-family: 'Neue Helvetica Bold';
   font-style: normal;
@@ -32,5 +32,4 @@
   src: local('Neue Helvetica Bold'),
     url('../assets/fonts/helvetica-neue/Helvetica Neue LT 75 Bold.woff')
       format('woff');
-  font-display: swap;
 }

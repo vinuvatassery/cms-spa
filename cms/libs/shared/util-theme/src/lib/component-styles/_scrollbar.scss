@@ -2,14 +2,16 @@
 $drawer-scrollbar-bg: #f8f8f8;
 $drawer-scrollbar-color: #cccccc;
 $drawer-scrollbar-hovered-color: darken($drawer-scrollbar-color, 15%);
-$breadcrumb-size: $size-xl;
+$bredcrumb-size: $size-xl;
+
 ::-webkit-scrollbar {
-  width: $breadcrumb-size;
-  height: $breadcrumb-size;
+  width: $bredcrumb-size;
+  height: $bredcrumb-size;
   scrollbar-width: thin;
   scrollbar-color: $drawer-scrollbar-color $drawer-scrollbar-bg;
   transition: all 300ms ease-in-out;
 }
+
 ::-webkit-scrollbar-track {
   background: $drawer-scrollbar-bg;
   transition: all 300ms ease-in-out;

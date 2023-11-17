@@ -1,6 +1,6 @@
 {
-  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
+  "root": "libs/shared/util-theme",
   "sourceRoot": "libs/shared/util-theme/src",
   "prefix": "theme",
   "targets": {
@@ -24,7 +24,7 @@
       "executor": "@nrwl/jest:jest",
       "outputs": ["coverage/libs/shared/util-theme"],
       "options": {
-        "jestConfig": "libs/shared/util-theme/jest.config.ts",
+        "jestConfig": "libs/shared/util-theme/jest.config.js",
         "passWithNoTests": true
       }
     },

@@ -1,28 +1,20 @@
-/** Angular **/
 import { Injectable } from '@angular/core';
-/** External libraries **/
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-/** Entities **/
+import { BehaviorSubject } from 'rxjs';
+
 import { Vendor } from '../entities/vendor';
-/** Data services **/
 import { VendorDataService } from '../infrastructure/vendor.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class VendorFacade {
-  /** Private properties **/
-  private vendorsSubject = new BehaviorSubject<Vendor[]>([]);
+  private vendorListSubject = new BehaviorSubject<Vendor[]>([]);
+  vendorList$ = this.vendorListSubject.asObservable();
 
-  /** Public properties **/
-  vendors$ = this.vendorsSubject.asObservable();
+  constructor(private vendorDataService: VendorDataService) {}
 
-  /** Constructor **/
-  constructor(private readonly vendorDataService: VendorDataService) {}
-
-  /** Public methods **/
-  loadVendors(): void {
-    this.vendorDataService.loadVendors().subscribe({
-      next: (vendors) => {
-        this.vendorsSubject.next(vendors);
+  load(): void {
+    this.vendorDataService.load().subscribe({
+      next: (vendorList) => {
+        this.vendorListSubject.next(vendorList);
       },
       error: (err) => {
         console.error('err', err);

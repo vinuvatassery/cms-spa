@@ -7,6 +7,10 @@ $font-family-light: 'Neue Helvetica Light' !important;
 $font-family-medium: 'Neue Helvetica Medium' !important;
 $font-family-bold: 'Neue Helvetica Bold' !important;
 
+/* Box Shadow */
+$primary-box-shadow: rgb(34 41 47 / 10%);
+$secondary-box-shadow: $primary-box-shadow;
+
 /* Font Size */
 $font-size: 14px;
 $font-size-m: 13px;
@@ -19,26 +23,26 @@ $font-size-xxx: 30px;
 $base-line-height: 16px;
 
 /* Size Matrix */
-$size-0: 0px; /*0px*/
-$size-s: 2px; /*2px*/
-$size-m: $size-s + 2; /*4px*/
-$size-l: $size-m + 2; /*6px*/
-$size-xl: $size-l + 2; /*8px*/
-$size-xx: $size-xl + 2; /*10px*/
-$size-xlg: $size-xx + $size-m; /*14px*/
-$size-xxx: $size-xx * 2; /*20px*/
-$size-xxxl: $size-xxx + $size-m; /*24px*/
-$size-xxxx: $size-xx * 3; /*30px*/
+$size-0: 0px;                       /*0px*/
+$size-s: 2px;                       /*2px*/
+$size-m: $size-s + 2;               /*4px*/
+$size-l: $size-m + 2;               /*6px*/
+$size-xl: $size-l + 2;              /*8px*/
+$size-xx: $size-xl + 2;             /*10px*/
+$size-xlg: $size-xx + $size-m;      /*14px*/
+$size-xxx: $size-xx * 2;            /*20px*/
+$size-xxxx: $size-xx * 3;           /*30px*/
+
 $header-height: 70px;
 $sidebar-width: 55px;
 $logo-width: 100px;
 $logo-height: 38px;
 
 /* Border-radius */
-$border-radius-sm: $size-m; /*4px*/
-$border-radius-md: $size-xl; /*8px*/
-$border-radius-xl: $size-xxx; /*20px*/
-$border-radius-xlg: $size-xxx * 5; /*100px*/
+$border-radius-sm: $size-m;         /*4px*/
+$border-radius-md: $size-xl;        /*8px*/
+$border-radius-xl: $size-xxx;       /*20px*/
+$border-radius-xlg: $size-xxx * 5;  /*100px*/
 
 /* Breakpoints */
 $breakpoint-xxl: 1250px;

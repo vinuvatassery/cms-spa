@@ -1,12 +1,13 @@
 @import 'common-color-variables';
 @import 'variables';
+
 /* Primary Color Palette */
 $hive-primary-palette: (
   50: #e0ebf2,
   100: #b2cdde,
-  200: #7599b1,
+  200: #7facc9,
   300: #4c8ab4,
-  400: #0071bc,
+  400: #19699e,
   500: #005994,
   600: #004e83,
   700: #004776,
@@ -33,18 +34,19 @@ $hive-primary-palette: (
     A700: $white,
   ),
 );
+
 /* Warn Color Palette */
 $hive-warn-palette: (
   50: #fdf1e4,
   100: #f9dcbb,
   200: #f6c48e,
   300: #f2ac61,
-  400: #ffe6af,
+  400: #ef9b3f,
   500: #ec891d,
   600: #ea811a,
   700: #e77615,
   800: #e46c11,
-  900: #e85d3c,
+  900: #df590a,
   A100: #ffffff,
   A200: #ffe3d5,
   A400: #ffc1a2,
@@ -66,17 +68,18 @@ $hive-warn-palette: (
     A700: $white,
   ),
 );
+
 /* Neutral Color Palette */
 $hive-neutral-palette: (
-  50: #f0f0f0,
+  50: #f7f7f7,
   100: #efefef,
   200: #dbdbdb,
-  300: #f8fafb,
+  300: #b9b9b9,
   400: #b9b9b9,
   500: #bec9d9,
   600: #83888d,
   700: #54667b,
-  800: #7f7f7f,
+  800: #33414d,
   900: #1f1f1f,
   A100: #ffffff,
   A200: #ffe3d5,
@@ -99,13 +102,14 @@ $hive-neutral-palette: (
     A700: $white,
   ),
 );
+
 /* Error Color Palette */
 $hive-error-palette: (
   50: #ffe0e0,
   100: #ffe8e6,
   200: #fdcccc,
   300: #ff4d4d,
-  400: #c3372c,
+  400: #ff2626,
   500: #ff0000,
   600: #ff0000,
   700: #ff0000,
@@ -132,6 +136,7 @@ $hive-error-palette: (
     A700: $white,
   ),
 );
+
 /* Success Color Palette */
 $hive-success-palette: (
   50: #e3f0ea,
@@ -165,6 +170,7 @@ $hive-success-palette: (
     A700: $white,
   ),
 );
+
 /* canyon Color Palette */
 $hive-canyon-palette: (
   50: #f2ebe1,

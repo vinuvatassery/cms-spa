@@ -1,0 +1,22 @@
+/* Theme Color Palette */
+@import 'blue-theme/palette';
+
+/* Kendo UI Theme Import */
+@import "~@progress/kendo-theme-material/dist/all.scss";
+
+$primary:                material-color( $hive-primary-palette, 500) !default;
+$app-primary:            material-color( $hive-primary-palette, 500) !default;
+$app-primary-variant:    material-color( $hive-primary-palette, 300) !default;
+$app-primary-lighten:    material-color( $hive-primary-palette, 200) !default;
+$app-primary-darken:     material-color( $hive-primary-palette, 600) !default;
+
+$secondary:              material-color($hive-warn-palette, 500) !default;
+
+/* importing App Component Styles*/
+@import '../component-styles/app-style.scss';
+
+
+
+
+
+
