@@ -39,7 +39,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Input() exportButtonShow$: any;
 
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
-  
+  @Output() changeTitle = new EventEmitter<any>();
+
   public state!: State;
   sortColumn = 'Batch #';
   sortDir = 'Descending';
@@ -48,7 +49,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn ='batchNumber'
+  selectedColumn = 'batchNumber'
   gridDataResult!: GridDataResult;
 
   gridVendorsAllPaymentsDataSubject = new Subject<any>();
@@ -57,10 +58,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
-  searchColumnChangeHandler(data:any){
+  searchColumnChangeHandler(data: any) {
     this.onChange(data)
   }
-  
+
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -95,8 +96,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   filteredByColumnDesc = '';
   sortColumnDesc = 'Vendor Name';
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
-  dataListApi:any;
-  
+  dataListApi: any;
+
   setToDefault() {
     this.state = {
       skip: 0,
@@ -112,7 +113,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.sortValue = 'vendorName';
     this.sortType = 'asc';
     this.sort = this.sortColumn;
-    this.searchValue =''
+    this.searchValue = ''
     this.loadVendorRefundAllPaymentsListGrid();
   }
 
@@ -174,10 +175,9 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   ) {
     this.isVendorRefundAllPaymentsGridLoaderShow = true;
 
-    if(sortValue  === 'batchNumber')
-    {
-      sortValue = 'entryDate'  
-    }  
+    if (sortValue === 'batchNumber') {
+      sortValue = 'entryDate'
+    }
 
     const gridDataRefinerValue = {
       SkipCount: skipCountValue,
@@ -195,9 +195,9 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     let operator = 'contains';
     if (
       this.selectedColumn === 'refundAmount' ||
-      this.selectedColumn === 'refundWarrentnbr'||
+      this.selectedColumn === 'refundWarrentnbr' ||
       this.selectedColumn === 'grantNumber' ||
-      this.selectedColumn === 'indexCode' 
+      this.selectedColumn === 'indexCode'
     ) {
       operator = 'eq';
     }
@@ -269,7 +269,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.filterData = filter;
   }
 
-  isDataAvailable=true;
+  isDataAvailable = true;
   gridDataHandle() {
     this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
@@ -281,12 +281,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       if (data?.total >= 0 || data?.total === -1) {
         this.isVendorRefundAllPaymentsGridLoaderShow = false;
       }
-      if(data?.total < 1)
-      {
-        this.isDataAvailable=false;
+      if (data?.total < 1) {
+        this.isDataAvailable = false;
       }
     });
-   
+
   }
 
   public selectedPayments: any[] = [];
@@ -294,12 +293,14 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   hideActionButton = false;
   RefundLogMode = false
   receptingLogClicked() {
+    this.changeTitle.emit("Receipting Log");
     this.isLogGridExpanded = !this.isLogGridExpanded;
     this.RefundLogMode = !this.RefundLogMode;
     this.hideActionButton = !this.hideActionButton;
   }
 
   cancelActions() {
+    this.changeTitle.emit();
     this.isLogGridExpanded = !this.isLogGridExpanded;
     this.hideActionButton = !this.hideActionButton;
     this.RefundLogMode = !this.RefundLogMode;
@@ -309,8 +310,15 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
   showExportLoader = false;
   onClickedExport() {
+    if (!this.selectedPayments.length) return;
     this.showExportLoader = true;
-    this.exportGridDataEvent.emit(this.vendorRefundAllPaymentsGridData);
+    
+    const exportData = {
+      gridData: this.vendorRefundAllPaymentsGridData,
+      selectedPayments: this.selectedPayments
+    };
+
+    this.exportGridDataEvent.emit(exportData);
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
         this.showExportLoader = false;
@@ -318,139 +326,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       }
     });
   }
-
-  refundGridData = [
-    {
-        "dateReceived": "2023-11-11T18:57:32.0225408+05:00",
-        "vendorId": "00000000-0000-0000-0000-000000000000",
-        "vendorName": "Vendor 100",
-        "paymentRequestId": "00000000-0000-0000-0000-000000000000",
-        "checkRequestId": "00000000-0000-0000-0000-000000000000",
-        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
-        "refundWarrentnbr": "Warrant #1",
-        "vp": "VP1",
-        "clientId": 0,
-        "clientFullName": "Client 1",
-        "type": null,
-        "refundAmount": 100.50,
-        "depositDate": "2023-11-11T18:57:32.0232501+05:00",
-        "pcaCode": null,
-        "indexCode": null,
-        "refundNotes": "Note 1",
-        "creatorId": null,
-        "creationTime": "0001-01-01T00:00:00",
-        "refundType": "Type A",
-        "credit": "Credit1",
-        "addedField": null,
-        "grantNumber": "Grant #1",
-        "entryDate": "2023-11-11T18:57:32.0235538+05:00",
-        "enteredBy": "User 1"
-    },
-    {
-        "dateReceived": "2023-11-11T18:57:32.0239411+05:00",
-        "vendorId": "00000000-0000-0000-0000-000000000000",
-        "vendorName": "Vendor 100",
-        "paymentRequestId": "00000000-0000-0000-0000-000000000000",
-        "checkRequestId": "00000000-0000-0000-0000-000000000000",
-        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
-        "refundWarrentnbr": "Warrant #1",
-        "vp": "VP1",
-        "clientId": 0,
-        "clientFullName": "Client 1",
-        "type": null,
-        "refundAmount": 100.50,
-        "depositDate": "2023-11-11T18:57:32.0239454+05:00",
-        "pcaCode": null,
-        "indexCode": null,
-        "refundNotes": "Note 1",
-        "creatorId": null,
-        "creationTime": "0001-01-01T00:00:00",
-        "refundType": "Type A",
-        "credit": "Credit1",
-        "addedField": null,
-        "grantNumber": "Grant #1",
-        "entryDate": "2023-11-11T18:57:32.0239465+05:00",
-        "enteredBy": "User 1"
-    },
-    {
-        "dateReceived": "0001-01-01T00:00:00",
-        "vendorId": "00000000-0000-0000-0000-000000000000",
-        "vendorName": "Vendor 100",
-        "paymentRequestId": "00000000-0000-0000-0000-000000000000",
-        "checkRequestId": "00000000-0000-0000-0000-000000000000",
-        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
-        "refundWarrentnbr": "Warrant #1",
-        "vp": "VP1",
-        "clientId": 0,
-        "clientFullName": "Client 1",
-        "type": null,
-        "refundAmount": 100.50,
-        "depositDate": "2023-11-11T18:57:32.0239469+05:00",
-        "pcaCode": null,
-        "indexCode": null,
-        "refundNotes": "Note 1",
-        "creatorId": null,
-        "creationTime": "0001-01-01T00:00:00",
-        "refundType": "Type A",
-        "credit": "Credit1",
-        "addedField": null,
-        "grantNumber": "Grant #1",
-        "entryDate": "2023-11-11T18:57:32.023947+05:00",
-        "enteredBy": "User 1"
-    },
-    {
-        "dateReceived": "0001-01-01T00:00:00",
-        "vendorId": "00000000-0000-0000-0000-000000000000",
-        "vendorName": "Vendor 100",
-        "paymentRequestId": "00000000-0000-0000-0000-000000000000",
-        "checkRequestId": "00000000-0000-0000-0000-000000000000",
-        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
-        "refundWarrentnbr": "Warrant #1",
-        "vp": "VP1",
-        "clientId": 0,
-        "clientFullName": "Client 1",
-        "type": null,
-        "refundAmount": 100.50,
-        "depositDate": "2023-11-11T18:57:32.0239472+05:00",
-        "pcaCode": null,
-        "indexCode": null,
-        "refundNotes": "Note 1",
-        "creatorId": null,
-        "creationTime": "0001-01-01T00:00:00",
-        "refundType": "Type A",
-        "credit": "Credit1",
-        "addedField": null,
-        "grantNumber": "Grant #1",
-        "entryDate": "2023-11-11T18:57:32.0239473+05:00",
-        "enteredBy": "User 1"
-    },
-    {
-        "dateReceived": "0001-01-01T00:00:00",
-        "vendorId": "00000000-0000-0000-0000-000000000000",
-        "vendorName": "Vendor 100",
-        "paymentRequestId": "00000000-0000-0000-0000-000000000000",
-        "checkRequestId": "00000000-0000-0000-0000-000000000000",
-        "clientCaseEligibilityId": "00000000-0000-0000-0000-000000000000",
-        "refundWarrentnbr": "Warrant #1",
-        "vp": "VP1",
-        "clientId": 0,
-        "clientFullName": "Client 1",
-        "type": null,
-        "refundAmount": 100.50,
-        "depositDate": "2023-11-11T18:57:32.0239475+05:00",
-        "pcaCode": null,
-        "indexCode": null,
-        "refundNotes": "Note 1",
-        "creatorId": null,
-        "creationTime": "0001-01-01T00:00:00",
-        "refundType": "Type A",
-        "credit": "Credit1",
-        "addedField": null,
-        "grantNumber": "Grant #1",
-        "entryDate": "2023-11-11T18:57:32.0239477+05:00",
-        "enteredBy": "User 1"
-    }
-]
 
   vendorRefundAllPaymentsGridData = [
     {
@@ -567,7 +442,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   selectedSearchColumn: null | string = null;
 
   private isValidDate = (searchValue: any) =>
-  isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+    isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 
 
   private formatSearchValue(searchValue: any, isDateSearch: boolean) {
@@ -585,33 +460,23 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     return searchValue;
   }
 
-  onSearch(searchValue: any) {
-    // const isDateSearch = searchValue.includes('/');
-    // this.showDateSearchWarning =
-    //   isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
-    // searchValue = this.formatSearchValue(searchValue, isDateSearch);
-    // if (isDateSearch && !searchValue) return;
-    //this.setFilterBy(false, searchValue, []);
-    //this.searchSubject.next(searchValue);
-  }
-
-  gridColumns: { [key: string]: string }  = {
+  gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     VendorName: "Vendor Name",
   };
 
   columns: any = {
     VendorName: 'Vendor Name',
-    type: 'Type' ,
+    type: 'Type',
     clientFullName: 'Client Name',
     refundWarrentnbr: 'Refund Warrant #',
-    refundAmount:'Refund Amount',
+    refundAmount: 'Refund Amount',
     indexCode: 'Index Code',
-    pcaCode:'PCA',
-    vp:'VP',
-    refunfNotes:'Refund Note',
-  
-    
+    pcaCode: 'PCA',
+    vp: 'VP',
+    refunfNotes: 'Refund Note',
+
+
   };
 
   searchColumnList: { columnName: string; columnDesc: string }[] = [

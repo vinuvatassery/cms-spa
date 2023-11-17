@@ -21,7 +21,7 @@ export class DocumentFacade {
         private readonly loaderService: LoaderService,
         private readonly loggingService: LoggingService,
         private readonly snackbarService: NotificationSnackbarService
-       ) { }
+    ) { }
 
     /** Public methods **/
     showSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -58,24 +58,24 @@ export class DocumentFacade {
         })
     }
 
-    getExportFile(pageAndSortedRequest : any, path : string , fileName : string, apiType : string = ApiType.CaseApi): void {           
-        this.documentDataService.getExportFile(pageAndSortedRequest,path,apiType).subscribe({
-          next: (response: any) => {
-            if (response) {                   
-               const fileUrl = window.URL.createObjectURL(response);
-               this.exportButtonShowSubject.next(true)    
-              const documentName = fileName+'.xlsx';         
-               const downloadLink = document.createElement('a');
-              downloadLink.href = fileUrl;
-               downloadLink.download = documentName;             
-               downloadLink.click();               
-            }
-          },
-          error: (err) => {     
-            this.exportButtonShowSubject.next(true)          
-            this.showSnackBar(SnackBarNotificationType.ERROR, err)
-          },
+    getExportFile(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedIds?: any[]): void {
+        this.documentDataService.getExportFile(pageAndSortedRequest, path, apiType, selectedIds).subscribe({
+            next: (response: any) => {
+                if (response) {
+                    const fileUrl = window.URL.createObjectURL(response);
+                    this.exportButtonShowSubject.next(true)
+                    const documentName = fileName + '.xlsx';
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = fileUrl;
+                    downloadLink.download = documentName;
+                    downloadLink.click();
+                }
+            },
+            error: (err) => {
+                this.exportButtonShowSubject.next(true)
+                this.showSnackBar(SnackBarNotificationType.ERROR, err)
+            },
         });
-       
-      }
+
+    }
 }

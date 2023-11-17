@@ -285,7 +285,7 @@ export class FinancialVendorRefundFacade {
   
   loadRefundReceiptLogListService( skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: string) {
     filter = JSON.stringify(filter);
-    this.financialVendorRefundDataService.loadFinancialRefundProcessListService(skipcount,  maxResultCount,  sort,  sortType, filter).subscribe({
+    this.financialVendorRefundDataService.loadRefundReceiptLogListService(skipcount,  maxResultCount,  sort,  sortType, filter).subscribe({
       next: (dataResponse) => {
         const gridView = { data: dataResponse["items"], total: dataResponse["totalCount"]
         };

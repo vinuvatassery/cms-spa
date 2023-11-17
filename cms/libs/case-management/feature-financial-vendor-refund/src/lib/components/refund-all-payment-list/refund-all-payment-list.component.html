@@ -48,11 +48,11 @@
 
 <!-- Case List table -->
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [data]="vendorRefundAllPaymentsGridLists$ | async" kendoGridSelectBy="refundAmount"
+  <kendo-grid [resizable]="true" [data]="vendorRefundAllPaymentsGridLists$ | async" kendoGridSelectBy="paymentRequestId"
     [loading]="isVendorRefundAllPaymentsGridLoaderShow" [pageSize]="state.take" [filter]="state.filter"
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
     [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
-    (filterChange)="filterChange($event)" [selectable]="true" [(selectedKeys)]="selectedPayments">
+    (filterChange)="filterChange($event)" [selectable]="true" [(selectedKeys)]="selectedPayments" >
 
     <kendo-grid-checkbox-column [hidden]="!isLogGridExpanded" [sticky]="true" [columnMenu]="false"
       [showSelectAll]="true" [width]="40"></kendo-grid-checkbox-column>
@@ -88,7 +88,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="clientFullName" title="client" [width]="180">
+    <kendo-grid-column field="clientFullName" title="Client" [width]="180">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -211,8 +211,8 @@
 
     <kendo-grid-column field="entryDate" title="Entry Date" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button [attr.aria-label]="dataItem.dateReceived" kendoButton look="flat" class="card-link-button">
-          {{ dataItem.entryDate | date:'MM/dd/yyyy'}}
+        <button [attr.aria-label]="dataItem.creationTime" kendoButton look="flat" class="card-link-button">
+          {{ dataItem.creationTime | date:'MM/dd/yyyy'}}
         </button>
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -251,7 +251,7 @@
         </kendo-popover>
       </ng-template>
     </kendo-grid-column> -->
-    <kendo-grid-column field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="75"
+    <!-- <kendo-grid-column field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="75"
       class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="allPaymentsGridActions" icon="more-vertical"
@@ -274,7 +274,7 @@
           </ng-template>
         </kendo-dropdownbutton>
       </ng-template>
-    </kendo-grid-column>
+    </kendo-grid-column> -->
 
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
@@ -312,11 +312,11 @@
 <div class="bottom-fixed-wrapper text-right flex-gap">
 
   <div [hidden]="!RefundLogMode">
-    <span *ngIf="selectedPayments" class="">{{selectedPayments.length}} payment(s) selected</span>
+    <span *ngIf="selectedPayments" class="">{{selectedPayments.length}} refund(s) selected </span>
     <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="cancelActions()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Download" icon="download" (click)="onClickedExport()"> Download
     </button>
-    <button kendoButton [primary]="true" aria-label="Print" icon="print" (click)="onClickedExport()"> Print </button>
+    <button kendoButton [primary]="true" aria-label="Print" icon="print"> Print </button>
   </div>
   <button [hidden]="hideActionButton" kendoButton [primary]="true" aria-label="Receipting Log"
     (click)="receptingLogClicked()"> Receipting Log </button>

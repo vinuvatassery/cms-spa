@@ -2,7 +2,7 @@
     <common-bread-crumb></common-bread-crumb>
     <div class=" pt-0"> 
         <section class="app-l-mainTittle">
-            <h1 class="maintitle_withicon text-bold">Vendor Refunds </h1>
+            <h1 class="maintitle_withicon text-bold"> {{pageTitle}} </h1>
         </section>
         <section class="app-l-client-wrapper ">
             <section class="app-l-wrapper"> 
@@ -38,6 +38,7 @@
                         <ng-template kendoTabContent>
                             <div class="block-section ">
                                 <cms-refund-all-payment-list 
+                                (changeTitle)="changeTitle($event)"
                                 [exportButtonShow$]="exportButtonShow$"
                                 (exportGridDataEvent)="exportClaimsPaymentsGridData($event)"
                                 [vendorRefundAllPaymentsGridLists$]="vendorRefundAllPaymentsGridLists$"
