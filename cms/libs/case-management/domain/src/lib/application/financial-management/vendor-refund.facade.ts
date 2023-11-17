@@ -39,7 +39,7 @@ export class FinancialVendorRefundFacade {
     field: this.sortValueRefundPayments,
   }];
 
-  public sortValueBatchLog = 'batch';
+  public sortValueBatchLog = 'vendorName';
   public sortBatchLogList: SortDescriptor[] = [{
     field: this.sortValueBatchLog,
   }];
@@ -239,8 +239,8 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-  loadBatchLogListGrid(loadBatchLogListRequestDto : any){
-    this.financialVendorRefundDataService.loadBatchLogListService(loadBatchLogListRequestDto).subscribe({
+  loadBatchLogListGrid(loadBatchLogListRequestDto : any, batchId : string){
+    this.financialVendorRefundDataService.loadBatchLogListService(loadBatchLogListRequestDto,batchId).subscribe({
       next: (dataResponse) => {
         const gridView = {
           data: dataResponse['items'],
