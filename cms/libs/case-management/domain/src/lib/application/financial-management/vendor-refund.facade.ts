@@ -173,9 +173,9 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-  addInsuranceRefundClaim(data:any,vendorId:any){
+  addInsuranceRefundClaim(data:any){
    
-    this.financialVendorRefundDataService.addInsuranceRefundClaim(data,vendorId).subscribe({
+    this.financialVendorRefundDataService.addInsuranceRefundClaim(data).subscribe({
       next: (dataResponse:any) => {
         this.addInsuranceRefundClaimSubject.next(dataResponse);
         

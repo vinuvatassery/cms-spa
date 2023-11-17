@@ -16,7 +16,7 @@ export class FinancialVendorRefundDataService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
-  addInsuranceRefundClaim(data:any,vendorId:any){
+  addInsuranceRefundClaim(data:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-refund`, data);
   }
 
