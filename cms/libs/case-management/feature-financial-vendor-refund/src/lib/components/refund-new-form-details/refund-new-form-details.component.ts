@@ -81,7 +81,8 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialVendorRefundFacade.clients$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
-  vendors$ = this.financialVendorRefundFacade.vendors$;
+  Insurancevendors$ = this.financialVendorRefundFacade.Insurancevendors$;
+  tpavendors$ = this.financialVendorRefundFacade.tpavendors$;
  
   @ViewChild('insClaims', { static: false })
   insClaims!: VendorRefundInsurancePremiumListComponent;
@@ -116,8 +117,11 @@ export class RefundNewFormDetailsComponent implements  OnInit{
     private dialogService: DialogService,
     private formBuilder: FormBuilder) {}
   ngOnInit(): void {
+    this.lovFacade.getRefundTypeLov();
     this.lovFacade.getServiceTypeLov();
-    this.lovFacade.serviceType$.subscribe((res:any[]) =>{
+   
+    this.lovFacade.refundType$.subscribe((res:any[]) =>{
+      
      this.refundType =  res.filter(x=> x.lovCode!=='TAX')
     })
 if(this.isEdit){
@@ -133,7 +137,7 @@ if(this.isEdit){
     }
   
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
-  this.financialVendorRefundFacade.vendorsSubject.next([this.selectedVendor])
+  this.financialVendorRefundFacade.InsurancevendorsSubject.next([this.selectedVendor])
  
 }
   }
@@ -310,11 +314,17 @@ this.insuraceAddRefundClickSubject.next(true);
       this.showServicesListForm = false;
     }
   }
-  searchVendors(searchText: any) {
+  searchInsuranceVendors(searchText: any) {
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorRefundFacade.loadvendorBySearchText(searchText,this.selectedRefundType);
+    this.financialVendorRefundFacade.loadInsurancevendorBySearchText(searchText);
+  }
+  searchTpaVendors(searchText: any) {
+    if (!searchText || searchText.length == 0) {
+      return;
+    }
+    this.financialVendorRefundFacade.loadTpavendorBySearchText(searchText);
   }
   claimsCountEvent(data:any){
     

@@ -472,7 +472,13 @@ export class FinancialVendorRefundDataService {
         `/financial-management/claims/pharmacies/SearchText=${searchText}`
     );
   }
-  loadvendorBySearchText(searchText: string,) {
+  loadTpavendorBySearchText(searchText: string,) {
+    return this.http.get<Pharmacy[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+  `/financial-management/claims/medical/tpa-vendor/SearchText=${searchText}`
+    );
+  }
+  loadInsurancevendorBySearchText(searchText: string,) {
     return this.http.get<Pharmacy[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
   `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}`
