@@ -111,6 +111,8 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  gridLoaderSubject = new BehaviorSubject(false);
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
+  itemNbr:'Item #',
+  batchName: 'Batch #',
   pharmacyName: 'Pharmacy Name',
   paymentMethodCode: 'Payment Method',
   clientFullName: 'Client Name',
@@ -214,7 +216,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.defaultGridState();
     this.sortValue = 'creationTime';
     this.sortType = 'desc';
-    this.sortDir = this.sortType === 'desc' ? 'Descending' : "";
+    this.sortDir = this.sortType === 'desc' ? 'Descending' : "Ascending";
     this.filter = [];
     this.searchText = '';
     this.selectedSearchColumn = 'ALL';
