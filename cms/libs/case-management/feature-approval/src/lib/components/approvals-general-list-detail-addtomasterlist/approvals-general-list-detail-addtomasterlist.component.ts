@@ -51,7 +51,7 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
   }
 
   onEditListItemsDetailClicked(): void {
-    var detailData = {
+    const detailData = {
       subTypeCode : this.subTypeCode,
       vendorData : this.vendorData
     }
