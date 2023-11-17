@@ -66,12 +66,15 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   filterResetDialog: any;
   paymentStatusCode =null;
   paymentStatusType:any;
-  paymentStatuses$ = this.lovFacade.paymentStatus$
+  paymentStatuses$ = this.lovFacade.paymentStatus$;
+  @Output() claimsCount = new EventEmitter<any>();
   constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade)
   {
  
   }
   ngOnInit(): void {
+    this.lovFacade.getPaymentStatusLov()
+    this.paymentStatusSubscription();
     this.lovFacade.getPaymentStatusLov()
     this.paymentStatusSubscription();
     this.selectedTpaClaims =  (this.tpaPaymentReqIds && this.tpaPaymentReqIds.length >0)?
@@ -108,16 +111,19 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
  
   dataStateChange(stateData: any): void {
     this.openResetDialog(this.filterResetConfirmationDialogTemplate);
+    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
 
+
   }
 
   selectedKeysChange(selection: any) {
     this.selectedTpaClaims = selection;
+    this.claimsCount.emit(this.selectedTpaClaims.length)
   }
   
   // updating the pagination infor based on dropdown selection
@@ -224,6 +230,6 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     if(field == "paymentStatusCode"){
       this.paymentStatusCode = value;
     }
-  }
- 
+  } 
+
 }

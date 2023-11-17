@@ -155,7 +155,7 @@
                         <cms-vendor-refund-claims-list  #tpaClaims  [tpaPaymentReqIds]="tpaPaymentReqIds"
                     [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
                     [sortValue]="sortValueClientClaims" [sortType]="sortType"
-                        ></cms-vendor-refund-claims-list>
+                    (claimsCount)="claimsCountEvent($event)"  ></cms-vendor-refund-claims-list>
                 </div>
             </div>
             <div class="confirm-container" *ngIf="isConfirmationClicked"> 
@@ -340,7 +340,7 @@
                     <cms-vendor-refund-insurance-premium-list  #insClaims  [selectedInsurancePremiumIds]="insurancePremiumPaymentReqIds"
                     [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
                         [sortValue]="sortValueClientClaims" [sortType]="sortType"
-                        [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId"
+                        [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId" (claimsCount)="claimsCountEvent($event)"
                         ></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
@@ -582,8 +582,8 @@
 </div>
     <div class="justify-content-end align-items-center" *ngIf="!isConfirmationClicked && selectedRefundType">
         
-        <span class="mr-2">2 refund(s) to be added</span>
-        <button kendoButton [primary]="true" aria-label="Confirm Selections"  (click)="confirmationClicked()"> Confirm Selections
+        <span class="mr-2">{{claimsCount}} refund(s) to be added</span>
+        <button kendoButton [primary]="true" aria-label="Confirm Selections" [disabled]="claimsCount<1"  (click)="confirmationClicked()"> Confirm Selections
         </button>
     </div>
 
