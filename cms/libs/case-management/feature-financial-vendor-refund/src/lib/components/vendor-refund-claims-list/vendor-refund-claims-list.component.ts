@@ -81,6 +81,9 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.selectedTpaClaims =  (this.tpaPaymentReqIds && this.tpaPaymentReqIds.length >0)?
     this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
+    this.tpaData$.subscribe((res:any)=>{
+      this.claimsCount.emit(this.selectedTpaClaims.length)
+  })
   }
   ngOnChanges(): void {
     this.state = {

@@ -124,8 +124,10 @@ export class FinancialVendorRefundFacade {
   private unbatchRefundsSubject =  new Subject<any>();
   unbatchRefunds$ = this.unbatchRefundsSubject.asObservable();
 
-  public vendorsSubject = new Subject<any>;
-  vendors$ = this.vendorsSubject.asObservable();
+  public tpaVendorsSubject = new Subject<any>;
+  tpavendors$ = this.tpaVendorsSubject.asObservable();
+  public insurancevendorsSubject = new Subject<any>;
+  insurancevendors$ = this.insurancevendorsSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -319,21 +321,15 @@ this.loaderService.show();
       },
     });
   }
-  loadvendorBySearchText(searchText: string,refundType:string) {
+  loadInsurancevendorBySearchText(searchText: string) {
     
    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
-    return this.financialVendorRefundDataService.loadvendorBySearchText(searchText).subscribe({
+    return this.financialVendorRefundDataService.loadInsurancevendorBySearchText(searchText).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor:any) => {
-          
-          if(refundType=='INS')
-          {
             vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.insuranceName ?? ''}${vendor.insuranceType ?? ''}`;
-          }else{
-            vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
-          }         
         });
-        this.vendorsSubject.next(response);
+        this.insurancevendorsSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
       },
       error: (err) => {
@@ -342,7 +338,24 @@ this.loaderService.show();
       }
     });
   } 
-
+  loadTpavendorBySearchText(searchText: string) {
+    
+    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
+     return this.financialVendorRefundDataService.loadTpavendorBySearchText(searchText).subscribe({
+       next: (response: Pharmacy[]) => {
+         response?.forEach((vendor:any) => {
+             vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+                  
+         });
+         this.tpaVendorsSubject.next(response);
+         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+       },
+       error: (err) => {
+         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+         this.loggingService.logException(err);
+       }
+     });
+   } 
   loadClaimsListGrid(){
     this.financialVendorRefundDataService.loadClaimsListService().subscribe({
       next: (dataResponse) => {
