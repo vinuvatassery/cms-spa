@@ -543,7 +543,6 @@ this.loaderService.show();
       },
     });
   }
-}
   
   loadRefundReceiptLogListService( skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: string) {
     filter = JSON.stringify(filter);

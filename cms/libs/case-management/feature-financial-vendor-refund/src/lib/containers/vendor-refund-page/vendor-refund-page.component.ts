@@ -29,7 +29,7 @@ export class VendorRefundPageComponent {
   sortPaymentsList = this.financialVendorRefundFacade.sortPaymentsList;
   state!: State;
   selectedClaimsTab = 1;
-  dataExportParameters!: any;
+  //dataExportParameters!: any;
   vendorRefundProcessGridLists$ =
     this.financialVendorRefundFacade.vendorRefundProcessData$;
   vendorRefundBatchGridLists$ = this.financialVendorRefundFacade.vendorRefundBatchData$;

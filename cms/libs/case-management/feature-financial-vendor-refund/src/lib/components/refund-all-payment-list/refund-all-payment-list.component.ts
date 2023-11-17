@@ -6,7 +6,9 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output
+  Output,
+  TemplateRef,
+  ViewChild
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
