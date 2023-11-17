@@ -7,10 +7,13 @@ import {
   OnChanges,
   OnInit,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -25,6 +28,9 @@ import { Subject } from 'rxjs';
 })
 export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  @ViewChild('filterResetConfirmationDialogTemplate', { read: TemplateRef })
+  filterResetConfirmationDialogTemplate!: TemplateRef<any>;
+  @ViewChild(GridComponent) grid!: GridComponent;
   isClientClaimsLoaderShow = false;
   /** Constructor **/
   @Input() pageSizes: any;
@@ -35,12 +41,14 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   @Input() clientId: any;
   @Input()refundType:any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
+  @Output() claimsCount = new EventEmitter<any>();
   public state!: State;
   @Input() clientClaimsListData$: any;
   @Output() loadClientClaimsListEvent = new EventEmitter<any>();
   sortColumn = 'clientId';
   sortDir = 'Ascending';
   columnsReordered = false;
+  filterResetDialog: any;
   filteredBy = '';
   paymentStatusType:any;
   public selectedClaims: any[] = [];
@@ -50,6 +58,7 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  selectedInsuranceClaims :any[] =[]
 @Input() selectedpharmacyClaimsPaymentReqIds:any[]=[]
 selectedPharmacyClaims:any[]=[]
   isRefundGridClaimShow=false;
@@ -64,7 +73,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
    
   constructor(
-    public financialVendorRefundFacade:FinancialVendorRefundFacade
+    public financialVendorRefundFacade:FinancialVendorRefundFacade,private dialogService: DialogService
   ) { }
   ngOnInit(): void {
     this.state = {
@@ -80,7 +89,32 @@ private clientClaimsListDataSubject =  new Subject<any>();
   selectedKeysChange(selection: any) {
     this.selectedPharmacyClaims = selection;
   }
-
+  resetFilterClicked(action: any,) {
+    if (action) {
+      this.selectedClaims=[]
+      this.clearSelection();
+      this.loadRefundClaimsListGrid();
+     this.filterResetDialog.close();
+    }
+  }
+  resetButtonClosed(result: any) {
+    if (result) {
+ 
+      this.filterResetDialog.close();
+    }
+  }
+  private clearSelection(): void {  
+    if (this.grid) {
+        this.selectedInsuranceClaims = [];
+    }
+  }
+  openResetDialog( template: TemplateRef<unknown>)
+  {
+    this.filterResetDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -90,12 +124,12 @@ private clientClaimsListDataSubject =  new Subject<any>();
     this.loadRefundClaimsListGrid();
   }
   dataStateChange(stateData: any): void {
+    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadRefundClaimsListGrid()
   }
 
   // updating the pagination infor based on dropdown selection
