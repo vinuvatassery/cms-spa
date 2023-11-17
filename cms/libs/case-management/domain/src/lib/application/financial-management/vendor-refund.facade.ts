@@ -524,6 +524,7 @@ this.loaderService.show();
     });
   }
   loadRefundClaimsListGrid(ClaimsPageAndSortedRequestDto:any) {
+    this.showLoader();
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
     this.financialVendorRefundDataService. loadRefundClaimsService(ClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
@@ -534,10 +535,12 @@ this.loaderService.show();
             total: dataResponse['totalCount'],
           };
           this.clientClaimsListDataSubject.next(gridView);
+          this.hideLoader();
         }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.hideLoader();
       },
     });
   }
