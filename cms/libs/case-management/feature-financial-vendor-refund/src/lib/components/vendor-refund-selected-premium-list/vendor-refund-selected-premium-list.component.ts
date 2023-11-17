@@ -87,10 +87,19 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
         refundType:"insurance"
       }
 
+      if(this.isEdit){
+        this.Reqpayload.emit({
+          data: refundRequests,
+          vendorId  : this.vendorAddressId,
+          clientId : this.clientId,
+
+        })
+      }else{
       this.Reqpayload.emit({
         data: payload,
         vendorId  : this.vendorAddressId
       })
+    }
     }
   })
 }

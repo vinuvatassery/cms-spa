@@ -17,7 +17,7 @@ export class FinancialVendorRefundDataService {
   ) {}
 
   addInsuranceRefundClaim(data:any,vendorId:any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/add-insurance-refund`, data);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-refund`, data);
   }
 
   getInsuranceRefundEditInformation(vendorId :any, clientId :any ,paginationSortingDto:any){
