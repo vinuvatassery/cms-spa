@@ -980,4 +980,10 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       }
 
   }
+  onBatchNumberClick(dataItem: any) {
+    this.route.navigate(
+        [`/financial-management/pharmacy-claims/batch`],
+        { queryParams: { bid: dataItem?.batchId } }
+    );
+}
 }
