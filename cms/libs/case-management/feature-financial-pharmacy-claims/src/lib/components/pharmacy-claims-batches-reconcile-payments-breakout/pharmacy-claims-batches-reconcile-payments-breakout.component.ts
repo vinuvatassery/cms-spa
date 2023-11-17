@@ -50,56 +50,25 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   addRemoveColumns="Default Columns";
   reconcilePaymentBreakoutLoader:any=true;
   columns : any = {
-    invoiceNbr:"Invoice ID",
     clientName:"Client Name",
-    serviceStartDate:"Service Start Date",
-    serviceEndDate:"Service End Date",
-    amountDue:"Amount Due",
-    paymentStatusCode:"Payment Status",
-    warrant:"Warrant Number",
-    cptCode:"CPT Code",
-    entryDate:"Entry Date"
-  }
-
-  dropDowncolumns : any = [
-    {
-      "columnCode": "invoiceNbr",
-      "columnDesc": "Invoice ID"
-    },
-    {
-      "columnCode": "clientName",
-      "columnDesc": "Client Name"
-    },
-    {
-      "columnCode": "serviceStartDate",
-      "columnDesc": "Service Start Date"
-    },
-    {
-      "columnCode": "serviceEndDate",
-      "columnDesc": "Service End Date"
-    },
-    {
-      "columnCode": "amountDue",
-      "columnDesc": "Amount Due"
-    },
-    {
-      "columnCode": "paymentStatusDesc",
-      "columnDesc": "Payment Status"
-    },
-    {
-      "columnCode": "warrant",
-      "columnDesc": "Warrant Number"
-    },
-    {
-      "columnCode": "cptCode",
-      "columnDesc": "CPT Code"
-    },
-
-    {
-      "columnCode": "entryDate",
-      "columnDesc": "Entry Date"
-    }
-  ]
+    nameOnPrimaryInsuranceCard:"Name on Primary Insurance Card",
+    clientId:"Client ID",
+    rxNumber:"RX Number",
+    prescriptionFillDate:"Fill Date",
+    brandName:"Brand Name",
+    drugName:"Drug Name",
+    paymentTypeDesc:"Payment Type",
+    amountPaid:"Amount Paid",
+    productType:"Product Type",
+    ndcCode:"NDC Code",
+    indexCode:"Index Code",
+    pcaCode:"PCA Code",
+    objectCode:"Object Code",
+    rxQty:"RX Qty",
+    unit:"Unit",
+    rxDaysSupply:"RX Days Supply",
+    creationTime:"Entry Date"
+  }  
 
   gridReconcilePaymentBreakoutListSubject = new Subject<any>();
   gridReconcilePaymentBreakout$ = this.gridReconcilePaymentBreakoutListSubject.asObservable();
@@ -339,18 +308,4 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
       logic: 'and',
     });
   }
-
-  // private getPaymentStatusLov() {
-  //   this.lovFacade.getPaymentStatusLov();
-  //   this.paymentStatus$.subscribe({
-  //     next: (data: any) => {
-  //       data.forEach((item: any) => {
-  //         item.lovDesc = item.lovDesc.toUpperCase();
-  //       });
-  //       this.paymentStatus = data.sort(
-  //         (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
-  //       );
-  //     },
-  //   });
-  // }
 }
