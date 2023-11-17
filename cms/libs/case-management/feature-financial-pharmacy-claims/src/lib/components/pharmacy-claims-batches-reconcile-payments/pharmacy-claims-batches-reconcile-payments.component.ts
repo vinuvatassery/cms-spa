@@ -195,10 +195,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       }
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
       this.calculateCharacterCountBulkNote(null);
-
-      this.warrantNumberChangeLoader$.subscribe((response: any) =>
-        this.warrantNumberChanged = response
-      )
   }
 
   ngOnDestroy(): void {

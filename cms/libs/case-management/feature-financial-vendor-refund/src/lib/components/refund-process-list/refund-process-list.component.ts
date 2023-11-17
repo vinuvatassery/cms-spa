@@ -71,7 +71,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  serviceType =''
   gridColumns: { [key: string]: string }  = {
     ALL: 'All Columns',
     VendorName: "Vendor Name",
@@ -164,6 +164,12 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   ];
   isAddRefundModalOpen = false;
   isEditRefund = false;
+  refunEditServiceType='';
+  refundEditClientId='';
+  refundEditClientFullName: any;
+  refundEditVendorId='';
+  refundEditVendorName: any;
+  inspaymentRequestId: any;
 
   public processGridActions(dataItem:any){
      return [
@@ -175,6 +181,12 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
         if(!this.isAddRefundModalOpen){
           this.isAddRefundModalOpen = true;
           this.isEditRefund = true
+          this.refunEditServiceType = dataItem.type
+          this.refundEditClientId =dataItem.clientId
+          this.refundEditClientFullName = dataItem.clientFullName
+          this.refundEditVendorId = dataItem.vendorId
+          this.refundEditVendorName = dataItem.vendorName
+          this.inspaymentRequestId = dataItem.paymentRequestId
         this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
         }
       },
@@ -262,6 +274,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   }
 
   onClickOpenAddEditRefundFromModal(template: TemplateRef<unknown>): void {
+    this.isEditRefund =false
     this.addEditRefundFormDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-96full add_refund_modal',

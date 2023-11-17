@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { ContactFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade, GridFilterParam } from '@cms/case-management/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentFacade } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-batch-page',
@@ -28,6 +30,17 @@ export class PharmacyClaimsBatchPageComponent {
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
   letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
   letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
+
+  updateProviderPanelSubject$ =
+  this.financialVendorFacade.updateProviderPanelSubject$;
+ ddlStates$ = this.contactFacade.ddlStates$;
+ paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+
+ vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  paymentRequestId: any;
+  providerDetailsDialog: any
   claimsType= 'pharmacies';
   batchId!:string;
   dataExportParameters! : any
@@ -36,6 +49,10 @@ export class PharmacyClaimsBatchPageComponent {
     private readonly route : ActivatedRoute,
       private readonly documentFacade: DocumentFacade,
       private readonly router: Router,
+      private dialogService: DialogService,
+      private readonly financialVendorFacade: FinancialVendorFacade,
+      private readonly contactFacade: ContactFacade,
+      private lovFacade: LovFacade,
   ) {}
 
   ngOnInit(): void {
@@ -80,5 +97,32 @@ export class PharmacyClaimsBatchPageComponent {
 
   loadEachLetterTemplate(event: any) {
     this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);
+  }
+  onProviderNameClick(event:any){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  }
+  onEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
+  }
+  updateProviderProfile(event: any) {
+    console.log(event);
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanel(event);
+  }
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
   }
 }

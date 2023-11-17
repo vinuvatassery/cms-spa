@@ -243,7 +243,7 @@
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                               <label aria-label="Medical Provider" kendoButton look="flat"
                                     class="card-link-button"  >
-                                    <strong>$</strong> {{dataItem?.amountDue | kendoNumber:'n2'}} 
+                                    <span class="tableamountview"> <strong>$</strong> {{dataItem?.amountDue | kendoNumber:'n2'}}</span>
                               </label>
                             </ng-template>
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
