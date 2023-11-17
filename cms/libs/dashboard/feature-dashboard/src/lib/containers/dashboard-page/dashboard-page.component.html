@@ -411,7 +411,28 @@
 
  
 <!-- //NOSONAR <common-signature-pad></common-signature-pad> -->
+<div class="app-l-inner-rapper ">
+ 
+  <section class="app-l-mainTittle justify-content-between">
+    <div>
+      <h1 class="maintitle_withicon text-bold">
+        <span aria-label="Clients" class="material-icons sidebar-menu_icon " aria-hidden="true"> home </span>
+        Welcome back, Stacey
+      </h1>
+      <kendo-dropdownlist class="plain_Drop"  [(ngModel)]="selectedValue" fillMode="none" [data]="areaList"></kendo-dropdownlist>
+    </div>
+ 
+    <div>
+      <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
+          (click)="editDashboardClicked()"> dashboard </span></button>
+      <div *ngIf="isReorderEnable">
+        <button kendoButton (click)="editDashboardCancelClicked()" class="mr-1" [primary]="true" aria-label="Save">
+          Save</button>
+        <button kendoButton fillMode="outline" (click)="editDashboardCancelClicked()"> Cancel </button>
 
+      </div>
+    </div>
+  </section>
 <gridster [options]="config" *ngIf="dashboardConfiguration$ | async as config">
   <gridster-item
     *ngFor="let item of dashboardContentList$ | async"
@@ -427,3 +448,4 @@
     </div>
   </gridster-item>
 </gridster>
+</div>

@@ -29,10 +29,9 @@ export class DashboardWrapperService {
         x: 2,
         y: 0,
         component: 'ProgramExpenses',
-        widgetChartConfig:{
-          chartType:'bar',
+        widgetChartConfig:{ 
           title:{
-            text:'Program Expensessss'
+            text:'ACTIVE CLIENTS BY GROUP'
           },
           legend:{
             position:'top',
@@ -43,31 +42,31 @@ export class DashboardWrapperService {
           },
           series:[
             {
-              name: 'Med Claims',
+              name: 'Group 1',
               data: [300, 200, 250, 400, 300, 350, 500],
               type:'line',
               color:'red'
             },
             {
-              name: 'Med Prem',
+              name: 'Group 2',
               data: [75, 130, 170, 220, 100, 180, 50],
               type:'line',
               color:'blue'
             },
             {
-              name: 'Dental Claims',
+              name: 'Group 3',
               data: [10, 30, 20, 10, 40, 70, 60],
               type:'line',
               color:'green'
             },
             {
-              name: 'Dental Prem',
+              name: 'Group 4',
               data: [20, 10, 30, 60, 40, 80, 60],
               type:'line',
               color:'yellow'
             },
             {
-              name: 'Pharm Claim',
+              name: 'Group 5',
               data: [100, 10, 60, 60, 40, 70, 60],
               type:'line',
               color:'purple'
@@ -82,8 +81,7 @@ export class DashboardWrapperService {
         x: 0,
         y: 0,
         component: 'ProgramExpenses',
-        widgetChartConfig:{
-          chartType:'bar',
+        widgetChartConfig:{ 
           title:{
             text:'Program Expenses'
           },
@@ -151,8 +149,7 @@ export class DashboardWrapperService {
         x: 0,
         y: 0,
         component: 'ClientByStatus',
-        widgetChartConfig:{
-          chartType:'donut',
+        widgetChartConfig:{ 
           title:{
             text:'Program Expenses'
           },
@@ -167,31 +164,25 @@ export class DashboardWrapperService {
             {
               name: 'Med Claims',
               data: [300, 200, 250, 400, 300, 350, 500],
-              type:'bar',
+              type:'donut',
               color:'red'
-            },
-            {
-              name: 'Med Prem',
-              data: [75, 130, 170, 220, 100, 180, 50],
-              type:'bar',
-              color:'blue'
             },
             {
               name: 'Dental Claims',
               data: [10, 30, 20, 10, 40, 70, 60],
-              type:'bar',
+              type:'donut',
               color:'green'
             },
             {
               name: 'Dental Prem',
               data: [20, 10, 30, 60, 40, 80, 60],
-              type:'bar',
+              type:'donut',
               color:'yellow'
             },
             {
               name: 'Pharm Claim',
               data: [100, 10, 60, 60, 40, 70, 60],
-              type:'bar',
+              type:'donut',
               color:'purple'
             }
           ]
@@ -204,11 +195,10 @@ export class DashboardWrapperService {
   getDashboardConfiguration(): Observable<GridsterConfig> {
     return of({
       gridType: GridType.VerticalFixed,
-      displayGrid: DisplayGrid.OnDragAndResize,
-      draggable: { enabled: true },
-      resizable: { enabled: false }, 
+      displayGrid: DisplayGrid.OnDragAndResize, 
+      resizable: { enabled: true }, 
       swap: true,
-      pushItems: true,
+      pushItems: false,
       outerMargin: true,
       enableEmptyCellDrop: false,  
       maxItemCols:6,
@@ -219,8 +209,20 @@ export class DashboardWrapperService {
       setGridSize: true,
       useBodyForBreakpoint: true,
       fixedRowHeight: 100, 
-      disableWindowResize: true, 
+      disableWindowResize: false, 
       disableWarnings: true,
+      scrollSpeed: 10, 
+      defaultItemCols: 2,
+      defaultItemRows: 2,
+      keepFixedWidthInMobile: false,
+      keepFixedHeightInMobile: true,
+      draggable: {
+        enabled: true,
+        ignoreContent: false, // if true drag will start only from elements from `dragHandleClass`
+        dragHandleClass: 'drag-handle', // drag event only from this class. If `ignoreContent` is true. 
+      },
+  
+      
     });
   }
 }

@@ -9,8 +9,7 @@ import { ChartComponent, PlaceholderDirective } from '@cms/shared/ui-common';
 })
 export class WidgetProgramIncomeComponent implements OnInit {
   @ViewChild(PlaceholderDirective, {static:true}) chartPlaceholder!:PlaceholderDirective;
-  incomeData:WidgetChartModel={
-    chartType:'bar',
+  incomeData:WidgetChartModel={ 
     title:{
       text:"Program Income"
     },
