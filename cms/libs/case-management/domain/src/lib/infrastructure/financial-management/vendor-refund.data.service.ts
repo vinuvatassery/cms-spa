@@ -492,7 +492,7 @@ export class FinancialVendorRefundDataService {
   }
 
   batchRefunds(batchId: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/batch`, batchId);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/batch`, batchId);
   }
 
   unbatchRefunds(paymentRequestIds: string[]) {
@@ -535,7 +535,7 @@ export class FinancialVendorRefundDataService {
     );
   }
   loadMedicalPremiumList(data:any): Observable<any> {
-    
+
     const ClaimsPageAndSortedRequestDto =
     {
       VendorId : data.vendorId,
@@ -546,11 +546,11 @@ export class FinancialVendorRefundDataService {
       MaxResultCount : data.pageSize,
       Filter : data.filter
     }
-    
+
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/refund-ins-list?vendorId=${data.vendorId}'&cliendId=${data.clientId}`,ClaimsPageAndSortedRequestDto);
   }
   loadTPARefundList(data:any): Observable<any> {
-    
+
     const ClaimsPageAndSortedRequestDto =
     {
       VendorId : data.vendorId,
