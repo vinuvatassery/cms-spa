@@ -154,37 +154,29 @@ export class DashboardWrapperService {
             text:'Program Expenses'
           },
           legend:{
+            visible: true,
             position:'top',
-            orientation: 'horizontal'
+            orientation: 'horizontal',
+           
           },
           categoryAxis:{
             categories:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
           },
           series:[
-            {
-              name: 'Med Claims',
-              data: [300, 200, 250, 400, 300, 350, 500],
+            { 
+              data: [  {
+                category: 'Asia',
+                value: 53.8,
+                color: '#9de219',
+              },
+              {
+                category: 'Europe',
+                value: 16.1,
+                color: '#90cc38',
+              },],
               type:'donut',
               color:'red'
             },
-            {
-              name: 'Dental Claims',
-              data: [10, 30, 20, 10, 40, 70, 60],
-              type:'donut',
-              color:'green'
-            },
-            {
-              name: 'Dental Prem',
-              data: [20, 10, 30, 60, 40, 80, 60],
-              type:'donut',
-              color:'yellow'
-            },
-            {
-              name: 'Pharm Claim',
-              data: [100, 10, 60, 60, 40, 70, 60],
-              type:'donut',
-              color:'purple'
-            }
           ]
         }
         
