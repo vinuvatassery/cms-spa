@@ -1,12 +1,13 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { ContactFacade, FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'cms-pharmacy-claims-page',
@@ -52,7 +53,18 @@ export class PharmacyClaimsPageComponent implements OnInit {
   searchClientLoader$ = this.financialPharmacyClaimsFacade.searchClientLoader$;
   searchDrugsLoader$ = this.financialPharmacyClaimsFacade.searchDrugsLoader$;
   tab = 1;
+  updateProviderPanelSubject$ =
+  this.financialVendorFacade.updateProviderPanelSubject$;
+  
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  paymentRequestId: any;
+  providerDetailsDialog: any
 
+ ddlStates$ = this.contactFacade.ddlStates$;
+
+ vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
   letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
   constructor(
@@ -62,6 +74,9 @@ export class PharmacyClaimsPageComponent implements OnInit {
     private loggingService: LoggingService,private readonly configProvider: ConfigurationProvider,
     private readonly intl: IntlService,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly contactFacade: ContactFacade,
+    private dialogService: DialogService,
+    private readonly financialVendorFacade: FinancialVendorFacade,
   ) {}
 
   ngOnInit(): void {
@@ -217,5 +232,33 @@ export class PharmacyClaimsPageComponent implements OnInit {
 
   loadEachLetterTemplate(event:any){
     this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);  
+  }
+  onProviderNameClick(event:any){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  
+  }
+  onEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
+  }
+  updateProviderProfile(event: any) {
+    console.log(event);
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanel(event);
+  }
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
   }
 }

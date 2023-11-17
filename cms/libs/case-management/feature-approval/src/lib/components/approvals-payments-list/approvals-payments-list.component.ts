@@ -34,7 +34,6 @@ import {
   PendingApprovalPaymentTypeCode,
 } from '@cms/case-management/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { scan } from 'rxjs/operators';
 @Component({
   selector: 'productivity-tools-approvals-payments-list',
   templateUrl: './approvals-payments-list.component.html',

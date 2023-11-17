@@ -45,12 +45,12 @@ export class ApprovalsEditItemsComponent implements OnInit {
   paymentMethodList: any[] = [];
   paymentRunDateList: any[] = [];
   tempVendorName: any;
-  constructor(private changeDetector: ChangeDetectorRef,
-              private insurancePlanFacade : InsurancePlanFacade,
+  constructor(private insurancePlanFacade : InsurancePlanFacade,
               private drugFacade : DrugsFacade,
               private financialVendorFacade : FinancialVendorFacade,
               private lovFacade: LovFacade,
               private readonly loaderService: LoaderService,
+              private readonly cd: ChangeDetectorRef
               ) {}
 
   ngOnInit(): void {
@@ -58,6 +58,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
     this.bindVendorData();
     this.getPaymentMethods();
     this.getPaymentRunDate();
+    this.cd.detectChanges();
   }
 
   private getDrugType() {
@@ -126,6 +127,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
     );    
     this.selectedClinicVendorId = null;
     this.searchClinicVendorClicked.emit(clinicName);
+    this.cd.detectChanges();
   }
 
   bindVendorData() {
@@ -153,13 +155,6 @@ export class ApprovalsEditItemsComponent implements OnInit {
         this.healthCareForm.controls['tinNumber'].setValue(
           this.selectedMasterData?.tin
         );
-        this.healthCareForm.controls['phoneNumber'].setValue(
-          this.selectedMasterData?.phoneNumber
-        );
-        this.healthCareForm.controls['email'].setValue(
-          this.selectedMasterData?.email
-        );
-        this.healthCareForm.controls['fax'].setValue(this.selectedMasterData?.fax);
         this.healthCareForm.controls['addressLine1'].setValue(
           this.selectedMasterData?.address1
         );
@@ -175,9 +170,6 @@ export class ApprovalsEditItemsComponent implements OnInit {
         this.healthCareForm.controls['zip'].setValue(this.selectedMasterData?.zip);
         this.healthCareForm.controls['contactFirstName'].setValue(
           this.selectedMasterData?.contact1FirstName
-        );
-        this.healthCareForm.controls['contactLastName'].setValue(
-          this.selectedMasterData?.contact1LastName
         );
         this.healthCareForm.controls['contactPhone'].setValue(
           this.selectedMasterData?.phoneNumber
@@ -285,8 +277,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
       this.pharmacyForm.controls['contactFax'].setValue(this.selectedMasterData?.fax);
       this.pharmacyForm.controls['contactEmail'].setValue(this.selectedMasterData?.email);
     }
-    this.changeDetector.detectChanges();
-  }
+    this.cd.detectChanges();  }
 
   validateForm() {
     if (
@@ -613,18 +604,19 @@ export class ApprovalsEditItemsComponent implements OnInit {
         this.updateMasterDetailsClickedEvent.emit(formData);
     }
     this.closeEditModal();
+    this.cd.detectChanges();
   }
 
   get healthCareFormControls() {
-    return this.healthCareForm.controls as any;
+    return this.healthCareForm.controls;
   }
 
   get drugFormControls() {
-    return this.drugForm.controls as any;
+    return this.drugForm.controls;
   }
   
   get insurancePlanFormControls() {
-    return this.insurancePlanForm.controls as any;
+    return this.insurancePlanForm.controls;
   }
 
   onCancel(){
@@ -670,7 +662,8 @@ export class ApprovalsEditItemsComponent implements OnInit {
         this.paymentMethodList = paymentMethod;
         this.loaderService.hide();
       }
-    })
+    });
+    this.cd.detectChanges();
   }
 
   get pharmacyFormControl() {
@@ -690,6 +683,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
         this.loaderService.hide();
       }
     })
+    this.cd.detectChanges();
   }
 
   get insuranceProviderFormControls() {

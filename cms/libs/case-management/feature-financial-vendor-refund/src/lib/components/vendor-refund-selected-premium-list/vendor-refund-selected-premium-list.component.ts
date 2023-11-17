@@ -25,6 +25,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
    @Input() sort :any
    @Input() pageSizes :any
    @Input() sortType :any
+   @Input() editPaymentRequestId:any
      public state!: State;
      filter!: any;  
   @Output() insuranceRefundInformationConfirmClicked = new EventEmitter<any>();
@@ -34,12 +35,14 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   financialPremiumsRefundGridLists!: any[];
  @Input() gridDataResult! : GridDataResult
- @Input() clientId :any =30104
-
+ @Input() clientId :any 
+@Input() vendorAddressId :any 
  public formUiStyle: UIFormStyle = new UIFormStyle();
   refundNoteValueLength = 0
+  @Input() isEdit = false
   isSubmitted = false;
   @Input() insuraceAddRefundClick$:any
+  @Output() Reqpayload = new EventEmitter<any>()
   refundForm = this.formBuilder.group({
     vp: ['', Validators.required],
     creditNumber: ['', Validators.required],
@@ -60,6 +63,43 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
     this.isSubmitted = true;
     if (this.refundForm.invalid) {
       return;
+    }else{
+       const refundRequests :any[] =[]
+      this.financialPremiumsRefundGridLists.forEach(x=>{
+        refundRequests.push({
+          ...x,
+          voucherPayable: this.refundForm.controls['vp']?.value,
+          refundWarrantNumber: this.refundForm.controls['warantNumber']?.value,
+          depositDate:this.refundForm.controls['depositDate']?.value,
+          refundNote:this.refundForm.controls['refundNote']?.value,
+        })
+      })
+
+      const payload ={
+        vendorId : this.vendorAddressId,
+        clientId : this.clientId,
+        creditNumber:"0",
+        voucherPayable: this.refundForm.controls['vp']?.value,
+        warrantNumber: this.refundForm.controls['warantNumber']?.value,
+        depositDate:this.refundForm.controls['depositDate']?.value,
+        Notes:this.refundForm.controls['refundNote']?.value,
+        addRefundDto: refundRequests,
+        refundType:"insurance"
+      }
+
+      if(this.isEdit){
+        this.Reqpayload.emit({
+          data: refundRequests,
+          vendorId  : this.vendorAddressId,
+          clientId : this.clientId,
+
+        })
+      }else{
+      this.Reqpayload.emit({
+        data: payload,
+        vendorId  : this.vendorAddressId
+      })
+    }
     }
   })
 }
@@ -67,9 +107,13 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
 
 
   refundAmountChange(dataItem:any){
-   if(dataItem.amountDue < dataItem.refundAmount ){
-     dataItem.refundAmountError="Refund Amount cannot be greater than claim amount"
+   if(dataItem.amountPaid < dataItem.refundAmount ){
+     dataItem.refundAmountError="Refund amount cannot be greater than claim amount"
+   }else{
+    dataItem.refundAmountError=""
    }
+   this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)       
+  
   }
 
 
@@ -91,7 +135,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   this.state = {
     skip: 0,
     take: this.pageSizes[0]?.value,
-    sort: [{ field: 'createdDate', dir: 'asc' }]
+    sort: [{ field: 'creationTime', dir: 'asc' }]
   };
   this.loadRefundInformationListGrid()
   }  

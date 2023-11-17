@@ -95,6 +95,12 @@ export class FinancialPharmacyClaimsFacade {
       field: this.sortValueReconcile,
     },
   ];
+  public sortValueReconcileBreakout = 'clientName';
+  public sortReconcileBreakoutList: SortDescriptor[] = [
+    {
+      field: this.sortValueReconcileBreakout,
+    },
+  ];
   public sortValueRecentClaimList = 'fillDate';
   public sortRecentClaimList: SortDescriptor[] = [{
     field: this.sortValueRecentClaimList,
@@ -169,6 +175,16 @@ export class FinancialPharmacyClaimsFacade {
 
   private letterContentLoaderSubject = new Subject<any>();
   letterContentLoader$ = this.letterContentLoaderSubject.asObservable();
+
+  private reconcileBreakoutSummaryDataSubject = new Subject<any>();
+  reconcileBreakoutSummary$ =
+    this.reconcileBreakoutSummaryDataSubject.asObservable();
+
+  private reconcilePaymentBreakoutListDataSubject =  new Subject<any>();
+  reconcilePaymentBreakoutList$ = this.reconcilePaymentBreakoutListDataSubject.asObservable();
+
+  private reconcilePaymentBreakoutListLoaderDataSubject =  new Subject<any>();
+  reconcilePaymentBreakoutLoaderList$ = this.reconcilePaymentBreakoutListLoaderDataSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -632,6 +648,41 @@ viewAdviceLetterData(printAdviceLetterData: any) {
 
 reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any) {
   return this.financialPharmacyClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData);
+}
+
+loadReconcilePaymentBreakoutSummary(data:any){ 
+  this.financialPharmacyClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
+    next: (dataResponse) => {
+      this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+    },
+  });
+}
+
+loadReconcilePaymentBreakoutListGrid(data:any) {
+  this.reconcilePaymentBreakoutListLoaderDataSubject.next(true);
+  data.filter=JSON.stringify(data.filter);
+  this.financialPharmacyClaimsDataService
+    .loadReconcilePaymentBreakoutListService(data)
+    .subscribe({
+      next: (dataResponse) => {
+        this.reconcilePaymentBreakoutListDataSubject.next(dataResponse);
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.reconcilePaymentBreakoutListDataSubject.next(gridView);
+          this.reconcilePaymentBreakoutListLoaderDataSubject.next(false);
+        }
+      },
+      error: (err) => {
+        this.reconcilePaymentBreakoutListLoaderDataSubject.next(false);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
 }
 
 }

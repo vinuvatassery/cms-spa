@@ -1,7 +1,7 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input} from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, filterBy } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam } from '@cms/case-management/domain'; 
+import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam, ServiceSubTypeCode } from '@cms/case-management/domain'; 
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject } from 'rxjs';
@@ -13,21 +13,19 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
 })
-export class RefundNewFormDetailsComponent{
+export class RefundNewFormDetailsComponent implements  OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
   selectedRefundType : any;
-  public refundType  = [
-    "TPA",
-    "INS", 
-    "RX",
-  ];
-
+  public refundType  :any[]=[]
   @Input() isEdit = false
   clientCaseEligibilityId: any = null;
-  clientId: any;
-  clientName: any;
-  vendorId: any;
+  @Input() clientId: any;
+
+  @Input() clientName: any;
+ vendorId: any;
+ @Input() vendorAddressId :any
+   selectedProvider:any;
   isRefundGridClaimShow = false;
   isShowReasonForException = false;
   showServicesListForm: boolean =false;
@@ -38,7 +36,7 @@ export class RefundNewFormDetailsComponent{
   providerTin: any;
   selectedClient: any;
   refundClaimForm!: FormGroup;
-  vendorName: any;
+  @Input() vendorName: any;
   sortType = this.financialVendorRefundFacade.sortType;
   pageSizes = this.financialVendorRefundFacade.gridPageSizes;
   gridSkipCount = this.financialVendorRefundFacade.skipCount;
@@ -53,7 +51,8 @@ export class RefundNewFormDetailsComponent{
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
-
+  serviceTypes$ = this.lovFacade.serviceType$
+  onEditInitiallydontShowPremiumselection = false;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   
@@ -83,7 +82,7 @@ export class RefundNewFormDetailsComponent{
   clientSearchResult$ = this.financialVendorRefundFacade.clients$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
   vendors$ = this.financialVendorRefundFacade.vendors$;
-
+ 
   @ViewChild('insClaims', { static: false })
   insClaims!: VendorRefundInsurancePremiumListComponent;
 
@@ -92,45 +91,15 @@ export class RefundNewFormDetailsComponent{
 
   @ViewChild('rxClaims', { static: false })
   rxClaims!: VendorRefundPharmacyPaymentsListComponent;
-
+  showNoDataMessage: boolean = false;
   insurancePremiumPaymentReqIds :any[] =[]
+  pharmacyClaimsPaymentReqIds :any[]=[]
+  tpaClaimsPaymentReqIds :any[] =[]
   tpaPaymentReqIds :any[] =[]
   rxPaymentReqIds :any[] =[]
 
-  clientSearchResult =[
-
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-  ];
-
+ @Input() serviceType=''
+ @Input() inspaymentRequestId:any
   @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
   sortValue: string | undefined;
   financialPremiumsRefundGridLists: any;
@@ -138,27 +107,59 @@ export class RefundNewFormDetailsComponent{
   paymentRequestId: any;
   insurancePremiumsRequestIds: any;
   disableFeildsOnConfirmSelection = false
-
+  selectedVendor: any;
+  claimsCount:number=0;
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
     public financialVendorFacade :FinancialVendorFacade,   
     private dialogService: DialogService,
-    private formBuilder: FormBuilder,) {}
+    private formBuilder: FormBuilder) {}
+  ngOnInit(): void {
+    this.lovFacade.getServiceTypeLov();
+    this.lovFacade.serviceType$.subscribe((res:any[]) =>{
+     this.refundType =  res.filter(x=> x.lovCode!=='TAX')
+    })
+if(this.isEdit){
+  this.selectedRefundType = this.serviceType
+  this.onEditInitiallydontShowPremiumselection = true
+  this.selectedClient={
+    clientId: this.clientId,
+    clientNames :this.clientName
+  }
+    this.selectedVendor ={
+     providerFullName: this.vendorName,
+     vendorAddressId: this.vendorAddressId
+    }
+  
+  this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
+  this.financialVendorRefundFacade.vendorsSubject.next([this.selectedVendor])
+ 
+}
+  }
+
+  addInsuranceRefundClaim(event:any){
+    if(this.isEdit){
+    this.financialVendorRefundFacade.updateInsuranceRefundEditInformation(event.data)
+    }else{
+    this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data)
+  }
+}
+
   selectionChange(event: any){
     this.isConfirmationClicked = false
     this.vendorId=null;
+    this.selectedProvider=null;
   }
   confirmationClicked (){
   
     this.isConfirmationClicked = true
     this.disableFeildsOnConfirmSelection = true
 
-    if(this.selectedRefundType=== "INS" 
+    if(this.selectedRefundType=== ServiceSubTypeCode.insurnacePremium 
     && this.insClaims.selectedInsuranceClaims &&  this.insClaims.selectedInsuranceClaims.length>0
     ){
     this.insurancePremiumPaymentReqIds =  this.insClaims.selectedInsuranceClaims
-   
   } 
 
   if(this.selectedRefundType === 'TPA'){
@@ -172,15 +173,18 @@ export class RefundNewFormDetailsComponent{
 
   /*** refund INS */
   getInsuranceRefundInformation(data:any){
+
     const param ={
       ...data,
-      paymentRequestsId : this.insurancePremiumPaymentReqIds
+      paymentRequestsId : this.insurancePremiumPaymentReqIds,
+      type: this.isEdit? "REFUND":"PAID"
     }
     this.financialVendorRefundFacade.getInsuranceRefundInformation(param);
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
     this.financialPremiumsRefundGridLists =  res;
       console.log(this.financialPremiumsRefundGridLists)
     })
+  
   }
 
 
@@ -226,6 +230,8 @@ this.insuraceAddRefundClickSubject.next(true);
   selectDiffPayments(){
     this.isConfirmationClicked = false;
     this.disableFeildsOnConfirmSelection = false;
+    this.onEditInitiallydontShowPremiumselection = false
+ 
   }
   closeAddEditRefundFormModalClicked(){
     this.modalCloseAddEditRefundFormModal.emit(true);  
@@ -279,12 +285,12 @@ this.insuraceAddRefundClickSubject.next(true);
   onProviderValueChange($event: any) {
     
     if($event==undefined){ 
-      this.vendorId=null;
+      this.vendorAddressId=null;
     }
-    this.vendorId = $event.vendorId;
+    this.vendorAddressId = $event.vendorAddressId;
     this.vendorName = $event.vendorName;
     this.providerTin = $event;
-    if (this.clientId != null && this.vendorId != null){
+    if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
     } 
   }
@@ -310,5 +316,8 @@ this.insuraceAddRefundClickSubject.next(true);
     }
     this.financialVendorRefundFacade.loadvendorBySearchText(searchText,this.selectedRefundType);
   }
-
+  claimsCountEvent(data:any){
+    
+    this.claimsCount=data;
+  }
 }

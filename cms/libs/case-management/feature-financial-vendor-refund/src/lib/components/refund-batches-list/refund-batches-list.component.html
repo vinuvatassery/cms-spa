@@ -2,53 +2,130 @@
  
 <p class="mt-2"> Select a batch to view refunds for.</p>
 <section class="table-filter-section mat-form-no-b-space">
-    <span class="filter-section_items filter--select">
-      <kendo-floatinglabel>
-        <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"  
-        textField="columnDesc" valueField="columnCode"  >
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </span>
-    <span class="filter-section_items filter--search">
-      <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
-      <kendo-floatinglabel text="Search">
-        <kendo-textbox   aria-label="Search case"
-          rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
-  
-      </kendo-floatinglabel>
-    </span>
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel>
+      <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
+      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"  (valueChange)="searchColumnChangeHandler($event)">
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
+    <kendo-floatinglabel text="Search">
+      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)"  aria-label="Search case" rounded="medium"
+      [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+
+    </kendo-floatinglabel>
+  </span>
     <span class="right-overlay-export">
-      <button kendoButton [primary]="true"  aria-label="Export" look="flat" class="button-lg">
-        <span class="material-icons" aria-label="Export" aria-invalid="true"
-          >exit_to_app</span
-        ><i class="exp_button-text">Export</i>
+      <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"  [disabled]="showExportLoader">
+        <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+
+        <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
       </button>
     </span>
   </section>
-  
+
   <!-- Sorted Info -->
   <div class="table-sorted-info">
-    Sorted Descending by <span class="sort-items"> Source </span>
-    <span class="sort-items"  >No Filters</span>
-    <span class="sort-items"  >Filtered by Batch</span>
-    <span class="sort-items">Default Columns</span>
-    <span class="sort-items" >Columns Re-ordered</span>
+    Sorted {{sortDir}} by <span class="sort-items">  {{sortColumn}} </span>
+    <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+    <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
+    <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+    <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+    <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+      <a>Set to Default</a>
+    </button>
   </div>
+
   
   <!-- Case List table -->
   <div class="app-c-table">
-    <kendo-grid [resizable]="true" [loading]="isVendorRefundBatchGridLoaderShow"  [pageSize]="state.take" [pageable]="true"
-    [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort"(dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [data]="vendorRefundBatchGridLists$ | async"  
+    <kendo-grid [resizable]="true" 
+    [loading]="isVendorRefundBatchGridLoaderShow" 
+    [pageSize]="state.take"
+    [pageable]="true"
+    [sortable]="true"
+    [skip]="state.skip" 
+    [groupable]="false"
+    [reorderable]="true"
+    [resizable]="true"
+    [columnMenu]="{ filter: true }"
+    [sort]="state.sort"
+    (dataStateChange)="dataStateChange($event)" 
+    (filterChange)="filterChange($event)" 
+    [data]="gridVendorsBatchData$ | async"  
     (cellClick)="onCellClick($event)">
       <kendo-grid-checkbox-column  [sticky]="true"  [columnMenu]="false" [showSelectAll]="true"  [width]="40"></kendo-grid-checkbox-column>
-      <kendo-grid-column field="batch" title="Batch #" [width]="120"> </kendo-grid-column>
-      <kendo-grid-column field="tpaRefunds" title="# TPA Refunds" [width]="160"> </kendo-grid-column> 
-      <kendo-grid-column field="insRefunds" title="# INS Refunds" [width]="160"> </kendo-grid-column>
-      <kendo-grid-column field="taxRefunds" title="# TAX Refunds" [width]="160"> </kendo-grid-column>
-      <kendo-grid-column field="rxRefunds" title="# RX Refunds" [width]="160"> </kendo-grid-column>
-      <kendo-grid-column field="totalOriginalAmountPaid" title="Total Original Amount Paid" [width]="180"> </kendo-grid-column>
-      <kendo-grid-column field="totalRefundAmount" title="Total Refund Amount" [width]="180"> </kendo-grid-column>  
+      <kendo-grid-column field="batchName" title="Batch #" [width]="120">      
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          [extra]="false" operator="eq">
+          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="tpaRefunds" title="# TPA Refunds" [width]="160"> 
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gt-operator></kendo-filter-gt-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lt-operator></kendo-filter-lt-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template> 
+      </kendo-grid-column> 
+      <kendo-grid-column field="insRefunds" title="# INS Refunds" [width]="160"> 
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gt-operator></kendo-filter-gt-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lt-operator></kendo-filter-lt-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template> 
+      </kendo-grid-column>
+      <kendo-grid-column field="rxRefunds" title="# RX Refunds" [width]="160"> 
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gt-operator></kendo-filter-gt-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lt-operator></kendo-filter-lt-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template> 
+      </kendo-grid-column>
+      <kendo-grid-column field="bulkPayment" title="Bulk Payment" [width]="180">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gt-operator></kendo-filter-gt-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lt-operator></kendo-filter-lt-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>  </kendo-grid-column>
+      <kendo-grid-column field="totalRefund" title="Total Refund Amount" [width]="180">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gt-operator></kendo-filter-gt-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lt-operator></kendo-filter-lt-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>  </kendo-grid-column>  
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
           <div class="d-flex align-items-center">

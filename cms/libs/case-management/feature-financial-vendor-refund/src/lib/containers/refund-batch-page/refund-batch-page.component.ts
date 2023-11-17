@@ -23,7 +23,7 @@ export class RefundBatchPageComponent   {
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade 
   ) {}
 
-  loadBatchLogListGrid(event: any) { 
-    this.financialVendorRefundFacade.loadBatchLogListGrid();
+  loadBatchLogListGrid(loadBatchLogListRequestDto : any) { 
+    this.financialVendorRefundFacade.loadBatchLogListGrid(loadBatchLogListRequestDto);
   }
 }
