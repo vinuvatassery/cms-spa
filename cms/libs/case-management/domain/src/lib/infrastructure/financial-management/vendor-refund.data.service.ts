@@ -82,39 +82,10 @@ export class FinancialVendorRefundDataService {
       },
     ]);
   }
-  loadVendorRefundBatchListService( ) {
-    return of([
-      {
-        id:1,
-        batch: '05012021_001 `',
-        tpaRefunds:'XX',
-        insRefunds:'XX',
-        taxRefunds:'XX',
-        rxRefunds:'XX',
-        totalOriginalAmountPaid:'XX,XXX.XX',
-        totalRefundAmount:'XX,XXX.XX',
-      },
-      {
-        id:2,
-        batch: '05012021_001 `',
-        tpaRefunds:'XX',
-        insRefunds:'XX',
-        taxRefunds:'XX',
-        rxRefunds:'XX',
-        totalOriginalAmountPaid:'XX,XXX.XX',
-        totalRefundAmount:'XX,XXX.XX',
-      },
-      {
-        id:3,
-        batch: '05012021_001 `',
-        tpaRefunds:'XX',
-        insRefunds:'XX',
-        taxRefunds:'XX',
-        rxRefunds:'XX',
-        totalOriginalAmountPaid:'XX,XXX.XX',
-        totalRefundAmount:'XX,XXX.XX',
-      },
-    ]);
+  loadVendorRefundBatchListService(loadBatchListRequestDto : any ) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/batches`,loadBatchListRequestDto
+    );
   }
 
 
@@ -125,42 +96,10 @@ export class FinancialVendorRefundDataService {
   }
 
 
-  loadBatchLogListService( ) {
-    return of([
-      {
-        vendorName: 'Address `',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
-      {
-        vendorName: 'Address `',
-        type:'address2',
-        clientName:'address2',
-        refundWarrant:'address2',
-        refundAmount:'address2',
-        depositDate:'address2',
-        depositMethod:'address2',
-        indexCode:'address2',
-        pca:'address2',
-        grant:'address2',
-        vp:'address2',
-        refundNote:'address2',
-        entryDate:'address2',
-        by: 'by',
-      },
-
-    ]);
+  loadBatchLogListService(loadBatchLogListRequestDto : any ) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/batches`,loadBatchLogListRequestDto
+    );
   }
 
   loadClaimsListService( ) {
@@ -493,10 +432,6 @@ export class FinancialVendorRefundDataService {
 
   batchRefunds(batchId: any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/batch`, batchId);
-  }
-
-  unbatchEntireBatch(paymentRequestBatchIds: string[]) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/batches/unbatch`, paymentRequestBatchIds);
   }
 
   unbatchRefunds(paymentRequestIds: string[]) {

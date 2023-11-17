@@ -90,6 +90,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
 
   @ViewChild('rxClaims', { static: false })
   rxClaims!: VendorRefundPharmacyPaymentsListComponent;
+  showNoDataMessage: boolean = false;
   insurancePremiumPaymentReqIds :any[] =[]
   pharmacyClaimsPaymentReqIds :any[]=[]
   tpaClaimsPaymentReqIds :any[] =[]

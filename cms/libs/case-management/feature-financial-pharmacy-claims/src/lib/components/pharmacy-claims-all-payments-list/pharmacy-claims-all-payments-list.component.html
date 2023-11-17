@@ -120,7 +120,7 @@
      <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.pharmacyName" kendoButton look="flat" class="card-link-button"
-          (click)="onViewProviderDetailClicked(providerDetailsTemplate)">
+          (click)="onProviderNameClick(dataItem.paymentRequestId)">
           {{ dataItem.pharmacyName }}
         </button>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">

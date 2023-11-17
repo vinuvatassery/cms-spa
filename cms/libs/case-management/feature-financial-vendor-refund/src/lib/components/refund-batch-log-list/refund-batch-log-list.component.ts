@@ -26,7 +26,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   templateUrl: './refund-batch-log-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundBatchLogListComponent implements OnInit, OnChanges{
+export class RefundBatchLogListComponent implements OnInit, OnChanges {
   @ViewChild('unBatchRefundsDialogTemplate', { read: TemplateRef })
   unBatchRefundsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
@@ -40,26 +40,26 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
   UnBatchDialog: any;
   deleteRefundsDialog: any;
   selected: any;
-  deletemodelbody = 'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
+  deletemodelbody =
+    'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
 
   public batchLogGridActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Refund',
       icon: 'edit',
-
     },
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Refund',
       icon: 'undo',
-      click: (data: any) =>{
+      click: (data: any) => {
         if (!this.isUnBatchRefundsClosed) {
           this.isUnBatchRefundsClosed = true;
           this.selected = data;
           this.onUnBatchOpenClicked(this.unBatchRefundsDialogTemplate);
         }
-      }
+      },
     },
     {
       buttonType: 'btn-h-danger',
@@ -73,7 +73,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
           this.deleteRefundsConfirmationDialogTemplate
         );
       },
-
     },
   ];
 
@@ -102,11 +101,12 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
   isBulkUnBatchOpened: any;
   batchId = '';
 
-
   /** Constructor **/
-  constructor(private route: Router,
+  constructor(
+    private route: Router,
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
-    private dialogService: DialogService) {}
+    private dialogService: DialogService
+  ) {}
 
   ngOnInit(): void {
     this.loadBatchLogListGrid();
@@ -120,7 +120,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
 
     this.loadBatchLogListGrid();
   }
-
 
   private loadBatchLogListGrid(): void {
     this.loadBatchLog(
@@ -146,7 +145,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
     this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
-
 
   onChange(data: any) {
     this.defaultGridState();
@@ -219,7 +217,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
     this.isBatchLogGridLoaderShow = false;
   }
 
-  onBackClicked(){
+  onBackClicked() {
     this.route.navigate(['financial-management/vendor-refund']);
   }
 
@@ -232,17 +230,10 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
 
   onUnBatchCloseClicked(result: any) {
     if (result) {
-      if (this.isBulkUnBatchOpened) {
-        this.handleUnbatchEntireBatch();
-        this.financialVendorRefundFacade.unbatchEntireBatch(
-          [this.batchId],
-        );
-      } else {
-        this.handleUnbatchRefunds();
-        this.financialVendorRefundFacade.unbatchRefund(
-          [this.selected.paymentRequestId]
-        );
-      }
+      this.handleUnbatchRefunds();
+      this.financialVendorRefundFacade.unbatchRefund([
+        this.selected.paymentRequestId,
+      ]);
     }
     this.isUnBatchRefundsClosed = false;
     this.isBulkUnBatchOpened = false;
@@ -254,21 +245,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges{
       .pipe(first((unbatchResponse: any) => unbatchResponse != null))
       .subscribe((unbatchResponse: any) => {
         if (unbatchResponse ?? false) {
-          this.loadBatchLogListGrid();
-        }
-      });
-  }
-
-  handleUnbatchEntireBatch() {
-    this.financialVendorRefundFacade.unbatchEntireBatch$
-      .pipe(
-        first(
-          (unbatchEntireBatchResponse: any) =>
-            unbatchEntireBatchResponse != null
-        )
-      )
-      .subscribe((unbatchEntireBatchResponse: any) => {
-        if (unbatchEntireBatchResponse ?? false) {
           this.loadBatchLogListGrid();
         }
       });

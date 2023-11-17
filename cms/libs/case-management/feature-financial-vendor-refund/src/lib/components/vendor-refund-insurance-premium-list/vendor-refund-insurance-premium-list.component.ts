@@ -1,6 +1,7 @@
 /** Angular **/
 import {
   AfterViewInit,
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -29,6 +30,12 @@ import { Subject, Subscription } from 'rxjs';
   templateUrl: './vendor-refund-insurance-premium-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
+export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnChanges {
+  @ViewChild('filterResetConfirmationDialogTemplate', { read: TemplateRef })
+  filterResetConfirmationDialogTemplate!: TemplateRef<any>;
+ 
+  @ViewChild(GridComponent) grid!: GridComponent;
+
 export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnChanges {
   @ViewChild('filterResetConfirmationDialogTemplate', { read: TemplateRef })
   filterResetConfirmationDialogTemplate!: TemplateRef<any>;
