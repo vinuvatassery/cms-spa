@@ -19,7 +19,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, Subscription, debounceTime } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, debounceTime } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoadTypes } from '@cms/case-management/domain';
@@ -53,6 +53,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   @Output() exportGridEvent$ = new EventEmitter<any>();
   @Output() loadPharmacyClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
   columnsReordered = false;
   filteredBy = '';
@@ -107,7 +108,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  vendorId: any;
  clientId: any;
  claimsType: any;
- 
+ gridLoaderSubject = new BehaviorSubject(false);
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
   pharmacyName: 'Pharmacy Name',
@@ -194,18 +195,9 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
   ngOnInit(): void {
     this.addSearchSubjectSubscription();
-    this.allPaymentsGridListSubscription();
+    this.handleAllPaymentsGridData();
   }
 
-  allPaymentsGridListSubscription() {
-      this.allPaymentsListSubscription = this.pharmacyClaimsAllPaymentsGridLists$.subscribe((response:any) =>{
-      this.totalGridRecordsCount = response.total;
-      if(this.selectAll){
-      this.markAsChecked(response.data);
-      }
-      this.financialClaimsAllPaymentsGridLists = response;
-    });
-  }
 
   ngOnChanges(): void {
     this.sortType = 'desc';
@@ -216,11 +208,6 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     };
 
     this.loadPharmacyClaimsAllPaymentsListGrid();
-  }
-
-  
-  ngOnDestroy(): void {
-    this.allPaymentsListSubscription.unsubscribe();
   }
 
   resetGrid(){
@@ -371,6 +358,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   }
 
   dataStateChange(stateData: any): void {
+    this.isPageCountChanged = false;
+    this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'desc';
@@ -380,33 +369,27 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.filter = stateData?.filter?.filters;
     this.setFilterBy(true, '', this.filter);
     this.loadPharmacyClaimsAllPaymentsListGrid();
+    if(this.isPrintAuthorizationClicked){
+      this.handleAllPaymentsGridData();
+    }
   }
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+    this.isPageCountChanged = true;
+    this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadPharmacyClaimsAllPaymentsListGrid();
+    if(this.isPrintAuthorizationClicked){
+      this.handleAllPaymentsGridData();
+    }
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
 
-  // gridDataHandle() {
-  //   this.pharmacyClaimsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
-  //     this.gridDataResult = data;
-  //     this.gridDataResult.data = filterBy(
-  //       this.gridDataResult.data,
-  //       this.filterData
-  //     );
-  //     this.gridPharmacyClaimsAllPaymentsDataSubject.next(this.gridDataResult);
-  //     if (data?.total >= 0 || data?.total === -1) { 
-  //       this.isPharmacyClaimsAllPaymentsGridLoaderShow = false;
-  //     }
-  //   });
-  //   this.isPharmacyClaimsAllPaymentsGridLoaderShow = false;
-  // }
   navToReconcilePayments(event : any){  
     this.route.navigate(['/financial-management/pharmacy-claims/payments/reconcile-payments'],
      { queryParams :{loadType: LoadTypes.allPayments}});
@@ -621,10 +604,10 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.unCheckedProcessRequest=[];
     this.checkedAndUncheckedRecordsFromSelectAll=[];
     if(this.selectAll){
-      this.markAsChecked(this.financialClaimsAllPaymentsGridLists.data);
+      this.markAsChecked(this.financialClaimsAllPaymentsGridLists);
     }
     else{
-      this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists.data);
+      this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists);
     }
     this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
     'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
@@ -698,5 +681,76 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
             [`/financial-management/pharmacy-claims/batch`],
             { queryParams: { bid: dataItem?.batchId } }
         );
+    }
+
+    handleAllPaymentsGridData() {
+      this.pharmacyClaimsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
+        this.gridDataResult = data;
+        this.gridDataResult.data = filterBy(
+          this.gridDataResult.data,
+          this.filterData
+        );
+        //this.financialClaimsAllPaymentsGridLists.next(this.gridDataResult);
+        if (data?.total >= 0 || data?.total === -1) {
+          this.gridLoaderSubject.next(false);
+        }
+        this.financialClaimsAllPaymentsGridLists = this.gridDataResult?.data;
+        if(this.recordCountWhenSelectallClicked == 0){
+          this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
+          this.totalGridRecordsCount = this.gridDataResult?.total;
+        }
+        if(!this.selectAll)
+        {
+        this.financialClaimsAllPaymentsGridLists.forEach((item1: any) => {
+          const matchingGridItem = this.selectedAllPaymentsList?.PrintAdviceLetterSelected.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
+          if (matchingGridItem) {
+            item1.selected = true;
+          } else {
+            item1.selected = false;
+          }
+        });
+      }
+      this.currentPageRecords = this.financialClaimsAllPaymentsGridLists;
+      //If the user is selecting the individual check boxes and changing the page count
+      this.handlePageCountSelectionChange();
+      //If the user click on select all header and either changing the page number or page count
+      this.pageNumberAndCountChangedInSelectAll();
+      this.gridLoaderSubject.next(false);
+      });
+    }
+
+    handlePageCountSelectionChange() {
+      if(!this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
+        // Extract the payment request ids from grid data
+        const idsToKeep: number[] = this.checkedAndUncheckedRecordsFromSelectAll.map((item: any) => item.paymentRequestId);
+        // Remove items from selected records based on the IDs from grid data
+        for (let i = this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.length - 1; i >= 0; i--) {
+          if (!idsToKeep.includes(this.selectedAllPaymentsList?.PrintAdviceLetterSelected[i].paymentRequestId)) {
+            this.selectedAllPaymentsList?.PrintAdviceLetterSelected.splice(i, 1); // Remove the item at index i
+          }
+        }
+        this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.filter((item:any) => item.selected));
+      }
+  }
+  
+  pageNumberAndCountChangedInSelectAll() {
+    //If selecte all header checked and either the page count or the page number changed
+    if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
+      this.selectedAllPaymentsList = [];
+      this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
+      for (const item of this.financialClaimsAllPaymentsGridLists) {
+        // Check if the item is in the second list.
+        const isItemInSecondList = this.unCheckedProcessRequest.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
+        // If the item is in the second list, mark it as selected true.
+        if (isItemInSecondList) {
+          item.selected = false;
+        }else{
+          item.selected = true;
+        }
+      }
+    }
+  }
+    onProviderNameClick(event: any) {
+      this.onProviderNameClickEvent.emit(event);
     }
 }

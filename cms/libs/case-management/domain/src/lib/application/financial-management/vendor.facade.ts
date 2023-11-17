@@ -356,7 +356,7 @@ export class FinancialVendorFacade {
       next: (updatedResponse: any) => {
         if (updatedResponse) {
           this.updateProviderPanelSubject.next(updatedResponse);
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse)
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse.Message)
           this.hideLoader();
         }
       },

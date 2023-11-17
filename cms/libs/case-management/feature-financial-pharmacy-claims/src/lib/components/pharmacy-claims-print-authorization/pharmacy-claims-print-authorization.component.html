@@ -22,7 +22,7 @@
                         </div>
                         <common-grid-loader-component *ngIf="letterContentLoader">
                         </common-grid-loader-component>
-                        <div class="flex-row align-items-end" *ngIf="!letterContentLoader">
+                        <div class="flex-row align-items-end" *ngIf="letterContent">
                               <div class="flex-col flex-col-3">
                                     <kendo-floatinglabel text="Account Number">
                                           <kendo-textbox [fillMode]="formUiStyle.inputFillMode"  
@@ -50,7 +50,7 @@
                               </div>
                         </div>
 
-                        <div class="flex-row" *ngIf="!letterContentLoader">
+                        <div class="flex-row" *ngIf="letterContent">
                               <div class="flex-col flex-col-3">
                                     <kendo-floatinglabel text="Authorized By">
                                           <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
