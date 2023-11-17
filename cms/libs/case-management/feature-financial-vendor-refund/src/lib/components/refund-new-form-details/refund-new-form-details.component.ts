@@ -23,7 +23,8 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   @Input() clientId: any;
 
   @Input() clientName: any;
- @Input() vendorId: any;
+ vendorId: any;
+ @Input() vendorAddressId :any
    selectedProvider:any;
   isRefundGridClaimShow = false;
   isShowReasonForException = false;
@@ -128,7 +129,7 @@ if(this.isEdit){
   }
     this.selectedVendor ={
      providerFullName: this.vendorName,
-     vendorId: this.vendorId
+     vendorAddressId: this.vendorAddressId
     }
   
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
@@ -138,8 +139,12 @@ if(this.isEdit){
   }
 
   addInsuranceRefundClaim(event:any){
+    if(this.isEdit){
+    this.financialVendorRefundFacade.updateInsuranceRefundEditInformation(event.vendorId, event.clientId,event.data)
+    }else{
     this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data, event.vendorId)
   }
+}
 
   selectionChange(event: any){
     this.isConfirmationClicked = false
@@ -280,12 +285,12 @@ this.insuraceAddRefundClickSubject.next(true);
   onProviderValueChange($event: any) {
     
     if($event==undefined){ 
-      this.vendorId=null;
+      this.vendorAddressId=null;
     }
-    this.vendorId = $event.vendorId;
+    this.vendorAddressId = $event.vendorAddressId;
     this.vendorName = $event.vendorName;
     this.providerTin = $event;
-    if (this.clientId != null && this.vendorId != null){
+    if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
     } 
   }

@@ -16,17 +16,22 @@ export class FinancialVendorRefundDataService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
-  addInsuranceRefundClaim(data:any, vendorId :any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums`, data);
+  addInsuranceRefundClaim(data:any,vendorId:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/add-insurance-refund`, data);
   }
 
-  getInsuranceRefundEditInformation(paymentRequestId:any,paginationSortingDto:any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums/${paymentRequestId}`, paginationSortingDto);
+  getInsuranceRefundEditInformation(vendorId :any, clientId :any ,paginationSortingDto:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums/${clientId}`, paginationSortingDto);
+  }
+
+  updateInsuranceRefundEditInformation(vendorId :any, clientId :any ,paginationSortingDto:any){
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums/${clientId}`, paginationSortingDto);
   }
 
   getInsurnaceRefundInformation(insuranceRefundInformation:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums`, insuranceRefundInformation);
   }
+
   loadVendorRefundProcessListService( ) {
     return of([
       {

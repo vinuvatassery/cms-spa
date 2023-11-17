@@ -68,12 +68,12 @@
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                                       <kendo-multicolumncombobox [data]="vendors$ | async" 
                                       textField='providerFullName'
-                                      valueField="vendorId" [fillMode]="formUiStyle.dropDownFillMode"
+                                      valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
                                       placeholder="Search Vendor Name, ID"
                                       [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                       [filterable]="true" 
                                       (filterChange)="searchVendors($event)"
-                                      (valueChange)="onProviderValueChange($event)" data [(ngModel)]="selectedProvider"
+                                      (valueChange)="onProviderValueChange($event)" [(ngModel)]="selectedVendor"
                                       >
                                     
                                       <button kendoButton fillMode="clear" icon="image"></button>
@@ -333,12 +333,12 @@
         </div>
 
         <!-- INS Content -->
-        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'&&vendorId&& clientId">
+        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'&& vendorAddressId && clientId">
             <div class="mt-1" *ngIf="!isConfirmationClicked" >
                 <h5>Select all premium included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-insurance-premium-list  #insClaims  [selectedInsurancePremiumIds]="insurancePremiumPaymentReqIds"
-                    [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
+                    [vendorAddressId]="vendorAddressId" [clientId]="clientId"  [pageSizes]="pageSizes"
                         [sortValue]="sortValueClientClaims" [sortType]="sortType"
                         [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId" (claimsCount)="claimsCountEvent($event)"
                         ></cms-vendor-refund-insurance-premium-list>
@@ -354,7 +354,7 @@
             [sortType]="sortType" [sort]="sortRefundInformationGrid" (insuranceRefundInformationConfirmClicked)="getInsuranceRefundInformation($event)"
             [insuraceAddRefundClick$]="insuraceAddRefundClick$"
             (Reqpayload)="addInsuranceRefundClaim($event)"
-            [vendorId]="vendorId"
+            [vendorAddressId]="vendorAddressId"
             [clientId]="clientId"></cms-vendor-refund-selected-premium-list>
             
             </div>

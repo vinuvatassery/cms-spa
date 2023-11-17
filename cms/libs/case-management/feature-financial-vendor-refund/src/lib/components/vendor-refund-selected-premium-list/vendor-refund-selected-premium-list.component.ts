@@ -25,6 +25,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
    @Input() sort :any
    @Input() pageSizes :any
    @Input() sortType :any
+   @Input() editPaymentRequestId:any
      public state!: State;
      filter!: any;  
   @Output() insuranceRefundInformationConfirmClicked = new EventEmitter<any>();
@@ -35,9 +36,10 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   financialPremiumsRefundGridLists!: any[];
  @Input() gridDataResult! : GridDataResult
  @Input() clientId :any =30104
-@Input() vendorId :any 
+@Input() vendorAddressId :any 
  public formUiStyle: UIFormStyle = new UIFormStyle();
   refundNoteValueLength = 0
+  @Input() isEdit = false
   isSubmitted = false;
   @Input() insuraceAddRefundClick$:any
   @Output() Reqpayload = new EventEmitter<any>()
@@ -65,15 +67,16 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
        const refundRequests :any[] =[]
       this.financialPremiumsRefundGridLists.forEach(x=>{
         refundRequests.push({
-          paymentRequestId : x.paymentRequestId,
-          VendorId : this.vendorId,
-          clientId : this.clientId,
-          amountPaid : x.refundAmount
+          ...x,
+          voucherPayable: this.refundForm.controls['vp']?.value,
+          refundWarrantNumber: this.refundForm.controls['warantNumber']?.value,
+          depositDate:this.refundForm.controls['depositDate']?.value,
+          refundNote:this.refundForm.controls['refundNote']?.value,
         })
       })
 
       const payload ={
-        vendorId : this.vendorId,
+        vendorId : this.vendorAddressId,
         clientId : this.clientId,
         creditNumber:"0",
         voucherPayable: this.refundForm.controls['vp']?.value,
@@ -85,8 +88,8 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
       }
 
       this.Reqpayload.emit({
-        data: this.financialPremiumsRefundGridLists,
-        vendorId  : this.vendorId
+        data: payload,
+        vendorId  : this.vendorAddressId
       })
     }
   })
@@ -97,7 +100,11 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   refundAmountChange(dataItem:any){
    if(dataItem.amountPaid < dataItem.refundAmount ){
      dataItem.refundAmountError="Refund amount cannot be greater than claim amount"
+   }else{
+    dataItem.refundAmountError=""
    }
+   this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)       
+  
   }
 
 

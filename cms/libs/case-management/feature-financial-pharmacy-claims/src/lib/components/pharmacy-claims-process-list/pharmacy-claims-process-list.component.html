@@ -303,7 +303,7 @@
       aria-label="Delete"> delete</span> Delete </button>
 
   <button kendoButton [primary]="true" aria-label="Batch" class=""
-    (click)="onBatchClaimsClicked(batchClaimsConfirmationDialog)" *ngIf="isProcessBatchClosed"> Batch </button>
+    (click)="onBatchClaimsClicked(batchClaimsConfirmationDialog)" *ngIf="isProcessBatchClosed" [disabled]="!selectedProcessClaims.length"> Batch </button>
 
   <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="claimsProcessMore"
     class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
