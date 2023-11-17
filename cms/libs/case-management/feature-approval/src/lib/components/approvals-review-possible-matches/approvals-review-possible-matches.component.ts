@@ -21,8 +21,6 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   @Output() saveReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
   isMatch: any=false;
   isNotMatch: any=false;
-  caseWorkerName:any="Case8.Worker8";
-  caseWorkerId:any="8602F760-2906-434D-9397-06BCBA85B12D";
   possibleMatch:any;
   hasSaveButtonEnabled:boolean=false;
   ngOnInit(): void {
@@ -74,7 +72,8 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
       invoiceExceptionId:this.claimData.invoiceExceptionId,
       claimId:this.claimData.importedClaimId,
       serviceDate:this.claimData.dateOfService,
-      isPossibleMatch: this.isMatch ? true : false
+      isPossibleMatch: this.isMatch ? true : false,
+      entityTypeCode: this.claimData.entityTypeCode
     }
     this.save(request);
   }
