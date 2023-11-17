@@ -13,11 +13,13 @@ export class VendorRefundPageComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-  tab = 1
-  sortType = this.financialVendorRefundFacade.sortType;
-  pageSizes = this.financialVendorRefundFacade.gridPageSizes;
-  gridSkipCount = this.financialVendorRefundFacade.skipCount;
-  exportButtonShow$ = this.documentFacade.exportButtonShow$;
+   tab = 1
+   dataExportParameters = null
+   batchesGridExportParameters = null
+   sortType = this.financialVendorRefundFacade.sortType;
+   pageSizes = this.financialVendorRefundFacade.gridPageSizes;
+   gridSkipCount = this.financialVendorRefundFacade.skipCount;
+   exportButtonShow$ = this.documentFacade.exportButtonShow$;
 
   sortValueRefundProcess = this.financialVendorRefundFacade.sortValueRefundProcess;
   sortProcessList = this.financialVendorRefundFacade.sortProcessList;
@@ -45,9 +47,11 @@ export class VendorRefundPageComponent {
   }
 
 
-  loadVendorRefundBatchListGrid(event: any) {
-
-    this.financialVendorRefundFacade.loadVendorRefundBatchListGrid();
+  loadVendorRefundBatchListGrid(loadBatchListRequestDto : any) {
+    this.financialVendorRefundFacade.selectedRefundsTab = 2;
+    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;   
+    this.batchesGridExportParameters = loadBatchListRequestDto; 
+    this.financialVendorRefundFacade.loadVendorRefundBatchListGrid(loadBatchListRequestDto);
   }
 
   loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto: any) {
@@ -116,5 +120,11 @@ export class VendorRefundPageComponent {
       this.pageTitle = "Vendor Refunds";
     else
       this.pageTitle = data;
+  }
+  exportBatchesGridData()
+  {
+    if (this.batchesGridExportParameters) {       
+      this.documentFacade.getExportFile(this.batchesGridExportParameters, `vendor-refunds/batches`,'All Batches');
+    }
   }
 }

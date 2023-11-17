@@ -16,7 +16,7 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
+import { InsurancePlanFacade, PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
 import {
   UserDataService,
   UserManagementFacade,
@@ -45,6 +45,12 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Input() clientsSubjects$: any;
   @Input() casereassignmentExpandedInfo$: any;
   @Input() submitGenerealRequest$: any;
+  @Input() drugForm!:  FormGroup;
+  @Input() insurancePlanForm! : FormGroup;
+  @Input() insuranceTypelovForPlan$:any;
+  @Input() pharmacyForm!:FormGroup;
+  @Input() insuranceVendorForm!:FormGroup;
+  @Input() insuranceProviderForm!:FormGroup;
   @Output() loadApprovalsGeneralGridEvent = new EventEmitter<any>();
   @Output() loadCasereassignmentExpanedInfoParentEvent = new EventEmitter<any>();
   @Output() submitGeneralRequestsEvent = new EventEmitter<any>();
@@ -97,6 +103,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Output() searchClinicVendorClicked = new EventEmitter<any>();
   @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
   selectedMasterData!:any;
+  currentlyExpandedPanelId: any;
 
   /** Constructor **/
   constructor(
@@ -104,7 +111,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     private dialogService: DialogService,
     private readonly cd: ChangeDetectorRef,
     private readonly userDataService: UserDataService,
-    private readonly loginUserFacade: UserManagementFacade
+    private readonly loginUserFacade: UserManagementFacade,
+    private readonly insurancePlanFacade: InsurancePlanFacade
   ) {}
 
   ngOnInit(): void {
@@ -125,7 +133,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
 
   private getMasterData() {
-    this.selectedMasterDetail$.subscribe((value: any) => this.selectedMasterData = value);
+    this.selectedMasterDetail$.subscribe((value: any) => {
+      this.selectedMasterData = value
+    });
   }
 
   ngOnChanges(): void {
@@ -136,6 +146,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     };
 
     this.loadApprovalGeneralListGrid();
+    this.getMasterData();
   }
 
   private loadApprovalGeneralListGrid(): void {
@@ -255,6 +266,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         approvalEntityId: item.approvalEntityId,
         subTypeCode: item.subTypeCode,
       };
+      this.currentlyExpandedPanelId = item.approvalEntityId;
       this.selectedSubtypeCode = item.subTypeCode;
       this.getMasterDetailsEvent.emit(userObject);    
       this.isPanelExpanded = true;
@@ -302,7 +314,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   }
   openEditModal(event: any) {
     if (event) {
-      this.editClickedEvent.emit(true);
+      this.selectedMasterData = event.vendorData;
+      this.editClickedEvent.emit(event.subTypeCode);
       this.onEditListItemsDetailClicked(this.editModalTemplate);
     }
   }
@@ -649,5 +662,14 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   onProviderNameClick(paymentRequestId: any) {
     this.onVendorClickedEvent.emit(paymentRequestId);
+  }
+
+  recordUpdate(event:any){
+      this.onCloseEditListItemsDetailClicked();
+      const userObject = {
+        approvalEntityId: this.currentlyExpandedPanelId,
+        subTypeCode: this.selectedSubtypeCode,
+      };
+      this.getMasterDetailsEvent.emit(userObject);   
   }
 }

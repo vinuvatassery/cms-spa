@@ -29,6 +29,8 @@
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundBatch"
                                 [sortType]="sortType" [sort]="sortBatchList" 
                                 (loadVendorRefundBatchListEvent)="loadVendorRefundBatchListGrid($event)"
+                                [exportButtonShow$]="exportButtonShow$"                              
+                                (exportGridDataEvent)="exportBatchesGridData()"
                                 ></cms-refund-batches-list>
                             </div>
                         </ng-template>

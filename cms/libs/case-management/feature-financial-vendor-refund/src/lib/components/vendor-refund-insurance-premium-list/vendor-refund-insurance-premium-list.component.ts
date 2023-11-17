@@ -7,35 +7,54 @@ import {
   OnChanges,
   OnInit,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
+import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { SelectableDirective } from '@progress/kendo-angular-dropdowns';
+import { FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-vendor-refund-insurance-premium-list',
   templateUrl: './vendor-refund-insurance-premium-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnChanges{
+export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnChanges {
+  @ViewChild('filterResetConfirmationDialogTemplate', { read: TemplateRef })
+  filterResetConfirmationDialogTemplate!: TemplateRef<any>;
+ 
+  @ViewChild(GridComponent) grid!: GridComponent;
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  isPremiumLoaderShow = false;
+  isClientClaimsLoaderShow = false;
   /** Constructor **/
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-  @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
-  @Input() premiumsListData$: any;
-  @Output() loadPremiumListEvent = new EventEmitter<any>();
-  sortColumn = 'vendorName';
+  @Input() vendorId: any;
+  @Input() clientId: any;
+  @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
+ @Input() isEdit = false
+ @Input() editPaymentRequestId:any
+  @Input() clientClaimsListData$: any;
+  @Output() loadClientClaimsListEvent = new EventEmitter<any>();
+  @Output() claimsCount = new EventEmitter<any>();
+  paymentStatusType:any;
+  paymentMethod:any;
+  public selectedClaims: any[] = [];
+  paymentStatusCode =null
+  sortColumn = 'clientId';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -44,83 +63,189 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-
-  gridPremiumDataSubject = new Subject<any>();
-  gridPremiumData$ = this.gridPremiumDataSubject.asObservable();
+  selectedInsuranceClaims :any[] =[]
+  gridClientClaimsDataSubject = new Subject<any>();
+  gridClientClaimsData$ = this.gridClientClaimsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+  financialPremiumsProcessData$ = this.financialVendorRefundFacade.financialPremiumsProcessData$;
+  premiumsListData$ =   this.financialVendorRefundFacade.premiumsListData$;
+  @Input() selectedInsurancePremiumIds:any[]  =[]
+  filterResetDialog: any;
+  paymentMethodCode: any
+  paymentStatusLovSubscription!:Subscription;
+  paymentStatuses$ = this.lovFacade.paymentStatus$
+  paymentMethodLov$ = this.lovFacade.paymentMethodType$;
+  paymentMethodLovSubscription!: Subscription;
+  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
+  {
  
-  ngOnInit(): void {
-    this.loadPremiumListGrid();
   }
-  ngOnChanges(): void {
+  selectedKeysChange(selection: any) {
+    
+
+    this.selectedInsuranceClaims = selection;
+    this.claimsCount.emit(this.selectedInsuranceClaims.length)
+  }
+  ngOnInit(): void {
+    
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    this.loadPremiumListGrid();
+    this.selectedInsuranceClaims =  (this.selectedInsurancePremiumIds && this.selectedInsurancePremiumIds.length >0)?
+                                    this.selectedInsurancePremiumIds : this.selectedInsuranceClaims
+                                    this.lovFacade.getPaymentStatusLov()
+                                    this.paymentStatusSubscription();                           
+    this.loadRefundClaimsListGrid();
+    this.paymentMethodSubscription()
+    this.lovFacade.getPaymentMethodLov();
+    
+  }
+  ngOnChanges(): void {  
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+    this.loadRefundClaimsListGrid();
+  }
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value:value.lovCode
+    }],
+      logic: "or"
+  });
+    if(field == "paymentStatusCode"){
+      this.paymentStatusCode = value;
+    }
   }
 
-  private loadPremiumListGrid(): void {
-    this.loadPremiumList(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
-  }
-  loadPremiumList
-  (    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string) {
-      this.isPremiumLoaderShow = true;
-      const gridDataRefinerValue = {
-        skipCount: skipCountValue,
-        pagesize: maxResultCountValue,
-        sortColumn: sortValue,
-        sortType: sortTypeValue,
-      };
-    this.loadPremiumListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+  loadRefundClaimsGrid(data: any) {
+    if(this.isEdit){
+      this.financialVendorRefundFacade.getInsuranceRefundEditInformation(this.editPaymentRequestId,data)
+    }else{
+      this.financialVendorRefundFacade.loadMedicalPremiumList(data);
+
+    }
   }
   
   dataStateChange(stateData: any): void {
+    
+    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadPremiumListGrid();
+   
   }
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.loadPremiumListGrid();
+    this.loadRefundClaimsListGrid();
   }
 
-  public filterChange(filter: CompositeFilterDescriptor): void {
-    this.filterData = filter;
+ 
+  private loadRefundClaimsListGrid(): void {
+    this.loadClaimsProcess(
+      this.vendorId,
+      this.clientId,
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
   }
-
-  gridDataHandle() {
-    this.premiumsListData$.subscribe((data: GridDataResult) => {
+  loadClaimsProcess(
+    vendorId: string,
+    clientId: number,
+    skipCountValue: number,
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string
+  ) {
+    this.isClientClaimsLoaderShow = true;
+    const gridDataRefinerValue = {
+      vendorId: vendorId,
+      clientId: clientId,
+      skipCount: skipCountValue,
+      pageSize: maxResultCountValue,
+      sort: sortValue,
+      sortType: sortTypeValue,
+      filter : this.state?.["filter"]?.["filters"] ?? []
+    };
+    this. loadRefundClaimsGrid(gridDataRefinerValue);
+    this.gridDataHandle();
+  
+  }
+  gridDataHandle() { 
+    this.financialPremiumsProcessData$.subscribe((data: GridDataResult) => {
+      
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
       );
-      this.gridPremiumDataSubject.next(this.gridDataResult);
+      this.gridClientClaimsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
-        this.isPremiumLoaderShow = false;
+        this.isClientClaimsLoaderShow = false;
       }
     });
-    this.isPremiumLoaderShow = false;
+    this.isClientClaimsLoaderShow = false;
 
+  }
+  filterChange(filter: CompositeFilterDescriptor): void {  
+    this.filterData = filter;
+ 
+  }
+  openResetDialog( template: TemplateRef<unknown>)
+  {
+    this.filterResetDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+  paymentStatusSubscription()
+  {
+    this.paymentStatusLovSubscription = this.paymentStatuses$.subscribe(data=>{
+      this.paymentStatusType = data;
+    });
+  }
+  paymentMethodSubscription()
+  {
+    this.paymentStatusLovSubscription = this.paymentMethodLov$.subscribe(data=>{
+      this.paymentMethod = data;
+    });
+  }
+  resetButtonClosed(result: any) {
+    if (result) {
+ 
+      this.filterResetDialog.close();
+    }
+  }
+  
+  resetFilterClicked(action: any,) {
+    if (action) {
+      this.selectedClaims=[]
+      this.clearSelection();
+      this.loadRefundClaimsListGrid();
+     this.filterResetDialog.close();
+    }
+  }
+  private clearSelection(): void {  
+    if (this.grid) {
+        this.selectedInsuranceClaims = [];
+    }
+  }
+  ngOnDestroy(): void {
+    this.paymentStatusLovSubscription.unsubscribe();
   }
 }

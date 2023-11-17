@@ -30,6 +30,13 @@ export class DrugsDataService {
     );
   }
 
+  updateDrugVendor(drugDto:any){
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/drugs`,drugDto
+    );
+    }
+
   loadRefundLogList() : Observable<any> {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/refund/history`   );

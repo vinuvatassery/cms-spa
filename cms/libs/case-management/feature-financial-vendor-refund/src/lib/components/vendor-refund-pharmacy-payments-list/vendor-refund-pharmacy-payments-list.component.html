@@ -2,7 +2,10 @@
     <kendo-grid [resizable]="true" [loading]="isClaimsLoaderShow" [pageSize]="state.take"
       [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
-      [data]="claimsListData$ | async">
+      [data]="claimsListData$ | async"
+      (selectedKeysChange)="selectedKeysChange($event)"
+      kendoGridSelectBy="paymentRequestId"
+      [(selectedKeys)]="selectedPharmacyClaims">
       <kendo-grid-column field="PharmacyName" title="Pharmacy Name" [width]="160">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.PharmacyName" kendoButton look="flat" class="card-link-button"  >

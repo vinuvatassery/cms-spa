@@ -41,6 +41,9 @@ export class FinancialVendorFacade {
   private vendorsListSubject = new BehaviorSubject<any>([]);
   vendorDetails$ = this.vendorsListSubject.asObservable();
 
+  private manufacturerListSubject = new BehaviorSubject<any>([]);
+  manufacturerList$ = this.manufacturerListSubject.asObservable();
+
   private medicalProviderSearchLoaderVisibilitySubject = new Subject<boolean>;
   medicalProviderSearchLoaderVisibility$ = this.medicalProviderSearchLoaderVisibilitySubject.asObservable();
   public insuranceVendorsSubject = new Subject<any>;
@@ -265,6 +268,21 @@ export class FinancialVendorFacade {
     });
   }
 
+  loadManufacturersList(): void {
+    this.showLoader();
+    this.financialVendorDataService.loadVendorList(FinancialVendorTypeCode.Manufacturers).subscribe({
+      next: (reponse: any) => {
+        if (reponse) {
+          this.hideLoader();
+          this.manufacturerListSubject.next(reponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
   getProviderList(providerPageAndSortedRequest: any) {
     this.showLoader();
     this.financialVendorDataService.getProvidersList(providerPageAndSortedRequest).subscribe({
@@ -331,4 +349,24 @@ export class FinancialVendorFacade {
       },
     });
   }
+
+  updateVendorProfile(ProviderPanelDto: any) {
+    this.showLoader();
+    return this.financialVendorDataService.updateVendorProfile(ProviderPanelDto).subscribe({
+      next: (updatedResponse: any) => {
+        if (updatedResponse) {
+          this.updateProviderPanelSubject.next(updatedResponse);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse.Message)
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
+
+
+
 }

@@ -1,6 +1,17 @@
-
 <cms-pharmacy-claims-batches-reconcile-payments 
 [reconcileGridLists$]="reconcileGridLists$"
 [pageSizes]="pageSizes" [sortValue]="sortValue"
 [sortType]="sortType" [sort]="sort" 
-(loadReconcileListEvent)="loadReconcileListGrid($event)"></cms-pharmacy-claims-batches-reconcile-payments>
+[reconcileGridLists$]="reconcileGridLists$"
+[pageSizes]="pageSizes" 
+[sortValue]="sortValue"
+[sortType]="sortType" [sort]="sort" 
+[sortValueBatch]="sortValueBatch"
+[sortBatch]="sortBatch"
+[batchId] = "batchId"
+(loadReconcileListEvent)="loadReconcileListGrid($event)"
+[exportButtonShow$]="exportButtonShow$"
+(exportGridDataEvent)="exportClaimBatchesGridData()"
+(loadTemplateEvent) = "loadEachLetterTemplate($event)"
+[letterContentList$]="letterContentList$"
+[letterContentLoader$]="letterContentLoader$"></cms-pharmacy-claims-batches-reconcile-payments>

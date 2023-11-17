@@ -41,6 +41,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
   @Output() changeTitle = new EventEmitter<any>();
 
+  @ViewChild('unBatchRefundsDialogTemplate', { read: TemplateRef })
+  unBatchRefundsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
+  deleteRefundsConfirmationDialogTemplate!: TemplateRef<any>;
+
   public state!: State;
   sortColumn = 'Batch #';
   sortDir = 'Descending';
@@ -53,7 +58,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   gridDataResult!: GridDataResult;
 
   gridVendorsAllPaymentsDataSubject = new Subject<any>();
-  gridVendorsAllPaymentsData$ = this.gridVendorsAllPaymentsDataSubject.asObservable();
+  gridVendorsAllPaymentsData$ =
+    this.gridVendorsAllPaymentsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -158,7 +164,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.loadVendorRefundAllPaymentsListGrid();
   }
 
-
   private loadVendorRefundAllPaymentsListGrid(): void {
     this.loadRefundAllPayments(
       this.state?.skip ?? 0,
@@ -184,7 +189,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       MaxResultCount: maxResultCountValue,
       Sorting: sortValue,
       SortType: sortTypeValue,
-      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? [])
+      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
     };
     this.loadVendorRefundAllPaymentsListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();

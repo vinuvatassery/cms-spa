@@ -65,7 +65,7 @@
                   </kendo-grid-column>
                   <kendo-grid-column field="amountDue" title="Amount Due" [width]="140">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              <span> <strong>$</strong> {{dataItem.amountDue | kendoNumber:'n2'}}</span>
+                              <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber:'n2'}}</span>
                         </ng-template>
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                               <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
