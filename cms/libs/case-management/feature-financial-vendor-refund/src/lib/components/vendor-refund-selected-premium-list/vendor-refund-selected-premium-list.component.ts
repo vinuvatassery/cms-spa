@@ -35,7 +35,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   financialPremiumsRefundGridLists!: any[];
  @Input() gridDataResult! : GridDataResult
- @Input() clientId :any =30104
+ @Input() clientId :any 
 @Input() vendorAddressId :any 
  public formUiStyle: UIFormStyle = new UIFormStyle();
   refundNoteValueLength = 0

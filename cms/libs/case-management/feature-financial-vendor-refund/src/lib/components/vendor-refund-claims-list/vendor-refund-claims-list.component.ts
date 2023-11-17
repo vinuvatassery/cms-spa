@@ -69,9 +69,9 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   paymentStatuses$ = this.lovFacade.paymentStatus$;
   @Output() claimsCount = new EventEmitter<any>();
   constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade){
-    
+
   }
-  @Input() EditinspaymentRequestId :any
+
 
   ngOnInit(): void {
     this.lovFacade.getPaymentStatusLov()
