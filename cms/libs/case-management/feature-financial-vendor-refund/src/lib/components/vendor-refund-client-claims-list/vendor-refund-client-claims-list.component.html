@@ -1,5 +1,5 @@
 <div class="app-c-table"> 
-  <kendo-grid [resizable]="true" [loading]="isClientClaimsLoaderShow" [pageSize]="state.take" [pageable]="true"
+  <kendo-grid #selectable [resizable]="true" [loading]="isClientClaimsLoaderShow" [pageSize]="state.take" [pageable]="true"
   [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"  [filter]="state.filter"
   [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
   [data]="clientclaimsData$| async"
@@ -51,15 +51,10 @@
       <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.prescriptionFillDate | date : 'MM/dd/yyyy' }}
       </ng-template>
-    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-      <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-        [extra]="false" operator="eq">
-        <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-        <kendo-filter-eq-operator></kendo-filter-eq-operator>
-        <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-        <kendo-filter-contains-operator></kendo-filter-contains-operator>
-      </kendo-grid-string-filter-menu>
-    </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter [field]="'prescriptionFillDate'" [filter]="filter" [filterService]="filterService">
+        </common-grid-cell-date-range-filter>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="ndc" title="NDC Code" [width]="140">
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -203,13 +198,8 @@
         {{ dataItem.entryDate | date : 'MM/dd/yyyy' }}
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-          [extra]="false" operator="eq">
-          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
-          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-          <kendo-filter-contains-operator></kendo-filter-contains-operator>
-        </kendo-grid-string-filter-menu>
+        <common-grid-cell-date-range-filter [field]="'entryDate'" [filter]="filter" [filterService]="filterService">
+        </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
 
@@ -261,3 +251,10 @@
 
   </kendo-grid>
 </div>
+<ng-template #filterResetConfirmationDialogTemplate>
+  <cms-reset-filter-confirmation
+      (isModalfilterResetButtonClicked)="resetFilterClicked($event)"
+      (isModalfilterResetsCloseClicked)="resetButtonClosed($event)"
+     >
+    </cms-reset-filter-confirmation>
+</ng-template>

@@ -87,6 +87,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     pcaCode:'PCA',
     vp:'VP',
     refunfNotes:'Refund Note',
+    origionalWarrentnbr:'Original Warrant #',
 
 
   };
@@ -122,6 +123,10 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     {
       columnCode: 'pcaCode',
       columnDesc: 'PCA',
+    },
+    {
+      columnCode: 'origionalWarrentnbr',
+      columnDesc: 'Original Warrant #',
     },
 
     {
