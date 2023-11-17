@@ -68,7 +68,7 @@
               kendoMultiColumnComboBoxColumnCellTemplate
               let-dataItem
             >
-              <span class="text-muted"> <em>DOB:</em> {{ dataItem.dob }}</span>
+              <span class="text-muted"> <em>DOB:</em> {{ dataItem.dob | date : 'MM/dd/YYYY'}}</span>
             </ng-template>
           </kendo-combobox-column>
         </kendo-multicolumncombobox>
