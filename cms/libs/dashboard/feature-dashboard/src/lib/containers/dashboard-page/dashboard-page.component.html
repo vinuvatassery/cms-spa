@@ -417,9 +417,9 @@
     <div>
       <h1 class="maintitle_withicon text-bold">
         <span aria-label="Clients" class="material-icons sidebar-menu_icon " aria-hidden="true"> home </span>
-        Welcome back, Stacey
+        Welcome back, {{ onGetUser()?.name }}
       </h1>
-      <kendo-dropdownlist class="plain_Drop"  [(ngModel)]="selectedValue" fillMode="none" [data]="areaList"></kendo-dropdownlist>
+     
     </div>
  
     <div>

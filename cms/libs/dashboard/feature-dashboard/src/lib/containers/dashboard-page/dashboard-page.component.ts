@@ -7,7 +7,7 @@ import { LocalStorageService } from '@cms/shared/util-core';
 import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
 import { TileLayoutReorderEvent } from "@progress/kendo-angular-layout";
 import { TileLayoutResizeEvent } from "@progress/kendo-angular-layout";
-
+import { AuthService } from '@cms/shared/util-oidc';
 @Component({
   selector: 'dashboard-dashboard-page',
   templateUrl: './dashboard-page.component.html',
@@ -33,6 +33,7 @@ export class DashboardPageComponent implements OnInit {
   public selectedValue = "ORHIVE Case Worker Dashboard";
   /** Constructor **/
   constructor(
+    private authService: AuthService,
     private readonly dashboardFacade: DashboardFacade,
     private readonly localStorageService: LocalStorageService, 
     private readonly dashboardWrapperFacade: DashboardWrapperFacade
@@ -47,7 +48,12 @@ export class DashboardPageComponent implements OnInit {
   editDashboardClicked(){
     this.isReorderEnable = true;
   }
-
+  user() {
+    return this.authService.getUser();
+  }
+  onGetUser() {
+    return this.authService.getUser();
+  }
   //#region Other Methods
 
   ConfigureDashboard() {
