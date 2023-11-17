@@ -145,9 +145,9 @@ export class RefundNewFormDetailsComponent{
     this.inputConfirmationClicked = true;
   }
   selectDiffPayments(){
-    this.isRefundGridClaimShow = true
     this.isConfirmationClicked = false;
-    this.showHideServicesListForm();
+    this.isRefundGridClaimShow = true;
+   
   }
   closeAddEditRefundFormModalClicked(){
     this.modalCloseAddEditRefundFormModal.emit(true);  

@@ -78,8 +78,8 @@ private clientClaimsListDataSubject =  new Subject<any>();
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-      
     };
+    this.loadRefundClaimsListGrid()
     if(this.confirmClicked == true) {
       this.selectedVendorRefundsListEvent.emit(this.selectedVendorRefunds)
     }

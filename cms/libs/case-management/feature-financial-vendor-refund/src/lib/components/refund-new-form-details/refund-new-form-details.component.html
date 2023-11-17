@@ -21,8 +21,9 @@
                         [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                         [filterable]="true" formControlName="client"
                         (filterChange)="loadClientBySearchText($event)"
-                        (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient"
+                        (selectionChange)="onClientValueChange($event)" [(ngModel)]="selectedClient"
                         (blur)="showHideServicesListForm()"
+                        
                        >
                             <button kendoButton fillMode="clear" icon="image"></button>
                             <kendo-combobox-column>
@@ -91,8 +92,9 @@
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                     [filterable]="true" formControlName="medicalProvider"
                     (filterChange)="searchPharmacy($event)" [data]="pharmacySearchResult$ | async"
-                    [(ngModel)]="selectedMedicalProvider" (valueChange)="onProviderValueChange($event)"
-                    (blur)="showHideServicesListForm()">
+                    [(ngModel)]="selectedMedicalProvider" (selectionChange)="onProviderValueChange($event)"
+                    (blur)="showHideServicesListForm()"
+                   >
                         <kendo-combobox-column>
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                 <span>{{ dataItem.vendorName }}</span>

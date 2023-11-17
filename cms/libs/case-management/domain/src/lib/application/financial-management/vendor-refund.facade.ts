@@ -213,7 +213,6 @@ export class FinancialVendorRefundFacade {
   }
 
   loadClientClaimsListGrid(){
-    this.showLoader();
     this.financialVendorRefundDataService.loadClientClaimsListService().subscribe({
       next: (dataResponse) => {
         this.clientClaimsListDataSubject.next(dataResponse);
