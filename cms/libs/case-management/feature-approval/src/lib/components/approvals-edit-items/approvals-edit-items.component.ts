@@ -6,6 +6,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoaderService } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
+import { YesNoFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'productivity-tools-approvals-edit-items',
   templateUrl: './approvals-edit-items.component.html',
@@ -38,6 +40,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
   isValidateForm!: boolean;
   tinMaskFormat: string = '0 00-000000';
   selectedVendor!: any;
+  selectedParentVendor!: any;
   drugTypesList : any;
   drugType: any;
   providerName: any;
@@ -124,7 +127,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
           this.clinicSearchSubscription?.unsubscribe();
         }
       }
-    );    
+    );
     this.selectedClinicVendorId = null;
     this.searchClinicVendorClicked.emit(clinicName);
     this.cd.detectChanges();
@@ -133,18 +136,19 @@ export class ApprovalsEditItemsComponent implements OnInit {
   bindVendorData() {
     this.clinicVendorListLocal = [
       {
-        vendorId: this.selectedMasterData.vendorId,
+        vendorId: this.getVendorId(),
         vendorName: this.getVendorName(),
       },
     ];
+    this.selectedParentVendor = this.selectedMasterData.parentVendorId;
     this.selectedVendor = this.selectedMasterData.vendorId;
     if(this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.DentalClinic ||
       this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.DentalProvider ||
       this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.MedicalClinic ||
       this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.MedicalProvider) {
-        
+
         this.healthCareForm.controls['providerName'].setValue(
-          this.selectedMasterData?.vendorName
+          this.selectedMasterData?.clinicName
         );
         this.healthCareForm.controls['firstName'].setValue(
           this.selectedMasterData?.firstName
@@ -198,7 +202,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
         this.insurancePlanForm.controls['termDate'].setValue(
           termDate
         );
-      } 
+      }
       if(this.selectedMasterData?.startDate) {
         const startDate = new Date(this.selectedMasterData?.startDate);
         this.insurancePlanForm.controls['startDate'].setValue(
@@ -220,46 +224,46 @@ export class ApprovalsEditItemsComponent implements OnInit {
     } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.InsuranceVendor) {
       this.insuranceVendorForm.controls['vendorName'].setValue(
         this.selectedMasterData?.vendorName
-      );  
+      );
       this.insuranceVendorForm.controls['nameOnCheck'].setValue(
         this.selectedMasterData?.nameOnCheck
-      );  
+      );
       this.insuranceVendorForm.controls['nameOnEnvelop'].setValue(
         this.selectedMasterData?.nameOnEnvelope
-      );  
+      );
       this.insuranceVendorForm.controls['tin'].setValue(
         this.selectedMasterData?.tin
-      );  
+      );
       this.insuranceVendorForm.controls['mailCode'].setValue(
         this.selectedMasterData?.mailCode
-      );  
+      );
       this.insuranceVendorForm.controls['paymentMethod'].setValue(
         this.selectedMasterData?.paymentMethodCode
-      );  
+      );
       this.insuranceVendorForm.controls['acceptsCombinedPayments'].setValue(
-        this.selectedMasterData?.acceptsCombinedPaymentsFlag
-      );  
+        this.selectedMasterData?.acceptsCombinedPaymentsFlag === YesNoFlag.Yes ? true : false
+      );
       this.insuranceVendorForm.controls['acceptsReport'].setValue(
-        this.selectedMasterData?.acceptsReportsFlag
-      );  
+        this.selectedMasterData?.acceptsReportsFlag  === YesNoFlag.Yes ? true : false
+      );
       this.insuranceVendorForm.controls['paymentRunDate'].setValue(
         this.selectedMasterData?.paymentRunDateMonthly.toString()
-      );  
+      );
       this.insuranceVendorForm.controls['contactFirstName'].setValue(
         this.selectedMasterData?.contact1FirstName ? this.selectedMasterData?.contact1FirstName : ''
-      );  
+      );
       this.insuranceVendorForm.controls['contactLastName'].setValue(
         this.selectedMasterData?.contact1LastName ? this.selectedMasterData?.contact1LastName : ''
-      );  
+      );
       this.insuranceVendorForm.controls['contactPhone'].setValue(
         this.selectedMasterData?.phoneNumber
-      );  
+      );
       this.insuranceVendorForm.controls['contactFax'].setValue(
         this.selectedMasterData?.fax
-      );  
+      );
       this.insuranceVendorForm.controls['contactEmail'].setValue(
         this.selectedMasterData?.email
-      );  
+      );
     } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.InsuranceProvider) {
       this.insuranceProviderForm.controls['providerName'].setValue(
         this.selectedMasterData?.vendorName
@@ -279,6 +283,19 @@ export class ApprovalsEditItemsComponent implements OnInit {
     }
     this.cd.detectChanges();  }
 
+  getVendorId()
+  {
+    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
+      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
+      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
+      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider)
+      {
+        return this.selectedMasterData?.parentVendorId;
+      }
+      else{
+        return this.selectedMasterData?.vendorId;
+      }
+  }
   validateForm() {
     if (
       this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.DentalClinic ||
@@ -292,7 +309,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
         Validators.required
       );
       this.healthCareForm.controls['providerName'].updateValueAndValidity();
-      
+
       if(this.selectedMasterData.firstName)
       {
         this.healthCareForm.controls['firstName'].setValidators(
@@ -361,34 +378,34 @@ export class ApprovalsEditItemsComponent implements OnInit {
     } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.Pharmacy) {
       this.pharmacyForm.controls['pharmacyName'].setValidators(Validators.required)
       this.pharmacyForm.controls['pharmacyName'].updateValueAndValidity();
-      
+
       this.pharmacyForm.controls['mailCode'].setValidators(Validators.required)
       this.pharmacyForm.controls['mailCode'].updateValueAndValidity();
-      
+
       this.pharmacyForm.controls['paymentMethod'].setValidators(Validators.required)
       this.pharmacyForm.controls['paymentMethod'].updateValueAndValidity();
     } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.InsuranceVendor) {
       this.insuranceVendorForm.controls['vendorName'].setValidators(Validators.required)
       this.insuranceVendorForm.controls['vendorName'].updateValueAndValidity();
-     
+
       this.insuranceVendorForm.controls['nameOnCheck'].setValidators(Validators.required)
       this.insuranceVendorForm.controls['nameOnCheck'].updateValueAndValidity();
-     
+
       this.insuranceVendorForm.controls['nameOnEnvelop'].setValidators(Validators.required)
       this.insuranceVendorForm.controls['nameOnEnvelop'].updateValueAndValidity();
-     
+
       this.insuranceVendorForm.controls['mailCode'].setValidators(Validators.required)
       this.insuranceVendorForm.controls['mailCode'].updateValueAndValidity();
-     
+
       this.insuranceVendorForm.controls['paymentMethod'].setValidators(Validators.required)
       this.insuranceVendorForm.controls['paymentMethod'].updateValueAndValidity();
-     
+
       this.insuranceVendorForm.controls['paymentRunDate'].setValidators(Validators.required)
       this.insuranceVendorForm.controls['paymentRunDate'].updateValueAndValidity();
     } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.InsuranceProvider) {
       this.insuranceProviderForm.controls['providerName'].setValidators(Validators.required);
       this.insuranceProviderForm.controls['providerName'].updateValueAndValidity();
-    } 
+    }
   }
 
   onUpdateClicked() {
@@ -403,14 +420,14 @@ export class ApprovalsEditItemsComponent implements OnInit {
         !this.insuranceProviderForm.valid ) {
       return;
     }
-    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalClinic || 
+    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
       this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider ||
       this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
       this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider) {
         this.updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
         let contact = [];
         let emails = [];
-        let phones = [];    
+        let phones = [];
         emails.push({
           emailAddress: this.healthCareForm.controls['email']?.value,
           vendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
@@ -432,8 +449,11 @@ export class ApprovalsEditItemsComponent implements OnInit {
         )
         let masterData = {
           vendorName: this.providerName ? this.providerName : this.tempVendorName,
+          parentVendorId: this.selectedParentVendor,
           vendorId: this.selectedVendor,
           tin: this.healthCareForm?.controls['tinNumber'].value,
+          firstName: this.healthCareForm?.controls['firstName'].value,
+          lastName: this.healthCareForm?.controls['lastName'].value,
           address: {
             vendorAddressId: this.selectedMasterData.vendorAddressId,
             paymentMethodCode: this.healthCareForm?.controls['paymentMethod']?.value ? this.healthCareForm?.controls['paymentMethod']?.value : '',
@@ -490,7 +510,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
       this.updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
         let contact = [];
         let emails = [];
-        let phones = [];    
+        let phones = [];
         emails.push({
           emailAddress: this.pharmacyForm.controls['contactEmail']?.value,
           vendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
@@ -532,7 +552,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
       this.updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
         let contact = [];
         let emails = [];
-        let phones = [];    
+        let phones = [];
         emails.push({
           emailAddress: this.insuranceVendorForm.controls['contactEmail']?.value,
           vendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
@@ -560,8 +580,8 @@ export class ApprovalsEditItemsComponent implements OnInit {
             MailCode: this.insuranceVendorForm.controls['mailCode'].value,
             paymentMethodCode: this.insuranceVendorForm?.controls['paymentMethod']?.value ? this.insuranceVendorForm?.controls['paymentMethod']?.value : '',
             nameOnEnvelope: this.insuranceVendorForm?.controls['nameOnEnvelop']?.value,
-            acceptsCombinedPaymentsFlag: this.insuranceVendorForm?.controls['acceptsCombinedPayments']?.value,
-            acceptsReportsFlag: this.insuranceVendorForm?.controls['acceptsReport']?.value,
+            acceptsCombinedPaymentsFlag: this.insuranceVendorForm?.controls['acceptsCombinedPayments']?.value ? StatusFlag.Yes : StatusFlag.No ,
+            acceptsReportsFlag: this.insuranceVendorForm?.controls['acceptsReport']?.value ? StatusFlag.Yes : StatusFlag.No,
             paymentRunDateMonthly: this.insuranceVendorForm?.controls['paymentRunDate']?.value,
             contacts: contact
           }
@@ -575,7 +595,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
       this.updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
         let contact = [];
         let emails = [];
-        let phones = [];    
+        let phones = [];
         emails.push({
           vendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
           vendorContactId: this.selectedMasterData.vendorContactId
@@ -614,7 +634,7 @@ export class ApprovalsEditItemsComponent implements OnInit {
   get drugFormControls() {
     return this.drugForm.controls;
   }
-  
+
   get insurancePlanFormControls() {
     return this.insurancePlanForm.controls;
   }
@@ -624,22 +644,27 @@ export class ApprovalsEditItemsComponent implements OnInit {
   }
 
   private getVendorName() {
-    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
-      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
-      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
-      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider ||
+    if(
       this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsuranceVendor ||
       this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsuranceProvider ||
       this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.Pharmacy) {
-        this.tempVendorName = this.selectedMasterData?.vendorName; 
+        this.tempVendorName = this.selectedMasterData?.vendorName;
         return this.selectedMasterData?.vendorName;
       } else if (this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.Drug) {
-        this.tempVendorName = this.selectedMasterData?.manufacturerName; 
+        this.tempVendorName = this.selectedMasterData?.manufacturerName;
         return this.selectedMasterData?.manufacturerName;
     } else if (this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
-      this.tempVendorName = this.selectedMasterData?.providerName; 
+      this.tempVendorName = this.selectedMasterData?.providerName;
       return this.selectedMasterData?.providerName;
     }
+    else if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
+      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
+      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
+      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider)
+      {
+        this.tempVendorName = this.selectedMasterData?.clinicName;
+        return this.selectedMasterData?.clinicName;
+      }
   }
 
   public selectionChange(value: any): void {

@@ -268,7 +268,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       };
       this.currentlyExpandedPanelId = item.approvalEntityId;
       this.selectedSubtypeCode = item.subTypeCode;
-      this.getMasterDetailsEvent.emit(userObject);    
+      this.getMasterDetailsEvent.emit(userObject);
       this.isPanelExpanded = true;
       this.cd.detectChanges();
     }
@@ -346,7 +346,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   loadCasereassignmentExpanedInfoEvent(approvalId: any) {
     this.loadCasereassignmentExpanedInfoParentEvent.emit(approvalId);
   }
-  
+
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
     let inValid = false;
 
@@ -567,6 +567,14 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       dataItem.isExpanded = true;
     }
     this.isPanelExpanded = dataItem.isExpanded;
+    if (
+      dataItem.approvalTypeCode ===
+      PendingApprovalGeneralTypeCode.GeneralAddToMasterList
+      &&  dataItem.status === this.approveStatus
+    )
+    {
+      this.onPanelExpand(dataItem);
+    }
     this.sendBackNotesChange(dataItem);
     this.assignRowDataToMainList(dataItem);
     this.enableSubmitButton();
@@ -647,7 +655,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     requests.splice(0, 1);
     this.submit(requests);
   }
-  
+
   submit(data: any) {
     this.submitGeneralRequestsEvent.emit(data);
   }
@@ -670,6 +678,6 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         approvalEntityId: this.currentlyExpandedPanelId,
         subTypeCode: this.selectedSubtypeCode,
       };
-      this.getMasterDetailsEvent.emit(userObject);   
+      this.getMasterDetailsEvent.emit(userObject);
   }
 }
