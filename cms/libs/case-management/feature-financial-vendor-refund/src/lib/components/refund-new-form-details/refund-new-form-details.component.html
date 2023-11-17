@@ -656,12 +656,9 @@
             </div>
             <div id="PharmacyPaymentsList">
                 <h5>PHARMACY PAYMENTS FOR FNAME LNAME</h5>
-                    <cms-vendor-refund-pharmacy-payments-list [claimsListData$]="claimsListData$"
+                    <cms-vendor-refund-pharmacy-payments-list [vendorId]="vendorId" [clientId]="clientId"
                         [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyPayment" [sortType]="sortType"
-                        [sort]="sortPharmacyPayment"
-                        (loadClaimsListEvent)="loadClaimsListGrid($event)"></cms-vendor-refund-pharmacy-payments-list>
-                
-
+                        [sort]="sortPharmacyPayment"></cms-vendor-refund-pharmacy-payments-list>
             </div>
             </div>
         </div>

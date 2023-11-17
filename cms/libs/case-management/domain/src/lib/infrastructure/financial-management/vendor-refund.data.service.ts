@@ -502,4 +502,21 @@ export class FinancialVendorRefundDataService {
     }
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/refund-tpa-list?vendorId='${data.vendorId}'&clientId='${data.clientId}`,ClaimsPageAndSortedRequestDto);
   }
+  loadFinancialRecentRefundListService(data:any):Observable<any> {
+    const RefundPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      refundType:data.refundType,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/recent-refunds`,
+      RefundPageAndSortedRequestDto
+    );
+  }
 }

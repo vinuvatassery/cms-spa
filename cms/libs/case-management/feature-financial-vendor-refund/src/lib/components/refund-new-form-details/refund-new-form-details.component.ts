@@ -377,5 +377,4 @@ this.insuraceAddRefundClickSubject.next(true);
    }
    return 'ng-dirty ng-invalid';
  }
-
 }

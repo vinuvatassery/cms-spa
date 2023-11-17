@@ -102,6 +102,11 @@ export class FinancialVendorRefundFacade {
   private pharmacyPaymentsListDataSubject =  new Subject<any>();
   pharmacyPaymentsListData$ = this.pharmacyPaymentsListDataSubject.asObservable();
 
+
+  private RecentRefundListDataSubject =  new Subject<any>();
+  RecentRefundListData$ = this.RecentRefundListDataSubject.asObservable();
+
+
   private insuranceRefundInformationSubject =  new Subject<any>();
   insuranceRefundInformation$ = this.insuranceRefundInformationSubject.asObservable();
 
@@ -535,6 +540,27 @@ this.loaderService.show();
             total: dataResponse['totalCount'],
           };
           this.clientClaimsListDataSubject.next(gridView);
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.hideLoader();
+      },
+    });
+  }
+  loadFinancialRecentRefundListGrid(RefundPageAndSortedRequestDto:any) {
+    this.showLoader();
+    RefundPageAndSortedRequestDto.filter = JSON.stringify(RefundPageAndSortedRequestDto.filter);
+    this.financialVendorRefundDataService. loadFinancialRecentRefundListService(RefundPageAndSortedRequestDto).subscribe({
+      next: (dataResponse) => {
+        this.RecentRefundListDataSubject.next(dataResponse);
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.RecentRefundListDataSubject.next(gridView);
           this.hideLoader();
         }
       },
