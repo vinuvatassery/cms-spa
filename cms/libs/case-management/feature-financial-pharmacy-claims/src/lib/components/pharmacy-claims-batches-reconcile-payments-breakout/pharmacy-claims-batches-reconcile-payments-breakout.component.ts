@@ -75,7 +75,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   selectedPaymentType: string | null = null;
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
-
+  claimsType:any;
   constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,private readonly lovFacade: LovFacade, private readonly financialClaimsFacade: FinancialClaimsFacade) { }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -308,4 +308,5 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
       logic: 'and',
     });
   }
+
 }

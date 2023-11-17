@@ -20,6 +20,11 @@
                   [loading]="reconcilePaymentBreakoutLoader"
                   >
                   <kendo-grid-column field="clientName" title="Client Name" [width]="120">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                              <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
+                                {{ dataItem.clientName }}
+                              </button>
+                            </ng-template>
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                               <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                                 [extra]="false" operator="eq">
@@ -255,3 +260,22 @@
             </kendo-grid>
       </div>
 </div>
+<ng-template #clientRecentClaimsDialog>
+      <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}} </h4></kendo-dialog-titlebar>
+      <section class="k-dialog-body">
+        <cms-pharmacy-claims-recent-claims-list
+          (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
+      </section>
+      <kendo-dialog-actions>
+        <div class="justify-content-between" >
+          <div class="justify-content-end" (click)="onClientClicked(clientId)">
+            <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
+              Client Profile <span class="material-icons ml-1">
+                chevron_right
+              </span>
+            </button>
+    
+          </div>
+        </div>
+      </kendo-dialog-actions>
+    </ng-template>
