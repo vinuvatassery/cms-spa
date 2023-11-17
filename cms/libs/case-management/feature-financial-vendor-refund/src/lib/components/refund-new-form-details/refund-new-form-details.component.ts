@@ -81,7 +81,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialVendorRefundFacade.clients$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
-  Insurancevendors$ = this.financialVendorRefundFacade.Insurancevendors$;
+  insurancevendors$ = this.financialVendorRefundFacade.insurancevendors$;
   tpavendors$ = this.financialVendorRefundFacade.tpavendors$;
  
   @ViewChild('insClaims', { static: false })
@@ -137,7 +137,7 @@ if(this.isEdit){
     }
   
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
-  this.financialVendorRefundFacade.InsurancevendorsSubject.next([this.selectedVendor])
+  this.financialVendorRefundFacade.insurancevendorsSubject.next([this.selectedVendor])
  
 }
   }

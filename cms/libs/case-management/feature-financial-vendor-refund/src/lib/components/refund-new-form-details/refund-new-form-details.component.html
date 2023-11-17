@@ -66,7 +66,7 @@
                         <div class="combotable_search_list new_refund_Search">                           
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                                      <kendo-multicolumncombobox [data]="Insurancevendors$ | async" 
+                                      <kendo-multicolumncombobox [data]="insurancevendors$ | async" 
                                       textField='providerFullName'
                                       valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
                                       placeholder="Search Vendor Name, ID"

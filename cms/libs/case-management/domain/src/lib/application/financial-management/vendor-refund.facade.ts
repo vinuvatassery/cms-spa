@@ -126,8 +126,8 @@ export class FinancialVendorRefundFacade {
 
   public tpaVendorsSubject = new Subject<any>;
   tpavendors$ = this.tpaVendorsSubject.asObservable();
-  public InsurancevendorsSubject = new Subject<any>;
-  Insurancevendors$ = this.InsurancevendorsSubject.asObservable();
+  public insurancevendorsSubject = new Subject<any>;
+  insurancevendors$ = this.insurancevendorsSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -329,7 +329,7 @@ this.loaderService.show();
         response?.forEach((vendor:any) => {
             vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.insuranceName ?? ''}${vendor.insuranceType ?? ''}`;
         });
-        this.InsurancevendorsSubject.next(response);
+        this.insurancevendorsSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
       },
       error: (err) => {
