@@ -471,4 +471,7 @@ export class ApprovalPageComponent implements OnInit {
     this.insuranceProviderForm = form;
   }
 
+  updateClientPolicy(importedclaimDto: any){
+    this.importedClaimFacade.updateClientPolicy(importedclaimDto);
+  }
 }

@@ -18,6 +18,7 @@ import {
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { FinancialClaimsFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'productivity-tools-imported-claims-lists',
@@ -33,6 +34,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Input() approvalsImportedClaimsLists$: any;
   @Output() loadImportedClaimsGridEvent = new EventEmitter<any>();
+  @Output() updateClientPolicyEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'clientName';
   sortDir = 'Ascending';
@@ -50,12 +52,19 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  selectedPolicyId: any
   private searchCaseDialog: any;
   private expectationDialog: any;
   private reviewPossibleMatchesDialog: any;
+  clientSearchResult$ = this.financialClaimsFacade.clients$;
+  selectedClaim: any;
 
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService,private readonly router: Router) {}
+  constructor(private route: Router, 
+              private dialogService: DialogService,
+              private readonly router: Router,
+              private financialClaimsFacade: FinancialClaimsFacade) 
+              {}
 
   ngOnInit(): void {
   }
@@ -172,7 +181,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.router.navigate([`/case-management/cases/case360/${clientId}`]);
 
   }
-  onSearchClientsDialogClicked(template: TemplateRef<unknown>): void {
+  
+  onSearchClientsDialogClicked(template: TemplateRef<unknown>, selectedClaim: any): void {
+    this.selectedClaim = selectedClaim
     this.searchCaseDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
@@ -201,4 +212,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   onCloseReviewPossibleMatchesDialogClicked() {
     this.reviewPossibleMatchesDialog.close();
   }
+
+  onClientValueChange(importedclaimDto: any){
+    this.updateClientPolicyEvent.emit(importedclaimDto);
+  }
+
 }

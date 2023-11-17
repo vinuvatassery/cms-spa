@@ -26,4 +26,11 @@ export class ImportedClaimService {
       importedClaimsRequestDto
     );
   }
+
+  updateClientPolicy(importedclaimDto : any){    
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/client-policy`,
+      importedclaimDto
+    );
+  }
 }
