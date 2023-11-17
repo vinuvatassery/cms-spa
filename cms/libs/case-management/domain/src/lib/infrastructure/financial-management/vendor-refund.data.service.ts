@@ -502,5 +502,11 @@ export class FinancialVendorRefundDataService {
       ClaimsPageAndSortedRequestDto
     );
   }
+  addNewRefundRx(refundRx: any): any {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/add-pharmacy-refund`,
+      refundRx
+    );
+  }
   
 }
