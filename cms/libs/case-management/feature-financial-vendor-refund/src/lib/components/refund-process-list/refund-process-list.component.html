@@ -181,7 +181,7 @@
         {{ dataItem.creationTime | date : 'MM/dd/yyyy' }}
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <common-grid-cell-date-range-filter [field]="'entryDate'" [filter]="filter" [filterService]="filterService">
+        <common-grid-cell-date-range-filter [field]="'creationTime'" [filter]="filter" [filterService]="filterService">
         </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
