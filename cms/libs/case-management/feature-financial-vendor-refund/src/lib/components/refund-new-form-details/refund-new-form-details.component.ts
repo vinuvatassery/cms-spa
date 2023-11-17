@@ -3,7 +3,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -55,8 +54,6 @@ export class RefundNewFormDetailsComponent{
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
   isConfirmationClicked = false;
   isSubmitted: boolean = false;
-  isRefundRxSubmitted : boolean = false;
-  isSpotsPayment!: boolean;
   clientSearchResult =[
     {
       clientId: '12',
@@ -91,53 +88,14 @@ export class RefundNewFormDetailsComponent{
   ];
   inputConfirmationClicked!: boolean;
   selectedVendorRefundsList: any = [];
-  refundNoteValueLength = 0
   @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
   constructor(  private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private formBuilder: FormBuilder,) {
  
     }
-    
-    refundRXForm = this.formBuilder.group({
-      //vp: [''],
-     // VPSuffix: [''],
-      warantNumber: ['', Validators.required],
-      depositDate: ['', Validators.required],
-      refundNote:[''],
-    })
     ngOnInit(){
       this.initRefundForm()
     }
-  addNewRefundRx() {
-    debugger
-    if (this.selectedRefundType == 'RX') {
-      this.isRefundRxSubmitted = true;
-      this.refundRXForm.markAsTouched();
-      this.refundRXForm.markAsDirty();
-
-      if (this.refundRXForm.invalid) {
-        return;
-      } else {
-        const refundRxData = this.refundRXForm.value;
-        this.financialVendorRefundFacade.addNewRefundRx(refundRxData).subscribe({
-          next: (data: any) => {
-            this.financialVendorRefundFacade.showLoader();
-            this.financialVendorRefundFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,
-              'Pharmacy Refund Added Successfuly')
-          },
-          error: (error: any) => {
-            if (error) {
-              this.financialVendorRefundFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
-              this.financialVendorRefundFacade.hideLoader();
-            }
-          }
-        })
-
-      }
-
-    }
-
-  }
   selectionChange(event: any){
     this.isConfirmationClicked = false
   }
@@ -145,9 +103,7 @@ export class RefundNewFormDetailsComponent{
     this.inputConfirmationClicked = true;
   }
   selectDiffPayments(){
-    this.isRefundGridClaimShow = true
     this.isConfirmationClicked = false;
-    this.showHideServicesListForm();
   }
   closeAddEditRefundFormModalClicked(){
     this.modalCloseAddEditRefundFormModal.emit(true);  
@@ -288,11 +244,4 @@ export class RefundNewFormDetailsComponent{
     }
     return 'ng-dirty ng-invalid';
   }
-  onRefundNoteValueChange(event: any) {
-    this.refundNoteValueLength = event.length
-  }
-  onSpotsPaymentChange(check: any) {
-    this.isSpotsPayment = check.currentTarget.checked;
-  }
-
 }
