@@ -42,7 +42,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   @Input() sortType: any;
   @Input() sort: any;
   public state!: State;
-  @Input() vendorId: any;
+  @Input() vendorAddressId: any;
   @Input() clientId: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
  @Input() isEdit = false
@@ -128,7 +128,15 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
 
   loadRefundClaimsGrid(data: any) {
     if(this.isEdit){
-      this.financialVendorRefundFacade.getInsuranceRefundEditInformation(this.editPaymentRequestId,data)
+      const param ={
+        ...data,
+        paymentRequestId : this.editPaymentRequestId
+      }
+      this.financialPremiumsProcessData$.subscribe((data: GridDataResult) => {
+       var refunded =    data.data.filter(x=> x.refundPaymentRequestId)
+       this.selectedInsuranceClaims =  refunded.map(item => item.paymentRequestId)
+      })
+      this.financialVendorRefundFacade.getInsuranceRefundEditInformation( this.vendorAddressId, this.clientId,param)
     }else{
       this.financialVendorRefundFacade.loadMedicalPremiumList(data);
 
@@ -156,7 +164,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
  
   private loadRefundClaimsListGrid(): void {
     this.loadClaimsProcess(
-      this.vendorId,
+      this.vendorAddressId,
       this.clientId,
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -165,7 +173,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
     );
   }
   loadClaimsProcess(
-    vendorId: string,
+    vendorAddressId: string,
     clientId: number,
     skipCountValue: number,
     maxResultCountValue: number,
@@ -174,7 +182,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   ) {
     this.isClientClaimsLoaderShow = true;
     const gridDataRefinerValue = {
-      vendorId: vendorId,
+      vendorId: vendorAddressId,
       clientId: clientId,
       skipCount: skipCountValue,
       pageSize: maxResultCountValue,

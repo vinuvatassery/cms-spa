@@ -173,9 +173,9 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-  addInsuranceRefundClaim(data:any,vendorId:any){
+  addInsuranceRefundClaim(data:any){
    
-    this.financialVendorRefundDataService.addInsuranceRefundClaim(data,vendorId).subscribe({
+    this.financialVendorRefundDataService.addInsuranceRefundClaim(data).subscribe({
       next: (dataResponse:any) => {
         this.addInsuranceRefundClaimSubject.next(dataResponse);
         
@@ -189,10 +189,10 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-  getInsuranceRefundEditInformation(paymentRequestId:any, paginationSortingDto:any){  
+  getInsuranceRefundEditInformation(vendorId :any,clientId:any , paginationSortingDto:any){  
   this.loaderService.show();
   paginationSortingDto.filter = JSON.stringify(paginationSortingDto.filter);
-    this.financialVendorRefundDataService.getInsuranceRefundEditInformation(paymentRequestId,paginationSortingDto).subscribe({
+    this.financialVendorRefundDataService.getInsuranceRefundEditInformation(vendorId,clientId,paginationSortingDto).subscribe({
       next: (dataResponse:any) => {
           const gridView = {
             data: dataResponse.items,
@@ -208,7 +208,22 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-
+  updateInsuranceRefundEditInformation(paginationSortingDto:any){  
+    this.loaderService.show();
+    paginationSortingDto.filter = JSON.stringify(paginationSortingDto.filter);
+      this.financialVendorRefundDataService.updateInsuranceRefundEditInformation(paginationSortingDto).subscribe({
+        next: (dataResponse:any) => {
+         
+            this.hideLoader();
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+          this.hideLoader();
+        },
+      });
+    }
+  
+  
   loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto : any){
     this.financialVendorRefundDataService.loadVendorRefundAllPaymentsListService(recentClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
