@@ -20,62 +20,131 @@ export class DashboardWrapperService {
         rows: 4,
         x: 0,
         y: 0,
-        component: 'ProgramIncome',
-      },
-      {
-        id:2,
-        cols: 6,
-        rows: 4,
-        x: 2,
-        y: 0,
-        component: 'ProgramExpenses',
+        component: 'ClientByStatus',
         widgetChartConfig:{ 
           title:{
-            text:'ACTIVE CLIENTS BY GROUP'
+            text:'Program Expenses'
           },
-          legend:{
-            position:'top',
-            orientation: 'horizontal'
+          legend:{ 
+            position:'right',
+            orientation: 'vertical',
+           
           },
           categoryAxis:{
             categories:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
           },
           series:[
-            {
-              name: 'Group 1',
-              data: [300, 200, 250, 400, 300, 350, 500],
-              type:'line',
+            
+              {
+                data: [
+                  {
+                    category: 'UPP',
+                    value: 45,
+                    color: '#FFD064',
+                  },
+                  {
+                    category: 'GROUP I',
+                    value: 15,
+                    color: '#ED6363',
+                  },
+                  {
+                    category: 'GROUP II',
+                    value: 10,
+                    color: '#57BAC3',
+                  },
+                  {
+                    category: 'BRIDGE',
+                    value: 10,
+                    color: '#0063A6',
+                  },
+                  {
+                    category: 'GROUP I / INS GAP',
+                    value: 10,
+                    color: '#BF61A5',
+                  },
+                  {
+                    category: 'GROUP II / INS GAP',
+                    value: 10,
+                    color: '#D8D365',
+                  },
+                ],
+            
+              type:'donut',
               color:'red'
             },
-            {
-              name: 'Group 2',
-              data: [75, 130, 170, 220, 100, 180, 50],
-              type:'line',
-              color:'blue'
-            },
-            {
-              name: 'Group 3',
-              data: [10, 30, 20, 10, 40, 70, 60],
-              type:'line',
-              color:'green'
-            },
-            {
-              name: 'Group 4',
-              data: [20, 10, 30, 60, 40, 80, 60],
-              type:'line',
-              color:'yellow'
-            },
-            {
-              name: 'Group 5',
-              data: [100, 10, 60, 60, 40, 70, 60],
-              type:'line',
-              color:'purple'
-            }
           ]
         }
+        
       },
       {
-        id:3,
+        id:2,
+        cols: 6,
+        rows: 4,
+        x: 0,
+        y: 0,
+        component: 'ProgramIncome',
+      },
+      {
+        id: 3,
+        cols: 6,
+        rows: 4,
+        x: 0,
+        y: 0,
+        component: 'ClientByStatus',
+        widgetChartConfig: {
+          title: {
+            text: 'ACTIVE CLIENTS BY GROUP',
+           
+          },
+          legend: { 
+            position: 'top',
+            orientation: 'horizontal',
+          },
+          categoryAxis:{
+            categories:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
+          },
+          series: [
+            {
+              data: [
+                {
+                  category: 'UPP',
+                  value: 45,
+                  color: '#FFD064',
+                },
+                {
+                  category: 'GROUP I',
+                  value: 15,
+                  color: '#ED6363',
+                },
+                {
+                  category: 'GROUP II',
+                  value: 10,
+                  color: '#57BAC3',
+                },
+                {
+                  category: 'BRIDGE',
+                  value: 10,
+                  color: '#0063A6',
+                },
+                {
+                  category: 'GROUP I / INS GAP',
+                  value: 10,
+                  color: '#BF61A5',
+                },
+                {
+                  category: 'GROUP II / INS GAP',
+                  value: 10,
+                  color: '#D8D365',
+                },
+              ],
+              type: 'donut',
+              color: 'red',
+            },
+          ],
+        },
+      },
+      {
+        id:4,
         cols: 6,
         rows: 4,
         x: 0,
@@ -127,7 +196,7 @@ export class DashboardWrapperService {
         }
       },
       {
-        id:4,
+        id:5,
         cols: 6,
         rows: 4,
         x: 0,
@@ -135,52 +204,14 @@ export class DashboardWrapperService {
         component: 'DirectMessages',
       },
       {
-        id:5,
+        id:6,
         cols: 6,
         rows: 4,
         x: 0,
         y: 0,
         component: 'RecentlyViewed',
       },
-      {
-        id:6,
-        cols: 6,
-        rows: 4,
-        x: 0,
-        y: 0,
-        component: 'ClientByStatus',
-        widgetChartConfig:{ 
-          title:{
-            text:'Program Expenses'
-          },
-          legend:{
-            visible: true,
-            position:'top',
-            orientation: 'horizontal',
-           
-          },
-          categoryAxis:{
-            categories:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
-          },
-          series:[
-            { 
-              data: [  {
-                category: 'Asia',
-                value: 53.8,
-                color: '#9de219',
-              },
-              {
-                category: 'Europe',
-                value: 16.1,
-                color: '#90cc38',
-              },],
-              type:'donut',
-              color:'red'
-            },
-          ]
-        }
-        
-      },
+   
     ]);
   }
 

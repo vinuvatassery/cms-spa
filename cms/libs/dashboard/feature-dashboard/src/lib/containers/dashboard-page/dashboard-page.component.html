@@ -433,6 +433,7 @@
       </div>
     </div>
   </section>
+  <div class="mt-1" [ngClass]="{'reorder_wrapper_enabled': isReorderEnable}">
 <gridster [options]="config" *ngIf="dashboardConfiguration$ | async as config">
   <gridster-item
     *ngFor="let item of dashboardContentList$ | async"
@@ -445,7 +446,9 @@
           [ndcDynamicComponent]="item.component" [ngComponentOutletNdcDynamicInputs]="{widgetChartConfig:item?.widgetChartConfig}"
         ></ndc-dynamic>
       </div>
-    </div>
+      </div>
+    
   </gridster-item>
 </gridster>
+</div>
 </div>

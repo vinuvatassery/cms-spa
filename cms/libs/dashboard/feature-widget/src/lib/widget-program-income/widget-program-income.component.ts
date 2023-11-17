@@ -36,7 +36,7 @@ export class WidgetProgramIncomeComponent implements OnInit {
 
   };
 
-  constructor() { }
+
 
   ngOnInit(): void {
     const hostview= this.chartPlaceholder.viewContainerRef;

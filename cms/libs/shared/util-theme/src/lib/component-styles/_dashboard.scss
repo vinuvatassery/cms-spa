@@ -123,31 +123,61 @@ color: #000000DE;
       padding: 8px; 
       border-radius: 6px;
       position: relative;
-      // &::before{
-      //   content: "\e945";
-      //   font-family: "Material Icons";
-      //   width: 12px;
-      //   height: 100%;
-      //   position: absolute;
-      //   left: 0;
-      //   top: 0;
-      //   background: #EFEFEF;
-      //   display: inline-flex;
-      //   align-items: center;
-      //   justify-content: center;
-      //   border-radius: 10px;
-      //   transition: .2s;
+      &::before{
+        content: "\e945";
+        font-family: "Material Icons";
+        width: 12px;
+        height: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: #EFEFEF;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        transition: .2s;
 
-      // }
-      // &:hover{
-      //   &::before{
-      //   background: #dcdcdc;
-      //   }
-      // }
+      }
+      &:hover{
+        &::before{
+        background: #dcdcdc;
+        }
+      }
+    }
+
+  
+  }
+}
+.reorder_wrapper_enabled{
+  gridster-item {
+    background: #F7F7F7 0% 0% no-repeat padding-box !important;
+    padding: 8px !important; 
+    border-radius: 6px !important;
+    // position: relative;
+    &::before{
+      content: "\e945";
+      font-family: "Material Icons";
+      width: 12px;
+      height: 100%;
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: #EFEFEF;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      transition: .2s;
+
+    }
+    &:hover{
+      &::before{
+      background: #dcdcdc;
+      }
     }
   }
 }
-
 .card_Tail_wrapper{
   .flex-row{
     align-items: flex-end;

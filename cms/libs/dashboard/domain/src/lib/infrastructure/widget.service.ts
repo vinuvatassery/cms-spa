@@ -49,6 +49,7 @@ export class WidgetService {
       title:{
         text:'Program Expensessssssssssss'
       },
+      
       legend:{
         position:'top',
         orientation: 'horizontal'
