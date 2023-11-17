@@ -369,10 +369,12 @@
 
                   <div *ngIf="isBreakoutPanelShow">
                         <cms-pharmacy-claims-batches-reconcile-payments-breakout
-                        [pageSizes]="pageSizes" [sortValue]="sortValue" 
+                        [pageSizes]="pageSizes" [sortValueBreakOut]="sortValueBreakOut" 
                         [sortType]="sortType" [sort]="sort"  [batchId]="batchId" [entityId]="entityId"    
                         [reconcilePaymentBreakoutList$]="reconcilePaymentBreakoutList$"
                         (loadReconcilePaymentBreakOutGridEvent)="loadReconcilePaymentBreakOutGridList($event)"
+                        [paymentRequestType$] ="paymentRequestType$"
+                        [reconcilePaymentBreakoutLoaderList$]="reconcilePaymentBreakoutLoaderList$"
                         ></cms-pharmacy-claims-batches-reconcile-payments-breakout>
                   </div>
             </div>

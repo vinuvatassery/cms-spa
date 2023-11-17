@@ -182,6 +182,9 @@ export class FinancialPharmacyClaimsFacade {
 
   private reconcilePaymentBreakoutListDataSubject =  new Subject<any>();
   reconcilePaymentBreakoutList$ = this.reconcilePaymentBreakoutListDataSubject.asObservable();
+
+  private reconcilePaymentBreakoutListLoaderDataSubject =  new Subject<any>();
+  reconcilePaymentBreakoutLoaderList$ = this.reconcilePaymentBreakoutListLoaderDataSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -647,12 +650,10 @@ reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any) {
   return this.financialPharmacyClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData);
 }
 
-loadReconcilePaymentBreakoutSummary(data:any){
-  this.loaderService.show(); 
+loadReconcilePaymentBreakoutSummary(data:any){ 
   this.financialPharmacyClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
     next: (dataResponse) => {
       this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
-      this.loaderService.hide(); 
     },
     error: (err) => {
       this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
@@ -661,7 +662,7 @@ loadReconcilePaymentBreakoutSummary(data:any){
 }
 
 loadReconcilePaymentBreakoutListGrid(data:any) {
-  this.loaderService.show(); 
+  this.reconcilePaymentBreakoutListLoaderDataSubject.next(true);
   data.filter=JSON.stringify(data.filter);
   this.financialPharmacyClaimsDataService
     .loadReconcilePaymentBreakoutListService(data)
@@ -674,10 +675,11 @@ loadReconcilePaymentBreakoutListGrid(data:any) {
             total: dataResponse['totalCount'],
           };
           this.reconcilePaymentBreakoutListDataSubject.next(gridView);
-          this.loaderService.hide();
+          this.reconcilePaymentBreakoutListLoaderDataSubject.next(false);
         }
       },
       error: (err) => {
+        this.reconcilePaymentBreakoutListLoaderDataSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });

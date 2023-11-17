@@ -39,7 +39,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   isReconcileGridLoaderShow = false;
   printAuthorizationDialog : any;
   @Input() pageSizes: any;
-  @Input() sortValue: any;
+  @Input() sortValueBreakOut: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() sortValueBatch: any;
@@ -53,6 +53,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Input() warrantNumberChangeLoader$: any;
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
+  @Input() reconcilePaymentBreakoutLoaderList$:any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
@@ -97,6 +98,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   noteRequired= false;
   pageValidationMessage:any=null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentRequestType$ = this.lovFacade.paymentRequestType$;
   paymentMethodType:any;
   pageValidationMessageFlag:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -175,6 +177,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       this.dropDropdownColumns.splice(0, 0, batch);
     }
     this.lovFacade.getPaymentMethodLov();
+    this.lovFacade.getCoPaymentRequestTypeLov();
     this.paymentMethodSubscription();
     this.state = {
       skip: 0,
@@ -242,7 +245,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       filters: [{
         field: field,
         operator: "eq",
-        value:value.lovCode
+        value:value.lovDesc
     }],
       logic: "or"
   });
@@ -371,7 +374,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     this.state = {
       skip: 0,
       take: this.pageSizes[2]?.value,
-      sort: this.sort,
+      sort: this.sortBatch,
     };
 
     this.sortColumn = this.providerTitle;
@@ -383,7 +386,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
     this.sortValueBatch = 'vendorName';
     this.sortType = 'asc';
-    this.sort = this.sortColumn;
+    this.sortBatch = this.sortColumn;
 
     this.loadReconcileListGrid();
   }
@@ -870,7 +873,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
     onRowSelection(grid:any, selection:any)
     {
-      debugger;
      this.warrantCalculationArray=[];
       const data = selection.selectedRows[0].dataItem;    
       this.isBreakoutPanelShow=true;

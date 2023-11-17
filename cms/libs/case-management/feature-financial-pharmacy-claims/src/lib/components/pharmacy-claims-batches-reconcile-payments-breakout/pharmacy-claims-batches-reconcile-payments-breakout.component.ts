@@ -18,12 +18,14 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   public gridSkipCount  : any;
   isGridLoaderShow = false;
   @Input() pageSizes: any;
-  @Input() sortValue: any;
+  @Input() sortValueBreakOut: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() reconcilePaymentBreakoutList$ :any;
   @Input() batchId:any;
   @Input() entityId:any;
+  @Input() paymentRequestType$: any;
+  @Input() reconcilePaymentBreakoutLoaderList$:any;
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
   vendorId:any;
   clientId:any;
@@ -41,11 +43,12 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
-
+  paymentRequestType:any
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  addRemoveColumns="Default Columns"
+  addRemoveColumns="Default Columns";
+  reconcilePaymentBreakoutLoader:any=true;
   columns : any = {
     invoiceNbr:"Invoice ID",
     clientName:"Client Name",
@@ -100,10 +103,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
 
   gridReconcilePaymentBreakoutListSubject = new Subject<any>();
   gridReconcilePaymentBreakout$ = this.gridReconcilePaymentBreakoutListSubject.asObservable();
-  selectedPaymentStatus: string | null = null;
-  selectedpaymentMethod: string | null = null;
-  paymentMethodType$ = this.lovFacade.paymentMethodType$;
-  paymentStatus$ = this.lovFacade.paymentStatus$;
+  selectedPaymentType: string | null = null;
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
 
@@ -113,12 +113,17 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
     this.filterData = filter;
    }
   ngOnInit(): void {
-    this.getPaymentStatusLov();
      this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+    this.paymentRequestType$.subscribe((paymentRequestType:any) => {
+      this.paymentRequestType= paymentRequestType;
+    });
+    this.reconcilePaymentBreakoutLoaderList$.subscribe((reconcilePaymentBreakoutLoader:any)=>{
+      this.reconcilePaymentBreakoutLoader = reconcilePaymentBreakoutLoader;
+    })
   }
 
   ngOnChanges(): void {
@@ -136,7 +141,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
       this.entityId,
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
-      this.sortValue,
+      this.sortValueBreakOut,
       this.sortType,
     );
   }
@@ -156,7 +161,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
-      filter : this.state?.["filter"]?.["filters"] ?? []
+      filter : this.filter === undefined?null:this.filter
     };
    this.loadPaymentBreakout(gridDataRefinerValue);
   }
@@ -208,38 +213,30 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   }
 
   dataStateChange(stateData: any): void {
-
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortValueBreakOut = stateData.sort[0]?.field ?? this.sortValueBreakOut;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortDir = this.sortValueBreakOut[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.filter = stateData?.filter?.filters;
 
     this.sortColumn = this.columns[stateData.sort[0]?.field];
 
-    if(stateData.filter?.filters.length > 0)
-    {
-      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
-      this.filter = stateFilter.value;
+    if (stateData.filter?.filters.length > 0) {
       this.isFiltered = true;
-      const filterList = []
-      for(const filter of stateData.filter.filters)
-      {
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
         filterList.push(this.columns[filter.filters[0].field]);
       }
-      this.filteredBy =  filterList.toString();
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = null;
+      this.isFiltered = false;
     }
-    else
-    {
-      this.filter = "";
-      this.isFiltered = false
-    }
-    if (!this.filteredBy.includes('Payment Status'))
-    this.selectedPaymentStatus = '';
     this.loadPaymentBreakoutGrid();
   }
 
-  pageselectionchange(data: any) {
+  pageSelectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadPaymentBreakoutGrid();
@@ -330,31 +327,30 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
     filterService: FilterService
   ): void {
     ;
-    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
-    if (field === 'paymentMethodDesc') this.selectedpaymentMethod = value;
+    if (field === 'paymentTypeDesc') this.selectedPaymentType = value;
     filterService.filter({
       filters: [
         {
           field: field,
           operator: 'eq',
-          value: value,
+          value: value.lovDesc,
         },
       ],
       logic: 'and',
     });
   }
 
-  private getPaymentStatusLov() {
-    this.lovFacade.getPaymentStatusLov();
-    this.paymentStatus$.subscribe({
-      next: (data: any) => {
-        data.forEach((item: any) => {
-          item.lovDesc = item.lovDesc.toUpperCase();
-        });
-        this.paymentStatus = data.sort(
-          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
-        );
-      },
-    });
-  }
+  // private getPaymentStatusLov() {
+  //   this.lovFacade.getPaymentStatusLov();
+  //   this.paymentStatus$.subscribe({
+  //     next: (data: any) => {
+  //       data.forEach((item: any) => {
+  //         item.lovDesc = item.lovDesc.toUpperCase();
+  //       });
+  //       this.paymentStatus = data.sort(
+  //         (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+  //       );
+  //     },
+  //   });
+  // }
 }

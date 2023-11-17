@@ -214,7 +214,7 @@ export class FinancialPharmacyClaimsDataService {
       warrantCalculation:data.warrantCalculation
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/payment-reconcile-breakout-summary`,ReconcilePaymentResponseDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/reconcile-breakout-summary`,ReconcilePaymentResponseDto
     );
   }
 
@@ -230,7 +230,7 @@ export class FinancialPharmacyClaimsDataService {
       Filter : data.filter
     }
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
     );
   }
 
