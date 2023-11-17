@@ -38,6 +38,7 @@ import {
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from '@progress/kendo-angular-editor/util';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -59,43 +60,31 @@ export class ApprovalPageComponent implements OnInit {
   sort = this.pendingApprovalGeneralFacade.sort;
   sortValueGeneralAPproval = this.approvalFacade.sortValueGeneralAPproval;
   sortGeneralList = this.approvalFacade.sortGeneralList;
-  sortApprovalPaymentsList =
-    this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
-  sortValueApprovalPaymentsApproval =
-    this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
+  sortApprovalPaymentsList = this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
+  sortValueApprovalPaymentsApproval = this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
   sortImportedClaimsList = this.importedClaimFacade.sortImportedClaimsList;
-  sortValueImportedClaimsAPproval =
-    this.importedClaimFacade.sortValueImportedClaimsAPproval;
+  sortValueImportedClaimsAPproval = this.importedClaimFacade.sortValueImportedClaimsAPproval;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
-  pendingApprovalPaymentsCount$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
+  pendingApprovalPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
 
   userLevel = UserLevel.Level1Value;
   pendingApprovalCount = 0;
   state!: State;
-  approvalsGeneralLists$ =
-    this.pendingApprovalGeneralFacade.approvalsGeneralList$;
-  approvalsImportedClaimsLists$ =
-    this.importedClaimFacade.approvalsImportedClaimsLists$;
+  approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
+  approvalsImportedClaimsLists$ = this.importedClaimFacade.approvalsImportedClaimsLists$;
   pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
-  approvalsPaymentsLists$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
-  approvalsPaymentsMainLists$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
-  pendingApprovalSubmittedSummary$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
-  pendingApprovalSubmit$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
-  batchDetailPaymentsList$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
-  batchDetailPaymentsCount$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
-  approvalsExceptionCard$ =
-    this.pendingApprovalGeneralFacade.approvalsGeneralExceptionCardSubjectList$;
+  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
+  approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
+  pendingApprovalSubmittedSummary$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
+  pendingApprovalSubmit$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
+  batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
+  batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
+  approvalsExceptionCard$ = this.pendingApprovalGeneralFacade.approvalsGeneralExceptionCardSubjectList$;
   invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
   isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
-  submitGenerealRequest$ =
-    this.pendingApprovalGeneralFacade.submitGenerealRequest$;
+  submitGenerealRequest$ = this.pendingApprovalGeneralFacade.submitGenerealRequest$;
+  possibleMatchData$ = this.importedClaimFacade.possibleMatchData$;
+  submitImportedClaims$ = this.importedClaimFacade.submitImportedClaims$;
 
   submitImportedClaims$ = this.importedClaimFacade.submitImportedClaims$;
 
@@ -314,16 +303,12 @@ export class ApprovalPageComponent implements OnInit {
       firstName: [''],
       lastName: [],
       tinNumber: [''],
-      phoneNumber: [''],
-      email:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)],
-      fax:[''],
       addressLine1: [''],
       addressLine2: [''],
       city: [''],
       state: [''],
       zip: [''],
       contactFirstName:[''],
-      contactLastName: [''],
       contactPhone:[''],
       contactFax:[''],
       contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
@@ -478,4 +463,13 @@ export class ApprovalPageComponent implements OnInit {
     this.importedClaimFacade.submitImportedClaims(claims);
   }
 
+  loadPossibleMatch(event: any)
+  {
+    this.importedClaimFacade.loadPossibleMatch(event);
+  }
+
+  savePossibleMatch(event:any)
+  {
+    this.importedClaimFacade.savePossibleMatch(event);
+  }
 }

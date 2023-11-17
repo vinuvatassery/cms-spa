@@ -1,7 +1,7 @@
-import {  ChangeDetectionStrategy,  ChangeDetectorRef,  Component, OnInit, } from '@angular/core';
+import {  ChangeDetectionStrategy,  ChangeDetectorRef,  Component, OnInit, TemplateRef, ViewChild, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain'; 
+import { ContactFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade, GridFilterParam } from '@cms/case-management/domain'; 
 import { ActivatedRoute, Router } from '@angular/router';
 import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -23,7 +23,17 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
    sort = this.financialPharmacyClaimsFacade.sortReconcileList;
    state!: State;
    reconcileGridLists$ = this.financialPharmacyClaimsFacade.reconcileDataList$;
-   batchId:any;
+   batchId:any = null;
+   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  paymentRequestId: any;
+  tab = 1;
+  updateProviderPanelSubject$ =
+  this.financialVendorFacade.updateProviderPanelSubject$;
+  providerDetailsDialog: any;
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
    sortValueBatch = this.financialPharmacyClaimsFacade.sortValueReconcile;
    sortBatch = this.financialPharmacyClaimsFacade.sortReconcileList;
    exportButtonShow$ = this.documentFacade.exportButtonShow$;
@@ -39,7 +49,9 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
     private readonly route: ActivatedRoute,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
-    private documentFacade :  DocumentFacade
+    private documentFacade :  DocumentFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade,
+    public contactFacade: ContactFacade
   ) {}
 
   ngOnInit(): void {   
@@ -71,8 +83,35 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
       this.documentFacade.getExportFile(vendorPageAndSortedRequest,`pharmacy/payment-batches/${this.batchId}/reconcile-payments` , fileName)
     }
   }
-
   loadEachLetterTemplate(event:any){
     this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);  
+  }
+  onProviderNameClick(event:any){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  
+  }
+  onEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
+  }
+  updateProviderProfile(event: any) {
+    console.log(event);
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanel(event);
+  }
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
   }
 }

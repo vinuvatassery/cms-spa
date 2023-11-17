@@ -100,6 +100,7 @@
           <productivity-tools-imported-claims-lists
             [submitImportedClaims$]="submitImportedClaims$"
             [approvalsImportedClaimsLists$]="approvalsImportedClaimsLists$"
+            [possibleMatchData$]="possibleMatchData$"
             [pageSizes]="pageSizes"
             [sortValue]="sortValueImportedClaimsAPproval"
             [sortType]="sortType"
@@ -107,6 +108,8 @@
             (loadImportedClaimsGridEvent)="loadImportedClaimsGrid($event)"
             (submitImportedClaimsEvent)="submitImportedClaims($event)"
             class="reminder-list-modal-wrap"
+            (loadPossibleMatchDataEvent)="loadPossibleMatch($event)"
+            (saveReviewPossibleMatchesDialogClickedEvent)="savePossibleMatch($event)"
           ></productivity-tools-imported-claims-lists>
         </div>
       </ng-template>

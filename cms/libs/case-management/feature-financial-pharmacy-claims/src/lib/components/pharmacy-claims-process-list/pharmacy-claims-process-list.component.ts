@@ -77,6 +77,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   clientId: any;
  clientName: any;
  claimsType:any;
+ paymentRequestId!: string;
   @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
   @Input() getPharmacyClaim$: any;
@@ -97,6 +98,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   @Output() searchDrugEvent = new EventEmitter<any>();
   @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
   @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
 
   public state!: State;
   sortColumnDesc = 'Entry Date';
@@ -577,5 +579,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.addClientRecentClaimsDialog.close();
+  }
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
   }
 }

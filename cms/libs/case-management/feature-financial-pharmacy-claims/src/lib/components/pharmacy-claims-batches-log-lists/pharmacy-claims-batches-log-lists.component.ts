@@ -64,12 +64,14 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   vendorId: any;
   clientId: any;
   clientName: any;
+  paymentRequestId!: string;
   isLogGridExpand = true;
   isBulkUnBatchOpened =false;
   deletemodelbody='This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
   @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
   @Output() unBatchClaimsEvent = new EventEmitter<any>();
   @Output() ondeletebatchesClickedEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Input() batchId:any
   @Input() unbatchClaim$ :any
   @Input() unbatchEntireBatch$ :any
@@ -211,7 +213,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   isFiltered = false;
   showDateSearchWarning = false
   filter!: any;
-  selectedColumn= 'itemNbr';
+  selectedColumn= 'ALL';
   gridDataResult!: GridDataResult;
   gridClaimsBatchLogDataSubject = new Subject<any>();
   gridClaimsBatchLogData$ = this.gridClaimsBatchLogDataSubject.asObservable();
@@ -226,7 +228,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   totalRecord: any;
   batchLogPrintAdviceLetterPagedList: any;
   isEdit!: boolean;
-  paymentRequestId!: string;
   selectedCount = 0;
   selectedDataRows: any;
   disablePrwButton = true;
@@ -271,6 +272,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   paymentStatusFilter = '';
     
   dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'itemNbr',
       columnDesc: 'Item #',
@@ -331,7 +333,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     private readonly notificationSnackbarService: NotificationSnackbarService ) {}
   
   ngOnInit(): void {
-    this.sortColumnName = 'Item #';
+    this.sortColumnName = 'Pharmacy Name';
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
   }
@@ -377,7 +379,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: this.sortColumn ?? 'itemNbr',
+      sortColumn: this.sortColumn ?? 'vendorName',
       sortType: sortTypeValue ?? 'asc',
       filter: this.filter,
     };
@@ -558,6 +560,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   gridDataHandle() {
     this.batchLogGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
+      if( this.selectedColumn != 'ALL')
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
@@ -581,7 +584,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   }
 
   navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/pharmacy-claims/batch/reconcile-payments'] );
+    this.route.navigate(['/financial-management/pharmacy-claims/batch/reconcile-payments'],
+    { queryParams: { bid: this.batchId } });
   }
   public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({
@@ -918,4 +922,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
    loadEachLetterTemplate(event:any){
     this.loadTemplateEvent.emit(event);
   } 
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
+  }
 }

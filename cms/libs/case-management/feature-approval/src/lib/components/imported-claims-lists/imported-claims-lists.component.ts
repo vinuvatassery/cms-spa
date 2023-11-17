@@ -38,8 +38,16 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Input() approvalsImportedClaimsLists$: any;
   @Input() submitImportedClaims$: any;
+  @Input() possibleMatchData$:any;
   @Output() loadImportedClaimsGridEvent = new EventEmitter<any>();
   @Output() submitImportedClaimsEvent = new EventEmitter<any>();
+  @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();
+  @Output() saveReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
+  importedClaimId:any;
+  clientName:any;
+  dateOfBirth:any;
+  policyId:any;
+  entityId:any;
   public state!: State;
   sortColumn = 'clientName';
   sortDir = 'Ascending';
@@ -69,6 +77,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   deletedCount = 0;
   private submitDialogService: any;
   yesNoFlag: any = YesNoFlag;
+  claimData: any;
 
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,private readonly router: Router,
@@ -223,14 +232,24 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.expectationDialog.close();
   }
 
-  onReviewPossibleMatchesDialogClicked(template: TemplateRef<unknown>): void {
+  onReviewPossibleMatchesDialogClicked(template: TemplateRef<unknown>,dataItem:any): void {
     this.reviewPossibleMatchesDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
+    this.claimData=dataItem;
   }
   onCloseReviewPossibleMatchesDialogClicked() {
     this.reviewPossibleMatchesDialog.close();
+  }  
+
+  loadPossibleMatch(data?: any) {
+    this.loadPossibleMatchDataEvent.emit(data);
+  }
+
+  savePossibleMatch(data?:any)
+  {
+    this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
   }
 
   assignDataFromUpdatedResultToPagedResult(itemResponse: any) {

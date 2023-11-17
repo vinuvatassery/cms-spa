@@ -40,7 +40,8 @@
                                 (exportPharmacyClaimsProcessListEvent)="onExportClaimsInProcess($event)"
                                 (onbatchClaimsClickedEvent)="onbatchClaimsClicked($event)"
                                 (ondeleteClaimsClickedEvent)="ondeleteClaimsClicked($event)"
-                                [batchingClaims$]="batchingClaims$"></cms-pharmacy-claims-process-list>
+                                [batchingClaims$]="batchingClaims$" (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                ></cms-pharmacy-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -71,7 +72,8 @@
                                 (exportGridEvent$)="onExportAllPayments($event)"
                                 (loadTemplateEvent) = "loadEachLetterTemplate($event)"
                                 [letterContentList$]="letterContentList$"
-                                [letterContentLoader$]="letterContentLoader$"></cms-pharmacy-claims-all-payments-list>
+                                [letterContentLoader$]="letterContentLoader$"
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -79,4 +81,13 @@
             </section>
         </section>
     </div>
+    <ng-template #providerDetailsTemplate>
+        <cms-pharmacy-claims-provider-info
+              [paymentRequestId]="paymentRequestId"
+              (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+              (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+              [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="onEditProviderProfileClick()"
+              [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
+  </ng-template>
 </div>
