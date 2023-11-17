@@ -208,10 +208,10 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-  updateInsuranceRefundEditInformation(vendorId :any,clientId:any , paginationSortingDto:any){  
+  updateInsuranceRefundEditInformation(paginationSortingDto:any){  
     this.loaderService.show();
     paginationSortingDto.filter = JSON.stringify(paginationSortingDto.filter);
-      this.financialVendorRefundDataService.updateInsuranceRefundEditInformation(vendorId,clientId,paginationSortingDto).subscribe({
+      this.financialVendorRefundDataService.updateInsuranceRefundEditInformation(paginationSortingDto).subscribe({
         next: (dataResponse:any) => {
          
             this.hideLoader();

@@ -140,7 +140,7 @@ if(this.isEdit){
 
   addInsuranceRefundClaim(event:any){
     if(this.isEdit){
-    this.financialVendorRefundFacade.updateInsuranceRefundEditInformation(event.vendorId, event.clientId,event.data)
+    this.financialVendorRefundFacade.updateInsuranceRefundEditInformation(event.data)
     }else{
     this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data)
   }

@@ -24,8 +24,8 @@ export class FinancialVendorRefundDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums/${clientId}`, paginationSortingDto);
   }
 
-  updateInsuranceRefundEditInformation(vendorId :any, clientId :any ,paginationSortingDto:any){
-    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums/${clientId}`, paginationSortingDto);
+  updateInsuranceRefundEditInformation(paginationSortingDto:any){
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums`, paginationSortingDto);
   }
 
   getInsurnaceRefundInformation(insuranceRefundInformation:any){
