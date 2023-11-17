@@ -22,7 +22,8 @@
                         [filterable]="true" formControlName="client"
                         (filterChange)="loadClientBySearchText($event)"
                         (valueChange)="onClientValueChange($event)" [(ngModel)]="selectedClient"
-                        (blur)="showHideServicesListForm()">
+                        (blur)="showHideServicesListForm()"
+                       >
                             <button kendoButton fillMode="clear" icon="image"></button>
                             <kendo-combobox-column>
                                 <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
@@ -461,7 +462,10 @@
                 <div class="flex-col flex-col-4 align-items-center justify-content-start">
                     <span class="app-checkboxwidtext-wrapper">
                         <input kendoCheckBox type="checkbox" id="spots-payment" name="spots-payment"
-                            aria-labelledby="spots-payment" />
+                            aria-labelledby="spots-payment" 
+                            id="isSpotsPaymentInputRX" [checked]="isSpotsPayment"
+                            (change)="onSpotsPaymentChange($event)"
+                            for="isSpotsPaymentInputRX"/>
                         <label class="k-checkbox-label" for="spots-payment">This is a SPOTS payment</label>
                     </span>
                 </div>
@@ -604,8 +608,8 @@
             </div>
             </div>
             <div class="flex-row mb-3">
-                <div class="flex-col">
-                    <div class="flex-row">
+                <div class="flex-col" [formGroup]="refundRXForm">
+                    <!-- <div class="flex-row">
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text=" VP">
                                 <kendo-textbox aria-label="VP" [disabled]="true" [fillMode]="formUiStyle.inputFillMode">
@@ -619,30 +623,37 @@
                                 </kendo-textbox>
                             </kendo-floatinglabel>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="flex-row">
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text="Refund Warrant #">
-                                <kendo-textbox aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode">
+                                <kendo-textbox aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode" formControlName="warantNumber">
                                 </kendo-textbox>
                             </kendo-floatinglabel>
+                            <kendo-formerror *ngIf="refundRXForm.hasError('required','warantNumber') && isRefundRxSubmitted">Refund Warrant # is required.
+                            </kendo-formerror>
                         </div>
                     </div>
                     <div class="flex-row">
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text="Deposit Date">
                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Deposit Date"
-                                    format="MM/dd/yyyy" formatPlaceholder="formatPattern">
+                                    format="MM/dd/yyyy" formatPlaceholder="formatPattern" formControlName="depositDate">
                                 </kendo-datepicker>
                             </kendo-floatinglabel>
+                            <kendo-formerror *ngIf="refundRXForm.hasError('required','depositDate') && isRefundRxSubmitted">Deposit Date is required.
+                            </kendo-formerror>
                         </div>
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text="Refund Note (optional)">
                                 <kendo-textbox aria-label="Refund Note (optional)"
-                                    [fillMode]="formUiStyle.inputFillMode">
+                                    [fillMode]="formUiStyle.inputFillMode"
+                                    formControlName="refundNote"
+                                    [maxlength]="100"
+                                    (valueChange)="onRefundNoteValueChange($event)">
                                 </kendo-textbox>
                                 <kendo-formhint class="justify-content-end"><span class="counter">
-                                        0/100</span></kendo-formhint>
+                                    {{refundNoteValueLength}}/100</span></kendo-formhint>
                             </kendo-floatinglabel>
                         </div>
                     </div>
@@ -670,7 +681,7 @@
     <div class="justify-content-end align-items-center" >
         <span class="mr-2">0 payment(s) selected</span>
         <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeAddEditRefundFormModalClicked()"> Cancel </button>
-        <button kendoButton [primary]="true" aria-label="Add" class=""> Add </button>
+        <button kendoButton [primary]="true" aria-label="Add" class="" (click)="addNewRefundRx()"> Add </button>
     </div>
 </div>
     <div class="justify-content-end align-items-center">

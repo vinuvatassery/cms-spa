@@ -213,6 +213,7 @@ export class FinancialVendorRefundFacade {
   }
 
   loadClientClaimsListGrid(){
+    this.showLoader()
     this.financialVendorRefundDataService.loadClientClaimsListService().subscribe({
       next: (dataResponse) => {
         this.clientClaimsListDataSubject.next(dataResponse);
@@ -299,6 +300,7 @@ export class FinancialVendorRefundFacade {
   }
 
   loadRefundClaimsListGrid(ClaimsPageAndSortedRequestDto:any) {
+    this.showLoader();
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
     this.financialVendorRefundDataService. loadRefundClaimsService(ClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
@@ -310,11 +312,15 @@ export class FinancialVendorRefundFacade {
           };
           this.clientClaimsListDataSubject.next(gridView);
         }
+        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
+  }
+  addNewRefundRx(refundRx: any): any {
+    return this.financialVendorRefundDataService.addNewRefundRx(refundRx);
   }
 
 }
