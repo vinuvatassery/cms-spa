@@ -4,9 +4,6 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigurationProvider } from '../shared-util-core.module';
 import { ApiType } from '../enums/api-type.enum';
 
-
-
-
 @Injectable({ providedIn: 'root' })
 export class DocumentDataService {
   /** Constructor**/
@@ -50,7 +47,6 @@ export class DocumentDataService {
         gridData: pageAndSortedRequest,
         selectedIds: selectedIds
       };
-      console.log(exportData)
 
       return this.http.post(
         `${apiUrl}/data-management/export/${path}`, exportData,

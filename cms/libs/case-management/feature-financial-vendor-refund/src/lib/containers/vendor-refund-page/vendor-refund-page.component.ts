@@ -13,13 +13,13 @@ export class VendorRefundPageComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-   tab = 1
-   dataExportParameters = null
-   batchesGridExportParameters = null
-   sortType = this.financialVendorRefundFacade.sortType;
-   pageSizes = this.financialVendorRefundFacade.gridPageSizes;
-   gridSkipCount = this.financialVendorRefundFacade.skipCount;
-   exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  tab = 1
+  dataExportParameters = null
+  batchesGridExportParameters = null
+  sortType = this.financialVendorRefundFacade.sortType;
+  pageSizes = this.financialVendorRefundFacade.gridPageSizes;
+  gridSkipCount = this.financialVendorRefundFacade.skipCount;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$;
 
   sortValueRefundProcess = this.financialVendorRefundFacade.sortValueRefundProcess;
   sortProcessList = this.financialVendorRefundFacade.sortProcessList;
@@ -46,11 +46,10 @@ export class VendorRefundPageComponent {
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();
   }
 
-
-  loadVendorRefundBatchListGrid(loadBatchListRequestDto : any) {
+  loadVendorRefundBatchListGrid(loadBatchListRequestDto: any) {
     this.financialVendorRefundFacade.selectedRefundsTab = 2;
-    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;   
-    this.batchesGridExportParameters = loadBatchListRequestDto; 
+    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;
+    this.batchesGridExportParameters = loadBatchListRequestDto;
     this.financialVendorRefundFacade.loadVendorRefundBatchListGrid(loadBatchListRequestDto);
   }
 
@@ -88,7 +87,7 @@ export class VendorRefundPageComponent {
     );
   }
 
-  exportClaimsPaymentsGridData(data: any) {
+  exportAllRefundsGridData(data: any) {
     let gridData = data.gridData;
     let selectedPayments = data.selectedPayments;
 
@@ -115,16 +114,13 @@ export class VendorRefundPageComponent {
   }
 
   pageTitle = "Vendor Refunds";
-  changeTitle(data: any) {
-    if (!data)
-      this.pageTitle = "Vendor Refunds";
-    else
-      this.pageTitle = data;
+  changeTitle(data: any): void {
+    this.pageTitle = data ?? "Vendor Refunds";
   }
-  exportBatchesGridData()
-  {
-    if (this.batchesGridExportParameters) {       
-      this.documentFacade.getExportFile(this.batchesGridExportParameters, `vendor-refunds/batches`,'All Batches');
+
+  exportBatchesGridData() {
+    if (this.batchesGridExportParameters) {
+      this.documentFacade.getExportFile(this.batchesGridExportParameters, `vendor-refunds/batches`, 'All Batches');
     }
   }
 }
