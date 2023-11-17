@@ -58,7 +58,6 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-  selectedInsuranceClaims :any[] =[]
 @Input() selectedpharmacyClaimsPaymentReqIds:any[]=[]
 selectedPharmacyClaims:any[]=[]
   isRefundGridClaimShow=false;
@@ -88,6 +87,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
 
   selectedKeysChange(selection: any) {
     this.selectedPharmacyClaims = selection;
+    this.claimsCount.emit(this.selectedPharmacyClaims.length)
   }
   resetFilterClicked(action: any,) {
     if (action) {
@@ -105,7 +105,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   }
   private clearSelection(): void {  
     if (this.grid) {
-        this.selectedInsuranceClaims = [];
+        this.selectedPharmacyClaims = [];
     }
   }
   openResetDialog( template: TemplateRef<unknown>)
