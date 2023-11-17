@@ -7,6 +7,8 @@ import {
   OnChanges,
   OnInit,
   Output,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -228,51 +230,6 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     if(field == "paymentStatusCode"){
       this.paymentStatusCode = value;
     }
-  }
- 
-  openResetDialog( template: TemplateRef<unknown>)
-  {
-    this.filterResetDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
-  resetButtonClosed(result: any) {
-    if (result) {
- 
-      this.filterResetDialog.close();
-    }
-  }
-  
-  resetFilterClicked(action: any,) {
-    if (action) {
-      this.selectedTpaClaims=[];    
-      this.loadRefundClaimsListGrid();
-     this.filterResetDialog.close();
-    }
-  }
-  paymentStatusSubscription()
-  {
-    this.paymentStatusLovSubscription = this.paymentStatuses$.subscribe(data=>{
-      this.paymentStatusType = data;
-    });
-  }
+  } 
 
-  ngOnDestroy(): void {
-    this.paymentStatusLovSubscription.unsubscribe();
-  }
-  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
-    filterService.filter({
-      filters: [{
-        field: field,
-        operator: "eq",
-        value:value.lovCode
-    }],
-      logic: "or"
-  });
-    if(field == "paymentStatusCode"){
-      this.paymentStatusCode = value;
-    }
-  }
- 
 }
