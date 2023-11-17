@@ -153,6 +153,7 @@ if(this.isEdit){
   selectionChange(event: any){
     this.isConfirmationClicked = false
     this.vendorId=null;
+    this.vendorAddressId=null;
     this.selectedProvider=null;
   }
   confirmationClicked (){
