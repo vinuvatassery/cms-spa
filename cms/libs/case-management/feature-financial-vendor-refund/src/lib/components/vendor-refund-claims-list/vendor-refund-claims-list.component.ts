@@ -66,7 +66,8 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   filterResetDialog: any;
   paymentStatusCode =null;
   paymentStatusType:any;
-  paymentStatuses$ = this.lovFacade.paymentStatus$
+  paymentStatuses$ = this.lovFacade.paymentStatus$;
+  @Output() claimsCount = new EventEmitter<any>();
   constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade)
   {
  
@@ -118,6 +119,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
 
   selectedKeysChange(selection: any) {
     this.selectedTpaClaims = selection;
+    this.claimsCount.emit(this.selectedTpaClaims.length)
   }
   
   // updating the pagination infor based on dropdown selection

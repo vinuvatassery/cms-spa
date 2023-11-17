@@ -81,7 +81,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   clientSearchResult$ = this.financialVendorRefundFacade.clients$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
   vendors$ = this.financialVendorRefundFacade.vendors$;
-
+ 
   @ViewChild('insClaims', { static: false })
   insClaims!: VendorRefundInsurancePremiumListComponent;
 
@@ -90,7 +90,6 @@ export class RefundNewFormDetailsComponent implements  OnInit{
 
   @ViewChild('rxClaims', { static: false })
   rxClaims!: VendorRefundPharmacyPaymentsListComponent;
-  showNoDataMessage: boolean = false;
   insurancePremiumPaymentReqIds :any[] =[]
   pharmacyClaimsPaymentReqIds :any[]=[]
   tpaClaimsPaymentReqIds :any[] =[]
@@ -107,7 +106,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   insurancePremiumsRequestIds: any;
   disableFeildsOnConfirmSelection = false
   selectedVendor: any;
-
+  claimsCount:number=0;
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
@@ -311,5 +310,8 @@ this.insuraceAddRefundClickSubject.next(true);
     }
     this.financialVendorRefundFacade.loadvendorBySearchText(searchText,this.selectedRefundType);
   }
-
+  claimsCountEvent(data:any){
+    
+    this.claimsCount=data;
+  }
 }

@@ -57,7 +57,7 @@
     </ng-template>
       
       </kendo-grid-column>
-      <kendo-grid-column title="Coverage Dates" [width]="140"> 
+      <kendo-grid-column title="Coverage Dates"  [field]="'coverageStartDate'" [width]="140"> 
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.coverageStartDate| date: 'MM/dd/yyyy' }} - {{dataItem.coverageEndDate| date: 'MM/dd/yyyy'}}
         </ng-template>
@@ -109,7 +109,20 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="paymentMethod" title="Pmt Method" [width]="140"> </kendo-grid-column>
+      <kendo-grid-column field="paymentMethod" title="Pmt Method" [width]="140"> 
+        <ng-template kendoGridFilterMenuTemplate
+        let-column="column"
+        let-filter="filter"
+        let-filterService="filterService">
+            <kendo-dropdownlist
+            [data]="paymentMethod"
+            textField="lovDesc"
+            valueField="lovCode"
+            [(ngModel)]="paymentMethodCode"
+            (valueChange)="dropdownFilterChange('paymentMethod',$event, filterService)">
+          </kendo-dropdownlist>
+        </ng-template>
+      </kendo-grid-column>
       <kendo-grid-column field="paymentStatus" title="Pmt Status" [width]="140"> 
         <ng-template kendoGridFilterMenuTemplate
         let-column="column"
@@ -120,7 +133,7 @@
             textField="lovDesc"
             valueField="lovCode"
             [(ngModel)]="paymentStatusCode"
-            (valueChange)="dropdownFilterChange('paymentStatusCode',$event, filterService)">
+            (valueChange)="dropdownFilterChange('paymentStatus',$event, filterService)">
           </kendo-dropdownlist>
         </ng-template>
       </kendo-grid-column>

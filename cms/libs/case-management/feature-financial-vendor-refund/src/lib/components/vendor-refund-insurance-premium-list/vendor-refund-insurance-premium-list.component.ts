@@ -13,6 +13,7 @@ import {
 } from '@angular/core';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { SelectableDirective } from '@progress/kendo-angular-dropdowns';
 import { FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
@@ -21,7 +22,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-vendor-refund-insurance-premium-list',
@@ -49,7 +50,9 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
  @Input() editPaymentRequestId:any
   @Input() clientClaimsListData$: any;
   @Output() loadClientClaimsListEvent = new EventEmitter<any>();
+  @Output() claimsCount = new EventEmitter<any>();
   paymentStatusType:any;
+  paymentMethod:any;
   public selectedClaims: any[] = [];
   paymentStatusCode =null
   sortColumn = 'clientId';
@@ -71,12 +74,20 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   premiumsListData$ =   this.financialVendorRefundFacade.premiumsListData$;
   @Input() selectedInsurancePremiumIds:any[]  =[]
   filterResetDialog: any;
-  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService)
+  paymentMethodCode: any
+  paymentStatusLovSubscription!:Subscription;
+  paymentStatuses$ = this.lovFacade.paymentStatus$
+  paymentMethodLov$ = this.lovFacade.paymentMethodType$;
+  paymentMethodLovSubscription!: Subscription;
+  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
   {
  
   }
   selectedKeysChange(selection: any) {
+    
+
     this.selectedInsuranceClaims = selection;
+    this.claimsCount.emit(this.selectedInsuranceClaims.length)
   }
   ngOnInit(): void {
     
@@ -87,8 +98,11 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
     };
     this.selectedInsuranceClaims =  (this.selectedInsurancePremiumIds && this.selectedInsurancePremiumIds.length >0)?
                                     this.selectedInsurancePremiumIds : this.selectedInsuranceClaims
-                                     
+                                    this.lovFacade.getPaymentStatusLov()
+                                    this.paymentStatusSubscription();                           
     this.loadRefundClaimsListGrid();
+    this.paymentMethodSubscription()
+    this.lovFacade.getPaymentMethodLov();
     
   }
   ngOnChanges(): void {  
@@ -123,7 +137,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   }
   
   dataStateChange(stateData: any): void {
-    debugger
+    
     this.openResetDialog(this.filterResetConfirmationDialogTemplate);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
@@ -200,6 +214,18 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
   }
+  paymentStatusSubscription()
+  {
+    this.paymentStatusLovSubscription = this.paymentStatuses$.subscribe(data=>{
+      this.paymentStatusType = data;
+    });
+  }
+  paymentMethodSubscription()
+  {
+    this.paymentStatusLovSubscription = this.paymentMethodLov$.subscribe(data=>{
+      this.paymentMethod = data;
+    });
+  }
   resetButtonClosed(result: any) {
     if (result) {
  
@@ -220,6 +246,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
         this.selectedInsuranceClaims = [];
     }
   }
-  
-
+  ngOnDestroy(): void {
+    this.paymentStatusLovSubscription.unsubscribe();
+  }
 }
