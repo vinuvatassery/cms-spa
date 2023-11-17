@@ -15,11 +15,11 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@cms/case-management/feature-approval": [
-        "libs/case-management/feature-approval/src/index.ts"
-      ],
       "@cms/case-management/domain": [
         "libs/case-management/domain/src/index.ts"
+      ],
+      "@cms/case-management/feature-approval": [
+        "libs/case-management/feature-approval/src/index.ts"
       ],
       "@cms/case-management/feature-authorization": [
         "libs/case-management/feature-authorization/src/index.ts"
@@ -118,9 +118,7 @@
       "@cms/dashboard/feature-widget": [
         "libs/dashboard/feature-widget/src/index.ts"
       ],
-      "@cms/dashboard/ui": [
-        "libs/dashboard/ui/src/index.ts"
-      ],
+      "@cms/dashboard/ui": ["libs/dashboard/ui/src/index.ts"],
       "@cms/productivity-tools/domain": [
         "libs/productivity-tools/domain/src/index.ts"
       ],
@@ -170,8 +168,7 @@
       ],
       "@cms/system-config/feature-user-management": [
         "libs/system-config/feature-user-management/src/index.ts"
-      ],
-     
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]

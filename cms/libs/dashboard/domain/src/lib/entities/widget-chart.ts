@@ -1,5 +1,6 @@
 
 export interface WidgetChartModel{
+    chartType:string,
     title:{
         text:string
     },

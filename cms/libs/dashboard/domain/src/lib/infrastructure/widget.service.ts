@@ -46,8 +46,9 @@ export class WidgetService {
 
   getChartData(){
     const chartData:WidgetChartModel={
+      chartType: 'bar',
       title:{
-        text:'Program Expenses'
+        text:'Program Expensessssssssssss'
       },
       legend:{
         position:'top',
