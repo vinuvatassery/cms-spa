@@ -1044,5 +1044,11 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.premiumReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged).length;
     this.cd.detectChanges();
   }
+  onBatchNumberClick(dataItem: any) {
+    this.route.navigate(
+      [`/financial-management/premiums/${this.premiumsType}/batch`],
+      { queryParams: { bid: dataItem?.batchId } }
+    );
+  }
 }
 
