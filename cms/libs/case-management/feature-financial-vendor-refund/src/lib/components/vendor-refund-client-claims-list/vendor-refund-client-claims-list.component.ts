@@ -203,7 +203,6 @@ private clientClaimsListDataSubject =  new Subject<any>();
     this.financialVendorRefundFacade.loadRefundClaimsListGrid(data);
   }
   selectedRXKeysChange(selection: any[]) {
-    debugger
     this.selectedPharmacyClaims = this.gridData.data.filter((i: any) => selection.includes( i.perscriptionFillId));
     this.claimsCount.emit(this.selectedPharmacyClaims.length)
   }

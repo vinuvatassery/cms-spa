@@ -570,4 +570,7 @@ this.loaderService.show();
       },
     });
   }
+  addNewRefundRx(refundRx: any): any {
+    return this.financialVendorRefundDataService.addNewRefundRx(refundRx);
+  }
 }

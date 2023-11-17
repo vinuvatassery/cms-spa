@@ -610,17 +610,18 @@
                 </div>
             </div>
             <div class="flex-row mb-3">
-                <div class="flex-col">
+                <div class="flex-col" [formGroup]="refundRXForm">
                     <div class="flex-row">
                         <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text=" VP">
-                                <kendo-textbox aria-label="VP" [disabled]="true" [fillMode]="formUiStyle.inputFillMode">
+                            <kendo-floatinglabel text="Voucher Payable" >
+                                <kendo-textbox aria-label="Voucher Payable"  [fillMode]="formUiStyle.inputFillMode"
+                                formControlName = "voucherPayable">
                                 </kendo-textbox>
                             </kendo-floatinglabel>
                         </div>
                         <div class="flex-col flex-col-3">
-                            <kendo-floatinglabel text="VP Suffix (optional)">
-                                <kendo-textbox aria-label="VP Suffix (optional)" [disabled]="true"
+                            <kendo-floatinglabel text="Credit #">
+                                <kendo-textbox aria-label="Credit # (optional)"  formControlName= "creditNumber"
                                     [fillMode]="formUiStyle.inputFillMode">
                                 </kendo-textbox>
                             </kendo-floatinglabel>
@@ -629,26 +630,34 @@
                     <div class="flex-row">
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text="Refund Warrant #">
-                                <kendo-textbox aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode">
+                                <kendo-textbox aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode"
+                                 formControlName="warantNumber">
                                 </kendo-textbox>
                             </kendo-floatinglabel>
+                            <kendo-formerror *ngIf="refundRXForm.hasError('required','warantNumber') && isRefundRxSubmitted">Refund Warrant # is required.
+                            </kendo-formerror>
                         </div>
                     </div>
                     <div class="flex-row">
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text="Deposit Date">
-                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Deposit Date"
+                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Deposit Date" formControlName="depositDate"
                                     format="MM/dd/yyyy" formatPlaceholder="formatPattern">
                                 </kendo-datepicker>
                             </kendo-floatinglabel>
+                            <kendo-formerror *ngIf="refundRXForm.hasError('required','depositDate') && isRefundRxSubmitted">Deposit Date is required.
+                            </kendo-formerror>
                         </div>
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text="Refund Note (optional)">
                                 <kendo-textbox aria-label="Refund Note (optional)"
-                                    [fillMode]="formUiStyle.inputFillMode">
+                                    [fillMode]="formUiStyle.inputFillMode"
+                                    formControlName="refundNote"
+                                    [maxlength]="100"
+                                    (valueChange)="onRefundNoteValueChange($event)">
                                 </kendo-textbox>
                                 <kendo-formhint class="justify-content-end"><span class="counter">
-                                        0/100</span></kendo-formhint>
+                                    {{refundNoteValueLength}}/100</span></kendo-formhint>
                             </kendo-floatinglabel>
                         </div>
                     </div>
@@ -678,7 +687,7 @@
     <div class="justify-content-end align-items-center" >
         <span class="mr-2">0 payment(s) selected</span>
         <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeAddEditRefundFormModalClicked()"> Cancel </button>
-        <button kendoButton [primary]="true" aria-label="Add" class=""  (click)="onAddRefundClick()" > Add </button>
+        <button kendoButton [primary]="true" aria-label="Add" class="" (click)="onAddRefundClick()" > Add </button>
     </div>
 </div>
     <div class="justify-content-end align-items-center" *ngIf="!isConfirmationClicked && selectedRefundType">

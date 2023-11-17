@@ -9,6 +9,7 @@ import { VendorRefundClaimsListComponent, VendorRefundInsurancePremiumListCompon
 import { VendorRefundClientClaimsListComponent } from '../vendor-refund-client-claims-list/vendor-refund-client-claims-list.component';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -110,6 +111,9 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   selectedVendor: any;
   claimsCount:number=0;
   inputConfirmationClicked!: boolean;
+  isRefundRxSubmitted!: boolean;
+  refundNoteValueLength: any;
+  isSpotsPayment: any;
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
@@ -219,7 +223,10 @@ OnEditProviderProfileClick(){
 }
 
 onAddRefundClick(){
-this.insuraceAddRefundClickSubject.next(true);
+  if (this.selectedRefundType === 'PHARMACY') {
+    this.addNewRefundRx();
+  } else
+    this.insuraceAddRefundClickSubject.next(true);
 }
 
   /******  */
@@ -317,7 +324,6 @@ this.insuraceAddRefundClickSubject.next(true);
     this.claimsCount=data;
   }
   getSelectedVendorRefundsList(listData : any){
-    debugger
     this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>
    JSON.stringify(
      {
@@ -377,4 +383,42 @@ this.insuraceAddRefundClickSubject.next(true);
    }
    return 'ng-dirty ng-invalid';
  }
+ refundRXForm = this.formBuilder.group({
+  voucherPayable: [''], 
+  creditNumber: [''],
+  warantNumber: ['', Validators.required],
+  depositDate: ['', Validators.required],
+  refundNote:[''],
+})
+addNewRefundRx() {
+    this.isRefundRxSubmitted = true;
+    this.refundRXForm.markAsTouched();
+    this.refundRXForm.markAsDirty();
+
+    if (this.refundRXForm.invalid) {
+      return;
+    } else {
+      const refundRxData = this.refundRXForm.value;
+      this.financialVendorRefundFacade.addNewRefundRx(refundRxData).subscribe({
+        next: (data: any) => {
+          this.financialVendorRefundFacade.showLoader();
+          this.financialVendorRefundFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,
+            'Pharmacy Refund Added Successfuly')
+        },
+        error: (error: any) => {
+          if (error) {
+            this.financialVendorRefundFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
+            this.financialVendorRefundFacade.hideLoader();
+          }
+        }
+      })
+    }
+  
+}
+onRefundNoteValueChange(event: any) {
+  this.refundNoteValueLength = event.length
+}
+onSpotsPaymentChange(check: any) {
+  this.isSpotsPayment = check.currentTarget.checked;
+}
 }
