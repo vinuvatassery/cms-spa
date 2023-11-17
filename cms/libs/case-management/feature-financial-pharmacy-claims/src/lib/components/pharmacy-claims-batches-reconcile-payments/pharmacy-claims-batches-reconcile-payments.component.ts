@@ -60,7 +60,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
-  paymentRequestId!:any;
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  paymentRequestId!: string;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
   public state!: State;
@@ -977,6 +978,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     if (result) {
       this.providerDetailsDialog.close();
       }
-
+  }
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
   }
 }
