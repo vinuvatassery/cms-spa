@@ -225,7 +225,6 @@
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
     <span class="" *ngIf="isPrintVisaAuthorizationClicked">{{noOfRecordToPrint}} authorization letter(s) to be previewed.</span>
-    <button (click)="goToBatchItems($event)">Batch Log items</button>
     <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintVisaAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Preview Requests" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
     <button kendoButton [primary]="true" aria-label="Preview" *ngIf="isPrintVisaAuthorizationClicked" [disabled]="disablePrwButton" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
