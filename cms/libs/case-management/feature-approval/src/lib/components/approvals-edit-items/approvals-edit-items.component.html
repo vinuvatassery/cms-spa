@@ -409,7 +409,7 @@
     <div class="flex-col ">
       <kendo-floatinglabel text="Mail Code">
         <kendo-textbox aria-label="Mail Code" placeholder="Mail Code" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="mailCode" [maxlength]="50">
+          formControlName="mailCode" [maxlength]="3">
         </kendo-textbox>
         <kendo-formerror *ngIf="insuranceVendorFormControls?.mailCode.errors?.required && isValidateForm">
           Mail Code is required
@@ -550,7 +550,7 @@
     <div class="flex-col ">
       <kendo-floatinglabel text="Mail Code">
         <kendo-textbox aria-label="Mail Code" placeholder="Mail Code" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="mailCode" [maxlength]="50">
+          formControlName="mailCode" [maxlength]="3">
         </kendo-textbox>
         <kendo-formerror *ngIf="pharmacyFormControl?.mailCode.errors?.required && isValidateForm">
           Mail Code is required
