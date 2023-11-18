@@ -160,9 +160,6 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
         depositDate:formData.depositDate,
         refundNote:formData.refundNote
        })
-       const depositDate = this.refundForm.get('depositDate') as AbstractControl;
-       depositDate.setValue(new Date(formData.depositDate))
-    //  this.refundForm.controls['depositDate'].setValue(new Date(formData.depositDate));
       })
     this.insuranceRefundInformationConfirmClicked.emit(param);
   }
