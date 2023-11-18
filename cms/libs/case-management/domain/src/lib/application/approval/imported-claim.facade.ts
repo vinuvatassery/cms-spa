@@ -16,12 +16,12 @@ export class ImportedClaimFacade {
   private ImportedClaimsSubject =  new Subject<any>();
   private submitImportedClaimsSubject = new Subject<any>();
   private possibleMatchSubject =  new Subject<any>();
-  private updateProviderPanelSubject = new Subject<any>();
+  private updateExceptionModalSubject = new Subject<any>();
   /** Public properties **/
   approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
   submitImportedClaims$ = this.submitImportedClaimsSubject.asObservable();
   possibleMatchData$ = this.possibleMatchSubject.asObservable();
-  updateProviderPanelSubject$ = this.updateProviderPanelSubject.asObservable();
+  updateExceptionModalSubject$ = this.updateExceptionModalSubject.asObservable();
 
   constructor(
     private readonly ImportedClaimService: ImportedClaimService,
@@ -124,7 +124,7 @@ export class ImportedClaimFacade {
       next: (response: any) => {
         if (response) {
           this.hideLoader();
-          this.updateProviderPanelSubject.next(response);
+          this.updateExceptionModalSubject.next(response);
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
         }
       },

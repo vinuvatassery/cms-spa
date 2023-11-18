@@ -21,6 +21,7 @@ import {
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { YesNoFlag } from '@cms/shared/ui-common';
+import { ImportedClaimFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'productivity-tools-imported-claims-lists',
@@ -80,9 +81,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   yesNoFlag: any = YesNoFlag;
   claimData: any;
   rowData: any;
+  updateExceptionModalSubject$ = this.importedClaimFacade.updateExceptionModalSubject$;
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,private readonly router: Router,
-    private readonly cd: ChangeDetectorRef) {}
+    private readonly cd: ChangeDetectorRef, private importedClaimFacade: ImportedClaimFacade) {}
 
   ngOnInit(): void {
     this.subscribeToSubmitImportedClaims();
@@ -253,6 +255,15 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   savePossibleMatch(data?:any)
   {
     this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
+    this.closePossibleMatchModal();
+  }
+
+  private closePossibleMatchModal() {
+    this.possibleMatchData$.subscribe((value: any) => {
+      if (value) {
+        this.onCloseReviewPossibleMatchesDialogClicked();
+      }
+    });
   }
 
   assignDataFromUpdatedResultToPagedResult(itemResponse: any) {
@@ -376,9 +387,19 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   addAnException(exceptionText: any){
     const exceptionObject = {
       InvoiceExceptionId : this.rowData.invoiceExceptionId,
-      ReasonDesc : exceptionText
+      ReasonDesc : exceptionText,
+      ClaimId: this.rowData.importedClaimId,
+      EntityTypeCode: this.rowData.entityTypeCode
     }
     this.addAnExceptionEvent.emit(exceptionObject);
+    this.closeExceptionModal();
   }
 
+  private closeExceptionModal() {
+    this.updateExceptionModalSubject$.subscribe((value: any) => {
+      if (value) {
+        this.onCloseMakeExpectationDialogClicked();
+      }
+    });
+  }
 }
