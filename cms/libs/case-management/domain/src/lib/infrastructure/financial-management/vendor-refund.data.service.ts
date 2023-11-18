@@ -500,7 +500,7 @@ export class FinancialVendorRefundDataService {
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/refund-ins-list/${data.vendorId}/${data.clientId}`,ClaimsPageAndSortedRequestDto);
   }
   loadTPARefundList(data:any): Observable<any> {
-debugger
+
     const ClaimsPageAndSortedRequestDto =
     {
       VendorId : data.vendorId,
