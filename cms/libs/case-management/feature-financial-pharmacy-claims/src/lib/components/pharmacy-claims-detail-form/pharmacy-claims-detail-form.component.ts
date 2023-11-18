@@ -200,7 +200,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
     {
        const service =
        {
-        prescriptionFillId : prescription.prescriptionFillId,
+        prescriptionFillId : prescription.prescriptionFillId ?? '00000000-0000-0000-0000-000000000000',
         claimNbr  : prescription.claimNbr,
         prescriptionFillDate  : this.intl.formatDate(prescription.prescriptionFillDate,this.dateFormat) ,
         copayAmountPaid  : prescription.copayAmountPaid,
