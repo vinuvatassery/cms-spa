@@ -144,16 +144,18 @@ if(this.isEdit){
   this.initForm()
    this.insRefundForm.patchValue({
     vendorId :  this.vendorAddressId,
-    insvendor : this.selectedVendor
+    insVendor : this.selectedVendor
   });
   this.searchInsuranceVendors(this.vendorName) 
+  this.insRefundForm.controls['insVendor'].disable();
 }
   }
   initForm(){
     this.insRefundForm = this.formBuilder.group({
       vendorId: [''],
-      insvendor:[this.selectedVendor]
+      insVendor:[this.selectedVendor]
     });
+
   }
 
   addInsuranceRefundClaim(event:any){
@@ -174,7 +176,7 @@ if(this.isEdit){
   
     this.isConfirmationClicked = true
     this.disableFeildsOnConfirmSelection = true
-
+    this.insRefundForm.controls['insVendor'].disable();
     if(this.selectedRefundType=== ServiceSubTypeCode.insurnacePremium 
     && this.insClaims.selectedInsuranceClaims &&  this.insClaims.selectedInsuranceClaims.length>0
     ){
@@ -249,6 +251,7 @@ this.insuraceAddRefundClickSubject.next(true);
   selectDiffPayments(){
     this.isConfirmationClicked = false;
     this.disableFeildsOnConfirmSelection = true;
+    this.insRefundForm.controls['insVendor'].disable();
     this.onEditInitiallydontShowPremiumselection = false
  
   }
