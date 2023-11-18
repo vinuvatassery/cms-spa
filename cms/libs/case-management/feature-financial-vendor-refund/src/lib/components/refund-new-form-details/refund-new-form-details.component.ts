@@ -1,6 +1,6 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit} from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, numberAttribute} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State, filterBy } from '@progress/kendo-data-query';
+import {State, filterBy } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam, ServiceSubTypeCode } from '@cms/case-management/domain'; 
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -15,7 +15,7 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
   templateUrl: './refund-new-form-details.component.html',
 })
 export class RefundNewFormDetailsComponent implements  OnInit{
-  public formUiStyle: UIFormStyle = new UIFormStyle();
+ public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
   selectedRefundType : any;
   public refundType  :any[]=[]
@@ -324,6 +324,7 @@ onAddRefundClick(){
     this.claimsCount=data;
   }
   getSelectedVendorRefundsList(listData : any){
+    debugger
     this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>
    JSON.stringify(
      {
@@ -381,7 +382,15 @@ onAddRefundClick(){
      document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.remove('ng-dirty');
      document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.add('ng-valid');
    }
-   return 'ng-dirty ng-invalid';
+   return 'ng-dirty ng-invalid grid-input';
+ }
+ getSumOfColumn(list:any, property : string):string{
+  let sum = 0 ;
+  if(property === 'amountPaid')
+    sum = list.reduce((accumulator : number, obj : any) => accumulator + obj.amountPaid, 0);
+  if(property === 'refundedAmount')
+    sum = list.reduce((accumulator : number, obj : any) => accumulator + obj.refundedAmount, 0);
+  return sum.toFixed(2);
  }
  refundRXForm = this.formBuilder.group({
   voucherPayable: [''], 
@@ -390,15 +399,42 @@ onAddRefundClick(){
   depositDate: ['', Validators.required],
   refundNote:[''],
 })
+markGridFormTouched(){
+  for(var index = 0; index<document.getElementsByClassName(`grid-input`).length;index++){
+    document.getElementsByClassName(`grid-input`)[index].classList.add('ng-touched')
+  }
+}
 addNewRefundRx() {
+  debugger;
     this.isRefundRxSubmitted = true;
     this.refundRXForm.markAsTouched();
     this.refundRXForm.markAsDirty();
-
-    if (this.refundRXForm.invalid) {
+    this.markGridFormTouched();
+    var selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionsDetail), []);
+    var anyInValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.any((x:any)=> !x.qtyRefundedValid || !x.daySupplyRefundedValid || !x.refundedAmountValid)
+    if (this.refundRXForm.invalid || anyInValidSelectedRefundPharmacyClaimInput) {
       return;
     } else {
-      const refundRxData = this.refundRXForm.value;
+      var selectedpharmacyClaimsDto = selectedpharmacyClaims.map((obj:any)=>
+      {
+        obj.paymentRequestId,
+        obj.PrescriptionFillId ,
+        obj.paymentRequestId,
+        obj.RefundedQty ,
+        obj.DaySupplyRefunded,
+        obj.RefundedAmount,
+        obj.grantNo,
+        obj.pcaCode,
+        obj.creditNumber
+      });
+      var refundRxData = { 
+        ...this.refundRXForm.value, 
+        vendorId : '<Assign-Value-as-Selected-Pharmacy-Id-In-Dropdown>',
+        clientId  : '<Assign-Value-as-Selected-Client-Id-In-Dropdown>',
+        clientCaseEligibilityId   : '<Assign-Value-as-Selected-Client-Case-Eledibility-In-Dropdown>',
+        refundType : "RX",
+        pharmacyRefundedItems:selectedpharmacyClaimsDto
+      };
       this.financialVendorRefundFacade.addNewRefundRx(refundRxData).subscribe({
         next: (data: any) => {
           this.financialVendorRefundFacade.showLoader();
