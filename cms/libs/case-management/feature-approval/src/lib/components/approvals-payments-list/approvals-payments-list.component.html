@@ -185,11 +185,11 @@
               )
             "
             [selected]="dataItem.batchStatus == approveStatus"
-            aria-label="Approve"
+            aria-label="APPROVE"
             id="approve{{ rowIndex }}"
             [toggleable]="true"
           >
-            Approve
+            APPROVE
           </button>
           <button kendoButton (selectedChange)="
               onRowLevelSendbackClicked(
@@ -200,11 +200,11 @@
               )
             "
             [selected]="dataItem.batchStatus == sendbackStatus"
-            aria-label="Send Back"
+            aria-label="SEND BACK"
             id="sendback{{ rowIndex }}"
             [toggleable]="true"
           >
-            Send Back
+            SEND BACK
           </button>
         </div>
       </ng-template>
@@ -312,7 +312,7 @@
     (click)="onOpenSubmitApprovalPaymentItemsClicked()"
     [disabled]="hasPaymentPendingApproval"
   >
-    Submit
+    SUBMIT
   </button>
 </div>
 
@@ -350,7 +350,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button aria-label="Cancel" kendoButton look="outline" (click)="onCloseSubmitApprovalPaymentItemsClicked()">
-          Cancel
+          CANCEL
         </button>
         <button aria-label="Submit" kendoButton [primary]="true" (click)="makeRequestData()">
           SUBMIT

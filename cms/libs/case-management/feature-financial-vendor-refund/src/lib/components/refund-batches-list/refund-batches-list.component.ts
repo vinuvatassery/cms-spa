@@ -120,15 +120,14 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
     );
   }
 
-  onCellClick(event : any){ 
+  navToBatchDetails(data: any) {   
     const query = {
       queryParams: {
-        b_id: event.dataItem.id ,         
+        b_id: data?.paymentRequestBatchId ,         
       },
     };
     this.route.navigate(['/financial-management/vendor-refund/batch/batch-log-list'], query );
   }
-
   
   loadRefundBatch(
     skipCountValue: number,

@@ -39,7 +39,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   isReconcileGridLoaderShow = false;
   printAuthorizationDialog : any;
   @Input() pageSizes: any;
-  @Input() sortValue: any;
+  @Input() sortValueBreakOut: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() sortValueBatch: any;
@@ -53,6 +53,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Input() warrantNumberChangeLoader$: any;
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
+  @Input() reconcilePaymentBreakoutLoaderList$:any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
@@ -60,7 +61,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
-  paymentRequestId!:any;
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  paymentRequestId!: string;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
   public state!: State;
@@ -97,6 +99,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   noteRequired= false;
   pageValidationMessage:any=null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentRequestType$ = this.lovFacade.paymentRequestType$;
   paymentMethodType:any;
   pageValidationMessageFlag:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -175,6 +178,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       this.dropDropdownColumns.splice(0, 0, batch);
     }
     this.lovFacade.getPaymentMethodLov();
+    this.lovFacade.getCoPaymentRequestTypeLov();
     this.paymentMethodSubscription();
     this.state = {
       skip: 0,
@@ -242,7 +246,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       filters: [{
         field: field,
         operator: "eq",
-        value:value.lovCode
+        value:value.lovDesc
     }],
       logic: "or"
   });
@@ -371,7 +375,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     this.state = {
       skip: 0,
       take: this.pageSizes[2]?.value,
-      sort: this.sort,
+      sort: this.sortBatch,
     };
 
     this.sortColumn = this.providerTitle;
@@ -381,9 +385,9 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     this.isFiltered = false;
     this.columnsReordered = false;
 
-    this.sortValue = 'vendorName';
+    this.sortValueBatch = 'vendorName';
     this.sortType = 'asc';
-    this.sort = this.sortColumn;
+    this.sortBatch = this.sortColumn;
 
     this.loadReconcileListGrid();
   }
@@ -875,20 +879,19 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
       let warrantTotal=0; 
-     this.batchId=data.batchId;
-    
-      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==data.batchId).forEach((item: any) => {
-       
-     
+      this.batchId=data.batchId;    
+
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined 
+      && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==data.batchId).forEach((item: any) => {  
         let object={
           vendorId:item?.entityId,
           batchId:item?.batchId,
           paymentRequestId:item?.paymentRequestId,
-          warrantNumber:item?.checkNbr,
-  
+          warrantNumber:item?.checkNbr,  
         }
         this.warrantCalculationArray.push(object);
       });
+
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
@@ -898,8 +901,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
-      }
-      
+      }      
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
 
@@ -977,6 +979,14 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     if (result) {
       this.providerDetailsDialog.close();
       }
-
   }
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
+  }
+  onBatchNumberClick(dataItem: any) {
+    this.route.navigate(
+        [`/financial-management/pharmacy-claims/batch`],
+        { queryParams: { bid: dataItem?.batchId } }
+    );
+}
 }
