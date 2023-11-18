@@ -379,7 +379,6 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   updateProviderProfile(event: any) {
-    console.log(event);
     this.financialVendorFacade.updateProviderPanel(event);
   }
 
