@@ -61,20 +61,20 @@
                 </div>
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
-                <div class="flex-col flex-col-6">
+                <div class="flex-col flex-col-6" [formGroup]="profileForm">
                     <kendo-floatinglabel  text="Vendor">
                         <div class="combotable_search_list new_refund_Search">                           
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                                      <kendo-multicolumncombobox [data]="insurancevendors$ | async" 
-                                      textField='providerFullName'
-                                      valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
-                                      placeholder="Search Vendor Name, ID"
-                                      [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                                      [filterable]="true" 
-                                      (filterChange)="searchInsuranceVendors($event)"
-                                      (valueChange)="onProviderValueChange($event)" [(ngModel)]="selectedVendor"
-                                      >
+                                   
+                                      <kendo-multicolumncombobox [data]="insurancevendors$ | async" textField="providerFullName"
+                                      valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode" 
+                                      (filterChange)="searchInsuranceVendors($event)" placeholder="Search Pharmacy name or TIN"
+                                      (selectionChange)="searchInsuranceVendors($event)" 
+                                         formControlName="insvendor" 
+                                         [(ngModel)]="selectedVendor"
+                                          [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                                          [filterable]="true">
                                     
                                       <button kendoButton fillMode="clear" icon="image"></button>
           
@@ -105,7 +105,7 @@
                               </div>
                       </kendo-floatinglabel> 
                 </div>
-
+{{profileForm.value|json}}
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
                 <div class="flex-col flex-col-6">
@@ -114,7 +114,7 @@
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                                       <kendo-multicolumncombobox [data]="tpavendors$ | async" 
-                                      textField='providerFullName'
+                                      textField="providerFullName"
                                       valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
                                       placeholder="Search Vendor Name, ID"
                                       [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"

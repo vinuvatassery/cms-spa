@@ -1,4 +1,4 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit} from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, ChangeDetectorRef} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, filterBy } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam, ServiceSubTypeCode } from '@cms/case-management/domain'; 
@@ -6,7 +6,6 @@ import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject } from 'rxjs';
 import { VendorRefundClaimsListComponent, VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
-import { VendorRefundClientClaimsListComponent } from '../vendor-refund-client-claims-list/vendor-refund-client-claims-list.component';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
@@ -55,7 +54,8 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   onEditInitiallydontShowPremiumselection = false;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
-  
+  insRefundForm!: FormGroup;
+
   /******/
   sortValueClaims = this.financialVendorRefundFacade.sortValueClaims;
   sortClaims = this.financialVendorRefundFacade.sortClaimsList;
@@ -119,7 +119,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   ngOnInit(): void {
     this.lovFacade.getRefundTypeLov();
     this.lovFacade.getServiceTypeLov();
-   
+     this.initForm()
     this.lovFacade.refundType$.subscribe((res:any[]) =>{
       
      this.refundType =  res.filter(x=> x.lovCode!=='TAX')
@@ -131,15 +131,28 @@ if(this.isEdit){
     clientId: this.clientId,
     clientNames :this.clientName
   }
-    this.selectedVendor ={
-     providerFullName: this.vendorName,
-     vendorAddressId: this.vendorAddressId
-    }
+  const vendors =[{ 
+    vendorAddressId: this.vendorAddressId,
+    providerFullName: this.vendorName,
+  },]
+   
   
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
-  this.financialVendorRefundFacade.insurancevendorsSubject.next([this.selectedVendor])
- 
+  this.financialVendorRefundFacade.insurancevendorsSubject.next(vendors)  
+  this.selectedVendor =vendors[0]
+  this.initForm()
+   this.insRefundForm.patchValue({
+    vendorId :  this.vendorAddressId,
+    insvendor : this.selectedVendor
+  });
+  this.searchInsuranceVendors(this.vendorName) 
 }
+  }
+  initForm(){
+    this.insRefundForm = this.formBuilder.group({
+      vendorId: [''],
+      insvendor:[this.selectedVendor]
+    });
   }
 
   addInsuranceRefundClaim(event:any){
@@ -294,6 +307,7 @@ this.insuraceAddRefundClickSubject.next(true);
     }
     this.vendorAddressId = $event.vendorAddressId;
     this.vendorName = $event.vendorName;
+    this.vendorId = $event.vendorId
     this.providerTin = $event;
     if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;

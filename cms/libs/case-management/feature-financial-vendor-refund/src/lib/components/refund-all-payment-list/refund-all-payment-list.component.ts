@@ -47,6 +47,9 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
   deleteRefundsConfirmationDialogTemplate!: TemplateRef<any>;
 
+  
+  private addEditRefundFormDialog: any;
+
   public state!: State;
   sortColumn = 'Batch #';
   sortDir = 'Descending';
@@ -65,6 +68,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
+
+  isRefundEditDialogOpen = false;
   isUnBatchRefundsClosed = false;
   isDeleteClaimClosed = false;
   unBatchDialog: any;
@@ -72,11 +77,34 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   selected: any;
   deletemodelbody = 'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
 
+  refunEditServiceType='';
+  refundEditClientId='';
+  refundEditClientFullName: any;
+  refundEditVendorAddressId='';
+  refundEditVendorName: any;
+  inspaymentRequestId: any;
+
+  @ViewChild('addEditRefundDialog', { read: TemplateRef })
+  addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
+  
+
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Refund',
       icon: 'edit',
+      click: (dataItem: any): void => {
+        if(!this.isRefundEditDialogOpen){
+          this.isRefundEditDialogOpen = true;
+          this.refunEditServiceType = dataItem.paymentTypeCode
+          this.refundEditClientId =dataItem.clientId
+          this.refundEditClientFullName = dataItem.clientFullName
+          this.refundEditVendorAddressId = dataItem.vendorAddressId
+          this.refundEditVendorName = dataItem.providerName
+          this.inspaymentRequestId = dataItem.paymentRequestId
+        this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
+        }
+      },
     },
     {
       buttonType: 'btn-h-primary',
@@ -405,5 +433,19 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
           this.loadVendorRefundAllPaymentsListGrid();
         }
       });
+  }
+
+  onEditRefundClaimClicked(template: TemplateRef<unknown>): void {
+    this.addEditRefundFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-96full add_refund_modal',
+    });
+  }
+
+  modalCloseAddEditRefundFormModal(result: any) {
+    if (result) {
+      this.isRefundEditDialogOpen = false;
+      this.addEditRefundFormDialog.close();
+    }
   }
 }
