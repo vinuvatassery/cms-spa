@@ -470,6 +470,9 @@ export class ApprovalPageComponent implements OnInit {
   {
     this.importedClaimFacade.savePossibleMatch(event);
   }
+  updateClientPolicy(importedclaimDto: any){
+    this.importedClaimFacade.updateClientPolicy(importedclaimDto);
+  }
 
   addAnException(exceptionObject : any){
     this.importedClaimFacade.makeExceptionForExceedBenefits(exceptionObject);

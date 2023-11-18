@@ -22,7 +22,7 @@
           class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
         ></span>
         <kendo-multicolumncombobox
-          [data]="clientSearchResult"
+          [data]="clientSearchResult$ | async"
           textField="clientFullName"
           valueField="clientId"
           [fillMode]="formUiStyle.dropDownFillMode"
@@ -32,6 +32,8 @@
             animate: true
           }"
           [filterable]="true"
+          (valueChange)="onClientValueChange($event)"
+          (filterChange)="loadClientBySearchText($event)"
         >
           <button kendoButton fillMode="clear" icon="image"></button>
 
@@ -66,7 +68,7 @@
               kendoMultiColumnComboBoxColumnCellTemplate
               let-dataItem
             >
-              <span class="text-muted"> <em>DOB:</em> {{ dataItem.dob }}</span>
+              <span class="text-muted"> <em>DOB:</em> {{ dataItem.dob | date : 'MM/dd/YYYY'}}</span>
             </ng-template>
           </kendo-combobox-column>
         </kendo-multicolumncombobox>
@@ -80,7 +82,7 @@
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel">
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Save">Save</button>
+      <button kendoButton [primary]="true" aria-label="Save" (click)="onClientSaveClick()">Save</button>
     </div>
   </div>
 </kendo-dialog-actions>

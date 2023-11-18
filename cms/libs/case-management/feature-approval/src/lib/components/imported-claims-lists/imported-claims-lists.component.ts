@@ -21,7 +21,7 @@ import {
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { YesNoFlag } from '@cms/shared/ui-common';
-import { ImportedClaimFacade } from '@cms/case-management/domain';
+import { ImportedClaimFacade, FinancialClaimsFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'productivity-tools-imported-claims-lists',
@@ -41,6 +41,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   @Input() submitImportedClaims$: any;
   @Input() possibleMatchData$:any;
   @Output() loadImportedClaimsGridEvent = new EventEmitter<any>();
+  @Output() updateClientPolicyEvent = new EventEmitter<any>();
   @Output() submitImportedClaimsEvent = new EventEmitter<any>();
   @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();
   @Output() saveReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
@@ -67,9 +68,12 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  selectedPolicyId: any
   private searchCaseDialog: any;
   private expectationDialog: any;
   private reviewPossibleMatchesDialog: any;
+  clientSearchResult$ = this.financialClaimsFacade.clients$;
+  selectedClaim: any;
   importedClaimsGridUpdatedResult: any = [];
   selectedDeletedDeniedDataRows: any = [];
   deniedStatus = 'DENIED';
@@ -83,8 +87,13 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   rowData: any;
   updateExceptionModalSubject$ = this.importedClaimFacade.updateExceptionModalSubject$;
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService,private readonly router: Router,
-    private readonly cd: ChangeDetectorRef, private importedClaimFacade: ImportedClaimFacade) {}
+  constructor(private route: Router, 
+              private dialogService: DialogService,
+              private readonly router: Router,
+              private readonly cd: ChangeDetectorRef,
+              private financialClaimsFacade: FinancialClaimsFacade,
+              private importedClaimFacade: ImportedClaimFacade) 
+              {}
 
   ngOnInit(): void {
     this.subscribeToSubmitImportedClaims();
@@ -215,7 +224,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.router.navigate([`/case-management/cases/case360/${clientId}`]);
 
   }
-  onSearchClientsDialogClicked(template: TemplateRef<unknown>): void {
+  
+  onSearchClientsDialogClicked(template: TemplateRef<unknown>, selectedClaim: any): void {
+    this.selectedClaim = selectedClaim
     this.searchCaseDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
@@ -381,6 +392,11 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   submit(data: any) {
     this.submitImportedClaimsEvent.emit(data);
+  }
+
+
+  onClientValueChange(importedclaimDto: any){
+    this.updateClientPolicyEvent.emit(importedclaimDto);
   }
 
   addAnException(exceptionText: any){
