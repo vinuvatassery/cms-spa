@@ -101,9 +101,9 @@ export class FinancialVendorRefundDataService {
   }
 
 
-  loadBatchLogListService(loadBatchLogListRequestDto : any ) {
+  loadBatchLogListService(loadBatchLogListRequestDto : any ,batchId : string) {
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/batches`,loadBatchLogListRequestDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/refund-batches/${batchId}/payments`,loadBatchLogListRequestDto
     );
   }
 
