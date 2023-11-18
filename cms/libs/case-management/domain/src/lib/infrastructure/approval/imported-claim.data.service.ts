@@ -54,4 +54,11 @@ export class ImportedClaimService {
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/save-possible-match/`,savePossibleMatchDto
     );
   }
+
+  makeExceptionForExceedBenifits(exceptionObject: string){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/makeException`,
+      exceptionObject
+    );
+  }
 }

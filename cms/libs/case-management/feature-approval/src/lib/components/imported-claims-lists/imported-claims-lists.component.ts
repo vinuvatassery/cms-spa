@@ -48,6 +48,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   dateOfBirth:any;
   policyId:any;
   entityId:any;
+  @Output() addAnExceptionEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'clientName';
   sortDir = 'Ascending';
@@ -78,7 +79,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   private submitDialogService: any;
   yesNoFlag: any = YesNoFlag;
   claimData: any;
-
+  rowData: any;
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,private readonly router: Router,
     private readonly cd: ChangeDetectorRef) {}
@@ -222,11 +223,12 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.searchCaseDialog.close();
   }
 
-  onMakeExpectationClicked(template: TemplateRef<unknown>): void {
+  onMakeExpectationClicked(template: TemplateRef<unknown>,dataItem:any): void {
     this.expectationDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
+    this.rowData = dataItem;
   }
   onCloseMakeExpectationDialogClicked() {
     this.expectationDialog.close();
@@ -239,6 +241,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     });
     this.claimData=dataItem;
   }
+
   onCloseReviewPossibleMatchesDialogClicked() {
     this.reviewPossibleMatchesDialog.close();
   }  
@@ -367,6 +370,15 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   submit(data: any) {
     this.submitImportedClaimsEvent.emit(data);
+  }
+
+
+  addAnException(exceptionText: any){
+    const exceptionObject = {
+      EntityId : this.rowData.InvoiceExceptionId,
+      ReasonDesc : exceptionText
+    }
+    this.addAnExceptionEvent.emit(exceptionObject);
   }
 
 }

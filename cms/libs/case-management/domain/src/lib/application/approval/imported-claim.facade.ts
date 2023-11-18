@@ -16,10 +16,12 @@ export class ImportedClaimFacade {
   private ImportedClaimsSubject =  new Subject<any>();
   private submitImportedClaimsSubject = new Subject<any>();
   private possibleMatchSubject =  new Subject<any>();
+  private updateProviderPanelSubject = new Subject<any>();
   /** Public properties **/
   approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
   submitImportedClaims$ = this.submitImportedClaimsSubject.asObservable();
   possibleMatchData$ = this.possibleMatchSubject.asObservable();
+  updateProviderPanelSubject$ = this.updateProviderPanelSubject.asObservable();
 
   constructor(
     private readonly ImportedClaimService: ImportedClaimService,
@@ -113,6 +115,23 @@ export class ImportedClaimFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.hideLoader();
       },
+    });
+  }
+
+  makeExceptionForExceedBenifits(exceptionObject: any) {
+    this.showLoader();
+    this.ImportedClaimService.makeExceptionForExceedBenifits(exceptionObject).subscribe({
+      next: (response: any) => {
+        if (response) {
+          this.hideLoader();
+          this.updateProviderPanelSubject.next(response);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+        }
+      },
+      error: (err: any) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err.message);
+      }
     });
   }
 }

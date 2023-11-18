@@ -195,18 +195,6 @@
           class="table_sub_row warning_info_row"
           *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No"
         >
-          <span class="material-icons">info</span>
-          This claim puts the client $521.62 over their max benefits. Deny the
-          claim, or make an exception.
-          <button
-          aria-label="Make an Exception"
-          kendoButton
-          look="flat"
-          class="card-link-button"
-          (click)="onMakeExpectationClicked(expectationReasonDialogModal)"
-        >
-          MAKE AN EXCEPTION
-        </button>
         </p>
 
         <p
@@ -248,6 +236,17 @@
           *ngIf="dataItem.isPossibleMatch === yesNoFlag.Yes && dataItem.policyIdMatch === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
+          The system could not match the Policy ID to a client. Delete the claim
+          or match it to a client.
+            <button
+              aria-label="Make an Exception"
+              kendoButton
+              look="flat"
+              class="card-link-button"
+              (click)="onMakeExpectationClicked(expectationReasonDialogModal,dataItem)"
+            >
+              MAKE AN EXCEPTION
+            </button>
           The  system could not match the Policy ID to a client. Delete the claim or match it to a client.
           <button
             aria-label="REVIEW POSSIBLE MATCH"
@@ -381,9 +380,8 @@
 
 <ng-template #expectationReasonDialogModal>
   <productivity-tools-approvals-expectation-reason
-    (closeMakeExpectationDialogClickedEvent)="
-      onCloseMakeExpectationDialogClicked()
-    "
+    (closeMakeExpectationDialogClickedEvent)="onCloseMakeExpectationDialogClicked()"
+    (addAnExceptionEvent)="addAnException($event)"
   ></productivity-tools-approvals-expectation-reason>
 </ng-template>
 
