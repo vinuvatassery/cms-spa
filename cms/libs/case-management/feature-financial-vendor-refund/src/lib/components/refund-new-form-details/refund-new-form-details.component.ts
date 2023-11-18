@@ -159,10 +159,13 @@ if(this.isEdit){
   }
 
   addInsuranceRefundClaim(event:any){
+    this.financialVendorRefundFacade.addUpdateInsuranceRefundClaim$.subscribe(res =>{
+      this.closeAddEditRefundFormModalClicked()
+    })
     if(this.isEdit){
     this.financialVendorRefundFacade.updateInsuranceRefundEditInformation(event.data)
     }else{
-    this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data)
+    this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data) 
   }
 }
 
