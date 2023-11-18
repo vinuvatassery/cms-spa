@@ -375,7 +375,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   addAnException(exceptionText: any){
     const exceptionObject = {
-      EntityId : this.rowData.InvoiceExceptionId,
+      InvoiceExceptionId : this.rowData.invoiceExceptionId,
       ReasonDesc : exceptionText
     }
     this.addAnExceptionEvent.emit(exceptionObject);
