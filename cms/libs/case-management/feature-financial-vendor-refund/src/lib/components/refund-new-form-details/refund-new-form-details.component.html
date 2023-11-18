@@ -69,8 +69,9 @@
                                    
                                       <kendo-multicolumncombobox [data]="insurancevendors$ | async" textField="providerFullName"
                                       valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode" 
-                                      (filterChange)="searchInsuranceVendors($event)" placeholder="Search Pharmacy name or TIN"
-                                      (selectionChange)="searchInsuranceVendors($event)" 
+                                      (filterChange)="searchInsuranceVendors($event)"
+                                       placeholder="Search Pharmacy name or TIN"
+                                       (valueChange)="onProviderValueChange($event)" 
                                          formControlName="insvendor" 
                                          [(ngModel)]="selectedVendor"
                                           [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"

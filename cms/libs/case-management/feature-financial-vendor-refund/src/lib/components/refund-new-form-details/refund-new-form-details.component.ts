@@ -287,7 +287,7 @@ this.insuraceAddRefundClickSubject.next(true);
       this.clientCaseEligibilityId = client.clientCaseEligibilityId;
       this.clientId = client.clientId;
       this.clientName = client.clientFullName;
-      if (this.clientId != null && this.vendorId != null) {
+      if (this.clientId != null && this.vendorAddressId != null) {
         this.isRefundGridClaimShow = true;
       } 
     }
