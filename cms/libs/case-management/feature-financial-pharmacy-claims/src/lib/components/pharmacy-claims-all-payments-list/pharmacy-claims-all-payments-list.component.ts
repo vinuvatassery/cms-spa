@@ -108,9 +108,12 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  vendorId: any;
  clientId: any;
  claimsType: any;
+ clientName: any;
  gridLoaderSubject = new BehaviorSubject(false);
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
+  itemNbr:'Item #',
+  batchName: 'Batch #',
   pharmacyName: 'Pharmacy Name',
   paymentMethodCode: 'Payment Method',
   clientFullName: 'Client Name',
@@ -214,7 +217,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.defaultGridState();
     this.sortValue = 'creationTime';
     this.sortType = 'desc';
-    this.sortDir = this.sortType === 'desc' ? 'Descending' : "";
+    this.sortDir = this.sortType === 'desc' ? 'Descending' : "Ascending";
     this.filter = [];
     this.searchText = '';
     this.selectedSearchColumn = 'ALL';
@@ -445,6 +448,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   clientRecentClaimsModalClicked(
     template: TemplateRef<unknown> ,data:any
   ): void {
+    
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
@@ -456,6 +460,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     });
     this.vendorId = data.vendorId;
     this.clientId = data.clientId;
+    this.clientName=data.clientFullName;
   }
 
   closeRecentClaimsModal(result: any) {

@@ -214,7 +214,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   isFiltered = false;
   showDateSearchWarning = false
   filter!: any;
-  selectedColumn= 'itemNbr';
+  selectedColumn= 'ALL';
   gridDataResult!: GridDataResult;
   gridClaimsBatchLogDataSubject = new Subject<any>();
   gridClaimsBatchLogData$ = this.gridClaimsBatchLogDataSubject.asObservable();
@@ -273,6 +273,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   paymentStatusFilter = '';
     
   dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'itemNbr',
       columnDesc: 'Item #',
@@ -333,7 +334,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     private readonly notificationSnackbarService: NotificationSnackbarService ) {}
   
   ngOnInit(): void {
-    this.sortColumnName = 'Item #';
+    this.sortColumnName = 'Pharmacy Name';
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
   }
@@ -379,7 +380,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: this.sortColumn ?? 'itemNbr',
+      sortColumn: this.sortColumn ?? 'vendorName',
       sortType: sortTypeValue ?? 'asc',
       filter: this.filter,
     };
@@ -560,6 +561,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   gridDataHandle() {
     this.batchLogGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
+      if( this.selectedColumn != 'ALL')
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData

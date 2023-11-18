@@ -59,6 +59,7 @@ export class PharmacyClaimsRecentClaimsListComponent {
   
   paymentTypeFilter = '';
   iseditView:string="";
+  defaultPageSize=20;
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
@@ -72,7 +73,7 @@ export class PharmacyClaimsRecentClaimsListComponent {
     this.getPaymentMethodLov(); 
     this.state = {
       skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value
+      take: this.defaultPageSize
     };
     this.showDuplicatePaymentExceptionHighlight$.subscribe(() => {
       this.cdr.detectChanges();

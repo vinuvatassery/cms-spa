@@ -68,10 +68,11 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   paymentStatusType:any;
   paymentStatuses$ = this.lovFacade.paymentStatus$;
   @Output() claimsCount = new EventEmitter<any>();
-  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade)
-  {
- 
+  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade){
+
   }
+
+
   ngOnInit(): void {
     this.lovFacade.getPaymentStatusLov()
     this.paymentStatusSubscription();
@@ -80,6 +81,9 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.selectedTpaClaims =  (this.tpaPaymentReqIds && this.tpaPaymentReqIds.length >0)?
     this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
+    this.tpaData$.subscribe((res:any)=>{
+      this.claimsCount.emit(this.selectedTpaClaims.length)
+  })
   }
   ngOnChanges(): void {
     this.state = {

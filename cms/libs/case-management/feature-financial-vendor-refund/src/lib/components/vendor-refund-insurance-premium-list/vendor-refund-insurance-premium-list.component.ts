@@ -10,7 +10,8 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
+import { FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -42,7 +43,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   @Input() sortType: any;
   @Input() sort: any;
   public state!: State;
-  @Input() vendorId: any;
+  @Input() vendorAddressId: any;
   @Input() clientId: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
  @Input() isEdit = false
@@ -78,7 +79,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   paymentStatuses$ = this.lovFacade.paymentStatus$
   paymentMethodLov$ = this.lovFacade.paymentMethodType$;
   paymentMethodLovSubscription!: Subscription;
-  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
+  constructor( private readonly router: Router, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
   {
  
   }
@@ -128,7 +129,15 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
 
   loadRefundClaimsGrid(data: any) {
     if(this.isEdit){
-      this.financialVendorRefundFacade.getInsuranceRefundEditInformation(this.editPaymentRequestId,data)
+      const param ={
+        ...data,
+        paymentRequestId : this.editPaymentRequestId
+      }
+      this.financialPremiumsProcessData$.subscribe((data: GridDataResult) => {
+       var refunded =    data.data.filter(x=> x.refundPaymentRequestId)
+       this.selectedInsuranceClaims =  refunded.map(item => item.paymentRequestId)
+      })
+      this.financialVendorRefundFacade.getInsuranceRefundEditInformation( this.vendorAddressId, this.clientId,param)
     }else{
       this.financialVendorRefundFacade.loadMedicalPremiumList(data);
 
@@ -156,7 +165,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
  
   private loadRefundClaimsListGrid(): void {
     this.loadClaimsProcess(
-      this.vendorId,
+      this.vendorAddressId,
       this.clientId,
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -165,7 +174,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
     );
   }
   loadClaimsProcess(
-    vendorId: string,
+    vendorAddressId: string,
     clientId: number,
     skipCountValue: number,
     maxResultCountValue: number,
@@ -174,7 +183,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   ) {
     this.isClientClaimsLoaderShow = true;
     const gridDataRefinerValue = {
-      vendorId: vendorId,
+      vendorId: vendorAddressId,
       clientId: clientId,
       skipCount: skipCountValue,
       pageSize: maxResultCountValue,
@@ -200,7 +209,9 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
       }
     });
     this.isClientClaimsLoaderShow = false;
-
+this.gridClientClaimsData$.subscribe((res:any)=>{
+    this.claimsCount.emit(this.selectedInsuranceClaims.length)
+})
   }
   filterChange(filter: CompositeFilterDescriptor): void {  
     this.filterData = filter;
@@ -248,4 +259,17 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   ngOnDestroy(): void {
     this.paymentStatusLovSubscription.unsubscribe();
   }
+  onVendorProfileViewClicked(vendorId:any) {  
+      
+    const query = {
+      queryParams: {
+        v_id:vendorId,
+        tab_code :FinancialVendorProviderTabCode.InsuranceVendors
+      },
+    };
+    this.router.navigate(['/financial-management/vendors/profile'], query)
+
+  }
+
+
 }

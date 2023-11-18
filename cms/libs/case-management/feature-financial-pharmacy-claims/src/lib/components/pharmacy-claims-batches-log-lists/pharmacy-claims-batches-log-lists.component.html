@@ -139,11 +139,12 @@
        </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="checkNbr" title="Warrant Number" [width]="160">
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
-                 <kendo-filter-eq-operator></kendo-filter-eq-operator>
-             </kendo-grid-numeric-filter-menu>
-         </ng-template>   </kendo-grid-column>
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span [attr.aria-label]="dataItem.checkNbr" look="flat">
+              {{ dataItem.checkNbr }}
+            </span>
+        </ng-template>
+        </kendo-grid-column>
         <kendo-grid-column field="creationTime" title="Entry Date" [width]="140">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.creationTime | date:'MM/dd/yyyy'}}
@@ -233,7 +234,6 @@
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
     <span class="" *ngIf="isPrintVisaAuthorizationClicked">{{noOfRecordToPrint}} authorization letter(s) to be previewed.</span>
-    <button (click)="goToBatchItems($event)">Batch Log items</button>
     <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintVisaAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Preview Requests" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
     <button kendoButton [primary]="true" aria-label="Preview" *ngIf="isPrintVisaAuthorizationClicked" [disabled]="disablePrwButton" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
