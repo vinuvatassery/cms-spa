@@ -235,6 +235,18 @@
           class="table_sub_row warning_info_row"
           *ngIf="dataItem.isPossibleMatch === yesNoFlag.Yes && dataItem.policyIdMatch === yesNoFlag.No"
         >
+          The  system could not match the Policy ID to a client. Delete the claim or match it to a client.
+          <button
+            aria-label="REVIEW POSSIBLE MATCH"
+            kendoButton
+            look="flat"
+            class="card-link-button"
+            (click)="onReviewPossibleMatchesDialogClicked(possibleMatchesDialogModal,dataItem)"
+          >
+              REVIEW POSSIBLE MATCH
+          </button>
+        </p>
+        <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === 'N/A' && dataItem.isPossibleMatch === yesNoFlag.Yes">
           <span class="material-icons">info</span>
           The system could not match the Policy ID to a client. Delete the claim
           or match it to a client.
@@ -247,16 +259,6 @@
             >
               MAKE AN EXCEPTION
             </button>
-          The  system could not match the Policy ID to a client. Delete the claim or match it to a client.
-          <button
-            aria-label="REVIEW POSSIBLE MATCH"
-            kendoButton
-            look="flat"
-            class="card-link-button"
-            (click)="onReviewPossibleMatchesDialogClicked(possibleMatchesDialogModal,dataItem)"
-          >
-              REVIEW POSSIBLE MATCH
-          </button>
         </p>
       </section>
     </ng-template>
