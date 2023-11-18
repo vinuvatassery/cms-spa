@@ -16,17 +16,22 @@ export class FinancialVendorRefundDataService {
     private readonly configurationProvider: ConfigurationProvider
   ) {}
 
-  addInsuranceRefundClaim(data:any, vendorId :any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums`, data);
+  addInsuranceRefundClaim(data:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-refund`, data);
   }
 
-  getInsuranceRefundEditInformation(paymentRequestId:any,paginationSortingDto:any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums/${paymentRequestId}`, paginationSortingDto);
+  getInsuranceRefundEditInformation(vendorId :any, clientId :any ,paginationSortingDto:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums/${clientId}`, paginationSortingDto);
+  }
+
+  updateInsuranceRefundEditInformation(paginationSortingDto:any){
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums`, paginationSortingDto);
   }
 
   getInsurnaceRefundInformation(insuranceRefundInformation:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums`, insuranceRefundInformation);
   }
+
   loadVendorRefundProcessListService( ) {
     return of([
       {
@@ -96,9 +101,9 @@ export class FinancialVendorRefundDataService {
   }
 
 
-  loadBatchLogListService(loadBatchLogListRequestDto : any ) {
+  loadBatchLogListService(loadBatchLogListRequestDto : any ,batchId : string) {
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/batches`,loadBatchLogListRequestDto
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/refund-batches/${batchId}/payments`,loadBatchLogListRequestDto
     );
   }
 
@@ -431,7 +436,7 @@ export class FinancialVendorRefundDataService {
   }
 
   batchRefunds(batchId: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/batch`, batchId);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/batch`, batchId);
   }
 
   unbatchRefunds(paymentRequestIds: string[]) {
@@ -467,14 +472,20 @@ export class FinancialVendorRefundDataService {
         `/financial-management/claims/pharmacies/SearchText=${searchText}`
     );
   }
-  loadvendorBySearchText(searchText: string,) {
+  loadTpavendorBySearchText(searchText: string,) {
+    return this.http.get<Pharmacy[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+  `/financial-management/claims/medical/tpa-vendor/SearchText=${searchText}`
+    );
+  }
+  loadInsurancevendorBySearchText(searchText: string,) {
     return this.http.get<Pharmacy[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
   `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}`
     );
   }
   loadMedicalPremiumList(data:any): Observable<any> {
-    
+
     const ClaimsPageAndSortedRequestDto =
     {
       VendorId : data.vendorId,
@@ -485,11 +496,11 @@ export class FinancialVendorRefundDataService {
       MaxResultCount : data.pageSize,
       Filter : data.filter
     }
-    
+
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/refund-ins-list?vendorId=${data.vendorId}'&clientId=${data.clientId}`,ClaimsPageAndSortedRequestDto);
   }
   loadTPARefundList(data:any): Observable<any> {
-    
+
     const ClaimsPageAndSortedRequestDto =
     {
       VendorId : data.vendorId,

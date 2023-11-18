@@ -23,7 +23,8 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   @Input() clientId: any;
 
   @Input() clientName: any;
- @Input() vendorId: any;
+ vendorId: any;
+ @Input() vendorAddressId :any
    selectedProvider:any;
   isRefundGridClaimShow = false;
   isShowReasonForException = false;
@@ -80,7 +81,8 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialVendorRefundFacade.clients$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
-  vendors$ = this.financialVendorRefundFacade.vendors$;
+  insurancevendors$ = this.financialVendorRefundFacade.insurancevendors$;
+  tpavendors$ = this.financialVendorRefundFacade.tpavendors$;
  
   @ViewChild('insClaims', { static: false })
   insClaims!: VendorRefundInsurancePremiumListComponent;
@@ -115,8 +117,11 @@ export class RefundNewFormDetailsComponent implements  OnInit{
     private dialogService: DialogService,
     private formBuilder: FormBuilder) {}
   ngOnInit(): void {
+    this.lovFacade.getRefundTypeLov();
     this.lovFacade.getServiceTypeLov();
-    this.lovFacade.serviceType$.subscribe((res:any[]) =>{
+   
+    this.lovFacade.refundType$.subscribe((res:any[]) =>{
+      
      this.refundType =  res.filter(x=> x.lovCode!=='TAX')
     })
 if(this.isEdit){
@@ -128,22 +133,27 @@ if(this.isEdit){
   }
     this.selectedVendor ={
      providerFullName: this.vendorName,
-     vendorId: this.vendorId
+     vendorAddressId: this.vendorAddressId
     }
   
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
-  this.financialVendorRefundFacade.vendorsSubject.next([this.selectedVendor])
+  this.financialVendorRefundFacade.insurancevendorsSubject.next([this.selectedVendor])
  
 }
   }
 
   addInsuranceRefundClaim(event:any){
-    this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data, event.vendorId)
+    if(this.isEdit){
+    this.financialVendorRefundFacade.updateInsuranceRefundEditInformation(event.data)
+    }else{
+    this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data)
   }
+}
 
   selectionChange(event: any){
     this.isConfirmationClicked = false
     this.vendorId=null;
+    this.vendorAddressId=null;
     this.selectedProvider=null;
   }
   confirmationClicked (){
@@ -280,12 +290,12 @@ this.insuraceAddRefundClickSubject.next(true);
   onProviderValueChange($event: any) {
     
     if($event==undefined){ 
-      this.vendorId=null;
+      this.vendorAddressId=null;
     }
-    this.vendorId = $event.vendorId;
+    this.vendorAddressId = $event.vendorAddressId;
     this.vendorName = $event.vendorName;
     this.providerTin = $event;
-    if (this.clientId != null && this.vendorId != null){
+    if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
     } 
   }
@@ -305,11 +315,17 @@ this.insuraceAddRefundClickSubject.next(true);
       this.showServicesListForm = false;
     }
   }
-  searchVendors(searchText: any) {
+  searchInsuranceVendors(searchText: any) {
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorRefundFacade.loadvendorBySearchText(searchText,this.selectedRefundType);
+    this.financialVendorRefundFacade.loadInsurancevendorBySearchText(searchText);
+  }
+  searchTpaVendors(searchText: any) {
+    if (!searchText || searchText.length == 0) {
+      return;
+    }
+    this.financialVendorRefundFacade.loadTpavendorBySearchText(searchText);
   }
   claimsCountEvent(data:any){
     
