@@ -58,7 +58,7 @@ export class ImportedClaimService {
 
   makeExceptionForExceedBenifits(exceptionObject: string){
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/makeException`,
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/make-exception`,
       exceptionObject
     );
   }
