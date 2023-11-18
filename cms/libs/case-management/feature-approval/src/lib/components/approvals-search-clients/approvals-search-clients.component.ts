@@ -17,7 +17,7 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 export class ApprovalsSearchClientsComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() closeSearchClientsDialogClickedEvent = new EventEmitter<any>();
-  @Output() ClientValueChangeEvent = new EventEmitter<any>();
+  @Output() clientValueChangeEvent = new EventEmitter<any>();
 
   @Input() selectedClaim: any;
   isShownSearchLoader = false;
@@ -107,7 +107,7 @@ export class ApprovalsSearchClientsComponent {
       policyId: this.selectedClaim.policyId,
       importedClaimId: this.selectedClaim.importedClaimId
     }
-    this.ClientValueChangeEvent.emit(importedclaimDto);
+    this.clientValueChangeEvent.emit(importedclaimDto);
   }
 
   subscribeToPolicyUpdate(){
