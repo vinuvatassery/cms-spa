@@ -248,7 +248,7 @@ this.insuraceAddRefundClickSubject.next(true);
   /******  */
   selectDiffPayments(){
     this.isConfirmationClicked = false;
-    this.disableFeildsOnConfirmSelection = false;
+    this.disableFeildsOnConfirmSelection = true;
     this.onEditInitiallydontShowPremiumselection = false
  
   }
