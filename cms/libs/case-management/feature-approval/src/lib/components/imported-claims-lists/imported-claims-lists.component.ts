@@ -21,7 +21,7 @@ import {
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { YesNoFlag } from '@cms/shared/ui-common';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { ImportedClaimFacade, FinancialClaimsFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'productivity-tools-imported-claims-lists',
@@ -50,6 +50,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   dateOfBirth:any;
   policyId:any;
   entityId:any;
+  @Output() addAnExceptionEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'clientName';
   sortDir = 'Ascending';
@@ -83,13 +84,15 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   private submitDialogService: any;
   yesNoFlag: any = YesNoFlag;
   claimData: any;
-
+  rowData: any;
+  updateExceptionModalSubject$ = this.importedClaimFacade.updateExceptionModalSubject$;
   /** Constructor **/
   constructor(private route: Router, 
               private dialogService: DialogService,
               private readonly router: Router,
               private readonly cd: ChangeDetectorRef,
-              private financialClaimsFacade: FinancialClaimsFacade) 
+              private financialClaimsFacade: FinancialClaimsFacade,
+              private importedClaimFacade: ImportedClaimFacade) 
               {}
 
   ngOnInit(): void {
@@ -233,11 +236,12 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.searchCaseDialog.close();
   }
 
-  onMakeExpectationClicked(template: TemplateRef<unknown>): void {
+  onMakeExpectationClicked(template: TemplateRef<unknown>,dataItem:any): void {
     this.expectationDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
+    this.rowData = dataItem;
   }
   onCloseMakeExpectationDialogClicked() {
     this.expectationDialog.close();
@@ -250,6 +254,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     });
     this.claimData=dataItem;
   }
+
   onCloseReviewPossibleMatchesDialogClicked() {
     this.reviewPossibleMatchesDialog.close();
   }  
@@ -261,6 +266,15 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   savePossibleMatch(data?:any)
   {
     this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
+    this.closePossibleMatchModal();
+  }
+
+  private closePossibleMatchModal() {
+    this.possibleMatchData$.subscribe((value: any) => {
+      if (value) {
+        this.onCloseReviewPossibleMatchesDialogClicked();
+      }
+    });
   }
 
   assignDataFromUpdatedResultToPagedResult(itemResponse: any) {
@@ -385,4 +399,22 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.updateClientPolicyEvent.emit(importedclaimDto);
   }
 
+  addAnException(exceptionText: any){
+    const exceptionObject = {
+      InvoiceExceptionId : this.rowData.invoiceExceptionId,
+      ReasonDesc : exceptionText,
+      ClaimId: this.rowData.importedClaimId,
+      EntityTypeCode: this.rowData.entityTypeCode
+    }
+    this.addAnExceptionEvent.emit(exceptionObject);
+    this.closeExceptionModal();
+  }
+
+  private closeExceptionModal() {
+    this.updateExceptionModalSubject$.subscribe((value: any) => {
+      if (value) {
+        this.onCloseMakeExpectationDialogClicked();
+      }
+    });
+  }
 }

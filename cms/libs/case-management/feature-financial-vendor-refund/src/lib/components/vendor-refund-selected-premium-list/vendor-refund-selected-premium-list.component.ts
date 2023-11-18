@@ -47,7 +47,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
     vp: ['', Validators.required],
     creditNumber: ['', Validators.required],
     warantNumber: ['', Validators.required],
-    depositDate: ['', Validators.required],
+    depositDate: [''],
     refundNote:['']
   })
   public constructor(private formBuilder : FormBuilder,
@@ -150,7 +150,14 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
         this.financialPremiumsRefundGridLists = res.data
        this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)       
        this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountPaid).reduce((a, b) => a + b, 0)
-     
+       const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
+       this.refundForm.patchValue({
+        vp: formData.voucherPayabeNbr,
+        creditNumber:formData.creditNumber,
+        warantNumber:formData.warantNumber ,
+        depositDate:formData.depositDate,
+        refundNote:formData.refundNote
+       })
       })
     this.insuranceRefundInformationConfirmClicked.emit(param);
   }

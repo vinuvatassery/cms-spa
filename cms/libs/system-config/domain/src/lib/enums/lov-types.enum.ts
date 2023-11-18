@@ -56,5 +56,7 @@ export enum LovType {
     DeliveryMethod = 'DELIVERY_METHOD',
     VendorTypeCode = 'VENDOR_TYPE_CODE',
     ClaimStatus = 'CLAIM_STATUS',
-    ServiceType ="SERVICE_TYPE"
+    ServiceType ="SERVICE_TYPE",
+    RefundType ="REFUND_TYPE",
+
   }

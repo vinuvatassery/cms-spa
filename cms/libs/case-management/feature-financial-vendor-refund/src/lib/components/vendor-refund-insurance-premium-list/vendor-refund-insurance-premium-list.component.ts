@@ -10,7 +10,8 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
+import { FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -78,7 +79,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   paymentStatuses$ = this.lovFacade.paymentStatus$
   paymentMethodLov$ = this.lovFacade.paymentMethodType$;
   paymentMethodLovSubscription!: Subscription;
-  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
+  constructor( private readonly router: Router, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
   {
  
   }
@@ -128,15 +129,8 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
 
   loadRefundClaimsGrid(data: any) {
     if(this.isEdit){
-      const param ={
-        ...data,
-        paymentRequestId : this.editPaymentRequestId
-      }
-      this.financialPremiumsProcessData$.subscribe((data: GridDataResult) => {
-       var refunded =    data.data.filter(x=> x.refundPaymentRequestId)
-       this.selectedInsuranceClaims =  refunded.map(item => item.paymentRequestId)
-      })
-      this.financialVendorRefundFacade.getInsuranceRefundEditInformation( this.vendorAddressId, this.clientId,param)
+ 
+      this.financialVendorRefundFacade.getInsuranceRefundEditInformation( this.vendorAddressId, this.clientId,data)
     }else{
       this.financialVendorRefundFacade.loadMedicalPremiumList(data);
 
@@ -185,12 +179,24 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
       vendorId: vendorAddressId,
       clientId: clientId,
       skipCount: skipCountValue,
-      pageSize: maxResultCountValue,
+      maxResultCount: maxResultCountValue,
       sort: sortValue,
       sortType: sortTypeValue,
       filter : this.state?.["filter"]?.["filters"] ?? []
     };
+    if(this.isEdit){
+      const param ={
+        ...gridDataRefinerValue,
+        paymentRequestId : this.editPaymentRequestId
+      }
+      this.financialPremiumsProcessData$.subscribe((data: GridDataResult) => {
+       var refunded =    data.data.filter(x=> x.refundPaymentRequestId)
+       this.selectedInsuranceClaims =  refunded.map(item => item.paymentRequestId)
+      })
+      this.loadRefundClaimsGrid(param)
+    }else{
     this. loadRefundClaimsGrid(gridDataRefinerValue);
+    }
     this.gridDataHandle();
   
   }
@@ -208,7 +214,9 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
       }
     });
     this.isClientClaimsLoaderShow = false;
-
+this.gridClientClaimsData$.subscribe((res:any)=>{
+    this.claimsCount.emit(this.selectedInsuranceClaims.length)
+})
   }
   filterChange(filter: CompositeFilterDescriptor): void {  
     this.filterData = filter;
@@ -256,4 +264,17 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   ngOnDestroy(): void {
     this.paymentStatusLovSubscription.unsubscribe();
   }
+  onVendorProfileViewClicked(vendorId:any) {  
+      
+    const query = {
+      queryParams: {
+        v_id:vendorId,
+        tab_code :FinancialVendorProviderTabCode.InsuranceVendors
+      },
+    };
+    this.router.navigate(['/financial-management/vendors/profile'], query)
+
+  }
+
+
 }

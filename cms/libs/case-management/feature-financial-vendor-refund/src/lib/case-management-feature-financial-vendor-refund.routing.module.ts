@@ -15,7 +15,7 @@ const routes = [
   },
   {
     path: 'batch/batch-log-list',
-    component: RefundBatchLogListComponent,
+    component: RefundBatchPageComponent,
   }, 
   {
     path: 'batch',
