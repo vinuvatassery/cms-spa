@@ -52,7 +52,7 @@ export class VendorRefundPageComponent {
   }
 
   loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto : any) {
-    this.financialVendorRefundFacade.selectedRefundsTab = 3;
+    this.financialVendorRefundFacade.selectedRefundsTab = 1;
     this.tab = this.financialVendorRefundFacade.selectedRefundsTab;   
     this.dataExportParameters = recentClaimsPageAndSortedRequestDto;    
     this.financialVendorRefundFacade.loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto);
