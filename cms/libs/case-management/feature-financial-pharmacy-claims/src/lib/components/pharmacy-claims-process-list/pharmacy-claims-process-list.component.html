@@ -298,12 +298,12 @@
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
-  <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed"
+  <button kendoButton kendoButton class="{{!selectedProcessClaims.length?'':'k-error-button'}}" [disabled]="!selectedProcessClaims.length" aria-label="Delete" *ngIf="isDeleteBatchClosed"
     (click)="onDeleteClaimsOpenClicked(deleteClaimsConfirmationDialog)"> <span class="material-icons mr-1"
       aria-label="Delete"> delete</span> Delete </button>
 
   <button kendoButton [primary]="true" aria-label="Batch" class=""
-    (click)="onBatchClaimsClicked(batchClaimsConfirmationDialog)" *ngIf="isProcessBatchClosed"> Batch </button>
+    (click)="onBatchClaimsClicked(batchClaimsConfirmationDialog)" *ngIf="isProcessBatchClosed" [disabled]="!selectedProcessClaims.length"> Batch </button>
 
   <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="claimsProcessMore"
     class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
