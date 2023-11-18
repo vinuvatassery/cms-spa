@@ -21,7 +21,29 @@ export class DocumentDataService {
       });
   }
 
-  getExportFile(pageAndSortedRequest: any, path: string, apiType: string = ApiType.CaseApi, selectedIds?: any[]) {
+  getExportFile(pageAndSortedRequest: any, path: string, apiType: string = ApiType.CaseApi) {
+    let apiUrl: any;
+    switch (apiType) {
+      case ApiType.CaseApi: {
+        apiUrl = this.configurationProvider.appSettings.caseApiUrl;
+        break;
+      }
+      case ApiType.ProductivityToolsApi: {
+        apiUrl = this.configurationProvider.appSettings.productivityToolsApiUrl;
+        break;
+      }
+      default: {
+        apiUrl = this.configurationProvider.appSettings.caseApiUrl;
+        break;
+      }
+    }
+    return this.http.post(
+      `${apiUrl}/data-management/export/${path}`, pageAndSortedRequest,
+      { responseType: 'blob' }
+    )
+  }
+
+  getExportFileForSelection(pageAndSortedRequest: any, path: string, apiType: string = ApiType.CaseApi, selectedIds?: any[]) {
     let apiUrl: any;
     switch (apiType) {
       case ApiType.CaseApi: {
@@ -53,6 +75,5 @@ export class DocumentDataService {
         { responseType: 'blob' }
       )
     }
-
   }
 }

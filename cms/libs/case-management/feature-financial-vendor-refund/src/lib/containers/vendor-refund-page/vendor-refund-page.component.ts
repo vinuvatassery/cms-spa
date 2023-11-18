@@ -101,7 +101,7 @@ export class VendorRefundPageComponent {
       };
       let fileName = 'Refund Payments';
 
-      this.documentFacade.getExportFile(
+      this.documentFacade.getExportFileForSelction(
         vendorPageAndSortedRequest,
         `vendor-refunds/receipting-log`,
         fileName,
