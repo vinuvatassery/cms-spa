@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialVendorProviderTabCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -78,19 +78,33 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   paymentStatusLovSubscription!:Subscription;
   paymentStatuses$ = this.lovFacade.paymentStatus$
   paymentMethodLov$ = this.lovFacade.paymentMethodType$;
+  cliams:any[]=[];
+  refundSelectedClaims:any[]=[];
   paymentMethodLovSubscription!: Subscription;
-  constructor( private readonly router: Router, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
+  constructor(  private readonly financialClaimsFacade: FinancialClaimsFacade, private readonly router: Router, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
   {
  
   }
   selectedKeysChange(selection: any) {
-    
-
-    this.selectedInsuranceClaims = selection;
-    this.claimsCount.emit(this.selectedInsuranceClaims.length)
+ const includeClaim =  this.cliams.filter(obj => selection.includes(obj.paymentRequestId));
+const uniqueOriginalWarrants = [...new Set(includeClaim.map(obj => obj.originalWarrant))];
+if(uniqueOriginalWarrants.length>1)
+{
+  this.financialClaimsFacade.errorShowHideSnackBar("Select a claim with Same warrant number")
+  this.claimsCount.emit(0)
+}
+  if(uniqueOriginalWarrants.length==1)
+    {
+      this.selectedInsuranceClaims = selection;
+      this.claimsCount.emit(this.selectedInsuranceClaims.length)
+    } 
   }
+
   ngOnInit(): void {
-    
+    this.gridClientClaimsData$.subscribe((res:any)=>{
+      
+      this.cliams=res.data;
+    })
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
