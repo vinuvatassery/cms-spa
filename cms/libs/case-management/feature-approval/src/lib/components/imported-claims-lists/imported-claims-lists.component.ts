@@ -383,7 +383,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.submitImportedClaimsEvent.emit(data);
   }
 
-
   addAnException(exceptionText: any){
     const exceptionObject = {
       InvoiceExceptionId : this.rowData.invoiceExceptionId,
