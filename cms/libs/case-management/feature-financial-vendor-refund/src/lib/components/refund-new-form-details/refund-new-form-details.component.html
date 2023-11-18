@@ -80,17 +80,17 @@
           
                                       <kendo-combobox-column>
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span>{{ dataItem.vendorName }}</span>
+                                              <span>Name:{{ dataItem.vendorName }}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="100">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class=" text-muted"> <em></em> {{dataItem.insuranceType}}</span>
+                                              <span class=" text-muted"> <em></em>Insurance Type: {{dataItem.insuranceType}}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="150">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class="text-muted"><em> </em> {{ dataItem.insuranceName }}</span>
+                                              <span class="text-muted"><em> </em>Insurance Name: {{ dataItem.insuranceName }}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="125">
@@ -127,17 +127,22 @@
           
                                       <kendo-combobox-column>
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span>{{ dataItem.vendorName }}</span>
+                                              <span>Name:{{ dataItem.vendorName }}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="100">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class=" text-muted"> <em></em> {{dataItem.tin}}</span>
+                                              <span class=" text-muted"> <em></em>TIN: {{dataItem.tin}}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="150">
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class="text-muted"><em> </em>MailCode: {{ dataItem.MmilCode }}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column> 
+                                      <kendo-combobox-column [width]="150">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class="text-muted"><em> </em> {{ dataItem.address }}</span>
+                                              <span class="text-muted"><em> </em>Address: {{ dataItem.address }}</span>
                                           </ng-template>
                                       </kendo-combobox-column>                                    
                                       <ng-template kendoMultiColumnComboBoxNoDataTemplate>
