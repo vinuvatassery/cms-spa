@@ -106,8 +106,16 @@ export class ImportedClaimFacade {
     this.showLoader();
     this.ImportedClaimService.savePossibleMatch(event).subscribe({
       next: (response: any) => {
-        this.possibleMatchSubject.next(response);
         this.hideLoader();
+        if(response.status == 1)
+        {
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+        }
+        else
+        {
+          this.showHideSnackBar(SnackBarNotificationType.WARNING,response.message);
+        }
+        this.possibleMatchSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
