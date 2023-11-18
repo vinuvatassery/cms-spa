@@ -74,7 +74,8 @@
                                          formControlName="insvendor" 
                                          [(ngModel)]="selectedVendor"
                                           [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                                          [filterable]="true">
+                                          [filterable]="true"
+                                          [disabled]="disableFeildsOnConfirmSelection">
                                     
                                       <button kendoButton fillMode="clear" icon="image"></button>
           
@@ -120,7 +121,7 @@
                                       [filterable]="true" 
                                       (filterChange)="searchTpaVendors($event)"
                                       (valueChange)="onProviderValueChange($event)" [(ngModel)]="selectedVendor"
-                                      >
+                                      [disabled]="disableFeildsOnConfirmSelection" >
                                     
                                       <button kendoButton fillMode="clear" icon="image"></button>
           
@@ -162,7 +163,7 @@
                     [filterable]="true" 
                     (filterChange)="searchPharmacy($event)" [data]="pharmacySearchResult$ | async"
                     [(ngModel)]="selectedMedicalProvider" (valueChange)="onProviderValueChange($event)"
-                    >
+                    [disabled]="disableFeildsOnConfirmSelection">
                         <kendo-combobox-column>
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                 <span>{{ dataItem.vendorName }}</span>

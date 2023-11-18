@@ -125,6 +125,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
      this.refundType =  res.filter(x=> x.lovCode!=='TAX')
     })
 if(this.isEdit){
+  this.disableFeildsOnConfirmSelection = true
   this.selectedRefundType = this.serviceType
   this.onEditInitiallydontShowPremiumselection = true
   this.selectedClient={
