@@ -43,7 +43,8 @@ export class PharmacyClaimsBatchPageComponent {
   providerDetailsDialog: any
   claimsType= 'pharmacies';
   batchId!:string;
-  dataExportParameters! : any
+  dataExportParameters! : any;
+  paymentBatchName$ =  this.financialPharmacyClaimsFacade.paymentBatchName$;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private readonly route : ActivatedRoute,
@@ -57,6 +58,7 @@ export class PharmacyClaimsBatchPageComponent {
 
   ngOnInit(): void {
     this.batchId =   this.route.snapshot.queryParams['bid'];
+    this.loadBatchName();
   }
 
   loadBatchLogListGrid(event: any) {
@@ -124,5 +126,10 @@ export class PharmacyClaimsBatchPageComponent {
     if (result) {
       this.providerDetailsDialog.close();
     }
+  }
+
+  loadBatchName(){
+    const batchId = this.route.snapshot.queryParams['bid'];
+    this.financialPharmacyClaimsFacade.loadBatchName(batchId);
   }
 }
