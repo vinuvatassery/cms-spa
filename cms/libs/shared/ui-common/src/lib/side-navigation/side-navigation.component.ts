@@ -74,7 +74,7 @@ export class SideNavigationComponent implements OnInit {
 
     private getMenuCount(){
       this.getPcaAssignmentMenuCount();
-      this.getPendingApprovalCount();
+      this.getPendingApprovalMenuCount();
 
     }
 
@@ -104,17 +104,29 @@ export class SideNavigationComponent implements OnInit {
       }
     }
 
-    private subscribeToPendingApprovalCount(){
-      this.navigationMenuFacade.pendingApprovalCount$.subscribe({
-        next: (val)=>{
-        this.setBadgeValue(MenuBadge.pendingApprovals, val);
-        }
-      })
-    }
-
-    private getPendingApprovalCount(){
-      this.navigationMenuFacade.getAllPendingApprovalPaymentCount(this.userLevel);
+    private getPendingApprovalMenuCount(){
+      this.navigationMenuFacade.getPendingApprovalPaymentCount(this.userLevel);
+      this.navigationMenuFacade.getPendingApprovalGeneralCount();
+      this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
       this.subscribeToPendingApprovalCount();
     }
 
+    private subscribeToPendingApprovalCount(){
+      this.navigationMenuFacade.pendingApprovalPaymentCount$.subscribe({
+        next: (paymentCount)=>{
+        this.navigationMenuFacade.pendingApprovalGeneralCount$.subscribe({
+          next: (generalCount)=>{
+            this.navigationMenuFacade.pendingApprovalImportedClaimCount$.subscribe({
+              next: (importedClaimCount)=>{
+                this.setBadgeValue(MenuBadge.pendingApprovals, 
+                  paymentCount? 0 : paymentCount
+                  + generalCount? 0 : generalCount 
+                  + importedClaimCount? 0 : importedClaimCount);
+              }
+            });  
+          }
+        });
+        }
+      })
+    }
 }

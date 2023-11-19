@@ -21,7 +21,7 @@ export class ImportedClaimService {
       Filter: JSON.stringify(data.filter),
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/`,
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/claims-data`,
       importedClaimsRequestDto
     );
   }
