@@ -91,6 +91,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   selectedKeysChange(selection: any) {
     this.selectedPharmacyClaims = selection;
     this.claimsCount.emit(this.selectedPharmacyClaims.length)
+    
   }
   resetFilterClicked(action: any,) {
     if (action) {
