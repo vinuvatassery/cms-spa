@@ -209,7 +209,7 @@
             kendoButton
             look="flat"
             class="card-link-button"
-            (click)="onSearchClientsDialogClicked(searchClientsDialogModal)"
+            (click)="onSearchClientsDialogClicked(searchClientsDialogModal, dataItem)"
           >
             SEARCH CLIENTS
           </button>
@@ -360,6 +360,8 @@
 <ng-template #searchClientsDialogModal>
   <productivity-tools-approvals-search-clients
     (closeSearchClientsDialogClickedEvent)="onCloseSearchClientsDialogClicked()"
+    (clientValueChangeEvent)="onClientValueChange($event)"
+    [selectedClaim] = "selectedClaim"
   ></productivity-tools-approvals-search-clients>
 </ng-template>
 

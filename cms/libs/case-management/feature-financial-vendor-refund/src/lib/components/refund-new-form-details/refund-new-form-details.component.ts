@@ -110,6 +110,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   disableFeildsOnConfirmSelection = false
   selectedVendor: any;
   claimsCount:number=0;
+  diffclaims:any[]=[];
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
@@ -117,6 +118,10 @@ export class RefundNewFormDetailsComponent implements  OnInit{
     private dialogService: DialogService,
     private formBuilder: FormBuilder) {}
   ngOnInit(): void {
+    this.financialVendorRefundFacade.premiumsListData$.subscribe((res:any)=>{
+      
+      this.diffclaims=res.item;
+    })
     this.lovFacade.getRefundTypeLov();
     this.lovFacade.getServiceTypeLov();
      this.initForm()
@@ -159,10 +164,13 @@ if(this.isEdit){
   }
 
   addInsuranceRefundClaim(event:any){
+    this.financialVendorRefundFacade.addUpdateInsuranceRefundClaim$.subscribe(res =>{
+      this.closeAddEditRefundFormModalClicked()
+    })
     if(this.isEdit){
     this.financialVendorRefundFacade.updateInsuranceRefundEditInformation(event.data)
     }else{
-    this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data)
+    this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data) 
   }
 }
 
@@ -174,7 +182,11 @@ if(this.isEdit){
   }
   confirmationClicked (){
   
+    
+   let dat= this.diffclaims.includes(this.insClaims.selectedInsuranceClaims);
+   
     this.isConfirmationClicked = true
+   
     this.disableFeildsOnConfirmSelection = true
     this.insRefundForm.controls['insVendor'].disable();
     if(this.selectedRefundType=== ServiceSubTypeCode.insurnacePremium 

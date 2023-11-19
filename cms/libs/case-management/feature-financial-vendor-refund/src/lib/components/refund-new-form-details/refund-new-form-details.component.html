@@ -626,7 +626,7 @@
     <div class="justify-content-end align-items-center" >
         <span class="mr-2">{{claimsCount}} payment(s) selected</span>
         <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeAddEditRefundFormModalClicked()"> Cancel </button>
-        <button kendoButton [primary]="true" aria-label="Add" class=""  (click)="onAddRefundClick()" > Add </button>
+        <button kendoButton [primary]="true" aria-label="Add" class=""  (click)="onAddRefundClick()"  > {{isEdit?"Update": "Add"}} </button>
     </div>
 </div>
     <div class="justify-content-end align-items-center" *ngIf="!isConfirmationClicked && selectedRefundType">
