@@ -167,6 +167,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
     ];
     this.selectedParentVendor = this.selectedMasterData.parentVendorId;
     this.selectedVendor = this.selectedMasterData.vendorId;
+    this.cd.detectChanges();
     this.bindHealthCareValues();
     this.bindDrugFormValues();
     this.bindInsurancePlanFormValues();
@@ -522,7 +523,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         )
         let masterData = {
           vendorName: this.providerName ? this.providerName : this.tempVendorName,
-          parentVendorId: this.selectedParentVendor,
+          parentVendorId: this.selectedMasterData.parentVendorId,
           vendorId: this.selectedVendor,
           tin: this.healthCareForm?.controls['tinNumber'].value,
           firstName: this.healthCareForm?.controls['firstName'].value,
@@ -577,12 +578,12 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         insurancePlanId: this.selectedMasterData.insurancePlanId,
         insurancePlanName: this.insurancePlanForm.controls['insurancePlanName'].value,
         healthInsuranceTypeCode: this.insurancePlanForm.controls['healthInsuranceTypeCode'].value,
-        canPayForMedicationFlag: this.insurancePlanForm.controls['canPayForMedicationFlag'].value == true ? 'YES' : 'No',
+        canPayForMedicationFlag: this.getMedicationFlagValue(),
         dentalPlanFlag: this.insurancePlanForm.controls['dentalPlanFlag'].value,
         startDate: this.insurancePlanForm.controls['startDate'].value,
         termDate: this.insurancePlanForm.controls['termDate'].value,
         providerName: this.providerName ? this.providerName : this.tempVendorName,
-        insuranceProviderId: this.selectedVendor
+        insuranceProviderId: this.selectedMasterData.vendorId
       }
       formData = {
         form: insurancePlanData,
@@ -590,6 +591,13 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       }
       this.updateMasterDetailsClickedEvent.emit(formData);
     }
+  }
+
+  getMedicationFlagValue(){
+    if(this.insurancePlanForm.controls['canPayForMedicationFlag'].value === true){
+      return "YES";
+    }
+    return "No";
   }
 
   updatePharmacyData(){
@@ -765,6 +773,14 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
 
   public selectionChange(value: any): void {
     this.providerName = value.vendorName;
+    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
+      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider)
+      {
+        this.selectedMasterData.vendorId = value.parentVendorId;
+      }else {
+        this.selectedMasterData.vendorId = value.vendorId;
+      }
+    
   }
 
   private closeEditModal() {

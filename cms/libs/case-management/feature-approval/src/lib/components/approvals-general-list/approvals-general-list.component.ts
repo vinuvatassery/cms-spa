@@ -141,7 +141,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: 0,
       sort: this.sort,
     };
 
