@@ -38,7 +38,6 @@ import {
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from '@progress/kendo-angular-editor/util';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',

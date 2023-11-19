@@ -6,8 +6,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoaderService } from '@cms/shared/util-core';
-import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
-import { YesNoFlag } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'productivity-tools-approvals-edit-items',
   templateUrl: './approvals-edit-items.component.html',
