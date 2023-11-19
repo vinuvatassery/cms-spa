@@ -111,7 +111,6 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   selectedVendor: any;
   claimsCount:number=0;
   diffclaims:any[]=[];
-  diffclaims:any[]=[];
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
