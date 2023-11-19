@@ -79,19 +79,19 @@
         </tr>
         <tr>
           <td>HIV Drug?</td>
-          <td>{{ vendorData.hiv }}</td>
+          <td>{{ vendorData.hiv | titlecase }}</td>
         </tr>
         <tr>
           <td>Hepatitis Drug?</td>
-          <td>{{ vendorData.hepatitis }}</td>
+          <td>{{ vendorData.hepatitis | titlecase }}</td>
         </tr>
         <tr>
           <td>Opportunistic infection drug?</td>
-          <td>{{ vendorData.opportunisticInfection }}</td>
+          <td>{{ vendorData.opportunisticInfection | titlecase }}</td>
         </tr>
         <tr>
           <td>Delivery Method</td>
-          <td>{{ vendorData.deliveryMethodCode }}</td>
+          <td>{{ vendorData.deliveryMethodDesc }}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.InsuranceVendor">
