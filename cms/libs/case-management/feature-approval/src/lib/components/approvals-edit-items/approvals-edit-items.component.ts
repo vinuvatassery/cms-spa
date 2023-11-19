@@ -198,10 +198,10 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         this.selectedMasterData?.paymentMethodCode
       );
       this.insuranceVendorForm.controls['acceptsCombinedPayments'].setValue(
-        this.selectedMasterData?.acceptsCombinedPaymentsFlag === YesNoFlag.Yes ? true : false
+        this.selectedMasterData?.acceptsCombinedPaymentsFlag.toUpperCase() === YesNoFlag.Yes.toUpperCase() ? true : false
       );
       this.insuranceVendorForm.controls['acceptsReport'].setValue(
-        this.selectedMasterData?.acceptsReportsFlag  === YesNoFlag.Yes ? true : false
+        this.selectedMasterData?.acceptsReportsFlag.toUpperCase()  === YesNoFlag.Yes.toUpperCase() ? true : false
       );
       this.insuranceVendorForm.controls['paymentRunDate'].setValue(
         this.selectedMasterData?.paymentRunDateMonthly.toString()
