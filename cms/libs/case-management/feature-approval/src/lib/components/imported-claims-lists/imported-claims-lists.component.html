@@ -160,7 +160,8 @@
           illMode="flat"
           [toggleable]="true"
           [selected]="dataItem.claimStatus === deletedStatus"
-          [disabled]="dataItem.policyIdMatch === yesNoFlag.No && dataItem.isPossibleMatch === yesNoFlag.Yes"
+          [disabled]="dataItem.policyIdMatch === yesNoFlag.No && dataItem.isPossibleMatch === yesNoFlag.Yes
+          && !dataItem.exceptionApprovedFlag"
           (selectedChange)="
           onRowLevelDeleteClicked(
                 dataItem
@@ -189,12 +190,6 @@
           >
             GO TO PROFILE
           </button>
-        </p>
-
-        <p
-          class="table_sub_row warning_info_row"
-          *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No"
-        >
         </p>
 
         <p
@@ -235,6 +230,7 @@
           class="table_sub_row warning_info_row"
           *ngIf="dataItem.isPossibleMatch === yesNoFlag.Yes && dataItem.policyIdMatch === yesNoFlag.No"
         >
+        <span class="material-icons">info</span>
           The  system could not match the Policy ID to a client. Delete the claim or match it to a client.
           <button
             aria-label="REVIEW POSSIBLE MATCH"
@@ -246,10 +242,10 @@
               REVIEW POSSIBLE MATCH
           </button>
         </p>
-        <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === 'N/A' && dataItem.isPossibleMatch === yesNoFlag.Yes">
+        <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No">
           <span class="material-icons">info</span>
-          The system could not match the Policy ID to a client. Delete the claim
-          or match it to a client.
+          This claim puts the client {{dataItem.exceededAmount}} over their max benefits. Deny the
+          claim, or make an exception.
             <button
               aria-label="Make an Exception"
               kendoButton

@@ -87,12 +87,12 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   rowData: any;
   updateExceptionModalSubject$ = this.importedClaimFacade.updateExceptionModalSubject$;
   /** Constructor **/
-  constructor(private route: Router, 
+  constructor(private route: Router,
               private dialogService: DialogService,
               private readonly router: Router,
               private readonly cd: ChangeDetectorRef,
               private financialClaimsFacade: FinancialClaimsFacade,
-              private importedClaimFacade: ImportedClaimFacade) 
+              private importedClaimFacade: ImportedClaimFacade)
               {}
 
   ngOnInit(): void {
@@ -224,7 +224,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.router.navigate([`/case-management/cases/case360/${clientId}`]);
 
   }
-  
+
   onSearchClientsDialogClicked(template: TemplateRef<unknown>, selectedClaim: any): void {
     this.selectedClaim = selectedClaim
     this.searchCaseDialog = this.dialogService.open({
@@ -257,7 +257,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   onCloseReviewPossibleMatchesDialogClicked() {
     this.reviewPossibleMatchesDialog.close();
-  }  
+  }
 
   loadPossibleMatch(data?: any) {
     this.loadPossibleMatchDataEvent.emit(data);
@@ -273,6 +273,8 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.possibleMatchData$.subscribe((value: any) => {
       if (value) {
         this.onCloseReviewPossibleMatchesDialogClicked();
+        this.cd.detectChanges();
+        this.loadImportedClaimsListGrid();
       }
     });
   }
@@ -414,6 +416,8 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.updateExceptionModalSubject$.subscribe((value: any) => {
       if (value) {
         this.onCloseMakeExpectationDialogClicked();
+        this.cd.detectChanges();
+        this.loadImportedClaimsListGrid();
       }
     });
   }
