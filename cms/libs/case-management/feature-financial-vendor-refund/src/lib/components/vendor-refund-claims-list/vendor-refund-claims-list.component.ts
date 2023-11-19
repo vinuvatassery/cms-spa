@@ -131,8 +131,19 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   }
 
   selectedKeysChange(selection: any) {
-    this.selectedTpaClaims = selection;
-    this.claimsCount.emit(this.selectedTpaClaims.length)
+  
+ const includeClaim =  this.cliams.filter(obj => selection.includes(obj.paymentRequestId));
+const uniqueOriginalWarrants = [...new Set(includeClaim.map(obj => obj.originalWarrant))];
+if(uniqueOriginalWarrants.length>1)
+{
+  this.financialClaimsFacade.errorShowHideSnackBar("Select a claim with Same warrant number")
+  this.claimsCount.emit(0)
+}
+  if(uniqueOriginalWarrants.length==1)
+    {
+      this.selectedTpaClaims = selection;
+      this.claimsCount.emit(this.selectedTpaClaims.length)
+    }  
   }
   pageSelectionChange(data: any) {
     this.filterResetDialog.close();

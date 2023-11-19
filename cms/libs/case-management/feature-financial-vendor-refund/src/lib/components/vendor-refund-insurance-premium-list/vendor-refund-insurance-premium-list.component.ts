@@ -144,15 +144,8 @@ if(uniqueOriginalWarrants.length>1)
 
   loadRefundClaimsGrid(data: any) {
     if(this.isEdit){
-      const param ={
-        ...data,
-        paymentRequestId : this.editPaymentRequestId
-      }
-      this.financialPremiumsProcessData$.subscribe((data: GridDataResult) => {
-       var refunded =    data.data.filter(x=> x.refundPaymentRequestId)
-       this.selectedInsuranceClaims =  refunded.map(item => item.paymentRequestId)
-      })
-      this.financialVendorRefundFacade.getInsuranceRefundEditInformation( this.vendorAddressId, this.clientId,param)
+ 
+      this.financialVendorRefundFacade.getInsuranceRefundEditInformation( this.vendorAddressId, this.clientId,data)
     }else{
       this.financialVendorRefundFacade.loadMedicalPremiumList(data);
 
@@ -211,12 +204,24 @@ if(uniqueOriginalWarrants.length>1)
       vendorId: vendorAddressId,
       clientId: clientId,
       skipCount: skipCountValue,
-      pageSize: maxResultCountValue,
+      maxResultCount: maxResultCountValue,
       sort: sortValue,
       sortType: sortTypeValue,
       filter : this.state?.["filter"]?.["filters"] ?? []
     };
+    if(this.isEdit){
+      const param ={
+        ...gridDataRefinerValue,
+        paymentRequestId : this.editPaymentRequestId
+      }
+      this.financialPremiumsProcessData$.subscribe((data: GridDataResult) => {
+       var refunded =    data.data.filter(x=> x.refundPaymentRequestId)
+       this.selectedInsuranceClaims =  refunded.map(item => item.paymentRequestId)
+      })
+      this.loadRefundClaimsGrid(param)
+    }else{
     this. loadRefundClaimsGrid(gridDataRefinerValue);
+    }
     this.gridDataHandle();
   
   }

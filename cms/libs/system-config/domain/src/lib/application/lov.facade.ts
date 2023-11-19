@@ -843,7 +843,7 @@ export class LovFacade {
     });
   }
   getRefundTypeLov(){
-    this.lovDataService.getLovsbyType(LovType.RefundType).subscribe({
+    this.lovDataService.getLovsbyType(LovType.ServiceType).subscribe({
       next: (lovResponse) => {
         
         this.refundTypeSubject.next(lovResponse);

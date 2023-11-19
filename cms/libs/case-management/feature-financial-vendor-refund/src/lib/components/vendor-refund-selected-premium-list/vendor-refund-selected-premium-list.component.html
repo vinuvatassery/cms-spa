@@ -232,13 +232,12 @@
             </div>
             <div class="flex-row">
                 <div class="flex-col flex-col-3">
-                    <kendo-floatinglabel text="Deposit Date">
+                    <kendo-floatinglabel text="Deposit Date (Optional)">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Deposit Date"
                             format="MM/dd/yyyy" formatPlaceholder="formatPattern" formControlName="depositDate">
                         </kendo-datepicker>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm.hasError('required','depositDate') && isSubmitted">Deposit date is required.
-                    </kendo-formerror>
+
                 </div>
                 <div class="flex-col flex-col-3">
                     <kendo-floatinglabel text="Refund Note (optional)">

@@ -106,8 +106,8 @@ export class FinancialVendorRefundFacade {
   insuranceRefundInformation$ = this.insuranceRefundInformationSubject.asObservable();
 
 
-  private addInsuranceRefundClaimSubject =  new Subject<any>();
-  addInsuranceRefundClaim$ = this.addInsuranceRefundClaimSubject.asObservable();
+  private addUpdateInsuranceRefundClaimSubject =  new Subject<any>();
+  addUpdateInsuranceRefundClaim$ = this.addUpdateInsuranceRefundClaimSubject.asObservable();
 
 
 
@@ -126,6 +126,7 @@ export class FinancialVendorRefundFacade {
 
   public tpaVendorsSubject = new Subject<any>;
   tpavendors$ = this.tpaVendorsSubject.asObservable();
+  
   public insurancevendorsSubject = new Subject<any>;
   insurancevendors$ = this.insurancevendorsSubject.asObservable();
   /** Private properties **/
@@ -179,7 +180,7 @@ export class FinancialVendorRefundFacade {
    
     this.financialVendorRefundDataService.addInsuranceRefundClaim(data).subscribe({
       next: (dataResponse:any) => {
-        this.addInsuranceRefundClaimSubject.next(dataResponse);
+        this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
         
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
         this.hideLoader();
@@ -215,7 +216,8 @@ export class FinancialVendorRefundFacade {
     paginationSortingDto.filter = JSON.stringify(paginationSortingDto.filter);
       this.financialVendorRefundDataService.updateInsuranceRefundEditInformation(paginationSortingDto).subscribe({
         next: (dataResponse:any) => {
-         
+          this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message)  ;
             this.hideLoader();
         },
         error: (err) => {

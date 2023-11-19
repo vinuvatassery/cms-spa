@@ -48,8 +48,7 @@
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
     [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)" [data]="gridVendorsBatchData$ | async">
-    <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
-      [width]="40"></kendo-grid-checkbox-column>
+  
     <kendo-grid-column field="batchName" title="Batch #" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
