@@ -337,6 +337,12 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.sortColumnName = 'Pharmacy Name';
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
+    this.batchLogGridLists$.subscribe((res:any)=>{
+      if(res.data.length==0)
+      {
+        this.route.navigate(['/financial-management/pharmacy-claims'] );       
+      }
+    })
   }
   ngOnChanges(): void {
     this.state = {
