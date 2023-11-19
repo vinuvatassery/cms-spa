@@ -42,14 +42,6 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
     this.ifApproveOrDeny = result;
   }
 
-  public onPanelCollapse(event: PanelBarCollapseEvent): void {
-    this.isPanelExpanded = false;
-  }
-
-  public onPanelExpand(event: PanelBarExpandEvent): void {
-    this.isPanelExpanded = true;
-  }
-
   onEditListItemsDetailClicked(): void {
     const detailData = {
       subTypeCode : this.subTypeCode,
