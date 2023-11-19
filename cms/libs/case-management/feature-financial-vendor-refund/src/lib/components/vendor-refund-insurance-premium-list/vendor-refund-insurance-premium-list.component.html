@@ -1,7 +1,7 @@
 <div class="app-c-table"> 
   <kendo-grid #selectable [resizable]="true" [loading]="isClientClaimsLoaderShow" [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
+    [columnMenu]="{ filter: true }" [sort]="state.sort"  (pageChange)="onPageChange($event)"  (dataStateChange)="dataStateChange($event)"
     [data]="gridClientClaimsData$| async"
     
     kendoGridSelectBy="paymentRequestId"

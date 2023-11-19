@@ -56,7 +56,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   @Input() tpaPaymentReqIds:any[]=[]
-
+ 
   gridClaimsDataSubject = new Subject<any>();
   gridClaimsData$ = this.gridClaimsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -93,7 +93,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take:20,
       sort: this.sort,
     };
 
@@ -119,8 +119,8 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   }
  
   dataStateChange(stateData: any): void {
-    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
-    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
+    
+        this.openResetDialog(this.filterResetConfirmationDialogTemplate);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -131,23 +131,11 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   }
 
   selectedKeysChange(selection: any) {
-  
- const includeClaim =  this.cliams.filter(obj => selection.includes(obj.paymentRequestId));
-const uniqueOriginalWarrants = [...new Set(includeClaim.map(obj => obj.originalWarrant))];
-if(uniqueOriginalWarrants.length>1)
-{
-  this.financialClaimsFacade.errorShowHideSnackBar("Select a claim with Same warrant number")
-  this.claimsCount.emit(0)
-}
-  if(uniqueOriginalWarrants.length==1)
-    {
-      this.selectedTpaClaims = selection;
-      this.claimsCount.emit(this.selectedTpaClaims.length)
-    }  
+    this.selectedTpaClaims = selection;
+    this.claimsCount.emit(this.selectedTpaClaims.length)
   }
-  
-  // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+    this.filterResetDialog.close();
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadRefundClaimsListGrid();
@@ -157,6 +145,7 @@ if(uniqueOriginalWarrants.length>1)
     this.filterData = filter;
   }
   loadRefundClaimsGrid(data: any) {
+ 
     this.financialVendorRefundFacade.loadTPARefundList(data);
   }
   private loadRefundClaimsListGrid(): void {

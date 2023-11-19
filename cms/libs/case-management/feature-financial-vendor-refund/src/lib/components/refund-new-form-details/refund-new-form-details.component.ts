@@ -162,14 +162,8 @@ if(this.isEdit){
     this.selectedProvider=null;
   }
   confirmationClicked (){
-  
-    
-   let dat= this.diffclaims.includes(this.insClaims.selectedInsuranceClaims);
-   
-    this.isConfirmationClicked = true
-   
-    this.disableFeildsOnConfirmSelection = true
-
+    this.isConfirmationClicked = true;   
+    this.disableFeildsOnConfirmSelection = true;
     if(this.selectedRefundType=== ServiceSubTypeCode.insurnacePremium 
     && this.insClaims.selectedInsuranceClaims &&  this.insClaims.selectedInsuranceClaims.length>0
     ){
@@ -301,6 +295,7 @@ this.insuraceAddRefundClickSubject.next(true);
     if($event==undefined){ 
       this.vendorAddressId=null;
     }
+    this.vendorId=$event.vendorId;
     this.vendorAddressId = $event.vendorAddressId;
     this.vendorName = $event.vendorName;
     this.providerTin = $event;

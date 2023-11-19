@@ -81,6 +81,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   cliams:any[]=[];
   refundSelectedClaims:any[]=[];
   paymentMethodLovSubscription!: Subscription;
+  private userInitiatedPageChange = false;
   constructor(  private readonly financialClaimsFacade: FinancialClaimsFacade, private readonly router: Router, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
   {
  
@@ -93,7 +94,7 @@ if(uniqueOriginalWarrants.length>1)
   this.financialClaimsFacade.errorShowHideSnackBar("Select a claim with Same warrant number")
   this.claimsCount.emit(0)
 }
-  if(uniqueOriginalWarrants.length==1)
+  if(uniqueOriginalWarrants.length<=1)
     {
       this.selectedInsuranceClaims = selection;
       this.claimsCount.emit(this.selectedInsuranceClaims.length)
@@ -157,20 +158,30 @@ if(uniqueOriginalWarrants.length>1)
 
     }
   }
-  
-  dataStateChange(stateData: any): void {
+  onPageChange(event: any): void {
     
-    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
+    // This method will be called when the user changes the page
+    this.userInitiatedPageChange = true;
+  }
+  dataStateChange(stateData: any): void { 
+      
+    if (this.userInitiatedPageChange) {
+      {
+        this.openResetDialog(this.filterResetConfirmationDialogTemplate);
+      }
+
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
    
+    }
   }
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadRefundClaimsListGrid();
