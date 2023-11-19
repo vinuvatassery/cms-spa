@@ -299,7 +299,7 @@
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
-  <button kendoButton  class="{{selectedProcessClaims.length?'':'k-error-button'}}" [disabled]="!selectedProcessClaims.length" aria-label="Delete" *ngIf="isDeleteBatchClosed"
+  <button kendoButton  class="{{!selectedProcessClaims.length?'':'k-error-button'}}" [disabled]="!selectedProcessClaims.length" aria-label="Delete" *ngIf="isDeleteBatchClosed"
     (click)="onDeleteClaimsOpenClicked(deleteClaimsConfirmationDialog)"> <span class="material-icons mr-1"
       aria-label="Delete"> delete</span> Delete </button>
 

@@ -323,10 +323,10 @@ this.loaderService.show();
       },
     });
   }
-  loadInsurancevendorBySearchText(searchText: string) {
+  loadInsurancevendorBySearchText(searchText: string,clientId:number) {
     
    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
-    return this.financialVendorRefundDataService.loadInsurancevendorBySearchText(searchText).subscribe({
+    return this.financialVendorRefundDataService.loadInsurancevendorBySearchText(searchText,clientId).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor:any) => {
             vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.insuranceName ?? ''}${vendor.insuranceType ?? ''}`;
@@ -340,10 +340,10 @@ this.loaderService.show();
       }
     });
   } 
-  loadTpavendorBySearchText(searchText: string) {
+  loadTpavendorBySearchText(searchText: string,clientId:number) {
     
     this.medicalProviderSearchLoaderVisibilitySubject.next(true);
-     return this.financialVendorRefundDataService.loadTpavendorBySearchText(searchText).subscribe({
+     return this.financialVendorRefundDataService.loadTpavendorBySearchText(searchText,clientId).subscribe({
        next: (response: Pharmacy[]) => {
          response?.forEach((vendor:any) => {
              vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
