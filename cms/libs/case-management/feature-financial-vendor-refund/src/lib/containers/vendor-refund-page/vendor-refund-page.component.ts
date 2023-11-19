@@ -88,33 +88,9 @@ export class VendorRefundPageComponent    {
   }
 
   exportReceiptDataEvent(data: any) {
-
     if (this.dataExportParameters) {       
       this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/receipt`, 'Refund Payments', ApiType.CaseApi, data);
     }
-    // let gridData = data.gridData;
-    // let selectedPayments = data.selectedPayments;
-
-    // if (data) {
-    //   const filter = JSON.stringify(gridData?.filter);
-
-    //   const vendorPageAndSortedRequest = {
-    //     SortType: gridData?.sortType,
-    //     Sorting: gridData?.sortColumn,
-    //     SkipCount: gridData?.skipcount,
-    //     MaxResultCount: gridData?.maxResultCount,
-    //     Filter: filter,
-    //   };
-    //   let fileName = 'Refund Payments';
-
-    //   this.documentFacade.getExportFileForSelction(
-    //     this.dataExportParameters,
-    //     `vendor-refunds/receipting-log`,
-    //     fileName,
-    //     ApiType.CaseApi,
-    //     selectedPayments
-    //   );
-    // }
   }
 
   pageTitle = "Vendor Refunds";
