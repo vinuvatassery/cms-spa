@@ -10,7 +10,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -68,7 +68,8 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   paymentStatusType:any;
   paymentStatuses$ = this.lovFacade.paymentStatus$;
   @Output() claimsCount = new EventEmitter<any>();
-  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade){
+  cliams:any[]=[];
+  constructor( private readonly financialClaimsFacade: FinancialClaimsFacade, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade){
 
   }
 
@@ -83,6 +84,10 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.loadRefundClaimsListGrid();
     this.tpaData$.subscribe((res:any)=>{
       this.claimsCount.emit(this.selectedTpaClaims.length)
+      this.tpaData$.subscribe((res:any)=>{
+      
+        this.cliams=res.data;
+      })
   })
   }
   ngOnChanges(): void {
@@ -126,8 +131,19 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   }
 
   selectedKeysChange(selection: any) {
-    this.selectedTpaClaims = selection;
-    this.claimsCount.emit(this.selectedTpaClaims.length)
+  
+ const includeClaim =  this.cliams.filter(obj => selection.includes(obj.paymentRequestId));
+const uniqueOriginalWarrants = [...new Set(includeClaim.map(obj => obj.originalWarrant))];
+if(uniqueOriginalWarrants.length>1)
+{
+  this.financialClaimsFacade.errorShowHideSnackBar("Select a claim with Same warrant number")
+  this.claimsCount.emit(0)
+}
+  if(uniqueOriginalWarrants.length==1)
+    {
+      this.selectedTpaClaims = selection;
+      this.claimsCount.emit(this.selectedTpaClaims.length)
+    }  
   }
   
   // updating the pagination infor based on dropdown selection

@@ -52,7 +52,21 @@ export class ImportedClaimService {
       EntityTypeCode : requests.entityTypeCode
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/save-possible-match/`,savePossibleMatchDto
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match/`,savePossibleMatchDto
+    );
+  }
+
+  makeExceptionForExceedBenefits(exceptionObject: any){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/make-exception/`,
+      exceptionObject
+    );
+  }
+
+  updateClientPolicy(importedclaimDto : any){    
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/client-policy`,
+      importedclaimDto
     );
   }
 }

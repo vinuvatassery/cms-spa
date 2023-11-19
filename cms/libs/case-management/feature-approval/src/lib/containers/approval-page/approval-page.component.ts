@@ -105,6 +105,7 @@ export class ApprovalPageComponent implements OnInit {
   pharmacyForm!: FormGroup;
   insuranceVendorForm: FormGroup;
   insuranceProviderForm: FormGroup;
+  
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -378,7 +379,6 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   updateProviderProfile(event: any) {
-    console.log(event);
     this.financialVendorFacade.updateProviderPanel(event);
   }
 
@@ -469,5 +469,12 @@ export class ApprovalPageComponent implements OnInit {
   savePossibleMatch(event:any)
   {
     this.importedClaimFacade.savePossibleMatch(event);
+  }
+  updateClientPolicy(importedclaimDto: any){
+    this.importedClaimFacade.updateClientPolicy(importedclaimDto);
+  }
+
+  addAnException(exceptionObject : any){
+    this.importedClaimFacade.makeExceptionForExceedBenefits(exceptionObject);
   }
 }

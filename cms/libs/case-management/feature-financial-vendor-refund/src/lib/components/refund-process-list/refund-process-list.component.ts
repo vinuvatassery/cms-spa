@@ -287,6 +287,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   }
   modalCloseAddEditRefundFormModal(result: any) {
     if (result) {
+      this.loadVendorRefundProcessListGrid();
       this.isAddRefundModalOpen = false;
       this.addEditRefundFormDialog.close();
     }
