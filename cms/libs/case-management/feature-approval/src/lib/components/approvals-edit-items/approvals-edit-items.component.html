@@ -9,7 +9,7 @@
       selectedSubtypeCode === subTypeConst.MedicalProvider ||
       selectedSubtypeCode === subTypeConst.DentalProvider
     " [formGroup]="healthCareForm">
-    <div *ngIf="selectedSubtypeCode == subTypeConst.MedicalClinic || subTypeConst.DentalClinic"
+    <div *ngIf="(selectedSubtypeCode == subTypeConst.MedicalProvider || subTypeConst.DentalProvider) && selectedMasterData.parentVendorId"
       class="flex-col flex-col-8 inlineloaderwrapper hidedropicon">
       <div class="k-auto-complete-box">
         <span *ngIf="clinicVendorLoader$ | async"
@@ -43,6 +43,17 @@
           Start typing to choose an existing clinic, or enter a new one
         </kendo-formhint>
       </div>
+    </div>
+    <div *ngIf="selectedSubtypeCode == subTypeConst.MedicalClinic || selectedSubtypeCode == subTypeConst.DentalClinic" 
+          class="flex-col">
+      <kendo-floatinglabel text="Clinic Name">
+        <kendo-textbox aria-label="Clinic Name" placeholder="Clinic Name"
+          [fillMode]="formUiStyle.inputFillMode" formControlName="providerName" [maxlength]="50" [(ngModel)]="tempVendorName">
+        </kendo-textbox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">
+        Clinic name is required
+      </kendo-formerror>
     </div>
     <div class="flex-col " *ngIf="selectedMasterData.firstName">
       <kendo-floatinglabel text="Provider First Name">
@@ -193,9 +204,9 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="NDC Code">
-        <kendo-textbox aria-label="NDC Code" placeholder="NDC Code" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="ndcCode">
-        </kendo-textbox>
+        <kendo-maskedtextbox aria-label="NDC Code" placeholder="NDC Code" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="ndcCode" [mask]="ndcMaskFormat">
+        </kendo-maskedtextbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
