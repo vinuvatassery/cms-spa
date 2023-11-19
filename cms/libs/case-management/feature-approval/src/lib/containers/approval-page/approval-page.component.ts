@@ -74,7 +74,7 @@ export class ApprovalPageComponent implements OnInit {
   state!: State;
   approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ = this.importedClaimFacade.approvalsImportedClaimsLists$;
-  pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalPaymentCount$;
+  pendingApprovalPaymentCount$ = this.navigationMenuFacade.pendingApprovalPaymentCount$;
   pendingApprovalGeneralCount$ = this.navigationMenuFacade.pendingApprovalGeneralCount$;
   pendingApprovalImportedClaimCount$ = this.navigationMenuFacade.pendingApprovalImportedClaimCount$;
   approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
@@ -153,7 +153,7 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   loadTabCount(){
-    this.pendingApprovalCount$.subscribe((response: any) => {
+    this.pendingApprovalPaymentCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalPaymentCount = response;
       } else {
