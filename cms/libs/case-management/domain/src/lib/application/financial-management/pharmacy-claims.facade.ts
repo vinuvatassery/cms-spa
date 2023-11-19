@@ -555,7 +555,8 @@ export class FinancialPharmacyClaimsFacade {
         }
         this.hideLoader();
       },
-      error: (err) => {
+      error: (err) => {       
+        this.batchClaimsSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.hideLoader();
       },
