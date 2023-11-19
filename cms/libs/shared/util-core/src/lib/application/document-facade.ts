@@ -79,7 +79,7 @@ export class DocumentFacade {
        
       }
 
-      getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedIds?: any[]): void {
+    getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedIds?: any[]): void {
         this.documentDataService.getExportFileForSelection(pageAndSortedRequest, path, apiType, selectedIds).subscribe({
             next: (response: any) => {
                 if (response) {
@@ -97,6 +97,5 @@ export class DocumentFacade {
                 this.showSnackBar(SnackBarNotificationType.ERROR, err)
             },
         });
-
     }
 }
