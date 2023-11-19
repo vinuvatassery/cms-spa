@@ -104,50 +104,53 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe(
       (data: any) => {
         if (data && clinicName !== '') {
-          if (
-            this.selectedSubtypeCode ===
-              PendingApprovalGeneralTypeCode.MedicalProvider ||
-            this.selectedSubtypeCode ===
-              PendingApprovalGeneralTypeCode.MedicalClinic
-          ) {
-            this.clinicVendorListLocal = data.filter(
-              (item: any) =>
-                item.vendorTypeCode ===
-                PendingApprovalGeneralTypeCode.MedicalClinic
-            );
-          } else if (
-            this.selectedSubtypeCode ===
-              PendingApprovalGeneralTypeCode.DentalProvider ||
-            this.selectedSubtypeCode ===
-              PendingApprovalGeneralTypeCode.DentalClinic
-          ) {
-            this.clinicVendorListLocal = data.filter(
-              (item: any) =>
-                item.vendorTypeCode ===
-                PendingApprovalGeneralTypeCode.DentalClinic
-            );
-          } else if(this.selectedSubtypeCode ===
-            PendingApprovalGeneralTypeCode.Drug){
-              this.clinicVendorListLocal = data.filter(
-                (item: any) =>
-                  item.vendorTypeCode ===
-                  PendingApprovalGeneralTypeCode.Drug ? PendingApprovalGeneralTypeCode.Drug : PendingApprovalGeneralTypeCode.MedicalProvider
-              );
-          } else if (this.selectedSubtypeCode ===
-            PendingApprovalGeneralTypeCode.InsurancePlan) {
-            this.clinicVendorListLocal = data.filter(
-              (item: any) =>
-                item.vendorTypeCode ===
-                  PendingApprovalGeneralTypeCode.InsurancePlan ? PendingApprovalGeneralTypeCode.InsurancePlan : PendingApprovalGeneralTypeCode.MedicalProvider
-            );
-          }
-          this.clinicSearchSubscription?.unsubscribe();
+          this.filterSearchClinicData(data);
         }
       }
     );
     this.searchClinicVendorClicked.emit(clinicName);
   }
 
+  filterSearchClinicData(data: any){
+    if (
+      this.selectedSubtypeCode ===
+        PendingApprovalGeneralTypeCode.MedicalProvider ||
+      this.selectedSubtypeCode ===
+        PendingApprovalGeneralTypeCode.MedicalClinic
+    ) {
+      this.clinicVendorListLocal = data.filter(
+        (item: any) =>
+          item.vendorTypeCode ===
+          PendingApprovalGeneralTypeCode.MedicalClinic
+      );
+    } else if (
+      this.selectedSubtypeCode ===
+        PendingApprovalGeneralTypeCode.DentalProvider ||
+      this.selectedSubtypeCode ===
+        PendingApprovalGeneralTypeCode.DentalClinic
+    ) {
+      this.clinicVendorListLocal = data.filter(
+        (item: any) =>
+          item.vendorTypeCode ===
+          PendingApprovalGeneralTypeCode.DentalClinic
+      );
+    } else if(this.selectedSubtypeCode ===
+      PendingApprovalGeneralTypeCode.Drug){
+        this.clinicVendorListLocal = data.filter(
+          (item: any) =>
+            item.vendorTypeCode ===
+            PendingApprovalGeneralTypeCode.Drug ? PendingApprovalGeneralTypeCode.Drug : PendingApprovalGeneralTypeCode.MedicalProvider
+        );
+    } else if (this.selectedSubtypeCode ===
+      PendingApprovalGeneralTypeCode.InsurancePlan) {
+      this.clinicVendorListLocal = data.filter(
+        (item: any) =>
+          item.vendorTypeCode ===
+            PendingApprovalGeneralTypeCode.InsurancePlan ? PendingApprovalGeneralTypeCode.InsurancePlan : PendingApprovalGeneralTypeCode.MedicalProvider
+      );
+    }
+    this.clinicSearchSubscription?.unsubscribe();
+  }
 
   subscribeSearchVendor(){ 
     this.clinicSearchSubscription = this.financialVendorFacade.vendorDetails$.subscribe({
