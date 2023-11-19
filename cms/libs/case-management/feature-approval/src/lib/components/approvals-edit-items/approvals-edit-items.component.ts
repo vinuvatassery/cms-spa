@@ -87,10 +87,14 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsurancePlan){
+    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
       this.subscribeSearchVendor();
       this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.InsuranceProviders);
-    } else {
+    } else if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.Drug) {
+      this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.Manufacturers);
+      this.subscribeSearchVendor();
+    }
+    else {
       this.searchClinicData(clinicName);
     }
     this.selectedClinicVendorId = null;
@@ -553,7 +557,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       this.updateProviderPanelSubject$ = this.drugFacade.updateProviderPanelSubject$;
       let drugData = {
         DrugId: this.selectedMasterData.drugId,
-        ManufacturerId : this.selectedVendor,
+        ManufacturerId : this.selectedMasterData.vendorId,
         NdcNbr : this.drugForm.controls['ndcCode'].value,
         BrandName : this.drugForm.controls['brandName'].value,
         DrugName : this.drugForm.controls['drugName'].value,
