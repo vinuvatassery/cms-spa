@@ -1,4 +1,4 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, numberAttribute} from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {State, filterBy } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam, ServiceSubTypeCode } from '@cms/case-management/domain'; 
@@ -98,6 +98,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   tpaPaymentReqIds :any[] =[]
   rxPaymentReqIds :any[] =[]
   selectedVendorRefundsList: any = [];
+  creditMaskFormat: string = '000000-000';
 
  @Input() serviceType=''
  @Input() inspaymentRequestId:any
@@ -113,7 +114,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   inputConfirmationClicked!: boolean;
   isRefundRxSubmitted!: boolean;
   refundNoteValueLength: any;
-  isSpotsPayment: any;
+  isSpotsPayment: boolean =true;
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
@@ -132,14 +133,23 @@ if(this.isEdit){
     clientId: this.clientId,
     clientNames :this.clientName
   }
-    this.selectedVendor ={
-     providerFullName: this.vendorName,
-     vendorId: this.vendorId
-    }
-  
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
-  this.financialVendorRefundFacade.vendorsSubject.next([this.selectedVendor])
  
+  if(this.refundType.toString() == 'RX' || this.refundType.toString() == 'PHARMACY' || true)
+  {
+    this.selectedMedicalProvider = {
+      providerFullName: this.vendorName,
+      vendorId: this.vendorId
+    }
+    this.financialVendorRefundFacade.pharmaciesSubject.next([this.selectedMedicalProvider])
+  }
+  else{
+      this.selectedVendor ={
+      providerFullName: this.vendorName,
+      vendorId: this.vendorId
+     }
+     this.financialVendorRefundFacade.vendorsSubject.next([this.selectedVendor])
+  }
 }
   }
 
@@ -234,6 +244,9 @@ onAddRefundClick(){
     this.isConfirmationClicked = false;
     this.disableFeildsOnConfirmSelection = false;
     this.onEditInitiallydontShowPremiumselection = false
+    this.inputConfirmationClicked= false
+    this.isRefundGridClaimShow = true;
+    
  
   }
   closeAddEditRefundFormModalClicked(){
@@ -411,8 +424,8 @@ addNewRefundRx() {
     this.refundRXForm.markAsDirty();
     this.markGridFormTouched();
     var selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionsDetail), []);
-    var anyInValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.any((x:any)=> !x.qtyRefundedValid || !x.daySupplyRefundedValid || !x.refundedAmountValid)
-    if (this.refundRXForm.invalid || anyInValidSelectedRefundPharmacyClaimInput) {
+    var InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
+    if (this.refundRXForm.invalid || InValidSelectedRefundPharmacyClaimInput.length >0) {
       return;
     } else {
       var selectedpharmacyClaimsDto = selectedpharmacyClaims.map((obj:any)=>
@@ -429,10 +442,11 @@ addNewRefundRx() {
       });
       var refundRxData = { 
         ...this.refundRXForm.value, 
-        vendorId : '<Assign-Value-as-Selected-Pharmacy-Id-In-Dropdown>',
-        clientId  : '<Assign-Value-as-Selected-Client-Id-In-Dropdown>',
-        clientCaseEligibilityId   : '<Assign-Value-as-Selected-Client-Case-Eledibility-In-Dropdown>',
-        refundType : "RX",
+        vendorId : this.vendorId,
+        clientId  : this.clientId,
+        clientCaseEligibilityId   : this.clientCaseEligibilityId,
+        refundType : this.selectedRefundType,
+        isSpotsPaymentCheck: this.isSpotsPayment,
         pharmacyRefundedItems:selectedpharmacyClaimsDto
       };
       this.financialVendorRefundFacade.addNewRefundRx(refundRxData).subscribe({

@@ -109,7 +109,7 @@
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'PHARMACY'">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel  text="Pharmacy  Provider ">
+                    <kendo-floatinglabel  text="Pharmacy Provider ">
                     <div class="combotable_search_list new_refund_Search">
                         <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>
@@ -391,7 +391,10 @@
                 <div class="flex-col flex-col-4 align-items-center justify-content-start">
                     <span class="app-checkboxwidtext-wrapper">
                         <input kendoCheckBox type="checkbox" id="spots-payment" name="spots-payment"
-                            aria-labelledby="spots-payment" />
+                            aria-labelledby="spots-payment" 
+                            id="isSpotsPaymentInputRX" [checked]="isSpotsPayment"
+                            (change)="onSpotsPaymentChange($event)"
+                            for="isSpotsPaymentInputRX"/>
                         <label class="k-checkbox-label" for="spots-payment">This is a SPOTS payment</label>
                     </span>
                 </div>
@@ -552,15 +555,19 @@
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text="Voucher Payable" >
                                 <kendo-textbox aria-label="Voucher Payable"  [fillMode]="formUiStyle.inputFillMode"
-                                formControlName = "voucherPayable">
-                                </kendo-textbox>
+                                formControlName = "voucherPayable"
+                                [maxlength]="7">
+                                </kendo-textbox >
                             </kendo-floatinglabel>
                         </div>
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text="Credit #">
-                                <kendo-textbox aria-label="Credit # (optional)"  formControlName= "creditNumber"
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
+                                <kendo-textbox  aria-label="Credit # (optional)" 
+                                    formControlName= "creditNumber"
+                                    [fillMode]="formUiStyle.inputFillMode"  name="creditNumber"
+                                    placeholder="Credit #"
+                                    [maxlength]="6">
+                                </kendo-textbox >
                             </kendo-floatinglabel>
                         </div>
                     </div>

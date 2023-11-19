@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  BehaviorSubject, Subject } from 'rxjs';
+import {  BehaviorSubject, Subject, catchError, of } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -131,6 +131,7 @@ export class FinancialVendorRefundFacade {
 
   public vendorsSubject = new Subject<any>;
   vendors$ = this.vendorsSubject.asObservable();
+
   /** Private properties **/
 
   /** Public properties **/
@@ -572,5 +573,18 @@ this.loaderService.show();
   }
   addNewRefundRx(refundRx: any): any {
     return this.financialVendorRefundDataService.addNewRefundRx(refundRx);
+  }
+  public loadPharmacyRefundEditList(paymentRequestId: string){
+    return this.financialVendorRefundDataService.loadPharmacyRefundEditList(paymentRequestId).pipe(
+      catchError((err: any) => {
+        this.loaderService.hide();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        if (!(err?.error ?? false)) {
+          this.loggingService.logException(err);
+          this.hideLoader();
+        }
+        return of(false);
+      })
+    );
   }
 }
