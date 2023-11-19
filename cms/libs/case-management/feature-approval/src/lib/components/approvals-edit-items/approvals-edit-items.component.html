@@ -1,7 +1,6 @@
 <section class="k-dialog-body newcase">
   <p class="mb-2">
-    Approved batches will be sent to the Salem Fiscal Team via email. “Send
-    Back” batches will be sent back to the user who submitted them.
+    All fields are required unless otherwise stated. Either a clinic name or provider name is required.
   </p>
 
   <div class="flex-row" *ngIf="
@@ -16,20 +15,20 @@
         <span *ngIf="clinicVendorLoader$ | async"
           class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
         <kendo-floatinglabel text="Clinic Name">
-          <kendo-combobox 
+          <kendo-combobox
           #vendor
           [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }"
-          placeholder="Clinic Name" 
-          [fillMode]="formUiStyle.dropDownFillMode"          
+          placeholder="Clinic Name"
+          [fillMode]="formUiStyle.dropDownFillMode"
           [filterable]="true"
-          (filterChange)="searchClinic($event)" 
-          [data]="clinicVendorListLocal" 
+          (filterChange)="searchClinic($event)"
+          [data]="clinicVendorListLocal"
           [formControlName]="'providerName'"
-          [valuePrimitive]="true" 
-          [valueField]="'vendorId'" 
+          [valuePrimitive]="true"
+          [valueField]="'vendorId'"
           [textField]="'vendorName'"
           [valuePrimitive]="true"
-          [(ngModel)]="selectedVendor" (selectionChange)="selectionChange($event)">
+          [(ngModel)]="selectedParentVendor" (selectionChange)="selectionChange($event)">
           <ng-template kendoComboBoxItemTemplate let-dataItem>
             <span>{{ dataItem.vendorName }}</span>
           </ng-template>
@@ -204,7 +203,7 @@
         <legend class="k-form-legend">
           <h5 class="mb-0"> Drug Types </h5>
         </legend>
-  
+
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
             <input type="radio" kendoRadioButton aria-labelledby="HIV" name="drugType" id="HIV" value="HIV"
@@ -221,7 +220,7 @@
               formControlName="drugType" />
             <kendo-label class="k-radio-label" text="Opportunistic Drug?" for="OPPORTUNISTICINFECTION"></kendo-label>
           </span>
-  
+
         </div>
         <kendo-formerror *ngIf="drugFormControls?.drugType.errors?.required && isValidateForm">
           Drug Type is required
@@ -233,7 +232,7 @@
         <legend class="k-form-legend">
           <h5 class="mb-0"> Delivery Method </h5>
         </legend>
-  
+
         <div class="component-list-h">
           <span class="app-radiobtnwidtext-wrapper">
             <input type="radio" kendoRadioButton aria-labelledby="tablet" name="deliveryMethod" id="tablet" value="TABLET"
@@ -250,7 +249,7 @@
               formControlName="deliveryMethod" />
             <kendo-label class="k-radio-label" text="Syrup" for="syrup"></kendo-label>
           </span>
-  
+
         </div>
         <kendo-formerror *ngIf="drugFormControls?.deliveryMethod.errors?.required && isValidateForm">
           Delivery Method is required
@@ -267,7 +266,7 @@
           placeholder="Insurance Provider Name" [fillMode]="formUiStyle.dropDownFillMode" [filterable]="true"
           (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" [formControlName]="'providerName'"
           [valuePrimitive]="true" [valueField]="'vendorId'" [textField]="'vendorName'" [valuePrimitive]="true"
-          [(ngModel)]="selectedVendor" 
+          [(ngModel)]="selectedVendor"
           (selectionChange)="selectionChange($event)">
           <ng-template kendoComboBoxItemTemplate let-dataItem>
             <span>{{ dataItem.vendorName }}</span>
@@ -409,7 +408,7 @@
     <div class="flex-col ">
       <kendo-floatinglabel text="Mail Code">
         <kendo-textbox aria-label="Mail Code" placeholder="Mail Code" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="mailCode" [maxlength]="50">
+          formControlName="mailCode" [maxlength]="3">
         </kendo-textbox>
         <kendo-formerror *ngIf="insuranceVendorFormControls?.mailCode.errors?.required && isValidateForm">
           Mail Code is required
@@ -550,7 +549,7 @@
     <div class="flex-col ">
       <kendo-floatinglabel text="Mail Code">
         <kendo-textbox aria-label="Mail Code" placeholder="Mail Code" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="mailCode" [maxlength]="50">
+          formControlName="mailCode" [maxlength]="3">
         </kendo-textbox>
         <kendo-formerror *ngIf="pharmacyFormControl?.mailCode.errors?.required && isValidateForm">
           Mail Code is required
