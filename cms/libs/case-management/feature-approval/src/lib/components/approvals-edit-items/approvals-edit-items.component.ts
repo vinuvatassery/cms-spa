@@ -47,6 +47,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   paymentMethodList: any[] = [];
   paymentRunDateList: any[] = [];
   tempVendorName: any;
+  ndcMaskFormat: string = "00000-0000-00"
   constructor(private insurancePlanFacade : InsurancePlanFacade,
               private drugFacade : DrugsFacade,
               private financialVendorFacade : FinancialVendorFacade,
@@ -94,7 +95,9 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       this.subscribeSearchVendor();
     }
     else {
-      this.searchClinicData(clinicName);
+      this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.MedicalClinic);
+      this.subscribeSearchVendor();
+      //this.searchClinicData(clinicName);
     }
     this.selectedClinicVendorId = null;
     this.cd.detectChanges();
@@ -297,7 +300,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
           this.selectedMasterData?.address1
         );
         this.healthCareForm.controls['addressLine2'].setValue(
-          this.selectedMasterData.addressLine2 ?  this.selectedMasterData.addressLine2 : ''
+          this.selectedMasterData.address2 ?  this.selectedMasterData.address2 : ''
         );
         this.healthCareForm.controls['city'].setValue(
           this.selectedMasterData?.cityCode
@@ -366,9 +369,15 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         PendingApprovalGeneralTypeCode.MedicalClinic ||
       this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.MedicalProvider
     ) {
-      this.healthCareForm.controls['providerName'].setValidators(
-        Validators.required
-      );
+      if (!this.selectedVendor.parentVendorId) {
+        this.healthCareForm.controls['providerName'].setValidators(
+          Validators.nullValidator
+        );
+      } else {
+        this.healthCareForm.controls['providerName'].setValidators(
+          Validators.required
+        );
+      }
       this.healthCareForm.controls['providerName'].updateValueAndValidity();
 
       if(this.selectedMasterData.firstName)
@@ -778,11 +787,10 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   }
 
   public selectionChange(value: any): void {
-    this.providerName = value.vendorName;
     if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
       this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider)
       {
-        this.selectedMasterData.vendorId = value.parentVendorId;
+        this.selectedMasterData.parentVendorId = value.vendorId;
       }else {
         this.selectedMasterData.vendorId = value.vendorId;
       }
