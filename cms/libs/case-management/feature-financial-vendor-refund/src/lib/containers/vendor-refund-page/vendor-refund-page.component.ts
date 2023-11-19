@@ -4,6 +4,7 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain'; 
 import { DocumentFacade } from 'libs/shared/util-core/src/lib/application/document-facade';
+import { ApiType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-vendor-refund-page',
   templateUrl: './vendor-refund-page.component.html', 
@@ -78,10 +79,47 @@ export class VendorRefundPageComponent    {
       this.documentFacade.getExportFile(this.dataExportParameters, `vendor-refunds/payments`,'All Refunds');
     }
   }
+
   exportBatchesGridData()
   {
     if (this.batchesGridExportParameters) {       
       this.documentFacade.getExportFile(this.batchesGridExportParameters, `vendor-refunds/batches`,'All Batches');
     }
   }
+
+  exportReceiptDataEvent(data: any) {
+
+    if (this.dataExportParameters) {       
+      this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/receipt`, 'Refund Payments', ApiType.CaseApi, data);
+    }
+    // let gridData = data.gridData;
+    // let selectedPayments = data.selectedPayments;
+
+    // if (data) {
+    //   const filter = JSON.stringify(gridData?.filter);
+
+    //   const vendorPageAndSortedRequest = {
+    //     SortType: gridData?.sortType,
+    //     Sorting: gridData?.sortColumn,
+    //     SkipCount: gridData?.skipcount,
+    //     MaxResultCount: gridData?.maxResultCount,
+    //     Filter: filter,
+    //   };
+    //   let fileName = 'Refund Payments';
+
+    //   this.documentFacade.getExportFileForSelction(
+    //     this.dataExportParameters,
+    //     `vendor-refunds/receipting-log`,
+    //     fileName,
+    //     ApiType.CaseApi,
+    //     selectedPayments
+    //   );
+    // }
+  }
+
+  pageTitle = "Vendor Refunds";
+  changeTitle(data: any): void {
+    this.pageTitle = data ?? "Vendor Refunds";
+  }
+
 }

@@ -78,4 +78,25 @@ export class DocumentFacade {
         });
        
       }
+
+      getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedIds?: any[]): void {
+        this.documentDataService.getExportFileForSelection(pageAndSortedRequest, path, apiType, selectedIds).subscribe({
+            next: (response: any) => {
+                if (response) {
+                    const fileUrl = window.URL.createObjectURL(response);
+                    this.exportButtonShowSubject.next(true)
+                    const documentName = fileName + '.xlsx';
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = fileUrl;
+                    downloadLink.download = documentName;
+                    downloadLink.click();
+                }
+            },
+            error: (err) => {
+                this.exportButtonShowSubject.next(true)
+                this.showSnackBar(SnackBarNotificationType.ERROR, err)
+            },
+        });
+
+    }
 }
