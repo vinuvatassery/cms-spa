@@ -321,6 +321,7 @@ this.insuraceAddRefundClickSubject.next(true);
     if($event==undefined){ 
       this.vendorAddressId=null;
     }
+    this.vendorId=$event.vendorId;
     this.vendorAddressId = $event.vendorAddressId;
     this.vendorName = $event.vendorName;
     this.vendorId = $event.vendorId

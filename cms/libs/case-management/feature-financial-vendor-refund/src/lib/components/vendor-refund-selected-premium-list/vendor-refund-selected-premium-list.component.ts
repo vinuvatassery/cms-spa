@@ -1,6 +1,6 @@
 /** Angular **/
 import {  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
-import {  FormBuilder, Validators } from '@angular/forms';
+import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
@@ -43,13 +43,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   isSubmitted = false;
   @Input() insuraceAddRefundClick$:any
   @Output() Reqpayload = new EventEmitter<any>()
-  refundForm = this.formBuilder.group({
-    vp: ['', Validators.required],
-    creditNumber: ['', Validators.required],
-    warantNumber: ['', Validators.required],
-    depositDate: [''],
-    refundNote:['']
-  })
+  refundForm! :FormGroup
   public constructor(private formBuilder : FormBuilder,
     private readonly changeDetectorRef: ChangeDetectorRef){
     
@@ -57,6 +51,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
 
  
  ngOnInit(): void {
+  this.initForm()
   this.initializeRefunInformationGrid()
   this.insuraceAddRefundClick$.subscribe((res:any) =>{
     this.changeDetectorRef.markForCheck()
@@ -106,6 +101,16 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   })
 }
 
+initForm(){
+  this.refundForm =  this.formBuilder.group({
+    vp: ['', Validators.required],
+    creditNumber: ['', Validators.required],
+    warantNumber: ['', Validators.required],
+    refundNote:[''],
+    depositDate: [''],
+
+  })
+}
 
 
   refundAmountChange(dataItem:any){
@@ -151,16 +156,16 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
       this.insuranceRefundInformation$.subscribe((res:any) =>{
         this.financialPremiumsRefundGridLists = res.data
        this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)       
-       this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountPaid).reduce((a, b) => a + b, 0)
-       const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
-       this.refundForm.patchValue({
+       this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountPaid).reduce((a, b) => a + b, 0)  
+      const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
+      this.refundForm.patchValue({
         vp: formData.voucherPayabeNbr,
         creditNumber:formData.creditNumber,
         warantNumber:formData.refundWarantNumber ,
-        depositDate:formData.depositDate,
-        refundNote:formData.refundNote
+        refundNote:formData.refundNote      
        })
-      })
+      this.refundForm.controls['depositDate'].setValue(new Date(formData.depositDate));
+    })
     this.insuranceRefundInformationConfirmClicked.emit(param);
   }
 
