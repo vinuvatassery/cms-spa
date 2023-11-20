@@ -48,10 +48,25 @@ export class ImportedClaimService {
       InvoiceExceptionId : requests.invoiceExceptionId,
       ClaimId : requests.claimId,
       ServiceDate : requests.serviceDate,
-      IsPossibleMatch : requests.isPossibleMatch
+      IsPossibleMatch : requests.isPossibleMatch,
+      EntityTypeCode : requests.entityTypeCode
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/save-possible-match/`,savePossibleMatchDto
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match/`,savePossibleMatchDto
+    );
+  }
+
+  makeExceptionForExceedBenefits(exceptionObject: any){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/make-exception/`,
+      exceptionObject
+    );
+  }
+
+  updateClientPolicy(importedclaimDto : any){    
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/client-policy`,
+      importedclaimDto
     );
   }
 }

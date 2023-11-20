@@ -172,7 +172,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   refunEditServiceType='';
   refundEditClientId='';
   refundEditClientFullName: any;
-  refundEditVendorId='';
+  refundEditVendorAddressId='';
   refundEditVendorName: any;
   inspaymentRequestId: any;
 
@@ -189,7 +189,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
           this.refunEditServiceType = dataItem.type
           this.refundEditClientId =dataItem.clientId
           this.refundEditClientFullName = dataItem.clientFullName
-          this.refundEditVendorId = dataItem.vendorId
+          this.refundEditVendorAddressId = dataItem.vendorAddressId
           this.refundEditVendorName = dataItem.vendorName
           this.inspaymentRequestId = dataItem.paymentRequestId
         this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
@@ -287,6 +287,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   }
   modalCloseAddEditRefundFormModal(result: any) {
     if (result) {
+      this.loadVendorRefundProcessListGrid();
       this.isAddRefundModalOpen = false;
       this.addEditRefundFormDialog.close();
     }

@@ -139,7 +139,7 @@
                         <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
                               <ng-template kendoGridCellTemplate let-dataItem>
                                     <button [attr.aria-label]="dataItem?.batchName" kendoButton look="flat" 
-                                                class="card-link-button"  >
+                                                class="card-link-button"  (click)="onBatchNumberClick(dataItem)">
                                                 {{dataItem?.batchName}} 
                                     </button>
                                     </ng-template>
@@ -239,7 +239,7 @@
                                     </ng-template>
                         </kendo-grid-column>                   
 
-                        <kendo-grid-column field="amountDue" title="Amount Due" [width]="180">
+                        <kendo-grid-column field="amountDue" title="Pmt. Amount" [width]="180">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                               <label aria-label="Medical Provider" kendoButton look="flat"
                                     class="card-link-button"  >
@@ -368,7 +368,14 @@
                   </div>   
 
                   <div *ngIf="isBreakoutPanelShow">
-                        <cms-pharmacy-claims-batches-reconcile-payments-breakout></cms-pharmacy-claims-batches-reconcile-payments-breakout>
+                        <cms-pharmacy-claims-batches-reconcile-payments-breakout
+                        [pageSizes]="pageSizes" [sortValueBreakOut]="sortValueBreakOut" 
+                        [sortType]="sortType" [sort]="sort"  [batchId]="batchId" [entityId]="entityId"    
+                        [reconcilePaymentBreakoutList$]="reconcilePaymentBreakoutList$"
+                        (loadReconcilePaymentBreakOutGridEvent)="loadReconcilePaymentBreakOutGridList($event)"
+                        [paymentRequestType$] ="paymentRequestType$"
+                        [reconcilePaymentBreakoutLoaderList$]="reconcilePaymentBreakoutLoaderList$"
+                        ></cms-pharmacy-claims-batches-reconcile-payments-breakout>
                   </div>
             </div>
             <div class="text-right flex-gap">     

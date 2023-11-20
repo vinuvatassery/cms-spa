@@ -1,8 +1,4 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  PanelBarCollapseEvent,
-  PanelBarExpandEvent,
-} from '@progress/kendo-angular-layout';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
   GeneralApprovalApproveDeny,
@@ -40,14 +36,6 @@ export class ApprovalsGeneralListDetailAddtomasterlistComponent
 
   approveOrDeny(result: any) {
     this.ifApproveOrDeny = result;
-  }
-
-  public onPanelCollapse(event: PanelBarCollapseEvent): void {
-    this.isPanelExpanded = false;
-  }
-
-  public onPanelExpand(event: PanelBarExpandEvent): void {
-    this.isPanelExpanded = true;
   }
 
   onEditListItemsDetailClicked(): void {

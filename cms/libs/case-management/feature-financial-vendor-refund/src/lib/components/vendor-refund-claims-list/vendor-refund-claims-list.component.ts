@@ -10,7 +10,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -56,7 +56,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   @Input() tpaPaymentReqIds:any[]=[]
-
+ 
   gridClaimsDataSubject = new Subject<any>();
   gridClaimsData$ = this.gridClaimsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -68,10 +68,12 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   paymentStatusType:any;
   paymentStatuses$ = this.lovFacade.paymentStatus$;
   @Output() claimsCount = new EventEmitter<any>();
-  constructor( private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade)
-  {
- 
+  cliams:any[]=[];
+  constructor( private readonly financialClaimsFacade: FinancialClaimsFacade, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade){
+
   }
+
+
   ngOnInit(): void {
     this.lovFacade.getPaymentStatusLov()
     this.paymentStatusSubscription();
@@ -80,11 +82,18 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.selectedTpaClaims =  (this.tpaPaymentReqIds && this.tpaPaymentReqIds.length >0)?
     this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
+    this.tpaData$.subscribe((res:any)=>{
+      this.claimsCount.emit(this.selectedTpaClaims.length)
+      this.tpaData$.subscribe((res:any)=>{
+      
+        this.cliams=res.data;
+      })
+  })
   }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take:20,
       sort: this.sort,
     };
 
@@ -110,8 +119,8 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   }
  
   dataStateChange(stateData: any): void {
-    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
-    this.openResetDialog(this.filterResetConfirmationDialogTemplate);
+    
+        this.openResetDialog(this.filterResetConfirmationDialogTemplate);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -122,12 +131,22 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   }
 
   selectedKeysChange(selection: any) {
-    this.selectedTpaClaims = selection;
-    this.claimsCount.emit(this.selectedTpaClaims.length)
-  }
   
-  // updating the pagination infor based on dropdown selection
+ const includeClaim =  this.cliams.filter(obj => selection.includes(obj.paymentRequestId));
+const uniqueOriginalWarrants = [...new Set(includeClaim.map(obj => obj.originalWarrant))];
+if(uniqueOriginalWarrants.length>1)
+{
+  this.financialClaimsFacade.errorShowHideSnackBar("Select a claim with Same warrant number")
+  this.claimsCount.emit(0)
+}
+  if(uniqueOriginalWarrants.length==1)
+    {
+      this.selectedTpaClaims = selection;
+      this.claimsCount.emit(this.selectedTpaClaims.length)
+    }  
+  }
   pageSelectionChange(data: any) {
+    this.filterResetDialog.close();
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadRefundClaimsListGrid();
@@ -137,6 +156,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.filterData = filter;
   }
   loadRefundClaimsGrid(data: any) {
+ 
     this.financialVendorRefundFacade.loadTPARefundList(data);
   }
   private loadRefundClaimsListGrid(): void {

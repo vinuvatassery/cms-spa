@@ -12,8 +12,13 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class ApprovalsExpectationReasonComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  exceptiontext: string = '';
   @Output() closeMakeExpectationDialogClickedEvent = new EventEmitter<any>();
+  @Output() addAnExceptionEvent = new EventEmitter<any>();
   closeMakeExpectation() {
     this.closeMakeExpectationDialogClickedEvent.emit();
+  }
+  makeException(){
+    this.addAnExceptionEvent.emit(this.exceptiontext);
   }
 }

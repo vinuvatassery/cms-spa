@@ -157,16 +157,18 @@
   </kendo-grid-column>
   <kendo-grid-column field="refundAmount" title="Refund Amount" [width]="150">
     <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        <span class="k-input-prefix custom-currencysymbol"> $ </span>
         <kendo-numerictextbox  aria-label="refund amount"
         placeholder="refund amount"  [maxlength]="12"
         [fillMode]="formUiStyle.inputFillMode"
         id ="refundAmount{{rowIndex}}"
         [(ngModel)]="dataItem.refundAmount" (afterValueChanged)="refundAmountChange(dataItem)" format="#.00">
       </kendo-numerictextbox>
+
       <kendo-formerror *ngIf="dataItem.refundAmountError">{{dataItem.refundAmountError}}</kendo-formerror>
   </ng-template>
       <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex" let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.refundAmount}} </span>
+          <span class="tableamountview"> <strong>$</strong> {{totalRefundAmount}} </span>
       </ng-template>
   </kendo-grid-column>
   <kendo-grid-column field="creatorId" title="By" [width]="75" class="text-center" [sticky]="true">
@@ -197,7 +199,7 @@
     </div>
 
     <div class="flex-row">
-        <div class="flex-col"  [formGroup]="refundForm">
+        <div class="flex-col"  [formGroup]="refundForm" >
             <div class="flex-row">
                 <div class="flex-col flex-col-3">
                     <kendo-floatinglabel text=" VP">
@@ -205,7 +207,7 @@
                         formControlName="vp" >
                         </kendo-textbox>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm.hasError('required','vp') && isSubmitted">Vp is required.
+                    <kendo-formerror *ngIf="refundForm?.hasError('required','vp') && isSubmitted">Vp is required.
                     </kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-3">
@@ -214,7 +216,7 @@
                             [fillMode]="formUiStyle.inputFillMode"  formControlName="creditNumber" >
                         </kendo-textbox>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm.hasError('required','creditNumber') && isSubmitted">Credit # is required.
+                    <kendo-formerror *ngIf="refundForm?.hasError('required','creditNumber') && isSubmitted">Credit # is required.
                     </kendo-formerror>
                 </div>
             </div>
@@ -224,19 +226,21 @@
                         <kendo-textbox   formControlName="warantNumber"  aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode">
                         </kendo-textbox>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm.hasError('required','warantNumber') && isSubmitted">Refund Warrant # is required.
+                    <kendo-formerror *ngIf="refundForm?.hasError('required','warantNumber') && isSubmitted">Refund Warrant # is required.
                     </kendo-formerror>
                 </div>
             </div>
             <div class="flex-row">
                 <div class="flex-col flex-col-3">
-                    <kendo-floatinglabel text="Deposit Date">
-                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Deposit Date"
-                            format="MM/dd/yyyy" formatPlaceholder="formatPattern" formControlName="depositDate">
-                        </kendo-datepicker>
+                    <kendo-floatinglabel text="Deposit Date (Optional)">
+                       
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                        formatPlaceholder="formatPattern" placeholder="" 
+                         formControlName="depositDate"
+                        >
+                  </kendo-datepicker>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm.hasError('required','depositDate') && isSubmitted">Deposit date is required.
-                    </kendo-formerror>
+
                 </div>
                 <div class="flex-col flex-col-3">
                     <kendo-floatinglabel text="Refund Note (optional)">

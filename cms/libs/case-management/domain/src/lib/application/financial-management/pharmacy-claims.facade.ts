@@ -21,13 +21,14 @@ import { Client } from '../../entities/client';
 import { PharmacyClaims } from '../../entities/financial-management/pharmacy-claim';
 import { Drug } from '../../entities/drug';
 import { DrugCategoryCode } from '../../enums/drug-category-code.enum';
+import { PaymentBatchName } from '../../entities/financial-management/Payment-details';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsFacade {
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'asc';
+  public sortType = 'desc';
 
   public selectedClaimsTab = 1
   batchClaimsSubject  =  new Subject<any>();
@@ -93,6 +94,12 @@ export class FinancialPharmacyClaimsFacade {
   public sortReconcileList: SortDescriptor[] = [
     {
       field: this.sortValueReconcile,
+    },
+  ];
+  public sortValueReconcileBreakout = 'clientName';
+  public sortReconcileBreakoutList: SortDescriptor[] = [
+    {
+      field: this.sortValueReconcileBreakout,
     },
   ];
   public sortValueRecentClaimList = 'fillDate';
@@ -169,6 +176,19 @@ export class FinancialPharmacyClaimsFacade {
 
   private letterContentLoaderSubject = new Subject<any>();
   letterContentLoader$ = this.letterContentLoaderSubject.asObservable();
+
+  private reconcileBreakoutSummaryDataSubject = new Subject<any>();
+  reconcileBreakoutSummary$ =
+    this.reconcileBreakoutSummaryDataSubject.asObservable();
+
+  private reconcilePaymentBreakoutListDataSubject =  new Subject<any>();
+  reconcilePaymentBreakoutList$ = this.reconcilePaymentBreakoutListDataSubject.asObservable();
+
+  private reconcilePaymentBreakoutListLoaderDataSubject =  new Subject<any>();
+  reconcilePaymentBreakoutLoaderList$ = this.reconcilePaymentBreakoutListLoaderDataSubject.asObservable();
+
+  paymentBatchNameSubject  =  new Subject<PaymentBatchName>();
+  paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -535,7 +555,8 @@ export class FinancialPharmacyClaimsFacade {
         }
         this.hideLoader();
       },
-      error: (err) => {
+      error: (err) => {       
+        this.batchClaimsSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.hideLoader();
       },
@@ -632,6 +653,52 @@ viewAdviceLetterData(printAdviceLetterData: any) {
 
 reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any) {
   return this.financialPharmacyClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData);
+}
+
+loadReconcilePaymentBreakoutSummary(data:any){ 
+  this.financialPharmacyClaimsDataService.loadReconcilePaymentBreakoutSummaryService(data).subscribe({
+    next: (dataResponse) => {
+      this.reconcileBreakoutSummaryDataSubject.next(dataResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+    },
+  });
+}
+
+loadReconcilePaymentBreakoutListGrid(data:any) {
+  this.reconcilePaymentBreakoutListLoaderDataSubject.next(true);
+  data.filter=JSON.stringify(data.filter);
+  this.financialPharmacyClaimsDataService
+    .loadReconcilePaymentBreakoutListService(data)
+    .subscribe({
+      next: (dataResponse) => {
+        this.reconcilePaymentBreakoutListDataSubject.next(dataResponse);
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.reconcilePaymentBreakoutListDataSubject.next(gridView);
+          this.reconcilePaymentBreakoutListLoaderDataSubject.next(false);
+        }
+      },
+      error: (err) => {
+        this.reconcilePaymentBreakoutListLoaderDataSubject.next(false);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+}
+
+loadBatchName(batchId: string){
+  this.financialPharmacyClaimsDataService.loadBatchName(batchId).subscribe({
+    next: (dataResponse) => {
+      this.paymentBatchNameSubject.next(dataResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+    },
+  });
 }
 
 }
