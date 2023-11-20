@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (close)="closeAddEditRefundFormModalClicked()">
+<kendo-dialog-titlebar (close)="closeAddEditRefundFormModalClicked(false)">
     <section class="app-l-mainTittle">
         <h1 class="maintitle_withicon text-bold">{{isEdit?"Edit": "Add New"}} Refund</h1>
     </section>
@@ -386,7 +386,7 @@
                 <h5>Select all premium included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-insurance-premium-list  #insClaims  [selectedInsurancePremiumIds]="insurancePremiumPaymentReqIds"
-                    [vendorAddressId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
+                    [vendorAddressId]="vendorAddressId" [clientId]="clientId"  [pageSizes]="pageSizes"
                         [sortValue]="sortValueClientClaims" [sortType]="sortType"
                         [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId" (claimsCount)="claimsCountEvent($event)"
                         ></cms-vendor-refund-insurance-premium-list>
@@ -625,7 +625,7 @@
 </div>
     <div class="justify-content-end align-items-center" >
         <span class="mr-2">{{claimsCount}} payment(s) selected</span>
-        <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeAddEditRefundFormModalClicked()"> Cancel </button>
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeAddEditRefundFormModalClicked(false)"> Cancel </button>
         <button kendoButton [primary]="true" aria-label="Add" class=""  (click)="onAddRefundClick()"  > {{isEdit?"Update": "Add"}} </button>
     </div>
 </div>
