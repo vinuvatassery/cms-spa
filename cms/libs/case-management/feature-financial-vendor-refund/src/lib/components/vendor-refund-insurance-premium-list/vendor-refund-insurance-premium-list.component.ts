@@ -132,7 +132,6 @@ if(uniqueOriginalWarrants.length>1)
       take: this.defaultpageSize,
       sort: this.sort,
     };
-    this.loadRefundClaimsListGrid();
   }
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
     filterService.filter({
