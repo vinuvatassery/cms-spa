@@ -345,7 +345,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
         disabled: [
           PaymentStatusCode.Paid,
           PaymentStatusCode.PaymentRequested,
-          PaymentStatusCode.PendingApproval,
+          PaymentStatusCode.ManagerApproved,
         ].includes(this.batchStatus),
         click: (data: any): void => {
           if (!this.isBulkUnBatchOpened) {
