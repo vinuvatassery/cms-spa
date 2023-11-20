@@ -565,7 +565,7 @@ addNewRefundRx() {
       this.financialVendorRefundFacade.addNewRefundRx(refundRxData).subscribe({
         next: (data: any) => {
           this.financialVendorRefundFacade.hideLoader();
-          this.closeAddEditRefundFormModalClicked()
+          this.closeAddEditRefundFormModalClicked(true)
           this.financialVendorRefundFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,
             'Pharmacy Refund Added Successfuly')
         },
@@ -582,7 +582,7 @@ addNewRefundRx() {
         this.financialVendorRefundFacade.editNewRefundRx(refundRxData).subscribe({
           next: (data: any) => {
             this.financialVendorRefundFacade.hideLoader();
-            this.closeAddEditRefundFormModalClicked()
+            this.closeAddEditRefundFormModalClicked(true)
             this.financialVendorRefundFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,
               'Pharmacy Refund Updated Successfuly')
           },
