@@ -8,15 +8,16 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Observable, Subject, first } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { OnInit } from '@angular/core';
 @Component({
   selector: 'cms-refund-batch-log-list',
   templateUrl: './refund-batch-log-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundBatchLogListComponent implements OnChanges {
+export class RefundBatchLogListComponent implements OnInit, OnChanges {
   @ViewChild('unBatchRefundsDialogTemplate', { read: TemplateRef })
   unBatchRefundsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
@@ -186,15 +187,23 @@ export class RefundBatchLogListComponent implements OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   isBulkUnBatchOpened: any;
-  batchId = '';
+  batchId: any;
 
   /** Constructor **/
   constructor(
     private route: Router,
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private dialogService: DialogService,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private activatedRoute: ActivatedRoute,
   ) { }
+
+  ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      const batchId = params['b_id'];
+      this.batchId = batchId;
+    });
+  }
 
   ngOnChanges(): void {
     this.state = {
@@ -316,6 +325,10 @@ export class RefundBatchLogListComponent implements OnChanges {
   gridDataHandle() {
     this.batchLogGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
+
+      if (this.gridDataResult && this.gridDataResult.data && this.gridDataResult.data.length > 0) {
+        this.batchId = this.gridDataResult.data[0].batchId;
+      }
       this.gridVendorsBatchLogDataSubject.next(this.gridDataResult);
       this.isBatchLogGridLoaderShow = false;
     });
@@ -450,13 +463,16 @@ export class RefundBatchLogListComponent implements OnChanges {
   }
 
   onClickedDownload() {
-    if (!this.selectedPayments.length) 
-    {
-      return;
-    }
+    // if (!this.selectedPayments.length) {
+    //   return;
+    // }
     this.showExportLoader = true;
-
-    this.exportReceiptDataEvent.emit(this.selectedPayments);
+    var data = {
+      batchId : this.batchId,
+      selectedIds : this.selectedPayments,
+      gridDataResult : this.gridDataResult
+    };
+    this.exportReceiptDataEvent.emit(data);
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
         this.showExportLoader = false;

@@ -46,7 +46,7 @@ export class DocumentDataService {
       )
     }
 
-    getExportFileForSelection(pageAndSortedRequest: any, path: string, apiType: string = ApiType.CaseApi, selectedIds?: any[]) {
+    getExportFileForSelection(pageAndSortedRequest: any, path: string, apiType: string = ApiType.CaseApi, selectedIds?: any[], batchId? : any) {
       let apiUrl: any;
       switch (apiType) {
         case ApiType.CaseApi: {
@@ -70,7 +70,8 @@ export class DocumentDataService {
       } else {
         const exportData = {
           gridData: pageAndSortedRequest,
-          selectedIds: selectedIds
+          selectedIds: selectedIds,
+          batachId : batchId,
         };
   
         return this.http.post(
