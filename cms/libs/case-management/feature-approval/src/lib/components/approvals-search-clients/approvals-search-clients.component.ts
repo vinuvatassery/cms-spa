@@ -101,7 +101,7 @@ export class ApprovalsSearchClientsComponent {
   }
 
   onClientSaveClick(){
-    var importedclaimDto = {
+    let importedclaimDto = {
       dateOfService: this.selectedClaim.dateOfService,
       clientId: this.selectedClient.clientId,
       policyId: this.selectedClaim.policyId,

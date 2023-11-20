@@ -472,16 +472,16 @@ export class FinancialVendorRefundDataService {
         `/financial-management/claims/pharmacies/SearchText=${searchText}`
     );
   }
-  loadTpavendorBySearchText(searchText: string,) {
+  loadTpavendorBySearchText(searchText: string,clientId:number) {
     return this.http.get<Pharmacy[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-  `/financial-management/claims/medical/tpa-vendor/SearchText=${searchText}`
+  `/financial-management/claims/medical/tpa-vendor/SearchText=${searchText}/${clientId}`
     );
   }
-  loadInsurancevendorBySearchText(searchText: string,) {
+  loadInsurancevendorBySearchText(searchText: string,clientId:number) {
     return this.http.get<Pharmacy[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-  `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}`
+  `/financial-management/claims/medical/insurance-vendor/SearchText=${searchText}/${clientId}`
     );
   }
   loadMedicalPremiumList(data:any): Observable<any> {
@@ -497,7 +497,7 @@ export class FinancialVendorRefundDataService {
       Filter : data.filter
     }
 
-      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/refund-ins-list/${data.vendorId}/${data.clientId}`,ClaimsPageAndSortedRequestDto);
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/vendors/${data.vendorId}/clients/${data.clientId}/refund-ins`,ClaimsPageAndSortedRequestDto);
   }
   loadTPARefundList(data:any): Observable<any> {
 
@@ -511,6 +511,6 @@ export class FinancialVendorRefundDataService {
       MaxResultCount : data.pageSize,
       Filter : data.filter
     }
-      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/refund-tpa-list/${data.vendorId}/${data.clientId}`,ClaimsPageAndSortedRequestDto);
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/vendors/${data.vendorId}/clients/${data.clientId}/refund-tpa`,ClaimsPageAndSortedRequestDto);
   }
 }

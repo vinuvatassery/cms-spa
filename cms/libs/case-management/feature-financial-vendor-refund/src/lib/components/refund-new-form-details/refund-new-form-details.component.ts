@@ -4,7 +4,7 @@ import { State, filterBy } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam, ServiceSubTypeCode } from '@cms/case-management/domain'; 
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subject } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 import { VendorRefundClaimsListComponent, VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -98,7 +98,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   tpaClaimsPaymentReqIds :any[] =[]
   tpaPaymentReqIds :any[] =[]
   rxPaymentReqIds :any[] =[]
-
+  
  @Input() serviceType=''
  @Input() inspaymentRequestId:any
   @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
@@ -118,6 +118,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
     private dialogService: DialogService,
     private formBuilder: FormBuilder) {}
   ngOnInit(): void {
+  
     this.financialVendorRefundFacade.premiumsListData$.subscribe((res:any)=>{
       
       this.diffclaims=res.item;
@@ -180,13 +181,8 @@ if(this.isEdit){
     this.vendorAddressId=null;
     this.selectedProvider=null;
   }
-  confirmationClicked (){
-  
-    
-   let dat= this.diffclaims.includes(this.insClaims.selectedInsuranceClaims);
-   
-    this.isConfirmationClicked = true
-   
+  confirmationClicked (){ 
+    this.isConfirmationClicked = true   
     this.disableFeildsOnConfirmSelection = true
     this.insRefundForm.controls['insVendor'].disable();
     if(this.selectedRefundType=== ServiceSubTypeCode.insurnacePremium 
@@ -196,7 +192,7 @@ if(this.isEdit){
   } 
 
   if(this.selectedRefundType === 'TPA'){
-    this.tpaPaymentReqIds = this.tpaClaims.selectedTpaClaims
+    this.insurancePremiumPaymentReqIds =  this.insClaims.selectedInsuranceClaims
   }
   if(this.selectedRefundType === 'RX'){
     this.rxPaymentReqIds = this.rxClaims.selectedPharmacyClaims
@@ -301,6 +297,7 @@ this.insuraceAddRefundClickSubject.next(true);
     if (client != undefined) {
       this.clientCaseEligibilityId = client.clientCaseEligibilityId;
       this.clientId = client.clientId;
+      this.financialVendorRefundFacade.loadInsurancevendorBySearchText("",this.clientId);
       this.clientName = client.clientFullName;
       if (this.clientId != null && this.vendorAddressId != null) {
         this.isRefundGridClaimShow = true;
@@ -318,9 +315,11 @@ this.insuraceAddRefundClickSubject.next(true);
   }
   onProviderValueChange($event: any) {
     
+    this.vendorAddressId=null;
     if($event==undefined){ 
       this.vendorAddressId=null;
     }
+    this.vendorId=$event.vendorId;
     this.vendorAddressId = $event.vendorAddressId;
     this.vendorName = $event.vendorName;
     this.vendorId = $event.vendorId
@@ -345,17 +344,37 @@ this.insuraceAddRefundClickSubject.next(true);
       this.showServicesListForm = false;
     }
   }
+   debounce<T>(func: (arg: T) => void, debounceTimeMs: number): (arg: T) => void {
+    const subject = new Subject<T>();
+  
+    subject.pipe(debounceTime(debounceTimeMs)).subscribe(arg => func(arg));
+  
+    return (arg: T) => subject.next(arg);
+  }
+  debouncedSearchInsuranceVendors = this.debounce((searchText: any) => {
+    this.searchInsuranceVendors(searchText);
+  }, 300); // Adjust the debounce time (in milliseconds) according to your needs
+
+
+  debouncedtpaVendors = this.debounce((searchText: any) => {
+    this.searchTpaVendors(searchText);
+  }, 300); // Adjust the debounce time (in milliseconds) according to your needs
+
+  onInputChange(searchText: any) {
+    this.debouncedSearchInsuranceVendors(searchText);
+  }
   searchInsuranceVendors(searchText: any) {
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorRefundFacade.loadInsurancevendorBySearchText(searchText);
+
+    this.financialVendorRefundFacade.loadInsurancevendorBySearchText(searchText,this.clientId);
   }
   searchTpaVendors(searchText: any) {
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorRefundFacade.loadTpavendorBySearchText(searchText);
+    this.financialVendorRefundFacade.loadTpavendorBySearchText(searchText,this.clientId);
   }
   claimsCountEvent(data:any){
     

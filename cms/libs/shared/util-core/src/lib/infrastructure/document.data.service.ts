@@ -45,4 +45,38 @@ export class DocumentDataService {
         {responseType: 'blob'}
       )
     }
+
+    getExportFileForSelection(pageAndSortedRequest: any, path: string, apiType: string = ApiType.CaseApi, selectedIds?: any[]) {
+      let apiUrl: any;
+      switch (apiType) {
+        case ApiType.CaseApi: {
+          apiUrl = this.configurationProvider.appSettings.caseApiUrl;
+          break;
+        }
+        case ApiType.ProductivityToolsApi: {
+          apiUrl = this.configurationProvider.appSettings.productivityToolsApiUrl;
+          break;
+        }
+        default: {
+          apiUrl = this.configurationProvider.appSettings.caseApiUrl;
+          break;
+        }
+      }
+      if (!selectedIds) {
+        return this.http.post(
+          `${apiUrl}/data-management/export/${path}`, pageAndSortedRequest,
+          { responseType: 'blob' }
+        )
+      } else {
+        const exportData = {
+          gridData: pageAndSortedRequest,
+          selectedIds: selectedIds
+        };
+  
+        return this.http.post(
+          `${apiUrl}/data-management/export/${path}`, exportData,
+          { responseType: 'blob' }
+        )
+      }
+    }
 }

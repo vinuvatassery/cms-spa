@@ -28,7 +28,7 @@ export class FinancialPharmacyClaimsFacade {
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'asc';
+  public sortType = 'desc';
 
   public selectedClaimsTab = 1
   batchClaimsSubject  =  new Subject<any>();
@@ -555,7 +555,8 @@ export class FinancialPharmacyClaimsFacade {
         }
         this.hideLoader();
       },
-      error: (err) => {
+      error: (err) => {       
+        this.batchClaimsSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.hideLoader();
       },
