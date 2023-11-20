@@ -461,7 +461,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
   isLogGridExpanded = false;
   hideActionButton = false;
-  ReceiptLogMode = false
+  receiptLogMode = false
   selectedPayments: any[] = [];
 
   cancelActions() {
@@ -469,13 +469,13 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.changeTitle.emit();
     this.isLogGridExpanded = !this.isLogGridExpanded;
     this.hideActionButton = !this.hideActionButton;
-    this.ReceiptLogMode = !this.ReceiptLogMode;
+    this.receiptLogMode = !this.receiptLogMode;
   }
 
   receiptingLogClicked() {
     this.changeTitle.emit("Receipting Log");
     this.isLogGridExpanded = !this.isLogGridExpanded;
-    this.ReceiptLogMode = !this.ReceiptLogMode;
+    this.receiptLogMode = !this.receiptLogMode;
     this.hideActionButton = !this.hideActionButton;
   }
 
