@@ -61,36 +61,38 @@
                 </div>
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
-                <div class="flex-col flex-col-6">
+                <div class="flex-col flex-col-6" [formGroup]="insRefundForm">
                     <kendo-floatinglabel  text="Vendor">
                         <div class="combotable_search_list new_refund_Search">                           
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                                      <kendo-multicolumncombobox [data]="insurancevendors$ | async" 
-                                      textField='providerFullName'
-                                      valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
-                                      placeholder="Search Vendor Name, ID"
-                                      [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                                      [filterable]="true" 
-                                      (filterChange)="searchInsuranceVendors($event)"
-                                      (valueChange)="onProviderValueChange($event)" [(ngModel)]="selectedVendor"
-                                      >
+                                   
+                                      <kendo-multicolumncombobox [data]="insurancevendors$ | async" textField="providerFullName"
+                                      valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode" 
+                                      (filterChange)="onInputChange($event)"
+                                       placeholder="Search Pharmacy name or TIN"
+                                       (valueChange)="onProviderValueChange($event)" 
+                                         formControlName="insVendor" 
+                                         [(ngModel)]="selectedVendor"
+                                          [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+                                          [filterable]="true"
+                                          [disabled]="disableFeildsOnConfirmSelection">
                                     
                                       <button kendoButton fillMode="clear" icon="image"></button>
           
                                       <kendo-combobox-column>
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span>{{ dataItem.vendorName }}</span>
+                                              <span>Name:{{ dataItem.vendorName }}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="100">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class=" text-muted"> <em></em> {{dataItem.insuranceType}}</span>
+                                              <span class=" text-muted"> <em></em>Insurance Type: {{dataItem.insuranceType}}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="150">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class="text-muted"><em> </em> {{ dataItem.insuranceName }}</span>
+                                              <span class="text-muted"><em> </em>Insurance Name: {{ dataItem.insuranceName }}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="125">
@@ -105,7 +107,6 @@
                               </div>
                       </kendo-floatinglabel> 
                 </div>
-
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
                 <div class="flex-col flex-col-6">
@@ -114,35 +115,40 @@
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                                       <kendo-multicolumncombobox [data]="tpavendors$ | async" 
-                                      textField='providerFullName'
+                                      textField="providerFullName"
                                       valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
                                       placeholder="Search Vendor Name, ID"
                                       [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                       [filterable]="true" 
                                       (filterChange)="searchTpaVendors($event)"
                                       (valueChange)="onProviderValueChange($event)" [(ngModel)]="selectedVendor"
-                                      >
+                                      [disabled]="disableFeildsOnConfirmSelection" >
                                     
                                       <button kendoButton fillMode="clear" icon="image"></button>
           
                                       <kendo-combobox-column>
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span>{{ dataItem.vendorName }}</span>
+                                              <span>Name:{{ dataItem.vendorName }}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="100">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class=" text-muted"> <em></em> {{dataItem.tin}}</span>
+                                              <span class=" text-muted"> <em></em>TIN: {{dataItem.tin}}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="150">
+                                        <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                            <span class="text-muted"><em> </em>MailCode: {{ dataItem.MmilCode }}</span>
+                                        </ng-template>
+                                    </kendo-combobox-column> 
+                                      <kendo-combobox-column [width]="150">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class="text-muted"><em> </em> {{ dataItem.address }}</span>
+                                              <span class="text-muted"><em> </em>Address: {{ dataItem.address }}</span>
                                           </ng-template>
                                       </kendo-combobox-column>                                    
                                       <ng-template kendoMultiColumnComboBoxNoDataTemplate>
-                                          <div class="no-data-text">No vendors found</div>
-                                      </ng-template>
+                                        <div class="no-data-text">No providers found</div>
+                                    </ng-template>
                                   </kendo-multicolumncombobox>
                               </div>
                       </kendo-floatinglabel> 
@@ -163,7 +169,7 @@
                     [filterable]="true" 
                     (filterChange)="searchPharmacy($event)" [data]="pharmacySearchResult$ | async"
                     [(ngModel)]="selectedMedicalProvider" (valueChange)="onProviderValueChange($event)"
-                    >
+                    [disabled]="disableFeildsOnConfirmSelection">
                         <kendo-combobox-column>
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                 <span>{{ dataItem.vendorName }}</span>
@@ -380,7 +386,7 @@
                 <h5>Select all premium included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-insurance-premium-list  #insClaims  [selectedInsurancePremiumIds]="insurancePremiumPaymentReqIds"
-                    [vendorAddressId]="vendorAddressId" [clientId]="clientId"  [pageSizes]="pageSizes"
+                    [vendorAddressId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
                         [sortValue]="sortValueClientClaims" [sortType]="sortType"
                         [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId" (claimsCount)="claimsCountEvent($event)"
                         ></cms-vendor-refund-insurance-premium-list>
@@ -620,7 +626,7 @@
     <div class="justify-content-end align-items-center" >
         <span class="mr-2">{{claimsCount}} payment(s) selected</span>
         <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeAddEditRefundFormModalClicked()"> Cancel </button>
-        <button kendoButton [primary]="true" aria-label="Add" class=""  (click)="onAddRefundClick()" > Add </button>
+        <button kendoButton [primary]="true" aria-label="Add" class=""  (click)="onAddRefundClick()"  > {{isEdit?"Update": "Add"}} </button>
     </div>
 </div>
     <div class="justify-content-end align-items-center" *ngIf="!isConfirmationClicked && selectedRefundType">

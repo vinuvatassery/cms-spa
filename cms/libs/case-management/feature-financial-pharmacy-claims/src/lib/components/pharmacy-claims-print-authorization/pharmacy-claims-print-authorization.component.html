@@ -1,5 +1,5 @@
 <section class="k-dialog-body">
-      <p>{{printOption ? 'Review the authorization(s) and confirm which ones to print. Click "Print" when you\'re done.':'Review the advice letters and confirm which ones to print. Click Reconcile & Print" when you\'re done.'}}</p>
+      <p>{{printOption ? 'Review the authorization(s) and confirm which ones to print. Click "Print" when you\'re done.':'Review the advice letters and confirm which ones to print. Click "Reconcile & Print" when you\'re done.'}}</p>
       <div class="custom_scroll_view mt-2">
             <kendo-scrollview [data]="returnResultFinalPrintList" [width]="width" [height]="height" [arrows]="true" [pageable]="false" 
             (itemChanged)="onItemChange($event)" [activeIndex]="currentIndex">

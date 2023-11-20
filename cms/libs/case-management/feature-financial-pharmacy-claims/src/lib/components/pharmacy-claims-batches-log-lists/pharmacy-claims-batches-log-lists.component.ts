@@ -25,7 +25,7 @@ import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter
 import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {
-  PaymentStatusCode,PaymentType, PaymentMethodCode
+  PaymentStatusCode,PaymentType, PaymentMethodCode, PaymentBatchName
 } from '@cms/case-management/domain';
 
 @Component({
@@ -76,7 +76,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   @Input() unbatchClaim$ :any
   @Input() unbatchEntireBatch$ :any
   @Input() deleteClaims$ :any
-  @Input() exportButtonShow$ :any
+  @Input() exportButtonShow$ :any;
+  @Input() paymentBatchName$!: Observable<PaymentBatchName>;
   public bulkMore = [ 
     
     {
@@ -336,6 +337,12 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.sortColumnName = 'Pharmacy Name';
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
+    this.batchLogGridLists$.subscribe((res:any)=>{
+      if(res.data.length==0)
+      {
+        this.route.navigate(['/financial-management/pharmacy-claims'] );       
+      }
+    })
   }
   ngOnChanges(): void {
     this.state = {

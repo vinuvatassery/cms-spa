@@ -329,7 +329,7 @@
 
             </div>
             <div class="mt-4" *ngIf="vendorId&&clientId">
-                <h5 class="text-upper"><span *ngIf="!IsEdit">RECENT PRESCRIPTIONS FOR THIS CLIENT AND PHARMACY PANEL </span><span  *ngIf="IsEdit">RECENT PURCHASES FOR THIS CLIENT & PHARMACY </span> </h5>
+                <h5 class="text-upper"><span *ngIf="!isEdit">RECENT PRESCRIPTIONS FOR THIS CLIENT AND PHARMACY PANEL </span><span  *ngIf="isEdit">RECENT PURCHASES FOR THIS CLIENT & PHARMACY </span> </h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-pharmacy-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
                 </div>
@@ -350,7 +350,7 @@
     <div class="justify-content-end align-items-center"> 
             <span class="mr-1">{{serviceCount}} service(s) to be added</span>
             <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeAddEditClaimsFormModalClicked()"> Cancel </button>
-            <button kendoButton [primary]="true" aria-label="Add" class="" (click)="savePharmacyClaim()"> {{isEdit === true ? 'UPDATE' : 'ADD'}} </button>
+            <button kendoButton [disabled]="isClientInEligible" [primary]="true" aria-label="Add" class="" (click)="savePharmacyClaim()"> {{isEdit === true ? 'UPDATE' : 'ADD'}} </button>
     </div>
 </kendo-dialog-actions>
 

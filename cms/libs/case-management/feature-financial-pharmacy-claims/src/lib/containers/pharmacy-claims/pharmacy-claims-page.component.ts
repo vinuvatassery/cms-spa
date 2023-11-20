@@ -159,8 +159,10 @@ export class PharmacyClaimsPageComponent implements OnInit {
       next: (response: any) => {
         this.financialClaimsFacade.hideLoader()
         if (response) {
+          
           if (response?.isReAssignmentNeeded ?? true) {
-            return;
+            this.financialClaimsFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "PCA ReAssignment Needed");
+           
           }
           claim.pcaSelectionResponseDto = response;
         

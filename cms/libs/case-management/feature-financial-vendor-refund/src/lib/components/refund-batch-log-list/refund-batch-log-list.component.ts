@@ -16,7 +16,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   templateUrl: './refund-batch-log-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundBatchLogListComponent implements OnInit, OnChanges {
+export class RefundBatchLogListComponent implements  OnChanges {
   @ViewChild('unBatchRefundsDialogTemplate', { read: TemplateRef })
   unBatchRefundsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
@@ -76,43 +76,40 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   ];
 
   columns: any = {
-    batchNumber: 'Batch #',
-    providerName: 'Vendor',
-    paymentType: 'Type',
+    vendorName: 'Vendor',
+    serviceType: 'Type',   
     clientFullName: 'Client Name',
-    insuranceName: 'Name on Primary Insurance Card',
+    nameOnInsuranceCard: 'Name on Primary Insurance Card',
     clientId: 'Client ID',
-    warrantNumber: 'Refund Warrant #',
+    refundWarrant: 'Refund Warrant #',
     refundAmount: 'Refund Amount',
     depositDate: 'Deposit Date',
-    originalWarrantNumber: 'Original Warrant #',
+    originalWarrant: 'Original Warrant #',
     originalAmount: 'Original Amount',
     indexCode: 'Index Code',
     pcaCode :'PCA',
-    voucherPayable :'VP',
-    refundNote:'Refund Note',
+    grantNumber :'Grant #',
+    voucherPayable:'VP',
+    refundNote : 'Refund Note',
     entryDate : 'Entry Date'
   };
 
   dropDowncolumns: any = [
     {
-      columnCode: 'batchNumber',
-      columnDesc: 'Batch #',
-    },
-    {
-      columnCode: 'providerName',
+      columnCode: 'vendorName',
       columnDesc: 'Vendor',
     },
     {
-      columnCode: 'paymentType',
+      columnCode: 'serviceType',
       columnDesc: 'Type',
     },
+   
     {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
     },
     {
-      columnCode: 'insuranceName',
+      columnCode: 'nameOnInsuranceCard',
       columnDesc: 'Name on Primary Insurance Card',
     },
     {
@@ -120,12 +117,50 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       columnDesc: 'Client ID',
     },
     {
-      columnCode: 'warrantNumber',
+      columnCode: 'refundWarrant',
       columnDesc: 'Refund Warrant #',
     },
     {
       columnCode: 'refundAmount',
       columnDesc: 'Refund Amount',
+    }
+    ,
+    {
+      columnCode: 'depositDate',
+      columnDesc: 'Deposit Date',
+    }
+    ,
+    {
+      columnCode: 'originalWarrant',
+      columnDesc: 'Original Warrant #',
+    }
+    ,
+    {
+      columnCode: 'originalAmount',
+      columnDesc: 'Original Amount',
+    }
+    ,
+    {
+      columnCode: 'indexCode',
+      columnDesc: 'Index Code',
+    }
+    ,
+    {
+      columnCode: 'pcaCode',
+      columnDesc: 'PCA',
+    }
+    ,
+    {
+      columnCode: 'grantNumber',
+      columnDesc: 'Grant #',
+    } ,
+    {
+      columnCode: 'voucherPayable',
+      columnDesc: 'VP',
+    },
+    {
+      columnCode: 'refundNote',
+      columnDesc: 'Refund Note',
     }
   ];
   showExportLoader = false;
@@ -139,7 +174,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn = 'vendorName'
   gridDataResult!: GridDataResult;
 
   gridVendorsBatchLogDataSubject = new Subject<any>();
@@ -158,9 +193,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    this.loadBatchLogListGrid();
-  }
+ 
   ngOnChanges(): void {
     this.state = {
       skip: 0,

@@ -62,7 +62,7 @@
     [reorderable]="true" 
     [columnMenu]="{ filter: true }" 
     [sort]="state.sort" 
-    [navigable]="isProcessGridExpand" 
+    [navigable]="!isProcessGridExpand" 
     [filter]="state.filter"
     [data]="pharmacyClaimsProcessGridLists$ | async"
     (dataStateChange)="dataStateChange($event)" 
@@ -74,7 +74,7 @@
     (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedProcessClaims">
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [columnMenu]="false" [showSelectAll]="true"
-      [width]="40" ></kendo-grid-checkbox-column>
+      [width]="40" [sticky]="true" ></kendo-grid-checkbox-column>
     <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="250">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.PharmacyName" kendoButton look="flat" class="card-link-button"
@@ -254,10 +254,11 @@
         </kendo-dropdownbutton>
       </ng-template>
     </kendo-grid-column>
-
-    <div *kendoGridDetailTemplate="let dataItem" [ngStyle]="{width:'75%'}">
-      <cms-financial-pharmacy-prescription [paymentId]="dataItem.paymentRequestId"></cms-financial-pharmacy-prescription>       
-    </div>
+<ng-container *ngIf="isProcessGridExpand && !isProcessBatchClosed && !isDeleteBatchClosed">
+      <div *kendoGridDetailTemplate="let dataItem" [ngStyle]="{width:'75%'}">
+        <cms-financial-pharmacy-prescription [paymentId]="dataItem.paymentRequestId"></cms-financial-pharmacy-prescription>
+      </div>
+    </ng-container>
 
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
@@ -298,7 +299,7 @@
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchClaimsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
-  <button kendoButton kendoButton class="{{!selectedProcessClaims.length?'':'k-error-button'}}" [disabled]="!selectedProcessClaims.length" aria-label="Delete" *ngIf="isDeleteBatchClosed"
+  <button kendoButton  class="{{!selectedProcessClaims.length?'':'k-error-button'}}" [disabled]="!selectedProcessClaims.length" aria-label="Delete" *ngIf="isDeleteBatchClosed"
     (click)="onDeleteClaimsOpenClicked(deleteClaimsConfirmationDialog)"> <span class="material-icons mr-1"
       aria-label="Delete"> delete</span> Delete </button>
 
