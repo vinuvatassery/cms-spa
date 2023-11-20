@@ -82,6 +82,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   refundSelectedClaims:any[]=[];
   paymentMethodLovSubscription!: Subscription;
   private userInitiatedPageChange = false;
+  defaultpageSize=20;
   constructor(  private readonly financialClaimsFacade: FinancialClaimsFacade, private readonly router: Router, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
   {
  
@@ -108,7 +109,7 @@ if(uniqueOriginalWarrants.length>1)
     })
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take:this.defaultpageSize,
       sort: this.sort,
     };
     this.selectedInsuranceClaims =  (this.selectedInsurancePremiumIds && this.selectedInsurancePremiumIds.length >0)?
@@ -123,7 +124,7 @@ if(uniqueOriginalWarrants.length>1)
   ngOnChanges(): void {  
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.defaultpageSize,
       sort: this.sort,
     };
     this.loadRefundClaimsListGrid();
@@ -151,25 +152,14 @@ if(uniqueOriginalWarrants.length>1)
 
     }
   }
-  onPageChange(event: any): void {
-    
-    // This method will be called when the user changes the page
-    this.userInitiatedPageChange = true;
-  }
-  dataStateChange(stateData: any): void { 
-      
-    if (this.userInitiatedPageChange) {
-      {
-        this.openResetDialog(this.filterResetConfirmationDialogTemplate);
-      }
 
+  dataStateChange(stateData: any): void {       
+   this.openResetDialog(this.filterResetConfirmationDialogTemplate);      
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-   
-    }
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';  
   }
 
   // updating the pagination infor based on dropdown selection
