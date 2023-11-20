@@ -8,6 +8,10 @@
         [fillMode]="formUiStyle.dropDownFillMode"
         textField="columnDesc"
         valueField="columnCode"
+        [data]="dropDownColumns"
+        [valuePrimitive]="true"
+        [(ngModel)]="selectedColumn"
+        (valueChange)="searchColumnChangeHandler($event)"
       >
       </kendo-dropdownlist>
     </kendo-floatinglabel>
@@ -21,6 +25,7 @@
         aria-label="Search case"
         rounded="medium"
         [fillMode]="formUiStyle.inputFillMode"
+        [(ngModel)]="searchValue" (afterValueChanged)="onApprovalSearch($event)"
       >
       </kendo-textbox>
     </kendo-floatinglabel>
@@ -31,11 +36,13 @@
       [primary]="true"
       look="flat"
       aria-label="Export"
-      class="button-lg"
+      class="button-lg" 
+      [disabled]="showExportLoader"
+      (click)="onClickedExport()"
     >
-      <span class="material-icons" aria-label="Export" aria-invalid="true"
-        >exit_to_app</span
-      >Export
+    <span *ngIf="!showExportLoader" class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>
+    <span *ngIf="showExportLoader" class="k-icon k-i-loading k-input-loading-icon mr-1"></span><i
+      class="exp_button-text">Export</i>
     </button>
   </span>
 </section>
@@ -67,7 +74,7 @@
     (filterChange)="filterChange($event)"
     [selectable]="true"
     [isDetailExpanded]="expandInClaimException"
-    [data]="approvalsImportedClaimsLists$ | async"
+    [data]="gridImportedClaimsBatchData$ | async"
     [navigable]="true"
   >
     <kendo-grid-column field="clientName" title="Client Name" [width]="160">

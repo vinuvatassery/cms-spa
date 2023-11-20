@@ -63,7 +63,8 @@ export class ApprovalPageComponent implements OnInit {
   sortApprovalPaymentsList = this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
   sortValueApprovalPaymentsApproval = this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
   sortImportedClaimsList = this.importedClaimFacade.sortImportedClaimsList;
-  sortValueImportedClaimsAPproval = this.importedClaimFacade.sortValueImportedClaimsAPproval;
+  sortValueImportedClaimsApproval = this.importedClaimFacade.sortValueImportedClaimsApproval;
+  sortTypeImportedClaim = this.importedClaimFacade.sortType;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
   pendingApprovalPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
 
@@ -140,24 +141,20 @@ export class ApprovalPageComponent implements OnInit {
   ngOnInit(): void {
     this.getUserRole();
     this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
-    this.pendingApprovalPaymentsCount$.subscribe((response: any) => {
-      if (response) {
-        this.navigationMenuFacade.getPendingApprovalPaymentCount(
-          this.userLevel
-        );
-      }
-    });
     this.loadTabCount();
     this.contactFacade.loadDdlStates();
     this.lovFacade.getHealthInsuranceTypeLovsForPlan();
   }
 
   loadTabCount(){
+    this.navigationMenuFacade.getPendingApprovalPaymentCount(
+      this.userLevel
+    );
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
+    this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
     this.pendingApprovalPaymentCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalPaymentCount = response;
-      } else {
-        this.pendingApprovalPaymentCount = 0;
       }
       this.cd.detectChanges();
     });
@@ -165,8 +162,6 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalGeneralCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalGeneralCount = response;
-      } else {
-        this.pendingApprovalGeneralCount = 0;
       }
       this.cd.detectChanges();
     });
@@ -174,8 +169,6 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalImportedClaimCount$.subscribe((response: any) => {
       if (response) {
         this.pendingApprovalImportedClaimCount = response;
-      } else {
-        this.pendingApprovalImportedClaimCount = 0;
       }
       this.cd.detectChanges();
     });
@@ -215,8 +208,9 @@ export class ApprovalPageComponent implements OnInit {
     );
   }
 
-  loadImportedClaimsGrid(event: any): void {
-    this.importedClaimFacade.loadImportedClaimsLists(event);
+  loadImportedClaimsGrid(gridDataValue: any): void {debugger;
+    this.dataExportParameters = gridDataValue;
+    this.importedClaimFacade.loadImportedClaimsLists(gridDataValue);
   }
   notificationTriger() {
     this.approvalFacade.NotifyShowHideSnackBar(
@@ -256,7 +250,7 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalPaymentFacade.submitForApproval(events);
   }
 
-  exportPendingApprovalGridData() {
+  exportPendingApprovalGridData() {debugger;
     const data = this.dataExportParameters;
     if (data) {
       const filter = JSON.stringify(data?.gridDataRefinerValue.filter);
@@ -281,6 +275,30 @@ export class ApprovalPageComponent implements OnInit {
       );
     }
   }
+
+  exportImportedClaimsGridData() {debugger;
+    const data = this.dataExportParameters;
+    if (data) {
+      const filter = JSON.stringify(data?.filter);
+
+      const approvalPageAndSortedRequest = {
+        SortType: data?.sortType,
+        Sorting: data?.sort,
+        SkipCount: data?.skipCount,
+        MaxResultCount: data?.pageSize,
+        Filter: filter,
+      };
+      let fileName = 'imported_claim_approvals';
+
+      this.documentFacade.getExportFile(
+        approvalPageAndSortedRequest,
+        `imported-claims`,
+        fileName,
+        ApiType.ProductivityToolsApi
+      );
+    }
+  }
+
   loadCasereassignmentExpanedInfoParentEvent(approvalId: any) {
     this.pendingApprovalGeneralFacade.loadCasereassignmentExpandedInfo(
       approvalId
