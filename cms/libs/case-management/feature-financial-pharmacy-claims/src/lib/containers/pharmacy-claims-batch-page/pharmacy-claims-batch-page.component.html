@@ -1,15 +1,34 @@
 
  <cms-pharmacy-claims-batches-log-lists [batchLogGridLists$]="batchLogGridLists$"
- [pageSizes]="pageSizes" [sortValue]="sortValue"
+ [batchId]="batchId"
+ [loader$]="paymentByBatchGridLoader$"
+ [pageSizes]="pageSizes" [sortValue]="sortValue" [claimsType]="claimsType"
  [sortType]="sortType" [sort]="sort" 
  (exportGridDataEvent)="exportPharmacyBatchesGridData()"
  [exportButtonShow$]="exportButtonShow$" 
  (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
  [batchId]="batchId"
- (unBatchEntireBatchEvent)="unBatchEntireBatchClick($event)"
+ (unBatchEntireBatchEvent)="unBatchEntireBatchClick()"
  (unBatchClaimsEvent)="unBatchClaimClick($event)"
  [unbatchClaim$]="unbatchClaim$"
- [unbatchEntireBatch$]="unbatchEntireBatch$">
+ [unbatchEntireBatch$]="unbatchEntireBatch$"
+ [deleteClaims$]="deleteClaims$"
+ (ondeletebatchesClickedEvent)="ondeletebatchesClicked($event)"
+ (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
+ (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+ [letterContentList$]="letterContentList$"      
+ [letterContentLoader$]="letterContentLoader$"
+ (onProviderNameClickEvent)="onProviderNameClick($event)"
+ [paymentBatchName$]="paymentBatchName$"
+ >
 </cms-pharmacy-claims-batches-log-lists>
 
- 
+<ng-template #providerDetailsTemplate>
+    <cms-pharmacy-claims-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="onEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
+</ng-template>

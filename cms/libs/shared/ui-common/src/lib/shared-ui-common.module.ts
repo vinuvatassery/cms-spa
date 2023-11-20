@@ -43,6 +43,7 @@ import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
 import { VendorDetailsComponent } from './vendor-details/vendor-details.component';
 import { TinPipe } from './pipes/tin.pipe';
 import { PlaceholderDirective } from './directives/placeholder.directive';
+import { FinancialDrugsDetailsComponent } from './financial-drugs-details/financial-drugs-details.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -79,7 +80,8 @@ import { PlaceholderDirective } from './directives/placeholder.directive';
     TinPipe,
     ReAssignCaseComponent,
     ChartComponent,
-    PlaceholderDirective
+    PlaceholderDirective,
+    FinancialDrugsDetailsComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -115,7 +117,8 @@ import { PlaceholderDirective } from './directives/placeholder.directive';
     TinPipe,
     ReAssignCaseComponent,
     ChartComponent,
-    PlaceholderDirective
+    PlaceholderDirective,
+    FinancialDrugsDetailsComponent
   ],
 })
 export class SharedUiCommonModule {}

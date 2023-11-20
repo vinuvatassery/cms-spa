@@ -139,7 +139,7 @@
                         <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
                               <ng-template kendoGridCellTemplate let-dataItem>
                                     <button [attr.aria-label]="dataItem?.batchName" kendoButton look="flat" 
-                                                class="card-link-button"  >
+                                                class="card-link-button"   (click)="onBatchNumberClick(dataItem)">
                                                 {{dataItem?.batchName}} 
                                     </button>
                                     </ng-template>
@@ -243,7 +243,7 @@
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                               <label aria-label="Medical Provider" kendoButton look="flat"
                                     class="card-link-button"  >
-                                    <strong>$</strong> {{dataItem?.amountDue | kendoNumber:'n2'}} 
+                                    <span class="tableamountview"> <strong>$</strong> {{dataItem?.amountDue | kendoNumber:'n2'}}</span>
                               </label>
                             </ng-template>
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">

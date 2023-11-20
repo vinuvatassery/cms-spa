@@ -34,6 +34,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  claimsType= 'pharmacy-claims';
   @Input() pharmacyClaimsBatchGridLists$: any;
   @Input() PharmacyBatchGridLoader$: any;
   @Output() loadPharmacyClaimsBatchListEvent = new EventEmitter<any>();
@@ -292,7 +293,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'ALL', dir: 'desc' }],
+      sort: [{ field: 'creationTime', dir: 'desc' }],
     };
   }
 

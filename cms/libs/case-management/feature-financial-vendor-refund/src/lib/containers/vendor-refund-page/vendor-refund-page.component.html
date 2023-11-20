@@ -2,7 +2,7 @@
     <common-bread-crumb></common-bread-crumb>
     <div class=" pt-0"> 
         <section class="app-l-mainTittle">
-            <h1 class="maintitle_withicon text-bold">Vendor Refunds </h1>
+            <h1 class="maintitle_withicon text-bold"> {{pageTitle}} </h1>
         </section>
         <section class="app-l-client-wrapper ">
             <section class="app-l-wrapper"> 
@@ -12,11 +12,10 @@
                         <ng-template kendoTabContent>
                             <div class="block-section ">
                                 <cms-refund-process-list
-                                
                                 [vendorRefundProcessGridLists$]="vendorRefundProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundProcess"
                                 [sortType]="sortType" [sort]="sortProcessList" 
-                                (loadVendorRefundProcessListEvent)="loadVendorRefundProcessListGrid($event)"
+                                (loadVendorRefundProcessListEvent)="loadFinancialRefundProcessListGrid($event)"
                                 > </cms-refund-process-list>
                             </div>
                         </ng-template>
@@ -30,6 +29,8 @@
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundBatch"
                                 [sortType]="sortType" [sort]="sortBatchList" 
                                 (loadVendorRefundBatchListEvent)="loadVendorRefundBatchListGrid($event)"
+                                [exportButtonShow$]="exportButtonShow$"                              
+                                (exportGridDataEvent)="exportBatchesGridData()"
                                 ></cms-refund-batches-list>
                             </div>
                         </ng-template>
@@ -42,7 +43,11 @@
                                 [vendorRefundAllPaymentsGridLists$]="vendorRefundAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList" 
-                                (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"></cms-refund-all-payment-list>
+                                (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"
+                                [exportButtonShow$]="exportButtonShow$"                              
+                                (exportGridDataEvent)="exportAllRefundsGridData()"
+                                (exportReceiptDataEvent)="exportReceiptDataEvent($event)"
+                                (changeTitle)="changeTitle($event)"></cms-refund-all-payment-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

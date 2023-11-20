@@ -21,4 +21,11 @@ export class InsurancePlanDataService {
       dto
     );
   }
+
+  updateInsurancePlan(insurancePlanDto: any) {
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/insurance-plans`, insurancePlanDto
+    );
+  }
 }
