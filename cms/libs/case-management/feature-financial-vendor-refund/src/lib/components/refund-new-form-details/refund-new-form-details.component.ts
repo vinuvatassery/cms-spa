@@ -343,7 +343,7 @@ onAddRefundClick(){
      {
        indexCode : item.indexCode,
        pcaCode : item.pcaCode,
-       grantNo:"xx-xxxxx",
+       grantNo : item.grantNo,
        warrantNbr : item.warrantNbr,
        paymentStatusCode : item.paymentStatusCode,
        prescriptionsDetail : []
@@ -428,18 +428,20 @@ addNewRefundRx() {
     if (this.refundRXForm.invalid || InValidSelectedRefundPharmacyClaimInput.length >0) {
       return;
     } else {
-      var selectedpharmacyClaimsDto = selectedpharmacyClaims.map((obj:any)=>
-      {
-        obj.paymentRequestId,
-        obj.PrescriptionFillId ,
-        obj.paymentRequestId,
-        obj.RefundedQty ,
-        obj.DaySupplyRefunded,
-        obj.RefundedAmount,
-        obj.grantNo,
-        obj.pcaCode,
-        obj.creditNumber
-      });
+      var selectedpharmacyClaimsDto = selectedpharmacyClaims.map((obj : any)=>
+        ({
+          paymentRequestId : obj.paymentRequestId,
+          PrescriptionFillId : obj.PrescriptionFillId ,
+          RefundedQty : obj.RefundedQty ,
+          DaySupplyRefunded : obj.DaySupplyRefunded,
+          RefundedAmount : obj.RefundedAmount,
+          grantNo : obj.grantNo,
+          pcaCode : obj.pcaCode,
+          creditNumber : obj.creditNumber,
+          rxqtype : obj.creditNumber,
+          pharmacyNpi : obj.PharmacyNpi,
+          ndc : obj.ndc,
+        }));
       var refundRxData = { 
         ...this.refundRXForm.value, 
         vendorId : this.vendorId,
