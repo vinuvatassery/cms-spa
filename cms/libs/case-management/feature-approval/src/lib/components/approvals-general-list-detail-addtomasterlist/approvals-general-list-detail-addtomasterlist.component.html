@@ -91,7 +91,7 @@
         </tr>
         <tr>
           <td>Delivery Method</td>
-          <td>{{ vendorData.deliveryMethodDesc }}</td>
+          <td>{{ vendorData.deliveryMethodCode | titlecase}}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.InsuranceVendor">
