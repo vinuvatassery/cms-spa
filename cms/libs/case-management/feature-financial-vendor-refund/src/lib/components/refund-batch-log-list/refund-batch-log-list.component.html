@@ -6,7 +6,7 @@
         <button aria-label="Go Back" title="Go Back" kendoButton look="flat" class="mr-1" (click)="onBackClicked()">
           <span class="material-icons">
             arrow_back </span> </button>
-        <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}}</h1> <br />
+        <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}} {{receiptLogTitlePart}}</h1> <br />
       </div>
       <div class="d-flex" *ngIf="batch.sendBackNotes != null">
         <span class="app-c-badge  mt-3" aria-label="">
@@ -66,9 +66,21 @@
           <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take" [pageable]="true"
             [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
             [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
-            [data]="gridVendorsBatchLogData$ | async">
+            [data]="gridVendorsBatchLogData$ | async" [selectable]="true" [(selectedKeys)]="selectedPayments"
+            kendoGridSelectBy="paymentRequestId">
             <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
               [width]="40"></kendo-grid-checkbox-column>
+
+            <kendo-grid-column *ngIf="receiptLogMode" field="entryDate" title="Date Received" [width]="150">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                {{dataItem.entryDate | date:'MM/dd/yyyy'}}
+              </ng-template>
+              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <common-grid-cell-date-range-filter [field]="'entryDate'" [filter]="filter"
+                  [filterService]="filterService">
+                </common-grid-cell-date-range-filter>
+              </ng-template>
+            </kendo-grid-column>
 
             <kendo-grid-column field="vendorName" title="Vendor" [width]="160">
               <ng-template kendoGridCellTemplate let-dataItem>
@@ -77,7 +89,7 @@
                 </button>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="serviceType" title="Type" [width]="160">
+            <kendo-grid-column *ngIf="!receiptLogMode" field="serviceType" title="Type" [width]="160">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                   [extra]="false" operator="eq">
@@ -88,7 +100,7 @@
                 </kendo-grid-string-filter-menu>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
+            <kendo-grid-column *ngIf="!receiptLogMode" field="clientFullName" title="Client Name" [width]="160">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                   [extra]="false" operator="eq">
@@ -99,7 +111,8 @@
                 </kendo-grid-string-filter-menu>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="nameOnInsuranceCard" title="Name on Primary Insurance Card" [width]="180">
+            <kendo-grid-column *ngIf="!receiptLogMode" field="nameOnInsuranceCard"
+              title="Name on Primary Insurance Card" [width]="180">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                   [extra]="false" operator="eq">
@@ -108,8 +121,20 @@
                   <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
                   <kendo-filter-contains-operator></kendo-filter-contains-operator>
                 </kendo-grid-string-filter-menu>
-              </ng-template> </kendo-grid-column>
+              </ng-template>
+            </kendo-grid-column>
             <kendo-grid-column field="clientId" title="Client ID" [width]="160"> </kendo-grid-column>
+            <kendo-grid-column *ngIf="receiptLogMode" field="serviceType" title="Refund Type" [width]="160">
+              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                  [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                </kendo-grid-string-filter-menu>
+              </ng-template>
+            </kendo-grid-column>
             <kendo-grid-column field="refundWarrant" title="Refund Warrant #" [width]="160">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -146,7 +171,7 @@
               </ng-template>
 
             </kendo-grid-column>
-            <kendo-grid-column field="originalWarrant" title="Original Warrant #" [width]="100">
+            <kendo-grid-column *ngIf="!receiptLogMode" field="originalWarrant" title="Original Warrant #" [width]="100">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                   [extra]="false" operator="eq">
@@ -157,7 +182,7 @@
                 </kendo-grid-string-filter-menu>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="originalAmount" title="Original Amount" [width]="100">
+            <kendo-grid-column *ngIf="!receiptLogMode" field="originalAmount" title="Original Amount" [width]="100">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                   [extra]="false" operator="eq">
@@ -171,7 +196,7 @@
                 <span class="tableamountview"> <strong>$</strong> {{dataItem.originalAmount | kendoNumber: 'n2'}}</span>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="indexCode" title="Index Code" [width]="100">
+            <kendo-grid-column *ngIf="!receiptLogMode" field="indexCode" title="Index Code" [width]="100">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                   [extra]="false" operator="eq">
@@ -182,7 +207,7 @@
                 </kendo-grid-string-filter-menu>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="pcaCode" title="PCA" [width]="150">
+            <kendo-grid-column *ngIf="!receiptLogMode" field="pcaCode" title="PCA" [width]="150">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                   [extra]="false" operator="eq">
@@ -191,7 +216,9 @@
                   <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
                   <kendo-filter-contains-operator></kendo-filter-contains-operator>
                 </kendo-grid-string-filter-menu>
-              </ng-template> </kendo-grid-column>
+              </ng-template> 
+            </kendo-grid-column>
+            <kendo-grid-column *ngIf="receiptLogMode" field="creditNumber" title="Credit" [width]="150"></kendo-grid-column>
             <kendo-grid-column field="grantNumber" title="Grant #" [width]="100">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -229,8 +256,8 @@
                 </kendo-popover>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="75"
-              class="text-center">
+            <kendo-grid-column *ngIf="!receiptLogMode" field="Option" title="Options" [sticky]="true"
+              [columnMenu]="false" [width]="75" class="text-center">
               <ng-template kendoGridCellTemplate let-dataItem>
                 <kendo-dropdownbutton [data]="batchLogGridActions" icon="more-vertical"
                   class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -289,6 +316,18 @@
       </section>
     </section>
   </div>
+</div>
+
+<div class="bottom-fixed-wrapper text-right flex-gap">
+  <span *ngIf="selectedPayments && receiptLogMode == true">{{selectedPayments.length}} refund(s) selected</span>
+  <button *ngIf="receiptLogMode" kendoButton [primary]="true" look="outline" aria-label="Cancel"
+    (click)="cancelActions()">Cancel</button>
+  <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Download" icon="download"
+    (click)="onClickedDownload()" [disabled]="!selectedPayments.length">Download</button>
+  <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Print" icon="print"
+    [disabled]="!selectedPayments.length">Print</button>
+  <button *ngIf="!hideActionButton" kendoButton [primary]="true" aria-label="Receipting Log"
+    (click)="receiptingLogClicked()">Receipting Log</button>
 </div>
 
 <ng-template #unBatchRefundsDialogTemplate>

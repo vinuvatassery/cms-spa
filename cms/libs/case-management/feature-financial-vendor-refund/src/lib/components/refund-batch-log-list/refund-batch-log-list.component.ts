@@ -1,12 +1,12 @@
 /** Angular **/
 import {
-  ChangeDetectionStrategy,  Component,  EventEmitter,
-  Input,  OnInit,  OnChanges,  Output,  TemplateRef,
-  ViewChild,  ChangeDetectorRef,
+  ChangeDetectionStrategy, Component, EventEmitter,
+  Input, OnChanges, Output, TemplateRef,
+  ViewChild, ChangeDetectorRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
-import {  CompositeFilterDescriptor,  State} from '@progress/kendo-data-query';
+import { GridDataResult } from '@progress/kendo-angular-grid';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Observable, Subject, first } from 'rxjs';
 import { Router } from '@angular/router';
 import { FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
@@ -16,7 +16,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   templateUrl: './refund-batch-log-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundBatchLogListComponent implements  OnChanges {
+export class RefundBatchLogListComponent implements OnChanges {
   @ViewChild('unBatchRefundsDialogTemplate', { read: TemplateRef })
   unBatchRefundsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
@@ -32,13 +32,16 @@ export class RefundBatchLogListComponent implements  OnChanges {
   @Input() exportButtonShow$: any
   @Input() paymentBatchName$!: Observable<PaymentBatchName>;
 
-  @Output() loadVendorRefundBatchLogListEvent = new EventEmitter<any>();  
+  @Output() loadVendorRefundBatchLogListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+  @Output() exportReceiptDataEvent = new EventEmitter<any>();
+
   isUnBatchRefundsClosed = false;
   isDeleteClaimClosed = false;
   UnBatchDialog: any;
   deleteRefundsDialog: any;
   selected: any;
+  receiptLogTitlePart = "";
   deletemodelbody =
     'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
 
@@ -77,7 +80,7 @@ export class RefundBatchLogListComponent implements  OnChanges {
 
   columns: any = {
     vendorName: 'Vendor',
-    serviceType: 'Type',   
+    serviceType: 'Type',
     clientFullName: 'Client Name',
     nameOnInsuranceCard: 'Name on Primary Insurance Card',
     clientId: 'Client ID',
@@ -87,11 +90,11 @@ export class RefundBatchLogListComponent implements  OnChanges {
     originalWarrant: 'Original Warrant #',
     originalAmount: 'Original Amount',
     indexCode: 'Index Code',
-    pcaCode :'PCA',
-    grantNumber :'Grant #',
-    voucherPayable:'VP',
-    refundNote : 'Refund Note',
-    entryDate : 'Entry Date'
+    pcaCode: 'PCA',
+    grantNumber: 'Grant #',
+    voucherPayable: 'VP',
+    refundNote: 'Refund Note',
+    entryDate: 'Entry Date'
   };
 
   dropDowncolumns: any = [
@@ -103,7 +106,7 @@ export class RefundBatchLogListComponent implements  OnChanges {
       columnCode: 'serviceType',
       columnDesc: 'Type',
     },
-   
+
     {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
@@ -153,7 +156,7 @@ export class RefundBatchLogListComponent implements  OnChanges {
     {
       columnCode: 'grantNumber',
       columnDesc: 'Grant #',
-    } ,
+    },
     {
       columnCode: 'voucherPayable',
       columnDesc: 'VP',
@@ -191,9 +194,8 @@ export class RefundBatchLogListComponent implements  OnChanges {
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private dialogService: DialogService,
     private readonly cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
- 
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -205,7 +207,7 @@ export class RefundBatchLogListComponent implements  OnChanges {
   }
 
   private loadBatchLogListGrid(): void {
-    
+
     this.loadBatchLog(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -315,7 +317,7 @@ export class RefundBatchLogListComponent implements  OnChanges {
     this.batchLogGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridVendorsBatchLogDataSubject.next(this.gridDataResult);
-        this.isBatchLogGridLoaderShow = false;
+      this.isBatchLogGridLoaderShow = false;
     });
 
   }
@@ -418,12 +420,48 @@ export class RefundBatchLogListComponent implements  OnChanges {
     this.sortValue = 'vendorName';
     this.sortType = 'asc';
     this.sort = this.sortColumn;
-    this.searchValue =''
+    this.searchValue = ''
 
     this.loadBatchLogListGrid();
   }
 
-  searchColumnChangeHandler(data:any){
+  searchColumnChangeHandler(data: any) {
     this.onChange('')
+  }
+
+  isLogGridExpanded = false;
+  hideActionButton = false;
+  receiptLogMode = false
+  selectedPayments: any[] = [];
+
+  cancelActions() {
+    this.receiptLogTitlePart = "";
+    this.selectedPayments = [];
+    this.isLogGridExpanded = !this.isLogGridExpanded;
+    this.hideActionButton = !this.hideActionButton;
+    this.receiptLogMode = !this.receiptLogMode;
+  }
+
+  receiptingLogClicked() {
+    this.receiptLogTitlePart = "Receipting Log";
+    this.isLogGridExpanded = !this.isLogGridExpanded;
+    this.receiptLogMode = !this.receiptLogMode;
+    this.hideActionButton = !this.hideActionButton;
+  }
+
+  onClickedDownload() {
+    if (!this.selectedPayments.length) 
+    {
+      return;
+    }
+    this.showExportLoader = true;
+
+    this.exportReceiptDataEvent.emit(this.selectedPayments);
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
