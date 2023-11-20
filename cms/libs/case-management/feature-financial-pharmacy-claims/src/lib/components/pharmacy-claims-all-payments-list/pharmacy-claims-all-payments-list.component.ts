@@ -94,7 +94,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  selectAll:boolean=false;
  unCheckedPaymentRequest:any=[];
  selectedDataIfSelectAllUnchecked:any=[];
- financialClaimsAllPaymentsGridLists: any = [];
+ pharmacyClaimsAllPaymentsGridLists: any = [];
  currentPageRecords: any = [];
  selectedAllPaymentsList!: any;
  isPageCountChanged: boolean = false;
@@ -110,6 +110,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  claimsType: any;
  clientName: any;
  gridLoaderSubject = new BehaviorSubject(false);
+ allPaymentsPrintAdviceLetterPagedList: any;
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
   itemNbr:'Item #',
@@ -198,7 +199,17 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
   ngOnInit(): void {
     this.addSearchSubjectSubscription();
-    this.handleAllPaymentsGridData();
+    this.pharmacyClaimsAllPaymentsSubscription();
+  }
+
+  pharmacyClaimsAllPaymentsSubscription() {
+    this.pharmacyClaimsAllPaymentsGridLists$.subscribe((response:any) =>{
+      this.totalGridRecordsCount = response?.spotsPaymentsQueryCount;
+      if(this.selectAll){
+      this.markAsChecked(response.data);
+      }
+      this.allPaymentsPrintAdviceLetterPagedList= response;
+    })
   }
 
 
@@ -415,8 +426,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAuthorizationClicked = false;
+    this.markAsUnChecked(this.allPaymentsPrintAdviceLetterPagedList?.data);
     this.markAsUnChecked(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
-    this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists?.data);
     this.unCheckedProcessRequest = [];
     this.checkedAndUncheckedRecordsFromSelectAll = [];
     this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
@@ -424,6 +435,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.selectAll = false;
     this.recordCountWhenSelectallClicked = 0;
     this.sendReportCount = 0;
+    this.loadPharmacyClaimsAllPaymentsListGrid();
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
@@ -609,10 +621,10 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.unCheckedProcessRequest=[];
     this.checkedAndUncheckedRecordsFromSelectAll=[];
     if(this.selectAll){
-      this.markAsChecked(this.financialClaimsAllPaymentsGridLists);
+      this.markAsChecked(this.allPaymentsPrintAdviceLetterPagedList?.data);
     }
     else{
-      this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists);
+      this.markAsUnChecked(this.allPaymentsPrintAdviceLetterPagedList?.data);
     }
     this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
     'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
@@ -695,18 +707,17 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
           this.gridDataResult.data,
           this.filterData
         );
-        //this.financialClaimsAllPaymentsGridLists.next(this.gridDataResult);
         if (data?.total >= 0 || data?.total === -1) {
           this.gridLoaderSubject.next(false);
         }
-        this.financialClaimsAllPaymentsGridLists = this.gridDataResult?.data;
+        this.pharmacyClaimsAllPaymentsGridLists = this.gridDataResult?.data;
         if(this.recordCountWhenSelectallClicked == 0){
           this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
           this.totalGridRecordsCount = this.gridDataResult?.total;
         }
         if(!this.selectAll)
         {
-        this.financialClaimsAllPaymentsGridLists.forEach((item1: any) => {
+        this.pharmacyClaimsAllPaymentsGridLists.forEach((item1: any) => {
           const matchingGridItem = this.selectedAllPaymentsList?.PrintAdviceLetterSelected.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
           if (matchingGridItem) {
             item1.selected = true;
@@ -715,7 +726,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
           }
         });
       }
-      this.currentPageRecords = this.financialClaimsAllPaymentsGridLists;
+      this.currentPageRecords = this.pharmacyClaimsAllPaymentsGridLists;
       //If the user is selecting the individual check boxes and changing the page count
       this.handlePageCountSelectionChange();
       //If the user click on select all header and either changing the page number or page count
@@ -743,7 +754,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
       this.selectedAllPaymentsList = [];
       this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
-      for (const item of this.financialClaimsAllPaymentsGridLists) {
+      for (const item of this.pharmacyClaimsAllPaymentsGridLists) {
         // Check if the item is in the second list.
         const isItemInSecondList = this.unCheckedProcessRequest.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
         // If the item is in the second list, mark it as selected true.

@@ -427,6 +427,7 @@ export class FinancialPharmacyClaimsFacade {
           const gridView = {
             data: dataResponse['items'],
             total: dataResponse['totalCount'],
+            spotsPaymentsQueryCount: dataResponse['spotsPaymentsQueryCount'],
           };
           this.pharmacyClaimsAllPaymentsLoaderSubject.next(false);
           this.pharmacyClaimsAllPaymentsDataSubject.next(gridView);
@@ -448,6 +449,7 @@ export class FinancialPharmacyClaimsFacade {
                 const gridView: any = {
                     data: dataResponse['items'],
                     total: dataResponse?.totalCount,
+                    spotsPaymentsQueryCount: dataResponse['spotsPaymentsQueryCount'],
                 };
 
                 this.paymentsByBatchDataSubject.next(gridView);

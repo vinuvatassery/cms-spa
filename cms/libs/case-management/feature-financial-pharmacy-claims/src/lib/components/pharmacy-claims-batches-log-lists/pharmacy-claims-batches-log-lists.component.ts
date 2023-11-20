@@ -210,7 +210,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   selectedDataRows: any;
   disablePrwButton = true;
   currentPrintAdviceLetterGridFilter: any;
-  batchLogListItemsSubscription!: Subscription;
   gridColumns: { [key: string]: string } = {
     itemNbr: 'Item #',
     vendorName: 'Pharmacy Name',
@@ -322,6 +321,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       this.batchStatus = res && res.data[0].batchStatus
       this.initiateBulkMore()
     })
+    this.handleBatchPaymentsGridData();
   }
   initiateBulkMore() {
    this.bulkMore = [ 
@@ -374,17 +374,13 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   }
 
   pharmacyBatchLogListSubscription(){
-    this.batchLogListItemsSubscription = this.batchLogGridLists$.subscribe((response:any) =>{
-      this.totalRecord = response.total;
+    this.batchLogGridLists$.subscribe((response:any) =>{
+      this.totalRecord = response.spotsPaymentsQueryCount;
       if(this.selectAll){
       this.markAsChecked(response.data);
       }
       this.batchLogPrintAdviceLetterPagedList = response;
     });
-  }
-
-  ngOnDestroy(): void {
-    this.batchLogListItemsSubscription.unsubscribe();
   }
 
   private loadBatchLogListGrid(): void {
@@ -837,12 +833,12 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.unCheckedPaymentRequest=[];
     this.selectedDataIfSelectAllUnchecked=[];
     if(this.selectAll){
-      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList?.data);
       this.noOfRecordToPrint = this.totalRecord;
       this.selectedCount = this.noOfRecordToPrint;
     }
     else{
-      this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList?.data);
       this.noOfRecordToPrint = 0;
       this.selectedCount = this.noOfRecordToPrint
     }
