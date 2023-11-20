@@ -21,6 +21,7 @@ import {
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { YesNoFlag } from '@cms/shared/ui-common';
+import { ImportedClaimFacade, FinancialClaimsFacade } from '@cms/case-management/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
@@ -44,6 +45,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   @Input() possibleMatchData$:any;
   @Input() exportButtonShow$: any;
   @Output() loadImportedClaimsGridEvent = new EventEmitter<any>();
+  @Output() updateClientPolicyEvent = new EventEmitter<any>();
   @Output() submitImportedClaimsEvent = new EventEmitter<any>();
   @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();
   @Output() saveReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
@@ -53,6 +55,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   dateOfBirth:any;
   policyId:any;
   entityId:any;
+  @Output() addAnExceptionEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'entryDate';
   sortColumnDesc = 'Entry Date';
@@ -125,9 +128,12 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  selectedPolicyId: any
   private searchCaseDialog: any;
   private expectationDialog: any;
   private reviewPossibleMatchesDialog: any;
+  clientSearchResult$ = this.financialClaimsFacade.clients$;
+  selectedClaim: any;
   importedClaimsGridUpdatedResult: any = [];
   selectedDeletedDeniedDataRows: any = [];
   deniedStatus = 'DENIED';
@@ -138,12 +144,18 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   private submitDialogService: any;
   yesNoFlag: any = YesNoFlag;
   claimData: any;
-
+  rowData: any;
+  updateExceptionModalSubject$ = this.importedClaimFacade.updateExceptionModalSubject$;
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService,private readonly router: Router,
-    private readonly cd: ChangeDetectorRef,
-    private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider) {}
+  constructor(private route: Router,
+              private dialogService: DialogService,
+              private readonly router: Router,
+              private readonly cd: ChangeDetectorRef,
+              private financialClaimsFacade: FinancialClaimsFacade,
+              private importedClaimFacade: ImportedClaimFacade,
+    		private readonly intl: IntlService,
+    		private readonly configProvider: ConfigurationProvider)
+              {}
 
   ngOnInit(): void {debugger;
     this.subscribeToSubmitImportedClaims();
@@ -339,7 +351,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.router.navigate([`/case-management/cases/case360/${clientId}`]);
 
   }
-  onSearchClientsDialogClicked(template: TemplateRef<unknown>): void {
+
+  onSearchClientsDialogClicked(template: TemplateRef<unknown>, selectedClaim: any): void {
+    this.selectedClaim = selectedClaim
     this.searchCaseDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
@@ -349,11 +363,12 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.searchCaseDialog.close();
   }
 
-  onMakeExpectationClicked(template: TemplateRef<unknown>): void {
+  onMakeExpectationClicked(template: TemplateRef<unknown>,dataItem:any): void {
     this.expectationDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
+    this.rowData = dataItem;
   }
   onCloseMakeExpectationDialogClicked() {
     this.expectationDialog.close();
@@ -366,9 +381,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     });
     this.claimData=dataItem;
   }
+
   onCloseReviewPossibleMatchesDialogClicked() {
     this.reviewPossibleMatchesDialog.close();
-  }  
+  }
 
   loadPossibleMatch(data?: any) {
     this.loadPossibleMatchDataEvent.emit(data);
@@ -377,6 +393,17 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   savePossibleMatch(data?:any)
   {
     this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
+    this.closePossibleMatchModal();
+  }
+
+  private closePossibleMatchModal() {
+    this.possibleMatchData$.subscribe((value: any) => {
+      if (value) {
+        this.onCloseReviewPossibleMatchesDialogClicked();
+        this.cd.detectChanges();
+        this.loadImportedClaimsListGrid();
+      }
+    });
   }
 
   assignDataFromUpdatedResultToPagedResult(itemResponse: any) {
@@ -496,6 +523,31 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.submitImportedClaimsEvent.emit(data);
   }
 
+
+  onClientValueChange(importedclaimDto: any){
+    this.updateClientPolicyEvent.emit(importedclaimDto);
+  }
+
+  addAnException(exceptionText: any){
+    const exceptionObject = {
+      InvoiceExceptionId : this.rowData.invoiceExceptionId,
+      ReasonDesc : exceptionText,
+      ClaimId: this.rowData.importedClaimId,
+      EntityTypeCode: this.rowData.entityTypeCode
+    }
+    this.addAnExceptionEvent.emit(exceptionObject);
+    this.closeExceptionModal();
+  }
+
+  private closeExceptionModal() {
+    this.updateExceptionModalSubject$.subscribe((value: any) => {
+      if (value) {
+        this.onCloseMakeExpectationDialogClicked();
+        this.cd.detectChanges();
+        this.loadImportedClaimsListGrid();
+      }
+    });
+  }
   private isValidDate = (searchValue: any) =>
     isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 

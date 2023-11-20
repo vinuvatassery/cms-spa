@@ -39,7 +39,7 @@ export class FinancialVendorRefundFacade {
     field: this.sortValueRefundPayments,
   }];
 
-  public sortValueBatchLog = 'batch';
+  public sortValueBatchLog = 'vendorName';
   public sortBatchLogList: SortDescriptor[] = [{
     field: this.sortValueBatchLog,
   }];
@@ -106,8 +106,8 @@ export class FinancialVendorRefundFacade {
   insuranceRefundInformation$ = this.insuranceRefundInformationSubject.asObservable();
 
 
-  private addInsuranceRefundClaimSubject =  new Subject<any>();
-  addInsuranceRefundClaim$ = this.addInsuranceRefundClaimSubject.asObservable();
+  private addUpdateInsuranceRefundClaimSubject =  new Subject<any>();
+  addUpdateInsuranceRefundClaim$ = this.addUpdateInsuranceRefundClaimSubject.asObservable();
 
 
 
@@ -124,8 +124,11 @@ export class FinancialVendorRefundFacade {
   private unbatchRefundsSubject =  new Subject<any>();
   unbatchRefunds$ = this.unbatchRefundsSubject.asObservable();
 
-  public vendorsSubject = new Subject<any>;
-  vendors$ = this.vendorsSubject.asObservable();
+  public tpaVendorsSubject = new Subject<any>;
+  tpavendors$ = this.tpaVendorsSubject.asObservable();
+  
+  public insurancevendorsSubject = new Subject<any>;
+  insurancevendors$ = this.insurancevendorsSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -177,7 +180,7 @@ export class FinancialVendorRefundFacade {
    
     this.financialVendorRefundDataService.addInsuranceRefundClaim(data).subscribe({
       next: (dataResponse:any) => {
-        this.addInsuranceRefundClaimSubject.next(dataResponse);
+        this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
         
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
         this.hideLoader();
@@ -213,7 +216,8 @@ export class FinancialVendorRefundFacade {
     paginationSortingDto.filter = JSON.stringify(paginationSortingDto.filter);
       this.financialVendorRefundDataService.updateInsuranceRefundEditInformation(paginationSortingDto).subscribe({
         next: (dataResponse:any) => {
-         
+          this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message)  ;
             this.hideLoader();
         },
         error: (err) => {
@@ -239,8 +243,8 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-  loadBatchLogListGrid(loadBatchLogListRequestDto : any){
-    this.financialVendorRefundDataService.loadBatchLogListService(loadBatchLogListRequestDto).subscribe({
+  loadBatchLogListGrid(loadBatchLogListRequestDto : any, batchId : string){
+    this.financialVendorRefundDataService.loadBatchLogListService(loadBatchLogListRequestDto,batchId).subscribe({
       next: (dataResponse) => {
         const gridView = {
           data: dataResponse['items'],
@@ -319,21 +323,15 @@ this.loaderService.show();
       },
     });
   }
-  loadvendorBySearchText(searchText: string,refundType:string) {
+  loadInsurancevendorBySearchText(searchText: string,clientId:number) {
     
    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
-    return this.financialVendorRefundDataService.loadvendorBySearchText(searchText).subscribe({
+    return this.financialVendorRefundDataService.loadInsurancevendorBySearchText(searchText,clientId).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor:any) => {
-          
-          if(refundType=='INS')
-          {
             vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.insuranceName ?? ''}${vendor.insuranceType ?? ''}`;
-          }else{
-            vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
-          }         
         });
-        this.vendorsSubject.next(response);
+        this.insurancevendorsSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
       },
       error: (err) => {
@@ -342,7 +340,24 @@ this.loaderService.show();
       }
     });
   } 
-
+  loadTpavendorBySearchText(searchText: string,clientId:number) {
+    
+    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
+     return this.financialVendorRefundDataService.loadTpavendorBySearchText(searchText,clientId).subscribe({
+       next: (response: Pharmacy[]) => {
+         response?.forEach((vendor:any) => {
+             vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+                  
+         });
+         this.tpaVendorsSubject.next(response);
+         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+       },
+       error: (err) => {
+         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
+         this.loggingService.logException(err);
+       }
+     });
+   } 
   loadClaimsListGrid(){
     this.financialVendorRefundDataService.loadClaimsListService().subscribe({
       next: (dataResponse) => {

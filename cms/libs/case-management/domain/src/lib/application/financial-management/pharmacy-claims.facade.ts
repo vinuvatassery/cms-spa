@@ -21,13 +21,14 @@ import { Client } from '../../entities/client';
 import { PharmacyClaims } from '../../entities/financial-management/pharmacy-claim';
 import { Drug } from '../../entities/drug';
 import { DrugCategoryCode } from '../../enums/drug-category-code.enum';
+import { PaymentBatchName } from '../../entities/financial-management/Payment-details';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsFacade {
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'asc';
+  public sortType = 'desc';
 
   public selectedClaimsTab = 1
   batchClaimsSubject  =  new Subject<any>();
@@ -185,6 +186,9 @@ export class FinancialPharmacyClaimsFacade {
 
   private reconcilePaymentBreakoutListLoaderDataSubject =  new Subject<any>();
   reconcilePaymentBreakoutLoaderList$ = this.reconcilePaymentBreakoutListLoaderDataSubject.asObservable();
+
+  paymentBatchNameSubject  =  new Subject<PaymentBatchName>();
+  paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -551,7 +555,8 @@ export class FinancialPharmacyClaimsFacade {
         }
         this.hideLoader();
       },
-      error: (err) => {
+      error: (err) => {       
+        this.batchClaimsSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.hideLoader();
       },
@@ -683,6 +688,17 @@ loadReconcilePaymentBreakoutListGrid(data:any) {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
+}
+
+loadBatchName(batchId: string){
+  this.financialPharmacyClaimsDataService.loadBatchName(batchId).subscribe({
+    next: (dataResponse) => {
+      this.paymentBatchNameSubject.next(dataResponse);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+    },
+  });
 }
 
 }

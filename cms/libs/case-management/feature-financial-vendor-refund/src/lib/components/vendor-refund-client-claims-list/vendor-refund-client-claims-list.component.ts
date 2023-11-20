@@ -83,11 +83,15 @@ private clientClaimsListDataSubject =  new Subject<any>();
     this.selectedPharmacyClaims =  (this.selectedpharmacyClaimsPaymentReqIds && this.selectedpharmacyClaimsPaymentReqIds.length >0)?
     this.selectedpharmacyClaimsPaymentReqIds : this.selectedPharmacyClaims
     this.loadRefundClaimsListGrid();
+    this.clientclaimsData$.subscribe((res:any)=>{
+      this.claimsCount.emit(this.selectedPharmacyClaims.length)
+  })
   }
 
   selectedKeysChange(selection: any) {
     this.selectedPharmacyClaims = selection;
     this.claimsCount.emit(this.selectedPharmacyClaims.length)
+    
   }
   resetFilterClicked(action: any,) {
     if (action) {

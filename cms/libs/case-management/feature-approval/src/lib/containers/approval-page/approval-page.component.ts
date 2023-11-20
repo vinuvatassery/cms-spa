@@ -38,7 +38,6 @@ import {
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from '@progress/kendo-angular-editor/util';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -110,6 +109,7 @@ export class ApprovalPageComponent implements OnInit {
   pharmacyForm!: FormGroup;
   insuranceVendorForm: FormGroup;
   insuranceProviderForm: FormGroup;
+  
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -422,7 +422,6 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   updateProviderProfile(event: any) {
-    console.log(event);
     this.financialVendorFacade.updateProviderPanel(event);
   }
 
@@ -513,5 +512,12 @@ export class ApprovalPageComponent implements OnInit {
   savePossibleMatch(event:any)
   {
     this.importedClaimFacade.savePossibleMatch(event);
+  }
+  updateClientPolicy(importedclaimDto: any){
+    this.importedClaimFacade.updateClientPolicy(importedclaimDto);
+  }
+
+  addAnException(exceptionObject : any){
+    this.importedClaimFacade.makeExceptionForExceedBenefits(exceptionObject);
   }
 }

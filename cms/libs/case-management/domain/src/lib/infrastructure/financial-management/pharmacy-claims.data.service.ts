@@ -234,4 +234,9 @@ export class FinancialPharmacyClaimsDataService {
     );
   }
 
+
+  loadBatchName(batchId: string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}`);
+  }
 }

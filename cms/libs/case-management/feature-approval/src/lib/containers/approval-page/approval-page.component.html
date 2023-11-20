@@ -109,9 +109,11 @@
             [exportButtonShow$]="exportButtonShow$"
             (loadImportedClaimsGridEvent)="loadImportedClaimsGrid($event)"
             (submitImportedClaimsEvent)="submitImportedClaims($event)"
+            (updateClientPolicyEvent) ="updateClientPolicy($event)"
             class="reminder-list-modal-wrap"
             (loadPossibleMatchDataEvent)="loadPossibleMatch($event)"
             (saveReviewPossibleMatchesDialogClickedEvent)="savePossibleMatch($event)"
+            (addAnExceptionEvent)="addAnException($event)"
             (exportGridDataEvent)="exportImportedClaimsGridData()"
           ></productivity-tools-imported-claims-lists>
         </div>

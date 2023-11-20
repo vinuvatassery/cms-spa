@@ -81,8 +81,6 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   save(data:any)
   {
     this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
-    this.closePossibleMatches();
-    this.cd.detectChanges();
   }
 
   constructor(private readonly cd: ChangeDetectorRef) {}

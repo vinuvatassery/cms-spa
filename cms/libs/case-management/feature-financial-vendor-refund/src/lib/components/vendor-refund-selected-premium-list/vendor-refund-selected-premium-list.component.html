@@ -199,7 +199,7 @@
     </div>
 
     <div class="flex-row">
-        <div class="flex-col"  [formGroup]="refundForm">
+        <div class="flex-col"  [formGroup]="refundForm" >
             <div class="flex-row">
                 <div class="flex-col flex-col-3">
                     <kendo-floatinglabel text=" VP">
@@ -207,7 +207,7 @@
                         formControlName="vp" >
                         </kendo-textbox>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm.hasError('required','vp') && isSubmitted">Vp is required.
+                    <kendo-formerror *ngIf="refundForm?.hasError('required','vp') && isSubmitted">Vp is required.
                     </kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-3">
@@ -216,7 +216,7 @@
                             [fillMode]="formUiStyle.inputFillMode"  formControlName="creditNumber" >
                         </kendo-textbox>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm.hasError('required','creditNumber') && isSubmitted">Credit # is required.
+                    <kendo-formerror *ngIf="refundForm?.hasError('required','creditNumber') && isSubmitted">Credit # is required.
                     </kendo-formerror>
                 </div>
             </div>
@@ -226,19 +226,21 @@
                         <kendo-textbox   formControlName="warantNumber"  aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode">
                         </kendo-textbox>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm.hasError('required','warantNumber') && isSubmitted">Refund Warrant # is required.
+                    <kendo-formerror *ngIf="refundForm?.hasError('required','warantNumber') && isSubmitted">Refund Warrant # is required.
                     </kendo-formerror>
                 </div>
             </div>
             <div class="flex-row">
                 <div class="flex-col flex-col-3">
-                    <kendo-floatinglabel text="Deposit Date">
-                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Deposit Date"
-                            format="MM/dd/yyyy" formatPlaceholder="formatPattern" formControlName="depositDate">
-                        </kendo-datepicker>
+                    <kendo-floatinglabel text="Deposit Date (Optional)">
+                       
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                        formatPlaceholder="formatPattern" placeholder="" 
+                         formControlName="depositDate"
+                        >
+                  </kendo-datepicker>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm.hasError('required','depositDate') && isSubmitted">Deposit date is required.
-                    </kendo-formerror>
+
                 </div>
                 <div class="flex-col flex-col-3">
                     <kendo-floatinglabel text="Refund Note (optional)">
