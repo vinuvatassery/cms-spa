@@ -101,7 +101,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   
  @Input() serviceType=''
  @Input() inspaymentRequestId:any
-  @Output() modalCloseAddEditRefundFormModal = new EventEmitter();
+  @Output() modalCloseAddEditRefundFormModal = new EventEmitter<Boolean>();
   sortValue: string | undefined;
   financialPremiumsRefundGridLists: any;
   filterData: any;
@@ -149,7 +149,6 @@ if(this.isEdit){
   this.selectedVendor =vendors[0]
   this.initForm()
    this.insRefundForm.patchValue({
-    vendorId :  this.vendorAddressId,
     insVendor : this.selectedVendor
   });
   this.searchInsuranceVendors(this.vendorName) 
@@ -158,7 +157,6 @@ if(this.isEdit){
   }
   initForm(){
     this.insRefundForm = this.formBuilder.group({
-      vendorId: [''],
       insVendor:[this.selectedVendor]
     });
 
@@ -166,7 +164,7 @@ if(this.isEdit){
 
   addInsuranceRefundClaim(event:any){
     this.financialVendorRefundFacade.addUpdateInsuranceRefundClaim$.subscribe(res =>{
-      this.closeAddEditRefundFormModalClicked()
+      this.closeAddEditRefundFormModalClicked(true)
     })
     if(this.isEdit){
     this.financialVendorRefundFacade.updateInsuranceRefundEditInformation(event.data)
@@ -263,9 +261,10 @@ this.insuraceAddRefundClickSubject.next(true);
     this.onEditInitiallydontShowPremiumselection = false
  
   }
-  closeAddEditRefundFormModalClicked(){
-    this.modalCloseAddEditRefundFormModal.emit(true);  
+  closeAddEditRefundFormModalClicked(event:Boolean){
+    this.modalCloseAddEditRefundFormModal.emit(event);  
   }
+
   loadVendorRefundProcessListGrid(event: any) {
   
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();
