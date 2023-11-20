@@ -294,7 +294,6 @@ export class FinancialVendorRefundFacade {
   tpaData$ = this.financialTpaDataSubject.asObservable();
   
   loadMedicalPremiumList(ClaimsPageAndSortedRequestDto:any){
-      
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
 
 this.loaderService.show();
