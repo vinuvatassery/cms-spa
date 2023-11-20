@@ -660,7 +660,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   }
 
   getSelectedReportCount(selectedSendReportList : []){
-    this.sendReportCount = selectedSendReportList.length;
+    this.sendReportCount = selectedSendReportList?.length;
   }
 
     loadEachLetterTemplate(event:any){
