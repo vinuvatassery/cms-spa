@@ -59,7 +59,8 @@
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <common-grid-cell-date-range-filter [field]="'entryDate'" [filter]="filter" [filterService]="filterService">
         </common-grid-cell-date-range-filter>
-      </ng-template></kendo-grid-column>
+      </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column *ngIf="!receiptLogMode" field="batchNumber" title="Batch #" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.batch" kendoButton look="flat" class="card-link-button">
@@ -337,9 +338,9 @@
   <span *ngIf="selectedPayments && receiptLogMode == true">{{selectedPayments.length}} refund(s) selected</span>
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" look="outline" aria-label="Cancel"
     (click)="cancelActions()">Cancel</button>
-  <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Download" icon="download"
+  <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Download" icon="download" [disabled]="!selectedPayments.length"
     (click)="onClickedDownload()">Download</button>
-  <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Print" icon="print">Print</button>
+  <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Print" icon="print" [disabled]="!selectedPayments.length">Print</button>
   <button *ngIf="!hideActionButton" kendoButton [primary]="true" aria-label="Receipting Log"
     (click)="receiptingLogClicked()">Receipting Log</button>
 </div>
