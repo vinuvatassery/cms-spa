@@ -106,6 +106,9 @@ export class FinancialVendorRefundFacade {
   private RecentRefundListDataSubject =  new Subject<any>();
   RecentRefundListData$ = this.RecentRefundListDataSubject.asObservable();
 
+  private ExistingRxRefundClaimSubject =  new Subject<any>();
+  ExistingRxRefundClaim$ = this.ExistingRxRefundClaimSubject.asObservable();
+
 
   private insuranceRefundInformationSubject =  new Subject<any>();
   insuranceRefundInformation$ = this.insuranceRefundInformationSubject.asObservable();
@@ -606,17 +609,22 @@ this.loaderService.show();
   addNewRefundRx(refundRx: any): any {
     return this.financialVendorRefundDataService.addNewRefundRx(refundRx);
   }
+  editNewRefundRx(refundRx: any): any {
+    return this.financialVendorRefundDataService.editNewRefundRx(refundRx);
+  }
   public loadPharmacyRefundEditList(paymentRequestId: string){
-    return this.financialVendorRefundDataService.loadPharmacyRefundEditList(paymentRequestId).pipe(
-      catchError((err: any) => {
-        this.loaderService.hide();
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
-        if (!(err?.error ?? false)) {
-          this.loggingService.logException(err);
-          this.hideLoader();
+    return this.financialVendorRefundDataService.loadPharmacyRefundEditList(paymentRequestId)
+    .subscribe({
+      next: (dataResponse) => {
+        this.ExistingRxRefundClaimSubject.next(dataResponse);
+        if (dataResponse) {
+          this.ExistingRxRefundClaimSubject.next(dataResponse);
         }
-        return of(false);
-      })
-    );
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.hideLoader();
+      },
+    });
   }
 }

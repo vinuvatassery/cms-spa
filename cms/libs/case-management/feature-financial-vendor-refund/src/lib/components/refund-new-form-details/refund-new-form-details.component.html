@@ -155,21 +155,23 @@
                 </div>
 
             </div>
-            <div class="flex-row" *ngIf="selectedRefundType === 'PHARMACY'">
+            <div class="flex-row" *ngIf="selectedRefundType === 'PHARMACY' || selectedRefundType === 'RX'">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel  text="Pharmacy Provider ">
                     <div class="combotable_search_list new_refund_Search">
                         <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>
                         <span></span>
-                    <kendo-multicolumncombobox textField="providerFullName" valueField="vendorId"
+                    <kendo-multicolumncombobox textField="providerFullName" 
+                    valueField="vendorAddressId"
                     [fillMode]="formUiStyle.dropDownFillMode"
-                    placeholder="Search pharmacy"
+                    placeholder="Search Pharmacy name or TIN"
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                     [filterable]="true" 
-                    (filterChange)="searchPharmacy($event)" [data]="pharmacySearchResult$ | async"
+                    (filterChange)="searchPharmacy($event)" [data]="pharmaciesList"
                     [(ngModel)]="selectedMedicalProvider" (valueChange)="onProviderValueChange($event)"
-                    [disabled]="disableFeildsOnConfirmSelection">
+                    [disabled]="disableFeildsOnConfirmSelection"
+                    >
                         <kendo-combobox-column>
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                 <span>{{ dataItem.vendorName }}</span>
@@ -488,7 +490,7 @@
                     <div class="app-c-table">
                         <kendo-grid [resizable]="true" [groupable]="false" [reorderable]="true" [resizable]="true"
                             [columnMenu]="{ filter: true }"
-                            [data] = item.prescriptionsDetail>
+                            [data] = item.prescriptionFillItems>
                             <kendo-grid-column field="rxNbr" title="RX #" [width]="160">
                                 <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
                                     Total
@@ -508,7 +510,7 @@
                                     </label>
                                 </ng-template>
                                 <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-                                    <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionsDetail,'amountPaid')}} </span>
+                                    <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionFillItems,'amountPaid')}} </span>
                                 </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="rxqty" title="RX Qty." [width]="120" > </kendo-grid-column>
@@ -580,7 +582,7 @@
                                   <kendo-formerror *ngIf="!dataItem.refundedAmountValid">Refund Amount is required</kendo-formerror>
                                 </ng-template>
                                 <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-                                    <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionsDetail, 'refundedAmount')}} </span>
+                                    <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionFillItems, 'refundedAmount')}} </span>
                                 </ng-template>
                             </kendo-grid-column>
                             <ng-template kendoGridLoadingTemplate>

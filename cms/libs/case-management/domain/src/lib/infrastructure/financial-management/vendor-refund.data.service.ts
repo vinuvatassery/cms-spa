@@ -536,6 +536,12 @@ export class FinancialVendorRefundDataService {
       refundRx
     );
   }
+  editNewRefundRx(refundRx: any): any {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/update-pharmacy-refund`,
+      refundRx
+    );
+  }
   loadPharmacyRefundEditList(paymentRequestId: string) {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/pharmacy-refund-detail?paymentRequestId=${paymentRequestId}`
