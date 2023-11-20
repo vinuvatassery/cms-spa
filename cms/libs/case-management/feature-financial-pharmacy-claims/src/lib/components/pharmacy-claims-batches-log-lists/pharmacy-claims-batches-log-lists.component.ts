@@ -78,40 +78,9 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   @Input() deleteClaims$ :any
   @Input() exportButtonShow$ :any;
   @Input() paymentBatchName$!: Observable<PaymentBatchName>;
-  public bulkMore = [ 
-    
-    {
-      buttonType: 'btn-h-primary',
-      text: 'RECONCILE PAYMENTS',
-      icon: 'edit',
-      click: (data: any): void => {
-        this.navToReconcilePayments(data);
-      },  
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'PRINT VISA AUTHORIZATIONS',
-      icon: 'print',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = false;
-        this.isPrintVisaAuthorizationClicked = true;
-          
-        },
-
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Unbatch Entire Batch',
-      icon: 'undo',
-      click: (data: any): void => {
-        if (!this.isBulkUnBatchOpened) {
-          this.isBulkUnBatchOpened = true;
-          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
-        }
-      },
-    }
-  ];
+  public bulkMore !:any
   selected: any;
+  batchStatus!:any;
 
   public batchLogGridActions(dataItem:any){ 
    return  [
@@ -342,7 +311,50 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       {
         this.route.navigate(['/financial-management/pharmacy-claims'] );       
       }
+      this.batchStatus = res && res.data[0].batchStatus
+      this.initiateBulkMore()
     })
+   
+  }
+  initiateBulkMore() {
+   this.bulkMore = [ 
+    
+      {
+        buttonType: 'btn-h-primary',
+        text: 'RECONCILE PAYMENTS',
+        icon: 'edit',
+        click: (data: any): void => {
+          this.navToReconcilePayments(data);
+        },  
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'PRINT VISA AUTHORIZATIONS',
+        icon: 'print',
+        click: (data: any): void => {
+          this.isRequestPaymentClicked = false;
+          this.isPrintVisaAuthorizationClicked = true;
+            
+          },
+  
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Unbatch Entire Batch',
+        icon: 'undo',
+        disabled: [
+          PaymentStatusCode.Paid,
+          PaymentStatusCode.PaymentRequested,
+          PaymentStatusCode.PendingApproval,
+        ].includes(this.batchStatus),
+        click: (data: any): void => {
+          if (!this.isBulkUnBatchOpened) {
+            this.isBulkUnBatchOpened = true;
+            this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+          }
+        },
+      }
+    ];
   }
   ngOnChanges(): void {
     this.state = {
