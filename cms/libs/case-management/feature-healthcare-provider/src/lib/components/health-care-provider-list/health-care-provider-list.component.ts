@@ -191,6 +191,8 @@ pageselectionchange(data: any) {
   { 
     if(type == this.vendorTypes.HealthcareProviders){
       this.isOpeneHealthcareProvider = false;
+    }else{
+      this.ShowClinicProvider = false;
     }
   }
 
@@ -198,6 +200,7 @@ pageselectionchange(data: any) {
   { 
     this.buildVendorForm( this.vendorTypes.HealthcareProviders);
     this.isOpeneHealthcareProvider = true;
+    this.providerTypeCode = this.vendorTypes.HealthcareProviders
   }
   onDeleteConfirmCloseClicked()
   {
@@ -394,13 +397,14 @@ pageselectionchange(data: any) {
       this.clinicForm.reset();
     else
       this.medicalProviderForm.reset(); 
-    this.medicalProviderForm = this.formBuilder.group({
+      let form = this.formBuilder.group({
       firstName:[''],
       lastName:[],
       providerName: [''],
       tinNumber: [''],
       npiNbr: [''],
       paymentMethod: [''],
+      clinicType: [''],
       specialHandling: [''],
       mailCode: [''],
       nameOnCheck: [''],
@@ -419,6 +423,10 @@ pageselectionchange(data: any) {
       ]),
       activeFlag:[]
     });
+    if (providerType === FinancialVendorTypeCode.Clinic)
+      this.clinicForm = form;
+    else
+      this.medicalProviderForm = form;
   }
 
   public get vendorTypes(): typeof FinancialVendorTypeCode {
@@ -431,7 +439,7 @@ pageselectionchange(data: any) {
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next:(response:any)=>{
         this.financialVendorFacade.hideLoader();
-        this.closeVendorDetailModal(this.vendorTypes.HealthcareProviders);
+        this.closeVendorDetailModal(this.providerTypeCode);
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
         this.cdr.detectChanges();
       },
@@ -447,8 +455,13 @@ pageselectionchange(data: any) {
     this.financialVendorFacade.searchClinicVendor(clientName);
   }
 
-  clickOpenClinicProviderDetails() {
-    //this.providerTypeCode = this.vendorTypes.Clinic;
+  clickOpenClinicProviderDetails(providerTypeForClinic: string) {
+    if (providerTypeForClinic === FinancialVendorTypeCode.DentalProviders)
+      this.selectedClinicType = FinancialVendorTypeCode.DentalProviders;
+    else if (providerTypeForClinic === FinancialVendorTypeCode.MedicalProviders)
+      this.selectedClinicType = FinancialVendorTypeCode.MedicalProviders;
+
+    this.providerTypeCode = this.vendorTypes.Clinic;
     this.buildVendorForm(this.vendorTypes.Clinic);
     this.ShowClinicProvider = true;
   }
