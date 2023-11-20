@@ -350,7 +350,7 @@
     <div class="justify-content-end align-items-center"> 
             <span class="mr-1">{{serviceCount}} service(s) to be added</span>
             <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeAddEditClaimsFormModalClicked()"> Cancel </button>
-            <button kendoButton [primary]="true" aria-label="Add" class="" (click)="savePharmacyClaim()"> {{isEdit === true ? 'UPDATE' : 'ADD'}} </button>
+            <button kendoButton [disabled]="isClientInEligible" [primary]="true" aria-label="Add" class="" (click)="savePharmacyClaim()"> {{isEdit === true ? 'UPDATE' : 'ADD'}} </button>
     </div>
 </kendo-dialog-actions>
 

@@ -16,7 +16,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   templateUrl: './refund-batch-log-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundBatchLogListComponent implements OnInit, OnChanges {
+export class RefundBatchLogListComponent implements  OnChanges {
   @ViewChild('unBatchRefundsDialogTemplate', { read: TemplateRef })
   unBatchRefundsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
@@ -193,9 +193,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef
   ) {}
 
-  ngOnInit(): void {
-    this.loadBatchLogListGrid();
-  }
+ 
   ngOnChanges(): void {
     this.state = {
       skip: 0,

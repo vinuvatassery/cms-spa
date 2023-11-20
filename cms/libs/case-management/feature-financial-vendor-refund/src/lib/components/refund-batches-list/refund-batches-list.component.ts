@@ -25,7 +25,7 @@ import { Subject } from 'rxjs';
   templateUrl: './refund-batches-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundBatchesListComponent implements OnInit, OnChanges{
+export class RefundBatchesListComponent implements  OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isVendorRefundBatchGridLoaderShow = false;
@@ -97,9 +97,7 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
   /** Constructor **/
   constructor(private route: Router, private readonly cdr: ChangeDetectorRef) {}
 
-  ngOnInit(): void {    
-    this.loadVendorRefundBatchListGrid();
-  }
+  
   ngOnChanges(): void {
     this.state = {
       skip: 0,

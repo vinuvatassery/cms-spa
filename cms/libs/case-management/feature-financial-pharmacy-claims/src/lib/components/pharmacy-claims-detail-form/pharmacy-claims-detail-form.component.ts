@@ -212,6 +212,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
        }
        pharmacyClaimData.prescriptionFillDto.push(service)
     }
+    debugger
     pharmacyClaimData.prescriptionFillDto.splice(0, 1);  
    
      if(pharmacyClaimData.paymentRequestId != '00000000-0000-0000-0000-000000000000')
@@ -298,7 +299,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
     this.pharmacyClaimForm.controls['prescriptionFillDto'].reset()
     this.pharmacyClaimForm.controls['clientCaseEligibilityId'].setValue(data?.clientCaseEligibilityId);
     this.isClientRestricted = data?.caseStatus === CaseStatusCode.restricted
-    this.isClientInEligible = (data?.caseStatus !== CaseStatusCode.accept && data?.caseStatus !== CaseStatusCode.restricted)
+    this.isClientInEligible = (data?.clientCaseEligibilityId && data?.caseStatus !== CaseStatusCode.accept && data?.caseStatus !== CaseStatusCode.restricted)
     this.objectCode = data?.objectCode;
     this.clientId=data.clientId;
     this.cd.detectChanges();
