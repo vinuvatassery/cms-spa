@@ -177,7 +177,7 @@ export class FinancialVendorRefundFacade {
   }
 
   addInsuranceRefundClaim(data:any){
-   
+   this.showLoader()
     this.financialVendorRefundDataService.addInsuranceRefundClaim(data).subscribe({
       next: (dataResponse:any) => {
         this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
