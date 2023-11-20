@@ -76,10 +76,13 @@
         (click)="onClientClicked(dataItem.clientId)">
           {{ dataItem.clientName }}
         </button>
+        <span *ngIf="!dataItem.clientId">
+          {{ dataItem.clientName }}
+        </span>
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
-      field="namePrimaryInsuranceCard"
+      field="nameOnPrimaryInsuranceCard"
       title="Name on Primary Insurance Card"
       [width]="200"
     >
