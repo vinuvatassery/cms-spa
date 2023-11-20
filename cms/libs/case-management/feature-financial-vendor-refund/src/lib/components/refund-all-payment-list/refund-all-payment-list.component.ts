@@ -193,8 +193,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     private dialogService: DialogService) { }
 
   ngOnInit(): void {
-    this.sortType = 'desc'
-    this.loadVendorRefundAllPaymentsListGrid();
+    this.sortType = 'desc'   
   }
 
   ngOnChanges(): void {
