@@ -1106,7 +1106,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
         break;
       }
       case PendingApprovalPaymentTypeCode.PharmacyClaim: {
-        type = 'claims/pharmacy';
+        type = 'pharmacy-claims';
         break;
       }
     }
