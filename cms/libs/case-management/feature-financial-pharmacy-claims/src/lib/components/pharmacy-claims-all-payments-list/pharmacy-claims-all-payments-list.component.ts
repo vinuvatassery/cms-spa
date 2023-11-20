@@ -78,7 +78,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   addEditClaimsFormDialog: any;
   deleteClaimsDialog: any;
   showExportLoader = false;
- sortDir = 'Ascending';
+ sortDir = 'Descending';
  sortColumnDesc = 'Entry Date';
  filteredByColumnDesc = '';
  columnChangeDesc = 'Default Columns';
