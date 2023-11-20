@@ -16,7 +16,7 @@
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                         <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField='clientNames'
                         valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                        placeholder="Search Client Name, ID, SSN or DOB"
+                        placeholder="Search Client Name, ID, SSN"
                         [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                         [filterable]="true"
                         (filterChange)="loadClientBySearchText($event)"
@@ -71,7 +71,7 @@
                                       <kendo-multicolumncombobox [data]="insurancevendors$ | async" textField="providerFullName"
                                       valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode" 
                                       (filterChange)="onInputChange($event)"
-                                       placeholder="Search Pharmacy name or TIN"
+                                       placeholder="Search Vendor name or TIN"
                                        (valueChange)="onProviderValueChange($event)" 
                                          formControlName="insVendor" 
                                          [(ngModel)]="selectedVendor"
