@@ -463,9 +463,9 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   }
 
   onClickedDownload() {
-    // if (!this.selectedPayments.length) {
-    //   return;
-    // }
+    if (!this.selectedPayments.length) {
+      return;
+    }
     this.showExportLoader = true;
     var data = {
       batchId : this.batchId,
