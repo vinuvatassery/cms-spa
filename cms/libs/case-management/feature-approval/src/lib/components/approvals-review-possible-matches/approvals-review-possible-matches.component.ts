@@ -24,16 +24,13 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   possibleMatch:any;
   hasSaveButtonEnabled:boolean=false;
   ngOnInit(): void {
-    let request={
+    let request = { 
+      policyId:this.claimData.policyId,
       firstName:this.claimData.firstName,
       lastName:this.claimData.lastName,
       dateOfBirth:this.claimData.dateOfBirth
     }
-    this.loadPossibleMatch(request); 
-    if(this.claimData.dateOfBirth != null && this.claimData.dateOfBirth != undefined && this.claimData.dateOfBirth != '')
-    {
-      this.loadPossibleMatch(request);      
-    }
+    this.loadPossibleMatch(request);
   }
 
   closePossibleMatches() { 
@@ -42,7 +39,7 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
 
   loadPossibleMatch(data?: any) {    
     this.loadPossibleMatchDataEvent.emit(data);
-    this.possibleMatchData$.subscribe((response: any) => {
+    this.possibleMatchData$.subscribe((response: any) => {debugger;
       if (response !== undefined && response !== null) {
         this.possibleMatch=response[0];
         this.cd.detectChanges();
@@ -68,9 +65,9 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   {
     let request = {
       clientId:data.clientId,
-      policyId:data.policyId,
-      invoiceExceptionId:this.claimData.invoiceExceptionId,
-      claimId:this.claimData.importedClaimId,
+      policyId: this.claimData.policyId,
+      invoiceExceptionId: this.claimData.invoiceExceptionId,
+      claimId: this.claimData.importedClaimId,
       serviceDate:this.claimData.dateOfService,
       isPossibleMatch: this.isMatch ? true : false,
       entityTypeCode: this.claimData.entityTypeCode

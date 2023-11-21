@@ -47,13 +47,26 @@
   </span>
 </section>
 
+<div class="table-sorted-info">
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning">
+    <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+      warning
+    </span>
+    <span *ngIf="showDateSearchWarning">
+      The '/' symbol can only be used with a date. The date format should be
+      [MM/DD/YYYY].
+    </span>
+  </span>
+</div>
+
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-  Sorted Descending by <span class="sort-items"> Source </span>
-  <span class="sort-items">No Filters</span>
-  <span class="sort-items">Filtered by Client Name</span>
-  <span class="sort-items">Default Columns</span>
-  <span class="sort-items">Columns Re-ordered</span>
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+  <span class="sort-items">{{columnChangeDesc}}</span>
+  <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetImportedClaimsGrid()">
+        <a>Set to Default</a>
+  </button>
 </div>
 
 <!-- Case List table -->
@@ -76,6 +89,8 @@
     [isDetailExpanded]="expandInClaimException"
     [data]="gridImportedClaimsBatchData$ | async"
     [navigable]="true"
+    (columnVisibilityChange)="columnChange($event)" 
+    (columnReorder)="onColumnReorder($event)"
   >
     <kendo-grid-column field="clientName" title="Client Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -86,16 +101,64 @@
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
-      field="namePrimaryInsuranceCard"
+      field="nameOnPrimaryInsuranceCard"
       title="Name on Primary Insurance Card"
       [width]="200"
     >
     </kendo-grid-column>
     <kendo-grid-column field="claimSource" title="Claim Source" [width]="180">
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="claimSourceList"
+          [value]="claimSourceFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'claimSource',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="policyId" title="Policy ID" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="amountDue" title="Amount Due" [width]="160">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview">
+          <strong>$</strong>
+          {{ dataItem.amountDue | kendoNumber : 'n2' }}</span
+        >
+      </ng-template>
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-grid-numeric-filter-menu
+          [column]="column"
+          [filter]="filter"
+          [filterService]="filterService"
+          [extra]="false"
+          operator="eq"
+        >
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-gt-operator></kendo-filter-gt-operator>
+          <kendo-filter-gte-operator></kendo-filter-gte-operator>
+          <kendo-filter-lt-operator></kendo-filter-lt-operator>
+          <kendo-filter-lte-operator></kendo-filter-lte-operator>
+        </kendo-grid-numeric-filter-menu>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
       field="dateOfService"
@@ -157,7 +220,7 @@
               )
             "
         >
-          Deny Claim
+          DENY CLAIM
         </button>
         <button
           *ngIf="dataItem.policyIdMatch === yesNoFlag.No"
@@ -175,7 +238,7 @@
               )
             "
         >
-          Delete Claim
+          DELETE CLAIM
         </button>
       </ng-template>
     </kendo-grid-column>

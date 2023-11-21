@@ -11,12 +11,11 @@ import {
   ViewChild
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { RowArgs, GridDataResult } from '@progress/kendo-angular-grid';
+import { RowArgs, GridDataResult, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { Router } from '@angular/router';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -157,7 +156,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     		private readonly configProvider: ConfigurationProvider)
               {}
 
-  ngOnInit(): void {debugger;
+  ngOnInit(): void {
     this.subscribeToSubmitImportedClaims();
   }
   ngOnChanges(): void {
@@ -166,7 +165,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       take: this.pageSizes[1]?.value,
       sort: this.sort,
       filter: { logic: 'and', filters: [] },
-    };debugger;
+    };
     this.loadImportedClaimsListGrid();
   }
   public expandInClaimException({ dataItem }: RowArgs): boolean {
@@ -177,6 +176,8 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.submitImportedClaims$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.importedClaimsGridUpdatedResult = [];
+        this.denyAndDeleteCount();
+        this.enableSubmitButtonMain();
         this.onCloseSubmitClicked();
         this.loadImportedClaimsListGrid();
       }
@@ -197,7 +198,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isImportedClaimsGridLoaderShow = true;debugger;
+    this.isImportedClaimsGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pageSize: maxResultCountValue,
@@ -226,7 +227,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   onChange(data: any) {
-    this.defaultGridState();
+    this.defaultGridState();debugger;
 
     if (this.selectedColumn === 'DateOfService' && (!this.isValidDate(data) && data !== '')) {
       return;
@@ -273,7 +274,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;    
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     if(stateData.filter?.filters.length > 0)
@@ -284,7 +285,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       const filterList = []
       for(const filter of stateData.filter.filters)
       {
-        filterList.push(this.gridColumns[filter.filters[0].field]);
+        filterList.push(this.columns[filter.filters[0].field]);
       }
       this.filteredBy =  filterList.toString();
     }
@@ -297,6 +298,26 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     if (!this.filteredBy.includes('Claim Source'))
     this.claimSourceFilter = '';
     this.loadImportedClaimsListGrid();
+  }
+
+  resetImportedClaimsGrid(){
+    this.sortValue = 'entryDate';
+    this.sortType = 'desc';
+    this.defaultGridState();
+    this.sortColumn = 'entryDate';
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "Descending";
+    this.filter = [];
+    this.searchValue = '';
+    this.selectedColumn = 'ALL';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.loadImportedClaimsListGrid();
+  }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 
   dropdownFilterChange(
@@ -319,7 +340,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     });
   }
 
-  // updating the pagination infor based on dropdown selection
+  // updating the pagination info based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
@@ -548,6 +569,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       }
     });
   }
+
+  columns: any = {};
+
   private isValidDate = (searchValue: any) =>
     isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 

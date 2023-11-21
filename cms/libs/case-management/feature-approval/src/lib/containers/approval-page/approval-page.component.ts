@@ -208,7 +208,7 @@ export class ApprovalPageComponent implements OnInit {
     );
   }
 
-  loadImportedClaimsGrid(gridDataValue: any): void {debugger;
+  loadImportedClaimsGrid(gridDataValue: any): void {
     this.dataExportParameters = gridDataValue;
     this.importedClaimFacade.loadImportedClaimsLists(gridDataValue);
   }
@@ -250,7 +250,7 @@ export class ApprovalPageComponent implements OnInit {
     this.pendingApprovalPaymentFacade.submitForApproval(events);
   }
 
-  exportPendingApprovalGridData() {debugger;
+  exportPendingApprovalGridData() {
     const data = this.dataExportParameters;
     if (data) {
       const filter = JSON.stringify(data?.gridDataRefinerValue.filter);
@@ -276,7 +276,7 @@ export class ApprovalPageComponent implements OnInit {
     }
   }
 
-  exportImportedClaimsGridData() {debugger;
+  exportImportedClaimsGridData() {
     const data = this.dataExportParameters;
     if (data) {
       const filter = JSON.stringify(data?.filter);
