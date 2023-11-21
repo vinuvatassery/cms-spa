@@ -8,6 +8,10 @@
         [fillMode]="formUiStyle.dropDownFillMode"
         textField="columnDesc"
         valueField="columnCode"
+        [data]="dropDownColumns"
+        [valuePrimitive]="true"
+        [(ngModel)]="selectedColumn"
+        (valueChange)="searchColumnChangeHandler($event)"
       >
       </kendo-dropdownlist>
     </kendo-floatinglabel>
@@ -21,6 +25,7 @@
         aria-label="Search case"
         rounded="medium"
         [fillMode]="formUiStyle.inputFillMode"
+        [(ngModel)]="searchValue" (afterValueChanged)="onApprovalSearch($event)"
       >
       </kendo-textbox>
     </kendo-floatinglabel>
@@ -32,21 +37,36 @@
       look="flat"
       aria-label="Export"
       class="button-lg"
+      [disabled]="showExportLoader"
+      (click)="onClickedExport()"
     >
-      <span class="material-icons" aria-label="Export" aria-invalid="true"
-        >exit_to_app</span
-      >Export
+    <span *ngIf="!showExportLoader" class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>
+    <span *ngIf="showExportLoader" class="k-icon k-i-loading k-input-loading-icon mr-1"></span><i
+      class="exp_button-text">Export</i>
     </button>
   </span>
 </section>
 
+<div class="table-sorted-info">
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning">
+    <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+      warning
+    </span>
+    <span *ngIf="showDateSearchWarning">
+      The '/' symbol can only be used with a date. The date format should be
+      [MM/DD/YYYY].
+    </span>
+  </span>
+</div>
+
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-  Sorted Descending by <span class="sort-items"> Source </span>
-  <span class="sort-items">No Filters</span>
-  <span class="sort-items">Filtered by Client Name</span>
-  <span class="sort-items">Default Columns</span>
-  <span class="sort-items">Columns Re-ordered</span>
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+  <span class="sort-items">{{columnChangeDesc}}</span>
+  <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetImportedClaimsGrid()">
+        <a>Set to Default</a>
+  </button>
 </div>
 
 <!-- Case List table -->
@@ -64,31 +84,80 @@
     [columnMenu]="{ filter: true }"
     [sort]="state.sort"
     (dataStateChange)="dataStateChange($event)"
-    (filterChange)="filterChange($event)"
-    [selectable]="true"
+    (filterChange)="filterChange($event)" 
     [isDetailExpanded]="expandInClaimException"
-    [data]="approvalsImportedClaimsLists$ | async"
+    [data]="gridImportedClaimsBatchData$ | async"
     [navigable]="true"
+    (columnVisibilityChange)="columnChange($event)"
+    (columnReorder)="onColumnReorder($event)"
   >
     <kendo-grid-column field="clientName" title="Client Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button *ngIf="dataItem.clientId" [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button"
+        <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button"
         (click)="onClientClicked(dataItem.clientId)">
           {{ dataItem.clientName }}
         </button>
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
-      field="namePrimaryInsuranceCard"
+      field="nameOnPrimaryInsuranceCard"
       title="Name on Primary Insurance Card"
       [width]="200"
     >
     </kendo-grid-column>
     <kendo-grid-column field="claimSource" title="Claim Source" [width]="180">
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="claimSourceList"
+          [value]="claimSourceFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'claimSource',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="policyId" title="Policy ID" [width]="120">
+    <kendo-grid-column field="policyId" title="Policy ID" [width]="120" extra="false">
     </kendo-grid-column>
     <kendo-grid-column field="amountDue" title="Amount Due" [width]="160">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview">
+          <strong>$</strong>
+          {{ dataItem.amountDue | kendoNumber : 'n2' }}</span
+        >
+      </ng-template>
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-grid-numeric-filter-menu
+          [column]="column"
+          [filter]="filter"
+          [filterService]="filterService"
+          [extra]="false"
+          operator="eq"
+        >
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-gt-operator></kendo-filter-gt-operator>
+          <kendo-filter-gte-operator></kendo-filter-gte-operator>
+          <kendo-filter-lt-operator></kendo-filter-lt-operator>
+          <kendo-filter-lte-operator></kendo-filter-lte-operator>
+        </kendo-grid-numeric-filter-menu>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
       field="dateOfService"
@@ -103,24 +172,32 @@
       field="policyIdMatch"
       title="Policy ID match?"
       [width]="180"
+      [sortable] = "false"
+      [filterable] = "false"
     >
     </kendo-grid-column>
     <kendo-grid-column
       field="eligibilityMatch"
       title="Eligibility match?"
       [width]="180"
+      [sortable] = "false"
+      [filterable] = "false"
     >
     </kendo-grid-column>
     <kendo-grid-column
       field="validInsurance"
       title="Valid insurance?"
       [width]="180"
+      [sortable] = "false"
+      [filterable] = "false"
     >
     </kendo-grid-column>
     <kendo-grid-column
       field="belowMaxBenefits"
       title="Below max benefits?"
       [width]="150"
+      [sortable] = "false"
+      [filterable] = "false"
     >
     </kendo-grid-column>
     <kendo-grid-column field="entryDate" title="Entry Date" [width]="120">
@@ -129,8 +206,8 @@
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
-      [columnMenu]="false"
       [sortable]="false"
+      [filterable] = "false"
       field="isDelete"
       title="Delete or Deny"
       [width]="160"
@@ -150,7 +227,7 @@
               )
             "
         >
-          Deny Claim
+          DENY CLAIM
         </button>
         <button
           *ngIf="dataItem.policyIdMatch === yesNoFlag.No"
@@ -168,7 +245,7 @@
               )
             "
         >
-          Delete Claim
+          DELETE CLAIM
         </button>
       </ng-template>
     </kendo-grid-column>
@@ -244,7 +321,7 @@
         </p>
         <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No">
           <span class="material-icons">info</span>
-          This claim puts the client {{dataItem.exceededAmount}} over their max benefits. Deny the
+          This claim puts the client ${{dataItem.exceededAmount | kendoNumber : 'n2'}} over their max benefits. Deny the
           claim, or make an exception.
             <button
               aria-label="Make an Exception"

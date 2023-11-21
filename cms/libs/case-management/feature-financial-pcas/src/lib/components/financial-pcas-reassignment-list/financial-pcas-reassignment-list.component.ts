@@ -300,6 +300,7 @@ export class FinancialPcasReassignmentListComponent
 
   onChange(data: any) {
     this.defaultGridState();
+    let operator = this.getColumnOperator();
     this.filterData = {
       logic: 'and',
       filters: [
@@ -307,7 +308,7 @@ export class FinancialPcasReassignmentListComponent
           filters: [
             {
               field: this.selectedColumn ?? 'ALL',
-              operator: 'startswith',
+              operator: operator,
               value: data,
             },
           ],
@@ -318,6 +319,13 @@ export class FinancialPcasReassignmentListComponent
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+  }
+
+  getColumnOperator(){
+    if(this.selectedColumn === "PCA" || this.selectedColumn === "closeDate"){
+      return "eq";
+    }
+    return "contains";
   }
 
   defaultGridState() {

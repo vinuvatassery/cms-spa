@@ -151,7 +151,7 @@
                     <ng-container formArrayName="prescriptionFillDto">
                         <ng-container *ngFor="let contact of addClaimServicesForm.controls; let i=index">
                             <ng-container [formGroupName]="i">
-                                <div class="section_border">
+                                <div class="section_border mb-2">
                                     <div class="flex-space-bw align-items-center" *ngFor="let prescriptionNumber of [i]">
                                         <h4 class="mar-0">Prescription {{prescriptionNumber + 1}}</h4>
                                         <button aria-label="Delete" kendoButton fillMode="flat" themeColor="error"

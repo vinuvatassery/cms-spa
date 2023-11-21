@@ -45,20 +45,24 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   @Input() insuraceAddRefundClick$:any
   @Output() Reqpayload = new EventEmitter<any>()
   refundForm! :FormGroup
+  
+  @Input() insurancePremiumPaymentReqIds:any[] =[]
   public constructor(private formBuilder : FormBuilder,
     private readonly changeDetectorRef: ChangeDetectorRef){
     
   }
 
- 
+
  ngOnInit(): void {
   this.initForm()
   this.initializeRefunInformationGrid()
   this.insuraceAddRefundClick$.subscribe((res:any) =>{
     this.changeDetectorRef.markForCheck()
     this.isSubmitted = true;
-    let refundError =   this.financialPremiumsRefundGridLists.filter(x=>x.refundAmountError)
-    if (this.refundForm.invalid && refundError) {
+    let refundError =   this.financialPremiumsRefundGridLists.filter((x) =>{
+      return   !!x.refundAmountError 
+    })
+    if (this.refundForm.invalid || (refundError && refundError.length >0)) {
       return;
     }else{
        const refundRequests :any[] =[]
@@ -170,7 +174,11 @@ initForm(){
        })
       this.refundForm.controls['depositDate'].setValue(new Date(formData.depositDate));
     })
-    this.insuranceRefundInformationConfirmClicked.emit(param);
+    this.insuranceRefundInformationConfirmClicked.emit(
+      {...param, 
+        paymentRequestsId : this.insurancePremiumPaymentReqIds
+      }
+      );
   }
 
 
