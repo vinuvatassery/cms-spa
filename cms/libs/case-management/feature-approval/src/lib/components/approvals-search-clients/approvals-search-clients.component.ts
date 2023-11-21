@@ -126,4 +126,8 @@ export class ApprovalsSearchClientsComponent {
       }
     });
   }
+
+  onCancelClick(){
+    this.closeSearchCase();
+  }
 }

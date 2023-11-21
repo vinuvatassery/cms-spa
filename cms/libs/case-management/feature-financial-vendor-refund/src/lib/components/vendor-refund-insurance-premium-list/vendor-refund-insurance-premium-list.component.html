@@ -148,21 +148,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template>
-         </kendo-grid-column>
-    <kendo-grid-column field="creatorId" title="By" [width]="70" [sticky]="true"  class="text-center">
-      <ng-template kendoGridCellTemplate let-dataItem>
-        <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem?.createdId">
-          <common-user-photo-icon></common-user-photo-icon>
-        </button>
-        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-          <ng-template kendoPopoverBodyTemplate>
-            <common-user-profile-card></common-user-profile-card>
-          </ng-template>
-        </kendo-popover>
-      </ng-template>
-    </kendo-grid-column>
- 
+         </kendo-grid-column> 
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
