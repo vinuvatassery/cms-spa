@@ -207,10 +207,10 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         this.selectedMasterData?.paymentMethodCode
       );
       this.insuranceVendorForm.controls['acceptsCombinedPayments'].setValue(
-        this.selectedMasterData?.acceptsCombinedPaymentsFlag.toUpperCase() === YesNoFlag.Yes.toUpperCase() ? true : false
+         this.selectedMasterData?.acceptsCombinedPaymentsFlag.toUpperCase()
       );
       this.insuranceVendorForm.controls['acceptsReport'].setValue(
-        this.selectedMasterData?.acceptsReportsFlag.toUpperCase()  === YesNoFlag.Yes.toUpperCase() ? true : false
+         this.selectedMasterData?.acceptsReportsFlag.toUpperCase()
       );
       this.insuranceVendorForm.controls['paymentRunDate'].setValue(
         this.selectedMasterData?.paymentRunDateMonthly.toString()
@@ -696,8 +696,8 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
             MailCode: this.insuranceVendorForm.controls['mailCode'].value,
             paymentMethodCode: this.insuranceVendorForm?.controls['paymentMethod']?.value ? this.insuranceVendorForm?.controls['paymentMethod']?.value : '',
             nameOnEnvelope: this.insuranceVendorForm?.controls['nameOnEnvelop']?.value,
-            acceptsCombinedPaymentsFlag: this.insuranceVendorForm?.controls['acceptsCombinedPayments']?.value ? StatusFlag.Yes : StatusFlag.No ,
-            acceptsReportsFlag: this.insuranceVendorForm?.controls['acceptsReport']?.value ? StatusFlag.Yes : StatusFlag.No,
+            acceptsCombinedPaymentsFlag: this.insuranceVendorForm?.controls['acceptsCombinedPayments']?.value == YesNoFlag.Yes.toUpperCase() ? StatusFlag.Yes : StatusFlag.No ,
+            acceptsReportsFlag: this.insuranceVendorForm?.controls['acceptsReport']?.value == YesNoFlag.Yes.toUpperCase() ? StatusFlag.Yes : StatusFlag.No,
             paymentRunDateMonthly: this.insuranceVendorForm?.controls['paymentRunDate']?.value,
             contacts: contact
           }
