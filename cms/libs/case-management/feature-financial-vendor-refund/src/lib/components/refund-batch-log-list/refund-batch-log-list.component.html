@@ -68,7 +68,7 @@
             [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
             [data]="gridVendorsBatchLogData$ | async" [selectable]="true" [(selectedKeys)]="selectedPayments"
             kendoGridSelectBy="paymentRequestId">
-            <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
+            <kendo-grid-checkbox-column *ngIf="receiptLogMode" [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
               [width]="40"></kendo-grid-checkbox-column>
 
             <kendo-grid-column *ngIf="receiptLogMode" field="entryDate" title="Date Received" [width]="150">
