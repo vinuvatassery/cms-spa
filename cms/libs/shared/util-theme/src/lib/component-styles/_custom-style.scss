@@ -1327,3 +1327,11 @@ padding: 8px;
 .pharmacyAuthorizationBanner{
   display: none !important;
 }
+
+.form-right-wrapper{
+  .app-checkboxwidtext-wrapper{
+    .k-checkbox{
+      vertical-align: sub;
+    }
+  }
+}

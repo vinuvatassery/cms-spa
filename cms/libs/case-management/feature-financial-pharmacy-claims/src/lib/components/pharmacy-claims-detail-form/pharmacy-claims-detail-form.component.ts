@@ -212,7 +212,6 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
        }
        pharmacyClaimData.prescriptionFillDto.push(service)
     }
-    debugger
     pharmacyClaimData.prescriptionFillDto.splice(0, 1);  
    
      if(pharmacyClaimData.paymentRequestId != '00000000-0000-0000-0000-000000000000')

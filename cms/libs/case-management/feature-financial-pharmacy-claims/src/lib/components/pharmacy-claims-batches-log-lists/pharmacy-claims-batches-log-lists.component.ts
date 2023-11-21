@@ -347,7 +347,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       },
       {
         buttonType: 'btn-h-primary',
-        text: 'Unbatch Entire Batch',
+        text: 'UNBATCH ENTIRE BATCH',
         icon: 'undo',
         disabled: [
           PaymentStatusCode.Paid,
@@ -604,9 +604,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     });
     this.isBatchLogGridLoaderShow = false;
   }
-  public rowClass = (args:any) => ({
-    "table-row-orange": (args.dataItem.item === 1),
-  });
+
    backToBatch(event : any){  
     this.route.navigate(['/financial-management/pharmacy-claims'] );
   }

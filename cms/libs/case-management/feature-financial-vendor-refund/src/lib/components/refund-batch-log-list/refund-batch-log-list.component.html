@@ -66,7 +66,7 @@
           <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take" [pageable]="true"
             [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
             [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
-            [data]="gridVendorsBatchLogData$ | async" [selectable]="true" [(selectedKeys)]="selectedPayments"
+            [data]="gridVendorsBatchLogData$ | async" [(selectedKeys)]="selectedPayments"
             kendoGridSelectBy="paymentRequestId">
             <kendo-grid-checkbox-column *ngIf="receiptLogMode" [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
               [width]="40"></kendo-grid-checkbox-column>
