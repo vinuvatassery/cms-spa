@@ -279,17 +279,24 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   }
 
   onClickOpenAddEditRefundFromModal(template: TemplateRef<unknown>): void {
-    this.isEditRefund =false
+    this.isEditRefund =false   
+    this.refunEditServiceType = ""
+    this.refundEditClientId =""
+    this.refundEditClientFullName = ""
+    this.refundEditVendorAddressId = ""
+    this.refundEditVendorName = ""
+    this.inspaymentRequestId = ""
+
     this.addEditRefundFormDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-96full add_refund_modal',
     });
   }
   modalCloseAddEditRefundFormModal(result: any) {
+    this.isAddRefundModalOpen = false;
+    this.addEditRefundFormDialog.close();
     if (result) {
       this.loadVendorRefundProcessListGrid();
-      this.isAddRefundModalOpen = false;
-      this.addEditRefundFormDialog.close();
     }
   }
   searchColumnChangeHandler(data:any){

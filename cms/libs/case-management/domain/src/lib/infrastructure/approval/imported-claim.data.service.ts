@@ -21,7 +21,7 @@ export class ImportedClaimService {
       Filter: JSON.stringify(data.filter),
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/`,
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/claims-data`,
       importedClaimsRequestDto
     );
   }
@@ -63,7 +63,7 @@ export class ImportedClaimService {
     );
   }
 
-  updateClientPolicy(importedclaimDto : any){    
+  updateClientPolicy(importedclaimDto : any){
     return this.http.put<any>(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/client-policy`,
       importedclaimDto

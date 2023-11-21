@@ -51,6 +51,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   @Input() clientClaimsListData$: any;
   @Output() loadClientClaimsListEvent = new EventEmitter<any>();
   @Output() claimsCount = new EventEmitter<any>();
+  @Output() selectedClaimsChangeEvent = new EventEmitter<any>();
   paymentStatusType:any;
   paymentMethod:any;
   public selectedClaims: any[] = [];
@@ -81,12 +82,16 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   cliams:any[]=[];
   refundSelectedClaims:any[]=[];
   paymentMethodLovSubscription!: Subscription;
+  @Input() vendorId : any
   private userInitiatedPageChange = false;
+  defaultpageSize=20;
   constructor(  private readonly financialClaimsFacade: FinancialClaimsFacade, private readonly router: Router, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,private readonly lovFacade : LovFacade)
   {
  
   }
   selectedKeysChange(selection: any) {
+    
+    this.selectedClaimsChangeEvent.emit(selection)
  const includeClaim =  this.cliams.filter(obj => selection.includes(obj.paymentRequestId));
 const uniqueOriginalWarrants = [...new Set(includeClaim.map(obj => obj.originalWarrant))];
 if(uniqueOriginalWarrants.length>1)
@@ -99,6 +104,7 @@ if(uniqueOriginalWarrants.length>1)
       this.selectedInsuranceClaims = selection;
       this.claimsCount.emit(this.selectedInsuranceClaims.length)
     } 
+
   }
 
   ngOnInit(): void {
@@ -108,7 +114,7 @@ if(uniqueOriginalWarrants.length>1)
     })
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take:this.defaultpageSize,
       sort: this.sort,
     };
     this.selectedInsuranceClaims =  (this.selectedInsurancePremiumIds && this.selectedInsurancePremiumIds.length >0)?
@@ -123,10 +129,9 @@ if(uniqueOriginalWarrants.length>1)
   ngOnChanges(): void {  
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.defaultpageSize,
       sort: this.sort,
     };
-    this.loadRefundClaimsListGrid();
   }
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
     filterService.filter({
@@ -151,25 +156,14 @@ if(uniqueOriginalWarrants.length>1)
 
     }
   }
-  onPageChange(event: any): void {
-    
-    // This method will be called when the user changes the page
-    this.userInitiatedPageChange = true;
-  }
-  dataStateChange(stateData: any): void { 
-      
-    if (this.userInitiatedPageChange) {
-      {
-        this.openResetDialog(this.filterResetConfirmationDialogTemplate);
-      }
 
+  dataStateChange(stateData: any): void {       
+   this.openResetDialog(this.filterResetConfirmationDialogTemplate);      
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-   
-    }
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';  
   }
 
   // updating the pagination infor based on dropdown selection
@@ -183,7 +177,7 @@ if(uniqueOriginalWarrants.length>1)
  
   private loadRefundClaimsListGrid(): void {
     this.loadClaimsProcess(
-      this.vendorAddressId,
+      this.vendorId,
       this.clientId,
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -240,7 +234,8 @@ if(uniqueOriginalWarrants.length>1)
     });
     this.isClientClaimsLoaderShow = false;
 this.gridClientClaimsData$.subscribe((res:any)=>{
-    this.claimsCount.emit(this.selectedInsuranceClaims.length)
+    this.claimsCount.emit(this.selectedInsuranceClaims.length)  
+    this.selectedClaimsChangeEvent.emit(this.selectedInsuranceClaims)
 })
   }
   filterChange(filter: CompositeFilterDescriptor): void {  
