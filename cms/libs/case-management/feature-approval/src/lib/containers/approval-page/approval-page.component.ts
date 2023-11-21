@@ -89,6 +89,7 @@ export class ApprovalPageComponent implements OnInit {
   submitGenerealRequest$ = this.pendingApprovalGeneralFacade.submitGenerealRequest$;
   possibleMatchData$ = this.importedClaimFacade.possibleMatchData$;
   submitImportedClaims$ = this.importedClaimFacade.submitImportedClaims$;
+  savePossibleMatchData$ = this.importedClaimFacade.savePossibleMatchData$;
 
   providerDetailsDialog: any;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
@@ -109,7 +110,7 @@ export class ApprovalPageComponent implements OnInit {
   pharmacyForm!: FormGroup;
   insuranceVendorForm: FormGroup;
   insuranceProviderForm: FormGroup;
-  
+
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,

@@ -36,7 +36,7 @@
       [primary]="true"
       look="flat"
       aria-label="Export"
-      class="button-lg" 
+      class="button-lg"
       [disabled]="showExportLoader"
       (click)="onClickedExport()"
     >
@@ -89,7 +89,7 @@
     [isDetailExpanded]="expandInClaimException"
     [data]="gridImportedClaimsBatchData$ | async"
     [navigable]="true"
-    (columnVisibilityChange)="columnChange($event)" 
+    (columnVisibilityChange)="columnChange($event)"
     (columnReorder)="onColumnReorder($event)"
   >
     <kendo-grid-column field="clientName" title="Client Name" [width]="160">
@@ -322,7 +322,7 @@
         </p>
         <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No">
           <span class="material-icons">info</span>
-          This claim puts the client {{dataItem.exceededAmount}} over their max benefits. Deny the
+          This claim puts the client ${{dataItem.exceededAmount | kendoNumber : 'n2'}} over their max benefits. Deny the
           claim, or make an exception.
             <button
               aria-label="Make an Exception"
