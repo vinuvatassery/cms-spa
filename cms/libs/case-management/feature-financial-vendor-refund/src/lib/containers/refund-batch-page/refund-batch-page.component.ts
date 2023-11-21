@@ -78,7 +78,7 @@ export class RefundBatchPageComponent implements OnInit {
       this.dataExportParameters = exportGridParams;
 
       const formattedDate = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-      this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/batch/receipt`, `Receipting Log [${formattedDate}]`, ApiType.CaseApi, data.selectedIds, data.batchId);
+      this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/batches/receipt`, `Receipting Log [${formattedDate}]`, ApiType.CaseApi, data.selectedIds, data.batchId);
     }
   }
 }

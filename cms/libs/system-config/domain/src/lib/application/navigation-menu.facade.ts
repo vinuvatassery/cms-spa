@@ -23,8 +23,14 @@ export class NavigationMenuFacade {
   private pcaReassignmentCountSubject = new Subject<any>()
   pcaReassignmentCount$ = this.pcaReassignmentCountSubject.asObservable();
 
-  private pendingApprovalCountSubject = new Subject<any>();
-  pendingApprovalCount$ = this.pendingApprovalCountSubject.asObservable();
+  private pendingApprovalPaymentCountSubject = new Subject<any>();
+  pendingApprovalPaymentCount$ = this.pendingApprovalPaymentCountSubject.asObservable();
+
+  private pendingApprovalGeneralCountSubject = new Subject<any>();
+  pendingApprovalGeneralCount$ = this.pendingApprovalGeneralCountSubject.asObservable();
+
+  private pendingApprovalImportedClaimCountSubject = new Subject<any>();
+  pendingApprovalImportedClaimCount$ = this.pendingApprovalImportedClaimCountSubject.asObservable();
 
 
   /** constructor **/
@@ -76,12 +82,40 @@ export class NavigationMenuFacade {
     });
   }
 
-  getAllPendingApprovalPaymentCount(userLevel:any) {
-    this.navigationMenuService.getAllPendingApprovalPaymentCount(userLevel)
+  getPendingApprovalPaymentCount(userLevel:any) {
+    this.navigationMenuService.getPendingApprovalPaymentCount(userLevel)
     .subscribe(
       {
         next: (count: any) => {
-            this.pendingApprovalCountSubject.next(count);
+            this.pendingApprovalPaymentCountSubject.next(count);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
+  getPendingApprovalGeneralCount() {
+    this.navigationMenuService.getPendingApprovalGeneralCount()
+    .subscribe(
+      {
+        next: (count: any) => {
+            this.pendingApprovalGeneralCountSubject.next(count);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  
+        },
+      }
+    );
+  }
+
+  getPendingApprovalImportedClaimCount() {
+    this.navigationMenuService.getPendingApprovalImportedClaimCount()
+    .subscribe(
+      {
+        next: (count: any) => {
+            this.pendingApprovalImportedClaimCountSubject.next(count);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  

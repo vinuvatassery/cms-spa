@@ -7,9 +7,11 @@ import { ImportedClaimService } from '../../infrastructure/approval/imported-cla
 @Injectable({ providedIn: 'root' })
 export class ImportedClaimFacade {
 
-  public sortValueImportedClaimsAPproval = 'clientName';
+  public sortType = 'desc';
+  public sortValueImportedClaimsApproval = 'entryDate';
   public sortImportedClaimsList: SortDescriptor[] = [{
-    field: this.sortValueImportedClaimsAPproval,
+    field: this.sortValueImportedClaimsApproval,
+    dir: 'desc',
   }];
 
   /** Private properties **/
