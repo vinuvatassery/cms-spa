@@ -121,17 +121,21 @@
   </ng-template>
 
       </kendo-grid-column>  
-      <kendo-grid-column title="By" field="creatorId" [width]="70" [sticky]="true" class="text-center">
+
+      <kendo-grid-column field="creatorId" title="By" [width]="70" class="text-center" [sortable]="false" [filterable]="false" >
         <ng-template kendoGridCellTemplate let-dataItem>
           <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-            <common-user-photo-icon></common-user-photo-icon>
+            <common-user-photo-icon [userId]="dataItem?.creatorId"></common-user-photo-icon>
           </button>
           <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
             <ng-template kendoPopoverBodyTemplate>
-              <common-user-profile-card></common-user-profile-card>
+              <common-user-profile-card [userId]="dataItem?.creatorId"></common-user-profile-card>
             </ng-template>
           </kendo-popover>
+        </ng-template>
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+    
         </ng-template>
       </kendo-grid-column> 
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
