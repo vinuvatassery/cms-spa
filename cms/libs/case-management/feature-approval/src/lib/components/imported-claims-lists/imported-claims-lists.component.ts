@@ -97,6 +97,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.subscribeToSubmitImportedClaims();
+    this.subscribeToPolicyUpdate();
   }
   ngOnChanges(): void {
     this.state = {
@@ -419,6 +420,17 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
         this.cd.detectChanges();
         this.loadImportedClaimsListGrid();
       }
+    });
+  }
+
+  subscribeToPolicyUpdate(){
+    this.importedClaimFacade.clientPolicyUpdate$.subscribe({
+      next:(response: any) => {
+        if(response.status){
+          this.onCloseSearchClientsDialogClicked();
+          this.loadImportedClaimsListGrid();
+        }
+      },
     });
   }
 }
