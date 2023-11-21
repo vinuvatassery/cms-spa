@@ -228,7 +228,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   onChange(data: any) {
-    this.defaultGridState();debugger;
+    this.defaultGridState();
 
     if (this.selectedColumn === 'DateOfService' && (!this.isValidDate(data) && data !== '')) {
       return;
