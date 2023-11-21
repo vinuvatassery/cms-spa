@@ -623,7 +623,7 @@ addNewRefundRx() {
         ...this.refundRXForm.value, 
         vendorId : this.vendorId,
         clientId  : this.clientId,
-        clientCaseEligibilityId   : this.clientCaseEligibilityId,
+        clientCaseEligibilityId   : this.clientCaseEligibilityId ?? selectedpharmacyClaims[0].clientCaseEligibilityId,
         refundType : this.selectedRefundType,
         isSpotsPaymentCheck: this.isSpotsPayment,
         pharmacyRefundedItems:selectedpharmacyClaimsDto
