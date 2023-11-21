@@ -2,8 +2,9 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  Output, 
+  Output,
   EventEmitter,
+  Input,
 } from '@angular/core';
 
 @Component({
@@ -12,10 +13,18 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteRefundConfirmationComponent  {
-  @Output() isModalDeleteRefundCloseClicked = new EventEmitter();
+  @Output() isModalDeleteRefundsCloseClicked = new EventEmitter();
+  @Output() isModalDeletedRefundsButtonClicked = new EventEmitter<boolean>();
+  @Input() selectedProcessRefundsCount = 0;
+  @Input() deletemodelbody = "";
+  @Input() singleRefundDelete = false;
 
- 
+
   closeDeleteRefundClicked() {
-    this.isModalDeleteRefundCloseClicked.emit(true);
+    this.isModalDeleteRefundsCloseClicked.emit(true);
+  }
+
+  deleteClicked(){
+    this.isModalDeletedRefundsButtonClicked.emit(true);
   }
 }

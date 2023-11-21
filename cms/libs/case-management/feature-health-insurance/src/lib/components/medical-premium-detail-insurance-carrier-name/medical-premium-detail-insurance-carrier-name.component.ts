@@ -103,7 +103,7 @@ selectedMedicalProvider: any;
       next:(response:any)=>{
         this.financialVendorFacade.hideLoader();
         this.addNewInsuranceProviderClose();
-        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Provider added successfully");
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
         this.cdr.detectChanges();
       },
       error:(err:any)=>{

@@ -7,6 +7,8 @@ import {
   OnInit,
   Output,
   TemplateRef,
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { RowArgs, GridDataResult } from '@progress/kendo-angular-grid';
@@ -18,23 +20,39 @@ import {
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { YesNoFlag } from '@cms/shared/ui-common';
+import { ImportedClaimFacade, FinancialClaimsFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'productivity-tools-imported-claims-lists',
   templateUrl: './imported-claims-lists.component.html',
 })
 export class ImportedClaimsListsComponent implements OnInit, OnChanges {
+  @ViewChild('submitModalDialog', { read: TemplateRef })
+  submitModalDialog!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isImportedClaimsGridLoaderShow = false;
+  isImportedClaimsGridLoaderShow = true;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() approvalsImportedClaimsLists$: any;
+  @Input() submitImportedClaims$: any;
+  @Input() possibleMatchData$:any;
   @Output() loadImportedClaimsGridEvent = new EventEmitter<any>();
+  @Output() updateClientPolicyEvent = new EventEmitter<any>();
+  @Output() submitImportedClaimsEvent = new EventEmitter<any>();
+  @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();
+  @Output() saveReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
+  importedClaimId:any;
+  clientName:any;
+  dateOfBirth:any;
+  policyId:any;
+  entityId:any;
+  @Output() addAnExceptionEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'clientName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -50,94 +68,36 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  selectedPolicyId: any
   private searchCaseDialog: any;
   private expectationDialog: any;
   private reviewPossibleMatchesDialog: any;
-
-  // Note to Developer: Please remove below when implementing API call and use this variable in data grid "approvalsImportedClaimsLists$""
-  claimsGridLists = [
-    {
-      id: 1,
-      clientName: 'Attention',
-      namePrimaryInsuranceCard: 'Attention',
-      claimSource: 'Attention',
-      policyID: 'xxxx',
-      amountDue: 'xxxx',
-      dateService: 'xxx',
-      policyIDMatch: 'xx/xx/xxxx',
-      eligibilityMatch: '12/2019',
-      validInsurance: 'Immediate',
-      belowMaxBenefits: 'Expense',
-      entryDate: 'Rent Deposit',
-      isDelete: 'Y',
-      subRow: {
-        type: '01',
-        expand: 1,
-      },
-    },
-    {
-      id: 2,
-      clientName: 'Attention',
-      namePrimaryInsuranceCard: 'Attention',
-      claimSource: 'Attention',
-      policyID: 'xxxx',
-      amountDue: 'xxxx',
-      dateService: 'xxx',
-      policyIDMatch: 'xx/xx/xxxx',
-      eligibilityMatch: '12/2019',
-      validInsurance: 'Immediate',
-      belowMaxBenefits: 'Expense',
-      entryDate: 'Rent Deposit',
-      isDelete: 'N',
-      subRow: {
-        type: '02',
-        expand: 1,
-      },
-    },
-    {
-      id: 3,
-      clientName: 'Attention',
-      namePrimaryInsuranceCard: 'Attention',
-      claimSource: 'Attention',
-      policyID: 'xxxx',
-      amountDue: 'xxxx',
-      dateService: 'xxx',
-      policyIDMatch: 'xx/xx/xxxx',
-      eligibilityMatch: '12/2019',
-      validInsurance: 'Immediate',
-      belowMaxBenefits: 'Expense',
-      entryDate: 'Rent Deposit',
-      isDelete: 'N',
-      subRow: {
-        type: '03',
-        expand: 1,
-      },
-    },
-    {
-      id: 4,
-      clientName: 'Attention',
-      namePrimaryInsuranceCard: 'Attention',
-      claimSource: 'Attention',
-      policyID: 'xxxx',
-      amountDue: 'xxxx',
-      dateService: 'xxx',
-      policyIDMatch: 'xx/xx/xxxx',
-      eligibilityMatch: '12/2019',
-      validInsurance: 'Immediate',
-      belowMaxBenefits: 'Expense',
-      entryDate: 'Rent Deposit',
-      isDelete: 'N',
-      subRow: {
-        type: '04',
-        expand: 1,
-      },
-    },
-  ];
+  clientSearchResult$ = this.financialClaimsFacade.clients$;
+  selectedClaim: any;
+  importedClaimsGridUpdatedResult: any = [];
+  selectedDeletedDeniedDataRows: any = [];
+  deniedStatus = 'DENIED';
+  deletedStatus = 'DELETED';
+  disableSubmit = true;
+  deniedCount = 0;
+  deletedCount = 0;
+  private submitDialogService: any;
+  yesNoFlag: any = YesNoFlag;
+  claimData: any;
+  rowData: any;
+  updateExceptionModalSubject$ = this.importedClaimFacade.updateExceptionModalSubject$;
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router,
+              private dialogService: DialogService,
+              private readonly router: Router,
+              private readonly cd: ChangeDetectorRef,
+              private financialClaimsFacade: FinancialClaimsFacade,
+              private importedClaimFacade: ImportedClaimFacade)
+              {}
 
   ngOnInit(): void {
-    this.loadImportedClaimsListGrid();
+    this.subscribeToSubmitImportedClaims();
+    this.subscribeToPolicyUpdate();
   }
   ngOnChanges(): void {
     this.state = {
@@ -145,11 +105,20 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
     this.loadImportedClaimsListGrid();
   }
-  public expandInStockProducts({ dataItem }: RowArgs): boolean {
-    return dataItem.subRow.expand === 1;
+  public expandInClaimException({ dataItem }: RowArgs): boolean {
+    return true;
+  }
+
+  subscribeToSubmitImportedClaims(){
+    this.submitImportedClaims$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.importedClaimsGridUpdatedResult = [];
+        this.onCloseSubmitClicked();
+        this.loadImportedClaimsListGrid();
+      }
+    });
   }
 
   private loadImportedClaimsListGrid(): void {
@@ -169,8 +138,8 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.isImportedClaimsGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
+      pageSize: maxResultCountValue,
+      sort: sortValue,
       sortType: sortTypeValue,
     };
     this.loadImportedClaimsGridEvent.emit(gridDataRefinerValue);
@@ -240,15 +209,25 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
         this.gridDataResult.data,
         this.filterData
       );
+      if(data.data.length > 0)
+      {
+        this.assignDataFromUpdatedResultToPagedResult(data);
+      }
       this.gridImportedClaimsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isImportedClaimsGridLoaderShow = false;
+      } else {
+        this.isImportedClaimsGridLoaderShow = false;
       }
     });
-    this.isImportedClaimsGridLoaderShow = false;
+  }
+  onClientClicked(clientId: any) {
+    this.router.navigate([`/case-management/cases/case360/${clientId}`]);
+
   }
 
-  onSearchClientsDialogClicked(template: TemplateRef<unknown>): void {
+  onSearchClientsDialogClicked(template: TemplateRef<unknown>, selectedClaim: any): void {
+    this.selectedClaim = selectedClaim
     this.searchCaseDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
@@ -258,23 +237,200 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.searchCaseDialog.close();
   }
 
-  onMakeExpectationClicked(template: TemplateRef<unknown>): void {
+  onMakeExpectationClicked(template: TemplateRef<unknown>,dataItem:any): void {
     this.expectationDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
+    this.rowData = dataItem;
   }
   onCloseMakeExpectationDialogClicked() {
     this.expectationDialog.close();
   }
 
-  onReviewPossibleMatchesDialogClicked(template: TemplateRef<unknown>): void {
+  onReviewPossibleMatchesDialogClicked(template: TemplateRef<unknown>,dataItem:any): void {
     this.reviewPossibleMatchesDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
+    this.claimData=dataItem;
   }
+
   onCloseReviewPossibleMatchesDialogClicked() {
     this.reviewPossibleMatchesDialog.close();
+  }
+
+  loadPossibleMatch(data?: any) {
+    this.loadPossibleMatchDataEvent.emit(data);
+  }
+
+  savePossibleMatch(data?:any)
+  {
+    this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
+    this.closePossibleMatchModal();
+  }
+
+  private closePossibleMatchModal() {
+    this.possibleMatchData$.subscribe((value: any) => {
+      if (value) {
+        this.onCloseReviewPossibleMatchesDialogClicked();
+        this.cd.detectChanges();
+        this.loadImportedClaimsListGrid();
+      }
+    });
+  }
+
+  assignDataFromUpdatedResultToPagedResult(itemResponse: any) {
+    itemResponse.data.forEach((item: any, index: number) => {
+      itemResponse.data[index].claimStatus = '';
+      let ifExist = this.importedClaimsGridUpdatedResult.find(
+        (x: any) => x.importedClaimId === item.importedClaimId
+      );
+      if (ifExist !== undefined && item.importedClaimId === ifExist.importedClaimId) {
+        itemResponse.data[index].claimStatus = ifExist?.claimStatus;
+      }
+    });
+  }
+
+  onRowLevelDeleteClicked(
+    dataItem: any,
+  ) {
+    if (
+      dataItem.claimStatus === undefined ||
+      dataItem.claimStatus === '' ||
+      dataItem.claimStatus === null
+    ) {
+      dataItem.claimStatus = this.deletedStatus;
+    } else if (dataItem.claimStatus == this.deletedStatus) {
+      dataItem.claimStatus = '';
+    }
+    this.assignRowDataToMainList(dataItem);
+    this.denyAndDeleteCount();
+    this.enableSubmitButtonMain();
+  }
+
+  onRowLevelDenyClicked(
+    dataItem: any
+  ) {
+    if (
+      dataItem.claimStatus === undefined ||
+      dataItem.claimStatus === '' ||
+      dataItem.claimStatus === null
+    ) {
+      dataItem.claimStatus = this.deniedStatus;
+    } else if (dataItem.claimStatus == this.deniedStatus) {
+      dataItem.claimStatus = '';
+    }
+    this.assignRowDataToMainList(dataItem);
+    this.denyAndDeleteCount();
+    this.enableSubmitButtonMain();
+  }
+
+  assignRowDataToMainList(dataItem: any) {
+    let ifExist = this.importedClaimsGridUpdatedResult.find(
+      (x: any) => x.importedClaimId === dataItem.importedClaimId
+    );
+    if (ifExist !== undefined) {
+      this.importedClaimsGridUpdatedResult.forEach(
+        (item: any, index: number) => {
+          if (item.importedClaimId === ifExist.importedClaimId) {
+            this.importedClaimsGridUpdatedResult[index].claimStatus =
+              dataItem?.claimStatus;
+          }
+        }
+      );
+    } else {
+      this.importedClaimsGridUpdatedResult.push(dataItem);
+    }
+  }
+
+  denyAndDeleteCount() {
+    this.deniedCount = 0;
+    this.deletedCount = 0;
+    this.deniedCount = this.importedClaimsGridUpdatedResult.filter((x: any) => x.claimStatus == this.deniedStatus).length;
+    this.deletedCount = this.importedClaimsGridUpdatedResult.filter((x: any) => x.claimStatus == this.deletedStatus).length;
+  }
+
+  enableSubmitButtonMain()
+  {
+    const totalCount = this.importedClaimsGridUpdatedResult.filter((x: any) => x.claimStatus == this.deletedStatus || x.claimStatus == this.deniedStatus).length;
+    this.disableSubmit = (totalCount <= 0);
+    this.cd.detectChanges();
+  }
+
+  onCloseSubmitClicked() {
+    this.submitDialogService.close();
+  }
+
+  onSubmitImportedClaimsClicked() {
+    this.selectedDeletedDeniedDataRows =  this.importedClaimsGridUpdatedResult.filter(
+      (x: any) =>
+        x.claimStatus == this.deniedStatus ||
+        x.claimStatus == this.deletedStatus
+    );
+    this.onSubmitClicked(this.submitModalDialog);
+  }
+
+  onSubmitClicked(template: TemplateRef<unknown>): void {
+    this.submitDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  makeRequestData()
+  {
+    let claims = [{}];
+    for (let element of this.selectedDeletedDeniedDataRows) {
+      let claim = {
+        importedClaimId: element.importedClaimId,
+        claimStatus: element.claimStatus,
+        entityTypeCode: element.entityTypeCode
+      };
+      claims.push(claim);
+    }
+    claims.splice(0, 1);
+    this.submit(claims);
+  }
+
+  submit(data: any) {
+    this.submitImportedClaimsEvent.emit(data);
+  }
+
+
+  onClientValueChange(importedclaimDto: any){
+    this.updateClientPolicyEvent.emit(importedclaimDto);
+  }
+
+  addAnException(exceptionText: any){
+    const exceptionObject = {
+      InvoiceExceptionId : this.rowData.invoiceExceptionId,
+      ReasonDesc : exceptionText,
+      ClaimId: this.rowData.importedClaimId,
+      EntityTypeCode: this.rowData.entityTypeCode
+    }
+    this.addAnExceptionEvent.emit(exceptionObject);
+    this.closeExceptionModal();
+  }
+
+  private closeExceptionModal() {
+    this.updateExceptionModalSubject$.subscribe((value: any) => {
+      if (value) {
+        this.onCloseMakeExpectationDialogClicked();
+        this.cd.detectChanges();
+        this.loadImportedClaimsListGrid();
+      }
+    });
+  }
+
+  subscribeToPolicyUpdate(){
+    this.importedClaimFacade.clientPolicyUpdate$.subscribe({
+      next:(response: any) => {
+        if(response.status){
+          this.onCloseSearchClientsDialogClicked();
+          this.loadImportedClaimsListGrid();
+        }
+      },
+    });
   }
 }

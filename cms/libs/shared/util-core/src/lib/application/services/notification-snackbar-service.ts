@@ -29,7 +29,11 @@ export class NotificationSnackbarService {
       { 
         
         let subtitleText = errorBody;
-        const titleText = (type== SnackBarNotificationType.SUCCESS) ? SnackBarNotificationText.SUCCESS : SnackBarNotificationText.ERROR
+        const titleText = (type== SnackBarNotificationType.SUCCESS) ? 
+                            SnackBarNotificationText.SUCCESS 
+                          : (type== SnackBarNotificationType.ERROR) ? 
+                            SnackBarNotificationText.ERROR
+                          : SnackBarNotificationText.WARNING
         
         if(type == SnackBarNotificationType.ERROR && source == NotificationSource.API)
         {         

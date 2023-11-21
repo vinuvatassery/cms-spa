@@ -6,6 +6,7 @@ import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { CaseManagementFeatureApprovalRoutingModule } from './case-management-feature-approval-routing.module';
+import { CaseManagementFeatureFinancialClaimsModule } from '@cms/case-management/feature-financial-claims';
 /** Components **/
 import { ApprovalListComponent } from './components/approval-list/approval-list.component';
 import { ApprovalDetailComponent } from './components/approval-detail/approval-detail.component';
@@ -32,6 +33,7 @@ import { ApprovalsGeneralListDetailAddtomasterlistComponent } from './components
     SharedUiCommonModule,
     SharedUiTpaModule,
     CaseManagementFeatureApprovalRoutingModule,
+    CaseManagementFeatureFinancialClaimsModule
   ],
   declarations: [
     ApprovalListComponent,

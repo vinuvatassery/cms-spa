@@ -922,25 +922,34 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
     onRowSelection(grid:any, selection:any)
     {
-     this.warrantCalculationArray=[];
+      this.warrantCalculationArray=[];
       const data = selection.selectedRows[0].dataItem;    
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
       let warrantTotal=0; 
-     this.batchId=data.batchId;
+      let bid=this.activeRoute.snapshot.queryParams["bid"];
+      this.batchId= data.batchId == '' || data.batchId == null || data.batchId==undefined? bid:data.batchId;
     
-      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==data.batchId).forEach((item: any) => {
-       
-     
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==this.batchId).forEach((item: any) => {
         let object={
           vendorId:item?.entityId,
           batchId:item?.batchId,
           paymentRequestId:item?.paymentRequestId,
-          warrantNumber:item?.checkNbr,
-  
+          warrantNumber:item?.checkNbr
         }
         this.warrantCalculationArray.push(object);
       });
+
+      if( this.warrantCalculationArray.length==0){
+        let object={
+          vendorId:data?.entityId,
+          batchId:this.batchId,
+          paymentRequestId:data?.paymentRequestId,
+          warrantNumber:data?.checkNbr  
+        }
+        this.warrantCalculationArray.push(object);
+      }
+
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
@@ -1024,6 +1033,13 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     });
     this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged).length;
     this.cd.detectChanges();
+  }
+  
+  onBatchNumberClick(dataItem: any) {
+    this.route.navigate(
+      [`/financial-management/claims/${this.claimsType}/batch`],
+      { queryParams: { bid: dataItem?.batchId } }
+    );
   }
 }
 

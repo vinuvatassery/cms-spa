@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CaseFacade, ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
+import { CaseFacade, ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'cms-financial-vendor-page',
@@ -80,7 +81,8 @@ export class FinancialVendorPageComponent implements OnInit {
   exportButtonShow$ = this.documentFacade.exportButtonShow$
   ddlStates = this.contactFacade.ddlStates$;
   clinicVendorList = this.financialVendorFacade.clinicVendorList$;;
-  clinicVendorLoader = this.financialVendorFacade.clinicVendorLoader$;;
+  clinicVendorLoader = this.financialVendorFacade.clinicVendorLoader$;
+
 
   private closeMedicalDentalProviderModalSubject = new BehaviorSubject<boolean>(false);
   closeMedicalDentalProviderModal$ = this.closeMedicalDentalProviderModalSubject.asObservable();
@@ -104,7 +106,7 @@ export class FinancialVendorPageComponent implements OnInit {
     private reminderFacade: ReminderFacade,
     private documentFacade: DocumentFacade,
     private readonly contactFacade: ContactFacade,
-    private userManagementFacade: UserManagementFacade,
+    private userManagementFacade: UserManagementFacade
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
     this.clinicForm = this.formBuilder.group({});
@@ -228,7 +230,11 @@ export class FinancialVendorPageComponent implements OnInit {
       next: (response: any) => {
         this.financialVendorFacade.hideLoader();
         this.closeVendorDetailModal(this.providerTypeCode);
-        let notificationMessage = "Vendor profile added successfully";
+
+        let notificationMessage = "Vendor profile added successfully.";
+        if (vendorProfile.activeFlag === StatusFlag.No)
+          notificationMessage = "Vendor profile requested successfully.";
+
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
         this.cdr.detectChanges();
       },
@@ -239,7 +245,7 @@ export class FinancialVendorPageComponent implements OnInit {
   }
 
   closeVendorDetailModal(data?: any) {
-    if (data == this.vendorTypes.Clinic) {
+    if (this.ShowClinicProvider) {
       this.ShowClinicProvider = false;
     } else {
       this.isShowMedicalProvider = false;
@@ -314,5 +320,6 @@ export class FinancialVendorPageComponent implements OnInit {
       this.documentFacade.getExportFile(vendorPageAndSortedRequest, 'vendors', fileName)
     }
   }
+
 
 }

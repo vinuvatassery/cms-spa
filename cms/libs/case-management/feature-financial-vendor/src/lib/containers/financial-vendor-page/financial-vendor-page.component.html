@@ -29,9 +29,10 @@
                   <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Manufacturers"
                     [vendorTypeCode]="financeVendorTypeCodes.Manufacturers" [vendorsList$]="vendorsList$"
                     [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
-                    [exportButtonShow$]="exportButtonShow$"
+                    [exportButtonShow$]="exportButtonShow$" 
                     (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                    (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
+                    (exportGridDataEvent)="exportGridData()"
+                   ></cms-financial-vendors-list>
                 </div>
               </ng-template>
             </kendo-tabstrip-tab>
@@ -115,7 +116,7 @@
 
 <!-- medical -->
 <kendo-dialog kendoRippleContainer *ngIf="isShowMedicalProvider" (close)="closeVendorDetailModal(vendorTypes.MedicalProviders)"
-  class="app-c-modal app-c-modal-lg app-c-modal-np" title="Add New Medical Provider" kendoTooltip>
+  class="app-c-modal app-c-modal-lg app-c-modal-np" title="{{hasMedicalAndDentalCreateUpdatePermission ? 'Add New Medical Provider' : 'Request New Medical Provider'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.MedicalProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.MedicalProviders)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList"
@@ -126,7 +127,7 @@
 
 <!-- dental -->
 <kendo-dialog kendoRippleContainer *ngIf="isShowDentalProvider" (close)="closeVendorDetailModal(vendorTypes.DentalProviders)"
-  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Dental Provider" kendoTooltip>
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{hasMedicalAndDentalCreateUpdatePermission ? 'Add New Dental Provider' : 'Request New Dental Provider'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.DentalProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.DentalProviders)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"

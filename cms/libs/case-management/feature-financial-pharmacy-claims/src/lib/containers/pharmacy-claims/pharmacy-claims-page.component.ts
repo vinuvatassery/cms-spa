@@ -1,13 +1,19 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { ContactFacade, FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
+import { ConfigurationProvider, SnackBarNotificationType, LoggingService } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs';
+import { DialogService } from '@progress/kendo-angular-dialog';
+
 @Component({
   selector: 'cms-pharmacy-claims-page',
   templateUrl: './pharmacy-claims-page.component.html',
 })
-export class PharmacyClaimsPageComponent {
+export class PharmacyClaimsPageComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
@@ -46,11 +52,56 @@ export class PharmacyClaimsPageComponent {
   searchPharmaciesLoader$ = this.financialPharmacyClaimsFacade.searchPharmaciesLoader$;
   searchClientLoader$ = this.financialPharmacyClaimsFacade.searchClientLoader$;
   searchDrugsLoader$ = this.financialPharmacyClaimsFacade.searchDrugsLoader$;
+  tab = 1;
+  updateProviderPanelSubject$ =
+  this.financialVendorFacade.updateProviderPanelSubject$;
+  
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  paymentRequestId: any;
+  providerDetailsDialog: any
 
+ ddlStates$ = this.contactFacade.ddlStates$;
+
+ vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
+  letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade ,
-    private lovFacade: LovFacade,
+    private lovFacade: LovFacade, private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,private readonly cdr: ChangeDetectorRef,
+    private loggingService: LoggingService,private readonly configProvider: ConfigurationProvider,
+    private readonly intl: IntlService,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly contactFacade: ContactFacade,
+    private dialogService: DialogService,
+    private readonly financialVendorFacade: FinancialVendorFacade,
   ) {}
+
+  ngOnInit(): void {
+    this.activatedRoute.queryParams.subscribe(
+      (data) => (this.tab = +(data['tab'] ?? 1))
+    );
+    this.tab = this.financialPharmacyClaimsFacade.selectedClaimsTab;
+    this.addNavigationSubscription();
+  }
+
+  private addNavigationSubscription() {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+
+      .subscribe({
+        next: () => {        
+          this.tab = 1;
+          this.cdr.detectChanges();
+        },
+
+        error: (err: any) => {
+          this.loggingService.logException(err);
+        },
+      });
+  }
 
   getCoPaymentRequestTypeLov()
   {
@@ -64,24 +115,88 @@ export class PharmacyClaimsPageComponent {
   }
 
   loadPharmacyClaimsProcessListGrid(event: any) {
+    this.financialPharmacyClaimsFacade.selectedClaimsTab = 1;
+    this.tab = this.financialPharmacyClaimsFacade.selectedClaimsTab;
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsProcessListGrid(event);
   }
 
   loadPharmacyClaimsBatchListGrid(event: any) {
+    this.financialPharmacyClaimsFacade.selectedClaimsTab = 2;
+    this.tab = this.financialPharmacyClaimsFacade.selectedClaimsTab;
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsBatchListGrid(event);
   }
 
-  loadPharmacyClaimsAllPaymentsListGrid(params: GridFilterParam) {
+  loadPharmacyClaimsAllPaymentsListGrid(params: any) {
+    this.financialPharmacyClaimsFacade.selectedClaimsTab = 3;
+    this.tab = this.financialPharmacyClaimsFacade.selectedClaimsTab;
     this.financialPharmacyClaimsFacade.loadPharmacyClaimsAllPaymentsListGrid(params);
   }
 
   addPharmacyClaim(data: any) {
-    this.financialPharmacyClaimsFacade.addPharmacyClaim(data);
+    this.getPcaCode(data,false);
+   
   }
 
   updatePharmacyClaim(data: any) {
-    this.financialPharmacyClaimsFacade.updatePharmacyClaim(data);
+   
+    this.getPcaCode(data,true);
   }
+
+  private getPcaCode(claim: any,edit : any) {
+    const totalAmountDue = (claim.prescriptionFillDto as []).reduce((acc, cur) => acc + (cur as any)?.copayAmountPaid ?? 0, 0);
+    const minServiceStartDate = this.getMinServiceStartDate(claim.prescriptionFillDto);
+    const maxServiceEndDate = this.getMaxServiceEndDate(claim.prescriptionFillDto);
+    const request = {
+      clientCaseEligibilityId: claim.clientCaseEligibilityId,
+      claimAmount: totalAmountDue,
+      serviceStartDate: minServiceStartDate,
+      serviceEndDate: maxServiceEndDate,
+      paymentRequestId: claim.paymentRequestId,
+      objectLedgerName : 'Pharmaceutical Drugs(ADAP)'
+    };
+    this.financialClaimsFacade.showLoader();
+    this.financialClaimsFacade.getPcaCode(request) .subscribe({
+      next: (response: any) => {
+        this.financialClaimsFacade.hideLoader()
+        if (response) {
+          
+          if (response?.isReAssignmentNeeded ?? true) {
+            //this.financialClaimsFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "PCA ReAssignment Needed");
+            response.isReAssignmentNeeded = false
+          }
+          claim.pcaSelectionResponseDto = response;
+        
+          if(edit === true)
+          {
+            this.financialPharmacyClaimsFacade.updatePharmacyClaim(claim);
+          }
+          else
+          {
+            this.financialPharmacyClaimsFacade.addPharmacyClaim(claim);
+          }
+        
+        }
+      },
+      error: (error: any) => {
+        this.financialClaimsFacade.hideLoader()
+        this.financialClaimsFacade.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+          error
+        );
+      },
+    });
+  }
+
+  getMinServiceStartDate(arr: any) {
+    const timestamps = arr.map((a: any) => new Date(a.prescriptionFillDate));
+    return this.intl.formatDate(new Date(Math.min(...timestamps)), this.configProvider?.appSettings?.dateFormat);
+  };
+
+  getMaxServiceEndDate(arr: any) {
+    const timestamps = arr.map((a: any) => new Date(a.prescriptionFillDate));
+    return this.intl.formatDate(new Date(Math.max(...timestamps)), this.configProvider?.appSettings?.dateFormat);
+  };
+
 
   getPharmacyClaim(paymentRequestId: string) {
     this.financialPharmacyClaimsFacade.getPharmacyClaim(paymentRequestId);
@@ -94,8 +209,12 @@ export class PharmacyClaimsPageComponent {
   searchClients(searchText: string) {
     this.financialPharmacyClaimsFacade.searchClients(searchText);
   }
-  searchDrug(searchText: string) {
-    this.financialPharmacyClaimsFacade.searchDrug(searchText);
+  searchDrug(ndcCodeSearch: any) {
+    this.financialPharmacyClaimsFacade.searchDrug(ndcCodeSearch?.searchText , ndcCodeSearch?.isClientRestricted);
+  }
+
+  onExportAllPayments(event: any){
+    this.financialPharmacyClaimsFacade.exportPharmacyClaimAllPayments(event);
   }
 
   onExportClaimsInProcess(event: any){
@@ -106,10 +225,42 @@ export class PharmacyClaimsPageComponent {
     this.financialPharmacyClaimsFacade.exportPharmacyClaimsBatchListGrid(event);
   }
 
-  onExportAllPayments(event: any){
-  }
-
   onbatchClaimsClicked(event:any){
     this.financialPharmacyClaimsFacade.batchClaims(event);
+  }
+  ondeleteClaimsClicked(event:any){
+    this.financialPharmacyClaimsFacade.deleteClaims(event);
+  }
+
+  loadEachLetterTemplate(event:any){
+    this.financialPharmacyClaimsFacade.loadEachLetterTemplate(event);  
+  }
+  onProviderNameClick(event:any){
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  
+  }
+  onEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
+  }
+  updateProviderProfile(event: any) {
+    console.log(event);
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanel(event);
+  }
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, FinancialVendorTypeCode, HealthInsurancePlan} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -74,7 +74,8 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
     private financialVendorFacade: FinancialVendorFacade,
     private financialClaimsFacade: FinancialClaimsFacade,
     private readonly contactFacade: ContactFacade,
-    private userManagementFacade:UserManagementFacade
+    private userManagementFacade:UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef, 
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
     this.medicalProviderForm = this.formBuilder.group({});
@@ -90,21 +91,21 @@ public get vendorTypes(): typeof FinancialVendorTypeCode {
             
             this.financialVendorFacade.hideLoader();
            this.closeVendorDetailModal();
-            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+            this.cdr.detectChanges();
           },
           error:(err:any)=>{
             this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
           }
         });
       }
-      else{
-      this.closeVendorDetailModal();
+      else{ 
         this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
-          next:(response:any)=>{
-            
+          next:(response:any)=>{ 
             this.financialVendorFacade.hideLoader();
-           
-            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,"Successfully Added");
+            this.closeVendorDetailModal();
+            this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+            this.cdr.detectChanges();
           },
           error:(err:any)=>{
             this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);

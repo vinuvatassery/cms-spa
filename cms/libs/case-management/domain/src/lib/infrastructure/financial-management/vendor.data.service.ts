@@ -30,9 +30,9 @@ export class FinancialVendorDataService {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors`, VendorPageAndSortedRequest);
   }
 
-  getVendorDetails(vendorId: string) {
+  getVendorDetails(vendorId: string, isActive: boolean) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/${vendorId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/vendor-details?vendorId=${vendorId}&isActive=${isActive}`
     );
   }
   searchInsurnaceVendor(searchText: string) {
@@ -159,5 +159,12 @@ export class FinancialVendorDataService {
   addProvider(provider:any)
   {   
     return this.http.patch(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors`,provider);
+  }
+
+  updateVendorProfile (providePanelDto:any){
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/vendor-profile`,providePanelDto
+    );
   }
 }

@@ -4,7 +4,7 @@
   <span class="text-bold" for="eemploymentep flex-col">Payment Request Type:&nbsp;</span>
   <div class="fmly-epdorpdown flex-col flex-col-3">
     <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
-      [data]="pendingApprovalPaymentType$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
+      [data]="paymentType" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
       [loading]="(pendingApprovalPaymentType$ | async)?.length === 0"
       (valueChange)="onPaymentTypeCodeValueChange($event)" [(ngModel)]="selectedPaymentType">
     </kendo-dropdownlist>
@@ -81,10 +81,10 @@
     [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)" [data]="pendingApprovalGridDataResult"
     [isDetailExpanded]="expandSendBackNotes" (columnVisibilityChange)="columnChange($event)" (columnReorder)="onColumnReorder($event)">
-    <kendo-grid-column [sortable]="false" field="viewPmtsInBatch" title="View Pmts In Batch" [width]="120">
+    <kendo-grid-column [sortable]="false" field="viewPmtsInBatch" title="Review Pmts In Batch" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button aria-label="View Pmts In Batch" title="View" kendoButton look="flat" class="card-link-button"
-          (click)="onOpenViewPaymentsBatchClicked(dataItem)">
+          (click)="onOpenViewPaymentsBatchClicked(dataItem,false)">
           <span class="material-icons"> plagiarism </span>
         </button>
       </ng-template>
@@ -151,7 +151,7 @@
         {{ dataItem.dateApprovalRequested | date : 'MM/dd/yyyy' }}
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column *ngIf="userLevel == 2" field="firstApprovalBy" title="First Approval By" [width]="120">
+    <kendo-grid-column *ngIf="userLevel == UserLevel.Level2Value" field="firstApprovalBy" title="First Approval By" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.firstApprovalBy" kendoButton look="flat" class="card-link-button"
           kendoPopoverAnchor [popover]="userCard" showOn="hover">
@@ -185,11 +185,11 @@
               )
             "
             [selected]="dataItem.batchStatus == approveStatus"
-            aria-label="Approve"
+            aria-label="APPROVE"
             id="approve{{ rowIndex }}"
             [toggleable]="true"
           >
-            Approve
+            APPROVE
           </button>
           <button kendoButton (selectedChange)="
               onRowLevelSendbackClicked(
@@ -200,11 +200,11 @@
               )
             "
             [selected]="dataItem.batchStatus == sendbackStatus"
-            aria-label="Send Back"
-            id="approve{{ rowIndex }}"
+            aria-label="SEND BACK"
+            id="sendback{{ rowIndex }}"
             [toggleable]="true"
           >
-            Send Back
+            SEND BACK
           </button>
         </div>
       </ng-template>
@@ -232,6 +232,9 @@
 
           <kendo-formerror *ngIf="dataItem.sendBackNotesInValid">{{
             dataItem.sendBackNotesInValidMsg
+            }}</kendo-formerror>
+          <kendo-formerror *ngIf="dataItem.atleastOnePaymentInValid && userLevel == UserLevel.Level1Value">{{
+            dataItem.atleastOnePaymentInValidMsg
             }}</kendo-formerror>
         </div>
       </ng-template>
@@ -309,7 +312,7 @@
     (click)="onOpenSubmitApprovalPaymentItemsClicked()"
     [disabled]="hasPaymentPendingApproval"
   >
-    Submit
+    SUBMIT
   </button>
 </div>
 
@@ -347,7 +350,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button aria-label="Cancel" kendoButton look="outline" (click)="onCloseSubmitApprovalPaymentItemsClicked()">
-          Cancel
+          CANCEL
         </button>
         <button aria-label="Submit" kendoButton [primary]="true" (click)="makeRequestData()">
           SUBMIT
@@ -361,7 +364,7 @@
   *ngIf="isViewPaymentsBatchDialog"
   (close)="onCloseViewPaymentsBatchClicked()"
   class="app-c-modal app-c-modal-xlg app-c-modal-np_0"
-  title="View Payments in Each Batch"
+  title="Review Payments in Each Batch"
   
 >
   <productivity-tools-approval-batch-lists
@@ -371,8 +374,9 @@
     [paymentStatusLovList]="paymentStatusLovList"
     [paymentMethodLovList]="paymentMethodLovList"
     [pageSizes]="pageSizes"
-    [sortType]="sortType"
     [selectedPaymentType]="selectedPaymentType"
+    [isSendBackMode]="isSendbackMode"
+    [userLevel]="userLevel"
     (closeViewPaymentsBatchClickedEvent)="onCloseViewPaymentsBatchClicked()"
     (loadBatchDetailPaymentsListEvent)="onLoadBatchDetailPaymentsList($event)"
     (batchModalSaveClickedEvent)="onBatchModalSaveClicked($event)"></productivity-tools-approval-batch-lists>
@@ -385,3 +389,27 @@
       aria-label="Edit" title="Edit"></button></kendo-dialog-titlebar>
   <productivity-tools-deposit-details> </productivity-tools-deposit-details>
 </ng-template>
+
+<kendo-dialog  *ngIf="isWarningDialogShow"  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar class="text-normal" (close)="onSendbackDeselectingWarningDialogCancelClicked()">
+    Remove Send Back?</kendo-dialog-titlebar>
+  <section class="k-dialog-body newcase">
+    <p class="mb-2">
+      {{
+        'Send back notes and payment selections will be removed, Do you wish to continue?'
+      }}
+    </p>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button aria-label="Yes" kendoButton [primary]="true" (click)="onSendbackDeselectingWarningDialogYesClicked()">
+          YES
+        </button>
+        <button aria-label="Cancel" kendoButton look="outline" (click)="onSendbackDeselectingWarningDialogCancelClicked()">
+          CANCEL
+        </button>       
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

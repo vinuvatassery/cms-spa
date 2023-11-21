@@ -27,7 +27,7 @@
       >
         <tr>
           <td>Clinic Name</td>
-          <td>{{ vendorData.vendorName }}</td>
+          <td>{{ vendorData.clinicName }}</td>
         </tr>
         <tr>
           <td>Provider First Name</td>
@@ -45,14 +45,14 @@
           <tr>
             <td>Phone</td>
             <td>{{ vendorData.phoneNumber }}</td>
-          </tr>        
+          </tr>
           <tr>
             <td>Email</td>
-            <td>{{ vendorData.Email }}</td>
+            <td>{{ vendorData.email }}</td>
           </tr>
           <tr>
             <td>Fax</td>
-            <td>{{ vendorData.Fax }}</td>
+            <td>{{ vendorData.fax }}</td>
           </tr>
         </ng-container>
         <tr>
@@ -79,19 +79,19 @@
         </tr>
         <tr>
           <td>HIV Drug?</td>
-          <td>{{ vendorData.hiv }}</td>
+          <td>{{ vendorData.hiv | titlecase }}</td>
         </tr>
         <tr>
           <td>Hepatitis Drug?</td>
-          <td>{{ vendorData.hepatitis }}</td>
+          <td>{{ vendorData.hepatitis | titlecase }}</td>
         </tr>
         <tr>
           <td>Opportunistic infection drug?</td>
-          <td>{{ vendorData.opportunisticInfection }}</td>
+          <td>{{ vendorData.opportunisticInfection | titlecase }}</td>
         </tr>
         <tr>
           <td>Delivery Method</td>
-          <td>{{ vendorData.deliveryMethodCode }}</td>
+          <td>{{ vendorData.deliveryMethodDesc }}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.InsuranceVendor">
@@ -104,18 +104,17 @@
           <td>{{vendorData.tin}}</td>
           <td></td>
         </tr>
-
         <tr>
           <td>Accepts Combined Payments</td>
-          <td>{{vendorData.acceptsCombinedPaymentsFlag}}</td>
+          <td>{{vendorData.acceptsCombinedPaymentsFlag | titlecase}}</td>
         </tr>
         <tr>
           <td>Accepts Reports</td>
-          <td>{{vendorData.acceptsReportsFlag}}</td>
+          <td>{{vendorData.acceptsReportsFlag | titlecase}}</td>
         </tr>
         <tr>
           <td>Payment Method</td>
-          <td>{{vendorData.paymentMethodCode}}</td>
+          <td>{{vendorData.paymentMethod}}</td>
         </tr>
         <tr>
           <td>Payment Run Date</td>
@@ -149,15 +148,15 @@
         </tr>
         <tr>
           <td>Health Insurance Type</td>
-          <td>{{vendorData.healthInsuranceTypeCode}}</td>
+          <td>{{vendorData.healthInsuranceType}}</td>
         </tr>
         <tr>
           <td>Can pay for medication</td>
-          <td>{{vendorData.canPayForMedicationFlag}}</td>
+          <td>{{vendorData.canPayForMedicationFlag | titlecase}}</td>
         </tr>
         <tr>
           <td>Is a dental plan</td>
-          <td>{{vendorData.dentalPlanFlag}}</td>
+          <td>{{vendorData.dentalPlanFlag | titlecase}}</td>
         </tr>
         <tr>
           <td>Start Date</td>
@@ -173,23 +172,19 @@
           <td>Provider Name</td>
           <td>{{vendorData.vendorName}}</td>
         </tr>
+      </tbody>
+      <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
+        <tr>
+          <td>Pharmacy</td>
+          <td>{{vendorData.vendorName}}</td>
+        </tr>
         <tr>
           <td>Tin</td>
           <td>{{vendorData.tin}}</td>
         </tr>
         <tr>
           <td>NPI </td>
-          <td>{{vendorData.npi}}</td>
-        </tr>
-        <tr>
-          <td>Preferred Pharmacy</td>
-          <td>{{vendorData.preferredFlag}}</td>
-        </tr>
-      </tbody>
-      <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
-        <tr>
-          <td>Pharmacy</td>
-          <td>vendorData.vendorName</td>
+          <td>{{vendorData.npiNbr}}</td>
         </tr>
       </tbody>
     </table>

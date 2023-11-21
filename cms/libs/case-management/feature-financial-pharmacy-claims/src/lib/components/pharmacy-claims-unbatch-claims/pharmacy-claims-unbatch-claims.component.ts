@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Output, 
   EventEmitter,
+  Input,
 } from '@angular/core';
 @Component({
   selector: 'cms-pharmacy-claims-unbatch-claims',
@@ -10,10 +11,14 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyClaimsUnbatchClaimsComponent { 
-  @Output() UnBatchCloseClickedEvent = new EventEmitter();
-
+  @Output() unBatchCloseClickedEvent = new EventEmitter();
+  @Input() isBulkUnBatchOpened = false;
  
   closeUnBatchClicked() {
-    this.UnBatchCloseClickedEvent.emit(true);
+    this.unBatchCloseClickedEvent.emit(false);
+  }
+
+  unBatchClicked() {
+    this.unBatchCloseClickedEvent.emit(true);
   }
 }
