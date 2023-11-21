@@ -2,7 +2,7 @@
     <kendo-grid [resizable]="true" [loading]="isClaimsLoaderShow" [pageSize]="state.take"
       [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
-      [data]="RecentRefundListData$| async"
+      [data]="recentRefundsListData$| async"
       (selectedKeysChange)="selectedKeysChange($event)"
       kendoGridSelectBy="paymentRequestId"
       [(selectedKeys)]="selectedPharmacyClaims">

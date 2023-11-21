@@ -532,19 +532,19 @@ export class FinancialVendorRefundDataService {
   }
   addNewRefundRx(refundRx: any): any {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/add-pharmacy-refund`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/add`,
       refundRx
     );
   }
   editNewRefundRx(refundRx: any): any {
     return this.http.post(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/update-pharmacy-refund`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/update `,
       refundRx
     );
   }
   loadPharmacyRefundEditList(paymentRequestId: string) {
     return this.http.get<any[]>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/pharmacy-refund-detail?paymentRequestId=${paymentRequestId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/pharmacy?paymentRequestId=${paymentRequestId}`
     );
   }
 }

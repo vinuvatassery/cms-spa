@@ -82,7 +82,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialVendorRefundFacade.clients$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
-  ExistingRxRefundClaim$ = this.financialVendorRefundFacade.ExistingRxRefundClaim$;
+  existingRxRefundClaim$ = this.financialVendorRefundFacade.existingRxRefundClaim$;
   insurancevendors$ = this.financialVendorRefundFacade.insurancevendors$;
   tpavendors$ = this.financialVendorRefundFacade.tpavendors$;
  
@@ -162,7 +162,6 @@ if(this.isEdit){
     this.financialVendorRefundFacade.pharmaciesSubject.next(vendors)  
     this.selectedMedicalProvider =vendors[0]
     this.loadPaymentRequestData();
-    //this.searchPharmacy(this.vendorName) 
   }
   else{
     this.financialVendorRefundFacade.insurancevendorsSubject.next(vendors)  
@@ -181,7 +180,7 @@ if(this.isEdit){
       this.pharmaciesList = res;
     });
 
-    this.ExistingRxRefundClaim$.subscribe((res:any)=>{
+    this.existingRxRefundClaim$.subscribe((res:any)=>{
       this.getSelectedVendorRefundsList(res,"EDIT");
     })
   }

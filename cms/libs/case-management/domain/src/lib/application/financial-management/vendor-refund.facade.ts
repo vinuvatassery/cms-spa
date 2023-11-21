@@ -103,11 +103,11 @@ export class FinancialVendorRefundFacade {
   pharmacyPaymentsListData$ = this.pharmacyPaymentsListDataSubject.asObservable();
 
 
-  private RecentRefundListDataSubject =  new Subject<any>();
-  RecentRefundListData$ = this.RecentRefundListDataSubject.asObservable();
+  private recentRefundListDataSubject  =  new Subject<any>();
+  recentRefundsListData$ = this.recentRefundListDataSubject .asObservable();
 
-  private ExistingRxRefundClaimSubject =  new Subject<any>();
-  ExistingRxRefundClaim$ = this.ExistingRxRefundClaimSubject.asObservable();
+  private existingRxRefundClaimSubject =  new Subject<any>();
+  existingRxRefundClaim$ = this.existingRxRefundClaimSubject.asObservable();
 
 
   private insuranceRefundInformationSubject =  new Subject<any>();
@@ -589,13 +589,13 @@ this.loaderService.show();
     RefundPageAndSortedRequestDto.filter = JSON.stringify(RefundPageAndSortedRequestDto.filter);
     this.financialVendorRefundDataService. loadFinancialRecentRefundListService(RefundPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
-        this.RecentRefundListDataSubject.next(dataResponse);
+        this.recentRefundListDataSubject .next(dataResponse);
         if (dataResponse) {
           const gridView = {
             data: dataResponse['items'],
             total: dataResponse['totalCount'],
           };
-          this.RecentRefundListDataSubject.next(gridView);
+          this.recentRefundListDataSubject .next(gridView);
           this.hideLoader();
         }
       },
@@ -615,9 +615,9 @@ this.loaderService.show();
     return this.financialVendorRefundDataService.loadPharmacyRefundEditList(paymentRequestId)
     .subscribe({
       next: (dataResponse) => {
-        this.ExistingRxRefundClaimSubject.next(dataResponse);
+        this.existingRxRefundClaimSubject.next(dataResponse);
         if (dataResponse) {
-          this.ExistingRxRefundClaimSubject.next(dataResponse);
+          this.existingRxRefundClaimSubject.next(dataResponse);
         }
       },
       error: (err) => {

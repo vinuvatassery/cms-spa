@@ -36,9 +36,9 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
   @Input() claimsListData$: any;
-  private RecentRefundListDataSubject =  new Subject<any>();
-  RecentRefundsListData$ = this.RecentRefundListDataSubject.asObservable();
- RecentRefundListData$= this.financialVendorRefundFacade.RecentRefundListData$ 
+  private recentRefundListDataSubject  =  new Subject<any>();
+  RecentRefundsListData$ = this.recentRefundListDataSubject .asObservable();
+  recentRefundsListData$= this.financialVendorRefundFacade.recentRefundsListData$ 
   @Output() loadClaimsListEvent = new EventEmitter<any>();
   
   sortColumn = 'vendorName';
@@ -79,30 +79,6 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
     };
     this.loadFinancialRecentRefundListGrid()
   }
-
-  // private loadClaimsListGrid(): void {
-  //   this.loadClaimsList(
-  //     this.state?.skip ?? 0,
-  //     this.state?.take ?? 0,
-  //     this.sortValue,
-  //     this.sortType
-  //   );
-  // }
-  // loadClaimsList
-  // (    skipCountValue: number,
-  //   maxResultCountValue: number,
-  //   sortValue: string,
-  //   sortTypeValue: string) {
-  //     this.isClaimsLoaderShow = true;
-  //     const gridDataRefinerValue = {
-  //       skipCount: skipCountValue,
-  //       pagesize: maxResultCountValue,
-  //       sortColumn: sortValue,
-  //       sortType: sortTypeValue,
-  //     };
-  //   this.loadClaimsListEvent.emit(gridDataRefinerValue);
-  //   this.loadFinancialRecentRefundListGrid();
-  // }
   
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
@@ -125,9 +101,9 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   }
 
   gridDataHandle() {
-    this.RecentRefundListData$.subscribe((data: GridDataResult) => {
+    this.recentRefundsListData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.RecentRefundListDataSubject.next(this.gridDataResult);
+      this.recentRefundListDataSubject .next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
       }
     });
