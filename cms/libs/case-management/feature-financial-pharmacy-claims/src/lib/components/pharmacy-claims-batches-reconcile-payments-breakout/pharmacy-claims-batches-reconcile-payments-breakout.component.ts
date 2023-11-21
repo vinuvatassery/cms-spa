@@ -25,6 +25,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   @Input() batchId:any;
   @Input() entityId:any;
   @Input() paymentRequestType$: any;
+  @Input() paymentStatus$:any
   @Input() reconcilePaymentBreakoutLoaderList$:any;
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
   vendorId:any;
@@ -73,6 +74,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   gridReconcilePaymentBreakoutListSubject = new Subject<any>();
   gridReconcilePaymentBreakout$ = this.gridReconcilePaymentBreakoutListSubject.asObservable();
   selectedPaymentType: string | null = null;
+  selectedPaymentStatus: string | null = null;
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   claimsType:any;
@@ -89,6 +91,9 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
     };
     this.paymentRequestType$.subscribe((paymentRequestType:any) => {
       this.paymentRequestType= paymentRequestType;
+    });
+    this.paymentStatus$.subscribe((paymentStatus:any) => {
+      this.paymentStatus= paymentStatus;
     });
     this.reconcilePaymentBreakoutLoaderList$.subscribe((reconcilePaymentBreakoutLoader:any)=>{
       this.reconcilePaymentBreakoutLoader = reconcilePaymentBreakoutLoader;
@@ -295,8 +300,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
     value: any,
     filterService: FilterService
   ): void {
-    ;
     if (field === 'paymentTypeDesc') this.selectedPaymentType = value;
+    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
     filterService.filter({
       filters: [
         {
