@@ -26,6 +26,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
    @Input() pageSizes :any
    @Input() sortType :any
    @Input() editPaymentRequestId:any
+   isSpotPayment = false
      public state!: State;
      filter!: any;  
   @Output() insuranceRefundInformationConfirmClicked = new EventEmitter<any>();
@@ -44,12 +45,14 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   @Input() insuraceAddRefundClick$:any
   @Output() Reqpayload = new EventEmitter<any>()
   refundForm! :FormGroup
+  
+  @Input() insurancePremiumPaymentReqIds:any[] =[]
   public constructor(private formBuilder : FormBuilder,
     private readonly changeDetectorRef: ChangeDetectorRef){
     
   }
 
- 
+
  ngOnInit(): void {
   this.initForm()
   this.initializeRefunInformationGrid()
@@ -68,7 +71,8 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
           refundWarantNumber: this.refundForm.controls['warantNumber']?.value,
           depositDate:this.refundForm.controls['depositDate']?.value,
           refundNote:this.refundForm.controls['refundNote']?.value,
-          creditNumber:this.refundForm.controls['creditNumber']?.value
+          creditNumber:this.refundForm.controls['creditNumber']?.value,
+          isSpotPayment: this.isSpotPayment
         })
       })
 
@@ -80,6 +84,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
         warrantNumber: this.refundForm.controls['warantNumber']?.value,
         depositDate:this.refundForm.controls['depositDate']?.value,
         notes:this.refundForm.controls['refundNote']?.value,
+        isSpotPayment: this.isSpotPayment,
         addRefundDto: refundRequests,
         refundType:"insurance"
       }
@@ -157,7 +162,8 @@ initForm(){
         this.financialPremiumsRefundGridLists = res.data
        this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)       
        this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountPaid).reduce((a, b) => a + b, 0)  
-      const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
+       const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
+       this.isSpotPayment = formData.isSpotPayment
       this.refundForm.patchValue({
         vp: formData.voucherPayabeNbr,
         creditNumber:formData.creditNumber,
@@ -166,7 +172,11 @@ initForm(){
        })
       this.refundForm.controls['depositDate'].setValue(new Date(formData.depositDate));
     })
-    this.insuranceRefundInformationConfirmClicked.emit(param);
+    this.insuranceRefundInformationConfirmClicked.emit(
+      {...param, 
+        paymentRequestsId : this.insurancePremiumPaymentReqIds
+      }
+      );
   }
 
 

@@ -109,7 +109,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   }
 
   ngOnInit(): void {
-    this.loadInsuranceCarrierName(InsuranceStatusType.healthInsurance);
+    this.loadInsuranceCarrierName(InsuranceStatusType.insurancePlanRequest);
     this.loadInsurancePlans();
   }
 

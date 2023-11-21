@@ -6,3 +6,9 @@ export enum ServiceSubTypeCode {
     dentalClaim ='DENTAL_CLAIM',
     insurnacePremium='INSURANCE_PREMIUM'
 }
+
+export enum ServiceTypeCode {
+    insurancePremium ='INSURANCE_PREMIUM',
+    tpa ='TPA',
+    pharmacy ='PHARMACY',
+}
