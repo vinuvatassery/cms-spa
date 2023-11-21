@@ -62,7 +62,7 @@ export class FinancialPharmacyClaimsFacade {
     },
   ];
 
-  public sortValuePharmacyClaimsPayments = 'creationTime';
+  public sortValuePharmacyClaimsPayments = 'batchName';
   public sortPaymentsList: SortDescriptor[] = [
     {
       field: this.sortValuePharmacyClaimsPayments,
