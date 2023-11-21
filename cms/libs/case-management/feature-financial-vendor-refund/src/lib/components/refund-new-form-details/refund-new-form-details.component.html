@@ -55,7 +55,8 @@
                         <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Refund Type" [(ngModel)]="selectedRefundType"
                             [data]="refundType" 
                             textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
-                            [fillMode]="formUiStyle.dropDownFillMode"  (selectionChange)="selectionChange($event)">
+                            [fillMode]="formUiStyle.dropDownFillMode"  (selectionChange)="selectionChange($event)"
+                            (valueChange)=initForm()>
                         </kendo-dropdownlist>
                     </kendo-floatinglabel>
                 </div>
@@ -77,7 +78,8 @@
                                          [(ngModel)]="selectedVendor"
                                           [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                           [filterable]="true"
-                                          [disabled]="disableFeildsOnConfirmSelection">
+                                          [disabled]="disableFeildsOnConfirmSelection"
+                                          >
                                     
                                       <button kendoButton fillMode="clear" icon="image"></button>
           
