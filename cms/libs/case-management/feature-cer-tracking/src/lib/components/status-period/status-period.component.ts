@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 /** Facades **/
-import { CaseFacade, StatusPeriodFacade, ClientEligibilityFacade } from '@cms/case-management/domain';
+import { CaseFacade, StatusPeriodFacade, ClientEligibilityFacade, ClientFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -68,7 +68,8 @@ export class StatusPeriodComponent implements OnInit {
     private caseFacade: CaseFacade,
     private cdr: ChangeDetectorRef,
     private clientEligibilityFacade: ClientEligibilityFacade,
-    private dialogService: DialogService) { }
+    private dialogService: DialogService,
+    private readonly clientFacade: ClientFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -145,6 +146,7 @@ export class StatusPeriodComponent implements OnInit {
       this.isStatusPeriodDetailOpened=false;
       this.isStatusPeriodEdit = false;
       this.isCopyPeriod = false;
+      this.clientFacade.runImportedClaimRules(this.clientId);
       this.loadStatusPeriodData();
     }
   }

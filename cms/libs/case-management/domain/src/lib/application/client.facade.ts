@@ -320,4 +320,17 @@ export class ClientFacade {
       },
     });
   }
+  runImportedClaimRules(clientId: number):void{
+    this.showLoader();
+    this.clientDataService.runImportedClaimRules(clientId).subscribe({
+      next: (response) => {
+
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
 }
