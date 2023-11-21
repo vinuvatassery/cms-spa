@@ -600,7 +600,7 @@ addNewRefundRx() {
     this.markGridFormTouched();
     var selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []);
     var InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
-    if (!this.refundRXForm.invalid || InValidSelectedRefundPharmacyClaimInput.length >0) {
+    if ((this.refundRXForm.invalid && !this.isEdit) || InValidSelectedRefundPharmacyClaimInput.length >0) {
       return;
     } else {
       var selectedpharmacyClaimsDto = selectedpharmacyClaims.map((obj : any)=>
