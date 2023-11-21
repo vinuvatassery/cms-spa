@@ -79,7 +79,7 @@
                (change)="selectionAllChange()"/>
        </ng-template>
        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
-           <input   kendoCheckBox
+           <input kendoCheckBox *ngIf="dataItem.paymentMethodCode === 'SPOTS'"
                type="checkbox"  [(ngModel)]="dataItem.selected"
                (change)="selectionChange(dataItem,dataItem.selected)"/>
        </ng-template>
@@ -94,12 +94,6 @@
              <kendo-filter-contains-operator></kendo-filter-contains-operator>
          </kendo-grid-string-filter-menu>
      </ng-template>
-     <ng-template kendoGridCellTemplate let-dataItem>
-      <button aria-label="itemNbr" kendoButton look="flat" class="card-link-button"
-      (click)="onitemNumberClick(dataItem)">
-        {{ dataItem.itemNbr }}
-      </button>
-    </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="batchName" title="Batch #" [width]="140">
         <ng-template kendoGridCellTemplate let-dataItem>

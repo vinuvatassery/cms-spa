@@ -69,7 +69,7 @@
                     (change)="selectionAllChange()"/>
             </ng-template>
             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
-                <input kendoCheckBox
+                <input kendoCheckBox *ngIf="dataItem.paymentMethodCode === 'SPOTS'"
                     type="checkbox"  [(ngModel)]="dataItem.selected"
                     (change)="selectionChange(dataItem,dataItem.selected)"/>
             </ng-template>
