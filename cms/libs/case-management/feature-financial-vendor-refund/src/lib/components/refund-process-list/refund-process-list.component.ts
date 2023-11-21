@@ -186,7 +186,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
         if(!this.isAddRefundModalOpen){
           this.isAddRefundModalOpen = true;
           this.isEditRefund = true
-          this.refunEditServiceType = dataItem.type
+          this.refunEditServiceType = dataItem.serviceTypeDescription.toUpperCase()
           this.refundEditClientId =dataItem.clientId
           this.refundEditClientFullName = dataItem.clientFullName
           this.refundEditVendorAddressId = dataItem.vendorAddressId
