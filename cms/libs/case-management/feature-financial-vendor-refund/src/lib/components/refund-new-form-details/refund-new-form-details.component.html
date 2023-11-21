@@ -16,7 +16,7 @@
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                         <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField='clientNames'
                         valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                        placeholder="Search Client Name, ID, SSN or DOB"
+                        placeholder="Search Client Name, ID, SSN"
                         [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                         [filterable]="true"
                         (filterChange)="loadClientBySearchText($event)"
@@ -55,13 +55,14 @@
                         <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Refund Type" [(ngModel)]="selectedRefundType"
                             [data]="refundType" 
                             textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
-                            [fillMode]="formUiStyle.dropDownFillMode"  (selectionChange)="selectionChange($event)">
+                            [fillMode]="formUiStyle.dropDownFillMode" (valueChange)="initForm()"  (selectionChange)="selectionChange($event)">
                         </kendo-dropdownlist>
                     </kendo-floatinglabel>
                 </div>
             </div>
+            <ng-container [formGroup]="refundForm">
             <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
-                <div class="flex-col flex-col-6" [formGroup]="insRefundForm">
+                <div class="flex-col flex-col-6" >
                     <kendo-floatinglabel  text="Vendor">
                         <div class="combotable_search_list new_refund_Search">                           
                                   <span *ngIf="isShownSearchLoader"
@@ -70,7 +71,7 @@
                                       <kendo-multicolumncombobox [data]="insurancevendors$ | async" textField="providerFullName"
                                       valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode" 
                                       (filterChange)="onInputChange($event)"
-                                       placeholder="Search Pharmacy name or TIN"
+                                       placeholder="Search Vendor name or TIN"
                                        (valueChange)="onProviderValueChange($event)" 
                                          formControlName="insVendor" 
                                          [(ngModel)]="selectedVendor"
@@ -120,6 +121,7 @@
                                       placeholder="Search Vendor Name, ID"
                                       [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                       [filterable]="true" 
+                                      formControlName="tpaVendor" 
                                       (filterChange)="searchTpaVendors($event)"
                                       (valueChange)="onProviderValueChange($event)" [(ngModel)]="selectedVendor"
                                       [disabled]="disableFeildsOnConfirmSelection" >
@@ -169,6 +171,7 @@
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                     [filterable]="true" 
                     (filterChange)="searchPharmacy($event)" [data]="pharmaciesList"
+                    formControlName="rxVendor"
                     [(ngModel)]="selectedMedicalProvider" (valueChange)="onProviderValueChange($event)"
                     [disabled]="disableFeildsOnConfirmSelection"
                     >
@@ -194,6 +197,7 @@
                 </div>
 
             </div>
+        </ng-container>
         </div>
 
         <!-- TPA Content -->
@@ -388,9 +392,12 @@
                 <h5>Select all premium included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-insurance-premium-list  #insClaims  [selectedInsurancePremiumIds]="insurancePremiumPaymentReqIds"
-                    [vendorAddressId]="vendorAddressId" [clientId]="clientId"  [pageSizes]="pageSizes"
+                    [vendorAddressId]="vendorAddressId"
+                    [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
                         [sortValue]="sortValueClientClaims" [sortType]="sortType"
-                        [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId" (claimsCount)="claimsCountEvent($event)"
+                        [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId" 
+                        (claimsCount)="claimsCountEvent($event)"
+                        (selectedClaimsChangeEvent)="onSelectedClaimsChangeEvent($event)"
                         ></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
@@ -398,6 +405,7 @@
 
             <cms-vendor-refund-selected-premium-list [insuranceRefundInformation$]="insuranceRefundInformation$"
              [gridDataResult]="financialPremiumsRefundGridLists"
+             [insurancePremiumPaymentReqIds]="insurancePremiumPaymentReqIds"
                      [refundInformationLoader$]="insuranceRefundInformationLoader$"
                      [pageSizes]="pageSizes" [sortValue]="sortValueRefundInformationGrid"
                      (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"

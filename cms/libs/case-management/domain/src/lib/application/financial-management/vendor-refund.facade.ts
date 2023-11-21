@@ -188,7 +188,7 @@ export class FinancialVendorRefundFacade {
   }
 
   addInsuranceRefundClaim(data:any){
-   
+   this.showLoader()
     this.financialVendorRefundDataService.addInsuranceRefundClaim(data).subscribe({
       next: (dataResponse:any) => {
         this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
@@ -339,7 +339,7 @@ this.loaderService.show();
     return this.financialVendorRefundDataService.loadInsurancevendorBySearchText(searchText,clientId).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor:any) => {
-            vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.insuranceName ?? ''}${vendor.insuranceType ?? ''}`;
+            vendor.providerFullName = `${vendor.vendorName ?? ''}`;
         });
         this.insurancevendorsSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
