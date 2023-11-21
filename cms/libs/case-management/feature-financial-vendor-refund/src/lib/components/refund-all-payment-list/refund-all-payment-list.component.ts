@@ -93,7 +93,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       click: (dataItem: any): void => {
         if (!this.isRefundEditDialogOpen) {
           this.isRefundEditDialogOpen = true;
-          this.refunEditServiceType = dataItem.paymentTypeCode
+          this.refunEditServiceType = dataItem.paymentType
           this.refundEditClientId = dataItem.clientId
           this.refundEditClientFullName = dataItem.clientFullName
           this.refundEditVendorAddressId = dataItem.vendorAddressId

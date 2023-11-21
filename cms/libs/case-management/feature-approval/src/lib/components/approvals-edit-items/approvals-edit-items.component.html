@@ -1,4 +1,4 @@
-<section class="k-dialog-body newcase">
+<section class="k-dialog-body newcase form-right-wrapper">
   <p class="mb-2">
     All fields are required unless otherwise stated. Either a clinic name or provider name is required.
   </p>
@@ -9,40 +9,28 @@
       selectedSubtypeCode === subTypeConst.MedicalProvider ||
       selectedSubtypeCode === subTypeConst.DentalProvider
     " [formGroup]="healthCareForm">
-    <div *ngIf="(selectedSubtypeCode == subTypeConst.MedicalProvider || subTypeConst.DentalProvider) && selectedMasterData.parentVendorId"
-      class="flex-col flex-col-8 inlineloaderwrapper hidedropicon">
-      <div class="k-auto-complete-box">
-        <span *ngIf="clinicVendorLoader$ | async"
-          class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-        <kendo-floatinglabel text="Clinic Name">
-          <kendo-combobox
-          #vendor
-          [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }"
-          placeholder="Clinic Name"
-          [fillMode]="formUiStyle.dropDownFillMode"
-          [filterable]="true"
-          (filterChange)="searchClinic($event)"
-          [data]="clinicVendorListLocal"
-          [formControlName]="'providerName'"
-          [valuePrimitive]="true"
-          [valueField]="'vendorId'"
-          [textField]="'vendorName'"
-          [valuePrimitive]="true"
+    <div
+      *ngIf="(selectedSubtypeCode == subTypeConst.MedicalProvider || subTypeConst.DentalProvider) && selectedMasterData.parentVendorId"
+      class="k-auto-complete-box flex-col">
+      <span *ngIf="clinicVendorLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+      <kendo-floatinglabel text="Clinic Name">
+        <kendo-combobox #vendor [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }"
+          placeholder="Clinic Name" [fillMode]="formUiStyle.dropDownFillMode" [filterable]="true"
+          (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" [formControlName]="'providerName'"
+          [valuePrimitive]="true" [valueField]="'vendorId'" [textField]="'vendorName'" [valuePrimitive]="true"
           [(ngModel)]="selectedParentVendor" (selectionChange)="selectionChange($event)">
           <ng-template kendoComboBoxItemTemplate let-dataItem>
             <span>{{ dataItem.vendorName }}</span>
           </ng-template>
-            <button kendoButton
-              fillMode="clear" icon="image"></button>
-          </kendo-combobox>
-        </kendo-floatinglabel>
-        <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">
-          Clinic Name is required
-        </kendo-formerror>
-        <kendo-formhint>
-          Start typing to choose an existing clinic, or enter a new one
-        </kendo-formhint>
-      </div>
+          <button kendoButton fillMode="clear" icon="image"></button>
+        </kendo-combobox>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">
+        Clinic Name is required
+      </kendo-formerror>
+      <kendo-formhint>
+        Start typing to choose an existing clinic, or enter a new one
+      </kendo-formhint>
     </div>
     <div *ngIf="selectedSubtypeCode == subTypeConst.MedicalClinic || selectedSubtypeCode == subTypeConst.DentalClinic" 
           class="flex-col">
@@ -55,7 +43,7 @@
         Clinic name is required
       </kendo-formerror>
     </div>
-    <div class="flex-col " *ngIf="selectedMasterData.firstName">
+    <div class="flex-col flex-col-6" *ngIf="selectedMasterData.firstName">
       <kendo-floatinglabel text="Provider First Name">
         <kendo-textbox aria-label="Provider First Name" placeholder="Provider First Name"
           [fillMode]="formUiStyle.inputFillMode" formControlName="firstName" [maxlength]="50">
@@ -65,7 +53,7 @@
         Provider First Name is required
       </kendo-formerror>
     </div>
-    <div class="flex-col " *ngIf="selectedMasterData.lastName">
+    <div class="flex-col flex-col-6" *ngIf="selectedMasterData.lastName">
       <kendo-floatinglabel text="Provider Last Name">
         <kendo-textbox aria-label="Provider Last Name" placeholder="Provider Last Name"
           [fillMode]="formUiStyle.inputFillMode" formControlName="lastName" [maxlength]="50">
@@ -109,7 +97,7 @@
         City Name is required
       </kendo-formerror>
     </div>
-    <div class="flex-col ">
+    <div class="flex-col flex-col-6 ">
       <kendo-floatinglabel text="State">
         <kendo-dropdownlist aria-label="State" [fillMode]="formUiStyle.dropDownFillMode" formControlName="state"
           [data]="ddlStates$| async" textField="stateName" valueField="stateCode" [valuePrimitive]="true"
@@ -120,7 +108,7 @@
         State is required
       </kendo-formerror>
     </div>
-    <div class="flex-col ">
+    <div class="flex-col flex-col-6 ">
       <kendo-floatinglabel text="Zip">
         <kendo-textbox aria-label="Zip" placeholder="Zip" [fillMode]="formUiStyle.inputFillMode" formControlName="zip"
           [maxlength]="10">
@@ -160,7 +148,7 @@
     </div>
   </div>
   <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.Drug" [formGroup]="drugForm">
-    <div class="k-auto-complete-box">
+    <div class="k-auto-complete-box flex-col">
       <span *ngIf="clinicVendorLoader$ | async"
         class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
       <kendo-floatinglabel text="Manufacturer Name">
@@ -269,7 +257,7 @@
     </div>
   </div>
   <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsurancePlan" [formGroup]="insurancePlanForm">
-    <div class="k-auto-complete-box">
+    <div class="k-auto-complete-box flex-col">
       <span *ngIf="clinicVendorLoader$ | async"
         class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
       <kendo-floatinglabel text="Insurance Provider Name">
@@ -313,17 +301,17 @@
         Health Insurance Type
       </kendo-formerror>
     </div>
-    <div class="flex-col ">
-      <fieldset class="k-form-fieldset">
-        <legend class="k-form-legend">
-          <h5 class="mb-0"> This insurance plan can pay for medication? </h5>
-        </legend>
-        <div class="component-list-h">
-            <input type="checkbox" kendoCheckBox formControlName="canPayForMedicationFlag" #terms />
-        </div>
-      </fieldset>
+    <div class="flex-col mt-3">
+      <span class="app-checkboxwidtext-wrapper">
+        <input type="checkbox" kendoCheckBox formControlName="canPayForMedicationFlag"
+          aria-labelledby="canPayForMedicationFlag" id="canPayForMedicationFlag" />
+    
+        <kendo-label for="canPayForMedicationFlag"> <strong>This insurance plan can pay for medication?</strong>
+        </kendo-label>
+      </span>
+    
     </div>
-    <div class="flex-col ">
+    <div class="flex-col mt-1">
       <fieldset class="k-form-fieldset">
         <legend class="k-form-legend">
           <h5 class="mb-0"> This is a Dental Plan? </h5>
@@ -426,7 +414,7 @@
         </kendo-formerror>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col ">
+    <div class="flex-col">
       <fieldset class="k-form-fieldset mt-1">
         <legend class="k-form-legend">
           <h5 class="mb-0"> Payment Method </h5>
@@ -453,13 +441,22 @@
         </kendo-formerror>
       </fieldset>
     </div>
-    <div class="flex-col ">
+    <div class="flex-col mt-1">
       <fieldset class="k-form-fieldset">
-        <legend class="k-form-legend mt-1">
+        <legend class="k-form-legend">
           <h5 class="mb-0"> Accepts combined payments? </h5>
         </legend>
         <div class="component-list-h">
-            <input type="checkbox" kendoCheckBox formControlName="acceptsCombinedPayments" />
+          <span class="app-radiobtnwidtext-wrapper">
+            <input type="radio" kendoRadioButton aria-labelledby="yes" name="acceptsCombinedPayments" id="yes" value="YES"
+              formControlName="acceptsCombinedPayments" />
+            <kendo-label class="k-radio-label" text="YES" for="yes"></kendo-label>
+          </span>
+          <span class="app-radiobtnwidtext-wrapper">
+            <input type="radio" kendoRadioButton aria-labelledby="no" name="acceptsCombinedPayments" id="no" value="NO"
+              formControlName="acceptsCombinedPayments" />
+            <kendo-label class="k-radio-label" text="NO" for="no"></kendo-label>
+          </span>
         </div>
       </fieldset>
     </div>
@@ -469,7 +466,16 @@
           <h5 class="mb-0"> Accepts reports? </h5>
         </legend>
         <div class="component-list-h">
-            <input type="checkbox" kendoCheckBox formControlName="acceptsReport" />
+          <span class="app-radiobtnwidtext-wrapper">
+            <input type="radio" kendoRadioButton aria-labelledby="yes" name="acceptsReport" id="yes" value="YES"
+              formControlName="acceptsReport" />
+            <kendo-label class="k-radio-label" text="YES" for="yes"></kendo-label>
+          </span>
+          <span class="app-radiobtnwidtext-wrapper">
+            <input type="radio" kendoRadioButton aria-labelledby="no" name="acceptsReport" id="no" value="NO"
+              formControlName="acceptsReport" />
+            <kendo-label class="k-radio-label" text="NO" for="no"></kendo-label>
+          </span>
         </div>
       </fieldset>
     </div>
@@ -547,15 +553,15 @@
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col ">
-      <fieldset class="k-form-fieldset">
-        <legend class="k-form-legend">
-          <h5 class="mb-0"> This is a preferred pharmacy? </h5>
-        </legend>
-        <div class="component-list-h">
-            <input type="checkbox" kendoCheckBox formControlName="preferredPharmacy" />
-        </div>
-      </fieldset>
+    <div class="flex-col mt-3">
+    
+      <span class="app-checkboxwidtext-wrapper">
+        <input type="checkbox" kendoCheckBox formControlName="preferredPharmacy" aria-labelledby="preferredPharmacy"
+          id="preferredPharmacy" />
+    
+        <kendo-label for="preferredPharmacy"> <strong>This is a preferred pharmacy?</strong> </kendo-label>
+      </span>
+    
     </div>
     <div class="flex-col ">
       <kendo-floatinglabel text="Mail Code">

@@ -604,9 +604,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     });
     this.isBatchLogGridLoaderShow = false;
   }
-  public rowClass = (args:any) => ({
-    "table-row-orange": (args.dataItem.item === 1),
-  });
+
    backToBatch(event : any){  
     this.route.navigate(['/financial-management/pharmacy-claims'] );
   }

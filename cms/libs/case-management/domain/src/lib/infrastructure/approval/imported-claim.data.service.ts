@@ -18,6 +18,7 @@ export class ImportedClaimService {
       Sorting: data.sort,
       SkipCount: data.skipCount,
       MaxResultCount: data.pageSize,
+      ColumnName : data.columnName,
       Filter: JSON.stringify(data.filter),
     };
     return this.http.post<any>(
@@ -36,7 +37,7 @@ export class ImportedClaimService {
 
   loadPossibleMatch(event:any) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match?firstName=${event.firstName}&lastName=${event.lastName}&dateOfBirth=${event.dateOfBirth}`
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match?policyId=${event.policyId}&firstName=${event.firstName}&lastName=${event.lastName}&dateOfBirth=${event.dateOfBirth}`
     );
   }
 

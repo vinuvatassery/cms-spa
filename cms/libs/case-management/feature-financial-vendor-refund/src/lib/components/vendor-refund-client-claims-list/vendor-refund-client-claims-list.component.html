@@ -3,9 +3,8 @@
   [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"  [filter]="state.filter"
   [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
   [data]="clientclaimsData$| async"
-  kendoGridSelectBy="paymentRequestId"
-  (selectedKeysChange)="selectedKeysChange($event)"
-  [(selectedKeys)]="selectedPharmacyClaims">
+  kendoGridSelectBy="perscriptionFillId"
+  (selectedKeysChange)="selectedRXKeysChange($event)">
     <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"></kendo-grid-checkbox-column>
 
