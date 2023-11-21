@@ -87,19 +87,19 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       columnDesc: 'All Columns',
     },
     {
-      columnCode: 'ClientName',
+      columnCode: 'clientName',
       columnDesc: 'Client Name',
     },
     {
-      columnCode: 'ClaimSource',
+      columnCode: 'claimSource',
       columnDesc: 'Claim Source',
     },
     {
-      columnCode: 'PolicyId',
+      columnCode: 'policyId',
       columnDesc: 'Policy ID',
     },
     {
-      columnCode: 'DateOfService',
+      columnCode: 'dateOfService',
       columnDesc: 'Date of Service',
     },
   ];
@@ -205,13 +205,14 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       pageSize: maxResultCountValue,
       sort: sortValue,
       sortType: sortTypeValue,
+      columnName: this.selectedColumn,
       filter: this.state?.['filter']?.['filters'] ?? [],
     };
     this.loadImportedClaimsGridEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
 
-  searchColumnChangeHandler(value: string) {    
+  searchColumnChangeHandler(value: string) {   
     this.filter = [];
     this.showDateSearchWarning = value === 'DateOfService';
     if (this.searchValue) {

@@ -18,6 +18,7 @@ export class ImportedClaimService {
       Sorting: data.sort,
       SkipCount: data.skipCount,
       MaxResultCount: data.pageSize,
+      ColumnName : data.columnName,
       Filter: JSON.stringify(data.filter),
     };
     return this.http.post<any>(
