@@ -320,7 +320,7 @@ deletePremiumPayment(paymentId: string) {
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Reconcile Payments',
+      text: 'RECONCILE PAYMENTS',
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
@@ -328,7 +328,7 @@ deletePremiumPayment(paymentId: string) {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Advice Letters',
+      text: 'PRINT ADVICE LETTERS',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;

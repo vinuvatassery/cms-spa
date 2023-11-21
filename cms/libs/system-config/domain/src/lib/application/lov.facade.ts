@@ -845,7 +845,6 @@ export class LovFacade {
   getRefundTypeLov(){
     this.lovDataService.getLovsbyType(LovType.ServiceType).subscribe({
       next: (lovResponse) => {
-        
         this.refundTypeSubject.next(lovResponse);
       },
       error: (err) => {

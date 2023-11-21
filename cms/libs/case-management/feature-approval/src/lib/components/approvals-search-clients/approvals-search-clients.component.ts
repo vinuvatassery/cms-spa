@@ -105,7 +105,9 @@ export class ApprovalsSearchClientsComponent {
       dateOfService: this.selectedClaim.dateOfService,
       clientId: this.selectedClient.clientId,
       policyId: this.selectedClaim.policyId,
-      importedClaimId: this.selectedClaim.importedClaimId
+      importedClaimId: this.selectedClaim.importedClaimId,
+      invoiceExceptionId: this.selectedClaim.invoiceExceptionId,
+      entityTypeCode: this.selectedClaim.entityTypeCode,
     }
     this.clientValueChangeEvent.emit(importedclaimDto);
   }
