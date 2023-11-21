@@ -71,7 +71,7 @@ export class DocumentDataService {
         const exportData = {
           gridData: pageAndSortedRequest,
           selectedIds: selectedIds,
-          batachId : batchId,
+          batchId : batchId,
         };
   
         return this.http.post(
