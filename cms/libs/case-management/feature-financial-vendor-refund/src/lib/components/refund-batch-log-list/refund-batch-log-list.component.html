@@ -323,7 +323,8 @@
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" look="outline" aria-label="Cancel"
     (click)="cancelActions()">Cancel</button>
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Download" icon="download"
-    (click)="onClickedDownload()" >Download</button>
+    (click)="onClickedDownload()" [disabled]="!selectedPayments.length"
+    >Download</button>
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Print" icon="print"
     [disabled]="!selectedPayments.length">Print</button>
   <button *ngIf="!hideActionButton" kendoButton [primary]="true" aria-label="Receipting Log"
