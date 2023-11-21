@@ -94,7 +94,12 @@
         </kendo-grid-column>
         <kendo-grid-column field="paymentMethodCode" title="Payment Method" [width]="160">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-dropdownlist [data]="paymentMethods" [value]="paymentMethodFilter"  (valueChange)="dropdownFilterChange('paymentMethodCode',$event, filterService)">
+            <kendo-dropdownlist 
+            [data]="paymentMethods" 
+            [value]="paymentMethodFilter" 
+            valueField="lovDesc"
+            textField="lovDesc" 
+            (valueChange)="dropdownFilterChange('paymentMethodCode',$event, filterService)">
             </kendo-dropdownlist>
          </ng-template>
            </kendo-grid-column>
@@ -116,13 +121,18 @@
          </ng-template> </kendo-grid-column>
         <kendo-grid-column field="paymentTypeCode" title="Payment Type" [width]="140"> 
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-dropdownlist [data]="paymentTypes" [value]="paymentTypeFilter"  (valueChange)="dropdownFilterChange('paymentTypeCode',$event, filterService)">
+            <kendo-dropdownlist 
+            [data]="paymentTypes" 
+            [value]="paymentTypeFilter"  
+            textField="lovDesc"
+            valueField="lovCode"
+            (valueChange)="dropdownFilterChange('payTypeDesc',$event, filterService)">
             </kendo-dropdownlist>
        </ng-template>
             </kendo-grid-column>
         <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="140">  <ng-template kendoGridCellTemplate
           let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid}}</span>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid | kendoNumber: 'n2'}}</span>
         </ng-template> 
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
@@ -134,7 +144,12 @@
         <kendo-grid-column field="objectCode" title="Object Code" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160"> 
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-dropdownlist [data]="paymentStatusList" [value]="paymentStatusFilter"  (valueChange)="dropdownFilterChange('paymentStatusCode',$event, filterService)">
+            <kendo-dropdownlist
+             [data]="paymentStatusList" 
+             [value]="paymentStatusFilter"
+            textField="lovDesc"
+            valueField="lovDesc" 
+           (valueChange)="dropdownFilterChange('paymentStatusDesc',$event, filterService)">
             </kendo-dropdownlist>
        </ng-template>
         </kendo-grid-column>
@@ -173,7 +188,7 @@
           </ng-template>
         </kendo-grid-column>
     
-        <kendo-grid-column field="Option" title=" "  [sticky]="false" [columnMenu]="false"  [sortable]="false" [width]="50" class="text-center">
+        <kendo-grid-column field="Option" title="Options"  [sticky]="false" [columnMenu]="false"  [sortable]="false" [width]="70" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton [data]="batchLogGridActions(dataItem)" icon="more-vertical"
               class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
