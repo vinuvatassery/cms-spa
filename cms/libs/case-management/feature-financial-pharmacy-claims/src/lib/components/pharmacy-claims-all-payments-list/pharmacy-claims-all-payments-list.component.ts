@@ -78,8 +78,8 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   addEditClaimsFormDialog: any;
   deleteClaimsDialog: any;
   showExportLoader = false;
- sortDir = 'Descending';
- sortColumnDesc = 'Entry Date';
+ sortDir = 'Ascending';
+ sortColumnDesc = 'Batch #';
  filteredByColumnDesc = '';
  columnChangeDesc = 'Default Columns';
  isColumnsReordered = false;
@@ -198,6 +198,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     private readonly cdr: ChangeDetectorRef,) {}
 
   ngOnInit(): void {
+    this.sortType = 'asc';
     this.addSearchSubjectSubscription();
     this.pharmacyClaimsAllPaymentsSubscription();
   }
@@ -214,7 +215,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
 
   ngOnChanges(): void {
-    this.sortType = 'desc';
+    this.sortType = 'asc';
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -226,8 +227,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
   resetGrid(){
     this.defaultGridState();
-    this.sortValue = 'creationTime';
-    this.sortType = 'desc';
+    this.sortValue = 'batchName';
+    this.sortType = 'asc';
     this.sortDir = this.sortType === 'desc' ? 'Descending' : "Ascending";
     this.filter = [];
     this.searchText = '';
@@ -376,7 +377,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'desc';
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
@@ -677,20 +678,6 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
     loadEachLetterTemplate(event:any){
       this.loadTemplateEvent.emit(event);
-    }
-
-    onitemNumberClick(dataItem: any) {
-        this.route.navigate(
-            [`/financial-management/pharmacy-claims/batch/items`],
-            {
-                queryParams:
-                {
-                    bid: dataItem?.batchId,
-                    pid: dataItem.paymentRequestId,
-                    eid: dataItem.vendorId,
-                }
-            }
-        );
     }
 
     onbatchNumberClick(dataItem: any) {
