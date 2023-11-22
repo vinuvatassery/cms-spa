@@ -438,8 +438,8 @@ onAddRefundClick(){
       voucherPayable: [''], 
       creditNumber: [''],
       warantNumber: ['', Validators.required],
-      depositDate: [null, [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
-      refundNote:[''],
+      depositDate: ['', Validators.required],
+      refundNote:['']
     });
   }
   showHideServicesListForm(){
@@ -590,7 +590,7 @@ onAddRefundClick(){
   voucherPayable: [''], 
   creditNumber: [''],
   warantNumber: ['', Validators.required],
-  depositDate:[null, [Validators.required, Validators.pattern(/^\d{4}-\d{2}-\d{2}$/)]],
+  depositDate:['', Validators.required],
   refundNote:[''],
 })
 markGridFormTouched(){
