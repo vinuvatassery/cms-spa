@@ -93,7 +93,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       click: (dataItem: any): void => {
         if (!this.isRefundEditDialogOpen) {
           this.isRefundEditDialogOpen = true;
-          this.refunEditServiceType = dataItem.paymentType
+          this.refunEditServiceType = dataItem.paymentTypeCode
           this.refundEditClientId = dataItem.clientId
           this.refundEditClientFullName = dataItem.clientFullName
           this.refundEditVendorAddressId = dataItem.vendorAddressId
@@ -452,9 +452,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   modalCloseAddEditRefundFormModal(result: any) {
+    this.isRefundEditDialogOpen = false;
+    this.addEditRefundFormDialog.close();
     if (result) {
-      this.isRefundEditDialogOpen = false;
-      this.addEditRefundFormDialog.close();
+      this.loadVendorRefundAllPaymentsListGrid();
     }
   }
 

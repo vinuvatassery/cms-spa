@@ -676,4 +676,9 @@ onRefundNoteValueChange(event: any) {
 onSpotsPaymentChange(check: any) {
   this.isSpotsPayment = check.currentTarget.checked;
 }
+
+selectedRxClaimsChangeEvent(event:any){
+  this.selectedInsRequests = event
+  this.pharmacyClaimsPaymentReqIds = event
+}
 }

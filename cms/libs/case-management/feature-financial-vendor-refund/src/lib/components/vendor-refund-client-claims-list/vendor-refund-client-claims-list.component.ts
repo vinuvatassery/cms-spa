@@ -48,6 +48,8 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   @Input() clientClaimsListData$: any;
   @Output() loadClientClaimsListEvent = new EventEmitter<any>();
   @Output() selectedVendorRefundsListEvent = new EventEmitter<any>();
+  
+  @Output() selectedClaimsChangeEvent = new EventEmitter<any>();
   sortColumn = 'clientId';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -96,6 +98,8 @@ private clientClaimsListDataSubject =  new Subject<any>();
   selectedKeysChange(selection: any) {
     this.selectedPharmacyClaims = selection;
     this.claimsCount.emit(this.selectedPharmacyClaims.length)
+      
+    this.selectedClaimsChangeEvent.emit(selection)
     
   }
   resetFilterClicked(action: any,) {
@@ -209,5 +213,6 @@ private clientClaimsListDataSubject =  new Subject<any>();
   selectedRXKeysChange(selection: any[]) {
     this.selectedPharmacyClaims = this.gridData.data.filter((i: any) => selection.includes( i.perscriptionFillId));
     this.claimsCount.emit(this.selectedPharmacyClaims.length)
+    this.selectedClaimsChangeEvent.emit(selection)
   }
 }
