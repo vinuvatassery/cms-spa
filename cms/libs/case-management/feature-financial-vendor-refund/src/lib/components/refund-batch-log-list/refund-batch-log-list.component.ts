@@ -1,16 +1,17 @@
 /** Angular **/
 import {
-  ChangeDetectionStrategy,  Component,  EventEmitter,
-  Input,  OnInit,  OnChanges,  Output,  TemplateRef,
-  ViewChild,  ChangeDetectorRef,
+  ChangeDetectionStrategy, Component, EventEmitter,
+  Input, OnChanges, Output, TemplateRef,
+  ViewChild, ChangeDetectorRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
-import {  CompositeFilterDescriptor,  State} from '@progress/kendo-data-query';
+import { GridDataResult } from '@progress/kendo-angular-grid';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Observable, Subject, first } from 'rxjs';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { OnInit } from '@angular/core';
 @Component({
   selector: 'cms-refund-batch-log-list',
   templateUrl: './refund-batch-log-list.component.html',
@@ -32,13 +33,16 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   @Input() exportButtonShow$: any
   @Input() paymentBatchName$!: Observable<PaymentBatchName>;
 
-  @Output() loadVendorRefundBatchLogListEvent = new EventEmitter<any>();  
+  @Output() loadVendorRefundBatchLogListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+  @Output() exportReceiptDataEvent = new EventEmitter<any>();
+
   isUnBatchRefundsClosed = false;
   isDeleteClaimClosed = false;
   UnBatchDialog: any;
   deleteRefundsDialog: any;
   selected: any;
+  receiptLogTitlePart = "";
   deletemodelbody =
     'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
 
@@ -77,7 +81,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
 
   columns: any = {
     vendorName: 'Vendor',
-    serviceType: 'Type',   
+    serviceType: 'Type',
     clientFullName: 'Client Name',
     nameOnInsuranceCard: 'Name on Primary Insurance Card',
     clientId: 'Client ID',
@@ -87,11 +91,11 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     originalWarrant: 'Original Warrant #',
     originalAmount: 'Original Amount',
     indexCode: 'Index Code',
-    pcaCode :'PCA',
-    grantNumber :'Grant #',
-    voucherPayable:'VP',
-    refundNote : 'Refund Note',
-    entryDate : 'Entry Date'
+    pcaCode: 'PCA',
+    grantNumber: 'Grant #',
+    voucherPayable: 'VP',
+    refundNote: 'Refund Note',
+    entryDate: 'Entry Date'
   };
 
   dropDowncolumns: any = [
@@ -103,7 +107,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       columnCode: 'serviceType',
       columnDesc: 'Type',
     },
-   
+
     {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
@@ -153,7 +157,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     {
       columnCode: 'grantNumber',
       columnDesc: 'Grant #',
-    } ,
+    },
     {
       columnCode: 'voucherPayable',
       columnDesc: 'VP',
@@ -183,19 +187,24 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   isBulkUnBatchOpened: any;
-  batchId = '';
+  batchId: any;
 
   /** Constructor **/
   constructor(
     private route: Router,
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private dialogService: DialogService,
-    private readonly cdr: ChangeDetectorRef
-  ) {}
+    private readonly cdr: ChangeDetectorRef,
+    private activatedRoute: ActivatedRoute,
+  ) { }
 
-  ngOnInit(): void {
-    this.loadBatchLogListGrid();
+  ngOnInit() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      const batchId = params['b_id'];
+      this.batchId = batchId;
+    });
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -207,7 +216,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   }
 
   private loadBatchLogListGrid(): void {
-    
+
     this.loadBatchLog(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -316,8 +325,12 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   gridDataHandle() {
     this.batchLogGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
+
+      if (this.gridDataResult && this.gridDataResult.data && this.gridDataResult.data.length > 0) {
+        this.batchId = this.gridDataResult.data[0].batchId;
+      }
       this.gridVendorsBatchLogDataSubject.next(this.gridDataResult);
-        this.isBatchLogGridLoaderShow = false;
+      this.isBatchLogGridLoaderShow = false;
     });
 
   }
@@ -420,12 +433,51 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     this.sortValue = 'vendorName';
     this.sortType = 'asc';
     this.sort = this.sortColumn;
-    this.searchValue =''
+    this.searchValue = ''
 
     this.loadBatchLogListGrid();
   }
 
-  searchColumnChangeHandler(data:any){
+  searchColumnChangeHandler(data: any) {
     this.onChange('')
+  }
+
+  isLogGridExpanded = false;
+  hideActionButton = false;
+  receiptLogMode = false
+  selectedPayments: any[] = [];
+
+  cancelActions() {
+    this.receiptLogTitlePart = "";
+    this.selectedPayments = [];
+    this.isLogGridExpanded = !this.isLogGridExpanded;
+    this.hideActionButton = !this.hideActionButton;
+    this.receiptLogMode = !this.receiptLogMode;
+  }
+
+  receiptingLogClicked() {
+    this.receiptLogTitlePart = "Receipting Log";
+    this.isLogGridExpanded = !this.isLogGridExpanded;
+    this.receiptLogMode = !this.receiptLogMode;
+    this.hideActionButton = !this.hideActionButton;
+  }
+
+  onClickedDownload() {
+    if (!this.selectedPayments.length) {
+      return;
+    }
+    this.showExportLoader = true;
+    var data = {
+      batchId : this.batchId,
+      selectedIds : this.selectedPayments,
+      gridDataResult : this.gridDataResult
+    };
+    this.exportReceiptDataEvent.emit(data);
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

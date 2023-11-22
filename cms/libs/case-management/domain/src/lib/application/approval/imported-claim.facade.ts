@@ -7,21 +7,25 @@ import { ImportedClaimService } from '../../infrastructure/approval/imported-cla
 @Injectable({ providedIn: 'root' })
 export class ImportedClaimFacade {
 
-  public sortValueImportedClaimsAPproval = 'clientName';
+  public sortType = 'desc';
+  public sortValueImportedClaimsApproval = 'entryDate';
   public sortImportedClaimsList: SortDescriptor[] = [{
-    field: this.sortValueImportedClaimsAPproval,
+    field: this.sortValueImportedClaimsApproval,
+    dir: 'desc',
   }];
 
   /** Private properties **/
   private ImportedClaimsSubject =  new Subject<any>();
   private submitImportedClaimsSubject = new Subject<any>();
   private possibleMatchSubject =  new Subject<any>();
+  private savePossibleMatchSubject =  new Subject<any>();
   private clientPolicyUpdateSubject = new Subject<any>();
   private updateExceptionModalSubject = new Subject<any>();
   /** Public properties **/
   approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
   submitImportedClaims$ = this.submitImportedClaimsSubject.asObservable();
   possibleMatchData$ = this.possibleMatchSubject.asObservable();
+  savePossibleMatchData$ = this.savePossibleMatchSubject.asObservable();
   updateExceptionModalSubject$ = this.updateExceptionModalSubject.asObservable();
   clientPolicyUpdate$ = this.clientPolicyUpdateSubject.asObservable();
 
@@ -119,7 +123,7 @@ export class ImportedClaimFacade {
         {
           this.showHideSnackBar(SnackBarNotificationType.WARNING,response.message);
         }
-        this.possibleMatchSubject.next(response);
+        this.savePossibleMatchSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -146,9 +150,11 @@ export class ImportedClaimFacade {
   }
 
   updateClientPolicy(importedclaimDto : any){
+    this.showLoader();
     this.importedClaimService.updateClientPolicy(importedclaimDto).subscribe(
       {
         next: (response: any) => {
+          this.hideLoader();
           this.clientPolicyUpdateSubject.next(response);
           this.notificationSnackbarService.manageSnackBar(
             SnackBarNotificationType.SUCCESS,
@@ -156,6 +162,7 @@ export class ImportedClaimFacade {
           );
         },
         error: (err) => {
+          this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }

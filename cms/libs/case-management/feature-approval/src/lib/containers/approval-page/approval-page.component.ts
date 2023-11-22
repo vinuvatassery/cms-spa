@@ -38,7 +38,6 @@ import {
 } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from '@progress/kendo-angular-editor/util';
 @Component({
   selector: 'productivity-tools-approval-page',
   templateUrl: './approval-page.component.html',
@@ -63,16 +62,21 @@ export class ApprovalPageComponent implements OnInit {
   sortApprovalPaymentsList = this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
   sortValueApprovalPaymentsApproval = this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
   sortImportedClaimsList = this.importedClaimFacade.sortImportedClaimsList;
-  sortValueImportedClaimsAPproval = this.importedClaimFacade.sortValueImportedClaimsAPproval;
+  sortValueImportedClaimsApproval = this.importedClaimFacade.sortValueImportedClaimsApproval;
+  sortTypeImportedClaim = this.importedClaimFacade.sortType;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
   pendingApprovalPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
 
   userLevel = UserLevel.Level1Value;
-  pendingApprovalCount = 0;
+  pendingApprovalPaymentCount = 0;
+  pendingApprovalGeneralCount = 0;
+  pendingApprovalImportedClaimCount = 0;
   state!: State;
   approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
   approvalsImportedClaimsLists$ = this.importedClaimFacade.approvalsImportedClaimsLists$;
-  pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
+  pendingApprovalPaymentCount$ = this.navigationMenuFacade.pendingApprovalPaymentCount$;
+  pendingApprovalGeneralCount$ = this.navigationMenuFacade.pendingApprovalGeneralCount$;
+  pendingApprovalImportedClaimCount$ = this.navigationMenuFacade.pendingApprovalImportedClaimCount$;
   approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
   approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
   pendingApprovalSubmittedSummary$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
@@ -85,6 +89,7 @@ export class ApprovalPageComponent implements OnInit {
   submitGenerealRequest$ = this.pendingApprovalGeneralFacade.submitGenerealRequest$;
   possibleMatchData$ = this.importedClaimFacade.possibleMatchData$;
   submitImportedClaims$ = this.importedClaimFacade.submitImportedClaims$;
+  savePossibleMatchData$ = this.importedClaimFacade.savePossibleMatchData$;
 
   providerDetailsDialog: any;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
@@ -105,7 +110,7 @@ export class ApprovalPageComponent implements OnInit {
   pharmacyForm!: FormGroup;
   insuranceVendorForm: FormGroup;
   insuranceProviderForm: FormGroup;
-  
+
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -137,23 +142,37 @@ export class ApprovalPageComponent implements OnInit {
   ngOnInit(): void {
     this.getUserRole();
     this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
-    this.pendingApprovalPaymentsCount$.subscribe((response: any) => {
+    this.loadTabCount();
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getHealthInsuranceTypeLovsForPlan();
+  }
+
+  loadTabCount(){
+    this.navigationMenuFacade.getPendingApprovalPaymentCount(
+      this.userLevel
+    );
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
+    this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
+    this.pendingApprovalPaymentCount$.subscribe((response: any) => {
       if (response) {
-        this.navigationMenuFacade.getAllPendingApprovalPaymentCount(
-          this.userLevel
-        );
-      }
-    });
-    this.pendingApprovalCount$.subscribe((response: any) => {
-      if (response) {
-        this.pendingApprovalCount = response;
-      } else {
-        this.pendingApprovalCount = 0;
+        this.pendingApprovalPaymentCount = response;
       }
       this.cd.detectChanges();
     });
-    this.contactFacade.loadDdlStates();
-    this.lovFacade.getHealthInsuranceTypeLovsForPlan();
+
+    this.pendingApprovalGeneralCount$.subscribe((response: any) => {
+      if (response) {
+        this.pendingApprovalGeneralCount = response;
+      }
+      this.cd.detectChanges();
+    });
+
+    this.pendingApprovalImportedClaimCount$.subscribe((response: any) => {
+      if (response) {
+        this.pendingApprovalImportedClaimCount = response;
+      }
+      this.cd.detectChanges();
+    });
   }
 
   loadApprovalsGeneralGrid(event: any): void {
@@ -168,7 +187,7 @@ export class ApprovalPageComponent implements OnInit {
         } else if (this.userManagementFacade.hasRole(UserRoleType.Level1)) {
           this.userLevel = UserLevel.Level1Value;
         }
-        this.navigationMenuFacade.getAllPendingApprovalPaymentCount(
+        this.navigationMenuFacade.getPendingApprovalPaymentCount(
           this.userLevel
         );
       }
@@ -190,8 +209,9 @@ export class ApprovalPageComponent implements OnInit {
     );
   }
 
-  loadImportedClaimsGrid(event: any): void {
-    this.importedClaimFacade.loadImportedClaimsLists(event);
+  loadImportedClaimsGrid(gridDataValue: any): void {
+    this.dataExportParameters = gridDataValue;
+    this.importedClaimFacade.loadImportedClaimsLists(gridDataValue);
   }
   notificationTriger() {
     this.approvalFacade.NotifyShowHideSnackBar(
@@ -256,6 +276,30 @@ export class ApprovalPageComponent implements OnInit {
       );
     }
   }
+
+  exportImportedClaimsGridData() {
+    const data = this.dataExportParameters;
+    if (data) {
+      const filter = JSON.stringify(data?.filter);
+
+      const approvalPageAndSortedRequest = {
+        SortType: data?.sortType,
+        Sorting: data?.sort,
+        SkipCount: data?.skipCount,
+        MaxResultCount: data?.pageSize,
+        Filter: filter,
+      };
+      let fileName = 'imported_claim_approvals';
+
+      this.documentFacade.getExportFile(
+        approvalPageAndSortedRequest,
+        `imported-claims`,
+        fileName,
+        ApiType.ProductivityToolsApi
+      );
+    }
+  }
+
   loadCasereassignmentExpanedInfoParentEvent(approvalId: any) {
     this.pendingApprovalGeneralFacade.loadCasereassignmentExpandedInfo(
       approvalId

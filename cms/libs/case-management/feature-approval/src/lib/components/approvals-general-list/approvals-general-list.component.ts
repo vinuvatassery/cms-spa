@@ -144,9 +144,6 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       take: 0,
       sort: this.sort,
     };
-
-    this.loadApprovalGeneralListGrid();
-    this.getMasterData();
   }
 
   private loadApprovalGeneralListGrid(): void {

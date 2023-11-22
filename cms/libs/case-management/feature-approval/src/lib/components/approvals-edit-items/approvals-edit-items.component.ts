@@ -6,8 +6,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoaderService } from '@cms/shared/util-core';
-import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
-import { YesNoFlag } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'productivity-tools-approvals-edit-items',
   templateUrl: './approvals-edit-items.component.html',
@@ -48,6 +47,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   paymentMethodList: any[] = [];
   paymentRunDateList: any[] = [];
   tempVendorName: any;
+  ndcMaskFormat: string = "00000-0000-00"
   constructor(private insurancePlanFacade : InsurancePlanFacade,
               private drugFacade : DrugsFacade,
               private financialVendorFacade : FinancialVendorFacade,
@@ -87,11 +87,17 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsurancePlan){
+    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
       this.subscribeSearchVendor();
       this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.InsuranceProviders);
-    } else {
-      this.searchClinicData(clinicName);
+    } else if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.Drug) {
+      this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.Manufacturers);
+      this.subscribeSearchVendor();
+    }
+    else {
+      this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.MedicalClinic);
+      this.subscribeSearchVendor();
+      //this.searchClinicData(clinicName);
     }
     this.selectedClinicVendorId = null;
     this.cd.detectChanges();
@@ -101,50 +107,53 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe(
       (data: any) => {
         if (data && clinicName !== '') {
-          if (
-            this.selectedSubtypeCode ===
-              PendingApprovalGeneralTypeCode.MedicalProvider ||
-            this.selectedSubtypeCode ===
-              PendingApprovalGeneralTypeCode.MedicalClinic
-          ) {
-            this.clinicVendorListLocal = data.filter(
-              (item: any) =>
-                item.vendorTypeCode ===
-                PendingApprovalGeneralTypeCode.MedicalClinic
-            );
-          } else if (
-            this.selectedSubtypeCode ===
-              PendingApprovalGeneralTypeCode.DentalProvider ||
-            this.selectedSubtypeCode ===
-              PendingApprovalGeneralTypeCode.DentalClinic
-          ) {
-            this.clinicVendorListLocal = data.filter(
-              (item: any) =>
-                item.vendorTypeCode ===
-                PendingApprovalGeneralTypeCode.DentalClinic
-            );
-          } else if(this.selectedSubtypeCode ===
-            PendingApprovalGeneralTypeCode.Drug){
-              this.clinicVendorListLocal = data.filter(
-                (item: any) =>
-                  item.vendorTypeCode ===
-                  PendingApprovalGeneralTypeCode.Drug ? PendingApprovalGeneralTypeCode.Drug : PendingApprovalGeneralTypeCode.MedicalProvider
-              );
-          } else if (this.selectedSubtypeCode ===
-            PendingApprovalGeneralTypeCode.InsurancePlan) {
-            this.clinicVendorListLocal = data.filter(
-              (item: any) =>
-                item.vendorTypeCode ===
-                  PendingApprovalGeneralTypeCode.InsurancePlan ? PendingApprovalGeneralTypeCode.InsurancePlan : PendingApprovalGeneralTypeCode.MedicalProvider
-            );
-          }
-          this.clinicSearchSubscription?.unsubscribe();
+          this.filterSearchClinicData(data);
         }
       }
     );
     this.searchClinicVendorClicked.emit(clinicName);
   }
 
+  filterSearchClinicData(data: any){
+    if (
+      this.selectedSubtypeCode ===
+        PendingApprovalGeneralTypeCode.MedicalProvider ||
+      this.selectedSubtypeCode ===
+        PendingApprovalGeneralTypeCode.MedicalClinic
+    ) {
+      this.clinicVendorListLocal = data.filter(
+        (item: any) =>
+          item.vendorTypeCode ===
+          PendingApprovalGeneralTypeCode.MedicalClinic
+      );
+    } else if (
+      this.selectedSubtypeCode ===
+        PendingApprovalGeneralTypeCode.DentalProvider ||
+      this.selectedSubtypeCode ===
+        PendingApprovalGeneralTypeCode.DentalClinic
+    ) {
+      this.clinicVendorListLocal = data.filter(
+        (item: any) =>
+          item.vendorTypeCode ===
+          PendingApprovalGeneralTypeCode.DentalClinic
+      );
+    } else if(this.selectedSubtypeCode ===
+      PendingApprovalGeneralTypeCode.Drug){
+        this.clinicVendorListLocal = data.filter(
+          (item: any) =>
+            item.vendorTypeCode ===
+            PendingApprovalGeneralTypeCode.Drug ? PendingApprovalGeneralTypeCode.Drug : PendingApprovalGeneralTypeCode.MedicalProvider
+        );
+    } else if (this.selectedSubtypeCode ===
+      PendingApprovalGeneralTypeCode.InsurancePlan) {
+      this.clinicVendorListLocal = data.filter(
+        (item: any) =>
+          item.vendorTypeCode ===
+            PendingApprovalGeneralTypeCode.InsurancePlan ? PendingApprovalGeneralTypeCode.InsurancePlan : PendingApprovalGeneralTypeCode.MedicalProvider
+      );
+    }
+    this.clinicSearchSubscription?.unsubscribe();
+  }
 
   subscribeSearchVendor(){ 
     this.clinicSearchSubscription = this.financialVendorFacade.vendorDetails$.subscribe({
@@ -198,10 +207,10 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         this.selectedMasterData?.paymentMethodCode
       );
       this.insuranceVendorForm.controls['acceptsCombinedPayments'].setValue(
-        this.selectedMasterData?.acceptsCombinedPaymentsFlag.toUpperCase() === YesNoFlag.Yes.toUpperCase() ? true : false
+         this.selectedMasterData?.acceptsCombinedPaymentsFlag.toUpperCase()
       );
       this.insuranceVendorForm.controls['acceptsReport'].setValue(
-        this.selectedMasterData?.acceptsReportsFlag.toUpperCase()  === YesNoFlag.Yes.toUpperCase() ? true : false
+         this.selectedMasterData?.acceptsReportsFlag.toUpperCase()
       );
       this.insuranceVendorForm.controls['paymentRunDate'].setValue(
         this.selectedMasterData?.paymentRunDateMonthly.toString()
@@ -291,7 +300,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
           this.selectedMasterData?.address1
         );
         this.healthCareForm.controls['addressLine2'].setValue(
-          this.selectedMasterData.addressLine2 ?  this.selectedMasterData.addressLine2 : ''
+          this.selectedMasterData.address2 ?  this.selectedMasterData.address2 : ''
         );
         this.healthCareForm.controls['city'].setValue(
           this.selectedMasterData?.cityCode
@@ -360,9 +369,15 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         PendingApprovalGeneralTypeCode.MedicalClinic ||
       this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.MedicalProvider
     ) {
-      this.healthCareForm.controls['providerName'].setValidators(
-        Validators.required
-      );
+      if (!this.selectedVendor.parentVendorId) {
+        this.healthCareForm.controls['providerName'].setValidators(
+          Validators.nullValidator
+        );
+      } else {
+        this.healthCareForm.controls['providerName'].setValidators(
+          Validators.required
+        );
+      }
       this.healthCareForm.controls['providerName'].updateValueAndValidity();
 
       if(this.selectedMasterData.firstName)
@@ -553,7 +568,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       this.updateProviderPanelSubject$ = this.drugFacade.updateProviderPanelSubject$;
       let drugData = {
         DrugId: this.selectedMasterData.drugId,
-        ManufacturerId : this.selectedVendor,
+        ManufacturerId : this.selectedMasterData.vendorId,
         NdcNbr : this.drugForm.controls['ndcCode'].value,
         BrandName : this.drugForm.controls['brandName'].value,
         DrugName : this.drugForm.controls['drugName'].value,
@@ -681,8 +696,8 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
             MailCode: this.insuranceVendorForm.controls['mailCode'].value,
             paymentMethodCode: this.insuranceVendorForm?.controls['paymentMethod']?.value ? this.insuranceVendorForm?.controls['paymentMethod']?.value : '',
             nameOnEnvelope: this.insuranceVendorForm?.controls['nameOnEnvelop']?.value,
-            acceptsCombinedPaymentsFlag: this.insuranceVendorForm?.controls['acceptsCombinedPayments']?.value ? StatusFlag.Yes : StatusFlag.No ,
-            acceptsReportsFlag: this.insuranceVendorForm?.controls['acceptsReport']?.value ? StatusFlag.Yes : StatusFlag.No,
+            acceptsCombinedPaymentsFlag: this.insuranceVendorForm?.controls['acceptsCombinedPayments']?.value == YesNoFlag.Yes.toUpperCase() ? StatusFlag.Yes : StatusFlag.No ,
+            acceptsReportsFlag: this.insuranceVendorForm?.controls['acceptsReport']?.value == YesNoFlag.Yes.toUpperCase() ? StatusFlag.Yes : StatusFlag.No,
             paymentRunDateMonthly: this.insuranceVendorForm?.controls['paymentRunDate']?.value,
             contacts: contact
           }
@@ -772,11 +787,10 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   }
 
   public selectionChange(value: any): void {
-    this.providerName = value.vendorName;
     if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
       this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider)
       {
-        this.selectedMasterData.vendorId = value.parentVendorId;
+        this.selectedMasterData.parentVendorId = value.vendorId;
       }else {
         this.selectedMasterData.vendorId = value.vendorId;
       }

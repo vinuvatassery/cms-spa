@@ -266,7 +266,7 @@
   <button kendoButton [primary]="true" aria-label="Batch" class="" [disabled]="!selectedProcessRefunds.length"
     (click)="onBatchRefundsClicked(batchRefundConfirmationDialog)" *ngIf="isProcessBatchClosed"> Batch </button>
 
-  <kendo-splitbutton [data]="refundProcessMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
+  <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="refundProcessMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
     <div class="btn-inner-block" (click)="onClickOpenAddEditRefundFromModal(addEditRefundDialog)">
       <span class="material-icons" aria-label="New Refund" aria-hidden="false">add</span>
@@ -300,11 +300,11 @@
 </ng-template>
 
 <ng-template #addEditRefundDialog>
-  <cms-refund-new-form-details [isEdit]="isEditRefund" 
+  <cms-refund-new-form-details [isEdit]="isEditRefund"
   [serviceType]="refunEditServiceType" [clientId]="refundEditClientId"
   [clientName]="refundEditClientFullName"
   [vendorAddressId]="refundEditVendorAddressId"
   [vendorName]="refundEditVendorName"
-  (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"
+  (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)" 
   [inspaymentRequestId]="inspaymentRequestId"></cms-refund-new-form-details>
 </ng-template>

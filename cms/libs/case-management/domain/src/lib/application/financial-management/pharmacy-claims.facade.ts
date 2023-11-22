@@ -28,7 +28,7 @@ export class FinancialPharmacyClaimsFacade {
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'asc';
+  public sortType = 'desc';
 
   public selectedClaimsTab = 1
   batchClaimsSubject  =  new Subject<any>();
@@ -62,7 +62,7 @@ export class FinancialPharmacyClaimsFacade {
     },
   ];
 
-  public sortValuePharmacyClaimsPayments = 'creationTime';
+  public sortValuePharmacyClaimsPayments = 'batchName';
   public sortPaymentsList: SortDescriptor[] = [
     {
       field: this.sortValuePharmacyClaimsPayments,
@@ -370,6 +370,8 @@ export class FinancialPharmacyClaimsFacade {
         var drugs :any =[]
       
           Object.values(dataResponse).forEach((key) => {
+            key.displayNdcCode = key?.ndcNbr?.replace(/\D/g, '').replace(/^(\d{5})/, '$1-').replace(/-(\d{4})/, '-$1-')
+
             if(isClientRestricted === true)
             {
               
@@ -427,6 +429,7 @@ export class FinancialPharmacyClaimsFacade {
           const gridView = {
             data: dataResponse['items'],
             total: dataResponse['totalCount'],
+            spotsPaymentsQueryCount: dataResponse['spotsPaymentsQueryCount'],
           };
           this.pharmacyClaimsAllPaymentsLoaderSubject.next(false);
           this.pharmacyClaimsAllPaymentsDataSubject.next(gridView);
@@ -448,6 +451,7 @@ export class FinancialPharmacyClaimsFacade {
                 const gridView: any = {
                     data: dataResponse['items'],
                     total: dataResponse?.totalCount,
+                    spotsPaymentsQueryCount: dataResponse['spotsPaymentsQueryCount'],
                 };
 
                 this.paymentsByBatchDataSubject.next(gridView);

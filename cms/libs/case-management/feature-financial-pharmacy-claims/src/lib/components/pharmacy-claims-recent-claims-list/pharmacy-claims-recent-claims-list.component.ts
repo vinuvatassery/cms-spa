@@ -26,7 +26,7 @@ export class PharmacyClaimsRecentClaimsListComponent {
   @Input() duplicatePaymentInputObject:any;
   public state!: any;
   sortColumn = 'Fill Date';
-  sortDir = 'Ascending';
+  sortDir = 'desc';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -44,7 +44,7 @@ export class PharmacyClaimsRecentClaimsListComponent {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   addRemoveColumns="Default Columns"
   columns : any;  
-  dropDowncolumns : any;
+  dropDowncolumns : any; 
   isFinancialClaimsRecentClaimGridLoaderShow = false;
 
   selectedPaymentStatus: string | null = null;
@@ -97,8 +97,9 @@ export class PharmacyClaimsRecentClaimsListComponent {
     
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      take: this.defaultPageSize,
+      sort: this.sortDir,
+      
     };
     this.loadFinancialRecentClaimListGrid();
     this.cdr.detectChanges();
