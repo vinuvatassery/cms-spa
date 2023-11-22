@@ -100,7 +100,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   tpaClaimsPaymentReqIds :any[] =[]
   tpaPaymentReqIds :any[] =[]
   rxPaymentReqIds :any[] =[]
-  selectedVendorRefundsList: any = [];
+  selectedVendorRefundsList: any[] = [];
   creditMaskFormat: string = '000000-000';
 
  @Input() serviceType=''
@@ -545,7 +545,14 @@ onAddRefundClick(){
             paymentStatusCode : obj.paymentStatus
           }));
      this.clientId = this.selectedClient.clientId
+     this.pharmacyClaimsPaymentReqIds =[]
       this.selectedVendorRefundsList = listData;
+      this.selectedVendorRefundsList.forEach(x=>{
+        x.prescriptionFillItems.forEach((y :any)=>{
+          this.pharmacyClaimsPaymentReqIds.push(y.prescriptionFillId)
+        })
+      })
+ 
     }
     
    this.isConfirmationClicked = true;
@@ -603,6 +610,7 @@ addNewRefundRx() {
     this.refundRXForm.markAsTouched();
     this.refundRXForm.markAsDirty();
     this.markGridFormTouched();
+
     var selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []);
     var InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
     if ((this.refundRXForm.invalid && !this.isEdit) || InValidSelectedRefundPharmacyClaimInput.length >0) {
@@ -677,8 +685,5 @@ onSpotsPaymentChange(check: any) {
   this.isSpotsPayment = check.currentTarget.checked;
 }
 
-selectedRxClaimsChangeEvent(event:any){
-  this.selectedInsRequests = event
-  this.pharmacyClaimsPaymentReqIds = event
-}
+
 }
