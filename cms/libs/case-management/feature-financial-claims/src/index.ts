@@ -31,4 +31,4 @@ export * from './lib/components/financial-claims-provider-info/financial-claims-
 
 export * from './lib/components/financial-claims-print-denial-letter/financial-claims-print-denial-letter.component';
 export * from './lib/components/financial-claims-payment-service-list/financial-claims-payment-service-list.component';
-export * from './lib/components/financial-pca-chosen-alert/financial-pca-chosen-alert.component';
+
