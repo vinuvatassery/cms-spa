@@ -60,7 +60,7 @@
           <td>{{ vendorData.address1 }}</td>
         </tr>
       </tbody>
-      <tbody *ngIf="subTypeCode === subTypeConst.Drug">
+      <tbody *ngIf="subTypeCode.toLowerCase() === subTypeConst.Drug.toLowerCase()">
         <tr>
           <td>Manufacturer</td>
           <td>{{ vendorData.manufacturerName }}</td>
