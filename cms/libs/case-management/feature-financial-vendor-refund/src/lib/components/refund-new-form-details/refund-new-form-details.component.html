@@ -430,11 +430,12 @@
                 <h5>Select all claims included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-vendor-refund-client-claims-list #rxClaims  [selectedpharmacyClaimsPaymentReqIds]="pharmacyClaimsPaymentReqIds" [vendorId]="vendorId" [clientId]="clientId" 
-                     [refundType]="selectedRefundType" [pageSizes]="pageSizes"
+                     [refundType]="selectedRefundType" [pageSizes]="pageSizes"  [isEdit]="isEdit"
                         [sortValue]="sortValueClientClaims" [sortType]="sortType" [sort]="sortClientClaims"
                         (loadClientClaimsListEvent)="loadClientClaimsListGrid($event)" (claimsCount)="claimsCountEvent($event)"
                         (selectedVendorRefundsListEvent)="getSelectedVendorRefundsList($event)"
                         [confirmClicked]="inputConfirmationClicked"
+                        (selectedClaimsChangeEvent)="selectedRxClaimsChangeEvent($event)"
                        ></cms-vendor-refund-client-claims-list>
                 </div>
             </div>

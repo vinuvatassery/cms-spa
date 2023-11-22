@@ -121,6 +121,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   pharmaciesList: any;
   isSpotsPayment: boolean =true;
   selectedInsRequests: any[]=[];
+  selectedRxVendorRefundList: any;
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
@@ -264,7 +265,6 @@ if(this.isEdit){
     this.selectedProvider=null;
   }
   confirmationClicked (){ 
-      this.isConfirmationClicked = true   
       this.inputConfirmationClicked = true;
     this.disableFeildsOnConfirmSelection = true
    
@@ -280,9 +280,13 @@ if(this.isEdit){
     this.tpaClaimsPaymentReqIds =  this.tpaClaims.selectedTpaClaims
   }
    if (this.selectedRefundType === ServiceTypeCode.pharmacy || this.selectedRefundType === 'RX' || this.selectedRefundType === 'PHARMACY'){
-    this.refundForm.controls['rxVendor'].disable();    
-    this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
+    this.refundForm.controls['rxVendor'].disable();   
+    if(!this.isEdit){
+      this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
+    }
   }
+  
+  this.isConfirmationClicked = true   
 }
 
 onSelectedClaimsChangeEvent(event:any[]){
@@ -361,6 +365,7 @@ onAddRefundClick(){
     this.onEditInitiallydontShowPremiumselection = false
     this.inputConfirmationClicked= false
     this.isRefundGridClaimShow = true;
+    this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
     
  
   }
@@ -518,7 +523,7 @@ onAddRefundClick(){
             && x.warrantNbr == element.warrantNbr
             && x.paymentStatusCode == element.paymentStatusCode
             )
-        });
+        });       
     }
     else{
           this.isConfirmationClicked = true   
@@ -547,12 +552,13 @@ onAddRefundClick(){
      this.clientId = this.selectedClient.clientId
      this.pharmacyClaimsPaymentReqIds =[]
       this.selectedVendorRefundsList = listData;
-      this.selectedVendorRefundsList.forEach(x=>{
-        x.prescriptionFillItems.forEach((y :any)=>{
-          this.pharmacyClaimsPaymentReqIds.push(y.prescriptionFillId)
+      if(this.selectedVendorRefundsList){
+      this.selectedVendorRefundsList.forEach((vl:any)=>{
+        vl && vl.prescriptionFillItems.forEach((y :any)=>{
+          this.pharmacyClaimsPaymentReqIds.push(y.refundedPrescriptionFillId)
         })
       })
- 
+    }
     }
     
    this.isConfirmationClicked = true;
@@ -685,5 +691,9 @@ onSpotsPaymentChange(check: any) {
   this.isSpotsPayment = check.currentTarget.checked;
 }
 
+selectedRxClaimsChangeEvent(event:any){
+  this.pharmacyClaimsPaymentReqIds = event
+  this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
+}
 
 }

@@ -56,7 +56,7 @@
 </div>
 <div class="flex-row  mb-3">
     <div class="flex-col  add_grid_section">
-        <h5>Enter refund amount for selected premium:</h5>
+        <h5>Enter refund amount for selected premiums:</h5>
 
 </div>
 </div>
@@ -74,7 +74,7 @@
   [filter]="state.filter"
   (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" 
   >
-  <kendo-grid-column field="coverageDates" title="Coverage Dates" [width]="200">
+  <kendo-grid-column field="coverageStartDate" title="Coverage Dates" [width]="200">
         <ng-template kendoGridCellTemplate let-dataItem>
           <span *ngIf="dataItem.coverageEndDate == '' ;else endDateBlock">
             {{dataItem.coverageStartDate | date:'MM/dd'}}
@@ -119,8 +119,8 @@
      </ng-template>
 
   </kendo-grid-column>
-  <kendo-grid-column field="paymentMethodDescription" title="Pmt. Method" [width]="140"> </kendo-grid-column>
-  <kendo-grid-column field="paymentStatusDescription" title="Pmt. Status" [width]="130">
+  <kendo-grid-column field="paymentMethodDescription" title="Payment Method" [width]="140"> </kendo-grid-column>
+  <kendo-grid-column field="paymentStatusDescription" title="Payment Status" [width]="130">
     <ng-template kendoGridFilterMenuTemplate
     let-column="column"
     let-filter="filter"
@@ -157,13 +157,22 @@
   </kendo-grid-column>
   <kendo-grid-column field="refundAmount" title="Refund Amount" [width]="150">
     <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        <kendo-floatinglabel  class="amount-with-symbol">
         <span class="k-input-prefix custom-currencysymbol"> $ </span>
         <kendo-numerictextbox  aria-label="refund amount"
         placeholder="refund amount"  [maxlength]="12"
         [fillMode]="formUiStyle.inputFillMode"
         id ="refundAmount{{rowIndex}}"
+        class="input-icon-right" 
+         [spinners]="false"
+        [fillMode]="formUiStyle.inputFillMode" 
+        format="c2" 
+        [min]="0"
+        [decimals]="2"
+        [maxlength]="15"
         [(ngModel)]="dataItem.refundAmount" (afterValueChanged)="refundAmountChange(dataItem)" format="#.00">
       </kendo-numerictextbox>
+        </kendo-floatinglabel>
 
       <kendo-formerror *ngIf="dataItem.refundAmountError">{{dataItem.refundAmountError}}</kendo-formerror>
   </ng-template>
