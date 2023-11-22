@@ -62,6 +62,8 @@
 <!-- Sorted Info -->
 <div class="table-sorted-info">
   Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+  <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
+  <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
   <span class="sort-items">{{columnChangeDesc}}</span>
   <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
   <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetImportedClaimsGrid()">
@@ -85,6 +87,7 @@
     [sort]="state.sort"
     (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)" 
+    [filter]="state.filter"
     [isDetailExpanded]="expandInClaimException"
     [data]="gridImportedClaimsBatchData$ | async"
     [navigable]="true"
@@ -98,12 +101,28 @@
           {{ dataItem.clientName }}
         </button>
       </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+             <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+             <kendo-filter-eq-operator></kendo-filter-eq-operator>
+             <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+             <kendo-filter-contains-operator></kendo-filter-contains-operator>
+         </kendo-grid-string-filter-menu>
+     </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
       field="nameOnPrimaryInsuranceCard"
       title="Name on Primary Insurance Card"
       [width]="200"
     >
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+           <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+           <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+           <kendo-filter-contains-operator></kendo-filter-contains-operator>
+       </kendo-grid-string-filter-menu>
+   </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="claimSource" title="Claim Source" [width]="180">
       <ng-template
@@ -129,7 +148,15 @@
         </kendo-dropdownlist>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="policyId" title="Policy ID" [width]="120" extra="false">
+    <kendo-grid-column field="policyId" title="Policy ID" [width]="120">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+             <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+             <kendo-filter-eq-operator></kendo-filter-eq-operator>
+             <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+             <kendo-filter-contains-operator></kendo-filter-contains-operator>
+         </kendo-grid-string-filter-menu>
+     </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="amountDue" title="Amount Due" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -167,42 +194,146 @@
     <ng-template kendoGridCellTemplate let-dataItem>
       {{dataItem.dateOfService | date:'MM/dd/yyyy'}}
     </ng-template>
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <common-grid-cell-date-range-filter
+        [field]="'dateOfService'"
+        [filter]="filter"
+        [filterService]="filterService"
+      >
+      </common-grid-cell-date-range-filter>
+    </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
       field="policyIdMatch"
       title="Policy ID match?"
       [width]="180"
-      [sortable] = "false"
-      [filterable] = "false"
+      [sortable]="false"
+      [filterable]="false"
     >
+    <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="matchList"
+          [value]="policyIdMatchFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'policyIdMatch',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
       field="eligibilityMatch"
       title="Eligibility match?"
       [width]="180"
-      [sortable] = "false"
-      [filterable] = "false"
+      [sortable]="false"
+      [filterable]="false"
     >
+    <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="matchList"
+          [value]="eligibilityMatchFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'eligibilityMatch',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
       field="validInsurance"
       title="Valid insurance?"
       [width]="180"
-      [sortable] = "false"
-      [filterable] = "false"
+      [sortable]="false"
+      [filterable]="false"
     >
+    <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="matchList"
+          [value]="validInsuranceFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'validInsurance',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column
       field="belowMaxBenefits"
       title="Below max benefits?"
       [width]="150"
-      [sortable] = "false"
-      [filterable] = "false"
+      [sortable]="false"
+      [filterable]="false"
     >
+    <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="matchList"
+          [value]="belowMaxBenefitsFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'belowMaxBenefits',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="entryDate" title="Entry Date" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.entryDate | date:'MM/dd/yyyy'}}
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter
+          [field]="'entryDate'"
+          [filter]="filter"
+          [filterService]="filterService"
+        >
+        </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column

@@ -83,37 +83,22 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   };
 
   dropDownColumns: { columnCode: string; columnDesc: string }[] = [
-    {
-      columnCode: 'ALL',
-      columnDesc: 'All Columns',
-    },
-    {
-      columnCode: 'clientName',
-      columnDesc: 'Client Name',
-    },
-    {
-      columnCode: 'claimSource',
-      columnDesc: 'Claim Source',
-    },
-    {
-      columnCode: 'policyId',
-      columnDesc: 'Policy ID',
-    },
-    {
-      columnCode: 'dateOfService',
-      columnDesc: 'Date of Service',
-    },
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
+    { columnCode: 'clientName', columnDesc: 'Client Name' },
+    { columnCode: 'claimSource', columnDesc: 'Claim Source' },
+    { columnCode: 'policyId', columnDesc: 'Policy ID' },
+    { columnCode: 'dateOfService', columnDesc: 'Date of Service' },
   ];
 
   claimSourceList: { code: string; desc: string }[] = [
-    {
-      code: 'Kaiser',
-      desc: 'Kaiser',
-    },
-    {
-      code: 'Moda',
-      desc: 'Moda'
-    },
+    { code: 'Kaiser', desc: 'Kaiser' },
+    { code: 'Moda', desc: 'Moda' },
+  ];
+
+  matchList: { code: string; desc: string }[] = [
+    { code: 'Yes', desc: 'Yes' },
+    { code: 'No', desc: 'No' },
+    { code: 'N/A', desc: 'N/A' },
   ];
 
   selectedColumn = 'ALL';
@@ -121,6 +106,10 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   showDateSearchWarning = false;
   columnChangeDesc = 'Default Columns';
   claimSourceFilter = '';
+  policyIdMatchFilter = '';
+  eligibilityMatchFilter = '';
+  validInsuranceFilter = '';
+  belowMaxBenefitsFilter = '';
 
   gridImportedClaimsDataSubject = new Subject<any>();
   gridImportedClaimsBatchData$ =
@@ -162,12 +151,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.subscribeToPolicyUpdate();
   }
   ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[1]?.value,
-      sort: this.sort,
-      filter: { logic: 'and', filters: [] },
-    };
+    this.initializeGrid();
     this.loadImportedClaimsListGrid();
   }
   public expandInClaimException({ dataItem }: RowArgs): boolean {
@@ -226,6 +210,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'DateOfService';
     searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
+    this.setFilterBy(false, searchValue, []);
     this.onChange(searchValue);
   }
 
@@ -267,6 +252,14 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     };
   }
 
+  initializeGrid(){
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[1]?.value,
+      sort: [{ field: 'entryDate', dir: 'desc' }]
+    };
+  }
+
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
@@ -280,6 +273,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
     this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.setFilterBy(true, '', this.filter);
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -298,23 +292,58 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       this.isFiltered = false
     }
 
-    if (!this.filteredBy.includes('Claim Source'))
-    this.claimSourceFilter = '';
+    if (!this.filteredBy.includes('Claim Source')){
+      this.claimSourceFilter = '';
+    }
+    if (!this.filteredBy.includes('Policy ID match?')){
+      this.policyIdMatchFilter = '';
+    }
+    if (!this.filteredBy.includes('Eligibility match?')){
+      this.eligibilityMatchFilter = '';
+    }
+    if (!this.filteredBy.includes('Valid insurance?')){
+      this.validInsuranceFilter = '';
+    }
+    if (!this.filteredBy.includes('Below max benefits?')){
+      this.belowMaxBenefitsFilter = '';
+    }
     this.loadImportedClaimsListGrid();
   }
 
-  resetImportedClaimsGrid(){
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.dropDownColumns?.find(i => i.columnCode === this.selectedColumn)?.columnDesc ?? '';
+    }
+  }
+
+  resetImportedClaimsGrid(){debugger;
     this.sortValue = 'entryDate';
     this.sortType = 'desc';
-    this.defaultGridState();
+    this.initializeGrid();
     this.sortColumn = 'entryDate';
-    this.sortDir = this.sortType === 'asc' ? 'Ascending' : "Descending";
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
     this.filter = [];
     this.searchValue = '';
     this.selectedColumn = 'ALL';
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
+    this.showDateSearchWarning = false;
     this.loadImportedClaimsListGrid();
   }
 
@@ -330,6 +359,18 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   ): void {
     if (field === 'claimSource') {
       this.claimSourceFilter = value;
+    }
+    if (field === 'policyIdMatch') {
+      this.policyIdMatchFilter = value;
+    }
+    if (field === 'eligibilityMatch') {
+      this.eligibilityMatchFilter = value;
+    }
+    if (field === 'validInsurance') {
+      this.validInsuranceFilter = value;
+    }
+    if (field === 'belowMaxBenefits') {
+      this.belowMaxBenefitsFilter = value;
     }
     filterService.filter({
       filters: [
