@@ -59,6 +59,7 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   gridVendorsRefundData$ = this.gridVendorsRefundDataSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   
+  @Output() selectedClaimsChangeEvent = new EventEmitter<any>();
   constructor(
     public financialVendorRefundFacade:FinancialVendorRefundFacade
   ) { }
@@ -68,6 +69,8 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   }
   
   selectedKeysChange(selection: any) {
+    
+    this.selectedClaimsChangeEvent.emit(selection)
     this.selectedPharmacyClaims = selection;
   }
 

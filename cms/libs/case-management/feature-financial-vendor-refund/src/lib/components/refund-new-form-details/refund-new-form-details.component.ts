@@ -173,22 +173,25 @@ if(this.isEdit){
   }*/
   this.initForm()
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
-    this.refundForm.patchValue({
-      insVendor : this.selectedVendor
-    });
-    
   this.refundForm.controls['insVendor'].disable();
-  this.financialVendorRefundFacade.insurancevendorsSubject.next([this.selectedVendor])
+  this.refundForm.patchValue({
+    insVendor : this.selectedVendor
+  });
+  this.insurancevendors$.subscribe((res:any[])=>{
+    const vendors = res.filter((x) =>{
+      return x.vendorAddressId ==  this.vendorAddressId
+    })
+    this.selectedVendor = vendors && vendors[0]
+  })
+  this.onInputChange(this.vendorName);
 
-  this.searchInsuranceVendors(this.vendorName) 
-  
+  this.financialVendorRefundFacade.insurancevendorsSubject.next([this.selectedVendor])
    }
 
     if (this.selectedRefundType === ServiceTypeCode.pharmacy || this.serviceType == 'PHARMACY'){
     this.refundForm.patchValue({
       rxVendor : this.selectedVendor
     });
-    
   this.refundForm.controls['rxVendor'].disable();
   this.financialVendorRefundFacade.pharmaciesSubject.next([this.selectedVendor])
   this.searchPharmacy(this.vendorName) 
@@ -277,8 +280,7 @@ if(this.isEdit){
     this.tpaClaimsPaymentReqIds =  this.tpaClaims.selectedTpaClaims
   }
    if (this.selectedRefundType === ServiceTypeCode.pharmacy || this.selectedRefundType === 'RX' || this.selectedRefundType === 'PHARMACY'){
-    this.refundForm.controls['rxVendor'].disable();
-    this.rxPaymentReqIds = this.rxClaims.selectedPharmacyClaims
+    this.refundForm.controls['rxVendor'].disable();    
     this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
   }
 }
@@ -288,6 +290,9 @@ onSelectedClaimsChangeEvent(event:any[]){
   this.insurancePremiumPaymentReqIds = event
 }
 
+onSelectedRxClaimsChangeEvent(event:any){
+  this.rxPaymentReqIds = event
+}
   /*** refund INS */
   getInsuranceRefundInformation(data:any){
 
@@ -623,7 +628,7 @@ addNewRefundRx() {
         ...this.refundRXForm.value, 
         vendorId : this.vendorId,
         clientId  : this.clientId,
-        clientCaseEligibilityId   : this.clientCaseEligibilityId,
+        clientCaseEligibilityId   : this.clientCaseEligibilityId ?? selectedpharmacyClaims[0].clientCaseEligibilityId,
         refundType : this.selectedRefundType,
         isSpotsPaymentCheck: this.isSpotsPayment,
         pharmacyRefundedItems:selectedpharmacyClaimsDto
