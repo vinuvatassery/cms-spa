@@ -168,7 +168,7 @@
       <kendo-formerror *ngIf="dataItem.refundAmountError">{{dataItem.refundAmountError}}</kendo-formerror>
   </ng-template>
       <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex" let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{totalRefundAmount}} </span>
+          <span class="tableamountview"> <strong>$</strong> {{totalRefundAmount | kendoNumber:'n2'}} </span>
       </ng-template>
   </kendo-grid-column>
   <kendo-grid-column field="creatorId" title="By" [width]="75" class="text-center" [sticky]="true">
