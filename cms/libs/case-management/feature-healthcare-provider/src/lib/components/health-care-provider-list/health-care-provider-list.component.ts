@@ -188,7 +188,7 @@ pageselectionchange(data: any) {
   }
 
   closeVendorDetailModal(type : any)
-  { 
+  {  
     if(type == this.vendorTypes.HealthcareProviders){
       this.isOpeneHealthcareProvider = false;
     }else{
