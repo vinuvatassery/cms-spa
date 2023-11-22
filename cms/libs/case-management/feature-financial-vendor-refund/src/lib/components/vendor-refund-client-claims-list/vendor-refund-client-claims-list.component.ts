@@ -48,7 +48,8 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   @Input() clientClaimsListData$: any;
   @Output() loadClientClaimsListEvent = new EventEmitter<any>();
   @Output() selectedVendorRefundsListEvent = new EventEmitter<any>();
-  
+  selectedPharmacyClaimsPayments :any[] =[]
+  @Input() isEdit = false
   @Output() selectedClaimsChangeEvent = new EventEmitter<any>();
   sortColumn = 'clientId';
   sortDir = 'Ascending';
@@ -77,7 +78,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-   
+
   constructor(
     public financialVendorRefundFacade:FinancialVendorRefundFacade,private dialogService: DialogService,private readonly cdr: ChangeDetectorRef
   ) { }
@@ -87,20 +88,12 @@ private clientClaimsListDataSubject =  new Subject<any>();
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    this.selectedPharmacyClaims =  (this.selectedpharmacyClaimsPaymentReqIds && this.selectedpharmacyClaimsPaymentReqIds.length >0)?
-    this.selectedpharmacyClaimsPaymentReqIds : this.selectedPharmacyClaims
+    this.selectedPharmacyClaimsPayments =  (this.selectedpharmacyClaimsPaymentReqIds && this.selectedpharmacyClaimsPaymentReqIds.length >0)?
+    this.selectedpharmacyClaimsPaymentReqIds : this.selectedPharmacyClaimsPayments
     this.loadRefundClaimsListGrid();
     this.clientclaimsData$.subscribe((res:any)=>{
-      this.claimsCount.emit(this.selectedPharmacyClaims.length)
+      this.claimsCount.emit(this.selectedPharmacyClaimsPayments.length)
   })
-  }
-
-  selectedKeysChange(selection: any) {
-    this.selectedPharmacyClaims = selection;
-    this.claimsCount.emit(this.selectedPharmacyClaims.length)
-      
-    this.selectedClaimsChangeEvent.emit(selection)
-    
   }
   resetFilterClicked(action: any,) {
     if (action) {
@@ -163,6 +156,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   gridDataHandle() { 
     this. clientclaimsData$.subscribe((data: GridDataResult) => {
       this.gridData = data;
+      this.selectedPharmacyClaims = this.gridData.data.filter((i: any) =>  this.selectedPharmacyClaimsPayments.includes( i.perscriptionFillId));
       this.gridDataResult = data;
       this.clientClaimsListDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 

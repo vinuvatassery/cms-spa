@@ -5,7 +5,7 @@
   [data]="clientclaimsData$| async"
   kendoGridSelectBy="perscriptionFillId"
   (selectedKeysChange)="selectedRXKeysChange($event)"
-  [(selectedKeys)]="selectedPharmacyClaims">
+  [(selectedKeys)]="selectedPharmacyClaimsPayments">
     <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"></kendo-grid-checkbox-column>
 
