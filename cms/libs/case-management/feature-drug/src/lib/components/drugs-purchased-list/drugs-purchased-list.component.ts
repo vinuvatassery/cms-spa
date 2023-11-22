@@ -64,7 +64,7 @@ export class DrugsPurchasedListComponent implements OnInit {
     rxType: 'RX Type',
     rxDaysSupply: 'RX Days Supply',
     pcaCode: 'PCA Code',
-    objectCodeDesc: 'Object Code',
+    objectCode: 'Object Code',
     paymentStatusDesc: 'Payment Status',
     warrantNo: 'Warrant Number',
     reversalDate: 'Reversal Date',
@@ -79,7 +79,7 @@ export class DrugsPurchasedListComponent implements OnInit {
   selectedPaymentRequestType: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
-  paymentType$ = this.lovFacade.paymentType$;
+  paymentType$ = this.lovFacade.paymentRequestType$;
   paymentRequestType$ = this.lovFacade.paymentRequestsType$;
   paymentMethodTypes: any = [];
   paymentStauses: any = [];
@@ -141,7 +141,7 @@ export class DrugsPurchasedListComponent implements OnInit {
   }
 
   private getPaymentTypeCodeLov() {
-    this.lovFacade.getPaymentTypeLov();
+    this.lovFacade.getCoPaymentRequestTypeLov();
     this.paymentType$.subscribe({
       next: (data: any) => {
         this.paymentTypes = data.sort(

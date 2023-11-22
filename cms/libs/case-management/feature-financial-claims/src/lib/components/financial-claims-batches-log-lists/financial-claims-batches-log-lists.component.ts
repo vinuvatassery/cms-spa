@@ -74,7 +74,7 @@ export class FinancialClaimsBatchesLogListsComponent
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Reconcile Payments',
+      text: 'RECONCILE PAYMENTS',
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
@@ -82,7 +82,7 @@ export class FinancialClaimsBatchesLogListsComponent
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Advice Letters',
+      text: 'PRINT ADVICE LETTERS',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
@@ -91,7 +91,7 @@ export class FinancialClaimsBatchesLogListsComponent
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Unbatch Entire Batch',
+      text: 'UNBATCH ENTIRE BATCH',
       icon: 'undo',
       click: (data: any): void => {
         if (!this.isBulkUnBatchOpened) {
