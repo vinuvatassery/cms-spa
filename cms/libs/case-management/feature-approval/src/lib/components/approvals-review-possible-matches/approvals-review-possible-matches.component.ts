@@ -13,10 +13,10 @@ import {
   templateUrl: './approvals-review-possible-matches.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalsReviewPossibleMatchesComponent implements OnInit { 
+export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   @Input() claimData:any;
   @Input() possibleMatchData$:any;
-  @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();  
+  @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();
   @Output() closeReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
   @Output() saveReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
   isMatch: any=false;
@@ -24,7 +24,7 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   possibleMatch:any;
   hasSaveButtonEnabled:boolean=false;
   ngOnInit(): void {
-    let request = { 
+    let request = {
       policyId:this.claimData.policyId,
       firstName:this.claimData.firstName,
       lastName:this.claimData.lastName,
@@ -33,11 +33,11 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
     this.loadPossibleMatch(request);
   }
 
-  closePossibleMatches() { 
+  closePossibleMatches() {
     this.closeReviewPossibleMatchesDialogClickedEvent.emit(true);
-  } 
+  }
 
-  loadPossibleMatch(data?: any) {    
+  loadPossibleMatch(data?: any) {
     this.loadPossibleMatchDataEvent.emit(data);
     this.possibleMatchData$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {

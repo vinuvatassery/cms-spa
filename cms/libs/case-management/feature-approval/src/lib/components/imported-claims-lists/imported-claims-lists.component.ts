@@ -42,6 +42,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   @Input() approvalsImportedClaimsLists$: any;
   @Input() submitImportedClaims$: any;
   @Input() possibleMatchData$:any;
+  @Input() savePossibleMatchData$:any;
   @Input() exportButtonShow$: any;
   @Output() loadImportedClaimsGridEvent = new EventEmitter<any>();
   @Output() updateClientPolicyEvent = new EventEmitter<any>();
@@ -212,7 +213,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.gridDataHandle();
   }
 
-  searchColumnChangeHandler(value: string) {   
+  searchColumnChangeHandler(value: string) {
     this.filter = [];
     this.showDateSearchWarning = value === 'DateOfService';
     if (this.searchValue) {
@@ -241,7 +242,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
           filters: [
             {
               field: this.selectedColumn ?? 'clientName',
-              operator: 
+              operator:
                 this.selectedColumn === 'DateOfService'
                 ? 'eq'
                 : 'startswith',
@@ -277,7 +278,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.filter = stateData?.filter?.filters;    
+    this.filter = stateData?.filter?.filters;
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     if(stateData.filter?.filters.length > 0)
     {
@@ -368,6 +369,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       if (response?.total >= 0 || response?.total === -1) {
         this.isImportedClaimsGridLoaderShow = false;
       }
+      this.cd.detectChanges();
     });
   }
   onClientClicked(clientId: any) {
@@ -420,7 +422,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   private closePossibleMatchModal() {
-    this.possibleMatchData$.subscribe((value: any) => {
+    this.savePossibleMatchData$.subscribe((value: any) => {
       if (value) {
         this.onCloseReviewPossibleMatchesDialogClicked();
         this.cd.detectChanges();

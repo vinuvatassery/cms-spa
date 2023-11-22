@@ -370,6 +370,8 @@ export class FinancialPharmacyClaimsFacade {
         var drugs :any =[]
       
           Object.values(dataResponse).forEach((key) => {
+            key.displayNdcCode = key?.ndcNbr?.replace(/\D/g, '').replace(/^(\d{5})/, '$1-').replace(/-(\d{4})/, '-$1-')
+
             if(isClientRestricted === true)
             {
               

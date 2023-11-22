@@ -36,7 +36,7 @@
       [primary]="true"
       look="flat"
       aria-label="Export"
-      class="button-lg" 
+      class="button-lg"
       [disabled]="showExportLoader"
       (click)="onClickedExport()"
     >
@@ -88,7 +88,7 @@
     [isDetailExpanded]="expandInClaimException"
     [data]="gridImportedClaimsBatchData$ | async"
     [navigable]="true"
-    (columnVisibilityChange)="columnChange($event)" 
+    (columnVisibilityChange)="columnChange($event)"
     (columnReorder)="onColumnReorder($event)"
   >
     <kendo-grid-column field="clientName" title="Client Name" [width]="160">
