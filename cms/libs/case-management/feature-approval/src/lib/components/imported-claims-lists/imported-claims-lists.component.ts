@@ -330,7 +330,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     }
   }
 
-  resetImportedClaimsGrid(){debugger;
+  resetImportedClaimsGrid(){
     this.sortValue = 'entryDate';
     this.sortType = 'desc';
     this.initializeGrid();
