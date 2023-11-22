@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, groupBy } from '@progress/kendo-data-query';
-import { CaseStatusCode, DrugsFacade, FinancialPharmacyClaimsFacade, PaymentMethodCode, VendorFacade } from '@cms/case-management/domain';
+import { CaseStatusCode, DrugsFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade, PaymentMethodCode, VendorFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Lov, UserManagementFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -63,6 +63,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
 
+  manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
   deliveryMethodLovs! :any
   vendorDetails$!: Observable<any>;
   isFinancialDrugsDetailShow = false
@@ -82,6 +83,8 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   clientId: any;
   claimsType:any;
   IsEdit:boolean=false;
+  manufacturers: any = [];
+
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private formBuilder: FormBuilder,private cd: ChangeDetectorRef,
@@ -90,23 +93,34 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
     private userManagementFacade: UserManagementFacade,
     private readonly vendorFacade: VendorFacade,
     private readonly drugsFacade: DrugsFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade,
 
   ) {}
   ngOnInit(): void {
     this.cd.markForCheck();
+    this.loadManufacturersLovs()
    this.initClaimForm()
    this.getCoPaymentRequestTypeLovEvent.emit()
    this.getDrugUnitTypeLovEvent.emit()
    this. mapPaymentRequestTypes()
     this.cd.markForCheck();
-    this.loadManufacturer()
     this.loadDeliveryMethodLovs()
+    this.loadManufacturer()
+
   }
   get addClaimServicesForm(): FormArray {
     return this.pharmacyClaimForm.get('prescriptionFillDto') as FormArray;
   }
 
 
+  private loadManufacturersLovs() {
+    this.manufacturersLov$
+      .subscribe({
+        next: (data: any) => {
+          this.manufacturers = data;
+        }
+      });
+  }
   mapPaymentRequestTypes()
   {
     this.paymentRequestType$.subscribe((paymentRequestTypes : any) => {
@@ -204,7 +218,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
         claimNbr  : prescription.claimNbr,
         prescriptionFillDate  : this.intl.formatDate(prescription.prescriptionFillDate,this.dateFormat) ,
         copayAmountPaid  : prescription.copayAmountPaid,
-        ndc  : prescription.ndc,
+        ndc  : prescription.ndc.replaceAll('-',''),
         qntType  : prescription.qntType,
         dispensingQty  : prescription.dispensingQty,
         daySupply  : prescription.daySupply ,
@@ -212,6 +226,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
        }
        pharmacyClaimData.prescriptionFillDto.push(service)
     }
+
     pharmacyClaimData.prescriptionFillDto.splice(0, 1);
 
      if(pharmacyClaimData.paymentRequestId != '00000000-0000-0000-0000-000000000000')
@@ -378,7 +393,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
         new Date(service?.prescriptionFillDate)
       );
       serviceForm.controls['copayAmountPaid'].setValue(service?.copayAmountPaid);
-      serviceForm.controls['ndc'].setValue(service?.ndc);
+      serviceForm.controls['ndc'].setValue(service?.ndc?.replace(/\D/g, '').replace(/^(\d{5})/, '$1-').replace(/-(\d{4})/, '-$1-'));
       serviceForm.controls['qntType'].setValue(service.qntType);
       serviceForm.controls['dispensingQty'].setValue(service?.dispensingQty);
       serviceForm.controls['daySupply'].setValue(service?.daySupply);
@@ -417,7 +432,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   }
 
   private loadManufacturer() {
-    this.vendorDetails$ = this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers)
+   this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers)
   }
 
   private loadDeliveryMethodLovs() {
