@@ -151,7 +151,7 @@ export class VendorInfoComponent implements OnInit {
   {
     
     this.financialVendorDataService.updateVendorDetails(vendorValues).subscribe({
-      next: (resp) => {
+      next: (resp:any) => {
         if (resp) {
          this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, this.profileInfoTitle.split(' ')[0] + ' information updated.');
           this.openEditDailog=false;
@@ -163,7 +163,7 @@ export class VendorInfoComponent implements OnInit {
         }
         this.loaderService.hide();
      },
-       error: (err) => {
+       error: (err:any) => {
         this.loaderService.hide();
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
        },

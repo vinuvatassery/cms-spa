@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (close)="closeDeleteRefundClicked()"> Delete Refunds? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeDeleteRefundClicked()"> {{singleRefundDelete ? 'Delete Refund?' : 'Delete Refund(s)?'}} </kendo-dialog-titlebar>
 <section class="k-dialog-body mb-2">
   <p class="text-muted mb-1"> {{deletemodelbody}}</p>
   <p *ngIf="!singleRefundDelete" class="text-muted mb-2"> Refunds to be deleted: {{selectedProcessRefundsCount}} </p>

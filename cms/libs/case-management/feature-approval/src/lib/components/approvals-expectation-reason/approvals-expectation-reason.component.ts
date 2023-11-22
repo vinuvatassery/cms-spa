@@ -12,8 +12,21 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class ApprovalsExpectationReasonComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  exceptiontext: string = '';
   @Output() closeMakeExpectationDialogClickedEvent = new EventEmitter<any>();
+  @Output() addAnExceptionEvent = new EventEmitter<any>();
+  textMaxLength: number = 100;
   closeMakeExpectation() {
     this.closeMakeExpectationDialogClickedEvent.emit();
+  }
+  makeException(){
+    this.addAnExceptionEvent.emit(this.exceptiontext);
+  }
+  serviceDescCharCount() {
+    let serviceDescription = this.exceptiontext;
+    if (serviceDescription) {
+      return `${serviceDescription.length}/${this.textMaxLength}`;
+    }
+    return `0/${this.textMaxLength}`;
   }
 }

@@ -40,7 +40,8 @@
                                 (exportPharmacyClaimsProcessListEvent)="onExportClaimsInProcess($event)"
                                 (onbatchClaimsClickedEvent)="onbatchClaimsClicked($event)"
                                 (ondeleteClaimsClickedEvent)="ondeleteClaimsClicked($event)"
-                                [batchingClaims$]="batchingClaims$"></cms-pharmacy-claims-process-list>
+                                [batchingClaims$]="batchingClaims$" (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                ></cms-pharmacy-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -68,7 +69,11 @@
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsPayments"
                                 [sortType]="sortType" [sort]="sortPaymentsList"
                                 (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"
-                                (exportGridEvent$)="onExportAllPayments($event)"></cms-pharmacy-claims-all-payments-list>
+                                (exportGridEvent$)="onExportAllPayments($event)"
+                                (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+                                [letterContentList$]="letterContentList$"
+                                [letterContentLoader$]="letterContentLoader$"
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -76,4 +81,23 @@
             </section>
         </section>
     </div>
+    <ng-template #providerDetailsTemplate>
+        <cms-pharmacy-claims-provider-info
+              [paymentRequestId]="paymentRequestId"
+              (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+              (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+              [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="onEditProviderProfileClick()"
+              [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
+  </ng-template>
 </div>
+
+
+<ng-template #pcaExceptionDialogTemplate>
+    <common-financial-pca-chosen-alert [chosenPca]="chosenPcaForReAssignment"
+        (confirmChosenPcaAlertClickedEvent)="onConfirmPcaAlertClicked($event)"
+        (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
+    </common-financial-pca-chosen-alert>
+ 
+</ng-template>
+ 

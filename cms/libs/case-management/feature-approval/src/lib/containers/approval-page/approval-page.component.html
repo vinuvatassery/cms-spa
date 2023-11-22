@@ -23,13 +23,13 @@
   >
     <kendo-tabstrip-tab [selected]="true" title="General">
       <ng-template kendoTabTitle>
-        General <span class="tab-batch-notify">4</span></ng-template
+        General <span class="tab-batch-notify">{{pendingApprovalGeneralCount}}</span></ng-template
       >
       <ng-template kendoTabContent>
         <div class="nm-20 approval_container">
           <productivity-tools-approvals-general-list
             [approvalsGeneralLists$]="approvalsGeneralLists$"
-            [submitGenerealRequest$]="submitGenerealRequest$"            
+            [submitGenerealRequest$]="submitGenerealRequest$"
             (loadApprovalsGeneralGridEvent)="loadApprovalsGeneralGrid($event)"
             (loadCasereassignmentExpanedInfoParentEvent)="loadCasereassignmentExpanedInfoParentEvent($event)"
             (submitGeneralRequestsEvent)="submitGeneralRequests($event)"
@@ -44,6 +44,13 @@
             [clinicVendorLoader$]="clinicVendorLoader$"
             (updateMasterDetailsClickedEvent)="updateMasterDetailsClicked($event)"
             (onVendorClickedEvent)="onProviderNameClick($event)"
+            [drugForm]="drugForm"
+            [insurancePlanForm]="insurancePlanForm"
+            [insuranceTypelovForPlan$]="insuranceTypelovForPlan$"
+            [pharmacyForm]="pharmacyForm"
+            [insuranceVendorForm]="insuranceVendorForm"
+            [insuranceProviderForm]="insuranceProviderForm"
+            [pageSizes]="pageSizes"
           >
           </productivity-tools-approvals-general-list>
         </div>
@@ -53,7 +60,7 @@
       <ng-template kendoTabTitle>
         Payments
         <span class="tab-batch-notify">{{
-          pendingApprovalCount
+          pendingApprovalPaymentCount
         }}</span></ng-template
       >
       <ng-template kendoTabContent>
@@ -87,18 +94,28 @@
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Imported Claims">
       <ng-template kendoTabTitle>
-        Imported Claims <span class="tab-batch-notify">4</span></ng-template
+        Imported Claims <span class="tab-batch-notify">{{pendingApprovalImportedClaimCount}}</span></ng-template
       >
       <ng-template kendoTabContent>
         <div class="nm-20 approval_container">
           <productivity-tools-imported-claims-lists
+            [submitImportedClaims$]="submitImportedClaims$"
             [approvalsImportedClaimsLists$]="approvalsImportedClaimsLists$"
+            [possibleMatchData$]="possibleMatchData$"
+            [savePossibleMatchData$]="savePossibleMatchData$"
             [pageSizes]="pageSizes"
-            [sortValue]="sortValueImportedClaimsAPproval"
-            [sortType]="sortType"
+            [sortValue]="sortValueImportedClaimsApproval"
+            [sortType]="sortTypeImportedClaim"
             [sort]="sortImportedClaimsList"
+            [exportButtonShow$]="exportButtonShow$"
             (loadImportedClaimsGridEvent)="loadImportedClaimsGrid($event)"
+            (submitImportedClaimsEvent)="submitImportedClaims($event)"
+            (updateClientPolicyEvent) ="updateClientPolicy($event)"
             class="reminder-list-modal-wrap"
+            (loadPossibleMatchDataEvent)="loadPossibleMatch($event)"
+            (saveReviewPossibleMatchesDialogClickedEvent)="savePossibleMatch($event)"
+            (addAnExceptionEvent)="addAnException($event)"
+            (exportGridDataEvent)="exportImportedClaimsGridData()"
           ></productivity-tools-imported-claims-lists>
         </div>
       </ng-template>

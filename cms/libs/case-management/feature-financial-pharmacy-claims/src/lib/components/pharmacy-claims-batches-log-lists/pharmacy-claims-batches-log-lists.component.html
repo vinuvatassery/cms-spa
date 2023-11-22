@@ -1,12 +1,20 @@
    <div class=" pt-0">
-          <section class="app-l-mainTittle">
-              <div class="d-flex">
-                  <button aria-label="Go Back" title="Go Back" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)"> <span
-                      class="material-icons">
-                      arrow_back </span> </button>
-              <h1 class="maintitle_withicon text-bold">Batch # 05012021_001 </h1>
-              </div>
+          <section class="app-l-mainTittle" *ngIf="(paymentBatchName$ | async) as batch;else loading">
+            <div class="d-flex">
+              <button aria-label="Go Back" title="Go Back" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)">
+                <span class="material-icons">
+                  arrow_back </span> </button>
+              <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}}</h1> <br />
+            </div>
+            <div class="d-flex" *ngIf="batch.sendBackNotes != null">
+              <span class="app-c-badge  mt-3" aria-label="">
+                {{ batch.sendBackNotes }}
+              </span>
+            </div>
           </section>
+          <ng-template #loading>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+          </ng-template>
           <section class="app-l-client-wrapper ">
               <section class="app-l-wrapper">
                   <p> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
@@ -48,11 +56,25 @@
     <div class="app-c-table">
       <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take" [loading]="(loader$ | async) ?? false"
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
         (columnReorder)="onColumnReorder($event)"
-        [data]="batchLogGridLists$| async"  [rowClass]="rowClass">
-        <kendo-grid-checkbox-column [sticky]="false" [columnMenu]="false" [showSelectAll]="true"
-          [width]="40"></kendo-grid-checkbox-column>
+        [data]="batchLogGridLists$| async">
+        <kendo-grid-column  *ngIf="isPrintVisaAuthorizationClicked" [sortable]="false" field="add" [width]="40"  class="text-center"
+          [sticky]="true" [sortable]="false"  [columnMenu]="false"  >
+            <ng-template kendoGridHeaderTemplate let-dataItem >
+                <input kendoCheckBox
+                    type="checkbox"
+                    name="selectAll"
+                    [(ngModel)]="selectAll"
+                    (change)="selectionAllChange()"/>
+            </ng-template>
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
+                <input kendoCheckBox *ngIf="dataItem.paymentMethodCode === 'SPOTS'"
+                    type="checkbox"  [(ngModel)]="dataItem.selected"
+                    (change)="selectionChange(dataItem,dataItem.selected)"/>
+            </ng-template>
+          </kendo-grid-column>
+
         <kendo-grid-column field="itemNbr" title="Item #" [width]="100">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
@@ -65,7 +87,7 @@
     
         <kendo-grid-column field="vendorName" title="Pharmacy Name" [width]="160"> 
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button" (click)="onViewProviderDetailClicked(providerDetailsTemplate)">
+            <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button" (click)="onProviderNameClick(dataItem.paymentRequestId)">
               {{ dataItem.vendorName }}
             </button>
           </ng-template>
@@ -117,11 +139,12 @@
        </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="checkNbr" title="Warrant Number" [width]="160">
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
-                 <kendo-filter-eq-operator></kendo-filter-eq-operator>
-             </kendo-grid-numeric-filter-menu>
-         </ng-template>   </kendo-grid-column>
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span [attr.aria-label]="dataItem.checkNbr" look="flat">
+              {{ dataItem.checkNbr }}
+            </span>
+        </ng-template>
+        </kendo-grid-column>
         <kendo-grid-column field="creationTime" title="Entry Date" [width]="140">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.creationTime | date:'MM/dd/yyyy'}}
@@ -169,7 +192,7 @@
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
-       <ng-container *ngIf="isLogGridExpand">
+       <ng-container *ngIf="isLogGridExpand && !isPrintVisaAuthorizationClicked">
           <div *kendoGridDetailTemplate="let dataItem">
       <cms-pharmacy-claims-prescriptions-services [paymentId] = "dataItem.paymentRequestId" [claimType] = "claimsType"></cms-pharmacy-claims-prescriptions-services>
           </div>
@@ -210,12 +233,12 @@
           </section>
       </div>
     <div class="bottom-fixed-wrapper text-right flex-gap">
-    <button (click)="goToBatchItems($event)">Batch Log items</button>
-    <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
+    <span class="" *ngIf="isPrintVisaAuthorizationClicked">{{noOfRecordToPrint}} authorization letter(s) to be previewed.</span>
+    <button kendoButton [primary]="true" look="outline" aria-label="Cancel" *ngIf="isRequestPaymentClicked || isPrintVisaAuthorizationClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
     <button kendoButton [primary]="true" aria-label="Preview Requests" *ngIf="isRequestPaymentClicked" (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-    <button kendoButton [primary]="true" aria-label="Review" *ngIf="isPrintAuthorizationClicked" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Review </button>
+    <button kendoButton [primary]="true" aria-label="Preview" *ngIf="isPrintVisaAuthorizationClicked" [disabled]="noOfRecordToPrint === 0" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
     <kendo-splitbutton [data]="bulkMore" class="app-c-split-button app-dropdown-action"
-      buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintAuthorizationClicked"
+      buttonClass="k-split-button" [tabindex]="0" *ngIf="!isRequestPaymentClicked && !isPrintVisaAuthorizationClicked"
       [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
       <div class="btn-inner-block" >
         Bulk
@@ -238,8 +261,16 @@
 
 
   <ng-template #PrintAuthorizationDialogTemplate>
-    <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization(s)</kendo-dialog-titlebar>
-  <cms-pharmacy-claims-print-authorization></cms-pharmacy-claims-print-authorization>
+  <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Preview and Print Authorization(s)</kendo-dialog-titlebar>
+  <cms-pharmacy-claims-print-authorization
+  [printOption]="true"
+  [batchId]="batchId"
+  [items]="selectedDataRows"
+  (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+  (selectUnSelectPayment)="selectUnSelectPayment($event)"
+  (loadTemplateEvent)="loadEachLetterTemplate($event)"
+  [letterContentList$]="letterContentList$"
+  [letterContentLoader$]="letterContentLoader$"></cms-pharmacy-claims-print-authorization>
   </ng-template>
 
   <ng-template #unBatchClaimsDialogTemplate>
@@ -259,12 +290,11 @@
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}}  </h4></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-pharmacy-claims-recent-claims-list
-
-      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-pharmacy-claims-recent-claims-list>
-  </section>
+    (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
+</section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div class="justify-content-end">
+      <div class="justify-content-end" (click)="onClientClicked(clientId)">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
           Client Profile <span class="material-icons ml-1">
             chevron_right

@@ -39,7 +39,7 @@
         </kendo-grid-column>
         <kendo-grid-column field="amountDue" title="Amount Due" [width]="140" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="140" [filterable]="false">    

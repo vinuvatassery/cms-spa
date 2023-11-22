@@ -4,7 +4,7 @@
   <span class="text-bold" for="eemploymentep flex-col">Payment Request Type:&nbsp;</span>
   <div class="fmly-epdorpdown flex-col flex-col-3">
     <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
-      [data]="pendingApprovalPaymentType$ | async" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
+      [data]="paymentType" valueField="lovCode" textField="lovDesc" [valuePrimitive]="true"
       [loading]="(pendingApprovalPaymentType$ | async)?.length === 0"
       (valueChange)="onPaymentTypeCodeValueChange($event)" [(ngModel)]="selectedPaymentType">
     </kendo-dropdownlist>
@@ -109,12 +109,6 @@
     </kendo-grid-column>
     <kendo-grid-column
       field="providerCount"
-      title="Provider Count"
-      [width]="120"
-    >
-    </kendo-grid-column>
-    <kendo-grid-column
-      field="providerCount"
       title="Carrier Count"
       [width]="120"
       *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
@@ -185,11 +179,11 @@
               )
             "
             [selected]="dataItem.batchStatus == approveStatus"
-            aria-label="Approve"
+            aria-label="APPROVE"
             id="approve{{ rowIndex }}"
             [toggleable]="true"
           >
-            Approve
+            APPROVE
           </button>
           <button kendoButton (selectedChange)="
               onRowLevelSendbackClicked(
@@ -200,11 +194,11 @@
               )
             "
             [selected]="dataItem.batchStatus == sendbackStatus"
-            aria-label="Send Back"
+            aria-label="SEND BACK"
             id="sendback{{ rowIndex }}"
             [toggleable]="true"
           >
-            Send Back
+            SEND BACK
           </button>
         </div>
       </ng-template>
@@ -312,7 +306,7 @@
     (click)="onOpenSubmitApprovalPaymentItemsClicked()"
     [disabled]="hasPaymentPendingApproval"
   >
-    Submit
+    SUBMIT
   </button>
 </div>
 
@@ -350,7 +344,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button aria-label="Cancel" kendoButton look="outline" (click)="onCloseSubmitApprovalPaymentItemsClicked()">
-          Cancel
+          CANCEL
         </button>
         <button aria-label="Submit" kendoButton [primary]="true" (click)="makeRequestData()">
           SUBMIT
@@ -374,7 +368,6 @@
     [paymentStatusLovList]="paymentStatusLovList"
     [paymentMethodLovList]="paymentMethodLovList"
     [pageSizes]="pageSizes"
-    [sortType]="sortType"
     [selectedPaymentType]="selectedPaymentType"
     [isSendBackMode]="isSendbackMode"
     [userLevel]="userLevel"

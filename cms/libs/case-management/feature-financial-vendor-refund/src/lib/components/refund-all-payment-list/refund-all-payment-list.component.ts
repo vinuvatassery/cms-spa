@@ -1,4 +1,3 @@
-
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -9,15 +8,14 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  ViewChild,
+  ViewChild
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject, first } from 'rxjs';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
@@ -41,11 +39,15 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+  @Output() exportReceiptDataEvent = new EventEmitter<any>();
+  @Output() changeTitle = new EventEmitter<any>();
 
   @ViewChild('unBatchRefundsDialogTemplate', { read: TemplateRef })
   unBatchRefundsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
   deleteRefundsConfirmationDialogTemplate!: TemplateRef<any>;
+
+  private addEditRefundFormDialog: any;
 
   public state!: State;
   sortColumn = 'Batch #';
@@ -55,7 +57,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn ='batchNumber'
+  selectedColumn = 'batchNumber'
   gridDataResult!: GridDataResult;
 
   gridVendorsAllPaymentsDataSubject = new Subject<any>();
@@ -65,6 +67,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
+  isRefundEditDialogOpen = false;
   isUnBatchRefundsClosed = false;
   isDeleteClaimClosed = false;
   unBatchDialog: any;
@@ -72,17 +75,39 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   selected: any;
   deletemodelbody = 'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
 
+  refunEditServiceType = '';
+  refundEditClientId = '';
+  refundEditClientFullName: any;
+  refundEditVendorAddressId = '';
+  refundEditVendorName: any;
+  inspaymentRequestId: any;
+
+  @ViewChild('addEditRefundDialog', { read: TemplateRef })
+  addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
+
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Refund',
       icon: 'edit',
+      click: (dataItem: any): void => {
+        if (!this.isRefundEditDialogOpen) {
+          this.isRefundEditDialogOpen = true;
+          this.refunEditServiceType = dataItem.paymentTypeCode
+          this.refundEditClientId = dataItem.clientId
+          this.refundEditClientFullName = dataItem.clientFullName
+          this.refundEditVendorAddressId = dataItem.vendorAddressId
+          this.refundEditVendorName = dataItem.providerName
+          this.inspaymentRequestId = dataItem.paymentRequestId
+          this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
+        }
+      },
     },
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Refund',
       icon: 'undo',
-      click: (data: any) =>{
+      click: (data: any) => {
         if (!this.isUnBatchRefundsClosed) {
           this.isUnBatchRefundsClosed = true;
           this.selected = data;
@@ -118,10 +143,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     originalWarrantNumber: 'Original Warrant #',
     originalAmount: 'Original Amount',
     indexCode: 'Index Code',
-    pcaCode :'PCA',
-    voucherPayable :'VP',
-    refundNote:'Refund Note',
-    entryDate : 'Entry Date'
+    pcaCode: 'PCA',
+    voucherPayable: 'VP',
+    refundNote: 'Refund Note',
+    entryDate: 'Entry Date'
   };
 
   dropDowncolumns: any = [
@@ -163,14 +188,14 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
   /** Constructor **/
   constructor(
-    private route: Router,  private readonly cdr: ChangeDetectorRef,
+    private route: Router, private readonly cdr: ChangeDetectorRef,
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
-    private dialogService: DialogService) {}
+    private dialogService: DialogService) { }
 
   ngOnInit(): void {
-    this.sortType = 'desc'
-    this.loadVendorRefundAllPaymentsListGrid();
+    this.sortType = 'desc'   
   }
+
   ngOnChanges(): void {
     this.sortType = 'desc'
     this.state = {
@@ -190,6 +215,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       this.sortType
     );
   }
+
   loadRefundAllPayments(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -198,8 +224,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   ) {
     this.isVendorRefundAllPaymentsGridLoaderShow = true;
 
-    if(sortValue  === 'batchNumber')
-    {
+    if (sortValue === 'batchNumber') {
       sortValue = 'entryDate'
     }
 
@@ -214,10 +239,9 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.gridDataHandle();
   }
 
-  searchColumnChangeHandler(data:any){
+  searchColumnChangeHandler(data: any) {
     this.onChange('')
   }
-
 
   onChange(data: any) {
     this.defaultGridState();
@@ -304,7 +328,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridVendorsAllPaymentsDataSubject.next(this.gridDataResult);
-        this.isVendorRefundAllPaymentsGridLoaderShow = false;
+      this.isVendorRefundAllPaymentsGridLoaderShow = false;
     });
 
   }
@@ -312,6 +336,19 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   onClickedExport() {
     this.showExportLoader = true;
     this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  onClickedDownload() {
+    if (!this.selectedPayments.length) return;
+    this.showExportLoader = true;
+
+    this.exportReceiptDataEvent.emit(this.selectedPayments);
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
         this.showExportLoader = false;
@@ -337,7 +374,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.sortValue = 'batchNumber';
     this.sortType = 'asc';
     this.sort = this.sortColumn;
-    this.searchValue =''
+    this.searchValue = ''
 
     this.loadVendorRefundAllPaymentsListGrid();
   }
@@ -406,4 +443,40 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
         }
       });
   }
+
+  onEditRefundClaimClicked(template: TemplateRef<unknown>): void {
+    this.addEditRefundFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-96full add_refund_modal',
+    });
+  }
+
+  modalCloseAddEditRefundFormModal(result: any) {
+    this.isRefundEditDialogOpen = false;
+    this.addEditRefundFormDialog.close();
+    if (result) {
+      this.loadVendorRefundAllPaymentsListGrid();
+    }
+  }
+
+  isLogGridExpanded = false;
+  hideActionButton = false;
+  receiptLogMode = false
+  selectedPayments: any[] = [];
+
+  cancelActions() {
+    this.selectedPayments = [];
+    this.changeTitle.emit();
+    this.isLogGridExpanded = !this.isLogGridExpanded;
+    this.hideActionButton = !this.hideActionButton;
+    this.receiptLogMode = !this.receiptLogMode;
+  }
+
+  receiptingLogClicked() {
+    this.changeTitle.emit("Receipting Log");
+    this.isLogGridExpanded = !this.isLogGridExpanded;
+    this.receiptLogMode = !this.receiptLogMode;
+    this.hideActionButton = !this.hideActionButton;
+  }
+
 }

@@ -253,10 +253,6 @@ export class FinancialPremiumsBatchesListComponent
     this.filterData = filter;
   }
 
-  rowClass = (args: any) => ({
-    'table-row-disabled': !args.dataItem.assigned,
-  });
-
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
     this.columnChangeDesc =

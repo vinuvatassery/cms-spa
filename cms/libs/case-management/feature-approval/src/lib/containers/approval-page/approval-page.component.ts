@@ -18,6 +18,8 @@ import {
   UserRoleType,
   FinancialVendorFacade,
   ContactFacade,
+  DrugsFacade,
+  InsurancePlanFacade,
   ImportedClaimFacade,
 } from '@cms/case-management/domain';
 import {
@@ -57,43 +59,37 @@ export class ApprovalPageComponent implements OnInit {
   sort = this.pendingApprovalGeneralFacade.sort;
   sortValueGeneralAPproval = this.approvalFacade.sortValueGeneralAPproval;
   sortGeneralList = this.approvalFacade.sortGeneralList;
-  sortApprovalPaymentsList =
-    this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
-  sortValueApprovalPaymentsApproval =
-    this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
+  sortApprovalPaymentsList = this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
+  sortValueApprovalPaymentsApproval = this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
   sortImportedClaimsList = this.importedClaimFacade.sortImportedClaimsList;
-  sortValueImportedClaimsAPproval =
-    this.importedClaimFacade.sortValueImportedClaimsAPproval;
+  sortValueImportedClaimsApproval = this.importedClaimFacade.sortValueImportedClaimsApproval;
+  sortTypeImportedClaim = this.importedClaimFacade.sortType;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
-  pendingApprovalPaymentsCount$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
+  pendingApprovalPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
 
   userLevel = UserLevel.Level1Value;
-  pendingApprovalCount = 0;
+  pendingApprovalPaymentCount = 0;
+  pendingApprovalGeneralCount = 0;
+  pendingApprovalImportedClaimCount = 0;
   state!: State;
-  approvalsGeneralLists$ =
-    this.pendingApprovalGeneralFacade.approvalsGeneralList$;
-  approvalsImportedClaimsLists$ =
-    this.importedClaimFacade.approvalsImportedClaimsLists$;
-  pendingApprovalCount$ = this.navigationMenuFacade.pendingApprovalCount$;
-  approvalsPaymentsLists$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
-  approvalsPaymentsMainLists$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
-  pendingApprovalSubmittedSummary$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
-  pendingApprovalSubmit$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
-  batchDetailPaymentsList$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
-  batchDetailPaymentsCount$ =
-    this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
-  approvalsExceptionCard$ =
-    this.pendingApprovalGeneralFacade.approvalsGeneralExceptionCardSubjectList$;
+  approvalsGeneralLists$ = this.pendingApprovalGeneralFacade.approvalsGeneralList$;
+  approvalsImportedClaimsLists$ = this.importedClaimFacade.approvalsImportedClaimsLists$;
+  pendingApprovalPaymentCount$ = this.navigationMenuFacade.pendingApprovalPaymentCount$;
+  pendingApprovalGeneralCount$ = this.navigationMenuFacade.pendingApprovalGeneralCount$;
+  pendingApprovalImportedClaimCount$ = this.navigationMenuFacade.pendingApprovalImportedClaimCount$;
+  approvalsPaymentsLists$ = this.pendingApprovalPaymentFacade.pendingApprovalGrid$;
+  approvalsPaymentsMainLists$ = this.pendingApprovalPaymentFacade.pendingApprovalMainList$;
+  pendingApprovalSubmittedSummary$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmittedSummary$;
+  pendingApprovalSubmit$ = this.pendingApprovalPaymentFacade.pendingApprovalSubmit$;
+  batchDetailPaymentsList$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsGrid$;
+  batchDetailPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalBatchDetailPaymentsCount$;
+  approvalsExceptionCard$ = this.pendingApprovalGeneralFacade.approvalsGeneralExceptionCardSubjectList$;
   invoiceData$ = this.pendingApprovalGeneralFacade.invoiceData$;
   isInvoiceLoading$ = this.pendingApprovalGeneralFacade.isInvoiceLoading$;
-  submitGenerealRequest$ =
-    this.pendingApprovalGeneralFacade.submitGenerealRequest$;
+  submitGenerealRequest$ = this.pendingApprovalGeneralFacade.submitGenerealRequest$;
+  possibleMatchData$ = this.importedClaimFacade.possibleMatchData$;
+  submitImportedClaims$ = this.importedClaimFacade.submitImportedClaims$;
+  savePossibleMatchData$ = this.importedClaimFacade.savePossibleMatchData$;
 
   providerDetailsDialog: any;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
@@ -103,11 +99,18 @@ export class ApprovalPageComponent implements OnInit {
   selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
   clinicVendorList$ = this.financialVendorFacade.clinicVendorList$;
   ddlStates$ = this.contactFacade.ddlStates$;
-  healthCareForm!: FormGroup;  
+  healthCareForm!: FormGroup;
   clinicVendorLoader$ = this.financialVendorFacade.clinicVendorLoader$;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  drugForm!:  FormGroup;
+  insurancePlanForm!: FormGroup;
+  insuranceTypelovForPlan$ = this.lovFacade.insuranceTypelovForPlan$;
+  pharmacyForm!: FormGroup;
+  insuranceVendorForm: FormGroup;
+  insuranceProviderForm: FormGroup;
+
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -125,30 +128,51 @@ export class ApprovalPageComponent implements OnInit {
     private readonly importedClaimFacade:ImportedClaimFacade,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
-
+    private drugService: DrugsFacade,
+    private insurancePlanFacade : InsurancePlanFacade
   ) {
     this.healthCareForm = this.formBuilder.group({});
+    this.drugForm = this.formBuilder.group({});
+    this.insurancePlanForm = this.formBuilder.group({});
+    this.pharmacyForm = this.formBuilder.group({});
+    this.insuranceVendorForm = this.formBuilder.group({});
+    this.insuranceProviderForm = this.formBuilder.group({});
   }
 
   ngOnInit(): void {
     this.getUserRole();
     this.userManagementFacade.getUsersByRole(UserDefaultRoles.CACaseWorker);
-    this.pendingApprovalPaymentsCount$.subscribe((response: any) => {
+    this.loadTabCount();
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getHealthInsuranceTypeLovsForPlan();
+  }
+
+  loadTabCount(){
+    this.navigationMenuFacade.getPendingApprovalPaymentCount(
+      this.userLevel
+    );
+    this.navigationMenuFacade.getPendingApprovalGeneralCount();
+    this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
+    this.pendingApprovalPaymentCount$.subscribe((response: any) => {
       if (response) {
-        this.navigationMenuFacade.getAllPendingApprovalPaymentCount(
-          this.userLevel
-        );
-      }
-    });
-    this.pendingApprovalCount$.subscribe((response: any) => {
-      if (response) {
-        this.pendingApprovalCount = response;
-      } else {
-        this.pendingApprovalCount = 0;
+        this.pendingApprovalPaymentCount = response;
       }
       this.cd.detectChanges();
     });
-    this.contactFacade.loadDdlStates();
+
+    this.pendingApprovalGeneralCount$.subscribe((response: any) => {
+      if (response) {
+        this.pendingApprovalGeneralCount = response;
+      }
+      this.cd.detectChanges();
+    });
+
+    this.pendingApprovalImportedClaimCount$.subscribe((response: any) => {
+      if (response) {
+        this.pendingApprovalImportedClaimCount = response;
+      }
+      this.cd.detectChanges();
+    });
   }
 
   loadApprovalsGeneralGrid(event: any): void {
@@ -163,7 +187,7 @@ export class ApprovalPageComponent implements OnInit {
         } else if (this.userManagementFacade.hasRole(UserRoleType.Level1)) {
           this.userLevel = UserLevel.Level1Value;
         }
-        this.navigationMenuFacade.getAllPendingApprovalPaymentCount(
+        this.navigationMenuFacade.getPendingApprovalPaymentCount(
           this.userLevel
         );
       }
@@ -185,8 +209,9 @@ export class ApprovalPageComponent implements OnInit {
     );
   }
 
-  loadImportedClaimsGrid(event: any): void {
-    this.importedClaimFacade.loadImportedClaimsLists(event);
+  loadImportedClaimsGrid(gridDataValue: any): void {
+    this.dataExportParameters = gridDataValue;
+    this.importedClaimFacade.loadImportedClaimsLists(gridDataValue);
   }
   notificationTriger() {
     this.approvalFacade.NotifyShowHideSnackBar(
@@ -251,12 +276,36 @@ export class ApprovalPageComponent implements OnInit {
       );
     }
   }
+
+  exportImportedClaimsGridData() {
+    const data = this.dataExportParameters;
+    if (data) {
+      const filter = JSON.stringify(data?.filter);
+
+      const approvalPageAndSortedRequest = {
+        SortType: data?.sortType,
+        Sorting: data?.sort,
+        SkipCount: data?.skipCount,
+        MaxResultCount: data?.pageSize,
+        Filter: filter,
+      };
+      let fileName = 'imported_claim_approvals';
+
+      this.documentFacade.getExportFile(
+        approvalPageAndSortedRequest,
+        `imported-claims`,
+        fileName,
+        ApiType.ProductivityToolsApi
+      );
+    }
+  }
+
   loadCasereassignmentExpanedInfoParentEvent(approvalId: any) {
     this.pendingApprovalGeneralFacade.loadCasereassignmentExpandedInfo(
       approvalId
     );
   }
-  
+
   submitGeneralRequests(requests: any) {
     this.pendingApprovalGeneralFacade.submitGeneralRequests(requests);
   }
@@ -276,6 +325,7 @@ export class ApprovalPageComponent implements OnInit {
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Pharmacy
     ) {
       this.financialVendorFacade.getVendorDetails(userObject.approvalEntityId, false);
+       this.selectedMasterDetail$ = this.financialVendorFacade.selectedVendor$;
     } else if (
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.Drug ||
       userObject.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan
@@ -286,25 +336,22 @@ export class ApprovalPageComponent implements OnInit {
       );
       this.selectedMasterDetail$ =
         this.pendingApprovalGeneralFacade.selectedMasterDetail$;
+
     }
   }
-  
+
   buildVendorForm() {
-  let form = this.formBuilder.group({
+    let form = this.formBuilder.group({
       providerName: [''],
       firstName: [''],
       lastName: [],
       tinNumber: [''],
-      phoneNumber: [''],
-      email:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)],
-      fax:[''],
       addressLine1: [''],
       addressLine2: [''],
       city: [''],
       state: [''],
       zip: [''],
       contactFirstName:[''],
-      contactLastName: [''],
       contactPhone:[''],
       contactFax:[''],
       contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
@@ -312,10 +359,24 @@ export class ApprovalPageComponent implements OnInit {
     this.healthCareForm = form;
   }
 
-  editClicked(event : any){
-    if(event)
+  editClicked(subTypeCode : any){
+    if(subTypeCode == PendingApprovalGeneralTypeCode.DentalClinic ||
+      subTypeCode == PendingApprovalGeneralTypeCode.MedicalClinic ||
+      subTypeCode ==  PendingApprovalGeneralTypeCode.DentalProvider ||
+      subTypeCode ==  PendingApprovalGeneralTypeCode.MedicalProvider)
     {
       this.buildVendorForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.Drug)
+    {
+      this.buildDrugForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsurancePlan) {
+      this.buildInsurancePlanForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.Pharmacy) {
+      this.buildPharmacyForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsuranceVendor) {
+      this.buildInsuranceVendorForm();
+    } else if (subTypeCode == PendingApprovalGeneralTypeCode.InsuranceProvider) {
+      this.buildInsuranceProviderForm();
     }
   }
 
@@ -324,7 +385,19 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   updateMasterDetailsClicked(event: any){
-    this.financialVendorFacade.updateProviderPanel(event);
+    if(event.subTypeCode === PendingApprovalGeneralTypeCode.MedicalClinic ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.MedicalProvider ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.Pharmacy ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.InsuranceVendor ||
+      event.subTypeCode === PendingApprovalGeneralTypeCode.InsuranceProvider) {
+        this.financialVendorFacade.updateVendorProfile(event.form);
+      } else if (event.subTypeCode === PendingApprovalGeneralTypeCode.Drug) {
+        this.drugService.updateDrugVendor(event.form);
+    } else if (event.subTypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
+      this.insurancePlanFacade.updateInsurancePlan(event.form);
+    }
   }
 
   onProviderNameClick(event: any) {
@@ -350,7 +423,6 @@ export class ApprovalPageComponent implements OnInit {
   }
 
   updateProviderProfile(event: any) {
-    console.log(event);
     this.financialVendorFacade.updateProviderPanel(event);
   }
 
@@ -359,4 +431,94 @@ export class ApprovalPageComponent implements OnInit {
     this.lovFacade.getPaymentMethodLov();
   }
 
+  buildDrugForm() {
+    let form = this.formBuilder.group({
+      providerName: [''],
+      drugName:[''],
+      brandName :[''],
+      ndcCode : [''],
+      drugType: [''],
+      deliveryMethod : ['']
+    })
+    this.drugForm = form;
+  }
+
+  buildInsurancePlanForm() {
+    let form = this.formBuilder.group({
+      providerName: [''],
+      termDate: [''],
+      startDate: [''],
+      dentalPlanFlag: [''],
+      canPayForMedicationFlag: [''],
+      healthInsuranceTypeCode: [''],
+      insurancePlanName: ['']
+    })
+    this.insurancePlanForm = form
+  }
+
+  buildPharmacyForm() {
+    let form = this.formBuilder.group({
+      pharmacyName : [''],
+      tin:[''],
+      npi:[''],
+      preferredPharmacy: [''],
+      mailCode:[''],
+      paymentMethod:[''],
+      contactFirstName: [''],
+      contactLastName:[''],
+      contactPhone: [''],
+      contactFax:[''],
+      contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
+    });
+    this.pharmacyForm = form;
+  }
+
+  buildInsuranceVendorForm() {
+    let form = this.formBuilder.group({
+      vendorName:[''],
+      nameOnCheck:[''],
+      nameOnEnvelop:[''],
+      tin:[''],
+      mailCode:[''],
+      paymentMethod:[''],
+      acceptsCombinedPayments:[''],
+      acceptsReport:[''],
+      paymentRunDate:[''],
+      contactFirstName: [''],
+      contactLastName:[''],
+      contactPhone: [''],
+      contactFax:[''],
+      contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
+    });
+    this.insuranceVendorForm = form;
+  }
+
+  buildInsuranceProviderForm() {
+    let form = this.formBuilder.group({
+      providerName : ['']
+    });
+    this.insuranceProviderForm = form;
+  }
+
+  submitImportedClaims(claims : any)
+  {
+    this.importedClaimFacade.submitImportedClaims(claims);
+  }
+
+  loadPossibleMatch(event: any)
+  {
+    this.importedClaimFacade.loadPossibleMatch(event);
+  }
+
+  savePossibleMatch(event:any)
+  {
+    this.importedClaimFacade.savePossibleMatch(event);
+  }
+  updateClientPolicy(importedclaimDto: any){
+    this.importedClaimFacade.updateClientPolicy(importedclaimDto);
+  }
+
+  addAnException(exceptionObject : any){
+    this.importedClaimFacade.makeExceptionForExceedBenefits(exceptionObject);
+  }
 }

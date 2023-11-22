@@ -77,6 +77,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   clientId: any;
  clientName: any;
  claimsType:any;
+ paymentRequestId!: string;
   @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
   @Input() getPharmacyClaim$: any;
@@ -97,6 +98,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   @Output() searchDrugEvent = new EventEmitter<any>();
   @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
   @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
 
   public state!: State;
   sortColumnDesc = 'Entry Date';
@@ -121,7 +123,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Batch Claims',
+      text: 'BATCH CLAIMS',
       icon: 'check',
       click: (data: any,paymentRequestId : any): void => {
         if (!this.isProcessBatchClosed) {
@@ -134,7 +136,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Claims',
+      text: 'DELETE CLAIMS',
       icon: 'delete',
       click: (data: any,paymentRequestId : any): void => {
         if (!this.isDeleteBatchClosed) {
@@ -193,17 +195,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     { columnName: 'ALL', columnDesc: 'All Columns' },
     { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
-    { columnName: 'paymentMethodCode', columnDesc: 'Payment Method' },
     { columnName: 'clientFullName', columnDesc: 'Client Name' },
-    { columnName: 'insuranceName', columnDesc: 'Name on Primary Insurance Card' },
     { columnName: 'clientId', columnDesc: 'Client ID' },
-    { columnName: 'paymentType', columnDesc: 'Payment Type' },
-    { columnName: 'amountPaid', columnDesc: 'Amount Paid' },
-    { columnName: 'indexCode', columnDesc: 'Index Code' },
-    { columnName: 'pcaCode', columnDesc: 'PCA Code' },
-    { columnName: 'objectCode', columnDesc: 'Object Code' },
-    { columnName: 'paymentStatus', columnDesc: 'Payment Status' },
-    { columnName: 'creationTime', columnDesc: 'Entry Date' }
   ];
 
   paymentMethodFilter = '';
@@ -338,7 +331,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   performSearch(data: any) {
     this.defaultGridState();
-    const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
+    const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'contains';
     this.filterData = {
       logic: 'and',
       filters: [
@@ -586,5 +579,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.addClientRecentClaimsDialog.close();
+  }
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
   }
 }

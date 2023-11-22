@@ -40,8 +40,8 @@ export class FinancialPharmacyClaimsDataService {
   loadPharmacyClaimsBatchListService(params: GridFilterParam) {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/batches`, params);
   }
-  loadPharmacyClaimsAllPaymentsListService(params: GridFilterParam) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies`, params);
+  loadPharmacyClaimsAllPaymentsListService(params: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/payments`, params);
   }
 
   loadBatchLogListService( ) {
@@ -72,7 +72,7 @@ export class FinancialPharmacyClaimsDataService {
         entryDate: 'XX/XX/XXXX',
         by: 'by',
       },
-
+      
     ]);
   }
   loadBatchItemsListService(){
@@ -183,4 +183,61 @@ export class FinancialPharmacyClaimsDataService {
     );
   }
 
+  loadEachLetterTemplate(templateParams:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/print-advice-letter`,templateParams);
+  }
+
+  getPrintAdviceLetterData(selectedProviders: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/print-advice-letter-summary`,selectedProviders);
+  }
+
+  viewPrintAdviceLetterData(printAdviceLetterData: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/download-advice-letter`, printAdviceLetterData,
+      { responseType: 'blob' }
+    );
+  }
+
+  reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/all/reconcile-payments`,reconcileData);
+  }
+
+  loadReconcilePaymentBreakoutSummaryService(data:any): Observable<any> {
+    const ReconcilePaymentResponseDto =
+    {
+      BatchId : data.batchId,
+      EntityId : data.entityId,
+      AmountTotal : data.amountTotal,
+      WarrantTotal : data.warrantTotal,
+      WarrantNbr : data.warrantNbr,
+      PaymentToReconcileCount : data.paymentToReconcileCount,
+      warrantCalculation:data.warrantCalculation,
+      loadType:data.loadType
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/reconcile-breakout-summary`,ReconcilePaymentResponseDto
+    );
+  }
+
+  loadReconcilePaymentBreakoutListService(data:any): Observable<any> {
+    const BreakoutPanelPageAndSortedRequestDto =
+    {
+      BatchId : data.batchId,
+      EntityId : data.entityId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
+    );
+  }
+
+
+  loadBatchName(batchId: string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/payment-batches/${batchId}`);
+  }
 }

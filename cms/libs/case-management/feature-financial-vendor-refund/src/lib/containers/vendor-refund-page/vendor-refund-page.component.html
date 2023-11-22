@@ -2,7 +2,7 @@
     <common-bread-crumb></common-bread-crumb>
     <div class=" pt-0"> 
         <section class="app-l-mainTittle">
-            <h1 class="maintitle_withicon text-bold">Vendor Refunds </h1>
+            <h1 class="maintitle_withicon text-bold"> {{pageTitle}} </h1>
         </section>
         <section class="app-l-client-wrapper ">
             <section class="app-l-wrapper"> 
@@ -29,6 +29,8 @@
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundBatch"
                                 [sortType]="sortType" [sort]="sortBatchList" 
                                 (loadVendorRefundBatchListEvent)="loadVendorRefundBatchListGrid($event)"
+                                [exportButtonShow$]="exportButtonShow$"                              
+                                (exportGridDataEvent)="exportBatchesGridData()"
                                 ></cms-refund-batches-list>
                             </div>
                         </ng-template>
@@ -43,7 +45,9 @@
                                 [sortType]="sortType" [sort]="sortPaymentsList" 
                                 (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"
                                 [exportButtonShow$]="exportButtonShow$"                              
-                                (exportGridDataEvent)="exportAllRefundsGridData()"></cms-refund-all-payment-list>
+                                (exportGridDataEvent)="exportAllRefundsGridData()"
+                                (exportReceiptDataEvent)="exportReceiptDataEvent($event)"
+                                (changeTitle)="changeTitle($event)"></cms-refund-all-payment-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

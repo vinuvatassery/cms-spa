@@ -139,7 +139,7 @@
                         <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
                               <ng-template kendoGridCellTemplate let-dataItem>
                                     <button [attr.aria-label]="dataItem?.batchName" kendoButton look="flat" 
-                                                class="card-link-button"  >
+                                                class="card-link-button"  (click)="onBatchNumberClick(dataItem)">
                                                 {{dataItem?.batchName}} 
                                     </button>
                                     </ng-template>
@@ -153,10 +153,10 @@
                                         </kendo-grid-string-filter-menu>
                                         </ng-template>
                         </kendo-grid-column>
-                        <kendo-grid-column field="vendorName" [title]="providerTitle" [width]="160">
+                        <kendo-grid-column field="vendorName" title="Pharmacy Provider" [width]="160">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"  (click)="onViewProviderDetailClicked(dataItem.paymentRequestId)" 
-                                          class="card-link-button"  >
+                              <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"
+                                          class="card-link-button"   (click)="onProviderNameClick(dataItem.paymentRequestId)" >
                                           {{dataItem?.vendorName}} 
                               </button>
                               </ng-template>
@@ -239,7 +239,7 @@
                                     </ng-template>
                         </kendo-grid-column>                   
 
-                        <kendo-grid-column field="amountDue" title="Amount Due" [width]="180">
+                        <kendo-grid-column field="amountDue" title="Pmt. Amount" [width]="180">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                               <label aria-label="Medical Provider" kendoButton look="flat"
                                     class="card-link-button"  >
@@ -355,18 +355,34 @@
       <div class="bottom-fixed-wrapper">
             <div class="sub-fix-bar">
                   <div class="flex-sp-btn">
-                        <div> <span><strong>Amount Total:</strong> $13,000.00</span> <span class="ml-2"><strong>Warrant Total:</strong> $13,000.00</span></div>
-                        <div>0 payment(s) to reconcile</div>
+                        <div> <span><strong>Amount Total:</strong> $&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.amountTotal |
+                              kendoNumber:'n2'}}</span>
+                        <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2">$&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.warrantTotal | kendoNumber: 'n2'}}</span>
                   </div>
-                 
-                  <div>
-                        <cms-pharmacy-claims-batches-reconcile-payments-breakout></cms-pharmacy-claims-batches-reconcile-payments-breakout>
+                  <div><span *ngIf="!onlyPrintAdviceLetter">{{ claimReconcileCount }} payment(s) to reconcile</span>
+                        <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close" title="Close">
+                              <span class="material-icons" aria-label="close" aria-hidden="true"
+                                    (click)="toggleBreakoutPanel()">close</span>
+                        </button>
+                  </div>
+                  </div>   
+
+                  <div *ngIf="isBreakoutPanelShow">
+                        <cms-pharmacy-claims-batches-reconcile-payments-breakout
+                        [pageSizes]="pageSizes" [sortValueBreakOut]="sortValueBreakOut" 
+                        [sortType]="sortType" [sort]="sort"  [batchId]="batchId" [entityId]="entityId"    
+                        [reconcilePaymentBreakoutList$]="reconcilePaymentBreakoutList$"
+                        (loadReconcilePaymentBreakOutGridEvent)="loadReconcilePaymentBreakOutGridList($event)"
+                        [paymentRequestType$] ="paymentRequestType$"
+                        [paymentStatus$]="paymentStatus$"
+                        [reconcilePaymentBreakoutLoaderList$]="reconcilePaymentBreakoutLoaderList$"
+                        ></cms-pharmacy-claims-batches-reconcile-payments-breakout>
                   </div>
             </div>
-            <div class="text-right flex-gap">
-                  
-                  <button kendoButton [primary]="true" look="outline"  aria-label="Close"(click)="navToReconcilePayments()" > Close </button>
-                  <button kendoButton [primary]="true" aria-label="Save"  (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
+            <div class="text-right flex-gap">     
+
+                  <button kendoButton [primary]="true" look="outline" class="" (click)="navToReconcilePayments()" aria-label="Cancel"> Close </button>
+                  <button kendoButton [primary]="true" [disabled]="claimReconcileCount == 0 && isRecordForPrint == 0 && !warrantNumberChanged" aria-label="Save" class="" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialog)"> Save </button>
             </div>
       
       
@@ -375,8 +391,20 @@
 
 
 <ng-template #PrintAuthorizationDialog>
-      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization(s)</kendo-dialog-titlebar>
-    <cms-pharmacy-claims-print-authorization></cms-pharmacy-claims-print-authorization>
+      <kendo-dialog-titlebar (close)="onPrintAuthorizationCloseClicked($event)">Reconcile Payment(s) and Print Authorization Letter(s)</kendo-dialog-titlebar>
+    <cms-pharmacy-claims-print-authorization
+      [claimReconcileCount]="claimReconcileCount"
+      [isReconcilePrintCount] ="isRecordForPrint"
+      [printOption]="onlyPrintAdviceLetter"
+      [isSaveClicked]="isSaveClicked"
+      [items]="selectedReconcileDataRows"
+      [batchId]="batchId"
+      (onClosePrintAdviceLetterEvent)="onPrintAuthorizationCloseClicked($event)"
+      (loadTemplateEvent)="loadEachLetterTemplate($event)"
+      [letterContentList$]="letterContentList$"
+      [letterContentLoader$]="letterContentLoader$"
+      (onReconcileRecordEvent)="onReconcileRecord($event)"
+    ></cms-pharmacy-claims-print-authorization>
     </ng-template>
 
 
