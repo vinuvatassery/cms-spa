@@ -314,7 +314,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
     this.batchLogGridLists$.subscribe((res:any)=>{
-      if(res.data.length==0)
+      if(res.data.length==0 && res.data.filter == null)
       {
         this.route.navigate(['/financial-management/pharmacy-claims'] );       
       }
