@@ -4,7 +4,8 @@
   [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
   [data]="clientclaimsData$| async"
   kendoGridSelectBy="perscriptionFillId"
-  (selectedKeysChange)="selectedRXKeysChange($event)">
+  (selectedKeysChange)="selectedRXKeysChange($event)"
+  [(selectedKeys)]="selectedPharmacyClaimsPayments">
     <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"></kendo-grid-checkbox-column>
 

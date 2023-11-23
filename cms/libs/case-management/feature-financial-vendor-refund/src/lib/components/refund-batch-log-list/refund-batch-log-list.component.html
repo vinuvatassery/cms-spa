@@ -347,3 +347,10 @@
     [deletemodelbody]="deletemodelbody" [singleRefundDelete]="true">
   </cms-delete-refund-confirmation>
 </ng-template>
+
+<ng-template #addEditRefundDialog>
+  <cms-refund-new-form-details [isEdit]="true" [serviceType]="refunEditServiceType" [clientId]="refundEditClientId"
+    [clientName]="refundEditClientFullName" [vendorAddressId]="refundEditVendorAddressId"
+    [vendorName]="refundEditVendorName" (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"
+    [inspaymentRequestId]="inspaymentRequestId"></cms-refund-new-form-details>
+</ng-template>

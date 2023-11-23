@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, take } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-provider-info',
@@ -236,7 +237,8 @@ createPhonesFormArray(contact: any): FormArray {
   onVendorProfileViewClicked() {
     const query = {
       queryParams: {
-        v_id: this.vendorProfile.vendorId
+        v_id: this.vendorProfile.vendorId,
+        tab_code: FinancialVendorProviderTabCode.Pharmacy
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)
