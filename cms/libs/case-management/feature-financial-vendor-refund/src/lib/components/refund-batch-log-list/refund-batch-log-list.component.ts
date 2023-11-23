@@ -25,6 +25,10 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
+  
+  @ViewChild('addEditRefundDialog', { read: TemplateRef })
+  addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
+
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -37,21 +41,42 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() exportReceiptDataEvent = new EventEmitter<any>();
 
+  private addEditRefundFormDialog: any;
   isUnBatchRefundsClosed = false;
   isDeleteClaimClosed = false;
   UnBatchDialog: any;
   deleteRefundsDialog: any;
   selected: any;
   receiptLogTitlePart = "";
+  isRefundEditDialogOpen = false;
   deletemodelbody =
     'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
+
+    refunEditServiceType = '';
+    refundEditClientId = '';
+    refundEditClientFullName: any;
+    refundEditVendorAddressId = '';
+    refundEditVendorName: any;
+    inspaymentRequestId: any;
 
   public batchLogGridActions = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Refund',
       icon: 'edit',
-    },
+      click: (dataItem: any): void => {
+        if (!this.isRefundEditDialogOpen) {
+          this.isRefundEditDialogOpen = true;
+          this.refunEditServiceType = dataItem.paymentTypeCode
+          this.refundEditClientId = dataItem.clientId
+          this.refundEditClientFullName = dataItem.clientFullName
+          this.refundEditVendorAddressId = dataItem.vendorAddressId
+          this.refundEditVendorName = dataItem.providerName
+          this.inspaymentRequestId = dataItem.paymentRequestId
+          this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
+        }
+    }
+  },
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Refund',
@@ -479,5 +504,20 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  onEditRefundClaimClicked(template: TemplateRef<unknown>): void {
+    this.addEditRefundFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-96full add_refund_modal',
+    });
+  }
+
+  modalCloseAddEditRefundFormModal(result: any) {
+    this.isRefundEditDialogOpen = false;
+    this.addEditRefundFormDialog.close();
+    if (result) {
+      this.loadBatchLogListGrid();
+    }
   }
 }

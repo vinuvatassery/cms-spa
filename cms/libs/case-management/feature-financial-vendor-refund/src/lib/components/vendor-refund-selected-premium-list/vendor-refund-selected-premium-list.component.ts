@@ -122,7 +122,7 @@ initForm(){
 
   refundAmountChange(dataItem:any){
    if(dataItem.amountPaid < dataItem.refundAmount ){
-     dataItem.refundAmountError="Refund amount cannot be greater than claim amount"
+     dataItem.refundAmountError="Refund amount is greater than the claim."
    }else{
     dataItem.refundAmountError=""
    }

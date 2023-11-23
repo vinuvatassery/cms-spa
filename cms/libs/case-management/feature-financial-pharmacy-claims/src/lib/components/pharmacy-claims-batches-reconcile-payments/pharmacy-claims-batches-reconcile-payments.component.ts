@@ -921,7 +921,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       pageSize:event.pagesize,
       sort:event.sortColumn,
       sortType:event.sortType,
-      filter:event.filter
+      filter:event.filter,
+      loadType:this.loadType 
     });
   }
   getItemNumber() {
