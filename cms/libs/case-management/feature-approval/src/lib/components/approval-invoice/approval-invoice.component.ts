@@ -8,7 +8,6 @@ import {
   EventEmitter,
   Output,
 } from '@angular/core';
-import { Router } from '@angular/router';
 
 /** External libraries **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';

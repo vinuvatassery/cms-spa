@@ -1,7 +1,7 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, ChangeDetectorRef} from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State, filterBy } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam, ServiceTypeCode, ServiceSubTypeCode } from '@cms/case-management/domain'; 
+import { State } from '@progress/kendo-data-query';
+import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, ServiceTypeCode } from '@cms/case-management/domain'; 
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject, debounceTime } from 'rxjs';
@@ -160,18 +160,6 @@ if(this.isEdit){
    
   
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
-  /*if(this.serviceType == 'PHARMACY'){
-    this.isConfirmationClicked = true;
-    this.financialVendorRefundFacade.pharmaciesSubject.next(vendors)  
-    this.selectedMedicalProvider =vendors[0]
-    this.loadPaymentRequestData();
-  }
-  else{
-    this.financialVendorRefundFacade.insurancevendorsSubject.next(vendors)  
-    this.selectedVendor =vendors[0];
-    this.searchInsuranceVendors(this.vendorName) 
-    this.insRefundForm.controls['insVendor'].disable();
-  }*/
   this.initForm()
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
   this.refundForm.controls['insVendor'].disable();
@@ -607,7 +595,7 @@ onAddRefundClick(){
   refundNote:[''],
 })
 markGridFormTouched(){
-  for(var index = 0; index<document.getElementsByClassName(`grid-input`).length;index++){
+  for(let index = 0; index<document.getElementsByClassName(`grid-input`).length;index++){
     document.getElementsByClassName(`grid-input`)[index].classList.add('ng-touched')
   }
 }
@@ -617,12 +605,12 @@ addNewRefundRx() {
     this.refundRXForm.markAsDirty();
     this.markGridFormTouched();
 
-    var selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []);
-    var InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
+    let selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []);
+    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
     if ((this.refundRXForm.invalid && !this.isEdit) || InValidSelectedRefundPharmacyClaimInput.length >0) {
       return;
     } else {
-      var selectedpharmacyClaimsDto = selectedpharmacyClaims.map((obj : any)=>
+      let selectedpharmacyClaimsDto = selectedpharmacyClaims.map((obj : any)=>
         ({
           paymentRequestId : obj.paymentRequestId ?? this.selectedVendorRefundsList[0].paymentRequestId,
           refundedPaymentRequestId : this.selectedVendorRefundsList[0].refundedPaymentRequestId,
@@ -638,7 +626,7 @@ addNewRefundRx() {
           pharmacyNpi : obj.PharmacyNpi,
           ndc : obj.ndc
         }));
-      var refundRxData = { 
+      let refundRxData = { 
         ...this.refundRXForm.value, 
         vendorId : this.vendorId,
         clientId  : this.clientId,
