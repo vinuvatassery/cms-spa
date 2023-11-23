@@ -350,7 +350,7 @@ export class ApprovalPageComponent implements OnInit {
       addressLine2: [''],
       city: [''],
       state: [''],
-      zip: [''],
+      zip: ['',Validators.pattern('^[A-Za-z0-9 \-]+$')],
       contactFirstName:[''],
       contactPhone:[''],
       contactFax:[''],
