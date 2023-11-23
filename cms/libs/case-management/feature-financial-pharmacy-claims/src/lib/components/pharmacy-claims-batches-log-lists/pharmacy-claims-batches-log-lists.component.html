@@ -92,14 +92,14 @@
             </button>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="paymentMethodCode" title="Payment Method" [width]="160">
+        <kendo-grid-column field="paymentMethodDesc" title="Payment Method" [width]="160">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-dropdownlist 
             [data]="paymentMethods" 
             [value]="paymentMethodFilter" 
             valueField="lovDesc"
             textField="lovDesc" 
-            (valueChange)="dropdownFilterChange('paymentMethodCode',$event, filterService)">
+            (valueChange)="dropdownFilterChange('paymentMethodDesc',$event, filterService)">
             </kendo-dropdownlist>
          </ng-template>
            </kendo-grid-column>
@@ -119,14 +119,14 @@
                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
              </kendo-grid-numeric-filter-menu>
          </ng-template> </kendo-grid-column>
-        <kendo-grid-column field="paymentTypeCode" title="Payment Type" [width]="140"> 
+        <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="140"> 
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-dropdownlist 
             [data]="paymentTypes" 
             [value]="paymentTypeFilter"  
             textField="lovDesc"
             valueField="lovCode"
-            (valueChange)="dropdownFilterChange('payTypeDesc',$event, filterService)">
+            (valueChange)="dropdownFilterChange('paymentTypeDesc',$event, filterService)">
             </kendo-dropdownlist>
        </ng-template>
             </kendo-grid-column>
@@ -142,7 +142,7 @@
         <kendo-grid-column field="indexCode" title="Index Code" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="pcaCode" title="PCA Code" [width]="140">   </kendo-grid-column>
         <kendo-grid-column field="objectCode" title="Object Code" [width]="140">   </kendo-grid-column>
-        <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160"> 
+        <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="160"> 
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-dropdownlist
              [data]="paymentStatusList" 
