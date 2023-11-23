@@ -228,7 +228,8 @@ export class FinancialPharmacyClaimsDataService {
       Sorting : data.sort,
       SkipCount : data.skipCount,
       MaxResultCount : data.pageSize,
-      Filter : data.filter
+      Filter : data.filter,
+      loadType:data.loadType
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
