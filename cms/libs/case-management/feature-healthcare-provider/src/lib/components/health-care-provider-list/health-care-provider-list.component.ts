@@ -188,7 +188,7 @@ pageselectionchange(data: any) {
   }
 
   closeVendorDetailModal(type : any)
-  {  
+  {
     if(type == this.vendorTypes.HealthcareProviders){
       this.isOpeneHealthcareProvider = false;
     }else{
@@ -434,11 +434,13 @@ pageselectionchange(data: any) {
   }
 
   saveVendorProfile(vendorProfile: any){
-    
+    if(vendorProfile.vendorTypeCode == this.vendorTypes.MedicalProviders){
+      this.providerTypeCode=this.vendorTypes.HealthcareProviders;
+    }
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next:(response:any)=>{
-        this.financialVendorFacade.hideLoader();
+        this.financialVendorFacade.hideLoader(); 
         this.closeVendorDetailModal(this.providerTypeCode);
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
         this.cdr.detectChanges();
