@@ -5,7 +5,7 @@ import { Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
-import { SortDescriptor, State } from '@progress/kendo-data-query';
+import { SortDescriptor } from '@progress/kendo-data-query';
 import { ClaimsDataService } from '../../infrastructure/financial-management/claims.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';

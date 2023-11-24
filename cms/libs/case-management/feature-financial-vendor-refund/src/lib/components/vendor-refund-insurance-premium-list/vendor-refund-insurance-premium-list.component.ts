@@ -15,7 +15,6 @@ import { FinancialClaimsFacade, FinancialVendorProviderTabCode, FinancialVendorR
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { SelectableDirective } from '@progress/kendo-angular-dropdowns';
 import { FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
@@ -209,7 +208,7 @@ if(uniqueOriginalWarrants.length>1)
         paymentRequestId : this.editPaymentRequestId
       }
       this.financialPremiumsProcessData$.subscribe((data: GridDataResult) => {
-       var refunded =    data.data.filter(x=> x.refundPaymentRequestId)
+       let refunded = data.data.filter(x=> x.refundPaymentRequestId)
        this.selectedInsuranceClaims =  refunded.map(item => item.paymentRequestId)
       })
       this.loadRefundClaimsGrid(param)

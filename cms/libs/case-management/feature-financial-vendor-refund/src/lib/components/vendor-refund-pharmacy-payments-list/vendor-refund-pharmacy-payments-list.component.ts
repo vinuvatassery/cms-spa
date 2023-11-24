@@ -14,7 +14,6 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 
@@ -106,9 +105,7 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   gridDataHandle() {
     this.recentRefundsListData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.recentRefundListDataSubject .next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-      }
+      this.recentRefundListDataSubject.next(this.gridDataResult);
     });
   }
   private loadFinancialRecentRefundListGrid(): void {
