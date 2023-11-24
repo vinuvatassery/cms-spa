@@ -18,7 +18,6 @@ import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject, first } from 'rxjs';
 @Component({
@@ -186,7 +185,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
         if(!this.isAddRefundModalOpen){
           this.isAddRefundModalOpen = true;
           this.isEditRefund = true
-          this.refunEditServiceType = dataItem.serviceSubTypeCode.toUpperCase()
+          this.refunEditServiceType = dataItem.type
           this.refundEditClientId =dataItem.clientId
           this.refundEditClientFullName = dataItem.clientFullName
           this.refundEditVendorAddressId = dataItem.vendorAddressId

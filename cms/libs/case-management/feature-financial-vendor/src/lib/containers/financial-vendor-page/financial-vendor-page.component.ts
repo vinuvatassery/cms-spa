@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { CaseFacade, ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
+import { CaseFacade, ContactFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, SearchHeaderType } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DocumentFacade, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -119,7 +119,7 @@ export class FinancialVendorPageComponent implements OnInit {
     this.hasClinicCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Clinic_Create_Update']);
     this.hasMedicalAndDentalCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Medical_Dental_Provider_Create_Update']);
     this.hasinsuranceVendorCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Vendor_Create_Update']);
-    this.hasPharmacyCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Pharmacy_Create_Update']); 
+    this.hasPharmacyCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Pharmacy_Create_Update']);
   }
 
   searchClinicVendorClicked(clientName: any) {

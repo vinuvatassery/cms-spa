@@ -22,8 +22,7 @@ import {
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
-import { LoadTypes } from '@cms/case-management/domain';
-import { GridFilterParam } from '@cms/case-management/domain';
+import { LoadTypes, GridFilterParam } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-all-payments-list',
@@ -335,7 +334,6 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       sortType: sortTypeValue,
       filter: JSON.stringify(this.filter)
     };
-        //this.gridDataHandle();
   }
 
   

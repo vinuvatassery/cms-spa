@@ -91,3 +91,13 @@
               [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
   </ng-template>
 </div>
+
+
+<ng-template #pcaExceptionDialogTemplate>
+    <common-financial-pca-chosen-alert [chosenPca]="chosenPcaForReAssignment"
+        (confirmChosenPcaAlertClickedEvent)="onConfirmPcaAlertClicked($event)"
+        (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
+    </common-financial-pca-chosen-alert>
+ 
+</ng-template>
+ 

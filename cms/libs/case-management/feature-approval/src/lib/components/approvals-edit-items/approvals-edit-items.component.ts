@@ -48,6 +48,8 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   paymentRunDateList: any[] = [];
   tempVendorName: any;
   ndcMaskFormat: string = "00000-0000-00"
+  public listItems: Array<string> = ["Tablet", "Syrup", "Injection"];
+  public selectedDeliveryMethod = "";
   constructor(private insurancePlanFacade : InsurancePlanFacade,
               private drugFacade : DrugsFacade,
               private financialVendorFacade : FinancialVendorFacade,
@@ -97,7 +99,6 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
     else {
       this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.MedicalClinic);
       this.subscribeSearchVendor();
-      //this.searchClinicData(clinicName);
     }
     this.selectedClinicVendorId = null;
     this.cd.detectChanges();
@@ -274,7 +275,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       this.drugForm.controls['brandName'].setValue(this.selectedMasterData.brandName);
       this.drugForm.controls['ndcCode'].setValue(this.selectedMasterData.ndcNbr);
       this.drugForm.controls['drugType'].setValue(this.drugType);
-      this.drugForm.controls['deliveryMethod'].setValue(this.selectedMasterData.deliveryMethodCode);
+      this.selectedDeliveryMethod = this.capitalizeFirstLetter(this.selectedMasterData.deliveryMethodCode);
     }
   }
 
@@ -572,7 +573,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         NdcNbr : this.drugForm.controls['ndcCode'].value,
         BrandName : this.drugForm.controls['brandName'].value,
         DrugName : this.drugForm.controls['drugName'].value,
-        DeliveryMethodCode: this.drugForm.controls['deliveryMethod'].value,
+        DeliveryMethodCode: this.drugForm.controls['deliveryMethod'].value.toUpperCase(),
         IncludeInManufacturerRebatesFlag: this.selectedMasterData.includeInManufacturerRebatesFlag,
         DrugType: this.drugForm.controls['drugType'].value,
         ManufacturerName : this.providerName ? this.providerName : this.tempVendorName,
@@ -840,5 +841,9 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
 
   get insuranceProviderFormControls() {
     return this.insuranceProviderForm.controls as any;
+  }
+
+  capitalizeFirstLetter(string:any) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
 }

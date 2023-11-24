@@ -1,5 +1,5 @@
 /** Angular **/
-import {  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import {  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -122,7 +122,7 @@ initForm(){
 
   refundAmountChange(dataItem:any){
    if(dataItem.amountPaid < dataItem.refundAmount ){
-     dataItem.refundAmountError="Refund amount cannot be greater than claim amount"
+     dataItem.refundAmountError="Refund amount is greater than the claim."
    }else{
     dataItem.refundAmountError=""
    }
