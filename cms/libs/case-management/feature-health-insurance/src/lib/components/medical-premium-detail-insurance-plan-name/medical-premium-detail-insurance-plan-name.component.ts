@@ -185,6 +185,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   }
 
   public addNewInsurancePlanOpen(): void {
+    this.newhealthInsuranceForm.reset();
     this.isaddNewInsurancePlanOpen = true;
   }
 
