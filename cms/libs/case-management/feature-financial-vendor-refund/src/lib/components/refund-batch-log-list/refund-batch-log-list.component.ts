@@ -2,7 +2,7 @@
 import {
   ChangeDetectionStrategy, Component, EventEmitter,
   Input, OnChanges, Output, TemplateRef,
-  ViewChild, ChangeDetectorRef
+  ViewChild, ChangeDetectorRef, OnInit
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -11,7 +11,6 @@ import { Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { OnInit } from '@angular/core';
 @Component({
   selector: 'cms-refund-batch-log-list',
   templateUrl: './refund-batch-log-list.component.html',
@@ -492,7 +491,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       return;
     }
     this.showExportLoader = true;
-    var data = {
+    let data = {
       batchId : this.batchId,
       selectedIds : this.selectedPayments,
       gridDataResult : this.gridDataResult

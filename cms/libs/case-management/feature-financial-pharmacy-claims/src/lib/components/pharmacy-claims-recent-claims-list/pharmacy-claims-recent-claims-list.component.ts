@@ -316,85 +316,67 @@ loadFinancialRecentClaimListGrid() {
       {
         "columnCode": "nDCCode",
         "columnDesc": "NDC Code"     
-      }
-      ,
+      },
       {
         "columnCode": "cptCode",
         "columnDesc": "CPT Code"         
-      }
-      ,
+      },
       {
         "columnCode": "payment Type",
         "columnDesc": "PaymentTypeDesc"         
-      }
-      ,
-    
-      ,
+      },
       {
         "columnCode": "amountPaid",
         "columnDesc": "Amount Paid"         
-      }
-      ,
+      },
       {
         "columnCode": "qty",
         "columnDesc": "Qty"         
-      }
-      ,
+      },
       {
         "columnCode": "rxType",
         "columnDesc": "RX Type"         
-      }
-      ,
+      },
       {
         "columnCode": "daysSupply",
         "columnDesc": "Days Supply"         
-      }
-      ,
+      },
       {
         "columnCode": "fillDate",
         "columnDesc": "Fill Date"         
-      }
-      ,
+      },
       {
         "columnCode": "prescriptionNumber",
         "columnDesc": "Prescription Number"         
-      }
-      ,
+      },
       {
         "columnCode": "indexCode",
         "columnDesc": "Index Code"         
-      }
-      ,
+      },
       {
         "columnCode": "pCACode",
         "columnDesc": "PCA Code"         
-      }
-      ,
+      },
       {
         "columnCode": "objectCode",
         "columnDesc": "Object Code"         
-      }
-      ,
+      },
       {
         "columnCode": "paymentMethodDesc",
         "columnDesc": "Payment Method"         
-      }
-      ,
+      },
       {
         "columnCode": "warrantSPOTNumber",
         "columnDesc": "Warrant SPOTs Number"         
-      }
-      ,
+      },
       {
         "columnCode": "paymentStatusCode",
         "columnDesc": "Payment Status "         
-      }
-      ,
+      },
       {
         "columnCode": "pharmacyName",
         "columnDesc": "Pharmacy Name"         
-      }
-      ,
+      },
       {
         "columnCode": "by",
         "columnDesc": "By"         
