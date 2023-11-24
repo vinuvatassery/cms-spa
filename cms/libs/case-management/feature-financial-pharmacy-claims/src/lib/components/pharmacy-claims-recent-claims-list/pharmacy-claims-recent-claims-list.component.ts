@@ -26,7 +26,7 @@ export class PharmacyClaimsRecentClaimsListComponent {
   @Input() duplicatePaymentInputObject:any;
   public state!: any;
   sortColumn = 'Fill Date';
-  sortDir = 'Ascending';
+  sortDir = 'desc';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -44,7 +44,7 @@ export class PharmacyClaimsRecentClaimsListComponent {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   addRemoveColumns="Default Columns"
   columns : any;  
-  dropDowncolumns : any;
+  dropDowncolumns : any; 
   isFinancialClaimsRecentClaimGridLoaderShow = false;
 
   selectedPaymentStatus: string | null = null;
@@ -58,6 +58,8 @@ export class PharmacyClaimsRecentClaimsListComponent {
   paymentRequestTypes: any = [];
   
   paymentTypeFilter = '';
+  iseditView:string="";
+  defaultPageSize=20;
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
@@ -71,7 +73,7 @@ export class PharmacyClaimsRecentClaimsListComponent {
     this.getPaymentMethodLov(); 
     this.state = {
       skip: this.gridSkipCount,
-      take: this.pageSizes[0]?.value
+      take: this.defaultPageSize
     };
     this.showDuplicatePaymentExceptionHighlight$.subscribe(() => {
       this.cdr.detectChanges();
@@ -95,8 +97,9 @@ export class PharmacyClaimsRecentClaimsListComponent {
     
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      take: this.defaultPageSize,
+      sort: this.sortDir,
+      
     };
     this.loadFinancialRecentClaimListGrid();
     this.cdr.detectChanges();
@@ -313,85 +316,67 @@ loadFinancialRecentClaimListGrid() {
       {
         "columnCode": "nDCCode",
         "columnDesc": "NDC Code"     
-      }
-      ,
+      },
       {
         "columnCode": "cptCode",
         "columnDesc": "CPT Code"         
-      }
-      ,
+      },
       {
         "columnCode": "payment Type",
         "columnDesc": "PaymentTypeDesc"         
-      }
-      ,
-    
-      ,
+      },
       {
         "columnCode": "amountPaid",
         "columnDesc": "Amount Paid"         
-      }
-      ,
+      },
       {
         "columnCode": "qty",
         "columnDesc": "Qty"         
-      }
-      ,
+      },
       {
         "columnCode": "rxType",
         "columnDesc": "RX Type"         
-      }
-      ,
+      },
       {
         "columnCode": "daysSupply",
         "columnDesc": "Days Supply"         
-      }
-      ,
+      },
       {
         "columnCode": "fillDate",
         "columnDesc": "Fill Date"         
-      }
-      ,
+      },
       {
         "columnCode": "prescriptionNumber",
         "columnDesc": "Prescription Number"         
-      }
-      ,
+      },
       {
         "columnCode": "indexCode",
         "columnDesc": "Index Code"         
-      }
-      ,
+      },
       {
         "columnCode": "pCACode",
         "columnDesc": "PCA Code"         
-      }
-      ,
+      },
       {
         "columnCode": "objectCode",
         "columnDesc": "Object Code"         
-      }
-      ,
+      },
       {
         "columnCode": "paymentMethodDesc",
         "columnDesc": "Payment Method"         
-      }
-      ,
+      },
       {
         "columnCode": "warrantSPOTNumber",
         "columnDesc": "Warrant SPOTs Number"         
-      }
-      ,
+      },
       {
         "columnCode": "paymentStatusCode",
         "columnDesc": "Payment Status "         
-      }
-      ,
+      },
       {
         "columnCode": "pharmacyName",
         "columnDesc": "Pharmacy Name"         
-      }
-      ,
+      },
       {
         "columnCode": "by",
         "columnDesc": "By"         

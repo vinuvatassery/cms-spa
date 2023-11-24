@@ -29,9 +29,10 @@
                   <cms-financial-vendors-list [financeTabTypeCode]="financeManagementTabs.Manufacturers"
                     [vendorTypeCode]="financeVendorTypeCodes.Manufacturers" [vendorsList$]="vendorsList$"
                     [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
-                    [exportButtonShow$]="exportButtonShow$"
+                    [exportButtonShow$]="exportButtonShow$" 
                     (loadFinancialVendorsListEvent)="loadFinancialVendorsList($event)"
-                    (exportGridDataEvent)="exportGridData()"></cms-financial-vendors-list>
+                    (exportGridDataEvent)="exportGridData()"
+                   ></cms-financial-vendors-list>
                 </div>
               </ng-template>
             </kendo-tabstrip-tab>
@@ -145,6 +146,7 @@
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)" [saveVendorEventSubject]="saveVendorEventSubject"></cms-vendor-details>
 </kendo-dialog>
 
+<!-- Insurance Vendors -->
 <kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"
   class="app-c-modal app-c-modal-md app-c-modal-np" title="{{hasinsuranceVendorCreateUpdatePermission==true? 'Add New Insurance Vendor':'Request New Insurance Vendor'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.InsuranceVendors"
@@ -154,6 +156,7 @@
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
 
+<!-- Pharmacy -->
 <kendo-dialog kendoRippleContainer *ngIf="isShowPharmacyProvider" (close)="closeVendorDetailModal()"
   class="app-c-modal app-c-modal-md app-c-modal-np" title="{{ hasPharmacyCreateUpdatePermission == true ? 'Add New Pharmacy' : 'Request New Pharmacy'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Pharmacy"
@@ -163,12 +166,12 @@
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
 
+<!-- Manufacturers -->
 <kendo-dialog kendoRippleContainer *ngIf="isShowManufacturers" (close)="closeVendorDetailModal()"
-  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{ hasManufacturerCreateUpdatePermission == true ? 
-    'Add New Manufacturer' : 'Request New Manufacturer'}}" kendoTooltip>
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="Add New Manufacturer" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Manufacturers"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal()"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
-    [hasCreateUpdatePermission]="hasManufacturerCreateUpdatePermission"
+    [hasCreateUpdatePermission]="true"
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>

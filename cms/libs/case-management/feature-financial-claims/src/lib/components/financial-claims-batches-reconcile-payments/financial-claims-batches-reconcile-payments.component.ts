@@ -1034,5 +1034,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged).length;
     this.cd.detectChanges();
   }
+  
+  onBatchNumberClick(dataItem: any) {
+    this.route.navigate(
+      [`/financial-management/claims/${this.claimsType}/batch`],
+      { queryParams: { bid: dataItem?.batchId } }
+    );
+  }
 }
 

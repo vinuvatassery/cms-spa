@@ -4,29 +4,32 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain'; 
 import { DocumentFacade } from 'libs/shared/util-core/src/lib/application/document-facade';
+import { ApiType } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-vendor-refund-page',
   templateUrl: './vendor-refund-page.component.html', 
 })
-export class VendorRefundPageComponent    {
+export class VendorRefundPageComponent    
+{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-   tab = 1
-   dataExportParameters = null
-   sortType = this.financialVendorRefundFacade.sortType;
-   pageSizes = this.financialVendorRefundFacade.gridPageSizes;
-   gridSkipCount = this.financialVendorRefundFacade.skipCount;
-   exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  tab = 1
+  dataExportParameters = null
+  batchesGridExportParameters = null
+  sortType = this.financialVendorRefundFacade.sortType;
+  pageSizes = this.financialVendorRefundFacade.gridPageSizes;
+  gridSkipCount = this.financialVendorRefundFacade.skipCount;
+  exportButtonShow$ = this.documentFacade.exportButtonShow$;
 
-   sortValueRefundProcess = this.financialVendorRefundFacade.sortValueRefundProcess;
-   sortProcessList = this.financialVendorRefundFacade.sortProcessList;
-   sortValueRefundBatch = this.financialVendorRefundFacade.sortValueRefundBatch;
-   sortBatchList = this.financialVendorRefundFacade.sortBatchList;
-   sortValueRefundPayments = this.financialVendorRefundFacade.sortValueRefundPayments;
-   sortPaymentsList = this.financialVendorRefundFacade.sortPaymentsList;
-   state!: State;
-   selectedClaimsTab = 1;
+  sortValueRefundProcess = this.financialVendorRefundFacade.sortValueRefundProcess;
+  sortProcessList = this.financialVendorRefundFacade.sortProcessList;
+  sortValueRefundBatch = this.financialVendorRefundFacade.sortValueRefundBatch;
+  sortBatchList = this.financialVendorRefundFacade.sortBatchList;
+  sortValueRefundPayments = this.financialVendorRefundFacade.sortValueRefundPayments;
+  sortPaymentsList = this.financialVendorRefundFacade.sortPaymentsList;
+  state!: State;
+  selectedClaimsTab = 1;
   vendorRefundProcessGridLists$ =
   this.financialVendorRefundFacade.vendorRefundProcessData$;
   vendorRefundBatchGridLists$ = this.financialVendorRefundFacade.vendorRefundBatchData$;
@@ -37,24 +40,31 @@ export class VendorRefundPageComponent    {
     private documentFacade: DocumentFacade,
   ) {}
 
+  pageTitle = "Vendor Refunds";
+  changeTitle(data: any): void 
+  {
+    this.pageTitle = data ?? "Vendor Refunds";
+  }
 
   loadVendorRefundProcessListGrid(event: any) {
   
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();
   }
   
-
-  loadVendorRefundBatchListGrid(event: any) {
- 
-    this.financialVendorRefundFacade.loadVendorRefundBatchListGrid();
+  loadVendorRefundBatchListGrid(loadBatchListRequestDto : any) {
+    this.financialVendorRefundFacade.selectedRefundsTab = 2;
+    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;   
+    this.batchesGridExportParameters = loadBatchListRequestDto; 
+    this.financialVendorRefundFacade.loadVendorRefundBatchListGrid(loadBatchListRequestDto);
   }
 
   loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto : any) {
-    this.financialVendorRefundFacade.selectedRefundsTab = 1;
+    this.financialVendorRefundFacade.selectedRefundsTab = 3;
     this.tab = this.financialVendorRefundFacade.selectedRefundsTab;   
     this.dataExportParameters = recentClaimsPageAndSortedRequestDto;    
     this.financialVendorRefundFacade.loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto);
   }
+
   loadFinancialRefundProcessListGrid(data: any) {
     this.financialVendorRefundFacade.selectedClaimsTab = 1;
     this.tab = this.financialVendorRefundFacade.selectedClaimsTab;
@@ -69,9 +79,26 @@ export class VendorRefundPageComponent    {
     );
   }
 
-  exportAllRefundsGridData() {   
+  exportAllRefundsGridData() 
+  {   
     if (this.dataExportParameters) {       
       this.documentFacade.getExportFile(this.dataExportParameters, `vendor-refunds/payments`,'All Refunds');
     }
   }
+
+  exportBatchesGridData()
+  {
+    if (this.batchesGridExportParameters) {       
+      this.documentFacade.getExportFile(this.batchesGridExportParameters, `vendor-refunds/batches`,'All Batches');
+    }
+  }
+
+  exportReceiptDataEvent(data: any) 
+  {
+    if (this.dataExportParameters) {
+      const formattedDate = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '.');
+      this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/receipt`, `Receipting Log [${formattedDate}]`, ApiType.CaseApi, data);
+    }
+  }
+
 }

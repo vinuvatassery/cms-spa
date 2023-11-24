@@ -3,11 +3,11 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
@@ -16,7 +16,6 @@ import {  GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
@@ -24,7 +23,7 @@ import { Subject } from 'rxjs';
   templateUrl: './refund-batches-list.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundBatchesListComponent implements OnInit, OnChanges{
+export class RefundBatchesListComponent implements  OnChanges{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isVendorRefundBatchGridLoaderShow = false;
@@ -33,16 +32,18 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
   @Input() sortType: any;
   @Input() sort: any;
   @Input() vendorRefundBatchGridLists$: any;
+  @Input() exportButtonShow$: any
+
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
+  sortColumn = 'Batch #';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn  = 'batchName'
   gridDataResult!: GridDataResult;
 
   gridVendorsBatchDataSubject = new Subject<any>();
@@ -50,14 +51,51 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+
+  columns: any = {
+    batchName: 'Batch #',
+    tpaRefunds: '# TPA Refunds',
+    insRefunds: '# INS Refunds',
+    rxRefunds: '# RX Refunds',
+    bulkPayment: 'Bulk Payment',
+    totalRefund: 'Total Refund Amount'   
+  };
+
+  dropDowncolumns: any = [
+    {
+      columnCode: 'batchName',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnCode: 'tpaRefunds',
+      columnDesc: '# TPA Refunds',
+    },
+    {
+      columnCode: 'insRefunds',
+      columnDesc: '# INS Refunds',
+    },
+    {
+      columnCode: 'rxRefunds',
+      columnDesc: '# RX Refunds',
+    },
+    {
+      columnCode: 'bulkPayment',
+      columnDesc: 'Bulk Payment',
+    },
+    {
+      columnCode: 'totalRefund',
+      columnDesc: 'Total Refund Amount',
+    } 
+    
+  ];
+  showExportLoader = false;
   
   
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(private route: Router, private readonly cdr: ChangeDetectorRef) {}
 
-  ngOnInit(): void {
-    this.loadVendorRefundBatchListGrid();
-  }
+  
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -77,6 +115,16 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
       this.sortType
     );
   }
+
+  navToBatchDetails(data: any) {   
+    const query = {
+      queryParams: {
+        b_id: data?.paymentRequestBatchId ,         
+      },
+    };
+    this.route.navigate(['/financial-management/vendor-refund/batch/batch-log-list'], query );
+  }
+  
   loadRefundBatch(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -84,28 +132,37 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
     sortTypeValue: string
   ) {
     this.isVendorRefundBatchGridLoaderShow = true;
+
+    if(sortValue  === 'batchName')
+    {
+      sortValue = 'creationTime'
+    }
     const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
+      SkipCount: skipCountValue,
+      MaxResultCount: maxResultCountValue,
+      Sorting: sortValue,
+      SortType: sortTypeValue,
+      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
     };
     this.loadVendorRefundBatchListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
 
-  onCellClick(event : any){ 
-    const query = {
-      queryParams: {
-        b_id: event.dataItem.id ,         
-      },
-    };
-    this.route.navigate(['/financial-management/vendor-refund/batch/batch-log-list'], query );
+  searchColumnChangeHandler(data:any){
+    this.onChange('')
   }
 
-  
+
   onChange(data: any) {
     this.defaultGridState();
+    let operator = 'startswith';
+
+    if (
+      this.selectedColumn === 'bulkPayment' ||
+      this.selectedColumn === 'totalRefund'
+    ) {
+      operator = 'eq';
+    }
 
     this.filterData = {
       logic: 'and',
@@ -113,8 +170,8 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedColumn ?? 'batchName',
+              operator: operator,
               value: data,
             },
           ],
@@ -122,7 +179,7 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
@@ -146,6 +203,22 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
     this.loadVendorRefundBatchListGrid();
   }
 
@@ -163,15 +236,42 @@ export class RefundBatchesListComponent implements OnInit, OnChanges{
   gridDataHandle() {
     this.vendorRefundBatchGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
       this.gridVendorsBatchDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
         this.isVendorRefundBatchGridLoaderShow = false;
+    });
+
+  }
+
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
       }
     });
-    this.isVendorRefundBatchGridLoaderShow = false;
+  }
+
+  setToDefault() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+
+    this.sortColumn = 'Batch #';
+    this.sortDir = 'Ascending';
+    this.filter = '';
+    this.selectedColumn = 'batchName';
+    this.isFiltered = false;
+    this.columnsReordered = false;
+
+    this.sortValue = 'batchName';
+    this.sortType = 'asc';
+    this.sort = this.sortColumn;
+    this.searchValue =''
+
+    this.loadVendorRefundBatchListGrid();
   }
 }

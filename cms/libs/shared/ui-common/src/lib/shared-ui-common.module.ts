@@ -42,6 +42,8 @@ import { ClientsAttachmentComponent } from './clients-attachment/clients-attachm
 import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
 import { VendorDetailsComponent } from './vendor-details/vendor-details.component';
 import { TinPipe } from './pipes/tin.pipe';
+import { FinancialDrugsDetailsComponent } from './financial-drugs-details/financial-drugs-details.component';
+import { FinancialPcaChosenAlertComponent } from './financial-pca-chosen-alert/financial-pca-chosen-alert.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -76,7 +78,9 @@ import { TinPipe } from './pipes/tin.pipe';
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
     TinPipe,
-    ReAssignCaseComponent
+    ReAssignCaseComponent,
+    FinancialDrugsDetailsComponent,
+    FinancialPcaChosenAlertComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -110,7 +114,9 @@ import { TinPipe } from './pipes/tin.pipe';
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
     TinPipe,
-    ReAssignCaseComponent
+    ReAssignCaseComponent,
+    FinancialDrugsDetailsComponent,
+    FinancialPcaChosenAlertComponent
   ],
 })
 export class SharedUiCommonModule {}

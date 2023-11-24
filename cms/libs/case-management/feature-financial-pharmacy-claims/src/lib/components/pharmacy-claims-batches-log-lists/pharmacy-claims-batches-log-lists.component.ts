@@ -19,13 +19,13 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, first } from 'rxjs';
+import { Observable, Subject, first, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {
-  PaymentStatusCode,PaymentType, PaymentMethodCode
+  PaymentStatusCode,PaymentType, PaymentMethodCode, PaymentBatchName
 } from '@cms/case-management/domain';
 
 @Component({
@@ -48,7 +48,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
   isRequestPaymentClicked = false;
-  isPrintAuthorizationClicked = false;
+  isPrintVisaAuthorizationClicked = false;
   isUnBatchClaimsClosed = false;
   isDeleteClaimClosed = false;
   reverseClaimsDialogClosed = false;
@@ -58,64 +58,37 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   printAuthorizationDialog: any;
   UnBatchDialog: any;
   deleteClaimsDialog: any;
-reverseClaimsDialog: any;
+  reverseClaimsDialog: any;
   addClientRecentClaimsDialog: any;
   addEditClaimsFormDialog: any;
   vendorId: any;
   clientId: any;
- clientName: any;
+  clientName: any;
+  paymentRequestId!: string;
   isLogGridExpand = true;
   isBulkUnBatchOpened =false;
+  gridLoaderSubject = new BehaviorSubject(false);
+  recordCountWhenSelectallClicked: number = 0;
+  totalGridRecordsCount: number = 0;
+  currentPageRecords: any = [];
+  selectedAllPaymentsList!: any;
+  isPageCountChanged: boolean = false;
+  isPageChanged: boolean = false;
+  unCheckedProcessRequest:any=[];
+  deletemodelbody='This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
   @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
   @Output() unBatchClaimsEvent = new EventEmitter<any>();
+  @Output() ondeletebatchesClickedEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Input() batchId:any
   @Input() unbatchClaim$ :any
   @Input() unbatchEntireBatch$ :any
-  @Input() exportButtonShow$ :any
-  public bulkMore = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Request Payments',
-      icon: 'local_atm',
-      click: (data: any): void => {
-      this.isRequestPaymentClicked = true;
-      this.isPrintAuthorizationClicked = false;
-        
-      },  
-    },
-    
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Reconcile Payments',
-      icon: 'edit',
-      click: (data: any): void => {
-        this.navToReconcilePayments(data);
-      },  
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Print Authorizations',
-      icon: 'print',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = false;
-        this.isPrintAuthorizationClicked = true;
-          
-        },
-
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Unbatch Entire Batch',
-      icon: 'undo',
-      click: (data: any): void => {
-        if (!this.isBulkUnBatchOpened) {
-          this.isBulkUnBatchOpened = true;
-          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
-        }
-      },
-    }
-  ];
+  @Input() deleteClaims$ :any
+  @Input() exportButtonShow$ :any;
+  @Input() paymentBatchName$!: Observable<PaymentBatchName>;
+  public bulkMore !:any
   selected: any;
+  batchStatus!:any;
 
   public batchLogGridActions(dataItem:any){ 
    return  [
@@ -166,9 +139,26 @@ reverseClaimsDialog: any;
       text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
-        if (!this.isDeleteClaimClosed) {
+            
+        if (
+          [
+            PaymentStatusCode.Paid,
+            PaymentStatusCode.PaymentRequested,
+            PaymentStatusCode.ManagerApproved,
+          ].includes(data.paymentStatusCode)
+        ) {
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.ERROR,
+            'This claim cannot be deleted',
+            NotificationSource.UI
+          );
+        } else {
+          this.isUnBatchClaimsClosed = false;
           this.isDeleteClaimClosed = true;
-          this.onDeleteClaimsOpenClicked(this.deleteClaimsConfirmationDialogTemplate);
+          this.onSingleClaimDelete(data.paymentRequestId.split(','));
+          this.onDeleteClaimsOpenClicked(
+            this.deleteClaimsConfirmationDialogTemplate
+          );
         }
        
       }
@@ -187,6 +177,9 @@ reverseClaimsDialog: any;
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>(); 
   @Input() claimsType: any;
+  @Input() letterContentList$: any;
+  @Input() letterContentLoader$: any;
+  @Output() loadTemplateEvent = new EventEmitter<any>();
   public state!: State;
   showExportLoader = false;
   sortColumn = 'paymentNbr';
@@ -198,13 +191,25 @@ reverseClaimsDialog: any;
   isFiltered = false;
   showDateSearchWarning = false
   filter!: any;
-  selectedColumn= 'itemNbr';
+  selectedColumn= 'ALL';
   gridDataResult!: GridDataResult;
   gridClaimsBatchLogDataSubject = new Subject<any>();
   gridClaimsBatchLogData$ = this.gridClaimsBatchLogDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  batchLogGridLists!: any;
+  selectAll: boolean = false;
+  unCheckedPaymentRequest: any = [];
+  selectedDataIfSelectAllUnchecked: any = [];
+  noOfRecordToPrint: any = 0;
+  totalRecord: any;
+  batchLogPrintAdviceLetterPagedList: any;
+  isEdit!: boolean;
+  selectedCount = 0;
+  selectedDataRows: any;
+  disablePrwButton = true;
+  currentPrintAdviceLetterGridFilter: any;
   gridColumns: { [key: string]: string } = {
     itemNbr: 'Item #',
     vendorName: 'Pharmacy Name',
@@ -244,6 +249,7 @@ reverseClaimsDialog: any;
   paymentStatusFilter = '';
     
   dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'itemNbr',
       columnDesc: 'Item #',
@@ -300,11 +306,62 @@ reverseClaimsDialog: any;
   /** Constructor **/
   constructor(private route: Router,private dialogService: DialogService,  private readonly cdr: ChangeDetectorRef,
     private readonly configProvider: ConfigurationProvider,
-    private readonly intl: IntlService, ) {}
+    private readonly intl: IntlService,
+    private readonly notificationSnackbarService: NotificationSnackbarService ) {}
   
   ngOnInit(): void {
-    this.sortColumnName = 'Item #';
+    this.sortColumnName = 'Pharmacy Name';
     this.loadBatchLogListGrid();
+    this.pharmacyBatchLogListSubscription();
+    this.batchLogGridLists$.subscribe((res:any)=>{
+      if(res.data.length==0)
+      {
+        this.route.navigate(['/financial-management/pharmacy-claims'] );       
+      }
+      this.batchStatus = res && res.data[0].batchStatus
+      this.initiateBulkMore()
+    })
+    this.handleBatchPaymentsGridData();
+  }
+  initiateBulkMore() {
+   this.bulkMore = [ 
+    
+      {
+        buttonType: 'btn-h-primary',
+        text: 'RECONCILE PAYMENTS',
+        icon: 'edit',
+        click: (data: any): void => {
+          this.navToReconcilePayments(data);
+        },  
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'PRINT VISA AUTHORIZATIONS',
+        icon: 'print',
+        click: (data: any): void => {
+          this.isRequestPaymentClicked = false;
+          this.isPrintVisaAuthorizationClicked = true;
+            
+          },
+  
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'UNBATCH ENTIRE BATCH',
+        icon: 'undo',
+        disabled: [
+          PaymentStatusCode.Paid,
+          PaymentStatusCode.PaymentRequested,
+          PaymentStatusCode.ManagerApproved,
+        ].includes(this.batchStatus),
+        click: (data: any): void => {
+          if (!this.isBulkUnBatchOpened) {
+            this.isBulkUnBatchOpened = true;
+            this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+          }
+        },
+      }
+    ];
   }
   ngOnChanges(): void {
     this.state = {
@@ -316,6 +373,15 @@ reverseClaimsDialog: any;
     this.loadBatchLogListGrid();
   }
 
+  pharmacyBatchLogListSubscription(){
+    this.batchLogGridLists$.subscribe((response:any) =>{
+      this.totalRecord = response.spotsPaymentsQueryCount;
+      if(this.selectAll){
+      this.markAsChecked(response.data);
+      }
+      this.batchLogPrintAdviceLetterPagedList = response;
+    });
+  }
 
   private loadBatchLogListGrid(): void {
     this.loadBatchLog(
@@ -335,7 +401,7 @@ reverseClaimsDialog: any;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
-      sortColumn: this.sortColumn ?? 'itemNbr',
+      sortColumn: this.sortColumn ?? 'vendorName',
       sortType: sortTypeValue ?? 'asc',
       filter: this.filter,
     };
@@ -449,6 +515,8 @@ reverseClaimsDialog: any;
   }
 
   dataStateChange(stateData: any): void {
+    this.isPageCountChanged = false;
+    this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -458,6 +526,9 @@ reverseClaimsDialog: any;
     this.sortColumnName = this.gridColumns[this.sortColumn];
     this.filter = stateData?.filter?.filters;
     this.loadBatchLogListGrid();
+    if(this.isPrintVisaAuthorizationClicked){
+      this.handleBatchPaymentsGridData();
+    }
   }
   dropdownFilterChange(
     field: string,
@@ -483,6 +554,9 @@ reverseClaimsDialog: any;
       logic: 'or',
     });
   }
+  onSingleClaimDelete(selection: any) {
+    this.selected = selection;
+  }
   searchColumnChangeHandler(value: string) {
     if(value === 'creationTime')
     {
@@ -501,9 +575,14 @@ reverseClaimsDialog: any;
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+    this.isPageCountChanged = true;
+    this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadBatchLogListGrid();
+    if(this.isPrintVisaAuthorizationClicked){
+      this.handleBatchPaymentsGridData();
+    }
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -513,6 +592,7 @@ reverseClaimsDialog: any;
   gridDataHandle() {
     this.batchLogGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
+      if( this.selectedColumn != 'ALL')
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
@@ -524,9 +604,7 @@ reverseClaimsDialog: any;
     });
     this.isBatchLogGridLoaderShow = false;
   }
-  public rowClass = (args:any) => ({
-    "table-row-orange": (args.dataItem.item === 1),
-  });
+
    backToBatch(event : any){  
     this.route.navigate(['/financial-management/pharmacy-claims'] );
   }
@@ -536,7 +614,8 @@ reverseClaimsDialog: any;
   }
 
   navToReconcilePayments(event : any){  
-    this.route.navigate(['/financial-management/pharmacy-claims/batch/reconcile-payments'] );
+    this.route.navigate(['/financial-management/pharmacy-claims/batch/reconcile-payments'],
+    { queryParams: { bid: this.batchId } });
   }
   public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({
@@ -553,10 +632,24 @@ reverseClaimsDialog: any;
 
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
-    this.isPrintAuthorizationClicked = false;
+    this.isPrintVisaAuthorizationClicked = false;
+    this.selectAll = false;
+    this.selectedDataRows = [];
+    this.selectedCount = 0;
+    this.noOfRecordToPrint = 0;
+    this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
+    this.markAsUnChecked(this.selectedDataIfSelectAllUnchecked);
+    this.selectedDataRows.PrintAdviceLetterSelected = [];
+    this.selectedDataRows.PrintAdviceLetterUnSelected = [];
+    this.unCheckedPaymentRequest=[];
+    this.selectedDataIfSelectAllUnchecked=[];
+    this.loadBatchLogListGrid();
   }
 
   onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.selectedDataRows.currentPrintAdviceLetterGridFilter = JSON.stringify(
+      this.currentPrintAdviceLetterGridFilter
+    );
     this.printAuthorizationDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-96full pharmacy_print_auth',
@@ -622,7 +715,23 @@ reverseClaimsDialog: any;
         }
       });
   }
+  onModalBatchDeletingClaimsButtonClicked(action: any) {
+  
+    this.ondeletebatchesClickedEvent.emit(this.selected)
+    this.deleteClaims$.subscribe((_:any) =>{
+      
+      this.isDeleteClaimClosed = false;
+      this.deleteClaimsDialog.close();
+      this.loadBatchLogListGrid();
+    })
+  
+    
+  }
 
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.addClientRecentClaimsDialog.close();
+  }
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,
@@ -702,19 +811,214 @@ reverseClaimsDialog: any;
       this.isAddEditClaimMoreClose = false;
       this.addEditClaimsFormDialog.close();
     }
-  }
-  onClickedExport() {
-    this.showExportLoader = true
-    this.exportGridDataEvent.emit()
+    }
 
-    this.exportButtonShow$
-      .subscribe((response: any) => {
-        if (response) {
-          this.showExportLoader = false
-          this.cdr.detectChanges()
-        }
-
-      })
-  }
+    onClickedExport() {
+      this.showExportLoader = true
+      this.exportGridDataEvent.emit()
   
+      this.exportButtonShow$
+        .subscribe((response: any) => {
+          if (response) {
+            this.showExportLoader = false
+            this.cdr.detectChanges()
+          }
+  
+        })
+    }
+
+  selectionAllChange(){
+    this.unCheckedPaymentRequest=[];
+    this.selectedDataIfSelectAllUnchecked=[];
+    if(this.selectAll){
+      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList?.data);
+      this.noOfRecordToPrint = this.totalRecord;
+      this.selectedCount = this.noOfRecordToPrint;
+    }
+    else{
+      this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList?.data);
+      this.noOfRecordToPrint = 0;
+      this.selectedCount = this.noOfRecordToPrint
+    }
+    this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
+    this.disablePreviewButton(this.selectedAllPaymentsList);
+  }
+
+  markAsUnChecked(data:any){
+    data.forEach((element:any) => {
+      element.selected = false;
+  });
+  }
+
+  markAsChecked(data:any){
+    data.forEach((element:any) => {
+      if(this.selectAll){
+        element.selected = true;
+      }
+      else{
+        element.selected = false;
+      }
+      if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
+        let itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
+          element.selected = false;
+        }
+        let itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
+          element.selected = true;
+        }
+      }
+
+    });
+  }
+
+  selectionChange(dataItem:any,selected:boolean){
+    if(!selected){
+      this.noOfRecordToPrint = this.noOfRecordToPrint - 1;
+      this.selectedCount = this.noOfRecordToPrint
+      this.unCheckedPaymentRequest.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
+      if(!this.selectAll){
+      this.selectedDataIfSelectAllUnchecked = this.selectedDataIfSelectAllUnchecked.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
+
+      }
+    }
+    else{
+      this.noOfRecordToPrint = this.noOfRecordToPrint + 1;
+      this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
+      if(!this.selectAll){
+      this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
+      }
+    }
+     this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
+    this.disablePreviewButton(this.selectedAllPaymentsList);
+  }
+
+  disablePreviewButton(result: any) {
+    this.selectedDataRows = result;
+    this.selectedDataRows.batchId = this.batchId;
+    if (result.selectAll) {
+      this.disablePrwButton = false;
+    } else if (result.PrintAdviceLetterSelected.length > 0) {
+      this.disablePrwButton = false;
+    } else {
+      this.disablePrwButton = true;
+    }
+  }
+
+  selectUnSelectPayment(dataItem: any) {
+    if (!dataItem.selected) {
+      const exist = this.selectedDataRows.PrintAdviceLetterUnSelected.filter(
+        (x: any) => x.vendorAddressId === dataItem.vendorAddressId
+      ).length;
+      if (exist === 0) {
+        this.selectedDataRows.PrintAdviceLetterUnSelected.push({
+          paymentRequestId: dataItem.paymentRequestId,
+          vendorAddressId: dataItem.vendorAddressId,
+          selected: true,
+        });
+      }
+      this.selectedDataRows?.PrintAdviceLetterSelected?.forEach(
+        (element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        }
+      );
+    } else {
+      this.selectedDataRows.PrintAdviceLetterUnSelected.forEach(
+        (element: any) => {
+          if (element.paymentRequestId === dataItem.paymentRequestId) {
+            element.selected = false;
+          }
+        }
+      );
+      const exist = this.selectedDataRows.PrintAdviceLetterSelected.filter(
+        (x: any) => x.vendorAddressId === dataItem.vendorAddressId
+      ).length;
+      if (exist === 0) {
+        this.selectedDataRows.PrintAdviceLetterSelected.push({
+          paymentRequestId: dataItem.paymentRequestId,
+          vendorAddressId: dataItem.vendorAddressId,
+          selected: true,
+        });
+      }
+    }
+   }
+
+   loadEachLetterTemplate(event:any){
+    this.loadTemplateEvent.emit(event);
+  } 
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
+  }
+
+  handleBatchPaymentsGridData() {
+    this.batchLogGridLists$.subscribe((data: GridDataResult) => {
+      this.gridDataResult = data;
+      this.gridDataResult.data = filterBy(
+        this.gridDataResult.data,
+        this.filterData
+      );
+      if (data?.total >= 0 || data?.total === -1) {
+        this.gridLoaderSubject.next(false);
+      }
+      this.batchLogGridLists = this.gridDataResult?.data;
+      if(this.recordCountWhenSelectallClicked == 0){
+        this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
+        this.totalGridRecordsCount = this.gridDataResult?.total;
+      }
+      if(!this.selectAll)
+      {
+      this.batchLogGridLists.forEach((item1: any) => {
+        const matchingGridItem = this.selectedAllPaymentsList?.PrintAdviceLetterSelected.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
+        if (matchingGridItem) {
+          item1.selected = true;
+        } else {
+          item1.selected = false;
+        }
+      });
+    }
+    this.currentPageRecords = this.batchLogGridLists;
+    //If the user is selecting the individual check boxes and changing the page count
+    this.handlePageCountSelectionChange();
+    //If the user click on select all header and either changing the page number or page count
+    this.pageNumberAndCountChangedInSelectAll();
+    this.gridLoaderSubject.next(false);
+    });
+  }
+
+  handlePageCountSelectionChange() {
+    if(!this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
+      // Extract the payment request ids from grid data
+      const idsToKeep: number[] = this.selectedDataIfSelectAllUnchecked.map((item: any) => item.paymentRequestId);
+      // Remove items from selected records based on the IDs from grid data
+      for (let i = this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.length - 1; i >= 0; i--) {
+        if (!idsToKeep.includes(this.selectedAllPaymentsList?.PrintAdviceLetterSelected[i].paymentRequestId)) {
+          this.selectedAllPaymentsList?.PrintAdviceLetterSelected.splice(i, 1); // Remove the item at index i
+        }
+      }
+    }
+}
+
+pageNumberAndCountChangedInSelectAll() {
+  //If selecte all header checked and either the page count or the page number changed
+  if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
+    this.selectedAllPaymentsList = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
+    for (const item of this.batchLogGridLists) {
+      // Check if the item is in the second list.
+      const isItemInSecondList = this.unCheckedProcessRequest.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
+      // If the item is in the second list, mark it as selected true.
+      if (isItemInSecondList) {
+        item.selected = false;
+      }else{
+        item.selected = true;
+      }
+    }
+  }
+}
 }

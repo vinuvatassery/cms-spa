@@ -1,15 +1,14 @@
-<kendo-dialog-titlebar (close)="closeDeleteRefundClicked()"> Delete Refunds? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeDeleteRefundClicked()"> {{singleRefundDelete ? 'Delete Refund?' : 'Delete Refund(s)?'}} </kendo-dialog-titlebar>
 <section class="k-dialog-body mb-2">
-   
-        <p class="text-muted mb-1">  This action cannot be undone, but you may add a refund at any time.    </p>
-        <p class="text-muted mb-2">   Refunds to be deleted: 1   </p>
-     
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDeleteRefundClicked()" > Cancel  </button>
-        <button kendoButton class="k-error-button" aria-label="Delete">Delete  </button>
-      </div>
+  <p class="text-muted mb-1"> {{deletemodelbody}}</p>
+  <p *ngIf="!singleRefundDelete" class="text-muted mb-2"> Refunds to be deleted: {{selectedProcessRefundsCount}} </p>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDeleteRefundClicked()">
+        Cancel </button>
+      <button kendoButton class="k-error-button" aria-label="Delete" (click)="deleteClicked()">Delete </button>
     </div>
-  </kendo-dialog-actions>
+  </div>
+</kendo-dialog-actions>

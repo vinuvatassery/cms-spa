@@ -2,11 +2,11 @@ import { Component, Input, ChangeDetectorRef, ChangeDetectionStrategy, Output, E
 import {
   FormBuilder,
   FormGroup,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade} from '@cms/system-config/domain';
 import { InsurancePlanFacade, HealthInsurancePolicyFacade, VendorFacade, InsuranceStatusType } from '@cms/case-management/domain';
 import { SnackBarNotificationType, LoggingService, NotificationSnackbarService, LoaderService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
@@ -60,7 +60,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
 
     this.newhealthInsuranceForm = this.formBuilder.group({
       insuranceCarrierName: ['', Validators.required],
-      insurancePlanName: ['', Validators.required, Validators.maxLength(500)],
+      insurancePlanName: ['', Validators.required],
       insuranceType: ['', Validators.required],
       startDate: ['', Validators.required],
       termDate: [''],
@@ -109,7 +109,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   }
 
   ngOnInit(): void {
-    this.loadInsuranceCarrierName(InsuranceStatusType.healthInsurance);
+    this.loadInsuranceCarrierName(InsuranceStatusType.insurancePlanRequest);
     this.loadInsurancePlans();
   }
 

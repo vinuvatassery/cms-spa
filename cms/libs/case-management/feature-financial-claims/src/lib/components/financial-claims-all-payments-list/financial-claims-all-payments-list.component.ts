@@ -190,7 +190,7 @@ export class FinancialClaimsAllPaymentsListComponent
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Reconcile Payments',
+      text: 'RECONCILE PAYMENTS',
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
@@ -199,7 +199,7 @@ export class FinancialClaimsAllPaymentsListComponent
 
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Advice Letter(s)',
+      text: 'PRINT ADVICE LETTER(S)',
       icon: 'print',
       click: (data: any): void => {
         this.isGridExpand = false;

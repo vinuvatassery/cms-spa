@@ -268,7 +268,7 @@ export class ClientDataService {
       ]);
     }
   }
-  save(applicantInfo: ApplicantInfo) {  
+  save(applicantInfo: ApplicantInfo) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients`,
       applicantInfo,
@@ -278,20 +278,20 @@ export class ClientDataService {
       return this.http.post(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/sendidcard`,
         newIDCardRequest,
-  
+
       )
     }
     load(clientId:any,caseId:any,eligibilityId:any){
       return this.http.get<ApplicantInfo>(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/cases/${caseId}/eligibility-periods/${eligibilityId}`,);
        }
-    update(applicantInfo: ApplicantInfo,clientId:any) {  
+    update(applicantInfo: ApplicantInfo,clientId:any) {
       return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}`,
         applicantInfo,
-    
+
     )}
-    searchDuplicateClient(clientData: any) {  
+    searchDuplicateClient(clientData: any) {
       return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/duplicate-check`,
       clientData,
@@ -299,4 +299,8 @@ export class ClientDataService {
     removeClientNote(clientId: number, clientNoteId: string) {
       return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/notes/${clientNoteId}`);
     }
+    runImportedClaimRules(clientId: number){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/rules?clientId=${clientId}`,);
+      }
 }

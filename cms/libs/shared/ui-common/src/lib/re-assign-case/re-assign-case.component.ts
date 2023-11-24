@@ -1,9 +1,8 @@
 /** Angular **/
 import { Input, Output, Component, ChangeDetectionStrategy, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
-import { StatusFlag } from '../enums/status-flag.enum';
 
 @Component({
   selector: 'common-re-assign-case',
@@ -90,7 +89,7 @@ export class ReAssignCaseComponent implements OnInit, OnChanges {
       newCaseWorkerId: this.hasReassignPermission ? formValues.newCaseWorkerId : null,
       reasonForReassign: formValues.reasonForReassign,
       clientCaseId: this.clientCaseId,
-      activeFlag: this.hasReassignPermission ? StatusFlag.Yes : StatusFlag.No,
+      hasPermission: this.hasReassignPermission,
     }
     return reassignData;
   }

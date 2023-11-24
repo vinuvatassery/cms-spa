@@ -259,11 +259,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
 
   filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
-  }
-
-  rowClass = (args: any) => ({
-    'table-row-disabled': !args.dataItem.assigned,
-  });
+  } 
 
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
@@ -293,7 +289,7 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'ALL', dir: 'desc' }],
+      sort: [{ field: 'creationTime', dir: 'desc' }],
     };
   }
 

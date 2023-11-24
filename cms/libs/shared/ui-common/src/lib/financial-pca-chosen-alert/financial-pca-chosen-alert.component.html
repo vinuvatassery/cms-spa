@@ -1,0 +1,17 @@
+<kendo-dialog-titlebar (close)="closeAlertReportClicked()"> Alert </kendo-dialog-titlebar>
+<section class="k-dialog-body mb-2">
+      <p class="mb-1"><strong>One or more PCA codes assigned to this expense type are no longer valid.</strong></p>
+        <p class="text-muted mb-1">  Do you want to override this alert and assign these expenses to <strong>PCA {{chosenPca.pcaCode}}</strong>  </p>
+ 
+     
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeAlertReportClicked()"> Cancel  </button>
+        <button kendoButton [primary]="true" aria-label="Ok" (click)="pcaAssignAlertConfirm()">
+            Ok
+      </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

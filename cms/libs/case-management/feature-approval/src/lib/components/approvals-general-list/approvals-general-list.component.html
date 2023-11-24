@@ -52,7 +52,7 @@
                   id="approve{{ i }}"
                   [toggleable]="true"
                 >
-                  Approve
+                  APPROVE
                 </button>
                 <button
                   kendoButton
@@ -64,7 +64,7 @@
                   id="deny{{ i }}"
                   [toggleable]="true"
                 >
-                  Deny
+                  DENY
                 </button>
               </div>
               <div
@@ -220,6 +220,13 @@
     (updateMasterDetailsClickedEvent)="updateMasterDetailsClicked($event)"
     (close)="onCloseEditListItemsDetailClicked()"
     [selectedMasterDetail$]="selectedMasterDetail$"
+    [drugForm]="drugForm"
+    [insurancePlanForm]="insurancePlanForm"
+    [insuranceTypelovForPlan$]="insuranceTypelovForPlan$"
+    (recordUpdatedEvent)="recordUpdate($event)"
+    [pharmacyForm]="pharmacyForm"
+    [insuranceVendorForm]="insuranceVendorForm"
+    [insuranceProviderForm]="insuranceProviderForm"
   >
   </productivity-tools-approvals-edit-items>
 </ng-template>
@@ -250,7 +257,7 @@
             look="outline"
             (click)="onCloseSubmitGeneralRequestClicked()"
           >
-            Cancel
+            CANCEL
           </button>
           <button
             aria-label="Submit"

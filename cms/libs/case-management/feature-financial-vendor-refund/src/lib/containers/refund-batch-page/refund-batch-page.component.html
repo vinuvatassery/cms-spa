@@ -2,4 +2,8 @@
 [batchLogGridLists$]="batchLogGridLists$"
 [pageSizes]="pageSizes" [sortValue]="sortValue"
 [sortType]="sortType" [sort]="sort" 
-(loadBatchLogListEvent)="loadBatchLogListGrid($event)"> </cms-refund-batch-log-list>
+[exportButtonShow$]="exportButtonShow$"
+[paymentBatchName$]="paymentBatchName$"
+(loadVendorRefundBatchLogListEvent)="loadBatchLogListGrid($event)"
+(exportGridDataEvent)="exportBatchesLogGridData()"
+(exportReceiptDataEvent)="exportReceiptDataEvent($event)"> </cms-refund-batch-log-list>

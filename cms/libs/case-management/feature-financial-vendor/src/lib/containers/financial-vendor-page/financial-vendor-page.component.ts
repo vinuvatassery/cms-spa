@@ -33,8 +33,7 @@ export class FinancialVendorPageComponent implements OnInit {
   inputProviderTypeForClinic = '';
   selectedClinicType : string = this.financeVendorTypeCodes.MedicalClinic;
   hasinsuranceVendorCreateUpdatePermission:boolean = false;
-  hasPharmacyCreateUpdatePermission:boolean = false;
-  hasManufacturerCreateUpdatePermission:boolean = false;
+  hasPharmacyCreateUpdatePermission:boolean = false; 
   data = [
     {
       text: 'Manufacturer',
@@ -81,7 +80,8 @@ export class FinancialVendorPageComponent implements OnInit {
   exportButtonShow$ = this.documentFacade.exportButtonShow$
   ddlStates = this.contactFacade.ddlStates$;
   clinicVendorList = this.financialVendorFacade.clinicVendorList$;;
-  clinicVendorLoader = this.financialVendorFacade.clinicVendorLoader$;;
+  clinicVendorLoader = this.financialVendorFacade.clinicVendorLoader$;
+
 
   private closeMedicalDentalProviderModalSubject = new BehaviorSubject<boolean>(false);
   closeMedicalDentalProviderModal$ = this.closeMedicalDentalProviderModalSubject.asObservable();
@@ -105,7 +105,7 @@ export class FinancialVendorPageComponent implements OnInit {
     private reminderFacade: ReminderFacade,
     private documentFacade: DocumentFacade,
     private readonly contactFacade: ContactFacade,
-    private userManagementFacade: UserManagementFacade,
+    private userManagementFacade: UserManagementFacade
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
     this.clinicForm = this.formBuilder.group({});
@@ -120,7 +120,6 @@ export class FinancialVendorPageComponent implements OnInit {
     this.hasMedicalAndDentalCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Medical_Dental_Provider_Create_Update']);
     this.hasinsuranceVendorCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Vendor_Create_Update']);
     this.hasPharmacyCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Pharmacy_Create_Update']);
-    this.hasManufacturerCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Manufacturer_Create_Update']);
   }
 
   searchClinicVendorClicked(clientName: any) {
@@ -319,5 +318,6 @@ export class FinancialVendorPageComponent implements OnInit {
       this.documentFacade.getExportFile(vendorPageAndSortedRequest, 'vendors', fileName)
     }
   }
+
 
 }
