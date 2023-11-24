@@ -146,7 +146,7 @@
     (searchClinicVendorClicked)="searchClinicVendorClicked($event)" [saveVendorEventSubject]="saveVendorEventSubject"></cms-vendor-details>
 </kendo-dialog>
 
-<!-- Insurance Vendors -->
+<!-- Insurance Vendor -->
 <kendo-dialog kendoRippleContainer *ngIf="isShowInsuranceProvider" (close)="closeVendorDetailModal()"
   class="app-c-modal app-c-modal-md app-c-modal-np" title="{{hasinsuranceVendorCreateUpdatePermission==true? 'Add New Insurance Vendor':'Request New Insurance Vendor'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.InsuranceVendors"
