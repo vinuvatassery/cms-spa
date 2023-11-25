@@ -12,4 +12,5 @@ export * from './lib/components/refund-batches-list/refund-batches-list.componen
 export * from './lib/components/refund-new-form-details/refund-new-form-details.component';
 export * from './lib/components/refund-process-list/refund-process-list.component';
 export * from './lib/components/vendor-refund-claims-list/vendor-refund-claims-list.component';
+export * from './lib/components/refund-claims-provider-info/refund-claims-provider-info.component';
 export * from './lib/components/vendor-refund-insurance-premium-list/vendor-refund-insurance-premium-list.component';

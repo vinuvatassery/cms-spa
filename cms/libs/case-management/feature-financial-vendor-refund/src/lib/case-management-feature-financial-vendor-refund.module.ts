@@ -20,6 +20,7 @@ import { VendorRefundPharmacyPaymentsListComponent } from './components/vendor-r
 import { CaseManagementFeatureFinancialPremiumsModule } from '@cms/case-management/feature-financial-premiums';
 import { UnbatchRefundConfirmationComponent } from './components/unbatch-refund-confirmation/unbatch-refund-confirmation.component';
 import { filterResetConfirmationComponent } from './components/reset-filter-confirmation/reset-filter-confirmation.component';
+import { RefundClaimsProviderInfoComponent } from './components/refund-claims-provider-info/refund-claims-provider-info.component';
 
 @NgModule({
   imports: [
@@ -45,7 +46,8 @@ import { filterResetConfirmationComponent } from './components/reset-filter-conf
     VendorRefundSelectedPremiumListComponent,
     VendorRefundClientClaimsListComponent,
     VendorRefundPharmacyPaymentsListComponent,
-    filterResetConfirmationComponent
+    filterResetConfirmationComponent,
+    RefundClaimsProviderInfoComponent
   ],
 })
 export class CaseManagementFeatureFinancialVendorRefundModule {}
