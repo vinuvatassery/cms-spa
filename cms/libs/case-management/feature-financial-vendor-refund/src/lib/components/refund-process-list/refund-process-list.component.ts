@@ -222,6 +222,9 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     private dialogService: DialogService,
     private financialVendorRefundFacade: FinancialVendorRefundFacade
   ) {} 
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,

@@ -416,7 +416,7 @@ export class MedicalPaymentDetailComponent {
     this.copayPaymentForm.controls['amountRequested'].setValidators([Validators.required,]);
     this.copayPaymentForm.controls['paymentTypeCode'].setValidators([Validators.required,]);
     this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['entryDate'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
 
     this.copayPaymentForm.controls['vendorId'].updateValueAndValidity();
     this.copayPaymentForm.controls['clientInsurancePolicyId'].updateValueAndValidity();
@@ -753,7 +753,9 @@ export class MedicalPaymentDetailComponent {
       ]),
       pcaCode: new FormControl(this.medicalClaimServices.pcaCode),
       serviceDescription: new FormControl(
-        this.medicalClaimServices.serviceDescription
+        this.medicalClaimServices.serviceDescription,[
+          Validators.required,
+        ]
       ),
       serviceCost: new FormControl(this.medicalClaimServices.serviceCost, [
         Validators.required,
