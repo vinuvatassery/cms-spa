@@ -39,11 +39,8 @@
                   </ng-template>
                 </kendo-popover>
               </p>
-              <div *ngIf="item.approvalTypeCode == pendingApprovalGeneralTypeCode.GeneralAddToMasterList">
-                <span class="mt-4">
-                  Contact Name
-                  <h6>{{item.fullName}}</h6>
-                </span>
+              <div *ngIf="item.approvalTypeCode == pendingApprovalGeneralTypeCode.GeneralAddToMasterList" class="mt-4">
+                Contact Name {{item.fullName}}
               </div>
             </div>
             <div class="flex-col flex-col-6">

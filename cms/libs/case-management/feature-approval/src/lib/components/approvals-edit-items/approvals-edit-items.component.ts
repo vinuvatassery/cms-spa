@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { DrugType, DrugsFacade, FinancialVendorFacade, InsurancePlanFacade, PendingApprovalGeneralTypeCode } from '@cms/case-management/domain';
+import { DrugType, DrugsFacade, EmailAddressTypeCode, FinancialVendorFacade, InsurancePlanFacade, PendingApprovalGeneralTypeCode, PhoneTypeCode } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
@@ -407,7 +407,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       this.healthCareForm.controls['state'].setValidators(Validators.required);
       this.healthCareForm.controls['state'].updateValueAndValidity();
 
-      this.healthCareForm.controls['zip'].setValidators(Validators.required);
+      this.healthCareForm.controls['zip'].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')]);
       this.healthCareForm.controls['zip'].updateValueAndValidity();
     } else if (this.selectedSubtypeCode == PendingApprovalGeneralTypeCode.Drug) {
       this.drugForm.controls['providerName'].setValidators(
@@ -519,22 +519,24 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
         let emails = [];
         let phones = [];
         emails.push({
-          emailAddress: this.healthCareForm.controls['email']?.value,
+          emailAddress: this.healthCareForm.controls['contactEmail']?.value,
           vendorContactEmailId: this.selectedMasterData.vendorContactEmailId,
-          vendorContactId: this.selectedMasterData.vendorContactId
+          vendorContactId: this.selectedMasterData.vendorContactId,
+          emailAddressTypeCode: EmailAddressTypeCode.Work
         })
         phones.push({
-          phoneNbr: this.healthCareForm?.controls['phoneNumber']?.value,
-          faxNbr: this.healthCareForm?.controls['fax']?.value,
+          phoneNbr: this.healthCareForm?.controls['contactPhone']?.value,
+          faxNbr: this.healthCareForm?.controls['contactFax']?.value,
           vendorContactPhoneId: this.selectedMasterData.vendorContactPhoneId,
-          vendorContactId: this.selectedMasterData.vendorContactId
+          vendorContactId: this.selectedMasterData.vendorContactId,
+          phoneTypeCode: PhoneTypeCode.Work
         })
         contact.push(
           {
             contactName: this.healthCareForm.controls['contactFirstName']?.value,
             vendorContactId: this.selectedMasterData.vendorContactId,
             emails,
-            phones
+            phones,            
           }
         )
         let masterData = {

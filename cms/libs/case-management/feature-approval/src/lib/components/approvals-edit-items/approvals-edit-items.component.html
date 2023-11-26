@@ -117,6 +117,9 @@
       <kendo-formerror *ngIf="healthCareFormControls?.zip.errors?.required && isValidateForm">
         Zip is required
       </kendo-formerror>
+      <kendo-formerror *ngIf="healthCareFormControls?.zip.errors?.pattern">
+        Special characters are not allowed
+      </kendo-formerror>
     </div>
     <div class="flex-col ">
       <kendo-floatinglabel text="Contact 1 Name (optional)">
