@@ -1,7 +1,7 @@
 import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, ServiceTypeCode } from '@cms/case-management/domain'; 
+import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, ServiceTypeCode } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject, debounceTime } from 'rxjs';
@@ -69,12 +69,12 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   sortValueClientClaims = this.financialVendorRefundFacade.sortValueClientClaims;
   sortClientClaims = this.financialVendorRefundFacade.sortClientClaimsList;
   clientClaimsListData$ =   this.financialVendorRefundFacade.clientClaimsListData$;
-  
+
   sortValuePharmacyPayment = this.financialVendorRefundFacade.sortValuePharmacyPayment;
   sortPharmacyPayment = this.financialVendorRefundFacade.sortValuePharmacyPayment;
   pharmacyPaymentsListData$ =   this.financialVendorRefundFacade.pharmacyPaymentsListData$;
   isConfirmationClicked = false;
-  
+
   insuraceAddRefundClickSubject = new Subject<any>();
   insuraceAddRefundClick$ = this.insuraceAddRefundClickSubject.asObservable()
 
@@ -85,7 +85,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   existingRxRefundClaim$ = this.financialVendorRefundFacade.existingRxRefundClaim$;
   insurancevendors$ = this.financialVendorRefundFacade.insurancevendors$;
   tpavendors$ = this.financialVendorRefundFacade.tpavendors$;
- 
+
   @ViewChild('insClaims', { static: false })
   insClaims!: VendorRefundInsurancePremiumListComponent;
 
@@ -125,21 +125,21 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
-    public financialVendorFacade :FinancialVendorFacade,   
+    public financialVendorFacade :FinancialVendorFacade,
     private dialogService: DialogService,
     private formBuilder: FormBuilder) {}
   ngOnInit(): void {
-    
+
     this.subscribeLoadRefundClaimDataForRx();
     this.financialVendorRefundFacade.premiumsListData$.subscribe((res:any)=>{
-      
+
       this.diffclaims=res.item;
     })
     this.lovFacade.getRefundTypeLov();
     this.lovFacade.getServiceTypeLov();
      this.initForm()
     this.lovFacade.refundType$.subscribe((res:any[]) =>{
-      
+
      this.refundType =  res.filter(x=> x.lovCode!=='TAX')
     })
 if(this.isEdit){
@@ -157,8 +157,8 @@ if(this.isEdit){
         tin: ""
     },]
     this.selectedVendor = vendors
-   
-  
+
+
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
   this.initForm()
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
@@ -183,24 +183,24 @@ if(this.isEdit){
     });
   this.refundForm.controls['rxVendor'].disable();
   this.financialVendorRefundFacade.pharmaciesSubject.next([this.selectedVendor])
-  this.searchPharmacy(this.vendorName) 
+  this.searchPharmacy(this.vendorName)
       this.isConfirmationClicked = true;
       this.financialVendorRefundFacade.pharmaciesSubject.next(vendors)
       this.selectedMedicalProvider = vendors[0]
       this.loadPaymentRequestData();
- 
+
   }
 
   if(this.selectedRefundType === ServiceTypeCode.tpa){
     this.refundForm.patchValue({
       tpaVendor : this.selectedVendor
     });
-    
+
   this.refundForm.controls['tpaVendor'].disable();
-  this.searchTpaVendors(this.vendorName) 
+  this.searchTpaVendors(this.vendorName)
   }
-  
-  
+
+
 
 }
   }
@@ -242,7 +242,7 @@ if(this.isEdit){
     if(this.isEdit){
     this.financialVendorRefundFacade.updateInsuranceRefundEditInformation(event.data)
     }else{
-    this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data) 
+    this.financialVendorRefundFacade.addInsuranceRefundClaim(event.data)
   }
 }
 
@@ -252,29 +252,45 @@ if(this.isEdit){
     this.vendorAddressId=null;
     this.selectedProvider=null;
   }
-  confirmationClicked (){ 
+  confirmationClicked (){
       this.inputConfirmationClicked = true;
     this.disableFeildsOnConfirmSelection = true
-   
-    if(this.selectedRefundType=== ServiceTypeCode.insurancePremium 
+
+    if(this.selectedRefundType=== ServiceTypeCode.insurancePremium
     && this.insClaims.selectedInsuranceClaims &&  this.insClaims.selectedInsuranceClaims.length>0
     ){
       this.refundForm.controls['insVendor'].disable();
     this.insurancePremiumPaymentReqIds =  [...this.insClaims.selectedInsuranceClaims]
-  } 
+  }
 
   if(this.selectedRefundType === ServiceTypeCode.tpa ){
     this.refundForm.controls['tpaVendor'].disable();
     this.tpaClaimsPaymentReqIds =  this.tpaClaims.selectedTpaClaims
   }
    if (this.selectedRefundType === ServiceTypeCode.pharmacy || this.selectedRefundType === 'RX' || this.selectedRefundType === 'PHARMACY'){
-    this.refundForm.controls['rxVendor'].disable();   
+    this.refundForm.controls['rxVendor'].disable();
     if(!this.isEdit){
       this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
-    }
+    }else{
+      this.rxClaims.selectedPharmacyClaims.forEach(element => {
+        const data = (this.selectedVendorRefundsList[0].prescriptionFillItems).find((obj:any) =>{
+          return obj.refundedPrescriptionFillId ==  element.perscriptionFillId
+        });
+        if(data){
+          element.daySupplyRefunded=data.daySupplyRefunded;
+          element.qtyRefunded =data.qtyRefunded;
+          element.qtyRefundedValid=data.qtyRefunded;
+          element.refundedAmount=data.refundedAmount;
+          element.refundedAmountValid=data.refundedAmountValid;
+          element.refundedPrescriptionFillId=data.refundedPrescriptionFillId;
+        };
+      });
+      this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
+     }
+
   }
-  
-  this.isConfirmationClicked = true   
+
+  this.isConfirmationClicked = true
 }
 
 onSelectedClaimsChangeEvent(event:any[]){
@@ -298,7 +314,7 @@ onSelectedRxClaimsChangeEvent(event:any){
     this.financialPremiumsRefundGridLists =  res;
       console.log(this.financialPremiumsRefundGridLists)
     })
-  
+
   }
 
 
@@ -321,11 +337,11 @@ onInsurancePremiumProviderCick(event:any){
     content: this.providerDetailsTemplate,
     animation:{
       direction: 'left',
-      type: 'slide',  
-    }, 
+      type: 'slide',
+    },
     cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
   });
-  
+
 }
 updateProviderProfile(event:any){
   this.financialVendorFacade.updateProviderPanel(event)
@@ -354,30 +370,30 @@ onAddRefundClick(){
     this.inputConfirmationClicked= false
     this.isRefundGridClaimShow = true;
     this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
-    
- 
+
+
   }
   closeAddEditRefundFormModalClicked(event:Boolean){
-    this.modalCloseAddEditRefundFormModal.emit(event);  
+    this.modalCloseAddEditRefundFormModal.emit(event);
   }
 
   loadVendorRefundProcessListGrid(event: any) {
-  
+
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();
   }
-  
 
-  loadClaimsListGrid(event: any) { 
+
+  loadClaimsListGrid(event: any) {
     this.financialVendorRefundFacade.loadClaimsListGrid();
   }
 
-  loadPremiumsListGrid(event: any) { 
+  loadPremiumsListGrid(event: any) {
     this.financialVendorRefundFacade.loadPremiumsListGrid();
   }
-  loadClientClaimsListGrid(event: any) { 
+  loadClientClaimsListGrid(event: any) {
     this.financialVendorRefundFacade.loadClientClaimsListGrid();
   }
-  loadPharmacyPaymentsListGrid(event: any) { 
+  loadPharmacyPaymentsListGrid(event: any) {
     this.financialVendorRefundFacade.loadPharmacyPaymentsListGrid();
   }
   loadClientBySearchText(clientSearchText: any) {
@@ -396,7 +412,7 @@ onAddRefundClick(){
       this.clientName = client.clientFullName;
       if (this.clientId != null && this.vendorAddressId != null) {
         this.isRefundGridClaimShow = true;
-      } 
+      }
     }
     else{
       this.clientId=null;
@@ -410,7 +426,7 @@ onAddRefundClick(){
   }
   onProviderValueChange($event: any) {
     this.vendorAddressId=null;
-    if($event==undefined){ 
+    if($event==undefined){
       this.vendorAddressId=null;
     }
     this.vendorId=$event.vendorId;
@@ -420,7 +436,7 @@ onAddRefundClick(){
     this.providerTin = $event;
     if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
-    } 
+    }
   }
   initRefundForm() {
     this.refundClaimForm = this.formBuilder.group({
@@ -428,7 +444,7 @@ onAddRefundClick(){
       client: [this.selectedClient, Validators.required],
     });
     this.refundRXForm = this.formBuilder.group({
-      voucherPayable: [''], 
+      voucherPayable: [''],
       creditNumber: [''],
       warantNumber: ['', Validators.required],
       depositDate: ['', Validators.required],
@@ -447,9 +463,9 @@ onAddRefundClick(){
   }
    debounce<T>(func: (arg: T) => void, debounceTimeMs: number): (arg: T) => void {
     const subject = new Subject<T>();
-  
+
     subject.pipe(debounceTime(debounceTimeMs)).subscribe(arg => func(arg));
-  
+
     return (arg: T) => subject.next(arg);
   }
   debouncedSearchInsuranceVendors = this.debounce((searchText: any) => {
@@ -478,7 +494,7 @@ onAddRefundClick(){
     this.financialVendorRefundFacade.loadTpavendorBySearchText(searchText,this.clientId);
   }
   claimsCountEvent(data:any){
-    
+
     this.claimsCount=data;
   }
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
@@ -491,16 +507,16 @@ onAddRefundClick(){
           grantNo : item.grantNo,
           warrantNbr : item.warrantNbr,
           paymentStatusCode : item.paymentStatusCode,
-          prescriptionFillItems : []  
+          prescriptionFillItems : []
         })))).map((str:any) => JSON.parse(str));
         listData = listData.map((obj : any) =>
           ({
             ...obj,
-            qtyRefunded : null,
+            qtyRefunded : obj.qtyRefunded ?? null,
             qtyRefundedValid : false,
-            daySupplyRefunded : null,
+            daySupplyRefunded : obj.daySupplyRefunded ?? null,
             daySupplyRefundedValid : false,
-            refundedAmount : null,
+            refundedAmount : obj.refundedAmount ?? null,
             refundedAmountValid : false
           }));
         this.selectedVendorRefundsList.forEach((element : any) => {
@@ -511,12 +527,13 @@ onAddRefundClick(){
             && x.warrantNbr == element.warrantNbr
             && x.paymentStatusCode == element.paymentStatusCode
             )
-        });       
+        });
     }
     else{
-          this.isConfirmationClicked = true   
+          this.isConfirmationClicked = true
           this.inputConfirmationClicked = true;
         this.disableFeildsOnConfirmSelection = true
+        this.vendorId = listData.vendorId;
         const formValues: {
           voucherPayable: string | null,
           creditNumber: string | null,
@@ -548,7 +565,7 @@ onAddRefundClick(){
       })
     }
     }
-    
+
    this.isConfirmationClicked = true;
  }
 
@@ -588,7 +605,7 @@ onAddRefundClick(){
   return sum.toFixed(2);
  }
  refundRXForm = this.formBuilder.group({
-  voucherPayable: [''], 
+  voucherPayable: [''],
   creditNumber: [''],
   warantNumber: ['', Validators.required],
   depositDate:['', Validators.required],
@@ -613,9 +630,9 @@ addNewRefundRx() {
       let selectedpharmacyClaimsDto = selectedpharmacyClaims.map((obj : any)=>
         ({
           paymentRequestId : obj.paymentRequestId ?? this.selectedVendorRefundsList[0].paymentRequestId,
-          refundedPaymentRequestId : this.selectedVendorRefundsList[0].refundedPaymentRequestId,
+          refundedPaymentRequestId : this.selectedVendorRefundsList[0].refundedPaymentRequestId ?? (obj.paymentRequestId ?? this.selectedVendorRefundsList[0].paymentRequestId),
           prescriptionFillId : obj.perscriptionFillId ?? obj.prescriptionFillId,
-          refundedPrescriptionFillId : obj.refundedPrescriptionFillId,
+          refundedPrescriptionFillId : obj.refundedPrescriptionFillId ?? (obj.perscriptionFillId ?? obj.prescriptionFillId),
           refundedQty : obj.qtyRefunded ,
           daySupplyRefunded : obj.daySupplyRefunded,
           refundedAmount : obj.refundedAmount,
@@ -626,8 +643,8 @@ addNewRefundRx() {
           pharmacyNpi : obj.PharmacyNpi,
           ndc : obj.ndc
         }));
-      let refundRxData = { 
-        ...this.refundRXForm.value, 
+      let refundRxData = {
+        ...this.refundRXForm.value,
         vendorId : this.vendorId,
         clientId  : this.clientId,
         clientCaseEligibilityId   : this.clientCaseEligibilityId ?? selectedpharmacyClaims[0].clientCaseEligibilityId,
@@ -670,7 +687,7 @@ addNewRefundRx() {
         })
       }
     }
-  
+
 }
 onRefundNoteValueChange(event: any) {
   this.refundNoteValueLength = event.length

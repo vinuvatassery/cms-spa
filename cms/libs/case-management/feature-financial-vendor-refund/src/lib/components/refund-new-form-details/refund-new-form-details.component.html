@@ -43,7 +43,7 @@
                                 <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                     <span class=" text-muted"> <em>DOB:</em> {{ dataItem.dob}}</span>
                                 </ng-template>
-                            </kendo-combobox-column>                          
+                            </kendo-combobox-column>
                         </kendo-multicolumncombobox>
                     </div>
 
@@ -53,7 +53,7 @@
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Refund Type">
                         <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Refund Type" [(ngModel)]="selectedRefundType"
-                            [data]="refundType" 
+                            [data]="refundType"
                             textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
                             [fillMode]="formUiStyle.dropDownFillMode" (valueChange)="initForm()"  (selectionChange)="selectionChange($event)">
                         </kendo-dropdownlist>
@@ -64,26 +64,26 @@
             <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
                 <div class="flex-col flex-col-6" >
                     <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">  
+                        <div class="combotable_search_list new_refund_Search">
                             <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>                         
+                            aria-hidden="true">search</span>
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                                   
+
                                       <kendo-multicolumncombobox [data]="insurancevendors$ | async" textField="providerFullName"
-                                      valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode" 
+                                      valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
                                       (filterChange)="onInputChange($event)"
                                        placeholder="Search Vendor name or TIN"
-                                       (valueChange)="onProviderValueChange($event)" 
-                                         formControlName="insVendor" 
+                                       (valueChange)="onProviderValueChange($event)"
+                                         formControlName="insVendor"
                                          [(ngModel)]="selectedVendor"
                                           [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                           [filterable]="true"
                                           [disabled]="disableFeildsOnConfirmSelection"
                                           >
-                                    
+
                                       <button kendoButton fillMode="clear" icon="image"></button>
-          
+
                                       <kendo-combobox-column>
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                               <span>Name:{{ dataItem.vendorName }}</span>
@@ -109,30 +109,30 @@
                                       </ng-template>
                                   </kendo-multicolumncombobox>
                               </div>
-                      </kendo-floatinglabel> 
+                      </kendo-floatinglabel>
                 </div>
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">  
+                        <div class="combotable_search_list new_refund_Search">
                             <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>                         
+                            aria-hidden="true">search</span>
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                                      <kendo-multicolumncombobox [data]="tpavendors$ | async" 
+                                      <kendo-multicolumncombobox [data]="tpavendors$ | async"
                                       textField="providerFullName"
                                       valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
                                       placeholder="Search Vendor Name, ID"
                                       [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                                      [filterable]="true" 
-                                      formControlName="tpaVendor" 
+                                      [filterable]="true"
+                                      formControlName="tpaVendor"
                                       (filterChange)="searchTpaVendors($event)"
                                       (valueChange)="onProviderValueChange($event)" [(ngModel)]="selectedVendor"
                                       [disabled]="disableFeildsOnConfirmSelection" >
-                                    
+
                                       <button kendoButton fillMode="clear" icon="image"></button>
-          
+
                                       <kendo-combobox-column>
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                               <span>Name:{{ dataItem.vendorName }}</span>
@@ -147,18 +147,18 @@
                                         <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                             <span class="text-muted"><em> </em>MailCode: {{ dataItem.MmilCode }}</span>
                                         </ng-template>
-                                    </kendo-combobox-column> 
+                                    </kendo-combobox-column>
                                       <kendo-combobox-column [width]="150">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                               <span class="text-muted"><em> </em>Address: {{ dataItem.address }}</span>
                                           </ng-template>
-                                      </kendo-combobox-column>                                    
+                                      </kendo-combobox-column>
                                       <ng-template kendoMultiColumnComboBoxNoDataTemplate>
                                         <div class="no-data-text">No providers found</div>
                                     </ng-template>
                                   </kendo-multicolumncombobox>
                               </div>
-                      </kendo-floatinglabel> 
+                      </kendo-floatinglabel>
                 </div>
 
             </div>
@@ -169,12 +169,12 @@
                         <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>
                         <span></span>
-                    <kendo-multicolumncombobox textField="providerFullName" 
+                    <kendo-multicolumncombobox textField="providerFullName"
                     valueField="vendorAddressId"
                     [fillMode]="formUiStyle.dropDownFillMode"
                     placeholder="Search Pharmacy name or TIN"
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
-                    [filterable]="true" 
+                    [filterable]="true"
                     (filterChange)="searchPharmacy($event)" [data]="pharmaciesList"
                     formControlName="rxVendor"
                     [(ngModel)]="selectedMedicalProvider" (valueChange)="onProviderValueChange($event)"
@@ -190,7 +190,7 @@
                                 <span class="text-muted"><em> TIN:</em> {{ dataItem.tin | tin }}</span>
                             </ng-template>
                         </kendo-combobox-column>
- 
+
                         <kendo-combobox-column>
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                 <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
@@ -217,12 +217,12 @@
                     (claimsCount)="claimsCountEvent($event)"  ></cms-vendor-refund-claims-list>
                 </div>
             </div>
-            <div class="confirm-container" *ngIf="isConfirmationClicked"> 
+            <div class="confirm-container" *ngIf="isConfirmationClicked">
             <!-- TPA Claims Refund Form -->
             <div class="flex-row" >
                 <div class="flex-col-6 flex-col">
                     <div class="flex-row">
-                        <div class="flex-col mt-2 mb-2 "> 
+                        <div class="flex-col mt-2 mb-2 ">
                             <div class="text-center">
                                 <a kendoButton look="flat" class="card-link-button" href="#medicalProviderPaymentslist">
                                     View Medical Provider Payments
@@ -310,12 +310,12 @@
                             <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
                                 Total
                             </ng-template>
-                        </kendo-grid-column> 
+                        </kendo-grid-column>
                         <kendo-grid-column field="amountPaid" title="Original Amount Paid" [width]="180">
                             <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
                                 <span class="tableamountview"> <strong>$</strong> XXXX.XX </span>
                             </ng-template>
-                        </kendo-grid-column>  
+                        </kendo-grid-column>
                         <ng-template kendoGridLoadingTemplate>
                           <common-grid-loader-component></common-grid-loader-component>
                         </ng-template>
@@ -400,13 +400,13 @@
                     [vendorAddressId]="vendorAddressId"
                     [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
                         [sortValue]="sortValueClientClaims" [sortType]="sortType"
-                        [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId" 
+                        [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId"
                         (claimsCount)="claimsCountEvent($event)"
                         (selectedClaimsChangeEvent)="onSelectedClaimsChangeEvent($event)"
                         ></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
-            <div class="confirm-container" *ngIf="isConfirmationClicked"> 
+            <div class="confirm-container" *ngIf="isConfirmationClicked">
 
             <cms-vendor-refund-selected-premium-list [insuranceRefundInformation$]="insuranceRefundInformation$"
              [gridDataResult]="financialPremiumsRefundGridLists"
@@ -420,16 +420,16 @@
             [vendorAddressId]="vendorAddressId"
             [isEdit]="isEdit"
             [clientId]="clientId"></cms-vendor-refund-selected-premium-list>
-            
+
             </div>
         </div>
 
         <!-- RX Content -->
-        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'PHARMACY' && vendorAddressId && clientId"> 
+        <div class="add_new_bottom_section" *ngIf="selectedRefundType === 'PHARMACY' && vendorAddressId && clientId">
             <div class="mt-1" *ngIf="!isConfirmationClicked">
                 <h5>Select all claims included in this refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-client-claims-list #rxClaims  [selectedpharmacyClaimsPaymentReqIds]="pharmacyClaimsPaymentReqIds" [vendorId]="vendorId" [clientId]="clientId" 
+                    <cms-vendor-refund-client-claims-list #rxClaims  [selectedpharmacyClaimsPaymentReqIds]="pharmacyClaimsPaymentReqIds" [vendorId]="vendorId" [clientId]="clientId"
                      [refundType]="selectedRefundType" [pageSizes]="pageSizes"  [isEdit]="isEdit"
                         [sortValue]="sortValueClientClaims" [sortType]="sortType" [sort]="sortClientClaims"
                         (loadClientClaimsListEvent)="loadClientClaimsListGrid($event)" (claimsCount)="claimsCountEvent($event)"
@@ -439,9 +439,9 @@
                        ></cms-vendor-refund-client-claims-list>
                 </div>
             </div>
-            <div class="confirm-container" *ngIf="isConfirmationClicked"> 
+            <div class="confirm-container" *ngIf="isConfirmationClicked">
             <div class="flex-row">
-                <div class="flex-col flex-col-6 mt-2 mb-2 "> 
+                <div class="flex-col flex-col-6 mt-2 mb-2 ">
                     <div class="text-center">
                         <a kendoButton look="flat" class="card-link-button" href="#PharmacyPaymentsList">
                             View Pharmacy Payments
@@ -457,7 +457,7 @@
                 <div class="flex-col flex-col-4 align-items-center justify-content-start">
                     <span class="app-checkboxwidtext-wrapper">
                         <input kendoCheckBox type="checkbox" id="spots-payment" name="spots-payment"
-                            aria-labelledby="spots-payment" 
+                            aria-labelledby="spots-payment"
                             id="isSpotsPaymentInputRX" [checked]="isSpotsPayment"
                             (change)="onSpotsPaymentChange($event)"
                             for="isSpotsPaymentInputRX"/>
@@ -553,9 +553,9 @@
                                 </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column editor="numeric" format="n" [width]="100" field="qtyRefunded" title="Qty Refunded" [editable]="true" [sticky]="true" [width]="130">
-                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">              
-                                    <kendo-numerictextbox  
-                                    id ="qtyRefunded{{tblIndex}}-{{rowIndex}}"  
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                    <kendo-numerictextbox
+                                    id ="qtyRefunded{{tblIndex}}-{{rowIndex}}"
                                     name ="qtyRefunded{{tblIndex}}-{{rowIndex}}"
                                     [fillMode]= "formUiStyle.inputFillMode"
                                     aria-label="Qty Refunded"
@@ -563,16 +563,16 @@
                                     [min] = "0"
                                     [(ngModel)]="dataItem.qtyRefunded"
                                     [ngClass]="ngDirtyInValid(dataItem,'qtyRefunded',tblIndex,rowIndex)"
-                                    >                                          
+                                    >
                                   </kendo-numerictextbox>
                                   <kendo-formerror *ngIf="!dataItem.qtyRefundedValid">Qty Refunded is required</kendo-formerror>
-                              </ng-template>    
+                              </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="daySupplyRefunded" title="Days Supply Refunded" [width]="160"
                                 [sticky]="true">
-                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">              
-                                    <kendo-numerictextbox  
-                                    id ="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"  
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                    <kendo-numerictextbox
+                                    id ="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
                                     name ="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
                                     [fillMode]= "formUiStyle.inputFillMode"
                                     aria-label="Days Supply Refunded"
@@ -580,15 +580,15 @@
                                     [(ngModel)]="dataItem.daySupplyRefunded"
                                     [min] = "0"
                                     [ngClass]="ngDirtyInValid(dataItem,'daySupplyRefunded',tblIndex,rowIndex)"
-                                    >                                          
+                                    >
                                   </kendo-numerictextbox>
                                   <kendo-formerror *ngIf="!dataItem.daySupplyRefundedValid">Days Supply Refunded is required</kendo-formerror>
                                 </ng-template>
                                 </kendo-grid-column>
                             <kendo-grid-column field="pmtStatus" title="Refund Amount" [width]="150" [sticky]="true">
-                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">              
-                                    <kendo-numerictextbox  
-                                    id ="refundedAmount{{tblIndex}}-{{rowIndex}}"  
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                                    <kendo-numerictextbox
+                                    id ="refundedAmount{{tblIndex}}-{{rowIndex}}"
                                     name ="refundedAmount{{tblIndex}}-{{rowIndex}}"
                                     [fillMode]= "formUiStyle.inputFillMode"
                                     aria-label="Refund Amount"
@@ -596,7 +596,7 @@
                                     [min] = "0"
                                     [(ngModel)]="dataItem.refundedAmount"
                                     [ngClass]="ngDirtyInValid(dataItem,'refundedAmount',tblIndex,rowIndex)"
-                                    >                                          
+                                    >
                                   </kendo-numerictextbox>
                                   <kendo-formerror *ngIf="!dataItem.refundedAmountValid">Refund Amount is required</kendo-formerror>
                                 </ng-template>
@@ -632,7 +632,7 @@
                         </div>
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text="Credit #">
-                                <kendo-textbox  aria-label="Credit # (optional)" 
+                                <kendo-textbox  aria-label="Credit # (optional)"
                                     formControlName= "creditNumber"
                                     [fillMode]="formUiStyle.inputFillMode"  name="creditNumber"
                                     placeholder="Credit #"
@@ -677,8 +677,8 @@
                     </div>
                 </div>
             </div>
-            <div id="PharmacyPaymentsList">
-                <h5>PHARMACY PAYMENTS FOR FNAME LNAME</h5>
+            <div id="PharmacyPaymentsList" *ngIf="vendorId && clientId">
+                <h5>PHARMACY PAYMENTS FOR {{ clientName }}</h5>
                     <cms-vendor-refund-pharmacy-payments-list [vendorId]="vendorId" [clientId]="clientId"
                         [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyPayment" [sortType]="sortType"
                         [sort]="sortPharmacyPayment"></cms-vendor-refund-pharmacy-payments-list>
@@ -705,7 +705,7 @@
     </div>
 </div>
     <div class="justify-content-end align-items-center" *ngIf="!isConfirmationClicked && selectedRefundType">
-        
+
         <span class="mr-2">{{claimsCount}} refund(s) to be added</span>
         <button kendoButton [primary]="true" aria-label="Confirm Selections" [disabled]="claimsCount<1"  (click)="confirmationClicked()"> Confirm Selections
         </button>
@@ -717,7 +717,7 @@
     <cms-financial-premiums-provider-info
     [paymentRequestId]="paymentRequestId"
     (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
     (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
     [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
     [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
