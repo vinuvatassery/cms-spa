@@ -32,6 +32,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   ndcMaskFormat: string = "00000-0000-00"
   isLoading = false;
 
+  deliveryMethodCodesLocal: any;
   showLoader() {
     this.loaderService.show();
   }
@@ -57,6 +58,21 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     } else {
       this.saveButtonText = "Update";
     }
+
+    // modify delivery methods for that results [ ML , MG , Tablet , Each ]
+    this.normalizeDeliveryMethods();
+
+  }
+
+  private normalizeDeliveryMethods() {
+    const orderMapping: Record<string, number> = { "ML": 1, "MG": 2, "TABLET": 3, "EACH": 4 };
+
+    const convertToAbbreviation = (description: string): string => ({ "Milliliter": "ML", "Milligram": "MG" }[description] || description);
+
+    this.deliveryMethodCodesLocal = this.deliveryMethodCodes
+      .filter((item: any) => ["ML", "MG", "TABLET", "EACH"].includes(item.lovCode))
+      .map(({ lovCode, lovDesc, ...rest }: { lovCode: string; lovDesc: string; }) => ({ lovCode: lovCode.toUpperCase(), lovDesc: convertToAbbreviation(lovDesc), ...rest }))
+      .sort((a: any, b: any) => (orderMapping[a.lovCode] || 999) - (orderMapping[b.lovCode] || 999));
   }
 
   createDrugForm() {
@@ -67,7 +83,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
       deliveryMethodCode: [this.drug?.deliveryMethodCode, Validators.required],
       drugName: [this.drug?.drugName, [Validators.required, Validators.maxLength(200)]],
       brandName: [this.drug?.brandName, [Validators.required, Validators.maxLength(200)]],
-      drugType: [this.drug?.drugCategoryCode, Validators.required]
+      drugType: [this.drug?.drugCategoryCode]
     });
   }
 
@@ -110,7 +126,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
       deliveryMethodCode: formValues.deliveryMethodCode,
       drugName: formValues.drugName,
       brandName: formValues.brandName,
-      drugType: formValues.drugType,
+      drugType: formValues.drugType || 'Not Applicable',
       activeFlag: this.hasCreateUpdatePermission ? StatusFlag.Yes : StatusFlag.No,
     };
     return dto;
