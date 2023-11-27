@@ -578,7 +578,7 @@
 
 <ng-template #possibleMatchesDialogModal>
   <productivity-tools-approvals-review-possible-matches
-    (closeReviewPossibleMatchesDialogClickedEvent)="onCloseReviewPossibleMatchesDialogClicked()"
+    (closeReviewPossibleMatchesDialogClickedEvent)="onCloseReviewPossibleMatchesDialogClicked($event)"
     [claimData]="claimData"
     [possibleMatchData$]="possibleMatchData$"
     (loadPossibleMatchDataEvent)="loadPossibleMatch($event)"
