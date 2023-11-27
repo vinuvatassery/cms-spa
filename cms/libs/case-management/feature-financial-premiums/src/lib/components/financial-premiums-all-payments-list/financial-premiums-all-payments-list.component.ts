@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { GridFilterParam, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade, GridFilterParam, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -79,6 +79,10 @@ export class FinancialPremiumsAllPaymentsListComponent
 
   searchColumnList: { columnName: string; columnDesc: string }[] = [
     {
+      columnName: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
       columnName: 'itemNumber',
       columnDesc: 'Item #',
     },
@@ -134,7 +138,7 @@ export class FinancialPremiumsAllPaymentsListComponent
 
   //searching
   private searchSubject = new Subject<string>();
-  selectedSearchColumn = 'itemNumber';
+  selectedSearchColumn = 'ALL';
   searchText: null | string = null;
 
   //sorting
@@ -205,6 +209,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   @Input() exportButtonShow$: any;
   @Output() deletePaymentEvent = new EventEmitter();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+
   UnBatchPaymentDialog: any;
   removePremiumsDialog: any;
   isPrintAdviceLetterClicked = false;
@@ -345,9 +350,14 @@ deletePremiumPayment(paymentId: string) {
     private readonly intl: IntlService,
     private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
+    private readonly financialPremiumsFacade: FinancialPremiumsFacade,
   ) {}
 
   ngOnInit(): void {
+    this.financialPremiumsFacade.financialPremiumsAllPaymentsData$.subscribe((response:any) =>{
+      debugger
+
+    })
     this.addSearchSubjectSubscription();
     this.getVedndorTypeCodeLov();
     this.getPaymentMethodLov();
@@ -359,6 +369,8 @@ deletePremiumPayment(paymentId: string) {
       }
       this.financialPremiumsAllPaymentsGridLists = response;
     })
+  
+
   }
 
   ngOnChanges(): void {
@@ -567,6 +579,7 @@ deletePremiumPayment(paymentId: string) {
         },
       ],
     };
+    
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
