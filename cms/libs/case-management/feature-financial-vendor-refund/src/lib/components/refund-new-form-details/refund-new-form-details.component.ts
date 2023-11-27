@@ -5,10 +5,11 @@ import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, Serv
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject, debounceTime } from 'rxjs';
-import { VendorRefundClaimsListComponent, VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
+import {  VednorRefundTpaClaimsListComponent,VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { IFrameService } from 'angular-auth-oidc-client/lib/iframe/existing-iframe.service';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -23,7 +24,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   @Input() clientId: any;
 
   @Input() clientName: any;
- vendorId: any;
+ @Input() vendorId: any;
  @Input() vendorAddressId :any
    selectedProvider:any;
   isRefundGridClaimShow = false;
@@ -78,6 +79,9 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   insuraceAddRefundClickSubject = new Subject<any>();
   insuraceAddRefundClick$ = this.insuraceAddRefundClickSubject.asObservable()
 
+  tpaAddRefundClickSubject = new Subject<any>();
+  tpaAddRefundClick$ = this.tpaAddRefundClickSubject.asObservable()
+
   clientSearchLoaderVisibility$ =
   this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialVendorRefundFacade.clients$;
@@ -85,12 +89,13 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   existingRxRefundClaim$ = this.financialVendorRefundFacade.existingRxRefundClaim$;
   insurancevendors$ = this.financialVendorRefundFacade.insurancevendors$;
   tpavendors$ = this.financialVendorRefundFacade.tpavendors$;
-
+  tpaRefundInformation$ = this.financialVendorRefundFacade.tpaRefundInformation$
+ 
   @ViewChild('insClaims', { static: false })
   insClaims!: VendorRefundInsurancePremiumListComponent;
 
   @ViewChild('tpaClaims', { static: false })
-  tpaClaims!: VendorRefundClaimsListComponent;
+  tpaClaims!: VednorRefundTpaClaimsListComponent;
 
   @ViewChild('rxClaims', { static: false })
   rxClaims!: VendorRefundPharmacyPaymentsListComponent;
@@ -108,6 +113,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   @Output() modalCloseAddEditRefundFormModal = new EventEmitter<Boolean>();
   sortValue: string | undefined;
   financialPremiumsRefundGridLists: any;
+  tpaRefundInformation :any
   filterData: any;
   paymentRequestId: any;
   insurancePremiumsRequestIds: any;
@@ -121,6 +127,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   pharmaciesList: any;
   isSpotsPayment: boolean =true;
   selectedInsRequests: any[]=[];
+  selectedTpaRequests: any[]=[];
   selectedRxVendorRefundList: any;
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
@@ -159,6 +166,7 @@ if(this.isEdit){
     this.selectedVendor = vendors
 
 
+ 
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
   this.initForm()
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
@@ -171,6 +179,8 @@ if(this.isEdit){
       return x.vendorAddressId ==  this.vendorAddressId
     })
     this.selectedVendor = vendors && vendors[0]
+    this.vendorId = vendors[0].vendorId
+    this.initForm()
   })
   this.onInputChange(this.vendorName);
 
@@ -195,7 +205,20 @@ if(this.isEdit){
     this.refundForm.patchValue({
       tpaVendor : this.selectedVendor
     });
-
+   
+    this. tpavendors$.subscribe((res:any[])=>{
+      const vendors = res.filter((x) =>{
+        return x.vendorAddressId ==  this.vendorAddressId
+      })
+      this.selectedVendor = vendors && vendors[0]
+      this.vendorId = vendors[0].vendorId
+      this.initForm()
+    })
+  this.debouncedtpaVendors(this.vendorName) 
+  
+  this.financialVendorRefundFacade.tpaVendorsSubject.next([this.selectedVendor])
+  this.isConfirmationClicked = true;
+  this.getTpaRefundInformation(this.inspaymentRequestId)
   this.refundForm.controls['tpaVendor'].disable();
   this.searchTpaVendors(this.vendorName)
   }
@@ -207,6 +230,12 @@ if(this.isEdit){
   subscribeLoadRefundClaimDataForRx(){
     this.pharmacySearchResult$.subscribe((res:any)=>{
       this.pharmaciesList = res;
+      const vendors = res.filter((x:any) =>{
+        return x.vendorAddressId ==  this.vendorAddressId
+      })
+      this.selectedVendor = vendors && vendors[0]
+      this.vendorId = vendors[0].vendorId
+      this.initForm()
     });
 
     this.existingRxRefundClaim$.subscribe((res:any)=>{
@@ -221,17 +250,26 @@ if(this.isEdit){
     this.refundForm = this.formBuilder.group({
       insVendor:this.selectedVendor
     });
+    if(this.isEdit){
+    this.refundForm.controls['insVendor'].disable();
+    }
   }
   if(this.selectedRefundType === ServiceTypeCode.pharmacy){
     this.refundForm = this.formBuilder.group({
       rxVendor:this.selectedVendor
     });
+    if(this.isEdit){
+    this.refundForm.controls['rxVendor'].disable();
+    }
   }
 
   if(this.selectedRefundType === ServiceTypeCode.tpa){
     this.refundForm = this.formBuilder.group({
       tpaVendor:this.selectedVendor
     });
+    if(this.isEdit){
+    this.refundForm.controls['tpaVendor'].disable();
+    }
   }
   }
 
@@ -298,6 +336,11 @@ onSelectedClaimsChangeEvent(event:any[]){
   this.insurancePremiumPaymentReqIds = event
 }
 
+onSelectedTpaClaimsChangeEvent(event:any[]){
+  this.selectedTpaRequests = event
+  this.tpaPaymentReqIds = event
+}
+
 onSelectedRxClaimsChangeEvent(event:any){
   this.rxPaymentReqIds = event
 }
@@ -312,11 +355,27 @@ onSelectedRxClaimsChangeEvent(event:any){
     this.financialVendorRefundFacade.getInsuranceRefundInformation(param);
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
     this.financialPremiumsRefundGridLists =  res;
-      console.log(this.financialPremiumsRefundGridLists)
     })
-
+  
   }
 
+
+  getTpaRefundInformation(data:any){
+
+    if(this.isEdit){
+     this.financialVendorRefundFacade.getTpaEditRefundInformation(data);
+
+    }else{
+    const param ={
+      paymentRequestIds: this.selectedTpaRequests,
+    }
+    this.financialVendorRefundFacade.getTpaRefundInformation(param);
+    this.financialVendorRefundFacade.tpaRefundInformation$.subscribe(res =>{
+    this.tpaRefundInformation =  res;
+    })
+  }
+  
+  }
 
 
 
@@ -355,8 +414,20 @@ OnEditProviderProfileClick(){
 onAddRefundClick(){
   if (this.selectedRefundType === 'PHARMACY') {
     this.addNewRefundRx();
-  } else
-    this.insuraceAddRefundClickSubject.next(true);
+  } 
+  if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
+      this.insuraceAddRefundClickSubject.next(true);
+  }
+  if(this.selectedRefundType === ServiceTypeCode.tpa){
+     this.tpaAddRefundClickSubject.next(true)
+  }
+}
+
+addTpa(event:any){
+  const param ={
+    tpaRefundInformation:event
+  }
+this.financialVendorRefundFacade.addTpaRefundClaim(param);
 }
 
   /******  */
@@ -369,10 +440,12 @@ onAddRefundClick(){
     this.onEditInitiallydontShowPremiumselection = false
     this.inputConfirmationClicked= false
     this.isRefundGridClaimShow = true;
+    if(this.selectedRefundType == ServiceTypeCode.pharmacy){
     this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
-
-
+    }
+ 
   }
+
   closeAddEditRefundFormModalClicked(event:Boolean){
     this.modalCloseAddEditRefundFormModal.emit(event);
   }
@@ -436,7 +509,8 @@ onAddRefundClick(){
     this.providerTin = $event;
     if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
-    }
+    } 
+    this.selectedMedicalProvider = $event
   }
   initRefundForm() {
     this.refundClaimForm = this.formBuilder.group({
