@@ -21,12 +21,12 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   @Input() deliveryMethodCodes: any;
   @Input() manufacturers: any;
   @Input() hasCreateUpdatePermission = false;
-  @Input() addDrug$ : any ;
+  @Input() addDrug$: any;
 
   @Output() close = new EventEmitter<any>();
   @Output() addDrugEvent = new EventEmitter<any>();
 
-  drug : any;
+  drug: any;
   drugForm!: FormGroup;
   isSubmitted: boolean = false;
   ndcMaskFormat: string = "00000-0000-00"
@@ -52,12 +52,10 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.hideLoader()
     this.drugForm.get('manufacturer')?.patchValue(this.vendorId);
-    if (this.dialogTitle === "Add New") {
-      this.saveButtonText = "Add"
-    } else if (this.dialogTitle === "Request New") {
-      this.saveButtonText = "Request"
+    if (this.dialogTitle === "Add New" || this.dialogTitle === "Request New") {
+      this.saveButtonText = this.dialogTitle;
     } else {
-      this.saveButtonText = "Update"
+      this.saveButtonText = "Update";
     }
   }
 
@@ -132,22 +130,20 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     if (this.drugForm.valid) {
       let finalData = this.mapFormValues();
       this.showLoader();
-       this.addDrugEvent.emit(finalData)
+      this.addDrugEvent.emit(finalData)
       this.addDrug$
-      .subscribe((addResponse: any) =>
-      {
-        if(addResponse)
-        {      
-          this.onCancelClick();
-          let notificationMessage = addResponse.message;
-          this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
-          this.hideLoader();
-          this.drugForm.reset();
-          this.isValidateForm = false;
-          this.cd.detectChanges();
-        }
-  
-      })     
+        .subscribe((addResponse: any) => {
+          if (addResponse) {
+            this.onCancelClick();
+            let notificationMessage = addResponse.message;
+            this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
+            this.hideLoader();
+            this.drugForm.reset();
+            this.isValidateForm = false;
+            this.cd.detectChanges();
+          }
+
+        })
     }
   }
 
