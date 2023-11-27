@@ -433,7 +433,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       this.exceptionsCount = this.approvalsPaymentsGridUpdatedResult.filter(
         (x: any) =>
           x.approvalTypeCode ===
-          this.pendingApprovalGeneralTypeCode.GeneralException
+          this.pendingApprovalGeneralTypeCode.GeneralExceptions
       ).length;
       this.onSubmitClicked(this.submitRequestModalDialog);
     }
