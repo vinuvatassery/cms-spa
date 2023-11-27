@@ -76,7 +76,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn: any='ALL';
   gridDataResult!: GridDataResult;
   selectedDataRows: any[] = [];
   selectedReconcileDataRows: any[] = [];
@@ -105,6 +105,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   showExportLoader = false;
   bulkNoteCounter:any=0;
   columns : any = {
+    ALL: 'ALL',
     vendorName:this.providerTitle,
     tin:"TIN",
     paymentMethodDesc:"Pmt. Method",
@@ -115,6 +116,10 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     comments:"Note (optional)"
   }
   dropDropdownColumns : any = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
     {
       columnCode: 'vendorName',
       columnDesc: this.providerTitle,
@@ -168,19 +173,19 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     public activeRoute: ActivatedRoute) {}
   
   ngOnInit(): void {
-    this.loadQueryParams();
-    if(this.loadType === LoadTypes.allPayments){
-      this.columns.batchName ='Batch #';
-      let batch = {columnCode:'batchName',columnDesc:'Batch #'};
-      this.dropDropdownColumns.splice(0, 0, batch);
-    }
+    this.loadQueryParams();   
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodSubscription();
     if(this.premiumsType === PremiumType.Dental){
       this.providerTitle = 'Dental Provider';
       this.sortColumn = this.providerTitle;
       this.columns['vendorName'] = this.providerTitle;
-      this.dropDropdownColumns[0].columnDesc = this.providerTitle;
+      this.dropDropdownColumns.find((x:any)=>x.columnCode === 'vendorName').columnDesc = this.providerTitle;
+    }
+    if(this.loadType === LoadTypes.allPayments){
+      this.columns.batchName ='Batch #';
+      let batch = {columnCode:'batchName',columnDesc:'Batch #'};
+      this.dropDropdownColumns.splice(0, 0, batch);
     }
     this.state = {
       skip: 0,
@@ -289,9 +294,9 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.columnsReordered = true;
   }
   allColumnChange(){
-    this.searchItem = null;
-    this.defaultGridState();
-    this.loadReconcileListGrid();
+    this.searchItem =null;
+      this.defaultGridState();
+      this.loadReconcileListGrid();
   }
   onSearchChange(data: any) {
     let searchValue = data;
@@ -312,7 +317,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
     }
    
-    if(searchValue !== ''){
     this.filterData = {
       logic: 'and',
       filters: [
@@ -331,7 +335,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
-  }
   }
 
   private formatSearchValue(searchValue: any, isDateSearch: boolean) {

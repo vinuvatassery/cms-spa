@@ -56,7 +56,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
   public  state!: State
   deletebuttonEmitted = false;
   editbuttonEmitted = false;
-  isOpenedbusinessInfo =false;
+  isOpeneHealthcareProvider =false;
   gridHoverDataItem! : any
   existingProviderData! : any
   selectedCustomProviderName! : string
@@ -68,6 +68,11 @@ export class HealthCareProviderListComponent implements  OnChanges {
   notApplicable :any ='Not Applicable'
   medicalProviderForm: FormGroup;
   hasHealthcareProviderCreateUpdatePermission=false;
+  ShowClinicProvider: boolean = false;
+  providerTypeCode: string = '';
+  clinicForm: FormGroup;
+  hasClinicCreateUpdatePermission = false;
+  selectedClinicType : string = this.vendorTypes.Clinic;
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -125,12 +130,14 @@ export class HealthCareProviderListComponent implements  OnChanges {
   constructor(private caseFacade: CaseFacade,private financialVendorFacade: FinancialVendorFacade,private contactFacade:ContactFacade,
     private userManagementFacade:UserManagementFacade, private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef,){
     this.medicalProviderForm = this.formBuilder.group({});
+    this.clinicForm = this.formBuilder.group({});
   }
 
   /** Lifecycle hooks **/ 
   ngOnInit() { 
     this.contactFacade.loadDdlStates();  
     this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Service_Provider_Medical_Dental_Provider_Create_Update']);
+    this.hasClinicCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Clinic_Create_Update']);
   }
   ngOnChanges(): void {     
     this.state = {
@@ -179,15 +186,21 @@ pageselectionchange(data: any) {
     this.editformVisibleSubject.next(this.isOpenedProviderSearch);
     this.editbuttonEmitted =false;
   }
-  onBusinessInfoCloseClicked()
+
+  closeVendorDetailModal(type : any)
   {
-    this.isOpenedbusinessInfo = false;
+    if(type == this.vendorTypes.HealthcareProviders){
+      this.isOpeneHealthcareProvider = false;
+    }else{
+      this.ShowClinicProvider = false;
+    }
   }
 
   onOpenBusinessLogicClicked()
   { 
-    this.buildVendorForm();
-    this.isOpenedbusinessInfo = true;
+    this.buildVendorForm( this.vendorTypes.HealthcareProviders);
+    this.isOpeneHealthcareProvider = true;
+    this.providerTypeCode = this.vendorTypes.HealthcareProviders
   }
   onDeleteConfirmCloseClicked()
   {
@@ -379,15 +392,19 @@ pageselectionchange(data: any) {
     
    }
 
-   buildVendorForm() {
-    this.medicalProviderForm.reset();
-    this.medicalProviderForm = this.formBuilder.group({
+   buildVendorForm(providerType?: any) {
+    if (providerType === FinancialVendorTypeCode.Clinic)
+      this.clinicForm.reset();
+    else
+      this.medicalProviderForm.reset(); 
+      let form = this.formBuilder.group({
       firstName:[''],
       lastName:[],
       providerName: [''],
       tinNumber: [''],
       npiNbr: [''],
       paymentMethod: [''],
+      clinicType: [''],
       specialHandling: [''],
       mailCode: [''],
       nameOnCheck: [''],
@@ -406,6 +423,10 @@ pageselectionchange(data: any) {
       ]),
       activeFlag:[]
     });
+    if (providerType === FinancialVendorTypeCode.Clinic)
+      this.clinicForm = form;
+    else
+      this.medicalProviderForm = form;
   }
 
   public get vendorTypes(): typeof FinancialVendorTypeCode {
@@ -413,12 +434,14 @@ pageselectionchange(data: any) {
   }
 
   saveVendorProfile(vendorProfile: any){
-    
+    if(vendorProfile.vendorTypeCode == this.vendorTypes.MedicalProviders){
+      this.providerTypeCode=this.vendorTypes.HealthcareProviders;
+    }
     this.financialVendorFacade.showLoader();
     this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
       next:(response:any)=>{
-        this.financialVendorFacade.hideLoader();
-        this.onBusinessInfoCloseClicked();
+        this.financialVendorFacade.hideLoader(); 
+        this.closeVendorDetailModal(this.providerTypeCode);
         this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
         this.cdr.detectChanges();
       },
@@ -427,9 +450,24 @@ pageselectionchange(data: any) {
       }
     });
   }
+
   searchClinicVendorClicked(clientName:any)
   {
     
     this.financialVendorFacade.searchClinicVendor(clientName);
   }
+
+  clickOpenClinicProviderDetails(providerTypeForClinic: string) {
+    if (providerTypeForClinic === FinancialVendorTypeCode.DentalProviders)
+      this.selectedClinicType = FinancialVendorTypeCode.DentalProviders;
+    else if (providerTypeForClinic === FinancialVendorTypeCode.MedicalProviders)
+      this.selectedClinicType = FinancialVendorTypeCode.MedicalProviders;
+
+    this.providerTypeCode = this.vendorTypes.Clinic;
+    this.buildVendorForm(this.vendorTypes.Clinic);
+    this.ShowClinicProvider = true;
+  }
+
+  saveVendorEventSubject: Subject<any> = new Subject();
+
 }

@@ -13,3 +13,5 @@ export * from './lib/components/refund-new-form-details/refund-new-form-details.
 export * from './lib/components/refund-process-list/refund-process-list.component';
 export * from './lib/components/vendor-refund-claims-list/vendor-refund-claims-list.component';
 export * from './lib/components/vendor-refund-insurance-premium-list/vendor-refund-insurance-premium-list.component';
+export * from './lib/components/vednor-refund-tpa-claims-list/vednor-refund-tpa-claims-list.component';
+export * from './lib/components/vednor-refund-tpa-selected-claims-list/vednor-refund-tpa-selected-claims-list.component';

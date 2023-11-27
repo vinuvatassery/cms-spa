@@ -1,0 +1,160 @@
+
+           <ng-container  *ngFor="let item of tpaRefundGridLists;let i = index" >
+           <!-- TPA Claims Refund Form -->
+            <div class="flex-row" >
+                <div class="flex-col-6 flex-col">
+                    <div class="flex-row">
+                        <div class="flex-col mt-2 mb-2 "> 
+                            <div class="text-center">
+                                <a kendoButton look="flat" class="card-link-button" href="#medicalProviderPaymentslist">
+                                    View Medical Provider Payments
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex-row align-items-center justify-content-between " >
+                        <div class="flex-col flex-col-2">
+                            <h5>Refund {{i+1}}</h5>
+                        </div>
+                        <div class="flex-col flex-col-6">
+                            <span class="app-checkboxwidtext-wrapper">
+                                <input kendoCheckBox type="checkbox" id="spots-payment" name="spots-payment"
+                                    aria-labelledby="spots-payment" />
+                                <label class="k-checkbox-label" for="spots-payment">This is a SPOTS payment</label>
+                            </span>
+                        </div>
+                        <div class="flex-col flex-col-4 justify-content-end">
+                            <button class="" kendoButton fillMode="flat" aria-label="Delete" (click)="onDeleteClick(i)"
+                                themeColor="error">DELETE</button>
+                        </div>
+
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="Service Start Date">
+                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+                                    aria-label="Service Start Date" format="MM/DD/YYYY"
+                                    formatPlaceholder="formatPattern" placeholder="">
+                                </kendo-datepicker>
+                            </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="Service Start Date">
+                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+                                    aria-label="Service Start Date" format="MM/DD/YYYY"
+                                    formatPlaceholder="formatPattern" placeholder="">
+                                </kendo-datepicker>
+                            </kendo-floatinglabel>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <!-- TPA Claims Info -->
+            <div class="flex-row mt-1">
+                <div class="flex-col flex-col-6">
+                    <table class=" info-table-custom left_right_align mb-3">
+                        <caption hidden> Refund Information</caption>
+                        <tr hidden>
+                            <th scope="col">Fields</th>
+                            <th scope="col">Details</th>
+
+                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>Invoice ID</td>
+                                <td>{{item.invoiceNbr}}</td>
+                            </tr>
+                            <tr>
+                                <td>Original Warrant #</td>
+                                <td>{{item.originalWarrantNumber}}</td>
+                            </tr>
+                            <tr>
+                                <td>PCA Code</td>
+                                <td>{{item.pcaCode}}</td>
+                            </tr>
+                            <tr>
+                                <td>Grant #</td>
+                                <td>{{item.grantId}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            <!-- TPA Claims CPT Grid -->
+            <div class="flex-row">
+                <div class="flex-col flex-col-6">
+                    <div class="app-c-table">
+                        <kendo-grid [resizable]="true" [groupable]="false" [reorderable]="true" [resizable]="true"
+                        [columnMenu]="false"  
+                        [data]="item.tpaInvoice">
+                        <kendo-grid-column field="cptCode" title="CPT Code" [width]="200">
+                            <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                                Total
+                            </ng-template>
+                        </kendo-grid-column> 
+                        <kendo-grid-column field="serviceCost" title="Original Amount Paid" [width]="180">
+                            <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+                                <span class="tableamountview"> <strong>$</strong> XXXX.XX </span>
+                            </ng-template>
+                        </kendo-grid-column>  
+                        <ng-template kendoGridLoadingTemplate>
+                          <common-grid-loader-component></common-grid-loader-component>
+                        </ng-template>
+                        <!-- grid No data Template -->
+                        <ng-template kendoGridNoRecordsTemplate>
+                          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+                          </div>
+                          <p>There is no data to display.</p>
+                        </ng-template>
+                      </kendo-grid>
+                          </div>
+                </div>
+            </div>
+            <!-- TPA Claims VP Form -->
+            <div class="flex-row">
+                <div class="flex-col flex-col-6">
+                    <div class="flex-row">
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="VP">
+                                <kendo-textbox aria-label="VP"
+                                [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="item.voucherPayableNbr">
+                                </kendo-textbox>
+                            </kendo-floatinglabel>
+                        </div>
+
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="Refund Warrant #">
+                                <kendo-textbox aria-label="Refund Warrant #"  [(ngModel)]="item.refundedWarrantNumber" [fillMode]="formUiStyle.inputFillMode">
+                                </kendo-textbox>
+                            </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="Refund Amount" class="amount-with-symbol">
+                                <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                                <kendo-numerictextbox aria-label="Refund Amount" [spinners]="false"
+                                    [fillMode]="formUiStyle.inputFillMode" format="#.00" [(ngModel)]="item.refundedAmount">
+                                </kendo-numerictextbox>
+                            </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="Deposit Date">
+                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Deposit Date"
+                                    format="MM/DD/YYYY" formatPlaceholder="formatPattern" [(ngModel)]="item.reconciledDate">
+                                </kendo-datepicker>
+                            </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col flex-col-6">
+                            <kendo-floatinglabel text="Refund Note (optional)">
+                                <kendo-textbox aria-label="Refund Note (optional)"
+                                    [fillMode]="formUiStyle.inputFillMode" [(ngModel)]="item.refundedNote">
+                                </kendo-textbox>
+                                <kendo-formhint class="justify-content-end"><span class="counter">
+                                        0/100</span></kendo-formhint>
+                            </kendo-floatinglabel>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
