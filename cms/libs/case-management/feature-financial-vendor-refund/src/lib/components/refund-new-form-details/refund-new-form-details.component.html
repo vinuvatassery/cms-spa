@@ -174,8 +174,8 @@
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                     [filterable]="true" 
                     (filterChange)="searchPharmacy($event)" [data]="pharmaciesList"
-                    [(ngModel)]="selectedMedicalProvider" 
                     (valueChange)="onProviderValueChange($event)"
+                    formControlName="rxVendor" 
                     >
                         <kendo-combobox-column>
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>

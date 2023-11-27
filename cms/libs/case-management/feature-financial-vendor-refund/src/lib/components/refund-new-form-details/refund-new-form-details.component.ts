@@ -160,8 +160,7 @@ if(this.isEdit){
         tin: ""
     },]
     this.selectedVendor = vendors
-   
-  
+ 
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
   this.initForm()
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
@@ -174,6 +173,8 @@ if(this.isEdit){
       return x.vendorAddressId ==  this.vendorAddressId
     })
     this.selectedVendor = vendors && vendors[0]
+    this.vendorId = vendors[0].vendorId
+    this.initForm()
   })
   this.onInputChange(this.vendorName);
 
@@ -222,6 +223,12 @@ if(this.isEdit){
   subscribeLoadRefundClaimDataForRx(){
     this.pharmacySearchResult$.subscribe((res:any)=>{
       this.pharmaciesList = res;
+      const vendors = res.filter((x:any) =>{
+        return x.vendorAddressId ==  this.vendorAddressId
+      })
+      this.selectedVendor = vendors && vendors[0]
+      this.vendorId = vendors[0].vendorId
+      this.initForm()
     });
 
     this.existingRxRefundClaim$.subscribe((res:any)=>{
@@ -236,17 +243,20 @@ if(this.isEdit){
     this.refundForm = this.formBuilder.group({
       insVendor:this.selectedVendor
     });
+    this.refundForm.controls['insVendor'].disable();
   }
   if(this.selectedRefundType === ServiceTypeCode.pharmacy){
     this.refundForm = this.formBuilder.group({
       rxVendor:this.selectedVendor
     });
+    this.refundForm.controls['rxVendor'].disable();
   }
 
   if(this.selectedRefundType === ServiceTypeCode.tpa){
     this.refundForm = this.formBuilder.group({
       tpaVendor:this.selectedVendor
     });
+    this.refundForm.controls['tpaVendor'].disable();
   }
   }
 
@@ -471,6 +481,7 @@ this.financialVendorRefundFacade.addTpaRefundClaim(param);
     if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
     } 
+    this.selectedMedicalProvider = $event
   }
   initRefundForm() {
     this.refundClaimForm = this.formBuilder.group({
