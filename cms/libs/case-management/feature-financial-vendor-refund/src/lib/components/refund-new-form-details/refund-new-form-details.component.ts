@@ -243,20 +243,26 @@ if(this.isEdit){
     this.refundForm = this.formBuilder.group({
       insVendor:this.selectedVendor
     });
+    if(this.isEdit){
     this.refundForm.controls['insVendor'].disable();
+    }
   }
   if(this.selectedRefundType === ServiceTypeCode.pharmacy){
     this.refundForm = this.formBuilder.group({
       rxVendor:this.selectedVendor
     });
+    if(this.isEdit){
     this.refundForm.controls['rxVendor'].disable();
+    }
   }
 
   if(this.selectedRefundType === ServiceTypeCode.tpa){
     this.refundForm = this.formBuilder.group({
       tpaVendor:this.selectedVendor
     });
+    if(this.isEdit){
     this.refundForm.controls['tpaVendor'].disable();
+    }
   }
   }
 
