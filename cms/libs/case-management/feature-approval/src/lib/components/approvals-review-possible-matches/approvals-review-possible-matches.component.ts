@@ -33,8 +33,8 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
     this.loadPossibleMatch(request);
   }
 
-  closePossibleMatches() {
-    this.closeReviewPossibleMatchesDialogClickedEvent.emit(true);
+  closePossibleMatches($event:any) {
+    this.closeReviewPossibleMatchesDialogClickedEvent.emit($event);
   }
 
   loadPossibleMatch(data?: any) {
@@ -43,6 +43,10 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
       if (response !== undefined && response !== null) {
         this.possibleMatch=response[0];
         this.cd.detectChanges();
+      }
+      else
+      {
+        this.closePossibleMatches(false);
       }
     });
   }
