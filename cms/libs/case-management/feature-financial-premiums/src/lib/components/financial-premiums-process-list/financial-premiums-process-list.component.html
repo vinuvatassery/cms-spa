@@ -1,6 +1,6 @@
 <!-- Table Top Filter, Search and Export -->
 
-<p class="mt-2"> Add, edit, or remove premiums as needed. Click “Batch Premiums” when you’re done.</p>
+<p class="mt-2"> Add, edit, or remove premiums as needed. Click “Batch Premiums” when you are done.</p>
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
@@ -327,7 +327,7 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span class="" *ngIf="isSendReportOpened">{{ sendReportCount}} payment(s) selected</span>
+  <span class="" *ngIf="isSendReportOpened">{{sendReportCount}} payment(s) selected</span>
   <span class="" *ngIf="!isProcessGridExpand && !isSendReportOpened && !isRemoveBatchClosed">{{ selectedProcessClaims.length}} payment(s) selected</span>
   <span class="" *ngIf="isRemoveBatchClosed">{{sendReportCount}} premium(s) to be remove</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"

@@ -738,7 +738,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   paymentClickHandler(dataItem: any) {
     const batchId = this.activeRoute.snapshot.queryParams['bid'];
     this.route.navigate([this.route.url.split('?')[0], 'items'], {
-      queryParams: { bid: batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId },
+      queryParams: { bid: batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId,vid:dataItem.vendorId },
     });
   }
 

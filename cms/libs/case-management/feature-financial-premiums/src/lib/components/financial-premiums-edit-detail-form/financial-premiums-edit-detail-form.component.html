@@ -188,7 +188,7 @@
 
     </div>
 
-    <div *ngIf="insurancePremium$ | async">
+    <div>
         <h5 class="text-upper">Recent Premiums for this client</h5>
   
             <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [paymentRequestId]="paymentRequestId" [clientId]="clientId" [premiumsType]="premiumsType"
