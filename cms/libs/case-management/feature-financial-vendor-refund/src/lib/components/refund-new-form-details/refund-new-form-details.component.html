@@ -76,10 +76,9 @@
                                        placeholder="Search Vendor name or TIN"
                                        (valueChange)="onProviderValueChange($event)" 
                                          formControlName="insVendor" 
-                                         [(ngModel)]="selectedVendor"
+                                       
                                           [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                           [filterable]="true"
-                                          [disabled]="disableFeildsOnConfirmSelection"
                                           >
                                     
                                       <button kendoButton fillMode="clear" icon="image"></button>
@@ -128,8 +127,7 @@
                                       [filterable]="true" 
                                       formControlName="tpaVendor" 
                                       (filterChange)="searchTpaVendors($event)"
-                                      (valueChange)="onProviderValueChange($event)" [(ngModel)]="selectedVendor"
-                                      [disabled]="disableFeildsOnConfirmSelection" >
+                                      (valueChange)="onProviderValueChange($event)">
                                     
                                       <button kendoButton fillMode="clear" icon="image"></button>
           
@@ -176,9 +174,8 @@
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                     [filterable]="true" 
                     (filterChange)="searchPharmacy($event)" [data]="pharmaciesList"
-                    formControlName="rxVendor"
-                    [(ngModel)]="selectedMedicalProvider" (valueChange)="onProviderValueChange($event)"
-                    [disabled]="disableFeildsOnConfirmSelection"
+                    [(ngModel)]="selectedMedicalProvider" 
+                    (valueChange)="onProviderValueChange($event)"
                     >
                         <kendo-combobox-column>
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
@@ -208,184 +205,27 @@
         <!-- TPA Content -->
         <div class="add_new_bottom_section" *ngIf="selectedRefundType==='TPA'&& vendorAddressId && clientId">
             <!-- TPA Claims Grid -->
-            <div class="mt-1" >
+            <div class="mt-1"  *ngIf="!isConfirmationClicked" >
                 <h5>Select claims to refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                        <cms-vendor-refund-claims-list  #tpaClaims  [tpaPaymentReqIds]="tpaPaymentReqIds"
+                        <cms-vednor-refund-tpa-claims-list  #tpaClaims  [tpaPaymentReqIds]="tpaPaymentReqIds"
                     [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
                     [sortValue]="sortValueClientClaims" [sortType]="sortType"
-                    (claimsCount)="claimsCountEvent($event)"  ></cms-vendor-refund-claims-list>
+                    (claimsCount)="claimsCountEvent($event)"  
+                    (selectedTpaClaimsChangeEvent)="onSelectedTpaClaimsChangeEvent($event)"></cms-vednor-refund-tpa-claims-list>
                 </div>
             </div>
             <div class="confirm-container" *ngIf="isConfirmationClicked"> 
-            <!-- TPA Claims Refund Form -->
-            <div class="flex-row" >
-                <div class="flex-col-6 flex-col">
-                    <div class="flex-row">
-                        <div class="flex-col mt-2 mb-2 "> 
-                            <div class="text-center">
-                                <a kendoButton look="flat" class="card-link-button" href="#medicalProviderPaymentslist">
-                                    View Medical Provider Payments
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="flex-row align-items-center justify-content-between ">
-                        <div class="flex-col flex-col-2">
-                            <h5>Refund 1</h5>
-                        </div>
-                        <div class="flex-col flex-col-6">
-                            <span class="app-checkboxwidtext-wrapper">
-                                <input kendoCheckBox type="checkbox" id="spots-payment" name="spots-payment"
-                                    aria-labelledby="spots-payment" />
-                                <label class="k-checkbox-label" for="spots-payment">This is a SPOTS payment</label>
-                            </span>
-                        </div>
-                        <div class="flex-col flex-col-4 justify-content-end">
-                            <button class="" kendoButton fillMode="flat" aria-label="Delete"
-                                themeColor="error">DELETE</button>
-                        </div>
-
-                    </div>
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Service Start Date">
-                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                    aria-label="Service Start Date" format="MM/DD/YYYY"
-                                    formatPlaceholder="formatPattern" placeholder="">
-                                </kendo-datepicker>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Service Start Date">
-                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                    aria-label="Service Start Date" format="MM/DD/YYYY"
-                                    formatPlaceholder="formatPattern" placeholder="">
-                                </kendo-datepicker>
-                            </kendo-floatinglabel>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            <!-- TPA Claims Info -->
-            <div class="flex-row mt-1">
-                <div class="flex-col flex-col-6">
-                    <table class=" info-table-custom left_right_align mb-3">
-                        <caption hidden> Refund Information</caption>
-                        <tr hidden>
-                            <th scope="col">Fields</th>
-                            <th scope="col">Details</th>
-
-                        </tr>
-                        <tbody>
-                            <tr>
-                                <td>Invoice ID</td>
-                                <td>XXXXXXXXXX</td>
-                            </tr>
-                            <tr>
-                                <td>Original Warrant #</td>
-                                <td>XXXXXXXXXX</td>
-                            </tr>
-                            <tr>
-                                <td>PCA Code</td>
-                                <td>XXXXXXXXXX</td>
-                            </tr>
-                            <tr>
-                                <td>Grant #</td>
-                                <td>XXXXXXXXXX</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-            </div>
-            <!-- TPA Claims CPT Grid -->
-            <div class="flex-row">
-                <div class="flex-col flex-col-6">
-                    <div class="app-c-table">
-                        <kendo-grid [resizable]="true" [groupable]="false" [reorderable]="true" [resizable]="true"
-                        [columnMenu]="false">
-                        <kendo-grid-column field="CPTCode" title="CPT Code" [width]="200">
-                            <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-                                Total
-                            </ng-template>
-                        </kendo-grid-column> 
-                        <kendo-grid-column field="amountPaid" title="Original Amount Paid" [width]="180">
-                            <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-                                <span class="tableamountview"> <strong>$</strong> XXXX.XX </span>
-                            </ng-template>
-                        </kendo-grid-column>  
-                        <ng-template kendoGridLoadingTemplate>
-                          <common-grid-loader-component></common-grid-loader-component>
-                        </ng-template>
-                        <!-- grid No data Template -->
-                        <ng-template kendoGridNoRecordsTemplate>
-                          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-                          </div>
-                          <p>There is no data to display.</p>
-                        </ng-template>
-                      </kendo-grid>
-                          </div>
-                </div>
-            </div>
-            <!-- TPA Claims VP Form -->
-            <div class="flex-row">
-                <div class="flex-col flex-col-6">
-                    <div class="flex-row">
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text=" VP">
-                                <kendo-textbox aria-label="VP" [disabled]="true" [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="VP Suffix (optional)">
-                                <kendo-textbox aria-label="VP Suffix (optional)" [disabled]="true"
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Refund Warrant #">
-                                <kendo-textbox aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Refund Amount" class="amount-with-symbol">
-                                <span class="k-input-prefix custom-currencysymbol"> $ </span>
-                                <kendo-numerictextbox aria-label="Refund Amount" [spinners]="false"
-                                    [fillMode]="formUiStyle.inputFillMode" format="#.00">
-                                </kendo-numerictextbox>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Deposit Date">
-                                <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Deposit Date"
-                                    format="MM/DD/YYYY" formatPlaceholder="formatPattern">
-                                </kendo-datepicker>
-                            </kendo-floatinglabel>
-                        </div>
-                        <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Refund Note (optional)">
-                                <kendo-textbox aria-label="Refund Note (optional)"
-                                    [fillMode]="formUiStyle.inputFillMode">
-                                </kendo-textbox>
-                                <kendo-formhint class="justify-content-end"><span class="counter">
-                                        0/100</span></kendo-formhint>
-                            </kendo-floatinglabel>
-                        </div>
-                    </div>
-                </div>
-            </div>
+             <cms-vednor-refund-tpa-selected-claims-list
+              [tpaRefundInformation$]="tpaRefundInformation$"
+              [isEdit]="isEdit"
+            (tpaRefundInformationConfirmClicked)="getTpaRefundInformation($event)"
+            [tpaAddRefundClick$]="tpaAddRefundClick$"
+            (tpaPayload)="addTpa($event)"></cms-vednor-refund-tpa-selected-claims-list>
             <div class="mt-3" id="medicalProviderPaymentslist">
                 <h5>MEDICAL PROVIDER PAYMENT FOR FNAME LNAME</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                    <cms-vendor-refund-claims-list [claimsListData$]="claimsListData$" [pageSizes]="pageSizes"
-                        [sortValue]="sortValueClaims" [sortType]="sortType" [sort]="sortClaims"
-                        (loadClaimsListEvent)="loadClaimsListGrid($event)"
-                        ></cms-vendor-refund-claims-list>
+                   
                 </div>
             </div>
             </div>
@@ -414,7 +254,8 @@
                      [refundInformationLoader$]="insuranceRefundInformationLoader$"
                      [pageSizes]="pageSizes" [sortValue]="sortValueRefundInformationGrid"
                      (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"
-            [sortType]="sortType" [sort]="sortRefundInformationGrid" (insuranceRefundInformationConfirmClicked)="getInsuranceRefundInformation($event)"
+            [sortType]="sortType" [sort]="sortRefundInformationGrid"
+             (insuranceRefundInformationConfirmClicked)="getInsuranceRefundInformation($event)"
             [insuraceAddRefundClick$]="insuraceAddRefundClick$"
             (Reqpayload)="addInsuranceRefundClaim($event)"
             [vendorAddressId]="vendorAddressId"
