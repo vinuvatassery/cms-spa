@@ -60,7 +60,7 @@
                     </kendo-floatinglabel>
                 </div>
             </div>
-            <ng-container [formGroup]="refundForm">
+            <ng-container [formGroup]="refundForm"  *ngIf="selectedRefundType">
             <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
                 <div class="flex-col flex-col-6" >
                     <kendo-floatinglabel  text="Vendor">

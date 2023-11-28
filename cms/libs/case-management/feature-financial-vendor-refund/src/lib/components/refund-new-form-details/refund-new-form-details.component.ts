@@ -568,10 +568,9 @@ addTpa(event:any){
     if($event==undefined){
       this.vendorAddressId=null;
     }
-    this.vendorId=$event.vendorId;
-    this.vendorAddressId = $event.vendorAddressId;
-    this.vendorName = $event.vendorName;
-    this.vendorId = $event.vendorId
+    this.vendorId=$event?.vendorId;
+    this.vendorAddressId = $event?.vendorAddressId;
+    this.vendorName = $event?.vendorName;
     this.providerTin = $event;
     if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
