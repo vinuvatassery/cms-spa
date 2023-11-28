@@ -241,10 +241,7 @@
 
                         <kendo-grid-column field="amountDue" title="Pmt. Amount" [width]="180">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                              <label aria-label="Medical Provider" kendoButton look="flat"
-                                    class="card-link-button"  >
-                                    <strong>$</strong> {{dataItem?.amountDue | kendoNumber:'n2'}} 
-                              </label>
+                                    <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
                             </ng-template>
                               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                                     <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
