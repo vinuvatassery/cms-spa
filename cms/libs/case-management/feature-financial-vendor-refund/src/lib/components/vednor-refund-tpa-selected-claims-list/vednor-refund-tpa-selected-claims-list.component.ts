@@ -10,7 +10,7 @@ import { forkJoin, map } from 'rxjs';
   templateUrl: './vednor-refund-tpa-selected-claims-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VednorRefundTpaSelectedClaimsListComponent implements OnInit,OnChanges{
+export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
 
   @Input() tpaAddRefundClick$!: any
   @Input() tpaRefundGridLists: any[]=[];
@@ -89,7 +89,7 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit,OnChan
        break;
     }
     case 'refundedAmount': {
-      if(event && event.length >0){
+      if(event && event >0){
        item.refundedAmountError = false
       }else{
        item.refundedAmountError = true
@@ -97,10 +97,6 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit,OnChan
      break;
   }
     }
-  }
-
-  ngOnChanges(): void {
-    console.log('changes')
   }
  
 
