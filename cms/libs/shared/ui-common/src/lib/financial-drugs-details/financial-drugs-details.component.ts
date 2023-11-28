@@ -5,7 +5,9 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Observable } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { StatusFlag } from '../enums/status-flag.enum';
-
+import {
+  DrugUnit
+} from '@cms/case-management/domain';
 @Component({
   selector: 'common-financial-drugs-details',
   templateUrl: './financial-drugs-details.component.html',
@@ -65,14 +67,17 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   }
 
   private normalizeDeliveryMethods() {
-    const orderMapping: Record<string, number> = { "ML": 1, "MG": 2, "TABLET": 3, "EACH": 4 };
+    const orderMapping: Record<DrugUnit, number> = { [DrugUnit.ML]: 1, [DrugUnit.MG]: 2, [DrugUnit.TABLET]: 3, [DrugUnit.EACH]: 4,
+    };
 
-    const convertToAbbreviation = (description: string): string => ({ "Milliliter": "ML", "Milligram": "MG" }[description] || description);
-
+    const convertToAbbreviation = (description: string): string => ({
+      "Milliliter": DrugUnit.ML,
+      "Milligram": DrugUnit.MG,
+    }[description] || description);
     this.deliveryMethodCodesLocal = this.deliveryMethodCodes
-      .filter((item: any) => ["ML", "MG", "TABLET", "EACH"].includes(item.lovCode))
+      .filter((item: any) => Object.values(DrugUnit).includes(item.lovCode))
       .map(({ lovCode, lovDesc, ...rest }: { lovCode: string; lovDesc: string; }) => ({ lovCode: lovCode.toUpperCase(), lovDesc: convertToAbbreviation(lovDesc), ...rest }))
-      .sort((a: any, b: any) => (orderMapping[a.lovCode] || 999) - (orderMapping[b.lovCode] || 999));
+      .sort((a: any, b: any) => (orderMapping[a.lovCode as DrugUnit] || 999) - (orderMapping[b.lovCode as DrugUnit] || 999));
   }
 
   createDrugForm() {
