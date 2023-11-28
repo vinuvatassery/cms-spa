@@ -1,9 +1,9 @@
-<kendo-dialog-titlebar (close)="closePossibleMatches()">
+<kendo-dialog-titlebar (close)="closePossibleMatches(true)">
   Review Possible Match
 </kendo-dialog-titlebar>
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    Select whether it's a match. It it's a match and the claim passes all criteria, it will automatically be submitted for approval. If it still fails one or more criteria, it will stay in your approval queue.
+    Select whether it's a match. If it's a match and the claim passes all criteria, it will automatically be submitted for approval. If it still fails one or more criteria, it will stay in your approval queue.
   </p>
 
   <div class="flex-row">
@@ -85,7 +85,7 @@
 <kendo-dialog-actions>
   <div class="justify-content-between">
     <div class="justify-content-end">
-      <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closePossibleMatches()">
+      <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closePossibleMatches(true)">
         CANCEL
       </button>
       <button kendoButton [primary]="true" aria-label="Save" (click)="savePossibleMatches(  possibleMatch)" [disabled]="!hasSaveButtonEnabled">SAVE</button>

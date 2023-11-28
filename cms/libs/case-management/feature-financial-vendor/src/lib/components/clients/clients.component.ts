@@ -6,7 +6,7 @@ import {
   CompositeFilterDescriptor
 } from '@progress/kendo-data-query';
 import { Router } from '@angular/router';
-import { FilterService } from '@progress/kendo-angular-grid';
+import { FilterService, ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { Subject, debounceTime } from 'rxjs';
 import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -33,7 +33,6 @@ export class ClientsComponent implements OnInit, OnChanges{
   caseStatusTypes:any=[];
   public state!:any;
   providerClientGridView$ = this.insuranceProviderFacade.providerClientsData$;
-
   @Input() providerId:any;
   addressGridView = [];
   @Input() vendorTypeCode: any;
@@ -53,40 +52,40 @@ export class ClientsComponent implements OnInit, OnChanges{
   showNumberSearchWarning = false
   numberSearchColumnName =''
   searchColumnList : { columnName: string, columnDesc: string }[] = [
-    { columnName: 'clientName', 
+    { columnName: 'clientName',
     columnDesc: 'Client Name'
    },
     {
       columnName: "pronouns",
-      columnDesc: "Pronouns"   
+      columnDesc: "Pronouns"
     },
     {
       columnName: "clientId",
-      columnDesc: "ID"   
+      columnDesc: "ID"
     },
     {
       columnName: "urn",
-      columnDesc: "URN"   
+      columnDesc: "URN"
     },
     {
       columnName: "preferredContact",
-      columnDesc: "Preferred Contact"   
+      columnDesc: "Preferred Contact"
     },
     {
       columnName: "status",
-      columnDesc: "Status"   
+      columnDesc: "Status"
     },
     {
       columnName: "group",
-      columnDesc: "Group"   
+      columnDesc: "Group"
     },
     {
       columnName: "eilgibilityStartDate",
-      columnDesc: "Eligibility Start Date"   
+      columnDesc: "Eligibility Start Date"
     },
     {
       columnName: "eligibilityEndDate",
-      columnDesc: "Eligibility End Date"   
+      columnDesc: "Eligibility End Date"
     }
   ]
   selectedSearchColumn='';
@@ -142,7 +141,7 @@ export class ClientsComponent implements OnInit, OnChanges{
   }
 
   performClientSearch(data: any) {
-    this.defaultGridState();  
+    this.defaultGridState();
     const operator = (['eilgibilityStartDate', 'eligibilityEndDate']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
 
     this.filterData = {
@@ -169,7 +168,7 @@ export class ClientsComponent implements OnInit, OnChanges{
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
-  
+
   searchColumnChangeHandler(value: string) {
     this.showNumberSearchWarning = (['clientId']).includes(value);
     this.showDateSearchWarning =   (['eilgibilityStartDate','eligibilityEndDate']).includes(value);
@@ -188,9 +187,14 @@ export class ClientsComponent implements OnInit, OnChanges{
     searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
+    if(this.selectedSearchColumn === 'preferredContact'  && !this.selectedSearchColumn?.includes('@'))
+    {
+      searchValue = this.removeExtraCharactersFromPhone(searchValue);
+    }
     this.searchSubject.next(searchValue);
+    this.cdr.detectChanges();
   }
-  
+
   defaultGridState() {
     this.state = {
       skip: this.gridSkipCount,
@@ -209,7 +213,7 @@ export class ClientsComponent implements OnInit, OnChanges{
     this.loadClientsListGrid();
   }
 
-  
+
   resetClientGrid() {
     this.sortValue = 'clientName';
     this.sortType = 'asc';
@@ -230,7 +234,7 @@ export class ClientsComponent implements OnInit, OnChanges{
     this.sortValue = stateData.sort[0]?.field ?? this.insuranceProviderFacade.clientsSortValue;
     this.sortType = stateData.sort[0]?.dir ?? this.insuranceProviderFacade.sortType;
       this.state = stateData;
-   
+
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
@@ -250,6 +254,13 @@ export class ClientsComponent implements OnInit, OnChanges{
         });
 
         this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+        this.filter.forEach((element : any) => {
+          const preferredContact = element.filters.find((x : any) => x.field === 'preferredContact')
+          if(preferredContact && !preferredContact?.value.includes('@'))
+          {
+            preferredContact.value = this.removeExtraCharactersFromPhone(preferredContact.value);
+          }
+        });
       }
       return;
     }
@@ -258,6 +269,16 @@ export class ClientsComponent implements OnInit, OnChanges{
       this.filteredByColumnDesc = this.searchColumnList?.find(i => i.columnName === this.selectedSearchColumn)?.columnDesc ?? '';
     }
   }
+
+  removeExtraCharactersFromPhone(value : any)
+  {
+    value = value.replaceAll("(", "");
+    value = value.replaceAll(")", "");
+    value = value.replaceAll(" ", "");
+    value = value.replaceAll("-","");
+    return value;
+  }
+
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
@@ -272,7 +293,7 @@ export class ClientsComponent implements OnInit, OnChanges{
       this.sortType,
       JSON.stringify(this.filter));
       this.insuranceProviderFacade.loadProviderClientsListGrid(this.providerId,this.vendorTypeCode,param);
- 
+
   }
   onClientClicked(clientId: any) {
     this.router.navigate([`/case-management/cases/case360/${clientId}`]);
@@ -310,7 +331,17 @@ export class ClientsComponent implements OnInit, OnChanges{
       this.statusValue = value;
     }
   }
-  public columnChange() {
+  public columnChange(e: any) {
+    let event = e as ColumnVisibilityChangeEvent;
+    const columnsRemoved = event?.columns.filter(x=> x.hidden).length
+    const columnsAdded = event?.columns.filter(x=> x.hidden === false).length
+
+  if (columnsAdded > 0) {
+    this.columnChangeDesc = 'Columns Added';
+  }
+  else {
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+  }
     this.cdr.detectChanges();
   }
 
@@ -345,7 +376,7 @@ export class ClientsComponent implements OnInit, OnChanges{
     })
   }
 
-   
+
   private isValidDate = (searchValue: any) => isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 
   private formatSearchValue(searchValue: any, isDateSearch: boolean) {
