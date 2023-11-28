@@ -63,7 +63,7 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  tpaData$ = this.financialVendorRefundFacade.tpaData$;
+  tpaData$ = this.financialVendorRefundFacade.tpasData$;
   filterResetDialog: any;
   paymentStatusCode =null;
   paymentStatusType:any;
@@ -87,7 +87,7 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
     this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
     this.tpaData$.subscribe((res:any)=>{
-       this.tpaGridData = res.data.filter((x :any) => !x.isRefunded)
+       this.tpaGridData = res.data
       this.claimsCount.emit(this.selectedTpaClaims.length)
       this.tpaData$.subscribe((res:any)=>{
         this.cliams=res.data;
@@ -153,7 +153,7 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
   }
 
   loadRefundClaimsGrid(data: any) {
-    this.financialVendorRefundFacade.loadTPARefundList(data);
+    this.financialVendorRefundFacade.loadTPARefundLists(data);
   }
   private loadRefundClaimsListGrid(): void {
     this.loadClaimsProcess(

@@ -531,6 +531,22 @@ export class FinancialVendorRefundDataService {
     }
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/vendors/${data.vendorId}/clients/${data.clientId}/refund-tpa`,ClaimsPageAndSortedRequestDto);
   }
+
+  loadTPARefundLists(data:any): Observable<any> {
+
+    const ClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/vendors/${data.vendorId}/clients/${data.clientId}/refund-tpa`,ClaimsPageAndSortedRequestDto);
+  }
+
   loadFinancialRecentRefundListService(data:any):Observable<any> {
     const RefundPageAndSortedRequestDto =
     {

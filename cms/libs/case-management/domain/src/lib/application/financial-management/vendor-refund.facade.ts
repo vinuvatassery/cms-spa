@@ -302,6 +302,9 @@ export class FinancialVendorRefundFacade {
   financialPremiumsProcessData$ = this.financialPremiumsProcessDataSubject.asObservable();
   private financialTpaDataSubject = new Subject<any>();
   tpaData$ = this.financialTpaDataSubject.asObservable();
+
+  private financialTpasDataSubject = new Subject<any>();
+  tpasData$ = this.financialTpasDataSubject.asObservable();
   
   loadMedicalPremiumList(ClaimsPageAndSortedRequestDto:any){
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
@@ -323,6 +326,7 @@ this.loaderService.show();
       },
     });
   }
+
   loadTPARefundList(ClaimsPageAndSortedRequestDto:any){
       
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
@@ -343,6 +347,28 @@ this.loaderService.show();
       },
     });
   }
+
+  loadTPARefundLists(ClaimsPageAndSortedRequestDto:any){
+      
+    ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
+   this.loaderService.show();
+    this.financialVendorRefundDataService.loadTPARefundLists(ClaimsPageAndSortedRequestDto).subscribe({
+      next: (dataResponse) => {
+        if (dataResponse) {
+          this.loaderService.hide();
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+            acceptsCombinedPaymentsCount: dataResponse['acceptsCombinedPaymentsQueryCount'],
+          };
+        this.financialTpasDataSubject.next(gridView);
+      }},
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
   loadInsurancevendorBySearchText(searchText: string,clientId:number) {
     
    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
