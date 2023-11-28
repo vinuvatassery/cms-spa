@@ -452,9 +452,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   modalCloseAddEditRefundFormModal(result: any) {
+    this.isRefundEditDialogOpen = false;
+    this.addEditRefundFormDialog.close();
     if (result) {
-      this.isRefundEditDialogOpen = false;
-      this.addEditRefundFormDialog.close();
+      this.loadVendorRefundAllPaymentsListGrid();
     }
   }
 

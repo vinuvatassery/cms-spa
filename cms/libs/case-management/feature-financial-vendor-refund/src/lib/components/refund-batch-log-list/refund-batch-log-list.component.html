@@ -101,6 +101,12 @@
               </ng-template>
             </kendo-grid-column>
             <kendo-grid-column *ngIf="!receiptLogMode" field="clientFullName" title="Client Name" [width]="160">
+              <ng-template kendoGridCellTemplate let-dataItem>
+                <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
+                  >
+                  {{ dataItem.clientFullName }}
+                </button>
+              </ng-template>
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                   [extra]="false" operator="eq">
@@ -340,4 +346,11 @@
     (isModalDeletedRefundsButtonClicked)="onModalBatchDeletingRefundsButtonClicked($event)"
     [deletemodelbody]="deletemodelbody" [singleRefundDelete]="true">
   </cms-delete-refund-confirmation>
+</ng-template>
+
+<ng-template #addEditRefundDialog>
+  <cms-refund-new-form-details [isEdit]="true" [serviceType]="refunEditServiceType" [clientId]="refundEditClientId"
+    [clientName]="refundEditClientFullName" [vendorAddressId]="refundEditVendorAddressId"
+    [vendorName]="refundEditVendorName" (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"
+    [inspaymentRequestId]="inspaymentRequestId"></cms-refund-new-form-details>
 </ng-template>

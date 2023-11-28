@@ -20,6 +20,10 @@ export class FinancialVendorRefundDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-refund`, data);
   }
 
+  addTpaRefundClaim(data:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/add-tpa-refund`, data);
+  }
+
   getInsuranceRefundEditInformation(vendorId :any, clientId :any ,paginationSortingDto:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums/${clientId}`, paginationSortingDto);
   }
@@ -30,6 +34,15 @@ export class FinancialVendorRefundDataService {
 
   getInsurnaceRefundInformation(insuranceRefundInformation:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/insurance-premiums`, insuranceRefundInformation);
+  }
+
+  getTPaRefundInformation(tpaPaymentIds:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/tpa/refund-information`, tpaPaymentIds);
+  }
+
+  getTpaEditRefundInformation(paymentRequestId :any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${paymentRequestId}/tpa/refund-information`,null);
+
   }
 
   loadVendorRefundProcessListService( ) {
@@ -512,5 +525,39 @@ export class FinancialVendorRefundDataService {
       Filter : data.filter
     }
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/vendors/${data.vendorId}/clients/${data.clientId}/refund-tpa`,ClaimsPageAndSortedRequestDto);
+  }
+  loadFinancialRecentRefundListService(data:any):Observable<any> {
+    const RefundPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      refundType:data.refundType,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/recent-refunds`,
+      RefundPageAndSortedRequestDto
+    );
+  }
+  addNewRefundRx(refundRx: any): any {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/add`,
+      refundRx
+    );
+  }
+  editNewRefundRx(refundRx: any): any {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/update `,
+      refundRx
+    );
+  }
+  loadPharmacyRefundEditList(paymentRequestId: string) {
+    return this.http.get<any[]>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/pharmacy/${paymentRequestId}`
+    );
   }
 }

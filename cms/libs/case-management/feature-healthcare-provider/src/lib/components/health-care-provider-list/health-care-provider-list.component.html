@@ -197,12 +197,21 @@
 </kendo-dialog>
 
 <!-- Business Logic Modal -->
-<kendo-dialog kendoRippleContainer *ngIf="isOpenedbusinessInfo" (close)="onBusinessInfoCloseClicked()"
+<kendo-dialog kendoRippleContainer *ngIf="isOpeneHealthcareProvider" (close)="closeVendorDetailModal(vendorTypes.HealthcareProviders)"
   class="app-c-modal app-c-modal-lg app-c-modal-np" title="{{hasHealthcareProviderCreateUpdatePermission==true ? 
     'Add New Healthcare Provider' : 'Request New Healthcare Provider' }}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.HealthcareProviders"
-    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="onBusinessInfoCloseClicked()"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.HealthcareProviders)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
     [hasCreateUpdatePermission]="hasHealthcareProviderCreateUpdatePermission"
-    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)" (closeMedicalDentalProviderDialogEvent)="clickOpenClinicProviderDetails($event)"></cms-vendor-details>
+</kendo-dialog>
+<!-- clinic -->
+<kendo-dialog kendoRippleContainer *ngIf="ShowClinicProvider" (close)="closeVendorDetailModal(vendorTypes.Clinic)"
+  class="app-c-modal app-c-modal-md hide app-c-modal-np" title="{{hasClinicCreateUpdatePermission ? 'Add New Clinic' : 'Request New Clinic'}}" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]=clinicForm [providerType]="vendorTypes.Clinic"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.Clinic)"
+    [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
+    [hasCreateUpdatePermission]="hasClinicCreateUpdatePermission" [selectedClinicType]="selectedClinicType"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)" [saveVendorEventSubject]="saveVendorEventSubject"></cms-vendor-details>
 </kendo-dialog>

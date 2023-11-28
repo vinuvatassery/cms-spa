@@ -211,7 +211,8 @@ export class FinancialPharmacyClaimsDataService {
       WarrantTotal : data.warrantTotal,
       WarrantNbr : data.warrantNbr,
       PaymentToReconcileCount : data.paymentToReconcileCount,
-      warrantCalculation:data.warrantCalculation
+      warrantCalculation:data.warrantCalculation,
+      loadType:data.loadType
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/reconcile-breakout-summary`,ReconcilePaymentResponseDto
@@ -227,7 +228,8 @@ export class FinancialPharmacyClaimsDataService {
       Sorting : data.sort,
       SkipCount : data.skipCount,
       MaxResultCount : data.pageSize,
-      Filter : data.filter
+      Filter : data.filter,
+      loadType:data.loadType
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto

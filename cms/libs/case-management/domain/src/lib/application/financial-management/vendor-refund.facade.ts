@@ -102,8 +102,21 @@ export class FinancialVendorRefundFacade {
   private pharmacyPaymentsListDataSubject =  new Subject<any>();
   pharmacyPaymentsListData$ = this.pharmacyPaymentsListDataSubject.asObservable();
 
+
+  private recentRefundListDataSubject  =  new Subject<any>();
+  recentRefundsListData$ = this.recentRefundListDataSubject .asObservable();
+
+  private existingRxRefundClaimSubject =  new Subject<any>();
+  existingRxRefundClaim$ = this.existingRxRefundClaimSubject.asObservable();
+
+
   private insuranceRefundInformationSubject =  new Subject<any>();
   insuranceRefundInformation$ = this.insuranceRefundInformationSubject.asObservable();
+
+  
+  private tpaRefundInformationSubject =  new Subject<any>();
+  tpaRefundInformation$ = this.tpaRefundInformationSubject.asObservable();
+
 
 
   private addUpdateInsuranceRefundClaimSubject =  new Subject<any>();
@@ -129,6 +142,9 @@ export class FinancialVendorRefundFacade {
   
   public insurancevendorsSubject = new Subject<any>;
   insurancevendors$ = this.insurancevendorsSubject.asObservable();
+  public vendorsSubject = new Subject<any>;
+  vendors$ = this.vendorsSubject.asObservable();
+
   /** Private properties **/
 
   /** Public properties **/
@@ -515,6 +531,61 @@ this.loaderService.show();
       },
       });
   }
+
+  getTpaRefundInformation(insuranceRefundInformation :any){
+    this.insuranceRefundInformationLoaderSubject.next(true)
+    this.financialVendorRefundDataService.getTPaRefundInformation(insuranceRefundInformation).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse.items,
+          total: dataResponse.totalCount,
+        };
+        this.tpaRefundInformationSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+        this.tpaRefundInformationSubject.next(false)
+      },
+      });
+  }
+
+  addTpaRefundClaim(data:any){
+    this.showLoader()
+    this.financialVendorRefundDataService.addTpaRefundClaim(data).subscribe({
+      next: (dataResponse:any) => {
+        this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
+        
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
+
+  getTpaEditRefundInformation(paymentRequestId:any){
+    this.insuranceRefundInformationLoaderSubject.next(true)
+    this.financialVendorRefundDataService.getTpaEditRefundInformation(paymentRequestId).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse.items,
+          total: dataResponse.totalCount,
+        };
+        this.tpaRefundInformationSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+        this.tpaRefundInformationSubject.next(false)
+      },
+      });
+  }
+
   loadClientBySearchText(text : string): void {
     this.clientSearchLoaderVisibilitySubject.next(true);
     if(text){
@@ -565,6 +636,48 @@ this.loaderService.show();
           };
           this.clientClaimsListDataSubject.next(gridView);
           this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.hideLoader();
+      },
+    });
+  }
+  loadFinancialRecentRefundListGrid(RefundPageAndSortedRequestDto:any) {
+    this.showLoader();
+    RefundPageAndSortedRequestDto.filter = JSON.stringify(RefundPageAndSortedRequestDto.filter);
+    this.financialVendorRefundDataService. loadFinancialRecentRefundListService(RefundPageAndSortedRequestDto).subscribe({
+      next: (dataResponse) => {
+        this.recentRefundListDataSubject .next(dataResponse);
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.recentRefundListDataSubject .next(gridView);
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.hideLoader();
+      },
+    });
+  }
+  addNewRefundRx(refundRx: any): any {
+    return this.financialVendorRefundDataService.addNewRefundRx(refundRx);
+  }
+  editNewRefundRx(refundRx: any): any {
+    return this.financialVendorRefundDataService.editNewRefundRx(refundRx);
+  }
+  public loadPharmacyRefundEditList(paymentRequestId: string){
+    return this.financialVendorRefundDataService.loadPharmacyRefundEditList(paymentRequestId)
+    .subscribe({
+      next: (dataResponse) => {
+        this.existingRxRefundClaimSubject.next(dataResponse);
+        if (dataResponse) {
+          this.existingRxRefundClaimSubject.next(dataResponse);
         }
       },
       error: (err) => {

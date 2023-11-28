@@ -7,23 +7,30 @@ import { ImportedClaimService } from '../../infrastructure/approval/imported-cla
 @Injectable({ providedIn: 'root' })
 export class ImportedClaimFacade {
 
-  public sortValueImportedClaimsAPproval = 'clientName';
+  public sortType = 'desc';
+  public sortValueImportedClaimsApproval = 'entryDate';
   public sortImportedClaimsList: SortDescriptor[] = [{
-    field: this.sortValueImportedClaimsAPproval,
+    field: this.sortValueImportedClaimsApproval,
+    dir: 'desc',
   }];
 
   /** Private properties **/
   private ImportedClaimsSubject =  new Subject<any>();
   private submitImportedClaimsSubject = new Subject<any>();
   private possibleMatchSubject =  new Subject<any>();
+  private savePossibleMatchSubject =  new Subject<any>();
   private clientPolicyUpdateSubject = new Subject<any>();
   private updateExceptionModalSubject = new Subject<any>();
+  private importedClaimsCountSubject = new Subject<any>();
   /** Public properties **/
   approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
   submitImportedClaims$ = this.submitImportedClaimsSubject.asObservable();
   possibleMatchData$ = this.possibleMatchSubject.asObservable();
+  savePossibleMatchData$ = this.savePossibleMatchSubject.asObservable();
   updateExceptionModalSubject$ = this.updateExceptionModalSubject.asObservable();
   clientPolicyUpdate$ = this.clientPolicyUpdateSubject.asObservable();
+  importedClaimsCount$ = this.importedClaimsCountSubject.asObservable();
+
 
   constructor(
     private readonly importedClaimService: ImportedClaimService,
@@ -83,6 +90,7 @@ export class ImportedClaimFacade {
             response.message
           );
             this.submitImportedClaimsSubject.next(response);
+            this.importedClaimsCountSubject.next(response);
         },
         error: (err) => {
           this.hideLoader();
@@ -119,7 +127,8 @@ export class ImportedClaimFacade {
         {
           this.showHideSnackBar(SnackBarNotificationType.WARNING,response.message);
         }
-        this.possibleMatchSubject.next(response);
+        this.savePossibleMatchSubject.next(response);
+        this.importedClaimsCountSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -135,6 +144,7 @@ export class ImportedClaimFacade {
         if (response) {
           this.hideLoader();
           this.updateExceptionModalSubject.next(response);
+          this.importedClaimsCountSubject.next(response);
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
         }
       },
@@ -146,16 +156,20 @@ export class ImportedClaimFacade {
   }
 
   updateClientPolicy(importedclaimDto : any){
+    this.showLoader();
     this.importedClaimService.updateClientPolicy(importedclaimDto).subscribe(
       {
         next: (response: any) => {
+          this.hideLoader();
           this.clientPolicyUpdateSubject.next(response);
+          this.importedClaimsCountSubject.next(response);
           this.notificationSnackbarService.manageSnackBar(
             SnackBarNotificationType.SUCCESS,
             response.message
           );
         },
         error: (err) => {
+          this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
         },
       }

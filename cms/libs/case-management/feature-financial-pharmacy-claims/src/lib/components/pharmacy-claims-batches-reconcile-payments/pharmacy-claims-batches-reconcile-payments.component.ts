@@ -100,6 +100,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   pageValidationMessage:any=null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentRequestType$ = this.lovFacade.paymentRequestType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
   paymentMethodType:any;
   pageValidationMessageFlag:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -178,6 +179,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       this.dropDropdownColumns.splice(0, 0, batch);
     }
     this.lovFacade.getPaymentMethodLov();
+    this.lovFacade.getPaymentStatusLov();
     this.lovFacade.getCoPaymentRequestTypeLov();
     this.paymentMethodSubscription();
     this.state = {
@@ -880,27 +882,27 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       this.entityId=data.entityId; 
       let warrantTotal=0; 
       this.batchId=data.batchId;    
-
       this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined 
-      && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==data.batchId).forEach((item: any) => {  
+      && x.checkNbr !== '' && x.checkNbr=== data.checkNbr).forEach((item: any) => {  
         let object={
           vendorId:item?.entityId,
           batchId:item?.batchId,
           paymentRequestId:item?.paymentRequestId,
           warrantNumber:item?.checkNbr,  
+          amountDue:item?.amountDue
         }
         this.warrantCalculationArray.push(object);
       });
-
       const ReconcilePaymentResponseDto =
       {
-        batchId : this.batchId,
+        batchId : data?.batchId,
         entityId : data.entityId,
         amountTotal : data.amountTotal,
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
-        paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
+        paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1,
+        loadType:this.loadType 
       }      
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
@@ -919,7 +921,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       pageSize:event.pagesize,
       sort:event.sortColumn,
       sortType:event.sortType,
-      filter:event.filter
+      filter:event.filter,
+      loadType:this.loadType 
     });
   }
   getItemNumber() {

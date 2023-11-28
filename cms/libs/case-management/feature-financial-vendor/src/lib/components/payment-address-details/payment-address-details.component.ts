@@ -180,7 +180,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
   submit() {
     this.paymentAddressForm.controls['zip']
     .setValidators([
-      Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')
+      Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')
     ]);
   this.paymentAddressForm.controls['zip'].updateValueAndValidity();
     this.formIsSubmitted = true;

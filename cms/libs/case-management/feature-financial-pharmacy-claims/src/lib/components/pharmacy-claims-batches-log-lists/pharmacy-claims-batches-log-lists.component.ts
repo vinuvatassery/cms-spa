@@ -19,7 +19,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, first, Subscription, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, first, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -314,7 +314,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
     this.batchLogGridLists$.subscribe((res:any)=>{
-      if(res.data.length==0)
+      if(res.data.length==0 && res.data.filter == null)
       {
         this.route.navigate(['/financial-management/pharmacy-claims'] );       
       }
