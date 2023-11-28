@@ -401,6 +401,7 @@ onSelectedRxClaimsChangeEvent(event:any){
         x.reconciledDate = new Date(x.reconciledDate)
         x.totalAmount = x.tpaInvoice.reduce((accumulator : number, obj : any) => accumulator + obj.serviceCost, 0);
       })
+      this.claimsCount = this.tpaRefundGridLists.length
     })
     if(this.isEdit){
      this.financialVendorRefundFacade.getTpaEditRefundInformation(data);

@@ -87,13 +87,14 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
     this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
     this.tpaData$.subscribe((res:any)=>{
-       this.tpaGridData = res.data.filter((x :any)=> !x.isRefuned)
+       this.tpaGridData = res.data.filter((x :any) => !x.isRefunded)
       this.claimsCount.emit(this.selectedTpaClaims.length)
       this.tpaData$.subscribe((res:any)=>{
         this.cliams=res.data;
       })
   })
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
