@@ -40,7 +40,7 @@
                 </kendo-popover>
               </p>
               <div *ngIf="item.approvalTypeCode == pendingApprovalGeneralTypeCode.GeneralAddToMasterList" class="mt-4">
-                Contact Name {{item.fullName}}
+                Contact Name {{item.contactFullName}}
               </div>
             </div>
             <div class="flex-col flex-col-6">
@@ -230,6 +230,7 @@
     [pharmacyForm]="pharmacyForm"
     [insuranceVendorForm]="insuranceVendorForm"
     [insuranceProviderForm]="insuranceProviderForm"
+    [deliveryMethodLov$]="deliveryMethodLov$"
   >
   </productivity-tools-approvals-edit-items>
 </ng-template>

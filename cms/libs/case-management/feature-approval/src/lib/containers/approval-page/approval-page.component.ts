@@ -110,7 +110,7 @@ export class ApprovalPageComponent implements OnInit {
   pharmacyForm!: FormGroup;
   insuranceVendorForm: FormGroup;
   insuranceProviderForm: FormGroup;
-
+  deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -145,6 +145,7 @@ export class ApprovalPageComponent implements OnInit {
     this.loadTabCount();
     this.contactFacade.loadDdlStates();
     this.lovFacade.getHealthInsuranceTypeLovsForPlan();
+    this.lovFacade.getDeliveryMethodLovs();
   }
 
   loadTabCount(){

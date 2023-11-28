@@ -104,7 +104,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
   selectedMasterData!:any;
   currentlyExpandedPanelId: any;
-
+  @Input() deliveryMethodLov$! : any;
   /** Constructor **/
   constructor(
     private route: Router,

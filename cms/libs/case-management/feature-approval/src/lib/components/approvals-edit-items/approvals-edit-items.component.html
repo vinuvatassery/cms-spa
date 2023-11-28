@@ -10,7 +10,7 @@
       selectedSubtypeCode === subTypeConst.DentalProvider
     " [formGroup]="healthCareForm">
     <div
-      *ngIf="(selectedSubtypeCode == subTypeConst.MedicalProvider || subTypeConst.DentalProvider) && selectedMasterData.parentVendorId"
+      *ngIf="(selectedSubtypeCode == subTypeConst.DentalClinic || selectedSubtypeCode == subTypeConst.MedicalClinic) && selectedMasterData.parentVendorId"
       class="k-auto-complete-box flex-col">
       <span *ngIf="clinicVendorLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
       <kendo-floatinglabel text="Clinic Name">
@@ -32,11 +32,11 @@
         Start typing to choose an existing clinic, or enter a new one
       </kendo-formhint>
     </div>
-    <div *ngIf="selectedSubtypeCode == subTypeConst.MedicalClinic || selectedSubtypeCode == subTypeConst.DentalClinic" 
+    <div *ngIf="selectedSubtypeCode == subTypeConst.DentalProvider || selectedSubtypeCode == subTypeConst.MedicalProvider" 
           class="flex-col">
       <kendo-floatinglabel text="Clinic Name">
         <kendo-textbox aria-label="Clinic Name" placeholder="Clinic Name"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="providerName" [maxlength]="50" [(ngModel)]="tempVendorName">
+          [fillMode]="formUiStyle.inputFillMode" formControlName="providerName" [maxlength]="50" [(ngModel)]="providerName">
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">
@@ -229,13 +229,16 @@
         </kendo-formerror>
       </fieldset>
     </div>
-    <div class="flex-col">
+    <div class="flex-col flex-col-6 ">
       <kendo-floatinglabel text="Delivery Method">
         <kendo-dropdownlist aria-label="Delivery Method" [fillMode]="formUiStyle.dropDownFillMode"
-          formControlName="deliveryMethod" [valuePrimitive]="true" placeholder="Delivery Method" [data]="listItems"
-          [(ngModel)]="selectedDeliveryMethod">
+          formControlName="deliveryMethod" [data]="deliveryMethodLov$| async" textField="lovDesc" valueField="lovCode"
+          [valuePrimitive]="true" placeholder="Delivery Method">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="drugFormControls?.deliveryMethod.errors?.required && isValidateForm">
+        Delivery Method is required
+      </kendo-formerror>
     </div>
   </div>
   <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsurancePlan" [formGroup]="insurancePlanForm">

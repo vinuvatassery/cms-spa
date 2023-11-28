@@ -28,6 +28,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   @Input() pharmacyForm!:FormGroup;
   @Input() insuranceVendorForm!:FormGroup;
   @Input() insuranceProviderForm!:FormGroup;
+  @Input() deliveryMethodLov$! : any;
   @Output() searchClinicVendorClicked = new EventEmitter<any>();
   @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
   @Output() close = new EventEmitter<any>();
@@ -48,8 +49,6 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   paymentRunDateList: any[] = [];
   tempVendorName: any;
   ndcMaskFormat: string = "00000-0000-00"
-  public listItems: Array<string> = ["Tablet", "Syrup", "Injection"];
-  public selectedDeliveryMethod = "";
   constructor(private insurancePlanFacade : InsurancePlanFacade,
               private drugFacade : DrugsFacade,
               private financialVendorFacade : FinancialVendorFacade,
@@ -275,7 +274,7 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
       this.drugForm.controls['brandName'].setValue(this.selectedMasterData.brandName);
       this.drugForm.controls['ndcCode'].setValue(this.selectedMasterData.ndcNbr);
       this.drugForm.controls['drugType'].setValue(this.drugType);
-      this.selectedDeliveryMethod = this.capitalizeFirstLetter(this.selectedMasterData.deliveryMethodCode);
+      this.drugForm.controls['deliveryMethod'].setValue(this.selectedMasterData.deliveryMethodCode);
     }
   }
 
@@ -790,10 +789,11 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   }
 
   public selectionChange(value: any): void {
-    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider ||
-      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider)
+    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
+      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalClinic)
       {
-        this.selectedMasterData.parentVendorId = value.vendorId;
+        this.selectedMasterData.vendorId = value.vendorId;
+        this.providerName = value.vendorName;
       }else {
         this.selectedMasterData.vendorId = value.vendorId;
       }
