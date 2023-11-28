@@ -70,6 +70,7 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
   paymentStatuses$ = this.lovFacade.paymentStatus$;
   @Output() claimsCount = new EventEmitter<any>();
   cliams:any[]=[];
+  tpaGridData!: any;
   constructor( private readonly financialClaimsFacade: FinancialClaimsFacade, 
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private dialogService: DialogService,   private readonly lovFacade : LovFacade){
@@ -86,6 +87,7 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
     this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
     this.tpaData$.subscribe((res:any)=>{
+       this.tpaGridData = res.data.filter((x :any)=> !x.isRefuned)
       this.claimsCount.emit(this.selectedTpaClaims.length)
       this.tpaData$.subscribe((res:any)=>{
         this.cliams=res.data;
