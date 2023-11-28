@@ -64,7 +64,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   clinicNameNotApplicable: boolean = false;
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  tinMaskFormat: string = '0 00-000000';
+  tinMaskFormat: string = '0 00-0000000';
   specialhandlingCounter!: string;
   specialHandlingCharachtersCount!: number;
   specialHandlingMaxLength = 100;
@@ -72,6 +72,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   selectedClinicVendorId!: any;
   mailCodeLengthError!: boolean;
   clinicSearchSubscription !: Subscription;
+  specialCharAdded: boolean = false;
+  accountingNumberValidated: boolean = true;
+
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
@@ -93,14 +96,14 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
       if (data && clinicName !== '') {
-        if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders 
+        if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders
           || this.providerType === FinancialVendorTypeCode.HealthcareProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
         } else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
-        } 
+        }
         this.clinicVendorListLocal = this.clinicVendorListLocal.filter((item: any) => item.vendorName.toLowerCase().includes(clinicName.toLowerCase()));
-        
+
         this.clinicSearchSubscription?.unsubscribe();
       }
     });
@@ -653,4 +656,31 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     }
 
   }
+
+  restrictSpecialChar(event: any) {
+    const status = ((event.charCode > 64 && event.charCode < 91) ||
+      (event.charCode > 96 && event.charCode < 123) ||
+      event.charCode == 8 || event.charCode == 32 ||
+      (event.charCode >= 48 && event.charCode <= 57) ||
+      event.charCode == 45);
+    if (status) {
+      this.medicalProviderForm.controls['zip'].setErrors(null);
+      this.specialCharAdded = false;
+    }
+    else {
+      this.medicalProviderForm.controls['zip'].setErrors({ 'incorrect': true });
+      this.specialCharAdded = true;
+    }
+    return status;
+  }
+
+  restrictAccountingNumber() {
+    if (this.medicalProviderForm.controls['tinNumber'].value && (parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 3)) {
+      this.accountingNumberValidated = true;
+    } else {
+      this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
+      this.accountingNumberValidated = false;
+    }
+  }
+
 }
