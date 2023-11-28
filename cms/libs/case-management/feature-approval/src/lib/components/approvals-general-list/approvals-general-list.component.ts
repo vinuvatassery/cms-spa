@@ -433,7 +433,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       this.exceptionsCount = this.approvalsPaymentsGridUpdatedResult.filter(
         (x: any) =>
           x.approvalTypeCode ===
-          this.pendingApprovalGeneralTypeCode.GeneralException
+          this.pendingApprovalGeneralTypeCode.GeneralExceptions
       ).length;
       this.onSubmitClicked(this.submitRequestModalDialog);
     }
@@ -567,10 +567,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     if (
       dataItem.approvalTypeCode ===
       PendingApprovalGeneralTypeCode.GeneralAddToMasterList
-      &&  dataItem.status === this.approveStatus
     )
     {
-      this.onPanelExpand(dataItem);
+      this.isPanelExpanded = dataItem.isExpanded = false;
     }
     this.sendBackNotesChange(dataItem);
     this.assignRowDataToMainList(dataItem);
@@ -586,7 +585,6 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     rowIndex: any
   ) {
     dataItem.isExpanded = false;
-    this.isPanelExpanded = dataItem.isExpanded;
     if (
       dataItem.status === undefined ||
       dataItem.status === '' ||
@@ -607,6 +605,14 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       dataItem.sendBackNotesInValid = true;
       dataItem.sendBackButtonDisabled = false;
     }
+    if (
+      dataItem.approvalTypeCode ===
+      PendingApprovalGeneralTypeCode.GeneralAddToMasterList
+    )
+    {
+      this.isPanelExpanded = dataItem.isExpanded;
+    }
+    this.cd.detectChanges();
     this.sendBackNotesChange(dataItem);
     this.assignRowDataToMainList(dataItem);
     this.ngDirtyInValid(dataItem, control, rowIndex);

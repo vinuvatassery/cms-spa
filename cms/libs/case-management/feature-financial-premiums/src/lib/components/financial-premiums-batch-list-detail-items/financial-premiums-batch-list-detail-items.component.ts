@@ -54,6 +54,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   @Input() ddlStates$ :any
   @Input() paymentMethodCode$ :any
   @Input() exportButtonShow$ : any
+  @Input() vendorId :any
+  @Input() paymentRequestId : any
 
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   @Output() loadPaymentPanel = new EventEmitter<any>();
@@ -90,7 +92,9 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   serviceGridColumnName = ''; 
   showExportLoader = false;
-
+  private addClientRecentPremiumsDialog: any;
+  clientName:any;
+  clientId:any;
   gridColumns : {[key: string]: string} = {
     clientFullName: 'Client Name',
     insuranceName: 'Name on Primary Insurance Card',
@@ -442,6 +446,36 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
 
   OnEditProviderProfileClick(){
    this.onEditProviderProfileEvent.emit()
+  }
+
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown>,
+    dataItem: any
+  ): void {
+    this.addClientRecentPremiumsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+     this.clientId=dataItem.clientId;
+     this.clientName=dataItem.clientFullName;
+  }
+
+  closeRecentPremiumsModal(result: any){
+    if (result) { 
+      this.addClientRecentPremiumsDialog.close();
+    }
+  }
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentPremiumsModal(true);
+  }
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event);
   }
 
 }

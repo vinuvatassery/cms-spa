@@ -387,7 +387,7 @@
           *ngIf="dataItem.validInsurance === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
-          The client's insurance is not valid for the date of service. Deny the claim,
+          The client's insurance is not valid for the date of service. Deny the claim
           or update the client's insurance in their profile.
           <button
             aria-label="Go To Profile"
@@ -422,7 +422,7 @@
           *ngIf="dataItem.eligibilityMatch === yesNoFlag.No"
         >
           <span class="material-icons">info</span>
-          The client was not eligible for the date of service. Deny the claim,
+          The client was not eligible for the date of service. Deny the claim
           or update the client's eligibility dates in their profile.
           <button
             aria-label="GO TO PROFILE"
@@ -453,7 +453,7 @@
         <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No">
           <span class="material-icons">info</span>
           This claim puts the client ${{dataItem.exceededAmount | kendoNumber : 'n2'}} over their max benefits. Deny the
-          claim, or make an exception.
+          claim or make an exception.
             <button
               aria-label="Make an Exception"
               kendoButton
@@ -578,7 +578,7 @@
 
 <ng-template #possibleMatchesDialogModal>
   <productivity-tools-approvals-review-possible-matches
-    (closeReviewPossibleMatchesDialogClickedEvent)="onCloseReviewPossibleMatchesDialogClicked()"
+    (closeReviewPossibleMatchesDialogClickedEvent)="onCloseReviewPossibleMatchesDialogClicked($event)"
     [claimData]="claimData"
     [possibleMatchData$]="possibleMatchData$"
     (loadPossibleMatchDataEvent)="loadPossibleMatch($event)"

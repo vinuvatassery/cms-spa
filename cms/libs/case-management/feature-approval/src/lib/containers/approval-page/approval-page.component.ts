@@ -65,7 +65,7 @@ export class ApprovalPageComponent implements OnInit {
   sortValueImportedClaimsApproval = this.importedClaimFacade.sortValueImportedClaimsApproval;
   sortTypeImportedClaim = this.importedClaimFacade.sortType;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
-  pendingApprovalPaymentsCount$ = this.pendingApprovalPaymentFacade.pendingApprovalPaymentsCount$;
+  importedClaimsCount$ = this.importedClaimFacade.importedClaimsCount$;
 
   userLevel = UserLevel.Level1Value;
   pendingApprovalPaymentCount = 0;
@@ -146,6 +146,41 @@ export class ApprovalPageComponent implements OnInit {
     this.contactFacade.loadDdlStates();
     this.lovFacade.getHealthInsuranceTypeLovsForPlan();
     this.lovFacade.getDeliveryMethodLovs();
+    this.loadPendingApprovalGeneralCount();
+    this.loadPendingApprovalImportedClaimCount();
+    this.loadPendingApprovalPaymentCount();
+  }
+
+  loadPendingApprovalGeneralCount()
+  {
+    this.submitGenerealRequest$.subscribe((response: any) => {
+      if (response) {
+        this.navigationMenuFacade.getPendingApprovalGeneralCount();
+      }
+      this.cd.detectChanges();
+    });
+  }
+
+  loadPendingApprovalImportedClaimCount()
+  {
+    this.importedClaimsCount$.subscribe((response: any) => {
+      if (response) {
+        this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
+      }
+      this.cd.detectChanges();
+    });
+  }
+
+  loadPendingApprovalPaymentCount()
+  {
+    this.pendingApprovalSubmit$.subscribe((response: any) => {
+      if (response) {
+        this.navigationMenuFacade.getPendingApprovalPaymentCount(
+          this.userLevel
+        );
+      }
+      this.cd.detectChanges();
+    });
   }
 
   loadTabCount(){

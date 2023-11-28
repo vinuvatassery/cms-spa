@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  BehaviorSubject, Subject, catchError, of } from 'rxjs';
+import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -112,6 +112,11 @@ export class FinancialVendorRefundFacade {
 
   private insuranceRefundInformationSubject =  new Subject<any>();
   insuranceRefundInformation$ = this.insuranceRefundInformationSubject.asObservable();
+
+  
+  private tpaRefundInformationSubject =  new Subject<any>();
+  tpaRefundInformation$ = this.tpaRefundInformationSubject.asObservable();
+
 
 
   private addUpdateInsuranceRefundClaimSubject =  new Subject<any>();
@@ -526,6 +531,61 @@ this.loaderService.show();
       },
       });
   }
+
+  getTpaRefundInformation(insuranceRefundInformation :any){
+    this.insuranceRefundInformationLoaderSubject.next(true)
+    this.financialVendorRefundDataService.getTPaRefundInformation(insuranceRefundInformation).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse.items,
+          total: dataResponse.totalCount,
+        };
+        this.tpaRefundInformationSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+        this.tpaRefundInformationSubject.next(false)
+      },
+      });
+  }
+
+  addTpaRefundClaim(data:any){
+    this.showLoader()
+    this.financialVendorRefundDataService.addTpaRefundClaim(data).subscribe({
+      next: (dataResponse:any) => {
+        this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
+        
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
+
+  getTpaEditRefundInformation(paymentRequestId:any){
+    this.insuranceRefundInformationLoaderSubject.next(true)
+    this.financialVendorRefundDataService.getTpaEditRefundInformation(paymentRequestId).subscribe({
+      next: (dataResponse:any) => {
+        const gridView = {
+          data: dataResponse.items,
+          total: dataResponse.totalCount,
+        };
+        this.tpaRefundInformationSubject.next(gridView);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+        this.tpaRefundInformationSubject.next(false)
+      },
+      });
+  }
+
   loadClientBySearchText(text : string): void {
     this.clientSearchLoaderVisibilitySubject.next(true);
     if(text){

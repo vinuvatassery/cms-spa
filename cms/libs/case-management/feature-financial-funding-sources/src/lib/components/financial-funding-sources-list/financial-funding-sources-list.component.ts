@@ -26,7 +26,7 @@ import { Observable, Subject, debounceTime } from 'rxjs';
   templateUrl: './financial-funding-sources-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
+export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('addEditFundingSourceDialogTemplate', { read: TemplateRef })
   addEditFundingSourceDialogTemplate!: TemplateRef<any>;
@@ -57,30 +57,31 @@ export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
   filteredBy = '';
   isFiltered = false;
   filter!: any;
-  selectedSearchColumn='ALL';
+  selectedSearchColumn = 'ALL';
   gridDataResult!: GridDataResult;
   columnName: string = '';
-  filteredByColumnDesc ='';
+  filteredByColumnDesc = '';
   columnChangeDesc = 'Default Columns'
 
-  gridColumns: { [key: string]: string }  = {
+  gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     fundingSourceCode: "Funding Source",
     fundingDesc: "Funding Name",
 
   };
 
-  searchColumnList : { columnName: string, columnDesc: string }[] = [
-    { columnName: 'ALL', 
-    columnDesc: 'All Columns'
-   },
+  searchColumnList: { columnName: string, columnDesc: string }[] = [
+    {
+      columnName: 'ALL',
+      columnDesc: 'All Columns'
+    },
     {
       columnName: "fundingSourceCode",
-      columnDesc: "Funding Source"   
+      columnDesc: "Funding Source"
     },
     {
       columnName: "fundingDesc",
-      columnDesc: "Funding Name"   
+      columnDesc: "Funding Name"
     },
   ]
   gridFinancialFundingSourcesDataSubject = new Subject<any>();
@@ -94,37 +95,45 @@ export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
   addEditFundingDialog: any;
   removeFundingDialog: any;
   selectFundingSourceId!: string;
-  public processGridActions(dataItem: any){
-    return [{
-      buttonType: 'btn-h-primary',
-      text: 'Edit',
-      icon: 'edit',
-      click: (data: any): void => {
-        if (!this.editFundingOpened) {
-          this.editFundingOpened = true;
-          this.onAddEditFundingSourceOpenClicked(
-            this.addEditFundingSourceDialogTemplate,
-            data
-          );
-        }
+  public processGridActions(dataItem: any) {
+    const buttons = [
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Edit',
+        icon: 'edit',
+        click: (data: any): void => {
+          if (!this.editFundingOpened) {
+            this.editFundingOpened = true;
+            this.onAddEditFundingSourceOpenClicked(
+              this.addEditFundingSourceDialogTemplate,
+              data
+            );
+          }
+        },
       },
-    },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Remove',
-      icon: 'delete',
-      disabled: dataItem.isFundingSourceAssignedToPca,
-      click: (data: any): void => {       
-        if (!this.removeFundingOpened) {
-          this.removeFundingOpened = true;
-          this.onRemoveFundingSourceOpenClicked(
-            this.removeFundingSourceDialogTemplate
-          );
-        }
+      {
+        buttonType: 'btn-h-danger',
+        text: 'Remove',
+        icon: 'delete',
+        click: (data: any): void => {
+          if (!this.removeFundingOpened && !dataItem.isFundingSourceAssignedToPca) {
+            this.removeFundingOpened = true;
+            this.onRemoveFundingSourceOpenClicked(
+              this.removeFundingSourceDialogTemplate
+            );
+          }
+        },
       },
-    },
-  ]
-}
+    ];
+
+    // Filter out the Remove button if the condition is met
+    if (dataItem.isFundingSourceAssignedToPca) {
+      return buttons.filter(button => button.text !== 'Remove');
+    }
+
+    return buttons;
+  }
+
   selectedFundingSourceCode: any;
   searchText = '';
   private searchSubject = new Subject<string>();
@@ -134,13 +143,14 @@ export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService
   ) { }
+
   ngOnInit(): void {
+    this.initializeFundingSourceGrid();
     this.initializeFundingSourcePage()
-    this.loadFinancialFundingSourceFacadeListGrid();
     this.addSearchSubjectSubscription()
   }
 
-  initializeFundingSourcePage() {   
+  initializeFundingSourcePage() {
     this.loadFinancialFundingSourceFacadeListGrid();
     this.addSearchSubjectSubscription();
   }
@@ -181,7 +191,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-      this.loadFinancialFundingSourcesListEvent.emit(param);
+    this.loadFinancialFundingSourcesListEvent.emit(param);
   }
 
   private addSearchSubjectSubscription() {
@@ -198,7 +208,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
     }
   }
 
-  
+
   onFundSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
     if (isDateSearch && !searchValue) return;
@@ -296,7 +306,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
     if (isFromGrid) {
       if (filter.length > 0) {
         const filteredColumns = this.filter?.map((f: any) => {
-          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+          const filteredColumns = f.filters?.filter((fld: any) => fld.value)?.map((fld: any) =>
             this.gridColumns[fld.field])
           return ([...new Set(filteredColumns)]);
         });
@@ -336,7 +346,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
     if (result) {
       this.editFundingOpened = false;
       this.addEditFundingDialog.close();
-    
+
     }
   }
 
@@ -344,7 +354,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges,OnInit {
     this.onAddFundingSourceEvent.emit(event)
     this.addFundingSource$.subscribe((_: any) => {
       this.loadFinancialFundingSourceFacadeListGrid();
-    }) 
+    })
   }
 
   updateFundingSource(event: any) {
