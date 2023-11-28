@@ -245,7 +245,7 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
     this.columnsReordered = false;
 
     this.sortValue = 'creationTime';
-    this.sortType = 'asc';
+    this.sortType = 'desc';
     this.sort = this.sortColumn;
 
     this.loadFinancialClaimsBatchListGrid();
