@@ -117,6 +117,11 @@ export class FinancialVendorRefundFacade {
   private tpaRefundInformationSubject =  new Subject<any>();
   tpaRefundInformation$ = this.tpaRefundInformationSubject.asObservable();
 
+    
+  // private tpaEditRefundInformationSubject =  new Subject<any>();
+  // tpaEditRefundInformation$ = this.tpaEditRefundInformationSubject.asObservable();
+
+
 
 
   private addUpdateInsuranceRefundClaimSubject =  new Subject<any>();
@@ -567,6 +572,21 @@ this.loaderService.show();
     });
   }
 
+  updateTpaRefundClaim(data:any){
+    this.showLoader()
+    this.financialVendorRefundDataService.updateTpaRefundClaim(data).subscribe({
+      next: (dataResponse:any) => {
+        this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
+        
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader();
+      },
+    });
+  }
   getTpaEditRefundInformation(paymentRequestId:any){
     this.insuranceRefundInformationLoaderSubject.next(true)
     this.financialVendorRefundDataService.getTpaEditRefundInformation(paymentRequestId).subscribe({
@@ -585,6 +605,7 @@ this.loaderService.show();
       },
       });
   }
+
 
   loadClientBySearchText(text : string): void {
     this.clientSearchLoaderVisibilitySubject.next(true);

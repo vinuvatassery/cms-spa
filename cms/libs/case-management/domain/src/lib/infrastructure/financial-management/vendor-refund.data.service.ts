@@ -24,6 +24,11 @@ export class FinancialVendorRefundDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/add-tpa-refund`, data);
   }
 
+  updateTpaRefundClaim(data:any){
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/tpa-refund`, data);
+  }
+
+
   getInsuranceRefundEditInformation(vendorId :any, clientId :any ,paginationSortingDto:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums/${clientId}`, paginationSortingDto);
   }
