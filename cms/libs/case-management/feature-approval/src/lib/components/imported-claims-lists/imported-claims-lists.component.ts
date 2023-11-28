@@ -67,6 +67,12 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   filter!: any;
   gridDataResult!: GridDataResult;
   showExportLoader = false;
+  claimSourceFilter = '';
+  policyIdMatchFilter = '';
+  eligibilityMatchFilter = '';
+  validInsuranceFilter = '';
+  belowMaxBenefitsFilter = '';
+
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     clientName: 'Client Name',
@@ -105,11 +111,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   filteredByColumnDesc = '';
   showDateSearchWarning = false;
   columnChangeDesc = 'Default Columns';
-  claimSourceFilter = '';
-  policyIdMatchFilter = '';
-  eligibilityMatchFilter = '';
-  validInsuranceFilter = '';
-  belowMaxBenefitsFilter = '';
 
   gridImportedClaimsDataSubject = new Subject<any>();
   gridImportedClaimsBatchData$ =
@@ -199,7 +200,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   searchColumnChangeHandler(value: string) {
     this.filter = [];
-    this.showDateSearchWarning = value === 'DateOfService';
+    this.showDateSearchWarning = value === 'dateOfService';
     if (this.searchValue) {
       this.onApprovalSearch(this.searchValue);
     }
@@ -207,7 +208,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   onApprovalSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'DateOfService';
+    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'dateOfService';
     searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
@@ -217,7 +218,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   onChange(data: any) {
     this.defaultGridState();
 
-    if (this.selectedColumn === 'DateOfService' && (!this.isValidDate(data) && data !== '')) {
+    if (this.selectedColumn === 'dateOfService' && (!this.isValidDate(data) && data !== '')) {
       return;
     }
     this.filterData = {
@@ -228,7 +229,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
             {
               field: this.selectedColumn ?? 'clientName',
               operator:
-                this.selectedColumn === 'DateOfService'
+                this.selectedColumn === 'dateOfService'
                 ? 'eq'
                 : 'startswith',
               value: data,
@@ -360,16 +361,16 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     if (field === 'claimSource') {
       this.claimSourceFilter = value;
     }
-    if (field === 'policyIdMatch') {
+    else if (field === 'policyIdMatch') {
       this.policyIdMatchFilter = value;
     }
-    if (field === 'eligibilityMatch') {
+    else if (field === 'eligibilityMatch') {
       this.eligibilityMatchFilter = value;
     }
-    if (field === 'validInsurance') {
+    else if (field === 'validInsurance') {
       this.validInsuranceFilter = value;
     }
-    if (field === 'belowMaxBenefits') {
+    else if (field === 'belowMaxBenefits') {
       this.belowMaxBenefitsFilter = value;
     }
     filterService.filter({
@@ -659,6 +660,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
         this.showExportLoader = false;
+        this.cd.detectChanges();
       }
     });
   }
