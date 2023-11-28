@@ -355,7 +355,6 @@ deletePremiumPayment(paymentId: string) {
 
   ngOnInit(): void {
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$.subscribe((response:any) =>{
-      debugger
 
     })
     this.addSearchSubjectSubscription();
