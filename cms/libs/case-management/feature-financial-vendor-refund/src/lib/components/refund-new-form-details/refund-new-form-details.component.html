@@ -64,9 +64,9 @@
             <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
                 <div class="flex-col flex-col-6" >
                     <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">
+                        <div class="combotable_search_list new_refund_Search">  
                             <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>
+                            aria-hidden="true">search</span>                         
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
 
@@ -114,9 +114,9 @@
             <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">
+                        <div class="combotable_search_list new_refund_Search">  
                             <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>
+                            aria-hidden="true">search</span>                         
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                                       <kendo-multicolumncombobox [data]="tpavendors$ | async"
