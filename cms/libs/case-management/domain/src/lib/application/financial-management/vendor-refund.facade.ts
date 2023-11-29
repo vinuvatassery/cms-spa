@@ -118,12 +118,6 @@ export class FinancialVendorRefundFacade {
   tpaRefundInformation$ = this.tpaRefundInformationSubject.asObservable();
 
     
-  // private tpaEditRefundInformationSubject =  new Subject<any>();
-  // tpaEditRefundInformation$ = this.tpaEditRefundInformationSubject.asObservable();
-
-
-
-
   private addUpdateInsuranceRefundClaimSubject =  new Subject<any>();
   addUpdateInsuranceRefundClaim$ = this.addUpdateInsuranceRefundClaimSubject.asObservable();
 
