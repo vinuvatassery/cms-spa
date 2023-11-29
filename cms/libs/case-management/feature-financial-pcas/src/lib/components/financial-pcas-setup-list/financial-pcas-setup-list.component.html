@@ -81,11 +81,11 @@ aria-label="add"> PCA Setup</button>
             <kendo-grid-column field="isPcaAssigned" title="Assigned" [width]="90"> 
                   <ng-template kendoGridCellTemplate let-dataItem> 
                         <div class="text-center">
-                              <span class="material-icons green-text-color " title="Assigned" *ngIf="dataItem.isPcaAssigned">
+                              <span class="material-icons red-text-color " title="Assigned" *ngIf="dataItem.isPcaAssigned">
                                     price_check 
                               </span>
 
-                              <span class="material-icons red-text-color" title="Un-assigned" *ngIf="!dataItem.isPcaAssigned">
+                              <span class="material-icons green-text-color" title="Un-assigned" *ngIf="!dataItem.isPcaAssigned">
                                     attach_money 
                               </span> 
                               
