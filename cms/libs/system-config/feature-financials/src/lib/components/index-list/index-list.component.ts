@@ -4,7 +4,7 @@ import {
   ViewEncapsulation,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { SystemConfigFinancialFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
   selector: 'system-config-index-list',
@@ -23,9 +23,8 @@ export class IndexListComponent implements OnInit{
     {text: 'All', value: 100}
   ];
   /** Public properties **/
-  isPeriodDetailPopup = false;
-  ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
-  clientProfilePeriods$ = this.userManagementFacade.clientProfilePeriods$;
+  isIndexDetailPopup = false; 
+  indexLists$ = this.systemConfigFinancialFacade.loadIndexListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [
@@ -46,28 +45,24 @@ export class IndexListComponent implements OnInit{
  
   ];
   /** Constructor **/
-  constructor(private readonly userManagementFacade: UserManagementFacade) {}
+  constructor(private readonly systemConfigFinancialFacade: SystemConfigFinancialFacade) {}
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
-    this.loadDdlColumnFilters();
-    this.loadClientProfilePeriods();
+  ngOnInit(): void { 
+    this.loadIndexLists();
   }
 
   /** Private  methods **/
-  private loadDdlColumnFilters() {
-    this.userManagementFacade.loadDdlColumnFilters();
-  }
-
-  private loadClientProfilePeriods() {
-    this.userManagementFacade.loadClientProfilePeriods();
+ 
+  private loadIndexLists() {
+    this.systemConfigFinancialFacade.loadIndexLists();
   }
 
   /** Internal event methods **/
-  onClosePeriodDetailClicked() {
-    this.isPeriodDetailPopup = false;
+  onCloseIndexDetailClicked() {
+    this.isIndexDetailPopup = false;
   }
-  onPeriodDetailClicked() {
-    this.isPeriodDetailPopup = true;
+  onIndexDetailClicked() {
+    this.isIndexDetailPopup = true;
   }
 }
