@@ -239,7 +239,7 @@
                                     </ng-template>
                         </kendo-grid-column>                   
 
-                        <kendo-grid-column field="amountDue" title="Pmt. Amount" [width]="180">                             
+                        <kendo-grid-column field="amountDue" title="Amount Due" [width]="180">                             
                             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                               <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
                             </ng-template>
