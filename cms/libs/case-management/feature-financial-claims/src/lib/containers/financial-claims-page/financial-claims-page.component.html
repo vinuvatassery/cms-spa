@@ -30,7 +30,7 @@
                             <div class="block-section">
                                 <cms-financial-claims-batches-list  [claimsType]="claimsType" [financialClaimsBatchGridLists$]="financialClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueFinancialClaimsBatch"
-                                [sortType]="sortType" [sort]="sortBatchList"
+                                [sortType]="'desc'" [sort]="sortBatchList"
                                 [exportButtonShow$]="exportButtonShow$"
                                 (loadFinancialClaimsBatchListEvent)="loadFinancialClaimsBatchListGrid($event)"
                                 (exportGridDataEvent)="exportClaimsBatchGridData()"
