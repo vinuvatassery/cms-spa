@@ -49,4 +49,43 @@ export class SystemConfigFinancialDataService {
         },
       ]);
     }
+
+     
+    loadExpenseTypeListsService() {
+      return of([
+        { 
+          id: 1, 
+          expensesType: 'Housing', 
+          objectCode: '432', 
+          preferredPaymentMethod: 'Check', 
+          defaultFrequency: 'One Time', 
+          lastModified: 'MM/DD/YYYY', 
+          modifiedBy: 'Caron', 
+          status: 'Active', 
+        
+        },
+        { 
+          id: 2, 
+          expensesType: 'Rent', 
+          objectCode: '432', 
+          preferredPaymentMethod: 'cash', 
+          defaultFrequency: 'One Time', 
+          lastModified: 'MM/DD/YYYY', 
+          modifiedBy: 'Caron', 
+          status: 'Active', 
+        
+        },
+        { 
+          id: 3, 
+          expensesType: 'Utility', 
+          objectCode: '432', 
+          preferredPaymentMethod: 'check', 
+          defaultFrequency: 'Recurrent', 
+          lastModified: 'MM/DD/YYYY', 
+          modifiedBy: 'Caron', 
+          status: 'Active', 
+        
+        },
+      ]);
+    }
 }
