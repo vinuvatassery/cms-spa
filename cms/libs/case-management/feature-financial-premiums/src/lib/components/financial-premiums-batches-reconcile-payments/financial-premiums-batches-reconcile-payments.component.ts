@@ -967,16 +967,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         this.warrantCalculationArray.push(object);
       });
 
-      if( this.warrantCalculationArray.length==0){
-        let object={
-          vendorId:data?.entityId,
-          batchId:this.batchId,
-          paymentRequestId:data?.paymentRequestId,
-          warrantNumber:data?.checkNbr  
-        }
-        this.warrantCalculationArray.push(object);
-      }
-
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
