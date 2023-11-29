@@ -154,8 +154,9 @@
             </kendo-floatinglabel>
           </div>
 
-          <div class="flex-col" *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo || (providerType === vendorTypes.Clinic && editVendorInfo &&
-          (medicalProviderForm.value.vendorTypeCode == vendorTypes.MedicalProviders
+          <div class="flex-col" *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo || (editVendorInfo
+          && (medicalProviderForm.value.vendorTypeCode == vendorTypes.MedicalProviders
+
           || medicalProviderForm.value.vendorTypeCode ==  vendorTypes.DentalProviders ))"
             [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider Last Name">
@@ -196,7 +197,7 @@
       </div>
       <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy">
         <kendo-floatinglabel text="NPI (optional)">
-          <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npiNbr">
+          <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npiNbr" [maxlength]="25">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['npiNbr'].valid && isValidateForm">
             NPI  is required

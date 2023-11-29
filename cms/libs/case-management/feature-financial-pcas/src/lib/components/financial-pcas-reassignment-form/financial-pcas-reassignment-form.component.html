@@ -5,14 +5,14 @@
       <p class="text-muted">
             All fields are required unless otherwise stated.
       </p>
-     
+
       <div class="flex-row">
             <div class="flex-col mt-1">
                   <p class="relative-heading"><strong>PCA Settings</strong></p>
             </div>
             <div class="flex-col flex-col-8">
                   <kendo-floatinglabel text="PCA">
-                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode"                  
+                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode"
                         [data]="pcaList"
                         formControlName="pca"
                         >
@@ -29,21 +29,21 @@
       <div class="flex-row mt-3">
             <div class="flex-col flex-col-4">
                   <label> PCA Amount </label>
-                  <p> $ {{pcaReassignmentByFundSource.pcaAmount}}</p>
+                  <p> $ {{pcaReassignmentByFundSource.pcaAmount | kendoNumber: 'n2'}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Allocated </label>
-                  <p> $ {{pcaReassignmentByFundSource.allocatedAmount}}</p>
+                  <p> $ {{pcaReassignmentByFundSource.allocatedAmount | kendoNumber: 'n2'}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Remaining </label>
-                  <p class="green-text-color">$ {{pcaReassignmentByFundSource.remainingAmount}}</p>
+                  <p class="green-text-color">$ {{pcaReassignmentByFundSource.remainingAmount | kendoNumber: 'n2'}}</p>
             </div>
-            
+
       </div>
       <div class="flex-row">
             <div class="flex-col mt-1">
-            
+
                   <p class="relative-heading"><strong>Assignment Settings</strong></p>
             </div>
             <div class="flex-col flex-col-6">
@@ -63,7 +63,7 @@
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Close Date">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                              formatPlaceholder="formatPattern" placeholder="" 
+                              formatPlaceholder="formatPattern" placeholder=""
                                formControlName="closeDate"
                                (keyup)="closeDateValidate()"
                                (valueChange)="closeDateValidate()" >
@@ -102,7 +102,7 @@
 </div>
 <kendo-dialog-actions>
       <div class="justify-content-between">
-            <div class="justify-content-end">    
+            <div class="justify-content-end">
                   <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
                         (click)="closeEditPcaReassignmentClicked()">
                         Cancel
