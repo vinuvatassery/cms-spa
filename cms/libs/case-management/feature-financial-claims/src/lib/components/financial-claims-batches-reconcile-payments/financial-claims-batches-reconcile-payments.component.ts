@@ -295,7 +295,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     let operator = 'contains';
 
     if (
-      this.selectedColumn === 'amountPaid' 
+      this.selectedColumn === 'amountDue' 
     ) {
       operator = 'eq';
     }

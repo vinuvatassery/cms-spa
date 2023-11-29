@@ -111,7 +111,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     paymentMethodDesc:"Pmt. Method",
     paymentReconciledDate:"Date Pmt. Reconciled",
     paymentSentDate:"Date Pmt. Sent",
-    amountDue:"Pmt. Amount",
+    amountDue:"Amount Due",
     checkNbr:"Warrant Number",
     comments:"Note (optional)"
   }
@@ -142,7 +142,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     },
     {
       columnCode: 'amountDue',
-      columnDesc: 'Pmt. Amount',
+      columnDesc: 'Amount Due',
     },
     {
       columnCode: 'checkNbr',
@@ -304,7 +304,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     let operator = 'contains';
 
     if (
-      this.selectedColumn === 'amountPaid' 
+      this.selectedColumn === 'amountDue' 
     ) {
       operator = 'eq';
     }

@@ -124,7 +124,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     paymentMethodDesc:"Pmt. Method",
     paymentReconciledDate:"Date Pmt. Reconciled",
     paymentSentDate:"Date Pmt. Sent",
-    amountDue:"Amount Due",
+    amountDue:"Pmt. Amount",
     checkNbr:"Warrant Number",
     comments:"Note (optional)"
   }
@@ -151,7 +151,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     },
     {
       columnCode: 'amountDue',
-      columnDesc: 'Amount Due',
+      columnDesc: 'Pmt. Amount',
     },
     {
       columnCode: 'checkNbr',
@@ -287,7 +287,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     let operator = 'contains';
 
     if (
-      this.selectedColumn === 'amountPaid' 
+      this.selectedColumn === 'amountDue' 
     ) {
       operator = 'eq';
     }
