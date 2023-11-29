@@ -41,6 +41,10 @@ export class VendorRefundPageComponent
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
   vendorRefundAllPaymentsGridLists$ = this.financialVendorRefundFacade.vendorRefundAllPaymentsData$;
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  paymentRequestId: any;
+  providerDetailsDialog:any;
   constructor( 
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade ,
     private documentFacade: DocumentFacade,
@@ -121,10 +125,6 @@ export class VendorRefundPageComponent
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
   }
-  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
-  providerDetailsTemplate!: TemplateRef<any>;
-  paymentRequestId: any;
-  providerDetailsDialog:any;
   onProviderNameClick(event:any){
     this.paymentRequestId = event
     this.providerDetailsDialog = this.dialogService.open({
