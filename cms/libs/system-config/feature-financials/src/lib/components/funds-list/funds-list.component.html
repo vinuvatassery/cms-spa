@@ -196,6 +196,40 @@
     class="app-c-modal app-c-modal-sm app-c-modal-np"
   >
     <kendo-dialog-titlebar> Add New Funds </kendo-dialog-titlebar>
+    <section class="k-dialog-body">
+      <div class="flex-row">
+        <div class="flex-col ">
+          <kendo-floatinglabel text="Fund">
+            <kendo-textbox [fillMode]="formUiStyle.inputFillMode" >
+            </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+       
+        <div class="flex-col">
+          <kendo-floatinglabel text="Category">
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" >
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+        </div>
+        <div class="flex-col">
+          <kendo-floatinglabel text="Service">
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" >
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+        </div>
+      </div>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button kendoButton aria-label="Cancel" (click)="onClosePeriodDetailClicked()" [primary]="true" look="outline">
+            Cancel
+          </button>
+          <button kendoButton aria-label="Update" [primary]="true">Save</button>
+        </div>
+      </div>
+    </kendo-dialog-actions>
+    
     <!-- //NOSONAR <system-config-eid-lifetime-period-detail></system-config-eid-lifetime-period-detail> -->
   </kendo-dialog>
   
