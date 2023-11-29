@@ -32,7 +32,8 @@ export class FinancialPremiumsProviderInfoComponent {
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
   isEditProvider = false;
-  vendorProfile: any
+  vendorProfile: any;
+  public isDisabled = true;
   showAddressValidationLoader$= new BehaviorSubject(false);
   profileForm = this.formBuilder.group({
     tin: [''],
@@ -40,7 +41,7 @@ export class FinancialPremiumsProviderInfoComponent {
       vendorAddressId: [''],
       paymentMethod: [''],
       address1: ['', Validators.required],
-      address2: [''],
+      address2: ['',Validators.required],
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
       zip: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],

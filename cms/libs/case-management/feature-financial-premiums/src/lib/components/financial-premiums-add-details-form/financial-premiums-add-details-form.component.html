@@ -91,7 +91,7 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="healthInsuranceType" title="Insurance Type" [width]="160">
                         </kendo-grid-column>
-                        <kendo-grid-column field="" title="Option" [columnMenu]="false" [width]="40" class="text-center" >
+                        <kendo-grid-column field="" title="Option" [columnMenu]="false" [width]="80" class="text-center" >
                             <ng-template kendoGridCellTemplate let-dataItem>
                               <kendo-dropdownbutton [data]="insurancePlansAction" icon="more-vertical"
                                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -183,7 +183,7 @@
                                     <kendo-textarea 
                                     *ngIf="dataItem.makeExceptionFlag"
                                     aria-label="Exception Reason" 
-                                    [maxlength]="160" 
+                                    [maxlength]="150" 
                                     [rows]="1"
                                     [fillMode]="formUiStyle.inputFillMode"
                                     resizable="none"
