@@ -179,6 +179,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   refundEditVendorAddressId='';
   refundEditVendorName: any;
   inspaymentRequestId: any;
+  refundEditVendorId: any;
 
   public processGridActions(dataItem:any){
      return [
@@ -190,12 +191,13 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
         if(!this.isAddRefundModalOpen){
           this.isAddRefundModalOpen = true;
           this.isEditRefund = true
-          this.refunEditServiceType = dataItem.type
+          this.refunEditServiceType = dataItem.serviceSubTypeCode
           this.refundEditClientId =dataItem.clientId
           this.refundEditClientFullName = dataItem.clientFullName
           this.refundEditVendorAddressId = dataItem.vendorAddressId
           this.refundEditVendorName = dataItem.vendorName
           this.inspaymentRequestId = dataItem.paymentRequestId
+          this.refundEditVendorId = dataItem.vendorId
         this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
         }
       },

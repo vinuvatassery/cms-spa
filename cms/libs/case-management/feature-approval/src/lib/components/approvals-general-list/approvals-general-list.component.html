@@ -6,7 +6,7 @@
     >
       <kendo-panelbar-item
         *ngIf="getTitle(item.approvalTypeCode, item.subTypeCode)"
-        [expanded]="item.isExpanded"
+        [expanded]="item.isExpanded && item.status == approveStatus"
       >
         <ng-template kendoPanelBarItemTitle>
           <div class="flex-row rw-100" (click)="$event.stopPropagation()">

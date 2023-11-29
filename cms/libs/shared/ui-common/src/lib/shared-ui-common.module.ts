@@ -44,6 +44,7 @@ import { VendorDetailsComponent } from './vendor-details/vendor-details.componen
 import { TinPipe } from './pipes/tin.pipe';
 import { FinancialDrugsDetailsComponent } from './financial-drugs-details/financial-drugs-details.component';
 import { FinancialPcaChosenAlertComponent } from './financial-pca-chosen-alert/financial-pca-chosen-alert.component';
+import { NdcCodePipe } from './pipes/ndc-code.pipe';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -80,7 +81,8 @@ import { FinancialPcaChosenAlertComponent } from './financial-pca-chosen-alert/f
     TinPipe,
     ReAssignCaseComponent,
     FinancialDrugsDetailsComponent,
-    FinancialPcaChosenAlertComponent
+    FinancialPcaChosenAlertComponent,
+    NdcCodePipe
   ],
   exports: [
     LoginStatusComponent,
@@ -116,7 +118,8 @@ import { FinancialPcaChosenAlertComponent } from './financial-pca-chosen-alert/f
     TinPipe,
     ReAssignCaseComponent,
     FinancialDrugsDetailsComponent,
-    FinancialPcaChosenAlertComponent
+    FinancialPcaChosenAlertComponent,
+    NdcCodePipe
   ],
 })
 export class SharedUiCommonModule {}

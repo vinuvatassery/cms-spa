@@ -35,12 +35,7 @@
       {{
         approvalsExceptionCard$?.clientAnnualTotal | kendoNumber : 'n2'
       }}</span
-    >
-    <strong>Client Balance : </strong>
-    <span class="mr-1">
-      <strong>$</strong>
-      {{ approvalsExceptionCard$?.clientBalance | kendoNumber : 'n2' }}
-    </span>
+    >    
     <strong>Service Cost Total : </strong
     ><span class="mr-1">
       <strong>$</strong>
@@ -51,6 +46,11 @@
       <strong>$</strong>
       {{ approvalsExceptionCard$?.amountDueTotal | kendoNumber : 'n2' }}</span
     >
+    <strong>Client Balance : </strong>
+    <span class="mr-1">
+      <strong>$</strong>
+      {{ approvalsExceptionCard$?.clientBalance | kendoNumber : 'n2' }}
+    </span>
   </p>
 </div>
 <div>

@@ -69,16 +69,15 @@
                   <kendo-grid 
                     [resizable]="true"  
                     [sortable]="true"   
-                    [resizable]="true"
-                    [isDetailExpanded]="expandRows"
+                    [resizable]="true"                    
                     [data]="insurancePlans$ | async"
                     [loading]="(insurancePlansLoader$ | async) == true"
-                    [data]="addPremiumGridLists$ | async">
+                    [isDetailExpanded]="expandRows">
                         <kendo-grid-column  title="" [width]="80">
                             <ng-template kendoGridCellTemplate let-dataItem>                  
                                   <input type="checkbox" id="insurancePlan" name="insurancePlan"
                                   aria-labelledby="insurancePlan" kendoCheckBox 
-                                  (click)="planSelectionChange($event)"
+                                  (click)="planSelectionChange($event, dataItem)"
                                   [(ngModel)]="dataItem.isPlanSelected"                                  
                                   />                                 
                             </ng-template>
@@ -110,6 +109,7 @@
                             </ng-template>
                           </kendo-grid-column>
                         <ng-template kendoGridDetailTemplate let-dataItem let-policyId="dataItem.clientInsurancePolicyId">
+                            <section *ngIf="dataItem.coverages">
                             <kendo-grid 
                             [resizable]="true"  
                             [sortable]="true"   
@@ -215,6 +215,7 @@
                             <button kendoButton [primary]="true" icon="add"  aria-label="Premium" (click)="addCoverage(dataItem)">
                             Premium
                             </button>
+                        </section>
                           </ng-template>
                          <ng-template kendoGridLoadingTemplate>
                               <common-grid-loader-component></common-grid-loader-component>

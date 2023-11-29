@@ -21,14 +21,17 @@ import { CaseManagementFeatureFinancialPremiumsModule } from '@cms/case-manageme
 import { UnbatchRefundConfirmationComponent } from './components/unbatch-refund-confirmation/unbatch-refund-confirmation.component';
 import { filterResetConfirmationComponent } from './components/reset-filter-confirmation/reset-filter-confirmation.component';
 import { RefundClaimsProviderInfoComponent } from './components/refund-claims-provider-info/refund-claims-provider-info.component';
-
+import { VednorRefundTpaClaimsListComponent } from './components/vednor-refund-tpa-claims-list/vednor-refund-tpa-claims-list.component';
+import { VednorRefundTpaSelectedClaimsListComponent } from './components/vednor-refund-tpa-selected-claims-list/vednor-refund-tpa-selected-claims-list.component';
+import { CaseManagementFeatureFinancialClaimsModule } from '@cms/case-management/feature-financial-claims';
 @NgModule({
   imports: [
     CommonModule,
     CaseManagementFeatureFinancialVendorRefundRoutingModule,
     SharedUiTpaModule,
     SharedUiCommonModule,
-    CaseManagementFeatureFinancialPremiumsModule
+    CaseManagementFeatureFinancialPremiumsModule,
+    CaseManagementFeatureFinancialClaimsModule
   ],
   declarations: [
     VendorRefundPageComponent,
@@ -47,7 +50,9 @@ import { RefundClaimsProviderInfoComponent } from './components/refund-claims-pr
     VendorRefundClientClaimsListComponent,
     VendorRefundPharmacyPaymentsListComponent,
     filterResetConfirmationComponent,
-    RefundClaimsProviderInfoComponent
+    RefundClaimsProviderInfoComponent,
+    VednorRefundTpaClaimsListComponent,
+    VednorRefundTpaSelectedClaimsListComponent,
   ],
 })
 export class CaseManagementFeatureFinancialVendorRefundModule {}

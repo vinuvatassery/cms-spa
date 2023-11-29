@@ -127,15 +127,19 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
 
   coverageDatesValueChanges(policyId: string, coverage: InsurancePremiumCoverage, value: any) {
     this.premiumExistCheckingRequired = true;
-    coverage.coverageDateRequired = !value
+    coverage.coverageDateRequired = !value;
+    coverage.premiumExistException = false;
     if (value) {
       this.coverageDateExistChecking(policyId, coverage);
     }
   }
 
-  planSelectionChange(event: any) {
+  planSelectionChange(event: any, plan: ClientInsurancePlans) {
     if (event?.target?.checked ?? false) {
       this.showPlanSelectionRequiredValidation = false;
+      if (!plan?.coverages || plan?.coverages?.length <= 0) {
+        this.addCoverage(plan);
+      }
     }
   }
 
@@ -183,7 +187,8 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
       comment: '',
       commentCount: '0/100',
       exceptionReason: '',
-      exceptionReasonCount: '0/160'
+      exceptionReasonCount: '0/160',
+      premiumAmount: plan?.premiumAmt ?? 0
     };
 
     plan.coverages.push(newCoverage);
@@ -195,7 +200,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     coverage.makeExceptionFlag = !coverage.makeExceptionFlag
     coverage.exceptionText = coverage.makeExceptionFlag ? "Don't Make Exception" : "Make Exception";
     if (!coverage.makeExceptionFlag) { coverage.exceptionReasonRequired = false; }
-  }
+  } 
 
   /* Private Methods */
   private coverageDateExistChecking(policyId: string, coverage: InsurancePremiumCoverage) {

@@ -32,7 +32,8 @@ export * from './lib/pipes/ssn.pipe';
 export * from './lib/pipes/fileSize.pipe';
 export * from './lib/pipes/phone.pipe';
 export * from './lib/pipes/yes-or-no.pipe';
-export * from './lib/pipes/tin.pipe'
+export * from './lib/pipes/tin.pipe';
+export * from './lib/pipes/ndc-code.pipe';
 
 /** Directives **/
 export * from './lib/directives/kendo-componentsforaccessibility.directive';

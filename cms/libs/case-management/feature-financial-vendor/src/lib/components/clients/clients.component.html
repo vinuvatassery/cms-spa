@@ -1,16 +1,16 @@
  <!-- Contact -->
  <div >
   <div class="flex-col flex-space-bw align-items-center">
-  
-    
+
+
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
-      <kendo-dropdownlist 
-      aria-label="All Columns" 
+      <kendo-dropdownlist
+      aria-label="All Columns"
       [fillMode]="formUiStyle.dropDownFillMode"
-      textField="columnDesc" 
-      valueField="columnName" 
+      textField="columnDesc"
+      valueField="columnName"
       [data]="searchColumnList"
       [valuePrimitive]="true"
       [(ngModel)]="selectedSearchColumn"
@@ -28,15 +28,15 @@
 
   <span class="right-overlay-export">
     <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-      <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
-      
+      <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+
       <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
     </button>
   </span>
 </section>
 </div>
 <div class="table-sorted-info">
-  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">       
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">
         <span class="material-icons" aria-label="search-warning" aria-hidden="true">
               warning
         </span>
@@ -46,7 +46,7 @@
         <span *ngIf="showNumberSearchWarning">
              {{numberSearchColumnName}} allow only numbers.
         </span>
-  </span>   
+  </span>
 </div>
 
 <div class="table-sorted-info">
@@ -78,7 +78,7 @@
       [filter]="state.filter"
       (dataStateChange)="dataStateChange($event)"
       (filterChange)="filterChange($event)"
-      (columnVisibilityChange)="columnChange()"
+      (columnVisibilityChange)="columnChange($event)"
       (columnReorder)="onColumnReorder($event)">
 
         <kendo-grid-column field="clientName" title="Client Name" [width]="150"  [sticky]="true">

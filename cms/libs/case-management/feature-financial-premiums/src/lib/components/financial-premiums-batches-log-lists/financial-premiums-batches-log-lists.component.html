@@ -17,7 +17,7 @@
   </ng-template>
   <section class="app-l-client-wrapper ">
     <section class="app-l-wrapper">
-      <p> Click “Bulk” to execute actions for one or more payments. Click on a row to view the individual premiums for that payment.</p>
+      <p> Click "Bulk" to execute actions for one or more payments. Click on the item # to view the individual premiums for that payment.</p>
       <section class="table-filter-section mat-form-no-b-space">
         <span class="filter-section_items filter--select">
           <kendo-floatinglabel>
@@ -146,7 +146,7 @@
             </kendo-grid-numeric-filter-menu>
         </ng-template>
         </kendo-grid-column>
-          <kendo-grid-column field="acceptsReports" title="Accepts reports?" [width]="180">
+          <kendo-grid-column field="acceptsReports" title="Accepts Reports?" [width]="180">
             <ng-template kendoGridCellTemplate let-dataItem>
                 {{ dataItem.acceptsReports === 'Y' ? 'Yes' : 'No' }}
             </ng-template>
