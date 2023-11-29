@@ -161,7 +161,6 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
      this.refundType =  res.filter(x=> x.lovCode!=='TAX')
     })
 if(this.isEdit){
-  console.log(this.tpaRefundGridLists)
   this.disableFeildsOnConfirmSelection = true
   this.selectedRefundType = this.serviceType
   this.onEditInitiallydontShowPremiumselection = true
