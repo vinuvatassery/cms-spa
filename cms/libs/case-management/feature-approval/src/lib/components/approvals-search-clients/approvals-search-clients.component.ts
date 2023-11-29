@@ -5,7 +5,8 @@ import {
   EventEmitter,
   Input,
 } from '@angular/core';
-import { FinancialClaimsFacade, ImportedClaimFacade } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
+import { CaseFacade, FinancialClaimsFacade, ImportedClaimFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
@@ -28,7 +29,9 @@ export class ApprovalsSearchClientsComponent {
     private readonly importedClaimFacade: ImportedClaimFacade,
     private readonly loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService,){}
+    private readonly loaderService: LoaderService,
+    private route: Router,
+    private caseFacade : CaseFacade){}
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {
@@ -51,38 +54,6 @@ export class ApprovalsSearchClientsComponent {
       this.loaderService.hide();
     }
 
-  clientSearchResult = [
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-  ];
   closeSearchCase() {
     this.closeSearchClientsDialogClickedEvent.emit();
   }
@@ -127,7 +98,8 @@ export class ApprovalsSearchClientsComponent {
     });
   }
 
-  onCancelClick(){
+  onGoToProfileClick() {
+    this.caseFacade.onClientProfileTabSelect("clt-info" ,this.selectedClient.clientId, this.selectedClient.clientCaseEligibilityId, this.selectedClient.clientCaseId);
     this.closeSearchCase();
   }
 }
