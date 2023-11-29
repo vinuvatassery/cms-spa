@@ -17,7 +17,7 @@ import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClai
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Lov, LovFacade, NavigationMenuFacade } from '@cms/system-config/domain';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
@@ -47,6 +47,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.financialClaimsFacade.CPTCodeSearchLoaderVisibility$;
   pharmacySearchResult$ = this.financialClaimsFacade.pharmacies$;
   searchCTPCode$ = this.financialClaimsFacade.searchCTPCode$;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
   vendorId: any;
   clientId: any;
   vendorName: any;
@@ -193,7 +194,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     private readonly financialPcaFacade: FinancialPcaFacade,
     public contactFacade: ContactFacade,
     private readonly financialVendorFacade : FinancialVendorFacade,
-    private readonly navigationMenuFacade: NavigationMenuFacade
+    private readonly navigationMenuFacade: NavigationMenuFacade,
+    private route: Router,
   ) {
     this.initMedicalClaimObject();
     this.initClaimForm();
@@ -1361,6 +1363,11 @@ duplicatePaymentObject:any = {};
       this.checkOldInvoiceException(index);
       this.checkBridgeUppEception(index);
     });
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeAddEditClaimsFormModalClicked(false);
   }
 
 }
