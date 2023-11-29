@@ -32,6 +32,7 @@ export class FinancialPcasReassignmentFormComponent implements  OnInit {
   pcaCloseDate!: Date;
   pcaOpenDate!: Date;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  isUnlimitedChecked: boolean = false;
 
 constructor(private formBuilder:FormBuilder, private configurationProvider: ConfigurationProvider,
   public intl: IntlService,){
@@ -51,7 +52,7 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
       unlimited:[false]
     })
 
-    this.getPcaAssignmentByIdEvent.emit(this.editPcaReassignmentItem.pcaAssignmentId)
+    this.getPcaAssignmentByIdEvent.emit(this.editPcaReassignmentItem.pcaAssignmentId);
     this.getPcaAssignmentById$.subscribe((res:any) =>{
      this.pcaReassignmentByFundSource = res;
      this.pcaCloseDate = new Date(this.intl.formatDate(this.pcaReassignmentByFundSource?.pcaCloseDate, this.dateFormat));
@@ -76,7 +77,8 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
      }    
      this.pcaList.push(`${this.pcaReassignmentByFundSource.fundingSourceCode}-${this.pcaReassignmentByFundSource.pcaCode}`);
      this.pcaReassignmentForm.controls['openDate'].setValue(new Date(this.pcaReassignmentByFundSource.openDate));
-     this.pcaReassignmentForm.controls['closeDate'].setValue(new Date(this.pcaReassignmentByFundSource.closeDate));  
+     this.pcaReassignmentForm.controls['closeDate'].setValue(new Date(this.pcaReassignmentByFundSource.closeDate)); 
+     this.pcaReassignmentForm.controls['unlimited'].setValue(false);   
     })
   }
 
@@ -88,6 +90,7 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
     this.pcaReassignmentForm.controls['pcaRemainingAmount'].enable();
     this.pcaReassignmentForm.controls['assignmentAmount'].enable();
     this.isViewGridOptionClicked = false;
+    this.isUnlimitedChecked = false;
   }
   closeEditPcaReassignmentClicked() {
     this.closeEditPcaReassignmentClickedEvent.emit(true);
@@ -105,7 +108,6 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
         pcaId:  this.pcaReassignmentByFundSource.pcaId,
       };
       this.saveEditPcaReassignmentClickedEvent.emit(pcaDetails);
-      console.log(pcaDetails)
     }
   }
 
@@ -165,15 +167,14 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
 
   unlimitedCheckChange($event : any)
   {   
-   const unlimited = this.pcaReassignmentForm.controls['unlimited'].value;
-   if(unlimited)
+   this.isUnlimitedChecked = this.pcaReassignmentForm.controls['unlimited'].value;
+   if(this.isUnlimitedChecked)
    {
     this.pcaReassignmentForm.patchValue(
       {    
         assignmentAmount :  0
       }
     )
-    this.amountValidate();
     this.pcaReassignmentForm.controls['assignmentAmount'].disable();
     this.pcaReassignmentForm.controls['assignmentAmount'].clearValidators();
     this.pcaReassignmentForm.controls['assignmentAmount'].updateValueAndValidity();

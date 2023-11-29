@@ -86,8 +86,8 @@
                                [fillMode]="formUiStyle.inputFillMode" formControlName="assignmentAmount">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['assignmentAmount'].valid && !pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect')">Assignment Amount is required.</kendo-formerror>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect')">Assignment Amount must be equal to or less than the Remaining PCA balance </kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['assignmentAmount'].valid && !pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect') && !isUnlimitedChecked">Assignment Amount is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect') && !isUnlimitedChecked">Assignment Amount must be equal to or less than the Remaining PCA balance </kendo-formerror>
             </div>
             <div class="flex-col mt-2">
                   <span class="app-checkboxwidtext-wrapper">
