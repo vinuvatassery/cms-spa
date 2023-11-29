@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
@@ -314,7 +314,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       if(!this.selectAll)
       {
       this.financialPremiumsProcessGridLists.forEach((item1: any) => {
-        const matchingGridItem = this.selectedSendReportList?.SelectedSendReports.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
+        const matchingGridItem = this.checkedAndUncheckedRecordsFromSelectAll?.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId && item2.selected);
         if (matchingGridItem) {
           item1.selected = true;
         } else {
@@ -376,9 +376,9 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
         this.totalGridRecordsCount = 0;
         this.selectAll = false;
       }else{
-      for (const item of this.financialPremiumsProcessGridLists) {
+      for (const item of this.checkedAndUncheckedRecordsFromSelectAll) {
         // Check if the item is in the second list.
-        const isItemInSecondList = this.checkedAndUncheckedRecordsFromSelectAll.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
+        const isItemInSecondList = this.financialPremiumsProcessGridLists.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
         // If the item is in the second list, mark it as selected true.
         if (isItemInSecondList) {
           item.selected = true;
@@ -392,16 +392,36 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   }
 
   handlePageCountSelectionChange() {
-      if(!this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
-        // Extract the payment request ids from grid data
-        const idsToKeep: number[] = this.checkedAndUncheckedRecordsFromSelectAll.map((item: any) => item.paymentRequestId);
-        // Remove items from selected records based on the IDs from grid data
-        for (let i = this.selectedSendReportList?.SelectedSendReports?.length - 1; i >= 0; i--) {
-          if (!idsToKeep.includes(this.selectedSendReportList?.SelectedSendReports[i].paymentRequestId)) {
-            this.selectedSendReportList?.SelectedSendReports.splice(i, 1); // Remove the item at index i
-          }
+      if(!this.selectAll && this.isPageCountChanged){
+        if(this.isRemoveBatchClosed){
+            const idsToKeep: number[] = this.financialPremiumsProcessGridLists.map((item: any) => item.selected && item.paymentRequestId);
+            const idsNotToKeep = this.financialPremiumsProcessGridLists.filter((item2: any) => !this.checkedAndUncheckedRecordsFromSelectAll.some((item1: any) => item1.paymentRequestId === item2.paymentRequestId && item2.selected));
+            this.financialPremiumsProcessGridLists.forEach((item2: any) => {
+                if (idsToKeep.includes(item2.paymentRequestId)) {
+                  // Mark records in list2 as selected: true if in list1
+                  item2.selected = true;
+                }else{
+                  item2.selected = false;
+                }
+              });
+              this.markAsUnChecked(idsNotToKeep);
         }
-        this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports?.filter((item:any) => item.selected));
+        this.getSelectedReportCount(this.checkedAndUncheckedRecordsFromSelectAll?.filter((item:any) => item.selected));
+      }
+
+      if(!this.selectAll && this.isPageChanged){
+        if(this.isRemoveBatchClosed){
+            const idsToKeep: number[] = this.financialPremiumsProcessGridLists.map((item: any) => item.selected && item.paymentRequestId);
+            this.financialPremiumsProcessGridLists.forEach((item2: any) => {
+                if (idsToKeep.includes(item2.paymentRequestId)) {
+                  // Mark records in list2 as selected: true if in list1
+                  item2.selected = true;
+                }else{
+                  item2.selected = false;
+                }
+              });
+        }
+        this.getSelectedReportCount(this.checkedAndUncheckedRecordsFromSelectAll?.filter((item:any) => item.selected));
       }
   }
 
@@ -524,7 +544,11 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.state = stateData;
     this.setGridState(stateData);
     this.loadFinancialPremiumsProcessListGrid();
+    if(this.isRemoveBatchClosed){
+      this.premiumGridlistDataHandle();
+    }
   }
+
   public setGridState(stateData: any): void {
     this.state = stateData;
 
@@ -557,6 +581,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     if(this.sort[0]?.dir === 'desc'){
       this.sortDir = 'Descending';
     }
+
   }
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
@@ -566,6 +591,9 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.state.skip = 0;
     this.isPageCountChanged = true;
     this.loadFinancialPremiumsProcessListGrid();
+    if(this.isRemoveBatchClosed){
+      this.premiumGridlistDataHandle();
+    }
   }
   groupFilterChange(value: any, filterService: FilterService): void {
     filterService.filter({
