@@ -111,7 +111,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     paymentMethodDesc:"Pmt. Method",
     paymentReconciledDate:"Date Pmt. Reconciled",
     paymentSentDate:"Date Pmt. Sent",
-    amountDue:"Pmt. Amount",
+    amountDue:"Amount Due",
     checkNbr:"Warrant Number",
     comments:"Note (optional)"
   }
@@ -142,7 +142,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     },
     {
       columnCode: 'amountDue',
-      columnDesc: 'Pmt. Amount',
+      columnDesc: 'Amount Due',
     },
     {
       columnCode: 'checkNbr',
@@ -185,7 +185,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     if(this.loadType === LoadTypes.allPayments){
       this.columns.batchName ='Batch #';
       let batch = {columnCode:'batchName',columnDesc:'Batch #'};
-      this.dropDropdownColumns.splice(0, 0, batch);
+      this.dropDropdownColumns.splice(1, 0, batch);
     }
     this.state = {
       skip: 0,
@@ -304,7 +304,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     let operator = 'contains';
 
     if (
-      this.selectedColumn === 'amountPaid' 
+      this.selectedColumn === 'amountDue' 
     ) {
       operator = 'eq';
     }
