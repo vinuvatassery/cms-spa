@@ -790,10 +790,10 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
   }
 
   public selectionChange(value: any): void {
-    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalClinic ||
-      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalClinic)
+    if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider ||
+      this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider)
       {
-        this.selectedMasterData.vendorId = value.vendorId;
+        this.selectedMasterData.parentVendorId = value.vendorId;
         this.providerName = value.vendorName;
       }else {
         this.selectedMasterData.vendorId = value.vendorId;
