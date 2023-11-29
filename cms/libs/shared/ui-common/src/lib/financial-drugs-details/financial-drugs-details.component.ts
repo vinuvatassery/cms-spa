@@ -5,7 +5,7 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Observable } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { StatusFlag } from '../enums/status-flag.enum';
-import { DrugUnit } from '@cms/case-management/domain';
+import { DrugUnit } from '../enums/drug_unit_enum';
 @Component({
   selector: 'common-financial-drugs-details',
   templateUrl: './financial-drugs-details.component.html',
