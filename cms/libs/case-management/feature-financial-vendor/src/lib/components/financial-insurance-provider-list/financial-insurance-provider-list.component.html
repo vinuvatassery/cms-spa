@@ -70,7 +70,7 @@
             </kendo-grid-numeric-filter-menu>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [filterable]="false" [sortable]="false">
+        <kendo-grid-column field="lastUpdatedBy" title="By" [width]="70" class="text-center" [filterable]="false" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.lastUpdatedBy">
@@ -144,15 +144,6 @@
       (click)="clickOpenAddEditInsurancePlanDetails()">
       Insurance Provider
     </button>
-   
-
-    <span class="right-overlay-export">
-      <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-        <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
-        
-        <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
-      </button>
-    </span>
   </div>
 </div>
 
