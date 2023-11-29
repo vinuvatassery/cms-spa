@@ -230,14 +230,14 @@
       </fieldset>
     </div>
     <div class="flex-col flex-col-6 ">
-      <kendo-floatinglabel text="Delivery Method">
-        <kendo-dropdownlist aria-label="Delivery Method" [fillMode]="formUiStyle.dropDownFillMode"
+      <kendo-floatinglabel text="Unit">
+        <kendo-dropdownlist aria-label="Unit" [fillMode]="formUiStyle.dropDownFillMode"
           formControlName="deliveryMethod" [data]="deliveryMethodLov$| async" textField="lovDesc" valueField="lovCode"
-          [valuePrimitive]="true" placeholder="Delivery Method">
+          [valuePrimitive]="true" placeholder="Unit">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="drugFormControls?.deliveryMethod.errors?.required && isValidateForm">
-        Delivery Method is required
+        Unit is required
       </kendo-formerror>
     </div>
   </div>
