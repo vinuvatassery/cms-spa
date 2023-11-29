@@ -163,7 +163,7 @@ initForm(){
       this.insuranceRefundInformation$.subscribe((res:any) =>{
         this.financialPremiumsRefundGridLists = res.data
        this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)       
-       this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountPaid).reduce((a, b) => a + b, 0)  
+       this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountDue).reduce((a, b) => a + b, 0)  
        const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
        this.isSpotPayment = formData.isSpotPayment
       this.refundForm.patchValue({

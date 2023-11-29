@@ -90,12 +90,7 @@ export class PaymentAddressesComponent {
 
  //filtering
  filteredBy = '';
- filter: any = [
-   {
-     filters: [],
-     logic: 'and',
-   },
- ];
+filter: any = [];
 
  filteredByColumnDesc = '';
  selectedStatus = 'Active';

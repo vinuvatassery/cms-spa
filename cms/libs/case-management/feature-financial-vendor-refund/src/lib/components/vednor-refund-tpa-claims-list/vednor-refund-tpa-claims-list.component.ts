@@ -1,4 +1,4 @@
-/** Angular **/
+
 import {
   ChangeDetectionStrategy,
   Component,
@@ -23,11 +23,11 @@ import {
 import { Subject, Subscription } from 'rxjs';
  
 @Component({
-  selector: 'cms-vendor-refund-claims-list',
-  templateUrl: './vendor-refund-claims-list.component.html',
+  selector: 'cms-vednor-refund-tpa-claims-list',
+  templateUrl: './vednor-refund-tpa-claims-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
+export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
   @ViewChild('filterResetConfirmationDialogTemplate', { read: TemplateRef })
   filterResetConfirmationDialogTemplate!: TemplateRef<any>;
   paymentStatusLovSubscription!:Subscription;
@@ -43,7 +43,6 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   @Input() vendorId: any;
   @Input() clientId: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
-  @Output() onProviderNameClickEvent = new EventEmitter<any>()
   public state!: State;
   @Input() claimsListData$: any;
   @Output() loadClaimsListEvent = new EventEmitter<any>();
@@ -57,20 +56,24 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   @Input() tpaPaymentReqIds:any[]=[]
-  providerDetailsDialog: any;
+ 
+  @Output() selectedTpaClaimsChangeEvent = new EventEmitter<any>();
   gridClaimsDataSubject = new Subject<any>();
   gridClaimsData$ = this.gridClaimsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  tpaData$ = this.financialVendorRefundFacade.tpaData$;
+  tpaData$ = this.financialVendorRefundFacade.tpasData$;
   filterResetDialog: any;
   paymentStatusCode =null;
   paymentStatusType:any;
   paymentStatuses$ = this.lovFacade.paymentStatus$;
   @Output() claimsCount = new EventEmitter<any>();
   cliams:any[]=[];
-  constructor( private readonly financialClaimsFacade: FinancialClaimsFacade, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade){
+  tpaGridData!: any;
+  constructor( private readonly financialClaimsFacade: FinancialClaimsFacade, 
+    private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
+    private dialogService: DialogService,   private readonly lovFacade : LovFacade){
  
   }
  
@@ -84,17 +87,18 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
     this.tpaData$.subscribe((res:any)=>{
+       this.tpaGridData = res.data
       this.claimsCount.emit(this.selectedTpaClaims.length)
       this.tpaData$.subscribe((res:any)=>{
-     
         this.cliams=res.data;
       })
   })
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take: 5,
+      take:20,
       sort: this.sort,
     };
  
@@ -121,20 +125,22 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
  
   dataStateChange(stateData: any): void {
    
+  this.openResetDialog(this.filterResetConfirmationDialogTemplate);
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    
-    this.loadRefundClaimsListGrid();
  
   }
  
   selectedKeysChange(selection: any) {  
       this.selectedTpaClaims = selection;
+      
+    this.selectedTpaClaimsChangeEvent.emit(selection)
       this.claimsCount.emit(this.selectedTpaClaims.length)    
   }
+
   pageSelectionChange(data: any) {
     this.filterResetDialog.close();
     this.state.take = data.value;
@@ -145,9 +151,9 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
+
   loadRefundClaimsGrid(data: any) {
- 
-    this.financialVendorRefundFacade.loadTPARefundList(data);
+    this.financialVendorRefundFacade.loadTPARefundLists(data);
   }
   private loadRefundClaimsListGrid(): void {
     this.loadClaimsProcess(
@@ -197,7 +203,13 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.isClaimsLoaderShow = false;
  
   }
-
+  openResetDialog( template: TemplateRef<unknown>)
+  {
+    this.filterResetDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
   resetButtonClosed(result: any) {
     if (result) {
  
@@ -205,7 +217,13 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     }
   }
  
-
+  resetFilterClicked(action: any,) {
+    if (action) {
+      this.selectedTpaClaims=[];    
+      this.loadRefundClaimsListGrid();
+     this.filterResetDialog.close();
+    }
+  }
   paymentStatusSubscription()
   {
     this.paymentStatusLovSubscription = this.paymentStatuses$.subscribe(data=>{
@@ -230,10 +248,4 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     }
   }
  
-    
-  onProviderNameClick(event:any){
-    this.onProviderNameClickEvent.emit(event)
-  }
-
-
 }

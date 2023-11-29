@@ -162,7 +162,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     },
     {
       columnCode: 'acceptsReports',
-      columnDesc: 'Accepts reports?',
+      columnDesc: 'Accepts Reports?',
     },
     {
       columnCode: 'paymentRequestedDate',
@@ -194,7 +194,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     vendorName: "Insurance Vendor",
     serviceCount: "Item Count",
     serviceCost: "Total Amount",
-    acceptsReports: "Accepts reports?",
+    acceptsReports: "Accepts Reports?",
     paymentRequestedDate: "Date Pmt. Requested",
     paymentSentDate: "Date Pmt. Sent",
     paymentMethodCode: "Pmt. Method",
