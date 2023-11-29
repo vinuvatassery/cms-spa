@@ -342,19 +342,12 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   searchColumnChangeHandler(value: string) { 
     this.searchValue = '';
     this.filter = [];
-    if (this.searchValue) {
-      this.onApprovalSearch(this.searchValue);
-    }
+    this.onApprovalSearch(this.searchValue);
   }
 
   onApprovalSearch(searchValue: any) {
-    if (searchValue === '')
-      this.showDateSearchWarning = false;
     const isDateSearch = searchValue.includes('/');
-    if (isDateSearch == false && this.searchValue !== '')
-      this.showDateSearchWarning = true;
-    else
-      this.showDateSearchWarning = false;
+    this.showDateSearchWarning = (!isDateSearch && this.selectedColumn === 'DateApprovalRequested') && searchValue !== '';
     searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.onChange(searchValue);
