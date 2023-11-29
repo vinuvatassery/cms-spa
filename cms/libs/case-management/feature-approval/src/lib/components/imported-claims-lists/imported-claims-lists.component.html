@@ -22,7 +22,7 @@
     >
     <kendo-floatinglabel text="Search">
       <kendo-textbox
-        aria-label="Search case"
+        aria-label="Search imported claims"
         rounded="medium"
         [fillMode]="formUiStyle.inputFillMode"
         [(ngModel)]="searchValue" (afterValueChanged)="onApprovalSearch($event)"
@@ -30,7 +30,7 @@
       </kendo-textbox>
     </kendo-floatinglabel>
   </span>
-  <span class="right-btn-export">
+  <span class="right-overlay-export">
     <button
       kendoButton
       [primary]="true"
@@ -207,8 +207,6 @@
       field="policyIdMatch"
       title="Policy ID match?"
       [width]="180"
-      [sortable]="false"
-      [filterable]="false"
     >
     <ng-template
         kendoGridFilterMenuTemplate
@@ -237,8 +235,6 @@
       field="eligibilityMatch"
       title="Eligibility match?"
       [width]="180"
-      [sortable]="false"
-      [filterable]="false"
     >
     <ng-template
         kendoGridFilterMenuTemplate
@@ -267,8 +263,6 @@
       field="validInsurance"
       title="Valid insurance?"
       [width]="180"
-      [sortable]="false"
-      [filterable]="false"
     >
     <ng-template
         kendoGridFilterMenuTemplate
@@ -297,8 +291,6 @@
       field="belowMaxBenefits"
       title="Below max benefits?"
       [width]="150"
-      [sortable]="false"
-      [filterable]="false"
     >
     <ng-template
         kendoGridFilterMenuTemplate
