@@ -185,7 +185,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     if(this.loadType === LoadTypes.allPayments){
       this.columns.batchName ='Batch #';
       let batch = {columnCode:'batchName',columnDesc:'Batch #'};
-      this.dropDropdownColumns.splice(0, 0, batch);
+      this.dropDropdownColumns.splice(1, 0, batch);
     }
     this.state = {
       skip: 0,
