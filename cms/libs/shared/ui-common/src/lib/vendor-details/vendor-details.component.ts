@@ -93,14 +93,14 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
       if (data && clinicName !== '') {
-        if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders 
+        if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders
           || this.providerType === FinancialVendorTypeCode.HealthcareProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
         } else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
-        } 
+        }
         this.clinicVendorListLocal = this.clinicVendorListLocal.filter((item: any) => item.vendorName.toLowerCase().includes(clinicName.toLowerCase()));
-        
+
         this.clinicSearchSubscription?.unsubscribe();
       }
     });
@@ -462,7 +462,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.markAllAsTouched();
     if (this.vendorTypes.DentalProviders == this.providerType || this.vendorTypes.MedicalProviders == this.providerType
       || this.vendorTypes.DentalClinic == this.providerType || this.vendorTypes.MedicalClinic == this.providerType) {
-      if (this.vendorDetails.vendorName) {
+      if (this.vendorDetails.vendorName && this.vendorDetails.vendorTypeCode != this.vendorTypes.DentalProviders) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }
