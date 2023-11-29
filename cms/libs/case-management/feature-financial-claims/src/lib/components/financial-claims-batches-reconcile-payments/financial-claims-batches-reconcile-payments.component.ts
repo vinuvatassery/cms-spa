@@ -24,7 +24,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
-import { LoadTypes } from '@cms/case-management/domain';
+import { LoadTypes, PremiumType } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-financial-claims-batches-reconcile-payments',
@@ -74,7 +74,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn: any='ALL';
   searchItem:any=null;
   gridDataResult!: GridDataResult;
   selectedDataRows: any[] = [];
@@ -117,6 +117,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   loadType:any = null;
   loadTypeAllPayments:any = LoadTypes.allPayments
   columns : any = {
+    ALL: 'ALL',
     vendorName:this.providerTitle,
     tin:"TIN",
     paymentMethodDesc:"Pmt. Method",
@@ -127,6 +128,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     comments:"Note (optional)"
   }
   dropDropdownColumns : any = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
     {
       columnCode: 'vendorName',
       columnDesc: this.providerTitle,
@@ -171,18 +176,18 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
 
   ngOnInit(): void {
-    this.loadQueryParams();
+    this.loadQueryParams();    
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodSubscription();
+    if(this.claimsType === PremiumType.Dental){
+      this.providerTitle = 'Dental Provider';
+      this.sortColumn = this.providerTitle;
+      this.dropDropdownColumns.find((x:any)=>x.columnCode === 'vendorName').columnDesc = this.providerTitle;
+    }
     if(this.loadType === LoadTypes.allPayments){
       this.columns.batchName ='Batch #';
       let batch = {columnCode:'batchName',columnDesc:'Batch #'};
       this.dropDropdownColumns.splice(0, 0, batch);
-    }
-    this.lovFacade.getPaymentMethodLov();
-    this.paymentMethodSubscription();
-    if(this.claimsType === 'dental'){
-      this.providerTitle = 'Dental Provider';
-      this.sortColumn = this.providerTitle;
-      this.dropDropdownColumns[0].columnDesc = this.providerTitle;
     }
     this.state = {
       skip: 0,
@@ -295,7 +300,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     let operator = 'contains';
 
     if (
-      this.selectedColumn === 'amountPaid' 
+      this.selectedColumn === 'amountDue' 
     ) {
       operator = 'eq';
     }
@@ -939,16 +944,6 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         }
         this.warrantCalculationArray.push(object);
       });
-
-      if( this.warrantCalculationArray.length==0){
-        let object={
-          vendorId:data?.entityId,
-          batchId:this.batchId,
-          paymentRequestId:data?.paymentRequestId,
-          warrantNumber:data?.checkNbr  
-        }
-        this.warrantCalculationArray.push(object);
-      }
 
       const ReconcilePaymentResponseDto =
       {
