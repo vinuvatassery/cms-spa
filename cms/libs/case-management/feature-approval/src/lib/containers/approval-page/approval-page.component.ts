@@ -68,7 +68,7 @@ export class ApprovalPageComponent implements OnInit {
   importedClaimsCount$ = this.importedClaimFacade.importedClaimsCount$;
 
   userLevel = UserLevel.Level1Value;
-  pendingApprovalPaymentCount = 0;
+  pendingApprovalPaymentCount! : any;
   pendingApprovalGeneralCount = 0;
   pendingApprovalImportedClaimCount = 0;
   state!: State;
