@@ -196,7 +196,7 @@
       </div>
       <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy">
         <kendo-floatinglabel text="NPI (optional)">
-          <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npiNbr">
+          <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npiNbr" [maxlength]="25">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['npiNbr'].valid && isValidateForm">
             NPI  is required
