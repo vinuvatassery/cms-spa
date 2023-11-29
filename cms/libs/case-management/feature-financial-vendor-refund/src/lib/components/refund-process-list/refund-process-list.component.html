@@ -79,6 +79,12 @@
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
+          (click)="clientRecentClaimsModalClicked(dataItem)">
+          {{ dataItem.clientFullName }}
+        </button>
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -305,7 +311,75 @@
   [clientName]="refundEditClientFullName"
   [vendorAddressId]="refundEditVendorAddressId"
   [vendorName]="refundEditVendorName"
-  (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)" 
+  (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"
   [inspaymentRequestId]="inspaymentRequestId"
   [vendorId]="refundEditVendorId"></cms-refund-new-form-details>
+</ng-template>
+
+<ng-template #clientRecentClaimsDialog>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">
+    <h4 class="text-upper">Recent Claims for {{clientName}}</h4>
+    <div *ngIf="(recentClaimsGridLists$ | async) as recentClaims" class="k-flex-grow justify-content-end">
+      <span class="d-flex k-wizard-horizontal align-items-fstart">
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
+      </span>
+    </div>
+  </kendo-dialog-titlebar>
+  <section class="k-dialog-body-padding">
+    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [includeServiceSubTypeFilter]="false" [claimsType]="claimsType"
+      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
+          Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
+            chevron_right
+          </span>
+        </button>
+
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</ng-template>
+
+<ng-template #clientRecentPremiumsDialogTemplate>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
+  <section class="k-dialog-body">
+    <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="claimsType" [includeServiceSubTypeFilter]="false"
+      (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-recent-premiums-list>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1">
+            chevron_right
+          </span>
+        </button>
+
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</ng-template>
+
+<ng-template #clientRecentPharmacyClaimsDialog>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}} </h4></kendo-dialog-titlebar>
+  <section class="k-dialog-body">
+    <cms-pharmacy-claims-recent-claims-list
+      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between" >
+      <div class="justify-content-end" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
+          Client Profile <span class="material-icons ml-1">
+            chevron_right
+          </span>
+        </button>
+
+      </div>
+    </div>
+  </kendo-dialog-actions>
 </ng-template>

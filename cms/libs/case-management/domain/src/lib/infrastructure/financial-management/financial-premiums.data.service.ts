@@ -368,6 +368,7 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     {
       VendorId : data.vendorId,
       ClientId : data.clientId,
+      includeServiceSubTypeFilter : data.includeServiceSubTypeFilter,
       SortType : data.sortType,
       Sorting : data.sort,
       SkipCount : data.skipCount,
@@ -401,7 +402,7 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
       , premiums
     );
   }
-  
+
   unbatchEntireBatch(paymentRequestBatchIds: string[], premiumType: string) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/unbatch`, paymentRequestBatchIds);
   }

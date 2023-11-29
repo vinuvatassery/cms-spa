@@ -14,7 +14,7 @@ import { BehaviorSubject, Observable, take } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-premiums-provider-info',
-  templateUrl: './financial-premiums-provider-info.component.html', 
+  templateUrl: './financial-premiums-provider-info.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsProviderInfoComponent {
@@ -28,7 +28,7 @@ export class FinancialPremiumsProviderInfoComponent {
   vendorProfile$: Observable<any> | undefined;
   @Input() updateProviderPanelSubject$ : Observable<any> | undefined;
   @Input() ddlStates$ : Observable<any> | undefined;
- 
+
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
   isEditProvider = false;
@@ -54,9 +54,9 @@ export class FinancialPremiumsProviderInfoComponent {
   isSubmitted: boolean = false
   @Input() paymentRequestId:any
 emailscount:number=0;
-  constructor(public formBuilder: FormBuilder, 
+  constructor(public formBuilder: FormBuilder,
     public activeRoute: ActivatedRoute,
-    private route: Router,   
+    private route: Router,
     private readonly changeDetectorRef: ChangeDetectorRef) {
 
   }
@@ -85,7 +85,7 @@ emailscount:number=0;
 
   createEmailsFormArray(contact: any): FormArray {
     let emails = new FormArray<FormGroup>([])
-   
+
     if(contact.emails && contact.emails.length>0){
       this.emailscount=contact.emails.length;
     contact.emails.forEach((email: any) => {
@@ -157,7 +157,7 @@ emailscount:number=0;
         acceptsReportsFlag :this.vendorProfile.address.acceptsReportsFlag
       }
     });
-    this.createContactsFormArray() 
+    this.createContactsFormArray()
   }
 
   get addressForm(){
@@ -199,7 +199,7 @@ emailscount:number=0;
       let emailForm = control as unknown as FormGroup
       emails.push({
         emailAddress: emailForm.controls['emailAddress']?.value,
-        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,  
+        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,
         vendorContactId: emailForm.controls['vendorContactId']?.value
       })
     })
@@ -242,11 +242,11 @@ emailscount:number=0;
         stateCode: this.profileForm?.controls.address.controls['stateCode']?.value,
         zip: this.profileForm?.controls.address.controls['zip']?.value,
         contacts: this.getContactArrayFormValues()
-      }    
+      }
     }
     this.updateProviderProfileEvent.emit(providerPanelDto)
-    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{       
-        this.loadVendorInfo(); 
+    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{
+        this.loadVendorInfo();
     });
   }
 
@@ -259,8 +259,8 @@ emailscount:number=0;
     return FinancialVendorTypeCode;
   }
 
-  onVendorProfileViewClicked() {  
-      
+  onVendorProfileViewClicked() {
+
     const query = {
       queryParams: {
         v_id: this.vendorProfile.vendorId,
