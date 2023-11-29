@@ -543,7 +543,7 @@ addTpa(event:any){
     clientSearchText = clientSearchText.replace("/", "-");
     this.financialVendorRefundFacade.loadClientBySearchText(clientSearchText)
   }
-  onClientValueChange(client: any) {
+  onClientValueChange(client: any) {   
     if (client != undefined) {
       this.clientCaseEligibilityId = client.clientCaseEligibilityId;
       this.clientId = client.clientId;
