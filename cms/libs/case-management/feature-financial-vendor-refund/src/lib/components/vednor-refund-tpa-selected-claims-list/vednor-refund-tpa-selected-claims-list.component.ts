@@ -4,6 +4,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { formatDate } from '@progress/kendo-angular-intl';
 import { FormatSettings } from "@progress/kendo-angular-dateinputs";
 import { forkJoin, map } from 'rxjs';
+import {ColumnNames } from '@cms/case-management/domain'
+
 
 @Component({
   selector: 'cms-vednor-refund-tpa-selected-claims-list',
@@ -64,7 +66,7 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
 
   onRefundNoteValueChange(event:any, type:any, item:any){
     switch (type) {
-      case 'voucherPayableNbr': {
+      case ColumnNames.VoucherPayableNbr: {
          if(event && event.length >0){
           item.voucherPayableNbrError = false
          }else{
@@ -72,7 +74,7 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
          }
         break;
       }
-        case 'creditNbr': {
+        case ColumnNames.CreditNbr: {
           if(event && event.length >0){
            item.creditNbrError = false
           }else{
@@ -80,7 +82,7 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
           }
          break;
       }
-      case 'refundedWarrantNumber': {
+      case ColumnNames.RefundedWarrantNumber: {
         if(event && event.length >0){
          item.refundWarantNumberError = false
         }else{
@@ -88,7 +90,7 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
         }
        break;
     }
-    case 'refundedAmount': {
+    case ColumnNames.RefundedAmount: {
       if(event && event >0){
        item.refundedAmountError = false
       }else{
