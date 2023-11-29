@@ -5,9 +5,7 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Observable } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { StatusFlag } from '../enums/status-flag.enum';
-import {
-  DrugUnit
-} from '@cms/case-management/domain';
+import { DrugUnit } from '@cms/case-management/domain';
 @Component({
   selector: 'common-financial-drugs-details',
   templateUrl: './financial-drugs-details.component.html',
@@ -67,7 +65,8 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   }
 
   private normalizeDeliveryMethods() {
-    const orderMapping: Record<DrugUnit, number> = { [DrugUnit.ML]: 1, [DrugUnit.MG]: 2, [DrugUnit.TABLET]: 3, [DrugUnit.EACH]: 4,
+    const orderMapping: Record<DrugUnit, number> = {
+      [DrugUnit.ML]: 1, [DrugUnit.MG]: 2, [DrugUnit.TABLET]: 3, [DrugUnit.EACH]: 4,
     };
 
     const convertToAbbreviation = (description: string): string => ({
