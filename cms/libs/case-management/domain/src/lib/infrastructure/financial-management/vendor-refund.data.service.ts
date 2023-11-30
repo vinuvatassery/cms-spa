@@ -24,6 +24,11 @@ export class FinancialVendorRefundDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/add-tpa-refund`, data);
   }
 
+  updateTpaRefundClaim(data:any){
+    return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/tpa-refund`, data);
+  }
+
+
   getInsuranceRefundEditInformation(vendorId :any, clientId :any ,paginationSortingDto:any){
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/${vendorId}/insurance-premiums/${clientId}`, paginationSortingDto);
   }
@@ -526,6 +531,22 @@ export class FinancialVendorRefundDataService {
     }
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/vendors/${data.vendorId}/clients/${data.clientId}/refund-tpa`,ClaimsPageAndSortedRequestDto);
   }
+
+  loadTPARefundLists(data:any): Observable<any> {
+
+    const ClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/vendors/${data.vendorId}/clients/${data.clientId}/refund-tpa`,ClaimsPageAndSortedRequestDto);
+  }
+
   loadFinancialRecentRefundListService(data:any):Observable<any> {
     const RefundPageAndSortedRequestDto =
     {

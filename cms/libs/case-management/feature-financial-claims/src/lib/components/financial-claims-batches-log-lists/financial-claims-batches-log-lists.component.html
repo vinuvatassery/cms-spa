@@ -153,13 +153,6 @@
               </kendo-grid-numeric-filter-menu>
             </ng-template>
            </kendo-grid-column>
-           <kendo-grid-column field="clientId" title="Client ID" [width]="130">
-             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-               <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
-                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-              </kendo-grid-numeric-filter-menu>
-            </ng-template>
-          </kendo-grid-column>
           <kendo-grid-column field="clientFullName" title="Client Name" [width]="250">
             <ng-template kendoGridCellTemplate let-dataItem>
               <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
@@ -424,8 +417,8 @@
     <kendo-dialog-actions>
       <div class="justify-content-between">
         <div class="justify-content-end">
-          <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-            Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
+          <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+            Client Profile <span class="material-icons ml-1">
               chevron_right
             </span>
           </button>
