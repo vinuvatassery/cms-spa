@@ -1,0 +1,107 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ManufacturersListComponent } from './components/manufacturers-list/manufacturers-list.component';
+import { DrugsListComponent } from './components/drugs-list/drugs-list.component';
+import { ManufacturerDetailsComponent } from './components/manufacturer-details/manufacturer-details.component';
+import { ManufacturersActivateComponent } from './components/manufacturers-activate/manufacturers-activate.component';
+import { ManufacturersDeactivateComponent } from './components/manufacturers-deactivate/manufacturers-deactivate.component';
+import { ManufacturersDeleteComponent } from './components/manufacturers-delete/manufacturers-delete.component';
+import { ManufacturersFormDetailsComponent } from './components/manufacturers-form-details/manufacturers-form-details.component';
+import { DrugsFormDetailsComponent } from './components/drugs-form-details/drugs-form-details.component';
+import { DrugsActivateComponent } from './components/drugs-activate/drugs-activate.component';
+import { DrugsDeactivateComponent } from './components/drugs-deactivate/drugs-deactivate.component';
+import { DrugsReassignComponent } from './components/drugs-reassign/drugs-reassign.component';
+import { MedicalProvidersListComponent } from './components/medical-providers-list/medical-providers-list.component';
+import { MedicalProvidersActivateComponent } from './components/medical-providers-activate/medical-providers-activate.component';
+import { MedicalProvidersDeactivateComponent } from './components/medical-providers-deactivate/medical-providers-deactivate.component';
+import { MedicalProvidersFormDetailsComponent } from './components/medical-providers-form-details/medical-providers-form-details.component';
+import { MedicalProvidersDeleteComponent } from './components/medical-providers-delete/medical-providers-delete.component';
+import { CptCodeDeleteComponent } from './components/cpt-code-delete/cpt-code-delete.component';
+import { CptCodeListComponent } from './components/cpt-code-list/cpt-code-list.component';
+import { CptCodeDeactivateComponent } from './components/cpt-code-deactivate/cpt-code-deactivate.component';
+import { CptCodeActivateComponent } from './components/cpt-code-activate/cpt-code-activate.component';
+import { CptCodeFormDetailsComponent } from './components/cpt-code-form-details/cpt-code-form-details.component';
+import { InsuranceVendorsListComponent } from './components/insurance-vendors-list/insurance-vendors-list.component';
+import { InsuranceVendorsFormDetailsComponent } from './components/insurance-vendors-form-details/insurance-vendors-form-details.component';
+import { InsuranceProvideFormDetailsComponent } from './components/insurance-provide-form-details/insurance-provide-form-details.component';
+import { InsuranceProvideListComponent } from './components/insurance-provide-list/insurance-provide-list.component';
+import { InsurancePlanListComponent } from './components/insurance-plan-list/insurance-plan-list.component';
+import { InsurancePlanFormDetailsComponent } from './components/insurance-plan-form-details/insurance-plan-form-details.component';
+import { InsurancePlanBulkMigrationComponent } from './components/insurance-plan-bulk-migration/insurance-plan-bulk-migration.component';
+import { PharmaciesListComponent } from './components/pharmacies-list/pharmacies-list.component';
+import { PharmaciesFormDetailsComponent } from './components/pharmacies-form-details/pharmacies-form-details.component';
+import { HealthcareProviderFormDetailsComponent } from './components/healthcare-provider-form-details/healthcare-provider-form-details.component';
+import { HealthcareProviderListComponent } from './components/healthcare-provider-list/healthcare-provider-list.component';
+
+@NgModule({
+  imports: [CommonModule],
+  declarations: [
+    ManufacturersListComponent,
+    DrugsListComponent,
+    ManufacturerDetailsComponent,
+    ManufacturersActivateComponent,
+    ManufacturersDeactivateComponent,
+    ManufacturersDeleteComponent,
+    ManufacturersFormDetailsComponent,
+    DrugsFormDetailsComponent,
+    DrugsActivateComponent,
+    DrugsDeactivateComponent,
+    DrugsReassignComponent,
+    MedicalProvidersListComponent,
+    MedicalProvidersActivateComponent,
+    MedicalProvidersDeactivateComponent,
+    MedicalProvidersFormDetailsComponent,
+    MedicalProvidersDeleteComponent,
+    CptCodeDeleteComponent,
+    CptCodeListComponent,
+    CptCodeDeactivateComponent,
+    CptCodeActivateComponent,
+    CptCodeFormDetailsComponent,
+    InsuranceVendorsListComponent,
+    InsuranceVendorsFormDetailsComponent,
+    InsuranceProvideFormDetailsComponent,
+    InsuranceProvideListComponent,
+    InsurancePlanListComponent,
+    InsurancePlanFormDetailsComponent,
+    InsurancePlanBulkMigrationComponent,
+    PharmaciesListComponent,
+    PharmaciesFormDetailsComponent,
+    HealthcareProviderFormDetailsComponent,
+    HealthcareProviderListComponent,
+  ],
+  exports: [
+    ManufacturersListComponent,
+    DrugsListComponent,
+    ManufacturerDetailsComponent,
+    ManufacturersActivateComponent,
+    ManufacturersDeactivateComponent,
+    ManufacturersDeleteComponent,
+    ManufacturersFormDetailsComponent,
+    DrugsFormDetailsComponent,
+    DrugsActivateComponent,
+    DrugsDeactivateComponent,
+    DrugsReassignComponent,
+    MedicalProvidersListComponent,
+    MedicalProvidersActivateComponent,
+    MedicalProvidersDeactivateComponent,
+    MedicalProvidersFormDetailsComponent,
+    MedicalProvidersDeleteComponent,
+    CptCodeDeleteComponent,
+    CptCodeListComponent,
+    CptCodeDeactivateComponent,
+    CptCodeActivateComponent,
+    CptCodeFormDetailsComponent,
+    InsuranceVendorsListComponent,
+    InsuranceVendorsFormDetailsComponent,
+    InsuranceProvideFormDetailsComponent,
+    InsuranceProvideListComponent,
+    InsurancePlanListComponent,
+    InsurancePlanFormDetailsComponent,
+    InsurancePlanBulkMigrationComponent,
+    PharmaciesListComponent,
+    PharmaciesFormDetailsComponent,
+    HealthcareProviderFormDetailsComponent,
+    HealthcareProviderListComponent,
+  ],
+})
+export class SystemConfigFeatureServiceProviderModule {}

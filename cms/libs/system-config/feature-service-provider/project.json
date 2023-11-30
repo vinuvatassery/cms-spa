@@ -1,0 +1,51 @@
+{
+  "name": "system-config-feature-service-provider",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/system-config/feature-service-provider/src",
+  "prefix": "system-config",
+  "tags": [],
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "options": {
+        "project": "libs/system-config/feature-service-provider/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/system-config/feature-service-provider/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/system-config/feature-service-provider/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/system-config/feature-service-provider/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/system-config/feature-service-provider/**/*.ts",
+          "libs/system-config/feature-service-provider/**/*.html",
+          "libs/system-config/feature-service-provider/package.json"
+        ]
+      }
+    }
+  }
+}

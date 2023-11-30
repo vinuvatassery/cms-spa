@@ -10,6 +10,8 @@ import { RolesAndPermissionsListComponent } from './components/roles-and-permiss
 import { UserListComponent } from './components/user-list/user-list.component';
 import { UserManagementPageComponent } from './containers/user-management-page/user-management-page.component'; 
 import { CaseAssignmentComponent, EligibilityCheckListComponent } from '@cms/system-config/feature-cases';
+import { AssisterGroupsListComponent, DomainsListComponent } from '@cms/system-config-feature-other-lists';
+import { CptCodeListComponent, DrugsListComponent, HealthcareProviderListComponent, InsurancePlanListComponent, InsuranceProvideListComponent, InsuranceVendorsListComponent, ManufacturersListComponent, MedicalProvidersListComponent, PharmaciesListComponent } from '@cms/system-config-feature-service-provider';
  
 const routes: Routes = [
   {
@@ -123,6 +125,50 @@ const routes: Routes = [
       {
         path: 'eligibility-checklist',
         component: EligibilityCheckListComponent
+      },
+      {
+        path: 'assister-groups',
+        component: AssisterGroupsListComponent
+      },
+      {
+        path: 'domains',
+        component: DomainsListComponent
+      },
+      {
+        path: 'manufacturers',
+        component: ManufacturersListComponent
+      },
+      {
+        path: 'drugs',
+        component: DrugsListComponent
+      },
+      {
+        path: 'medical-providers',
+        component: MedicalProvidersListComponent
+      },
+      {
+        path: 'ppt-code',
+        component: CptCodeListComponent
+      },
+      {
+        path: 'insurance-vendors',
+        component: InsuranceVendorsListComponent
+      },
+      {
+        path: 'insurance-provide',
+        component: InsuranceProvideListComponent
+      },
+      {
+        path: 'insurance-plan',
+        component: InsurancePlanListComponent
+      },
+      {
+        path: 'pharmacies',
+        component: PharmaciesListComponent
+      },
+      {
+        path: 'healthcare-provider',
+        component: HealthcareProviderListComponent
       },
     ],
   },
