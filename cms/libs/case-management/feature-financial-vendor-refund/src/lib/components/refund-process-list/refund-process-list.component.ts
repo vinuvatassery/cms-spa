@@ -93,8 +93,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     vp:'VP',
     refunfNotes:'Refund Note',
     origionalWarrentnbr:'Original Warrant #',
-
-
+    creationTime: 'Creation Time'
   };
 
   dropDowncolumns: any = [
@@ -241,10 +240,11 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   }
 
   ngOnChanges(): void {
+    this.sortType = 'desc';
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'VendorName', dir: 'asc' }]
+      sort: this.sort
     };
     this.loadVendorRefundProcessListGrid();
   }
@@ -372,6 +372,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     if (stateData.filter?.filters.length > 0) {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -426,8 +427,9 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     this.selectedColumn = 'VendorName';
     this.isFiltered = false;
     this.columnsReordered = false;
-    this.sortValue = 'VendorName';
-    this.sortType = 'asc';
+    this.sortColumnDesc = 'Creation Time';
+    this.sortValue = 'creationTime';
+    this.sortType = 'desc';
     this.sort = this.sortColumn;
     this.searchValue =''
     this.loadVendorRefundProcessListGrid();
