@@ -120,7 +120,8 @@
 
           <div class="flex-col" *ngIf="editVendorInfo 
           && ( medicalProviderForm.value.vendorTypeCode == 'MEDICAL_CLINIC' 
-          || medicalProviderForm.value.vendorTypeCode == 'DENTAL_CLINIC')">
+          || medicalProviderForm.value.vendorTypeCode == 'DENTAL_CLINIC'
+          || medicalProviderForm.value.vendorTypeCode == 'CLINIC')">
             <kendo-floatinglabel text="Provider Name">
               <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
                 formControlName="providerName" [maxlength]="500">
