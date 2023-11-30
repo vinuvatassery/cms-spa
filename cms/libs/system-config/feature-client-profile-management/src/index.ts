@@ -12,3 +12,7 @@ export * from './lib/components/racial-or-ethnic-identity-list/racial-or-ethnic-
 export * from './lib/components/racial-or-ethnic-identity-detail/racial-or-ethnic-identity-detail.component';
 export * from './lib/components/language-list/language-list.component';
 export * from './lib/components/language-detail/language-detail.component';
+export * from './lib/components/direct-messages-list/direct-messages-list.component';
+ 
+
+export * from './lib/components/direct-messages-frequencies-form/direct-messages-frequencies-form.component';

@@ -13,6 +13,8 @@ import { RacialOrEthnicIdentityListComponent } from './components/racial-or-ethn
 import { SexualOrientationDetailComponent } from './components/sexual-orientation-detail/sexual-orientation-detail.component';
 import { SexualOrientationListComponent } from './components/sexual-orientation-list/sexual-orientation-list.component';
 import { ClientProfileManagementPageComponent } from './containers/client-profile-management-page/client-profile-management-page.component';
+import { DirectMessagesListComponent } from './components/direct-messages-list/direct-messages-list.component'; 
+import { DirectMessagesFrequenciesFormComponent } from './components/direct-messages-frequencies-form/direct-messages-frequencies-form.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
   declarations: [
@@ -27,6 +29,8 @@ import { ClientProfileManagementPageComponent } from './containers/client-profil
     SexualOrientationDetailComponent,
     SexualOrientationListComponent,
     ClientProfileManagementPageComponent,
+    DirectMessagesListComponent, 
+    DirectMessagesFrequenciesFormComponent,
   ],
   exports: [
     GenderDetailComponent,
@@ -40,6 +44,8 @@ import { ClientProfileManagementPageComponent } from './containers/client-profil
     SexualOrientationDetailComponent,
     SexualOrientationListComponent,
     ClientProfileManagementPageComponent,
+    DirectMessagesListComponent, 
+    DirectMessagesFrequenciesFormComponent,
   ],
 })
 export class SystemConfigFeatureClientProfileManagementModule {}

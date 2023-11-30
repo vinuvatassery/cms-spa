@@ -1,7 +1,7 @@
 /** Angular **/
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { GenderListComponent, LanguageListComponent, PronounsListComponent, RacialOrEthnicIdentityListComponent, SexualOrientationListComponent } from '@cms/system-config/feature-client-profile-management';
+import { DirectMessagesListComponent, GenderListComponent, LanguageListComponent, PronounsListComponent, RacialOrEthnicIdentityListComponent, SexualOrientationListComponent } from '@cms/system-config/feature-client-profile-management';
 import { EmailTemplateListComponent, LetterTemplateListComponent, SmsTextTemplateListComponent } from '@cms/system-config/feature-communication';
 import { ExpenseTypesListComponent, FundsListComponent, IncomeTypesListComponent, IndexListComponent, PcaCodesListComponent } from '@cms/system-config/feature-financials';
 import { CaseAvailabilityListComponent, EidLifetimePeriodListComponent, HousingAcuityLevelListComponent, IncomeInclusionsExclusionsListComponent, PsMfrZipListComponent, RegionAssignmentListComponent, ServiceProviderListComponent, SlotListComponent } from '@cms/system-config/feature-housing-coordination-management';
@@ -169,6 +169,10 @@ const routes: Routes = [
       {
         path: 'healthcare-provider',
         component: HealthcareProviderListComponent
+      },
+      {
+        path: 'direct-messages',
+        component: DirectMessagesListComponent
       },
     ],
   },
