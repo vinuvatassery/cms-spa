@@ -1,8 +1,8 @@
 <div class="app-c-table">
     <kendo-grid [resizable]="true" [loading]="isClaimsLoaderShow" [pageSize]="state.take"
       [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-      [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
-      [data]="recentRefundsListData$| async"
+      [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
+      [data]="clientclaimsData$| async"
       (selectedKeysChange)="selectedKeysChange($event)"
       kendoGridSelectBy="paymentRequestId"
       [(selectedKeys)]="selectedPharmacyClaims">
@@ -22,7 +22,7 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="paymentStatus" title="Payment Method" [width]="160">
+      <kendo-grid-column field="paymentMethodCode" title="Payment Method" [width]="160">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -32,14 +32,18 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template>
-         </kendo-grid-column> 
-      <kendo-grid-column field="rxNumber" title="RX Number" [width]="140"> </kendo-grid-column>
-      <kendo-grid-column field="fillDate" title="Fill Date" [width]="140"> 
+         </kendo-grid-column>
+      <kendo-grid-column field="rxNbr" title="RX Number" [width]="140"> </kendo-grid-column>
+      <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="140">
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{ dataItem.fillDate | date : 'MM/dd/yyyy' }}
+          {{ dataItem.prescriptionFillDate | date : 'MM/dd/yyyy' }}
         </ng-template> </kendo-grid-column>
-      <kendo-grid-column field="ndcCode" title="NDC Code" [width]="140">   </kendo-grid-column>
-      <kendo-grid-column field="brandName" title="Brand Name" [width]="180"> 
+        <kendo-grid-column field="ndc" title="NDC Code" [width]="140">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.ndc | ndcCode}}
+        </ng-template>
+        </kendo-grid-column>
+      <kendo-grid-column field="brandName" title="Brand Name" [width]="180">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -49,7 +53,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template>  </kendo-grid-column>
-      <kendo-grid-column field="drugName" title="Drug Name" [width]="140">  
+      <kendo-grid-column field="drugName" title="Drug Name" [width]="140">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -59,7 +63,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template> </kendo-grid-column>
-      <kendo-grid-column field="paymentType" title="Payment Type" [width]="140">
+      <kendo-grid-column field="paymentTypeCode" title="Payment Type" [width]="140">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -68,7 +72,7 @@
             <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
-        </ng-template> 
+        </ng-template>
           </kendo-grid-column>
       <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="140">  <ng-template kendoGridCellTemplate
         let-dataItem>
@@ -84,7 +88,7 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-      <kendo-grid-column field="rxQty" title="RX Qty." [width]="140">
+      <kendo-grid-column field="rxqty" title="RX Qty." [width]="140">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -104,7 +108,7 @@
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
       </ng-template>
-      <kendo-grid-column field="rxType" title="RX Type" [width]="140">  
+      <kendo-grid-column field="rxqtype" title="RX Type" [width]="140">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -114,7 +118,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template> </kendo-grid-column>
-      <kendo-grid-column field="rxDays" title="RX Days Supply" [width]="160"> 
+      <kendo-grid-column field="daySupply" title="RX Days Supply" [width]="160">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -124,7 +128,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template>  </kendo-grid-column>
-      <kendo-grid-column field="indexCode" title="Index Code" [width]="140">  
+      <kendo-grid-column field="indexCode" title="Index Code" [width]="140">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -134,7 +138,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template> </kendo-grid-column>
-      <kendo-grid-column field="pcaCode" title="PCA Code" [width]="140"> 
+      <kendo-grid-column field="pcaCode" title="PCA Code" [width]="140">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -144,7 +148,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template>  </kendo-grid-column>
-      <kendo-grid-column field="objectCode" title="Object Code" [width]="140"> 
+      <kendo-grid-column field="objectCode" title="Object Code" [width]="140">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -154,7 +158,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template>  </kendo-grid-column>
-      <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="160">  
+      <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -164,7 +168,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template> </kendo-grid-column>
-      <kendo-grid-column field="warrantNumber" title="Warrant Number" [width]="160">   
+      <kendo-grid-column field="warrantNbr" title="Warrant Number" [width]="160">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -175,10 +179,10 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="creationTime" title="Entry Date" [width]="140">  
+      <kendo-grid-column field="entryDate" title="Entry Date" [width]="140">
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{ dataItem.creationTime | date : 'MM/dd/yyyy' }}
-        </ng-template> 
+          {{ dataItem.entryDate | date : 'MM/dd/yyyy' }}
+        </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <common-grid-cell-date-range-filter [field]="'creationTime'" [filter]="filter" [filterService]="filterService">
           </common-grid-cell-date-range-filter>
@@ -208,7 +212,7 @@
               [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
-  
+
           </div>
           <div class="d-flex">
             <kendo-pager-input></kendo-pager-input>
@@ -226,6 +230,6 @@
         </div>
         <p>There is no data to display.</p>
       </ng-template>
-  
+
     </kendo-grid>
   </div>
