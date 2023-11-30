@@ -53,7 +53,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.hideLoader()
     this.drugForm.get('manufacturer')?.patchValue(this.vendorId);
-    if (this.dialogTitle === "Add New" || this.dialogTitle === "Request New") {
+    if (this.dialogTitle === "Add" || this.dialogTitle === "Request New") {
       this.saveButtonText = this.dialogTitle;
     } else {
       this.saveButtonText = "Update";
