@@ -218,8 +218,7 @@ export class RefundProcessListComponent implements  OnChanges {
     private dialogService: DialogService,
     private financialVendorRefundFacade: FinancialVendorRefundFacade
   ) {}
-
- 
+  
   ngOnChanges(): void {
     this.state = {
       skip: 0,
