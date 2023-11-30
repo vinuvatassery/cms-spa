@@ -42,6 +42,11 @@
                   <label> {{isViewGridOptionClicked ? 'Remaining Amount' : 'Remaining'}} </label>
                   <p class="green-text-color">$ {{pcaReassignmentByFundSource.remainingAmount}}</p>
             </div>
+            <div class="flex-col flex-col-4">
+                  <label> Close Date </label>
+                  <p class="green-text-color">{{pcaReassignmentByFundSource.pcaCloseDate | date: 'dd/MM/yyyy' }}</p>
+            </div>
+            
 
       </div>
       <div class="flex-row">
@@ -81,7 +86,7 @@
       </div>
       <div class="flex-row">
             <div class="flex-col ">
-                  <kendo-floatinglabel text=" isViewGridOptionClicked ? 'Amount' : 'Assignment Amount' " class="amount-with-symbol">
+                  <kendo-floatinglabel [text]="isViewGridOptionClicked ? 'Amount' : 'Assignment Amount' " class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
                         <kendo-numerictextbox  aria-label="Object Amount" [spinners]="false"
                               class="input-icon-right" placeholder="00.00"
