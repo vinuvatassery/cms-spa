@@ -51,6 +51,7 @@ export class VendorRefundInsurancePremiumListComponent  implements OnInit, OnCha
   @Output() loadClientClaimsListEvent = new EventEmitter<any>();
   @Output() claimsCount = new EventEmitter<any>();
   @Output() selectedClaimsChangeEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   paymentStatusType:any;
   paymentMethod:any;
   public selectedClaims: any[] = [];
@@ -293,6 +294,9 @@ this.gridClientClaimsData$.subscribe((res:any)=>{
     };
     this.router.navigate(['/financial-management/vendors/profile'], query)
 
+  }
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event.paymentRequestId)
   }
 
 
