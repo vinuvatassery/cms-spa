@@ -51,7 +51,7 @@
 
                     </kendo-multicolumncombobox>
                     <kendo-formerror class="d-flex align-items-center" *ngIf="showClientRequiredValidation">                    
-                        <span class="material-icons mr-1" aria-hidden="false">info</span>  Client is required
+                        <span class="material-icons mr-1" aria-hidden="false">info</span>  A client selection is required
                     </kendo-formerror>
                 </div>
             </div>
@@ -183,7 +183,7 @@
                                     <kendo-textarea 
                                     *ngIf="dataItem.makeExceptionFlag"
                                     aria-label="Exception Reason" 
-                                    [maxlength]="160" 
+                                    [maxlength]="150" 
                                     [rows]="1"
                                     [fillMode]="formUiStyle.inputFillMode"
                                     resizable="none"
