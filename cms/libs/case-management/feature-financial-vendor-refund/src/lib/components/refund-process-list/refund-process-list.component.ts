@@ -6,7 +6,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   TemplateRef,
   ViewChild,
@@ -25,7 +24,7 @@ import { Subject, first } from 'rxjs';
   templateUrl: './refund-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundProcessListComponent implements OnInit, OnChanges {
+export class RefundProcessListComponent implements  OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('batchRefundConfirmationDialog', { read: TemplateRef })
   batchRefundConfirmationDialog!: TemplateRef<any>;
@@ -224,9 +223,6 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     private dialogService: DialogService,
     private financialVendorRefundFacade: FinancialVendorRefundFacade
   ) {} 
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
-  }
   ngOnChanges(): void {
     this.state = {
       skip: 0,
