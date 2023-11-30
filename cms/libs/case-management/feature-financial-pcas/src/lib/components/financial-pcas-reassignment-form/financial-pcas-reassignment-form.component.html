@@ -50,24 +50,29 @@
                   <kendo-floatinglabel text="Open Date">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                               formatPlaceholder="formatPattern" placeholder=""
-                                 formControlName="openDate" >
+                                 formControlName="openDate" (keyup)="openDateValidate()"
+                                 (valueChange)="openDateValidate()">
                         </kendo-datepicker>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['openDate'].valid">Open Date is required.</kendo-formerror>
-
+                  
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['openDate'].valid && !pcaReassignmentForm.controls['openDate'].hasError('incorrect')"> Open Date is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['openDate'].hasError('incorrect')"> Open Date is after the Close Date.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && isAssignmentpcaCloseDateGreater"> Open Date is after the PCA Close Date.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && isAssignmentpcaOpenDateGreater"> Open Date is before the PCA Open Date.</kendo-formerror>
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Close Date">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                               formatPlaceholder="formatPattern" placeholder=""
                                formControlName="closeDate"
-                               (keyup)="dateValidate()"
-                               (valueChange)="dateValidate()" >
+                               (keyup)="closeDateValidate()"
+                               (valueChange)="closeDateValidate()" >
                         </kendo-datepicker>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['closeDate'].valid && !pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is required.</kendo-formerror>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is before the Open Date
-                  </kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['closeDate'].valid && !pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is before the Open Date.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && ispcaCloseDateGreater"> Close Date is after the PCA Close Date.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && ispcaOpenDateGreater"> Close Date is before the PCA Open Date.</kendo-formerror>
 
             </div>
       </div>
@@ -81,15 +86,12 @@
                                [fillMode]="formUiStyle.inputFillMode" formControlName="assignmentAmount">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked &&!pcaReassignmentForm.controls['assignmentAmount'].valid && !pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect')">Assignment Amount is required.</kendo-formerror>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect')">Assignment Amount must be equal to or less than the Remaining PCA balance </kendo-formerror>
-
-
-
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['assignmentAmount'].valid && !pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect') && !isUnlimitedChecked">Assignment Amount is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['assignmentAmount'].hasError('incorrect') && !isUnlimitedChecked">Assignment Amount must be equal to or less than the Remaining PCA balance </kendo-formerror>
             </div>
             <div class="flex-col mt-2">
                   <span class="app-checkboxwidtext-wrapper">
-                        <input type="checkbox" kendoCheckBox aria-labelledby="Unlimited" id="Unlimited"  formControlName="unlimited"  />
+                        <input type="checkbox" kendoCheckBox aria-labelledby="Unlimited" id="Unlimited"  formControlName="unlimited"  (change)="unlimitedCheckChange($event)"/>
                         <label class="k-checkbox-label" for="Unlimited" >Unlimited</label>
                   </span>
             </div>

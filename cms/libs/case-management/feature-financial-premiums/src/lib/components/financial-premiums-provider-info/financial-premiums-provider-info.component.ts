@@ -46,7 +46,7 @@ export class FinancialPremiumsProviderInfoComponent {
       zip: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
       specialHandlingDesc: [''],
       mailCode: [{ value: '', disabled: true }],
-      acceptsCombinedPaymentsFlags:[''],
+      acceptsCombinedPaymentsFlag:[''],
       acceptsReportsFlag:['']
     }),
     contacts: new FormArray([])
@@ -153,7 +153,7 @@ emailscount:number=0;
         mailCode: this.vendorProfile.address.mailCode,
         specialHandlingDesc: this.vendorProfile.address.specialHandlingDesc,
         paymentMethod: this.vendorProfile.address.paymentMethodCode,
-        acceptsCombinedPaymentsFlags : this.vendorProfile.address.acceptsCombinedPaymentsFlags,
+        acceptsCombinedPaymentsFlag : this.vendorProfile.address.acceptsCombinedPaymentsFlag,
         acceptsReportsFlag :this.vendorProfile.address.acceptsReportsFlag
       }
     });
@@ -234,7 +234,7 @@ emailscount:number=0;
         specialHandlingDesc: this.profileForm?.controls.address.controls['specialHandlingDesc']?.value,
         paymentMethodCode: this.profileForm?.controls.address.controls['paymentMethod']?.value,
         address1: this.profileForm?.controls.address.controls['address1']?.value,
-        acceptsCombinedPaymentsFlags : this.profileForm?.controls.address.controls['acceptsCombinedPaymentsFlags'].value,
+        acceptsCombinedPaymentsFlag : this.profileForm?.controls.address.controls['acceptsCombinedPaymentsFlag'].value,
         acceptsReportsFlag : this.profileForm?.controls.address.controls['acceptsReportsFlag'].value,
 
         address2: this.profileForm?.controls.address.controls['address2']?.value,
