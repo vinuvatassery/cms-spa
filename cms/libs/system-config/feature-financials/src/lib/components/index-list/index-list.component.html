@@ -10,10 +10,9 @@
 </section>
 
 
-<!-- Funds List Section -->
+ 
 <section>
-  <!-- Label info show only in list -->
-  <p class="pt-1">Add, edit and delete Funds.</p>
+ 
   <div class="flex-row">
     <!-- Table header show only in list -->
     <div class="flex-col">
@@ -46,8 +45,7 @@
     <span class="sort-items">No Filters</span>
     <span class="sort-items">All Columns</span>
   </div>
-
-  <!-- EID lifetime Index list -->
+ 
   <div class="app-c-table">
     <kendo-grid [pageSize]="5" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
       [resizable]="true" [columnMenu]="{ filter: true }" [data]="indexLists$ | async">
@@ -100,16 +98,16 @@
     </kendo-grid>
   </div>
 
-  <!-- Add Funds show only in list -->
+ 
   <div class="mt-2 block-section">
-    <!-- Add Funds Button -->
+ 
     <button icon="add" kendoButton [primary]="true" aria-label="Funds" (click)="onIndexDetailClicked()">
       Index
     </button>
   </div>
 </section>
 
-<!-- Add Funds Modal Html-->
+ 
 <kendo-dialog *ngIf="isIndexDetailPopup" (close)="onCloseIndexDetailClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar> Add Index </kendo-dialog-titlebar>

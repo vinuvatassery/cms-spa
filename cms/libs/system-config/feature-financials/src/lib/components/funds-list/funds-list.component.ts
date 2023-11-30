@@ -35,15 +35,13 @@ export class FundsListComponent implements OnInit {
       buttonType:"btn-h-primary",
       text: "Edit",
       icon: "edit",
-      click: (): void => {
-      },
+    
     }, 
     {
       buttonType:"btn-h-danger",
       text: "Delete",
       icon: "delete",
-      click: (): void => {
-      },
+  
     }, 
  
   ];

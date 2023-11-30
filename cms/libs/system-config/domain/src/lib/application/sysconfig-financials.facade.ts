@@ -27,6 +27,15 @@ export class SystemConfigFinancialFacade {
   loadExpenseTypeListsService$ =
     this.loadExpenseTypeListsServiceSubject.asObservable();
 
+    private loadIncomeTypeListsServiceSubject = new BehaviorSubject<any>([]);
+    loadIncomeTypeListsService$ =
+      this.loadIncomeTypeListsServiceSubject.asObservable();
+
+
+      private loadPcaCodeListsServiceSubject = new BehaviorSubject<any>([]);
+      loadPcaCodeListsService$ =
+        this.loadPcaCodeListsServiceSubject.asObservable();
+
   /** Constructor **/
   constructor(
     private readonly zipCodeDataService: ZipCodeDataService,
@@ -79,6 +88,36 @@ export class SystemConfigFinancialFacade {
         next: (loadExpenseTypeListsService) => {
           this.loadExpenseTypeListsServiceSubject.next(
             loadExpenseTypeListsService
+          );
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  loadIncomeTypeLists() {
+    this.systemConfigFinancialDataService
+      .loadIncomeTypeListsService()
+      .subscribe({
+        next: (loadIncomeTypeListsService) => {
+          this.loadIncomeTypeListsServiceSubject.next(
+            loadIncomeTypeListsService
+          );
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  loadPcaCodeLists() {
+    this.systemConfigFinancialDataService
+      .loadPcaCodeListsService()
+      .subscribe({
+        next: (loadPcaCodeListsService) => {
+          this.loadPcaCodeListsServiceSubject.next(
+            loadPcaCodeListsService
           );
         },
         error: (err) => {

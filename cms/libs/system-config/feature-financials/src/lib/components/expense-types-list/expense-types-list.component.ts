@@ -23,9 +23,8 @@ export class ExpenseTypesListComponent implements OnInit{
     {text: '20', value: 20},
     {text: 'All', value: 100}
   ];
-  /** Public properties **/
-  isExpenseTypeDetailPopup = false; 
-  indexLists$ = this.systemConfigFinancialFacade.loadExpenseTypeListsService$;
+  /** Public properties **/ 
+  expenseTypeLists$ = this.systemConfigFinancialFacade.loadExpenseTypeListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreActions = [
@@ -33,15 +32,13 @@ export class ExpenseTypesListComponent implements OnInit{
       buttonType:"btn-h-primary",
       text: "Edit",
       icon: "edit",
-      click: (): void => {
-      },
+    
     }, 
     {
       buttonType:"btn-h-danger",
       text: "Deactivate",
       icon: "block",
-      click: (): void => {
-      },
+ 
     }, 
  
   ];
@@ -60,11 +57,6 @@ export class ExpenseTypesListComponent implements OnInit{
   }
 
   /** Internal event methods **/
-  onCloseExpenseTypeDetailClicked() {
-    this.isExpenseTypeDetailPopup = false;
-  }
-  onExpenseTypeDetailClicked() {
-    this.isExpenseTypeDetailPopup = true;
-  }
+ 
 }
 
