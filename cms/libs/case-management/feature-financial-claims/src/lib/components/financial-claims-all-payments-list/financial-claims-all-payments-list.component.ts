@@ -364,6 +364,7 @@ export class FinancialClaimsAllPaymentsListComponent
 }
 
 pageNumberAndCountChangedInSelectAll() {
+  debugger;
   //If selecte all header checked and either the page count or the page number changed
   if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
     this.selectedAllPaymentsList = [];
@@ -848,6 +849,7 @@ pageNumberAndCountChangedInSelectAll() {
   }
 
   selectionAllChange(){
+    debugger;
     this.unCheckedProcessRequest=[];
     this.checkedAndUncheckedRecordsFromSelectAll=[];
     if(this.selectAll){

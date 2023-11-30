@@ -16,8 +16,9 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
+  filterBy
 } from '@progress/kendo-data-query';
-import { Subject, first } from 'rxjs';
+import { BehaviorSubject, Subject, first } from 'rxjs';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
@@ -35,11 +36,12 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Input() sortValueRefunds: any;
   @Input() vendorRefundAllPaymentsGridLists$: any;
+  @Input() vendorRefundAllPaymentsGridLists: any = [];
   @Input() exportButtonShow$: any;
-  @Input() vendorProfile$ :any;
-  @Input() updateProviderPanelSubject$:any
-  @Input() ddlStates$ :any
-  @Input() paymentMethodCode$ :any
+  @Input() vendorProfile$: any;
+  @Input() updateProviderPanelSubject$: any
+  @Input() ddlStates$: any
+  @Input() paymentMethodCode$: any
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
@@ -197,8 +199,79 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     private dialogService: DialogService) { }
 
   ngOnInit(): void {
-    this.sortType = 'desc'   
+    this.sortType = 'desc'
+    this.handleAllPaymentsGridData();
   }
+  gridLoaderSubject = new BehaviorSubject(false);
+  handleAllPaymentsGridData() {
+    this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
+      this.gridDataResult = data;
+      this.gridDataResult.data = filterBy(
+        this.gridDataResult.data,
+        this.filterData
+      );
+      this.gridVendorsAllPaymentsDataSubject.next(this.gridDataResult);
+      if (data?.total >= 0 || data?.total === -1) {
+        this.gridLoaderSubject.next(false);
+      }
+      this.vendorRefundAllPaymentsGridLists = this.gridDataResult?.data;
+      if (this.recordCountWhenSelectallClicked == 0) {
+        this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
+        this.totalGridRecordsCount = this.gridDataResult?.total;
+      }
+      if (!this.selectAll) {
+        this.vendorRefundAllPaymentsGridLists.forEach((item1: any) => {
+          const matchingGridItem = this.selectedAllPaymentsList?.PrintAdviceLetterSelected.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
+          if (matchingGridItem) {
+            item1.selected = true;
+          } else {
+            item1.selected = false;
+          }
+        });
+      }
+      this.currentPageRecords = this.vendorRefundAllPaymentsGridLists;
+      //If the user is selecting the individual check boxes and changing the page count
+      this.handlePageCountSelectionChange();
+      //If the user click on select all header and either changing the page number or page count
+      this.pageNumberAndCountChangedInSelectAll();
+      this.gridLoaderSubject.next(false);
+    });
+  }
+
+  handlePageCountSelectionChange() {
+    debugger;
+    if (!this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {
+      // Extract the payment request ids from grid data
+      const idsToKeep: number[] = this.checkedAndUncheckedRecordsFromSelectAll.map((item: any) => item.paymentRequestId);
+      // Remove items from selected records based on the IDs from grid data
+      for (let i = this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.length - 1; i >= 0; i--) {
+        if (!idsToKeep.includes(this.selectedAllPaymentsList?.PrintAdviceLetterSelected[i].paymentRequestId)) {
+          this.selectedAllPaymentsList?.PrintAdviceLetterSelected.splice(i, 1); // Remove the item at index i
+        }
+      }
+      this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.filter((item: any) => item.selected));
+    }
+  }
+
+  pageNumberAndCountChangedInSelectAll() {
+    debugger;
+    //If selecte all header checked and either the page count or the page number changed
+    if (this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {
+      this.selectedAllPaymentsList = [];
+      this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
+      for (const item of this.vendorRefundAllPaymentsGridLists) {
+        // Check if the item is in the second list.
+        const isItemInSecondList = this.unCheckedProcessRequest.find((item2: any) => item2.paymentRequestId === item.paymentRequestId);
+        // If the item is in the second list, mark it as selected true.
+        if (isItemInSecondList) {
+          item.selected = false;
+        } else {
+          item.selected = true;
+        }
+      }
+    }
+  }
+
 
   ngOnChanges(): void {
     this.sortType = 'desc'
@@ -293,6 +366,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   dataStateChange(stateData: any): void {
+    this.isPageCountChanged = false;
+    this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -349,10 +424,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   onClickedDownload() {
-    if (!this.selectedPayments.length) return;
+    if (!this.selectedClaims.length) return;
     this.showExportLoader = true;
 
-    this.exportReceiptDataEvent.emit(this.selectedPayments);
+    this.exportReceiptDataEvent.emit(this.selectedClaims);
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
         this.showExportLoader = false;
@@ -466,14 +541,25 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   isLogGridExpanded = false;
   hideActionButton = false;
   receiptLogMode = false
-  selectedPayments: any[] = [];
+  //selectedPayments: any[] = [];
 
   cancelActions() {
-    this.selectedPayments = [];
+    this.selectedClaims = [];
     this.changeTitle.emit();
     this.isLogGridExpanded = !this.isLogGridExpanded;
     this.hideActionButton = !this.hideActionButton;
     this.receiptLogMode = !this.receiptLogMode;
+
+    this.markAsUnChecked(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+    this.markAsUnChecked(this.vendorRefundAllPaymentsGridLists);
+    this.unCheckedProcessRequest = [];
+    this.checkedAndUncheckedRecordsFromSelectAll = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterUnSelected = [];
+    this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+    this.selectAll = false;
+    this.recordCountWhenSelectallClicked = 0;
+    this.sendReportCount = 0;
   }
 
   receiptingLogClicked() {
@@ -482,7 +568,150 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.receiptLogMode = !this.receiptLogMode;
     this.hideActionButton = !this.hideActionButton;
   }
-  onProviderNameClick(event: any) {    
+  onProviderNameClick(event: any) {
     this.onProviderNameClickEvent.emit(event);
   }
+
+
+  selectionAllChange() {
+    debugger;
+    this.unCheckedProcessRequest = [];
+    this.checkedAndUncheckedRecordsFromSelectAll = [];
+    if (this.selectAll) {
+      this.markAsChecked(this.vendorRefundAllPaymentsGridLists);
+    }
+    else {
+      this.markAsUnChecked(this.vendorRefundAllPaymentsGridLists);
+    }
+    this.selectedAllPaymentsList = {
+      'selectAll': this.selectAll, 'PrintAdviceLetterUnSelected': this.unCheckedProcessRequest,
+      'PrintAdviceLetterSelected': this.checkedAndUncheckedRecordsFromSelectAll, 'print': true,
+      'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print'
+    };
+    this.cdr.detectChanges();
+    if (this.selectAll) {
+      if (this.unCheckedProcessRequest?.length > 0) {
+        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
+      } else {
+        this.sendReportCount = this.totalGridRecordsCount;
+      }
+    } else {
+      this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+    }
+  }
+
+  getSelectedReportCount(selectedSendReportList: []) {
+    this.sendReportCount = selectedSendReportList.length;
+  }
+
+  selectionChange(dataItem: any, selected: boolean) {
+    if (!selected) {
+      this.onRecordSelectionChecked(dataItem);
+    }
+    else {
+      this.onRecordSelectionUnChecked(dataItem);
+    }
+    this.selectedAllPaymentsList = {
+      'selectAll': this.selectAll, 'PrintAdviceLetterUnSelected': this.unCheckedProcessRequest,
+      'PrintAdviceLetterSelected': this.checkedAndUncheckedRecordsFromSelectAll, 'print': true,
+      'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print'
+    };
+    if (this.selectAll) {
+      if (this.unCheckedProcessRequest?.length > 0) {
+        this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
+      } else {
+        this.recordCountWhenSelectallClicked = selected ? this.recordCountWhenSelectallClicked + 1 : this.recordCountWhenSelectallClicked - 1;
+        this.sendReportCount = this.recordCountWhenSelectallClicked;
+      }
+    } else {
+      this.sendReportCount = this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.filter((item: any) => item.selected).length;
+    }
+    this.cdr.detectChanges();
+  }
+
+  markAsChecked(data: any) {
+    debugger;
+    data.forEach((element: any) => {
+      if (this.selectAll) {
+        element.selected = true;
+      }
+      else {
+        element.selected = false;
+      }
+      if (this.unCheckedPaymentRequest.length > 0 || this.selectedDataIfSelectAllUnchecked.length > 0) {
+        const itemMarkedAsUnChecked = this.unCheckedPaymentRequest.find((x: any) => x.paymentRequestId === element.paymentRequestId);
+        if (itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined) {
+          element.selected = false;
+        }
+        const itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x: any) => x.paymentRequestId === element.paymentRequestId);
+        if (itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined) {
+          element.selected = true;
+        }
+      }
+
+    });
+
+  }
+
+  markAsUnChecked(data: any) {
+    data.forEach((element: any) => {
+      element.selected = false;
+    });
+  }
+
+  onRecordSelectionChecked(dataItem: any) {
+    this.unCheckedProcessRequest.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
+    this.currentPageRecords?.forEach((element: any) => {
+      if (element.paymentRequestId === dataItem.paymentRequestId) {
+        element.selected = false;
+      }
+    });
+    const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+    if (exist === 0) {
+      this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': false, 'batchId': dataItem.batchId });
+    } else {
+      const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+      if (recordIndex !== -1) {
+        this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+      }
+    }
+  }
+
+  onRecordSelectionUnChecked(dataItem: any) {
+    this.unCheckedProcessRequest = this.unCheckedProcessRequest.filter((item: any) => item.paymentRequestId !== dataItem.paymentRequestId);
+    this.currentPageRecords?.forEach((element: any) => {
+      if (element.paymentRequestId === dataItem.paymentRequestId) {
+        element.selected = true;
+      }
+    });
+    const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+    if (exist === 0) {
+      this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true, 'batchId': dataItem.batchId });
+    } else {
+      const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+      if (recordIndex !== -1) {
+        this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+      }
+    }
+  }
+  selectedClaims: any[] = [];
+  selectedKeysChange(selection: any) {
+    this.selectedClaims = selection;
+  }
+
+  selectAll: boolean = false;
+  unCheckedPaymentRequest: any = [];
+  selectedDataIfSelectAllUnchecked: any = [];
+  currentPageRecords: any = [];
+  selectedAllPaymentsList!: any;
+  isPageCountChanged: boolean = false;
+  isPageChanged: boolean = false;
+  unCheckedProcessRequest: any = [];
+  checkedAndUncheckedRecordsFromSelectAll: any = [];
+  recordCountWhenSelectallClicked: number = 0;
+  totalGridRecordsCount: number = 0;
+  sendReportCount: number = 0;
+  //recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 }
