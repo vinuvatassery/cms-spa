@@ -19,6 +19,7 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
   @Input() tpaRefundInformation$: any
   
   @Output() tpaRefundInformationConfirmClicked = new EventEmitter<any>();
+  @Output() onTpaClaimsDeleteEvent = new EventEmitter<any>()
   @Input() isEdit = false
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Input() tpaPremiumPaymentReqIds: any[] = [];
@@ -104,6 +105,11 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
 
   onDeleteClick(index:number){
     this.tpaRefundGridLists.splice(index,1)
+    if(this.tpaRefundGridLists.length >0){
+     this.onTpaClaimsDeleteEvent.emit([this.tpaRefundGridLists.map(x=> x.paymentRequestId).join(',')])  
+    }else{
+      this.onTpaClaimsDeleteEvent.emit([])
+    } 
   }
 
   getDate(value:any){

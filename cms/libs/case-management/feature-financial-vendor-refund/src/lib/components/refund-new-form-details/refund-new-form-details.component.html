@@ -222,7 +222,7 @@
               [tpaRefundGridLists]="tpaRefundGridLists"
             (tpaRefundInformationConfirmClicked)="getTpaRefundInformation($event)"
             [tpaAddRefundClick$]="tpaAddRefundClick$"
-          
+           (onTpaClaimsDeleteEvent)="onTpaClaimsDelete($event)"
             (tpaPayload)="addTpa($event)"></cms-vednor-refund-tpa-selected-claims-list>
             <div class="mt-3" id="medicalProviderPaymentslist">
                 <h5>MEDICAL PROVIDER PAYMENT FOR {{this.clientName}}</h5>

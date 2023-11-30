@@ -2,10 +2,13 @@
 <ng-container *ngIf="pcaReassignmentByFundSource">
 <div [formGroup]="pcaReassignmentForm">
 <section class="k-dialog-body">
-      <p class="text-muted">
+      <p class="text-muted" *ngIf="!isViewGridOptionClicked">
             All fields are required unless otherwise stated.
       </p>
-
+      <p class="text-muted" *ngIf="isViewGridOptionClicked">
+            The fields on this window are view only, to edit, use the "Edit" option."
+      </p>
+     
       <div class="flex-row">
             <div class="flex-col mt-1">
                   <p class="relative-heading"><strong>PCA Settings</strong></p>
@@ -21,7 +24,7 @@
 
             </div>
             <div class="flex-col flex-col-4">
-                  <kendo-floatinglabel text="AY">
+                  <kendo-floatinglabel text="Year">
                         <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode" formControlName="ay" > </kendo-textbox>
                   </kendo-floatinglabel>
             </div>
@@ -31,20 +34,20 @@
                   <label> PCA Amount </label>
                   <p> $ {{pcaReassignmentByFundSource.pcaAmount | kendoNumber: 'n2'}}</p>
             </div>
-            <div class="flex-col flex-col-4">
+            <div class="flex-col flex-col-4" *ngIf="!isViewGridOptionClicked">
                   <label> Allocated </label>
                   <p> $ {{pcaReassignmentByFundSource.allocatedAmount | kendoNumber: 'n2'}}</p>
             </div>
             <div class="flex-col flex-col-4">
-                  <label> Remaining </label>
-                  <p class="green-text-color">$ {{pcaReassignmentByFundSource.remainingAmount | kendoNumber: 'n2'}}</p>
+                  <label> {{isViewGridOptionClicked ? 'Remaining Amount' : 'Remaining'}} </label>
+                  <p class="green-text-color">$ {{pcaReassignmentByFundSource.remainingAmount}}</p>
             </div>
 
       </div>
       <div class="flex-row">
             <div class="flex-col mt-1">
-
-                  <p class="relative-heading"><strong>Assignment Settings</strong></p>
+            
+                  <p class="relative-heading"><strong> {{isViewGridOptionClicked ? 'Object Settings' : 'Assignment Settings'}}  </strong></p>
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Open Date">
@@ -78,7 +81,7 @@
       </div>
       <div class="flex-row">
             <div class="flex-col ">
-                  <kendo-floatinglabel text="Assignment Amount" class="amount-with-symbol">
+                  <kendo-floatinglabel text=" isViewGridOptionClicked ? 'Amount' : 'Assignment Amount' " class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
                         <kendo-numerictextbox  aria-label="Object Amount" [spinners]="false"
                               class="input-icon-right" placeholder="00.00"
