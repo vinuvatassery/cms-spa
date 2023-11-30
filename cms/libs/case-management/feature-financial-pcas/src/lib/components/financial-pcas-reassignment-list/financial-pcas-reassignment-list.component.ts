@@ -21,6 +21,8 @@ import { Subject } from 'rxjs';
 import { FinancialPcaFacade, PcaAssignmentsFacade } from '@cms/case-management/domain';
 import { NavigationMenuFacade } from '@cms/system-config/domain';
 import { FormGroup } from '@angular/forms';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 @Component({
   selector: 'cms-financial-pcas-reassignment-list',
   templateUrl: './financial-pcas-reassignment-list.component.html',
@@ -166,7 +168,7 @@ export class FinancialPcasReassignmentListComponent
     },
     {
       columnCode: 'CloseDate',
-      columnDesc: 'CloseDate',
+      columnDesc: 'Close Date',
     },
   ];
 
@@ -189,6 +191,8 @@ export class FinancialPcasReassignmentListComponent
     private financialPcaFacade:FinancialPcaFacade,
     private readonly navigationMenuFacade: NavigationMenuFacade,
     private readonly pcaAssignmentsFacade : PcaAssignmentsFacade,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider
   ) {}
   reassignPcaData(pcaAssignmentData : any)
   {
@@ -322,8 +326,10 @@ export class FinancialPcasReassignmentListComponent
   }
 
   getColumnOperator(){
-    if(this.selectedColumn === "PCA" || this.selectedColumn === "closeDate"){
+    if(this.selectedColumn === "PcaCode" || this.selectedColumn === "CloseDate"){
       return "eq";
+    } else if (this.selectedColumn === "ALL") {
+      return "startswith"
     }
     return "contains";
   }
@@ -493,8 +499,10 @@ public itemDisabled(itemArgs:any)
       this.onChange(value);
     }
   }
-  onPcaReassignmentSearch(searchValue : any){
-      this.onChange(searchValue);
+  onPcaReassignmentSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    this.onChange(searchValue);
   }
 
   restPcaReassignmentGrid() {
@@ -525,4 +533,21 @@ public itemDisabled(itemArgs:any)
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configProvider?.appSettings?.dateFormat
+        );
+      } else {
+        return '';
+      }
+    }
+    return searchValue;
+  }
+
+  private isValidDate = (searchValue: any) =>
+    isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 }
