@@ -250,6 +250,7 @@
                         [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId"
                         (claimsCount)="claimsCountEvent($event)"
                         (selectedClaimsChangeEvent)="onSelectedClaimsChangeEvent($event)"
+                        (onProviderNameClickEvent)="onTpaProviderClick($event)"
                         ></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
@@ -284,6 +285,7 @@
                         (selectedVendorRefundsListEvent)="getSelectedVendorRefundsList($event)"
                         [confirmClicked]="inputConfirmationClicked"
                         (selectedClaimsChangeEvent)="selectedRxClaimsChangeEvent($event)"
+                        (onProviderNameClickEvent)="onTpaProviderClick($event)"
                        ></cms-vendor-refund-client-claims-list>
                 </div>
             </div>
@@ -529,7 +531,8 @@
                 <h5>PHARMACY PAYMENTS FOR {{ clientName }}</h5>
                     <cms-vendor-refund-pharmacy-payments-list [vendorId]="vendorId" [clientId]="clientId"
                         [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyPayment" [sortType]="sortType"
-                        [sort]="sortPharmacyPayment"></cms-vendor-refund-pharmacy-payments-list>
+                        [sort]="sortPharmacyPayment"
+                        (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"></cms-vendor-refund-pharmacy-payments-list>
             </div>
             </div>
         </div>
