@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { PaymentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -25,9 +26,11 @@ export class FinancialPaymentBatchSubListComponent implements OnInit {
     loader$ = new BehaviorSubject<boolean>(false);
     isPaymentLoadFailed = false;
     /** Constructor **/
-    constructor(private readonly paymentsFacade: PaymentsFacade,
+    constructor(
+        private readonly paymentsFacade: PaymentsFacade,
         private loggingService: LoggingService,
-        private readonly notificationSnackbarService: NotificationSnackbarService,) { }
+        private readonly notificationSnackbarService: NotificationSnackbarService,
+        private route: Router) { }
 
     /* Life cycle events */
     ngOnInit(): void {
@@ -76,4 +79,8 @@ export class FinancialPaymentBatchSubListComponent implements OnInit {
             },
         });
     }
+
+    onClientClicked(clientId: any) {
+        this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+      }
 }
