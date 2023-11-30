@@ -127,7 +127,7 @@
 
 <!-- dental -->
 <kendo-dialog kendoRippleContainer *ngIf="isShowDentalProvider" (close)="closeVendorDetailModal(vendorTypes.DentalProviders)"
-  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{hasMedicalAndDentalCreateUpdatePermission ? 'Add New Dental Provider' : 'Request New Dental Provider'}}" kendoTooltip>
+  class="app-c-modal app-c-modal-lg app-c-modal-np" title="{{hasMedicalAndDentalCreateUpdatePermission ? 'Add New Dental Provider' : 'Request New Dental Provider'}}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.DentalProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.DentalProviders)"
     [ddlStates$]="ddlStates" [clinicVendorList$]="clinicVendorList" [clinicVendorLoader$]="clinicVendorLoader"
