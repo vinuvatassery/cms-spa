@@ -5,7 +5,7 @@ import {
   Input,
   ChangeDetectorRef,EventEmitter,Output
 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl, AbstractControl } from '@angular/forms';
 
 /** Facades **/
 import {
@@ -416,7 +416,7 @@ export class MedicalPaymentDetailComponent {
     this.copayPaymentForm.controls['amountRequested'].setValidators([Validators.required,]);
     this.copayPaymentForm.controls['paymentTypeCode'].setValidators([Validators.required,]);
     this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['entryDate'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
 
     this.copayPaymentForm.controls['vendorId'].updateValueAndValidity();
     this.copayPaymentForm.controls['clientInsurancePolicyId'].updateValueAndValidity();
@@ -536,6 +536,12 @@ export class MedicalPaymentDetailComponent {
   }
   isControlValid(controlName: string, index: any) {
     let control = this.addClaimServicesForm.at(index) as FormGroup;
+    const selectedDate = new Date(control.value);
+    const currentDate = new Date();
+  
+    if (selectedDate < currentDate) {
+      return { 'INVALID': true };
+    }
     return control.controls[controlName].status == 'INVALID';
   }
   getExceptionFormValue(controlName: string, index: any)
@@ -736,14 +742,16 @@ export class MedicalPaymentDetailComponent {
   }
   
   addClaimServiceGroup() {
+    debugger
+
     let claimForm = this.formBuilder.group({
       serviceStartDate: new FormControl(
-        this.medicalClaimServices.serviceStartDate,
-        [Validators.required]
+        this.addClaimServicesForm.value[0]?.serviceStartDate,
+        [Validators.required,this.dateValidator]
       ),
       serviceEndDate: new FormControl(
-        this.medicalClaimServices.serviceEndDate,
-        [Validators.required]
+        this.addClaimServicesForm.value[0]?.serviceEndDate,
+        [Validators.required,this.dateValidator]
       ),
       paymentType: new FormControl(this.medicalClaimServices.paymentType, [
         Validators.required,
@@ -753,7 +761,9 @@ export class MedicalPaymentDetailComponent {
       ]),
       pcaCode: new FormControl(this.medicalClaimServices.pcaCode),
       serviceDescription: new FormControl(
-        this.medicalClaimServices.serviceDescription
+        this.medicalClaimServices.serviceDescription,[
+          Validators.required,
+        ]
       ),
       serviceCost: new FormControl(this.medicalClaimServices.serviceCost, [
         Validators.required,
@@ -799,5 +809,14 @@ export class MedicalPaymentDetailComponent {
     });
     this.addExceptionForm.push(exceptionForm);
   }
-
+  dateValidator(control: AbstractControl): { [key: string]: any } | null {
+    const selectedDate = new Date(control.value);
+    const currentDate = new Date('1/1/1999');
+  
+    if (selectedDate < currentDate) {
+      return { 'invalidDate': true };
+    }
+  
+    return null;
+  }
 }
