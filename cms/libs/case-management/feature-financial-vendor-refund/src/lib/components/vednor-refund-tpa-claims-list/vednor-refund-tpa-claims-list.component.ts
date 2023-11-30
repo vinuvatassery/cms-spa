@@ -63,13 +63,14 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  tpaData$ = this.financialVendorRefundFacade.tpaData$;
+  tpaData$ = this.financialVendorRefundFacade.tpasData$;
   filterResetDialog: any;
   paymentStatusCode =null;
   paymentStatusType:any;
   paymentStatuses$ = this.lovFacade.paymentStatus$;
   @Output() claimsCount = new EventEmitter<any>();
   cliams:any[]=[];
+  tpaGridData!: any;
   constructor( private readonly financialClaimsFacade: FinancialClaimsFacade, 
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private dialogService: DialogService,   private readonly lovFacade : LovFacade){
@@ -86,12 +87,14 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
     this.tpaPaymentReqIds : this.selectedTpaClaims
     this.loadRefundClaimsListGrid();
     this.tpaData$.subscribe((res:any)=>{
+       this.tpaGridData = res.data
       this.claimsCount.emit(this.selectedTpaClaims.length)
       this.tpaData$.subscribe((res:any)=>{
         this.cliams=res.data;
       })
   })
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -150,7 +153,7 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
   }
 
   loadRefundClaimsGrid(data: any) {
-    this.financialVendorRefundFacade.loadTPARefundList(data);
+    this.financialVendorRefundFacade.loadTPARefundLists(data);
   }
   private loadRefundClaimsListGrid(): void {
     this.loadClaimsProcess(

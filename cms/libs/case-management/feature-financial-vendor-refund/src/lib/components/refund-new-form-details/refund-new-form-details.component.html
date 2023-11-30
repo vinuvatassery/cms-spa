@@ -60,13 +60,13 @@
                     </kendo-floatinglabel>
                 </div>
             </div>
-            <ng-container [formGroup]="refundForm">
+            <ng-container [formGroup]="refundForm"  *ngIf="selectedRefundType">
             <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
                 <div class="flex-col flex-col-6" >
                     <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">
+                        <div class="combotable_search_list new_refund_Search">  
                             <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>
+                            aria-hidden="true">search</span>                         
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
 
@@ -76,7 +76,6 @@
                                        placeholder="Search Vendor name or TIN"
                                        (valueChange)="onProviderValueChange($event)"
                                          formControlName="insVendor"
-                                         [(ngModel)]="selectedVendor"
                                           [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                           [filterable]="true"
                                           >
@@ -114,9 +113,9 @@
             <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">
+                        <div class="combotable_search_list new_refund_Search">  
                             <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>
+                            aria-hidden="true">search</span>                         
                                   <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                                       <kendo-multicolumncombobox [data]="tpavendors$ | async"
@@ -208,10 +207,11 @@
             <div class="mt-1"  *ngIf="!isConfirmationClicked" >
                 <h5>Select claims to refund</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                        <cms-vednor-refund-tpa-claims-list  #tpaClaims  [tpaPaymentReqIds]="tpaPaymentReqIds"
+                        <cms-vednor-refund-tpa-claims-list #tpaClaims  [tpaPaymentReqIds]="tpaPaymentReqIds"
                     [vendorId]="vendorId" [clientId]="clientId"  [pageSizes]="pageSizes"
                     [sortValue]="sortValueClientClaims" [sortType]="sortType"
                     (claimsCount)="claimsCountEvent($event)"  
+                  
                     (selectedTpaClaimsChangeEvent)="onSelectedTpaClaimsChangeEvent($event)"></cms-vednor-refund-tpa-claims-list>
                 </div>
             </div>
@@ -219,13 +219,20 @@
              <cms-vednor-refund-tpa-selected-claims-list
               [tpaRefundInformation$]="tpaRefundInformation$"
               [isEdit]="isEdit"
+              [tpaRefundGridLists]="tpaRefundGridLists"
             (tpaRefundInformationConfirmClicked)="getTpaRefundInformation($event)"
             [tpaAddRefundClick$]="tpaAddRefundClick$"
+          
             (tpaPayload)="addTpa($event)"></cms-vednor-refund-tpa-selected-claims-list>
             <div class="mt-3" id="medicalProviderPaymentslist">
-                <h5>MEDICAL PROVIDER PAYMENT FOR FNAME LNAME</h5>
+                <h5>MEDICAL PROVIDER PAYMENT FOR {{this.clientName}}</h5>
                 <div class="add_new_fixed_bottom_grid_section">
-                   
+                    <cms-vendor-refund-claims-list [claimsListData$]="claimsListData$" [pageSizes]="pageSizes"
+                    [sortValue]="sortValueClaims" [sortType]="sortType" [sort]="sortClaims"
+                    (loadClaimsListEvent)="loadClaimsListGrid($event)" 
+                    (onProviderNameClickEvent)="onTpaProviderClick($event)"
+                    [clientId]="clientId" [vendorId]="vendorId"
+                    ></cms-vendor-refund-claims-list>
                 </div>
             </div>
             </div>
@@ -243,6 +250,7 @@
                         [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId"
                         (claimsCount)="claimsCountEvent($event)"
                         (selectedClaimsChangeEvent)="onSelectedClaimsChangeEvent($event)"
+                        (onProviderNameClickEvent)="onTpaProviderClick($event)"
                         ></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
@@ -277,6 +285,7 @@
                         (selectedVendorRefundsListEvent)="getSelectedVendorRefundsList($event)"
                         [confirmClicked]="inputConfirmationClicked"
                         (selectedClaimsChangeEvent)="selectedRxClaimsChangeEvent($event)"
+                        (onProviderNameClickEvent)="onTpaProviderClick($event)"
                        ></cms-vendor-refund-client-claims-list>
                 </div>
             </div>
@@ -522,7 +531,8 @@
                 <h5>PHARMACY PAYMENTS FOR {{ clientName }}</h5>
                     <cms-vendor-refund-pharmacy-payments-list [vendorId]="vendorId" [clientId]="clientId"
                         [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyPayment" [sortType]="sortType"
-                        [sort]="sortPharmacyPayment"></cms-vendor-refund-pharmacy-payments-list>
+                        [sort]="sortPharmacyPayment"
+                        (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"></cms-vendor-refund-pharmacy-payments-list>
             </div>
             </div>
         </div>
@@ -562,4 +572,15 @@
     (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
     [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
     [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+</ng-template>
+
+
+<ng-template #tpaProviderDetailsTemplate>
+    <cms-financial-claims-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
 </ng-template>

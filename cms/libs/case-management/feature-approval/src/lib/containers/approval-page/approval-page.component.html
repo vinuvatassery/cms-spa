@@ -58,7 +58,7 @@
       </ng-template>
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Payments">
-      <ng-template kendoTabTitle>
+      <ng-template kendoTabTitle *ngIf="pendingApprovalPaymentCount > 0">
         Payments
         <span class="tab-batch-notify">{{
           pendingApprovalPaymentCount

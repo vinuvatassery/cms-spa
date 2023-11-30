@@ -6,4 +6,23 @@
 [paymentBatchName$]="paymentBatchName$"
 (loadVendorRefundBatchLogListEvent)="loadBatchLogListGrid($event)"
 (exportGridDataEvent)="exportBatchesLogGridData()"
-(exportReceiptDataEvent)="exportReceiptDataEvent($event)"> </cms-refund-batch-log-list>
+(exportReceiptDataEvent)="exportReceiptDataEvent($event)"
+(getProviderPanelEvent)="getProviderPanel($event)"
+[vendorProfile$]="vendorProfile$"
+(updateProviderProfileEvent) ="updateProviderProfile($event)"
+[updateProviderPanelSubject$]="updateProviderPanelSubject$"
+[ddlStates$]="ddlStates$"
+(onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+[paymentMethodCode$]=" paymentMethodCode$"
+(onProviderNameClickEvent)="onProviderNameClick($event)"
+> </cms-refund-batch-log-list>
+<ng-template #providerDetailsTemplate>
+    <cms-refund-claims-provider-info
+    [paymentRequestId]="paymentRequestId"
+    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+    (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+    [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+    [paymentMethodCode$]="paymentMethodCode$">
+        </cms-refund-claims-provider-info>
+  </ng-template>

@@ -339,17 +339,15 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.setGridValues(data);
   }
 
-  searchColumnChangeHandler(value: string) {    
+  searchColumnChangeHandler(value: string) { 
+    this.searchValue = '';
     this.filter = [];
-    this.showDateSearchWarning = value === 'DateApprovalRequested';
-    if (this.searchValue) {
-      this.onApprovalSearch(this.searchValue);
-    }
+    this.onApprovalSearch(this.searchValue);
   }
 
   onApprovalSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'DateApprovalRequested';
+    this.showDateSearchWarning = (!isDateSearch && this.selectedColumn === 'DateApprovalRequested') && searchValue !== '';
     searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.onChange(searchValue);

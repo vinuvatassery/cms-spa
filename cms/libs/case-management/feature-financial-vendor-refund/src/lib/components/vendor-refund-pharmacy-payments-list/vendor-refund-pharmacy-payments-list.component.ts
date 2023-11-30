@@ -33,6 +33,7 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   @Input() vendorId: any;
   @Input() clientId: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
   @Input() claimsListData$: any;
   private recentRefundListDataSubject  =  new Subject<any>();
@@ -140,5 +141,8 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   }
   loadRecentRefundClaimsGrid(data: any) {
     this.financialVendorRefundFacade.loadFinancialRecentRefundListGrid(data);
+  }
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event.paymentRequestId)
   }
 }
