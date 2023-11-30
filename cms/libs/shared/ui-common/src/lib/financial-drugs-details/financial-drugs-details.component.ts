@@ -5,7 +5,7 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Observable } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { StatusFlag } from '../enums/status-flag.enum';
-
+import { DrugUnit } from '../enums/drug_unit_enum';
 @Component({
   selector: 'common-financial-drugs-details',
   templateUrl: './financial-drugs-details.component.html',
@@ -32,6 +32,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   ndcMaskFormat: string = "00000-0000-00"
   isLoading = false;
 
+  deliveryMethodCodesLocal: any;
   showLoader() {
     this.loaderService.show();
   }
@@ -57,6 +58,25 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     } else {
       this.saveButtonText = "Update";
     }
+
+    // modify delivery methods for that results [ ML , MG , Tablet , Each ]
+    this.normalizeDeliveryMethods();
+
+  }
+
+  private normalizeDeliveryMethods() {
+    const orderMapping: Record<DrugUnit, number> = {
+      [DrugUnit.ML]: 1, [DrugUnit.MG]: 2, [DrugUnit.TABLET]: 3, [DrugUnit.EACH]: 4,
+    };
+
+    const convertToAbbreviation = (description: string): string => ({
+      "Milliliter": DrugUnit.ML,
+      "Milligram": DrugUnit.MG,
+    }[description] || description);
+    this.deliveryMethodCodesLocal = this.deliveryMethodCodes
+      .filter((item: any) => Object.values(DrugUnit).includes(item.lovCode))
+      .map(({ lovCode, lovDesc, ...rest }: { lovCode: string; lovDesc: string; }) => ({ lovCode: lovCode.toUpperCase(), lovDesc: convertToAbbreviation(lovDesc), ...rest }))
+      .sort((a: any, b: any) => (orderMapping[a.lovCode as DrugUnit] || 999) - (orderMapping[b.lovCode as DrugUnit] || 999));
   }
 
   createDrugForm() {
@@ -67,7 +87,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
       deliveryMethodCode: [this.drug?.deliveryMethodCode, Validators.required],
       drugName: [this.drug?.drugName, [Validators.required, Validators.maxLength(200)]],
       brandName: [this.drug?.brandName, [Validators.required, Validators.maxLength(200)]],
-      drugType: [this.drug?.drugCategoryCode, Validators.required]
+      drugType: [this.drug?.drugCategoryCode]
     });
   }
 
@@ -110,7 +130,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
       deliveryMethodCode: formValues.deliveryMethodCode,
       drugName: formValues.drugName,
       brandName: formValues.brandName,
-      drugType: formValues.drugType,
+      drugType: formValues.drugType || 'Not Applicable',
       activeFlag: this.hasCreateUpdatePermission ? StatusFlag.Yes : StatusFlag.No,
     };
     return dto;

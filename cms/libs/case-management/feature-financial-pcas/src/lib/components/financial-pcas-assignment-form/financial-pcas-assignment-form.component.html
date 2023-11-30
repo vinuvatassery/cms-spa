@@ -66,12 +66,12 @@
       <div class="flex-row mt-3">
             <div class="flex-col flex-col-4">
                   <label> PCA Amount </label>
-                  <p> $ {{pcaCodeInfo?.totalAmount}}</p>
+                  <p> ${{pcaCodeInfo?.totalAmount}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Remaining </label>
                   <p [ngClass]="pcaCodeInfo?.remainingAmount < 0 ? 'red-text-color' : 'green-text-color'">
-                        $ {{pcaCodeInfo?.remainingAmount}}
+                        ${{pcaCodeInfo?.remainingAmount}}
                   </p>                  
             </div>
             <div class="flex-col flex-col-4">
@@ -138,6 +138,9 @@
                   </kendo-floatinglabel>
                   <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required && formSubmitted">
                         Amount is required
+                  </kendo-formerror>   
+                  <kendo-formerror *ngIf="pcaCodeInfo?.remainingAmount < pcaAssignmentFormControls?.amount?.value && formSubmitted">
+                        Amount should be equal or less than the Remaining PCA balance
                   </kendo-formerror>   
             </div>
             <div class="flex-col flex-col-6 mt-2">
