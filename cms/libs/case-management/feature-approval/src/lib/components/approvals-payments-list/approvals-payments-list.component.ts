@@ -162,6 +162,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   paymentMethodLovSubscription!: Subscription;
   paymentType: any;
   isWarningDialogShow: boolean=false;
+  providerCountFieldTitle:any="Provider Count"
   /** Constructor **/
   constructor(
     private route: Router,
@@ -475,16 +476,19 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.sendbackBatchCount = 0;
     switch (this.selectedPaymentType) {
       case PendingApprovalPaymentTypeCode.TpaClaim: {
+        this.providerCountFieldTitle="Provider Count";
         this.approvalPermissionCode =
           ApprovalLimitPermissionCode.MedicalClaimPermissionCode;
         break;
       }
       case PendingApprovalPaymentTypeCode.PharmacyClaim: {
+        this.providerCountFieldTitle="Provider Count";
         this.approvalPermissionCode =
           ApprovalLimitPermissionCode.PharmacyPermissionCode;
         break;
       }
       case PendingApprovalPaymentTypeCode.InsurancePremium: {
+        this.providerCountFieldTitle="Carrier Count";
         this.approvalPermissionCode =
           ApprovalLimitPermissionCode.InsurancePremiumPermissionCode;
         break;
