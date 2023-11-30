@@ -24,6 +24,7 @@ export class ApprovalsSearchClientsComponent {
   isShownSearchLoader = false;
   clientSearchResult$ = this.financialClaimsFacade.clients$;
   selectedClient: any;
+  isButtonDisable = true;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly importedClaimFacade: ImportedClaimFacade,
@@ -60,6 +61,7 @@ export class ApprovalsSearchClientsComponent {
 
   onClientValueChange(client: any){
     this.selectedClient = client;
+    this.isButtonDisable = false;
   }
 
   loadClientBySearchText(clientSearchText: any) {
@@ -100,6 +102,10 @@ export class ApprovalsSearchClientsComponent {
 
   onGoToProfileClick() {
     this.caseFacade.onClientProfileTabSelect("clt-info" ,this.selectedClient.clientId, this.selectedClient.clientCaseEligibilityId, this.selectedClient.clientCaseId);
+    this.closeSearchCase();
+  }
+
+  onCancelClick(){
     this.closeSearchCase();
   }
 }

@@ -10,7 +10,7 @@
       selectedSubtypeCode === subTypeConst.DentalProvider
     " [formGroup]="healthCareForm">
     <div
-      *ngIf="(selectedSubtypeCode == subTypeConst.MedicalProvider || selectedSubtypeCode == subTypeConst.DentalProvider) && selectedMasterData.parentVendorId"
+      *ngIf="(selectedSubtypeCode == subTypeConst.MedicalProvider || subTypeConst.DentalProvider)"
       class="k-auto-complete-box flex-col">
       <span *ngIf="clinicVendorLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
       <kendo-floatinglabel text="Clinic Name">
