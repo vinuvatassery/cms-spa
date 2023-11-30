@@ -127,6 +127,7 @@
           [vendorTypeCode]="vendorTypeCode"
           [removeprovider$]="removeprovider$"
           [addProviderNew$]="addProviderNew$"
+          (onProviderNameClickEvent)="onProviderNameClick($event)"
           ></cms-financial-clinic-provider-list>
           </div>
         </div>
@@ -148,3 +149,15 @@
    <!-- Event Log Side Panel -->
    <productivity-tools-event-log   *ngIf="isShownEventLog"  (closeAction)="handleShowEventLogClicked()"
  ></productivity-tools-event-log>
+
+ <ng-template #providerDetailsTemplate>
+  <cms-financial-claims-provider-info
+        [paymentRequestId]=""
+        (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+        (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfilePanel$"
+        (updateProviderProfileEvent)="updateProviderProfile($event)"
+         [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+        [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="onEditProviderProfileClick()"
+        [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+</ng-template>
+ 
