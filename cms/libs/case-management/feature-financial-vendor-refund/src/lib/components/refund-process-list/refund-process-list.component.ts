@@ -6,7 +6,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   TemplateRef,
   ViewChild,
@@ -25,7 +24,7 @@ import { Subject, first } from 'rxjs';
   templateUrl: './refund-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundProcessListComponent implements OnInit, OnChanges {
+export class RefundProcessListComponent implements  OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('batchRefundConfirmationDialog', { read: TemplateRef })
   batchRefundConfirmationDialog!: TemplateRef<any>;
@@ -47,6 +46,11 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() vendorRefundProcessGridLists$: any;
+  @Input() vendorProfile$ :any;
+  @Input() updateProviderPanelSubject$:any
+  @Input() ddlStates$ :any
+  @Input() paymentMethodCode$ :any
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   isColumnsReordered = false;
   columnChangeDesc = 'Default Columns';
   filteredByColumnDesc = '';
@@ -218,10 +222,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private financialVendorRefundFacade: FinancialVendorRefundFacade
-  ) {}
-
-  ngOnInit(): void {
-  }
+  ) {} 
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -523,4 +524,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     });
   }
 
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
+  }
 }
