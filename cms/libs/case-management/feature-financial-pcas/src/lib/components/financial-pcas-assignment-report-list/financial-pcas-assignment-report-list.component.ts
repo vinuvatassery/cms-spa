@@ -78,7 +78,7 @@ export class FinancialPcasAssignmentReportListComponent
     },
     {
       columnName: 'pcaCode',
-      columnDesc: 'PCA #',
+      columnDesc: 'PCA',
     },
     {
       columnName: 'objectName',

@@ -440,32 +440,38 @@
 
             <div *ngIf="isRecentClaimShow" id="isRecentClaimShow">
                 <h5 class="text-upper">Recent Claims for this {{clientName}} and {{vendorName}}</h5>
-
+                <div *ngIf="(recentClaimsGridLists$ | async) as recentClaims" class="k-flex-grow justify-content-end">
+                    <span class="d-flex k-wizard-horizontal align-items-fstart">
+                      <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
+                      <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
+                    </span>
+                  </div>
                 <div class="add_new_fixed_bottom_grid_section">
                     <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [duplicatePaymentInputObject]="duplicatePaymentObject"
                     [claimsType]="claimsType"></cms-financial-claims-recent-claims-list>
                 </div>
-
-
+                <div class="justify-content-between">
+                    <div class="justify-content-end">
+                    <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+                        Client Profile <span class="material-icons ml-1">
+                        chevron_right
+                        </span>
+                    </button>            
+                    </div>
+                </div>
             </div>
         </div>
     </section>
-
-</section>
- 
+</section> 
 <kendo-dialog-actions>
-
-    <div class="justify-content-end align-items-center"> 
-       
+    <div class="justify-content-end align-items-center">        
             <span class="mr-2">1 service(s) to be added</span>
             <button kendoButton [primary]="true" look="outline"  aria-label="Cancel" 
                 (click)="closeAddEditClaimsFormModalClicked(false)"> Cancel </button>
  
             <button kendoButton [primary]="true" [attr.aria-label]="addOrEdit" (click)="save(false)">
                 {{addOrEdit}}
-            </button>
- 
-       
+            </button>       
     </div>
 </kendo-dialog-actions>
 
