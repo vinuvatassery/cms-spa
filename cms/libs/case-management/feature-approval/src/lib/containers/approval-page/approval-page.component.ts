@@ -110,7 +110,7 @@ export class ApprovalPageComponent implements OnInit {
   pharmacyForm!: FormGroup;
   insuranceVendorForm: FormGroup;
   insuranceProviderForm: FormGroup;
-
+  deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
   /** Constructor **/
   constructor(
     private readonly approvalFacade: ApprovalFacade,
@@ -145,6 +145,7 @@ export class ApprovalPageComponent implements OnInit {
     this.loadTabCount();
     this.contactFacade.loadDdlStates();
     this.lovFacade.getHealthInsuranceTypeLovsForPlan();
+    this.lovFacade.getDeliveryMethodLovs();
     this.loadPendingApprovalGeneralCount();
     this.loadPendingApprovalImportedClaimCount();
     this.loadPendingApprovalPaymentCount();
@@ -385,8 +386,8 @@ export class ApprovalPageComponent implements OnInit {
       addressLine2: [''],
       city: [''],
       state: [''],
-      zip: [''],
-      contactFirstName:[''],
+      zip: ['',Validators.pattern('^[A-Za-z0-9 \-]+$')],
+      contactName:[''],
       contactPhone:[''],
       contactFax:[''],
       contactEmail:['',Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]
@@ -499,7 +500,7 @@ export class ApprovalPageComponent implements OnInit {
       preferredPharmacy: [''],
       mailCode:[''],
       paymentMethod:[''],
-      contactFirstName: [''],
+      contactName: [''],
       contactLastName:[''],
       contactPhone: [''],
       contactFax:[''],
@@ -519,7 +520,7 @@ export class ApprovalPageComponent implements OnInit {
       acceptsCombinedPayments:[''],
       acceptsReport:[''],
       paymentRunDate:[''],
-      contactFirstName: [''],
+      contactName: [''],
       contactLastName:[''],
       contactPhone: [''],
       contactFax:[''],
