@@ -8,7 +8,9 @@ import { CaseAvailabilityListComponent, EidLifetimePeriodListComponent, HousingA
 import { RolesAndPermissionsDetailComponent } from './components/roles-and-permissions-detail/roles-and-permissions-detail.component';
 import { RolesAndPermissionsListComponent } from './components/roles-and-permissions-list/roles-and-permissions-list.component';
 import { UserListComponent } from './components/user-list/user-list.component';
-import { UserManagementPageComponent } from './containers/user-management-page/user-management-page.component';
+import { UserManagementPageComponent } from './containers/user-management-page/user-management-page.component'; 
+import { CaseAssignmentComponent, EligibilityCheckListComponent } from '@cms/system-config/feature-cases';
+ 
 const routes: Routes = [
   {
     path: '',
@@ -114,7 +116,14 @@ const routes: Routes = [
         component: SmsTextTemplateListComponent
       },
      
-      
+      {
+        path: 'case-assignment',
+        component: CaseAssignmentComponent
+      },
+      {
+        path: 'eligibility-checklist',
+        component: EligibilityCheckListComponent
+      },
     ],
   },
   {
