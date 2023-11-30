@@ -124,13 +124,6 @@ loadFinancialRecentClaimListGrid() {
   onChange(data: any) {
     this.defaultGridState();
     let operator= "startswith"
-
-    if(this.selectedColumn ==="serviceCost" || this.selectedColumn ==="amountDue" || this.selectedColumn ==="clientBalance"
-    || this.selectedColumn ==="clientAnnualTotal" || this.selectedColumn === "balanceAmount")
-    {
-      operator = "eq"
-    }
-    
     this.filterData = {
       logic: 'and',
       filters: [

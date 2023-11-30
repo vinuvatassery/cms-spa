@@ -241,16 +241,17 @@
 
                         <kendo-grid-column field="amountDue" title="Amount Due" [width]="180">
                               <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                              <label aria-label="Medical Provider" kendoButton look="flat"
-                                    class="card-link-button"  >
-                                    <span class="tableamountview"> <strong>$</strong> {{dataItem?.amountDue | kendoNumber:'n2'}}</span>
-                              </label>
-                            </ng-template>
-                              <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                                          [extra]="false" operator="eq">
-                                          <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                                  </kendo-grid-string-filter-menu>
+                                    <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
+                            </ng-template>                            
+                                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                    <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                      [extra]="false" operator="eq">
+                                      <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                      <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                                      <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                                      <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                                      <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                                    </kendo-grid-numeric-filter-menu>
                                   </ng-template>
                         </kendo-grid-column>
                         <kendo-grid-column field="checkNbr" title="Warrant Number" [width]="180">

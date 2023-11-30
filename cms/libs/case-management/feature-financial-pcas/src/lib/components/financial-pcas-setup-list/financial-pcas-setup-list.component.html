@@ -25,6 +25,7 @@ aria-label="add"> PCA Setup</button>
                               <kendo-textbox 
                                     aria-label="Search case" 
                                     rounded="medium"
+                                    [clearButton]="true"
                                     [fillMode]="formUiStyle.inputFillMode"
                                     [(ngModel)]="searchText"
                                     (afterValueChanged)="onPcaSearch($event)"> </kendo-textbox>
@@ -77,14 +78,14 @@ aria-label="add"> PCA Setup</button>
             (filterChange)="filterChange($event)"
             (columnReorder)="onColumnReorder($event)"
             (columnVisibilityChange)="columnChange($event)">
-            <kendo-grid-column field="isPcaAssigned" title="Assigned" [width]="90"> 
+            <kendo-grid-column field="isPcaAssigned" title="Assign" [width]="90"> 
                   <ng-template kendoGridCellTemplate let-dataItem> 
                         <div class="text-center">
-                              <span class="material-icons green-text-color " title="Assigned" *ngIf="dataItem.isPcaAssigned">
+                              <span class="material-icons red-text-color " title="Assigned" *ngIf="!dataItem.isPcaAssigned">
                                     price_check 
                               </span>
 
-                              <span class="material-icons red-text-color" title="Un-assigned" *ngIf="!dataItem.isPcaAssigned">
+                              <span class="material-icons green-text-color" title="Un-assigned" *ngIf="dataItem.isPcaAssigned">
                                     attach_money 
                               </span> 
                               

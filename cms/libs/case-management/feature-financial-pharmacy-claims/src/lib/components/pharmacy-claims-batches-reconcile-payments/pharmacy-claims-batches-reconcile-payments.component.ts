@@ -74,7 +74,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn: any='ALL';
   searchItem:any=null;
   gridDataResult!: GridDataResult;
   selectedDataRows: any[] = [];
@@ -119,16 +119,21 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   loadType:any = null;
   loadTypeAllPayments:any = LoadTypes.allPayments
   columns : any = {
+    ALL: 'ALL',
     vendorName:this.providerTitle,
     tin:"TIN",
     paymentMethodDesc:"Pmt. Method",
     paymentReconciledDate:"Date Pmt. Reconciled",
     paymentSentDate:"Date Pmt. Sent",
-    amountDue:"Amount Due",
+    amountDue:"Pmt. Amount",
     checkNbr:"Warrant Number",
     comments:"Note (optional)"
   }
   dropDropdownColumns : any = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
     {
       columnCode: 'vendorName',
       columnDesc: this.providerTitle,
@@ -151,7 +156,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     },
     {
       columnCode: 'amountDue',
-      columnDesc: 'Amount Due',
+      columnDesc: 'Pmt. Amount',
     },
     {
       columnCode: 'checkNbr',
@@ -176,7 +181,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     if(this.loadType === LoadTypes.allPayments){
       this.columns.batchName ='Batch #';
       let batch = {columnCode:'batchName',columnDesc:'Batch #'};
-      this.dropDropdownColumns.splice(0, 0, batch);
+      this.dropDropdownColumns.splice(1, 0, batch);
     }
     this.lovFacade.getPaymentMethodLov();
     this.lovFacade.getPaymentStatusLov();
@@ -287,7 +292,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     let operator = 'contains';
 
     if (
-      this.selectedColumn === 'amountPaid' 
+      this.selectedColumn === 'amountDue' 
     ) {
       operator = 'eq';
     }

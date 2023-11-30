@@ -1,6 +1,6 @@
 
 <ng-container >
-    <kendo-dialog-titlebar (close)="closeViewProviderClicked()"> {{isEditProvider ? 'Edit ' : ''}}{{vendorProfile?.vendorName}}</kendo-dialog-titlebar>
+    <kendo-dialog-titlebar (close)="closeViewProviderClicked()">{{isEditProvider ? 'Edit ' : ''}}{{vendorProfile?.vendorName}}</kendo-dialog-titlebar>
     
     <section class="k-dialog-body newcase" *ngIf="vendorProfile">
         <button aria-label="Edit" kendoButton look="flat" class="card-link-button"  *ngIf="!isEditProvider" (click)="editProviderClicked()">Edit </button>
@@ -26,7 +26,7 @@
                 
                 <tr> 
                     <td><strong>Accepts combined payments?</strong></td>
-                    <td>{{vendorProfile.address.acceptsCombinedPaymentsFlags==='Y'? "Yes":"No"}}</td>
+                    <td>{{vendorProfile.address.acceptsCombinedPaymentsFlag ==='Y'? "Yes":"No"}}</td>
                 </tr>
                 
                 <tr> 
@@ -69,15 +69,20 @@
                 <tr hidden>
                     <th>Field</th>
                     <th> details</th>
-                </tr>
+                </tr>  
                 <tr>
                     <td><strong>TIN</strong></td>
-                    <td> 
-                            <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" formControlName="tin">
-                            </kendo-textbox>
+                        <td  [attr.disabled]="true">
+                                <kendo-textbox 
+                                [disabled]="true"
+                                [readonly]="true"                                
+                                  [disabled]="isDisabled"
+                                  formControlName="tin"
+                                ></kendo-textbox>
                             
-                    </td>
-                </tr>
+                        </td>
+                </tr>      
+          
                 <ng-container formGroupName="address">
                 <tr>
                     <td><strong>Mail Code</strong></td>
@@ -113,13 +118,13 @@
                     <td>
                 <div class="component-list-h">
                     <span class="app-radiobtnwidtext-wrapper">
-                      <input type="radio" kendoRadioButton aria-labelledby="combinedpaymentsYes" name="acceptsCombinedPaymentsFlags"
-                        id="combinedpaymentsYes" value="Y" formControlName="acceptsCombinedPaymentsFlags" />
+                      <input type="radio" kendoRadioButton aria-labelledby="combinedpaymentsYes" name="acceptsCombinedPaymentsFlag"
+                        id="combinedpaymentsYes" value="Y" formControlName="acceptsCombinedPaymentsFlag" />
                       <kendo-label class="k-radio-label" text="Yes" for="combinedpaymentsYes"></kendo-label>
                     </span>
                     <span class="app-radiobtnwidtext-wrapper">
-                      <input type="radio" kendoRadioButton name="acceptsCombinedPaymentsFlags" id="combinedpaymentsno"
-                        aria-labelledby="combinedpaymentsno" value="N" formControlName="acceptsCombinedPaymentsFlags" />
+                      <input type="radio" kendoRadioButton name="acceptsCombinedPaymentsFlag" id="combinedpaymentsno"
+                        aria-labelledby="combinedpaymentsno" value="N" formControlName="acceptsCombinedPaymentsFlag" />
                       <kendo-label class="k-radio-label" text="No" for="combinedpaymentsno"></kendo-label>
                     </span>
         
@@ -161,6 +166,8 @@
                                 <kendo-textbox aria-label="Address 1" placeholder="Address 2" 
                                 [fillMode]="formUiStyle.inputFillMode" formControlName="address2" [maxlength]="100">
                                 </kendo-textbox>
+                                <kendo-formerror *ngIf="addressForm?.hasError('required','address2') && isSubmitted">Address Line 2  is Required
+                                </kendo-formerror>
                             </div>
                             <div class="flex-col mt-1">
                                 <kendo-textbox aria-label="City" placeholder="City" [fillMode]="formUiStyle.inputFillMode"
