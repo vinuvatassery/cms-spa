@@ -34,14 +34,11 @@ aria-label="add"> PCA Setup</button>
              
 </section>
 <div class="table-sorted-info">
-      <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">       
+      <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showNumberSearchWarning && searchText && isNotNumeric(searchText)">       
             <span class="material-icons" aria-label="search-warning" aria-hidden="true">
                   warning
             </span>
-            <span *ngIf="showDateSearchWarning">
-                  The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
-            </span>
-            <span *ngIf="showNumberSearchWarning">
+            <span>
                   PCA/AY # allow only numbers.
             </span>
       </span>   
