@@ -450,16 +450,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   onCloseReviewPossibleMatchesDialogClicked($event:any) {
-    if($event)
-    {
-      this.reviewPossibleMatchesDialog.close();
-    }
-    else
-    {
-      this.reviewPossibleMatchesDialog.close();
-      this.cd.detectChanges();
-      this.loadImportedClaimsListGrid();
-    }
+    this.reviewPossibleMatchesDialog.close();
   }
 
   loadPossibleMatch(data?: any) {
@@ -468,6 +459,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   savePossibleMatch(data?:any)
   {
+    this.onClientClicked(data.clientId);
     this.closePossibleMatchModal();
   }
 
@@ -476,7 +468,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       if (value) {
         this.onCloseReviewPossibleMatchesDialogClicked(true);
         this.cd.detectChanges();
-        this.loadImportedClaimsListGrid();
       }
     });
   }

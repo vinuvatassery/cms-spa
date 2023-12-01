@@ -3,10 +3,13 @@
 </kendo-dialog-titlebar>
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    Select whether it's a match. If it's a match and the claim passes all criteria, it will automatically be submitted for approval. If it still fails one or more criteria, it will stay in your approval queue.
+    If the client is found, navigate to their profile and update their information. Once corrected If the claim passes all criteria it will be submitted for processing when you return to the queue. If it still fails one or more criteria, it will stay in your approval queue.
   </p>
 
   <div class="flex-row">
+    <div class="flex-col mt-1" *ngIf="possibleMatch == null">
+      {{warningMessage}}
+    </div>
     <div class="flex-col mt-1" *ngIf="possibleMatch != null">
       <table class="table_view_data_info">
         <caption hidden>

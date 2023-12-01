@@ -7,8 +7,6 @@ import {
   OnInit,
   ChangeDetectorRef,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import { CaseFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'productivity-tools-approvals-review-possible-matches',
@@ -25,6 +23,7 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   isNotMatch: any=false;
   possibleMatch:any;
   hasSaveButtonEnabled:boolean=false;
+  warningMessage:any="";
   ngOnInit(): void {
     this.loadPossibleMatch(this.claimData);
   }
@@ -36,21 +35,25 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   loadPossibleMatch(data?: any) {
     this.loadPossibleMatchDataEvent.emit(data);
     this.possibleMatchData$.subscribe((response: any) => {
-      if (response !== undefined && response !== null && response.length > 0) {
+      if (response !== undefined && response !== null && response.status == 2)
+      {
+        this.warningMessage = response.message;
+        this.cd.detectChanges();
+      }
+      else if (response !== undefined && response !== null && response.status==1) {
         this.hasSaveButtonEnabled = true;
-        this.possibleMatch=response[0];
+        this.possibleMatch=response;
         this.cd.detectChanges();
       }
       else
       {
-        this.closePossibleMatches(false);
+        this.warningMessage="Client information updated, please refresh the imported claims grid.";
       }
     });
   }
 
   onGoToProfileClick(data:any) {
-    this.caseFacade.onClientProfileTabSelect("clt-info" ,data.clientId, data.clientCaseEligibilityId, data.clientCaseId);
-    this.save(data);
+    this.save(data);    
   }
 
   save(data:any)
@@ -58,6 +61,5 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
     this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
   }
 
-  constructor(private readonly cd: ChangeDetectorRef,private route: Router,
-    private caseFacade : CaseFacade) {}
+  constructor(private readonly cd: ChangeDetectorRef) {}
 }
