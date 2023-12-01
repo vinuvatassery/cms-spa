@@ -67,22 +67,7 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
 
   onRefundNoteValueChange(event:any, type:any, item:any){
     switch (type) {
-      case ColumnNames.VoucherPayableNbr: {
-         if(event && event.length >0){
-          item.voucherPayableNbrError = false
-         }else{
-          item.voucherPayableNbrError = true
-         }
-        break;
-      }
-        case ColumnNames.CreditNbr: {
-          if(event && event.length >0){
-           item.creditNbrError = false
-          }else{
-           item.creditNbrError = true
-          }
-         break;
-      }
+
       case ColumnNames.RefundedWarrantNumber: {
         if(event && event.length >0){
          item.refundWarantNumberError = false

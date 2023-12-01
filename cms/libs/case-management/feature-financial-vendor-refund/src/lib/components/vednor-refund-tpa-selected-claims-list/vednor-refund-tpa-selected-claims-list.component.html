@@ -130,21 +130,19 @@
                                 [fillMode]="formUiStyle.inputFillMode" 
                                 [(ngModel)]="item.voucherPayableNbr"
                                 (valueChange)="onRefundNoteValueChange($event, 'voucherPayableNbr',item)"
-                                 required>
+                                 >
                                 </kendo-textbox>
                             </kendo-floatinglabel>
-                            <kendo-formerror *ngIf="item.voucherPayableNbrError">VP is required.
-                            </kendo-formerror>
+                          
                         </div>
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="Credit #">
                                 <kendo-textbox aria-label="Refund Warrant #" 
                                  [(ngModel)]="item.creditNbr" [fillMode]="formUiStyle.inputFillMode"
-                                 (valueChange)="onRefundNoteValueChange($event,'creditNbr',item)"  required>
+                                 (valueChange)="onRefundNoteValueChange($event,'creditNbr',item)" >
                                 </kendo-textbox>
                             </kendo-floatinglabel>
-                            <kendo-formerror *ngIf="item.creditNbrError">Credit # is required.
-                            </kendo-formerror>
+                           
                         </div>
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="Refund Warrant #">
