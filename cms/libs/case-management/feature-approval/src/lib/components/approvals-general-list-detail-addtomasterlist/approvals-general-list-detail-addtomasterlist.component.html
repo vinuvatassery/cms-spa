@@ -29,11 +29,11 @@
           <td>Clinic Name</td>
           <td>{{ vendorData.clinicName }}</td>
         </tr>
-        <tr>
+        <tr *ngIf="subTypeCode !== subTypeConst.DentalClinic && subTypeCode !== subTypeConst.MedicalClinic">
           <td>Provider First Name</td>
           <td>{{ vendorData.firstName }}</td>
         </tr>
-        <tr>
+        <tr *ngIf="subTypeCode !== subTypeConst.DentalClinic && subTypeCode !== subTypeConst.MedicalClinic">
           <td>Provider Last Name</td>
           <td>{{ vendorData.lastName }}</td>
         </tr>
@@ -129,12 +129,24 @@
           <td>{{vendorData.nameOnEnvelope}}</td>
         </tr>
         <tr>
-          <td>Billing Email</td>
-          <td>{{vendorData.email}}</td>
+          <td>Address</td>
+          <td>{{vendorData.address1}}</td>
         </tr>
         <tr>
-          <td>Billing Address</td>
-          <td>{{vendorData.address1}}</td>
+          <td>Contact 1</td>
+          <td>{{vendorData.contactName}}</td>
+        </tr>
+        <tr>
+          <td>Phone</td>
+          <td>{{vendorData.phoneNumber}}</td>
+        </tr>
+        <tr>
+          <td>Fax</td>
+          <td>{{vendorData.fax}}</td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td>{{vendorData.email}}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.InsurancePlan">
@@ -175,15 +187,15 @@
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
         <tr>
-          <td>Pharmacy</td>
+          <td>Pharmacy Name</td>
           <td>{{vendorData.vendorName}}</td>
         </tr>
         <tr>
-          <td>Tin</td>
+          <td>TIN</td>
           <td>{{vendorData.tin}}</td>
         </tr>
         <tr>
-          <td>NPI </td>
+          <td>NPI</td>
           <td>{{vendorData.npiNbr}}</td>
         </tr>
       </tbody>

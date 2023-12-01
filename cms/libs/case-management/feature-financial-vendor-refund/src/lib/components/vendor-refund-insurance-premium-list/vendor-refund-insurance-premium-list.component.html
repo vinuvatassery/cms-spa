@@ -15,7 +15,8 @@
 
       <kendo-grid-column field="insuranceVendor" title="Insurance Vendor" [width]="160">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button [attr.aria-label]="dataItem.insuranceVendor" kendoButton look="flat" class="card-link-button"  >
+          <button [attr.aria-label]="dataItem.insuranceVendor" (click)="onProviderNameClick(dataItem)"
+          kendoButton look="flat" class="card-link-button"  >
             {{ dataItem.insuranceVendor }}
           </button>
         </ng-template>

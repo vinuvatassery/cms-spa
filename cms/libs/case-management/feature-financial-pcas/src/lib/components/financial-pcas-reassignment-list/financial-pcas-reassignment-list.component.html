@@ -65,6 +65,7 @@
                   </ng-template>
             </kendo-grid-column>
             <kendo-grid-column field="amountSpendAfterExpiration" title="Amount Spent after Expiration" [width]="160">
+            <kendo-grid-column field="amountSpendAfterExpiration" title="Amount Spent after Expiration" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.amountSpendAfterExpiration | kendoNumber: 'n2'}}</span>
                   </ng-template> </kendo-grid-column>
