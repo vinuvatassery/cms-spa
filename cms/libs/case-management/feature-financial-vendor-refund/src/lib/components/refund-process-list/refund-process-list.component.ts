@@ -6,25 +6,27 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
+  OnInit,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialVendorRefundFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import {  GridDataResult, SelectAllCheckboxState } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Subject, first } from 'rxjs';
+import { Subject, Subscription, first } from 'rxjs';
 @Component({
   selector: 'cms-refund-process-list',
   templateUrl: './refund-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundProcessListComponent implements  OnChanges {
+export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('batchRefundConfirmationDialog', { read: TemplateRef })
   batchRefundConfirmationDialog!: TemplateRef<any>;
@@ -35,7 +37,7 @@ export class RefundProcessListComponent implements  OnChanges {
   private addEditRefundFormDialog: any;
   @ViewChild('addEditRefundDialog', { read: TemplateRef })
   addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
-  
+
   isDeleteBatchClosed = false;
   isDataAvailable=true;
   isProcessBatchClosed = false;
@@ -91,8 +93,7 @@ export class RefundProcessListComponent implements  OnChanges {
     vp:'VP',
     refunfNotes:'Refund Note',
     origionalWarrentnbr:'Original Warrant #',
-
-
+    creationTime: 'Creation Time'
   };
 
   dropDowncolumns: any = [
@@ -217,17 +218,33 @@ export class RefundProcessListComponent implements  OnChanges {
 
   deletemodelbody = 'This action cannot be undone, but you may add a refund at any time.';
   singleRefundDelete = false;
+
+  public selectAllState: SelectAllCheckboxState = "unchecked";
+  vendorRefundProcessGridLists: any;
+  vendorRefundProcessGridListsSub!: Subscription;
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private financialVendorRefundFacade: FinancialVendorRefundFacade
-  ) {} 
+  ) {
+  }
+
+  ngOnInit(){
+    this.vendorRefundProcessGridListsSub = this.vendorRefundProcessGridLists$.subscribe((res: any) => this.vendorRefundProcessGridLists = res)
+  }
+
+  ngOnDestroy(){
+    this.vendorRefundProcessGridListsSub?.unsubscribe();
+  }
+
   ngOnChanges(): void {
+    this.sortType = 'desc';
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'VendorName', dir: 'asc' }]
+      sort: this.sort
     };
     this.loadVendorRefundProcessListGrid();
   }
@@ -281,7 +298,7 @@ export class RefundProcessListComponent implements  OnChanges {
   }
 
   onClickOpenAddEditRefundFromModal(template: TemplateRef<unknown>): void {
-    this.isEditRefund =false   
+    this.isEditRefund =false
     this.refunEditServiceType = ""
     this.refundEditClientId =""
     this.refundEditClientFullName = ""
@@ -355,6 +372,7 @@ export class RefundProcessListComponent implements  OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     if (stateData.filter?.filters.length > 0) {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -409,8 +427,9 @@ export class RefundProcessListComponent implements  OnChanges {
     this.selectedColumn = 'VendorName';
     this.isFiltered = false;
     this.columnsReordered = false;
-    this.sortValue = 'VendorName';
-    this.sortType = 'asc';
+    this.sortColumnDesc = 'Creation Time';
+    this.sortValue = 'creationTime';
+    this.sortType = 'desc';
     this.sort = this.sortColumn;
     this.searchValue =''
     this.loadVendorRefundProcessListGrid();
@@ -431,12 +450,22 @@ export class RefundProcessListComponent implements  OnChanges {
   }
 
   onModalBatchRefundsButtonClicked(event: any) {
-    const input: any = {
-      PaymentRequestIds: this.selectedProcessRefunds,
+    this.handleBatchRefunds();
+
+    this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType
+
+    const gridDataRefinerValue: any = {
+      skipCount: this.state?.skip ?? 0,
+      maxResultCount: this.state?.take ?? 0,
+      sorting: this.sortValue,
+      sortType: this.sortType,
+      filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
     };
 
-    this.handleBatchRefunds();
-    this.financialVendorRefundFacade.batchRefunds(input);
+    this.financialVendorRefundFacade.batchRefunds(this.selectedProcessRefunds, this.selectAllState === 'checked', gridDataRefinerValue);
   }
 
   handleBatchRefunds() {
@@ -460,7 +489,28 @@ export class RefundProcessListComponent implements  OnChanges {
   }
 
   selectedKeysChange(selection: any) {
+
+    const len = this.selectedProcessRefunds.length;
+
+    if (len === 0) {
+      this.selectAllState = "unchecked";
+    } else if (len > 0 && len < this.vendorRefundProcessGridLists.total) {
+      this.selectAllState = "indeterminate";
+    } else {
+      this.selectAllState = "checked";
+    }
+
     this.selectedProcessRefunds = selection;
+  }
+
+  public onSelectAllChange(checkedState: SelectAllCheckboxState): void {
+    if (checkedState === "checked") {
+      this.selectedProcessRefunds = this.vendorRefundProcessGridLists.data.map((item: any) => item.paymentRequestId);
+      this.selectAllState = "checked";
+    } else {
+      this.selectedProcessRefunds = [];
+      this.selectAllState = "unchecked";
+    }
   }
 
   onBatchRefundsGridSelectedCancelClicked() {
@@ -469,6 +519,7 @@ export class RefundProcessListComponent implements  OnChanges {
     this.isProcessBatchClosed = false;
     this.singleRefundDelete = false;
     this.selectedProcessRefunds = [];
+    this.selectAllState = "unchecked";
     this.cdr.detectChanges();
   }
 
