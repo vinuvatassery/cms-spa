@@ -49,8 +49,8 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   }
 
   onGoToProfileClick(data:any) {
-    this.route.navigate([`/case-management/cases/case360/${data.clientId}`]);  
     this.closeReviewPossibleMatchesDialogClickedEvent.emit(true);
+    this.route.navigate([`/case-management/cases/case360/${data.clientId}`]);      
   }
 
   constructor(private readonly cd: ChangeDetectorRef,private route: Router,) {}
