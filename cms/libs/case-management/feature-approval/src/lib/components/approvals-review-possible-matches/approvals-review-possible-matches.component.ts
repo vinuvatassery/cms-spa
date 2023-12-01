@@ -7,6 +7,7 @@ import {
   OnInit,
   ChangeDetectorRef,
 } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'productivity-tools-approvals-review-possible-matches',
@@ -18,7 +19,6 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   @Input() possibleMatchData$:any;
   @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();
   @Output() closeReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
-  @Output() saveReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
   isMatch: any=false;
   isNotMatch: any=false;
   possibleMatch:any;
@@ -45,21 +45,13 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
         this.possibleMatch=response;
         this.cd.detectChanges();
       }
-      else
-      {
-        this.warningMessage="Client information updated, please refresh the imported claims grid.";
-      }
     });
   }
 
   onGoToProfileClick(data:any) {
-    this.save(data);    
+    this.route.navigate([`/case-management/cases/case360/${data.clientId}`]);  
+    this.closeReviewPossibleMatchesDialogClickedEvent.emit(true);
   }
 
-  save(data:any)
-  {
-    this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
-  }
-
-  constructor(private readonly cd: ChangeDetectorRef) {}
+  constructor(private readonly cd: ChangeDetectorRef,private route: Router,) {}
 }
