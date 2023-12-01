@@ -40,7 +40,7 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   loadPossibleMatch(data?: any) {
     this.loadPossibleMatchDataEvent.emit(data);
     this.possibleMatchData$.subscribe((response: any) => {
-      if (response !== undefined && response !== null) {
+      if (response !== undefined && response !== null && response.length > 0) {
         this.possibleMatch=response[0];
         this.cd.detectChanges();
       }

@@ -454,9 +454,11 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     {
       this.reviewPossibleMatchesDialog.close();
     }
-  else{
-    this.cd.detectChanges();
-    this.loadImportedClaimsListGrid();
+    else
+    {
+      this.reviewPossibleMatchesDialog.close();
+      this.cd.detectChanges();
+      this.loadImportedClaimsListGrid();
     }
   }
 
