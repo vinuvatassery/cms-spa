@@ -7,6 +7,8 @@ import {
   OnInit,
   ChangeDetectorRef,
 } from '@angular/core';
+import { Router } from '@angular/router';
+import { CaseFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'productivity-tools-approvals-review-possible-matches',
@@ -24,13 +26,7 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   possibleMatch:any;
   hasSaveButtonEnabled:boolean=false;
   ngOnInit(): void {
-    let request = {
-      policyId:this.claimData.policyId,
-      firstName:this.claimData.firstName,
-      lastName:this.claimData.lastName,
-      dateOfBirth:this.claimData.dateOfBirth
-    }
-    this.loadPossibleMatch(request);
+    this.loadPossibleMatch(this.claimData);
   }
 
   closePossibleMatches($event:any) {
@@ -40,7 +36,8 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   loadPossibleMatch(data?: any) {
     this.loadPossibleMatchDataEvent.emit(data);
     this.possibleMatchData$.subscribe((response: any) => {
-      if (response !== undefined && response !== null) {
+      if (response !== undefined && response !== null && response.length > 0) {
+        this.hasSaveButtonEnabled = true;
         this.possibleMatch=response[0];
         this.cd.detectChanges();
       }
@@ -51,32 +48,9 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
     });
   }
 
-  onMatchClicked()
-  {
-    this.isMatch =  true;
-    this.isNotMatch = !this.isMatch;
-    this.hasSaveButtonEnabled = true;
-  }
-
-  onNotMatchClicked()
-  {
-    this.isNotMatch =  true;
-    this.isMatch = !this.isNotMatch;
-    this.hasSaveButtonEnabled = true;
-  }
-
-  savePossibleMatches(data?:any)
-  {
-    let request = {
-      clientId:data.clientId,
-      policyId: this.claimData.policyId,
-      invoiceExceptionId: this.claimData.invoiceExceptionId,
-      claimId: this.claimData.importedClaimId,
-      serviceDate:this.claimData.dateOfService,
-      isPossibleMatch: this.isMatch ? true : false,
-      entityTypeCode: this.claimData.entityTypeCode
-    }
-    this.save(request);
+  onGoToProfileClick(data:any) {
+    this.caseFacade.onClientProfileTabSelect("clt-info" ,data.clientId, data.clientCaseEligibilityId, data.clientCaseId);
+    this.save(data);
   }
 
   save(data:any)
@@ -84,5 +58,6 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
     this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
   }
 
-  constructor(private readonly cd: ChangeDetectorRef) {}
+  constructor(private readonly cd: ChangeDetectorRef,private route: Router,
+    private caseFacade : CaseFacade) {}
 }

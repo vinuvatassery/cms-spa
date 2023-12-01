@@ -64,16 +64,6 @@
         </tr>
       </table>
     </div>
-    <div class="flex-col mt-3">
-      <kendo-buttongroup selection="single" class="fill_width_group_btn">
-        <button kendoButton aria-label="It’s a Match" [toggleable]="true" (click)="onMatchClicked()">
-          IT'S A MATCH
-        </button>
-        <button kendoButton aria-label="It’s Not a Match" [toggleable]="true" (click)="onNotMatchClicked()">
-          IT'S NOT A MATCH
-        </button>
-      </kendo-buttongroup>
-    </div>
   </div>
 </section>
 
@@ -88,7 +78,7 @@
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closePossibleMatches(true)">
         CANCEL
       </button>
-      <button kendoButton [primary]="true" aria-label="Save" (click)="savePossibleMatches(  possibleMatch)" [disabled]="!hasSaveButtonEnabled">SAVE</button>
+      <button kendoButton [primary]="true" aria-label="GO TO PROFILE" (click)="onGoToProfileClick(possibleMatch)" [disabled]="!hasSaveButtonEnabled">GO TO PROFILE</button>
     </div>
   </div>
 </kendo-dialog-actions>
