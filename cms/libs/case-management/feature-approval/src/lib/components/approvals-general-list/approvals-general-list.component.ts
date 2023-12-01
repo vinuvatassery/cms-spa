@@ -303,7 +303,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       case PendingApprovalGeneralTypeCode.GeneralExceptions:
         return 'Request to Exceed Max Benefits';
       case PendingApprovalGeneralTypeCode.GeneralCaseReassignment:
-        return 'Request for Case reassignment';
+        return 'Request for Case Re-Assignment';
       case PendingApprovalGeneralTypeCode.GeneralAddToMasterList:
         return this.getMasterlistTitle(subTypeCode);
     }

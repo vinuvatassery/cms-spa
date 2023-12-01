@@ -6,7 +6,8 @@
     >
       <kendo-panelbar-item
         *ngIf="getTitle(item.approvalTypeCode, item.subTypeCode)"
-        [expanded]="item.isExpanded && item.status == approveStatus"
+        [expanded]="item.isExpanded && item.status === approveStatus &&  item.approvalTypeCode ===
+        pendingApprovalGeneralTypeCode.GeneralExceptions"
       >
         <ng-template kendoPanelBarItemTitle>
           <div class="flex-row rw-100" (click)="$event.stopPropagation()">
@@ -101,7 +102,7 @@
                   </kendo-textarea-suffix>
                 </kendo-textarea>
 
-           
+
                   <kendo-formerror *ngIf="item.sendBackNotesInValid">{{
                     item.sendBackNotesInValidMsg
                   }}</kendo-formerror>
@@ -146,7 +147,7 @@
         <ng-template kendoPanelBarContent>
           <ng-switch
             [ngSwitch]="item.approvalTypeCode"
-            *ngIf="item.status !== denyStatus"
+
           >
             <ng-template
               ngSwitchCase="{{
@@ -181,8 +182,8 @@
             >
               <productivity-tools-approvals-general-list-detail-exceptions
                 [approvalId]="item.generalPendingApprovalId"
-                [exceptionId]="item.approvalEntityId"       
-                (onVendorClickedEvent)="onProviderNameClick($event)"        
+                [exceptionId]="item.approvalEntityId"
+                (onVendorClickedEvent)="onProviderNameClick($event)"
               >
               </productivity-tools-approvals-general-list-detail-exceptions>
             </ng-template>
@@ -236,10 +237,10 @@
 </ng-template>
 
 <ng-template #submitRequestModalDialog>
- 
+
   <kendo-dialog-titlebar (close)="onCloseSubmitGeneralRequestClicked()">
     Submit Item(s)</kendo-dialog-titlebar>
-    <section class="k-dialog-body newcase"> 
+    <section class="k-dialog-body newcase">
       <p *ngIf="caseReassignmentsCount > 0" class="mb-1">
         Case re-assignments to be submitted:
         <strong>{{ caseReassignmentsCount }}</strong>
@@ -273,5 +274,5 @@
           </button>
         </div>
       </div>
-    </kendo-dialog-actions> 
+    </kendo-dialog-actions>
 </ng-template>
