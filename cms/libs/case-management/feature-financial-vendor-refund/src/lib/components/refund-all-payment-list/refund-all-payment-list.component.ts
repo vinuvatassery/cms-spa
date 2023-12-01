@@ -240,7 +240,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   handlePageCountSelectionChange() {
-    debugger;
     if (!this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {
       // Extract the payment request ids from grid data
       const idsToKeep: number[] = this.checkedAndUncheckedRecordsFromSelectAll.map((item: any) => item.paymentRequestId);
@@ -255,7 +254,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   pageNumberAndCountChangedInSelectAll() {
-    debugger;
     //If selecte all header checked and either the page count or the page number changed
     if (this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {
       this.selectedAllPaymentsList = [];
@@ -395,12 +393,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.handleAllPaymentsGridData();
   }
 
-  // updating the pagination infor based on dropdown selection
-  // pageSelectionChange(data: any) {
-  //   this.state.take = data.value;
-  //   this.state.skip = 0;
-  //   this.loadVendorRefundAllPaymentsListGrid();
-  // }
   pageSelectionChange(data: any) {
     this.isPageCountChanged = true;
     this.isPageChanged = false;
@@ -435,7 +427,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   onClickedDownload() {
-    //debugger;
     //if (!this.selectedPayments.length) return;
     this.showExportLoader = true;
 
@@ -553,7 +544,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   isLogGridExpanded = false;
   hideActionButton = false;
   receiptLogMode = false
-  //selectedPayments: any[] = [];
 
   cancelActions() {
     this.selectedPayments = [];
@@ -586,7 +576,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
 
   selectionAllChange() {
-    debugger;
     this.unCheckedProcessRequest = [];
     this.checkedAndUncheckedRecordsFromSelectAll = [];
     if (this.selectAll) {
@@ -595,21 +584,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     else {
       this.markAsUnChecked(this.vendorRefundAllPaymentsGridLists);
     }
-
-    // this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
-    // 'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
-    // 'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'};
-    // this.cdr.detectChanges();
-    // if(this.selectAll){
-    //   if(this.unCheckedProcessRequest?.length > 0){
-    //     this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
-    //     this.recordCountWhenSelectallClicked = this.sendReportCount;
-    //   }else{
-    //     this.sendReportCount = this.totalGridRecordsCount;
-    //   }
-    // }else{
-    // this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
-
 
     this.selectedAllPaymentsList =
     {
@@ -642,11 +616,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     else {
       this.onRecordSelectionUnChecked(dataItem);
     }
-    // this.selectedAllPaymentsList = {
-    //   'selectAll': this.selectAll, 'PrintAdviceLetterUnSelected': this.unCheckedProcessRequest,
-    //   'PrintAdviceLetterSelected': this.checkedAndUncheckedRecordsFromSelectAll, 'print': true,
-    //   'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print'
-    // };
+
     this.selectedAllPaymentsList =
     {
       'selectAll': this.selectAll,
@@ -669,7 +639,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   markAsChecked(data: any) {
-    //debugger;
     data.forEach((element: any) => {
       if (this.selectAll) {
         element.selected = true;
@@ -700,7 +669,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
   onRecordSelectionChecked(dataItem: any) {
     this.unCheckedProcessRequest.push({ 'paymentRequestId': dataItem.paymentRequestId, 'selected': true });
-    //this.unCheckedProcessRequest.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
     this.currentPageRecords?.forEach((element: any) => {
       if (element.paymentRequestId === dataItem.paymentRequestId) {
         element.selected = false;
@@ -751,5 +719,4 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   recordCountWhenSelectallClicked: number = 0;
   totalGridRecordsCount: number = 0;
   sendReportCount: number = 0;
-  //recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 }
