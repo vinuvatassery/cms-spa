@@ -742,8 +742,6 @@ export class MedicalPaymentDetailComponent {
   }
   
   addClaimServiceGroup() {
-    debugger
-
     let claimForm = this.formBuilder.group({
       serviceStartDate: new FormControl(
         this.addClaimServicesForm.value[0]?.serviceStartDate,
