@@ -442,6 +442,7 @@ pageNumberAndCountChangedInSelectAll() {
       sortType: sortTypeValue,
       filter: this.state?.['filter']?.['filters'] ?? [],
     };
+    alert('call')
     this.loadFinancialClaimsAllPaymentsListEvent.emit(gridDataRefinerValue);
   }
 
@@ -661,6 +662,7 @@ pageNumberAndCountChangedInSelectAll() {
   }
 
   onClickedExport() {
+    alert('export')
     this.showExportLoader = true;
     this.exportGridDataEvent.emit();
 

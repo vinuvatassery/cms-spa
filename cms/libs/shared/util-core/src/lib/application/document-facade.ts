@@ -79,8 +79,8 @@ export class DocumentFacade {
        
       }
 
-    getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedIds?: any[], batchId? : any): void {
-        this.documentDataService.getExportFileForSelection(pageAndSortedRequest, path, apiType, selectedIds, batchId).subscribe({
+    getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedAllPaymentsList: any, batchId? : any): void {
+        this.documentDataService.getExportFileForSelection(pageAndSortedRequest, path, apiType, selectedAllPaymentsList, batchId).subscribe({
             next: (response: any) => {
                 if (response) {
                     const fileUrl = window.URL.createObjectURL(response);

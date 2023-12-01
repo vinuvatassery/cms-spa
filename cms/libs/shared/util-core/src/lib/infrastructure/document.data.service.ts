@@ -46,7 +46,7 @@ export class DocumentDataService {
       )
     }
 
-    getExportFileForSelection(pageAndSortedRequest: any, path: string, apiType: string = ApiType.CaseApi, selectedIds?: any[], batchId? : any) {
+    getExportFileForSelection(pageAndSortedRequest: any, path: string, apiType: string = ApiType.CaseApi, selectedAllPaymentsList: any, batchId? : any) {
       let apiUrl: any;
       switch (apiType) {
         case ApiType.CaseApi: {
@@ -62,18 +62,49 @@ export class DocumentDataService {
           break;
         }
       }
-      if (!selectedIds) {
+     
+      if (!selectedAllPaymentsList) {
         return this.http.post(
           `${apiUrl}/data-management/export/${path}`, pageAndSortedRequest,
           { responseType: 'blob' }
         )
       } else {
-        const exportData = {
-          gridData: pageAndSortedRequest,
-          selectedIds: selectedIds,
-          batchId : batchId,
-        };
+
+        
+    // this.selectedAllPaymentsList =
+    // {
+    //   'selectAll': this.selectAll,
+    //   'paymentsUnSelected': this.unCheckedProcessRequest,
+    //   'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
+    //   'batchId': null,
+    // };
+
+  //   const selectedIds: string[] = selectedAllPaymentsList.paymentsSelected
+  //   .map((item: any) => item.paymentRequestId)
+  //   .filter((id: string | null | undefined) => id !== null && id !== undefined && id !== '');
   
+  // const unselectedIds: string[] = selectedAllPaymentsList.paymentsUnSelected
+  //   .map((item: any) => item.paymentRequestId)
+  //   .filter((id: string | null | undefined) => id !== null && id !== undefined && id !== '');
+
+  const selectedIds: string[] = selectedAllPaymentsList.paymentsSelected?.map((item: any) => item.paymentRequestId) ?? [];
+  const unselectedIds: string[] = selectedAllPaymentsList.paymentsUnSelected?.map((item: any) => item.paymentRequestId) ?? [];
+  
+    const exportData = {
+          'gridData': pageAndSortedRequest,
+          'selectedIds': selectedIds,
+          'UnSelectedIds' : unselectedIds,
+          'batchId' : batchId,
+          'selectAll' : selectedAllPaymentsList.selectAll,
+        };
+        // const exportData = {
+        //   'gridData': pageAndSortedRequest,
+        //   'selectedIds': selectedAllPaymentsList.paymentsSelected,
+        //   'UnSelectedIds' : selectedAllPaymentsList.paymentsUnSelected,
+        //   'batchId' : batchId,
+        //   'selectAll' : selectedAllPaymentsList.selectAll,
+        // };
+        //debugger;
         return this.http.post(
           `${apiUrl}/data-management/export/${path}`, exportData,
           { responseType: 'blob' }
