@@ -29,18 +29,46 @@
             </div>
 
             <div class="flex-col mb-1">
-                <kendo-floatinglabel text="Drug Name">
+                <!-- <kendo-floatinglabel text="Drug Name">
                     <kendo-textbox placeholder="Drug Name" [fillMode]="formUiStyle.inputFillMode"
                         formControlName="drugName">
                     </kendo-textbox>
-                </kendo-floatinglabel>
-                <kendo-formerror
+                </kendo-floatinglabel> -->
+                <kendo-floatinglabel text="Drug Name">
+                    <div>                                             
+                          <kendo-textarea
+                          #tareaCessation
+                          [fillMode]="formUiStyle.inputFillMode"
+                          [maxlength]="tAreaCessationMaxLength"
+                          [rows]="2"                                          
+                          resizable ="none"
+                          formControlName="drugName" 
+                          (valueChange)="onDrugNameValueChange($event)"
+                          aria-label="Drug Name"
+                          class="form-control table-text-area">                                       
+                        </kendo-textarea>                    
+                    <div class="flex-row">
+                          <div class="flex-col flex-col-6">
+                            <kendo-formerror
+                                *ngIf="(!drugForm.controls['drugName'].valid && drugForm.controls['drugName'].hasError('required')) && isSubmitted">
+                                Drug name is required.
+                            </kendo-formerror>
+                          </div>
+                          <div class="justify-content-end flex-col flex-col-6">                                         
+                                <span class="counter">{{ drugNameCounter }}</span>
+                            </div> 
+                        </div>
+                                                               
+                    </div>
+                                         
+              </kendo-floatinglabel>
+                <!-- <kendo-formerror
                     *ngIf="(!drugForm.controls['drugName'].valid && drugForm.controls['drugName'].hasError('required')) && isSubmitted">
                     Drug name is required.
                 </kendo-formerror>
                 <kendo-formerror *ngIf="drugForm.controls['drugName'].hasError('maxlength')">
                     Drug name cannot exceed 200 characters.
-                </kendo-formerror>
+                </kendo-formerror> -->
             </div>
 
             <div class="flex-col mb-1">
