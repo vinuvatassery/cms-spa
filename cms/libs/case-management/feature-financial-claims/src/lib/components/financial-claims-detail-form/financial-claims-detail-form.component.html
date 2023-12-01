@@ -450,14 +450,12 @@
                     <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [duplicatePaymentInputObject]="duplicatePaymentObject"
                     [claimsType]="claimsType"></cms-financial-claims-recent-claims-list>
                 </div>
-                <div class="justify-content-between">
-                    <div class="justify-content-end">
+                <div class="mt-1 text-right">                    
                     <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
                         Client Profile <span class="material-icons ml-1">
                         chevron_right
                         </span>
-                    </button>            
-                    </div>
+                    </button>
                 </div>
             </div>
         </div>

@@ -8,6 +8,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialVendorRefundDataService } from '../../infrastructure/financial-management/vendor-refund.data.service';
 import { Pharmacy } from '../../entities/client-pharmacy';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundFacade {
@@ -113,11 +114,11 @@ export class FinancialVendorRefundFacade {
   private insuranceRefundInformationSubject =  new Subject<any>();
   insuranceRefundInformation$ = this.insuranceRefundInformationSubject.asObservable();
 
-  
+
   private tpaRefundInformationSubject =  new Subject<any>();
   tpaRefundInformation$ = this.tpaRefundInformationSubject.asObservable();
 
-    
+
   private addUpdateInsuranceRefundClaimSubject =  new Subject<any>();
   addUpdateInsuranceRefundClaim$ = this.addUpdateInsuranceRefundClaimSubject.asObservable();
 
@@ -138,7 +139,7 @@ export class FinancialVendorRefundFacade {
 
   public tpaVendorsSubject = new Subject<any>;
   tpavendors$ = this.tpaVendorsSubject.asObservable();
-  
+
   public insurancevendorsSubject = new Subject<any>;
   insurancevendors$ = this.insurancevendorsSubject.asObservable();
   public vendorsSubject = new Subject<any>;
@@ -196,8 +197,8 @@ export class FinancialVendorRefundFacade {
     this.financialVendorRefundDataService.addInsuranceRefundClaim(data).subscribe({
       next: (dataResponse:any) => {
         this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
-        
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
+
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message)
         this.hideLoader();
       },
       error: (err) => {
@@ -207,7 +208,7 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-  getInsuranceRefundEditInformation(vendorId :any,clientId:any , paginationSortingDto:any){  
+  getInsuranceRefundEditInformation(vendorId :any,clientId:any , paginationSortingDto:any){
   this.loaderService.show();
   paginationSortingDto.filter = JSON.stringify(paginationSortingDto.filter);
     this.financialVendorRefundDataService.getInsuranceRefundEditInformation(vendorId,clientId,paginationSortingDto).subscribe({
@@ -216,7 +217,7 @@ export class FinancialVendorRefundFacade {
             data: dataResponse.items,
             total: dataResponse.totalCount,
           };
-        this.financialPremiumsProcessDataSubject.next(gridView); 
+        this.financialPremiumsProcessDataSubject.next(gridView);
           this.hideLoader();
       },
       error: (err) => {
@@ -226,7 +227,7 @@ export class FinancialVendorRefundFacade {
     });
   }
 
-  updateInsuranceRefundEditInformation(paginationSortingDto:any){  
+  updateInsuranceRefundEditInformation(paginationSortingDto:any){
     this.loaderService.show();
     paginationSortingDto.filter = JSON.stringify(paginationSortingDto.filter);
       this.financialVendorRefundDataService.updateInsuranceRefundEditInformation(paginationSortingDto).subscribe({
@@ -241,8 +242,8 @@ export class FinancialVendorRefundFacade {
         },
       });
     }
-  
-  
+
+
   loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto : any){
     this.financialVendorRefundDataService.loadVendorRefundAllPaymentsListService(recentClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
@@ -299,7 +300,7 @@ export class FinancialVendorRefundFacade {
 
   private financialTpasDataSubject = new Subject<any>();
   tpasData$ = this.financialTpasDataSubject.asObservable();
-  
+
   loadMedicalPremiumList(ClaimsPageAndSortedRequestDto:any){
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
 
@@ -307,7 +308,7 @@ this.loaderService.show();
     this.financialVendorRefundDataService.loadMedicalPremiumList(ClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {
         if (dataResponse) {
-          
+
           this.loaderService.hide();
           const gridView = {
             data: dataResponse['items'],
@@ -322,7 +323,7 @@ this.loaderService.show();
   }
 
   loadTPARefundList(ClaimsPageAndSortedRequestDto:any){
-      
+
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
    this.loaderService.show();
     this.financialVendorRefundDataService.loadTPARefundList(ClaimsPageAndSortedRequestDto).subscribe({
@@ -343,7 +344,7 @@ this.loaderService.show();
   }
 
   loadTPARefundLists(ClaimsPageAndSortedRequestDto:any){
-      
+
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
    this.loaderService.show();
     this.financialVendorRefundDataService.loadTPARefundLists(ClaimsPageAndSortedRequestDto).subscribe({
@@ -364,7 +365,7 @@ this.loaderService.show();
   }
 
   loadInsurancevendorBySearchText(searchText: string,clientId:number) {
-    
+
    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
     return this.financialVendorRefundDataService.loadInsurancevendorBySearchText(searchText,clientId).subscribe({
       next: (response: Pharmacy[]) => {
@@ -379,15 +380,15 @@ this.loaderService.show();
         this.loggingService.logException(err);
       }
     });
-  } 
+  }
   loadTpavendorBySearchText(searchText: string,clientId:number) {
-    
+
     this.medicalProviderSearchLoaderVisibilitySubject.next(true);
      return this.financialVendorRefundDataService.loadTpavendorBySearchText(searchText,clientId).subscribe({
        next: (response: Pharmacy[]) => {
          response?.forEach((vendor:any) => {
              vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
-                  
+
          });
          this.tpaVendorsSubject.next(response);
          this.medicalProviderSearchLoaderVisibilitySubject.next(false);
@@ -397,7 +398,7 @@ this.loaderService.show();
          this.loggingService.logException(err);
        }
      });
-   } 
+   }
   loadClaimsListGrid(){
     this.financialVendorRefundDataService.loadClaimsListService().subscribe({
       next: (dataResponse) => {
@@ -493,11 +494,11 @@ this.loaderService.show();
     });
   }
 
-  batchRefunds(batchId: any) {
+  batchRefunds(PaymentRequestIds: string[], selectAll: boolean, filterParams: GridFilterParam) {
     this.showLoader();
-    return this.financialVendorRefundDataService
-      .batchRefunds(batchId)
-      .subscribe({
+    const request = selectAll ? this.financialVendorRefundDataService.batchAllRefunds(filterParams) : this.financialVendorRefundDataService.batchRefunds(PaymentRequestIds);
+
+    return request.subscribe({
         next: (response:any) => {
           this.batchRefundsSubject.next(response);
           if (response.status) {
@@ -581,8 +582,8 @@ this.loaderService.show();
     this.financialVendorRefundDataService.addTpaRefundClaim(data).subscribe({
       next: (dataResponse:any) => {
         this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
-        
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
+
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message)
         this.hideLoader();
       },
       error: (err) => {
@@ -597,8 +598,8 @@ this.loaderService.show();
     this.financialVendorRefundDataService.updateTpaRefundClaim(data).subscribe({
       next: (dataResponse:any) => {
         this.addUpdateInsuranceRefundClaimSubject.next(dataResponse);
-        
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message) 
+
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , dataResponse.message)
         this.hideLoader();
       },
       error: (err) => {
