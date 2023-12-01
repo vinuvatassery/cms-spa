@@ -96,7 +96,7 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
     this.closeEditPcaReassignmentClickedEvent.emit(true);
   }
   saveEditPcaReassignmentClicked() {
-    if (this.pcaReassignmentForm.valid) {
+    if (this.pcaReassignmentForm.valid && !this.ispcaCloseDateGreater && !this.ispcaOpenDateGreater && !this.isAssignmentpcaCloseDateGreater && !this.isAssignmentpcaOpenDateGreater) {
       let formData = this.pcaReassignmentForm.value;
       this.checkboxValue = formData.unlimited ? 'Y' : 'N'
       let pcaDetails: UpdatePcaDetails = {
@@ -113,6 +113,8 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
 
   closeDateValidate()
   {
+    this.ispcaCloseDateGreater = false;
+    this.ispcaOpenDateGreater = false;
     const endDate = this.pcaReassignmentForm.controls['closeDate'].value;
     const startDate = this.pcaReassignmentForm.controls['openDate'].value;
     if (endDate < startDate && this.pcaReassignmentForm.controls['closeDate'].value) {
@@ -135,6 +137,8 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
 
   openDateValidate()
   {
+    this.isAssignmentpcaCloseDateGreater = false;
+    this.isAssignmentpcaOpenDateGreater = false;
     const endDate = this.pcaReassignmentForm.controls['closeDate'].value;
     const startDate = this.pcaReassignmentForm.controls['openDate'].value;
     if (endDate < startDate && this.pcaReassignmentForm.controls['openDate'].value) {

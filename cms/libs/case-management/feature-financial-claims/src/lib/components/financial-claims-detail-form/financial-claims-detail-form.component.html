@@ -8,7 +8,7 @@
         <div [formGroup]="claimForm">
 
             <div class="add_new_top_section">
-                <p class="mb-3"> Select a {{claimsType | titlecase}} Provider to bulk add services for this claim.</p>
+                <p class="mb-3"> Make changes as needed and click “Update.”</p>
                 <div class="flex-row">
                     <div class="flex-col flex-col-6">
                         <div class="combotable_search_list new_refund_Search new_claims_Search mb-3">
@@ -47,7 +47,7 @@
                                 </kendo-combobox-column>
 
                             </kendo-multicolumncombobox>
-                            <kendo-formerror *ngIf="(!claimForm.controls['medicalProvider'].valid) && isSubmitted">  Provider is required
+                            <kendo-formerror *ngIf="(!claimForm.controls['medicalProvider'].valid) && isSubmitted">Provider Name is required
                             </kendo-formerror>
                             <div *ngIf="getParentExceptionFormValue('providerNotEligibleExceptionFlag')">
                                 <kendo-formerror class="align-items-center"> <span class="material-icons mr-1"
@@ -92,7 +92,7 @@
                             </span>
                             <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField="clientFullName"
                                 valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                                placeholder="Search Client Name, ID, SSN or DOB"
+                                placeholder="Search Client by Name, ID, SSN or DOB"
                                 [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                 [filterable]="true" formControlName="client"
                                 (filterChange)="loadClientBySearchText($event)"
@@ -208,7 +208,7 @@
                                                     *ngIf="(isControlValid('serviceEndDate', i) && isSubmitted)">  Service End Date is required
                                                 </kendo-formerror>
                                                 <kendo-formerror *ngIf="(isStartEndDateError(i))" >
-                                                    Service End date must be equal to or greater than start date
+                                                    Service End Date cannot be before Service Start Date
                                                 </kendo-formerror>
                                             </div>
                                             <div class="ml-2">
