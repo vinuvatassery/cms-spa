@@ -24,7 +24,6 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   possibleMatch:any;
   hasSaveButtonEnabled:boolean=false;
   ngOnInit(): void {
-    debugger;
     let request = {
       policyId:this.claimData.policyId,
       firstName:this.claimData.firstName,
