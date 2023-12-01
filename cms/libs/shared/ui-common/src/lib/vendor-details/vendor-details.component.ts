@@ -527,7 +527,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       nameOnEnvelope: formValues.nameOnEnvolop,
       paymentMethodCode: formValues.paymentMethod,
       clinicType: formValues.clinicType,
-      specialHandling: formValues.specialHandling,
+      specialHandlingDesc: formValues.specialHandlingDesc,
       phoneTypeCode: AddressType.Mailing,
       vendorContacts: this.vendorContactList,
       AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,

@@ -193,7 +193,7 @@ export class FinancialVendorPageComponent implements OnInit {
       npiNbr: [''],
       paymentMethod: [''],
       clinicType: [''],
-      specialHandling: [''],
+      specialHandlingDesc: [''],
       mailCode: [''],
       nameOnCheck: [''],
       nameOnEnvolop: [''],
