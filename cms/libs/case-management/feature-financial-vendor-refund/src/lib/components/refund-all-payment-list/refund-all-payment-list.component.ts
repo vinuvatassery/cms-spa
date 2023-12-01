@@ -203,6 +203,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.handleAllPaymentsGridData();
   }
   gridLoaderSubject = new BehaviorSubject(false);
+
   handleAllPaymentsGridData() {
     this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
@@ -239,7 +240,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   handlePageCountSelectionChange() {
-    //debugger;
+    debugger;
     if (!this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {
       // Extract the payment request ids from grid data
       const idsToKeep: number[] = this.checkedAndUncheckedRecordsFromSelectAll.map((item: any) => item.paymentRequestId);
@@ -254,7 +255,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   pageNumberAndCountChangedInSelectAll() {
-    //debugger;
+    debugger;
     //If selecte all header checked and either the page count or the page number changed
     if (this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {
       this.selectedAllPaymentsList = [];
@@ -389,14 +390,24 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       this.filter = '';
       this.isFiltered = false;
     }
+
     this.loadVendorRefundAllPaymentsListGrid();
+    this.handleAllPaymentsGridData();
   }
 
   // updating the pagination infor based on dropdown selection
+  // pageSelectionChange(data: any) {
+  //   this.state.take = data.value;
+  //   this.state.skip = 0;
+  //   this.loadVendorRefundAllPaymentsListGrid();
+  // }
   pageSelectionChange(data: any) {
+    this.isPageCountChanged = true;
+    this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadVendorRefundAllPaymentsListGrid();
+    this.handleAllPaymentsGridData();
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -575,7 +586,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
 
   selectionAllChange() {
-    //debugger;
+    debugger;
     this.unCheckedProcessRequest = [];
     this.checkedAndUncheckedRecordsFromSelectAll = [];
     if (this.selectAll) {
@@ -585,12 +596,26 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       this.markAsUnChecked(this.vendorRefundAllPaymentsGridLists);
     }
 
+    // this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
+    // 'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
+    // 'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'};
+    // this.cdr.detectChanges();
+    // if(this.selectAll){
+    //   if(this.unCheckedProcessRequest?.length > 0){
+    //     this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+    //     this.recordCountWhenSelectallClicked = this.sendReportCount;
+    //   }else{
+    //     this.sendReportCount = this.totalGridRecordsCount;
+    //   }
+    // }else{
+    // this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+
+
     this.selectedAllPaymentsList =
     {
       'selectAll': this.selectAll,
       'paymentsUnSelected': this.unCheckedProcessRequest,
       'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
-      'batchId': null,
     };
 
     this.cdr.detectChanges();
@@ -602,7 +627,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
         this.sendReportCount = this.totalGridRecordsCount;
       }
     } else {
-      this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
+      this.getSelectedReportCount(this.selectedAllPaymentsList?.paymentsSelected);
     }
   }
 
