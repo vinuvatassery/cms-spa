@@ -480,7 +480,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
-    if (this.vendorTypes.Pharmacy == this.providerType) {
+    if (this.vendorTypes.Pharmacy != this.providerType) {
       this.medicalProviderForm.controls['npiNbr'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['npiNbr'].updateValueAndValidity();
     }
@@ -675,6 +675,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   restrictAccountingNumber() {
+    if(this.providerType == this.vendorTypes.Pharmacy){
+      return;
+    }
     if (this.medicalProviderForm.controls['tinNumber'].value && (parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 3)) {
       this.accountingNumberValidated = true;
     } else {
