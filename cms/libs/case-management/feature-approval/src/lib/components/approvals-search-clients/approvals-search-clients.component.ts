@@ -4,6 +4,7 @@ import {
   Output,
   EventEmitter,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { ImportedClaimFacade } from '@cms/case-management/domain';
@@ -31,7 +32,8 @@ export class ApprovalsSearchClientsComponent {
     private readonly loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private router: Router){}
+    private router: Router,
+    private changeDetector: ChangeDetectorRef){}
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {
@@ -70,6 +72,7 @@ export class ApprovalsSearchClientsComponent {
     clientSearchText = clientSearchText.replace("/", "-");
     clientSearchText = clientSearchText.replace("/", "-");
     this.importedClaimFacade.loadClientBySearchText(clientSearchText);
+    this.changeDetector.detectChanges();
   }
 
   onClientSaveClick(){

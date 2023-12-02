@@ -611,7 +611,6 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
   }
 
   loadClientBySearchText(text : string): void {
-    this.clientSearchLoaderVisibilitySubject.next(true);
     if(text){
       this.financialClaimsDataService.loadClientBySearchText(text).subscribe({
 
@@ -629,6 +628,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       this.clientSearchLoaderVisibilitySubject.next(false);
     }
   }
+
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
     this.showLoader();
     return this.financialClaimsDataService
