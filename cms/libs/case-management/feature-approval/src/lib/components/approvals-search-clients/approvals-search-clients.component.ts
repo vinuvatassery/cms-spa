@@ -6,7 +6,7 @@ import {
   Input,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialClaimsFacade, ImportedClaimFacade } from '@cms/case-management/domain';
+import { ImportedClaimFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
@@ -22,11 +22,11 @@ export class ApprovalsSearchClientsComponent {
 
   @Input() selectedClaim: any;
   isShownSearchLoader = false;
-  clientSearchResult$ = this.financialClaimsFacade.clients$;
+  clientSearchResult$ = this.importedClaimFacade.clients$;
   selectedClient: any;
   isButtonDisable = true;
 
-  constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
+  constructor(
     private readonly importedClaimFacade: ImportedClaimFacade,
     private readonly loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
@@ -69,7 +69,7 @@ export class ApprovalsSearchClientsComponent {
     }
     clientSearchText = clientSearchText.replace("/", "-");
     clientSearchText = clientSearchText.replace("/", "-");
-    this.financialClaimsFacade.loadClientBySearchText(clientSearchText);
+    this.importedClaimFacade.loadClientBySearchText(clientSearchText);
   }
 
   onClientSaveClick(){

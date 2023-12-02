@@ -3,9 +3,9 @@
 </kendo-dialog-titlebar>
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    If the claim passes all criteria after clicking “Save” it will automatically
-    be submitted for processing. This action cannot be undone. If it still fails
-    one or more criteria, it will stay in your approval queue.
+    If the client is found, navigate to their profile and update their information. 
+    Once corrected If the claim passes all criteria it will be submitted for processing when you return to the queue. 
+    If it still fails one or more criteria, it will stay in your approval queue.
   </p>
 
   <div class="flex-row">
@@ -26,7 +26,7 @@
           textField="clientFullName"
           valueField="clientId"
           [fillMode]="formUiStyle.dropDownFillMode"
-          placeholder="Search client Name, Member ID, SSN, or Policy ID"
+          placeholder="Search Client Name, Client ID, SSN, or Policy ID"
           [popupSettings]="{
             popupClass: 'combotable_search_list',
             animate: true
@@ -51,10 +51,10 @@
               let-dataItem
             >
               <span class="text-muted">
-                <em>ID:</em> {{ dataItem.clientId }}</span
+                <em>Client ID:</em> {{ dataItem.clientId }}</span
               >
             </ng-template>
-          </kendo-combobox-column>
+          </kendo-combobox-column>          
           <kendo-combobox-column [width]="150">
             <ng-template
               kendoMultiColumnComboBoxColumnCellTemplate
@@ -68,7 +68,15 @@
               kendoMultiColumnComboBoxColumnCellTemplate
               let-dataItem
             >
-              <span class="text-muted"> <em>DOB:</em> {{ dataItem.dob | date : 'MM/dd/YYYY'}}</span>
+              <span class="text-muted"> <em>Policy ID:</em> {{ dataItem.policyId }}</span>
+            </ng-template>
+          </kendo-combobox-column>
+          <kendo-combobox-column [width]="125">
+            <ng-template
+              kendoMultiColumnComboBoxColumnCellTemplate
+              let-dataItem
+            >
+              <span class="text-muted"> <em>DOB</em> {{ dataItem.dob | date : 'MM/dd/YYYY'}}</span>
             </ng-template>
           </kendo-combobox-column>
         </kendo-multicolumncombobox>
