@@ -71,14 +71,6 @@
               <span class="text-muted"> <em>Policy ID:</em> {{ dataItem.policyId }}</span>
             </ng-template>
           </kendo-combobox-column>
-          <kendo-combobox-column [width]="125">
-            <ng-template
-              kendoMultiColumnComboBoxColumnCellTemplate
-              let-dataItem
-            >
-              <span class="text-muted"> <em>DOB</em> {{ dataItem.dob | date : 'MM/dd/YYYY'}}</span>
-            </ng-template>
-          </kendo-combobox-column>
         </kendo-multicolumncombobox>
       </div>
     </div>
