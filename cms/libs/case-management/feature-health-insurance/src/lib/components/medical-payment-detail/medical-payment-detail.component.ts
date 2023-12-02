@@ -364,7 +364,7 @@ export class MedicalPaymentDetailComponent {
       this.insurancePolicyFacade.showLoader();
       this.insurancePolicyFacade.savePaymentRequest(bodyData).subscribe({
         next: () => {
-          
+
           this.insurancePolicyFacade.getMedicalClaimMaxbalance(this.clientId,this.caseEligibilityId);
           if(this.tabStatus=='hlt-ins-co-pay'){
             this.insurancePolicyFacade.showHideSnackBar(
@@ -538,7 +538,7 @@ export class MedicalPaymentDetailComponent {
     let control = this.addClaimServicesForm.at(index) as FormGroup;
     const selectedDate = new Date(control.value);
     const currentDate = new Date();
-  
+
     if (selectedDate < currentDate) {
       return { 'INVALID': true };
     }
@@ -740,7 +740,6 @@ export class MedicalPaymentDetailComponent {
     this.isSubmitted = false;
     this.addClaimServiceGroup();
   }
-  
   addClaimServiceGroup() {
     let claimForm = this.formBuilder.group({
       serviceStartDate: new FormControl(
@@ -810,11 +809,11 @@ export class MedicalPaymentDetailComponent {
   dateValidator(control: AbstractControl): { [key: string]: any } | null {
     const selectedDate = new Date(control.value);
     const currentDate = new Date('1/1/1999');
-  
+
     if (selectedDate < currentDate) {
       return { 'invalidDate': true };
     }
-  
+
     return null;
   }
 }

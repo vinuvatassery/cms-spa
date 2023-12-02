@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { GridFilterParam, PaymentsFacade } from '@cms/case-management/domain';
+import { GridFilterParam, PaymentsFacade, PremiumType } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ColumnVisibilityChangeEvent, FilterService } from '@progress/kendo-angular-grid';
@@ -7,6 +7,7 @@ import { Subject, debounceTime } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
+import { Router } from '@angular/router';
 @Component({
   selector: 'cms-financial-payments',
   templateUrl: './financial-payments.component.html',
@@ -76,7 +77,8 @@ export class FinancialPaymentComponent {
     private documentFacade :  DocumentFacade,
     private lovFacade :  LovFacade,
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider) { }
+    private readonly configProvider: ConfigurationProvider,
+    private route: Router) { }
 
   ngOnInit(): void {
     this.loadPaymentsListGrid();
@@ -277,4 +279,10 @@ export class FinancialPaymentComponent {
 
     this.documentFacade.getExportFile(params,`vendors/${this.vendorId}/payment-batches` , 'insurance-payments')
   }
+
+  onBatchClicked(dataItem: any) {
+    const premiumsType = dataItem?.serviceSubTypeCode.toLowerCase().includes(PremiumType.Medical) ? PremiumType.Medical : PremiumType.Dental;
+    this.route.navigate([`/financial-management/premiums/${premiumsType}/batch`],
+    { queryParams :{bid: dataItem.batchId }});
+}
 }

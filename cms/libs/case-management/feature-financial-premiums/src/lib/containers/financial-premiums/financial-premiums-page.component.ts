@@ -120,6 +120,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
     this.financialPremiumsFacade.selectedClaimsTab = 1;
     this.tab = this.financialPremiumsFacade.selectedClaimsTab;
+    this.dataExportParameters = gridDataRefinerValue;
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
       pagesize: gridDataRefinerValue.pagesize,
@@ -139,6 +140,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   loadFinancialPremiumsBatchListGrid(data: GridFilterParam) {
     this.financialPremiumsFacade.selectedClaimsTab = 2;
     this.tab = this.financialPremiumsFacade.selectedClaimsTab;
+    this.dataExportParameters = data;
     this.financialPremiumsFacade.loadFinancialPremiumsBatchListGrid(
       data,
       this.premiumType
@@ -241,5 +243,55 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
   loadEachLetterTemplate(event:any){
     this.financialPremiumsFacade.loadEachLetterTemplate(this.premiumType, event);  
+  }
+
+  exportPremiumsPaymentsGridData() {
+    const data = this.dataExportParameters;
+    if (data) {
+      const filter = JSON.stringify(data?.filter);
+
+      const param = {
+        SortType: data?.sortType,
+        Sorting: data?.sortColumn,
+        SkipCount: data?.skipcount,
+        MaxResultCount: data?.maxResultCount,
+        Filter: filter,
+      };
+      let fileName =
+        this.premiumType[0].toUpperCase() +
+        this.premiumType.substr(1).toLowerCase() +
+        ' Premiums';
+
+      this.documentFacade.getExportFile(
+        param,
+        `premium/${this.premiumType}/process/payments`,
+        fileName
+      );
+    }
+  }
+
+  exportPremiumsBatchPaymentsGridData(){
+  const data = this.dataExportParameters;
+    if (data) {
+      const filter = JSON.stringify(data?.filter);
+
+      const param = {
+        SortType: data?.sortType,
+        Sorting: data?.sortColumn,
+        SkipCount: data?.skipcount,
+        MaxResultCount: data?.maxResultCount,
+        Filter: filter,
+      };
+      let fileName =
+        this.premiumType[0].toUpperCase() +
+        this.premiumType.substr(1).toLowerCase() +
+        ' Premiums';
+
+      this.documentFacade.getExportFile(
+        param,
+        `premium/${this.premiumType}/batches`,
+        fileName
+      );
+    }
   }
 }
