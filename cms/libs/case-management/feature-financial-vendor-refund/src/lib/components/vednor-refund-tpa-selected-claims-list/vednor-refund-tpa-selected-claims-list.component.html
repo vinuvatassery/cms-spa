@@ -100,6 +100,9 @@
                             </ng-template>
                         </kendo-grid-column> 
                         <kendo-grid-column field="serviceCost" title="Original Amount Paid" [width]="180">
+                            <ng-template kendoGridCellTemplate let-dataItem>
+                                <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
+                              </ng-template>
                             <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
                                 <span class="tableamountview"> <strong>$</strong> {{item.totalAmount | kendoNumber:'n2'}} </span>
                             </ng-template>
@@ -126,28 +129,27 @@
                                 <kendo-textbox aria-label="VP"
                                 [fillMode]="formUiStyle.inputFillMode" 
                                 [(ngModel)]="item.voucherPayableNbr"
-                                (valueChange)="onRefundNoteValueChange($event, 'voucherPayableNbr',item)">
+                                (valueChange)="onRefundNoteValueChange($event, 'voucherPayableNbr',item)"
+                                 >
                                 </kendo-textbox>
                             </kendo-floatinglabel>
-                            <kendo-formerror *ngIf="item.voucherPayableNbrError">VP is required.
-                            </kendo-formerror>
+                          
                         </div>
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="Credit #">
                                 <kendo-textbox aria-label="Refund Warrant #" 
                                  [(ngModel)]="item.creditNbr" [fillMode]="formUiStyle.inputFillMode"
-                                 (valueChange)="onRefundNoteValueChange($event,'creditNbr',item)">
+                                 (valueChange)="onRefundNoteValueChange($event,'creditNbr',item)" >
                                 </kendo-textbox>
                             </kendo-floatinglabel>
-                            <kendo-formerror *ngIf="item.creditNbrError">Credit # is required.
-                            </kendo-formerror>
+                           
                         </div>
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="Refund Warrant #">
                                 <kendo-textbox aria-label="Refund Warrant #" 
                                  [(ngModel)]="item.refundedWarrantNumber"
                                   [fillMode]="formUiStyle.inputFillMode"
-                                  (valueChange)="onRefundNoteValueChange($event,'refundedWarrantNumber',item)">
+                                  (valueChange)="onRefundNoteValueChange($event,'refundedWarrantNumber',item)"  required>
                                 </kendo-textbox>
                             </kendo-floatinglabel>
                             <kendo-formerror *ngIf="item.refundWarantNumberError">Refund Warrant # is required.
@@ -159,7 +161,7 @@
                                 <kendo-numerictextbox aria-label="Refund Amount" [spinners]="false"
                                     [fillMode]="formUiStyle.inputFillMode" 
                                     format="#.00" [(ngModel)]="item.refundedAmount"
-                                    (valueChange)="onRefundNoteValueChange($event,'refundedAmount',item)">
+                                    (valueChange)="onRefundNoteValueChange($event,'refundedAmount',item)"  required>
                                 </kendo-numerictextbox>
                             </kendo-floatinglabel>
                             <kendo-formerror *ngIf="item.refundedAmountError">Refund Amount is required.
