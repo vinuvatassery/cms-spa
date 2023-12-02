@@ -22,6 +22,7 @@
           <kendo-textbox
                 aria-label="Search case"
                 rounded="medium"
+                [clearButton]="true"
                 [fillMode]="formUiStyle.inputFillMode"
                 [(ngModel)]="searchText"
                 (afterValueChanged)="onSearch($event)"> </kendo-textbox>

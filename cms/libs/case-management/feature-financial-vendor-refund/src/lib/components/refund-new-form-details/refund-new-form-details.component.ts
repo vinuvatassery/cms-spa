@@ -635,7 +635,18 @@ addTpa(event:any){
   claimsCountEvent(data:any){
 
     this.claimsCount=data;
+  
   }
+
+  onTpaClaimsDelete(data:any){
+    this.claimsCount = data.length
+    this.tpaPaymentReqIds = data;
+    if(data.length<=0){
+      this.isConfirmationClicked = false;
+    }
+   
+  }
+
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
     if(operation === "ADD"){
       this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>

@@ -229,7 +229,21 @@ export class FinancialVendorFacade {
     })
   }
 
-
+  getProviderPanelByVendorId(vendorId: string) {
+    this.showLoader();
+    this.financialVendorDataService.getProviderPanelByVendorId(vendorId).subscribe({
+      next: (vendorsResponse: any) => {
+        if (vendorsResponse) {
+          this.providePanelSubject.next(vendorsResponse);
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
   updateManufacturerProfile(vendorProfile: any) {
     return this.financialVendorDataService.updateManufacturerProfile(vendorProfile);
   }

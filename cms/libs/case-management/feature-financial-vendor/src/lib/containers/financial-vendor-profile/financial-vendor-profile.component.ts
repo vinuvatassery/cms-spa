@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, InvoiceFacade } from '@cms/case-management/domain';
+import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, InvoiceFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
 
 
@@ -45,7 +46,20 @@ export class FinancialVendorProfileComponent implements OnInit {
   isClinicalVendor = false;
   vendorName: any;
 
+    
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  
+  providerDetailsDialog: any
+
+ ddlStates$ = this.contactFacade.ddlStates$;
+ isEditForm = false
+ vendorProfilePanel$ = this.financialVendorFacade.providePanelSubject$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
   hasDrugCreateUpdatePermission = false;
+  vendorProfileId: any;
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -53,6 +67,9 @@ export class FinancialVendorProfileComponent implements OnInit {
     private readonly drugsFacade: DrugsFacade,
     private readonly invoiceFacade: InvoiceFacade,
     private readonly userManagementFacade: UserManagementFacade,
+    private readonly contactFacade: ContactFacade,
+    private dialogService: DialogService,
+    private lovFacade: LovFacade
   ) { }
 
   ngOnInit(): void {
@@ -63,7 +80,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     };
     this.loadDrugsListGrid();
     this.loadVendorDetailList();
-
+    this.setVendorTypeCode('');
     this.hasDrugCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Drug_Create_Update']);
 
   }
@@ -176,6 +193,35 @@ export class FinancialVendorProfileComponent implements OnInit {
 
   loadInvoiceServices(event: any) {
     this.invoiceFacade.loadPaymentRequestServices(event.dataItem, this.vendorId, this.tabCode)
+  }
+  onProviderNameClick(event:any){
+    this.vendorProfileId = event;
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  
+  }
+
+  onEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
+  }
+  updateProviderProfile(event: any) {
+    console.log(event);
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanelByVendorId(this.vendorProfileId);
+  }
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
   }
 
 }

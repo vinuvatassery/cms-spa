@@ -6,7 +6,7 @@ import {
   Input,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { CaseFacade, FinancialClaimsFacade, ImportedClaimFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, ImportedClaimFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
@@ -24,14 +24,14 @@ export class ApprovalsSearchClientsComponent {
   isShownSearchLoader = false;
   clientSearchResult$ = this.financialClaimsFacade.clients$;
   selectedClient: any;
+  isButtonDisable = true;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly importedClaimFacade: ImportedClaimFacade,
     private readonly loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private route: Router,
-    private caseFacade : CaseFacade){}
+    private router: Router){}
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {
@@ -60,6 +60,7 @@ export class ApprovalsSearchClientsComponent {
 
   onClientValueChange(client: any){
     this.selectedClient = client;
+    this.isButtonDisable = false;
   }
 
   loadClientBySearchText(clientSearchText: any) {
@@ -99,7 +100,11 @@ export class ApprovalsSearchClientsComponent {
   }
 
   onGoToProfileClick() {
-    this.caseFacade.onClientProfileTabSelect("clt-info" ,this.selectedClient.clientId, this.selectedClient.clientCaseEligibilityId, this.selectedClient.clientCaseId);
+    this.router.navigate([`/case-management/cases/case360/${this.selectedClient.clientId}`]);
+    this.closeSearchCase();
+  }
+
+  onCancelClick(){
     this.closeSearchCase();
   }
 }
