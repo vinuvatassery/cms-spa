@@ -54,6 +54,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
   @Input() reconcilePaymentBreakoutLoaderList$:any;
+  @Input() deliveryMethodLov$:any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;

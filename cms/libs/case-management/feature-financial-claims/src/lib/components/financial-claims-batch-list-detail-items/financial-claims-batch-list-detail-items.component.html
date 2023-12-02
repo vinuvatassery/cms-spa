@@ -25,16 +25,16 @@
                   <ng-template #loading>
                         <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
                   </ng-template>
-                  <div class="grey-banner-section mt-2" *ngIf ="paymentPanelDetails?.paymentStatusDate != null">
+                  <div class="grey-banner-section mt-2" *ngIf ="paymentPanelDetails?.paymentSentDate != null">
                         <div class="flex-row">
                               <button aria-label="Edit" kendoButton look="flat" class="edit-btn card-link-button" (click)="onPaymentDetailFormClicked(paymentDetailsFromTemplate)" > Edit </button>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Reconciled</small>
-                              <p>{{paymentPanelDetails?.paymentStatusDate | date:'dd/MM/yyyy'}}</p>
+                              <p>{{paymentPanelDetails?.paymentReconciledDate | date:'MM/dd/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Sent</small>
-                              <p>{{paymentPanelDetails?.sentDate | date:'dd/MM/yyyy'}}</p>
+                              <p>{{paymentPanelDetails?.paymentSentDate | date:'MM/dd/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Payment Amount</small>
