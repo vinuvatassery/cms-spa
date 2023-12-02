@@ -162,6 +162,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   paymentMethodLovSubscription!: Subscription;
   paymentType: any;
   isWarningDialogShow: boolean=false;
+  providerCountFieldTitle:any="Provider Count"
   /** Constructor **/
   constructor(
     private route: Router,
@@ -339,17 +340,15 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.setGridValues(data);
   }
 
-  searchColumnChangeHandler(value: string) {    
+  searchColumnChangeHandler(value: string) { 
+    this.searchValue = '';
     this.filter = [];
-    this.showDateSearchWarning = value === 'DateApprovalRequested';
-    if (this.searchValue) {
-      this.onApprovalSearch(this.searchValue);
-    }
+    this.onApprovalSearch(this.searchValue);
   }
 
   onApprovalSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'DateApprovalRequested';
+    this.showDateSearchWarning = (!isDateSearch && this.selectedColumn === 'DateApprovalRequested') && searchValue !== '';
     searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.onChange(searchValue);
@@ -475,16 +474,19 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     this.sendbackBatchCount = 0;
     switch (this.selectedPaymentType) {
       case PendingApprovalPaymentTypeCode.TpaClaim: {
+        this.providerCountFieldTitle="Provider Count";
         this.approvalPermissionCode =
           ApprovalLimitPermissionCode.MedicalClaimPermissionCode;
         break;
       }
       case PendingApprovalPaymentTypeCode.PharmacyClaim: {
+        this.providerCountFieldTitle="Provider Count";
         this.approvalPermissionCode =
           ApprovalLimitPermissionCode.PharmacyPermissionCode;
         break;
       }
       case PendingApprovalPaymentTypeCode.InsurancePremium: {
+        this.providerCountFieldTitle="Carrier Count";
         this.approvalPermissionCode =
           ApprovalLimitPermissionCode.InsurancePremiumPermissionCode;
         break;

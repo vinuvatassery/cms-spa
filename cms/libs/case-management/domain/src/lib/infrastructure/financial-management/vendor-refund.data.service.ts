@@ -7,6 +7,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientCase } from '../../entities/client-case';
 import { Pharmacy } from '../../entities/client-pharmacy';
 import { Observable } from 'rxjs';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundDataService {
@@ -453,8 +454,12 @@ export class FinancialVendorRefundDataService {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds`,options);
   }
 
-  batchRefunds(batchId: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/batch`, batchId);
+  batchRefunds(PaymentRequestIds: string[]) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/batch`, {PaymentRequestIds});
+  }
+
+  batchAllRefunds(filterParams: GridFilterParam) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/batch-all`, filterParams);
   }
 
   unbatchRefunds(paymentRequestIds: string[]) {

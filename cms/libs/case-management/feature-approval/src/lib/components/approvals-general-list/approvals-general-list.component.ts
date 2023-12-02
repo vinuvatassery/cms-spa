@@ -104,7 +104,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   @Output() updateMasterDetailsClickedEvent = new EventEmitter<any>();
   selectedMasterData!:any;
   currentlyExpandedPanelId: any;
-
+  @Input() deliveryMethodLov$! : any;
   /** Constructor **/
   constructor(
     private route: Router,
@@ -303,7 +303,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       case PendingApprovalGeneralTypeCode.GeneralExceptions:
         return 'Request to Exceed Max Benefits';
       case PendingApprovalGeneralTypeCode.GeneralCaseReassignment:
-        return 'Request for Case reassignment';
+        return 'Request for Case Re-Assignment';
       case PendingApprovalGeneralTypeCode.GeneralAddToMasterList:
         return this.getMasterlistTitle(subTypeCode);
     }

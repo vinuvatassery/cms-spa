@@ -82,7 +82,7 @@
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCancelClick()">
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Save" (click)="onClientSaveClick()">Save</button>
+      <button kendoButton [primary]="true" aria-label="GOT TO PROFILE" (click)="onGoToProfileClick()" [disabled]="isButtonDisable">GO TO PROFILE</button>
     </div>
   </div>
 </kendo-dialog-actions>

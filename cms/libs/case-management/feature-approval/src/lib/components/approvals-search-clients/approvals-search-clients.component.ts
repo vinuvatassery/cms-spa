@@ -5,6 +5,7 @@ import {
   EventEmitter,
   Input,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { FinancialClaimsFacade, ImportedClaimFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -23,12 +24,14 @@ export class ApprovalsSearchClientsComponent {
   isShownSearchLoader = false;
   clientSearchResult$ = this.financialClaimsFacade.clients$;
   selectedClient: any;
+  isButtonDisable = true;
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly importedClaimFacade: ImportedClaimFacade,
     private readonly loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService,){}
+    private readonly loaderService: LoaderService,
+    private router: Router){}
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {
@@ -51,44 +54,13 @@ export class ApprovalsSearchClientsComponent {
       this.loaderService.hide();
     }
 
-  clientSearchResult = [
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-  ];
   closeSearchCase() {
     this.closeSearchClientsDialogClickedEvent.emit();
   }
 
   onClientValueChange(client: any){
     this.selectedClient = client;
+    this.isButtonDisable = false;
   }
 
   loadClientBySearchText(clientSearchText: any) {
@@ -125,6 +97,11 @@ export class ApprovalsSearchClientsComponent {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       }
     });
+  }
+
+  onGoToProfileClick() {
+    this.router.navigate([`/case-management/cases/case360/${this.selectedClient.clientId}`]);
+    this.closeSearchCase();
   }
 
   onCancelClick(){
