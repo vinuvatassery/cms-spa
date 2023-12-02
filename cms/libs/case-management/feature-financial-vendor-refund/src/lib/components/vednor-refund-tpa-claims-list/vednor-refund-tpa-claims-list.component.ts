@@ -102,7 +102,6 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges {
       sort: this.sort,
     };
  
-    this.loadRefundClaimsListGrid();
   }
  
  

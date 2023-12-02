@@ -67,7 +67,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   filter!: any;
   gridDataResult!: GridDataResult;
   showExportLoader = false;
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   claimSourceFilter = '';
+  requestTypeFilter = '';
   policyIdMatchFilter = '';
   eligibilityMatchFilter = '';
   validInsuranceFilter = '';
@@ -77,6 +79,8 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     ALL: 'All Columns',
     clientName: 'Client Name',
     nameOnPrimaryInsuranceCard: 'Name on Primary Insurance Card',
+    invoiceNbr: 'Invoice #',
+    requestType: 'Request Type',
     claimSource: 'Claim Source',
     policyId: 'Policy ID',
     amountDue: 'Amount Due',
@@ -107,6 +111,12 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     { code: 'N/A', desc: 'N/A' },
   ];
 
+  requestTypeList: { code: string; desc: string }[] = [
+    { code: 'Insurance Premium', desc: 'Insurance Premium' },
+    { code: 'TPA - Dental', desc: 'TPA - Dental' },
+    { code: 'TPA - Medical', desc: 'TPA - Medical' },
+  ];
+
   selectedColumn = 'ALL';
   filteredByColumnDesc = '';
   showDateSearchWarning = false;
@@ -117,7 +127,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.gridImportedClaimsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   selectedPolicyId: any
   private searchCaseDialog: any;
   private expectationDialog: any;
@@ -296,6 +305,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     if (!this.filteredBy.includes('Claim Source')){
       this.claimSourceFilter = '';
     }
+    if (!this.filteredBy.includes('Request Type')){
+      this.requestTypeFilter = '';
+    }
     if (!this.filteredBy.includes('Policy ID match?')){
       this.policyIdMatchFilter = '';
     }
@@ -360,6 +372,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   ): void {
     if (field === 'claimSource') {
       this.claimSourceFilter = value;
+    }
+    else if (field === 'requestType') {
+      this.requestTypeFilter = value;
     }
     else if (field === 'policyIdMatch') {
       this.policyIdMatchFilter = value;
@@ -450,14 +465,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   onCloseReviewPossibleMatchesDialogClicked($event:any) {
-    if($event)
-    {
-      this.reviewPossibleMatchesDialog.close();
-    }
-  else{
-    this.cd.detectChanges();
-    this.loadImportedClaimsListGrid();
-    }
+    this.reviewPossibleMatchesDialog.close();
   }
 
   loadPossibleMatch(data?: any) {
@@ -466,7 +474,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   savePossibleMatch(data?:any)
   {
-    this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
+    this.onClientClicked(data.clientId);
     this.closePossibleMatchModal();
   }
 
@@ -475,7 +483,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       if (value) {
         this.onCloseReviewPossibleMatchesDialogClicked(true);
         this.cd.detectChanges();
-        this.loadImportedClaimsListGrid();
       }
     });
   }

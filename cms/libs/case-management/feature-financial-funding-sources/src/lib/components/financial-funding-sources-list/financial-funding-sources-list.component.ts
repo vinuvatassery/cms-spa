@@ -113,7 +113,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
       },
       {
         buttonType: 'btn-h-danger',
-        text: 'Remove',
+        text: 'Delete',
         icon: 'delete',
         click: (data: any): void => {
           if (!this.removeFundingOpened && !dataItem.isFundingSourceAssignedToPca) {
