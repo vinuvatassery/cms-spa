@@ -380,7 +380,7 @@
     >
       <ng-template kendoGridCellTemplate let-dataItem>
         <button
-          *ngIf="dataItem.policyIdMatch === yesNoFlag.Yes"
+          *ngIf="dataItem.policyIdMatch === yesNoFlag.Yes && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
           kendoButton
           aria-label="Deny Claim"
           class="select-primary cc-fwc"
@@ -396,7 +396,7 @@
           DENY CLAIM
         </button>
         <button
-          *ngIf="dataItem.policyIdMatch === yesNoFlag.No"
+          *ngIf="dataItem.policyIdMatch === yesNoFlag.No || dataItem.isDuplicatePayment || dataItem.isPcaReassignmentException"
           kendoButton
           aria-label="Delete Claim"
           class="select-error cc-fwc"
@@ -419,7 +419,7 @@
       <section >
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.validInsurance === yesNoFlag.No"
+          *ngIf="dataItem.validInsurance === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
         >
           <span class="material-icons">info</span>
           The client's insurance is not valid for the date of service. Deny the claim
@@ -437,7 +437,7 @@
 
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.isPossibleMatch === yesNoFlag.No && dataItem.policyIdMatch === yesNoFlag.No"
+          *ngIf="dataItem.isPossibleMatch === yesNoFlag.No && dataItem.policyIdMatch === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
         >
           <span class="material-icons">info</span>
           The system could not match the Policy ID to a client. Delete the claim
@@ -454,7 +454,7 @@
         </p>
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.eligibilityMatch === yesNoFlag.No"
+          *ngIf="dataItem.eligibilityMatch === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
         >
           <span class="material-icons">info</span>
           The client was not eligible for the date of service. Deny the claim
@@ -471,7 +471,7 @@
         </p>
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.isPossibleMatch === yesNoFlag.Yes && dataItem.policyIdMatch === yesNoFlag.No"
+          *ngIf="dataItem.isPossibleMatch === yesNoFlag.Yes && dataItem.policyIdMatch === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
         >
         <span class="material-icons">info</span>
           The  system could not match the Policy ID to a client. Delete the claim or match it to a client.
@@ -485,7 +485,7 @@
               REVIEW POSSIBLE MATCH
           </button>
         </p>
-        <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No">
+        <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException">
           <span class="material-icons">info</span>
           This claim puts the client ${{dataItem.exceededAmount | kendoNumber : 'n2'}} over their max benefits. Deny the
           claim or make an exception.
@@ -498,6 +498,20 @@
             >
               MAKE AN EXCEPTION
             </button>
+        </p>
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.isDuplicatePayment"
+        >
+          <span class="material-icons">info</span>
+          Duplicate claim found!
+        </p>
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.isPcaReassignmentException"
+        >
+          <span class="material-icons">info</span>
+          PCA unable to be assigned.
         </p>
       </section>
     </ng-template>
