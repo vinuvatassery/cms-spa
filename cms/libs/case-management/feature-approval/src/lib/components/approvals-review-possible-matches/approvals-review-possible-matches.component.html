@@ -15,7 +15,7 @@
         </div>              
       </div>      
     </div>
-    <div class="flex-col mt-1" *ngIf="possibleMatch != null">
+    <div class="flex-col mt-1">
       <table class="table_view_data_info">
         <caption hidden>
           CLAIM & CLIENT INFO
@@ -28,17 +28,17 @@
         <tr>
           <td><strong>Name:</strong></td>
           <td>{{claimData.nameOnPrimaryInsuranceCard}}</td>
-          <td>{{possibleMatch.clientName}}</td>
+          <td>{{possibleMatch?.clientName}}</td>
         </tr>
         <tr>
           <td><strong>DOB:</strong></td>
           <td>{{claimData.dateOfBirth | date : 'MM/dd/yyyy'}}</td>
-          <td>{{possibleMatch.dateOfBirth | date : 'MM/dd/yyyy'}}</td>
+          <td>{{possibleMatch?.dateOfBirth | date : 'MM/dd/yyyy'}}</td>
         </tr>
         <tr>
           <td><strong>Policy ID:</strong></td>
           <td>{{claimData.policyId}}</td>
-          <td>{{possibleMatch.policyId}}</td>
+          <td>{{possibleMatch?.policyId}}</td>
         </tr>
         <tr>
           <td><strong>Case Worker:</strong></td>
@@ -53,7 +53,7 @@
               look="flat"
               class="card-link-button"
             >
-              {{possibleMatch.caseWorkerName}}
+              {{possibleMatch?.caseWorkerName}}
             </button>
             <kendo-popover
                   #onUserProfileDetailsHovered
