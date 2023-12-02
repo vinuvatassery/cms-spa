@@ -40,7 +40,7 @@ export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
         this.warningMessage = response.message;
         this.cd.detectChanges();
       }
-      else if (response !== undefined && response !== null && response.status==1) {
+      else if (response !== undefined && response !== null) {
         this.hasSaveButtonEnabled = true;
         this.possibleMatch=response;
         this.cd.detectChanges();

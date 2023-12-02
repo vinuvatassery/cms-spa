@@ -448,7 +448,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   onMakeExpectationClicked(template: TemplateRef<unknown>,dataItem:any): void {
     this.expectationDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
     this.rowData = dataItem;
   }
