@@ -183,10 +183,10 @@
           <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
             placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber()">
           </kendo-maskedtextbox>
-          <kendo-formerror *ngIf="!medicalProviderForm.controls['tinNumber'].valid && isValidateForm && accountingNumberValidated">
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['tinNumber'].valid && isValidateForm && accountingNumberValidated && providerType != vendorTypes.Pharmacy">
             TIN cannot be less than 9 digits
           </kendo-formerror>
-          <kendo-formerror *ngIf="!accountingNumberValidated">
+          <kendo-formerror *ngIf="!accountingNumberValidated && providerType != vendorTypes.Pharmacy">
             A 1 or a 3 is required
           </kendo-formerror>
         </kendo-floatinglabel>
@@ -195,7 +195,7 @@
         <kendo-floatinglabel text="NPI (optional)">
           <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npiNbr" [maxlength]="25">
           </kendo-textbox>
-          <kendo-formerror *ngIf="!medicalProviderForm.controls['npiNbr'].valid && isValidateForm">
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['npiNbr'].valid && isValidateForm && providerType != vendorTypes.Pharmacy">
             NPI  is required
           </kendo-formerror>
         </kendo-floatinglabel>
