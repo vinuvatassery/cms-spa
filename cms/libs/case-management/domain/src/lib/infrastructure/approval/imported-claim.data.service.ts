@@ -70,4 +70,10 @@ export class ImportedClaimService {
       importedclaimDto
     );
   }
+
+  loadClientBySearchText(text: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/SearchText=${text}`
+    );
+  }
 }
