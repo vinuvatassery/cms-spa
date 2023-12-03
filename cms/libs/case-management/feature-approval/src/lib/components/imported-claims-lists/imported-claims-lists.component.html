@@ -403,8 +403,6 @@
           illMode="flat"
           [toggleable]="true"
           [selected]="dataItem.claimStatus === deletedStatus"
-          [disabled]="dataItem.policyIdMatch === yesNoFlag.No && dataItem.isPossibleMatch === yesNoFlag.Yes
-          && !dataItem.exceptionApprovedFlag"
           (selectedChange)="
           onRowLevelDeleteClicked(
                 dataItem
