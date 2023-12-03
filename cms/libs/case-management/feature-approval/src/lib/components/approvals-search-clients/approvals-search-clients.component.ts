@@ -61,6 +61,10 @@ export class ApprovalsSearchClientsComponent {
   }
 
   onClientValueChange(client: any){
+    if(client == undefined) {
+      this.isButtonDisable = true;
+      this.changeDetector.detectChanges();
+    }
     this.selectedClient = client;
     this.isButtonDisable = false;
   }
