@@ -592,7 +592,8 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       let claim = {
         importedClaimId: element.importedClaimId,
         claimStatus: element.claimStatus,
-        entityTypeCode: element.entityTypeCode
+        entityTypeCode: element.entityTypeCode,
+        exceptionTypeCode : element.exceptionTypeCode,
       };
       claims.push(claim);
     }
