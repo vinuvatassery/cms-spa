@@ -2,13 +2,13 @@
   Review Possible Match
 </kendo-dialog-titlebar>
 <section class="k-dialog-body">
-  <p class="text-muted mb-2">
+  <p class="text-muted mb-1">
     If the client is found, navigate to their profile and update their information. Once corrected If the claim passes all criteria it will be submitted for processing when you return to the queue. If it still fails one or more criteria, it will stay in your approval queue.
   </p>
 
   <div class="flex-row">
     <div class="flex-col mt-1" *ngIf="possibleMatch == null && warningMessage != ''">
-      <div class="info-banners canyon-banner d-flex mt-2 mb-2">
+      <div class="info-banners canyon-banner d-flex mt-1 mb-1">
         <span class="material-icons" aria-label="warning" aria-hidden="true">error</span>              
         <div>              
           <p > {{warningMessage}} </p>       
