@@ -52,43 +52,20 @@ export class ClientsComponent implements OnInit, OnChanges{
   showNumberSearchWarning = false
   numberSearchColumnName =''
   searchColumnList : { columnName: string, columnDesc: string }[] = [
-    { columnName: 'clientName',
-    columnDesc: 'Client Name'
-   },
     {
-      columnName: "pronouns",
-      columnDesc: "Pronouns"
+      columnName: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
+      columnName: 'clientName',
+      columnDesc: 'Client Name'
     },
     {
       columnName: "clientId",
-      columnDesc: "ID"
-    },
-    {
-      columnName: "urn",
-      columnDesc: "URN"
-    },
-    {
-      columnName: "preferredContact",
-      columnDesc: "Preferred Contact"
-    },
-    {
-      columnName: "status",
-      columnDesc: "Status"
-    },
-    {
-      columnName: "group",
-      columnDesc: "Group"
-    },
-    {
-      columnName: "eilgibilityStartDate",
-      columnDesc: "Eligibility Start Date"
-    },
-    {
-      columnName: "eligibilityEndDate",
-      columnDesc: "Eligibility End Date"
+      columnDesc: "Client ID"
     }
   ]
-  selectedSearchColumn='';
+  selectedSearchColumn='ALL';
   filteredByColumnDesc ='';
   columnChangeDesc = 'Default Columns'
   gridColumns: { [key: string]: string }  = {
@@ -162,7 +139,6 @@ export class ClientsComponent implements OnInit, OnChanges{
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
-    this.loadClientsListGrid();
   }
 
   onColumnReorder($event: any) {
@@ -223,7 +199,7 @@ export class ClientsComponent implements OnInit, OnChanges{
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
     this.filter = [];
     this.searchText = '';
-    this.selectedSearchColumn = '';
+    this.selectedSearchColumn = 'ALL';
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
