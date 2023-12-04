@@ -22,6 +22,8 @@ export class ImportedClaimFacade {
   private clientPolicyUpdateSubject = new Subject<any>();
   private updateExceptionModalSubject = new Subject<any>();
   private importedClaimsCountSubject = new Subject<any>();
+  private clientSearchLoaderVisibilitySubject = new Subject<boolean>;
+  public clientSubject = new Subject<any>();
   /** Public properties **/
   approvalsImportedClaimsLists$ = this.ImportedClaimsSubject.asObservable();
   submitImportedClaims$ = this.submitImportedClaimsSubject.asObservable();
@@ -30,6 +32,8 @@ export class ImportedClaimFacade {
   updateExceptionModalSubject$ = this.updateExceptionModalSubject.asObservable();
   clientPolicyUpdate$ = this.clientPolicyUpdateSubject.asObservable();
   importedClaimsCount$ = this.importedClaimsCountSubject.asObservable();
+  clientSearchLoaderVisibility$= this.clientSearchLoaderVisibilitySubject.asObservable();  
+  clients$ = this.clientSubject.asObservable();
 
 
   constructor(
@@ -175,4 +179,25 @@ export class ImportedClaimFacade {
       }
     );
   }
+
+  loadClientBySearchText(text : string): void {
+    this.clientSearchLoaderVisibilitySubject.next(true);
+    if(text){
+      this.importedClaimService.loadClientBySearchText(text).subscribe({
+
+        next: (caseBySearchTextResponse) => {
+          this.clientSubject.next(caseBySearchTextResponse);
+          this.clientSearchLoaderVisibilitySubject.next(false);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      });
+    }
+    else{
+      this.clientSubject.next(null);
+      this.clientSearchLoaderVisibilitySubject.next(false);
+    }
+  }
+
 }

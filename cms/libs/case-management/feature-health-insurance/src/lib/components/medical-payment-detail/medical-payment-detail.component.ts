@@ -740,7 +740,6 @@ export class MedicalPaymentDetailComponent {
     this.isSubmitted = false;
     this.addClaimServiceGroup();
   }
-
   addClaimServiceGroup() {
     let claimForm = this.formBuilder.group({
       serviceStartDate: new FormControl(

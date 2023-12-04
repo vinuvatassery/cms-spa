@@ -4,9 +4,10 @@ import {
   Output,
   EventEmitter,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialClaimsFacade, ImportedClaimFacade } from '@cms/case-management/domain';
+import { ImportedClaimFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
@@ -22,16 +23,17 @@ export class ApprovalsSearchClientsComponent {
 
   @Input() selectedClaim: any;
   isShownSearchLoader = false;
-  clientSearchResult$ = this.financialClaimsFacade.clients$;
+  clientSearchResult$ = this.importedClaimFacade.clients$;
   selectedClient: any;
   isButtonDisable = true;
 
-  constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
+  constructor(
     private readonly importedClaimFacade: ImportedClaimFacade,
     private readonly loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private router: Router){}
+    private router: Router,
+    private changeDetector: ChangeDetectorRef){}
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {
@@ -59,6 +61,10 @@ export class ApprovalsSearchClientsComponent {
   }
 
   onClientValueChange(client: any){
+    if(client == undefined) {
+      this.isButtonDisable = true;
+      this.changeDetector.detectChanges();
+    }
     this.selectedClient = client;
     this.isButtonDisable = false;
   }
@@ -69,7 +75,8 @@ export class ApprovalsSearchClientsComponent {
     }
     clientSearchText = clientSearchText.replace("/", "-");
     clientSearchText = clientSearchText.replace("/", "-");
-    this.financialClaimsFacade.loadClientBySearchText(clientSearchText);
+    this.importedClaimFacade.loadClientBySearchText(clientSearchText);
+    this.changeDetector.detectChanges();
   }
 
   onClientSaveClick(){

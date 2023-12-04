@@ -264,7 +264,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
       this.documentFacade.getExportFile(
         param,
-        `premiums/${this.premiumType}/payments`,
+        `premium/${this.premiumType}/process/payments`,
         fileName
       );
     }
@@ -289,7 +289,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
       this.documentFacade.getExportFile(
         param,
-        `premiums/${this.premiumType}/batches`,
+        `premium/${this.premiumType}/batches`,
         fileName
       );
     }

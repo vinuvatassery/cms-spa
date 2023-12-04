@@ -31,7 +31,11 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   isSubmitted: boolean = false;
   ndcMaskFormat: string = "00000-0000-00"
   isLoading = false;
-
+  tAreaCessationMaxLength = 200;
+  drugNameCounter!: string;
+  brandNameCounter!:string;
+  drugNameCharactersCount!: number;
+  brandNameCharactersCount!:number;
   deliveryMethodCodesLocal: any;
   showLoader() {
     this.loaderService.show();
@@ -61,7 +65,8 @@ export class FinancialDrugsDetailsComponent implements OnInit {
 
     // modify delivery methods for that results [ ML , MG , Tablet , Each ]
     this.normalizeDeliveryMethods();
-
+    this. onDrugNameValueChange();
+    this.onBrandNameValueChange();
   }
 
   private normalizeDeliveryMethods() {
@@ -89,6 +94,16 @@ export class FinancialDrugsDetailsComponent implements OnInit {
       brandName: [this.drug?.brandName, [Validators.required, Validators.maxLength(200)]],
       drugType: [this.drug?.drugCategoryCode]
     });
+  }
+
+  onDrugNameValueChange(event: any= null): void {
+    this.drugNameCharactersCount = event== null?0:event.length;
+    this.drugNameCounter = `${this.drugNameCharactersCount}/${this.tAreaCessationMaxLength}`;
+  }
+
+  onBrandNameValueChange(event: any= null): void {
+    this.brandNameCharactersCount = event== null?0:event.length;
+    this.brandNameCounter = `${this.brandNameCharactersCount}/${this.tAreaCessationMaxLength}`;
   }
 
   atLeastOneDrugTypeSelected(): ValidatorFn {
