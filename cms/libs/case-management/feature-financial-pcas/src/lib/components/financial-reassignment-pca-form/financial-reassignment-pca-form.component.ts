@@ -142,9 +142,15 @@ this.loaderService.show();
   onPcaAssignmentFormSubmit()
   {    
     if(this.openDateError)
-    return ;
+    {
+      return ;
+    }
+  
   if(this.closeDateError)
+  {
     return ;
+  }
+
     this.formSubmitted = true
    
     this.pcaAssignmentForm.markAllAsTouched();
@@ -248,18 +254,17 @@ this.loaderService.show();
               return  "";
           }
         }
-        checkOpenDateValidity(opendate: string, closedate: string): string {
-          
+        checkOpenDateValidity(opendate: string, closedate: string): string {          
         this.closeDateError=false;
           const openDateObj: Date = new Date(opendate);
           const closeDateObj: Date = new Date(closedate);
-          switch (true) {
-            case  openDateObj>closeDateObj:
-              this.openDateError=true;
-              return "Open Date must be before Close Date";
-            default:
-              this.openDateError=false;
-              return "";
+          if(openDateObj>closeDateObj)
+          {
+            this.openDateError=true;
+            return "Open Date must be before Close Date";
+          }else{
+            this.openDateError=false;
+            return "";
           }
         }
     
