@@ -140,7 +140,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="acceptsReportsFlag" title="Accepts reports" [width]="180">
+    <kendo-grid-column field="acceptsReportsFlag" title="Accepts reports?" [width]="180">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.acceptsReportsFlag === 'Y' ? 'Yes' : 'No' }}
       </ng-template>
