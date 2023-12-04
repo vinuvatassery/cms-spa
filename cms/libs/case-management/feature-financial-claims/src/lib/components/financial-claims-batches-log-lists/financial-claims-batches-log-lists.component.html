@@ -22,8 +22,12 @@
         <span class="filter-section_items filter--select">
           <kendo-floatinglabel>
             <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
-              textField="columnDesc" valueField="columnCode" [data]="searchColumnList" [valuePrimitive]="true"
-              [(ngModel)]="selectedSearchColumn" (valueChange)="searchColumnChangeHandler($event)">
+              textField="columnDesc"
+              valueField="columnName"
+              [data]="searchColumnList"
+              [valuePrimitive]="true"
+              [(ngModel)]="selectedSearchColumn"
+              (valueChange)="searchColumnChangeHandler($event)">
             </kendo-dropdownlist>
           </kendo-floatinglabel>
         </span>
@@ -74,7 +78,7 @@
       <div class="app-c-table">
         <kendo-grid [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [columnMenu]="{ filter: true }"
-          [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  
+          [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
           [data]="batchLogGridLists$ | async" (filterChange)="filterChange($event)" filterable="menu"
           [filter]="state.filter">
           <kendo-grid-column  *ngIf="isPrintAdviceLetterClicked" [sortable]="false" field="add" [width]="40"  class="text-center"
