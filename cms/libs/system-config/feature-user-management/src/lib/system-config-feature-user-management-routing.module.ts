@@ -90,7 +90,7 @@ const routes: Routes = [
         component: FundsListComponent
       },
       {
-        path: 'expende-types',
+        path: 'expense-types',
         component: ExpenseTypesListComponent
       },
       {
@@ -147,7 +147,7 @@ const routes: Routes = [
         component: MedicalProvidersListComponent
       },
       {
-        path: 'ppt-code',
+        path: 'ppt-codes',
         component: CptCodeListComponent
       },
       {
@@ -155,11 +155,11 @@ const routes: Routes = [
         component: InsuranceVendorsListComponent
       },
       {
-        path: 'insurance-provide',
+        path: 'insurance-provides',
         component: InsuranceProvideListComponent
       },
       {
-        path: 'insurance-plan',
+        path: 'insurance-plans',
         component: InsurancePlanListComponent
       },
       {

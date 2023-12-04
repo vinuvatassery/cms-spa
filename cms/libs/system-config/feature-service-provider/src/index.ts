@@ -4,9 +4,7 @@ export * from './lib/components/manufacturers-list/manufacturers-list.component'
 
 export * from './lib/components/drugs-list/drugs-list.component';
 
-export * from './lib/components/manufacturer-details/manufacturer-details.component';
-
-export * from './lib/components/manufacturers-activate/manufacturers-activate.component';
+export * from './lib/components/manufacturer-details/manufacturer-details.component'; 
 
 export * from './lib/components/manufacturers-deactivate/manufacturers-deactivate.component';
 

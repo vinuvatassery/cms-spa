@@ -1,18 +1,19 @@
 <!-- Header Section -->
 <div class="block-section">
-      <h1 class="maintitle_withicon text-bold"><span aria-label="Index" aria-hidden="true"
-            class="material-icons sidebar-menu_icon"> settings </span> Direct Message </h1>
-  
-      <button icon="edit" kendoButton [primary]="true" aria-label="Direct Message" class="add-button-top"
+      <h1 class="maintitle_withicon text-bold"><span aria-hidden="true" class="material-icons sidebar-menu_icon">
+                  settings </span> Direct Message </h1>
+
+      <button kendoButton [primary]="true" aria-label="Direct Message" class="add-button-top"
             (click)="onDirectMessageDetailClicked()">
-            EDIT FREQUENCIES
+            <span aria-hidden="edit" class="material-icons mr-1"> edit </span> EDIT FREQUENCIES
       </button>
 </div>
 
 <!-- Direct Message List Section -->
 <section>
       <!-- Label info show only in list -->
-      <p class="pt-1">Specify when the system will automatically archive and log events for direct messages in the client’s profile.</p>
+      <p class="pt-1">Specify when the system will automatically archive and log events for direct messages in the
+            client’s profile.</p>
       <!-- Label info show only in reorder list -->
       <p class="pt-1" hidden>
             Select a sorting option or manually drag and drop the items in the list.
@@ -23,7 +24,7 @@
             <!-- Table header show only in list -->
             <div class="flex-col">
                   <div class="table-filter-section mat-form-no-b-space">
-                     
+
                         <span class="filter-section_items filter--search">
                               <span class="material-icons">search</span>
                               <kendo-floatinglabel text="Search">
@@ -95,24 +96,39 @@
                   </ng-template>
             </kendo-grid>
       </div>
- 
-
-      <!-- Reorder button block show only in reorder list -->
-      <div class="mt-2 block-section" hidden>
-            <div class="justify-content-end">
-                  <button kendoButton aria-label="Cancel" [primary]="true" look="outline">
-                        Cancel
-                  </button>
-                  <button kendoButton aria-label="Update" [primary]="true" class="ml-1">
-                        Update
-                  </button>
-            </div>
-      </div>
 </section>
 
 <!-- Add Direct Message Modal Html-->
 <kendo-dialog *ngIf="isDirectMessageDetailPopup" (close)="onCloseDirectMessageDetailClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar> Add Direct Message </kendo-dialog-titlebar>
-      <system-config-gender-detail></system-config-gender-detail>
+      <kendo-dialog-titlebar> Edit Frequencies </kendo-dialog-titlebar>
+      <section class="k-dialog-body">
+            <p>Edit frequencies for automatically archival and event logging of direct messages.</p>
+            <div class="flex-row">
+                  <div class="flex-col">
+                        <kendo-floatinglabel text="Frequency for Automatic Event Logging">
+                              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode">
+                              </kendo-dropdownlist>
+                        </kendo-floatinglabel>
+                  </div>
+                  <div class="flex-col">
+                        <kendo-floatinglabel text="Frequency for Automatic Archival">
+                              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode">
+                              </kendo-dropdownlist>
+                        </kendo-floatinglabel>
+                  </div>
+
+            </div>
+      </section>
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton aria-label="Cancel" (click)="onCloseDirectMessageDetailClicked()"
+                              [primary]="true" look="outline">
+                              Cancel
+                        </button>
+                        <button kendoButton aria-label="Update" [primary]="true">Save</button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
 </kendo-dialog>

@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { ManufacturersListComponent } from './components/manufacturers-list/manufacturers-list.component';
 import { DrugsListComponent } from './components/drugs-list/drugs-list.component';
-import { ManufacturerDetailsComponent } from './components/manufacturer-details/manufacturer-details.component';
-import { ManufacturersActivateComponent } from './components/manufacturers-activate/manufacturers-activate.component';
+import { ManufacturerDetailsComponent } from './components/manufacturer-details/manufacturer-details.component'; 
 import { ManufacturersDeactivateComponent } from './components/manufacturers-deactivate/manufacturers-deactivate.component';
 import { ManufacturersDeleteComponent } from './components/manufacturers-delete/manufacturers-delete.component';
 import { ManufacturersFormDetailsComponent } from './components/manufacturers-form-details/manufacturers-form-details.component';
@@ -32,14 +33,14 @@ import { PharmaciesListComponent } from './components/pharmacies-list/pharmacies
 import { PharmaciesFormDetailsComponent } from './components/pharmacies-form-details/pharmacies-form-details.component';
 import { HealthcareProviderFormDetailsComponent } from './components/healthcare-provider-form-details/healthcare-provider-form-details.component';
 import { HealthcareProviderListComponent } from './components/healthcare-provider-list/healthcare-provider-list.component';
+ 
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
   declarations: [
     ManufacturersListComponent,
     DrugsListComponent,
-    ManufacturerDetailsComponent,
-    ManufacturersActivateComponent,
+    ManufacturerDetailsComponent, 
     ManufacturersDeactivateComponent,
     ManufacturersDeleteComponent,
     ManufacturersFormDetailsComponent,
@@ -72,8 +73,7 @@ import { HealthcareProviderListComponent } from './components/healthcare-provide
   exports: [
     ManufacturersListComponent,
     DrugsListComponent,
-    ManufacturerDetailsComponent,
-    ManufacturersActivateComponent,
+    ManufacturerDetailsComponent, 
     ManufacturersDeactivateComponent,
     ManufacturersDeleteComponent,
     ManufacturersFormDetailsComponent,
