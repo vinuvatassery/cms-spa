@@ -21,10 +21,10 @@
                 </kendo-floatinglabel>
                 <kendo-formerror
                     *ngIf="(!drugForm.controls['ndcNbr'].valid && drugForm.controls['ndcNbr'].hasError('required')) && isSubmitted">
-                    NDC number is required.
+                    NDC Code is required.
                 </kendo-formerror>
                 <kendo-formerror *ngIf="drugForm.controls['ndcNbr'].hasError('maxlength')">
-                    NDC number cannot exceed 13 characters.
+                    NDC Code cannot exceed 13 characters.
                 </kendo-formerror>
             </div>
 

@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Subject } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
@@ -40,9 +40,8 @@ export class DrugsFacade {
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
 
-  errorShowHideSnackBar( subtitle : any)
-  {
-    this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR,subtitle, NotificationSource.UI)
+  errorShowHideSnackBar(subtitle: any) {
+    this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, subtitle, NotificationSource.UI)
   }
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -63,9 +62,9 @@ export class DrugsFacade {
   ) { }
 
   /** Public methods **/
-  loadDrugsListGrid(vendorId:string, skipCount: number, maxResultCount: number, sort: string, sortType: string, filters: any) {
+  loadDrugsListGrid(vendorId: string, skipCount: number, maxResultCount: number, sort: string, sortType: string, filters: any) {
     this.drugDataLoaderSubject.next(true);
-    this.drugsDataService.loadDrugList(vendorId,skipCount,maxResultCount,sort,sortType,filters).subscribe({
+    this.drugsDataService.loadDrugList(vendorId, skipCount, maxResultCount, sort, sortType, filters).subscribe({
       next: (dataResponse) => {
         this.drugsDataSubject.next(dataResponse);
 
@@ -80,7 +79,7 @@ export class DrugsFacade {
       },
       error: (err) => {
         this.drugsDataSubject.next(false);
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.drugDataLoaderSubject.next(false);
       },
     });
@@ -91,18 +90,29 @@ export class DrugsFacade {
   addDrug(dto: any) {
     return this.drugsDataService.addDrug(dto);
   }
-  addDrugData(dto: any) 
-    {
-      this.drugsDataService.addDrug(dto).subscribe({
-      next: (response: any) => {
+// Observable to subscribe to for the "drugAdded" event
+drugAdded$(): Observable<any> {
+  return this.addDrugSubject.asObservable();
+}
+  addDrugData(dto: any): Observable<any> {
+    return this.drugsDataService.addDrug(dto).pipe(
+      tap((response: any) => {
         this.addDrugSubject.next(response);
-       
-      },
-      error: (err: any) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-      }
-    });
+      }),
+    );
   }
+  // addDrugData(dto: any) 
+  //   {
+  //     this.drugsDataService.addDrug(dto).subscribe({
+  //     next: (response: any) => {
+  //       this.addDrugSubject.next(response);
+
+  //     },
+  //     error: (err: any) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+  //     }
+  //   });
+  // }
 
   updateDrugVendor(drugDto: any) {
     this.showLoader();

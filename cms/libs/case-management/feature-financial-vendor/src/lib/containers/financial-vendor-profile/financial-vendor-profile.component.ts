@@ -159,6 +159,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   }
 
   loadDrugsListGrid() {
+    // alert('loadDrugsListGrid')
     this.drugsFacade.loadDrugsListGrid(
       this.vendorId ?? "",
       this.state.skip ?? 0,

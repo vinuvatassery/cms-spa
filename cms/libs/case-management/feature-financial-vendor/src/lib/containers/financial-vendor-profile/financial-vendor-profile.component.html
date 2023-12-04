@@ -44,7 +44,8 @@
             [sort]="sort"
             [gridSkipCount]="gridSkipCount"
             [hasCreateUpdatePermission]="hasDrugCreateUpdatePermission"
-            [vendorDetails$]="vendorDetails$"></cms-financial-drugs>
+            [vendorDetails$]="vendorDetails$"
+            (addDrugEvent)="loadDrugsListGrid()"></cms-financial-drugs>
           </div>
         </div>
       </ng-template>
