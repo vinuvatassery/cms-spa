@@ -31,7 +31,9 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   isSubmitted: boolean = false;
   ndcMaskFormat: string = "00000-0000-00"
   isLoading = false;
-
+  tAreaCessationMaxLength = 200;
+  drugNameCounter!: string;
+  drugNameCharactersCount!: number;
   deliveryMethodCodesLocal: any;
   showLoader() {
     this.loaderService.show();
@@ -53,7 +55,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.hideLoader()
     this.drugForm.get('manufacturer')?.patchValue(this.vendorId);
-    if (this.dialogTitle === "Add New" || this.dialogTitle === "Request New") {
+    if (this.dialogTitle === "Add" || this.dialogTitle === "Request New") {
       this.saveButtonText = this.dialogTitle;
     } else {
       this.saveButtonText = "Update";
@@ -61,7 +63,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
 
     // modify delivery methods for that results [ ML , MG , Tablet , Each ]
     this.normalizeDeliveryMethods();
-
+    this. onDrugNameValueChange();
   }
 
   private normalizeDeliveryMethods() {
@@ -91,6 +93,10 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     });
   }
 
+  onDrugNameValueChange(event: any= null): void {
+    this.drugNameCharactersCount = event== null?0:event.length;
+    this.drugNameCounter = `${this.drugNameCharactersCount}/${this.tAreaCessationMaxLength}`;
+  }
   atLeastOneDrugTypeSelected(): ValidatorFn {
     return (formGroup: AbstractControl) => {
       const hiv = formGroup.get('hiv')?.value;

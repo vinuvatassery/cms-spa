@@ -38,7 +38,7 @@ export class FinancialDrugsComponent {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isDrugsGridLoaderShow = false;
   public state!: State;
-  dialogTitle = "Add New";
+  dialogTitle = "Add";
   filters: any = [];
   isFiltered = false;
   yesOrNoLovs: any = [];
@@ -173,8 +173,8 @@ export class FinancialDrugsComponent {
 
   clickOpenAddEditFinancialDrugsDetails(title: string) {
     this.dialogTitle = title;
-    if (title === "Add New") {
-      this.dialogTitle = this.hasCreateUpdatePermission ? "Add New" : "Request New";
+    if (title === "Add") {
+      this.dialogTitle = this.hasCreateUpdatePermission ? "Add" : "Request New";
     }
 
     this.isFinancialDrugsDetailShow = true;

@@ -206,7 +206,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      sortType : sortTypeValue,
      vendorTypeCode : (this.vendorTypeCode == this.financeVendorTypeCodes.MedicalProviders 
       || this.vendorTypeCode == this.financeVendorTypeCodes.DentalProviders) 
-      ? this.vendorTypeCode + ',' + this.vendorTypeCode.split('_')[0] + '_CLINIC' : this.vendorTypeCode ,
+      ? this.vendorTypeCode + ',' + this.vendorTypeCode.split('_')[0] + '_CLINIC' +',' + this.financeVendorTypeCodes.Clinic : this.vendorTypeCode ,
      filter : this.state?.["filter"]?.["filters"] ?? []
    }
 

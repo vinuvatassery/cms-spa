@@ -113,7 +113,12 @@ export class FinancialVendorDataService {
         `/financial-management/vendors/${vendorId}/profile/special-handling`
     );
   }
-
+  getProviderPanelByVendorId(vendorId:string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/${vendorId}`
+    );
+  }
 
   addVendorProfile(vendorProfile:any) {
     return this.http.post(

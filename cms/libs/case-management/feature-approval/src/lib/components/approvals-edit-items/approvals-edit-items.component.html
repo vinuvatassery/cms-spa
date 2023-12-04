@@ -1,6 +1,6 @@
 <section class="k-dialog-body newcase form-right-wrapper">
   <p class="mb-2">
-    All fields are required unless otherwise stated. Either a clinic name or provider name is required.
+    All fields are required unless otherwise stated.
   </p>
 
   <div class="flex-row" *ngIf="
@@ -10,7 +10,7 @@
       selectedSubtypeCode === subTypeConst.DentalProvider
     " [formGroup]="healthCareForm">
     <div
-      *ngIf="(selectedSubtypeCode == subTypeConst.MedicalProvider || subTypeConst.DentalProvider) && selectedMasterData.parentVendorId"
+      *ngIf="(selectedSubtypeCode == subTypeConst.MedicalProvider || subTypeConst.DentalProvider)"
       class="k-auto-complete-box flex-col">
       <span *ngIf="clinicVendorLoader$ | async" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
       <kendo-floatinglabel text="Clinic Name">
@@ -36,7 +36,7 @@
           class="flex-col">
       <kendo-floatinglabel text="Clinic Name">
         <kendo-textbox aria-label="Clinic Name" placeholder="Clinic Name"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="providerName" [maxlength]="50" [(ngModel)]="tempVendorName">
+          [fillMode]="formUiStyle.inputFillMode" formControlName="providerName" [maxlength]="50" [(ngModel)]="providerName">
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">
@@ -117,11 +117,14 @@
       <kendo-formerror *ngIf="healthCareFormControls?.zip.errors?.required && isValidateForm">
         Zip is required
       </kendo-formerror>
+      <kendo-formerror *ngIf="healthCareFormControls?.zip.errors?.pattern">
+        Special characters are not allowed
+      </kendo-formerror>
     </div>
     <div class="flex-col ">
-      <kendo-floatinglabel text="Contact 1 Name (optional)">
-        <kendo-textbox aria-label="Contact 1 Name (optional)" placeholder="Contact 1 Name (optional)"
-          [fillMode]="formUiStyle.inputFillMode" formControlName="contactFirstName" [maxlength]="40" placeholder="Contact 1 Name (optional)">
+      <kendo-floatinglabel text="Contact Name (optional)">
+        <kendo-textbox aria-label="Contact Name (optional)" placeholder="Contact Name (optional)"
+          [fillMode]="formUiStyle.inputFillMode" formControlName="contactName" [maxlength]="40" placeholder="Contact Name (optional)">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
@@ -226,13 +229,16 @@
         </kendo-formerror>
       </fieldset>
     </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="Delivery Method">
-        <kendo-dropdownlist aria-label="Delivery Method" [fillMode]="formUiStyle.dropDownFillMode"
-          formControlName="deliveryMethod" [valuePrimitive]="true" placeholder="Delivery Method" [data]="listItems"
-          [(ngModel)]="selectedDeliveryMethod">
+    <div class="flex-col flex-col-6 ">
+      <kendo-floatinglabel text="Unit">
+        <kendo-dropdownlist aria-label="Unit" [fillMode]="formUiStyle.dropDownFillMode"
+          formControlName="deliveryMethod" [data]="deliveryMethodLov$| async" textField="lovDesc" valueField="lovCode"
+          [valuePrimitive]="true" placeholder="Unit">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="drugFormControls?.deliveryMethod.errors?.required && isValidateForm">
+        Unit is required
+      </kendo-formerror>
     </div>
   </div>
   <div class="flex-row" *ngIf="selectedSubtypeCode === subTypeConst.InsurancePlan" [formGroup]="insurancePlanForm">
@@ -472,16 +478,9 @@
         <p class="mt-4">of each month</p>
       </div>
     <div class="flex-col ">
-      <kendo-floatinglabel text="Contact First Name (optional)">
-        <kendo-textbox aria-label="Contact First Name (optional)" placeholder="Contact First Name (optional)" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="contactFirstName" [maxlength]="50">
-        </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col ">
-      <kendo-floatinglabel text="Contact Last Name (optional)">
-        <kendo-textbox aria-label="Contact Last Name (optional)" placeholder="Contact Last Name (optional)" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="contactLastName" [maxlength]="50">
+      <kendo-floatinglabel text="Contact Name (optional)">
+        <kendo-textbox aria-label="Contact Name (optional)" placeholder="Contact Name (optional)" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="contactName" [maxlength]="50">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>
@@ -580,16 +579,9 @@
       </fieldset>
     </div>
     <div class="flex-col ">
-      <kendo-floatinglabel text="Contact First Name (optional)">
-        <kendo-textbox aria-label="Contact First Name (optional)" placeholder="Contact First Name (optional)" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="contactFirstName" [maxlength]="50">
-        </kendo-textbox>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col ">
-      <kendo-floatinglabel text="Contact Last Name (optional)">
-        <kendo-textbox aria-label="Contact Last Name (optional)" placeholder="Contact Last Name (optional)" [fillMode]="formUiStyle.inputFillMode"
-          formControlName="contactLastName" [maxlength]="50">
+      <kendo-floatinglabel text="Contact Name (optional)">
+        <kendo-textbox aria-label="Contact Name (optional)" placeholder="Contact Name (optional)" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="contactName" [maxlength]="50">
         </kendo-textbox>
       </kendo-floatinglabel>
     </div>

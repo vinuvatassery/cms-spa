@@ -67,6 +67,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Input() actionResponse$: any;
   @Input() existingPremiums$!: Observable<PolicyPremiumCoverage[]>;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
+  @Input() exportButtonShow$: any;
   @Output() clientChangeEvent = new EventEmitter<any>();
   @Output() premiumsExistValidationEvent = new EventEmitter<{ clientId: number, premiums: PolicyPremiumCoverage[] }>();
   @Output() savePremiumsEvent = new EventEmitter<InsurancePremium[]>();
@@ -75,6 +76,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   public state!: any;
   sortColumn = 'clientFullName';
   sortDir = 'Ascending';
@@ -186,7 +188,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   premiumId!:string;
   isPageChanged: boolean = false;
   selectedDeletePremiumsList!: any;
-
+  showExportLoader = false;
   public premiumsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -995,5 +997,16 @@ if(!this.selectAll && this.isSendReportOpened){
     if (this.actionResponseSubscription) {
       this.actionResponseSubscription.unsubscribe();
     }
+  }
+
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
