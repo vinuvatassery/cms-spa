@@ -1,7 +1,11 @@
-
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import {
+  LoaderService,
+  LoggingService,
+  NotificationSnackbarService,
+  SnackBarNotificationType,
+} from '@cms/shared/util-core';
 import { Subject, first } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -28,20 +32,23 @@ export class UserManagementFacade {
   private clientProfileCaseAvailabilitiesSubject = new BehaviorSubject<any>([]);
   private clientProfilePeriodsSubject = new BehaviorSubject<any>([]);
   private clientProfileSexualOrientationSubject = new BehaviorSubject<any>([]);
-  private clientProfileRacialOrEthnicIdentitySubject = new BehaviorSubject<any>([]);
+  private clientProfileRacialOrEthnicIdentitySubject = new BehaviorSubject<any>(
+    []
+  );
   private clientProfilePronounsSubject = new BehaviorSubject<any>([]);
   private clientProfileGenderSubject = new BehaviorSubject<any>([]);
+  private directMessageLogEventSubject = new BehaviorSubject<any>([]);
 
- 
   private clientProfileHousingAcuityLevelSubject = new BehaviorSubject<any>([]);
-  private clientProfileIncomeInclusionsExlusionsSubject = new BehaviorSubject<any>([]);
+  private clientProfileIncomeInclusionsExlusionsSubject =
+    new BehaviorSubject<any>([]);
   private clientProfileRegionAssignmentSubject = new BehaviorSubject<any>([]);
   private clientProfilePSMFRZIPSubject = new BehaviorSubject<any>([]);
   private clientProfileServiceProviderSubject = new BehaviorSubject<any>([]);
   private usersByRoleSubject = new BehaviorSubject<LoginUser[]>([]);
   private userImageSubject = new Subject<any>();
-  private userByIdSubject = new Subject<any>(); 
- 
+  private userByIdSubject = new Subject<any>();
+
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -57,164 +64,162 @@ export class UserManagementFacade {
   clientProfileCaseAvailabilities$ =
     this.clientProfileCaseAvailabilitiesSubject.asObservable();
   clientProfilePeriods$ = this.clientProfilePeriodsSubject.asObservable();
-  clientProfileSexualOrientation$ = this.clientProfileSexualOrientationSubject.asObservable();
-  clientProfileRacialOrEthnicIdentity$ = this.clientProfileRacialOrEthnicIdentitySubject.asObservable();
+  clientProfileSexualOrientation$ =
+    this.clientProfileSexualOrientationSubject.asObservable();
+  clientProfileRacialOrEthnicIdentity$ =
+    this.clientProfileRacialOrEthnicIdentitySubject.asObservable();
   clientProfilePronouns$ = this.clientProfilePronounsSubject.asObservable();
   clientProfileGender$ = this.clientProfileGenderSubject.asObservable();
- 
-  clientProfileHousingAcuityLevel$ = this.clientProfileHousingAcuityLevelSubject.asObservable();
-  clientProfilIncomeInclusionsExlusions$ = this.clientProfileIncomeInclusionsExlusionsSubject.asObservable();
-  clientProfilRegionAssignment$ = this.clientProfileRegionAssignmentSubject.asObservable();
+  directMessageLogEvent$ = this.directMessageLogEventSubject.asObservable();
+
+  clientProfileHousingAcuityLevel$ =
+    this.clientProfileHousingAcuityLevelSubject.asObservable();
+  clientProfilIncomeInclusionsExlusions$ =
+    this.clientProfileIncomeInclusionsExlusionsSubject.asObservable();
+  clientProfilRegionAssignment$ =
+    this.clientProfileRegionAssignmentSubject.asObservable();
   clientProfilPSMFRZIP$ = this.clientProfilePSMFRZIPSubject.asObservable();
-  clientProfilServiceProvider$ = this.clientProfileServiceProviderSubject.asObservable();
+  clientProfilServiceProvider$ =
+    this.clientProfileServiceProviderSubject.asObservable();
   usersByRole$ = this.usersByRoleSubject.asObservable();
   userImage$ = this.userImageSubject.asObservable();
   usersById$ = this.userByIdSubject.asObservable();
- 
-  
+
   /** Constructor **/
-  constructor(private readonly userDataService: UserDataService,
-    private loggingService : LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService 
-    ) {}
+  constructor(
+    private readonly userDataService: UserDataService,
+    private loggingService: LoggingService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly loaderService: LoaderService
+  ) {}
 
-
-    showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
-    {        
-        if(type == SnackBarNotificationType.ERROR)
-        {
-          const err= subtitle;    
-          this.loggingService.logException(err)
-        }  
-          this.notificationSnackbarService.manageSnackBar(type,subtitle)
-          this.hideLoader();   
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err);
     }
-      
-    showLoader()
-    {
-      this.loaderService.show();
-    }
-      
-    hideLoader()
-    {
-      this.loaderService.hide();
-    }
-
-  /** Public methods **/
-  hasRole(roleCode : string) : any
-  {
-    let roleCheck;
-    this.userDataService.getProfile$
-      .pipe(first(profile => profile?.length > 0))
-      .subscribe((profile:any)=>{ 
-        const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
-        roleCheck = roleProfile ? true : false;
-      })
-      return roleCheck;
+    this.notificationSnackbarService.manageSnackBar(type, subtitle);
+    this.hideLoader();
   }
 
-  hasPermission(ifPermission : string[]) : any
-  {
-    let hasPerm =false;
+  showLoader() {
+    this.loaderService.show();
+  }
+
+  hideLoader() {
+    this.loaderService.hide();
+  }
+
+  /** Public methods **/
+  hasRole(roleCode: string): any {
+    let roleCheck;
     this.userDataService.getProfile$
-      .pipe(first(profile => profile?.length > 0))
-      .subscribe((profile:any)=>{
-        let permission : any;       
-        for(const profileItem of profile){
-          if(permission == undefined || permission?.length == 0){
-            permission = profileItem?.permissions 
-          }
-          else{
-            profileItem?.permissions.forEach((newPerm : any) => {
-              const permissionExists = permission.some((existPerm : any) => existPerm.permissionId === newPerm.permissionId);
-              if(!permissionExists){
-                permission.push(newPerm);    
+      .pipe(first((profile) => profile?.length > 0))
+      .subscribe((profile: any) => {
+        const roleProfile = profile?.find((x: any) => x.roleCode === roleCode);
+        roleCheck = roleProfile ? true : false;
+      });
+    return roleCheck;
+  }
+
+  hasPermission(ifPermission: string[]): any {
+    let hasPerm = false;
+    this.userDataService.getProfile$
+      .pipe(first((profile) => profile?.length > 0))
+      .subscribe((profile: any) => {
+        let permission: any;
+        for (const profileItem of profile) {
+          if (permission == undefined || permission?.length == 0) {
+            permission = profileItem?.permissions;
+          } else {
+            profileItem?.permissions.forEach((newPerm: any) => {
+              const permissionExists = permission.some(
+                (existPerm: any) =>
+                  existPerm.permissionId === newPerm.permissionId
+              );
+              if (!permissionExists) {
+                permission.push(newPerm);
               }
             });
           }
         }
         if (permission?.length == 0) {
           hasPerm = false;
-        }  
+        }
 
-        const searchPermission  = ifPermission;    
-        let hasPermissions = false;    
-        for (const perm of searchPermission)
-        {            
-            hasPermissions = permission?.some((x : any)=> x.permissionsCode   === perm)   
+        const searchPermission = ifPermission;
+        let hasPermissions = false;
+        for (const perm of searchPermission) {
+          hasPermissions = permission?.some(
+            (x: any) => x.permissionsCode === perm
+          );
         }
 
         if (!hasPermissions) {
           hasPerm = false;
         } else {
           hasPerm = true;
-        }  
-      })
-      return  hasPerm;
+        }
+      });
+    return hasPerm;
   }
 
-  getUserPermissionMetaData(permissionCode : string, roleCode : any)
-  {
+  getUserPermissionMetaData(permissionCode: string, roleCode: any) {
     let permissionMetaData;
-    if(!roleCode)
-    {
+    if (!roleCode) {
       return;
     }
     this.userDataService.getProfile$
-    .pipe(first(profile => profile?.length > 0))
-    .subscribe((profile:any)=>{ 
-      const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
-      const permission = roleProfile?.permissions;
-      if (permission?.length == 0) {
-       return;
-      }  
-      const permissiondata = permission?.find((x : any)=> x.permissionsCode === permissionCode);  
-      if(permissiondata?.metadata)
-      {
-        permissionMetaData = JSON.parse(permissiondata.metadata);
-      }
-    })
+      .pipe(first((profile) => profile?.length > 0))
+      .subscribe((profile: any) => {
+        const roleProfile = profile?.find((x: any) => x.roleCode === roleCode);
+        const permission = roleProfile?.permissions;
+        if (permission?.length == 0) {
+          return;
+        }
+        const permissiondata = permission?.find(
+          (x: any) => x.permissionsCode === permissionCode
+        );
+        if (permissiondata?.metadata) {
+          permissionMetaData = JSON.parse(permissiondata.metadata);
+        }
+      });
     return permissionMetaData;
   }
 
-  ///for case manager hover popup //NOSONAR 
-  getUserById(userId : string): void {
+  ///for case manager hover popup //NOSONAR
+  getUserById(userId: string): void {
     this.userDataService.getUserById(userId).subscribe({
-      next: (userDataResponse) => {        
+      next: (userDataResponse) => {
         this.userByIdSubject.next(userDataResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
-      },
-    });
-  } 
-
-
-  getUserImage(userId : string): void {    
-    this.userDataService.getUserImage(userId).subscribe({
-      next: (userImageResponse : any) => {        
-        this.userImageSubject.next(userImageResponse);
-      },
-      error: (err) => {        
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
 
+  getUserImage(userId: string): void {
+    this.userDataService.getUserImage(userId).subscribe({
+      next: (userImageResponse: any) => {
+        this.userImageSubject.next(userImageResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
 
-  getUsersByRole(rolecode : string): void {
+  getUsersByRole(rolecode: string): void {
     this.userDataService.getUsersByRole(rolecode).subscribe({
       next: (usersByRoleResponse) => {
         this.usersByRoleSubject.next(usersByRoleResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
-
- 
 
   loadUsersData(): void {
     this.userDataService.loadUsersData().subscribe({
@@ -222,7 +227,7 @@ export class UserManagementFacade {
         this.usersDataSubject.next(usersDataResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -233,7 +238,7 @@ export class UserManagementFacade {
         this.usersFilterColumnSubject.next(usersFilterColumnResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -244,7 +249,7 @@ export class UserManagementFacade {
         this.ddlUserRoleSubject.next(ddlUserRoleResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -257,7 +262,7 @@ export class UserManagementFacade {
         );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -270,7 +275,7 @@ export class UserManagementFacade {
         );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -281,7 +286,7 @@ export class UserManagementFacade {
         this.ddlColumnFiltersSubject.next(ddlColumnFilters);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -292,7 +297,7 @@ export class UserManagementFacade {
         this.clientProfileLanguagesSubject.next(clientProfileLanguages);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -303,7 +308,7 @@ export class UserManagementFacade {
         this.clientProfileSlotsSubject.next(clientProfileSlots);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -316,7 +321,7 @@ export class UserManagementFacade {
         );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -327,108 +332,129 @@ export class UserManagementFacade {
         this.clientProfilePeriodsSubject.next(clientProfilePeriods);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
 
-  loadSexualOrientationList(){
+  loadSexualOrientationList() {
     this.userDataService.loadSexualOrientationList().subscribe({
       next: (clientProfileSexualOrientation) => {
-        this.clientProfileSexualOrientationSubject.next(clientProfileSexualOrientation);
+        this.clientProfileSexualOrientationSubject.next(
+          clientProfileSexualOrientation
+        );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
-  loadRacialOrEthnicIdentityList(){
+  loadRacialOrEthnicIdentityList() {
     this.userDataService.loadRacialOrEthnicIdentityList().subscribe({
       next: (clientProfileRacialOrEthnicIdentity) => {
-        this.clientProfileRacialOrEthnicIdentitySubject.next(clientProfileRacialOrEthnicIdentity);
+        this.clientProfileRacialOrEthnicIdentitySubject.next(
+          clientProfileRacialOrEthnicIdentity
+        );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
-  loadPronounsList(){
+  loadPronounsList() {
     this.userDataService.loadPronounsList().subscribe({
       next: (clientProfilePronouns) => {
         this.clientProfilePronounsSubject.next(clientProfilePronouns);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
-
   }
-  loadGenderList(){
+  loadGenderList() {
     this.userDataService.loadGenderList().subscribe({
       next: (clientProfileGender) => {
         this.clientProfileGenderSubject.next(clientProfileGender);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
- 
-  loadHousingAcuityLevelList(){
+
+  loadHousingAcuityLevelList() {
     this.userDataService.loadHousingAcuityLevelList().subscribe({
       next: (clientProfileHousingAcuityLevel) => {
-        this.clientProfileHousingAcuityLevelSubject.next(clientProfileHousingAcuityLevel);
+        this.clientProfileHousingAcuityLevelSubject.next(
+          clientProfileHousingAcuityLevel
+        );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
-  loadIncomeInclusionsExlusionsList(){
+  loadIncomeInclusionsExlusionsList() {
     this.userDataService.loadIncomeInclusionsExlusionsList().subscribe({
       next: (clientProfilIncomeInclusionsExlusions) => {
-        this.clientProfileIncomeInclusionsExlusionsSubject.next(clientProfilIncomeInclusionsExlusions);
+        this.clientProfileIncomeInclusionsExlusionsSubject.next(
+          clientProfilIncomeInclusionsExlusions
+        );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
- 
-  loadRegionAssignmentList(){
+
+  loadRegionAssignmentList() {
     this.userDataService.loadRegionAssignmentList().subscribe({
       next: (clientProfilRegionAssignment) => {
-        this.clientProfileRegionAssignmentSubject.next(clientProfilRegionAssignment);
+        this.clientProfileRegionAssignmentSubject.next(
+          clientProfilRegionAssignment
+        );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
-  loadPSMFRZIPList(){
+  loadPSMFRZIPList() {
     this.userDataService.loadPSMFRZIPList().subscribe({
       next: (clientProfilPSMFRZIP) => {
         this.clientProfilePSMFRZIPSubject.next(clientProfilPSMFRZIP);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
 
-  loadServiceProviderList(){
+  loadServiceProviderList() {
     this.userDataService.loadServiceProviderList().subscribe({
       next: (clientProfilServiceProvider) => {
-        this.clientProfileServiceProviderSubject.next(clientProfilServiceProvider);
+        this.clientProfileServiceProviderSubject.next(
+          clientProfilServiceProvider
+        );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
 
-  reassignCase(caseReassignData : any){
+  reassignCase(caseReassignData: any) {
     return this.userDataService.reassignCase(caseReassignData);
   }
- 
+
+  loadDirectMessageLogEvent() {
+    this.userDataService.loadDirectMessageLogEventService().subscribe({
+      next: (directMessageLogEvent) => {
+        this.directMessageLogEventSubject.next(directMessageLogEvent);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
 }
