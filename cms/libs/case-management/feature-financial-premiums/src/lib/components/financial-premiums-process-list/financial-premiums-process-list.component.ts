@@ -297,11 +297,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
 
   premiumGridlistDataHandle() {
     this.financialPremiumsProcessGridLists$.subscribe((data:any) => {
-      // this.gridDataResult = data;
-      // this.gridDataResult.data = filterBy(
-      //   this.gridDataResult.data,
-      //   this.filterData
-      // );
       this.gridFinancialPremiumsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
