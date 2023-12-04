@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialPremiumsFacade, GridFilterParam, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade, GridFilterParam, InsurancePremiumDetails, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -27,7 +27,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { BehaviorSubject, Subject, debounceTime, first } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, debounceTime, first } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-premiums-all-payments-list',
@@ -45,6 +45,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   deletePaymentDialogTemplate!: TemplateRef<any>;
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  private editPremiumsFormDialog: any;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isFinancialPremiumsAllPaymentsGridLoaderShow = false;
   gridLoaderSubject = new BehaviorSubject(false);
@@ -61,6 +62,8 @@ export class FinancialPremiumsAllPaymentsListComponent
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() unBatchPremiumEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
+  @Input() insuranceCoverageDates$: any;
+  clientName:any="";
   gridColumns: any = {
     itemNumber: 'Item #',
     batchNumber: 'Batch #',
@@ -199,20 +202,29 @@ export class FinancialPremiumsAllPaymentsListComponent
   isEditBatchClosed = false;
   isUnBatchPaymentPremiumsClosed = false;
   showDeleteConfirmation = false;
+  premiumId!:string;
+
   @ViewChild('removePremiumsConfirmationDialogTemplate', { read: TemplateRef })
   removePremiumsConfirmationDialogTemplate!: TemplateRef<any>;
   @ViewChild('unBatchPaymentPremiumsDialogTemplate', { read: TemplateRef })
   unBatchPaymentPremiumsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('editPremiumsDialogTemplate', { read: TemplateRef })
+  editPremiumsDialogTemplate!: TemplateRef<any>;
   selected:any;
+  paymentRequestId: any;
   paymentId!: any;
   showExportLoader = false;
   @Input() unbatchPremiums$ :any
   @Input() exportButtonShow$: any;
   @Output() deletePaymentEvent = new EventEmitter();
   @Output() exportGridDataEvent = new EventEmitter<any>();
-
+  @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
+  @Output() loadPremiumEvent = new EventEmitter<string>();
+  @Output() updatePremiumEvent = new EventEmitter<any>();
   UnBatchPaymentDialog: any;
   removePremiumsDialog: any;
+  vendorId:any;
+  clientId:any
   isPrintAdviceLetterClicked = false;
   selectAll:boolean=false;
   unCheckedPaymentRequest:any=[];
@@ -289,6 +301,7 @@ export class FinancialPremiumsAllPaymentsListComponent
       click: (data: any): void => {
         if (!this.isEditBatchClosed) {
           this.isEditBatchClosed = true;
+          this.onEditPremiumsClick(data?.insurancePremiumId,data?.vendorId,data?.clientId,data.clientFullName, data?.paymentRequestId);
         }
       },
     },
@@ -1002,4 +1015,31 @@ if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
   }
 }
 }
+loadPremium(premiumId: string){
+  this.loadPremiumEvent.emit(premiumId);
+}
+updatePremium(data: any){
+  this.updatePremiumEvent.emit(data);
+}
+modalCloseEditPremiumsFormModal(result: any) {
+  if (result && this.editPremiumsFormDialog) {
+    this.isEditBatchClosed = false;
+    this.editPremiumsFormDialog.close();
+  }
+}
+onEditPremiumsClick(premiumId: string,vendorId:any,clientId:any,clientName:any,paymentRequestId:any){
+  this.vendorId=vendorId;
+  this.clientId=clientId;
+  this.clientName=clientName;
+  this.premiumId = premiumId;
+  this.paymentRequestId = paymentRequestId;
+  this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
+}
+onClickOpenEditPremiumsFromModal(template: TemplateRef<unknown>): void {
+  this.editPremiumsFormDialog = this.dialogService.open({
+    content: template,
+    cssClass: 'app-c-modal app-c-modal-96full add_premiums_modal',
+  });
+}
+
 }
