@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Subject } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
