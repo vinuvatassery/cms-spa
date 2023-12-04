@@ -82,7 +82,7 @@ export class FinancialClaimsBatchesLogListsComponent
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'PRINT ADVICE LETTERS',
+      text: 'PRINT ADVICE LETTER',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
