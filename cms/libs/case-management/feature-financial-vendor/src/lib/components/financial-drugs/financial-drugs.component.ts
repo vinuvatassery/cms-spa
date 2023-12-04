@@ -344,7 +344,6 @@ export class FinancialDrugsComponent {
     }
   }
 
-
   addDrug(data: any): void {
     this.drugsFacade.addDrugData(data).subscribe(() => {
       // After adding the drug, refresh the grid data or perform any other action

@@ -90,10 +90,11 @@ export class DrugsFacade {
   addDrug(dto: any) {
     return this.drugsDataService.addDrug(dto);
   }
-// Observable to subscribe to for the "drugAdded" event
-drugAdded$(): Observable<any> {
-  return this.addDrugSubject.asObservable();
-}
+
+  drugAdded$(): Observable<any> {
+    return this.addDrugSubject.asObservable();
+  }
+  
   addDrugData(dto: any): Observable<any> {
     return this.drugsDataService.addDrug(dto).pipe(
       tap((response: any) => {
@@ -101,18 +102,6 @@ drugAdded$(): Observable<any> {
       }),
     );
   }
-  // addDrugData(dto: any) 
-  //   {
-  //     this.drugsDataService.addDrug(dto).subscribe({
-  //     next: (response: any) => {
-  //       this.addDrugSubject.next(response);
-
-  //     },
-  //     error: (err: any) => {
-  //       this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-  //     }
-  //   });
-  // }
 
   updateDrugVendor(drugDto: any) {
     this.showLoader();
