@@ -18,8 +18,8 @@
                               class="mr-3 card-link-button">
                               {{payment.vendorName}}
                         </button>
-                        <span class="mr-3" *ngIf="payment.paymentStatusDate">Pmt. Requested {{payment.paymentStatusDate | kendoDate}}</span> <span class="mr-3">{{payment.amountDue | kendoNumber : "c"}} Due</span>
-                        <span class="mr-3">{{payment.paymentStatusCode}}</span>
+                        <span class="mr-3">Status Date: {{payment.paymentStatusDate | kendoDate}}</span> <span class="mr-3">{{payment.amountDue | kendoNumber : "c"}} Due</span>
+                        <span class="mr-3">Status: {{payment.paymentStatusCode}}</span>
                   </p>
                   </div>
                   <ng-template #loading>
