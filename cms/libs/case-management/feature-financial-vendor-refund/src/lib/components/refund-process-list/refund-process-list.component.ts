@@ -12,7 +12,7 @@ import {
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialVendorRefundFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {  GridDataResult, SelectAllCheckboxState } from '@progress/kendo-angular-grid';
