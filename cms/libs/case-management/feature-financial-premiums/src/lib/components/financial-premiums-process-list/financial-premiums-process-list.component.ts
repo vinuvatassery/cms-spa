@@ -54,7 +54,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   gridLoaderSubject = new BehaviorSubject(false);
   gridDataResult!: any;
   @Input() premiumsType: any;
-  @Input() batchingPremium$: any; 
+  @Input() batchingPremium$: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -85,11 +85,12 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn='clientFullName';
+  selectedColumn='ALL';
   columnName: string = '';
   public selectedProcessClaims: any[] = [];
 
   columns: any = {
+    ALL: 'All Columns',
     clientFullName:"Client Name",
     insuranceName:"Name on Primary Insurance Card",
     clientId:"Client ID",
@@ -104,6 +105,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     paymentStatus:"Payment Status"
   };
   dropDowncolumns : any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
@@ -124,8 +126,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       columnCode: 'premiumAmount',
       columnDesc: 'Premium Amount',
     },
-   
- 
+
+
     {
       columnCode: 'planName',
       columnDesc: 'Plan Name',
@@ -155,11 +157,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       columnDesc: 'Payment Status',
     },
   ];
-  columnDroplist : any = {
-    ALL: "ALL",
-    ClientFirstName:"clientFirstName",
-    ClientId:"clientId"
-  }
+
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public gridFilter: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   isRemovePremiumGridOptionClosed = false;
@@ -197,7 +195,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       click: (data: any): void => {
         if (!this.isSendReportOpened) {
           this.isSendReportOpened = true;
-          this.selectAll = false; 
+          this.selectAll = false;
           this.isRemoveBatchClosed = false;
           this.recordCountWhenSelectallClicked = this.totalGridRecordsCount;
           this.onBatchPremiumsGridSelectedClicked();
@@ -225,7 +223,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
           this.isRemoveBatchClosed = true;
           this.directRemoveClicked = false;
           this.isSendReportOpened = false;
-          this.selectAll = false; 
+          this.selectAll = false;
           this.onBatchPremiumsGridSelectedClicked();
         }
       },
@@ -267,7 +265,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   recordCountWhenSelectallClicked: number = 0;
   totalGridRecordsCount: number = 0;
 
-  
+
   /** Constructor **/
   constructor(
   private financialPremiumsFacade : FinancialPremiumsFacade ,
@@ -299,11 +297,11 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
 
   premiumGridlistDataHandle() {
     this.financialPremiumsProcessGridLists$.subscribe((data:any) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
+      // this.gridDataResult = data;
+      // this.gridDataResult.data = filterBy(
+      //   this.gridDataResult.data,
+      //   this.filterData
+      // );
       this.gridFinancialPremiumsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
@@ -332,7 +330,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     });
     this.ref.detectChanges();
   }
-  
+
   pageNumberAndCountChangedInSelectAll() {
     //If selecte all header checked and either the page count or the page number changed
     if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
@@ -436,7 +434,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-      
+
     };
     this.loadFinancialPremiumsProcessListGrid();
   }
@@ -742,7 +740,7 @@ gridlistDataHandle() {
 
 }
 closeRecentPremiumsModal(result: any){
-    if (result) { 
+    if (result) {
       this.addClientRecentPremiumsDialog.close();
     }
   }
@@ -864,7 +862,7 @@ closeRecentPremiumsModal(result: any){
     if(this.selectAll && this.isSendReportOpened){
       if(this.unCheckedProcessRequest?.length > 0){
         this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
-        this.recordCountWhenSelectallClicked = this.sendReportCount;      
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
       }else{
         this.sendReportCount = this.totalGridRecordsCount;
       }
@@ -875,10 +873,10 @@ closeRecentPremiumsModal(result: any){
   }
 
   markAsChecked(data:any){
-    data.forEach((element:any) => { 
+    data.forEach((element:any) => {
       if(this.selectAll){
         element.selected = true;
-      } 
+      }
       else{
         element.selected = false;
       }
@@ -899,8 +897,8 @@ closeRecentPremiumsModal(result: any){
   }
 
   markAsUnChecked(data:any){
-      data.forEach((element:any) => {     
-        element.selected = false;    
+      data.forEach((element:any) => {
+        element.selected = false;
     });
 if(!this.selectAll && this.isSendReportOpened){
       this.sendReportCount = 0;
