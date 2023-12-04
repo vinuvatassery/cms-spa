@@ -266,8 +266,13 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   paymentRequestId: any;
   recordCountWhenSelectallClicked: number = 0;
   totalGridRecordsCount: number = 0;
-
-  
+@Input() paymentMethodCode$ :any
+@Input() paymentStatusCode$ :any
+@Input() healthInsuranceTypeLov$ :any
+paymentMethodFilter = '';
+paymentTypeFilter = '';
+paymentStatusFilter = '';
+healthInsuranceValue ='';
   /** Constructor **/
   constructor(
   private financialPremiumsFacade : FinancialPremiumsFacade ,
@@ -609,23 +614,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       logic: 'or',
     });
   }
-  dropdownFilterChange(
-    field: string,
-    value: any,
-    filterService: FilterService
-  ): void {
-    filterService.filter({
-      filters: [
-        {
-          field: field,
-          operator: 'eq',
-          value: value.lovDesc,
-        },
-      ],
-      logic: 'or',
-    });
-    this.gridLoaderSubject.next(false);
-  }
+
 
   public onBatchPremiumsClicked(template: TemplateRef<unknown>): void {
     this.batchConfirmPremiumsDialog = this.dialogService.open({
@@ -1009,4 +998,32 @@ if(!this.selectAll && this.isSendReportOpened){
       }
     });
   }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentMethod') {
+      this.paymentMethodFilter = value;
+    } else if (field === 'paymentTypeCode') {
+      this.paymentTypeFilter = value;
+    } else if (field === 'paymentStatus') {
+      this.paymentStatusFilter = value;
+    }else if(field === 'insuranceType'){
+      this.healthInsuranceValue = value;
+    }
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+    this.gridLoaderSubject.next(false);
+  }
+  
 }
