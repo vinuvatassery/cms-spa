@@ -216,25 +216,24 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
   }
+
   exportClaimsPaymentsGridData() {
     const data = this.dataExportParameters;
     if (data) {
-      const param = new GridFilterParam(
-        this.state?.skip ?? 0,
-        this.state?.take ?? 0,
-        this.sortValue,
-        this.sortType,
-  
-        JSON.stringify(this.filter)
-      );
-   
+      const vendorPageAndSortedRequest = {
+        SortType: data?.sortType,
+        Sorting: data?.sortColumn,
+        SkipCount: data?.skipcount,
+        MaxResultCount: data?.maxResultCount,
+        Filter: data?.filter,
+      };
       let fileName =
         this.premiumType[0].toUpperCase() +
         this.premiumType.substr(1).toLowerCase() +
-        ' Premium Payments';
+        'Premiums Payments';
 
       this.documentFacade.getExportFile(
-        param,
+        vendorPageAndSortedRequest,
         `premium/${this.premiumType}/payments`,
         fileName
       );
