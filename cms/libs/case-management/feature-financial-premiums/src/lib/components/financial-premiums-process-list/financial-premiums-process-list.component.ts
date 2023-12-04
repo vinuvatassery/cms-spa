@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage,FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
@@ -413,18 +413,22 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
 
       if(!this.selectAll && this.isPageChanged){
         if(this.isRemoveBatchClosed){
-            const idsToKeep: number[] = this.financialPremiumsProcessGridLists.map((item: any) => item.selected && item.paymentRequestId);
-            this.financialPremiumsProcessGridLists.forEach((item2: any) => {
-                if (idsToKeep.includes(item2.paymentRequestId)) {
-                  // Mark records in list2 as selected: true if in list1
-                  item2.selected = true;
-                }else{
-                  item2.selected = false;
-                }
-              });
+          this.selectAllAndPageChange();
         }
         this.getSelectedReportCount(this.checkedAndUncheckedRecordsFromSelectAll?.filter((item:any) => item.selected));
       }
+  }
+  
+  selectAllAndPageChange() {
+    const idsToKeep: number[] = this.financialPremiumsProcessGridLists.map((item: any) => item.selected && item.paymentRequestId);
+    this.financialPremiumsProcessGridLists.forEach((item2: any) => {
+        if (idsToKeep.includes(item2.paymentRequestId)) {
+          // Mark records in list2 as selected: true if in list1
+          item2.selected = true;
+        }else{
+          item2.selected = false;
+        }
+      });
   }
 
   onSinglePremiumRemove(selection: any) {

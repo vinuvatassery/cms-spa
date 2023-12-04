@@ -1,9 +1,9 @@
-import {  ChangeDetectionStrategy,  ChangeDetectorRef,  Component, OnInit, TemplateRef, ViewChild, } from '@angular/core';
+import {  ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade, GridFilterParam } from '@cms/case-management/domain'; 
-import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
+import { ActivatedRoute } from '@angular/router';
+import { DocumentFacade } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
