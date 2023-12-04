@@ -34,14 +34,11 @@ aria-label="add"> PCA Setup</button>
              
 </section>
 <div class="table-sorted-info">
-      <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">       
+      <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showNumberSearchWarning && searchText && isNotNumeric(searchText)">       
             <span class="material-icons" aria-label="search-warning" aria-hidden="true">
                   warning
             </span>
-            <span *ngIf="showDateSearchWarning">
-                  The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
-            </span>
-            <span *ngIf="showNumberSearchWarning">
+            <span>
                   PCA/AY # allow only numbers.
             </span>
       </span>   
@@ -81,11 +78,11 @@ aria-label="add"> PCA Setup</button>
             <kendo-grid-column field="isPcaAssigned" title="Assign" [width]="90"> 
                   <ng-template kendoGridCellTemplate let-dataItem> 
                         <div class="text-center">
-                              <span class="material-icons red-text-color " title="Assigned" *ngIf="!dataItem.isPcaAssigned">
+                              <span class="material-icons red-text-color " title="Assigned" *ngIf="dataItem.isPcaAssigned">
                                     price_check 
                               </span>
 
-                              <span class="material-icons green-text-color" title="Un-assigned" *ngIf="dataItem.isPcaAssigned">
+                              <span class="material-icons green-text-color" title="Un-assigned" *ngIf="!dataItem.isPcaAssigned">
                                     attach_money 
                               </span> 
                               
@@ -192,7 +189,7 @@ aria-label="add"> PCA Setup</button>
                          </kendo-grid-string-filter-menu>
                      </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="70" [sortable]="false" class="text-center">
+            <kendo-grid-column field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="70" [sortable]="false" class="text-center" [includeInChooser]="false">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     <kendo-dropdownbutton [data]="gridMoreActions" icon="more-vertical"
                       class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

@@ -23,6 +23,7 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
    sort = this.financialPharmacyClaimsFacade.sortReconcileBreakoutList;
    state!: State;
    reconcileGridLists$ = this.financialPharmacyClaimsFacade.reconcileDataList$;
+   deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
    batchId:any = null;
    @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
@@ -46,9 +47,6 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
 
   constructor( 
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
-    private readonly router: Router,
-    private readonly cdr: ChangeDetectorRef,
-    private loggingService: LoggingService,
     private readonly route: ActivatedRoute,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
@@ -59,6 +57,7 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
 
   ngOnInit(): void {   
     this.getQueryParams();
+    this.lovFacade.getDeliveryMethodLovs();
   }
  
   private getQueryParams() {

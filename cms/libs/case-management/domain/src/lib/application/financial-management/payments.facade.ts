@@ -104,8 +104,8 @@ export class PaymentsFacade {
       },
     });
   }
-  loadPaymentPanel(vendorAddressId:any,batchId:any):any{
-    this.paymentsDataService.loadPaymentPanel(vendorAddressId,batchId).subscribe({
+  loadPaymentPanel(paymentRequestId:any,batchId:any):any{
+    this.paymentsDataService.loadPaymentPanel(paymentRequestId,batchId).subscribe({
       next: (dataResponse) => {
         this.paymentPanelSubject.next(dataResponse);
         this.hideLoader();
@@ -116,8 +116,8 @@ export class PaymentsFacade {
       },
     });
   }
-  updatePaymentPanel(vendorAddressId:any,batchId:any,paymentPanel:any){
-    this.paymentsDataService.updatePaymentPanel(vendorAddressId,batchId,paymentPanel).subscribe({
+  updatePaymentPanel(batchId:any,paymentPanel:any){
+    this.paymentsDataService.updatePaymentPanel(batchId,paymentPanel).subscribe({
       next: (response: any) => {        
         this.updatePaymentPanelResponseSubject.next(response);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);

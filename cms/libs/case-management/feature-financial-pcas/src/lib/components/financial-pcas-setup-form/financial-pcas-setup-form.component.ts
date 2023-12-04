@@ -119,7 +119,7 @@ export class FinancialPcasSetupFormComponent implements OnInit, OnDestroy {
 
   private getPcaDetails() {
     return {
-      pcaCode: this.pcaFormControls?.pcaCode?.value,
+      pcaCode: this.pcaFormControls?.pcaCode?.value.toString(),
       appropriationYear: this.pcaFormControls?.appropriationYear?.value,
       pcaDesc: this.pcaFormControls?.pcaDesc?.value,
       openDate: this.intl.formatDate(this.pcaFormControls?.openDate?.value, this.configProvider?.appSettings?.dateFormat),
