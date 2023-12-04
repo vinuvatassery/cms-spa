@@ -196,6 +196,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   isSendReportOpened = false;
   isUnBatchPaymentOpen = false;
   isDeletePaymentOpen = false;
+  isEditBatchClosed = false;
   isUnBatchPaymentPremiumsClosed = false;
   showDeleteConfirmation = false;
   @ViewChild('removePremiumsConfirmationDialogTemplate', { read: TemplateRef })
@@ -281,6 +282,16 @@ export class FinancialPremiumsAllPaymentsListComponent
          }
        },
      },
+     {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Premium',
+      icon: 'edit',
+      click: (data: any): void => {
+        if (!this.isEditBatchClosed) {
+          this.isEditBatchClosed = true;
+        }
+      },
+    },
    ];
  }
  onUnBatchPaymentCloseClicked(result: any) {
