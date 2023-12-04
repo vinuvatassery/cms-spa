@@ -485,4 +485,14 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   onProviderNameClick(event: any) {    
     this.onProviderNameClickEvent.emit(event);
   }
+
+  
+  navToBatchDetails(data: any) {   
+    const query = {
+      queryParams: {
+        b_id: data?.batchId ,         
+      },
+    };
+    this.route.navigate(['/financial-management/vendor-refund/batch/batch-log-list'], query );
+  }
 }

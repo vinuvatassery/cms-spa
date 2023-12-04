@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Router } from '@angular/router';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -45,7 +45,7 @@ export class RefundBatchesListComponent implements  OnChanges{
   filter!: any;
   selectedColumn  = 'batchName'
   gridDataResult!: GridDataResult;
-
+  columnChangeDesc = 'Default Columns';
   gridVendorsBatchDataSubject = new Subject<any>();
   gridVendorsBatchData$ = this.gridVendorsBatchDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -160,6 +160,12 @@ export class RefundBatchesListComponent implements  OnChanges{
     if (
       this.selectedColumn === 'bulkPayment' ||
       this.selectedColumn === 'totalRefund'
+      ||
+      this.selectedColumn === 'insRefunds'
+      ||
+      this.selectedColumn === 'rxRefunds'
+      ||
+      this.selectedColumn === 'tpaRefunds'
     ) {
       operator = 'eq';
     }
@@ -273,5 +279,11 @@ export class RefundBatchesListComponent implements  OnChanges{
     this.searchValue =''
 
     this.loadVendorRefundBatchListGrid();
+  }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
+    this.columnChangeDesc =
+      columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 }
