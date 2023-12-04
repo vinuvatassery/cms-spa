@@ -239,16 +239,22 @@ export class FinancialClaimsBatchesLogListsComponent
   ];
 
   numericColumns: any[] = [
-    'balanceAmount',
-    'clientMaximum',
-    'amountDue',
-    'serviceCost',
-    'serviceCount',
     'itemNbr',
+    'invoiceNbr',
+    'vendorName',
+    'clientFullName',
+    'nameOnInsuranceCard',
+    'serviceCount',
+    'serviceCost',
+    'amountDue',
+    'paymentMethodDesc',
+    'paymentStatusDesc',
+    'clientMaximum',
+    'balanceAmount'
   ];
   dateColumns: any[] = [];
   private searchSubject = new Subject<string>();
-  selectedSearchColumn: null | string = 'itemNbr';
+  selectedSearchColumn:null | string = 'itemNbr';
   showDateSearchWarning = false;
   showNumberSearchWarning = true;
   searchText: null | string = null;
@@ -422,10 +428,11 @@ export class FinancialClaimsBatchesLogListsComponent
 
   private loadLov() {
     this.lovFacade.getPaymentMethodLov();
-    this.lovFacade.getPaymentStatusLov();   
+    this.lovFacade.getPaymentStatusLov();
   }
 
   searchColumnChangeHandler(value: string) {
+    debugger;
     this.filter = [];
     this.showNumberSearchWarning = this.numericColumns.includes(value);
     this.showDateSearchWarning = this.dateColumns.includes(value);

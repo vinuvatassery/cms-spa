@@ -118,8 +118,8 @@
 
           </div>
 
-          <div class="flex-col" *ngIf="editVendorInfo 
-          && ( medicalProviderForm.value.vendorTypeCode == 'MEDICAL_CLINIC' 
+          <div class="flex-col" *ngIf="editVendorInfo
+          && ( medicalProviderForm.value.vendorTypeCode == 'MEDICAL_CLINIC'
           || medicalProviderForm.value.vendorTypeCode == 'DENTAL_CLINIC'
           || medicalProviderForm.value.vendorTypeCode == 'CLINIC')">
             <kendo-floatinglabel text="Provider Name">
@@ -140,8 +140,8 @@
               <label class="k-checkbox-label" for="Applicable">Not Applicable</label>
             </span>
           </div>
-          <div class="flex-col" *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo || (editVendorInfo 
-          && ( medicalProviderForm.value.vendorTypeCode == vendorTypes.MedicalProviders 
+          <div class="flex-col" *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo || (editVendorInfo
+          && ( medicalProviderForm.value.vendorTypeCode == vendorTypes.MedicalProviders
           || medicalProviderForm.value.vendorTypeCode == vendorTypes.DentalProviders))"
             [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider First Name">
@@ -155,7 +155,7 @@
             </kendo-floatinglabel>
           </div>
 
-          <div class="flex-col" *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo || (editVendorInfo &&  
+          <div class="flex-col" *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo || (editVendorInfo &&
           (medicalProviderForm.value.vendorTypeCode == vendorTypes.MedicalProviders
           || medicalProviderForm.value.vendorTypeCode ==  vendorTypes.DentalProviders))"
             [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
@@ -183,7 +183,7 @@
       </div>
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.InsuranceProviders">
-        <kendo-floatinglabel text="TIN">
+        <kendo-floatinglabel text="TIN (optional)">
           <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
             placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber()">
           </kendo-maskedtextbox>
