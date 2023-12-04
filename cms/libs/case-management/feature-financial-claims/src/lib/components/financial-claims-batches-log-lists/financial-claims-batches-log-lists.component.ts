@@ -432,7 +432,6 @@ export class FinancialClaimsBatchesLogListsComponent
   }
 
   searchColumnChangeHandler(value: string) {
-    debugger;
     this.filter = [];
     this.showNumberSearchWarning = this.numericColumns.includes(value);
     this.showDateSearchWarning = this.dateColumns.includes(value);
