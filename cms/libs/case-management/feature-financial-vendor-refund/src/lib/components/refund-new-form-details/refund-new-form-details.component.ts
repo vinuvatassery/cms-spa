@@ -5,11 +5,10 @@ import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, Serv
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
-import {  VednorRefundTpaClaimsListComponent,VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
+import { VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { IFrameService } from 'angular-auth-oidc-client/lib/iframe/existing-iframe.service';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -505,11 +504,7 @@ addTpa(event:any){
     this.isRefundGridClaimShow = true;
     if(this.selectedRefundType == ServiceTypeCode.pharmacy){    
     this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
-    }
-
-    if(this.selectedRefundType == ServiceTypeCode.tpa){       
-    }
- 
+    } 
   }
 
   closeAddEditRefundFormModalClicked(event:Boolean){
