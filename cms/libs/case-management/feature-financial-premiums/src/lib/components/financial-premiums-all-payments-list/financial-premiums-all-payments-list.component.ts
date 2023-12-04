@@ -774,7 +774,7 @@ deletePremiumPayment(paymentId: string) {
   }
   paymentClickHandler(dataItem: any) {
     this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch/items`], {
-      queryParams: { bid: dataItem.batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId },
+      queryParams: { bid: dataItem.batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId,vid:dataItem.vendorId },
     });
   }
   onClickedExport() {
