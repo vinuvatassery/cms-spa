@@ -38,7 +38,7 @@ export class RefundClaimsProviderInfoComponent {
       vendorAddressId: [''],
       paymentMethod: [''],
       address1: ['', Validators.required],
-      address2: [''],
+      address2: ['', Validators.required],
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
       zip: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
@@ -81,15 +81,8 @@ export class RefundClaimsProviderInfoComponent {
 
   createEmailsFormArray(contact: any): FormArray {
     let emails = new FormArray<FormGroup>([])
-   
-    if(contact.emails && contact.emails.length===0){
-       emails.push(this.formBuilder.group({
-        emailAddress: ['',Validators.required],
-        vendorContactEmailId: null,
-        vendorContactId: contact.vendorContactId
-      }));
-    }
-    else{
+   debugger
+    if(contact.emails && contact.emails.length>0){
     contact.emails.forEach((email: any) => {
       return emails.push(this.formBuilder.group({
         emailAddress: [email.emailAddress,Validators.required],
@@ -264,6 +257,7 @@ export class RefundClaimsProviderInfoComponent {
         tab_code: FinancialVendorProviderTabCode.MedicalProvider
       },
     };
+    this.closeViewProviderDetailClickedEvent.emit(true);
     this.route.navigate(['/financial-management/vendors/profile'], query)
     this.closeViewProviderClicked()
   }
