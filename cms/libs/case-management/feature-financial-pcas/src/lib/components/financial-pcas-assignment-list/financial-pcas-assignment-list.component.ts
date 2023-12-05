@@ -142,7 +142,7 @@ ngOnChanges(changes: SimpleChanges) {
     }
 }
 
-public ngOnDestroy(): void { 
+public ngOnDestroy(): void {
   this.resetAssignmentInfoObject.emit();
 }
 
@@ -151,7 +151,7 @@ public rowCallback(context: RowClassArgs) {
       dragging: context.dataItem.dragging
   };
 }
-  ngOnInit(): void {    
+  ngOnInit(): void {
     this.loadObjectCodesEvent.emit()
     this.loadGroupCodesEvent.emit()
 
@@ -211,7 +211,7 @@ public rowCallback(context: RowClassArgs) {
     this.isFinancialPcaAssignmentGridLoaderShow = true;
    const draggedRows = e?.draggedRows[0]?.dataItem
    const dropTargetRow = e?.dropTargetRow?.dataItem
-  
+
    const pcaAssignmentPriorityArguments =
    {
      objectId : this.objectCodeIdValue,
@@ -220,12 +220,12 @@ public rowCallback(context: RowClassArgs) {
      pcaAssignmentId : draggedRows?.pcaAssignmentId
    }
    this.pcaAssignmentPriorityUpdateEvent.emit(pcaAssignmentPriorityArguments)
-   
+
   }
 
   groupChange($event : any)
-  {    
-    debugger
+  {
+
     this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;
     let  groupCodeIdsdValueData= []
 
@@ -246,7 +246,7 @@ public rowCallback(context: RowClassArgs) {
     {
       this.groupCodesValid = false
     }
-   
+
       this.isFinancialPcaAssignmentGridLoaderShow = true;
       const pcaAssignmentGridArguments =
       {
@@ -254,9 +254,9 @@ public rowCallback(context: RowClassArgs) {
         groupIds : groupCodeIdsdValueData
       }
 
-      this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments)     
+      this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments)
       this.gridDataHandle();
-    
+
   }
 
   onColumnReorder($event: any) {
@@ -264,8 +264,8 @@ public rowCallback(context: RowClassArgs) {
   }
 
   gridDataHandle() {
-    this.financialPcaAssignmentGridListsData$.subscribe((data: GridDataResult) => {      
-        this.isFinancialPcaAssignmentGridLoaderShow = false;        
+    this.financialPcaAssignmentGridListsData$.subscribe((data: GridDataResult) => {
+        this.isFinancialPcaAssignmentGridLoaderShow = false;
     });
 
   }
@@ -369,7 +369,7 @@ public rowCallback(context: RowClassArgs) {
   }
   close()
   {
-    
+
   }
 }
 
