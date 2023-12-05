@@ -25,10 +25,10 @@ export class InsuranceVendorsListComponent implements OnInit{
     {text: 'All', value: 100}
   ];
   /** Public properties **/
-  isMedicalProvidersDetailPopup = false; 
-  isMedicalProvidersDeletePopupShow = false;
-  isMedicalProvidersDeactivatePopupShow = false;
-  indexLists$ = this.systemConfigServiceProviderFacade.loadMedicalProvidersListsService$;
+  isInsuranceVendorsDetailPopup = false; 
+  isInsuranceVendorsDeletePopupShow = false;
+  isInsuranceVendorsDeactivatePopupShow = false;
+  indexLists$ = this.systemConfigServiceProviderFacade.loadInsuranceVendorsListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [
@@ -44,7 +44,7 @@ export class InsuranceVendorsListComponent implements OnInit{
       text: "Deactivate",
       icon: "block",
       click: (data: any): void => {
-        this.onMedicalProvidersDeactivateClicked();
+        this.onInsuranceVendorsDeactivateClicked();
       },
     }, 
     {
@@ -52,7 +52,7 @@ export class InsuranceVendorsListComponent implements OnInit{
       text: "Delete",
       icon: "delete", 
       click: (data: any): void => {
-        this.onMedicalProvidersDeleteClicked();
+        this.onInsuranceVendorsDeleteClicked();
       },
     }, 
  
@@ -62,33 +62,33 @@ export class InsuranceVendorsListComponent implements OnInit{
 
   /** Lifecycle hooks **/
   ngOnInit(): void { 
-    this.loadMedicalProvidersLists();
+    this.loadInsuranceVendorsLists();
   }
 
   /** Private  methods **/
  
-  private loadMedicalProvidersLists() {
-    this.systemConfigServiceProviderFacade.loadMedicalProvidersLists();
+  private loadInsuranceVendorsLists() {
+    this.systemConfigServiceProviderFacade.loadInsuranceVendorsLists();
   }
 
   /** Internal event methods **/
-  onCloseMedicalProvidersDetailClicked() {
-    this.isMedicalProvidersDetailPopup = false;
+  onCloseInsuranceVendorsDetailClicked() {
+    this.isInsuranceVendorsDetailPopup = false;
   }
-  onMedicalProvidersDetailClicked() {
-    this.isMedicalProvidersDetailPopup = true;
+  onInsuranceVendorsDetailClicked() {
+    this.isInsuranceVendorsDetailPopup = true;
   }
 
-  onCloseMedicalProvidersDeleteClicked() {
-    this.isMedicalProvidersDeletePopupShow = false;
+  onCloseInsuranceVendorsDeleteClicked() {
+    this.isInsuranceVendorsDeletePopupShow = false;
   }
-  onMedicalProvidersDeleteClicked() {
-    this.isMedicalProvidersDeletePopupShow = true;
+  onInsuranceVendorsDeleteClicked() {
+    this.isInsuranceVendorsDeletePopupShow = true;
   }
-  onCloseMedicalProvidersDeactivateClicked() {
-    this.isMedicalProvidersDeactivatePopupShow = false;
+  onCloseInsuranceVendorsDeactivateClicked() {
+    this.isInsuranceVendorsDeactivatePopupShow = false;
   }
-  onMedicalProvidersDeactivateClicked() {
-    this.isMedicalProvidersDeactivatePopupShow = true;
+  onInsuranceVendorsDeactivateClicked() {
+    this.isInsuranceVendorsDeactivatePopupShow = true;
   }
 }

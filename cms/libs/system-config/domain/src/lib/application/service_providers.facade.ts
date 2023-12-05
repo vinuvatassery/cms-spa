@@ -27,8 +27,8 @@ export class SystemConfigServiceProviderFacade {
   private loadCptCodeListsServiceSubject = new BehaviorSubject<any>([]);
   loadCptCodeListsService$ = this.loadCptCodeListsServiceSubject.asObservable();
 
-  private loadInsuranceVendorListsServiceSubject = new BehaviorSubject<any>([]);
-  loadInsuranceVendorListsService$ = this.loadInsuranceVendorListsServiceSubject.asObservable();
+  private loadInsuranceVendorsListsServiceSubject = new BehaviorSubject<any>([]);
+  loadInsuranceVendorsListsService$ = this.loadInsuranceVendorsListsServiceSubject.asObservable();
 
   private loadInsuranceProvidersListsServiceSubject = new BehaviorSubject<any>([]);
   loadInsuranceProvidersListsService$ = this.loadInsuranceProvidersListsServiceSubject.asObservable();
@@ -112,10 +112,10 @@ export class SystemConfigServiceProviderFacade {
     });
   }
 
-  loadInsuranceVendorLists() {
-    this.systemConfigServiceProvidersDataService.loadInsuranceVendorListsService().subscribe({
-      next: (loadInsuranceVendorListsService) => {
-        this.loadInsuranceVendorListsServiceSubject.next(loadInsuranceVendorListsService);
+  loadInsuranceVendorsLists() {
+    this.systemConfigServiceProvidersDataService.loadInsuranceVendorsListsService().subscribe({
+      next: (loadInsuranceVendorsListsService) => {
+        this.loadInsuranceVendorsListsServiceSubject.next(loadInsuranceVendorsListsService);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

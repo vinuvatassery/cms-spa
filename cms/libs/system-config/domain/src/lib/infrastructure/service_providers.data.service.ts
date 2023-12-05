@@ -164,7 +164,7 @@ export class SystemConfigServiceProvidersDataService {
       },
     ]);
   }
-  loadInsuranceVendorListsService() {
+  loadInsuranceVendorsListsService() {
     return of([
       {
         id: 1,

@@ -1,11 +1,11 @@
 <!-- Header Section -->
 <section class="app-l-mainTittle">
-      <h1 class="maintitle_withicon text-bold"><span aria-label="MedicalProviders" aria-hidden="true"
-                  class="material-icons sidebar-menu_icon"> settings </span> Medical Providers (TPA) </h1>
+      <h1 class="maintitle_withicon text-bold"><span aria-label="InsuranceVendors" aria-hidden="true"
+                  class="material-icons sidebar-menu_icon"> settings </span> Insurance Vendors (TPA) </h1>
 
       <button icon="add" kendoButton [primary]="true" aria-label="Funds" class="add-button-top"
-            (click)="onMedicalProvidersDetailClicked()">
-            Medical Providers
+            (click)="onInsuranceVendorsDetailClicked()">
+            Insurance Vendors
       </button>
 </section>
 
@@ -17,7 +17,7 @@
 
             <!-- Table header show only in list -->
             <div class="flex-col">
-                  <p class="pt-1">Add, edit, re-assign or deactivate Medical Providers.</p>
+                  <p class="pt-1">Add, edit, re-assign or deactivate Insurance Vendors.</p>
                   <div class="table-filter-section mat-form-no-b-space">
 
                         <span class="filter-section_items filter--search">
@@ -47,10 +47,14 @@
       <div class="app-c-table">
             <kendo-grid [pageSize]="5" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
                   [resizable]="true" [columnMenu]="{ filter: true }" [data]="indexLists$ | async">
-                  <kendo-grid-column field="medicalProviderName" title="Medical Providers Name" [width]="200">
+                  <kendo-grid-column field="insuranceVendorName" title="Insurance Vendors Name" [width]="200">
                   </kendo-grid-column>
                   <kendo-grid-column field="tin" title="TIN" [width]="180">
                   </kendo-grid-column>
+                  <kendo-grid-column field="pmtMethod" title="pmt.. Method" [width]="130">
+                  </kendo-grid-column> 
+                  <kendo-grid-column field="runDate" title="Run Date" [width]="130">
+                  </kendo-grid-column>  
                   <kendo-grid-column field="mailCode" title="Mail Code" [width]="130">
                   </kendo-grid-column>
                
@@ -132,24 +136,24 @@
       </div>
  
       <div class="mt-2 block-section"> 
-            <button icon="add" kendoButton [primary]="true" aria-label="Funds" (click)="onMedicalProvidersDetailClicked()">
-                  Medical Provider
+            <button icon="add" kendoButton [primary]="true" aria-label="Funds" (click)="onInsuranceVendorsDetailClicked()">
+                  Insurance Vendor
             </button>
       </div>
 </section>
 
 
-<kendo-dialog *ngIf="isMedicalProvidersDetailPopup" (close)="onCloseMedicalProvidersDetailClicked()"
+<kendo-dialog *ngIf="isInsuranceVendorsDetailPopup" (close)="onCloseInsuranceVendorsDetailClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar> Add New Medical Provider </kendo-dialog-titlebar>
-      <system-config-medical-providers-form-details></system-config-medical-providers-form-details>
+      <kendo-dialog-titlebar> Add New Insurance Vendor </kendo-dialog-titlebar>
+      <system-config-insurance-vendors-form-details></system-config-insurance-vendors-form-details>
 </kendo-dialog>
 
-<kendo-dialog *ngIf="isMedicalProvidersDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar (close)="onCloseMedicalProvidersDeleteClicked()"> Delete Medical Provider?</kendo-dialog-titlebar>
-      <system-config-medical-providers-delete></system-config-medical-providers-delete>
+<kendo-dialog *ngIf="isInsuranceVendorsDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseInsuranceVendorsDeleteClicked()"> Delete Insurance Vendor?</kendo-dialog-titlebar>
+      <system-config-insurance-vendors-delete></system-config-insurance-vendors-delete>
 </kendo-dialog>
-<kendo-dialog *ngIf="isMedicalProvidersDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar (close)="onCloseMedicalProvidersDeactivateClicked()"> Deactivate Medical Provider? </kendo-dialog-titlebar>
-      <system-config-medical-providers-deactivate></system-config-medical-providers-deactivate>
+<kendo-dialog *ngIf="isInsuranceVendorsDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseInsuranceVendorsDeactivateClicked()"> Deactivate Insurance Vendor? </kendo-dialog-titlebar>
+      <system-config-insurance-vendors-deactivate></system-config-insurance-vendors-deactivate>
 </kendo-dialog>

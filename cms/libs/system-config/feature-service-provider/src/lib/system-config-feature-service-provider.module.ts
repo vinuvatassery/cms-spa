@@ -3,8 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { ManufacturersListComponent } from './components/manufacturers-list/manufacturers-list.component';
-import { DrugsListComponent } from './components/drugs-list/drugs-list.component';
-import { ManufacturerDetailsComponent } from './components/manufacturer-details/manufacturer-details.component';
+import { DrugsListComponent } from './components/drugs-list/drugs-list.component'; 
 import { ManufacturersDeactivateComponent } from './components/manufacturers-deactivate/manufacturers-deactivate.component';
 import { ManufacturersDeleteComponent } from './components/manufacturers-delete/manufacturers-delete.component';
 import { ManufacturersFormDetailsComponent } from './components/manufacturers-form-details/manufacturers-form-details.component';
@@ -36,13 +35,17 @@ import { InsuranceVendorsDeactivateComponent } from './components/insurance-vend
 import { HealthcareProviderDeactivateComponent } from './components/healthcare-provider-deactivate/healthcare-provider-deactivate.component';
 import { InsurancePlanDeactivateComponent } from './components/insurance-plan-deactivate/insurance-plan-deactivate.component';
 import { PharmaciesDeactivateComponent } from './components/pharmacies-deactivate/pharmacies-deactivate.component';
+import { InsuranceVendorsDeleteComponent } from './components/insurance-vendors-delete/insurance-vendors-delete.component';
+import { InsurancePlanDeleteComponent } from './components/insurance-plan-delete/insurance-plan-delete.component';
+import { InsuranceProvideDeleteComponent } from './components/insurance-provide-delete/insurance-provide-delete.component';
+import { InsuranceProvideDeactivateComponent } from './components/insurance-provide-deactivate/insurance-provide-deactivate.component';
+import { HealthcareProviderDeleteComponent } from './components/healthcare-provider-delete/healthcare-provider-delete.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
   declarations: [
     ManufacturersListComponent,
-    DrugsListComponent,
-    ManufacturerDetailsComponent,
+    DrugsListComponent, 
     ManufacturersDeactivateComponent,
     ManufacturersDeleteComponent,
     ManufacturersFormDetailsComponent,
@@ -74,11 +77,15 @@ import { PharmaciesDeactivateComponent } from './components/pharmacies-deactivat
     HealthcareProviderDeactivateComponent,
     InsurancePlanDeactivateComponent,
     PharmaciesDeactivateComponent,
+    InsuranceVendorsDeleteComponent,
+    InsurancePlanDeleteComponent,
+    InsuranceProvideDeleteComponent,
+    InsuranceProvideDeactivateComponent,
+    HealthcareProviderDeleteComponent,
   ],
   exports: [
     ManufacturersListComponent,
-    DrugsListComponent,
-    ManufacturerDetailsComponent,
+    DrugsListComponent, 
     ManufacturersDeactivateComponent,
     ManufacturersDeleteComponent,
     ManufacturersFormDetailsComponent,
@@ -110,6 +117,11 @@ import { PharmaciesDeactivateComponent } from './components/pharmacies-deactivat
     HealthcareProviderDeactivateComponent,
     InsurancePlanDeactivateComponent,
     PharmaciesDeactivateComponent,
+    InsuranceVendorsDeleteComponent,
+    InsurancePlanDeleteComponent,
+    InsuranceProvideDeleteComponent,
+    InsuranceProvideDeactivateComponent,
+    HealthcareProviderDeleteComponent,
   ],
 })
 export class SystemConfigFeatureServiceProviderModule {}
