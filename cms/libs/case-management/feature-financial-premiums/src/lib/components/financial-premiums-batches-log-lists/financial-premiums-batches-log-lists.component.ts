@@ -620,21 +620,6 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     this.deletePaymentEvent.emit(this.paymentId);
   }
 
-  clientRecentPremiumsModalClicked(template: TemplateRef<unknown>, data: any): void {
-    this.addClientRecentPremiumsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
-      animation: {
-        direction: 'up',
-        type: 'slide',
-        duration: 200
-      }
-    });
-    this.vendorId = "3F111CFD-906B-4F56-B7E2-7FCE5A563C36";
-    this.clientId = 5;
-    this.clientName = "Jason Biggs";
-  }
-
   closeRecentPremiumsModal(result: any) {
     if (result) {
       this.addClientRecentPremiumsDialog.close();

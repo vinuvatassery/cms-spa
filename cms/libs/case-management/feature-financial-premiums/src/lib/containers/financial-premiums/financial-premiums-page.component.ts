@@ -65,7 +65,11 @@ export class FinancialPremiumsPageComponent implements OnInit {
   letterContentLoader$ = this.financialPremiumsFacade.letterContentLoader$;
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  paymentStatusCode$ = this.lovFacade.paymentStatus$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  
+
+  healthInsuranceTypeLov$ = this.lovFacade.insuranceTypelov$;
   providerDetailsDialog: any
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
@@ -118,6 +122,10 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
   }
   loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
+    
+    this.lovFacade.getPaymentMethodLov()
+    this.lovFacade.getPaymentStatusLov()
+    this.lovFacade.getHealthInsuranceTypeLovs()
     this.financialPremiumsFacade.selectedClaimsTab = 1;
     this.tab = this.financialPremiumsFacade.selectedClaimsTab;
     this.dataExportParameters = gridDataRefinerValue;
@@ -134,7 +142,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
       gridDataRefiner.sortColumn,
       gridDataRefiner.sortType,
       gridDataRefiner.filter,
-      this.premiumType);
+      this.premiumType);     
   }
 
   loadFinancialPremiumsBatchListGrid(data: GridFilterParam) {
@@ -216,25 +224,24 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
   }
+
   exportClaimsPaymentsGridData() {
     const data = this.dataExportParameters;
     if (data) {
-      const param = new GridFilterParam(
-        this.state?.skip ?? 0,
-        this.state?.take ?? 0,
-        this.sortValue,
-        this.sortType,
-  
-        JSON.stringify(this.filter)
-      );
-   
+      const vendorPageAndSortedRequest = {
+        SortType: data?.sortType,
+        Sorting: data?.sortColumn,
+        SkipCount: data?.skipcount,
+        MaxResultCount: data?.maxResultCount,
+        Filter: data?.filter,
+      };
       let fileName =
         this.premiumType[0].toUpperCase() +
         this.premiumType.substr(1).toLowerCase() +
-        ' Premium Payments';
+        'Premiums Payments';
 
       this.documentFacade.getExportFile(
-        param,
+        vendorPageAndSortedRequest,
         `premium/${this.premiumType}/payments`,
         fileName
       );
@@ -264,7 +271,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
       this.documentFacade.getExportFile(
         param,
-        `premiums/${this.premiumType}/payments`,
+        `premium/${this.premiumType}/process/payments`,
         fileName
       );
     }
@@ -289,7 +296,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
 
       this.documentFacade.getExportFile(
         param,
-        `premiums/${this.premiumType}/batches`,
+        `premium/${this.premiumType}/batches`,
         fileName
       );
     }

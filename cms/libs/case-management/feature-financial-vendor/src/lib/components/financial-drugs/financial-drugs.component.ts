@@ -344,10 +344,15 @@ export class FinancialDrugsComponent {
     }
   }
 
- 
-  addDrug(data : any)
-  {    
-    this.drugsFacade.addDrugData(data)
+  addDrug(data: any): void {
+    this.drugsFacade.addDrugData(data).subscribe(() => {
+      // After adding the drug, refresh the grid data or perform any other action
+      this.loadDrugsListGrid();
+      
+      // Emit an event to notify other parts of the application that a drug has been added
+      this.drugsFacade.drugAdded$().subscribe(() => {
+        // Handle the drug added event here
+      });
+    });
   }
-  
 }

@@ -94,13 +94,13 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.city.errors?.required && isValidateForm">
-        City Name is required
+        City is required
       </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6 ">
       <kendo-floatinglabel text="State">
         <kendo-dropdownlist aria-label="State" [fillMode]="formUiStyle.dropDownFillMode" formControlName="state"
-          [data]="ddlStates$| async" textField="stateName" valueField="stateCode" [valuePrimitive]="true"
+          [data]="ddlStates$| async" textField="stateCode" valueField="stateCode" [valuePrimitive]="true"
           placeholder="State">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
@@ -259,7 +259,7 @@
         </kendo-combobox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="insurancePlanFormControls?.providerName.errors?.required && isValidateForm">
-        Provider Name is required
+        Insurance Provider Name is required
       </kendo-formerror>
     </div>
     <div class="flex-col ">
@@ -518,7 +518,7 @@
       </kendo-floatinglabel>
     </div>
     <div class="flex-col ">
-      <kendo-floatinglabel text="Tin">
+      <kendo-floatinglabel text="TIN">
         <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
           placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tin" [mask]="tinMaskFormat">
         </kendo-maskedtextbox>
@@ -537,7 +537,7 @@
         <input type="checkbox" kendoCheckBox formControlName="preferredPharmacy" aria-labelledby="preferredPharmacy"
           id="preferredPharmacy" />
     
-        <kendo-label for="preferredPharmacy"> <strong>This is a preferred pharmacy?</strong> </kendo-label>
+        <kendo-label for="preferredPharmacy"> <strong>This is a preferred pharmacy</strong> </kendo-label>
       </span>
     
     </div>

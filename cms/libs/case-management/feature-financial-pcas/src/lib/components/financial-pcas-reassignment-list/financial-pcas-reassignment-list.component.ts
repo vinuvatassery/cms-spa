@@ -263,8 +263,7 @@ export class FinancialPcasReassignmentListComponent
     this.pcaChangeEvent.emit()
     this.loadObjectCodesEvent.emit()
     this.loadGroupCodesEvent.emit()
-    this.defaultGridState();
-    this.financialPcaFacade.getPcaUnAssignments();
+    this.defaultGridState();  
     this.notAssignPcaLists$.subscribe((res:any)=>{
       this.allNotAssignedPcaSList=res;
       this.notSelectedPcaS=this.allNotAssignedPcaSList;

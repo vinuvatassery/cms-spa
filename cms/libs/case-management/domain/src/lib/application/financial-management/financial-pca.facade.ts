@@ -303,16 +303,8 @@ export class FinancialPcaFacade {
       },
     });
   }
-  getPcaUnAssignments(){
-    this.notPcaDataSubject.next(null);
-    this.financialPcaDataService.getPcaUnAssignments().subscribe({
-      next: (response) => {
-        this.notPcaDataSubject.next(response);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-      },
-    });
+  getPcaUnAssignments(objectCodeId:any,pcaAssignmentId:any){
+  return   this.financialPcaDataService.getPcaUnAssignments(objectCodeId,pcaAssignmentId);  
   }
 
   pcaReassignment(data: any) {
