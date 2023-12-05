@@ -22,7 +22,7 @@ export class FinancialPremiumsFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
   public selectedClaimsTab = 1
-  
+
   public sortValueFinancialPremiumsProcess = 'clientFullName';
   public sortProcessList: SortDescriptor[] = [{
     field: this.sortValueFinancialPremiumsProcess,
@@ -207,20 +207,6 @@ export class FinancialPremiumsFacade {
   {
     return router.url.split('/')?.filter(element => element === FinancialPremiumTypeCode.Dental || element ===FinancialPremiumTypeCode.Medical)[0]
   }
-
-  loadFinancialPremiumsProcessListGrid(){
-    this.financialPremiumsDataService.loadFinancialPremiumsProcessListService().subscribe({
-      next: (dataResponse) => {
-        this.financialPremiumsProcessDataSubject.next(dataResponse);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader();
-      },
-    });
-  }
-
 
   loadFinancialPremiumsBatchListGrid(parms: GridFilterParam, claimsType: string
     ) {
@@ -550,7 +536,7 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
     loadRecentPremiumsByClient(data:any,clientId:any){
       this.recentPremiumLoaderSubject.next(true);
       data.filter = JSON.stringify(data.filter);
- 
+
       this.financialPremiumsDataService.loadRecentPremiumsByClient(data,clientId).subscribe({
         next: (dataResponse) => {
           this.recentPremiumListDataSubject.next(dataResponse);
@@ -569,7 +555,7 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
         },
       });
     }
-    
+
     loadPremium(type: string, premiumId: string){
       this.financialPremiumsDataService.loadPremium(type, premiumId)
       .subscribe({
@@ -672,7 +658,7 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
     checkWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
       this.warrantNumberChangeLoaderSubject.next(true);
       this.financialPremiumsDataService.checkWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
-        next: (dataResponse:any) => {       
+        next: (dataResponse:any) => {
           this.warrantNumberChangeSubject.next(dataResponse);
           this.warrantNumberChangeLoaderSubject.next(false);
         },
