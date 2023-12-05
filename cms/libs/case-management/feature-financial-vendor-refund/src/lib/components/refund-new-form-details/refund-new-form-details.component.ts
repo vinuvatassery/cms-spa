@@ -422,6 +422,7 @@ onSelectedRxClaimsChangeEvent(event:any){
 
 onCloseViewProviderDetailClicked(result: any){
   if(result){
+    this.modalCloseAddEditRefundFormModal.emit(false);
     this.providerDetailsDialog.close();
   }
 }
