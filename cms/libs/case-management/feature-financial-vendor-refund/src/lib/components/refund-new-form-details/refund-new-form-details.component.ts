@@ -422,6 +422,7 @@ onSelectedRxClaimsChangeEvent(event:any){
 
 onCloseViewProviderDetailClicked(result: any){
   if(result){
+    this.modalCloseAddEditRefundFormModal.emit(false);
     this.providerDetailsDialog.close();
   }
 }
@@ -552,11 +553,11 @@ addTpa(event:any){
       this.clientId=null;
     }
   }
-  searchPharmacy(searchText: any) {;
+  searchPharmacy(searchText: any , ) {;
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText);
+    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
     this.vendorAddressId=null;
