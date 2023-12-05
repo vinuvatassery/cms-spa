@@ -5,12 +5,12 @@
     </p>
     <div class="flex-row">
       <div class="flex-col" *ngIf="providerType == vendorTypes.InsuranceVendors">
-        <kendo-floatinglabel text="Vendor Name">
+        <kendo-floatinglabel text="Insurance Vendor Name">
           <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
             formControlName="providerName" [maxlength]="500">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Vendor Name is required
+            Insurance Vendor Name is required
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -179,7 +179,7 @@
       </div>
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.InsuranceProviders">
-        <kendo-floatinglabel text="TIN (optional)">
+        <kendo-floatinglabel text="TIN">
           <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
             placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber()">
           </kendo-maskedtextbox>
