@@ -178,10 +178,10 @@ filter: any = [];
   private checkMailCode() {
     this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
       if (mailCode.length > 0) {
-        this.IsAddContactDisabled = false;
+        this.IsAddContactDisabled = true;
         this.cdr.detectChanges();
       } else {
-        this.IsAddContactDisabled = true;
+        this.IsAddContactDisabled = false;
       }
     });
   }
