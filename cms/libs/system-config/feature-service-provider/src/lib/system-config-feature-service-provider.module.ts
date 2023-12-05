@@ -8,8 +8,7 @@ import { ManufacturerDetailsComponent } from './components/manufacturer-details/
 import { ManufacturersDeactivateComponent } from './components/manufacturers-deactivate/manufacturers-deactivate.component';
 import { ManufacturersDeleteComponent } from './components/manufacturers-delete/manufacturers-delete.component';
 import { ManufacturersFormDetailsComponent } from './components/manufacturers-form-details/manufacturers-form-details.component';
-import { DrugsFormDetailsComponent } from './components/drugs-form-details/drugs-form-details.component';
-import { DrugsActivateComponent } from './components/drugs-activate/drugs-activate.component';
+import { DrugsFormDetailsComponent } from './components/drugs-form-details/drugs-form-details.component'; 
 import { DrugsDeactivateComponent } from './components/drugs-deactivate/drugs-deactivate.component';
 import { DrugsReassignComponent } from './components/drugs-reassign/drugs-reassign.component';
 import { MedicalProvidersListComponent } from './components/medical-providers-list/medical-providers-list.component';
@@ -44,8 +43,7 @@ import { HealthcareProviderListComponent } from './components/healthcare-provide
     ManufacturersDeactivateComponent,
     ManufacturersDeleteComponent,
     ManufacturersFormDetailsComponent,
-    DrugsFormDetailsComponent,
-    DrugsActivateComponent,
+    DrugsFormDetailsComponent, 
     DrugsDeactivateComponent,
     DrugsReassignComponent,
     MedicalProvidersListComponent,
@@ -77,8 +75,7 @@ import { HealthcareProviderListComponent } from './components/healthcare-provide
     ManufacturersDeactivateComponent,
     ManufacturersDeleteComponent,
     ManufacturersFormDetailsComponent,
-    DrugsFormDetailsComponent,
-    DrugsActivateComponent,
+    DrugsFormDetailsComponent, 
     DrugsDeactivateComponent,
     DrugsReassignComponent,
     MedicalProvidersListComponent,

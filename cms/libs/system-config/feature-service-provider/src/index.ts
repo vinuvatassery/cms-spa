@@ -14,8 +14,6 @@ export * from './lib/components/manufacturers-form-details/manufacturers-form-de
 
 export * from './lib/components/drugs-form-details/drugs-form-details.component';
 
-export * from './lib/components/drugs-activate/drugs-activate.component';
-
 export * from './lib/components/drugs-deactivate/drugs-deactivate.component';
 
 export * from './lib/components/drugs-reassign/drugs-reassign.component';
