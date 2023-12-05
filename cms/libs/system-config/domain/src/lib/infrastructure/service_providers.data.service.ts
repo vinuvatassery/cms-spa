@@ -313,7 +313,7 @@ export class SystemConfigServiceProvidersDataService {
       },
     ]);
   }
-  loadHealthCareProvidersListsService() {
+  loadHealthcareProvidersListsService() {
     return of([
       {
         id: 1,
@@ -329,7 +329,9 @@ export class SystemConfigServiceProvidersDataService {
       },
       {
         id: 2,
-        pharmacyName: 'A pharmacyName 1',
+        clinicName: 'A pharmacyName 1',
+        providerName: 'A pharmacyName 1',
+        address: 'A pharmacyName 1',
         tin: 'XXX-XX-XXXX',
         nabp: 'XXX, XXX, XXXX',
         ncpdp: 'XXX, XXX, XXXX',
@@ -340,7 +342,9 @@ export class SystemConfigServiceProvidersDataService {
       },
       {
         id: 3,
-        pharmacyName: 'A pharmacyName 1',
+        clinicName: 'A pharmacyName 1',
+        providerName: 'A pharmacyName 1',
+        address: 'A pharmacyName 1',
         tin: 'XXX-XX-XXXX',
         nabp: 'XXX, XXX, XXXX',
         ncpdp: 'XXX, XXX, XXXX',

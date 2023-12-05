@@ -39,8 +39,8 @@ export class SystemConfigServiceProviderFacade {
   private loadPharmaciesListsServiceSubject = new BehaviorSubject<any>([]);
   loadPharmaciesListsService$ = this.loadPharmaciesListsServiceSubject.asObservable();
 
-  private loadHealthCareProvidersListsServiceSubject = new BehaviorSubject<any>([]);
-  loadHealthCareProvidersListsService$ = this.loadHealthCareProvidersListsServiceSubject.asObservable();
+  private loadHealthcareProvidersListsServiceSubject = new BehaviorSubject<any>([]);
+  loadHealthcareProvidersListsService$ = this.loadHealthcareProvidersListsServiceSubject.asObservable();
 
   /** Constructor **/
   constructor(
@@ -157,10 +157,10 @@ export class SystemConfigServiceProviderFacade {
   }
 
   
-  loadHealthCareProvidersLists() {
-    this.systemConfigServiceProvidersDataService.loadHealthCareProvidersListsService().subscribe({
-      next: (loadHealthCareProvidersListsService) => {
-        this.loadHealthCareProvidersListsServiceSubject.next(loadHealthCareProvidersListsService);
+  loadHealthcareProvidersLists() {
+    this.systemConfigServiceProvidersDataService.loadHealthcareProvidersListsService().subscribe({
+      next: (loadHealthcareProvidersListsService) => {
+        this.loadHealthcareProvidersListsServiceSubject.next(loadHealthcareProvidersListsService);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
