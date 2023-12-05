@@ -4,7 +4,7 @@ export * from './lib/components/manufacturers-list/manufacturers-list.component'
 
 export * from './lib/components/drugs-list/drugs-list.component';
 
-export * from './lib/components/manufacturer-details/manufacturer-details.component'; 
+export * from './lib/components/manufacturer-details/manufacturer-details.component';
 
 export * from './lib/components/manufacturers-deactivate/manufacturers-deactivate.component';
 
@@ -59,3 +59,11 @@ export * from './lib/components/pharmacies-form-details/pharmacies-form-details.
 export * from './lib/components/healthcare-provider-form-details/healthcare-provider-form-details.component';
 
 export * from './lib/components/healthcare-provider-list/healthcare-provider-list.component';
+
+export * from './lib/components/insurance-vendors-deactivate/insurance-vendors-deactivate.component';
+
+export * from './lib/components/healthcare-provider-deactivate/healthcare-provider-deactivate.component';
+
+export * from './lib/components/insurance-plan-deactivate/insurance-plan-deactivate.component';
+
+export * from './lib/components/pharmacies-deactivate/pharmacies-deactivate.component';

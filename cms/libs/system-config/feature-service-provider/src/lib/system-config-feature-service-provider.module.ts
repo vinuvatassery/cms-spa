@@ -4,11 +4,11 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { ManufacturersListComponent } from './components/manufacturers-list/manufacturers-list.component';
 import { DrugsListComponent } from './components/drugs-list/drugs-list.component';
-import { ManufacturerDetailsComponent } from './components/manufacturer-details/manufacturer-details.component'; 
+import { ManufacturerDetailsComponent } from './components/manufacturer-details/manufacturer-details.component';
 import { ManufacturersDeactivateComponent } from './components/manufacturers-deactivate/manufacturers-deactivate.component';
 import { ManufacturersDeleteComponent } from './components/manufacturers-delete/manufacturers-delete.component';
 import { ManufacturersFormDetailsComponent } from './components/manufacturers-form-details/manufacturers-form-details.component';
-import { DrugsFormDetailsComponent } from './components/drugs-form-details/drugs-form-details.component'; 
+import { DrugsFormDetailsComponent } from './components/drugs-form-details/drugs-form-details.component';
 import { DrugsDeactivateComponent } from './components/drugs-deactivate/drugs-deactivate.component';
 import { DrugsReassignComponent } from './components/drugs-reassign/drugs-reassign.component';
 import { MedicalProvidersListComponent } from './components/medical-providers-list/medical-providers-list.component';
@@ -32,18 +32,21 @@ import { PharmaciesListComponent } from './components/pharmacies-list/pharmacies
 import { PharmaciesFormDetailsComponent } from './components/pharmacies-form-details/pharmacies-form-details.component';
 import { HealthcareProviderFormDetailsComponent } from './components/healthcare-provider-form-details/healthcare-provider-form-details.component';
 import { HealthcareProviderListComponent } from './components/healthcare-provider-list/healthcare-provider-list.component';
- 
+import { InsuranceVendorsDeactivateComponent } from './components/insurance-vendors-deactivate/insurance-vendors-deactivate.component';
+import { HealthcareProviderDeactivateComponent } from './components/healthcare-provider-deactivate/healthcare-provider-deactivate.component';
+import { InsurancePlanDeactivateComponent } from './components/insurance-plan-deactivate/insurance-plan-deactivate.component';
+import { PharmaciesDeactivateComponent } from './components/pharmacies-deactivate/pharmacies-deactivate.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
   declarations: [
     ManufacturersListComponent,
     DrugsListComponent,
-    ManufacturerDetailsComponent, 
+    ManufacturerDetailsComponent,
     ManufacturersDeactivateComponent,
     ManufacturersDeleteComponent,
     ManufacturersFormDetailsComponent,
-    DrugsFormDetailsComponent, 
+    DrugsFormDetailsComponent,
     DrugsDeactivateComponent,
     DrugsReassignComponent,
     MedicalProvidersListComponent,
@@ -67,15 +70,19 @@ import { HealthcareProviderListComponent } from './components/healthcare-provide
     PharmaciesFormDetailsComponent,
     HealthcareProviderFormDetailsComponent,
     HealthcareProviderListComponent,
+    InsuranceVendorsDeactivateComponent,
+    HealthcareProviderDeactivateComponent,
+    InsurancePlanDeactivateComponent,
+    PharmaciesDeactivateComponent,
   ],
   exports: [
     ManufacturersListComponent,
     DrugsListComponent,
-    ManufacturerDetailsComponent, 
+    ManufacturerDetailsComponent,
     ManufacturersDeactivateComponent,
     ManufacturersDeleteComponent,
     ManufacturersFormDetailsComponent,
-    DrugsFormDetailsComponent, 
+    DrugsFormDetailsComponent,
     DrugsDeactivateComponent,
     DrugsReassignComponent,
     MedicalProvidersListComponent,
@@ -99,6 +106,10 @@ import { HealthcareProviderListComponent } from './components/healthcare-provide
     PharmaciesFormDetailsComponent,
     HealthcareProviderFormDetailsComponent,
     HealthcareProviderListComponent,
+    InsuranceVendorsDeactivateComponent,
+    HealthcareProviderDeactivateComponent,
+    InsurancePlanDeactivateComponent,
+    PharmaciesDeactivateComponent,
   ],
 })
 export class SystemConfigFeatureServiceProviderModule {}
