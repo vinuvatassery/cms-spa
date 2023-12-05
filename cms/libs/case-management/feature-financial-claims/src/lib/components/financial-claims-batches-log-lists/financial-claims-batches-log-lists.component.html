@@ -21,17 +21,23 @@
       <section class="table-filter-section mat-form-no-b-space">
         <span class="filter-section_items filter--select">
           <kendo-floatinglabel>
-            <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
-              textField="columnDesc" valueField="columnCode" [data]="searchColumnList" [valuePrimitive]="true"
-              [(ngModel)]="selectedSearchColumn" (valueChange)="searchColumnChangeHandler($event)">
-            </kendo-dropdownlist>
+                <kendo-dropdownlist 
+                      aria-label="All Columns" 
+                      [fillMode]="formUiStyle.dropDownFillMode"
+                      textField="columnDesc" 
+                      valueField="columnName" 
+                      [data]="searchColumnList"
+                      [valuePrimitive]="true"
+                      [(ngModel)]="selectedSearchColumn"
+                      (valueChange)="searchColumnChangeHandler($event)">
+                </kendo-dropdownlist>
           </kendo-floatinglabel>
-        </span>
+    </span>
         <span class="filter-section_items filter--search">
           <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
           <kendo-floatinglabel text="Search">
             <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
-              [(ngModel)]="searchText" (afterValueChanged)="onSearch($event)"> </kendo-textbox>
+              [(ngModel)]="searchText" [clearButton]="true" (afterValueChanged)="onSearch($event)"> </kendo-textbox>
           </kendo-floatinglabel>
         </span>
         <span class="right-overlay-export">
@@ -41,21 +47,6 @@
           </button>
         </span>
       </section>
-
-      <div class="table-sorted-info">
-        <span class="app-c-badge badge-warn-light" aria-label="search-warning"
-          *ngIf="showDateSearchWarning || showNumberSearchWarning">
-          <span class="material-icons" aria-label="search-warning" aria-hidden="true">
-            warning
-          </span>
-          <span *ngIf="showDateSearchWarning">
-            The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
-          </span>
-          <span *ngIf="showNumberSearchWarning">
-            Item # / Service Count / Total Cost / Total Due / Client Annual Total / Client Balance allow only numbers.
-          </span>
-        </span>
-      </div>
 
       <!-- Sorted Info -->
       <div class="table-sorted-info">
@@ -289,8 +280,8 @@
         </ng-template>
       </kendo-grid-column>
 
-          <kendo-grid-column field="Option" title="Options" [reorderable]="false" [draggable]="false" [sortable]="false"
-            [columnMenu]="false" [width]="80" class="text-center">
+          <kendo-grid-column field="Option" title="Options" [reorderable]="false" [draggable]="false" [sortable]="false" 
+            [columnMenu]="false" [width]="80" class="text-center" [includeInChooser]="false">
             <ng-template kendoGridCellTemplate let-dataItem>
               <kendo-dropdownbutton [data]="getBatchLogGridActions(dataItem)" icon="more-vertical"
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

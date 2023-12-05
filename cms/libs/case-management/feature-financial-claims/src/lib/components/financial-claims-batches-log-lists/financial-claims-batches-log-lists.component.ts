@@ -151,6 +151,7 @@ export class FinancialClaimsBatchesLogListsComponent
   batchLogGridLists!: any;
 
   gridColumns: { [key: string]: string } = {
+    ALL: 'All Columns',
     itemNbr: 'Item #',
     invoiceNbr: 'Invoice ID',
     vendorName: 'Provider Name',
@@ -179,75 +180,15 @@ export class FinancialClaimsBatchesLogListsComponent
 
   //searching
   searchColumnList: { columnName: string; columnDesc: string }[] = [
-    {
-      columnName: 'itemNbr',
-      columnDesc: 'Item #',
-    },
-    {
-      columnName: 'invoiceNbr',
-      columnDesc: 'Invoice ID',
-    },
-    {
-      columnName: 'vendorName',
-      columnDesc: 'Provider Name',
-    },
-    {
-      columnName: 'tin',
-      columnDesc: 'Tax ID',
-    },
-    {
-      columnName: 'clientFullName',
-      columnDesc: 'Client Name',
-    },
-    {
-      columnName: 'nameOnInsuranceCard',
-      columnDesc: 'Name on Primary Insurance Card',
-    },
-    {
-      columnName: 'serviceCount',
-      columnDesc: 'Service Count',
-    },
-    {
-      columnName: 'serviceCost',
-      columnDesc: 'Total Cost',
-    },
-    {
-      columnName: 'amountDue',
-      columnDesc: 'Total Due',
-    },
-    {
-      columnName: 'paymentMethodDesc',
-      columnDesc: 'Payment Method',
-    },
-    {
-      columnName: 'paymentTypeDesc',
-      columnDesc: 'Payment Type',
-    },
-    {
-      columnName: 'paymentStatusDesc',
-      columnDesc: 'Payment Status',
-    },
-    {
-      columnName: 'clientMaximum',
-      columnDesc: 'Client Annual Total',
-    },
-    {
-      columnName: 'balanceAmount',
-      columnDesc: 'Client Balance',
-    },
+    { columnName: 'ALL', columnDesc: 'All Columns' },
+    { columnName: 'vendorName', columnDesc: 'Provider Name', },
+    { columnName: 'tin', columnDesc: 'Tax ID', },
+    { columnName: 'clientFullName', columnDesc: 'Client Name', }
   ];
 
-  numericColumns: any[] = [
-    'balanceAmount',
-    'clientMaximum',
-    'amountDue',
-    'serviceCost',
-    'serviceCount',
-    'itemNbr',
-  ];
   dateColumns: any[] = [];
   private searchSubject = new Subject<string>();
-  selectedSearchColumn: null | string = 'itemNbr';
+  selectedSearchColumn = 'ALL';
   showDateSearchWarning = false;
   showNumberSearchWarning = true;
   searchText: null | string = null;
@@ -392,8 +333,6 @@ export class FinancialClaimsBatchesLogListsComponent
 
   searchColumnChangeHandler(value: string) {
     this.filter = [];
-    this.showNumberSearchWarning = this.numericColumns.includes(value);
-    this.showDateSearchWarning = this.dateColumns.includes(value);
     if (this.searchText) {
       this.onSearch(this.searchText);
     }
@@ -411,32 +350,14 @@ export class FinancialClaimsBatchesLogListsComponent
 
   performSearch(data: any) {
     this.defaultGridState();
-    const operator = [...this.numericColumns, ...this.dateColumns].includes(
-      this.selectedSearchColumn
-    )
-      ? 'eq'
-      : 'startswith';
-    if (
-      this.dateColumns.includes(this.selectedSearchColumn) &&
-      !this.isValidDate(data) &&
-      data !== ''
-    ) {
-      return;
-    }
-    if (
-      this.numericColumns.includes(this.selectedSearchColumn) &&
-      isNaN(Number(data))
-    ) {
-      return;
-    }
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedSearchColumn ?? 'itemNbr',
-              operator: operator,
+              field: this.selectedSearchColumn ?? 'ALL',
+              operator: 'contains',
               value: data,
             },
           ],
@@ -457,7 +378,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.sortDir = 'Descending';
     this.filter = [];
     this.searchText = '';
-    this.selectedSearchColumn = 'itemNbr';
+    this.selectedSearchColumn = 'ALL';
     this.filteredByColumnDesc = '';
     this.columnChangeDesc = 'Default Columns';
     this.showDateSearchWarning = false;
