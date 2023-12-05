@@ -179,7 +179,7 @@
       </div>
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.InsuranceProviders">
-        <kendo-floatinglabel text="TIN (optional)">
+        <kendo-floatinglabel text="TIN">
           <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
             placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber()">
           </kendo-maskedtextbox>
