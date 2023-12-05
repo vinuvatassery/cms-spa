@@ -75,3 +75,5 @@ export * from './lib/components/insurance-provide-delete/insurance-provide-delet
 export * from './lib/components/insurance-provide-deactivate/insurance-provide-deactivate.component';
 
 export * from './lib/components/healthcare-provider-delete/healthcare-provider-delete.component';
+
+export * from './lib/components/pharmacies-delete/pharmacies-delete.component';

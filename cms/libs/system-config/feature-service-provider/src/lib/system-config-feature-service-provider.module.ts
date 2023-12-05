@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { ManufacturersListComponent } from './components/manufacturers-list/manufacturers-list.component';
-import { DrugsListComponent } from './components/drugs-list/drugs-list.component'; 
+import { DrugsListComponent } from './components/drugs-list/drugs-list.component';
 import { ManufacturersDeactivateComponent } from './components/manufacturers-deactivate/manufacturers-deactivate.component';
 import { ManufacturersDeleteComponent } from './components/manufacturers-delete/manufacturers-delete.component';
 import { ManufacturersFormDetailsComponent } from './components/manufacturers-form-details/manufacturers-form-details.component';
@@ -40,12 +40,13 @@ import { InsurancePlanDeleteComponent } from './components/insurance-plan-delete
 import { InsuranceProvideDeleteComponent } from './components/insurance-provide-delete/insurance-provide-delete.component';
 import { InsuranceProvideDeactivateComponent } from './components/insurance-provide-deactivate/insurance-provide-deactivate.component';
 import { HealthcareProviderDeleteComponent } from './components/healthcare-provider-delete/healthcare-provider-delete.component';
+import { PharmaciesDeleteComponent } from './components/pharmacies-delete/pharmacies-delete.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
   declarations: [
     ManufacturersListComponent,
-    DrugsListComponent, 
+    DrugsListComponent,
     ManufacturersDeactivateComponent,
     ManufacturersDeleteComponent,
     ManufacturersFormDetailsComponent,
@@ -82,10 +83,11 @@ import { HealthcareProviderDeleteComponent } from './components/healthcare-provi
     InsuranceProvideDeleteComponent,
     InsuranceProvideDeactivateComponent,
     HealthcareProviderDeleteComponent,
+    PharmaciesDeleteComponent,
   ],
   exports: [
     ManufacturersListComponent,
-    DrugsListComponent, 
+    DrugsListComponent,
     ManufacturersDeactivateComponent,
     ManufacturersDeleteComponent,
     ManufacturersFormDetailsComponent,
@@ -122,6 +124,7 @@ import { HealthcareProviderDeleteComponent } from './components/healthcare-provi
     InsuranceProvideDeleteComponent,
     InsuranceProvideDeactivateComponent,
     HealthcareProviderDeleteComponent,
+    PharmaciesDeleteComponent,
   ],
 })
 export class SystemConfigFeatureServiceProviderModule {}
