@@ -1,6 +1,6 @@
 
 <kendo-dialog-titlebar (close)="closeAddPremiumClicked()"> Add Premium</kendo-dialog-titlebar>
-<section class="k-dialog-body">
+<section class="k-dialog-body">   
       <p class="text-muted mb-1">  Search for a client to add their premium payment(s). If a client has multiple insurance plans, select which ones to add. </p>
       <div class="flex-row">
             <div class="flex-col">
@@ -10,7 +10,7 @@
                         <kendo-multicolumncombobox 
                             autofocusfield
                             placeholder="Search Client Name, ID Number, DOB, or SSN"
-                            textField="clientFullName"
+                            textField="providerFullName"
                             valueField="clientId" 
                             class="'k-invalid': showClientRequiredValidation"
                             [fillMode]="formUiStyle.dropDownFillMode"

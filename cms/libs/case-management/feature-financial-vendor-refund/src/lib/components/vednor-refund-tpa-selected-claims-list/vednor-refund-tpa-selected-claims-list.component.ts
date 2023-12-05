@@ -1,9 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { formatDate } from '@progress/kendo-angular-intl';
 import { FormatSettings } from "@progress/kendo-angular-dateinputs";
-import { forkJoin, map } from 'rxjs';
 import {ColumnNames } from '@cms/case-management/domain'
 
 

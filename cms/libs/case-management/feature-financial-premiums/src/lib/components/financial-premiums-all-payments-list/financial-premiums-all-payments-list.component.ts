@@ -196,6 +196,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   isSendReportOpened = false;
   isUnBatchPaymentOpen = false;
   isDeletePaymentOpen = false;
+  isEditBatchClosed = false;
   isUnBatchPaymentPremiumsClosed = false;
   showDeleteConfirmation = false;
   @ViewChild('removePremiumsConfirmationDialogTemplate', { read: TemplateRef })
@@ -281,6 +282,16 @@ export class FinancialPremiumsAllPaymentsListComponent
          }
        },
      },
+     {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Premium',
+      icon: 'edit',
+      click: (data: any): void => {
+        if (!this.isEditBatchClosed) {
+          this.isEditBatchClosed = true;
+        }
+      },
+    },
    ];
  }
  onUnBatchPaymentCloseClicked(result: any) {
@@ -774,7 +785,7 @@ deletePremiumPayment(paymentId: string) {
   }
   paymentClickHandler(dataItem: any) {
     this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch/items`], {
-      queryParams: { bid: dataItem.batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId },
+      queryParams: { bid: dataItem.batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId,vid:dataItem.vendorId },
     });
   }
   onClickedExport() {
