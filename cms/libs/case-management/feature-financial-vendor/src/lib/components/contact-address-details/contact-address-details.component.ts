@@ -162,7 +162,6 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
     if(this.isEdit == true){
     if(contactForm.controls['contactName'].dirty == true){
         this.isSubmitted = true;
-        contactForm.controls['contactName'].invalid;
       }
   }
   }

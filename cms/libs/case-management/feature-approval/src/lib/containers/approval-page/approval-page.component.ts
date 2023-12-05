@@ -247,6 +247,7 @@ export class ApprovalPageComponent implements OnInit {
 
   loadImportedClaimsGrid(gridDataValue: any): void {
     this.dataExportParameters = gridDataValue;
+    this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
     this.importedClaimFacade.loadImportedClaimsLists(gridDataValue);
   }
   notificationTriger() {

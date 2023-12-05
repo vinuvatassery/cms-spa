@@ -225,6 +225,7 @@ public rowCallback(context: RowClassArgs) {
 
   groupChange($event : any)
   {    
+    debugger
     this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;
     let  groupCodeIdsdValueData= []
 
@@ -245,8 +246,7 @@ public rowCallback(context: RowClassArgs) {
     {
       this.groupCodesValid = false
     }
-    if(this.groupCodeIdsdValue.length > 0 && this.objectCodeIdValue)
-    {
+   
       this.isFinancialPcaAssignmentGridLoaderShow = true;
       const pcaAssignmentGridArguments =
       {
@@ -256,7 +256,7 @@ public rowCallback(context: RowClassArgs) {
 
       this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments)     
       this.gridDataHandle();
-    }
+    
   }
 
   onColumnReorder($event: any) {
