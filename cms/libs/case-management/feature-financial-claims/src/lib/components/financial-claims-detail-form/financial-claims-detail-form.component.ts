@@ -61,61 +61,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   isShowReasonForException = false;
   pcaExceptionDialogService: any;
   chosenPcaForReAssignment: any;
-  clientSearchResult = [
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-  ];
-
-  providerSearchResult = [
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-  ];
+  private deletedServices : string[] = [];
 
   clientSearchLoaderVisibility$ =
     this.financialClaimsFacade.clientSearchLoaderVisibility$;
@@ -573,13 +519,19 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
   }
   removeService(i: number) {
-    if(this.isEdit && this.addClaimServicesForm.length == 1)
-    {
-       this.addClaimServicesForm.reset();
+    let servicCount = 0;;
+    for(let service of this.claimForm.value.claimService) {
+      if (service.tpaInvoiceId) {
+        servicCount++;
+      }
+    }
+    if(servicCount == 1){
+      this.addClaimServicesForm.reset();
+      return;
     }
     if(this.addClaimServicesForm.length > 1 ){
-    let form = this.addClaimServicesForm.value[i]
-    this.deleteClaimService(form.tpaInvoiceId);
+    let form = this.addClaimServicesForm.value[i];
+    this.deletedServices.push(form.tpaInvoiceId);
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
     }
@@ -685,6 +637,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       pcaAssignmentId: null,
       isPcaReassignmentNeeded: null,
       tpaInvoices: [{}],
+      deletedInvoices : this.deletedServices
     };
     let checkDeniedClaim = false;
     for (let element of formValues.claimService) {
