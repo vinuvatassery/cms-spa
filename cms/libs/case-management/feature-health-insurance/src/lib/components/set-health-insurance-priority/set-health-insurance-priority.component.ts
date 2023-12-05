@@ -75,6 +75,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     this.lovFacade.getCaseCodeLovs();
   }
   public onChangePriority(value: any, insurance: any): void {
+    
     if (value === PriorityCode.Primary) {
       if (insurance.canPayForMedicationFlag === "N") {
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'Primary insurance always consists of insurance that pays for medications.', NotificationSource.UI)
@@ -95,6 +96,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
 
   }
   insuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
+   
     this.gridList.forEach((row: any) => {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });

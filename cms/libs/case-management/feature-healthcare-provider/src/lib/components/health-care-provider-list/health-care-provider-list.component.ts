@@ -394,9 +394,12 @@ pageselectionchange(data: any) {
 
    buildVendorForm(providerType?: any) {
     if (providerType === FinancialVendorTypeCode.Clinic)
-      this.clinicForm.reset();
-    else
-      this.medicalProviderForm.reset(); 
+      {
+        this.clinicForm.reset();
+      }
+    else{
+        this.medicalProviderForm.reset(); 
+      }
       let form = this.formBuilder.group({
       firstName:[''],
       lastName:[],
@@ -423,10 +426,14 @@ pageselectionchange(data: any) {
       ]),
       activeFlag:[]
     });
+
     if (providerType === FinancialVendorTypeCode.Clinic)
-      this.clinicForm = form;
-    else
+      {
+        this.clinicForm = form;
+      }
+    else{
       this.medicalProviderForm = form;
+    }      
   }
 
   public get vendorTypes(): typeof FinancialVendorTypeCode {

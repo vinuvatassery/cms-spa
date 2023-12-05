@@ -92,14 +92,15 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     if (clinicName === '' || !clinicName) {
       this.clinicVendorListLocal = null;
       return;
-    }
-
+    } 
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
       if (data && clinicName !== '') {
-        if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders
-          || this.providerType === FinancialVendorTypeCode.HealthcareProviders) {
+        if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
-        } else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
+        } else if (this.providerType === FinancialVendorTypeCode.HealthcareProviders) {
+          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic 
+          || item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic );
+        }else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
         }
         this.clinicVendorListLocal = this.clinicVendorListLocal.filter((item: any) => item.vendorName.toLowerCase().includes(clinicName.toLowerCase()));
@@ -675,7 +676,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   restrictAccountingNumber() {
-    if(this.providerType == this.vendorTypes.Pharmacy){
+    if(this.providerType == this.vendorTypes.Pharmacy && this.medicalProviderForm.controls['tinNumber'].value==''){
+      this.accountingNumberValidated = true;
       return;
     }
     if (this.medicalProviderForm.controls['tinNumber'].value && (parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 3)) {
