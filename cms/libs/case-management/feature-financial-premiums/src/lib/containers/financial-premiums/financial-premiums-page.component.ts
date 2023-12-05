@@ -65,7 +65,11 @@ export class FinancialPremiumsPageComponent implements OnInit {
   letterContentLoader$ = this.financialPremiumsFacade.letterContentLoader$;
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  paymentStatusCode$ = this.lovFacade.paymentStatus$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  
+
+  healthInsuranceTypeLov$ = this.lovFacade.insuranceTypelov$;
   providerDetailsDialog: any
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
@@ -118,6 +122,10 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
   }
   loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
+    
+    this.lovFacade.getPaymentMethodLov()
+    this.lovFacade.getPaymentStatusLov()
+    this.lovFacade.getHealthInsuranceTypeLovs()
     this.financialPremiumsFacade.selectedClaimsTab = 1;
     this.tab = this.financialPremiumsFacade.selectedClaimsTab;
     this.dataExportParameters = gridDataRefinerValue;
@@ -134,7 +142,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
       gridDataRefiner.sortColumn,
       gridDataRefiner.sortType,
       gridDataRefiner.filter,
-      this.premiumType);
+      this.premiumType);     
   }
 
   loadFinancialPremiumsBatchListGrid(data: GridFilterParam) {
