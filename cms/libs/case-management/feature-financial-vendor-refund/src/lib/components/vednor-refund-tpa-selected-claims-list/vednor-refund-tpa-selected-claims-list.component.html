@@ -7,7 +7,7 @@
                         <div class="flex-col mt-2 mb-2 "> 
                             <div class="text-center">
                                 <a kendoButton look="flat" class="card-link-button" href="#medicalProviderPaymentslist">
-                                    View Medical Provider Payments
+                                    View  Provider Payments
                                 </a>
                             </div>
                         </div>
@@ -43,9 +43,9 @@
                             </kendo-floatinglabel>
                         </div>
                         <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Service Start Date">
+                            <kendo-floatinglabel text="Service End Date">
                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                    aria-label="Service Start Date" format="MM-dd-yyyy"
+                                    aria-label="Service End Date" format="MM-dd-yyyy"
                                     formatPlaceholder="formatPattern" placeholder=""
                                     [disabled]="true"  [(ngModel)] ="item.serviceEndDate">
                                 </kendo-datepicker>
@@ -154,6 +154,7 @@
                             </kendo-floatinglabel>
                             <kendo-formerror *ngIf="item.refundWarantNumberError">Refund Warrant # is required.
                             </kendo-formerror>
+                           
                         </div>
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="Refund Amount" class="amount-with-symbol">
@@ -165,6 +166,8 @@
                                 </kendo-numerictextbox>
                             </kendo-floatinglabel>
                             <kendo-formerror *ngIf="item.refundedAmountError">Refund Amount is required.
+                            </kendo-formerror>
+                            <kendo-formerror *ngIf="item.refundAmountExeedError">Refund exceeds amount paid.
                             </kendo-formerror>
                         </div>
                         <div class="flex-col flex-col-6">
