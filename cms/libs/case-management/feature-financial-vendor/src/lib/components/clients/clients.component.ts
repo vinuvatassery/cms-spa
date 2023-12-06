@@ -69,6 +69,7 @@ export class ClientsComponent implements OnInit, OnChanges{
   filteredByColumnDesc ='';
   columnChangeDesc = 'Default Columns'
   gridColumns: { [key: string]: string }  = {
+    ALL: 'All Columns',
     clientName: 'Client Name',
     pronouns: "Pronouns",
     clientId: "ID",
