@@ -233,13 +233,13 @@ this.loaderService.show();
         const startDate = this.pcaAssignmentForm.controls['openDate'].value;
         this.openDateErrorMsg=this.checkOpenDateValidity(startDate, endDate)
       }
-      isValid:any;
         checkcloseDateValidity(opendate: string, closedate: string, pcaClosedate: string): string {
           
           this.openDateError=false;
           const openDateObj: Date = new Date(opendate);
           const closeDateObj: Date = new Date(closedate);
           const pcaCloseDateObj: Date = new Date(pcaClosedate);
+          debugger
           switch (true) {
             case closeDateObj < openDateObj:
               this.closeDateError=true;
@@ -254,7 +254,8 @@ this.loaderService.show();
               return  "";
           }
         }
-        checkOpenDateValidity(opendate: string, closedate: string): string {          
+        checkOpenDateValidity(opendate: string, closedate: string): string {    
+          debugger      
         this.closeDateError=false;
           const openDateObj: Date = new Date(opendate);
           const closeDateObj: Date = new Date(closedate);
@@ -262,7 +263,8 @@ this.loaderService.show();
           {
             this.openDateError=true;
             return "Open Date must be before Close Date";
-          }else{
+          }
+          else{
             this.openDateError=false;
             return "";
           }

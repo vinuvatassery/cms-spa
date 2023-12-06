@@ -2,7 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { Router } from '@angular/router';
 import { FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import { LovFacade } from '@cms/system-config/domain';
+import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
@@ -37,7 +38,7 @@ sortColumn = "Vendor Name";
   isFiltered = false;
   filter! : any
 
-  selectedColumn!: any;
+  selectedColumn!:any;
 
 gridDataResult! : GridDataResult
 gridVendorsDataSubject = new Subject<any>();
@@ -49,8 +50,9 @@ loader = false;
 vendorNameTitle ="Vendor Name"
 vendorNameTitleDataSubject = new Subject<any>();
 vendornameTitleData$ = this.vendorNameTitleDataSubject.asObservable();
-
-showTinSearchWarning = false;
+paymentMethodType$ = this.lovFacade.paymentMethodType$;
+paymentMethodTypes: any = [];
+selectedPaymentMethod: string | null = null;showTinSearchWarning = false;
 columns : any = {
   vendorName:"Vendor Name",
   tin:"Tin",
@@ -155,9 +157,16 @@ dropDowncolumns : any = [
     "columnDesc": "Physical Address"   ,
     "vendorTypeCode": ["PHARMACY"],
   }
+  ,
+  {
+    "columnCode": "mailCode",
+    "columnDesc": "Mail Code"   ,
+    "vendorTypeCode": ["MEDICAL_PROVIDER"],
+  }
 ]
 constructor(private route: Router,
-  private readonly  cdr :ChangeDetectorRef) {
+  private readonly  cdr :ChangeDetectorRef,
+  private readonly lovFacade: LovFacade) {
 }
 ngOnChanges(): void {
   this.state = {
@@ -185,6 +194,7 @@ ngOnChanges(): void {
 }
 
 ngOnInit(): void {
+  this.getPaymentMethodLov();
   this.bindDropdownClumns()
   if(!this.selectedColumn)
       {
@@ -195,6 +205,7 @@ ngOnInit(): void {
 
 private bindDropdownClumns()
 {
+  debugger
   this.dropDowncolumns = this.dropDowncolumns.filter((x : any)=>x.vendorTypeCode.includes(this.vendorTypeCode) || x.vendorTypeCode === 'ALL')
 }
 
@@ -400,5 +411,37 @@ public filterChange(filter: CompositeFilterDescriptor): void {
       }
 
     })
+  }
+  private getPaymentMethodLov() {
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodType$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentMethodTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+    
+  }
+  dropdownFilterChange(
+    
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    debugger
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
   }
 }

@@ -187,6 +187,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   getContactNameValidation(index: number) {
     return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get("isCheckContactNameValid")?.value;
   }
+  getEmailValidation(index: number) {
+    return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get("email")?.value;
+  }
 
   checkContactPreference(i: number) {
     for (let index = 0; index < this.AddContactForm.length; index++) {
