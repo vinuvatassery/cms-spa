@@ -87,19 +87,19 @@
                                               <span>Name:{{ dataItem.vendorName }}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
-                                      <kendo-combobox-column [width]="100">
+                                      <kendo-combobox-column [width]="150">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                               <span class=" text-muted"> <em></em>Insurance Type: {{dataItem.insuranceType}}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
-                                      <kendo-combobox-column [width]="150">
+                                      <kendo-combobox-column [width]="200">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                               <span class="text-muted"><em> </em>Insurance Name: {{ dataItem.insuranceName }}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="125">
                                           <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                              <span class=" text-muted"> <em>Coverage effective dates:</em> {{ dataItem.coverageStartDate|date:'MM/dd/YYYY'}} - {{ dataItem.coverageEndDate|date:'MM/dd/YYYY'}}</span>
+                                              <span class=" text-muted"> <em>Insurance effective dates:</em> {{ dataItem.coverageStartDate|date:'MM/dd/YYYY'}} - {{ dataItem.coverageEndDate|date:'MM/dd/YYYY'}}</span>
                                           </ng-template>
                                       </kendo-combobox-column>
                                       <ng-template kendoMultiColumnComboBoxNoDataTemplate>
@@ -576,24 +576,23 @@
     </div>
 
 </kendo-dialog-actions>
-
 <ng-template #providerDetailsTemplate>
-    <cms-financial-premiums-provider-info
+    <cms-refund-claims-provider-info
     [paymentRequestId]="paymentRequestId"
     (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
     (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
     (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
     [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-    [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+    [paymentMethodCode$]="paymentMethodCode$"></cms-refund-claims-provider-info>
 </ng-template>
 
 
 <ng-template #tpaProviderDetailsTemplate>
-    <cms-financial-claims-provider-info
+    <cms-refund-claims-provider-info
           [paymentRequestId]="paymentRequestId"
           (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
           (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
           (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
           [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+          [paymentMethodCode$]="paymentMethodCode$"></cms-refund-claims-provider-info>
 </ng-template>

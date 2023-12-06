@@ -98,9 +98,9 @@ export class FinancialPcaDataService {
     );
   }
 
-  getPcaUnAssignments() {
+  getPcaUnAssignments(objectCodeId:any,pcaAssignmentId:any) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/unassign-data`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/unassign-data/${objectCodeId}/${pcaAssignmentId}`
     );
   }
   pcaReassignment(data: any) {

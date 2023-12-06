@@ -33,7 +33,9 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   isLoading = false;
   tAreaCessationMaxLength = 200;
   drugNameCounter!: string;
+  brandNameCounter!:string;
   drugNameCharactersCount!: number;
+  brandNameCharactersCount!:number;
   deliveryMethodCodesLocal: any;
   showLoader() {
     this.loaderService.show();
@@ -64,6 +66,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     // modify delivery methods for that results [ ML , MG , Tablet , Each ]
     this.normalizeDeliveryMethods();
     this. onDrugNameValueChange();
+    this.onBrandNameValueChange();
   }
 
   private normalizeDeliveryMethods() {
@@ -97,6 +100,12 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     this.drugNameCharactersCount = event== null?0:event.length;
     this.drugNameCounter = `${this.drugNameCharactersCount}/${this.tAreaCessationMaxLength}`;
   }
+
+  onBrandNameValueChange(event: any= null): void {
+    this.brandNameCharactersCount = event== null?0:event.length;
+    this.brandNameCounter = `${this.brandNameCharactersCount}/${this.tAreaCessationMaxLength}`;
+  }
+
   atLeastOneDrugTypeSelected(): ValidatorFn {
     return (formGroup: AbstractControl) => {
       const hiv = formGroup.get('hiv')?.value;

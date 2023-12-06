@@ -70,7 +70,7 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
 
   dropDowncolumns: any = [
     {
-      columnCode: 'creationTime',
+      columnCode: 'batchName',
       columnDesc: 'Batch #',
     },
     {
@@ -149,7 +149,7 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
     this.defaultGridState();
     let operator = 'startswith';
 
-    if (this.selectedColumn !== 'creationTime') {
+    if (this.selectedColumn !== 'creationTime'  && this.selectedColumn !==  'batchName') {
       operator = 'eq';
     }
 

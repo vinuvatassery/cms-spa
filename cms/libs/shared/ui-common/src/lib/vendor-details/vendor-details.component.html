@@ -5,12 +5,12 @@
     </p>
     <div class="flex-row">
       <div class="flex-col" *ngIf="providerType == vendorTypes.InsuranceVendors">
-        <kendo-floatinglabel text="Vendor Name">
+        <kendo-floatinglabel text="Insurance Vendor Name">
           <kendo-textbox aria-label="Provider Name" [fillMode]="formUiStyle.inputFillMode"
             formControlName="providerName" [maxlength]="500">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Vendor Name is required
+            Insurance Vendor Name is required
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -114,8 +114,8 @@
 
           </div>
 
-          <div class="flex-col" *ngIf="editVendorInfo 
-          && ( medicalProviderForm.value.vendorTypeCode == 'MEDICAL_CLINIC' 
+          <div class="flex-col" *ngIf="editVendorInfo
+          && ( medicalProviderForm.value.vendorTypeCode == 'MEDICAL_CLINIC'
           || medicalProviderForm.value.vendorTypeCode == 'DENTAL_CLINIC'
           || medicalProviderForm.value.vendorTypeCode == 'CLINIC')">
             <kendo-floatinglabel text="Provider Name">
@@ -136,8 +136,8 @@
               <label class="k-checkbox-label" for="Applicable">Not Applicable</label>
             </span>
           </div>
-          <div class="flex-col" *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo || (editVendorInfo 
-          && ( medicalProviderForm.value.vendorTypeCode == vendorTypes.MedicalProviders 
+          <div class="flex-col" *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo || (editVendorInfo
+          && ( medicalProviderForm.value.vendorTypeCode == vendorTypes.MedicalProviders
           || medicalProviderForm.value.vendorTypeCode == vendorTypes.DentalProviders))"
             [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
             <kendo-floatinglabel text="Provider First Name">
@@ -151,7 +151,7 @@
             </kendo-floatinglabel>
           </div>
 
-          <div class="flex-col" *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo || (editVendorInfo &&  
+          <div class="flex-col" *ngIf="vendorTypes.Clinic != providerType && !editVendorInfo || (editVendorInfo &&
           (medicalProviderForm.value.vendorTypeCode == vendorTypes.MedicalProviders
           || medicalProviderForm.value.vendorTypeCode ==  vendorTypes.DentalProviders))"
             [ngClass]="editVendorInfo ? 'flex-col-6' : 'flex-col-4'">
@@ -180,7 +180,7 @@
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.InsuranceProviders">
         <kendo-floatinglabel text="TIN">
-          <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
+          <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
             placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber()">
           </kendo-maskedtextbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['tinNumber'].valid && isValidateForm && accountingNumberValidated && providerType != vendorTypes.Pharmacy">
