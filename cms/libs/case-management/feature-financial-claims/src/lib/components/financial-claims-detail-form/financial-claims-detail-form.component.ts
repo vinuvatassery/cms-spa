@@ -526,9 +526,11 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       }
     }
     if(servicCount == 1){
-      this.addClaimServicesForm.reset();
+      let form = this.addClaimServicesForm.controls[i];
+      form.reset();
       return;
     }
+    
     if(this.addClaimServicesForm.length > 1 ){
     let form = this.addClaimServicesForm.value[i];
     this.deletedServices.push(form.tpaInvoiceId);
