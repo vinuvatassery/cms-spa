@@ -134,6 +134,16 @@ export class FinancialClaimsProviderInfoComponent {
           phones: this.createPhonesFormArray(contact)
         }));
     });
+
+    if(!this.vendorProfile.address && !this.vendorProfile.address.contact){
+    contacts.push(
+      this.formBuilder.group({
+        contactName: [],
+        vendorContactId: [],
+        emails: this.createEmailsFormArray({emails:[]}),
+        phones: this.createPhonesFormArray({phones :[]})
+      }));
+    }
     return contacts;
   }
 

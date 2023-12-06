@@ -649,9 +649,9 @@ this.loaderService.show();
       this.clientSearchLoaderVisibilitySubject.next(false);
     }
   }
-  loadPharmacyBySearchText(searchText: string,) {
+  loadPharmacyBySearchText(searchText: string , clientId:number) {
    this.medicalProviderSearchLoaderVisibilitySubject.next(true);
-    return this.financialVendorRefundDataService.loadPharmacyBySearchText(searchText).subscribe({
+    return this.financialVendorRefundDataService.loadPharmacyBySearchText(searchText,clientId).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor:any) => {
           vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;

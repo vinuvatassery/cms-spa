@@ -72,7 +72,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   tAreaCessationMaxLength: any = 200;
   approveStatus: string = 'APPROVED';
   denyStatus: string = 'DENIED';
-  sendbackNotesRequireMessage: string = 'Reason for denial is required.';
+  sendbackNotesRequireMessage: string = 'Reason for Denial is required.';
   approvalsPaymentsGridPagedResult: any = [];
   approvalsPaymentsGridUpdatedResult: any = [];
   hasDisabledSubmit: boolean = true;
