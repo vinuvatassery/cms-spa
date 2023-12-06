@@ -12,6 +12,7 @@
             [loading]="isGridLoaderShow"
             (dataStateChange)="dataStateChange($event)"
             (filterChange)="filterChange($event)" 
+            [filter]="state.filter"
             (columnVisibilityChange)="columnChange($event)"
             [data]="reconcileBreakoutList$ | async">
            
