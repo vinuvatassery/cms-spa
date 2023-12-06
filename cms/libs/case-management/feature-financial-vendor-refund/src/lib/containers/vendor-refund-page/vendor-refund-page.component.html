@@ -64,7 +64,7 @@
                               [ddlStates$]="ddlStates$"
                               (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
                               [paymentMethodCode$]=" paymentMethodCode$"
-                              (onProviderNameClickEvent)="onProviderNameClick($event)"
+                              (providerNameClickEvent)="onProviderNameClick($event)"
                               ></cms-refund-all-payment-list>
                                </div>
                         </ng-template>
@@ -83,14 +83,4 @@
             [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
     </ng-template>
 </div>
-<ng-template #providerDetailsTemplate>
-    <cms-refund-claims-provider-info
-    [paymentRequestId]="paymentRequestId"
-    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
-    (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
-    [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-    [paymentMethodCode$]="paymentMethodCode$">
-        </cms-refund-claims-provider-info>
-  </ng-template>
 

@@ -1,9 +1,8 @@
 /** Angular **/
 import {  Component, TemplateRef, ViewChild } from '@angular/core';
-import {  Component, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentsFacade } from '@cms/case-management/domain';
 import { ApiType, DocumentFacade } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
@@ -47,10 +46,6 @@ export class VendorRefundPageComponent
   providerDetailsTemplate!: TemplateRef<any>;
   providerDetailsDialog: any
   paymentRequestId: any;
-  vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
-  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
-  ddlStates$ = this.contactFacade.ddlStates$;
-  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
 
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade ,
@@ -67,9 +62,7 @@ export class VendorRefundPageComponent
   {
     this.pageTitle = data ?? "Vendor Refunds";
   }
-  getProviderPanel(event:any){
-    this.financialVendorFacade.getProviderPanel(event)
-  }
+
   loadVendorRefundProcessListGrid(event: any) {
 
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();

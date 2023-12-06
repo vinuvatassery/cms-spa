@@ -32,7 +32,7 @@ import { CaseManagementFeatureFinancialPharmacyClaimsModule } from '@cms/case-ma
     SharedUiTpaModule,
     SharedUiCommonModule,
     CaseManagementFeatureFinancialPremiumsModule,
-    CaseManagementFeatureFinancialClaimsModule
+    CaseManagementFeatureFinancialClaimsModule,
     CaseManagementFeatureFinancialPharmacyClaimsModule
   ],
   declarations: [

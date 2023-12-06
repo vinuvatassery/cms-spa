@@ -596,9 +596,6 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     });
   }
 
-  onProviderNameClick(event: any) {
-    this.onProviderNameClickEvent.emit(event);
-  }
   clientRecentClaimsModalClicked(
     data: any
   ): void {
@@ -643,9 +640,9 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     }
   }
 
-  // onProviderNameClick(event:any){
-  //   this.providerNameClickEvent.emit(event);
-  // }
+  onProviderNameClick(event:any){
+    this.providerNameClickEvent.emit(event);
+  }
 
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
