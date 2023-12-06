@@ -54,7 +54,6 @@ vendornameTitleData$ = this.vendorNameTitleDataSubject.asObservable();
 columns : any = {
   vendorName:"Vendor Name",
   tin:"Tin",
-  paymentMethod:"Payment Method",
   totalPayments:"Total Payments",
   unreconciledPayments:"Unreconciled Payments",
   insurancePlans:"Insurance Plans",
@@ -82,11 +81,6 @@ dropDowncolumns : any = [
     "columnDesc": "Tin"   ,
     "vendorTypeCode": "ALL",
   },
-  {
-    "columnCode": "paymentMethod",
-    "columnDesc": "Payment Method"   ,
-    "vendorTypeCode": ["INSURANCE_VENDOR","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
-  }
   ,
   {
     "columnCode": "totalClaims",
