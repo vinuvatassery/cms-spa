@@ -1,9 +1,9 @@
-import {  ChangeDetectionStrategy,  ChangeDetectorRef,  Component, OnInit, TemplateRef, ViewChild, } from '@angular/core';
+import {  ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade, GridFilterParam } from '@cms/case-management/domain'; 
-import { ActivatedRoute, Router } from '@angular/router';
-import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
+import { ActivatedRoute } from '@angular/router';
+import { DocumentFacade } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 
@@ -23,6 +23,7 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
    sort = this.financialPharmacyClaimsFacade.sortReconcileBreakoutList;
    state!: State;
    reconcileGridLists$ = this.financialPharmacyClaimsFacade.reconcileDataList$;
+   deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
    batchId:any = null;
    @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
@@ -46,9 +47,6 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
 
   constructor( 
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
-    private readonly router: Router,
-    private readonly cdr: ChangeDetectorRef,
-    private loggingService: LoggingService,
     private readonly route: ActivatedRoute,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
@@ -59,6 +57,7 @@ export class PharmacyClaimsReconcilePageComponent implements OnInit{
 
   ngOnInit(): void {   
     this.getQueryParams();
+    this.lovFacade.getDeliveryMethodLovs();
   }
  
   private getQueryParams() {

@@ -36,7 +36,11 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Input() sortValueRefunds: any;
   @Input() vendorRefundAllPaymentsGridLists$: any;
   @Input() exportButtonShow$: any;
-
+  @Input() vendorProfile$ :any;
+  @Input() updateProviderPanelSubject$:any
+  @Input() ddlStates$ :any
+  @Input() paymentMethodCode$ :any
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() exportReceiptDataEvent = new EventEmitter<any>();
@@ -478,5 +482,17 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.receiptLogMode = !this.receiptLogMode;
     this.hideActionButton = !this.hideActionButton;
   }
+  onProviderNameClick(event: any) {    
+    this.onProviderNameClickEvent.emit(event);
+  }
 
+  
+  navToBatchDetails(data: any) {   
+    const query = {
+      queryParams: {
+        b_id: data?.batchId ,         
+      },
+    };
+    this.route.navigate(['/financial-management/vendor-refund/batch/batch-log-list'], query );
+  }
 }

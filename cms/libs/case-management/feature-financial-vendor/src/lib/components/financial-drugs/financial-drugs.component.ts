@@ -38,7 +38,7 @@ export class FinancialDrugsComponent {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isDrugsGridLoaderShow = false;
   public state!: State;
-  dialogTitle = "Add New";
+  dialogTitle = "Add";
   filters: any = [];
   isFiltered = false;
   yesOrNoLovs: any = [];
@@ -173,8 +173,8 @@ export class FinancialDrugsComponent {
 
   clickOpenAddEditFinancialDrugsDetails(title: string) {
     this.dialogTitle = title;
-    if (title === "Add New") {
-      this.dialogTitle = this.hasCreateUpdatePermission ? "Add New" : "Request New";
+    if (title === "Add") {
+      this.dialogTitle = this.hasCreateUpdatePermission ? "Add" : "Request New";
     }
 
     this.isFinancialDrugsDetailShow = true;
@@ -344,10 +344,15 @@ export class FinancialDrugsComponent {
     }
   }
 
- 
-  addDrug(data : any)
-  {    
-    this.drugsFacade.addDrugData(data)
+  addDrug(data: any): void {
+    this.drugsFacade.addDrugData(data).subscribe(() => {
+      // After adding the drug, refresh the grid data or perform any other action
+      this.loadDrugsListGrid();
+      
+      // Emit an event to notify other parts of the application that a drug has been added
+      this.drugsFacade.drugAdded$().subscribe(() => {
+        // Handle the drug added event here
+      });
+    });
   }
-  
 }

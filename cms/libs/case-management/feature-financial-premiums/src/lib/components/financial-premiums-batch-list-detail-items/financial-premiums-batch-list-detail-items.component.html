@@ -27,16 +27,16 @@
                         <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
                   </ng-template>
                   <p class="mt-2">Make adjustments to the items below as needed. Click "Confirm Changes" when you're ready to request payment</p>
-                  <div class="grey-banner-section mt-2" *ngIf ="premiumPaymentDetails?.paymentStatusDate != null">
+                  <div class="grey-banner-section mt-2" *ngIf ="premiumPaymentDetails?.paymentSentDate != null">
                         <div class="flex-row">
                               <button aria-label="Edit" kendoButton look="flat" class="edit-btn card-link-button" (click)="onPaymentDetailFormClicked(paymentDetailsFromTemplate)" > Edit </button>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Reconciled</small>
-                              <p>{{premiumPaymentDetails?.paymentStatusDate | date:'dd/MM/yyyy'}}</p>
+                              <p>{{premiumPaymentDetails?.paymentReconciledDate | date:'MM/dd/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Date Payment Sent</small>
-                              <p>{{premiumPaymentDetails?.sentDate | date:'dd/MM/yyyy'}}</p>
+                              <p>{{premiumPaymentDetails?.paymentSentDate | date:'MM/dd/yyyy'}}</p>
                         </div>
                         <div class="flex-col flex-col-2">
                               <small>Payment Amount</small>

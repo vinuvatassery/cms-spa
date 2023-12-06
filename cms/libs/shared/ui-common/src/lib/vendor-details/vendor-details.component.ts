@@ -64,7 +64,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   clinicNameNotApplicable: boolean = false;
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  tinMaskFormat: string = '0 00-0000000';
+  tinMaskFormat: string = '0 00-000000';
   specialhandlingCounter!: string;
   specialHandlingCharachtersCount!: number;
   specialHandlingMaxLength = 100;
@@ -92,14 +92,15 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     if (clinicName === '' || !clinicName) {
       this.clinicVendorListLocal = null;
       return;
-    }
-
+    } 
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
       if (data && clinicName !== '') {
-        if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders
-          || this.providerType === FinancialVendorTypeCode.HealthcareProviders) {
+        if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
-        } else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
+        } else if (this.providerType === FinancialVendorTypeCode.HealthcareProviders) {
+          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic 
+          || item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic );
+        }else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
         }
         this.clinicVendorListLocal = this.clinicVendorListLocal.filter((item: any) => item.vendorName.toLowerCase().includes(clinicName.toLowerCase()));
@@ -465,7 +466,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.markAllAsTouched();
     if (this.vendorTypes.DentalProviders == this.providerType || this.vendorTypes.MedicalProviders == this.providerType
       || this.vendorTypes.DentalClinic == this.providerType || this.vendorTypes.MedicalClinic == this.providerType) {
-      if (this.vendorDetails.vendorName) {
+      if (this.vendorDetails.vendorName && this.vendorDetails.vendorTypeCode != this.vendorTypes.DentalProviders) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }
@@ -480,7 +481,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
-    if (this.vendorTypes.Pharmacy == this.providerType) {
+    if (this.vendorTypes.Pharmacy != this.providerType) {
       this.medicalProviderForm.controls['npiNbr'].setValidators([Validators.required]);
       this.medicalProviderForm.controls['npiNbr'].updateValueAndValidity();
     }
@@ -527,7 +528,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       nameOnEnvelope: formValues.nameOnEnvolop,
       paymentMethodCode: formValues.paymentMethod,
       clinicType: formValues.clinicType,
-      specialHandling: formValues.specialHandling,
+      specialHandlingDesc: formValues.specialHandlingDesc,
       phoneTypeCode: AddressType.Mailing,
       vendorContacts: this.vendorContactList,
       AcceptsReportsFlag: (formValues.isAcceptReports != null && formValues.isAcceptReports != '') ? formValues.isAcceptReports : null,
@@ -675,6 +676,10 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   restrictAccountingNumber() {
+    if(this.providerType == this.vendorTypes.Pharmacy && this.medicalProviderForm.controls['tinNumber'].value==''){
+      this.accountingNumberValidated = true;
+      return;
+    }
     if (this.medicalProviderForm.controls['tinNumber'].value && (parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 3)) {
       this.accountingNumberValidated = true;
     } else {

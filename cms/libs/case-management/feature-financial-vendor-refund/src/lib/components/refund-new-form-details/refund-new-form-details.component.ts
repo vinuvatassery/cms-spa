@@ -5,11 +5,10 @@ import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, Serv
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
-import {  VednorRefundTpaClaimsListComponent,VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
+import {  VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { IFrameService } from 'angular-auth-oidc-client/lib/iframe/existing-iframe.service';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -85,7 +84,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   tpaAddRefundClickSubject = new Subject<any>();
   tpaAddRefundClick$ = this.tpaAddRefundClickSubject.asObservable()
 
-  
+
   selectDiffPaymentClicked = new Subject<any>();
   selectDiffPaymentClicked$ = this.selectDiffPaymentClicked.asObservable()
 
@@ -115,7 +114,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
 
  @Input() serviceType=''
  @Input() inspaymentRequestId:any
-  @Output() modalCloseAddEditRefundFormModal = new EventEmitter<Boolean>();
+  @Output() modalCloseAddEditRefundFormModal = new EventEmitter<boolean>();
   sortValue: string | undefined;
   financialPremiumsRefundGridLists: any;
   tpaRefundInformation :any
@@ -178,7 +177,7 @@ if(this.isEdit){
     this.selectedVendor = vendors
 
 
- 
+
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
   this.initForm()
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
@@ -217,21 +216,21 @@ if(this.isEdit){
     this.refundForm.patchValue({
       tpaVendor : this.selectedVendor
     });
-   
+
     this. tpavendors$.subscribe((res:any[])=>{
       const vendors = res.filter((x) =>{
         return x.vendorAddressId ==  this.vendorAddressId
-      
+
       })
       this.selectedVendor = vendors && vendors[0]
       this.vendorId = vendors[0].vendorId
       this.initForm()
     })
-  this.debouncedtpaVendors(this.vendorName) 
-  
+  this.debouncedtpaVendors(this.vendorName)
+
   this.financialVendorRefundFacade.tpaVendorsSubject.next([this.selectedVendor])
   this.isConfirmationClicked = true;
-  
+
   this.getTpaRefundInformation(this.inspaymentRequestId)
   this.refundForm.controls['tpaVendor'].disable();
   this.searchTpaVendors(this.vendorName)
@@ -373,7 +372,7 @@ onSelectedRxClaimsChangeEvent(event:any){
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
     this.financialPremiumsRefundGridLists =  res;
     })
-  
+
   }
 
 
@@ -386,7 +385,7 @@ onSelectedRxClaimsChangeEvent(event:any){
       response = res.data
       if(this.tpaRefundGridLists && this.tpaRefundGridLists.length>0){
         this.tpaRefundGridLists.forEach(element => {
-          var index =  response.findIndex(x=> x.paymentRequestId == element.paymentRequestId)
+          let index =  response.findIndex(x=> x.paymentRequestId == element.paymentRequestId)
           if(index>=0)
            response.splice(index)
       })
@@ -401,6 +400,7 @@ onSelectedRxClaimsChangeEvent(event:any){
         x.reconciledDate = new Date(x.reconciledDate)
         x.totalAmount = x.tpaInvoice.reduce((accumulator : number, obj : any) => accumulator + obj.serviceCost, 0);
       })
+      this.claimsCount = this.tpaRefundGridLists.length
     })
     if(this.isEdit){
      this.financialVendorRefundFacade.getTpaEditRefundInformation(data);
@@ -413,16 +413,17 @@ onSelectedRxClaimsChangeEvent(event:any){
     this.financialVendorRefundFacade.tpaRefundInformation$.subscribe(res =>{
     this.tpaRefundInformation =  res;
     })
- 
+
 
   }
-  
+
   }
 
 
 
 onCloseViewProviderDetailClicked(result: any){
   if(result){
+    this.modalCloseAddEditRefundFormModal.emit(false);
     this.providerDetailsDialog.close();
   }
 }
@@ -469,7 +470,7 @@ OnEditProviderProfileClick(){
 onAddRefundClick(){
   if (this.selectedRefundType === 'PHARMACY') {
     this.addNewRefundRx();
-  } 
+  }
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
       this.insuraceAddRefundClickSubject.next(true);
   }
@@ -503,16 +504,12 @@ addTpa(event:any){
     this.onEditInitiallydontShowPremiumselection = false
     this.inputConfirmationClicked= false
     this.isRefundGridClaimShow = true;
-    if(this.selectedRefundType == ServiceTypeCode.pharmacy){    
+    if(this.selectedRefundType == ServiceTypeCode.pharmacy){
     this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
     }
-
-    if(this.selectedRefundType == ServiceTypeCode.tpa){       
-    }
- 
   }
 
-  closeAddEditRefundFormModalClicked(event:Boolean){
+  closeAddEditRefundFormModalClicked(event:boolean){
     this.modalCloseAddEditRefundFormModal.emit(event);
   }
 
@@ -557,25 +554,24 @@ addTpa(event:any){
       this.clientId=null;
     }
   }
-  searchPharmacy(searchText: any) {;
+  searchPharmacy(searchText: any , ) {;
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText);
+    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
     this.vendorAddressId=null;
     if($event==undefined){
       this.vendorAddressId=null;
     }
-    this.vendorId=$event.vendorId;
-    this.vendorAddressId = $event.vendorAddressId;
-    this.vendorName = $event.vendorName;
-    this.vendorId = $event.vendorId
+    this.vendorId=$event?.vendorId;
+    this.vendorAddressId = $event?.vendorAddressId;
+    this.vendorName = $event?.vendorName;
     this.providerTin = $event;
     if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
-    } 
+    }
     this.selectedMedicalProvider = $event
   }
   initRefundForm() {
@@ -636,7 +632,18 @@ addTpa(event:any){
   claimsCountEvent(data:any){
 
     this.claimsCount=data;
+
   }
+
+  onTpaClaimsDelete(data:any){
+    this.claimsCount = data.length
+    this.tpaPaymentReqIds = data;
+    if(data.length<=0){
+      this.isConfirmationClicked = false;
+    }
+
+  }
+
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
     if(operation === "ADD"){
       this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>

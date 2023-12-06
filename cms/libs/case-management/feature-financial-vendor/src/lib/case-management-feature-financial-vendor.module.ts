@@ -54,6 +54,7 @@ import { FinancialClinicProviderListComponent } from './components/financial-cli
 import { FinancialClinicProviderRemoveComponent } from './components/financial-clinic-provider-remove/financial-clinic-provider-remove.component';
 import { FinancialClinicProviderDetailsComponent } from './components/financial-clinic-provider-details/financial-clinic-provider-details.component';
 import { InvoiceServiceComponent } from './components/invoice-service/invoice-service.component';
+import { CaseManagementFeatureFinancialClaimsModule } from '@cms/case-management/feature-financial-claims';
 @NgModule({
   imports: [
     CaseManagementDomainModule,
@@ -65,6 +66,7 @@ import { InvoiceServiceComponent } from './components/invoice-service/invoice-se
     ProductivityToolsFeatureEventLogModule,
     CaseManagementFeatureCommunicationModule,
     ProductivityToolsFeatureNotificationModule,
+    CaseManagementFeatureFinancialClaimsModule
   ],
   declarations: [
     FinancialVendorPageComponent,

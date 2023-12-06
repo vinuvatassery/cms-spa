@@ -141,6 +141,8 @@ export * from './lib/enums/user-role-type-enum';
 export * from './lib/enums/pending-approval-general-type-code.enum';
 export * from './lib/enums/general-approval-approve-deny.enum';
 export * from './lib/enums/drug-type.enum';
+export * from './lib/enums/column-names.enum'
+export * from './lib/enums/drug_unit_enum';
 export * from './lib/enums/financial-service-type.enum';
 
 /** Data services **/

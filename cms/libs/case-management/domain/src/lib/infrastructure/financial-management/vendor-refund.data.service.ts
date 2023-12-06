@@ -7,6 +7,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientCase } from '../../entities/client-case';
 import { Pharmacy } from '../../entities/client-pharmacy';
 import { Observable } from 'rxjs';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundDataService {
@@ -453,8 +454,12 @@ export class FinancialVendorRefundDataService {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds`,options);
   }
 
-  batchRefunds(batchId: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/batch`, batchId);
+  batchRefunds(PaymentRequestIds: string[]) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/batch`, {PaymentRequestIds});
+  }
+
+  batchAllRefunds(filterParams: GridFilterParam) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/payment-requests/batch-all`, filterParams);
   }
 
   unbatchRefunds(paymentRequestIds: string[]) {
@@ -484,10 +489,10 @@ export class FinancialVendorRefundDataService {
         `/financial-management/claims/medical/clients/SearchText=${text}`
     );
   }
-  loadPharmacyBySearchText(searchText: string,) {
+  loadPharmacyBySearchText(searchText: string , clientId:number) {
     return this.http.get<Pharmacy[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/claims/pharmacies/SearchText=${searchText}`
+        `/financial-management/claims/pharmacies/pharmacy/SearchText=${searchText}/${clientId}`
     );
   }
   loadTpavendorBySearchText(searchText: string,clientId:number) {
@@ -531,6 +536,22 @@ export class FinancialVendorRefundDataService {
     }
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/vendors/${data.vendorId}/clients/${data.clientId}/refund-tpa`,ClaimsPageAndSortedRequestDto);
   }
+
+  loadTPARefundLists(data:any): Observable<any> {
+
+    const ClaimsPageAndSortedRequestDto =
+    {
+      VendorId : data.vendorId,
+      ClientId : data.clientId,
+      SortType : data.sortType,
+      Sorting : data.sort,
+      SkipCount : data.skipCount,
+      MaxResultCount : data.pageSize,
+      Filter : data.filter
+    }
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendor-refunds/vendors/${data.vendorId}/clients/${data.clientId}/refund-tpa`,ClaimsPageAndSortedRequestDto);
+  }
+
   loadFinancialRecentRefundListService(data:any):Observable<any> {
     const RefundPageAndSortedRequestDto =
     {

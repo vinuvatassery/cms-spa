@@ -36,8 +36,8 @@ export class ImportedClaimService {
 
 
   loadPossibleMatch(event:any) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match?policyId=${event.policyId}&firstName=${event.firstName}&lastName=${event.lastName}&dateOfBirth=${event.dateOfBirth}`
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match`,event
     );
   }
 
@@ -68,6 +68,12 @@ export class ImportedClaimService {
     return this.http.put<any>(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/client-policy`,
       importedclaimDto
+    );
+  }
+
+  loadClientBySearchText(text: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/SearchText=${text}`
     );
   }
 }

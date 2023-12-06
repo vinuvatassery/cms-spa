@@ -50,7 +50,7 @@ vendorNameTitle ="Vendor Name"
 vendorNameTitleDataSubject = new Subject<any>();
 vendornameTitleData$ = this.vendorNameTitleDataSubject.asObservable();
 
-
+showTinSearchWarning = false;
 columns : any = {
   vendorName:"Vendor Name",
   tin:"Tin",
@@ -73,20 +73,30 @@ columns : any = {
 
 dropDowncolumns : any = [
   {
+    "columnCode": "ALL",
+    "columnDesc": "All Columns",
+    "vendorTypeCode": "ALL",
+  },
+  {
     "columnCode": "vendorName",
     "columnDesc": "Vendor Name"   ,
-    "vendorTypeCode": "ALL",
+    "vendorTypeCode":["INSURANCE_VENDOR","PHARMACY"],
+  },
+  {
+    "columnCode": "vendorName",
+    "columnDesc": "Provider Name"   ,
+    "vendorTypeCode": ["DENTAL_PROVIDER","MEDICAL_PROVIDER"],
+  },
+  {
+    "columnCode": "vendorName",
+    "columnDesc": "Manufacturer Name"   ,
+    "vendorTypeCode": ["MANUFACTURERS"],
   },
   {
     "columnCode": "tin",
-    "columnDesc": "Tin"   ,
+    "columnDesc": "TIN"   ,
     "vendorTypeCode": "ALL",
   },
-  {
-    "columnCode": "paymentMethod",
-    "columnDesc": "Payment Method"   ,
-    "vendorTypeCode": ["INSURANCE_VENDOR","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
-  }
   ,
   {
     "columnCode": "totalClaims",
@@ -178,7 +188,7 @@ ngOnInit(): void {
   this.bindDropdownClumns()
   if(!this.selectedColumn)
       {
-        this.selectedColumn = "vendorName";
+        this.selectedColumn = "ALL";
       }
 }
 
@@ -206,7 +216,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      sortType : sortTypeValue,
      vendorTypeCode : (this.vendorTypeCode == this.financeVendorTypeCodes.MedicalProviders 
       || this.vendorTypeCode == this.financeVendorTypeCodes.DentalProviders) 
-      ? this.vendorTypeCode + ',' + this.vendorTypeCode.split('_')[0] + '_CLINIC' : this.vendorTypeCode ,
+      ? this.vendorTypeCode + ',' + this.vendorTypeCode.split('_')[0] + '_CLINIC' +',' + this.financeVendorTypeCodes.Clinic : this.vendorTypeCode ,
      filter : this.state?.["filter"]?.["filters"] ?? []
    }
 
@@ -234,6 +244,18 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     || this.selectedColumn ==="totalDrugs")
     {
       operator = "eq"
+    }
+    if(this.selectedColumn ==="tin"){
+      let noOfhypen =   data.split("-").length - 1
+      let index = data.lastIndexOf("-")
+      if(noOfhypen>=1 && index!==2){
+        this.showTinSearchWarning = true;
+        return;
+      }else{
+        this.showTinSearchWarning = false
+       data = data.replace("-","")
+      }
+ 
     }
     this.filterData = {logic:'and',filters:[{
       "filters": [
@@ -265,6 +287,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
   }
 
   dataStateChange(stateData: any): void {
+    this.showTinSearchWarning = false;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc'
@@ -276,6 +299,18 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      if(stateFilter.field ==="tin"){
+        let noOfhypen =   stateFilter.value.split("-").length - 1
+        let index = stateFilter.value.lastIndexOf("-")
+        if(noOfhypen>=1 && index!==2){
+          this.showTinSearchWarning = true;
+          return;
+        }else{
+          this.showTinSearchWarning = false;
+          stateFilter.value = stateFilter.value.replace("-","")
+        }
+   
+      }
       this.filter = stateFilter.value;
       this.isFiltered = true;
       const filterList = []
@@ -324,7 +359,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
   {
 
  
-
+    this.showTinSearchWarning = false;
     this.sortColumn = 'Vendor Name';
     this.sortDir = 'Ascending';
     this.filter = "";

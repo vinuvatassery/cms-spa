@@ -13,49 +13,43 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, take } from 'rxjs';
 
 @Component({
-  selector: 'cms-financial-premiums-provider-info',
-  templateUrl: './financial-premiums-provider-info.component.html',
+  selector: 'cms-refund-claims-provider-info',
+  templateUrl: './refund-claims-provider-info.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPremiumsProviderInfoComponent {
-
+export class RefundClaimsProviderInfoComponent {
   @Output() closeViewProviderDetailClickedEvent = new EventEmitter();
   @Output() getProviderPanelEvent = new EventEmitter<any>();
   @Output() updateProviderProfileEvent = new EventEmitter<any>();
   @Output() onEditProviderProfileEvent = new EventEmitter<any>();
-  @Input() paymentMethodCode$ : Observable<any> | undefined;
+ 
   @Input()
   vendorProfile$: Observable<any> | undefined;
   @Input() updateProviderPanelSubject$ : Observable<any> | undefined;
   @Input() ddlStates$ : Observable<any> | undefined;
-
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   isEditProvider = false;
-  vendorProfile: any;
-  public isDisabled = true;
+  vendorProfile: any
   showAddressValidationLoader$= new BehaviorSubject(false);
+  @Input() paymentMethodCode$ : Observable<any> | undefined;
   profileForm = this.formBuilder.group({
     tin: [''],
     address: this.formBuilder.group({
       vendorAddressId: [''],
       paymentMethod: [''],
       address1: ['', Validators.required],
-      address2: ['',Validators.required],
+      address2: ['', Validators.required],
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
       zip: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
       specialHandlingDesc: [''],
-      mailCode: [{ value: '', disabled: true }],
-      acceptsCombinedPaymentsFlag:[''],
-      acceptsReportsFlag:['']
+      mailCode: [{ value: '', disabled: true }]
     }),
     contacts: new FormArray([])
   })
   isSubmitted: boolean = false
   @Input() paymentRequestId:any
-emailscount:number=0;
-  constructor(public formBuilder: FormBuilder,
+  constructor(public formBuilder: FormBuilder, 
     public activeRoute: ActivatedRoute,
     private route: Router,
     private readonly changeDetectorRef: ChangeDetectorRef) {
@@ -63,12 +57,13 @@ emailscount:number=0;
   }
 
   ngOnInit(): void {
-   this.paymentRequestId= this.paymentRequestId ? this.paymentRequestId : this.activeRoute.snapshot.queryParams['pid'];
+    
+   this.paymentRequestId= this.paymentRequestId? this.paymentRequestId: this.activeRoute.snapshot.queryParams['pid'];
     this.loadVendorInfo()
   }
 
   loadVendorInfo() {
-    this.vendorProfile$?.subscribe((res:any) => {
+    this.vendorProfile$?.subscribe(res => {
       this.changeDetectorRef.markForCheck()
       this.vendorProfile = res;
       this.isEditProvider = false
@@ -86,10 +81,8 @@ emailscount:number=0;
 
   createEmailsFormArray(contact: any): FormArray {
     let emails = new FormArray<FormGroup>([])
-
+   debugger
     if(contact.emails && contact.emails.length>0){
-      
-      this.emailscount=contact.emails.length;
     contact.emails.forEach((email: any) => {
       return emails.push(this.formBuilder.group({
         emailAddress: [email.emailAddress,Validators.required],
@@ -155,11 +148,10 @@ emailscount:number=0;
         mailCode: this.vendorProfile.address.mailCode,
         specialHandlingDesc: this.vendorProfile.address.specialHandlingDesc,
         paymentMethod: this.vendorProfile.address.paymentMethodCode,
-        acceptsCombinedPaymentsFlag : this.vendorProfile.address.acceptsCombinedPaymentsFlag,
-        acceptsReportsFlag :this.vendorProfile.address.acceptsReportsFlag
+      
       }
     });
-    this.createContactsFormArray()
+    this.createContactsFormArray() 
   }
 
   get addressForm(){
@@ -201,7 +193,7 @@ emailscount:number=0;
       let emailForm = control as unknown as FormGroup
       emails.push({
         emailAddress: emailForm.controls['emailAddress']?.value,
-        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,
+        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,  
         vendorContactId: emailForm.controls['vendorContactId']?.value
       })
     })
@@ -236,19 +228,16 @@ emailscount:number=0;
         specialHandlingDesc: this.profileForm?.controls.address.controls['specialHandlingDesc']?.value,
         paymentMethodCode: this.profileForm?.controls.address.controls['paymentMethod']?.value,
         address1: this.profileForm?.controls.address.controls['address1']?.value,
-        acceptsCombinedPaymentsFlag : this.profileForm?.controls.address.controls['acceptsCombinedPaymentsFlag'].value,
-        acceptsReportsFlag : this.profileForm?.controls.address.controls['acceptsReportsFlag'].value,
-
         address2: this.profileForm?.controls.address.controls['address2']?.value,
         cityCode: this.profileForm?.controls.address.controls['cityCode']?.value,
         stateCode: this.profileForm?.controls.address.controls['stateCode']?.value,
         zip: this.profileForm?.controls.address.controls['zip']?.value,
         contacts: this.getContactArrayFormValues()
-      }
+      }    
     }
     this.updateProviderProfileEvent.emit(providerPanelDto)
-    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{
-        this.loadVendorInfo();
+    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{       
+        this.loadVendorInfo(); 
     });
   }
 
@@ -262,19 +251,18 @@ emailscount:number=0;
   }
 
   onVendorProfileViewClicked() {
-
     const query = {
       queryParams: {
         v_id: this.vendorProfile.vendorId,
-        tab_code :FinancialVendorProviderTabCode.InsuranceVendors
+        tab_code: FinancialVendorProviderTabCode.MedicalProvider
       },
     };
+    this.closeViewProviderDetailClickedEvent.emit(true);
     this.route.navigate(['/financial-management/vendors/profile'], query)
     this.closeViewProviderClicked()
   }
 
 }
-
 
 
 

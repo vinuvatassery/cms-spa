@@ -49,11 +49,23 @@
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
       [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"
-      [sticky]="true"></kendo-grid-checkbox-column>
+      [sticky]="true">
+      <ng-template *ngIf="this.isProcessBatchClosed" kendoGridHeaderTemplate>
+        <input
+          type="checkbox"
+          kendoCheckBox
+          id="selectAllCheckboxId"
+          kendoGridSelectAllCheckbox
+          [state]="selectAllState"
+          (selectAllChange)="onSelectAllChange($event)"
+        />
+        <label class="k-checkbox-label" for="selectAllCheckboxId"></label>
+      </ng-template>
+    </kendo-grid-checkbox-column>
 
     <kendo-grid-column field="VendorName" title="Vendor Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button">
+        <button  [attr.aria-label]="dataItem.vendorName" (click)="onProviderNameClick(dataItem.paymentRequestId)"kendoButton look="flat" class="card-link-button">
           {{ dataItem.vendorName  }}
         </button>
       </ng-template>
@@ -259,7 +271,7 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span *ngIf="isProcessBatchClosed" class="">{{selectedProcessRefunds.length}} refunds(s) to be batched</span>
+  <span *ngIf="isProcessBatchClosed" class="">{{selectAllState === "checked" ? vendorRefundProcessGridLists.total : selectedProcessRefunds.length}} refunds(s) to be batched</span>
   <span *ngIf="isDeleteBatchClosed" class="">{{selectedProcessRefunds.length}} refunds(s) to be deleted</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchRefundsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
@@ -292,7 +304,7 @@
   <cms-batch-refund-confirmation
       (isModalBatchRefundsCloseClicked)="onModalBatchRefundsModalClose($event)"
       (isModalBatchRefundsButtonClicked)="onModalBatchRefundsButtonClicked($event)"
-      [selectedProcessRefundsCount]="selectedProcessRefunds.length">
+      [selectedProcessRefundsCount]="selectAllState === 'checked' ? vendorRefundProcessGridLists.total : selectedProcessRefunds.length">
     </cms-batch-refund-confirmation>
 </ng-template>
 <ng-template #deleteRefundConfirmationDialog>

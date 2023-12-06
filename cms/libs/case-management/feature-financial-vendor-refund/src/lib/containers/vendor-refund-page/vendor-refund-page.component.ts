@@ -1,5 +1,6 @@
 /** Angular **/
 import {  Component, TemplateRef, ViewChild } from '@angular/core';
+import {  Component, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
@@ -34,7 +35,11 @@ export class VendorRefundPageComponent
   vendorRefundProcessGridLists$ =
   this.financialVendorRefundFacade.vendorRefundProcessData$;
   vendorRefundBatchGridLists$ = this.financialVendorRefundFacade.vendorRefundBatchData$;
-
+  paymentDetails$ =  this.paymentFacade.paymentDetails$;
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$
   vendorRefundAllPaymentsGridLists$ = this.financialVendorRefundFacade.vendorRefundAllPaymentsData$;
 
   //provider panel
@@ -50,10 +55,11 @@ export class VendorRefundPageComponent
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade ,
     private documentFacade: DocumentFacade,
-    private dialogService: DialogService,
-    private readonly financialVendorFacade : FinancialVendorFacade,
     public contactFacade: ContactFacade,
     public lovFacade: LovFacade,
+    private paymentFacade:PaymentsFacade,
+    private readonly financialVendorFacade : FinancialVendorFacade,
+    private dialogService: DialogService,
   ) {}
 
   pageTitle = "Vendor Refunds";
@@ -61,7 +67,9 @@ export class VendorRefundPageComponent
   {
     this.pageTitle = data ?? "Vendor Refunds";
   }
-
+  getProviderPanel(event:any){
+    this.financialVendorFacade.getProviderPanel(event)
+  }
   loadVendorRefundProcessListGrid(event: any) {
 
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();

@@ -4,20 +4,20 @@
         <button aria-label="back to vendor refund" title="Go back" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)"> <span
             class="material-icons">
             arrow_back </span> </button>
-        <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}}</h1> <br />                  
+        <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}}</h1> <br />
     </div>
     <div class="d-flex" *ngIf="batch.sendBackNotes != null">
-      <span class="app-c-badge  mt-3" aria-label=""> 
-        {{ batch.sendBackNotes }}      
-      </span> 
-    </div>             
+      <span class="app-c-badge  mt-3" aria-label="">
+        {{ batch.sendBackNotes }}
+      </span>
+    </div>
 </section>
   <ng-template #loading>
     <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
   </ng-template>
   <section class="app-l-client-wrapper ">
     <section class="app-l-wrapper">
-      <p> Click "Bulk" to execute actions for one or more payments. Click on the item # to view the individual premiums for that payment.</p>
+      <p> Click "Bulk" to execute actions for one or more payments. Click on the item # to view the individual premiums for that payment. <span class="justify-content-end">{{totalPaymentsCount}} Payment(s) * {{totalReconciled}} Reconciled</span></p>
       <section class="table-filter-section mat-form-no-b-space">
         <span class="filter-section_items filter--select">
           <kendo-floatinglabel>
@@ -37,8 +37,8 @@
         </span>
         <span class="right-overlay-export">
           <button kendoButton [primary]="true" aria-label="Export"  look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-            <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
-            
+            <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+
             <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
           </button>
         </span>
@@ -51,7 +51,7 @@
           </span>
           <span *ngIf="showDateSearchWarning">
             The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
-          </span>          
+          </span>
         </span>
       </div>
       <!-- Sorted Info -->
@@ -73,18 +73,18 @@
           [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
           [data]="batchLogGridLists$ | async" (filterChange)="filterChange($event)" filterable="menu"
           [filter]="state.filter">
-          <kendo-grid-column  *ngIf="isPrintAdviceLetterClicked" [sortable]="false" field="add" [width]="40"  class="text-center" 
+          <kendo-grid-column  *ngIf="isPrintAdviceLetterClicked" [sortable]="false" field="add" [width]="40"  class="text-center"
           [sticky]="true" [sortable]="false"  [columnMenu]="false"  >
             <ng-template kendoGridHeaderTemplate let-dataItem >
                 <input kendoCheckBox
-                    type="checkbox" 
+                    type="checkbox"
                     name="selectAll"
                     [(ngModel)]="selectAll"
                     (change)="selectionAllChange()"/>
-            </ng-template> 
+            </ng-template>
             <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
                 <input kendoCheckBox *ngIf="dataItem.acceptsReports === 'Y'"
-                    type="checkbox"  [(ngModel)]="dataItem.selected" 
+                    type="checkbox"  [(ngModel)]="dataItem.selected"
                     (change)="selectionChange(dataItem,dataItem.selected)"/>
             </ng-template>
           </kendo-grid-column>
@@ -229,7 +229,7 @@
                 <span hidden> More Option</span>
                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                   <ng-container>
-                    <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"                    
+                    <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                       [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                       <span class="material-icons"
                         [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
@@ -243,9 +243,10 @@
           <ng-container *ngIf="!isPrintAdviceLetterClicked">
             <div *kendoGridDetailTemplate="let dataItem">
               <cms-financial-premiums-batches-log-invoice-lists
-                [paymentRequestId]="dataItem?.paymentRequestId"               
+                [paymentRequestId]="dataItem?.paymentRequestId"
                 [pageSizes]="pageSizes"
-                (loadFinancialPremiumBatchInvoiceListEvent)=loadFinancialPremiumBatchInvoiceList($event)>
+                (loadFinancialPremiumBatchInvoiceListEvent)=loadFinancialPremiumBatchInvoiceList($event)
+                (clientRecentPremiumClickedEvent)="clientRecentClaimsModalClicked(clientRecentPremiumsDialogTemplate,dataItem,$event)">
               </cms-financial-premiums-batches-log-invoice-lists>
             </div>
           </ng-container>
@@ -292,7 +293,7 @@
     *ngIf="isRequestPaymentClicked || isSendReportOpened || isPrintAdviceLetterClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
   <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked"
     (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-    <button kendoButton [primary]="true" aria-label="Preview" class="" *ngIf="isPrintAdviceLetterClicked" 
+    <button kendoButton [primary]="true" aria-label="Preview" class="" *ngIf="isPrintAdviceLetterClicked"
     [disabled]="selectedCount == 0" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
   <button kendoButton [primary]="true" aria-label="Send Report" class="" *ngIf="isSendReportOpened"
     (click)="onSendReportOpenClicked(sendReportDialogTemplate)"> Send Report </button>
@@ -371,8 +372,3 @@
   [letterContentLoader$]="letterContentLoader$"
   ></cms-financial-premiums-print-authorization>
   </ng-template>
-
-  <button aria-label="clientName" kendoButton look="flat" class="card-link-button" [hidden]="true"
-            (click)="clientRecentPremiumsModalClicked(clientRecentPremiumsDialogTemplate, null)">
-            Client Name
-          </button>

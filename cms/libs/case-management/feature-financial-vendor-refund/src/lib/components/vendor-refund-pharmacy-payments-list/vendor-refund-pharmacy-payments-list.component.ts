@@ -32,14 +32,17 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   @Input() sort: any;
   @Input() vendorId: any;
   @Input() clientId: any;
+  @Input() refundType: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
   @Input() claimsListData$: any;
-  private recentRefundListDataSubject  =  new Subject<any>();
-  RecentRefundsListData$ = this.recentRefundListDataSubject .asObservable();
-  recentRefundsListData$= this.financialVendorRefundFacade.recentRefundsListData$ 
+  private clientClaimsListDataSubject =  new Subject<any>();
+  clientClaimListData$ = this.clientClaimsListDataSubject.asObservable();
+  clientclaimsData$=this.financialVendorRefundFacade.clientClaimsListData$
+
   @Output() loadClaimsListEvent = new EventEmitter<any>();
-  
+
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -57,18 +60,18 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   gridVendorsRefundDataSubject = new Subject<any>();
   gridVendorsRefundData$ = this.gridVendorsRefundDataSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+
   @Output() selectedClaimsChangeEvent = new EventEmitter<any>();
   constructor(
     public financialVendorRefundFacade:FinancialVendorRefundFacade
   ) { }
- 
+
   ngOnInit(): void {
     this.loadFinancialRecentRefundListGrid();
   }
-  
+
   selectedKeysChange(selection: any) {
-    
+
     this.selectedClaimsChangeEvent.emit(selection)
     this.selectedPharmacyClaims = selection;
   }
@@ -81,7 +84,7 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
     };
     this.loadFinancialRecentRefundListGrid()
   }
-  
+
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
@@ -103,15 +106,16 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   }
 
   gridDataHandle() {
-    this.recentRefundsListData$.subscribe((data: GridDataResult) => {
+    this.clientclaimsData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.recentRefundListDataSubject.next(this.gridDataResult);
+      this.clientClaimsListDataSubject.next(this.gridDataResult);
     });
   }
   private loadFinancialRecentRefundListGrid(): void {
     this.loadRefundProcess(
       this.vendorId,
       this.clientId,
+      this.refundType,
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
@@ -121,6 +125,7 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   loadRefundProcess(
     vendorId: string,
     clientId: number,
+    refundType: string,
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
@@ -129,6 +134,7 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
     const gridDataRefinerValue = {
       vendorId: vendorId,
       clientId: clientId,
+      refundType: refundType,
       skipCount: skipCountValue,
       pageSize: maxResultCountValue,
       sort: sortValue,
@@ -139,6 +145,9 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
     this.gridDataHandle();
   }
   loadRecentRefundClaimsGrid(data: any) {
-    this.financialVendorRefundFacade.loadFinancialRecentRefundListGrid(data);
+    this.financialVendorRefundFacade.loadRefundClaimsListGrid(data);
+  }
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event.paymentRequestId)
   }
 }

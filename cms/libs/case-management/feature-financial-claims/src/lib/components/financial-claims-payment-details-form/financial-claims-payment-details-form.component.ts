@@ -63,8 +63,8 @@ import { Subscription } from 'rxjs';
   }
 
   paymentPanelLoadSubscription(){
-      this.medicalClaimPaymentForm.controls['datePaymentSent'].setValue(this.paymentPanelDetails?.sentDate != null?new Date(this.paymentPanelDetails.sentDate):null);
-      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentPanelDetails?.paymentStatusDate != null? new Date(this.paymentPanelDetails.paymentStatusDate):null);
+      this.medicalClaimPaymentForm.controls['datePaymentSent'].setValue(this.paymentPanelDetails?.paymentSentDate != null?new Date(this.paymentPanelDetails.paymentSentDate):null);
+      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentPanelDetails?.paymentReconciledDate != null? new Date(this.paymentPanelDetails.paymentReconciledDate):null);
       if(this.paymentPanelDetails?.amountPaid !== undefined && this.paymentPanelDetails?.amountPaid !== null){
         this.medicalClaimPaymentForm.controls['paymentAmount'].setValue(this.paymentPanelDetails?.amountPaid);
       }
@@ -169,8 +169,8 @@ import { Subscription } from 'rxjs';
     this.paymentPanel.CheckRequestId = this.paymentPanelDetails.checkRequestId;
     this.paymentPanel.PaymentRequestBatchId = this.paymentPanelDetails.paymentRequestBatchId;
     this.paymentPanel.PaymentRequestId = this.paymentPanelDetails.paymentRequestId;
-    this.paymentPanel.paymentStatusDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat); 
-    this.paymentPanel.sentDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentSent'].value, this.dateFormat); 
+    this.paymentPanel.paymentReconciledDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat); 
+    this.paymentPanel.paymentSentDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentSent'].value, this.dateFormat); 
     this.paymentPanel.amountPaid = this.medicalClaimPaymentForm.controls['paymentAmount'].value
     this.paymentPanel.checkNbr = this.medicalClaimPaymentForm.controls['warrantNumber'].value
     this.paymentPanel.notes = this.medicalClaimPaymentForm.controls['note'].value

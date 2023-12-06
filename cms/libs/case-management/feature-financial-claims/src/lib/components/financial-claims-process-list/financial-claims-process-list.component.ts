@@ -448,9 +448,15 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
+    
     if (result) {
       this.isDeleteBatchClosed = false;
+      this.isProcessGridExpand = true;
+      this.isDeleteBatchClosed = false;
+      this.isProcessBatchClosed = false;
+      this.selectedProcessClaims = [];
       this.deleteClaimsDialog.close();
+      this.cdr.detectChanges();
     }
   }
 

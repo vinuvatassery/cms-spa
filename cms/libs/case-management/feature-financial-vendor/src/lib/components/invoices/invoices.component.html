@@ -68,7 +68,7 @@
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
           [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
           [columnMenu]="{ filter: true }"(filterChange)="filterChange($event)" [filter]="state.filter"
-          [navigable]="true" [data]="invoiceGridView$ | async">  
+          [data]="invoiceGridView$ | async">  
               <kendo-grid-column field="batchName" title="Batch #" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                       <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"

@@ -12,6 +12,14 @@
                         <ng-template kendoTabContent>
                             <div class="block-section ">
                                 <cms-refund-process-list
+                                 (getProviderPanelEvent)="getProviderPanel($event)"
+                                 [vendorProfile$]="vendorProfile$"
+                                 (updateProviderProfileEvent) ="updateProviderProfile($event)"
+                                 [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+                                 [ddlStates$]="ddlStates$"
+                                 (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+                                 [paymentMethodCode$]=" paymentMethodCode$"
+                                 (onProviderNameClickEvent)="onProviderNameClick($event)"
                                 [vendorRefundProcessGridLists$]="vendorRefundProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundProcess"
                                 [sortType]="sortType" [sort]="sortProcessList"
@@ -48,8 +56,17 @@
                                 [exportButtonShow$]="exportButtonShow$"
                                 (exportGridDataEvent)="exportAllRefundsGridData()"
                                 (exportReceiptDataEvent)="exportReceiptDataEvent($event)"
-                                (changeTitle)="changeTitle($event)"></cms-refund-all-payment-list>
-                            </div>
+                                (changeTitle)="changeTitle($event)"
+                              (getProviderPanelEvent)="getProviderPanel($event)"
+                              [vendorProfile$]="vendorProfile$"
+                              (updateProviderProfileEvent) ="updateProviderProfile($event)"
+                              [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+                              [ddlStates$]="ddlStates$"
+                              (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+                              [paymentMethodCode$]=" paymentMethodCode$"
+                              (onProviderNameClickEvent)="onProviderNameClick($event)"
+                              ></cms-refund-all-payment-list>
+                               </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
                 </kendo-tabstrip>
@@ -66,4 +83,14 @@
             [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
     </ng-template>
 </div>
+<ng-template #providerDetailsTemplate>
+    <cms-refund-claims-provider-info
+    [paymentRequestId]="paymentRequestId"
+    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+    (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+    [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+    [paymentMethodCode$]="paymentMethodCode$">
+        </cms-refund-claims-provider-info>
+  </ng-template>
 
