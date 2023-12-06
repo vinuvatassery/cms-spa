@@ -5,7 +5,7 @@ import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, Serv
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
-import { VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
+import {  VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -114,7 +114,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
 
  @Input() serviceType=''
  @Input() inspaymentRequestId:any
-  @Output() modalCloseAddEditRefundFormModal = new EventEmitter<Boolean>();
+  @Output() modalCloseAddEditRefundFormModal = new EventEmitter<boolean>();
   sortValue: string | undefined;
   financialPremiumsRefundGridLists: any;
   tpaRefundInformation :any
@@ -384,7 +384,7 @@ onSelectedRxClaimsChangeEvent(event:any){
       response = res.data
       if(this.tpaRefundGridLists && this.tpaRefundGridLists.length>0){
         this.tpaRefundGridLists.forEach(element => {
-          var index =  response.findIndex(x=> x.paymentRequestId == element.paymentRequestId)
+          let index =  response.findIndex(x=> x.paymentRequestId == element.paymentRequestId)
           if(index>=0)
            response.splice(index)
       })
@@ -422,6 +422,7 @@ onSelectedRxClaimsChangeEvent(event:any){
 
 onCloseViewProviderDetailClicked(result: any){
   if(result){
+    this.modalCloseAddEditRefundFormModal.emit(false);
     this.providerDetailsDialog.close();
   }
 }
@@ -504,10 +505,10 @@ addTpa(event:any){
     this.isRefundGridClaimShow = true;
     if(this.selectedRefundType == ServiceTypeCode.pharmacy){    
     this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
-    } 
+    }
   }
 
-  closeAddEditRefundFormModalClicked(event:Boolean){
+  closeAddEditRefundFormModalClicked(event:boolean){
     this.modalCloseAddEditRefundFormModal.emit(event);
   }
 
@@ -552,11 +553,11 @@ addTpa(event:any){
       this.clientId=null;
     }
   }
-  searchPharmacy(searchText: any) {;
+  searchPharmacy(searchText: any , ) {;
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText);
+    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
     this.vendorAddressId=null;
