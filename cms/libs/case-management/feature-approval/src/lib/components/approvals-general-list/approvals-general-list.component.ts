@@ -320,13 +320,13 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   getMasterlistTitle(subTypeCode: string) {
     switch (subTypeCode) {
       case PendingApprovalGeneralTypeCode.DentalClinic:
-        return 'Request to add Dental Clinics To Master List';
+        return 'Request to add new Dental Clinics to the list';
       case PendingApprovalGeneralTypeCode.MedicalClinic:
-        return 'Request to add Medical Clinics To Master List';
+        return 'Request to add new Medical Clinics to the list';
       case PendingApprovalGeneralTypeCode.MedicalProvider:
-        return 'Request to add Medical Providers To Master List';
+        return 'Request to add new Medical Providers to the list';
       case PendingApprovalGeneralTypeCode.DentalProvider:
-        return 'Request to add Dental Providers To Master List';
+        return 'Request to add new Dental Providers to the list';
       case PendingApprovalGeneralTypeCode.InsuranceVendor:
         return 'Request to Add new Insurance Vendor to the list';
       case PendingApprovalGeneralTypeCode.Pharmacy:
@@ -335,6 +335,8 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         return 'Request to Add New Drug to the list';
       case PendingApprovalGeneralTypeCode.InsurancePlan:
         return 'Request to Add new Insurance Plan to the list';
+      case PendingApprovalGeneralTypeCode.InsuranceProvider:
+        return 'Request to Add new Insurance Provider to the list';
     }
     return null;
   }
