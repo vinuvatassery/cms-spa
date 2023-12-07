@@ -166,7 +166,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
         );
         this.onCloseDeleteConfirmClicked();
         this.loaderService.hide()
-        this.router.navigateByUrl(`dashboard`);
+        this.router.navigateByUrl(`case-management/cases`);
       },
       error: (error: any) => {
         if (error) {

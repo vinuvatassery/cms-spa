@@ -58,7 +58,8 @@
   (filterChange)="filterChange($event)" [selectable]="selectableSettings"
   kendoGridSelectBy="paymentRequestId"
   (selectedKeysChange)="selectedKeysChange($event)"
-  [(selectedKeys)]="selectedProcessClaims">
+  [(selectedKeys)]="selectedProcessClaims"
+  (pageChange)="pageChange($event)">
 
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
       [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"

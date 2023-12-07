@@ -13,6 +13,7 @@
     [loading]="isFinancialClaimsRecentClaimGridLoaderShow"
     (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)"
+    [filter]="state.filter"
     [rowClass]="rowClass"
     (columnVisibilityChange)="columnChange($event)">
     <kendo-grid-column field="invoiceId" title="Invoice ID" [width]="120" [sticky]="true">
