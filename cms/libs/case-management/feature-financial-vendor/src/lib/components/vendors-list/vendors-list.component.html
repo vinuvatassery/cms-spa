@@ -24,6 +24,17 @@
   </span>
 </section>
 
+<div class="table-sorted-info">
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showTinSearchWarning">       
+        <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+              warning
+        </span>
+        <span>
+              In correct TIN format .
+        </span>
+  </span>   
+</div>
+
 <!-- Sorted Info -->
 <div class="table-sorted-info">
   Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>

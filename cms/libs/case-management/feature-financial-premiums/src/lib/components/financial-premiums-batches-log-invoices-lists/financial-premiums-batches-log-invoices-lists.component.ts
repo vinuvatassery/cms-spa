@@ -14,20 +14,22 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsBatchesLogInvoiceListsComponent  implements OnChanges
-{ 
+{
    @Input() paymentRequestId : any
 
    @Input() pageSizes : any
    @Output() loadFinancialPremiumBatchInvoiceListEvent = new EventEmitter<any>();
+   @Output() clientRecentPremiumClickedEvent = new EventEmitter<any>();
    gridFinancialPremiumInvoiceSubject = new Subject<any>();
    gridFinancialPremiumInvoice$ =  this.gridFinancialPremiumInvoiceSubject.asObservable();
 
    private batchLogServicesDataSubject =  new Subject<any>();
    batchLogServicesDataList$ = this.batchLogServicesDataSubject.asObservable();
 
-   
+
+
    isFinancialPremiumInvoiceGridLoaderShow = false
-   public state!: State;  
+   public state!: State;
    sortType ="asc"
    sort = 'clientFullName'
    gridDataResult!: GridDataResult;
@@ -35,10 +37,11 @@ export class FinancialPremiumsBatchesLogInvoiceListsComponent  implements OnChan
 
    constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
-   
+
   ) {}
 
-      ngOnChanges(): void {            
+
+      ngOnChanges(): void {
         this.state = {
           skip: 0,
           take: 5,
@@ -47,7 +50,7 @@ export class FinancialPremiumsBatchesLogInvoiceListsComponent  implements OnChan
               field: 'clientFullName',
             },
           ]
-        };    
+        };
         this.loadFinancialInvoiceListGrid();
       }
 
@@ -65,13 +68,13 @@ export class FinancialPremiumsBatchesLogInvoiceListsComponent  implements OnChan
           skipCount: skipCountValue,
           pagesize: maxResultCountValue,
           sortColumn: sortValue,
-          sortType: sortTypeValue    
+          sortType: sortTypeValue
         };
         this.loadFinancialPremiumBatchInvoiceListEvent.emit(gridDataRefinerValue);
         this.loadPremiumServicesByPayment('medical'  ,paymentRequestId, gridDataRefinerValue)
       }
 
-      loadPremiumServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {  
+      loadPremiumServicesByPayment(premiumType : string ,paymentId : string, paginationParameters : any) {
         this.financialPremiumsFacade.loadPremiumSubListServicesByPayment(premiumType ,paymentId ,paginationParameters )
         .subscribe({
           next: (dataResponse : any) => {
@@ -79,17 +82,17 @@ export class FinancialPremiumsBatchesLogInvoiceListsComponent  implements OnChan
               data: dataResponse['items'],
               total: dataResponse['totalCount'],
             };
-            this.batchLogServicesDataSubject.next(gridView);         
+            this.batchLogServicesDataSubject.next(gridView);
             this.isFinancialPremiumInvoiceGridLoaderShow = false;
-           
+
           },
           error: (err) => {
-            this.financialPremiumsFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;          
+            this.financialPremiumsFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
           },
         });
       }
-   
-    
+
+
       loadFinancialInvoiceListGrid()
       {
         this.loadPremiumBatchesInvoices(
@@ -109,8 +112,12 @@ export class FinancialPremiumsBatchesLogInvoiceListsComponent  implements OnChan
       }
 
       dataStateChange(stateData : any)
-      {     
-        this.state = stateData;       
+      {
+        this.state = stateData;
         this.loadFinancialInvoiceListGrid();
+      }
+
+      clientRecentPremiumModalClicked(data:any){
+        this.clientRecentPremiumClickedEvent.emit(data);
       }
 }

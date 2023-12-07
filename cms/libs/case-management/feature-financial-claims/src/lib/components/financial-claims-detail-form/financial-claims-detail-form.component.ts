@@ -61,61 +61,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   isShowReasonForException = false;
   pcaExceptionDialogService: any;
   chosenPcaForReAssignment: any;
-  clientSearchResult = [
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-  ];
-
-  providerSearchResult = [
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-  ];
+  private deletedServices : string[] = [];
 
   clientSearchLoaderVisibility$ =
     this.financialClaimsFacade.clientSearchLoaderVisibility$;
@@ -570,16 +516,25 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         this.isRecentClaimShow = true;
       }
       this.showServicesListForm= true ;
+      this.checkForChildClaimFlags(true);
     }
   }
   removeService(i: number) {
-    if(this.isEdit && this.addClaimServicesForm.length == 1)
-    {
-       this.addClaimServicesForm.reset();
+    let servicCount = 0;;
+    for(let service of this.claimForm.value.claimService) {
+      if (service.tpaInvoiceId) {
+        servicCount++;
+      }
     }
+    if(servicCount == 1){
+      let form = this.addClaimServicesForm.controls[i];
+      form.reset();
+      return;
+    }
+    
     if(this.addClaimServicesForm.length > 1 ){
-    let form = this.addClaimServicesForm.value[i]
-    this.deleteClaimService(form.tpaInvoiceId);
+    let form = this.addClaimServicesForm.value[i];
+    this.deletedServices.push(form.tpaInvoiceId);
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
     }
@@ -685,6 +640,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       pcaAssignmentId: null,
       isPcaReassignmentNeeded: null,
       tpaInvoices: [{}],
+      deletedInvoices : this.deletedServices
     };
     let checkDeniedClaim = false;
     for (let element of formValues.claimService) {
@@ -1192,7 +1148,7 @@ duplicatePaymentObject:any = {};
       this.claimForm.controls['providerNotEligibleExceptionFlag']?.setValue(false);
       this.claimForm.controls['parentExceptionTypeCode'].setValue('');
       this.claimForm.controls['parentExceptionFlag']?.setValue(StatusFlag.No);
-      this.checkForChildClaimFlags();
+      this.checkForChildClaimFlags(false);
     }
     this.cd.detectChanges();
   }
@@ -1260,7 +1216,7 @@ duplicatePaymentObject:any = {};
       startDate = null;
       endDate = null;
     }
-    if (cptCode && clientId) {
+    if (cptCode && clientId && startDate && endDate) {
       this.financialClaimsFacade.checkGroupException(startDate,endDate, clientId,cptCode, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
@@ -1356,8 +1312,17 @@ duplicatePaymentObject:any = {};
     this.duplicatePaymentObject.serviceEndDate = this.addClaimServicesForm.at(0).get('serviceEndDate')?.value;
   }
 
-  checkForChildClaimFlags()
+  checkForChildClaimFlags(ineligibleCheck : boolean)
   {
+    if(ineligibleCheck)
+    {
+      this.addClaimServicesForm.controls.forEach((element, index) => {
+        let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
+        let startDate = serviceFormData.controls['serviceStartDate'].value;
+        let endDate = serviceFormData.controls['serviceEndDate'].value;
+        this.checkIneligibleEception(startDate, endDate, index);
+      });
+    }
     this.addClaimServicesForm.controls.forEach((element, index) => {
       this.loadServiceCostMethod(index);
       this.checkOldInvoiceException(index);

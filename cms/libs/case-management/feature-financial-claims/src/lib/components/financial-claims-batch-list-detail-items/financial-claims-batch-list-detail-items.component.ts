@@ -19,7 +19,7 @@ import {
 import { Observable, Subject, debounceTime } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridFilterParam, PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, GridFilterParam, PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { LovFacade } from '@cms/system-config/domain';
 @Component({
@@ -77,6 +77,11 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Input() exportButtonShow$:any
   columnChangeDesc = 'Default Columns'
   selectedSearchColumn='creationTime';
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  addClientRecentClaimsDialog: any;
+  vendorId: any;
+  clientId: any;
+  clientName: any;
 
   gridColumns : {[key: string]: string} = {
             clientFullName: 'Client Name',
@@ -108,7 +113,8 @@ private searchSubject = new Subject<string>();
   constructor(private route: Router, private dialogService: DialogService, 
     public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef,
-    private lovFacade :  LovFacade) {
+    private lovFacade :  LovFacade,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,) {
       this.searchColumnList = []
     }
   
@@ -423,5 +429,34 @@ private searchSubject = new Subject<string>();
        this.cd.detectChanges()
       }
     })
+  }
+
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown>,
+    data: any
+  ): void {
+    this.addClientRecentClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientFullName;
+  }
+
+  closeRecentClaimsModal(result: any) {
+    if (result) {
+      this.addClientRecentClaimsDialog.close();
+    }
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentClaimsModal(true);
   }
 }

@@ -232,8 +232,8 @@
                           <span hidden> More Option</span>
                           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
                               let-buttondataItem>
-                              <ng-container>
-                                <div *ngIf="dataItem.activeFlag ==='Y' ; else deactivateButton">
+                              <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete Address') || (dataItem.activeFlag == 'Y')">
+                                <div>
                                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                                       [class]="buttondataItem.buttonType" aria-hidden="false"
 
@@ -306,7 +306,7 @@
       Address
     </button>
 
-    <button kendoButton [disabled]="IsAddContactDisabled" aria-label="Contact"   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
+    <button kendoButton aria-label="Contact"   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
         Contact
       </button>
   </div>
