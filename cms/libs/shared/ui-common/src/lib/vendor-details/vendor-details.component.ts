@@ -230,6 +230,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     else {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+      this.medicalProviderForm.controls['city'].setValidators([Validators.pattern('^[A-Za-z ]+$')]);
+      this.medicalProviderForm.controls['city'].updateValueAndValidity();
     }
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     this.validateMailCode()
@@ -481,11 +483,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
-    if (this.vendorTypes.Pharmacy != this.providerType) {
-      this.medicalProviderForm.controls['npiNbr'].setValidators([Validators.required]);
-      this.medicalProviderForm.controls['npiNbr'].updateValueAndValidity();
-    }
-
+    
   }
 
   mapAddressContact(formValues: any) {

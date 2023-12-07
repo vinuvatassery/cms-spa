@@ -54,7 +54,6 @@ showTinSearchWarning = false;
 columns : any = {
   vendorName:"Vendor Name",
   tin:"Tin",
-  paymentMethod:"Payment Method",
   totalPayments:"Total Payments",
   unreconciledPayments:"Unreconciled Payments",
   insurancePlans:"Insurance Plans",
