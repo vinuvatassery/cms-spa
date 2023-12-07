@@ -60,18 +60,18 @@
     [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
     (columnReorder)="onColumnReorder($event)"
     (filterChange)="filterChange($event)" [data]="financialPremiumsAllPaymentsGridLists$ | async">
-    <kendo-grid-column  *ngIf="isPrintAdviceLetterClicked" [sortable]="false" field="add" [width]="40"  class="text-center" 
+    <kendo-grid-column  *ngIf="isPrintAdviceLetterClicked" [sortable]="false" field="add" [width]="40"  class="text-center"
     [sticky]="true" [sortable]="false"  [columnMenu]="false"  >
       <ng-template kendoGridHeaderTemplate let-dataItem >
           <input kendoCheckBox
-              type="checkbox" 
+              type="checkbox"
               name="selectAll"
               [(ngModel)]="selectAll"
               (change)="selectionAllChange()"/>
-      </ng-template> 
+      </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
           <input kendoCheckBox *ngIf="dataItem.acceptsReportsFlag === 'Y'"
-              type="checkbox"  [(ngModel)]="dataItem.selected" 
+              type="checkbox"  [(ngModel)]="dataItem.selected"
               (change)="selectionChange(dataItem, dataItem.selected)"/>
       </ng-template>
     </kendo-grid-column>
@@ -157,14 +157,14 @@
         {{dataItem.paymentRequestedDate | date:'MM/dd/yyyy'}}
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <common-grid-cell-date-range-filter 
-        [field]="'paymentRequestedDate'" 
+        <common-grid-cell-date-range-filter
+        [field]="'paymentRequestedDate'"
         [filter]="filter"
           [filterService]="filterService">
         </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
-    
+
     <kendo-grid-column field="paymentSentDate" title="Date Payment Sent" [width]="180">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.paymentSentDate | date:'MM/dd/yyyy'}}
@@ -301,7 +301,7 @@
     *ngIf="isRequestPaymentClicked || isSendReportOpened || isPrintAdviceLetterClicked" (click)="onBulkOptionCancelClicked()"> Cancel </button>
   <button kendoButton [primary]="true" aria-label="Preview Requests" class="" *ngIf="isRequestPaymentClicked"
     (click)="onPreviewSubmitPaymentOpenClicked(previewSubmitPaymentDialogTemplate)"> Preview Requests </button>
-    <button kendoButton [primary]="true" aria-label="Preview" class="" *ngIf="isPrintAdviceLetterClicked" 
+    <button kendoButton [primary]="true" aria-label="Preview" class="" *ngIf="isPrintAdviceLetterClicked"
     [disabled]="selectedCount == 0" (click)="onPrintAuthorizationOpenClicked(PrintAuthorizationDialogTemplate)"> Preview </button>
   <button kendoButton [primary]="true" aria-label="Send Report" class="" *ngIf="isSendReportOpened"
     (click)="onSendReportOpenClicked(sendReportDialogTemplate)"> Send Report </button>
