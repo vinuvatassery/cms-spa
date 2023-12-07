@@ -1,25 +1,37 @@
 {
-  "name": "..-libs-system-interface-domain",
+  "name": "system-interface-domain",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/system-interface/domain/src",
   "prefix": "system-interface",
   "tags": ["domain:system-interface", "type:domain-logic"],
   "projectType": "library",
   "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": ["{workspaceRoot}/dist/libs/system-interface/domain"],
+      "options": {
+        "project": "libs/system-interface/domain/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": true
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/system-interface/domain/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/system-interface/domain/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "libs/system-interface/domain/jest.config.ts",
         "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
       }
-    },
+    }, 
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],

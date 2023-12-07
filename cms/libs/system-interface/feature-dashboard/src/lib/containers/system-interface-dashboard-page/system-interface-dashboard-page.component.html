@@ -1,1 +1,116 @@
-<p>system-interface-dashboard-page works!</p>
+<common-bread-crumb></common-bread-crumb>
+<div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+  <!-- Main Title Section -->
+  <div class="app-l-mainTittle" kendoRippleContainer>
+    <h2>
+
+      <span class="material-icons sidebar-menu_icon" aria-hidden="true">
+        insights
+      </span>
+      System Interface Dashboard
+    </h2>
+  </div>
+  <section class="pt-2">
+    <div class="interface-chart-wrapper">
+      <div class="interface-chart-cards">
+        <h3 class="mb-1">Client Records Sent</h3>
+        <kendo-chart style=" height: 200px;">
+
+          <kendo-chart-category-axis>
+            <kendo-chart-category-axis-item [labels]="{ format: 'd', rotation: 'auto' }"
+              [categories]="['05/01/21', '05/02/21', '05/03/21', '05/04/21', '05/05/21', '05/06/21', '05/07/21', '05/08/21', '05/09/21']">
+            </kendo-chart-category-axis-item>
+          </kendo-chart-category-axis>
+          <kendo-chart-series>
+            <kendo-chart-series-item color="#005994" [gap]="2" [spacing]=".25"
+              [data]="[10, 12, 23, 34, 12, 23, 10, 12, 23]">
+            </kendo-chart-series-item>
+            <kendo-chart-series-item [style]="'smooth'" type="line" color="#005994"  
+            [data]="[10, 12, 23, 34, 12, 23, 10, 12, 23]">
+          </kendo-chart-series-item>
+          </kendo-chart-series>
+          <kendo-chart-tooltip> </kendo-chart-tooltip>
+        </kendo-chart>
+      </div>
+      <div class="interface-chart-cards">
+        <h3 class="mb-1">Prescription Fill Loading</h3>
+        <div class="flex-row">
+          <div class="flex-col flex-col-8">
+
+            <h5> Latest File Received: </h5>
+            <h3> 05/07/2021</h3>
+
+            <h5> Total Record Received: </h5>
+            <h3> 456</h3>
+
+            <h5> File Record Failures: </h5>
+            <h3>0</h3>
+
+            <div class="mt-2"> <button kendoButton aria-label="View Details" [primary]="true" look="flat"> View Details
+              </button></div>
+          </div>
+          <div class="flex-col flex-col-4">
+
+            <span class="material-icons green-text-color status_icon">
+              check_circle_outline
+            </span>
+          </div>
+        </div>
+
+      </div>
+      <div class="interface-chart-cards">
+        <h3 class="mb-1">Cards Request</h3>
+        <kendo-chart style=" height: 200px;">
+
+          <kendo-chart-category-axis>
+            <kendo-chart-category-axis-item [labels]="{ format: 'd', rotation: 'auto' }"
+              [categories]="['05/01/21', '05/02/21', '05/03/21', '05/04/21', '05/05/21', '05/06/21', '05/07/21', '05/08/21', '05/09/21']">
+            </kendo-chart-category-axis-item>
+          </kendo-chart-category-axis>
+          <kendo-chart-series>
+            <kendo-chart-series-item color="#ec891d" [gap]="2" [spacing]=".25"
+              [data]="[5, 15, 4, 15, 15, 23, 25, 13, 32]">
+            </kendo-chart-series-item>
+            <kendo-chart-series-item color="#f9dcbb" type="area"
+            [data]="[5, 15, 4, 15, 15, 23, 25, 13, 32]">
+          </kendo-chart-series-item>
+          </kendo-chart-series>
+          <kendo-chart-tooltip> </kendo-chart-tooltip>
+        </kendo-chart>
+      </div>
+      <div class="interface-chart-cards">
+        <h3 class="mb-1"> Order Data</h3>
+        <div class="flex-row">
+          <div class="flex-col flex-col-8">
+
+            <h5> Latest File Received:</h5>
+            <h3> 05/07/2021</h3>
+
+            <h5> Total Record Received:</h5>
+            <h3> 456</h3>
+
+            <h5> File Record Failures:</h5>
+            <h3>0</h3>
+
+            <div class="mt-2"> <button kendoButton aria-label="View Details" [primary]="true" look="flat"> View Details
+              </button></div>
+          </div>
+          <div class="flex-col flex-col-4">
+            <span class="material-icons warn-text-color status_icon">
+              warning_amber
+            </span>
+          </div>
+        </div>
+      </div>
+      <!-- Page Content Section -->
+    </div>
+    <div>
+      <div class="interface-chart-cards mt-2">
+        <h3 > Activity Log</h3>
+        <cms-system-interface-activity-log-lists [activityEventLogList$]="activityEventLogLists$"
+          [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
+          (loadActivityLogListEvent)="loadActivityEventLog()"></cms-system-interface-activity-log-lists>
+      </div>
+    </div>
+  </section>
+</div>

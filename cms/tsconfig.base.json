@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@cms/../libs/system-interface/domain": [
+      "@cms/system-interface/domain": [
         "libs/system-interface/domain/src/index.ts"
       ],
       "@cms/case-management/domain": [
