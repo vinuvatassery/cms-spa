@@ -368,7 +368,7 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     {
       VendorId : data.vendorId,
       ClientId : data.clientId,
-      includeServiceSubTypeFilter : data.includeServiceSubTypeFilter,
+      hasServiceSubTypeFilter : data.includeServiceSubTypeFilter,
       SortType : data.sortType,
       Sorting : data.sort,
       SkipCount : data.skipCount,
