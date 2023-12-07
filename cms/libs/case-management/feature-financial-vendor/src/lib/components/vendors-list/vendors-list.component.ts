@@ -100,13 +100,13 @@ dropDowncolumns : any = [
   {
     "columnCode": "totalClaims",
     "columnDesc": "Total Claims"   ,
-    "vendorTypeCode": ["DENTAL_PROVIDER","MEDICAL_PROVIDER"],
+    "vendorTypeCode": ["MEDICAL_PROVIDER"],
   }
   ,
   {
     "columnCode": "unreconciledClaims",
     "columnDesc": "Unreconciled Claims"   ,
-    "vendorTypeCode": ["PHARMACY","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
+    "vendorTypeCode": ["PHARMACY","MEDICAL_PROVIDER"],
   }
   ,
   {
@@ -141,7 +141,7 @@ dropDowncolumns : any = [
   {
     "columnCode": "address",
     "columnDesc": "Address"   ,
-    "vendorTypeCode":  ["MANUFACTURERS","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
+    "vendorTypeCode":  ["MANUFACTURERS","MEDICAL_PROVIDER"],
   },
   {
     "columnCode": "NpiNbr",

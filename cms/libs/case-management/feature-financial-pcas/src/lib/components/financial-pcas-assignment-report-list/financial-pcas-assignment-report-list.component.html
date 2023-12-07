@@ -130,7 +130,7 @@
 
     <kendo-grid-column field="openDate" title="Open Date" [width]="120" [format]="{ date: 'MM-dd-YYYY' }">
       <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.openDate | date:'MM/dd/YYYY'}}
+        {{dataItem.openDate | date:'MM/dd/yyyy'}}
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <common-grid-cell-date-range-filter field="openDate" [filter]="filter" [filterService]="filterService">
@@ -138,9 +138,9 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="closeDate" title="Close Date" [width]="120" [format]="{ date: 'MM-dd-YYYY' }">
+    <kendo-grid-column field="closeDate" title="Close Date" [width]="120" >
       <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.closeDate | date:'MM/dd/YYYY'}}
+        {{dataItem.closeDate | date:'MM/dd/yyyy'}}
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <common-grid-cell-date-range-filter field="closeDate" [filter]="filter" [filterService]="filterService">
