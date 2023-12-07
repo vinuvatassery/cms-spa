@@ -40,7 +40,12 @@
                   </ng-template>
                 </kendo-popover>
               </p>
-              <div *ngIf="item.approvalTypeCode == pendingApprovalGeneralTypeCode.GeneralAddToMasterList" class="mt-4">
+              <div *ngIf="item.approvalTypeCode == pendingApprovalGeneralTypeCode.GeneralAddToMasterList ||
+                          item.subTypeCode == subTypeConst.InsuranceVendor ||
+                          item.subTypeCode == subTypeConst.MedicalProvider ||
+                          item.subTypeCode == subTypeConst.DentalProvider  ||  
+                          item.subTypeCode == subTypeConst.MedicalClinic   ||
+                          item.subTypeCode == subTypeConst.DentalClinic" class="mt-4">
                 Contact Name {{item.contactName}}
               </div>
             </div>
