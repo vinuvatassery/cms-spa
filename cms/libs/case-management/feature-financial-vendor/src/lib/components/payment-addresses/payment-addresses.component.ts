@@ -165,7 +165,6 @@ filter: any = [];
     this.loadVenderPaymentMethodsLovs();
     this.loadYesOrNoLovs();
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
-    this.checkMailCode();
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -173,15 +172,17 @@ filter: any = [];
     this.tabCode = this.route.snapshot.queryParams['tab_code'];
     this.getTabCode();
     this.loadPaymentsAddressListGrid();
+    this.checkMailCode();
+   
   }
 
   private checkMailCode() {
     this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
       if (mailCode.length > 0) {
-        this.IsAddContactDisabled = true;
+        this.IsAddContactDisabled = false;
         this.cdr.detectChanges();
       } else {
-        this.IsAddContactDisabled = false;
+        this.IsAddContactDisabled = true;
       }
     });
   }
@@ -230,6 +231,7 @@ filter: any = [];
     this.manufacturerAddEditTitleText = 'Add Address'
     this.isPaymentAddressDetailShow = true;
     this.isPaymentAddressDetailIsEdit = false;
+    this.IsAddContactDisabled = true;
   }
 
   clickOpenEditPaymentAddressDetails() {

@@ -306,7 +306,7 @@
       Address
     </button>
 
-    <button kendoButton aria-label="Contact"   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
+    <button kendoButton [disabled]="IsAddContactDisabled" aria-label="Contact"   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
         Contact
       </button>
   </div>
