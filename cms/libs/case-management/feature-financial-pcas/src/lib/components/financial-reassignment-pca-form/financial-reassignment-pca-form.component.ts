@@ -239,7 +239,7 @@ this.loaderService.show();
           const openDateObj: Date = new Date(opendate);
           const closeDateObj: Date = new Date(closedate);
           const pcaCloseDateObj: Date = new Date(pcaClosedate);
-          debugger
+          
           switch (true) {
             case closeDateObj < openDateObj:
               this.closeDateError=true;
@@ -255,7 +255,7 @@ this.loaderService.show();
           }
         }
         checkOpenDateValidity(opendate: string, closedate: string): string {    
-          debugger      
+                
         this.closeDateError=false;
           const openDateObj: Date = new Date(opendate);
           const closeDateObj: Date = new Date(closedate);

@@ -205,7 +205,7 @@ ngOnInit(): void {
 
 private bindDropdownClumns()
 {
-  debugger
+  
   this.dropDowncolumns = this.dropDowncolumns.filter((x : any)=>x.vendorTypeCode.includes(this.vendorTypeCode) || x.vendorTypeCode === 'ALL')
 }
 
@@ -432,7 +432,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
     value: any,
     filterService: FilterService
   ): void {
-    debugger
+    
     filterService.filter({
       filters: [
         {
