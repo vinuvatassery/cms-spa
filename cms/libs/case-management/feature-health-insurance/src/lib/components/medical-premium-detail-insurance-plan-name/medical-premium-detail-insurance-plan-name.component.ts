@@ -187,6 +187,9 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   public addNewInsurancePlanOpen(): void {
     this.newhealthInsuranceForm.reset();
     this.isaddNewInsurancePlanOpen = true;
+    //Reloading insurance carrier dropdown to make available newly added.
+    this.loadInsuranceCarrierName(InsuranceStatusType.insurancePlanRequest);
+    this.loadInsurancePlans();
   }
 
   private loadInsurancePlans() {
