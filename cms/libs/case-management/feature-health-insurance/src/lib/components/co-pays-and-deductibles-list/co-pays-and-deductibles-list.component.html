@@ -31,7 +31,9 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="cptCode" title="CPT Code" [width]="150" [filterable]="false">
-        </kendo-grid-column>       
+        </kendo-grid-column> 
+        <kendo-grid-column field="serviceDesc" title="{{serviceDescription}} Service" [width]="200" [sortable]="false" [filterable]="false">
+        </kendo-grid-column>      
         <kendo-grid-column field="serviceCost" title="Service Cost" [width]="140" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
@@ -51,9 +53,7 @@
         </kendo-grid-column>
        
         <kendo-grid-column field="CheckNbr" title="Warrant" [width]="130" [sortable]="false" [filterable]="false">
-        </kendo-grid-column>
-        <kendo-grid-column field="serviceDesc" title="Service Description" [width]="200" [sortable]="false" [filterable]="false">
-        </kendo-grid-column>
+        </kendo-grid-column>     
         <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [sortable]="false" [columnMenu]="false" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
