@@ -228,20 +228,13 @@ export class FinancialPremiumsPageComponent implements OnInit {
   exportClaimsPaymentsGridData() {
     const data = this.dataExportParameters;
     if (data) {
-      const vendorPageAndSortedRequest = {
-        SortType: data?.sortType,
-        Sorting: data?.sortColumn,
-        SkipCount: data?.skipcount,
-        MaxResultCount: data?.maxResultCount,
-        Filter: data?.filter,
-      };
       let fileName =
         this.premiumType[0].toUpperCase() +
         this.premiumType.substr(1).toLowerCase() +
         'Premiums Payments';
 
       this.documentFacade.getExportFile(
-        vendorPageAndSortedRequest,
+        this.dataExportParameters,
         `premium/${this.premiumType}/payments`,
         fileName
       );
