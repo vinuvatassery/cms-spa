@@ -49,12 +49,10 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
       this.changeDetectorRef.markForCheck()
       this.isError = false
       this.tpaRefundGridLists.forEach(x=>{
-        if(!(x.voucherPayableNbr && x.refundedWarrantNumber && x.creditNbr && x.refundedAmount)){
+        if(!( x.refundedWarrantNumber && x.refundedAmount && !x.refundAmountExeedError)){
           this.isError = true
-           x.voucherPayableNbrError = !x.voucherPayableNbr
            x.refundWarantNumberError = !x.refundedWarrantNumber
            x.refundedAmountError = !x.refundedAmount
-           x.creditNbrError = !x.creditNbr
 
         }
       })
@@ -67,25 +65,15 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
   onRefundNoteValueChange(event:any, type:any, item:any){
     switch (type) {
 
-      case ColumnNames.RefundedWarrantNumber: {
-        if(event && event.length >0){
-         item.refundWarantNumberError = false
-        }else{
-         item.refundWarantNumberError = true
-        }
+      case ColumnNames.RefundedWarrantNumber:
+         item.refundWarantNumberError = event && event.length <=0
        break;
-    }
-    case ColumnNames.RefundedAmount: {
-      if(event && event >0){
-       item.refundedAmountError = false
-      }else{
-       item.refundedAmountError = true
-      }
+    case ColumnNames.RefundedAmount:
+       item.refundedAmountError = event && event <=0
+       item.refundAmountExeedError = item.totalAmount < event;
      break;
-  }
     }
   }
-
 
   onDeleteClick(index:number){
     this.tpaRefundGridLists.splice(index,1)

@@ -432,6 +432,10 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
       if (data?.total < 1) {
         this.isDataAvailable = false;
       }
+      else 
+      {
+        this.isDataAvailable=true;
+      }
     });
   }
 

@@ -98,7 +98,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public checkboxOnly = true;
   public mode: SelectableMode = 'multiple';
   public drag = false;
-
+  isDeleteClaimClicked =false;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 
 
@@ -191,7 +191,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       click: (data: any): void => {
         if (!this.isDeleteBatchClosed) {
           this.isDeleteBatchClosed = true;
-          this.onBatchClaimsGridSelectedClicked();
+          this.onDeleteClaimsGridSelectedClicked();
         }
       },
     },
@@ -370,6 +370,14 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
+  searchColumnChangeHandler(data:any){
+    this.onChange(data)
+  }
+  pageChange(event:any){
+    if(this.isDeleteClaimClicked){
+        this.selectedProcessClaims =[]
+    }
+  }
 
   gridDataHandle() {
     this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
@@ -457,6 +465,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       this.deleteClaimsDialog.close();
       this.cdr.detectChanges();
     }
+    this.isDeleteClaimClicked = false;
   }
 
   onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
@@ -474,6 +483,11 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.isProcessGridExpand = false;
   }
 
+  onDeleteClaimsGridSelectedClicked(){
+    this.isProcessGridExpand = false;
+    this.isDeleteClaimClicked =true;
+  }
+
   onBatchClaimsDeleteGridSelectedClicked() {
     this.isProcessGridExpand = false;
   }
@@ -486,6 +500,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.isDeleteBatchClosed = false;
     this.isProcessBatchClosed = false;
     this.selectedProcessClaims = [];
+    this.isDeleteClaimClicked = false;
   }
 
   clientRecentClaimsModalClicked(
