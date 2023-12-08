@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (close)="closeAddEditPcaAssignmentClicked()">PCA Reassignment  </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeAddEditPcaAssignmentClicked()">Reassign PCA </kendo-dialog-titlebar>
 <form [formGroup]="pcaAssignmentForm" (ngSubmit)="onPcaAssignmentFormSubmit()">   
       <input type="hidden" formControlName="pcaAssignmentId">
 <section class="k-dialog-body">
@@ -101,7 +101,7 @@
                               <kendo-formerror *ngIf="pcaAssignmentFormControls?.openDate?.errors?.required && formSubmitted">
                                     Open Date is required
                               </kendo-formerror>  
-                              <kendo-formerror *ngIf="openDateError">{{closeDateErrorMsg}}</kendo-formerror>
+                              <kendo-formerror *ngIf="openDateError">{{openDateErrorMsg}}</kendo-formerror>
                             
                        
                   </kendo-floatinglabel>
