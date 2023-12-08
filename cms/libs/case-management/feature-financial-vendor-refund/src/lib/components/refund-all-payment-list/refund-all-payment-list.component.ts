@@ -538,6 +538,15 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     }
   }
 
+  navToBatchDetails(data: any) {   
+    const query = {
+      queryParams: {
+        b_id: data?.batchId ,         
+      },
+    };
+    this.route.navigate(['/financial-management/vendor-refund/batch/batch-log-list'], query );
+  }
+
   isLogGridExpanded = false;
   hideActionButton = false;
   receiptLogMode = false
