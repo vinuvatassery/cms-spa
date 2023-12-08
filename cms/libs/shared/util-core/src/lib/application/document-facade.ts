@@ -60,22 +60,15 @@ export class DocumentFacade {
 
     getExportFile(pageAndSortedRequest : any, path : string , fileName : string, apiType : string = ApiType.CaseApi): void {           
         this.documentDataService.getExportFile(pageAndSortedRequest,path,apiType).subscribe({
-          next: (response: any) => {           
-            if (response) {      
-                this.exportButtonShowSubject.next(true)    
-                if(response?.size === 0)
-                {
-                    this.showSnackBar(SnackBarNotificationType.WARNING, "No data")
-                }
-                else
-                {             
-                    const fileUrl = window.URL.createObjectURL(response);                 
-                    const documentName = fileName+'.xlsx';         
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = fileUrl;
-                    downloadLink.download = documentName;             
-                    downloadLink.click();     
-                }          
+          next: (response: any) => {
+            if (response) {                   
+               const fileUrl = window.URL.createObjectURL(response);
+               this.exportButtonShowSubject.next(true)    
+              const documentName = fileName+'.xlsx';         
+               const downloadLink = document.createElement('a');
+              downloadLink.href = fileUrl;
+               downloadLink.download = documentName;             
+               downloadLink.click();               
             }
           },
           error: (err) => {     
@@ -86,8 +79,8 @@ export class DocumentFacade {
        
       }
 
-    getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedIds?: any[], batchId? : any): void {
-        this.documentDataService.getExportFileForSelection(pageAndSortedRequest, path, apiType, selectedIds, batchId).subscribe({
+    getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedAllPaymentsList: any, batchId? : any): void {
+        this.documentDataService.getExportFileForSelection(pageAndSortedRequest, path, apiType, selectedAllPaymentsList, batchId).subscribe({
             next: (response: any) => {
                 if (response) {
                     const fileUrl = window.URL.createObjectURL(response);
