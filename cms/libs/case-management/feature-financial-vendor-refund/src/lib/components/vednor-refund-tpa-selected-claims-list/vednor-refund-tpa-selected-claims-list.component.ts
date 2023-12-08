@@ -85,8 +85,6 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
   }
 
   getDate(value:any){
-
-    console.log( formatDate(new Date(value), 'MM-dd-yyyy'))
     return new Date(formatDate(new Date(value), 'MM-dd-yyyy'));
   }
 

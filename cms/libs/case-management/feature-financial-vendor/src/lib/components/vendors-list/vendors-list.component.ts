@@ -101,13 +101,15 @@ dropDowncolumns : any = [
   {
     "columnCode": "totalClaims",
     "columnDesc": "Total Claims"   ,
-    "vendorTypeCode": ["DENTAL_PROVIDER","MEDICAL_PROVIDER"],
-  },
+    "vendorTypeCode": ["MEDICAL_PROVIDER"],
+  }
+  ,
   {
     "columnCode": "unreconciledClaims",
     "columnDesc": "Unreconciled Claims"   ,
-    "vendorTypeCode": ["PHARMACY","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
-  },
+    "vendorTypeCode": ["PHARMACY","MEDICAL_PROVIDER"],
+  }
+  ,
   {
     "columnCode": "totalPayments",
     "columnDesc": "Total Payments"   ,
@@ -136,7 +138,7 @@ dropDowncolumns : any = [
   {
     "columnCode": "address",
     "columnDesc": "Address"   ,
-    "vendorTypeCode":  ["MANUFACTURERS","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
+    "vendorTypeCode":  ["MANUFACTURERS","MEDICAL_PROVIDER"],
   },
   {
     "columnCode": "NpiNbr",
@@ -250,7 +252,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     if(this.selectedColumn ==="tin"){
       let noOfhypen =   data.split("-").length - 1
       let index = data.lastIndexOf("-")
-      if(noOfhypen>=1 && index!==2){
+      if(noOfhypen>=1 && (index!==2 && index !==3)){
         this.showTinSearchWarning = true;
         return;
       }else{
@@ -304,7 +306,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
       if(stateFilter.field ==="tin"){
         let noOfhypen =   stateFilter.value.split("-").length - 1
         let index = stateFilter.value.lastIndexOf("-")
-        if(noOfhypen>=1 && index!==2){
+        if(noOfhypen>=1 && (index!==2 && index !==3)){
           this.showTinSearchWarning = true;
           return;
         }else{
