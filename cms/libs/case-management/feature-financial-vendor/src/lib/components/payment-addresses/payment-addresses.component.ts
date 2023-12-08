@@ -165,7 +165,6 @@ filter: any = [];
     this.loadVenderPaymentMethodsLovs();
     this.loadYesOrNoLovs();
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
-    this.checkMailCode();
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -173,6 +172,8 @@ filter: any = [];
     this.tabCode = this.route.snapshot.queryParams['tab_code'];
     this.getTabCode();
     this.loadPaymentsAddressListGrid();
+    this.checkMailCode();
+  
   }
 
   private checkMailCode() {
@@ -275,7 +276,9 @@ filter: any = [];
     this.isPaymentAddressDeactivateShow = false;
     this.clickCloseAddEditPaymentAddressDetails();
     if (isSuccess)
+    this.vendorcontactFacade.loadMailCodes(this.vendorId);
       this.loadPaymentsAddressListGrid();
+      this.checkMailCode();
   }
 
   clickOpenDeletePaymentAddressDetails() {
@@ -285,8 +288,8 @@ filter: any = [];
     this.isPaymentAddressDeleteShow = false;
     if (isSuccess) {
       this.vendorcontactFacade.loadMailCodes(this.vendorId);
-      this.checkMailCode();
       this.loadPaymentsAddressListGrid();
+      this.checkMailCode();
     }
   }
 
