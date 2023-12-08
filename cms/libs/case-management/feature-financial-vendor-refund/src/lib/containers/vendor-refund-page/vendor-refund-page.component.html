@@ -1,11 +1,11 @@
 <div class="app-l-inner-rapper pt-0 bottom-pad">
     <common-bread-crumb></common-bread-crumb>
-    <div class=" pt-0"> 
+    <div class=" pt-0">
         <section class="app-l-mainTittle">
             <h1 class="maintitle_withicon text-bold"> {{pageTitle}} </h1>
         </section>
         <section class="app-l-client-wrapper ">
-            <section class="app-l-wrapper"> 
+            <section class="app-l-wrapper">
                 <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
                     class="app-c-tab case-360-tab">
                     <kendo-tabstrip-tab title="Process" [selected]="tab===1">
@@ -22,8 +22,9 @@
                                  (onProviderNameClickEvent)="onProviderNameClick($event)"
                                 [vendorRefundProcessGridLists$]="vendorRefundProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundProcess"
-                                [sortType]="sortType" [sort]="sortProcessList" 
+                                [sortType]="sortType" [sort]="sortProcessList"
                                 (loadVendorRefundProcessListEvent)="loadFinancialRefundProcessListGrid($event)"
+                                (providerNameClickEvent)="onProviderNameClick($event)"
                                 > </cms-refund-process-list>
                             </div>
                         </ng-template>
@@ -35,9 +36,9 @@
                                 <cms-refund-batches-list
                                 [vendorRefundBatchGridLists$]="vendorRefundBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundBatch"
-                                [sortType]="sortType" [sort]="sortBatchList" 
+                                [sortType]="sortType" [sort]="sortBatchList"
                                 (loadVendorRefundBatchListEvent)="loadVendorRefundBatchListGrid($event)"
-                                [exportButtonShow$]="exportButtonShow$"                              
+                                [exportButtonShow$]="exportButtonShow$"
                                 (exportGridDataEvent)="exportBatchesGridData()"
                                 ></cms-refund-batches-list>
                             </div>
@@ -47,12 +48,12 @@
                     <kendo-tabstrip-tab title="All Refunds" [selected]="tab===3">
                         <ng-template kendoTabContent>
                             <div class="block-section ">
-                                <cms-refund-all-payment-list 
+                                <cms-refund-all-payment-list
                                 [vendorRefundAllPaymentsGridLists$]="vendorRefundAllPaymentsGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundPayments"
-                                [sortType]="sortType" [sort]="sortPaymentsList" 
+                                [sortType]="sortType" [sort]="sortPaymentsList"
                                 (loadVendorRefundAllPaymentsListEvent)="loadVendorRefundAllPaymentsListGrid($event)"
-                                [exportButtonShow$]="exportButtonShow$"                              
+                                [exportButtonShow$]="exportButtonShow$"
                                 (exportGridDataEvent)="exportAllRefundsGridData()"
                                 (exportReceiptDataEvent)="exportReceiptDataEvent($event)"
                                 (changeTitle)="changeTitle($event)"
@@ -63,24 +64,23 @@
                               [ddlStates$]="ddlStates$"
                               (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
                               [paymentMethodCode$]=" paymentMethodCode$"
-                              (onProviderNameClickEvent)="onProviderNameClick($event)"
+                              (providerNameClickEvent)="onProviderNameClick($event)"
                               ></cms-refund-all-payment-list>
                                </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
-                </kendo-tabstrip> 
-            </section> 
+                </kendo-tabstrip>
+            </section>
         </section>
     </div>
+    <ng-template #providerDetailsTemplate>
+      <cms-financial-premiums-provider-info
+            [paymentRequestId]="paymentRequestId"
+            (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+            (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+            (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+            [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+            [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+    </ng-template>
 </div>
-<ng-template #providerDetailsTemplate>
-    <cms-refund-claims-provider-info
-    [paymentRequestId]="paymentRequestId"
-    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
-    (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
-    [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-    [paymentMethodCode$]="paymentMethodCode$">
-        </cms-refund-claims-provider-info>
-  </ng-template>
 

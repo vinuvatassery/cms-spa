@@ -84,7 +84,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   tpaAddRefundClickSubject = new Subject<any>();
   tpaAddRefundClick$ = this.tpaAddRefundClickSubject.asObservable()
 
-  
+
   selectDiffPaymentClicked = new Subject<any>();
   selectDiffPaymentClicked$ = this.selectDiffPaymentClicked.asObservable()
 
@@ -160,6 +160,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
      this.refundType =  res.filter(x=> x.lovCode!=='TAX')
     })
 if(this.isEdit){
+  console.log(this.tpaRefundGridLists)
   this.disableFeildsOnConfirmSelection = true
   this.selectedRefundType = this.serviceType
   this.onEditInitiallydontShowPremiumselection = true
@@ -176,7 +177,7 @@ if(this.isEdit){
     this.selectedVendor = vendors
 
 
- 
+
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
   this.initForm()
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
@@ -215,21 +216,21 @@ if(this.isEdit){
     this.refundForm.patchValue({
       tpaVendor : this.selectedVendor
     });
-   
+
     this. tpavendors$.subscribe((res:any[])=>{
       const vendors = res.filter((x) =>{
         return x.vendorAddressId ==  this.vendorAddressId
-      
+
       })
       this.selectedVendor = vendors && vendors[0]
       this.vendorId = vendors[0].vendorId
       this.initForm()
     })
-  this.debouncedtpaVendors(this.vendorName) 
-  
+  this.debouncedtpaVendors(this.vendorName)
+
   this.financialVendorRefundFacade.tpaVendorsSubject.next([this.selectedVendor])
   this.isConfirmationClicked = true;
-  
+
   this.getTpaRefundInformation(this.inspaymentRequestId)
   this.refundForm.controls['tpaVendor'].disable();
   this.searchTpaVendors(this.vendorName)
@@ -371,7 +372,7 @@ onSelectedRxClaimsChangeEvent(event:any){
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
     this.financialPremiumsRefundGridLists =  res;
     })
-  
+
   }
 
 
@@ -412,10 +413,10 @@ onSelectedRxClaimsChangeEvent(event:any){
     this.financialVendorRefundFacade.tpaRefundInformation$.subscribe(res =>{
     this.tpaRefundInformation =  res;
     })
- 
+
 
   }
-  
+
   }
 
 
@@ -469,7 +470,7 @@ OnEditProviderProfileClick(){
 onAddRefundClick(){
   if (this.selectedRefundType === 'PHARMACY') {
     this.addNewRefundRx();
-  } 
+  }
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
       this.insuraceAddRefundClickSubject.next(true);
   }
@@ -503,7 +504,7 @@ addTpa(event:any){
     this.onEditInitiallydontShowPremiumselection = false
     this.inputConfirmationClicked= false
     this.isRefundGridClaimShow = true;
-    if(this.selectedRefundType == ServiceTypeCode.pharmacy){    
+    if(this.selectedRefundType == ServiceTypeCode.pharmacy){
     this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
     }
   }
@@ -570,7 +571,7 @@ addTpa(event:any){
     this.providerTin = $event;
     if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
-    } 
+    }
     this.selectedMedicalProvider = $event
   }
   initRefundForm() {
@@ -631,7 +632,7 @@ addTpa(event:any){
   claimsCountEvent(data:any){
 
     this.claimsCount=data;
-  
+
   }
 
   onTpaClaimsDelete(data:any){
@@ -640,7 +641,7 @@ addTpa(event:any){
     if(data.length<=0){
       this.isConfirmationClicked = false;
     }
-   
+
   }
 
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
