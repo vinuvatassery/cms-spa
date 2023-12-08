@@ -386,10 +386,8 @@
       </div>
       <p>There is no data to display.</p>
     </ng-template>
-
   </kendo-grid>
 </div>
-
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span *ngIf="selectedPayments" class="">{{selectionCount}} refund(s) selected</span>
@@ -400,7 +398,6 @@
   <button *ngIf="!hideActionButton" kendoButton [primary]="true" aria-label="Receipting Log"
     (click)="receiptingLogClicked()">Receipting Log</button>
 </div>
-
 
 <ng-template #unBatchRefundsDialogTemplate>
   <cms-unbatch-refund-confirmation (unBatchCloseClickedEvent)="onUnBatchCloseClicked($event)"
