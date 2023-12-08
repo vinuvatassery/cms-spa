@@ -128,6 +128,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   batchId: any;
   paymentStatusCode: any;
   duplicatePaymentFlagPaymentRequestId : any;
+  tempTpaInvoiceId: any;
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -527,9 +528,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
     if(servicCount == 1){
       let formControl = this.addClaimServicesForm.controls[i];
-      let tpaInvoiceId = this.addClaimServicesForm.value[i].tpaInvoiceId;
+      this.tempTpaInvoiceId = this.addClaimServicesForm.value[i].tpaInvoiceId;
       formControl.reset();
-      this.addClaimServicesForm.value[i].tpaInvoiceId = tpaInvoiceId;
       return;
     }
    
@@ -659,7 +659,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         amountDue: element.amountDue,
         ServiceDesc: element.serviceDescription,
         exceptionReasonCode: element.reasonForException,
-        tpaInvoiceId: element.tpaInvoiceId,
+        tpaInvoiceId: element.tpaInvoiceId ?? this.tempTpaInvoiceId,
         exceptionFlag: element.exceptionFlag,
         exceptionTypeCode: element.exceptionTypeCode,
         pcaCode:element.pcaCode
