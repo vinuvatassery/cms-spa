@@ -552,13 +552,13 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     }
   }
 
-  navToBatchDetails(data: any) {   
+  navToBatchDetails(data: any) {
     const query = {
       queryParams: {
-        b_id: data?.batchId ,         
+        b_id: data?.batchId,
       },
     };
-    this.route.navigate(['/financial-management/vendor-refund/batch/batch-log-list'], query );
+    this.route.navigate(['/financial-management/vendor-refund/batch/batch-log-list'], query);
   }
 
   isLogGridExpanded = false;
@@ -590,6 +590,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.receiptLogMode = !this.receiptLogMode;
     this.hideActionButton = !this.hideActionButton;
   }
+
   onProviderNameClick(event: any) {
     this.onProviderNameClickEvent.emit(event);
   }
@@ -738,31 +739,31 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     let template;
 
     switch (data.paymentTypeCode) {
-      case FinancialServiceTypeCode.Tpa:{
+      case FinancialServiceTypeCode.Tpa: {
         template = this.clientRecentClaimsDialogRef
         break;
       }
-      case FinancialServiceTypeCode.Insurance:{
+      case FinancialServiceTypeCode.Insurance: {
         template = this.clientRecentPremiumsDialogRef;
         break;
       }
-      case FinancialServiceTypeCode.Pharmacy:{
+      case FinancialServiceTypeCode.Pharmacy: {
         template = this.clientRecentPharmacyClaimsDialogRef;
         break;
       }
       default: break;
     }
 
-    if(template)
-    this.addClientRecentClaimsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
-      animation: {
-        direction: 'up',
-        type: 'slide',
-        duration: 200,
-      },
-    });
+    if (template)
+      this.addClientRecentClaimsDialog = this.dialogService.open({
+        content: template,
+        cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+        animation: {
+          direction: 'up',
+          type: 'slide',
+          duration: 200,
+        },
+      });
   }
 
   closeRecentClaimsModal(result: any) {
@@ -771,25 +772,21 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     }
   }
 
-  onProviderNameClick(event:any){
-    this.providerNameClickEvent.emit(event);
-  }
-
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
-    }
+  }
 
-    selectAll: boolean = false;
-    unCheckedPaymentRequest: any = [];
-    selectedDataIfSelectAllUnchecked: any = [];
-    currentPageRecords: any = [];
-    selectedAllPaymentsList!: any;
-    isPageCountChanged: boolean = false;
-    isPageChanged: boolean = false;
-    unCheckedProcessRequest: any = [];
-    checkedAndUncheckedRecordsFromSelectAll: any = [];
-    recordCountWhenSelectallClicked: number = 0;
-    totalGridRecordsCount: number = 0;
-    selectionCount: number = 0;
+  selectAll: boolean = false;
+  unCheckedPaymentRequest: any = [];
+  selectedDataIfSelectAllUnchecked: any = [];
+  currentPageRecords: any = [];
+  selectedAllPaymentsList!: any;
+  isPageCountChanged: boolean = false;
+  isPageChanged: boolean = false;
+  unCheckedProcessRequest: any = [];
+  checkedAndUncheckedRecordsFromSelectAll: any = [];
+  recordCountWhenSelectallClicked: number = 0;
+  totalGridRecordsCount: number = 0;
+  selectionCount: number = 0;
 }
