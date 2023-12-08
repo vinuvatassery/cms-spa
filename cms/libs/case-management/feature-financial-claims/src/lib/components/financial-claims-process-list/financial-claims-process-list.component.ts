@@ -24,8 +24,8 @@ import {
   SelectableMode,
   SelectableSettings,
 } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { Subject, Subscription, first } from 'rxjs';
+import { CompositeFilterDescriptor, State, orderBy } from '@progress/kendo-data-query';
+import { Subject, Subscription, first, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 @Component({
@@ -381,6 +381,11 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
 
   gridDataHandle() {
     this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
+      data.data = data.data.sort((a, b) => {
+        const dateA = new Date(a.creationTime);
+        const dateB = new Date(b.creationTime);
+        return dateB.getTime() - dateA.getTime();
+      });
       this.gridDataResult = data;
       this.gridFinancialClaimsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
