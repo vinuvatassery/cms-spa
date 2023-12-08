@@ -529,6 +529,8 @@ healthInsuranceValue ='';
   }
 
   dataStateChange(stateData: any): void {
+    this.isPageChanged = true;
+    this.isPageCountChanged = false;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -598,7 +600,6 @@ healthInsuranceValue ='';
     this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
-    this.isPageCountChanged = true;
     this.loadFinancialPremiumsProcessListGrid();
     if(this.isRemoveBatchClosed){
       this.premiumGridlistDataHandle();
