@@ -1410,6 +1410,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsuranceForm.controls["policyHolderFirstName"].disable();
       this.healthInsuranceForm.controls["policyHolderLastName"].disable();
       this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].disable();
+      this.healthInsuranceForm.controls["insuranceVendorAddressId"].disable();
     }
     else {
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
@@ -1453,6 +1454,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsuranceForm.controls["policyHolderFirstName"].enable();
       this.healthInsuranceForm.controls["policyHolderLastName"].enable();
       this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].enable();
+      this.healthInsuranceForm.controls["insuranceVendorAddressId"].enable();
     }
   }
 
