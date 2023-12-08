@@ -9,7 +9,7 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-refund-batch-log-list',
@@ -24,7 +24,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
-  
+
   @ViewChild('addEditRefundDialog', { read: TemplateRef })
   addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
 
@@ -217,6 +217,19 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   isBulkUnBatchOpened: any;
   batchId: any;
 
+  //recent claims modal
+  @ViewChild('clientRecentClaimsDialog') clientRecentClaimsDialogRef!: TemplateRef<unknown>
+  @ViewChild('clientRecentPremiumsDialogTemplate') clientRecentPremiumsDialogRef!: TemplateRef<unknown>
+  @ViewChild('clientRecentPharmacyClaimsDialog') clientRecentPharmacyClaimsDialogRef!: TemplateRef<unknown>
+  @Output() providerNameClickEvent = new EventEmitter<any>();
+  vendorId: any;
+  clientId: any;
+  clientName: any;
+  claimsType: any;
+  paymentRequestId: any;
+  private addClientRecentClaimsDialog: any;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+
   /** Constructor **/
   constructor(
     private route: Router,
@@ -225,7 +238,8 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
     private readonly financialVendorFacade: FinancialVendorFacade,
-    
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+
   ) { }
 
   ngOnInit() {
@@ -525,7 +539,57 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       this.loadBatchLogListGrid();
     }
   }
-  onProviderNameClick(event: any) {
-    this.onProviderNameClickEvent.emit(event);
+
+  clientRecentClaimsModalClicked(
+    data: any
+  ): void {
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientFullName;
+    this.paymentRequestId = data.paymentRequestId
+    this.claimsType = 'medical'
+    let template;
+
+    switch (data.serviceTypeCode) {
+      case FinancialServiceTypeCode.Tpa:{
+        template = this.clientRecentClaimsDialogRef
+        break;
+      }
+      case FinancialServiceTypeCode.Insurance:{
+        template = this.clientRecentPremiumsDialogRef;
+        break;
+      }
+      case FinancialServiceTypeCode.Pharmacy:{
+        template = this.clientRecentPharmacyClaimsDialogRef;
+        break;
+      }
+      default: break;
+    }
+
+    if(template)
+    this.addClientRecentClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+  }
+
+  closeRecentClaimsModal(result: any) {
+    if (result) {
+      this.addClientRecentClaimsDialog.close();
+    }
+  }
+
+  onProviderNameClick(event:any){
+    this.providerNameClickEvent.emit(event);
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentClaimsModal(true);
   }
 }

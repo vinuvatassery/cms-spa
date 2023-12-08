@@ -187,6 +187,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   getContactNameValidation(index: number) {
     return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get("isCheckContactNameValid")?.value;
   }
+  getEmailValidation(index: number) {
+    return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get("email")?.value;
+  }
 
   checkContactPreference(i: number) {
     for (let index = 0; index < this.AddContactForm.length; index++) {
@@ -674,7 +677,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   restrictAccountingNumber() {
-    if(this.providerType == this.vendorTypes.Pharmacy && this.medicalProviderForm.controls['tinNumber'].value==''){
+    if(((this.providerType == this.vendorTypes.Pharmacy)||(this.providerType==this.vendorTypes.DentalProviders)) && this.medicalProviderForm.controls['tinNumber'].value==''){
       this.accountingNumberValidated = true;
       return;
     }
