@@ -60,6 +60,10 @@
         </button>
       </div>
 
+      <div class="table-sorted-info" *ngIf="(paymentBatchName$ | async) as batch; else loading">
+        <span class="sort-items"> {{batch.totalPayments}} </span> Payment(s)
+        <span class="sort-items"> {{batch.totalReconciledPayments}} </span> Reconciled 
+      </div>
 
       <div class="app-c-table">
         <kendo-grid [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
