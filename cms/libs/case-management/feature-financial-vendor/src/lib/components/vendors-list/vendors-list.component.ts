@@ -247,7 +247,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     if(this.selectedColumn ==="tin"){
       let noOfhypen =   data.split("-").length - 1
       let index = data.lastIndexOf("-")
-      if(noOfhypen>=1 && index!==2){
+      if(noOfhypen>=1 && (index!==2 && index !==3)){
         this.showTinSearchWarning = true;
         return;
       }else{
@@ -301,7 +301,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
       if(stateFilter.field ==="tin"){
         let noOfhypen =   stateFilter.value.split("-").length - 1
         let index = stateFilter.value.lastIndexOf("-")
-        if(noOfhypen>=1 && index!==2){
+        if(noOfhypen>=1 && (index!==2 && index !==3)){
           this.showTinSearchWarning = true;
           return;
         }else{
