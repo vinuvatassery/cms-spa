@@ -65,7 +65,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   @Output() exportGridDataEvent = new EventEmitter<any>();
 
   paymentStatusCode =null
-  public state!: State;
+  public state!: any;
   sortColumn = 'Invoice ID';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -73,7 +73,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn='invoiceNbr';
+  selectedColumn='ALL';
   gridDataResult!: GridDataResult;
   showExportLoader = false;
   gridFinancialClaimsProcessDataSubject = new Subject<any>();
@@ -104,6 +104,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
 
   public selectedProcessClaims: any[] = [];
   columns: any = {
+    ALL: 'All Columns',
     invoiceNbr: 'Invoice ID',
     vendorFullName: 'Provider Name',
     tin: 'Tax ID',
@@ -119,6 +120,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   };
 
   dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'invoiceNbr',
       columnDesc: 'Invoice ID',
@@ -458,7 +460,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
-    
+
     if (result) {
       this.isDeleteBatchClosed = false;
       this.isProcessGridExpand = true;
@@ -539,7 +541,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.sortColumn = 'Invoice ID';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'invoiceNbr';
+    this.selectedColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
 

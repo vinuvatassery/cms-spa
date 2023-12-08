@@ -24,6 +24,7 @@ import { RefundClaimsProviderInfoComponent } from './components/refund-claims-pr
 import { VednorRefundTpaClaimsListComponent } from './components/vednor-refund-tpa-claims-list/vednor-refund-tpa-claims-list.component';
 import { VednorRefundTpaSelectedClaimsListComponent } from './components/vednor-refund-tpa-selected-claims-list/vednor-refund-tpa-selected-claims-list.component';
 import { CaseManagementFeatureFinancialClaimsModule } from '@cms/case-management/feature-financial-claims';
+import { CaseManagementFeatureFinancialPharmacyClaimsModule } from '@cms/case-management/feature-financial-pharmacy-claims';
 @NgModule({
   imports: [
     CommonModule,
@@ -31,7 +32,8 @@ import { CaseManagementFeatureFinancialClaimsModule } from '@cms/case-management
     SharedUiTpaModule,
     SharedUiCommonModule,
     CaseManagementFeatureFinancialPremiumsModule,
-    CaseManagementFeatureFinancialClaimsModule
+    CaseManagementFeatureFinancialClaimsModule,
+    CaseManagementFeatureFinancialPharmacyClaimsModule
   ],
   declarations: [
     VendorRefundPageComponent,

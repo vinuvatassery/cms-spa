@@ -14,4 +14,6 @@ export interface PaymentBatchName {
   batchNbr: number
   creationTime: string
   sendBackNotes:string
+  totalPayments:number
+  totalReconciledPayments:number
 }

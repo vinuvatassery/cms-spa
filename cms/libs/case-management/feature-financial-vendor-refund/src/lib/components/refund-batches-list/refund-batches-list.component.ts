@@ -43,7 +43,7 @@ export class RefundBatchesListComponent implements  OnChanges{
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn  = 'batchName'
+  selectedColumn  = 'ALL'
   gridDataResult!: GridDataResult;
   columnChangeDesc = 'Default Columns';
   gridVendorsBatchDataSubject = new Subject<any>();
@@ -63,6 +63,10 @@ export class RefundBatchesListComponent implements  OnChanges{
   };
 
   dropDowncolumns: any = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
     {
       columnCode: 'batchName',
       columnDesc: 'Batch #',
@@ -269,7 +273,7 @@ export class RefundBatchesListComponent implements  OnChanges{
     this.sortColumn = 'Batch #';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'batchName';
+    this.selectedColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
 
