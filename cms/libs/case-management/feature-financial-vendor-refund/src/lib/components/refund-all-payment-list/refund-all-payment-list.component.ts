@@ -36,7 +36,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Input() sort: any;
   @Input() sortValueRefunds: any;
   @Input() vendorRefundAllPaymentsGridLists$: any;
-  @Input() vendorRefundAllPaymentsGridLists: any = [];
+  vendorRefundAllPaymentsGridLists: any = [];
   @Input() exportButtonShow$: any;
   @Input() vendorProfile$: any;
   @Input() updateProviderPanelSubject$: any

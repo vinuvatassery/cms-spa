@@ -72,7 +72,6 @@ export class DocumentDataService {
 
       const selectedIds: string[] = selectedAllPaymentsList.paymentsSelected?.map((item: any) => item.paymentRequestId) ?? [];
       const unselectedIds: string[] = selectedAllPaymentsList.paymentsUnSelected?.map((item: any) => item.paymentRequestId) ?? [];
-
       const exportData = {
         'gridData': pageAndSortedRequest,
         'selectedIds': selectedIds,
