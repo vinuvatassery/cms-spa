@@ -341,11 +341,9 @@
     (click)="cancelActions()">Cancel</button>
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Download" icon="download" [disabled]="!selectedPayments.length"
     (click)="onClickedDownload()">Download</button>
-  <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Print" icon="print" [disabled]="!selectedPayments.length">Print</button>
   <button *ngIf="!hideActionButton" kendoButton [primary]="true" aria-label="Receipting Log"
     (click)="receiptingLogClicked()">Receipting Log</button>
 </div>
-
 
 <ng-template #unBatchRefundsDialogTemplate>
   <cms-unbatch-refund-confirmation (unBatchCloseClickedEvent)="onUnBatchCloseClicked($event)"
