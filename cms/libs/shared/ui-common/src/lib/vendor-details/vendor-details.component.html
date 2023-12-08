@@ -575,6 +575,8 @@
                 formControlName="email" [maxlength]="200">
               </kendo-textbox>
             </kendo-floatinglabel>
+            <kendo-formerror
+            *ngIf="!getContactControl(i, 'email')?.valid&& getEmailValidation(i)">Invalid email format</kendo-formerror>
           </div>
           <div *ngIf="providerType === vendorTypes.Manufacturers" class="flex-col mt-1">
             <div class="component-list-h">
