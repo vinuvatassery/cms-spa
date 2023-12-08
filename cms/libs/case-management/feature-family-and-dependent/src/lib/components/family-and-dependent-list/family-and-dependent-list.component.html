@@ -12,8 +12,8 @@
   (dataStateChange)="dataStateChange($event)">
   <ng-template kendoGridColumnMenuTemplate let-service="service">
     <span class="k-icon k-i-x" (click)="service.close()"
-      style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>   
-    <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser> 
+      style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
+    <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>
   </ng-template>
 
     <kendo-grid-column  [width]="180"
@@ -44,7 +44,7 @@
         title="SSN"
         [sortable]="true"
         [columnMenu]="false"
-  
+
       >
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.ssn | ssn }}
@@ -56,14 +56,14 @@
         isAddOrEditFamilyDependentDisplay ? 'Date of Birth' : 'DOB(Age)'
       }}"
       [sortable]="true"
-      [columnMenu]="false"
+      [columnMenu]="true"
 
     >
     <ng-template kendoGridCellTemplate let-dataItem>
       {{ dataItem.dob | date: 'MM/dd/yyyy' }}  (Age {{dataItem.age}})
     </ng-template>
   </kendo-grid-column>
- 
+
     <kendo-grid-column [width]="160"
       field="enrolledInInsuranceFlag"
       title="{{
@@ -147,16 +147,16 @@
     </div>
   </div>
 </ng-template>
-    <!-- grid Loader Template -->  
+    <!-- grid Loader Template -->
     <ng-template kendoGridLoadingTemplate>
       <common-grid-loader-component></common-grid-loader-component>
      </ng-template>
-     <!-- grid No data Template -->  
+     <!-- grid No data Template -->
      <ng-template kendoGridNoRecordsTemplate>
        <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
        </div>
        <p>There is no data to display.</p>
-     </ng-template> 
+     </ng-template>
   </kendo-grid>
 </div>
 <kendo-formerror *ngIf="!isDependentAvailable"><span class="material-icons"> error </span> A Response is required.</kendo-formerror>
