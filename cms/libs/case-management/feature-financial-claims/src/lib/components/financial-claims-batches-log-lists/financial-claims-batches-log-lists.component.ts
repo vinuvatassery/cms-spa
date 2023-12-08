@@ -380,6 +380,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.searchText = '';
     this.selectedSearchColumn = 'ALL';
     this.filteredByColumnDesc = '';
+    this.filteredBy = '';
     this.columnChangeDesc = 'Default Columns';
     this.showDateSearchWarning = false;
     this.showNumberSearchWarning = false;

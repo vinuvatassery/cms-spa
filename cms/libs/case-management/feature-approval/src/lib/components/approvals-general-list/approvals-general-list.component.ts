@@ -105,6 +105,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedMasterData!:any;
   currentlyExpandedPanelId: any;
   @Input() deliveryMethodLov$! : any;
+  readonly subTypeConst = PendingApprovalGeneralTypeCode;
   /** Constructor **/
   constructor(
     private route: Router,

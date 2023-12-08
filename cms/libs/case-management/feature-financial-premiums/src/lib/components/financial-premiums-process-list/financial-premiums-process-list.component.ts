@@ -529,29 +529,33 @@ healthInsuranceValue ='';
   }
 
   dataStateChange(stateData: any): void {
+    this.isPageChanged = true;
+    this.isPageCountChanged = false;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-
     this.sortColumn = this.columns[stateData.sort[0]?.field];
 
     if (stateData.filter?.filters.length > 0) {
-      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
       this.isFiltered = true;
       const filterList = [];
       for (const filter of stateData.filter.filters) {
         filterList.push(this.columns[filter.filters[0].field]);
       }
+      this.isFiltered = true;
       this.filteredBy = filterList.toString();
-    } 
-    else
-    {
+    }
+    else {
       this.filter = '';
+      this.columnName = '';
       this.isFiltered = false;
     }
+    this.state = stateData;
+    this.setGridState(stateData);
     this.loadFinancialPremiumsProcessListGrid();
     if(this.isRemoveBatchClosed){
       this.premiumGridlistDataHandle();
@@ -560,7 +564,6 @@ healthInsuranceValue ='';
 
   public setGridState(stateData: any): void {
     this.state = stateData;
-
     const filters = stateData.filter?.filters ?? [];
 
     const filterList = this.state?.filter?.filters ?? [];
@@ -577,20 +580,6 @@ healthInsuranceValue ='';
       this.columnName = "";
       this.isFiltered = false;
     }
-
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortType = stateData.sort[0]?.dir ?? "";
-    this.state = stateData;
-    this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.sortDir = "";
-    if(this.sort[0]?.dir === 'asc'){
-      this.sortDir = 'Ascending';
-    }
-    if(this.sort[0]?.dir === 'desc'){
-      this.sortDir = 'Descending';
-    }
-
   }
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
@@ -598,7 +587,6 @@ healthInsuranceValue ='';
     this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
-    this.isPageCountChanged = true;
     this.loadFinancialPremiumsProcessListGrid();
     if(this.isRemoveBatchClosed){
       this.premiumGridlistDataHandle();

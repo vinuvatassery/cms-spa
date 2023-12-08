@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { formatDate } from '@progress/kendo-angular-intl';
@@ -16,7 +16,7 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
   @Input() tpaAddRefundClick$!: any
   @Input() tpaRefundGridLists: any[]=[];
   @Input() tpaRefundInformation$: any
-  
+
   @Output() tpaRefundInformationConfirmClicked = new EventEmitter<any>();
   @Output() onTpaClaimsDeleteEvent = new EventEmitter<any>()
   @Input() isEdit = false
@@ -28,15 +28,15 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
     displayFormat: "dd/MM/yyyy",
     inputFormat: "yyyy-MM-dd'T'HH:mm:ss",
   };
-  
+
    Datevalue: Date = new Date(2000, 2, 10);
   public constructor(private formBuilder: FormBuilder,
     private readonly changeDetectorRef: ChangeDetectorRef) {
 
   }
   ngOnInit(): void {
-  
-  
+
+
     if (!this.isEdit) {
       this.tpaRefundInformationConfirmClicked.emit(
         {
@@ -53,7 +53,7 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
           this.isError = true
            x.refundWarantNumberError = !x.refundedWarrantNumber
            x.refundedAmountError = !x.refundedAmount
-           
+
         }
       })
       if(this.isError)
@@ -65,10 +65,10 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
   onRefundNoteValueChange(event:any, type:any, item:any){
     switch (type) {
 
-      case ColumnNames.RefundedWarrantNumber: 
+      case ColumnNames.RefundedWarrantNumber:
          item.refundWarantNumberError = event && event.length <=0
        break;
-    case ColumnNames.RefundedAmount: 
+    case ColumnNames.RefundedAmount:
        item.refundedAmountError = event && event <=0
        item.refundAmountExeedError = item.totalAmount < event;
      break;
@@ -78,10 +78,10 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
   onDeleteClick(index:number){
     this.tpaRefundGridLists.splice(index,1)
     if(this.tpaRefundGridLists.length >0){
-     this.onTpaClaimsDeleteEvent.emit([this.tpaRefundGridLists.map(x=> x.paymentRequestId).join(',')])  
+     this.onTpaClaimsDeleteEvent.emit([this.tpaRefundGridLists.map(x=> x.paymentRequestId).join(',')])
     }else{
       this.onTpaClaimsDeleteEvent.emit([])
-    } 
+    }
   }
 
   getDate(value:any){

@@ -1083,10 +1083,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.policyHolderFirstName = null;
       this.healthInsurancePolicy.policyHolderLastName = null;
       this.healthInsurancePolicy.insuranceVendorAddressId = null;
-      this.healthInsurancePolicy.insuranceTypeCode = null;
-
     }
-
     this.healthInsurancePolicy.isCerReview = this.isReviewPopup;
   }
 

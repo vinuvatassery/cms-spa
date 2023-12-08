@@ -65,7 +65,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
 
     // modify delivery methods for that results [ ML , MG , Tablet , Each ]
     this.normalizeDeliveryMethods();
-    this. onDrugNameValueChange();
+    this.onDrugNameValueChange();
     this.onBrandNameValueChange();
   }
 
