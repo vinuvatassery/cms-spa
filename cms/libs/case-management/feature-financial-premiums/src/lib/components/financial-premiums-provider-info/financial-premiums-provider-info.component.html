@@ -1,7 +1,7 @@
 
 <ng-container >
     <kendo-dialog-titlebar (close)="closeViewProviderClicked()">{{isEditProvider ? 'Edit ' : ''}}{{vendorProfile?.vendorName}}</kendo-dialog-titlebar>
-    
+
     <section class="k-dialog-body newcase" *ngIf="vendorProfile">
         <button aria-label="Edit" kendoButton look="flat" class="card-link-button"  *ngIf="!isEditProvider" (click)="editProviderClicked()">Edit </button>
         <div class="detail-items-with-border mt-2 small-input-only-field">
@@ -11,88 +11,88 @@
                     <th>Field</th>
                     <th> Details</th>
                 </tr>
-                  <tr> 
+                  <tr>
                     <td><strong>TIN</strong></td>
                     <td>  {{vendorProfile.tin| tin}}</td>
                 </tr>
-                <tr> 
+                <tr>
                     <td><strong>Mail Code</strong></td>
                     <td>{{vendorProfile.address.mailCode}}</td>
                 </tr>
-                <tr> 
+                <tr>
                     <td><strong>Accepts reports?</strong></td>
                     <td>{{vendorProfile.address.acceptsReportsFlag==='Y'? "Yes":"No"}}</td>
                 </tr>
-                
-                <tr> 
+
+                <tr>
                     <td><strong>Accepts combined payments?</strong></td>
                     <td>{{vendorProfile.address.acceptsCombinedPaymentsFlag ==='Y'? "Yes":"No"}}</td>
                 </tr>
-                
-                <tr> 
+
+                <tr>
                     <td><strong>Payment Method</strong></td>
                     <td> {{vendorProfile.address.paymentMethodCode}}</td>
                 </tr>
-    
-                <tr> 
+
+                <tr>
                     <td><strong>Address</strong></td>
-                    <td> <p>{{vendorProfile.address.address1}} </p>  
+                    <td> <p>{{vendorProfile.address.address1}} </p>
                          <p>{{vendorProfile.address.address2}} </p>
                          <p>
                           {{vendorProfile.address.cityCode}}, {{vendorProfile.address.stateCode}} {{vendorProfile.address.zip}}
                         </p>
                    </td>
                 </tr>
-                <tr> 
+                <tr>
                     <td><strong>Special Handling</strong></td>
                     <td>{{vendorProfile.address.specialHandlingDesc}}</td>
                 </tr>
-                <tr *ngFor="let contact of vendorProfile.address.contacts;let i = index"> 
+                <tr *ngFor="let contact of vendorProfile.address.contacts;let i = index">
                   <td><strong>Contact {{i+1}}</strong></td>
                   <td> <p>{{contact.contactName}}</p>
-                      <ng-container *ngFor="let phone of contact.phones"> 
-                        <p>{{phone.phoneNbr  | phone }}</p> 
+                      <ng-container *ngFor="let phone of contact.phones">
+                        <p>{{phone.phoneNbr  | phone }}</p>
                       </ng-container>
                       <ng-container *ngFor="let email of contact.emails">
-                        <p>{{email.emailAddress}}</p> 
+                        <p>{{email.emailAddress}}</p>
                       </ng-container>
                        </td>
               </tr>
-                
-    
+
+
             </table>
-    
-    
+
+
             <ng-container [formGroup]="profileForm">
             <table *ngIf="isEditProvider">
                 <caption hidden> Provider Details</caption>
                 <tr hidden>
                     <th>Field</th>
                     <th> details</th>
-                </tr>  
+                </tr>
                 <tr>
                     <td><strong>TIN</strong></td>
                         <td  [attr.disabled]="true">
-                                <kendo-textbox 
+                                <kendo-textbox
                                 [disabled]="true"
-                                [readonly]="true"                                
+                                [readonly]="true"
                                   [disabled]="isDisabled"
                                   formControlName="tin"
                                 ></kendo-textbox>
-                            
+
                         </td>
-                </tr>      
-          
+                </tr>
+
                 <ng-container formGroupName="address">
                 <tr>
                     <td><strong>Mail Code</strong></td>
-                    <td [attr.disabled]="true"><kendo-textbox aria-label="Mail Code" 
+                    <td [attr.disabled]="true"><kendo-textbox aria-label="Mail Code"
                         [disabled]="true"
                         [readonly]="true"
-                         [fillMode]="formUiStyle.inputFillMode" 
+                         [fillMode]="formUiStyle.inputFillMode"
                          formControlName="mailCode">
                         </kendo-textbox>
-                        
+
                     </td>
                 </tr>
                 <tr>
@@ -109,7 +109,7 @@
                         aria-labelledby="acceptReportsNo" value="N" formControlName="acceptsReportsFlag" />
                       <kendo-label class="k-radio-label" text="No" for="acceptReportsNo"></kendo-label>
                     </span>
-        
+
                   </div>
                 </td>
                 </tr>
@@ -127,7 +127,7 @@
                         aria-labelledby="combinedpaymentsno" value="N" formControlName="acceptsCombinedPaymentsFlag" />
                       <kendo-label class="k-radio-label" text="No" for="combinedpaymentsno"></kendo-label>
                     </span>
-        
+
                   </div>
                 </td>
                 </tr>
@@ -139,31 +139,31 @@
                               <input type="radio" kendoRadioButton formControlName="paymentMethod" [value]="paymentMethod.lovCode"
                               name="paymentMethod" attr.aria-labelledby="{{ paymentMethod.lovCode }}"
                               id="{{ paymentMethod.lovCode }}" />
-    
+
                             <kendo-label class="k-radio-label" for="trans{{ paymentMethod.lovCode }}"
                               text="{{ paymentMethod.lovDesc }}"></kendo-label>
-    
+
                             </span>
-    
+
                           </div>
                     </div></td>
                 </tr>
-     
-               
+
+
                 <tr>
                     <td><strong>Address</strong></td>
                     <td>
                         <div class="flex-row">
                             <div class="flex-col mt-1">
-                                <kendo-textbox aria-label="Address 1" placeholder="Address 1" 
+                                <kendo-textbox aria-label="Address 1" placeholder="Address 1"
                                 [fillMode]="formUiStyle.inputFillMode" formControlName="address1"   [maxlength]="100">
                                 </kendo-textbox>
                                 <kendo-formerror *ngIf="addressForm?.hasError('required','address1') && isSubmitted">Address Line 1 is Required
                                 </kendo-formerror>
-                              
+
                             </div>
                             <div class="flex-col mt-1">
-                                <kendo-textbox aria-label="Address 1" placeholder="Address 2" 
+                                <kendo-textbox aria-label="Address 1" placeholder="Address 2"
                                 [fillMode]="formUiStyle.inputFillMode" formControlName="address2" [maxlength]="100">
                                 </kendo-textbox>
                                 <kendo-formerror *ngIf="addressForm?.hasError('required','address2') && isSubmitted">Address Line 2  is Required
@@ -175,19 +175,19 @@
                                 </kendo-textbox>
                                 <kendo-formerror *ngIf="addressForm?.hasError('required','cityCode') && isSubmitted">City is Required
                                 </kendo-formerror>
-                              
+
                             </div>
                             <div class="flex-col  mt-1">
-                            
-                                <kendo-dropdownlist 
-                                aria-label="State" 
+
+                                <kendo-dropdownlist
+                                aria-label="State"
                                 [fillMode]="formUiStyle.dropDownFillMode"
                                 formControlName="stateCode"
                                 [data]="ddlStates$ | async"
                                 textField="stateName"
                                 valueField="stateCode"
                                 [valuePrimitive]="true" placeholder="State"
-                              
+
                                 >
                                 </kendo-dropdownlist>
                                 <kendo-formerror *ngIf="addressForm?.hasError('required','stateCode') && isSubmitted">State is Required
@@ -200,10 +200,10 @@
                                 <kendo-formerror *ngIf="addressForm?.hasError('required','zip') && isSubmitted">Zip is Required
                                 </kendo-formerror>
                                 <kendo-formerror *ngIf="isSubmitted && addressForm?.hasError('pattern','zip')">
-                                    Invalid Zip Code format. 
+                                    Invalid Zip Code format.
                             </kendo-formerror>
                             </div>
-    
+
                         </div>
                     </td>
                 </tr>
@@ -211,16 +211,16 @@
                     <td><strong>Special Handling</strong></td>
                     <td>
                         <div class="flex-col flex-col-6">
-                            
-                                <kendo-textarea  aria-label="Special Handling" [fillMode]="formUiStyle.inputFillMode" 
+
+                                <kendo-textarea  aria-label="Special Handling" [fillMode]="formUiStyle.inputFillMode"
                                 formControlName="specialHandlingDesc"
                                 [rows]="3" resize="none">
                                 </kendo-textarea>
-                            
+
                         </div>
                     </td>
                 </tr>
-    
+
             </ng-container>
             <ng-container formArrayName="contacts" *ngFor="let contact of contactsArray.controls; let i=index">
                 <ng-container  [formGroupName]="i" >
@@ -283,41 +283,41 @@
                                             is Required
                                         </kendo-formerror>
                                     </div>
-    
+
                                 </div>
-                            </td> 
+                            </td>
                         </ng-container>
-                       
+
                     </tr>
                 </ng-container>
             </ng-container>
-           
+
             </table>
         </ng-container>
         </div>
-    
-    
-    
+
+
+
     </section>
-    
+
     <kendo-dialog-actions>
         <div class="justify-content-between" *ngIf="!isEditProvider">
-    
+
             <button kendoButton [primary]="true" look="flat" class="" aria-label="Provider profile" (click)="onVendorProfileViewClicked()"> VENDOR PROFILE <span
                     class="material-icons ml-1">
                     chevron_right
                 </span></button>
-    
+
         </div>
-    
+
         <div class="justify-content-between align-items-center" *ngIf="isEditProvider">
             <div class="align-items-center">
-                   
+
                   <button kendoButton [primary]="true" aria-label="Update" (click)="updateProfile()">Update</button>
                   <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="editProviderClicked()">
                         Cancel
                   </button>
-                
+
             </div>
       </div>
     </kendo-dialog-actions>

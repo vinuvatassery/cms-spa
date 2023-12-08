@@ -1,7 +1,7 @@
 <cms-refund-batch-log-list
 [batchLogGridLists$]="batchLogGridLists$"
 [pageSizes]="pageSizes" [sortValue]="sortValue"
-[sortType]="sortType" [sort]="sort" 
+[sortType]="sortType" [sort]="sort"
 [exportButtonShow$]="exportButtonShow$"
 [paymentBatchName$]="paymentBatchName$"
 (loadVendorRefundBatchLogListEvent)="loadBatchLogListGrid($event)"
@@ -14,15 +14,14 @@
 [ddlStates$]="ddlStates$"
 (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
 [paymentMethodCode$]=" paymentMethodCode$"
-(onProviderNameClickEvent)="onProviderNameClick($event)"
+(providerNameClickEvent)="onProviderNameClick($event)"
 > </cms-refund-batch-log-list>
 <ng-template #providerDetailsTemplate>
-    <cms-refund-claims-provider-info
-    [paymentRequestId]="paymentRequestId"
-    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
-    (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
-    [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-    [paymentMethodCode$]="paymentMethodCode$">
-        </cms-refund-claims-provider-info>
-  </ng-template>
+  <cms-financial-premiums-provider-info
+        [paymentRequestId]="paymentRequestId"
+        (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+        (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+        (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+        [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+        [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+</ng-template>

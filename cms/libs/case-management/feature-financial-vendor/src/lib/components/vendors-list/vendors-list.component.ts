@@ -56,7 +56,6 @@ selectedPaymentMethod: string | null = null;showTinSearchWarning = false;
 columns : any = {
   vendorName:"Vendor Name",
   tin:"Tin",
-  paymentMethod:"Payment Method",
   totalPayments:"Total Payments",
   unreconciledPayments:"Unreconciled Payments",
   insurancePlans:"Insurance Plans",
@@ -99,43 +98,38 @@ dropDowncolumns : any = [
     "columnDesc": "TIN"   ,
     "vendorTypeCode": "ALL",
   },
-  ,
   {
     "columnCode": "totalClaims",
     "columnDesc": "Total Claims"   ,
-    "vendorTypeCode": ["DENTAL_PROVIDER","MEDICAL_PROVIDER"],
+    "vendorTypeCode": ["MEDICAL_PROVIDER"],
   }
   ,
   {
     "columnCode": "unreconciledClaims",
     "columnDesc": "Unreconciled Claims"   ,
-    "vendorTypeCode": ["PHARMACY","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
+    "vendorTypeCode": ["PHARMACY","MEDICAL_PROVIDER"],
   }
   ,
   {
     "columnCode": "totalPayments",
     "columnDesc": "Total Payments"   ,
     "vendorTypeCode": ["INSURANCE_VENDOR"],
-  }
-  ,
+  },
   {
     "columnCode": "unreconciledPayments",
     "columnDesc": "Unreconciled Payments"   ,
     "vendorTypeCode": ["INSURANCE_VENDOR"],
-  }
-  ,
+  },
   {
     "columnCode": "insurancePlans",
     "columnDesc": "Insurance Plans"   ,
     "vendorTypeCode": ["INSURANCE_VENDOR"],
-  }
-  ,
+  },
   {
     "columnCode": "clients",
     "columnDesc": "Clients"   ,
     "vendorTypeCode":["INSURANCE_VENDOR","PHARMACY"],
-  }
-  ,
+  },
   {
     "columnCode": "totalDrugs",
     "columnDesc": "Total Drugs"   ,
@@ -144,14 +138,13 @@ dropDowncolumns : any = [
   {
     "columnCode": "address",
     "columnDesc": "Address"   ,
-    "vendorTypeCode":  ["MANUFACTURERS","DENTAL_PROVIDER","MEDICAL_PROVIDER"],
+    "vendorTypeCode":  ["MANUFACTURERS","MEDICAL_PROVIDER"],
   },
   {
     "columnCode": "NpiNbr",
     "columnDesc": "Npi Number"   ,
     "vendorTypeCode": ["PHARMACY"],
-  }
-  ,
+  },
   {
     "columnCode": "physicalAddress",
     "columnDesc": "Physical Address"   ,
@@ -259,7 +252,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     if(this.selectedColumn ==="tin"){
       let noOfhypen =   data.split("-").length - 1
       let index = data.lastIndexOf("-")
-      if(noOfhypen>=1 && index!==2){
+      if(noOfhypen>=1 && (index!==2 && index !==3)){
         this.showTinSearchWarning = true;
         return;
       }else{
@@ -313,7 +306,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
       if(stateFilter.field ==="tin"){
         let noOfhypen =   stateFilter.value.split("-").length - 1
         let index = stateFilter.value.lastIndexOf("-")
-        if(noOfhypen>=1 && index!==2){
+        if(noOfhypen>=1 && (index!==2 && index !==3)){
           this.showTinSearchWarning = true;
           return;
         }else{

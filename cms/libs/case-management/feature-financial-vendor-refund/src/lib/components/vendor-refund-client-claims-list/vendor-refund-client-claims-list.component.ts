@@ -127,7 +127,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
       sort: this.sort,
     };
     this.loadRefundClaimsListGrid();
-    if(this.confirmClicked == true) {
+    if(this.confirmClicked) {
       this.selectedVendorRefundsListEvent.emit(this.selectedPharmacyClaims)
     }
     this.cdr.detectChanges();

@@ -39,18 +39,17 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column *ngIf="!managementTab" field="providerPriority" title="Provider Type" [width]="150"
-          [sortable]="false" [columnMenu]="false"></kendo-grid-column>
-        <kendo-grid-column field="primaryPhone" title="Phone" [width]="120" [sortable]="false" [columnMenu]="false">
+          ></kendo-grid-column>
+        <kendo-grid-column field="primaryPhone" title="Phone" [width]="120" >
         </kendo-grid-column>
-        <kendo-grid-column *ngIf="managementTab" field="emailAddress" title="Email" [width]="120" [sortable]="false"
-          [columnMenu]="false">
+        <kendo-grid-column *ngIf="managementTab" field="emailAddress" title="Email" [width]="120" >
         </kendo-grid-column>
-        <kendo-grid-column field="address1" title="Address" [width]="250" [sortable]="false" [columnMenu]="false">
+        <kendo-grid-column field="address1" title="Address" [width]="250" >
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.address1}} {{dataItem.address2}} {{dataItem.city+' '+dataItem.stateCode+' '+dataItem.zip}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="fax" title="Fax" [width]="120" [sortable]="false" [columnMenu]="false"
+        <kendo-grid-column field="fax" title="Fax" [width]="120"
           *ngIf="managementTab">
         </kendo-grid-column>
         <kendo-grid-column *ngIf="managementTab" field="startDate" title="Effective Date" [width]="150">
@@ -98,17 +97,17 @@
           </ng-template>
         </kendo-grid-column>
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
- 
+
         let-currentPage="currentPage">
-        <div class="grid-custom-paginationtemplates d-flex"> 
-          <div class="d-flex align-items-center">    
-            <label class="mr-1">Rows Per Page</label> 
+        <div class="grid-custom-paginationtemplates d-flex">
+          <div class="d-flex align-items-center">
+            <label class="mr-1">Rows Per Page</label>
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
               [valuePrimitive]="true" [(value)]="state.take"
               (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
- 
+
 
             </div>
             <div class="d-flex">
@@ -116,7 +115,7 @@
               <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
               <kendo-pager-next-buttons></kendo-pager-next-buttons>
             </div>
- 
+
           </div>
         </ng-template>
         <!-- grid Loader Template -->
@@ -198,7 +197,7 @@
 
 <!-- Business Logic Modal -->
 <kendo-dialog kendoRippleContainer *ngIf="isOpeneHealthcareProvider" (close)="closeVendorDetailModal(vendorTypes.HealthcareProviders)"
-  class="app-c-modal app-c-modal-lg app-c-modal-np" title="{{hasHealthcareProviderCreateUpdatePermission==true ? 
+  class="app-c-modal app-c-modal-lg app-c-modal-np" title="{{hasHealthcareProviderCreateUpdatePermission==true ?
     'Add New Healthcare Provider' : 'Request New Healthcare Provider' }}" kendoTooltip>
   <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.HealthcareProviders"
     (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="closeVendorDetailModal(vendorTypes.HealthcareProviders)"
