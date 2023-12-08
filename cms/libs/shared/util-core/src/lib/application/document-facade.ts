@@ -85,23 +85,18 @@ export class DocumentFacade {
         });
        
       }
-
-    getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedAllPaymentsList: any, batchId?: any): void {
+      
+    getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedAllPaymentsList: any, batchId? : any): void {
         this.documentDataService.getExportFileForSelection(pageAndSortedRequest, path, apiType, selectedAllPaymentsList, batchId).subscribe({
             next: (response: any) => {
                 if (response) {
+                    const fileUrl = window.URL.createObjectURL(response);
                     this.exportButtonShowSubject.next(true)
-                    if (response?.size === 0) {
-                        this.showSnackBar(SnackBarNotificationType.WARNING, "No data")
-                    }
-                    else {
-                        const fileUrl = window.URL.createObjectURL(response);
-                        const documentName = fileName + '.xlsx';
-                        const downloadLink = document.createElement('a');
-                        downloadLink.href = fileUrl;
-                        downloadLink.download = documentName;
-                        downloadLink.click();
-                    }
+                    const documentName = fileName + '.xlsx';
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = fileUrl;
+                    downloadLink.download = documentName;
+                    downloadLink.click();
                 }
             },
             error: (err) => {

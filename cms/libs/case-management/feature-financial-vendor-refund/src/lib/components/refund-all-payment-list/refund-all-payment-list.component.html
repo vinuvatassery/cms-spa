@@ -403,7 +403,7 @@
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" look="outline" aria-label="Cancel"
     (click)="cancelActions()">Cancel</button>
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Download" icon="download"
-    [disabled]="!selectedPayments" (click)="onClickedDownload()">Download</button>
+  [disabled]="selectionCount < 1" (click)="onClickedDownload()">Download</button>
   <button *ngIf="!hideActionButton" kendoButton [primary]="true" aria-label="Receipting Log"
     (click)="receiptingLogClicked()">Receipting Log</button>
 </div>

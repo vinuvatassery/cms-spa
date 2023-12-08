@@ -426,9 +426,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   onClickedDownload() {
-    //if (!this.selectedPayments.length) return;
     this.showExportLoader = true;
-
     this.exportReceiptDataEvent.emit(this.selectedAllPaymentsList);
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
