@@ -365,9 +365,6 @@ deletePremiumPayment(paymentId: string) {
   ) {}
 
   ngOnInit(): void {
-    this.financialPremiumsFacade.financialPremiumsAllPaymentsData$.subscribe((response:any) =>{
-
-    })
     this.addSearchSubjectSubscription();
     this.getVedndorTypeCodeLov();
     this.getPaymentMethodLov();
@@ -379,7 +376,7 @@ deletePremiumPayment(paymentId: string) {
       }
       this.financialPremiumsAllPaymentsGridLists = response;
     })
-  
+
 
   }
 
@@ -441,7 +438,7 @@ deletePremiumPayment(paymentId: string) {
   }
 
   onSearch(searchValue: any) {
-    
+
     const isDateSearch = searchValue.includes('/');
     this.showDateSearchWarning =
       isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
@@ -589,7 +586,7 @@ deletePremiumPayment(paymentId: string) {
         },
       ],
     };
-    
+
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
@@ -938,10 +935,6 @@ onPrintAuthorizationCloseClicked(result: any) {
 handleAllPaymentsGridData() {
   this.financialPremiumsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
     this.gridDataResult = data;
-    this.gridDataResult.data = filterBy(
-      this.gridDataResult.data,
-      this.filterData
-    );
     this.gridFinancialPremiumsAllPaymentsDataSubject.next(this.gridDataResult);
     if (data?.total >= 0 || data?.total === -1) {
       this.gridLoaderSubject.next(false);

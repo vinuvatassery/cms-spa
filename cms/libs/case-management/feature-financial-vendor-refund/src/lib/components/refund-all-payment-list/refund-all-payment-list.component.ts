@@ -19,7 +19,7 @@ import {
   filterBy
 } from '@progress/kendo-data-query';
 import { BehaviorSubject, Subject, first } from 'rxjs';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-refund-all-payment-list',
@@ -192,10 +192,24 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   showExportLoader = false;
 
 
+  //recent claims modal
+  @ViewChild('clientRecentClaimsDialog') clientRecentClaimsDialogRef!: TemplateRef<unknown>
+  @ViewChild('clientRecentPremiumsDialogTemplate') clientRecentPremiumsDialogRef!: TemplateRef<unknown>
+  @ViewChild('clientRecentPharmacyClaimsDialog') clientRecentPharmacyClaimsDialogRef!: TemplateRef<unknown>
+  @Output() providerNameClickEvent = new EventEmitter<any>();
+  vendorId: any;
+  clientId: any;
+  clientName: any;
+  claimsType: any;
+  paymentRequestId: any;
+  private addClientRecentClaimsDialog: any;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+
   /** Constructor **/
   constructor(
     private route: Router, private readonly cdr: ChangeDetectorRef,
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
     private dialogService: DialogService) { }
 
   ngOnInit(): void {
@@ -713,16 +727,69 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.selectedPayments = selection;
   }
 
-  selectAll: boolean = false;
-  unCheckedPaymentRequest: any = [];
-  selectedDataIfSelectAllUnchecked: any = [];
-  currentPageRecords: any = [];
-  selectedAllPaymentsList!: any;
-  isPageCountChanged: boolean = false;
-  isPageChanged: boolean = false;
-  unCheckedProcessRequest: any = [];
-  checkedAndUncheckedRecordsFromSelectAll: any = [];
-  recordCountWhenSelectallClicked: number = 0;
-  totalGridRecordsCount: number = 0;
-  selectionCount: number = 0;
+  clientRecentClaimsModalClicked(
+    data: any
+  ): void {
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientFullName;
+    this.paymentRequestId = data.paymentRequestId
+    this.claimsType = 'medical'
+    let template;
+
+    switch (data.paymentTypeCode) {
+      case FinancialServiceTypeCode.Tpa:{
+        template = this.clientRecentClaimsDialogRef
+        break;
+      }
+      case FinancialServiceTypeCode.Insurance:{
+        template = this.clientRecentPremiumsDialogRef;
+        break;
+      }
+      case FinancialServiceTypeCode.Pharmacy:{
+        template = this.clientRecentPharmacyClaimsDialogRef;
+        break;
+      }
+      default: break;
+    }
+
+    if(template)
+    this.addClientRecentClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+  }
+
+  closeRecentClaimsModal(result: any) {
+    if (result) {
+      this.addClientRecentClaimsDialog.close();
+    }
+  }
+
+  onProviderNameClick(event:any){
+    this.providerNameClickEvent.emit(event);
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentClaimsModal(true);
+    }
+
+    selectAll: boolean = false;
+    unCheckedPaymentRequest: any = [];
+    selectedDataIfSelectAllUnchecked: any = [];
+    currentPageRecords: any = [];
+    selectedAllPaymentsList!: any;
+    isPageCountChanged: boolean = false;
+    isPageChanged: boolean = false;
+    unCheckedProcessRequest: any = [];
+    checkedAndUncheckedRecordsFromSelectAll: any = [];
+    recordCountWhenSelectallClicked: number = 0;
+    totalGridRecordsCount: number = 0;
+    selectionCount: number = 0;
 }

@@ -47,7 +47,7 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
   isFiltered = false;
   filter!: any;
   claimType: any;
-  selectedColumn!: any;
+  selectedColumn ='ALL'
   gridDataResult!: GridDataResult;
   showExportLoader = false;
   gridFinancialClaimsBatchDataSubject = new Subject<any>();
@@ -69,6 +69,10 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
   };
 
   dropDowncolumns: any = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
     {
       columnCode: 'batchName',
       columnDesc: 'Batch #',

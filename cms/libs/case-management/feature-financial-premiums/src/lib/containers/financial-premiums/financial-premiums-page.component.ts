@@ -67,7 +67,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   paymentStatusCode$ = this.lovFacade.paymentStatus$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
-  
+
 
   healthInsuranceTypeLov$ = this.lovFacade.insuranceTypelov$;
   providerDetailsDialog: any
@@ -122,7 +122,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
   }
   loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
-    
+
     this.lovFacade.getPaymentMethodLov()
     this.lovFacade.getPaymentStatusLov()
     this.lovFacade.getHealthInsuranceTypeLovs()
@@ -142,7 +142,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
       gridDataRefiner.sortColumn,
       gridDataRefiner.sortType,
       gridDataRefiner.filter,
-      this.premiumType);     
+      this.premiumType);
   }
 
   loadFinancialPremiumsBatchListGrid(data: GridFilterParam) {
@@ -197,11 +197,11 @@ export class FinancialPremiumsPageComponent implements OnInit {
       content: this.providerDetailsTemplate,
       animation:{
         direction: 'left',
-        type: 'slide',  
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-    
+
   }
 
   onCloseViewProviderDetailClicked(result: any){
@@ -209,8 +209,8 @@ export class FinancialPremiumsPageComponent implements OnInit {
       this.providerDetailsDialog.close();
     }
   }
-  
-  
+
+
   getProviderPanel(event:any){
     this.financialVendorFacade.getProviderPanel(event)
   }
@@ -228,20 +228,13 @@ export class FinancialPremiumsPageComponent implements OnInit {
   exportClaimsPaymentsGridData() {
     const data = this.dataExportParameters;
     if (data) {
-      const vendorPageAndSortedRequest = {
-        SortType: data?.sortType,
-        Sorting: data?.sortColumn,
-        SkipCount: data?.skipcount,
-        MaxResultCount: data?.maxResultCount,
-        Filter: data?.filter,
-      };
       let fileName =
         this.premiumType[0].toUpperCase() +
         this.premiumType.substr(1).toLowerCase() +
         'Premiums Payments';
 
       this.documentFacade.getExportFile(
-        vendorPageAndSortedRequest,
+        data,
         `premium/${this.premiumType}/payments`,
         fileName
       );
@@ -249,7 +242,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   }
 
   loadEachLetterTemplate(event:any){
-    this.financialPremiumsFacade.loadEachLetterTemplate(this.premiumType, event);  
+    this.financialPremiumsFacade.loadEachLetterTemplate(this.premiumType, event);
   }
 
   exportPremiumsPaymentsGridData() {
@@ -278,24 +271,14 @@ export class FinancialPremiumsPageComponent implements OnInit {
   }
 
   exportPremiumsBatchPaymentsGridData(){
-  const data = this.dataExportParameters;
-    if (data) {
-      const filter = JSON.stringify(data?.filter);
-
-      const param = {
-        SortType: data?.sortType,
-        Sorting: data?.sortColumn,
-        SkipCount: data?.skipcount,
-        MaxResultCount: data?.maxResultCount,
-        Filter: filter,
-      };
+    if (this.dataExportParameters) {
       let fileName =
         this.premiumType[0].toUpperCase() +
         this.premiumType.substr(1).toLowerCase() +
         ' Premiums';
 
       this.documentFacade.getExportFile(
-        param,
+        this.dataExportParameters,
         `premium/${this.premiumType}/batches`,
         fileName
       );
