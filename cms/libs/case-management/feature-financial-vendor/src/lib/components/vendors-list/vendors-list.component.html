@@ -88,10 +88,12 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="paymentMethod" title="Payment Method"  [width]="160" [sortable]="false"  [filterable]="false" 
-      *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-      
+        <kendo-dropdownlist [data]="paymentMethodTypes" textField="lovDesc" valueField="lovDesc"
+          [(ngModel)]="selectedPaymentMethod" [valuePrimitive]="true"
+          (valueChange)="dropdownFilterChange('paymentMethod',$event, filterService)">
+        </kendo-dropdownlist>
       </ng-template>
     </kendo-grid-column>
 
