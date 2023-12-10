@@ -3,7 +3,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  ChangeDetectorRef,EventEmitter,Output
+  ChangeDetectorRef,EventEmitter,Output, OnDestroy, OnInit
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl, AbstractControl } from '@angular/forms';
 
@@ -32,13 +32,14 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { groupBy } from '@progress/kendo-data-query';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-medical-payment-detail',
   templateUrl: './medical-payment-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalPaymentDetailComponent {
+export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isPaymentAddForm = true;
   copayPaymentForm!: FormGroup;
@@ -69,7 +70,7 @@ export class MedicalPaymentDetailComponent {
     caseSensitive: false,
     operator: 'startsWith',
   };
-
+  private showIneligibleSubscription !: Subscription;
   statusEndDateIsGreaterThanStartDate: boolean = true;
   paymentRequest !: PaymentRequest;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -82,6 +83,7 @@ export class MedicalPaymentDetailComponent {
   clientName: any;
   providerTin: any;
   claimForm!: FormGroup;
+  showIneligibleException$ = this.financialClaimsFacade.showIneligibleException$;
   providerNotEligiblePriorityArray = ['ineligibleExceptionFlag'];
   exceedMaxBenefitPriorityArray = ['ineligibleExceptionFlag'];
   duplicatePaymentPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag'];
@@ -115,6 +117,7 @@ export class MedicalPaymentDetailComponent {
     private readonly vendorFacade: VendorFacade,
     private readonly insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private cd: ChangeDetectorRef,
   ) {
     this.copayPaymentForm = this.formBuilder.group({});
 
@@ -126,6 +129,7 @@ export class MedicalPaymentDetailComponent {
     {
       this.financialProvider="Dental";
     }
+    this.checkExceptions();
     this.paymentRequestType$.subscribe((paymentRequestTypes) => {
       let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
       let refactoredPaymentRequestTypeArray :Lov[] =[]
@@ -160,6 +164,46 @@ export class MedicalPaymentDetailComponent {
     }
     this.addClaimServiceGroup();
   }
+
+  checkExceptions()
+  {
+
+    this.showIneligibleSubscription = this.showIneligibleException$.subscribe(data => {
+      if(data?.flag)
+      {
+        this.resetExceptionFields(data?.indexNumber);
+        this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
+        this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(ExceptionTypeCode.Ineligible)
+        this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.Yes)
+      }
+      else if (this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.value === ExceptionTypeCode.Ineligible)
+      {
+        this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No)
+        this.checkProviderNotEligibleException(this.providerTin);
+        this.loadServiceCostMethod(data?.indexNumber);
+
+      }
+
+      this.cd.detectChanges();
+    });
+
+  }
+
+  resetExceptionFields(indexNumber:any)
+  {
+    this.addExceptionForm.at(indexNumber).reset();
+    this.claimForm.controls['parentReasonForException'].setValue('');
+    this.claimForm.controls['parentExceptionFlag'].setValue(StatusFlag.No);
+    this.claimForm.controls['parentExceptionTypeCode'].setValue('');
+    this.claimForm.controls['providerNotEligibleExceptionFlag'].setValue('');
+    this.claimForm.controls['showProviderNotEligibleExceptionReason'].setValue('');
+    this.claimForm.controls['providerNotEligibleExceptionFlagText'].setValue(this.isExcededMaxBanifitButtonText);
+  }
+
   resetForm() {
     this.copayPaymentForm.reset();
     this.copayPaymentForm.updateValueAndValidity();
@@ -683,10 +727,10 @@ export class MedicalPaymentDetailComponent {
   checkIneligibleEception(startDate:any, endDate:any, index:number)
   {
     const formValues = this.claimForm.value
-    if (startDate && endDate && formValues.client?.clientId) {
+    if (startDate && endDate && formValues.client) {
       startDate = this.intl.formatDate(startDate,  this.dateFormat ) ;
       endDate = this.intl.formatDate(endDate,  this.dateFormat ) ;
-      this.financialClaimsFacade.checkIneligibleException(startDate,endDate, formValues.client?.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkIneligibleException(startDate,endDate, formValues.client, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   serviceDescCharCount(i: number) {
@@ -815,5 +859,10 @@ export class MedicalPaymentDetailComponent {
     }
 
     return null;
+  }
+
+  ngOnDestroy(): void {
+    this.showIneligibleSubscription.unsubscribe();
+
   }
 }

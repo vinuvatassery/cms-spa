@@ -106,7 +106,12 @@
                                         <kendo-formerror
                                             *ngIf="(isControlValid('serviceStartDate', i) && isSubmitted)"
                                             class="d-flex align-items-center">Service Start Date is required
-                                        </kendo-formerror>                                   
+                                        </kendo-formerror>
+                                        <kendo-formerror
+                                        *ngIf="(isControlValid('serviceStartDate', i) && isSubmitted)"
+                                        class="d-flex align-items-center">Service Start Date is required
+                                    </kendo-formerror>     
+                                                 
                                        
                                     </div>
                                     <div class="flex-col flex-col-6">
