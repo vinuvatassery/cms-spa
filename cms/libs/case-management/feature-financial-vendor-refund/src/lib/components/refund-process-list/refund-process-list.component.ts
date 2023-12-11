@@ -6,26 +6,28 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
+import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import {  GridDataResult, SelectAllCheckboxState } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Subject, first } from 'rxjs';
+import { Subject, Subscription, first } from 'rxjs';
 @Component({
   selector: 'cms-refund-process-list',
   templateUrl: './refund-process-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RefundProcessListComponent implements OnInit, OnChanges {
+export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('batchRefundConfirmationDialog', { read: TemplateRef })
   batchRefundConfirmationDialog!: TemplateRef<any>;
@@ -36,9 +38,9 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   private addEditRefundFormDialog: any;
   @ViewChild('addEditRefundDialog', { read: TemplateRef })
   addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
-  
+
   isDeleteBatchClosed = false;
-  isDataAvailable=true;
+  isDataAvailable = true;
   isProcessBatchClosed = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isVendorRefundProcessGridLoaderShow = false;
@@ -47,6 +49,11 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() vendorRefundProcessGridLists$: any;
+  @Input() vendorProfile$ :any;
+  @Input() updateProviderPanelSubject$:any
+  @Input() ddlStates$ :any
+  @Input() paymentMethodCode$ :any
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   isColumnsReordered = false;
   columnChangeDesc = 'Default Columns';
   filteredByColumnDesc = '';
@@ -61,38 +68,36 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn='VendorName';
+  selectedColumn = 'VendorName';
   gridDataResult!: GridDataResult;
   showExportLoader = false;
-  isBatchSelected=false;
+  isBatchSelected = false;
   gridVendorsProcessDataSubject = new Subject<any>();
   gridVendorsProcessData$ = this.gridVendorsProcessDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  serviceType =''
-  gridColumns: { [key: string]: string }  = {
+  serviceType = '';
+  gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
-    VendorName: "Vendor Name",
+    VendorName: 'Vendor Name',
   };
 
   columns: any = {
     VendorName: 'Vendor Name',
-    type: 'Type' ,
+    type: 'Type',
     clientFullName: 'Client Name',
     refundWarrentnbr: 'Refund Warrant #',
-    refundAmount:'Refund Amount',
+    refundAmount: 'Refund Amount',
     indexCode: 'Index Code',
     pcaCode:'PCA',
     vp:'VP',
     refunfNotes:'Refund Note',
     origionalWarrentnbr:'Original Warrant #',
-
-
+    creationTime: 'Creation Time'
   };
 
   dropDowncolumns: any = [
-
     {
       columnCode: 'VendorName',
       columnDesc: 'Vendor Name',
@@ -137,7 +142,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       columnCode: 'refundNotes',
       columnDesc: 'Refund Note',
     },
-  ]
+  ];
 
   public selectedProcessRefunds: any[] = [];
   isProcessGridExpand = true;
@@ -168,65 +173,99 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   ];
   isAddRefundModalOpen = false;
   isEditRefund = false;
-  refunEditServiceType='';
-  refundEditClientId='';
+  refunEditServiceType = '';
+  refundEditClientId = '';
   refundEditClientFullName: any;
-  refundEditVendorAddressId='';
+  refundEditVendorAddressId = '';
   refundEditVendorName: any;
   inspaymentRequestId: any;
   refundEditVendorId: any;
 
-  public processGridActions(dataItem:any){
-     return [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Edit Refund',
-      icon: 'edit',
-      click: (refund: any): void => {
-        if(!this.isAddRefundModalOpen){
-          this.isAddRefundModalOpen = true;
-          this.isEditRefund = true
-          this.refunEditServiceType = dataItem.serviceSubTypeCode
-          this.refundEditClientId =dataItem.clientId
-          this.refundEditClientFullName = dataItem.clientFullName
-          this.refundEditVendorAddressId = dataItem.vendorAddressId
-          this.refundEditVendorName = dataItem.vendorName
-          this.inspaymentRequestId = dataItem.paymentRequestId
-          this.refundEditVendorId = dataItem.vendorId
-        this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
-        }
+  public processGridActions(dataItem: any) {
+    return [
+      {
+        buttonType: 'btn-h-primary',
+        text: 'Edit Refund',
+        icon: 'edit',
+        click: (refund: any): void => {
+          if (!this.isAddRefundModalOpen) {
+            this.isAddRefundModalOpen = true;
+            this.isEditRefund = true;
+            this.refunEditServiceType = dataItem.serviceSubTypeCode;
+            this.refundEditClientId = dataItem.clientId;
+            this.refundEditClientFullName = dataItem.clientFullName;
+            this.refundEditVendorAddressId = dataItem.vendorAddressId;
+            this.refundEditVendorName = dataItem.vendorName;
+            this.inspaymentRequestId = dataItem.paymentRequestId;
+            this.refundEditVendorId = dataItem.vendorId;
+            this.onEditRefundClaimClicked(
+              this.addEditRefundFormDialogDialogTemplate
+            );
+          }
+        },
       },
-    },
-    {
-      buttonType: 'btn-h-danger',
-      text: 'Delete Refund',
-      icon: 'delete',
-      click: (refund: any): void => {
-        if(refund.paymentRequestId){
-          this.onSingleRefundDelete(refund.paymentRequestId?.split(','));
-          this.onDeleteRefundsOpenClicked(this.deleteRefundConfirmationDialog);
-        }
+      {
+        buttonType: 'btn-h-danger',
+        text: 'Delete Refund',
+        icon: 'delete',
+        click: (refund: any): void => {
+          if (refund.paymentRequestId) {
+            this.onSingleRefundDelete(refund.paymentRequestId?.split(','));
+            this.onDeleteRefundsOpenClicked(
+              this.deleteRefundConfirmationDialog
+            );
+          }
+        },
       },
-    },
-  ];
-}
+    ];
+  }
 
-  deletemodelbody = 'This action cannot be undone, but you may add a refund at any time.';
+  deletemodelbody =
+    'This action cannot be undone, but you may add a refund at any time.';
   singleRefundDelete = false;
+
+  public selectAllState: SelectAllCheckboxState = "unchecked";
+  vendorRefundProcessGridLists: any;
+  vendorRefundProcessGridListsSub!: Subscription;
+
+
+  //recent claims modal
+  @ViewChild('clientRecentClaimsDialog') clientRecentClaimsDialogRef!: TemplateRef<unknown>
+  @ViewChild('clientRecentPremiumsDialogTemplate') clientRecentPremiumsDialogRef!: TemplateRef<unknown>
+  @ViewChild('clientRecentPharmacyClaimsDialog') clientRecentPharmacyClaimsDialogRef!: TemplateRef<unknown>
+  @Output() providerNameClickEvent = new EventEmitter<any>();
+  vendorId: any;
+  clientId: any;
+  clientName: any;
+  claimsType: any;
+  paymentRequestId: any;
+  private addClientRecentClaimsDialog: any;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
-    private financialVendorRefundFacade: FinancialVendorRefundFacade
-  ) {}
-
-  ngOnInit(): void {
+    private financialVendorRefundFacade: FinancialVendorRefundFacade,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly route: Router
+  ) {
   }
+
+  ngOnInit(){
+    this.vendorRefundProcessGridListsSub = this.vendorRefundProcessGridLists$.subscribe((res: any) => this.vendorRefundProcessGridLists = res)
+  }
+
+  ngOnDestroy(){
+    this.vendorRefundProcessGridListsSub?.unsubscribe();
+  }
+
   ngOnChanges(): void {
+    this.sortType = 'desc';
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'VendorName', dir: 'asc' }]
+      sort: this.sort
     };
     this.loadVendorRefundProcessListGrid();
   }
@@ -280,7 +319,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   }
 
   onClickOpenAddEditRefundFromModal(template: TemplateRef<unknown>): void {
-    this.isEditRefund =false   
+    this.isEditRefund =false
     this.refunEditServiceType = ""
     this.refundEditClientId =""
     this.refundEditClientFullName = ""
@@ -300,8 +339,8 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       this.loadVendorRefundProcessListGrid();
     }
   }
-  searchColumnChangeHandler(data:any){
-    this.onChange(data)
+  searchColumnChangeHandler(data: any) {
+    this.onChange(data);
   }
 
   onChange(data: any) {
@@ -354,6 +393,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     if (stateData.filter?.filters.length > 0) {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -389,9 +429,12 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
       if (data?.total >= 0 || data?.total === -1) {
         this.isVendorRefundProcessGridLoaderShow = false;
       }
-      if(data?.total < 1)
+      if (data?.total < 1) {
+        this.isDataAvailable = false;
+      }
+      else 
       {
-        this.isDataAvailable=false;
+        this.isDataAvailable=true;
       }
     });
   }
@@ -408,10 +451,11 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.selectedColumn = 'VendorName';
     this.isFiltered = false;
     this.columnsReordered = false;
-    this.sortValue = 'VendorName';
-    this.sortType = 'asc';
+    this.sortColumnDesc = 'Creation Time';
+    this.sortValue = 'creationTime';
+    this.sortType = 'desc';
     this.sort = this.sortColumn;
-    this.searchValue =''
+    this.searchValue = '';
     this.loadVendorRefundProcessListGrid();
   }
 
@@ -424,18 +468,28 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   }
 
   onModalBatchRefundsModalClose(result: any) {
-    if(result){
+    if (result) {
       this.batchConfirmRefundDialog.close();
     }
   }
 
   onModalBatchRefundsButtonClicked(event: any) {
-    const input: any = {
-      PaymentRequestIds: this.selectedProcessRefunds,
+    this.handleBatchRefunds();
+
+    this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType
+
+    const gridDataRefinerValue: any = {
+      skipCount: this.state?.skip ?? 0,
+      maxResultCount: this.state?.take ?? 0,
+      sorting: this.sortValue,
+      sortType: this.sortType,
+      filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
     };
 
-    this.handleBatchRefunds();
-    this.financialVendorRefundFacade.batchRefunds(input);
+    this.financialVendorRefundFacade.batchRefunds(this.selectedProcessRefunds, this.selectAllState === 'checked', gridDataRefinerValue);
   }
 
   handleBatchRefunds() {
@@ -459,7 +513,28 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   }
 
   selectedKeysChange(selection: any) {
+
+    const len = this.selectedProcessRefunds.length;
+
+    if (len === 0) {
+      this.selectAllState = "unchecked";
+    } else if (len > 0 && len < this.vendorRefundProcessGridLists.total) {
+      this.selectAllState = "indeterminate";
+    } else {
+      this.selectAllState = "checked";
+    }
+
     this.selectedProcessRefunds = selection;
+  }
+
+  public onSelectAllChange(checkedState: SelectAllCheckboxState): void {
+    if (checkedState === "checked") {
+      this.selectedProcessRefunds = this.vendorRefundProcessGridLists.data.map((item: any) => item.paymentRequestId);
+      this.selectAllState = "checked";
+    } else {
+      this.selectedProcessRefunds = [];
+      this.selectAllState = "unchecked";
+    }
   }
 
   onBatchRefundsGridSelectedCancelClicked() {
@@ -468,6 +543,7 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     this.isProcessBatchClosed = false;
     this.singleRefundDelete = false;
     this.selectedProcessRefunds = [];
+    this.selectAllState = "unchecked";
     this.cdr.detectChanges();
   }
 
@@ -498,9 +574,10 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
   }
 
   public onDeleteRefundsOpenClicked(template: TemplateRef<unknown>): void {
-    if (!this.selectedProcessRefunds?.length)
-    {
-      this.financialVendorRefundFacade.errorShowHideSnackBar("Select a Refund to delete")
+    if (!this.selectedProcessRefunds?.length) {
+      this.financialVendorRefundFacade.errorShowHideSnackBar(
+        'Select a Refund to delete'
+      );
       return;
     }
     this.deleteRefundDialog = this.dialogService.open({
@@ -523,4 +600,56 @@ export class RefundProcessListComponent implements OnInit, OnChanges {
     });
   }
 
+  clientRecentClaimsModalClicked(
+    data: any
+  ): void {
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientFullName;
+    this.paymentRequestId = data.paymentRequestId
+    this.claimsType = 'medical'
+    let template;
+
+    switch (data.type) {
+      case FinancialServiceTypeCode.Tpa:{
+        template = this.clientRecentClaimsDialogRef
+        break;
+      }
+      case FinancialServiceTypeCode.Insurance:{
+        template = this.clientRecentPremiumsDialogRef;
+        break;
+      }
+      case FinancialServiceTypeCode.Pharmacy:{
+        template = this.clientRecentPharmacyClaimsDialogRef;
+        break;
+      }
+      default: break;
+    }
+
+    if(template)
+    this.addClientRecentClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+  }
+
+  closeRecentClaimsModal(result: any) {
+    if (result) {
+      this.addClientRecentClaimsDialog.close();
+    }
+  }
+
+  onProviderNameClick(event:any){
+    this.providerNameClickEvent.emit(event);
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentClaimsModal(true);
+  }
 }

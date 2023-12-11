@@ -90,12 +90,7 @@ export class PaymentAddressesComponent {
 
  //filtering
  filteredBy = '';
- filter: any = [
-   {
-     filters: [],
-     logic: 'and',
-   },
- ];
+filter: any = [];
 
  filteredByColumnDesc = '';
  selectedStatus = 'Active';
@@ -183,10 +178,10 @@ export class PaymentAddressesComponent {
   private checkMailCode() {
     this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
       if (mailCode.length > 0) {
-        this.IsAddContactDisabled = false;
+        this.IsAddContactDisabled = true;
         this.cdr.detectChanges();
       } else {
-        this.IsAddContactDisabled = true;
+        this.IsAddContactDisabled = false;
       }
     });
   }
@@ -436,6 +431,7 @@ export class PaymentAddressesComponent {
   }
 
   dataStateChange(stateData: any): void {
+  
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -443,6 +439,9 @@ export class PaymentAddressesComponent {
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.column[this.sortValue];
     this.filter = stateData?.filter?.filters;
+    if(!this.filter){
+      this.filter = [];
+    }
     this.setFilterBy(true, '', this.filter);
     if (!this.filteredByColumnDesc.includes('Status')) this.selectedStatus = '';
     this.loadPaymentsAddressListGrid();

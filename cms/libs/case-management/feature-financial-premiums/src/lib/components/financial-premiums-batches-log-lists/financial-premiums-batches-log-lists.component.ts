@@ -51,7 +51,9 @@ export class FinancialPremiumsBatchesLogListsComponent
   vendorId: any;
   clientId: any;
   clientName: any = "";
- 
+  totalPaymentsCount = 0;
+  totalReconciled = 0;
+
   yesOrNoLovs: any = [];
   onlyPrintAdviceLetter: boolean = true;
   printAuthorizationDialog: any;
@@ -78,7 +80,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   totalRecord:any;
   noOfRecordToPrint:any = 0;
   batchLogPrintAdviceLetterPagedList:any;
- 
+
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
@@ -162,7 +164,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     },
     {
       columnCode: 'acceptsReports',
-      columnDesc: 'Accepts reports?',
+      columnDesc: 'Accepts Reports?',
     },
     {
       columnCode: 'paymentRequestedDate',
@@ -194,7 +196,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     vendorName: "Insurance Vendor",
     serviceCount: "Item Count",
     serviceCost: "Total Amount",
-    acceptsReports: "Accepts reports?",
+    acceptsReports: "Accepts Reports?",
     paymentRequestedDate: "Date Pmt. Requested",
     paymentSentDate: "Date Pmt. Sent",
     paymentMethodCode: "Pmt. Method",
@@ -217,8 +219,8 @@ export class FinancialPremiumsBatchesLogListsComponent
 
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   @Output() loadFinancialPremiumBatchInvoiceListEvent = new EventEmitter<any>();
-  @Output() exportGridDataEvent = new EventEmitter<any>();   
-  @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
+  @Output() exportGridDataEvent = new EventEmitter<any>();
+  @Output() unBatchEntireBatchEvent = new EventEmitter<any>();
   @Output() unBatchPremiumEvent = new EventEmitter<any>();
   @Output() deletePaymentEvent = new EventEmitter();
 
@@ -257,9 +259,14 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.addActionRespSubscription();
     this.batchLogListItemsSubscription();
     this.batchLogGridLists$.subscribe((data:GridDataResult) =>{
+      this.totalPaymentsCount=data.total;
+      this.totalReconciled = 0;
         data.data.forEach(item =>{
           if(!([BatchStatusCode.Paid, BatchStatusCode.PaymentRequested, BatchStatusCode.ManagerApproved].includes(item.batchStatusCode))){
             this.disableBtnUnbatchEntireBatch = false
+          }
+          if(item.paymentStatusCode == BatchStatusCode.Paid){
+            this.totalReconciled += 1;
           }
         })
     })
@@ -325,7 +332,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   }
 
   searchColumnChangeHandler(value: string) {
-    
+
     if(value === 'paymentRequestedDate' || value === 'paymentSentDate')
     {
       this.showDateSearchWarning = true
@@ -335,7 +342,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       this.showDateSearchWarning = false
     }
     this.filter = [];
-   
+
     if (this.searchValue) {
       this.onChange(this.searchValue);
     }
@@ -345,7 +352,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     this.defaultGridState();
 
     const isDateSearch = data.includes('/');
-    
+
     data = this.formatSearchValue(data, isDateSearch);
     if (isDateSearch && !data) return;
 
@@ -355,7 +362,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       this.selectedColumn === 'serviceCount' ||
       this.selectedColumn === 'serviceCost' ||
       this.selectedColumn === 'amountDue' ||
-      this.selectedColumn === 'balanceAmount'     
+      this.selectedColumn === 'balanceAmount'
     ) {
       operator = 'eq';
     }
@@ -379,7 +386,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     if( this.selectedColumn === 'paymentRequestedDate'||
     this.selectedColumn === 'paymentSentDate')
     {
-      
+
       this.filterData = {
         logic: 'and',
         filters: [
@@ -405,9 +412,9 @@ export class FinancialPremiumsBatchesLogListsComponent
           }
         ],
       };
-    } 
+    }
 
-   
+
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
@@ -488,7 +495,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
         this.isBatchLogGridLoaderShow = false;
       }
       this.isBatchLogGridLoaderShow = false;
-    });    
+    });
   }
 
   backToBatch(event: any) {
@@ -600,7 +607,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
         }
       });
   }
-  
+
   public onRemovePremiumsOpenClicked(paymentRequestId: string, template: TemplateRef<unknown>): void {
     this.paymentId = paymentRequestId;
     this.removePremiumsDialog = this.dialogService.open({
@@ -618,21 +625,6 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
 
   deletePremiumPayment(paymentId: string) {
     this.deletePaymentEvent.emit(this.paymentId);
-  }
-
-  clientRecentPremiumsModalClicked(template: TemplateRef<unknown>, data: any): void {
-    this.addClientRecentPremiumsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
-      animation: {
-        direction: 'up',
-        type: 'slide',
-        duration: 200
-      }
-    });
-    this.vendorId = "3F111CFD-906B-4F56-B7E2-7FCE5A563C36";
-    this.clientId = 5;
-    this.clientName = "Jason Biggs";
   }
 
   closeRecentPremiumsModal(result: any) {
@@ -839,7 +831,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
       this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item:any) => item.paymentRequestId !== dataItem.paymentRequestId);
       if(!this.selectAll){
       this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
-      }          
+      }
     }
     let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
@@ -848,27 +840,27 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   }
 
   markAsUnChecked(data:any){
-    data.forEach((element:any) => {     
-      element.selected = false;    
+    data.forEach((element:any) => {
+      element.selected = false;
    });
   }
 
   markAsChecked(data:any){
-    data.forEach((element:any) => { 
+    data.forEach((element:any) => {
       if(this.selectAll){
-        element.selected = true; 
-      } 
+        element.selected = true;
+      }
       else{
-        element.selected = false; 
+        element.selected = false;
       }
       if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
         let itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
-          element.selected = false;    
+          element.selected = false;
         }
         let itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
-          element.selected = true;   
+          element.selected = true;
         }
       }
     });
@@ -876,5 +868,24 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
 
   loadEachLetterTemplate(event:any){
     this.loadTemplateEvent.emit(event);
+  }
+
+  clientRecentClaimsModalClicked(
+    template: TemplateRef<unknown>,
+    dataItem: any,
+    event:any
+  ): void {
+    this.addClientRecentPremiumsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+      animation: {
+        direction: 'up',
+        type: 'slide',
+        duration: 200,
+      },
+    });
+    this.vendorId=dataItem.vendorId;
+    this.clientId=event.clientId;
+    this.clientName=event.clientFullName;
   }
 }

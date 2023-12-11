@@ -17,7 +17,8 @@
 (loadReconcileBreakoutSummaryEvent)="loadReconcileBreakoutSummary($event)"
 (loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"
 [reconcilePaymentBreakoutLoaderList$]="reconcilePaymentBreakoutLoaderList$"
-(onProviderNameClickEvent)="onProviderNameClick($event)"></cms-pharmacy-claims-batches-reconcile-payments>
+(onProviderNameClickEvent)="onProviderNameClick($event)"
+[deliveryMethodLov$]="deliveryMethodLov$"></cms-pharmacy-claims-batches-reconcile-payments>
 <ng-template #providerDetailsTemplate>
     <cms-pharmacy-claims-provider-info
           [paymentRequestId]="paymentRequestId"

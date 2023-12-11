@@ -41,6 +41,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   objectCodeControl! : FormControl
   editPca = false
   formSubmitted =false
+  remainingAmountValidate = false
   constructor(  
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
@@ -188,13 +189,24 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
  }
   onPcaAssignmentFormSubmit()
   {    
+    this.remainingAmountValidate = false
     this.dateValidate()
+    if(this.openDateError === true)
+    {
+      return
+    }
+   
     if(this.pcaAssignmentForm?.controls["unlimited"].value === false && this.pcaAssignmentForm?.controls["amount"].value < 1)
     {
       this.pcaAssignmentForm?.controls["amount"].setValue('')
     }
     this.formSubmitted = true
     this.pcaAssignmentForm.markAllAsTouched();
+    if(this.pcaCodeInfo?.remainingAmount < this.pcaAssignmentForm?.controls["amount"].value)
+    {
+      this.remainingAmountValidate = true
+       return
+    }
     if(this.pcaAssignmentForm.valid)
     {
 
@@ -256,6 +268,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
    {
     this.pcaAssignmentForm.controls['amount'].enable();
    }
+   this.pcaCodeInfo.remainingAmount = this.totalAmount
   }
 
 

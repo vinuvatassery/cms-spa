@@ -10,7 +10,10 @@ export class VendorFacade {
   private paymentRequestVendorsSubject = new BehaviorSubject<any>([]);
   private isVendorLoadingSubject = new BehaviorSubject<any>(true);
   paymentRequestVendors$ = this.paymentRequestVendorsSubject.asObservable();
-  isVendorLoading$ = this.isVendorLoadingSubject.asObservable();
+  isVendorLoading$ = this.isVendorLoadingSubject.asObservable(); 
+  
+  public loadCarrierSubject = new BehaviorSubject<any>(true);
+  loadCarrier$ = this.loadCarrierSubject.asObservable();
 
   constructor(
     private readonly vendorDataService: VendorDataService,

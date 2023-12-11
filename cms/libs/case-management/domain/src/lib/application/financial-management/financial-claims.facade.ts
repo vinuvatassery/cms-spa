@@ -20,6 +20,7 @@ import { BatchClaim } from '../../entities/financial-management/batch-claim';
 import { GridFilterParam } from '../../entities/grid-filter-param';
 import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
 import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -72,7 +73,7 @@ export class FinancialClaimsFacade {
     field: this.sortValueBatchItem, dir: 'desc'
   }];
 
-
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   public sortValueReconcile = 'vendorName';
   public sortReconcileList: SortDescriptor[] = [
     {
@@ -238,6 +239,7 @@ export class FinancialClaimsFacade {
     private configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
+    public intl: IntlService,
   ) {}
 
   /** Public methods **/
@@ -609,13 +611,35 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       },
     });
   }
+  formatDateString(originalDate: string): string {
+   // Parse the ISO 8601 formatted date
+   const dateObject: Date = new Date(originalDate);
 
+   // Check if the date is valid
+   if (isNaN(dateObject.getTime())) {
+     return 'Invalid Date';
+   }
+
+   // Format the date as needed
+   const formattedDate: string = dateObject.toLocaleDateString('en-US', {
+     day: '2-digit',
+     month: '2-digit',
+     year: 'numeric',
+   });
+
+   return formattedDate;
+  }
   loadClientBySearchText(text : string): void {
-    this.clientSearchLoaderVisibilitySubject.next(true);
     if(text){
       this.financialClaimsDataService.loadClientBySearchText(text).subscribe({
 
         next: (caseBySearchTextResponse) => {
+          caseBySearchTextResponse?.forEach((data:any) => {
+            
+            let date =this.formatDateString(data.dob); 
+            data.providerFullName = `${data.clientFullName ?? ''} `+' '+`${data.clientId?? ''}  `+' '+`${date?? ''}` +' '+`${data.ssn?? ''}`;
+        });
+          
           this.clientSubject.next(caseBySearchTextResponse);
           this.clientSearchLoaderVisibilitySubject.next(false);
         },
@@ -629,6 +653,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       this.clientSearchLoaderVisibilitySubject.next(false);
     }
   }
+
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
     this.showLoader();
     return this.financialClaimsDataService

@@ -77,7 +77,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   objectCode! : any
   pcaCode! :any
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  dialogTitle = "Add New"
+  dialogTitle = "Add"
   hasDrugCreateUpdatePermission = false
   vendorId! : any
   clientId: any;
@@ -420,7 +420,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   clickOpenAddEditFinancialDrugsDetails() {
     this.vendorFacade.showLoader()
     this.hasDrugCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Drug_Create_Update']);
-      this.dialogTitle = this.hasDrugCreateUpdatePermission ? "Add New" : "Request New";
+      this.dialogTitle = this.hasDrugCreateUpdatePermission ? "Add" : "Request New";
 
     this.isFinancialDrugsDetailShow = true;
     this.cd.detectChanges()

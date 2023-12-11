@@ -1,20 +1,19 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit } from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, ServiceTypeCode } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subject, debounceTime } from 'rxjs';
-import {  VednorRefundTpaClaimsListComponent,VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
+import { Subject, debounceTime, takeUntil } from 'rxjs';
+import {  VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { IFrameService } from 'angular-auth-oidc-client/lib/iframe/existing-iframe.service';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
 })
-export class RefundNewFormDetailsComponent implements  OnInit{
+export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
   selectedRefundType : any;
@@ -56,8 +55,11 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   onEditInitiallydontShowPremiumselection = false;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
-  refundForm!: FormGroup;
 
+  @ViewChild('tpaProviderDetailsTemplate', { read: TemplateRef })
+  tpaProviderDetailsTemplate!: TemplateRef<any>;
+  refundForm!: FormGroup;
+  private ngUnsubscribe = new Subject<void>();
   /******/
   sortValueClaims = this.financialVendorRefundFacade.sortValueClaims;
   sortClaims = this.financialVendorRefundFacade.sortClaimsList;
@@ -82,6 +84,10 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   tpaAddRefundClickSubject = new Subject<any>();
   tpaAddRefundClick$ = this.tpaAddRefundClickSubject.asObservable()
 
+
+  selectDiffPaymentClicked = new Subject<any>();
+  selectDiffPaymentClicked$ = this.selectDiffPaymentClicked.asObservable()
+
   clientSearchLoaderVisibility$ =
   this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialVendorRefundFacade.clients$;
@@ -90,12 +96,10 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   insurancevendors$ = this.financialVendorRefundFacade.insurancevendors$;
   tpavendors$ = this.financialVendorRefundFacade.tpavendors$;
   tpaRefundInformation$ = this.financialVendorRefundFacade.tpaRefundInformation$
- 
+ // tpaEditRefundInformation$ = this.financialVendorRefundFacade.tpaEditRefundInformation$
   @ViewChild('insClaims', { static: false })
   insClaims!: VendorRefundInsurancePremiumListComponent;
 
-  @ViewChild('tpaClaims', { static: false })
-  tpaClaims!: VednorRefundTpaClaimsListComponent;
 
   @ViewChild('rxClaims', { static: false })
   rxClaims!: VendorRefundPharmacyPaymentsListComponent;
@@ -110,7 +114,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
 
  @Input() serviceType=''
  @Input() inspaymentRequestId:any
-  @Output() modalCloseAddEditRefundFormModal = new EventEmitter<Boolean>();
+  @Output() modalCloseAddEditRefundFormModal = new EventEmitter<boolean>();
   sortValue: string | undefined;
   financialPremiumsRefundGridLists: any;
   tpaRefundInformation :any
@@ -129,12 +133,18 @@ export class RefundNewFormDetailsComponent implements  OnInit{
   selectedInsRequests: any[]=[];
   selectedTpaRequests: any[]=[];
   selectedRxVendorRefundList: any;
+  tpaRefundGridLists: any[]=[]
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
     public financialVendorFacade :FinancialVendorFacade,
     private dialogService: DialogService,
     private formBuilder: FormBuilder) {}
+  ngOnDestroy(): void {
+
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
+  }
   ngOnInit(): void {
 
     this.subscribeLoadRefundClaimDataForRx();
@@ -150,6 +160,7 @@ export class RefundNewFormDetailsComponent implements  OnInit{
      this.refundType =  res.filter(x=> x.lovCode!=='TAX')
     })
 if(this.isEdit){
+  console.log(this.tpaRefundGridLists)
   this.disableFeildsOnConfirmSelection = true
   this.selectedRefundType = this.serviceType
   this.onEditInitiallydontShowPremiumselection = true
@@ -166,7 +177,7 @@ if(this.isEdit){
     this.selectedVendor = vendors
 
 
- 
+
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
   this.initForm()
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
@@ -205,19 +216,21 @@ if(this.isEdit){
     this.refundForm.patchValue({
       tpaVendor : this.selectedVendor
     });
-   
+
     this. tpavendors$.subscribe((res:any[])=>{
       const vendors = res.filter((x) =>{
         return x.vendorAddressId ==  this.vendorAddressId
+
       })
       this.selectedVendor = vendors && vendors[0]
       this.vendorId = vendors[0].vendorId
       this.initForm()
     })
-  this.debouncedtpaVendors(this.vendorName) 
-  
+  this.debouncedtpaVendors(this.vendorName)
+
   this.financialVendorRefundFacade.tpaVendorsSubject.next([this.selectedVendor])
   this.isConfirmationClicked = true;
+
   this.getTpaRefundInformation(this.inspaymentRequestId)
   this.refundForm.controls['tpaVendor'].disable();
   this.searchTpaVendors(this.vendorName)
@@ -303,7 +316,10 @@ if(this.isEdit){
 
   if(this.selectedRefundType === ServiceTypeCode.tpa ){
     this.refundForm.controls['tpaVendor'].disable();
-    this.tpaClaimsPaymentReqIds =  this.tpaClaims.selectedTpaClaims
+    const param ={
+      paymentRequestIds: this.selectedTpaRequests,
+    }
+      this.financialVendorRefundFacade.getTpaRefundInformation(param)
   }
    if (this.selectedRefundType === ServiceTypeCode.pharmacy || this.selectedRefundType === 'RX' || this.selectedRefundType === 'PHARMACY'){
     this.refundForm.controls['rxVendor'].disable();
@@ -356,12 +372,36 @@ onSelectedRxClaimsChangeEvent(event:any){
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
     this.financialPremiumsRefundGridLists =  res;
     })
-  
+
   }
 
 
   getTpaRefundInformation(data:any){
-
+    this.tpaRefundInformation$
+    .pipe(takeUntil(this.ngUnsubscribe))
+    .subscribe((res: any) => {
+      let data:any[] =[]
+      let response :any[] =[]
+      response = res.data
+      if(this.tpaRefundGridLists && this.tpaRefundGridLists.length>0){
+        this.tpaRefundGridLists.forEach(element => {
+          let index =  response.findIndex(x=> x.paymentRequestId == element.paymentRequestId)
+          if(index>=0)
+           response.splice(index)
+      })
+      this.tpaRefundGridLists =  this.tpaRefundGridLists.concat(response)
+      }else{
+      this.tpaRefundGridLists = res.data
+      }
+      this.tpaRefundGridLists = [...this.tpaRefundGridLists]
+      this.tpaRefundGridLists.forEach(x=>{
+        x.serviceStartDate =new Date(x.serviceStartDate);
+        x.serviceEndDate =new Date(x.serviceEndDate);
+        x.reconciledDate =  x.reconciledDate ? new Date(x.reconciledDate) : new Date()
+        x.totalAmount = x.tpaInvoice.reduce((accumulator : number, obj : any) => accumulator + obj.serviceCost, 0);
+      })
+      this.claimsCount = this.tpaRefundGridLists.length
+    })
     if(this.isEdit){
      this.financialVendorRefundFacade.getTpaEditRefundInformation(data);
 
@@ -373,14 +413,17 @@ onSelectedRxClaimsChangeEvent(event:any){
     this.financialVendorRefundFacade.tpaRefundInformation$.subscribe(res =>{
     this.tpaRefundInformation =  res;
     })
+
+
   }
-  
+
   }
 
 
 
 onCloseViewProviderDetailClicked(result: any){
   if(result){
+    this.modalCloseAddEditRefundFormModal.emit(false);
     this.providerDetailsDialog.close();
   }
 }
@@ -402,6 +445,19 @@ onInsurancePremiumProviderCick(event:any){
   });
 
 }
+
+onTpaProviderClick(event:any){
+  this.paymentRequestId = event
+  this.providerDetailsDialog = this.dialogService.open({
+    content: this.tpaProviderDetailsTemplate,
+    animation:{
+      direction: 'left',
+      type: 'slide',
+    },
+    cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+  });
+
+}
 updateProviderProfile(event:any){
   this.financialVendorFacade.updateProviderPanel(event)
 }
@@ -414,7 +470,7 @@ OnEditProviderProfileClick(){
 onAddRefundClick(){
   if (this.selectedRefundType === 'PHARMACY') {
     this.addNewRefundRx();
-  } 
+  }
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
       this.insuraceAddRefundClickSubject.next(true);
   }
@@ -424,10 +480,17 @@ onAddRefundClick(){
 }
 
 addTpa(event:any){
+  this.financialVendorRefundFacade.addUpdateInsuranceRefundClaim$.subscribe(res =>{
+    this.closeAddEditRefundFormModalClicked(true)
+  })
   const param ={
     tpaRefundInformation:event
   }
-this.financialVendorRefundFacade.addTpaRefundClaim(param);
+  if(!this.isEdit){
+    this.financialVendorRefundFacade.addTpaRefundClaim(param);
+  }else{
+    this.financialVendorRefundFacade.updateTpaRefundClaim(param)
+  }
 }
 
   /******  */
@@ -435,6 +498,7 @@ this.financialVendorRefundFacade.addTpaRefundClaim(param);
     this.isConfirmationClicked = false;
     this.disableFeildsOnConfirmSelection = true;
     if(this.selectedRefundType == ServiceTypeCode.insurancePremium){
+
     this.refundForm.controls['insVendor'].disable();
     }
     this.onEditInitiallydontShowPremiumselection = false
@@ -443,10 +507,9 @@ this.financialVendorRefundFacade.addTpaRefundClaim(param);
     if(this.selectedRefundType == ServiceTypeCode.pharmacy){
     this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
     }
- 
   }
 
-  closeAddEditRefundFormModalClicked(event:Boolean){
+  closeAddEditRefundFormModalClicked(event:boolean){
     this.modalCloseAddEditRefundFormModal.emit(event);
   }
 
@@ -491,25 +554,24 @@ this.financialVendorRefundFacade.addTpaRefundClaim(param);
       this.clientId=null;
     }
   }
-  searchPharmacy(searchText: any) {;
+  searchPharmacy(searchText: any , ) {;
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText);
+    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
     this.vendorAddressId=null;
     if($event==undefined){
       this.vendorAddressId=null;
     }
-    this.vendorId=$event.vendorId;
-    this.vendorAddressId = $event.vendorAddressId;
-    this.vendorName = $event.vendorName;
-    this.vendorId = $event.vendorId
+    this.vendorId=$event?.vendorId;
+    this.vendorAddressId = $event?.vendorAddressId;
+    this.vendorName = $event?.vendorName;
     this.providerTin = $event;
     if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
-    } 
+    }
     this.selectedMedicalProvider = $event
   }
   initRefundForm() {
@@ -570,7 +632,18 @@ this.financialVendorRefundFacade.addTpaRefundClaim(param);
   claimsCountEvent(data:any){
 
     this.claimsCount=data;
+
   }
+
+  onTpaClaimsDelete(data:any){
+    this.claimsCount = data.length
+    this.tpaPaymentReqIds = data;
+    if(data.length<=0){
+      this.isConfirmationClicked = false;
+    }
+
+  }
+
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
     if(operation === "ADD"){
       this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>
@@ -647,15 +720,15 @@ this.financialVendorRefundFacade.addTpaRefundClaim(param);
    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
    let inValid = false;
    if (control === 'qtyRefunded') {
-     inValid = isTouched == true && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
+     inValid == isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
      dataItem.qtyRefundedValid = !inValid;
    }
    if (control === 'daySupplyRefunded') {
-     inValid = isTouched == true && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+     inValid == isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
      dataItem.daySupplyRefundedValid = !inValid;
    }
    if (control === 'refundedAmount') {
-     inValid = isTouched == true && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
+     inValid == isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
      dataItem.refundedAmountValid = !inValid;
    }
    if (inValid) {

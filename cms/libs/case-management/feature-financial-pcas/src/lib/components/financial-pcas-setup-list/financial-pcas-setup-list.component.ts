@@ -119,9 +119,6 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     { columnName: 'ALL', columnDesc: 'All Columns' },
     { columnName: 'pcaCode', columnDesc: 'PCA #' },
     { columnName: 'appropriationYear', columnDesc: 'AY #' },
-    { columnName: 'pcaDesc', columnDesc: 'Description' },
-    { columnName: 'closeDate', columnDesc: 'Close Date' },
-    { columnName: 'fundingSource', columnDesc: 'Funding Source' },
     { columnName: 'fundingDesc', columnDesc: 'Funding Name' },
   ];
   selectedSearchColumn = 'ALL';
@@ -374,6 +371,10 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     }
 
     return searchValue;
+  }
+
+  isNotNumeric(num: any){
+    return isNaN(num)
   }
 
 }

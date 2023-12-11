@@ -1,6 +1,6 @@
 
 <kendo-dialog-titlebar (close)="closeAddPremiumClicked()"> Add Premium</kendo-dialog-titlebar>
-<section class="k-dialog-body">
+<section class="k-dialog-body">   
       <p class="text-muted mb-1">  Search for a client to add their premium payment(s). If a client has multiple insurance plans, select which ones to add. </p>
       <div class="flex-row">
             <div class="flex-col">
@@ -10,7 +10,7 @@
                         <kendo-multicolumncombobox 
                             autofocusfield
                             placeholder="Search Client Name, ID Number, DOB, or SSN"
-                            textField="clientFullName"
+                            textField="providerFullName"
                             valueField="clientId" 
                             class="'k-invalid': showClientRequiredValidation"
                             [fillMode]="formUiStyle.dropDownFillMode"
@@ -51,7 +51,7 @@
 
                     </kendo-multicolumncombobox>
                     <kendo-formerror class="d-flex align-items-center" *ngIf="showClientRequiredValidation">                    
-                        <span class="material-icons mr-1" aria-hidden="false">info</span>  Client is required
+                        <span class="material-icons mr-1" aria-hidden="false">info</span>  A client selection is required
                     </kendo-formerror>
                 </div>
             </div>
@@ -69,16 +69,15 @@
                   <kendo-grid 
                     [resizable]="true"  
                     [sortable]="true"   
-                    [resizable]="true"
-                    [isDetailExpanded]="expandRows"
+                    [resizable]="true"                    
                     [data]="insurancePlans$ | async"
                     [loading]="(insurancePlansLoader$ | async) == true"
-                    [data]="addPremiumGridLists$ | async">
+                    [isDetailExpanded]="expandRows">
                         <kendo-grid-column  title="" [width]="80">
                             <ng-template kendoGridCellTemplate let-dataItem>                  
                                   <input type="checkbox" id="insurancePlan" name="insurancePlan"
                                   aria-labelledby="insurancePlan" kendoCheckBox 
-                                  (click)="planSelectionChange($event)"
+                                  (click)="planSelectionChange($event, dataItem)"
                                   [(ngModel)]="dataItem.isPlanSelected"                                  
                                   />                                 
                             </ng-template>
@@ -91,7 +90,7 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="healthInsuranceType" title="Insurance Type" [width]="160">
                         </kendo-grid-column>
-                        <kendo-grid-column field="" title="Option" [columnMenu]="false" [width]="40" class="text-center" >
+                        <kendo-grid-column field="" title="Option" [columnMenu]="false" [width]="80" class="text-center" >
                             <ng-template kendoGridCellTemplate let-dataItem>
                               <kendo-dropdownbutton [data]="insurancePlansAction" icon="more-vertical"
                                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -110,6 +109,7 @@
                             </ng-template>
                           </kendo-grid-column>
                         <ng-template kendoGridDetailTemplate let-dataItem let-policyId="dataItem.clientInsurancePolicyId">
+                            <section *ngIf="dataItem.coverages">
                             <kendo-grid 
                             [resizable]="true"  
                             [sortable]="true"   
@@ -183,7 +183,7 @@
                                     <kendo-textarea 
                                     *ngIf="dataItem.makeExceptionFlag"
                                     aria-label="Exception Reason" 
-                                    [maxlength]="160" 
+                                    [maxlength]="150" 
                                     [rows]="1"
                                     [fillMode]="formUiStyle.inputFillMode"
                                     resizable="none"
@@ -215,6 +215,7 @@
                             <button kendoButton [primary]="true" icon="add"  aria-label="Premium" (click)="addCoverage(dataItem)">
                             Premium
                             </button>
+                        </section>
                           </ng-template>
                          <ng-template kendoGridLoadingTemplate>
                               <common-grid-loader-component></common-grid-loader-component>

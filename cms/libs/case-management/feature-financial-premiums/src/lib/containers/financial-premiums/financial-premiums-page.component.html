@@ -29,7 +29,12 @@
                                 (savePremiumsEvent)="saveInsurancePremiums($event)"
                                 (updatePremiumEvent)="updatePremium($event)"
                                 (loadPremiumEvent)="loadPremium($event)"
-                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-process-list>
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                (exportGridDataEvent)="exportPremiumsPaymentsGridData()"
+                                [exportButtonShow$]="exportButtonShow$"
+                                [paymentMethodCode$]="paymentMethodCode$"
+                                [paymentStatusCode$]="paymentStatusCode$"
+                                [healthInsuranceTypeLov$]="healthInsuranceTypeLov$"></cms-financial-premiums-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -45,7 +50,9 @@
                                 [sortValue]="sortValueFinancialPremiumsBatch"
                                 [sortType]="sortType"
                                 [sort]="sortBatchList"
-                                (loadFinancialPremiumsBatchListEvent)="loadFinancialPremiumsBatchListGrid($event)"></cms-financial-premiums-batches-list>
+                                (loadFinancialPremiumsBatchListEvent)="loadFinancialPremiumsBatchListGrid($event)"
+                                (exportGridDataEvent)="exportPremiumsBatchPaymentsGridData()"
+                                [exportButtonShow$]="exportButtonShow$"></cms-financial-premiums-batches-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -76,7 +83,7 @@
         <cms-financial-premiums-provider-info
               [paymentRequestId]="paymentRequestId"
               (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
               (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
               [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
               [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>

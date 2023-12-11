@@ -5,7 +5,7 @@
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
       <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"  (valueChange)="searchColumnChangeHandler($event)">
+      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
@@ -58,7 +58,8 @@
   (filterChange)="filterChange($event)" [selectable]="selectableSettings"
   kendoGridSelectBy="paymentRequestId"
   (selectedKeysChange)="selectedKeysChange($event)"
-  [(selectedKeys)]="selectedProcessClaims">
+  [(selectedKeys)]="selectedProcessClaims"
+  (pageChange)="pageChange($event)">
 
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
       [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"
@@ -95,7 +96,7 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="tin" title="Tax ID" [width]="150">
+    <kendo-grid-column field="tin" title="Tax ID" [width]="150" >
       <ng-template kendoGridCellTemplate let-dataItem>
 
           {{ dataItem.tin | tin }}
@@ -382,8 +383,8 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-          Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1">
             chevron_right
           </span>
         </button>

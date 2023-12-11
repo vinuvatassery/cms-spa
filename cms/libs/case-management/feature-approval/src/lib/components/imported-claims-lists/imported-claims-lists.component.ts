@@ -67,10 +67,20 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   filter!: any;
   gridDataResult!: GridDataResult;
   showExportLoader = false;
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  claimSourceFilter = '';
+  requestTypeFilter = '';
+  policyIdMatchFilter = '';
+  eligibilityMatchFilter = '';
+  validInsuranceFilter = '';
+  belowMaxBenefitsFilter = '';
+
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     clientName: 'Client Name',
     nameOnPrimaryInsuranceCard: 'Name on Primary Insurance Card',
+    invoiceNbr: 'Invoice #',
+    requestType: 'Request Type',
     claimSource: 'Claim Source',
     policyId: 'Policy ID',
     amountDue: 'Amount Due',
@@ -101,22 +111,22 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     { code: 'N/A', desc: 'N/A' },
   ];
 
+  requestTypeList: { code: string; desc: string }[] = [
+    { code: 'Insurance Premium', desc: 'Insurance Premium' },
+    { code: 'TPA - Dental', desc: 'TPA - Dental' },
+    { code: 'TPA - Medical', desc: 'TPA - Medical' },
+  ];
+
   selectedColumn = 'ALL';
   filteredByColumnDesc = '';
   showDateSearchWarning = false;
   columnChangeDesc = 'Default Columns';
-  claimSourceFilter = '';
-  policyIdMatchFilter = '';
-  eligibilityMatchFilter = '';
-  validInsuranceFilter = '';
-  belowMaxBenefitsFilter = '';
 
   gridImportedClaimsDataSubject = new Subject<any>();
   gridImportedClaimsBatchData$ =
     this.gridImportedClaimsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   selectedPolicyId: any
   private searchCaseDialog: any;
   private expectationDialog: any;
@@ -199,7 +209,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   searchColumnChangeHandler(value: string) {
     this.filter = [];
-    this.showDateSearchWarning = value === 'DateOfService';
+    this.showDateSearchWarning = value === 'dateOfService';
     if (this.searchValue) {
       this.onApprovalSearch(this.searchValue);
     }
@@ -207,7 +217,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   onApprovalSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'DateOfService';
+    this.showDateSearchWarning = isDateSearch || this.selectedColumn === 'dateOfService';
     searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
@@ -217,7 +227,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   onChange(data: any) {
     this.defaultGridState();
 
-    if (this.selectedColumn === 'DateOfService' && (!this.isValidDate(data) && data !== '')) {
+    if (this.selectedColumn === 'dateOfService' && (!this.isValidDate(data) && data !== '')) {
       return;
     }
     this.filterData = {
@@ -228,7 +238,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
             {
               field: this.selectedColumn ?? 'clientName',
               operator:
-                this.selectedColumn === 'DateOfService'
+                this.selectedColumn === 'dateOfService'
                 ? 'eq'
                 : 'startswith',
               value: data,
@@ -295,6 +305,9 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     if (!this.filteredBy.includes('Claim Source')){
       this.claimSourceFilter = '';
     }
+    if (!this.filteredBy.includes('Request Type')){
+      this.requestTypeFilter = '';
+    }
     if (!this.filteredBy.includes('Policy ID match?')){
       this.policyIdMatchFilter = '';
     }
@@ -360,16 +373,19 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     if (field === 'claimSource') {
       this.claimSourceFilter = value;
     }
-    if (field === 'policyIdMatch') {
+    else if (field === 'requestType') {
+      this.requestTypeFilter = value;
+    }
+    else if (field === 'policyIdMatch') {
       this.policyIdMatchFilter = value;
     }
-    if (field === 'eligibilityMatch') {
+    else if (field === 'eligibilityMatch') {
       this.eligibilityMatchFilter = value;
     }
-    if (field === 'validInsurance') {
+    else if (field === 'validInsurance') {
       this.validInsuranceFilter = value;
     }
-    if (field === 'belowMaxBenefits') {
+    else if (field === 'belowMaxBenefits') {
       this.belowMaxBenefitsFilter = value;
     }
     filterService.filter({
@@ -432,7 +448,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   onMakeExpectationClicked(template: TemplateRef<unknown>,dataItem:any): void {
     this.expectationDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     });
     this.rowData = dataItem;
   }
@@ -449,14 +465,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
   }
 
   onCloseReviewPossibleMatchesDialogClicked($event:any) {
-    if($event)
-    {
-      this.reviewPossibleMatchesDialog.close();
-    }
-  else{
-    this.cd.detectChanges();
-    this.loadImportedClaimsListGrid();
-    }
+    this.reviewPossibleMatchesDialog.close();
   }
 
   loadPossibleMatch(data?: any) {
@@ -465,7 +474,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
 
   savePossibleMatch(data?:any)
   {
-    this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
+    this.onClientClicked(data.clientId);
     this.closePossibleMatchModal();
   }
 
@@ -474,7 +483,6 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       if (value) {
         this.onCloseReviewPossibleMatchesDialogClicked(true);
         this.cd.detectChanges();
-        this.loadImportedClaimsListGrid();
       }
     });
   }
@@ -584,7 +592,8 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
       let claim = {
         importedClaimId: element.importedClaimId,
         claimStatus: element.claimStatus,
-        entityTypeCode: element.entityTypeCode
+        entityTypeCode: element.entityTypeCode,
+        exceptionTypeCode : element.exceptionTypeCode,
       };
       claims.push(claim);
     }
@@ -659,6 +668,7 @@ export class ImportedClaimsListsComponent implements OnInit, OnChanges {
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
         this.showExportLoader = false;
+        this.cd.detectChanges();
       }
     });
   }

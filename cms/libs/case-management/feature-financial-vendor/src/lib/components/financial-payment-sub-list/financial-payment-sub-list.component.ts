@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { PaymentsFacade } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
+import { PaymentsFacade, PremiumType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
@@ -25,9 +26,11 @@ export class FinancialPaymentBatchSubListComponent implements OnInit {
     loader$ = new BehaviorSubject<boolean>(false);
     isPaymentLoadFailed = false;
     /** Constructor **/
-    constructor(private readonly paymentsFacade: PaymentsFacade,
+    constructor(
+        private readonly paymentsFacade: PaymentsFacade,
         private loggingService: LoggingService,
-        private readonly notificationSnackbarService: NotificationSnackbarService,) { }
+        private readonly notificationSnackbarService: NotificationSnackbarService,
+        private route: Router) { }
 
     /* Life cycle events */
     ngOnInit(): void {
@@ -75,5 +78,15 @@ export class FinancialPaymentBatchSubListComponent implements OnInit {
                 this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
             },
         });
+    }
+
+    onClientClicked(clientId: any) {
+        this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    }
+
+    onItemClicked(dataItem: any) {
+        const premiumsType = dataItem?.serviceSubTypeCode.toLowerCase().includes(PremiumType.Medical) ? PremiumType.Medical : PremiumType.Dental;
+        this.route.navigate([`/financial-management/premiums/${premiumsType}/batch/items`],
+        { queryParams :{bid: dataItem.batchId, pid: dataItem.paymentRequestId, eid:dataItem.vendorAddressId,vid:dataItem.vendorId }});
     }
 }

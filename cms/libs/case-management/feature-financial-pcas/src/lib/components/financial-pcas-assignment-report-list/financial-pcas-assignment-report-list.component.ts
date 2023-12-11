@@ -47,6 +47,8 @@ export class FinancialPcasAssignmentReportListComponent
   @Output() loadFinancialPcaReportListEvent = new EventEmitter<any>();
   @Output() loadFinancialPcaSubReportListEvent = new EventEmitter<any>();
   @Output() editButtonClick: EventEmitter<any> = new EventEmitter<any>();
+  @Output() loadGroupCodesEvent = new EventEmitter<any>();
+  @Input() groupCodesData$:any
   public state!: State;
   columnsReordered = false;
 
@@ -78,7 +80,7 @@ export class FinancialPcasAssignmentReportListComponent
     },
     {
       columnName: 'pcaCode',
-      columnDesc: 'PCA #',
+      columnDesc: 'PCA',
     },
     {
       columnName: 'objectName',
@@ -115,6 +117,7 @@ export class FinancialPcasAssignmentReportListComponent
 
   filteredByColumnDesc = '';
   selectedStatus = '';
+  selectedGroupCode ='';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   showDateSearchWarning = false;
   showNumberSearchWarning = false;
@@ -134,6 +137,7 @@ export class FinancialPcasAssignmentReportListComponent
 
   ngOnInit() {
     this.loadObjectCodes();
+    this.loadGroupCodesEvent.emit()
     this.initializePcaPage();
   }
 

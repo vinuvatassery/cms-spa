@@ -54,7 +54,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   gridLoaderSubject = new BehaviorSubject(false);
   gridDataResult!: any;
   @Input() premiumsType: any;
-  @Input() batchingPremium$: any; 
+  @Input() batchingPremium$: any;
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -67,6 +67,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Input() actionResponse$: any;
   @Input() existingPremiums$!: Observable<PolicyPremiumCoverage[]>;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
+  @Input() exportButtonShow$: any;
   @Output() clientChangeEvent = new EventEmitter<any>();
   @Output() premiumsExistValidationEvent = new EventEmitter<{ clientId: number, premiums: PolicyPremiumCoverage[] }>();
   @Output() savePremiumsEvent = new EventEmitter<InsurancePremium[]>();
@@ -75,6 +76,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   @Output() updatePremiumEvent = new EventEmitter<any>();
   @Output() OnbatchClaimsClickedEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   public state!: any;
   sortColumn = 'clientFullName';
   sortDir = 'Ascending';
@@ -83,11 +85,12 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn='clientFullName';
+  selectedColumn='ALL';
   columnName: string = '';
   public selectedProcessClaims: any[] = [];
 
   columns: any = {
+    ALL: 'All Columns',
     clientFullName:"Client Name",
     insuranceName:"Name on Primary Insurance Card",
     clientId:"Client ID",
@@ -102,6 +105,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     paymentStatus:"Payment Status"
   };
   dropDowncolumns : any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
@@ -122,8 +126,8 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       columnCode: 'premiumAmount',
       columnDesc: 'Premium Amount',
     },
-   
- 
+
+
     {
       columnCode: 'planName',
       columnDesc: 'Plan Name',
@@ -153,11 +157,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       columnDesc: 'Payment Status',
     },
   ];
-  columnDroplist : any = {
-    ALL: "ALL",
-    ClientFirstName:"clientFirstName",
-    ClientId:"clientId"
-  }
+
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public gridFilter: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   isRemovePremiumGridOptionClosed = false;
@@ -186,7 +186,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   premiumId!:string;
   isPageChanged: boolean = false;
   selectedDeletePremiumsList!: any;
-
+  showExportLoader = false;
   public premiumsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -195,7 +195,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       click: (data: any): void => {
         if (!this.isSendReportOpened) {
           this.isSendReportOpened = true;
-          this.selectAll = false; 
+          this.selectAll = false;
           this.isRemoveBatchClosed = false;
           this.recordCountWhenSelectallClicked = this.totalGridRecordsCount;
           this.onBatchPremiumsGridSelectedClicked();
@@ -223,7 +223,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
           this.isRemoveBatchClosed = true;
           this.directRemoveClicked = false;
           this.isSendReportOpened = false;
-          this.selectAll = false; 
+          this.selectAll = false;
           this.onBatchPremiumsGridSelectedClicked();
         }
       },
@@ -264,8 +264,13 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   paymentRequestId: any;
   recordCountWhenSelectallClicked: number = 0;
   totalGridRecordsCount: number = 0;
-
-  
+@Input() paymentMethodCode$ :any
+@Input() paymentStatusCode$ :any
+@Input() healthInsuranceTypeLov$ :any
+paymentMethodFilter = '';
+paymentTypeFilter = '';
+paymentStatusFilter = '';
+healthInsuranceValue ='';
   /** Constructor **/
   constructor(
   private financialPremiumsFacade : FinancialPremiumsFacade ,
@@ -296,7 +301,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   }
 
   premiumGridlistDataHandle() {
-    this.financialPremiumsProcessGridLists$.subscribe((data:any) => {
+    this.financialPremiumsProcessGridLists$.subscribe((data: any) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
@@ -314,7 +319,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       if(!this.selectAll)
       {
       this.financialPremiumsProcessGridLists.forEach((item1: any) => {
-        const matchingGridItem = this.selectedSendReportList?.SelectedSendReports.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
+        const matchingGridItem = this.checkedAndUncheckedRecordsFromSelectAll?.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId && item2.selected);
         if (matchingGridItem) {
           item1.selected = true;
         } else {
@@ -330,7 +335,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     });
     this.ref.detectChanges();
   }
-  
+
   pageNumberAndCountChangedInSelectAll() {
     //If selecte all header checked and either the page count or the page number changed
     if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
@@ -376,9 +381,9 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
         this.totalGridRecordsCount = 0;
         this.selectAll = false;
       }else{
-      for (const item of this.financialPremiumsProcessGridLists) {
+      for (const item of this.checkedAndUncheckedRecordsFromSelectAll) {
         // Check if the item is in the second list.
-        const isItemInSecondList = this.checkedAndUncheckedRecordsFromSelectAll.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
+        const isItemInSecondList = this.financialPremiumsProcessGridLists.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
         // If the item is in the second list, mark it as selected true.
         if (isItemInSecondList) {
           item.selected = true;
@@ -392,17 +397,41 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   }
 
   handlePageCountSelectionChange() {
-      if(!this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
-        // Extract the payment request ids from grid data
-        const idsToKeep: number[] = this.checkedAndUncheckedRecordsFromSelectAll.map((item: any) => item.paymentRequestId);
-        // Remove items from selected records based on the IDs from grid data
-        for (let i = this.selectedSendReportList?.SelectedSendReports?.length - 1; i >= 0; i--) {
-          if (!idsToKeep.includes(this.selectedSendReportList?.SelectedSendReports[i].paymentRequestId)) {
-            this.selectedSendReportList?.SelectedSendReports.splice(i, 1); // Remove the item at index i
-          }
+      if(!this.selectAll && this.isPageCountChanged){
+        if(this.isRemoveBatchClosed){
+            const idsToKeep: number[] = this.financialPremiumsProcessGridLists.map((item: any) => item.selected && item.paymentRequestId);
+            const idsNotToKeep = this.financialPremiumsProcessGridLists.filter((item2: any) => !this.checkedAndUncheckedRecordsFromSelectAll.some((item1: any) => item1.paymentRequestId === item2.paymentRequestId && item2.selected));
+            this.financialPremiumsProcessGridLists.forEach((item2: any) => {
+                if (idsToKeep.includes(item2.paymentRequestId)) {
+                  // Mark records in list2 as selected: true if in list1
+                  item2.selected = true;
+                }else{
+                  item2.selected = false;
+                }
+              });
+              this.markAsUnChecked(idsNotToKeep);
         }
-        this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports?.filter((item:any) => item.selected));
+        this.getSelectedReportCount(this.checkedAndUncheckedRecordsFromSelectAll?.filter((item:any) => item.selected));
       }
+
+      if(!this.selectAll && this.isPageChanged){
+        if(this.isRemoveBatchClosed){
+          this.selectAllAndPageChange();
+        }
+        this.getSelectedReportCount(this.checkedAndUncheckedRecordsFromSelectAll?.filter((item:any) => item.selected));
+      }
+  }
+  
+  selectAllAndPageChange() {
+    const idsToKeep: number[] = this.financialPremiumsProcessGridLists.map((item: any) => item.selected && item.paymentRequestId);
+    this.financialPremiumsProcessGridLists.forEach((item2: any) => {
+        if (idsToKeep.includes(item2.paymentRequestId)) {
+          // Mark records in list2 as selected: true if in list1
+          item2.selected = true;
+        }else{
+          item2.selected = false;
+        }
+      });
   }
 
   onSinglePremiumRemove(selection: any) {
@@ -414,7 +443,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-      
+
     };
     this.loadFinancialPremiumsProcessListGrid();
   }
@@ -500,14 +529,18 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
   }
 
   dataStateChange(stateData: any): void {
-    this.isPageCountChanged = false;
     this.isPageChanged = true;
+    this.isPageCountChanged = false;
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+
     if (stateData.filter?.filters.length > 0) {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
-      this.columnName = stateFilter.field;
-
       this.filter = stateFilter.value;
-
       this.isFiltered = true;
       const filterList = [];
       for (const filter of stateData.filter.filters) {
@@ -524,10 +557,13 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.state = stateData;
     this.setGridState(stateData);
     this.loadFinancialPremiumsProcessListGrid();
+    if(this.isRemoveBatchClosed){
+      this.premiumGridlistDataHandle();
+    }
   }
+
   public setGridState(stateData: any): void {
     this.state = stateData;
-
     const filters = stateData.filter?.filters ?? [];
 
     const filterList = this.state?.filter?.filters ?? [];
@@ -544,19 +580,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       this.columnName = "";
       this.isFiltered = false;
     }
-
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortType = stateData.sort[0]?.dir ?? "";
-    this.state = stateData;
-    this.sortColumn = this.columns[stateData.sort[0]?.field];
-    this.sortDir = "";
-    if(this.sort[0]?.dir === 'asc'){
-      this.sortDir = 'Ascending';
-    }
-    if(this.sort[0]?.dir === 'desc'){
-      this.sortDir = 'Descending';
-    }
   }
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
@@ -564,8 +587,10 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
     this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
-    this.isPageCountChanged = true;
     this.loadFinancialPremiumsProcessListGrid();
+    if(this.isRemoveBatchClosed){
+      this.premiumGridlistDataHandle();
+    }
   }
   groupFilterChange(value: any, filterService: FilterService): void {
     filterService.filter({
@@ -579,23 +604,7 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       logic: 'or',
     });
   }
-  dropdownFilterChange(
-    field: string,
-    value: any,
-    filterService: FilterService
-  ): void {
-    filterService.filter({
-      filters: [
-        {
-          field: field,
-          operator: 'eq',
-          value: value.lovDesc,
-        },
-      ],
-      logic: 'or',
-    });
-    this.gridLoaderSubject.next(false);
-  }
+
 
   public onBatchPremiumsClicked(template: TemplateRef<unknown>): void {
     this.batchConfirmPremiumsDialog = this.dialogService.open({
@@ -712,7 +721,7 @@ gridlistDataHandle() {
 
 }
 closeRecentPremiumsModal(result: any){
-    if (result) { 
+    if (result) {
       this.addClientRecentPremiumsDialog.close();
     }
   }
@@ -834,7 +843,7 @@ closeRecentPremiumsModal(result: any){
     if(this.selectAll && this.isSendReportOpened){
       if(this.unCheckedProcessRequest?.length > 0){
         this.sendReportCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
-        this.recordCountWhenSelectallClicked = this.sendReportCount;      
+        this.recordCountWhenSelectallClicked = this.sendReportCount;
       }else{
         this.sendReportCount = this.totalGridRecordsCount;
       }
@@ -845,10 +854,10 @@ closeRecentPremiumsModal(result: any){
   }
 
   markAsChecked(data:any){
-    data.forEach((element:any) => { 
+    data.forEach((element:any) => {
       if(this.selectAll){
         element.selected = true;
-      } 
+      }
       else{
         element.selected = false;
       }
@@ -869,8 +878,8 @@ closeRecentPremiumsModal(result: any){
   }
 
   markAsUnChecked(data:any){
-      data.forEach((element:any) => {     
-        element.selected = false;    
+      data.forEach((element:any) => {
+        element.selected = false;
     });
 if(!this.selectAll && this.isSendReportOpened){
       this.sendReportCount = 0;
@@ -968,4 +977,43 @@ if(!this.selectAll && this.isSendReportOpened){
       this.actionResponseSubscription.unsubscribe();
     }
   }
+
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentMethod') {
+      this.paymentMethodFilter = value;
+    } else if (field === 'paymentTypeCode') {
+      this.paymentTypeFilter = value;
+    } else if (field === 'paymentStatus') {
+      this.paymentStatusFilter = value;
+    }else if(field === 'insuranceType'){
+      this.healthInsuranceValue = value;
+    }
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+    this.gridLoaderSubject.next(false);
+  }
+  
 }

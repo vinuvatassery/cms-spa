@@ -22,7 +22,7 @@
     >
     <kendo-floatinglabel text="Search">
       <kendo-textbox
-        aria-label="Search case"
+        aria-label="Search imported claims"
         rounded="medium"
         [fillMode]="formUiStyle.inputFillMode"
         [(ngModel)]="searchValue" (afterValueChanged)="onApprovalSearch($event)"
@@ -30,7 +30,7 @@
       </kendo-textbox>
     </kendo-floatinglabel>
   </span>
-  <span class="right-btn-export">
+  <span class="right-overlay-export">
     <button
       kendoButton
       [primary]="true"
@@ -86,7 +86,7 @@
     [columnMenu]="{ filter: true }"
     [sort]="state.sort"
     (dataStateChange)="dataStateChange($event)"
-    (filterChange)="filterChange($event)" 
+    (filterChange)="filterChange($event)"
     [filter]="state.filter"
     [isDetailExpanded]="expandInClaimException"
     [data]="gridImportedClaimsBatchData$ | async"
@@ -96,10 +96,11 @@
   >
     <kendo-grid-column field="clientName" title="Client Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button"
+        <button *ngIf="dataItem.clientName != 'N/A'" [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button"
         (click)="onClientClicked(dataItem.clientId)">
           {{ dataItem.clientName }}
         </button>
+        <span *ngIf="dataItem.clientName == 'N/A'"> {{ dataItem.clientName }}</span>
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
@@ -124,7 +125,49 @@
        </kendo-grid-string-filter-menu>
    </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="claimSource" title="Claim Source" [width]="180">
+    <kendo-grid-column
+      field="invoiceNbr"
+      title="Invoice #"
+      [width]="150"
+    >
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+           <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+           <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+           <kendo-filter-contains-operator></kendo-filter-contains-operator>
+       </kendo-grid-string-filter-menu>
+   </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="requestType"
+      title="Request Type"
+      [width]="180"
+    >
+    <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="requestTypeList"
+          [value]="requestTypeFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'requestType',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="claimSource" title="Claim Source" [width]="150">
       <ng-template
         kendoGridFilterMenuTemplate
         let-filter
@@ -207,8 +250,6 @@
       field="policyIdMatch"
       title="Policy ID match?"
       [width]="180"
-      [sortable]="false"
-      [filterable]="false"
     >
     <ng-template
         kendoGridFilterMenuTemplate
@@ -237,8 +278,6 @@
       field="eligibilityMatch"
       title="Eligibility match?"
       [width]="180"
-      [sortable]="false"
-      [filterable]="false"
     >
     <ng-template
         kendoGridFilterMenuTemplate
@@ -267,8 +306,6 @@
       field="validInsurance"
       title="Valid insurance?"
       [width]="180"
-      [sortable]="false"
-      [filterable]="false"
     >
     <ng-template
         kendoGridFilterMenuTemplate
@@ -297,8 +334,6 @@
       field="belowMaxBenefits"
       title="Below max benefits?"
       [width]="150"
-      [sortable]="false"
-      [filterable]="false"
     >
     <ng-template
         kendoGridFilterMenuTemplate
@@ -345,7 +380,7 @@
     >
       <ng-template kendoGridCellTemplate let-dataItem>
         <button
-          *ngIf="dataItem.policyIdMatch === yesNoFlag.Yes"
+          *ngIf="dataItem.policyIdMatch === yesNoFlag.Yes && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
           kendoButton
           aria-label="Deny Claim"
           class="select-primary cc-fwc"
@@ -361,15 +396,13 @@
           DENY CLAIM
         </button>
         <button
-          *ngIf="dataItem.policyIdMatch === yesNoFlag.No"
+          *ngIf="dataItem.policyIdMatch === yesNoFlag.No || dataItem.isDuplicatePayment || dataItem.isPcaReassignmentException"
           kendoButton
           aria-label="Delete Claim"
           class="select-error cc-fwc"
           illMode="flat"
           [toggleable]="true"
           [selected]="dataItem.claimStatus === deletedStatus"
-          [disabled]="dataItem.policyIdMatch === yesNoFlag.No && dataItem.isPossibleMatch === yesNoFlag.Yes
-          && !dataItem.exceptionApprovedFlag"
           (selectedChange)="
           onRowLevelDeleteClicked(
                 dataItem
@@ -384,7 +417,7 @@
       <section >
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.validInsurance === yesNoFlag.No"
+          *ngIf="dataItem.validInsurance === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
         >
           <span class="material-icons">info</span>
           The client's insurance is not valid for the date of service. Deny the claim
@@ -402,7 +435,7 @@
 
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.isPossibleMatch === yesNoFlag.No && dataItem.policyIdMatch === yesNoFlag.No"
+          *ngIf="dataItem.isPossibleMatch === yesNoFlag.No && dataItem.policyIdMatch === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
         >
           <span class="material-icons">info</span>
           The system could not match the Policy ID to a client. Delete the claim
@@ -419,7 +452,7 @@
         </p>
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.eligibilityMatch === yesNoFlag.No"
+          *ngIf="dataItem.eligibilityMatch === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
         >
           <span class="material-icons">info</span>
           The client was not eligible for the date of service. Deny the claim
@@ -436,7 +469,7 @@
         </p>
         <p
           class="table_sub_row warning_info_row"
-          *ngIf="dataItem.isPossibleMatch === yesNoFlag.Yes && dataItem.policyIdMatch === yesNoFlag.No"
+          *ngIf="dataItem.isPossibleMatch === yesNoFlag.Yes && dataItem.policyIdMatch === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
         >
         <span class="material-icons">info</span>
           The  system could not match the Policy ID to a client. Delete the claim or match it to a client.
@@ -450,7 +483,7 @@
               REVIEW POSSIBLE MATCH
           </button>
         </p>
-        <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No">
+        <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException">
           <span class="material-icons">info</span>
           This claim puts the client ${{dataItem.exceededAmount | kendoNumber : 'n2'}} over their max benefits. Deny the
           claim or make an exception.
@@ -463,6 +496,20 @@
             >
               MAKE AN EXCEPTION
             </button>
+        </p>
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.isDuplicatePayment"
+        >
+          <span class="material-icons">info</span>
+          Duplicate claim found!
+        </p>
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.isPcaReassignmentException"
+        >
+          <span class="material-icons">info</span>
+          PCA unable to be assigned.
         </p>
       </section>
     </ng-template>
@@ -529,6 +576,9 @@
   <kendo-dialog-titlebar (close)="onCloseSubmitClicked()">
     Submit claims?</kendo-dialog-titlebar>
     <section class="k-dialog-body newcase">
+      <p class="mb-2">
+        Denied claims will be saved to the clients' profiles with the status "Denied." Deleted claims will be soft deleted from the system.
+      </p>
       <p class="mb-1">
         Claims to be denied:
         <strong>{{ deniedCount }}</strong>

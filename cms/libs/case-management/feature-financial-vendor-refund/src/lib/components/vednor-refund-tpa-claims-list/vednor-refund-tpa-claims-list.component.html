@@ -1,8 +1,9 @@
+
 <div class="app-c-table">
     <kendo-grid #selectable [resizable]="true" [loading]="isClaimsLoaderShow" [pageSize]="state.take"
       [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  
-      [data]="tpaData$ | async"
+      [data]="tpaGridData"
       (selectedKeysChange)="selectedKeysChange($event)"     
       kendoGridSelectBy="paymentRequestId"
       [(selectedKeys)]="selectedTpaClaims">

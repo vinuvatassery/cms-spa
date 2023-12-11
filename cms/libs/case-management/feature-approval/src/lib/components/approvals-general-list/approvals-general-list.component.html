@@ -6,7 +6,8 @@
     >
       <kendo-panelbar-item
         *ngIf="getTitle(item.approvalTypeCode, item.subTypeCode)"
-        [expanded]="item.isExpanded && item.status == approveStatus"
+        [expanded]="item.isExpanded && item.status === approveStatus &&  item.approvalTypeCode ===
+        pendingApprovalGeneralTypeCode.GeneralExceptions"
       >
         <ng-template kendoPanelBarItemTitle>
           <div class="flex-row rw-100" (click)="$event.stopPropagation()">
@@ -39,6 +40,14 @@
                   </ng-template>
                 </kendo-popover>
               </p>
+              <div *ngIf="item.approvalTypeCode == pendingApprovalGeneralTypeCode.GeneralAddToMasterList ||
+                          item.subTypeCode == subTypeConst.InsuranceVendor ||
+                          item.subTypeCode == subTypeConst.MedicalProvider ||
+                          item.subTypeCode == subTypeConst.DentalProvider  ||  
+                          item.subTypeCode == subTypeConst.MedicalClinic   ||
+                          item.subTypeCode == subTypeConst.DentalClinic" class="mt-4">
+                Contact Name {{item.contactName}}
+              </div>
             </div>
             <div class="flex-col flex-col-6">
               <div class="cms-button-group">
@@ -77,7 +86,7 @@
                 <i>The user will be notified of your changes.</i>
               </div>
               <div *ngIf="item.status == denyStatus">
-                <kendo-floatinglabel text="Send Back Notes">
+                <kendo-floatinglabel text="Reason for Denial">
                   <kendo-textarea
                     #tareaCessation
                     [fillMode]="formUiStyle.inputFillMode"
@@ -98,7 +107,7 @@
                   </kendo-textarea-suffix>
                 </kendo-textarea>
 
-           
+
                   <kendo-formerror *ngIf="item.sendBackNotesInValid">{{
                     item.sendBackNotesInValidMsg
                   }}</kendo-formerror>
@@ -143,7 +152,7 @@
         <ng-template kendoPanelBarContent>
           <ng-switch
             [ngSwitch]="item.approvalTypeCode"
-            *ngIf="item.status !== denyStatus"
+
           >
             <ng-template
               ngSwitchCase="{{
@@ -178,8 +187,8 @@
             >
               <productivity-tools-approvals-general-list-detail-exceptions
                 [approvalId]="item.generalPendingApprovalId"
-                [exceptionId]="item.approvalEntityId"       
-                (onVendorClickedEvent)="onProviderNameClick($event)"        
+                [exceptionId]="item.approvalEntityId"
+                (onVendorClickedEvent)="onProviderNameClick($event)"
               >
               </productivity-tools-approvals-general-list-detail-exceptions>
             </ng-template>
@@ -227,15 +236,16 @@
     [pharmacyForm]="pharmacyForm"
     [insuranceVendorForm]="insuranceVendorForm"
     [insuranceProviderForm]="insuranceProviderForm"
+    [deliveryMethodLov$]="deliveryMethodLov$"
   >
   </productivity-tools-approvals-edit-items>
 </ng-template>
 
 <ng-template #submitRequestModalDialog>
- 
+
   <kendo-dialog-titlebar (close)="onCloseSubmitGeneralRequestClicked()">
-    Submit Item(s)</kendo-dialog-titlebar>
-    <section class="k-dialog-body newcase"> 
+    Submit Item(s)?</kendo-dialog-titlebar>
+    <section class="k-dialog-body newcase">
       <p *ngIf="caseReassignmentsCount > 0" class="mb-1">
         Case re-assignments to be submitted:
         <strong>{{ caseReassignmentsCount }}</strong>
@@ -269,5 +279,5 @@
           </button>
         </div>
       </div>
-    </kendo-dialog-actions> 
+    </kendo-dialog-actions>
 </ng-template>

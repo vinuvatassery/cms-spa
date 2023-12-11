@@ -80,6 +80,7 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   private getQueryParams() {
     this.vendorAddressId = this.route.snapshot.queryParams['eid'];
     this.batchId = this.route.snapshot.queryParams['bid'];
+    this.paymentRequestId = this.route.snapshot.queryParams['pid'];
   }
 
 
@@ -106,10 +107,10 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
    }
 
   loadPaymentPanel(event:any=null){
-    this.paymentFacade.loadPaymentPanel(this.vendorAddressId,this.batchId);    
+    this.paymentFacade.loadPaymentPanel(this.paymentRequestId,this.batchId);    
   }
   updatePaymentPanel(paymentPanel:PaymentPanel){
-    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel);
+    this.paymentFacade.updatePaymentPanel(this.batchId, paymentPanel);
     this.paymentFacade.updatePaymentPanelResponse$.subscribe({
         next: (response: any) => {
           this.loadPaymentPanel();

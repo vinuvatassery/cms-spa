@@ -1,7 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output, OnChanges, SimpleChanges} from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FinancialPcaFacade, } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
 
@@ -15,7 +17,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
 
   @Input() groupCodesData$ : any
   @Input() objectCodesData$ : any
-  @Input() pcaCodesData$ : any
+  pcaCodesData$ : any
   @Input() pcaAssignOpenDatesList$ : any
   @Input() pcaAssignCloseDatesList$ : any
   @Input() objectCodeIdValue : any
@@ -33,7 +35,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
   @Output() pcaChangeEvent = new EventEmitter<any>();
   @Output() loadPcaEvent = new EventEmitter<any>();
   @Output() reassignpcaEvent = new EventEmitter<any>();
-
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   pcaAssignmentForm!: FormGroup;
   pcaCodesInfo : any
   pcaCodeInfo : any
@@ -42,24 +44,38 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
   formSubmitted =false;
   startDate:any;
   endDate:any;
-  openDateError =false
-
+  ispcaCloseDateGreater: any = false;
+  ispcaOpenDateGreater: any = false;
+  isAssignmentpcaCloseDateGreater: any = false;
+  isAssignmentpcaOpenDateGreater: any = false;
+  openDateErrorMsg!:string;
+  openDateError:boolean=false;
+  closeDateErrorMsg!:string;
+  closeDateError:boolean=false;
   constructor(  
     private formBuilder: FormBuilder,
-    public intl: IntlService,private datePipe: DatePipe
+    public intl: IntlService,private datePipe: DatePipe,
+    private financialPcaFacade:FinancialPcaFacade,
+    private configurationProvider: ConfigurationProvider,
+    private readonly loaderService: LoaderService,
   ) {}  
   ngOnInit(): void {  
     this.formSubmitted = false
     this.loadPcaEvent.emit()
+this.loaderService.show();
+    this.financialPcaFacade.getPcaUnAssignments(this.pcaAssignmentFormDataModel$?.objectId,this.pcaAssignmentFormDataModel$?.pcaAssignmentId).subscribe((res:any)=>{
+      this.pcaCodesData$=res;
+      this.loaderService.hide()
+    });
+   
     this.getPcaInfoData()
-
+   
    
     
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    
-   
+ 
     let date = new Date();
     this.startDate = new Date(date.getFullYear(), date.getMonth(), 1);
      this.endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -96,7 +112,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
           pcaId: '', 
           openDate:this.startDate,
           closeDate: this.endDate,
-          amount:this.pcaAssignmentFormDataModel$.pcaRemainingAmount,
+          amount:null,
           unlimited:false,
           groupCodes : this.groupCodesData$               
         }
@@ -125,24 +141,22 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
 
   onPcaAssignmentFormSubmit()
   {    
-    if(this.pcaAssignmentForm?.controls["openDate"].value && this.pcaAssignmentForm?.controls["closeDate"].value)
+    if(this.openDateError)
     {
-        if(this.pcaAssignmentForm?.controls["openDate"].value > this.pcaAssignmentForm?.controls["closeDate"].value)
-        {
-       
-              this.openDateError = true;
-              return;
-        }
-        else
-        {
-          this.openDateError = false
-        }
-       
+      return ;
     }
+  
+  if(this.closeDateError)
+  {
+    return ;
+  }
+
     this.formSubmitted = true
+   
     this.pcaAssignmentForm.markAllAsTouched();
     if(this.pcaAssignmentForm.valid)
     {
+
 
       const groupCodes= this.pcaAssignmentForm?.controls["groupCodes"].value
       this.groupCodeIdsdValueData= []
@@ -150,6 +164,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
       {           
         this.groupCodeIdsdValueData.push(groupCodes[key]?.groupCodeId)     
       }
+      
       const pcaAssignmentData =
       {
         pcaAssignmentId: this.pcaAssignmentForm?.controls["pcaAssignmentId"].value
@@ -159,7 +174,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
         pcaId: this.pcaAssignmentForm?.controls["pcaId"].value,  
         openDate:new Date(this.pcaAssignmentForm?.controls["openDate"].value+'Z:00:00:00'),  
         closeDate:new Date(this.pcaAssignmentForm?.controls["closeDate"].value+'Z:00:00:00'),  
-        amount: this.pcaAssignmentForm?.controls["amount"].value,  
+        amount: this.pcaAssignmentForm?.controls["amount"].value??0,  
         unlimitedFlag: this.pcaAssignmentForm?.controls["unlimited"].value === true ? 'Y' : 'N',  
         groupCodeIds : this.groupCodeIdsdValueData,  
       }
@@ -176,7 +191,7 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
    {
     this.pcaAssignmentForm.patchValue(
       {    
-        amount :  0
+        amount :null
       }
     )
     this.pcaAssignmentForm.controls['amount'].disable();
@@ -191,11 +206,68 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
 
   onPcaChange(data : any)
   { 
-       
     this.pcaCodeInfo = this.pcaCodesData$?.find((x : any)=>x.pcaId==data)
+    this.pcaCloseDate = new Date(this.intl.formatDate(this.pcaCodeInfo?.closeDate, this.dateFormat));
+    this.pcaOpenDate = new Date(this.intl.formatDate(this.pcaCodeInfo?.openDate, this.dateFormat));
+   
     this.pcaAssignmentForm.patchValue(
       {     
         ay:  this.pcaCodeInfo?.ay ?? ''}    
     ) 
+    this.closeDateValidate();
       }
-    }
+
+      closeDateValidate()
+      { 
+        const endDate = this.pcaAssignmentForm.controls['closeDate'].value;
+        const startDate = this.pcaAssignmentForm.controls['openDate'].value;
+        this.closeDateErrorMsg=this.checkcloseDateValidity(startDate, endDate, this.pcaCodeInfo?.closeDate)   
+
+        }
+     
+      pcaCloseDate!: Date;
+      pcaOpenDate!: Date;
+      openDateValidate()
+      {
+        const endDate = this.pcaAssignmentForm.controls['closeDate'].value;
+        const startDate = this.pcaAssignmentForm.controls['openDate'].value;
+        this.openDateErrorMsg=this.checkOpenDateValidity(startDate, endDate)
+      }
+        checkcloseDateValidity(opendate: string, closedate: string, pcaClosedate: string): string {
+          
+          this.openDateError=false;
+          const openDateObj: Date = new Date(opendate);
+          const closeDateObj: Date = new Date(closedate);
+          const pcaCloseDateObj: Date = new Date(pcaClosedate);
+          
+          switch (true) {
+            case closeDateObj < openDateObj:
+              this.closeDateError=true;
+              return "Close Date must be after Open Date";
+        
+            case closeDateObj > pcaCloseDateObj:
+              this.closeDateError=true;
+              return "Assignment Close Date cannot exceed the PCA Close Date";
+        
+            default:
+              this.closeDateError=false;
+              return  "";
+          }
+        }
+        checkOpenDateValidity(opendate: string, closedate: string): string {    
+                
+        this.closeDateError=false;
+          const openDateObj: Date = new Date(opendate);
+          const closeDateObj: Date = new Date(closedate);
+          if(openDateObj>closeDateObj)
+          {
+            this.openDateError=true;
+            return "Open Date must be before Close Date";
+          }
+          else{
+            this.openDateError=false;
+            return "";
+          }
+        }
+    
+  }

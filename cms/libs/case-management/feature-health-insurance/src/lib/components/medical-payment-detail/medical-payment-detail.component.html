@@ -5,14 +5,14 @@
             <div class="flex-row">
                 <div class="flex-col flex-col-8">
                     <div class="combotable_search_list new_refund_Search new_claims_Search mb-3">
-                        <kendo-floatinglabel text="Provider Name">
+                        <kendo-floatinglabel text="Service Provider Name">
                         <span *ngIf="medicalProvidersearchLoaderVisibility$ | async"
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
                         </span>
 
                         <kendo-multicolumncombobox textField="providerFullName" valueField="vendorAddressId"
                             [fillMode]="formUiStyle.dropDownFillMode"
-                            placeholder="Search {{claimsType | titlecase}} Providers by name or TIN"
+                            placeholder="Search Service {{claimsType | titlecase}} Providers by name or TIN"
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
                             formControlName="medicalProvider" (filterChange)="searchMedicalProvider($event)"
                             [data]="pharmacySearchResult$ | async" [(ngModel)]="selectedMedicalProvider"
@@ -106,7 +106,8 @@
                                         <kendo-formerror
                                             *ngIf="(isControlValid('serviceStartDate', i) && isSubmitted)"
                                             class="d-flex align-items-center">Service Start Date is required
-                                        </kendo-formerror>
+                                        </kendo-formerror>                                   
+                                       
                                     </div>
                                     <div class="flex-col flex-col-6">
                                         <kendo-floatinglabel text="Service End Date">
@@ -121,9 +122,8 @@
                                             class="d-flex align-items-center">Service End Date is required
                                         </kendo-formerror>
                                         <kendo-formerror
-                                            *ngIf="(!isStartEndDateError(i))"
-                                            class="d-flex align-items-center">Service
-                                            End date must be equal to or greater than start date
+                                            *ngIf="(!isStartEndDateError(i))&&addClaimServicesForm.value[i].serviceEndDate!=null"
+                                            class="d-flex align-items-center"> Service Start date should not be after the Service end date 
                                         </kendo-formerror>
                                     </div>
                                     <div class="ml-2">

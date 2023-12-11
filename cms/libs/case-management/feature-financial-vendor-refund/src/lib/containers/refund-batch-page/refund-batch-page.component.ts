@@ -1,10 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnInit, } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild, } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialClaimsFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { ContactFacade, FinancialClaimsFacade, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentsFacade } from '@cms/case-management/domain';
 import { DocumentFacade } from 'libs/shared/util-core/src/lib/application/document-facade';
 import { ActivatedRoute } from '@angular/router';
 import { ApiType } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'cms-refund-batch-page',
@@ -31,6 +33,11 @@ export class RefundBatchPageComponent implements OnInit {
     private documentFacade: DocumentFacade,
     private readonly route: ActivatedRoute,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
+    public contactFacade: ContactFacade,
+    public lovFacade: LovFacade,
+    private paymentFacade: PaymentsFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade,
+    private dialogService: DialogService,
   ) { }
 
   ngOnInit(): void {
@@ -62,7 +69,7 @@ export class RefundBatchPageComponent implements OnInit {
     }
   }
 
-  dataExportParameters :any;
+  dataExportParameters: any;
   exportReceiptDataEvent(data: any) {
     const gridDataResult = data.gridDataResult;
     if (data) {
@@ -78,7 +85,44 @@ export class RefundBatchPageComponent implements OnInit {
       this.dataExportParameters = exportGridParams;
 
       const formattedDate = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-      this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/batches/receipt`, `Receipting Log [${formattedDate}]`, ApiType.CaseApi, data.selectedIds, data.batchId);
+      this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/batches/receipt`, `Receipting Log [${formattedDate}]`, ApiType.CaseApi, data, data.batchId);
     }
+  }
+
+  updateProviderProfile(event: any) {
+    this.financialVendorFacade.updateProviderPanel(event)
+  }
+
+  OnEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates()
+    this.lovFacade.getPaymentMethodLov()
+  }
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  paymentRequestId: any;
+  providerDetailsDialog: any;
+  vendorProfile$ = this.financialVendorFacade.providePanelSubject$
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
+  ddlStates$ = this.contactFacade.ddlStates$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  onProviderNameClick(event: any) {
+    this.paymentRequestId = event
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation: {
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+
+  }
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
+  }
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanel(event);
   }
 }

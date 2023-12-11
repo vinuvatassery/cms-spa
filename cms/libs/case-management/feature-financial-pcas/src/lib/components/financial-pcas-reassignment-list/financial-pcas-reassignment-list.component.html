@@ -64,15 +64,15 @@
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.originalAmount | kendoNumber: 'n2'}}</span>
                   </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="amountSpendAfterExpiration" title="Amount Spent After Expiration" [width]="160">
+            <kendo-grid-column field="amountSpendAfterExpiration" title="Amount Spent after Expiration" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.amountSpendAfterExpiration | kendoNumber: 'n2'}}</span>
                   </ng-template> </kendo-grid-column>
-            <kendo-grid-column field="overSpendAmount" title="Overspend Amount" [width]="180">
+            <kendo-grid-column field="overSpendAmount" title="Overspent Amount" [width]="180">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.overSpendAmount | kendoNumber: 'n2'}}</span>
                   </ng-template> </kendo-grid-column>
-            <kendo-grid-column field="totalOverSpendAmount" title="Total Overspend Amount" [width]="180"> 
+            <kendo-grid-column field="totalOverSpendAmount" title="Total Overspent Amount" [width]="180"> 
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.totalOverSpendAmount | kendoNumber: 'n2'}}</span>
                   </ng-template>  </kendo-grid-column>
@@ -90,7 +90,7 @@
                            
                             </span>
                   </ng-template> </kendo-grid-column>
-            <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50"
+            <kendo-grid-column [reorderable]="false" field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="50"
                   class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
 
@@ -143,8 +143,7 @@
                   </div>
                   <p>There is no data to display.</p>
             </ng-template>
-
-      </kendo-grid>
+     </kendo-grid>
 </div>
 
 <ng-template #addEditPcaReassignmentDialogTemplate>
@@ -167,7 +166,6 @@
       [groupCodeIdsdValue]="groupCodeIdsdValue"
       [groupCodesData$]="groupCodesData$"
       [objectCodesData$]="objectCodesData$"
-      [pcaCodesData$]="allNotAssignedPcaSList"
       [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$"
       [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$"
       [pcaCodesInfoData$]="pcaCodesInfoData$"

@@ -29,7 +29,7 @@
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
+      <kendo-textbox aria-label="Search batches" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
         [(ngModel)]="searchValue" (afterValueChanged)="onApprovalSearch($event)">
       </kendo-textbox>
     </kendo-floatinglabel>
@@ -109,11 +109,10 @@
     </kendo-grid-column>
     <kendo-grid-column
       field="providerCount"
-      title="Carrier Count"
+      title="{{providerCountFieldTitle}}"
       [width]="120"
-      *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
     ></kendo-grid-column>
-    <kendo-grid-column field="totalPayments" title="Pmt Count" [width]="120">
+    <kendo-grid-column field="totalPayments" title="Pmt. Count" [width]="120">
     </kendo-grid-column>
     <kendo-grid-column field="paymentRequestSubTypeCode" title="Claim Type" [width]="120"
       *ngIf="selectedPaymentType === paymentTypeCode.TpaClaim">
@@ -136,7 +135,7 @@
     <kendo-grid-column
       field="premiumCount"
       title="Premium Count"
-      [width]="100"
+      [width]="130"
       *ngIf="selectedPaymentType === paymentTypeCode.InsurancePremium"
     >
     </kendo-grid-column>

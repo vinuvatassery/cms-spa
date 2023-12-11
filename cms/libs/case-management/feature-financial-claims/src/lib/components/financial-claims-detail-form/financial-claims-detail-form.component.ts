@@ -17,7 +17,7 @@ import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClai
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Lov, LovFacade, NavigationMenuFacade } from '@cms/system-config/domain';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
@@ -47,6 +47,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.financialClaimsFacade.CPTCodeSearchLoaderVisibility$;
   pharmacySearchResult$ = this.financialClaimsFacade.pharmacies$;
   searchCTPCode$ = this.financialClaimsFacade.searchCTPCode$;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
   vendorId: any;
   clientId: any;
   vendorName: any;
@@ -60,61 +61,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   isShowReasonForException = false;
   pcaExceptionDialogService: any;
   chosenPcaForReAssignment: any;
-  clientSearchResult = [
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-  ];
-
-  providerSearchResult = [
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-    {
-      providerId: '12',
-      providerFullName: 'Fname Lname',
-      tin: '2434324324234',
-    },
-  ];
+  private deletedServices : string[] = [];
 
   clientSearchLoaderVisibility$ =
     this.financialClaimsFacade.clientSearchLoaderVisibility$;
@@ -193,7 +140,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     private readonly financialPcaFacade: FinancialPcaFacade,
     public contactFacade: ContactFacade,
     private readonly financialVendorFacade : FinancialVendorFacade,
-    private readonly navigationMenuFacade: NavigationMenuFacade
+    private readonly navigationMenuFacade: NavigationMenuFacade,
+    private route: Router,
   ) {
     this.initMedicalClaimObject();
     this.initClaimForm();
@@ -571,13 +519,23 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     }
   }
   removeService(i: number) {
-    if(this.isEdit && this.addClaimServicesForm.length == 1)
-    {
-       this.addClaimServicesForm.reset();
+    let servicCount = 0;;
+    for(let service of this.claimForm.value.claimService) {
+      if (service.tpaInvoiceId) {
+        servicCount++;
+      }
     }
+    if(servicCount == 1){
+      let formControl = this.addClaimServicesForm.controls[i];
+      let tpaInvoiceId = this.addClaimServicesForm.value[i].tpaInvoiceId;
+      formControl.reset();
+      this.addClaimServicesForm.value[i].tpaInvoiceId = tpaInvoiceId;
+      return;
+    }
+   
     if(this.addClaimServicesForm.length > 1 ){
-    let form = this.addClaimServicesForm.value[i]
-    this.deleteClaimService(form.tpaInvoiceId);
+    let form = this.addClaimServicesForm.value[i];
+    this.deletedServices.push(form.tpaInvoiceId);
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
     }
@@ -683,6 +641,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       pcaAssignmentId: null,
       isPcaReassignmentNeeded: null,
       tpaInvoices: [{}],
+      deletedInvoices : this.deletedServices
     };
     let checkDeniedClaim = false;
     for (let element of formValues.claimService) {
@@ -771,7 +730,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       serviceStartDate: minServiceStartDate,
       serviceEndDate: maxServiceEndDate,
       paymentRequestId: this.isEdit ? claim.paymentRequestId : null,
-      objectLedgerName : 'Third Party(TPA)'
+      objectLedgerName : 'Third Party (TPA)'
     };
     this.loaderService.show();
     this.financialClaimsFacade.getPcaCode(request)
@@ -1361,6 +1320,11 @@ duplicatePaymentObject:any = {};
       this.checkOldInvoiceException(index);
       this.checkBridgeUppEception(index);
     });
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeAddEditClaimsFormModalClicked(false);
   }
 
 }
