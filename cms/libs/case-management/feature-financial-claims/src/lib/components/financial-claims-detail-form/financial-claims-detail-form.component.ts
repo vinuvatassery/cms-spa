@@ -518,6 +518,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         this.isRecentClaimShow = true;
       }
       this.showServicesListForm= true ;
+      this.checkForChildClaimFlags(true);
     }
   }
   removeService(i: number) {
@@ -1150,7 +1151,7 @@ duplicatePaymentObject:any = {};
       this.claimForm.controls['providerNotEligibleExceptionFlag']?.setValue(false);
       this.claimForm.controls['parentExceptionTypeCode'].setValue('');
       this.claimForm.controls['parentExceptionFlag']?.setValue(StatusFlag.No);
-      this.checkForChildClaimFlags();
+      this.checkForChildClaimFlags(false);
     }
     this.cd.detectChanges();
   }
@@ -1218,7 +1219,7 @@ duplicatePaymentObject:any = {};
       startDate = null;
       endDate = null;
     }
-    if (cptCode && clientId) {
+    if (cptCode && clientId && startDate && endDate) {
       this.financialClaimsFacade.checkGroupException(startDate,endDate, clientId,cptCode, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
@@ -1314,8 +1315,17 @@ duplicatePaymentObject:any = {};
     this.duplicatePaymentObject.serviceEndDate = this.addClaimServicesForm.at(0).get('serviceEndDate')?.value;
   }
 
-  checkForChildClaimFlags()
+  checkForChildClaimFlags(ineligibleCheck : boolean)
   {
+    if(ineligibleCheck)
+    {
+      this.addClaimServicesForm.controls.forEach((element, index) => {
+        let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
+        let startDate = serviceFormData.controls['serviceStartDate'].value;
+        let endDate = serviceFormData.controls['serviceEndDate'].value;
+        this.checkIneligibleEception(startDate, endDate, index);
+      });
+    }
     this.addClaimServicesForm.controls.forEach((element, index) => {
       this.loadServiceCostMethod(index);
       this.checkOldInvoiceException(index);
