@@ -82,7 +82,7 @@
       (columnReorder)="onColumnReorder($event)"
       (columnVisibilityChange)="columnChange($event)">
 
-      <kendo-grid-column field="vendorName" title="Provider Name" [width]="100"> 
+      <kendo-grid-column field="vendorName" title="Provider Name" [width]="160"> 
             <ng-template kendoGridCellTemplate let-dataItem>
                   <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button"
                     (click)="onProviderNameClick(dataItem)">
