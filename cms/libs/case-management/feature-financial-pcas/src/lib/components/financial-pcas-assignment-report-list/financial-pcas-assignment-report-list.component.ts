@@ -12,7 +12,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { GridFilterParam, PcaAssignmentsFacade } from '@cms/case-management/domain';
+import { GridFilterParam, PcaAssignmentReport, PcaAssignmentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -195,7 +195,7 @@ export class FinancialPcasAssignmentReportListComponent
     ) {
       return;
     }
-    if(this.selectedSearchColumn == 'ay'){
+    if(this.selectedSearchColumn ==  PcaAssignmentReport.Ay){
       let matches = data.match(/(\d+)/);
       data = matches[0];
     }
@@ -263,7 +263,7 @@ export class FinancialPcasAssignmentReportListComponent
     if(stateData?.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
-      if(stateFilter.field ==="ay"){
+      if(stateFilter.field === PcaAssignmentReport.Ay){
         let matches = stateFilter.value.match(/(\d+)/);
         stateFilter.value = matches[0];
       }
