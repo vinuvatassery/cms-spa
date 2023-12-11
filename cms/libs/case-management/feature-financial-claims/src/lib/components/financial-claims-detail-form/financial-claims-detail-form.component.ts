@@ -129,6 +129,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   paymentStatusCode: any;
   duplicatePaymentFlagPaymentRequestId : any;
   tempTpaInvoiceId: any;
+  specialCharAdded!: boolean;
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -815,14 +816,14 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           );
           this.pcaExceptionDialogService.close();
         } else {
-          this.navigationMenuFacade.pcaReassignmentCount();
-          this.closeAddEditClaimsFormModalClicked(true);
-          this.pcaExceptionDialogService.close();
-          this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Claim updated successfully'
           );
+          this.navigationMenuFacade.pcaReassignmentCount();
+          this.closeAddEditClaimsFormModalClicked(true);
+          this.pcaExceptionDialogService.close();
+          this.financialPcaFacade.pcaReassignmentCount();
         }
       },
       error: (error: any) => {
@@ -1325,6 +1326,19 @@ duplicatePaymentObject:any = {};
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeAddEditClaimsFormModalClicked(false);
+  }
+
+  restrictSpecialChar(event: any) {
+    const status = ((event.charCode > 64 && event.charCode < 91) ||
+      (event.charCode > 96 && event.charCode < 123) ||
+      event.charCode == 8 || event.charCode == 32 ||
+      (event.charCode >= 48 && event.charCode <= 57) ||
+      event.charCode == 45);
+    if (status) {
+      this.claimForm.controls['invoiceId'].setErrors(null);
+      this.specialCharAdded = false;
+    }
+    return status;
   }
 
 }
