@@ -852,7 +852,7 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
   }
   dateValidator(control: AbstractControl): { [key: string]: any } | null {
     const selectedDate = new Date(control.value);
-    const currentDate = new Date('1/1/1999');
+    const currentDate = new Date('1/1/1900');
 
     if (selectedDate < currentDate) {
       return { 'invalidDate': true };
