@@ -22,7 +22,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   @Input() isViewContentEditable!: boolean;
   @Input() insurancePlans: any;
   @Input() hasCreateUpdatePermission = false;
-
   @Output() insuranceCarrierNameChange = new EventEmitter<any>();
   @Output() insuranceCarrierNameData = new EventEmitter<any>();
 
@@ -48,7 +47,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
 
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
   insuranceTypeListForPlan$ = this.lovFacade.insuranceTypelovForPlan$;
-
+  loadCarrierSubject= this.vendorFacade.loadCarrierSubject;
   constructor(private formBuilder: FormBuilder, private readonly lovFacade: LovFacade, private readonly insurancePlanFacade: InsurancePlanFacade,
     private changeDetector: ChangeDetectorRef, private readonly loggingService: LoggingService,
     private readonly loaderService: LoaderService,
@@ -119,7 +118,6 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
       next: (data: any) => {
         if (!Array.isArray(data)) return;
         this.sortCarrier(data);
-        this.insuranceCarrierNameData.emit(this.carrierNames);
         this.isLoading = false;
         this.insurancePlanFacade.planLoaderSubject.next(false);
       },
@@ -170,7 +168,9 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
           this.hideLoader();
           this.newhealthInsuranceForm.reset();
           this.isValidateForm = false;
-          this.cdr.detectChanges();
+          //Reload Carrier List
+          this.loadCarrierSubject.next(true);
+          this.cdr.detectChanges(); 
         },
         error: (err: any) => {
           this.hideLoader();
@@ -187,6 +187,8 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   public addNewInsurancePlanOpen(): void {
     this.newhealthInsuranceForm.reset();
     this.isaddNewInsurancePlanOpen = true;
+    //Reloading insurance carrier dropdown to make available newly added.
+    this.loadInsuranceCarrierName(InsuranceStatusType.insurancePlanRequest);
   }
 
   private loadInsurancePlans() {
