@@ -822,7 +822,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         }
       },
       error: (error: any) => {
-        console.log("🚀 ~ error:", error)
         this.loaderService.hide();
         this.financialClaimsFacade.showHideSnackBar(
           SnackBarNotificationType.ERROR,
