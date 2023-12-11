@@ -88,7 +88,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="160">
+    <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="160" [filterable]="false">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-dropdownlist [data]="paymentMethodTypes" textField="lovDesc" valueField="lovDesc"
           [(ngModel)]="selectedPaymentMethod" [valuePrimitive]="true"
