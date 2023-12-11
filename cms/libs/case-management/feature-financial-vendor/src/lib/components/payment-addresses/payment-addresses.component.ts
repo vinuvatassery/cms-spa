@@ -276,9 +276,11 @@ filter: any = [];
     this.isPaymentAddressDeactivateShow = false;
     this.clickCloseAddEditPaymentAddressDetails();
     if (isSuccess)
-    this.vendorcontactFacade.loadMailCodes(this.vendorId);
+    {
       this.loadPaymentsAddressListGrid();
+      this.vendorcontactFacade.loadMailCodes(this.vendorId);
       this.checkMailCode();
+    }  
   }
 
   clickOpenDeletePaymentAddressDetails() {
