@@ -18,6 +18,7 @@ import {
   GridDataResult,
   FilterService,
 } from '@progress/kendo-angular-grid';
+import { ColumnVisibilityChangeEvent} from '@progress/kendo-angular-grid';
 
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Observable, Subject, debounceTime } from 'rxjs';
