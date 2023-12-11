@@ -327,17 +327,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     sortTypeValue: string
   ) {
     this.isPharmacyClaimsAllPaymentsGridLoaderShow = true;
-    const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
-      filter: JSON.stringify(this.filter)
-    };
   }
 
-  
-  
   onChange(data: any) {
     this.defaultGridState();
 

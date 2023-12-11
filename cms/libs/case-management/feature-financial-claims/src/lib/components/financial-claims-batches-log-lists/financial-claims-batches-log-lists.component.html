@@ -21,11 +21,11 @@
       <section class="table-filter-section mat-form-no-b-space">
         <span class="filter-section_items filter--select">
           <kendo-floatinglabel>
-                <kendo-dropdownlist 
-                      aria-label="All Columns" 
+                <kendo-dropdownlist
+                      aria-label="All Columns"
                       [fillMode]="formUiStyle.dropDownFillMode"
-                      textField="columnDesc" 
-                      valueField="columnName" 
+                      textField="columnDesc"
+                      valueField="columnName"
                       [data]="searchColumnList"
                       [valuePrimitive]="true"
                       [(ngModel)]="selectedSearchColumn"
@@ -41,16 +41,16 @@
           </kendo-floatinglabel>
         </span>
         <span class="right-overlay-export">
-          <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg" (click)="onClickedExport()">
-            <span class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span><i
-              class="exp_button-text">Export</i>
+          <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"  [disabled]="showExportLoader">
+            <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+      
+            <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
           </button>
         </span>
       </section>
 
       <!-- Sorted Info -->
       <div class="table-sorted-info">
-        Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnName}} </span>
         Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnName}} </span>
         <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
         <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
@@ -61,6 +61,10 @@
         </button>
       </div>
 
+      <div class="table-sorted-info" *ngIf="(paymentBatchName$ | async) as batch; else loading">
+        <span class="sort-items"> {{batch.totalPayments}} </span> Payment(s)
+        <span class="sort-items"> {{batch.totalReconciledPayments}} </span> Reconciled 
+      </div>
 
       <div class="app-c-table">
         <kendo-grid [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
@@ -280,7 +284,7 @@
         </ng-template>
       </kendo-grid-column>
 
-          <kendo-grid-column field="Option" title="Options" [reorderable]="false" [draggable]="false" [sortable]="false" 
+          <kendo-grid-column field="Option" title="Options" [reorderable]="false" [draggable]="false" [sortable]="false"
             [columnMenu]="false" [width]="80" class="text-center" [includeInChooser]="false">
             <ng-template kendoGridCellTemplate let-dataItem>
               <kendo-dropdownbutton [data]="getBatchLogGridActions(dataItem)" icon="more-vertical"
