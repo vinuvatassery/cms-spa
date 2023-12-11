@@ -13,12 +13,12 @@ import {
 } from '@angular/core';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DialogService } from '@progress/kendo-angular-dialog';
+import { DialogService, } from '@progress/kendo-angular-dialog';
 import {
   GridDataResult,
   FilterService,
+  ColumnVisibilityChangeEvent
 } from '@progress/kendo-angular-grid';
-import { ColumnVisibilityChangeEvent} from '@progress/kendo-angular-grid';
 
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Observable, Subject, debounceTime } from 'rxjs';
