@@ -189,6 +189,9 @@
           <kendo-formerror *ngIf="!accountingNumberValidated && providerType != vendorTypes.Pharmacy">
             A 1 or a 3 is required
           </kendo-formerror>
+          <kendo-formerror *ngIf="isDuplicateTin">
+           {{duplicateTinMessage}}
+          </kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy">

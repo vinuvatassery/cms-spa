@@ -381,6 +381,8 @@ export class FinancialVendorFacade {
     })
   }
 
-
+  validateTinNbr(tinNbr: any) {
+    return this.financialVendorDataService.getValidateTinNbr(tinNbr);
+  }
 
 }

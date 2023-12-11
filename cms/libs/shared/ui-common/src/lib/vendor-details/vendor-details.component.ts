@@ -1,6 +1,6 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-
+import { FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, } from '@cms/shared/util-core';
@@ -74,6 +74,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   clinicSearchSubscription !: Subscription;
   specialCharAdded: boolean = false;
   accountingNumberValidated: boolean = true;
+  isDuplicateTin = false;
+  duplicateTinMessage = "";
+
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -82,6 +85,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
+    private financialVendorFacade: FinancialVendorFacade
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
@@ -92,13 +96,13 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     if (clinicName === '' || !clinicName) {
       this.clinicVendorListLocal = null;
       return;
-    } 
+    }
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
       if (data && clinicName !== '') {
         if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
         } else if (this.providerType === FinancialVendorTypeCode.HealthcareProviders) {
-          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic 
+          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic
           || item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic );
         }else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
@@ -486,7 +490,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
-    
+
   }
 
   mapAddressContact(formValues: any) {
@@ -683,10 +687,34 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     }
     if (this.medicalProviderForm.controls['tinNumber'].value && (parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 3)) {
       this.accountingNumberValidated = true;
+      if(this.medicalProviderForm.controls['tinNumber'].value.length>=9){
+        this.validateTin(this.medicalProviderForm.controls['tinNumber'].value);
+      }
     } else {
       this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
       this.accountingNumberValidated = false;
+      this.isDuplicateTin = false;
     }
+  }
+
+  validateTin(tinNbr: any) {
+    this.financialVendorFacade.showLoader();
+    this.financialVendorFacade.validateTinNbr(tinNbr).subscribe({
+      next: (response: any) => {
+        if(response){
+          this.isDuplicateTin = false;
+        }
+        this.financialVendorFacade.hideLoader();
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.financialVendorFacade.hideLoader();
+        this.isDuplicateTin = true;
+        this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
+        this.duplicateTinMessage = err.error?.error?.message ?? "";
+        this.cdr.detectChanges();
+        }
+    });
   }
 
 }
