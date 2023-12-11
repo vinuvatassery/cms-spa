@@ -6,7 +6,7 @@
             All fields are required unless otherwise stated.
       </p>
       <p class="text-muted" *ngIf="isViewGridOptionClicked">
-            The fields on this window are view only, to edit, use the "Edit" option."
+            The fields on this window are view only, to edit, use the "Edit" option.
       </p>
      
       <div class="flex-row">
@@ -40,11 +40,11 @@
             </div>
             <div class="flex-col flex-col-4">
                   <label> {{isViewGridOptionClicked ? 'Remaining Amount' : 'Remaining'}} </label>
-                  <p class="green-text-color">$ {{pcaReassignmentByFundSource.remainingAmount}}</p>
+                  <p>$ {{pcaReassignmentByFundSource.remainingAmount  | kendoNumber: 'n2' }}</p>
             </div>
             <div class="flex-col flex-col-4" *ngIf="isViewGridOptionClicked">
                   <label> Close Date </label>
-                  <p class="green-text-color">{{pcaReassignmentByFundSource.pcaCloseDate | date: 'dd/MM/yyyy' }}</p>
+                  <p class="green-text-color">{{pcaReassignmentByFundSource.pcaCloseDate | date: 'MM/dd/yyyy' }}</p>
             </div>
             
 
