@@ -89,8 +89,8 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
     }
 
     if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
-      this.subscribeSearchVendor();
       this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.InsuranceProviders);
+      this.subscribeSearchVendor();
     } else if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.Drug) {
       this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.Manufacturers);
       this.subscribeSearchVendor();

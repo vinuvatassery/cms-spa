@@ -416,6 +416,7 @@ export class FinancialClaimsDataService {
     {
       VendorId : data.vendorId,
       ClientId : data.clientId,
+      hasServiceSubTypeFilter: data.includeServiceSubTypeFilter,
       SortType : data.sortType,
       Sorting : data.sort,
       SkipCount : data.skipCount,

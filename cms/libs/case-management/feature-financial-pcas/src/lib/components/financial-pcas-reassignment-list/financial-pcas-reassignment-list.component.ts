@@ -379,7 +379,6 @@ export class FinancialPcasReassignmentListComponent
         }
       }
     );
-    this.isFinancialPcaReassignmentGridLoaderShow = false;  
   }
 
   onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>,data:any): void {
