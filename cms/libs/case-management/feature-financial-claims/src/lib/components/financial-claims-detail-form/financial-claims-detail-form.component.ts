@@ -809,13 +809,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.financialClaimsFacade.updateMedicalClaim(data, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
-        if (!response) {
-          this.financialClaimsFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            'An error occure whilie updating claim'
-          );
-          this.pcaExceptionDialogService.close();
-        } else {
+        this.pcaExceptionDialogService.close();
+        if (response) {
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Claim updated successfully'
@@ -827,6 +822,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         }
       },
       error: (error: any) => {
+        console.log("🚀 ~ error:", error)
         this.loaderService.hide();
         this.financialClaimsFacade.showHideSnackBar(
           SnackBarNotificationType.ERROR,
