@@ -809,16 +809,21 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     this.financialClaimsFacade.updateMedicalClaim(data, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim).subscribe({
       next: (response: any) => {
         this.loaderService.hide();
-        this.pcaExceptionDialogService.close();
         if (response) {
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
-            'Claim updated successfully'
+            response.message
           );
           this.navigationMenuFacade.pcaReassignmentCount();
           this.closeAddEditClaimsFormModalClicked(true);
           this.pcaExceptionDialogService.close();
           this.financialPcaFacade.pcaReassignmentCount();
+        } else {
+          this.financialClaimsFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            'An error occure whilie updating claim'
+          );
+          this.pcaExceptionDialogService.close();
         }
       },
       error: (error: any) => {
