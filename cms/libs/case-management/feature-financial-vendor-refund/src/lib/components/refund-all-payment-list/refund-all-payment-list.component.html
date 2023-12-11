@@ -388,7 +388,7 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span *ngIf="selectedPayments" class="">{{selectionCount}} refund(s) selected</span>
+  <span *ngIf="receiptLogMode" class="">{{selectionCount}} refund(s) selected</span>
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" look="outline" aria-label="Cancel"
     (click)="cancelActions()">Cancel</button>
   <button *ngIf="receiptLogMode" kendoButton [primary]="true" aria-label="Download" icon="download"
