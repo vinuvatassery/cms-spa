@@ -337,6 +337,8 @@ filter: any = [];
   onGetHistoricalPaymentAddressData()
   {
     this.loadPaymentsAddressListGrid();
+    this.vendorcontactFacade.loadMailCodes(this.vendorId);
+    this.checkMailCode();
   }
   onEditDeactivateClicked(event:any)
   {
