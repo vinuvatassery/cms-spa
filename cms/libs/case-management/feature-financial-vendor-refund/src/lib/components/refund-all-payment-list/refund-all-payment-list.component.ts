@@ -219,6 +219,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   gridLoaderSubject = new BehaviorSubject(false);
 
   handleAllPaymentsGridData() {
+    debugger;
     this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
