@@ -575,16 +575,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   receiptLogMode = false
   selectedPayments: any[] = [];
 
-  // cancelActions() {
-  //   this.receiptLogTitlePart = "";
-  //   this.selectedPayments = [];
-  //   this.isLogGridExpanded = !this.isLogGridExpanded;
-  //   this.hideActionButton = !this.hideActionButton;
-  //   this.receiptLogMode = !this.receiptLogMode;
-  //   this.markAsUnChecked(this.selectedAllPaymentsList?.paymentsSelected);
-  //   this.markAsUnChecked(this.batchLogGridLists);
-  // }
-
   cancelActions() {
     this.selectedPayments = [];
     this.isLogGridExpanded = !this.isLogGridExpanded;
