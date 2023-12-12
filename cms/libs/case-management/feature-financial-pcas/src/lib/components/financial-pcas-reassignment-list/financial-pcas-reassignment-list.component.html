@@ -93,11 +93,12 @@
                        
                   </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                        <kendo-grid-date-filter-menu
-                          [column]="column"
+                        <common-grid-cell-date-range-filter
+                          [field]="'closeDate'"
                           [filter]="filter"
-                          [filterService]="filterService">
-                        </kendo-grid-date-filter-menu>
+                          [filterService]="filterService"
+                        >
+                        </common-grid-cell-date-range-filter>
                   </ng-template>
             </kendo-grid-column>
             <kendo-grid-column field="originalAmount" title="Original Amount" [width]="160">
