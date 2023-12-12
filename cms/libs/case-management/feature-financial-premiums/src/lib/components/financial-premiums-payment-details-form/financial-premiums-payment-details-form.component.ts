@@ -164,6 +164,16 @@ validateModel(){
     Validators.required,
   ]);
   this.premiumPaymentForm.controls['warrantNumber'].updateValueAndValidity();
+  if (this.premiumPaymentForm.controls['datePaymentReconciled'].value === null || 
+      this.premiumPaymentForm.controls['datePaymentReconciled'].value > this.currentDate) {
+    this.dateReconciledValidator = false;
+    this.premiumPaymentForm.controls['datePaymentReconciled'].setErrors({'incorrect': true});
+   }
+   if (this.premiumPaymentForm.controls['datePaymentSent'].value === null || 
+       this.premiumPaymentForm.controls['datePaymentSent'].value > this.currentDate) {
+    this.datePaymentSentValidator = false;
+    this.premiumPaymentForm.controls['datePaymentSent'].setErrors({'incorrect': true});
+   }
 }
 
 populatePaymentPanelModel(){
