@@ -269,7 +269,7 @@ export class FinancialVendorFacade {
 
   loadVendorList(vendorTypeCode: any): void {
     this.showLoader();
-    this.financialVendorDataService.loadVendorList(vendorTypeCode).subscribe({
+    this.financialVendorDataService.loadVendors(vendorTypeCode).subscribe({
       next: (reponse: any) => {
         if (reponse) {
           this.hideLoader();

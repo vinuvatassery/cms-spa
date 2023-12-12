@@ -578,7 +578,7 @@
             <kendo-formerror
             *ngIf="!getContactControl(i, 'email')?.valid&& getEmailValidation(i)">Invalid email format</kendo-formerror>
           </div>
-          <div *ngIf="providerType === vendorTypes.Manufacturers" class="flex-col mt-1">
+          <div *ngIf="providerType != vendorTypes.InsuranceProviders"  class="flex-col mt-1">
             <div class="component-list-h">
               <span class="app-checkboxwidtext-wrapper">
                 <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="isPreferedContact{{i}}"
