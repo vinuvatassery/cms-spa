@@ -2,16 +2,15 @@
 import {  Component, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentsFacade } from '@cms/case-management/domain'; 
-import { DocumentFacade } from 'libs/shared/util-core/src/lib/application/document-facade';
-import { ApiType } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentsFacade } from '@cms/case-management/domain';
+import { ApiType, DocumentFacade } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-vendor-refund-page',
-  templateUrl: './vendor-refund-page.component.html', 
+  templateUrl: './vendor-refund-page.component.html',
 })
-export class VendorRefundPageComponent    
+export class VendorRefundPageComponent
 {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
@@ -41,11 +40,14 @@ export class VendorRefundPageComponent
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
   vendorRefundAllPaymentsGridLists$ = this.financialVendorRefundFacade.vendorRefundAllPaymentsData$;
+
+  //provider panel
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
+  providerDetailsDialog: any
   paymentRequestId: any;
-  providerDetailsDialog:any;
-  constructor( 
+
+  constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade ,
     private documentFacade: DocumentFacade,
     public contactFacade: ContactFacade,
@@ -56,29 +58,27 @@ export class VendorRefundPageComponent
   ) {}
 
   pageTitle = "Vendor Refunds";
-  changeTitle(data: any): void 
+  changeTitle(data: any): void
   {
     this.pageTitle = data ?? "Vendor Refunds";
   }
-  getProviderPanel(event:any){
-    this.financialVendorFacade.getProviderPanel(event)
-  }
+
   loadVendorRefundProcessListGrid(event: any) {
-  
+
     this.financialVendorRefundFacade.loadVendorRefundProcessListGrid();
   }
-  
+
   loadVendorRefundBatchListGrid(loadBatchListRequestDto : any) {
     this.financialVendorRefundFacade.selectedRefundsTab = 2;
-    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;   
-    this.batchesGridExportParameters = loadBatchListRequestDto; 
+    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;
+    this.batchesGridExportParameters = loadBatchListRequestDto;
     this.financialVendorRefundFacade.loadVendorRefundBatchListGrid(loadBatchListRequestDto);
   }
 
   loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto : any) {
     this.financialVendorRefundFacade.selectedRefundsTab = 3;
-    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;   
-    this.dataExportParameters = recentClaimsPageAndSortedRequestDto;    
+    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;
+    this.dataExportParameters = recentClaimsPageAndSortedRequestDto;
     this.financialVendorRefundFacade.loadVendorRefundAllPaymentsListGrid(recentClaimsPageAndSortedRequestDto);
   }
 
@@ -92,25 +92,25 @@ export class VendorRefundPageComponent
       data?.sortColumn,
       data?.sortType,
       data?.filter,
-      
+
     );
   }
 
-  exportAllRefundsGridData() 
-  {   
-    if (this.dataExportParameters) {       
+  exportAllRefundsGridData()
+  {
+    if (this.dataExportParameters) {
       this.documentFacade.getExportFile(this.dataExportParameters, `vendor-refunds/payments`,'All Refunds');
     }
   }
 
   exportBatchesGridData()
   {
-    if (this.batchesGridExportParameters) {       
+    if (this.batchesGridExportParameters) {
       this.documentFacade.getExportFile(this.batchesGridExportParameters, `vendor-refunds/batches`,'All Batches');
     }
   }
 
-  exportReceiptDataEvent(data: any) 
+  exportReceiptDataEvent(data: any)
   {
     if (this.dataExportParameters) {
       const formattedDate = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '.');
@@ -118,28 +118,38 @@ export class VendorRefundPageComponent
     }
   }
 
-  updateProviderProfile(event:any){
-    this.financialVendorFacade.updateProviderPanel(event)
-  }
-  OnEditProviderProfileClick(){
-    this.contactFacade.loadDdlStates()
-    this.lovFacade.getPaymentMethodLov()
-  }
+//provider panel
   onProviderNameClick(event:any){
     this.paymentRequestId = event
     this.providerDetailsDialog = this.dialogService.open({
       content: this.providerDetailsTemplate,
       animation:{
         direction: 'left',
-        type: 'slide',  
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-    
+
   }
-  onCloseViewProviderDetailClicked(result: any) {
-    if (result) {
+
+  onCloseViewProviderDetailClicked(result: any){
+    if(result){
       this.providerDetailsDialog.close();
     }
   }
+
+  getProviderPanel(event:any){
+    this.financialVendorFacade.getProviderPanel(event)
+  }
+
+  updateProviderProfile(event:any){
+    console.log(event)
+    this.financialVendorFacade.updateProviderPanel(event)
+  }
+
+  OnEditProviderProfileClick(){
+    this.contactFacade.loadDdlStates()
+    this.lovFacade.getPaymentMethodLov()
+  }
+
 }

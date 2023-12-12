@@ -4,10 +4,10 @@
             <div class="flex-row" >
                 <div class="flex-col-6 flex-col">
                     <div class="flex-row">
-                        <div class="flex-col mt-2 mb-2 "> 
+                        <div class="flex-col mt-2 mb-2 ">
                             <div class="text-center">
                                 <a kendoButton look="flat" class="card-link-button" href="#medicalProviderPaymentslist">
-                                    View Medical Provider Payments
+                                    View Provider Payments
                                 </a>
                             </div>
                         </div>
@@ -33,9 +33,9 @@
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="Service Start Date">
                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
-                                    aria-label="Service Start Date"                  
+                                    aria-label="Service Start Date"
                                     [(ngModel)]="item.serviceStartDate"
-                                     placeholder="" 
+                                     placeholder=""
                                      format="MM-dd-yyyy"
                                      [disabled]="true"
                                   >
@@ -43,7 +43,7 @@
                             </kendo-floatinglabel>
                         </div>
                         <div class="flex-col flex-col-6">
-                            <kendo-floatinglabel text="Service Start Date">
+                            <kendo-floatinglabel text="Service End Date">
                                 <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
                                     aria-label="Service Start Date" format="MM-dd-yyyy"
                                     formatPlaceholder="formatPattern" placeholder=""
@@ -92,13 +92,13 @@
                 <div class="flex-col flex-col-6">
                     <div class="app-c-table">
                         <kendo-grid [resizable]="true" [groupable]="false" [reorderable]="true" [resizable]="true"
-                        [columnMenu]="false"  
+                        [columnMenu]="false"
                         [data]="item.tpaInvoice">
                         <kendo-grid-column field="cptCode" title="CPT Code" [width]="200">
                             <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
                                 Total
                             </ng-template>
-                        </kendo-grid-column> 
+                        </kendo-grid-column>
                         <kendo-grid-column field="serviceCost" title="Original Amount Paid" [width]="180">
                             <ng-template kendoGridCellTemplate let-dataItem>
                                 <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
@@ -106,7 +106,7 @@
                             <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
                                 <span class="tableamountview"> <strong>$</strong> {{item.totalAmount | kendoNumber:'n2'}} </span>
                             </ng-template>
-                        </kendo-grid-column>  
+                        </kendo-grid-column>
                         <ng-template kendoGridLoadingTemplate>
                           <common-grid-loader-component></common-grid-loader-component>
                         </ng-template>
@@ -127,26 +127,26 @@
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="VP">
                                 <kendo-textbox aria-label="VP"
-                                [fillMode]="formUiStyle.inputFillMode" 
+                                [fillMode]="formUiStyle.inputFillMode"
                                 [(ngModel)]="item.voucherPayableNbr"
                                 (valueChange)="onRefundNoteValueChange($event, 'voucherPayableNbr',item)"
                                  >
                                 </kendo-textbox>
                             </kendo-floatinglabel>
-                          
+
                         </div>
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="Credit #">
-                                <kendo-textbox aria-label="Refund Warrant #" 
+                                <kendo-textbox aria-label="Refund Warrant #"
                                  [(ngModel)]="item.creditNbr" [fillMode]="formUiStyle.inputFillMode"
                                  (valueChange)="onRefundNoteValueChange($event,'creditNbr',item)" >
                                 </kendo-textbox>
                             </kendo-floatinglabel>
-                           
+
                         </div>
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="Refund Warrant #">
-                                <kendo-textbox aria-label="Refund Warrant #" 
+                                <kendo-textbox aria-label="Refund Warrant #"
                                  [(ngModel)]="item.refundedWarrantNumber"
                                   [fillMode]="formUiStyle.inputFillMode"
                                   (valueChange)="onRefundNoteValueChange($event,'refundedWarrantNumber',item)"  required>
@@ -159,12 +159,14 @@
                             <kendo-floatinglabel text="Refund Amount" class="amount-with-symbol">
                                 <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                 <kendo-numerictextbox aria-label="Refund Amount" [spinners]="false"
-                                    [fillMode]="formUiStyle.inputFillMode" 
+                                    [fillMode]="formUiStyle.inputFillMode"
                                     format="#.00" [(ngModel)]="item.refundedAmount"
                                     (valueChange)="onRefundNoteValueChange($event,'refundedAmount',item)"  required>
                                 </kendo-numerictextbox>
                             </kendo-floatinglabel>
                             <kendo-formerror *ngIf="item.refundedAmountError">Refund Amount is required.
+                            </kendo-formerror>
+                            <kendo-formerror *ngIf="item.refundAmountExeedError">Refund exceeds amount paid.
                             </kendo-formerror>
                         </div>
                         <div class="flex-col flex-col-6">
@@ -176,7 +178,7 @@
                             </kendo-floatinglabel>
 
                         </div>
-                    
+
                         <div class="flex-col flex-col-6">
                             <kendo-floatinglabel text="Refund Note (optional)">
                                 <kendo-textbox aria-label="Refund Note (optional)"
@@ -192,4 +194,3 @@
             </div>
         </ng-container>
 
- 

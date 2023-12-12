@@ -15,6 +15,7 @@
                   (dataStateChange)="dataStateChange($event)"
                   (filterChange)="filterChange($event)"
                   (columnVisibilityChange)="columnChange($event)"
+                  [filter]="state.filter"
                   >
                   <kendo-grid-column field="invoiceNbr" title="Invoice ID" [width]="120">
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">

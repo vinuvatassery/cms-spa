@@ -22,7 +22,7 @@ export class RefundClaimsProviderInfoComponent {
   @Output() getProviderPanelEvent = new EventEmitter<any>();
   @Output() updateProviderProfileEvent = new EventEmitter<any>();
   @Output() onEditProviderProfileEvent = new EventEmitter<any>();
- 
+
   @Input()
   vendorProfile$: Observable<any> | undefined;
   @Input() updateProviderPanelSubject$ : Observable<any> | undefined;
@@ -38,7 +38,7 @@ export class RefundClaimsProviderInfoComponent {
       vendorAddressId: [''],
       paymentMethod: [''],
       address1: ['', Validators.required],
-      address2: [''],
+      address2: ['', Validators.required],
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
       zip: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
@@ -49,7 +49,7 @@ export class RefundClaimsProviderInfoComponent {
   })
   isSubmitted: boolean = false
   @Input() paymentRequestId:any
-  constructor(public formBuilder: FormBuilder, 
+  constructor(public formBuilder: FormBuilder,
     public activeRoute: ActivatedRoute,
     private route: Router,
     private readonly changeDetectorRef: ChangeDetectorRef) {
@@ -57,7 +57,7 @@ export class RefundClaimsProviderInfoComponent {
   }
 
   ngOnInit(): void {
-    
+
    this.paymentRequestId= this.paymentRequestId? this.paymentRequestId: this.activeRoute.snapshot.queryParams['pid'];
     this.loadVendorInfo()
   }
@@ -81,15 +81,8 @@ export class RefundClaimsProviderInfoComponent {
 
   createEmailsFormArray(contact: any): FormArray {
     let emails = new FormArray<FormGroup>([])
-   
-    if(contact.emails && contact.emails.length===0){
-       emails.push(this.formBuilder.group({
-        emailAddress: ['',Validators.required],
-        vendorContactEmailId: null,
-        vendorContactId: contact.vendorContactId
-      }));
-    }
-    else{
+
+    if(contact.emails && contact.emails.length>0){
     contact.emails.forEach((email: any) => {
       return emails.push(this.formBuilder.group({
         emailAddress: [email.emailAddress,Validators.required],
@@ -155,10 +148,10 @@ export class RefundClaimsProviderInfoComponent {
         mailCode: this.vendorProfile.address.mailCode,
         specialHandlingDesc: this.vendorProfile.address.specialHandlingDesc,
         paymentMethod: this.vendorProfile.address.paymentMethodCode,
-      
+
       }
     });
-    this.createContactsFormArray() 
+    this.createContactsFormArray()
   }
 
   get addressForm(){
@@ -200,7 +193,7 @@ export class RefundClaimsProviderInfoComponent {
       let emailForm = control as unknown as FormGroup
       emails.push({
         emailAddress: emailForm.controls['emailAddress']?.value,
-        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,  
+        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,
         vendorContactId: emailForm.controls['vendorContactId']?.value
       })
     })
@@ -240,11 +233,11 @@ export class RefundClaimsProviderInfoComponent {
         stateCode: this.profileForm?.controls.address.controls['stateCode']?.value,
         zip: this.profileForm?.controls.address.controls['zip']?.value,
         contacts: this.getContactArrayFormValues()
-      }    
+      }
     }
     this.updateProviderProfileEvent.emit(providerPanelDto)
-    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{       
-        this.loadVendorInfo(); 
+    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{
+        this.loadVendorInfo();
     });
   }
 
@@ -264,6 +257,7 @@ export class RefundClaimsProviderInfoComponent {
         tab_code: FinancialVendorProviderTabCode.MedicalProvider
       },
     };
+    this.closeViewProviderDetailClickedEvent.emit(true);
     this.route.navigate(['/financial-management/vendors/profile'], query)
     this.closeViewProviderClicked()
   }

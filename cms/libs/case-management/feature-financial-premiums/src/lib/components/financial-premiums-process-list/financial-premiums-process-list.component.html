@@ -109,7 +109,7 @@
     <kendo-grid-column field="clientId" title="Client Id" [width]="120">
       <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
          </ng-template>
        </kendo-grid-column>
@@ -152,7 +152,7 @@
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
-                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
         </kendo-grid-string-filter-menu>
          </ng-template>
     </kendo-grid-column>
@@ -200,9 +200,6 @@
     <kendo-grid-column field="policyId" title="Policy ID" [width]="120">
       <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
-          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
-          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
          </ng-template>
@@ -211,9 +208,6 @@
     <kendo-grid-column field="groupId" title="Group ID" [width]="160">
       <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
-          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
-          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
          </ng-template>
@@ -221,9 +215,6 @@
     <kendo-grid-column field="paymentId" title="Payment ID" [width]="160">
       <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
-          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
-          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
          </ng-template>

@@ -377,9 +377,11 @@ export class FinancialPcasReassignmentListComponent
         if (data?.total >= 0 || data?.total === -1) {
           this.isFinancialPcaReassignmentGridLoaderShow = false;
         }
+      },
+      (error: any)=>{
+        this.isFinancialPcaReassignmentGridLoaderShow = false;
       }
     );
-    this.isFinancialPcaReassignmentGridLoaderShow = false;  
   }
 
   onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>,data:any): void {

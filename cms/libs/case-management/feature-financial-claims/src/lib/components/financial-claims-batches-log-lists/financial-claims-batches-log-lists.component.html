@@ -21,49 +21,39 @@
       <section class="table-filter-section mat-form-no-b-space">
         <span class="filter-section_items filter--select">
           <kendo-floatinglabel>
-            <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
-              textField="columnDesc"
-              valueField="columnName"
-              [data]="searchColumnList"
-              [valuePrimitive]="true"
-              [(ngModel)]="selectedSearchColumn"
-              (valueChange)="searchColumnChangeHandler($event)">
-            </kendo-dropdownlist>
+                <kendo-dropdownlist
+                      aria-label="All Columns"
+                      [fillMode]="formUiStyle.dropDownFillMode"
+                      textField="columnDesc"
+                      valueField="columnName"
+                      [data]="searchColumnList"
+                      [valuePrimitive]="true"
+                      [(ngModel)]="selectedSearchColumn"
+                      (valueChange)="searchColumnChangeHandler($event)">
+                </kendo-dropdownlist>
           </kendo-floatinglabel>
-        </span>
+    </span>
         <span class="filter-section_items filter--search">
           <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
           <kendo-floatinglabel text="Search">
             <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
-              [(ngModel)]="searchText" (afterValueChanged)="onSearch($event)"> </kendo-textbox>
+              [(ngModel)]="searchText" [clearButton]="true" (afterValueChanged)="onSearch($event)"> </kendo-textbox>
           </kendo-floatinglabel>
         </span>
         <span class="right-overlay-export">
-          <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg" (click)="onClickedExport()">
-            <span class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span><i
-              class="exp_button-text">Export</i>
+          <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"  [disabled]="showExportLoader">
+            <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+      
+            <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
           </button>
         </span>
       </section>
 
-      <div class="table-sorted-info">
-        <span class="app-c-badge badge-warn-light" aria-label="search-warning"
-          *ngIf="showDateSearchWarning || showNumberSearchWarning">
-          <span class="material-icons" aria-label="search-warning" aria-hidden="true">
-            warning
-          </span>
-          <span *ngIf="showDateSearchWarning">
-            The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
-          </span>
-          <span *ngIf="showNumberSearchWarning">
-            Item # / Service Count / Total Cost / Total Due / Client Annual Total / Client Balance allow only numbers.
-          </span>
-        </span>
-      </div>
-
       <!-- Sorted Info -->
+      <div class="justify-content-between">
+
+    
       <div class="table-sorted-info">
-        Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnName}} </span>
         Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnName}} </span>
         <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
         <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
@@ -74,7 +64,11 @@
         </button>
       </div>
 
-
+      <div class="table-sorted-info" *ngIf="(paymentBatchName$ | async) as batch; else loading">
+        <span class="sort-items"> {{batch.totalPayments}} </span> Payment(s)
+        <span class="sort-items"> {{batch.totalReconciledPayments}} </span> Reconciled 
+      </div>
+    </div>
       <div class="app-c-table">
         <kendo-grid [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [columnMenu]="{ filter: true }"
@@ -294,7 +288,7 @@
       </kendo-grid-column>
 
           <kendo-grid-column field="Option" title="Options" [reorderable]="false" [draggable]="false" [sortable]="false"
-            [columnMenu]="false" [width]="80" class="text-center">
+            [columnMenu]="false" [width]="80" class="text-center" [includeInChooser]="false">
             <ng-template kendoGridCellTemplate let-dataItem>
               <kendo-dropdownbutton [data]="getBatchLogGridActions(dataItem)" icon="more-vertical"
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"

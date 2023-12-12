@@ -172,4 +172,11 @@ export class FinancialVendorDataService {
         `/financial-management/vendors/vendor-profile`,providePanelDto
     );
   }
+
+  loadVendors(searchText:any){  
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/clinicsearch?searchText=${searchText}`
+    );
+  }
 }

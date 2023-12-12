@@ -6,13 +6,16 @@ import {
   Input,
   OnInit,
   OnDestroy,
+  ViewChild,
+  TemplateRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { FinancialPremiumsFacade, InsurancePremiumDetails, PremiumAdjustment } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPremiumsFacade, InsurancePremiumDetails, ObjectCode, PremiumAdjustment } from '@cms/case-management/domain';
 import { Observable, Subscription } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-financial-premiums-edit-detail-form',
   templateUrl: './financial-premiums-edit-detail-form.component.html',
@@ -20,21 +23,26 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 })
 export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestroy {
 
+  @ViewChild('pcaExceptionDialogTemplate', { read: TemplateRef })
+  pcaExceptionDialogTemplate!: TemplateRef<any>;
+  
   /* Input Properties */
   @Input() premiumId!: string;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
   @Input() insuranceCoverageDates$: any;
   @Input() paymentRequestId :any
+  @Input() vendorId: any;
+  @Input() clientId: any;
+  @Input() premiumsType: any;
 
   /* Output Properties */
   @Output() loadPremiumEvent = new EventEmitter<string>();
   @Output() modalCloseEditPremiumsFormModal = new EventEmitter();
   @Output() updatePremiumEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
 
-  public formUiStyle: UIFormStyle = new UIFormStyle();
-  @Input() vendorId: any;
-  @Input() clientId: any;
-  @Input() premiumsType: any;
+
+  formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
   premiumsListData$ = this.financialPremiumsFacade.premiumsListData$;
   sortValue = this.financialPremiumsFacade.sortValuePremiums;
@@ -47,13 +55,17 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
   coverageDateList: any;
   premiumSubscription = new Subscription;
   coverageDatesSubscription = new Subscription;
-  @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  pcaExceptionDialogService: any;
+  chosenPcaForReAssignment: any;
   
 
   /* Constructor */
   constructor(private readonly financialPremiumsFacade: FinancialPremiumsFacade,
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider
+    private readonly configProvider: ConfigurationProvider,
+    private readonly loaderService: LoaderService,
+    private dialogService: DialogService
   ) { }
 
   /* Lifecycle Events */
@@ -139,14 +151,73 @@ export class FinancialPremiumsEditDetailFormComponent implements OnInit, OnDestr
   save() {
     const isValid = this.validate();
     if (isValid) {
-      const premiumAndAdjustments = this.getPremiumAndAdjustments();
-      if(premiumAndAdjustments){
-        this.updatePremiumEvent.emit(premiumAndAdjustments);
-      }
+      this.checkValidPcaAndSave();
     }
   }
 
+  private checkValidPcaAndSave() {
+    const totalAdjustment = this.premium?.premiumAdjustments?.reduce((accumulator, currentValue) => accumulator + (currentValue.adjustmentAmount ?? 0), 0,);
+    const totalPremiumAmount = totalAdjustment + this.premium.premiumAmount;
+    const request = {
+      clientId: this.premium.clientId,
+      claimAmount: totalPremiumAmount,
+      serviceStartDate: this.premium.coverageStartDate,
+      serviceEndDate: this.premium.coverageEndDate,
+      paymentRequestId: this.premium.paymentRequestId,
+      objectLedgerName : ObjectCode.InsurancePremium
+    };
+
+    this.loaderService.show();
+    this.financialClaimsFacade.getPcaCode(request)
+      .subscribe({
+        next: (response: any) => {
+          this.loaderService.hide();
+          if (response) {
+            if (response?.isReAssignmentNeeded ?? true) {
+              this.chosenPcaForReAssignment = response;
+              this.onPcaReportAlertClicked(this.pcaExceptionDialogTemplate);
+              return;
+            }
+
+            this.savePremiums();
+          }
+        },
+        error: (error: any) => {
+          this.loaderService.hide();
+          this.financialClaimsFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+        },
+      });
+  }
+
+  onPcaReportAlertClicked(template: TemplateRef<unknown>): void {
+    this.pcaExceptionDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onPcaAlertCloseClicked(result: any) {
+    if (result) {
+      this.pcaExceptionDialogService.close();
+    }
+  }
+
+  onConfirmPcaAlertClicked(chosenPca: any) {
+    this.savePremiums();
+    this.pcaExceptionDialogService?.close();
+  }
+
   /* Private Methods */
+
+  private savePremiums(){
+    const premiumAndAdjustments = this.getPremiumAndAdjustments();
+    if(premiumAndAdjustments){
+      this.updatePremiumEvent.emit(premiumAndAdjustments);
+    }
+  }
   private getPremiumAndAdjustments() {
     return {
       premiumId:this.premiumId,

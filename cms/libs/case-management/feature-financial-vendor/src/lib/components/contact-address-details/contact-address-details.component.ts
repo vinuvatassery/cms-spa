@@ -159,8 +159,8 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   onValueChange(index:any){
     let contactForm = this.AddContactForm.at(index) as FormGroup;
-    if(this.isEdit == true){
-    if(contactForm.controls['contactName'].dirty == true){
+    if(this.isEdit){
+    if(contactForm.controls['contactName'].dirty){
         this.isSubmitted = true;
       }
   }

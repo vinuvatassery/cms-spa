@@ -2,7 +2,7 @@
   <p class="text-muted mb-2" *ngIf="dialogTitle === 'View' || dialogTitle === 'Add' || dialogTitle === 'Edit'">
     {{
     isEditViewPopup
-    ? 'Click "Edit" to make changes to the insurance '
+    ? 'Click "Edit" to make changes to the Insurance '
     : 'All fields are required unless otherwise stated.'
     }}
   </p>
@@ -109,7 +109,8 @@
           <h5 class="text-capital">Copy of Medicare Card</h5>
           <common-document-upload
           [file]="copyOfMedicareCardFiles"
-          [isFileViewable]="true"
+          [isFileViewable]="true"          
+          [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_MEDICARE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'medicareCard')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'medicareCard')"
@@ -215,6 +216,7 @@
         <common-document-upload
           [file]="proofOfPremiumFiles"
           [isFileViewable]="true"
+          [isDisabled] ="isViewContentEditable"
           [typeCode]="'PROOF_OF_PREMIUM'"
           (handleFileSelectEvent)="handleFileSelected($event,'proof')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'proof')"
@@ -236,6 +238,7 @@
         <common-document-upload
           [file]="copyOfSummaryFiles"
           [isFileViewable]="true"
+          [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_SUMMARY_Of_BENEFITS_AND_COVERAGE'"
           (handleFileSelectEvent)="handleFileSelected($event,'summary')"
           (handleFileRemoveEvent)="handleFileRemoved($event, 'summary')"
@@ -256,6 +259,7 @@
         <common-document-upload
           [file]="copyOfInsuranceCardFiles"
           [isFileViewable]="true"
+          [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_INSURANCE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'copyInsurance')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'copyInsurance')"

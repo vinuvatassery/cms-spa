@@ -84,7 +84,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   tpaAddRefundClickSubject = new Subject<any>();
   tpaAddRefundClick$ = this.tpaAddRefundClickSubject.asObservable()
 
-  
+
   selectDiffPaymentClicked = new Subject<any>();
   selectDiffPaymentClicked$ = this.selectDiffPaymentClicked.asObservable()
 
@@ -160,6 +160,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
      this.refundType =  res.filter(x=> x.lovCode!=='TAX')
     })
 if(this.isEdit){
+  console.log(this.tpaRefundGridLists)
   this.disableFeildsOnConfirmSelection = true
   this.selectedRefundType = this.serviceType
   this.onEditInitiallydontShowPremiumselection = true
@@ -176,7 +177,7 @@ if(this.isEdit){
     this.selectedVendor = vendors
 
 
- 
+
   this.financialVendorRefundFacade.clientSubject.next([this.selectedClient])
   this.initForm()
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
@@ -215,21 +216,21 @@ if(this.isEdit){
     this.refundForm.patchValue({
       tpaVendor : this.selectedVendor
     });
-   
+
     this. tpavendors$.subscribe((res:any[])=>{
       const vendors = res.filter((x) =>{
         return x.vendorAddressId ==  this.vendorAddressId
-      
+
       })
       this.selectedVendor = vendors && vendors[0]
       this.vendorId = vendors[0].vendorId
       this.initForm()
     })
-  this.debouncedtpaVendors(this.vendorName) 
-  
+  this.debouncedtpaVendors(this.vendorName)
+
   this.financialVendorRefundFacade.tpaVendorsSubject.next([this.selectedVendor])
   this.isConfirmationClicked = true;
-  
+
   this.getTpaRefundInformation(this.inspaymentRequestId)
   this.refundForm.controls['tpaVendor'].disable();
   this.searchTpaVendors(this.vendorName)
@@ -371,7 +372,7 @@ onSelectedRxClaimsChangeEvent(event:any){
     this.financialVendorRefundFacade.insuranceRefundInformation$.subscribe(res =>{
     this.financialPremiumsRefundGridLists =  res;
     })
-  
+
   }
 
 
@@ -396,7 +397,7 @@ onSelectedRxClaimsChangeEvent(event:any){
       this.tpaRefundGridLists.forEach(x=>{
         x.serviceStartDate =new Date(x.serviceStartDate);
         x.serviceEndDate =new Date(x.serviceEndDate);
-        x.reconciledDate = new Date(x.reconciledDate)
+        x.reconciledDate =  x.reconciledDate ? new Date(x.reconciledDate) : new Date()
         x.totalAmount = x.tpaInvoice.reduce((accumulator : number, obj : any) => accumulator + obj.serviceCost, 0);
       })
       this.claimsCount = this.tpaRefundGridLists.length
@@ -412,16 +413,17 @@ onSelectedRxClaimsChangeEvent(event:any){
     this.financialVendorRefundFacade.tpaRefundInformation$.subscribe(res =>{
     this.tpaRefundInformation =  res;
     })
- 
+
 
   }
-  
+
   }
 
 
 
 onCloseViewProviderDetailClicked(result: any){
   if(result){
+    this.modalCloseAddEditRefundFormModal.emit(false);
     this.providerDetailsDialog.close();
   }
 }
@@ -468,7 +470,7 @@ OnEditProviderProfileClick(){
 onAddRefundClick(){
   if (this.selectedRefundType === 'PHARMACY') {
     this.addNewRefundRx();
-  } 
+  }
   if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
       this.insuraceAddRefundClickSubject.next(true);
   }
@@ -502,7 +504,7 @@ addTpa(event:any){
     this.onEditInitiallydontShowPremiumselection = false
     this.inputConfirmationClicked= false
     this.isRefundGridClaimShow = true;
-    if(this.selectedRefundType == ServiceTypeCode.pharmacy){    
+    if(this.selectedRefundType == ServiceTypeCode.pharmacy){
     this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
     }
   }
@@ -552,11 +554,11 @@ addTpa(event:any){
       this.clientId=null;
     }
   }
-  searchPharmacy(searchText: any) {;
+  searchPharmacy(searchText: any , ) {;
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText);
+    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
     this.vendorAddressId=null;
@@ -569,7 +571,7 @@ addTpa(event:any){
     this.providerTin = $event;
     if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
-    } 
+    }
     this.selectedMedicalProvider = $event
   }
   initRefundForm() {
@@ -630,7 +632,7 @@ addTpa(event:any){
   claimsCountEvent(data:any){
 
     this.claimsCount=data;
-  
+
   }
 
   onTpaClaimsDelete(data:any){
@@ -639,7 +641,7 @@ addTpa(event:any){
     if(data.length<=0){
       this.isConfirmationClicked = false;
     }
-   
+
   }
 
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
@@ -718,15 +720,15 @@ addTpa(event:any){
    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
    let inValid = false;
    if (control === 'qtyRefunded') {
-     inValid = isTouched == true && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
+     inValid == isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
      dataItem.qtyRefundedValid = !inValid;
    }
    if (control === 'daySupplyRefunded') {
-     inValid = isTouched == true && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+     inValid == isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
      dataItem.daySupplyRefundedValid = !inValid;
    }
    if (control === 'refundedAmount') {
-     inValid = isTouched == true && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
+     inValid == isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
      dataItem.refundedAmountValid = !inValid;
    }
    if (inValid) {

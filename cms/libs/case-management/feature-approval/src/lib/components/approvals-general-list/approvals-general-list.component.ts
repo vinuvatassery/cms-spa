@@ -72,7 +72,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   tAreaCessationMaxLength: any = 200;
   approveStatus: string = 'APPROVED';
   denyStatus: string = 'DENIED';
-  sendbackNotesRequireMessage: string = 'Reason for denial is required.';
+  sendbackNotesRequireMessage: string = 'Reason for Denial is required.';
   approvalsPaymentsGridPagedResult: any = [];
   approvalsPaymentsGridUpdatedResult: any = [];
   hasDisabledSubmit: boolean = true;
@@ -105,6 +105,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   selectedMasterData!:any;
   currentlyExpandedPanelId: any;
   @Input() deliveryMethodLov$! : any;
+  readonly subTypeConst = PendingApprovalGeneralTypeCode;
   /** Constructor **/
   constructor(
     private route: Router,
@@ -320,23 +321,23 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   getMasterlistTitle(subTypeCode: string) {
     switch (subTypeCode) {
       case PendingApprovalGeneralTypeCode.DentalClinic:
-        return 'Request to add Dental Clinics To Master List';
+        return 'Request to add new Dental Clinics to the list';
       case PendingApprovalGeneralTypeCode.MedicalClinic:
-        return 'Request to add Medical Clinics To Master List';
+        return 'Request to add new Medical Clinics to the list';
       case PendingApprovalGeneralTypeCode.MedicalProvider:
-        return 'Request to add Medical Providers To Master List';
+        return 'Request to add new Medical Providers to the list';
       case PendingApprovalGeneralTypeCode.DentalProvider:
-        return 'Request to add Dental Providers To Master List';
+        return 'Request to add new Dental Providers to the list';
       case PendingApprovalGeneralTypeCode.InsuranceVendor:
-        return 'Request to Add Insurance Vendor';
-      case PendingApprovalGeneralTypeCode.InsuranceProvider:
-        return 'Request to add Insurance Providers To Master List';
+        return 'Request to Add new Insurance Vendor to the list';
       case PendingApprovalGeneralTypeCode.Pharmacy:
         return 'Request to Add new Pharmacy to the list';
       case PendingApprovalGeneralTypeCode.Drug:
-        return 'Request to add Drugs To Master List';
+        return 'Request to Add New Drug to the list';
       case PendingApprovalGeneralTypeCode.InsurancePlan:
         return 'Request to Add new Insurance Plan to the list';
+      case PendingApprovalGeneralTypeCode.InsuranceProvider:
+        return 'Request to Add new Insurance Provider to the list';
     }
     return null;
   }

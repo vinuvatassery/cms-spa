@@ -13,10 +13,11 @@ import {
 } from '@angular/core';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DialogService } from '@progress/kendo-angular-dialog';
+import { DialogService, } from '@progress/kendo-angular-dialog';
 import {
   GridDataResult,
-  FilterService
+  FilterService,
+  ColumnVisibilityChangeEvent
 } from '@progress/kendo-angular-grid';
 
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
@@ -255,6 +256,11 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
 
   filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
+  }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
   groupFilterChange(value: any, filterService: FilterService): void {
     filterService.filter({

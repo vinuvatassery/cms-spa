@@ -143,6 +143,8 @@ export * from './lib/enums/general-approval-approve-deny.enum';
 export * from './lib/enums/drug-type.enum';
 export * from './lib/enums/column-names.enum'
 export * from './lib/enums/drug_unit_enum';
+export * from './lib/enums/financial-service-type.enum';
+export * from './lib/enums/Object-code.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
