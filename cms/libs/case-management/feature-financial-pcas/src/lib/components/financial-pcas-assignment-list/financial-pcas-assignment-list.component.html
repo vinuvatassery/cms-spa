@@ -43,7 +43,7 @@ aria-label="Assignment"> Assignment</button>
 </section>
 
       <div>
-      <kendo-grid  [kendoGridBinding]="financialPcaAssignmentGridLists$"  [loading]="isFinancialPcaAssignmentGridLoaderShow"
+      <kendo-grid [resizable]="true"  [kendoGridBinding]="financialPcaAssignmentGridLists$"  [loading]="isFinancialPcaAssignmentGridLoaderShow"
        [rowReorderable]="true" (rowReorder)="onPriorityChange($event)">               
              <kendo-grid-rowreorder-column [width]="40"></kendo-grid-rowreorder-column>
      
