@@ -12,7 +12,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { GridFilterParam, PcaAssignmentsFacade } from '@cms/case-management/domain';
+import { GridFilterParam, PcaAssignmentReport, PcaAssignmentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -120,10 +120,8 @@ export class FinancialPcasAssignmentReportListComponent
   selectedGroupCode ='';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   showDateSearchWarning = false;
-  showNumberSearchWarning = false;
   columnChangeDesc = 'Default Columns';
 
-  numericColumns = ['pcaCode', 'ay'];
   dateColumns = ['openDate', 'closeDate'];
 
   /** Constructor **/
@@ -167,7 +165,6 @@ export class FinancialPcasAssignmentReportListComponent
   /* Public methods */
   searchColumnChangeHandler(value: string) {
     this.filter = [];
-    this.showNumberSearchWarning = this.numericColumns.includes(value);
     this.showDateSearchWarning = this.dateColumns.includes(value);
     if (this.searchText) {
       this.onSearch(this.searchText);
@@ -186,11 +183,11 @@ export class FinancialPcasAssignmentReportListComponent
 
   performSearch(data: any) {
     this.defaultGridState();
-    const operator = [...this.numericColumns, ...this.dateColumns].includes(
+    let operator = [ ...this.dateColumns].includes(
       this.selectedSearchColumn
     )
       ? 'eq'
-      : 'startswith';
+      : 'contains';
     if (
       this.dateColumns.includes(this.selectedSearchColumn) &&
       !this.isValidDate(data) &&
@@ -198,11 +195,9 @@ export class FinancialPcasAssignmentReportListComponent
     ) {
       return;
     }
-    if (
-      this.numericColumns.includes(this.selectedSearchColumn) &&
-      isNaN(Number(data))
-    ) {
-      return;
+    if(this.selectedSearchColumn ==  PcaAssignmentReport.Ay){
+      let matches = data.match(/(\d+)/);
+      data = matches[0];
     }
     this.filterData = {
       logic: 'and',
@@ -238,7 +233,6 @@ export class FinancialPcasAssignmentReportListComponent
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
     this.showDateSearchWarning = false;
-    this.showNumberSearchWarning = false;
     this.loadFinancialPcaReportListGrid();
   }
 
@@ -266,6 +260,14 @@ export class FinancialPcasAssignmentReportListComponent
     this.setFilterBy(true, '', this.filter);
     if (!this.filteredByColumnDesc.includes('Status')) this.selectedStatus = '';
     if (!this.filteredByColumnDesc.includes('Object')) this.selectedObjectCode = '';
+    if(stateData?.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      if(stateFilter.field === PcaAssignmentReport.Ay){
+        let matches = stateFilter.value.match(/(\d+)/);
+        stateFilter.value = matches[0];
+      }
+    }
     this.loadFinancialPcaReportListGrid();
   }
 

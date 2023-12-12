@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import {ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam } from '@cms/case-management/domain';
@@ -43,7 +43,10 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   paymentByBatchGridLoader$ = this.financialPremiumsFacade.paymentByBatchGridLoader$;
+  insurancePremium$ = this.financialPremiumsFacade.insurancePremium$;
   providerDetailsDialog:any;
+  insuranceCoverageDates$ = this.financialPremiumsFacade.insuranceCoverageDates$;
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
   constructor(
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
     private readonly router: Router,
@@ -164,4 +167,13 @@ export class FinancialPremiumsBatchPageComponent implements OnInit{
   loadEachLetterTemplate(event:any){
     this.financialPremiumsFacade.loadEachLetterTemplate(this.premiumType, event);  
   }
+
+  updatePremium(premium:any){
+    this.financialPremiumsFacade.updatePremium(this.premiumType, premium.premiumId, premium);
+  }
+
+  loadPremiumEvent(premiumId: string){
+    this.financialPremiumsFacade.loadPremium(this.premiumType, premiumId);
+  }
+
 }
