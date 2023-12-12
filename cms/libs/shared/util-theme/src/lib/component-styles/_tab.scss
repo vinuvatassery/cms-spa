@@ -125,18 +125,21 @@
   margin-top: 0px;
   .tab-over-icon-btn{
     top: 16px;
-    z-index: 2;
+    z-index: 0;
   }
 }
 
 .vendor-profile-tabs{
-  position: relative;
-  z-index: 0;
   .k-tabstrip-items-wrapper{
     box-shadow: 0 4px 5px #00000024;
     position: sticky;
     top: 142px;
-    z-index: 2;
+    z-index: 1;
     background: #ffffff;
 }
+.table-filter-section, .k-grid{
+  position: relative;
+  z-index: 0;
 }
+}
+ 
