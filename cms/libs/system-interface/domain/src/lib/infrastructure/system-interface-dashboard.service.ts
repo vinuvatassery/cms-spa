@@ -1,134 +1,107 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core'; 
-import { Observable, of } from 'rxjs';   
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class SystemInterfaceDashboardService {
   constructor(private http: HttpClient) {}
 
- 
-  getDashboardContent(): Observable<any[]> {
-    return of([
-      {
-    
-        component: 'ClientByStatus',
-        widgetChartConfig:{ 
-          title:{
-            text:'Program Expenses'
-          },
-          legend:{ 
-            position:'right',
-            orientation: 'vertical',
-           
-          },
-          categoryAxis:{
-            categories:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
-          },
-          series:[
-            
-              {
-                data: [
-                  {
-                    category: 'UPP',
-                    value: 45,
-                    color: '#FFD064',
-                  },
-                  {
-                    category: 'GROUP I',
-                    value: 15,
-                    color: '#ED6363',
-                  },
-                  {
-                    category: 'GROUP II',
-                    value: 10,
-                    color: '#57BAC3',
-                  },
-                  {
-                    category: 'BRIDGE',
-                    value: 10,
-                    color: '#0063A6',
-                  },
-                  {
-                    category: 'GROUP I / INS GAP',
-                    value: 10,
-                    color: '#BF61A5',
-                  },
-                  {
-                    category: 'GROUP II / INS GAP',
-                    value: 10,
-                    color: '#D8D365',
-                  },
-                ],
-            
-              type:'donut',
-              color:'red'
-            },
-          ]
-        }
-        
-      },
-  
-      {
-    
-        component: 'ClientByStatus',
-        widgetChartConfig: {
-          title: {
-            text: 'ACTIVE CLIENTS BY GROUP',
-           
-          },
-          legend: { 
-            position: 'top',
-            orientation: 'horizontal',
-          },
-          categoryAxis:{
-            categories:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
-          },
-          series: [
-            {
-              data: [
-                {
-                  category: 'UPP',
-                  value: 45,
-                  color: '#FFD064',
-                },
-                {
-                  category: 'GROUP I',
-                  value: 15,
-                  color: '#ED6363',
-                },
-                {
-                  category: 'GROUP II',
-                  value: 10,
-                  color: '#57BAC3',
-                },
-                {
-                  category: 'BRIDGE',
-                  value: 10,
-                  color: '#0063A6',
-                },
-                {
-                  category: 'GROUP I / INS GAP',
-                  value: 10,
-                  color: '#BF61A5',
-                },
-                {
-                  category: 'GROUP II / INS GAP',
-                  value: 10,
-                  color: '#D8D365',
-                },
-              ],
-              type: 'donut',
-              color: 'red',
-            },
-          ],
+  getClientRecordSendChart(): Observable<any> {
+    return of({
+      component: 'ClientRecordsSent',
+      chartData: {
+        title: {
+          visible: false,
+          text: 'Client Records Sent',
         },
+        legend: {
+          visible: false,
+          position: 'right',
+          orientation: 'vertical',
+        },
+        categoryAxis: {
+          categories: [
+            '05/01/21',
+            '05/02/21',
+            '05/03/21',
+            '05/04/21',
+            '05/05/21',
+            '05/06/21',
+            '05/07/21',
+            '05/08/21',
+            '05/09/21',
+          ],
+          labels: { format: 'd', rotation: 'auto' },
+        },
+        tooltip: {
+          visible: true,
+          shared: true,
+        },
+        series: [
+          {
+            data: [10, 12, 23, 34, 12, 23, 10, 12, 23],
+
+            type: 'column',
+            color: '#005994',
+          },
+          {
+            data: [10, 12, 23, 34, 12, 23, 10, 12, 23],
+
+            type: 'line',
+            color: '#005994',
+            style: 'smooth',
+          },
+        ],
       },
-    
-    ]);
+    });
+  }
+  getCardsRequestChart(): Observable<any> {
+    return of({
+      component: 'CardsRequest',
+      chartData: {
+        title: {
+          visible: false,
+          text: 'Cards Request',
+        },
+        legend: {
+          visible: false,
+          position: 'right',
+          orientation: 'vertical',
+        },
+        categoryAxis: {
+          categories: [
+            '05/01/21', '05/02/21', '05/03/21', '05/04/21', '05/05/21', '05/06/21', '05/07/21', '05/08/21', '05/09/21'
+          ],
+          labels: { format: 'd', rotation: 'auto' },
+        },
+        tooltip: {
+          visible: true,
+          shared: true,
+        },
+        series: [
+          {
+            data: [5, 15, 4, 15, 15, 23, 25, 13, 32],
+
+            type: 'column',
+            color: '#ec891d',
+            gap:2,
+            spacing: .25
+          },
+          {
+            data: [5, 15, 4, 15, 15, 23, 25, 13, 32],
+
+            type: 'area',
+            color: '#f9dcbb',
+            style: 'smooth',
+            gap:2,
+            spacing: .25
+          },
+        ],
+      },
+    });
   }
 
- 
   loadActivityLogListsServices() {
     return of([
       {
@@ -141,7 +114,7 @@ export class SystemInterfaceDashboardService {
         totalRecords: 100,
         failedRecords: 4,
         stampDate: 'MM/DD/YYYY',
-        standTime: '00:00:00 AM', 
+        standTime: '00:00:00 AM',
       },
       {
         id: 2,
@@ -153,7 +126,7 @@ export class SystemInterfaceDashboardService {
         totalRecords: 100,
         failedRecords: 0,
         stampDate: 'MM/DD/YYYY',
-        standTime: '00:00:00 AM', 
+        standTime: '00:00:00 AM',
       },
       {
         id: 3,
@@ -165,7 +138,7 @@ export class SystemInterfaceDashboardService {
         totalRecords: 100,
         failedRecords: 0,
         stampDate: 'MM/DD/YYYY',
-        standTime: '00:00:00 AM', 
+        standTime: '00:00:00 AM',
       },
       {
         id: 4,
@@ -177,9 +150,8 @@ export class SystemInterfaceDashboardService {
         totalRecords: 100,
         failedRecords: 0,
         stampDate: 'MM/DD/YYYY',
-        standTime: '00:00:00 AM', 
+        standTime: '00:00:00 AM',
       },
-      
     ]);
   }
 }

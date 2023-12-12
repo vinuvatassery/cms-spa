@@ -8,13 +8,16 @@ import { State } from '@progress/kendo-data-query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemInterfaceDashboardPageComponent implements OnInit {
-  dashboardChartList$ = this.systemInterfaceDashboardFacade.dashboardChartList$;
+  ClientRecordSendChart$ = this.systemInterfaceDashboardFacade.ClientRecordSendChart$;
+  cardsRequestChart$ = this.systemInterfaceDashboardFacade.cardsRequestChart$;
   activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
   pageSizes = this.systemInterfaceDashboardFacade.gridPageSizes;
   sortValue = this.systemInterfaceDashboardFacade.sortValue;
   sortType = this.systemInterfaceDashboardFacade.sortType;
   sort = this.systemInterfaceDashboardFacade.sort;
   public state!: State;
+  clientRecordSendChart: any;
+  cardsRequestChart: any;
   /** Constructor **/
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
@@ -26,14 +29,30 @@ export class SystemInterfaceDashboardPageComponent implements OnInit {
       take: this.pageSizes[0]?.value,
       sort: this.sort
       };
-    this.loadChartsList(); 
-    this.loadActivityEventLog( )
+    this.loadClientRecordSendChart(); 
+    this.loadCardsRequestChart();
+    this.loadActivityEventLog();  
   }
 
-   loadChartsList() {
-    this.systemInterfaceDashboardFacade.loadDashboardContent();
+  loadClientRecordSendChart() {
+    this.systemInterfaceDashboardFacade.loadClientRecordSendChart();
+    this.ClientRecordSendChart$.subscribe({
+      next: (response) => { 
+        if(response){
+          this.clientRecordSendChart = response 
+        }
+       
+      }})
   }
-
+  loadCardsRequestChart() {
+    this.systemInterfaceDashboardFacade.loadCardsRequestChart();
+    this.cardsRequestChart$.subscribe({
+      next: (response) => { 
+        if(response){
+          this.cardsRequestChart = response 
+        } 
+      }})
+  }
    loadActivityEventLog( ) {
     this.systemInterfaceDashboardFacade.getEventLogLists();
   }

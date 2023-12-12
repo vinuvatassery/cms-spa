@@ -14,23 +14,16 @@
     <div class="interface-chart-wrapper">
       <div class="interface-chart-cards">
         <h3 class="mb-1">Client Records Sent</h3>
-        <kendo-chart style=" height: 200px;">
-
-          <kendo-chart-category-axis>
-            <kendo-chart-category-axis-item [labels]="{ format: 'd', rotation: 'auto' }"
-              [categories]="['05/01/21', '05/02/21', '05/03/21', '05/04/21', '05/05/21', '05/06/21', '05/07/21', '05/08/21', '05/09/21']">
-            </kendo-chart-category-axis-item>
-          </kendo-chart-category-axis>
-          <kendo-chart-series>
-            <kendo-chart-series-item color="#005994" [gap]="2" [spacing]=".25"
-              [data]="[10, 12, 23, 34, 12, 23, 10, 12, 23]">
-            </kendo-chart-series-item>
-            <kendo-chart-series-item [style]="'smooth'" type="line" color="#005994"  
-            [data]="[10, 12, 23, 34, 12, 23, 10, 12, 23]">
-          </kendo-chart-series-item>
-          </kendo-chart-series>
-          <kendo-chart-tooltip> </kendo-chart-tooltip>
+        <kendo-chart  *ngIf="clientRecordSendChart" [series]="clientRecordSendChart?.chartData?.series"
+          [legend]="clientRecordSendChart?.chartData?.legend" [title]="clientRecordSendChart?.chartData?.title"
+          [categoryAxis]="clientRecordSendChart?.chartData?.categoryAxis"
+          [tooltip]="clientRecordSendChart?.chartData?.tooltip">
         </kendo-chart>
+        <div class="text-center pt-3" *ngIf="!clientRecordSendChart">
+          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+          </div>
+          <p>There is no data to display.</p>
+        </div>
       </div>
       <div class="interface-chart-cards">
         <h3 class="mb-1">Prescription Fill Loading</h3>
@@ -60,23 +53,17 @@
       </div>
       <div class="interface-chart-cards">
         <h3 class="mb-1">Cards Request</h3>
-        <kendo-chart style=" height: 200px;">
-
-          <kendo-chart-category-axis>
-            <kendo-chart-category-axis-item [labels]="{ format: 'd', rotation: 'auto' }"
-              [categories]="['05/01/21', '05/02/21', '05/03/21', '05/04/21', '05/05/21', '05/06/21', '05/07/21', '05/08/21', '05/09/21']">
-            </kendo-chart-category-axis-item>
-          </kendo-chart-category-axis>
-          <kendo-chart-series>
-            <kendo-chart-series-item color="#ec891d" [gap]="2" [spacing]=".25"
-              [data]="[5, 15, 4, 15, 15, 23, 25, 13, 32]">
-            </kendo-chart-series-item>
-            <kendo-chart-series-item color="#f9dcbb" type="area"
-            [data]="[5, 15, 4, 15, 15, 23, 25, 13, 32]">
-          </kendo-chart-series-item>
-          </kendo-chart-series>
-          <kendo-chart-tooltip> </kendo-chart-tooltip>
+        <kendo-chart   *ngIf="cardsRequestChart"  [series]="cardsRequestChart?.chartData?.series"
+        [legend]="cardsRequestChart?.chartData?.legend" [title]="cardsRequestChart?.chartData?.title"
+        [categoryAxis]="cardsRequestChart?.chartData?.categoryAxis"
+        [tooltip]="cardsRequestChart?.chartData?.tooltip">
+ 
         </kendo-chart>
+        <div class="text-center pt-3" *ngIf="!cardsRequestChart">
+          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+          </div>
+          <p>There is no data to display.</p>
+        </div>
       </div>
       <div class="interface-chart-cards">
         <h3 class="mb-1"> Order Data</h3>
@@ -106,7 +93,7 @@
     </div>
     <div>
       <div class="interface-chart-cards mt-2">
-        <h3 > Activity Log</h3>
+        <h3> Activity Log</h3>
         <cms-system-interface-activity-log-lists [activityEventLogList$]="activityEventLogLists$"
           [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
           (loadActivityLogListEvent)="loadActivityEventLog()"></cms-system-interface-activity-log-lists>
