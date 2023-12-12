@@ -46,12 +46,13 @@
         </kendo-grid-column>
         <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="140" [filterable]="false">
         </kendo-grid-column>
+        <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="170" [filterable]="false">
+        </kendo-grid-column>
         <kendo-grid-column field="entryDate" title="Entry Date" [width]="130" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.entryDate | date:'MM/dd/YYYY' }}
           </ng-template>
         </kendo-grid-column>
-
         <kendo-grid-column field="CheckNbr" title="Warrant" [width]="130" [sortable]="false" [filterable]="false">
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [sortable]="false" [columnMenu]="false" [sticky]="true">

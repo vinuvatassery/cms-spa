@@ -267,5 +267,12 @@
     </div>
 </kendo-dialog-actions>
 
+<ng-template #pcaExceptionDialogTemplate>
+    <common-financial-pca-chosen-alert [chosenPca]="chosenPcaForReAssignment"
+        (confirmChosenPcaAlertClickedEvent)="onConfirmPcaAlertClicked($event)"
+        (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
+    </common-financial-pca-chosen-alert>
+</ng-template>
+
 
  
