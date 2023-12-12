@@ -74,7 +74,7 @@ import { Subscription } from 'rxjs';
       }
 
   }
-  dateValidate(event: Event, type: any) {
+  dateValidate(type: any) {
     const todayDate = new Date();
 
     switch (type.toUpperCase()) {
@@ -150,10 +150,13 @@ import { Subscription } from 'rxjs';
       Validators.required,
     ]);
     this.medicalClaimPaymentForm.controls['datePaymentReconciled'].updateValueAndValidity();
+    this.dateValidate('RECONCILED');
     this.medicalClaimPaymentForm.controls['datePaymentSent'].setValidators([
       Validators.required,
     ]);
     this.medicalClaimPaymentForm.controls['datePaymentSent'].updateValueAndValidity();
+    this.dateValidate('PAYMENT_SENT');
+    this.startDateOnChange();
     this.medicalClaimPaymentForm.controls['paymentAmount'].setValidators([
       Validators.required,
     ]);
@@ -188,6 +191,7 @@ import { Subscription } from 'rxjs';
     });
     
   }
+  isModalValid : any = true;
   save(){   
     this.validateModel();
     if(this.medicalClaimPaymentForm.valid){
