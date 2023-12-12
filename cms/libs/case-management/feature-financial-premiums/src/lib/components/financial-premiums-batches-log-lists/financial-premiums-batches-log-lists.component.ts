@@ -12,7 +12,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BatchStatusCode, PaymentBatchName, PaymentStatusCode } from '@cms/case-management/domain';
+import { BatchStatusCode, InsurancePremiumDetails, PaymentBatchName, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -70,6 +70,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
   selected:any
+  private editPremiumsFormDialog: any;
   currentPrintAdviceLetterGridFilter: any;
   isPrintAdviceLetterClicked = false;
   selectAll = false;
@@ -79,6 +80,13 @@ export class FinancialPremiumsBatchesLogListsComponent
   totalRecord:any;
   noOfRecordToPrint:any = 0;
   batchLogPrintAdviceLetterPagedList:any;
+  @ViewChild('editPremiumsDialogTemplate', { read: TemplateRef })
+  editPremiumsDialogTemplate!: TemplateRef<any>;
+  isEditBatchClosed =false;
+  premiumId!:string;
+  paymentRequestId!:any
+    @Output() updatePremiumEvent = new EventEmitter<any>();
+    @Output() loadPremiumEvent = new EventEmitter<string>();
 
   public bulkMore = [
     {
@@ -130,7 +138,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Payment',
+      text: 'Remove Payment',
       icon: 'delete',
       disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {
@@ -140,6 +148,18 @@ export class FinancialPremiumsBatchesLogListsComponent
         }
       },
     },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Premium',
+      icon: 'edit',
+      disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
+      click: (data: any): void => {
+        if (!this.isEditBatchClosed) {
+          this.isEditBatchClosed = true;
+          this.onEditPremiumsClick(data?.insurancePremiumId,data?.vendorId,data?.clientId,data.clientFullName, data?.paymentRequestId);
+        }
+      },
+    }
   ];
 }
 
@@ -245,7 +265,8 @@ export class FinancialPremiumsBatchesLogListsComponent
   selectedCount = 0;
   disablePrwButton = true;
   batchLogListSubscription!: Subscription;
-
+  @Input() insuranceCoverageDates$: any;
+  @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService,
     public activeRoute: ActivatedRoute, private readonly lovFacade: LovFacade,
@@ -272,6 +293,30 @@ export class FinancialPremiumsBatchesLogListsComponent
         })
     })
   }
+
+  onEditPremiumsClick(premiumId: string,vendorId:any,clientId:any,clientName:any,paymentRequestId:any){
+    this.vendorId=vendorId;
+    this.clientId=clientId;
+    this.clientName=clientName;
+    this.premiumId = premiumId;
+    this.paymentRequestId = paymentRequestId;
+    this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
+  }
+
+  onClickOpenEditPremiumsFromModal(template: TemplateRef<unknown>): void {
+    this.editPremiumsFormDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-96full add_premiums_modal',
+    });
+  }
+
+  modalCloseEditPremiumsFormModal(result: any) {
+    if (result && this.editPremiumsFormDialog) {
+      this.isEditBatchClosed = false;
+      this.editPremiumsFormDialog.close();
+    }
+  }
+
   batchLogListItemsSubscription() {
     this.batchLogListSubscription = this.batchLogGridLists$.subscribe((response:any) =>{
       this.totalRecord = response?.acceptsReportsCount;
@@ -717,15 +762,10 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     this.actionResponseSubscription = this.actionResponse$.subscribe((resp: boolean) => {
       if (resp) {
         this.onModalRemovePremiumsModalClose(true);
+        this.modalCloseEditPremiumsFormModal(true);
         this.loadBatchLogListGrid();
       }
     });
-  }
-
-  private unsubscribeFromActionResponse() {
-    if (this.actionResponseSubscription) {
-      this.actionResponseSubscription.unsubscribe();
-    }
   }
 
   paymentClickHandler(dataItem: any) {
@@ -888,5 +928,21 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     this.vendorId=dataItem.vendorId;
     this.clientId=event.clientId;
     this.clientName=event.clientFullName;
+  }
+
+  updatePremium(data: any){
+    this.updatePremiumEvent.emit(data);
+  }
+
+  loadPremium(data:any){
+    this.loadPremiumEvent.emit(data)
+  }
+
+
+
+  private unsubscribeFromActionResponse() {
+    if (this.actionResponseSubscription) {
+      this.actionResponseSubscription.unsubscribe();
+    }
   }
 }

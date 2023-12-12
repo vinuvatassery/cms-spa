@@ -63,7 +63,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn = 'batchNumber'
+  selectedColumn = 'ALL'
   gridDataResult!: GridDataResult;
 
   gridVendorsAllPaymentsDataSubject = new Subject<any>();
@@ -137,6 +137,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   ];
 
   columns: any = {
+    ALL: 'All Columns',
     batchNumber: 'Batch #',
     providerName: 'Vendor',
     paymentType: 'Type',
@@ -156,6 +157,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   };
 
   dropDowncolumns: any = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
     {
       columnCode: 'batchNumber',
       columnDesc: 'Batch #',
@@ -188,6 +193,31 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       columnCode: 'refundAmount',
       columnDesc: 'Refund Amount',
     }
+    ,
+    {
+      columnCode: 'originalAmount',
+      columnDesc: 'Original Amount',
+    }
+    ,
+    {
+      columnCode: 'indexCode',
+      columnDesc: 'Index Code',
+    }
+    ,
+    {
+      columnCode: 'pcaCode',
+      columnDesc: 'PCA',
+    }
+    ,
+    {
+      columnCode: 'voucherPayable',
+      columnDesc: 'VP',
+    }
+    ,
+    {
+      columnCode: 'refundNote',
+      columnDesc: 'Refund Note',
+    }       
   ];
   showExportLoader = false;
 
@@ -460,7 +490,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.sortColumn = 'Batch #';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'batchNumber';
+    this.selectedColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
 
