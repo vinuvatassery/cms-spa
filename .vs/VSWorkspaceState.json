@@ -1,0 +1,20 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\cms",
+    "\\cms\\libs",
+    "\\cms\\libs\\case-management",
+    "\\cms\\libs\\case-management\\domain",
+    "\\cms\\libs\\case-management\\domain\\src",
+    "\\cms\\libs\\case-management\\domain\\src\\lib",
+    "\\cms\\libs\\case-management\\domain\\src\\lib\\application",
+    "\\cms\\libs\\case-management\\domain\\src\\lib\\application\\financial-management",
+    "\\cms\\libs\\case-management\\feature-financial-premiums",
+    "\\cms\\libs\\case-management\\feature-financial-premiums\\src",
+    "\\cms\\libs\\case-management\\feature-financial-premiums\\src\\lib",
+    "\\cms\\libs\\case-management\\feature-financial-premiums\\src\\lib\\components",
+    "\\cms\\libs\\case-management\\feature-financial-premiums\\src\\lib\\components\\financial-premiums-provider-info"
+  ],
+  "SelectedNode": "\\cms\\libs\\case-management\\feature-financial-pcas\\src\\lib\\components\\financial-pcas-reassignment-form\\financial-pcas-reassignment-form.component.ts",
+  "PreviewInSolutionExplorer": false
+}

@@ -26,7 +26,7 @@
     <div class="flex-col mt-2" >
         <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
-                <h5>Others covered on the plan(Select all that apply)</h5>
+                <h5>Others covered on the plan (select all that apply)</h5>
             </legend>
             <div class="component-list-h" formArrayName="othersCoveredOnPlan">
                 <span class="app-c-badge  mt-3" *ngIf="otherCoveredPlanLoader">       
@@ -92,12 +92,12 @@
                     </kendo-floatinglabel>
                 </div>
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel text="Date of birth">
+                    <kendo-floatinglabel text="Date of Birth">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Date of birth"
-                            format="MM-dd-yyyy" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern"
+                            format="MM-DD-YYYY" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern"
                             formControlName="dob">
                             <kendo-formerror *ngIf="getPersonControl(i, 'dob')?.valid
-                     && isViewContentEditable==false">Date of birth is required.</kendo-formerror>
+                     && isViewContentEditable==false">Date of Birth is required.</kendo-formerror>
                         </kendo-datepicker>
                     </kendo-floatinglabel>
                 </div>
