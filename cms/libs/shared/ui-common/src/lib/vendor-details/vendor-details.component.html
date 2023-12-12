@@ -605,7 +605,7 @@
     <div class="justify-content-end">
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeVendorModal()"> Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission == true ? 'ADD' : 'REQUEST NEW'}} </button>
+      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">

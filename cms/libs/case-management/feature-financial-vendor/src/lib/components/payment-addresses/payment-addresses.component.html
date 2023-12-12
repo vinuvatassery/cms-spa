@@ -306,7 +306,7 @@
       Address
     </button>
 
-    <button kendoButton aria-label="Contact"   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
+    <button kendoButton aria-label="Contact" [disabled]="IsAddContactDisabled"  icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
         Contact
       </button>
   </div>
@@ -327,7 +327,8 @@ class="app-c-modal app-c-modal-sm app-c-modal-np">
 class="app-c-modal app-c-modal-md app-c-modal-np">
 <kendo-dialog-titlebar (close)="clickCloseAddEditPaymentAddressDetails()"> {{tabCode !== financialVendorType.Manufacturers ? addEditTitleText : manufacturerAddEditTitleText}}
 </kendo-dialog-titlebar>
-<cms-payment-address-details (closeEvent)="closePaymentAddressDetails($event)" (editDeactivateClicked)="onEditDeactivateClicked($event)" [isEdit]="isPaymentAddressDetailIsEdit" [billingAddress]="billingAddressObj" > </cms-payment-address-details>
+<cms-payment-address-details (closeEvent)="closePaymentAddressDetails($event)" (editDeactivateClicked)="onEditDeactivateClicked($event)" [isEdit]="isPaymentAddressDetailIsEdit" [billingAddress]="billingAddressObj"
+(paymentAddressAdded)="paymentAddressAdded($event)" > </cms-payment-address-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isPaymentAddressDeactivateShow" (close)="clickCloseDeactivatePaymentAddress(false)" class="app-c-modal app-c-modal-sm app-c-modal-np">
