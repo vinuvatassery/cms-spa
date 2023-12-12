@@ -254,9 +254,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   gridLoaderSubject = new BehaviorSubject(false);
 
   handleAllPaymentsGridData() {
-    debugger;
     this.batchLogGridLists$.subscribe((data: GridDataResult) => {
-      debugger;
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
@@ -287,7 +285,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       //If the user click on select all header and either changing the page number or page count
       this.pageNumberAndCountChangedInSelectAll();
       this.gridLoaderSubject.next(false);
-      debugger;
     });
   }
 
@@ -390,7 +387,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
-    
+
   }
 
   defaultGridState() {
@@ -407,9 +404,15 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   }
 
   dataStateChange(stateData: any): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      const batchId = params['b_id'];
+      this.batchId = batchId;
+    });
+
+    this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'desc';
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
 
@@ -435,6 +438,8 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+    this.isPageCountChanged = true;
+    this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadBatchLogListGrid();
@@ -570,12 +575,31 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   receiptLogMode = false
   selectedPayments: any[] = [];
 
+  // cancelActions() {
+  //   this.receiptLogTitlePart = "";
+  //   this.selectedPayments = [];
+  //   this.isLogGridExpanded = !this.isLogGridExpanded;
+  //   this.hideActionButton = !this.hideActionButton;
+  //   this.receiptLogMode = !this.receiptLogMode;
+  //   this.markAsUnChecked(this.selectedAllPaymentsList?.paymentsSelected);
+  //   this.markAsUnChecked(this.batchLogGridLists);
+  // }
+
   cancelActions() {
-    this.receiptLogTitlePart = "";
     this.selectedPayments = [];
     this.isLogGridExpanded = !this.isLogGridExpanded;
     this.hideActionButton = !this.hideActionButton;
     this.receiptLogMode = !this.receiptLogMode;
+
+
+    this.unCheckedProcessRequest = [];
+    this.checkedAndUncheckedRecordsFromSelectAll = [];
+    this.selectedAllPaymentsList.paymentsSelected = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterUnSelected = [];
+    this.getSelectedReportCount(this.selectedAllPaymentsList?.paymentsSelected);
+    this.selectAll = false;
+    this.recordCountWhenSelectallClicked = 0;
+    this.selectionCount = 0;
     this.markAsUnChecked(this.selectedAllPaymentsList?.paymentsSelected);
     this.markAsUnChecked(this.batchLogGridLists);
   }
@@ -588,6 +612,13 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   }
 
   onClickedDownload() {
+    this.selectedAllPaymentsList =
+    {
+      'selectAll': this.selectAll,
+      'paymentsUnSelected': this.unCheckedProcessRequest,
+      'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
+      'batchId': this.batchId,
+    };
     this.showExportLoader = true;
     this.exportReceiptDataEvent.emit(this.selectedAllPaymentsList);
     this.exportButtonShow$.subscribe((response: any) => {
@@ -643,31 +674,31 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     let template;
 
     switch (data.serviceTypeCode) {
-      case FinancialServiceTypeCode.Tpa:{
+      case FinancialServiceTypeCode.Tpa: {
         template = this.clientRecentClaimsDialogRef
         break;
       }
-      case FinancialServiceTypeCode.Insurance:{
+      case FinancialServiceTypeCode.Insurance: {
         template = this.clientRecentPremiumsDialogRef;
         break;
       }
-      case FinancialServiceTypeCode.Pharmacy:{
+      case FinancialServiceTypeCode.Pharmacy: {
         template = this.clientRecentPharmacyClaimsDialogRef;
         break;
       }
       default: break;
     }
 
-    if(template)
-    this.addClientRecentClaimsDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
-      animation: {
-        direction: 'up',
-        type: 'slide',
-        duration: 200,
-      },
-    });
+    if (template)
+      this.addClientRecentClaimsDialog = this.dialogService.open({
+        content: template,
+        cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+        animation: {
+          direction: 'up',
+          type: 'slide',
+          duration: 200,
+        },
+      });
   }
 
   closeRecentClaimsModal(result: any) {
@@ -676,7 +707,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     }
   }
 
-  onProviderNameClick(event:any){
+  onProviderNameClick(event: any) {
     this.providerNameClickEvent.emit(event);
   }
 
@@ -701,7 +732,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       'selectAll': this.selectAll,
       'paymentsUnSelected': this.unCheckedProcessRequest,
       'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
-      'batchId' : this.batchId,
+      'batchId': this.batchId,
     };
 
     this.cdr.detectChanges();
@@ -734,7 +765,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       'selectAll': this.selectAll,
       'paymentsUnSelected': this.unCheckedProcessRequest,
       'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
-      'batchId' : this.batchId,
+      'batchId': this.batchId,
     };
 
     if (this.selectAll) {
@@ -752,6 +783,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   }
 
   markAsChecked(data: any) {
+
     data.forEach((element: any) => {
       if (this.selectAll) {
         element.selected = true;
@@ -781,7 +813,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   }
 
   onRecordSelectionChecked(dataItem: any) {
-    debugger;
     this.unCheckedProcessRequest.push({ 'paymentRequestId': dataItem.paymentRequestId, 'selected': true });
     this.currentPageRecords?.forEach((element: any) => {
       if (element.paymentRequestId === dataItem.paymentRequestId) {

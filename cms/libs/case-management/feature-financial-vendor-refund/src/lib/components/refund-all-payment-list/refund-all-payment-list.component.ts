@@ -219,7 +219,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   gridLoaderSubject = new BehaviorSubject(false);
 
   handleAllPaymentsGridData() {
-    debugger;
     this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
@@ -441,6 +440,13 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   onClickedDownload() {
+    this.selectedAllPaymentsList =
+    {
+      'selectAll': this.selectAll,
+      'paymentsUnSelected': this.unCheckedProcessRequest,
+      'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
+    };
+    
     this.showExportLoader = true;
     this.exportReceiptDataEvent.emit(this.selectedAllPaymentsList);
     this.exportButtonShow$.subscribe((response: any) => {
@@ -605,7 +611,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     else {
       this.markAsUnChecked(this.vendorRefundAllPaymentsGridLists);
     }
-
     this.selectedAllPaymentsList =
     {
       'selectAll': this.selectAll,
@@ -615,6 +620,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
     this.cdr.detectChanges();
     if (this.selectAll) {
+
+
       if (this.unCheckedProcessRequest?.length > 0) {
         this.selectionCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
         this.recordCountWhenSelectallClicked = this.selectionCount;
