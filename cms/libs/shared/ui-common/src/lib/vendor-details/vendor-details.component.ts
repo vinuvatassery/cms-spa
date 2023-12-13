@@ -200,6 +200,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   save() {
+    debugger;
     this.validateForm();
     this.isValidateForm = true;
     if (this.medicalProviderForm.valid) {
@@ -212,8 +213,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.markAllAsTouched();
     if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders || this.providerType == this.vendorTypes.HealthcareProviders) {
       if (!this.clinicNameNotApplicable) {
-        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
-        this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+        this.medicalProviderForm.controls['parentVendorId'].setValidators([Validators.required]);
+        this.medicalProviderForm.controls['parentVendorId'].updateValueAndValidity();
       }
       if (!this.firstLastNameNotApplicable) {
         this.medicalProviderForm.controls['firstName'].setValidators([Validators.required]);
@@ -412,13 +413,13 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
   onClinicNameChecked() {
     if (this.clinicNameNotApplicable) {
-      this.medicalProviderForm.controls['providerName'].setValue(null);
-      this.medicalProviderForm.controls['providerName'].disable();
+      this.medicalProviderForm.controls['parentVendorId'].setValue(null);
+      this.medicalProviderForm.controls['parentVendorId'].disable();
       this.firstLastNameNotApplicable = false;
       this.onNameChecked();
     }
     else {
-      this.medicalProviderForm.controls['providerName'].enable();
+      this.medicalProviderForm.controls['parentVendorId'].enable();
     }
   }
 
@@ -539,6 +540,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes : StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing,
       activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,
+      parentVendorId : formValues.parentVendorId,
     }
     if (this.providerType === FinancialVendorTypeCode.Clinic) {
       if (vendorProfileData.clinicType === FinancialVendorTypeCode.MedicalClinic) {
