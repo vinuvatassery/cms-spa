@@ -69,7 +69,7 @@ export class VendorInfoComponent implements OnInit {
 
   public popoverCallback = (anchor: HTMLElement) => {
       return this.onUserProfileDetailsHovered ;
-}
+  }
 
   ngOnInit() {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
