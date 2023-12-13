@@ -84,7 +84,7 @@
     </button>
     </div>
        </div>
-        <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'|| healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == null">
+        <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Date Currently Paid Through">
                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
