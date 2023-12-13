@@ -213,8 +213,6 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.markAllAsTouched();
     if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders || this.providerType == this.vendorTypes.HealthcareProviders) {
       if (!this.clinicNameNotApplicable) {
-        // this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
-        // this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
         this.medicalProviderForm.controls['parentVendorId'].setValidators([Validators.required]);
         this.medicalProviderForm.controls['parentVendorId'].updateValueAndValidity();
       }
