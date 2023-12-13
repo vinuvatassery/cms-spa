@@ -2,7 +2,7 @@
   <div class="flex-col">
     <kendo-panelbar
       (expand)="onPanelExpand(item)"
-      *ngFor="let item of approvalsGeneralLists$ | async; let i = index"
+      *ngFor="let item of approvalsPaymentsGridPagedResult; let i = index"
     >
       <kendo-panelbar-item
         *ngIf="getTitle(item.approvalTypeCode, item.subTypeCode)"
@@ -55,7 +55,7 @@
                 <button
                   kendoButton
                   (selectedChange)="
-                    onRowLevelApproveClicked($event, item, 'sendBackNotes', i)
+                    onRowLevelApproveClicked($event, item)
                   "
                   [selected]="item.status == approveStatus"
                   aria-label="Approve"
@@ -67,7 +67,7 @@
                 <button
                   kendoButton
                   (selectedChange)="
-                    onRowLevelDenyClicked($event, item, 'sendBackNotes', i)
+                    onRowLevelDenyClicked($event, item)
                   "
                   [selected]="item.status == denyStatus"
                   aria-label="Deny"
