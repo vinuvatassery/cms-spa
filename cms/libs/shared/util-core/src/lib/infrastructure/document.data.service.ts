@@ -73,11 +73,13 @@ export class DocumentDataService {
       const selectedIds: string[] = selectedAllPaymentsList.paymentsSelected?.map((item: any) => item.paymentRequestId) ?? [];
       const unselectedIds: string[] = selectedAllPaymentsList.paymentsUnSelected?.map((item: any) => item.paymentRequestId) ?? [];
       const exportData = {
-        'gridData': pageAndSortedRequest,
         'selectedIds': selectedIds,
         'UnSelectedIds': unselectedIds,
         'batchId': batchId,
         'selectAll': selectedAllPaymentsList.selectAll,
+        'sortType': pageAndSortedRequest.SortType,
+        'sorting': pageAndSortedRequest.Sorting,
+        'filter': pageAndSortedRequest.Filter,
       };
       return this.http.post(
         `${apiUrl}/data-management/export/${path}`, exportData,

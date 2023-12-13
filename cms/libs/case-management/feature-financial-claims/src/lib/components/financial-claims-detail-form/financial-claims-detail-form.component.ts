@@ -789,7 +789,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
-            'Claim added successfully'
+            'Claim added! Claim added successfully'
           );
           this.navigationMenuFacade.pcaReassignmentCount();
         }

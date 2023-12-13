@@ -241,10 +241,14 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
         if(this.pcaAssignmentForm?.controls["openDate"].value > this.pcaAssignmentForm?.controls["closeDate"].value)
         {
               this.openDateError = true
+              this.pcaAssignmentForm?.controls["openDate"].setErrors({'incorrect': true});
+              this.pcaAssignmentForm?.controls["closeDate"].setErrors({'incorrect': true});
         }
         else
         {
           this.openDateError = false
+          this.pcaAssignmentForm?.controls["openDate"].removeValidators
+          this.pcaAssignmentForm?.controls["closeDate"].removeValidators
         }
     }
     

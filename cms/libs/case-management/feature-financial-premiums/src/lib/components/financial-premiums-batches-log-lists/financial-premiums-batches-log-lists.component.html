@@ -372,3 +372,18 @@
   [letterContentLoader$]="letterContentLoader$"
   ></cms-financial-premiums-print-authorization>
   </ng-template>
+
+  <ng-template #editPremiumsDialogTemplate>
+    <cms-financial-premiums-edit-detail-form [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="premiumsType"
+    [premiumId]= "premiumId"
+    [insurancePremium$]="insurancePremium$"
+    [insuranceCoverageDates$]="insuranceCoverageDates$"
+    (loadPremiumEvent)="loadPremium($event)"
+    (updatePremiumEvent)="updatePremium($event)"
+    [paymentRequestId]="paymentRequestId"
+    [clientId]="clientId"
+    [vendorId]="vendorId"
+      (modalCloseEditPremiumsFormModal)="modalCloseEditPremiumsFormModal($event)"
+        (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-edit-detail-form>
+  </ng-template>
+  
