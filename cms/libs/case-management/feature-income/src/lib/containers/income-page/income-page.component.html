@@ -98,8 +98,8 @@
               <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
               class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
            </span>
-          <kendo-dropdownbutton  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"
-            aria-label="more actions"  [popupSettings]="{ popupClass: popupClassAction, animate: true }"  >
+          <kendo-dropdownbutton #proofSchoolDropdown  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"  (close)="onClose($event)"  (blur)="onBlur()"
+            aria-label="more actions"  [popupSettings]="{ popupClass: popupClassAction, animate: true }" >
 
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
 

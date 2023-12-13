@@ -137,8 +137,13 @@
     z-index: 1;
     background: #ffffff;
 }
-.table-filter-section, .k-grid{
+.table-filter-section{
   position: relative;
+  z-index: 0;
+}
+
+.k-grid .k-grid-content-sticky,
+.k-grid-header .k-table-th.k-grid-header-sticky{
   z-index: 0;
 }
 }
