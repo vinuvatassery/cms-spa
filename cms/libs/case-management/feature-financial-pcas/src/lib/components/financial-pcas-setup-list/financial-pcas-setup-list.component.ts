@@ -117,8 +117,8 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
 
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     { columnName: 'ALL', columnDesc: 'All Columns' },
-    { columnName: 'pcaCode', columnDesc: 'PCA #' },
-    { columnName: 'appropriationYear', columnDesc: 'AY #' },
+    { columnName: 'pcaCode', columnDesc: 'PCA' },
+    { columnName: 'appropriationYear', columnDesc: 'AY' },
     { columnName: 'fundingDesc', columnDesc: 'Funding Name' },
   ];
   selectedSearchColumn = 'ALL';
