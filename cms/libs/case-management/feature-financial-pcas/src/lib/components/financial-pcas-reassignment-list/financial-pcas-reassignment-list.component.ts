@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -12,7 +13,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult , ColumnVisibilityChangeEvent} from '@progress/kendo-angular-grid';
+import { GridDataResult , ColumnVisibilityChangeEvent, ColumnBase, GridComponent} from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State
@@ -23,6 +24,7 @@ import { NavigationMenuFacade } from '@cms/system-config/domain';
 import { FormGroup } from '@angular/forms';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+
 @Component({
   selector: 'cms-financial-pcas-reassignment-list',
   templateUrl: './financial-pcas-reassignment-list.component.html',
@@ -30,7 +32,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPcasReassignmentListComponent
-  implements OnInit, OnChanges
+  implements OnInit, OnChanges, AfterViewInit
 {
   @ViewChild('addEditPcaReassignmentDialogTemplate', { read: TemplateRef })
   addEditPcaReassignmentDialogTemplate!: TemplateRef<any>;
@@ -87,6 +89,8 @@ export class FinancialPcasReassignmentListComponent
   filteredByColumnDesc = '';
   sortColumnDesc = 'PCA #';
   columnChangeDesc = 'Default Columns';
+  defaultColumnState: ColumnBase[] = []; 
+  @ViewChild("pcaReassignmentGrid") pcaReassinmentGrid: any;
 
   public gridMoreActions = [
     {
@@ -275,7 +279,7 @@ export class FinancialPcasReassignmentListComponent
         this.navigationMenuFacade.pcaReassignmentCount();
         this.loadPcaReassignment();
       }
-    })
+    });
   }
 
   ngOnChanges(): void {
@@ -285,6 +289,10 @@ export class FinancialPcasReassignmentListComponent
       sort: this.sort,
     };
     this.loadPcaReassignment();
+  }
+
+  ngAfterViewInit() {
+    this.defaultColumnState = this.pcaReassinmentGrid.columns.toArray();
   }
 
   loadPcaReassignment() {
@@ -519,6 +527,10 @@ public itemDisabled(itemArgs:any)
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
+    this.defaultColumnState.forEach(item => {
+      item.hidden = false;
+      });
+    this.pcaReassinmentGrid.columns = this.defaultColumnState;
     this.loadPcaReassignment();
   }
 
