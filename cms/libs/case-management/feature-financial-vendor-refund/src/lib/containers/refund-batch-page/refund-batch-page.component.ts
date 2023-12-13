@@ -76,14 +76,13 @@ export class RefundBatchPageComponent implements OnInit {
       const filter = JSON.stringify(gridDataResult?.filter);
 
       const exportGridParams = {
-        SortType: gridDataResult?.sortType,
-        Sorting: gridDataResult?.sortColumn,
+        SortType: this.sortType,
+        Sorting: this.sortValue,
         SkipCount: gridDataResult?.skipcount,
         MaxResultCount: gridDataResult?.maxResultCount,
         Filter: filter,
       };
       this.dataExportParameters = exportGridParams;
-
       const formattedDate = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '.');
       this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/batches/receipt`, `Receipting Log [${formattedDate}]`, ApiType.CaseApi, data, data.batchId);
     }
