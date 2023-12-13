@@ -186,7 +186,7 @@
                   </kendo-grid-numeric-filter-menu>
                 </ng-template>
             </kendo-grid-column>
-                  <kendo-grid-column field="unlimitedFlag" title="Unlimited" [width]="100"> <ng-template
+            <kendo-grid-column field="unlimitedFlag" title="Unlimited" [width]="100"> <ng-template
                         kendoGridCellTemplate let-dataItem>
                         <span class="app-checkboxwidtext-wrapper">
                               <input 
@@ -199,7 +199,15 @@
                               />
                            
                             </span>
-                  </ng-template> </kendo-grid-column>
+                  </ng-template> 
+                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                        <kendo-grid-boolean-filter-menu
+                          [column]="column"
+                          [filter]="filter"
+                          [filterService]="filterService">
+                        </kendo-grid-boolean-filter-menu>
+                      </ng-template>
+            </kendo-grid-column>
             <kendo-grid-column [reorderable]="false" field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="50"
                   class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
