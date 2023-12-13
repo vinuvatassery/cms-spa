@@ -109,7 +109,7 @@ export class FinancialPcasAssignmentReportListComponent
   //sorting
   sortColumn = 'pcaCode';
   sortColumnDesc = 'PCA #';
-  sortDir = 'Ascending';
+  sortDir = 'Descending';
 
   //filtering
   filteredBy = '';
@@ -140,6 +140,7 @@ export class FinancialPcasAssignmentReportListComponent
   }
 
   ngOnChanges(): void {
+    this.sortType = 'desc';
     this.initializePCAGrid();
     this.loadFinancialPcaReportListGrid();
   }
@@ -221,11 +222,10 @@ export class FinancialPcasAssignmentReportListComponent
 
   restGrid() {
     this.sortValue = 'pcaCode';
-    this.sortType = 'asc';
-    this.initializePCAGrid();
+    this.sortType = 'desc';
     this.sortColumn = 'pcaCode';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.initializePCAGrid();
     this.filter = [];
     this.searchText = '';
     this.selectedSearchColumn = 'ALL';
@@ -280,7 +280,7 @@ export class FinancialPcasAssignmentReportListComponent
   filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-  
+
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
     this.columnChangeDesc =
@@ -324,7 +324,7 @@ export class FinancialPcasAssignmentReportListComponent
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'pcaCode', dir: 'asc' }],
+      sort: [{ field: 'pcaCode', dir: 'desc' }],
     };
   }
 
@@ -341,7 +341,6 @@ export class FinancialPcasAssignmentReportListComponent
   }
 
   private initializePcaPage() {
-    this.loadFinancialPcaReportListGrid();
     this.addSearchSubjectSubscription();
   }
 
@@ -403,7 +402,7 @@ export class FinancialPcasAssignmentReportListComponent
   }
 
   editAssignmentReport(objectId: any, groupsCoveredId: any) {
-   let selectedGroupCodeIds : string[] = [];
+   const selectedGroupCodeIds : string[] = [];
     selectedGroupCodeIds.push(groupsCoveredId)
     const data = {
       objectId: objectId,

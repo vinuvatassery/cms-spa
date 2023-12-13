@@ -1,27 +1,26 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
-  OnInit,
   OnChanges,
+  OnInit,
   Output,
   TemplateRef,
   ViewChild,
-  ChangeDetectorRef,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { CompositeFilterDescriptor, State, } from '@progress/kendo-data-query';
-import { Subject, first, Subscription, Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LovFacade } from '@cms/system-config/domain';
-import { BatchStatusCode, PaymentStatusCode } from 'libs/case-management/domain/src/lib/enums/payment-status-code.enum';
-import { InsurancePremiumDetails, PaymentBatchName } from '@cms/case-management/domain';
+import { BatchStatusCode, InsurancePremiumDetails, PaymentBatchName, PaymentStatusCode } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { CompositeFilterDescriptor, State, } from '@progress/kendo-data-query';
+import { Observable, Subject, Subscription, first } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-batches-log-lists',
   templateUrl: './financial-premiums-batches-log-lists.component.html',
@@ -55,7 +54,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   totalReconciled = 0;
 
   yesOrNoLovs: any = [];
-  onlyPrintAdviceLetter: boolean = true;
+  onlyPrintAdviceLetter = true;
   printAuthorizationDialog: any;
   selectedDataRows: any;
   isLogGridExpand = true;
@@ -74,7 +73,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   private editPremiumsFormDialog: any;
   currentPrintAdviceLetterGridFilter: any;
   isPrintAdviceLetterClicked = false;
-  selectAll:boolean=false;
+  selectAll = false;
   unCheckedPaymentRequest:any=[];
   selectedDataIfSelectAllUnchecked:any=[];
   currentGridFilter:any;
@@ -166,6 +165,7 @@ export class FinancialPremiumsBatchesLogListsComponent
 
 
   dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'itemNbr',
       columnDesc: 'Item #',
@@ -212,6 +212,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     },
   ]
   columns: any = {
+    ALL: 'All Columns',
     itemNbr: "Item #",
     vendorName: "Insurance Vendor",
     serviceCount: "Item Count",
@@ -253,7 +254,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn: null | string = 'ALL';
   gridDataResult!: GridDataResult;
   gridPremiumsBatchLogDataSubject = new Subject<any>();
   gridPremiumsBatchLogData$ = this.gridPremiumsBatchLogDataSubject.asObservable();
@@ -261,8 +262,8 @@ export class FinancialPremiumsBatchesLogListsComponent
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   sendReportDialog: any;
-  selectedCount: number = 0;
-  disablePrwButton:boolean= true;
+  selectedCount = 0;
+  disablePrwButton = true;
   batchLogListSubscription!: Subscription;
   @Input() insuranceCoverageDates$: any;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
@@ -308,7 +309,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       cssClass: 'app-c-modal app-c-modal-96full add_premiums_modal',
     });
   }
-  
+
   modalCloseEditPremiumsFormModal(result: any) {
     if (result && this.editPremiumsFormDialog) {
       this.isEditBatchClosed = false;
@@ -418,7 +419,7 @@ export class FinancialPremiumsBatchesLogListsComponent
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'itemNbr',
+              field: this.selectedColumn ?? 'ALL',
               operator: operator,
               value: data,
             },
@@ -438,7 +439,7 @@ export class FinancialPremiumsBatchesLogListsComponent
           {
             filters: [
               {
-                field: this.selectedColumn ?? 'itemNbr',
+                field: this.selectedColumn ?? 'ALL',
                 operator: 'gte',
                 value: data+'T01:01:00.000Z',
               },
@@ -448,7 +449,7 @@ export class FinancialPremiumsBatchesLogListsComponent
           {
             filters: [
               {
-                field: this.selectedColumn ?? 'itemNbr',
+                field: this.selectedColumn ?? 'ALL',
                 operator: 'lte',
                 value: data+'T23:59:00.000Z',
               },
@@ -721,9 +722,9 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     this.sortDir = 'Ascending';
     this.filter = '';
     this.searchValue = '';
+    this.selectedColumn = 'ALL'
     this.isFiltered = false;
     this.columnsReordered = false;
-
     this.sortValue = 'itemNbr';
     this.sortType = 'asc';
     this.sort = this.sortColumn;
@@ -793,7 +794,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
 
   selectUnSelectPayment(dataItem: any) {
     if (!dataItem.selected) {
-      let exist = this.selectedDataRows.PrintAdviceLetterUnSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
+      const exist = this.selectedDataRows.PrintAdviceLetterUnSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
       if (exist === 0) {
         this.selectedDataRows.PrintAdviceLetterUnSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
       }
@@ -809,7 +810,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
           element.selected = false;
         }
       });
-        let exist = this.selectedDataRows.PrintAdviceLetterSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
+        const exist = this.selectedDataRows.PrintAdviceLetterSelected.filter((x: any) => x.vendorAddressId === dataItem.vendorAddressId).length;
         if (exist === 0) {
           this.selectedDataRows.PrintAdviceLetterSelected.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true });
         }
@@ -849,7 +850,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
       this.noOfRecordToPrint = 0;
       this.selectedCount = this.noOfRecordToPrint
     }
-    let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    const returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
     'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
     this.disablePreviewButton(returnResult);
@@ -873,7 +874,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
       this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
       }
     }
-    let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    const returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
     'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
     this.disablePreviewButton(returnResult);
@@ -894,11 +895,11 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
         element.selected = false;
       }
       if(this.unCheckedPaymentRequest.length>0 || this.selectedDataIfSelectAllUnchecked.length >0)   {
-        let itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        const itemMarkedAsUnChecked=   this.unCheckedPaymentRequest.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined){
           element.selected = false;
         }
-        let itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
+        const itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x:any)=>x.paymentRequestId ===element.paymentRequestId);
         if(itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined){
           element.selected = true;
         }

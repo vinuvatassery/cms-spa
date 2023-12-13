@@ -11,7 +11,7 @@ import {
   ViewChild,
   ChangeDetectorRef
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
@@ -24,11 +24,11 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
 @Component({
   selector: 'cms-financial-premiums-batch-list-detail-items',
-  templateUrl: './financial-premiums-batch-list-detail-items.component.html', 
+  templateUrl: './financial-premiums-batch-list-detail-items.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, OnChanges {
- 
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('editPremiumsDialogTemplate', { read: TemplateRef })
   editPremiumsDialogTemplate!: TemplateRef<any>;
@@ -62,19 +62,19 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   @Output()  updatePaymentPanel  = new EventEmitter<PaymentPanel>();
   @Output() getProviderPanelEvent = new EventEmitter<any>();
   @Output() updateProviderProfileEvent = new EventEmitter<any>();
-  @Output() onEditProviderProfileEvent = new EventEmitter<any>(); 
+  @Output() onEditProviderProfileEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'batch';
   sortDir = 'Ascending';
-  sortColumnDesc:string = '';
+  sortColumnDesc = '';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn: null | string = 'ALL';
   gridDataResult!: GridDataResult;
   premiumPaymentDetails: any;
   providerDetailsDialog: any;
@@ -90,12 +90,13 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  serviceGridColumnName = ''; 
+  serviceGridColumnName = '';
   showExportLoader = false;
   private addClientRecentPremiumsDialog: any;
   clientName:any;
   clientId:any;
   gridColumns : {[key: string]: string} = {
+    ALL: 'All Columns',
     clientFullName: 'Client Name',
     insuranceName: 'Name on Primary Insurance Card',
     paymentStatus: 'Payment Status',
@@ -107,6 +108,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   };
 
   dropDowncolumns : any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
@@ -147,7 +149,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
       text: 'Edit Premium',
       icon: 'edit',
       click: (data: any): void => {
-        
+
         if (!this.isEditPremiumsOpened) {
           this.isEditPremiumsOpened = true;
           this.onClickOpenEditPremiumsFromModal(this.editPremiumsDialogTemplate);
@@ -179,17 +181,17 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   ];
 
   paymentStatusFilter = '';
-  
+
   /** Constructor **/
-  constructor(private route: Router, 
+  constructor(private route: Router,
     private dialogService: DialogService,
     public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef) {}
-  
-  ngOnInit(): void {  
+
+  ngOnInit(): void {
     this.serviceGridColumnName = this.premiumsType.charAt(0).toUpperCase() + this.premiumsType.slice(1);
     this.gridColumns['serviceDesc'] = `${this.serviceGridColumnName} Service`;
-    this.initializeGridState(); 
+    this.initializeGridState();
     this.loadBatchLogItemsListGrid();
   }
   ngOnChanges(): void {
@@ -235,8 +237,8 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     this.loadBatchItemsListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
- 
-  
+
+
   onChange(data: any) {
     this.defaultGridState();
     let operator = 'startswith';
@@ -254,7 +256,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'clientFullName',
+              field: this.selectedColumn ?? 'ALL',
               operator: operator,
               value: data,
             },
@@ -336,7 +338,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
         this.filterData
       );
       this.gridClaimsBatchLogItemsDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
+      if (data?.total >= 0 || data?.total === -1) {
         this.isBatchLogItemsGridLoaderShow = false;
       }
     });
@@ -345,13 +347,13 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
 
   onClickedExport(){
     this.showExportLoader = true
-    this.exportGridDataEvent.emit()    
-    
+    this.exportGridDataEvent.emit()
+
     this.exportButtonShow$
     .subscribe((response: any) =>
     {
       if(response)
-      {        
+      {
         this.showExportLoader = false
         this.cd.detectChanges()
       }
@@ -359,14 +361,14 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
     })
   }
 
-  backToBatchLog(event : any){  
+  backToBatchLog(event : any){
     const batchId = this.activeRoute.snapshot.queryParams['bid'];
     this.route.navigate(['/financial-management/premiums/' + this.premiumsType +'/batch'],
-    { queryParams :{bid: batchId}} ); 
+    { queryParams :{bid: batchId}} );
   }
 
 
-  onViewProviderDetailClicked(): void {   
+  onViewProviderDetailClicked(): void {
     this.onProviderNameClickEvent.emit();
   }
 
@@ -377,7 +379,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   }
 
 
-  onPaymentDetailFormClicked(  template: TemplateRef<unknown>): void {   
+  onPaymentDetailFormClicked(  template: TemplateRef<unknown>): void {
     this.paymentDetailsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-sm',
@@ -435,7 +437,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   updatePaymentPanelRecord(paymentPanel:PaymentPanel){
     this.updatePaymentPanel.emit(paymentPanel);
   }
-  
+
   getProviderPanel(event:any){
     this.getProviderPanelEvent.emit(event)
   }
@@ -466,7 +468,7 @@ export class FinancialPremiumsBatchListDetailItemsComponent implements OnInit, O
   }
 
   closeRecentPremiumsModal(result: any){
-    if (result) { 
+    if (result) {
       this.addClientRecentPremiumsDialog.close();
     }
   }
