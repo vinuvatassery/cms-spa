@@ -669,7 +669,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       'relationshipCode',
       'firstName',
       'lastName',
-      'dob'
+      'dob',
+      'relationshipSubTypeCode'
     ];
     if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y') {
       if (this.othersCoveredOnPlanNew.controls.length > 0) {

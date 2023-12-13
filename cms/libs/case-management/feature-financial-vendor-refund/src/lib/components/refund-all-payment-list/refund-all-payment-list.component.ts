@@ -412,7 +412,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
 
@@ -470,6 +470,13 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   onClickedDownload() {
+    this.selectedAllPaymentsList =
+    {
+      'selectAll': this.selectAll,
+      'paymentsUnSelected': this.unCheckedProcessRequest,
+      'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
+    };
+    
     this.showExportLoader = true;
     this.exportReceiptDataEvent.emit(this.selectedAllPaymentsList);
     this.exportButtonShow$.subscribe((response: any) => {
@@ -634,7 +641,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     else {
       this.markAsUnChecked(this.vendorRefundAllPaymentsGridLists);
     }
-
     this.selectedAllPaymentsList =
     {
       'selectAll': this.selectAll,
@@ -644,6 +650,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
     this.cdr.detectChanges();
     if (this.selectAll) {
+
+
       if (this.unCheckedProcessRequest?.length > 0) {
         this.selectionCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
         this.recordCountWhenSelectallClicked = this.selectionCount;
