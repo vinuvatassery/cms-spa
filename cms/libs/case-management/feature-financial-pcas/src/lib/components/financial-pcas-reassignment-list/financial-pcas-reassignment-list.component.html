@@ -162,7 +162,30 @@
             <kendo-grid-column field="totalOverSpendAmount" title="Total Overspent Amount" [width]="180"> 
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.totalOverSpendAmount | kendoNumber: 'n2'}}</span>
-                  </ng-template>  </kendo-grid-column>
+                  </ng-template>  
+                  <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                  format="0"
+                >
+                  <kendo-grid-numeric-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="true"
+                    operator="eq"
+                    format="0"
+                  >
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                  </kendo-grid-numeric-filter-menu>
+                </ng-template>
+            </kendo-grid-column>
                   <kendo-grid-column field="unlimitedFlag" title="Unlimited" [width]="100"> <ng-template
                         kendoGridCellTemplate let-dataItem>
                         <span class="app-checkboxwidtext-wrapper">
