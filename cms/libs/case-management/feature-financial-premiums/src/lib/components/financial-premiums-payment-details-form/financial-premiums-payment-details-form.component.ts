@@ -152,12 +152,12 @@ validateModel(){
     Validators.required,
   ]);
   this.premiumPaymentForm.controls['datePaymentReconciled'].updateValueAndValidity();
-  this.dateValidate('RECONCILED');
+  this.dateValidate(PremiumPaymentStatus.RECONCILED);
   this.premiumPaymentForm.controls['datePaymentSent'].setValidators([
     Validators.required,
   ]);
   this.premiumPaymentForm.controls['datePaymentSent'].updateValueAndValidity();
-  this.dateValidate('PAYMENT_SENT');
+  this.dateValidate(PremiumPaymentStatus.PAYMENT_SENT);
   this.startDateOnChange();
   this.premiumPaymentForm.controls['paymentAmount'].setValidators([
     Validators.required,
