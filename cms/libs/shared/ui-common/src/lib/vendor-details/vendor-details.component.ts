@@ -413,13 +413,13 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
   onClinicNameChecked() {
     if (this.clinicNameNotApplicable) {
-      this.medicalProviderForm.controls['providerName'].setValue(null);
-      this.medicalProviderForm.controls['providerName'].disable();
+      this.medicalProviderForm.controls['parentVendorId'].setValue(null);
+      this.medicalProviderForm.controls['parentVendorId'].disable();
       this.firstLastNameNotApplicable = false;
       this.onNameChecked();
     }
     else {
-      this.medicalProviderForm.controls['providerName'].enable();
+      this.medicalProviderForm.controls['parentVendorId'].enable();
     }
   }
 
