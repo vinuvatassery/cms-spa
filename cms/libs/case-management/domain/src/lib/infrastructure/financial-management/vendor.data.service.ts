@@ -176,7 +176,7 @@ export class FinancialVendorDataService {
   loadVendors(searchText:any,vendorType:any){  
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/vendors/clinicsearch?searchText=${searchText}?vendorType=${vendorType}`
+        `/financial-management/vendors/clinicsearch?searchText=${searchText}&vendorType=${vendorType}`
     );
   }
 }
