@@ -940,6 +940,16 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.appInfoForm.controls['yesTransgender'].setValidators(
         Validators.required
       );
+      this.appInfoForm.controls[
+        'yesTransgender'
+      ].updateValueAndValidity();
+    }else{
+      this.appInfoForm.controls['yesTransgender'].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls[
+        'yesTransgender'
+      ].updateValueAndValidity();
     }
   }
 
