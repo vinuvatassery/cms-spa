@@ -89,14 +89,16 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
     }
 
     if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
-      this.financialVendorFacade.loadVendorList(clinicName);
+      this.financialVendorFacade.loadVendors(clinicName,PendingApprovalGeneralTypeCode.InsuranceVendor);
       this.subscribeSearchVendor();
     } else if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.Drug) {
-      this.financialVendorFacade.loadVendorList(clinicName);
+      this.financialVendorFacade.loadVendors(clinicName,FinancialVendorTypeCode.Manufacturers);
       this.subscribeSearchVendor();
-    }
-    else {
-      this.financialVendorFacade.loadVendorList(clinicName);
+    } else if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider || this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalClinic) {
+      this.financialVendorFacade.loadVendors(clinicName,PendingApprovalGeneralTypeCode.MedicalProvider);
+      this.subscribeSearchVendor();
+    } else if (this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider || this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalClinic) {
+      this.financialVendorFacade.loadVendors(clinicName,PendingApprovalGeneralTypeCode.DentalProvider);
       this.subscribeSearchVendor();
     }
     this.selectedClinicVendorId = null;
