@@ -731,9 +731,9 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
 viewAdviceLetterData(printAdviceLetterData: any, claimsType:any) {
   return this.financialClaimsDataService.viewPrintAdviceLetterData(printAdviceLetterData,claimsType);
 }
-loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string,clientCaseEligibilityId : string){
+loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string,clientCaseEligibilityId : string, paymentRequestId:string){
   this.showLoader();
-  this.financialClaimsDataService.checkExceededMaxBenefit(serviceCost,clientId, typeCode,clientCaseEligibilityId).subscribe({
+  this.financialClaimsDataService.checkExceededMaxBenefit(serviceCost,clientId, typeCode,clientCaseEligibilityId, paymentRequestId).subscribe({
     next: (serviceCostResponse:any)=>{
       this.serviceCostFlag =  serviceCostResponse;
       let response = {
@@ -782,9 +782,9 @@ checkGroupException(startDtae: any,endDate: any, clientId: number,cptCode:any, i
   })
   this.hideLoader();
 }
-checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any,paymentRequestId :any, indexNumber: any, typeCode : string){
+checkDuplicatePaymentException(clientId: number, startDate: any,endDate: any, vendorId: any,totalAmountDue:any,paymentRequestId :any, indexNumber: any, typeCode : string){
   this.showLoader();
-  this.financialClaimsDataService.checkDuplicatePaymentException(startDtae,endDate,vendorId,totalAmountDue, paymentRequestId, typeCode).subscribe({
+  this.financialClaimsDataService.checkDuplicatePaymentException(clientId, startDate,endDate,vendorId,totalAmountDue, paymentRequestId, typeCode).subscribe({
     next: (data:any)=>{
       const flag =  data;
       let response = {

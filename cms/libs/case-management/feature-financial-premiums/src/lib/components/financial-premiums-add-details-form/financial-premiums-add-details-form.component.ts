@@ -77,6 +77,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
 
   /* Private Properties  */
   private premiumExistCheckingRequired = true;
+  private hasException = false;
 
   /* Constructor */
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -160,6 +161,11 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     const selectedPlans = this.insurancePlans?.filter(i => i.isPlanSelected);
     const isValid = this.validate(selectedPlans);
     if (!isValid) {
+      return;
+    }
+
+    if(this.hasException){
+      this.savePremiums(selectedPlans);
       return;
     }
 
@@ -458,9 +464,11 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
             }
           })
         }
+        this.hasException = true;
       })
     }
     else {
+      this.hasException = false;
       this.save();
     }
   }

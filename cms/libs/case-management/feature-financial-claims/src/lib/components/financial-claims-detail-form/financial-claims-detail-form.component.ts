@@ -645,6 +645,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       tpaInvoices: [{}],
       deletedInvoices : this.deletedServices
     };
+    let isTpaInvoiceHasException = false;
     let checkDeniedClaim = false;
     for (let element of formValues.claimService) {
       let service = {
@@ -668,8 +669,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       };
       this.validateStartEndDate(service.serviceStartDate,
         service.serviceEndDate);
-      if (service.exceptionFlag === StatusFlag.Yes && !service.exceptionReasonCode) {
-        checkDeniedClaim = true;
+      if (service.exceptionFlag === StatusFlag.Yes) {
+        isTpaInvoiceHasException = true;
+        checkDeniedClaim = !service.exceptionReasonCode;
       }
       bodyData.tpaInvoices.push(service);
     }
@@ -680,6 +682,12 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       this.onPrintDenialLetterOpen();
       return;
     }
+
+    if(bodyData.exceptionFlag === StatusFlag.Yes || isTpaInvoiceHasException){
+      this.saveClaim(bodyData);
+      return;
+    }
+
     this.getPCACode(isPcaAssigned, bodyData);
 }
 
@@ -727,6 +735,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     const minServiceStartDate = this.getMinServiceStartDate(claim.tpaInvoices);
     const maxServiceEndDate = this.getMinServiceEndDate(claim.tpaInvoices);
     const request = {
+      clientId: claim.clientId,
       clientCaseEligibilityId: claim.clientCaseEligibilityId,
       claimAmount: totalAmountDue,
       serviceStartDate: minServiceStartDate,
@@ -1090,7 +1099,7 @@ duplicatePaymentObject:any = {};
     this.isPrintDenailLetterClicked = false;
     if(status)
     {
-      this.getPcaCode(this.printDenialLetterData);
+      this.saveClaim(this.printDenialLetterData);
     }
   }
   onPcaReportAlertClicked(template: TemplateRef<unknown>): void {
@@ -1234,8 +1243,9 @@ duplicatePaymentObject:any = {};
     const endDate = this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ) ;
     const dueAmount = serviceFormData.controls['amountDue'].value;
     const vendorId = this.claimForm.value?.medicalProvider?.vendorId
+    const clientId = this.claimForm.value?.client.clientId;
     if (startDate && endDate && dueAmount && vendorId) {
-      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount, this.duplicatePaymentFlagPaymentRequestId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkDuplicatePaymentException(clientId, startDate,endDate, vendorId,dueAmount, this.duplicatePaymentFlagPaymentRequestId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   loadServiceCostMethod(index:number){
@@ -1251,7 +1261,8 @@ duplicatePaymentObject:any = {};
           totalServiceCost += + element.get('amountDue')?.value;
       });
       this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index,
-        this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim, this.clientCaseEligibilityId);
+        this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim, this.clientCaseEligibilityId
+        ,this.paymentRequestId);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }

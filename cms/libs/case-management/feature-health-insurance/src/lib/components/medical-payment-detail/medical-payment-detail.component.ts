@@ -597,7 +597,7 @@ export class MedicalPaymentDetailComponent {
       });
       this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId,
         index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
-        this.clientCaseEligibilityId);
+        this.clientCaseEligibilityId, this.paymentRequestId);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }
@@ -612,9 +612,10 @@ export class MedicalPaymentDetailComponent {
     const startDate = this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat );
     const endDate = this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ) ;
     const dueAmount = serviceFormData.controls['amountDue'].value;
-    const vendorId = this.claimForm.value?.medicalProvider?.vendorId
+    const vendorId = this.claimForm.value?.medicalProvider?.vendorId;
+    const clientId = this.claimForm.value?.client?.clientId;
     if (startDate && endDate && dueAmount && vendorId) {
-      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount,null, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkDuplicatePaymentException(clientId, startDate,endDate, vendorId,dueAmount,null, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   calculateMedicadeRate(index: number) {
