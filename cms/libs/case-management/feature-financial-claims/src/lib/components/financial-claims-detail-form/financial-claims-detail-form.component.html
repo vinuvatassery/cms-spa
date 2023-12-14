@@ -20,7 +20,7 @@
 
                             <kendo-multicolumncombobox textField="providerFullName" valueField="vendorAddressId"
                                 [fillMode]="formUiStyle.dropDownFillMode"
-                                placeholder="Search {{claimsType | titlecase}} Providers by name , TIN or Mail Code"
+                                placeholder="Search {{claimsType | titlecase}} Providers"
                                 [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                 [filterable]="true" formControlName="medicalProvider"
                                 (filterChange)="searchMedicalProvider($event)" [data]="pharmacySearchResult$ | async"
@@ -92,7 +92,7 @@
                             </span>
                             <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField="clientFullName"
                                 valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                                placeholder="Search Client by Name, ID, SSN or DOB"
+                                placeholder="Search Clients"
                                 [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                 [filterable]="true" formControlName="client"
                                 (filterChange)="loadClientBySearchText($event)"

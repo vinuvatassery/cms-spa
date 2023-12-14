@@ -325,9 +325,9 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       case PendingApprovalGeneralTypeCode.MedicalClinic:
         return 'Request to add new Medical Clinics to the list';
       case PendingApprovalGeneralTypeCode.MedicalProvider:
-        return 'Request to add new Medical Providers to the list';
+        return 'Request to add new Medical Provider to the list';
       case PendingApprovalGeneralTypeCode.DentalProvider:
-        return 'Request to add new Dental Providers to the list';
+        return 'Request to add new Dental Provider to the list';
       case PendingApprovalGeneralTypeCode.InsuranceVendor:
         return 'Request to Add new Insurance Vendor to the list';
       case PendingApprovalGeneralTypeCode.Pharmacy:
