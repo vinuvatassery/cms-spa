@@ -296,6 +296,23 @@
       </section>
 </div>
 
+<div class="bottom-fixed-wrapper text-right flex-gap">
+      <kendo-splitbutton [data]="options" class="app-c-split-button app-dropdown-action"
+        buttonClass="k-split-button" [tabindex]="0"
+        [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
+        <div class="btn-inner-block" >
+          OPTIONS
+        </div>
+        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+          <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+            aria-hidden="false" (click)="dataItem.click(dataItem)">
+            <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+            <label> {{ dataItem.text }} </label>
+          </button>
+        </ng-template>
+      </kendo-splitbutton>
+    </div>
+
 <ng-template #providerDetailsTemplate>
       <cms-financial-claims-provider-info
             (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
@@ -338,4 +355,16 @@
           </div>
         </div>
       </kendo-dialog-actions>
+    </ng-template>
+
+    <ng-template #unBatchClaimsDialogTemplate>
+      <cms-financial-claims-unbatch-claims (UnBatchCloseClickedEvent)="onUnBatchCloseClicked($event)"
+        [isBulkUnBatchOpened]="false"></cms-financial-claims-unbatch-claims>
+    </ng-template>
+  
+    <ng-template #deleteClaimsConfirmationDialogTemplate>
+      <cms-financial-claims-delete-claims (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"
+        (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked($event)"
+        [selectedProcessClaimsCount]="1"
+        [deletemodelbody]="deletemodelbody"></cms-financial-claims-delete-claims>
     </ng-template>
