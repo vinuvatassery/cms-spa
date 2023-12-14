@@ -140,7 +140,7 @@
                   <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required && formSubmitted">
                         Amount is required
                   </kendo-formerror>   
-                  <kendo-formerror *ngIf="pcaCodeInfo?.remainingAmount < pcaAssignmentFormControls?.amount?.value && formSubmitted">
+                  <kendo-formerror *ngIf="remainingAmountValidate">
                         Amount should be equal or less than the Remaining PCA balance
                   </kendo-formerror>   
             </div>
