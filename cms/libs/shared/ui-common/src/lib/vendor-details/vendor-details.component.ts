@@ -690,5 +690,16 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.accountingNumberValidated = false;
     }
   }
+  onKeyPressAllowAlphabetOnly(event:number) {
+    if((event > 64 &&
+      event < 91) || (event > 96 && event < 123)||event==32)
+      {
+        this.medicalProviderForm.controls['city'].setErrors(null); 
+        return true;
+      }else{
+        this.medicalProviderForm.controls['city'].setErrors({ 'incorrect': true });
+        return false;
+      }
+  }
 
 }
