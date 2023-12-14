@@ -591,6 +591,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     ];
 
     const careassistPayingRequiredFields: Array<string> = [
+      'premiumPaidThruDate',
       'nextPremiumDueDate',
       'premiumAmt',
       'premiumFrequencyCode',
