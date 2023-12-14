@@ -75,7 +75,7 @@ aria-label="add"> PCA Setup</button>
             (filterChange)="filterChange($event)"
             (columnReorder)="onColumnReorder($event)"
             (columnVisibilityChange)="columnChange($event)">
-            <kendo-grid-column field="isPcaAssigned" title="Assign" [width]="90"> 
+            <kendo-grid-column field="isPcaAssigned" title="Assign" [width]="90" [sticky]="true"> 
                   <ng-template kendoGridCellTemplate let-dataItem> 
                         <div class="text-center">
                               <span class="material-icons red-text-color " title="Assigned" *ngIf="dataItem.isPcaAssigned">
