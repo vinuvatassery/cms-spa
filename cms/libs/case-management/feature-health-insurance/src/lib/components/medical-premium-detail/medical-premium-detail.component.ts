@@ -626,6 +626,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.summaryFilesExceedsFileSizeLimit = false;
       }
     }
+
     this.validateOthersCoveredOnPlan();
     this.validateReview();
   }
@@ -699,6 +700,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     const medicarePlanRequiredFields: Array<string> = [
       'medicareBeneficiaryIdNbr',
       'medicareCoverageTypeCode',
+      'onLisFlag',
     ];
 
     if (this.ddlInsuranceType === HealthInsurancePlan.Medicare) {
@@ -709,7 +711,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value?.includes('B') === true) {
         medicarePlanRequiredFields.push('medicarePartBStartDate');
       }
-
+      if(this.healthInsuranceForm.controls['onLisFlag'].value === StatusFlag.Yes)
+      {
+        this.isMedicareCardFileUploaded = (this.copyOfMedicareCardFiles?.length > 0 && !!this.copyOfMedicareCardFiles[0].name) ? true : false;
+        if (!this.isMedicareCardFileUploaded) {
+          this.medicareCardFilesExceedsFileSizeLimit = false;
+        }
+      }
       this.medicareInsInfoCheck(medicarePlanRequiredFields, careassistPayingRequiredFields, policyHolderRequiredFields);
 
       medicarePlanRequiredFields.forEach((key: string) => {
