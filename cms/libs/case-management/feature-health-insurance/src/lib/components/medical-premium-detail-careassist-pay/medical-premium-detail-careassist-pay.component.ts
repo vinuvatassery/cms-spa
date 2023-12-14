@@ -146,10 +146,12 @@ export class MedicalPremiumDetailCareassistPayComponent implements OnInit {
     if (isChecked) {
       this.sameAsInsuranceIdFlag = true;
       this.healthInsuranceForm.controls['paymentIdNbr'].setValue(this.healthInsuranceForm.controls['insuranceIdNumber'].value);
+      this.healthInsuranceForm.controls['paymentIdNbr'].disable();
     }
     else {
       this.sameAsInsuranceIdFlag = false;
       this.healthInsuranceForm.controls['paymentIdNbr'].setValue(null);
+      this.healthInsuranceForm.controls['paymentIdNbr'].enable();
     }
   }
 

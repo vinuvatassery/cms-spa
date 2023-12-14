@@ -1,9 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, Input, EventEmitter, Output, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input, EventEmitter, Output, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { FinancialVendorDataService, FinancialVendorFacade } from '@cms/case-management/domain'
+import { PopoverComponent } from '@progress/kendo-angular-tooltip';
 @Component({
   selector: 'cms-vendor-info',
   templateUrl: './vendor-info.component.html',
@@ -55,11 +56,19 @@ export class VendorInfoComponent implements OnInit {
     },
   ];
 
+  @ViewChild("onUserProfileDetailsHovered", { static: false })
+  public onUserProfileDetailsHovered!: PopoverComponent;
+
+
   constructor(private financialVendorFacade: FinancialVendorFacade,
     private activeRoute: ActivatedRoute,
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,private financialVendorDataService:FinancialVendorDataService,private loaderService:LoaderService) {
       this.medicalProviderForm = this.formBuilder.group({});
+  }
+
+  public popoverCallback = (anchor: HTMLElement) => {
+      return this.onUserProfileDetailsHovered ;
   }
 
   ngOnInit() {
