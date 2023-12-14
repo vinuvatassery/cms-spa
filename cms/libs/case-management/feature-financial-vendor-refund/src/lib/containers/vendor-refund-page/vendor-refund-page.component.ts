@@ -110,8 +110,7 @@ export class VendorRefundPageComponent
     }
   }
 
-  exportReceiptDataEvent(data: any)
-  {
+  exportReceiptDataEvent(data: any) {
     if (this.dataExportParameters) {
       const formattedDate = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '.');
       this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/receipt`, `Receipting Log [${formattedDate}]`, ApiType.CaseApi, data);

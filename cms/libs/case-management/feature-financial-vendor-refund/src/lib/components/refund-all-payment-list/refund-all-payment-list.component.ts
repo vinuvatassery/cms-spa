@@ -63,7 +63,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn = 'batchNumber'
+  selectedColumn = 'ALL'
   gridDataResult!: GridDataResult;
 
   gridVendorsAllPaymentsDataSubject = new Subject<any>();
@@ -137,6 +137,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   ];
 
   columns: any = {
+    ALL: 'All Columns',
     batchNumber: 'Batch #',
     providerName: 'Vendor',
     paymentType: 'Type',
@@ -156,6 +157,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   };
 
   dropDowncolumns: any = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
     {
       columnCode: 'batchNumber',
       columnDesc: 'Batch #',
@@ -188,6 +193,31 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       columnCode: 'refundAmount',
       columnDesc: 'Refund Amount',
     }
+    ,
+    {
+      columnCode: 'originalAmount',
+      columnDesc: 'Original Amount',
+    }
+    ,
+    {
+      columnCode: 'indexCode',
+      columnDesc: 'Index Code',
+    }
+    ,
+    {
+      columnCode: 'pcaCode',
+      columnDesc: 'PCA',
+    }
+    ,
+    {
+      columnCode: 'voucherPayable',
+      columnDesc: 'VP',
+    }
+    ,
+    {
+      columnCode: 'refundNote',
+      columnDesc: 'Refund Note',
+    }       
   ];
   showExportLoader = false;
 
@@ -382,7 +412,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
 
@@ -440,6 +470,13 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   onClickedDownload() {
+    this.selectedAllPaymentsList =
+    {
+      'selectAll': this.selectAll,
+      'paymentsUnSelected': this.unCheckedProcessRequest,
+      'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
+    };
+    
     this.showExportLoader = true;
     this.exportReceiptDataEvent.emit(this.selectedAllPaymentsList);
     this.exportButtonShow$.subscribe((response: any) => {
@@ -460,7 +497,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.sortColumn = 'Batch #';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'batchNumber';
+    this.selectedColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
 
@@ -604,7 +641,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     else {
       this.markAsUnChecked(this.vendorRefundAllPaymentsGridLists);
     }
-
     this.selectedAllPaymentsList =
     {
       'selectAll': this.selectAll,
@@ -614,6 +650,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
     this.cdr.detectChanges();
     if (this.selectAll) {
+
+
       if (this.unCheckedProcessRequest?.length > 0) {
         this.selectionCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
         this.recordCountWhenSelectallClicked = this.selectionCount;

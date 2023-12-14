@@ -14,8 +14,6 @@
           >
           </kendo-datepicker>
         </kendo-floatinglabel>
-        
-        <kendo-formerror *ngIf="dateValidator">Due Date cannot be less than Current Date.</kendo-formerror>
         <kendo-formerror *ngIf="!clientReminderForm.controls['dueDate'].valid">Due Date is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">

@@ -383,7 +383,7 @@
       </kendo-formerror>
     </div>
     <div class="flex-col ">
-      <kendo-floatinglabel text="Tin">
+      <kendo-floatinglabel text="TIN">
         <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
           placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tin" [mask]="tinMaskFormat">
         </kendo-maskedtextbox>
@@ -477,6 +477,11 @@
       <div class="flex-col flex-col-4">
         <p class="mt-4">of each month</p>
       </div>
+    <div class="flex-col">
+        <legend class="k-form-legend">
+          <h5 class="mb-0"> Contact 1 </h5>
+        </legend>
+    </div>
     <div class="flex-col ">
       <kendo-floatinglabel text="Contact Name (optional)">
         <kendo-textbox aria-label="Contact Name (optional)" placeholder="Contact Name (optional)" [fillMode]="formUiStyle.inputFillMode"
