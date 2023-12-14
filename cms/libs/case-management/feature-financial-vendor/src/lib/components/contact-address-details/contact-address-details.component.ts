@@ -204,13 +204,13 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   clickCloseDeactivateContactAddress() {
     this.isContactAddressDeactivateShow = false;
+    this.ContactUpdated.emit(true);
+      this.isContactDetailPopupClose.emit(true);
   }
 
   onDeactiveCancel(isCancel: any) {
     if (isCancel) {
-      this.clickCloseDeactivateContactAddress()
-      this.ContactUpdated.emit(true);
-      this.isContactDetailPopupClose.emit(true);
+      this.clickCloseDeactivateContactAddress() 
     }
   }
 

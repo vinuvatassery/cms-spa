@@ -123,7 +123,10 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
       this.ispcaOpenDateGreater = false;
       return;
     }
-    if(this.pcaCloseDate < endDate && this.pcaReassignmentForm.controls['closeDate'].value){
+    const endDateWithoutTime = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+    const pcaCloseDateWithoutTime = new Date(new Date(this.pcaCloseDate).getFullYear(),new Date(this.pcaCloseDate).getMonth(), new Date(this.pcaCloseDate).getDate());
+
+    if(pcaCloseDateWithoutTime < endDateWithoutTime && this.pcaReassignmentForm.controls['closeDate'].value){
       this.ispcaCloseDateGreater = true;
       this.ispcaOpenDateGreater = false;
       return;

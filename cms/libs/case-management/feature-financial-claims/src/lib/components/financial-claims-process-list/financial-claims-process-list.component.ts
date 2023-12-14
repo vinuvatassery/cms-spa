@@ -154,18 +154,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       columnDesc: 'Service Count',
     },
     {
-      columnCode: 'annualTotal',
-      columnDesc: 'Client Annual Total',
-    },
-    {
-      columnCode: 'balanceAmount',
-      columnDesc: 'Client Balance',
-    },
-    {
-      columnCode: 'amountDue',
-      columnDesc: 'Total Due',
-    },
-    {
       columnCode: 'paymentStatusCode',
       columnDesc: 'Payment Status',
     },
