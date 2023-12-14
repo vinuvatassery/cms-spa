@@ -548,9 +548,9 @@ deletemodelbody =
     this.financialClaimsFacade.unbatchClaims$
       .pipe(first((unbatchResponse: any) => unbatchResponse != null))
       .subscribe((unbatchResponse: any) => {
-        if (unbatchResponse ?? false) {
-          this.loadBatchLogItemsListGrid();
-        }
+        this.route.navigateByUrl(
+          `financial-management/claims/${this.claimsType}?tab=2`
+        );
       });
   }
 
