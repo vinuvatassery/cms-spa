@@ -11,15 +11,15 @@
                   <th>Field</th>
                   <th> Details</th>
               </tr>
-              <tr> 
+              <tr>
                 <td><strong>TIN</strong></td>
                 <td> {{vendorProfile.tin | tin }}</td>
             </tr>
-            <tr> 
+            <tr>
                 <td><strong>Mail Code</strong></td>
                 <td>{{vendorProfile.address.mailCode}}</td>
             </tr>
-            <tr> 
+            <tr>
                 <td><strong>Payment Method</strong></td>
                 <td> {{vendorProfile.address.paymentMethodCode}}</td>
             </tr>
@@ -66,9 +66,15 @@
                     <tr>
                         <td><strong>TIN</strong></td>
                         <td>
-                            <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode"
-                                formControlName="tin">
-                            </kendo-textbox>
+                            <kendo-maskedtextbox aria-label="tin" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
+                              placeholder="TIN" [maskOnFocus]="true" formControlName="tin" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber()">
+                            </kendo-maskedtextbox>
+                            <kendo-formerror *ngIf="!profileForm.controls['tin'].valid  && accountingNumberValidated">
+                              TIN cannot be less than 9 digits
+                            </kendo-formerror>
+                            <kendo-formerror *ngIf="!accountingNumberValidated">
+                              A 1 or a 3 is required
+                            </kendo-formerror>
 
                         </td>
                     </tr>
@@ -201,7 +207,7 @@
                                     </div>
                                 </td>
                             </tr>
-        
+
                             <tr class="providerContact">
                                 <td>
                                     <div class="flex-row fiel-column-label"><strong>  Phone</strong> </div>
@@ -215,14 +221,14 @@
                                                 id="{{'phoneNbr'+i}}">
                                             </kendo-maskedtextbox>
                                             <kendo-formerror
-                                                *ngIf="phone.hasError('required','phoneNbr') && isSubmitted">phoneNbr is
+                                                *ngIf="phone.hasError('required','phoneNbr') && isSubmitted">Phone Number is
                                                 Required
                                             </kendo-formerror>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-        
+
                             <tr class="providerContact">
                                 <td>
                                     <div class="flex-row fiel-column-label"><strong>  Email</strong> </div>
@@ -235,18 +241,18 @@
                                                 formControlName="emailAddress" id="{{'emailAddress'+i}}">
                                             </kendo-textbox>
                                             <kendo-formerror
-                                                *ngIf="email.hasError('required','emailAddress') &&  isSubmitted">EmailAddress
+                                                *ngIf="email.hasError('required','emailAddress') &&  isSubmitted">Email Address
                                                 is Required
                                             </kendo-formerror>
                                         </div>
-        
+
                                     </div>
                                 </td>
                             </tr>
                         </ng-container>
                     </ng-container>
-            
-           
+
+
             </table>
 </ng-container>
 </div>

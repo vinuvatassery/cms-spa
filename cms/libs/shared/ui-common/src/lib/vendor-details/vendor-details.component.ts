@@ -92,13 +92,13 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     if (clinicName === '' || !clinicName) {
       this.clinicVendorListLocal = null;
       return;
-    } 
+    }
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
       if (data && clinicName !== '') {
         if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
         } else if (this.providerType === FinancialVendorTypeCode.HealthcareProviders) {
-          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic 
+          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic
           || item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic );
         }else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
@@ -200,7 +200,6 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   save() {
-    debugger;
     this.validateForm();
     this.isValidateForm = true;
     if (this.medicalProviderForm.valid) {
@@ -487,7 +486,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
-    
+
   }
 
   mapAddressContact(formValues: any) {
