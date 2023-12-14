@@ -691,8 +691,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     }
   }
   onKeyPressAllowAlphabetOnly(event:number) {
-    if((event > 64 &&
-      event < 91) || (event > 96 && event < 123)||event==32)
+    if((event > 64 && event < 91) || (event > 96 && event < 123)||event==32)
       {
         this.medicalProviderForm.controls['city'].setErrors(null); 
         return true;
