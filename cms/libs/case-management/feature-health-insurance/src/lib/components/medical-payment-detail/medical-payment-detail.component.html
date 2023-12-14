@@ -137,7 +137,7 @@
                                             <span class="material-icons mr-1" aria-hidden="false">error</span>
                                             Invoice is over 1 year old. <a kendoButton
                                                 class="ml-1 card-link-button" (click)="onMakeExceptionClick('oldInvoiceExceptionReason',i)">
-                                                 n{{getExceptionFormValue('oldInvoiceExceptionFlagText',i)}}
+                                                 {{getExceptionFormValue('oldInvoiceExceptionFlagText',i)}}
                                               </a></kendo-formerror>
                                         <kendo-formerror *ngIf="getExceptionFormValue('ineligibleExceptionFlag',i)" class="d-flex align-items-center">
                                           <span class="material-icons mr-1" aria-hidden="false">error</span>
