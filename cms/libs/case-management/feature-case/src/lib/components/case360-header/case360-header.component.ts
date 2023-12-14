@@ -65,6 +65,11 @@ export class Case360HeaderComponent implements OnInit {
       }
     );
     this.addGroupUpdatedSubscription();
+    this.clientFacade.copyStatusPeriodTriggeredResponse$.subscribe(data=>{
+      if(data){
+        this.loadClientProfileInfoEvent.emit();
+      }
+    })
   }
 
   /** Internal event methods **/

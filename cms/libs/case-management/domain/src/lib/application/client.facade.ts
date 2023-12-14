@@ -37,7 +37,7 @@ export class ClientFacade {
   pronounListSubject = new  BehaviorSubject<any>([]);
   specialHandlingChangeDetectionSubject = new  BehaviorSubject<any>([]);
   private clientProfileReloadSubject = new BehaviorSubject<any>([]);
-
+  public copyStatusPeriodTriggeredSubject = new BehaviorSubject(false);
 
   /** Public properties **/
   ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
@@ -67,6 +67,7 @@ export class ClientFacade {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   clientFacadesnackbar$ = this.snackbarSubject.asObservable();
+  copyStatusPeriodTriggeredResponse$ = this.copyStatusPeriodTriggeredSubject.asObservable();
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {

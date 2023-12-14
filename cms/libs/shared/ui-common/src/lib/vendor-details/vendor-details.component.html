@@ -62,20 +62,17 @@
 
               <kendo-combobox placeholder="Clinic Name" [fillMode]="formUiStyle.dropDownFillMode"
                 [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal"
-                [formControlName]="'providerName'" [valuePrimitive]="true" [valueField]="'vendorName'"
-                [textField]="'vendorName'"><button kendoButton fillMode="clear" icon="image"></button>
+                (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" [formControlName]="'parentVendorId'"
+                [valuePrimitive]="true" [valueField]="'vendorId'" [textField]="'vendorName'"><button kendoButton
+                  fillMode="clear" icon="image"></button>
                 <ng-template kendoComboBoxItemTemplate let-dataItem>
                   <span>{{ dataItem.vendorName }}</span>
                 </ng-template>
               </kendo-combobox>
 
               <kendo-formerror
-                *ngIf="medicalProviderFormControls?.providerName.errors?.required && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
+                *ngIf="medicalProviderFormControls?.parentVendorId.errors?.required && !medicalProviderForm.controls['parentVendorId'].disabled && isValidateForm">
                 Clinic Name is required
-              </kendo-formerror>
-              <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.maxlength">
-                Clinic Name cannot be more than 500 characters
               </kendo-formerror>
             </kendo-floatinglabel>
 
@@ -301,7 +298,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="City">
           <kendo-textbox aria-label="City" [maxlength]="50" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="city">
+            formControlName="city" (keypress)="onKeyPressAllowAlphabetOnly($event.charCode)">
           </kendo-textbox>
           <kendo-formerror *ngIf="medicalProviderFormControls?.city.errors?.required && isValidateForm">
             City is required

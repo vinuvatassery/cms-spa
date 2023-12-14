@@ -195,6 +195,17 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     {
       return
     }
+    if(this.pcaCodeInfo?.remainingAmount < this.pcaAssignmentForm?.controls["amount"]?.value)
+    {
+    this.pcaAssignmentForm?.controls["amount"].setErrors({'incorrect': true});
+    this.remainingAmountValidate = true
+    return
+    }
+    else
+    {
+      this.remainingAmountValidate = false
+      this.pcaAssignmentForm?.controls["amount"].removeValidators
+    }
    
     if(this.pcaAssignmentForm?.controls["unlimited"].value === false && this.pcaAssignmentForm?.controls["amount"].value < 1)
     {
@@ -202,11 +213,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     }
     this.formSubmitted = true
     this.pcaAssignmentForm.markAllAsTouched();
-    if(this.pcaCodeInfo?.remainingAmount < this.pcaAssignmentForm?.controls["amount"].value)
-    {
-      this.remainingAmountValidate = true
-       return
-    }
+  
     if(this.pcaAssignmentForm.valid)
     {
 
@@ -292,8 +299,9 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   amountChange(amount : any)
   {
     if(this.pcaCodeInfo?.totalAmount)
-    {     
-      this.pcaCodeInfo.remainingAmount = this.totalAmount - amount
+    {         
+      const numberOfGroups = this.pcaAssignmentForm?.controls["groupCodes"].value.length 
+      this.pcaCodeInfo.remainingAmount = this.totalAmount - (amount *  numberOfGroups)
     }
     
   }
