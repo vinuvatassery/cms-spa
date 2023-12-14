@@ -111,7 +111,7 @@
                                     <div class="flex-col mt-1">
                                         <kendo-textbox aria-label="Address 1" placeholder="Address 1"
                                             [fillMode]="formUiStyle.inputFillMode" formControlName="address1"
-                                            [maxlength]="100">
+                                            [maxlength]="200">
                                         </kendo-textbox>
                                         <kendo-formerror
                                             *ngIf="addressForm?.hasError('required','address1') && isSubmitted">Address
@@ -122,13 +122,13 @@
                                     <div class="flex-col mt-1">
                                         <kendo-textbox aria-label="Address 1" placeholder="Address 2"
                                             [fillMode]="formUiStyle.inputFillMode" formControlName="address2"
-                                            [maxlength]="100">
+                                            [maxlength]="50">
                                         </kendo-textbox>
                                     </div>
                                     <div class="flex-col mt-1">
                                         <kendo-textbox aria-label="City" placeholder="City"
                                             [fillMode]="formUiStyle.inputFillMode" formControlName="cityCode"
-                                            [maxlength]="20">
+                                            [maxlength]="50">
                                         </kendo-textbox>
                                         <kendo-formerror
                                             *ngIf="addressForm?.hasError('required','cityCode') && isSubmitted">City is
