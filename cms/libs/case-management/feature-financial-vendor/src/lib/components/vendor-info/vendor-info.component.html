@@ -49,20 +49,19 @@
         </tbody>
       </table>
       <!-- Last Updated by -->
-      <p class="mt-1 mb1">
+      <p class="mt-1 mb1 table-sorted-info">
         <span class="badge-dot-info bdi-left"></span> Last Updated  {{selectedVendorInfo$?.lastModificationTime | date: 'MM/dd/yyyy' }}
-        by 
-        <button
-          kendoButton
-          [primary]="true"
-          class="avatar-sm-btn c-default"
-          kendoPopoverAnchor
+        by  
+         <button 
+          kendoButton 
           [popover]="onUserProfileDetailsHovered"
-          showOn="hover"
-          [attr.aria-label]="selectedVendorInfo$?.lastModifierId"
-        >
-        <common-user-photo-icon  [userId]="selectedVendorInfo$?.lastModifierId"></common-user-photo-icon>
-        </button>
+           look="flat"   
+           showOn="hover"
+           kendoPopoverAnchor 
+           class="card-link-button">
+        <a>{{selectedVendorInfo$?.lastModifedUserName}}</a>
+      </button>
+    </p>
         <kendo-popover
           #onUserProfileDetailsHovered
           width="330"
@@ -72,12 +71,9 @@
             <common-user-profile-card [userId]="selectedVendorInfo$?.lastModifierId"></common-user-profile-card>
           </ng-template>
         </kendo-popover>
-      </p>
     </div>
   </div>
 </div>
-
- 
 
 <kendo-dialog *ngIf="openEditDailog" (close)="openEditDailog=false;" class="app-c-modal app-c-modal-sm app-c-modal-np">
     <kendo-dialog-titlebar class="transform-none" *ngIf="selectedVendorInfo$.vendorTypeCode!='MANUFACTURERS'"> Edit {{editTitlePrefix + profileInfoTitle}} </kendo-dialog-titlebar>

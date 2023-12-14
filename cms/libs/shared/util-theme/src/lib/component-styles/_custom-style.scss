@@ -962,7 +962,7 @@ color: $app-primary-font-color;
   right: 0;
   width: auto;
   left: $app-left_menu-width;
-  z-index: 4;
+  z-index: 2;
   min-height: 40px;
 &.content-start{
   justify-content: flex-start !important;
