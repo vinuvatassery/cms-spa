@@ -123,10 +123,19 @@ export class PendingApprovalGeneralFacade {
       {
         next: (response: any) => {
           this.hideLoader();
-          this.notificationSnackbarService.manageSnackBar(
-            SnackBarNotificationType.SUCCESS,
-            response.message
-          );
+          if(response.status)
+          {
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.SUCCESS,
+              response.message
+            );
+          }
+          else{
+            this.notificationSnackbarService.manageSnackBar(
+              SnackBarNotificationType.ERROR,
+              response.message
+            );
+          }
           this.submitGenerealRequestSubject.next(response);
         },
         error: (err) => {
@@ -139,7 +148,7 @@ export class PendingApprovalGeneralFacade {
   getMasterDetails(masterDetailId: string,subTypeCode: string) {
     this.showLoader();
     this.pendingApprovalGeneralService.getMasterDetails(masterDetailId, subTypeCode).subscribe({
-      next: (vendorDetail: any) => {    
+      next: (vendorDetail: any) => {
         this.selectedMasterDetailSubject.next(vendorDetail);
         this.hideLoader();
       },
