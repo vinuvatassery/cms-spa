@@ -30,7 +30,7 @@
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </div>
-  <div class="mt-2">
+  <div class="mt-2"  *ngIf="!isDisabled">
   <kendo-fileselect
               aria-label="proof of home address"
               name="upload proof"
@@ -54,5 +54,16 @@
                 </span>
               </ng-template>
   </kendo-fileselect>
+
+</div>
+<div class="mt-2" *ngIf="isDisabled">
+ <span (click)="documentFacade.viewOrDownloadFile(isFileViewable,file[0]?.documentId,file[0]?.name)">
+                <span *ngIf="!file[0].documentId">{{ file[0].name }} </span>
+                  <button [attr.aria-label]="file[0].name" *ngIf="file[0]?.documentId" kendoButton look="flat" class="card-link-button"  >
+                    <a>{{ file[0].name }} </a>
+                  </button>
+                  <br>
+                  <span>{{   file[0]?.size  | fileSize  }}</span>
+                </span>
 </div>
   

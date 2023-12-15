@@ -55,6 +55,7 @@
 <ng-template #eligibilityGroupDetail>
     <kendo-dialog-titlebar (close)="onGroupDetailClosed($event)">Edit Scheduled Group Change </kendo-dialog-titlebar>
     <case-management-group-detail [showDeleteOption]="true" [currentGroup$]="currentGroup$" [ddlGroups$]="ddlGroups$"
+    [groupList]="groupList"
     (isModalGroupCloseClicked)="onGroupDetailClosed($event)"
     (updateGroup)="onGroupChangeUpdateClicked($event)" (deleteGroupChange)="onDeleteGroupClicked($event, deleteScheduleGroupChanges)"
     (cancelGroupChange)="onGroupChangeCancelClicked($event)">
@@ -68,7 +69,7 @@
         </p>
     </section>
     <kendo-dialog-actions>
-       
+
         <div class="justify-content-end">
             <button
               kendoButton

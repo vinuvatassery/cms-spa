@@ -130,6 +130,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   duplicatePaymentFlagPaymentRequestId : any;
   tempTpaInvoiceId: any;
   specialCharAdded!: boolean;
+  informativeText!: string;
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -167,16 +168,19 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     if (!this.isEdit && this.claimsType == this.financialProvider) {
       this.title = 'Add Medical';
       this.addOrEdit = 'Add';
+      this.informativeText = 'Select a Medical Provider to bulk add services for this claim'
       this.addClaimServiceGroup();
     }
     else if (!this.isEdit && this.claimsType != this.financialProvider) {
       this.title = 'Add Dental';
       this.addOrEdit = 'Add';
+      this.informativeText = 'Select a Dental Provider to bulk add services for this claim'
       this.addClaimServiceGroup();
     }
 
     if (this.isEdit) {
       this.title = 'Edit';
+      this.informativeText = 'Make changes as needed and click “Update.”';
       this.showServicesListForm = true;
       this.addOrEdit = 'Update';
       this.duplicatePaymentFlagPaymentRequestId = this.paymentRequestId;
@@ -528,13 +532,19 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         servicCount++;
       }
     }
-    if(servicCount == 1){
+    if (servicCount == 1) {
       let formControl = this.addClaimServicesForm.controls[i];
       this.tempTpaInvoiceId = this.addClaimServicesForm.value[i].tpaInvoiceId;
-      formControl.reset();
+      if (this.tempTpaInvoiceId != null || this.tempTpaInvoiceId != undefined) {
+        formControl.reset();
+      } else {
+        let form = this.addClaimServicesForm.value[i];
+        this.addClaimServicesForm.removeAt(i);
+        this.addExceptionForm.removeAt(i);
+      }
       return;
     }
-   
+
     if(this.addClaimServicesForm.length > 1 ){
     let form = this.addClaimServicesForm.value[i];
     this.deletedServices.push(form.tpaInvoiceId);
