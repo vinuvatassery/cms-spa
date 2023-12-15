@@ -1,8 +1,7 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-import { FinancialVendorFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade,TinValidationFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
@@ -85,7 +84,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
-    private financialVendorFacade: FinancialVendorFacade
+    private tinValidationFacade: TinValidationFacade
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
@@ -700,7 +699,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   onKeyPressAllowAlphabetOnly(event:number) {
     if((event > 64 && event < 91) || (event > 96 && event < 123)||event==32)
       {
-        this.medicalProviderForm.controls['city'].setErrors(null); 
+        this.medicalProviderForm.controls['city'].setErrors(null);
         return true;
       }else{
         this.medicalProviderForm.controls['city'].setErrors({ 'incorrect': true });
@@ -709,17 +708,17 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   validateTin(tinNbr: any) {
-    this.financialVendorFacade.showLoader();
-    this.financialVendorFacade.validateTinNbr(tinNbr).subscribe({
+    this.tinValidationFacade.showLoader();
+    this.tinValidationFacade.validateTinNbr(tinNbr).subscribe({
       next: (response: any) => {
         if(response){
           this.isDuplicateTin = false;
         }
-        this.financialVendorFacade.hideLoader();
+        this.tinValidationFacade.hideLoader();
         this.cdr.detectChanges();
       },
       error: (err: any) => {
-        this.financialVendorFacade.hideLoader();
+        this.tinValidationFacade.hideLoader();
         this.isDuplicateTin = true;
         this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
         this.duplicateTinMessage = err.error?.error?.message ?? "";

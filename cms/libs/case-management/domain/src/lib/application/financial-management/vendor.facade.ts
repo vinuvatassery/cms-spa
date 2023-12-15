@@ -386,16 +386,17 @@ export class FinancialVendorFacade {
   }
 
   loadVendors(searchText:any,vendorTypeCode:any){
-    this.showLoader();
+    this.clinicVendorLoaderSubject.next(true);
     this.financialVendorDataService.loadVendors(searchText,vendorTypeCode).subscribe({
       next: (reponse: any) => {
         if (reponse) {
-          this.hideLoader();
+          this.clinicVendorLoaderSubject.next(false);
           this.vendorsListSubject.next(reponse);
         }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.clinicVendorLoaderSubject.next(false);
       },
     });
   }
