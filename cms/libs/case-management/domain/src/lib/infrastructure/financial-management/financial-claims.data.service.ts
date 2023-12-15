@@ -443,15 +443,16 @@ export class FinancialClaimsDataService {
     );
   }
 
-  checkExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string,clientCaseEligibilityId : string ) {
+  checkExceededMaxBenefit(serviceCost: number, clientId: number, typeCode : string,clientCaseEligibilityId : string, paymentRequestId:string) {
     let path = 'financial-management/claims/medical';
 
     const limitExceedCheckDto =
     {
       clientId : clientId,
       servicesCost : serviceCost,
-      clientCaseEligibilityId : clientCaseEligibilityId
-    }
+      clientCaseEligibilityId : clientCaseEligibilityId,
+      paymentRequestId : paymentRequestId
+    };
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/exceeded-limit-check`,limitExceedCheckDto);
   }
 
@@ -476,14 +477,14 @@ export class FinancialClaimsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/group-check?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}&cptCode=${cptCode}`
     );
   }
-  checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any, paymentRequestId :any, typeCode : string ) {
+  checkDuplicatePaymentException(clientId: number, startDate: any,endDate: any, vendorId: any,totalAmountDue:any, paymentRequestId :any, typeCode : string ) {
     let path;
     if (typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';
     } else {
       path = 'financial-management/claims/dental';
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${startDtae}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}&paymentRequestId=${paymentRequestId}`
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${startDate}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}&paymentRequestId=${paymentRequestId}&clientId=${clientId}`
     );
   }
   searchProvidorsById(VendorAddressId: string, typeCode: string) {
