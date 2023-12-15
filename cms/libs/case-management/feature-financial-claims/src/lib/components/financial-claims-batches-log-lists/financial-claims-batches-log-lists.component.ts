@@ -29,6 +29,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   ColumnVisibilityChangeEvent,
   GridDataResult,
+  ColumnComponent
 } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
@@ -452,12 +453,6 @@ export class FinancialClaimsBatchesLogListsComponent
   rowClass = (args: any) => ({
     'table-row-disabled': !args.dataItem.assigned,
   });
-
-  columnChange(event: ColumnVisibilityChangeEvent) {
-    const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
-    this.columnChangeDesc =
-      columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
-  }
 
   dropdownFilterChange(
     field: string,
@@ -1011,6 +1006,41 @@ export class FinancialClaimsBatchesLogListsComponent
       }
     }
   }
-
   //#endregion
+  
+  //#region Grid Column Add-Remove Action in Header Text
+  public columnChange(e: any) {
+    let event = e as ColumnVisibilityChangeEvent;
+    const columnsRemoved = event?.columns.filter(x=> x.hidden).length
+    const columnsAdded = event?.columns.filter(x=> x.hidden === false).length 
+
+  if (columnsAdded > 0) {
+    this.columnChangeDesc = 'Columns Added';
+  }
+  else {
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+  } 
+  event.columns.forEach(column => {
+    if (column.hidden) {
+      const field = (column as ColumnComponent)?.field;
+      const mainFilters = this.state.filter?.filters; 
+      mainFilters?.forEach((filter:any) => {
+          const filterList = filter.filters; 
+          const foundFilter = filterList.find((x: any) => x.field === field);
+
+          if (foundFilter) {
+            filter.filters = filterList.filter((x: any) => x.field !== field);
+            this.loadBatchLogListGrid();
+            this.batchLogListSubscription();
+          }
+        });
+      }
+      if (!column.hidden) {
+        let columnData = column as ColumnComponent;
+        this.gridColumns[columnData.field] = columnData.title;
+      }
+
+    });
+  }
+  //endregion
 }
