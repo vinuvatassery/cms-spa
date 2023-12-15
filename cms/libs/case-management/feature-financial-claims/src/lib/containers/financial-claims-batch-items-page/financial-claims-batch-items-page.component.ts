@@ -92,7 +92,7 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
 
   
   exportBatchItemListGridData(data:any){
-    const  filter = JSON.stringify(data?.filter);
+    const  filter = JSON.stringify(data?.Filter);
      const PagingAndSortedRequest =
      {
        SortType : data?.sortType,
