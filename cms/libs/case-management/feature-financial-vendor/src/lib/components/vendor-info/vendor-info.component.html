@@ -49,7 +49,7 @@
         </tbody>
       </table>
       <!-- Last Updated by -->
-      <p class="mt-1 mb=1" *ngIf="selectedVendorInfo$?.modifierName">
+      <p class="mt-1 mb=1" *ngIf="selectedVendorInfo$?.lastModifierId">
         <span class="badge-dot-info bdi-left"></span> Last Updated  {{selectedVendorInfo$?.lastModificationTime | date: 'MM/dd/yyyy' }}
         by <button 
           kendoButton 
