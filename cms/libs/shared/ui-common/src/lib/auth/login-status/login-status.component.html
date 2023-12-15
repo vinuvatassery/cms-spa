@@ -2,7 +2,6 @@
   <button
     class="header-buttons user-button" 
     kendoButton
-    title="XX"
      (click)="isProfilePopoverOpen = !isProfilePopoverOpen"  >
     <div class="app-c-avatar">
       <span class="profile-text-avatar">
@@ -17,8 +16,7 @@
       </span>
     </div>
   </button>
-  <div class="profile_popover_wrapper"  *ngIf="isProfilePopoverOpen"  >
-   
+  <div class="profile_popover_wrapper"  *ngIf="isProfilePopoverOpen">   
       <div class="app-c-card user-setting-dropdown">
         <div class="app-c-card-header card-header-border-bottom">
           <div class="app-c-avatar avatar-lg">
