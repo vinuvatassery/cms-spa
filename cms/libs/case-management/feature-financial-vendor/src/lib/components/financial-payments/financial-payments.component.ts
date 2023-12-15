@@ -3,7 +3,7 @@ import { GridFilterParam, PaymentsFacade, PremiumType } from '@cms/case-manageme
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ColumnVisibilityChangeEvent, FilterService } from '@progress/kendo-angular-grid';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject, Subscription, debounceTime } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -30,7 +30,9 @@ export class FinancialPaymentComponent {
   paymentStatusFilter = '';
   paymentBatchesGridView$ = this.paymentsFacade.paymentBatches$;
   paymentBatchLoader$ = this.paymentsFacade.paymentBatchLoader$;
-  paymentStatusLov$ = this.lovFacade.paymentStatus$;  
+  batchStatusLov$ = this.lovFacade.batchStatus$;  
+  batchStatusLov:any;
+  batchStatusLovSubscription!: Subscription;
   sortDir = 'Ascending';
   sortColumnDesc = 'Batch #';
   filteredByColumnDesc = '';
@@ -79,11 +81,11 @@ export class FinancialPaymentComponent {
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
     private route: Router) { }
-
+    
   ngOnInit(): void {
     this.loadPaymentsListGrid();
     this.addSearchSubjectSubscription();
-    this.lovFacade.getPaymentStatusLov();
+    this.loadBatchStatusLov();
   }
 
   ngOnChanges(): void {
@@ -285,4 +287,18 @@ export class FinancialPaymentComponent {
     this.route.navigate([`/financial-management/premiums/${premiumsType}/batch`],
     { queryParams :{bid: dataItem.batchId }});
 }
+
+  loadBatchStatusLov()
+  {
+    this.lovFacade.getBatchStatusLov();
+    this.batchStatusLovSubscription = this.batchStatusLov$.subscribe({
+      next:(response) => {
+        this.batchStatusLov = response;
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.batchStatusLovSubscription.unsubscribe();
+  }
 }

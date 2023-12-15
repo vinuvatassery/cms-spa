@@ -154,7 +154,7 @@
         <kendo-grid-column field="paymentStatusCode" title="Pmt. Status" [width]="120">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-dropdownlist 
-            [data]="paymentStatusLov$ | async" 
+            [data]="batchStatusLov" 
             textField="lovDesc"
             valueField="lovCode" 
             [value]="paymentStatusFilter" 
