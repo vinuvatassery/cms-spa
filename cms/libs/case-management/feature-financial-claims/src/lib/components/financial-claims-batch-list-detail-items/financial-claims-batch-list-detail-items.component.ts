@@ -8,7 +8,8 @@ import {
   OnChanges,
   Output,
   TemplateRef,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -16,10 +17,10 @@ import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, debounceTime } from 'rxjs';
+import { Observable, Subject, debounceTime, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FinancialClaimsFacade, GridFilterParam, PaymentDetail, PaymentPanel } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, GridFilterParam, PaymentDetail, PaymentPanel, PaymentStatusCode } from '@cms/case-management/domain';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { LovFacade } from '@cms/system-config/domain';
 @Component({
@@ -82,7 +83,15 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   vendorId: any;
   clientId: any;
   clientName: any;
+  UnBatchDialog: any;
+  deleteClaimsDialog:any
+  public options:any[] =[]
 
+  @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
+  unBatchClaimsDialogTemplate!: TemplateRef<any>;
+  @ViewChild('deleteClaimsConfirmationDialogTemplate', { read: TemplateRef })
+  deleteClaimsConfirmationDialogTemplate!: TemplateRef<any>;
+  isDeleteClaimClosed = false
   gridColumns : {[key: string]: string} = {
             clientFullName: 'Client Name',
             nameOnInsuranceCard: 'Name on Primary Insurance Card',
@@ -98,10 +107,12 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
           };
 searchText =''
 private searchSubject = new Subject<string>();
-       
+deletemodelbody =
+'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
+
   searchColumnList : { columnName: string, columnDesc: string }[] 
   
-
+  isUnBatchClaimsClosed = false;
   paymentStatusLov$ = this.lovFacade.paymentStatus$;
   paymentStatusFilter = '';
   showExportLoader=false;
@@ -109,6 +120,8 @@ private searchSubject = new Subject<string>();
   showDateSearchWarning =false
   showNumberSearchWarning =false
   numberSearchColumnName =""
+  paymentRequestId: any;
+  selected: any;
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
     public activeRoute: ActivatedRoute,
@@ -139,6 +152,59 @@ private searchSubject = new Subject<string>();
     this.loadBatchLogItemsListGrid(); 
     this.lovFacade.getPaymentStatusLov();
     this.addSearchSubjectSubscription();
+    this.paymentDetails$.subscribe((res :any) =>{
+      this.paymentRequestId = res.paymentRequestId
+      this.options = [
+        {
+          buttonType: 'btn-h-primary',
+          text: 'UNBATCH CLAIM',
+          icon: 'undo',
+          disabled: [
+            PaymentStatusCode.Paid,
+            PaymentStatusCode.PaymentRequested,
+            PaymentStatusCode.ManagerApproved,
+          ].includes(res.paymentStatusLovCode),
+          click: (data: any): void => {
+              if (!this.isUnBatchClaimsClosed) {
+                this.isUnBatchClaimsClosed = true;
+                this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+              }
+
+        }
+      },
+        {
+          buttonType: 'btn-h-primary',
+          text: 'DELETE CLAIM',
+          icon: 'delete',
+          disabled: [
+            PaymentStatusCode.Paid,
+            PaymentStatusCode.PaymentRequested,
+            PaymentStatusCode.ManagerApproved,
+          ].includes(res.paymentStatusLovCode),
+          click: (data: any): void => {
+            if(!this.isDeleteClaimClosed){
+            this.isDeleteClaimClosed = true;
+            this.onSingleClaimDelete(this.paymentRequestId);
+            this.onDeleteClaimsOpenClicked(
+              this.deleteClaimsConfirmationDialogTemplate
+            );
+            }
+        },
+      }
+      ];
+    })
+
+  }
+  
+  public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
+    this.deleteClaimsDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onSingleClaimDelete(selection: any) {
+    this.selected = selection;
   }
   
   ngOnChanges(): void {
@@ -159,7 +225,13 @@ private searchSubject = new Subject<string>();
       });
   }
 
-  
+  onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
+    this.UnBatchDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
   performSearch(data: any) {
     this.defaultGridState();
     const operator = (['serviceStartDate','creationTime','clientId','invoiceNbr','serviceCost','amountDue']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
@@ -459,4 +531,53 @@ private searchSubject = new Subject<string>();
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
   }
+
+  onUnBatchCloseClicked(result: any) {
+    if (result) {
+        this.handleUnbatchClaims();
+        this.financialClaimsFacade.unbatchClaims(
+          [this.paymentRequestId],
+          this.claimsType
+        );
+      }
+    this.isUnBatchClaimsClosed = false;
+    this.UnBatchDialog.close();
+  }
+
+  handleUnbatchClaims() {
+    this.financialClaimsFacade.unbatchClaims$
+      .pipe(first((unbatchResponse: any) => unbatchResponse != null))
+      .subscribe((unbatchResponse: any) => {
+        this.route.navigateByUrl(
+          `financial-management/claims/${this.claimsType}?tab=2`
+        );
+      });
+  }
+
+  onModalDeleteClaimsModalClose(result: any) {
+    if (result) {
+      this.isDeleteClaimClosed = false;
+      this.deleteClaimsDialog.close();
+    }
+  }
+
+  onModalBatchDeletingClaimsButtonClicked(action: any) {
+    if (action) {
+      this.handleDeleteClaims();
+      this.financialClaimsFacade.deleteClaims([this.paymentRequestId], this.claimsType);
+    }
+  }
+
+  handleDeleteClaims() {
+    this.financialClaimsFacade.deleteClaims$
+      .pipe(first((deleteResponse: any) => deleteResponse != null))
+      .subscribe((deleteResponse: any) => {
+        if (deleteResponse != null) {
+          this.isDeleteClaimClosed = false;
+          this.deleteClaimsDialog.close();
+          this.loadBatchLogItemsListGrid();
+        }
+      });
+  }
+
 }

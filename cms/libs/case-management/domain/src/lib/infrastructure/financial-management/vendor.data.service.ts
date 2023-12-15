@@ -173,10 +173,10 @@ export class FinancialVendorDataService {
     );
   }
 
-  loadVendors(searchText:any){  
+  loadVendors(searchText:any,vendorType:any){  
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-        `/financial-management/vendors/clinicsearch?searchText=${searchText}`
+        `/financial-management/vendors/clinic-search?searchText=${searchText}&vendorType=${vendorType}`
     );
   }
 }

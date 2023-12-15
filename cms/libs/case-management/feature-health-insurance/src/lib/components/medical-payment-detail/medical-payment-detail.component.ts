@@ -750,6 +750,14 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
+
+    const minDate = new Date('1/1/1900');
+    const maxDate = new Date('31/12/2099');
+    startDate = new Date(this.intl.formatDate(startDate,  this.dateFormat )) ;
+    endDate = new Date(this.intl.formatDate(endDate,  this.dateFormat )) ;
+    if(startDate < minDate || startDate > maxDate || endDate < minDate || endDate > maxDate){
+      return;
+    }
     if(this.isStartEndDateValid(startDate, endDate))
     {
       this.checkIneligibleEception(startDate,endDate,index);

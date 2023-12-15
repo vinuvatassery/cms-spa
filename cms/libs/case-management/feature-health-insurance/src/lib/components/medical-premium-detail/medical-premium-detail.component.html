@@ -109,7 +109,7 @@
           <h5 class="text-capital">Copy of Medicare Card</h5>
           <common-document-upload
           [file]="copyOfMedicareCardFiles"
-          [isFileViewable]="true"          
+          [isFileViewable]="true"
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_MEDICARE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'medicareCard')"
@@ -134,7 +134,7 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Insurance Start Date">
             <kendo-datepicker aria-label="Insurance Start Date" [fillMode]="formUiStyle.dateInputFillMode"
-              format="MM-dd-yyyy" formControlName="insuranceStartDate" 
+              format="MM-dd-yyyy" formControlName="insuranceStartDate"
               formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange()">
             </kendo-datepicker>
           </kendo-floatinglabel>
@@ -145,7 +145,7 @@
           <kendo-floatinglabel text="Insurance End Date">
             <kendo-datepicker aria-label="Insurance End Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" [min]="endDateMin" (focus)="changeMinDate()" (blur)="endDateOnChange()"
-              (valueChange)="endDateValueChange($event)" 
+              (valueChange)="endDateValueChange($event)"
               formControlName="insuranceEndDate" formatPlaceholder="formatPattern" placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
@@ -153,7 +153,7 @@
             *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && insuranceEndDateIsgreaterthanStartDate && !healthInsuranceForm.controls['insuranceEndDate'].disabled">Insurance
             End Date is required.</kendo-formerror>
           <kendo-formerror
-            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate && !healthInsuranceForm.controls['insuranceEndDate'].disabled">End date cannot be prior to the Start Date.</kendo-formerror>
+            *ngIf="!healthInsuranceForm.controls['insuranceEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate && !healthInsuranceForm.controls['insuranceEndDate'].disabled">End Date must be after Start Date.</kendo-formerror>
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Insurance ID Number">
