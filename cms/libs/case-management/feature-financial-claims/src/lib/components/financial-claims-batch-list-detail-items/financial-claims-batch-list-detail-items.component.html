@@ -18,7 +18,7 @@
                               class="mr-3 card-link-button">
                               {{payment.vendorName}}
                         </button>
-                        <span class="mr-3">Status Date: {{payment.paymentStatusDate | kendoDate}}</span> <span class="mr-3">{{payment.amountDue | kendoNumber : "c"}} Due</span>
+                        <span class="mr-3">Pmt. Requested: {{payment.paymentStatusDate | kendoDate}}</span> <span class="mr-3">{{payment.amountDue | kendoNumber : "c"}} Due</span>
                         <span class="mr-3">Status: {{payment.paymentStatusCode}}</span>
                   </p>
                   </div>
@@ -59,7 +59,7 @@
                                           [valuePrimitive]="true"
                                           [(ngModel)]="selectedSearchColumn"
                                           (valueChange)="searchColumnChangeHandler($event)">
-                                    
+
                                     </kendo-dropdownlist>
                               </kendo-floatinglabel>
                         </span>
@@ -74,8 +74,8 @@
                         </span>
                         <span class="right-overlay-export">
                               <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-                                <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
-                                
+                                <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+
                                 <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
                               </button>
                             </span>
@@ -83,7 +83,7 @@
                   </section>
                   <!-- Sorted Info -->
                   <div class="table-sorted-info">
-                        <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">       
+                        <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">
                               <span class="material-icons" aria-label="search-warning" aria-hidden="true">
                                     warning
                               </span>
@@ -93,7 +93,7 @@
                               <span *ngIf="showNumberSearchWarning">
                                    {{numberSearchColumnName}} allow only numbers.
                               </span>
-                        </span>   
+                        </span>
                       </div>
 
                   <div class="table-sorted-info">
@@ -112,10 +112,10 @@
                         <kendo-grid [resizable]="true" [loading]="(itemsListGridLoader$ | async) ?? false" [pageSize]="state.take"
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  
+                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
                               [data]="batchItemsGridLists$ | async"
                               (filterChange)="filterChange($event)" filterable="menu" [filter]="state.filter">
-                                    <kendo-grid-column field="clientFullName" title="Client Name" [width]="250">
+                                    <kendo-grid-column field="clientFullName" title="Client Name" [width]="250" [sticky]="true">
                                           <ng-template kendoGridCellTemplate let-dataItem>
                                                 <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
                                                   (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)">
@@ -296,6 +296,23 @@
       </section>
 </div>
 
+<div class="bottom-fixed-wrapper text-right flex-gap">
+      <kendo-splitbutton [data]="options" class="app-c-split-button app-dropdown-action"
+        buttonClass="k-split-button" [tabindex]="0"
+        [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
+        <div class="btn-inner-block" >
+          OPTIONS
+        </div>
+        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+          <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+            aria-hidden="false" (click)="dataItem.click(dataItem)">
+            <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+            <label> {{ dataItem.text }} </label>
+          </button>
+        </ng-template>
+      </kendo-splitbutton>
+    </div>
+
 <ng-template #providerDetailsTemplate>
       <cms-financial-claims-provider-info
             (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
@@ -334,8 +351,20 @@
                 chevron_right
               </span>
             </button>
-  
+
           </div>
         </div>
       </kendo-dialog-actions>
+    </ng-template>
+
+    <ng-template #unBatchClaimsDialogTemplate>
+      <cms-financial-claims-unbatch-claims (UnBatchCloseClickedEvent)="onUnBatchCloseClicked($event)"
+        [isBulkUnBatchOpened]="false"></cms-financial-claims-unbatch-claims>
+    </ng-template>
+  
+    <ng-template #deleteClaimsConfirmationDialogTemplate>
+      <cms-financial-claims-delete-claims (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)"
+        (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked($event)"
+        [selectedProcessClaimsCount]="1"
+        [deletemodelbody]="deletemodelbody"></cms-financial-claims-delete-claims>
     </ng-template>

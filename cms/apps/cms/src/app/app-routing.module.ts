@@ -51,6 +51,14 @@ const routes: Routes = [
     canLoad: [AutoLoginAllRoutesGuard],
   },
   {
+    path: 'system-interface',
+    loadChildren: () =>
+      import('@cms/system-interface/feature-dashboard').then(
+        (m) => m.SystemInterfaceFeatureDashboardModule
+      ),
+    canLoad: [AutoLoginAllRoutesGuard],
+  },
+  {
     outlet: 'search',
     path: '',
     loadChildren: () =>

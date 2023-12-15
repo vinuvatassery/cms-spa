@@ -216,8 +216,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.markAllAsTouched();
     if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders || this.providerType == this.vendorTypes.HealthcareProviders) {
       if (!this.clinicNameNotApplicable) {
-        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
-        this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+        this.medicalProviderForm.controls['parentVendorId'].setValidators([Validators.required]);
+        this.medicalProviderForm.controls['parentVendorId'].updateValueAndValidity();
       }
       if (!this.firstLastNameNotApplicable) {
         this.medicalProviderForm.controls['firstName'].setValidators([Validators.required]);
@@ -416,13 +416,13 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
   onClinicNameChecked() {
     if (this.clinicNameNotApplicable) {
-      this.medicalProviderForm.controls['providerName'].setValue(null);
-      this.medicalProviderForm.controls['providerName'].disable();
+      this.medicalProviderForm.controls['parentVendorId'].setValue(null);
+      this.medicalProviderForm.controls['parentVendorId'].disable();
       this.firstLastNameNotApplicable = false;
       this.onNameChecked();
     }
     else {
-      this.medicalProviderForm.controls['providerName'].enable();
+      this.medicalProviderForm.controls['parentVendorId'].enable();
     }
   }
 
@@ -475,7 +475,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.markAllAsTouched();
     if (this.vendorTypes.DentalProviders == this.providerType || this.vendorTypes.MedicalProviders == this.providerType
       || this.vendorTypes.DentalClinic == this.providerType || this.vendorTypes.MedicalClinic == this.providerType) {
-      if (this.vendorDetails.vendorName && this.vendorDetails.vendorTypeCode != this.vendorTypes.DentalProviders) {
+      if (this.vendorDetails.vendorName && this.vendorDetails.vendorTypeCode != this.vendorTypes.DentalProviders && this.vendorDetails.vendorTypeCode != this.vendorTypes.MedicalProviders) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }
@@ -543,6 +543,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes : StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing,
       activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,
+      parentVendorId : formValues.parentVendorId,
     }
     if (this.providerType === FinancialVendorTypeCode.Clinic) {
       if (vendorProfileData.clinicType === FinancialVendorTypeCode.MedicalClinic) {
@@ -695,6 +696,16 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.accountingNumberValidated = false;
       this.isDuplicateTin = false;
     }
+  }
+  onKeyPressAllowAlphabetOnly(event:number) {
+    if((event > 64 && event < 91) || (event > 96 && event < 123)||event==32)
+      {
+        this.medicalProviderForm.controls['city'].setErrors(null); 
+        return true;
+      }else{
+        this.medicalProviderForm.controls['city'].setErrors({ 'incorrect': true });
+        return false;
+      }
   }
 
   validateTin(tinNbr: any) {

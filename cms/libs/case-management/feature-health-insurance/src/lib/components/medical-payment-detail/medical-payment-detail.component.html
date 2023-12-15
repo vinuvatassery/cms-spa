@@ -104,10 +104,13 @@
                                             </kendo-datepicker>
                                         </kendo-floatinglabel>
                                         <kendo-formerror
-                                            *ngIf="(isControlValid('serviceStartDate', i) && isSubmitted)"
+                                            *ngIf="(isControlValid('serviceStartDate', i) && isSubmitted) && !contact.hasError('invalidDate','serviceStartDate')"
                                             class="d-flex align-items-center">Service Start Date is required
-                                        </kendo-formerror>                                   
-                                       
+                                        </kendo-formerror>
+                                    <kendo-formerror
+                                    *ngIf="contact.hasError('invalidDate','serviceStartDate')"> Service Start Date is invalid
+                                   </kendo-formerror>
+                                
                                     </div>
                                     <div class="flex-col flex-col-6">
                                         <kendo-floatinglabel text="Service End Date">
@@ -118,24 +121,27 @@
                                             </kendo-datepicker>
                                         </kendo-floatinglabel>
                                         <kendo-formerror
-                                            *ngIf="(isControlValid('serviceEndDate', i) && isSubmitted)"
+                                            *ngIf="(isControlValid('serviceEndDate', i) && isSubmitted) && !contact.hasError('invalidDate','serviceEndDate')"
                                             class="d-flex align-items-center">Service End Date is required
                                         </kendo-formerror>
                                         <kendo-formerror
                                             *ngIf="(!isStartEndDateError(i))&&addClaimServicesForm.value[i].serviceEndDate!=null"
                                             class="d-flex align-items-center"> Service Start date should not be after the Service end date 
                                         </kendo-formerror>
+                                        <kendo-formerror
+                                        *ngIf="contact.hasError('invalidDate','serviceEndDate')"> Service End Date is invalid
+                                       </kendo-formerror>                                  
                                     </div>
                                     <div class="ml-2">
                                         <kendo-formerror *ngIf="getExceptionFormValue('oldInvoiceExceptionFlag',i)" class="d-flex align-items-center">
                                             <span class="material-icons mr-1" aria-hidden="false">error</span>
                                             Invoice is over 1 year old. <a kendoButton
                                                 class="ml-1 card-link-button" (click)="onMakeExceptionClick('oldInvoiceExceptionReason',i)">
-                                                {{getExceptionFormValue('oldInvoiceExceptionFlagText',i)}}
+                                                 {{getExceptionFormValue('oldInvoiceExceptionFlagText',i)}}
                                               </a></kendo-formerror>
                                         <kendo-formerror *ngIf="getExceptionFormValue('ineligibleExceptionFlag',i)" class="d-flex align-items-center">
                                           <span class="material-icons mr-1" aria-hidden="false">error</span>
-                                          Client not eligible for these dates. Claim status will automatically be Denied.
+                                          Client not eligible for these dates.
                                         </kendo-formerror>
                                     </div>
 

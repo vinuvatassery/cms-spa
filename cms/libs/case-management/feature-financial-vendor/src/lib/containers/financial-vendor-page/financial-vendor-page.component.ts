@@ -207,6 +207,7 @@ export class FinancialVendorPageComponent implements OnInit {
       paymentRunDate: [''],
       isAcceptCombinedPayment: [''],
       isAcceptReports: [''],
+      parentVendorId : [],
       newAddContactForm: this.formBuilder.array([
       ]),
     });

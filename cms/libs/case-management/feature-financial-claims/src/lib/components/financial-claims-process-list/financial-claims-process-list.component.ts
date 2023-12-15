@@ -24,8 +24,8 @@ import {
   SelectableMode,
   SelectableSettings,
 } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State, orderBy } from '@progress/kendo-data-query';
-import { Subject, Subscription, first, map } from 'rxjs';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { Subject, Subscription, first } from 'rxjs';
 import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
 @Component({
@@ -152,18 +152,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     {
       columnCode: 'serviceCount',
       columnDesc: 'Service Count',
-    },
-    {
-      columnCode: 'annualTotal',
-      columnDesc: 'Client Annual Total',
-    },
-    {
-      columnCode: 'balanceAmount',
-      columnDesc: 'Client Balance',
-    },
-    {
-      columnCode: 'amountDue',
-      columnDesc: 'Total Due',
     },
     {
       columnCode: 'paymentStatusCode',
@@ -380,12 +368,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   }
 
   gridDataHandle() {
-    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
-      data.data = data.data.sort((a, b) => {
-        const dateA = new Date(a.creationTime);
-        const dateB = new Date(b.creationTime);
-        return dateB.getTime() - dateA.getTime();
-      });
+    this.financialClaimsProcessGridLists$.subscribe((data: any) => {
+      data.data = this.sortRecordsByCreationTime(data); 
       this.gridDataResult = data;
       this.gridFinancialClaimsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
@@ -599,5 +583,13 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     if(field == "paymentStatusCode"){
       this.paymentStatusCode = value;
     }
+  }
+
+  sortRecordsByCreationTime(data: GridDataResult) {
+    data.data.sort((a, b) => {
+        const dateA = new Date(a.creationTime);
+        const dateB = new Date(b.creationTime);
+        return dateB.getTime() - dateA.getTime();
+      });
   }
 }

@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild
 } from '@angular/core';
 /** External Libraries **/
 import { Subject } from 'rxjs/internal/Subject';
@@ -10,6 +10,7 @@ import { CompletionChecklist, ScreenType, WorkflowFacade, ClientDocumentFacade, 
 import { DeleteRequest, SnackBar, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService,  LoggingService,  NotificationSource,  SnackBarNotificationType,} from '@cms/shared/util-core';
+import { DropDownListComponent } from '@progress/kendo-angular-dropdowns';
 @Component({
   selector: 'case-management-income-list',
   templateUrl: './income-list.component.html',
@@ -18,6 +19,7 @@ import { ConfigurationProvider, LoaderService,  LoggingService,  NotificationSou
 })
 export class IncomeListComponent implements OnInit {
   /** Input properties **/
+  @ViewChild("proofSchoolDropdownOne") public proofSchoolDropdownOne!: DropDownListComponent;
   @Input() data!: any;
   @Input() hasNoIncome!: boolean;
   @Input() clientCaseEligibilityId: string="";
@@ -69,6 +71,7 @@ export class IncomeListComponent implements OnInit {
       text: "Attach from client/'s attachments",
       id: "attachfromclient",
       click: (event: any,dataItem: any): void => {
+        this.onProofSchoolDropdownOneBlur();
       },
     },
 
@@ -78,6 +81,7 @@ export class IncomeListComponent implements OnInit {
       id: "removefile",
       click: (event: any,dataItem: any): void => {
       this.removeDependentsProofofSchoool(dataItem.clientDocumentId)
+      this.onProofSchoolDropdownOneBlur();
       },
     },
 
@@ -152,6 +156,20 @@ export class IncomeListComponent implements OnInit {
         this.updateWorkFlowStatus(false);
       }
     })
+  }
+  /** Private methods **/
+  public onProofSchoolDropdownOneClose(event: any) {
+    event.preventDefault();
+    // Close the list if the component is no longer focused
+    setTimeout(() => {
+      if ( !this.proofSchoolDropdownOne.wrapper.nativeElement.contains(   document.activeElement  ) ) {
+        this.proofSchoolDropdownOne.toggle(false); 
+      }
+    });
+  }
+
+  public onProofSchoolDropdownOneBlur() {
+    this.proofSchoolDropdownOne.toggle(false);
   }
 // Grid More action clicl function
 onIncomeActionClicked(

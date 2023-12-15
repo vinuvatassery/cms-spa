@@ -489,7 +489,7 @@ healthInsuranceValue ='';
       this.selectedColumn === 'groupId' ||
       this.selectedColumn === 'paymentId'
     ) {
-      operator = 'eq';
+      operator = 'contains';
     }
 
     this.filterData = {

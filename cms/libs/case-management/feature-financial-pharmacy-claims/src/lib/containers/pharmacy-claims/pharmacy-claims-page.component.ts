@@ -154,12 +154,13 @@ export class PharmacyClaimsPageComponent implements OnInit {
     const minServiceStartDate = this.getMinServiceStartDate(claim.prescriptionFillDto);
     const maxServiceEndDate = this.getMaxServiceEndDate(claim.prescriptionFillDto);
     const request = {
+      clientId: claim.clientId,
       clientCaseEligibilityId: claim.clientCaseEligibilityId,
       claimAmount: totalAmountDue,
       serviceStartDate: minServiceStartDate,
       serviceEndDate: maxServiceEndDate,
       paymentRequestId: claim.paymentRequestId,
-      objectLedgerName : 'Pharmaceutical Drugs(ADAP)'
+      objectLedgerName : 'Pharmacy'
     };
     this.financialClaimsFacade.showLoader();
     this.financialClaimsFacade.getPcaCode(request) .subscribe({

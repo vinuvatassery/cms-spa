@@ -50,6 +50,9 @@
       </section>
 
       <!-- Sorted Info -->
+      <div class="justify-content-between">
+
+    
       <div class="table-sorted-info">
         Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnName}} </span>
         <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
@@ -65,7 +68,7 @@
         <span class="sort-items"> {{batch.totalPayments}} </span> Payment(s)
         <span class="sort-items"> {{batch.totalReconciledPayments}} </span> Reconciled 
       </div>
-
+    </div>
       <div class="app-c-table">
         <kendo-grid [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [columnMenu]="{ filter: true }"

@@ -173,10 +173,19 @@ export class FinancialVendorDataService {
     );
   }
 
+
   getValidateTinNbr(tinNbr:any){
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
         `/financial-management/vendors/ValidateTin/${tinNbr}`
+        );
+      }
+
+  loadVendors(searchText:any,vendorType:any){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/clinic-search?searchText=${searchText}&vendorType=${vendorType}`
     );
   }
+
 }

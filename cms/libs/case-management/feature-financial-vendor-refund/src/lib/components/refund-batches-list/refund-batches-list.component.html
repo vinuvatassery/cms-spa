@@ -49,7 +49,7 @@
     [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)" [data]="gridVendorsBatchData$ | async"
     (columnVisibilityChange)="columnChange($event)">
-  
+
     <kendo-grid-column field="batchName" title="Batch #" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
@@ -76,6 +76,7 @@
           <kendo-filter-gte-operator></kendo-filter-gte-operator>
           <kendo-filter-lt-operator></kendo-filter-lt-operator>
           <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
@@ -88,6 +89,7 @@
           <kendo-filter-gte-operator></kendo-filter-gte-operator>
           <kendo-filter-lt-operator></kendo-filter-lt-operator>
           <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
@@ -100,6 +102,7 @@
           <kendo-filter-gte-operator></kendo-filter-gte-operator>
           <kendo-filter-lt-operator></kendo-filter-lt-operator>
           <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
