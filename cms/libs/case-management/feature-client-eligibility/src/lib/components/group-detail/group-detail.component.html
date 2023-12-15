@@ -50,7 +50,7 @@
           Cancel
         </button>
         <button kendoButton aria-label="Change" [primary]="true" (click)="onUpdateGroup()" [disabled]="(isReadOnly$ | async) ? true : false">
-          Change
+          {{buttonText}}
         </button>
       </div>
     </div>
