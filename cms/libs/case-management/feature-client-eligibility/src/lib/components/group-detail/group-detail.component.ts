@@ -37,6 +37,8 @@ export class GroupDetailComponent implements OnInit {
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   isScheduledGroup = false;
   isShowDelete = true;
+  buttonText!: any;
+
   /** Constructor **/
   constructor(private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
@@ -76,6 +78,11 @@ export class GroupDetailComponent implements OnInit {
           groupStartDate: groupDate > today ? new Date(group.groupStartDate) : this.currentDate
         });
         this.isDisableDelete();
+      }
+      if(this.isScheduledGroup){
+        this.buttonText = 'Update';
+      }else{
+        this.buttonText = 'Change';
       }
     });
   }
