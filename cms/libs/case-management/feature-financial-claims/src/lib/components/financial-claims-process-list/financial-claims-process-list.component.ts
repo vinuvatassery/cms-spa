@@ -369,7 +369,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
 
   gridDataHandle() {
     this.financialClaimsProcessGridLists$.subscribe((data: any) => {
-      data.data = this.sortRecordsByCreationTime(data); 
+      //data.data = this.sortRecordsByCreationTime(data); 
       this.gridDataResult = data;
       this.gridFinancialClaimsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
