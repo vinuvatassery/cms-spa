@@ -10,4 +10,24 @@
 [reconcileBreakoutSummary$]="reconcileBreakoutSummary$ | async"
 [reconcilePaymentBreakoutList$]="reconcilePaymentBreakoutList$"
 (loadReconcileBreakoutSummaryEvent)="loadReconcileBreakoutSummary($event)"
-(loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"></cms-financial-claims-batches-reconcile-payments>
+(loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"
+[exportButtonShow$]="exportButtonShow$"  
+(exportGridDataEvent)="exportClaimBatchesGridData()"
+(onVendorClickedEvent)="navigateProviderPanel($event)"
+(warrantNumberChangeEvent)="warrantNumberChange($event)"
+[warrantNumberChange$]="warrantNumberChange$"
+[warrantNumberChangeLoader$]="warrantNumberChangeLoader$"
+(loadTemplateEvent) = "loadEachLetterTemplate($event)"
+[letterContentList$]="letterContentList$"
+[letterContentLoader$]="letterContentLoader$"
+></cms-financial-claims-batches-reconcile-payments>
+
+<ng-template #providerDetailsTemplate>
+    <cms-financial-claims-provider-info
+        [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+</ng-template>

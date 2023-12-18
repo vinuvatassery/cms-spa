@@ -100,7 +100,7 @@
       </common-grid-cell-date-range-filter>
     </ng-template>
   </kendo-grid-column>
-  <kendo-grid-column field="creatorId" title="By" [filterable]="false" [width]="50" [sortable]="false">
+  <kendo-grid-column field="creatorId" title="By" class="text-center" [filterable]="false" [width]="50" [sortable]="false">
     <ng-template kendoGridCellTemplate let-dataItem>
       <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
         [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
@@ -113,14 +113,14 @@
       </kendo-popover>
     </ng-template>
   </kendo-grid-column>
-  <kendo-grid-column [sticky]="true" field="" title="Options" [columnMenu]="false" [width]="60" class="text-center">
+  <kendo-grid-column [sticky]="true" field="" title="Options" [columnMenu]="false" [width]="70" class="text-center">
     <ng-template kendoGridCellTemplate let-dataItem>
       <kendo-dropdownbutton [data]="contactAddressActions" icon="more-vertical"
         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
         aria-label="more actions" title="More option" [popupSettings]="{ popupClass: popupClassAction,  animate: true }">
         <span hidden> More Option</span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-          <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete') || (dataItem.activeFlag == 'Y')">
+          <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete Contact') || (dataItem.activeFlag == 'Y')">
             <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
               aria-hidden="false" (click)="buttondataItem.click(dataItem)">
               <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
@@ -140,7 +140,7 @@
         [valueField]="'value'" #RowsPerPage id="RowsPerPage" aria-label="Rows Per Page" [valuePrimitive]="true"
         [(value)]="state.take" (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
       <kendo-pager-info> </kendo-pager-info>
-      <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+      <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
     </div>
     <div class="d-flex">
       <kendo-pager-input></kendo-pager-input>
@@ -152,21 +152,21 @@
 </kendo-grid>
 <kendo-dialog *ngIf="isContactAddressDeactivateShow" (close)="clickCloseDeactivateContactAddress()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Deactivate contact?</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> Deactivate Contact?</kendo-dialog-titlebar>
   <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)"
     [VendorContactId]="VendorContactId" [vendorId]="vendorId"> </cms-contacts-deactivate>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isContactAddressDeleteShow" (close)="clickCloseDeleteContactAddress()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Delete contact?</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> Delete Contact?</kendo-dialog-titlebar>
   <cms-contacts-delete (closeDeleteContactAddress)="onCancelPopup($event)" [VendorContactId]="VendorContactId" [vendorId]="vendorId">
   </cms-contacts-delete>
 </kendo-dialog>
 <kendo-dialog *ngIf="isContactsDetailShow" (close)="clickCloseAddEditContactsDetails()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="clickCloseAddEditContactsDetails()">Edit contact
+  <kendo-dialog-titlebar (close)="clickCloseAddEditContactsDetails()">Edit Contact
   </kendo-dialog-titlebar>
-  <cms-contact-address-details [VendorContactId]="VendorContactId"  [vendorId]="vendorId" (editDeactivateContactClicked)="onEditDeactivateContactClicked($event)"
+  <cms-contact-address-details [VendorContactId]="VendorContactId" [isEdit]="isEdit"  [vendorId]="vendorId" (editDeactivateContactClicked)="onEditDeactivateContactClicked($event)"
     (isContactDetailPopupClose)="clickCloseAddEditContactsDetails()"  (ContactUpdated)=contactUpdated($event)> </cms-contact-address-details>
 </kendo-dialog>

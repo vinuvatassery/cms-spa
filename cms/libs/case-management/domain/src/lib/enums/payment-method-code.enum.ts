@@ -1,4 +1,5 @@
 export enum PaymentMethodCode{
     ACH="ACH",
-    SPOTS = "SPOTS"
+    SPOTS = "SPOTS",
+    CHECK ='CHECK'
 }

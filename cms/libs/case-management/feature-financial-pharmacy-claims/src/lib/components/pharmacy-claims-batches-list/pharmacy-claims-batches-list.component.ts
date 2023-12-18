@@ -1,4 +1,4 @@
- 
+
 
 /** Angular **/
 import {
@@ -10,18 +10,20 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import { Router } from '@angular/router';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import { ActivatedRoute, Router } from '@angular/router';
+import { GridFilterParam } from '@cms/case-management/domain';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { IntlService } from '@progress/kendo-angular-intl';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy,
+  State
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, debounceTime } from 'rxjs';
 @Component({
   selector: 'cms-pharmacy-claims-batches-list',
-  templateUrl: './pharmacy-claims-batches-list.component.html', 
+  templateUrl: './pharmacy-claims-batches-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
@@ -32,16 +34,15 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  claimsType= 'pharmacy-claims';
   @Input() pharmacyClaimsBatchGridLists$: any;
+  @Input() PharmacyBatchGridLoader$: any;
   @Output() loadPharmacyClaimsBatchListEvent = new EventEmitter<any>();
+  @Output() exportPharmacyClaimsBatchListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'batch';
-  sortDir = 'Ascending';
   columnsReordered = false;
-  filteredBy = '';
   searchValue = '';
-  isFiltered = false;
-  filter!: any;
+  isFiltered = false
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
@@ -49,62 +50,154 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
   gridPharmacyClaimsBatchData$ = this.gridPharmacyClaimsBatchDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
+
+  gridColumns: any = {
+    ALL: 'All Columns',
+    batchName: 'Batch #',
+    sendBackNotes: 'Send Back Notes',
+    totalPharmacy: '# of Pharmacies',
+    totalClaims: '# of Claims',
+    totalReconciled: '# of Pmts Reconciled',
+    totalAmountPaid: 'Total Amt. Paid',
+    totalAmountReconciled: 'Total Amt. Reconciled',
+    creationTime: 'Creation Time'
+  };
+
+  searchColumnList: { columnName: string; columnDesc: string }[] = [
+    { columnName: 'ALL', columnDesc: 'All Columns' },
+    {
+      columnName: 'batchName',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnName: "sendBackNotes",
+      columnDesc: "Send Back Notes"
+    },
+    {
+      columnName: 'totalPharmacy',
+      columnDesc: '# of Pharmacies',
+    },
+    {
+      columnName: 'totalClaims',
+      columnDesc: '# of Claims',
+    },
+    {
+      columnName: 'totalReconciled',
+      columnDesc: '# of Pmts Reconciled',
+    },
+    {
+      columnName: 'totalAmountPaid',
+      columnDesc: 'Total Amt. Paid',
+    },
+    {
+      columnName: 'totalAmountReconciled',
+      columnDesc: 'Total Amt. Reconciled',
+    },
+  ];
+
+  numericColumns: any[] = ['totalAmountReconciled', 'totalAmountPaid', 'totalReconciled', 'totalClaims', 'totalPharmacy'];
+  dateColumns: any[] = [];
+
+  //searching
+  private searchSubject = new Subject<string>();
+  selectedSearchColumn = 'ALL';
+  searchText: null | string = null;
+
+  //sorting
+  sortColumnDesc = 'Creation Time';
+  sortDir = 'Descending';
+
+  //filtering
+  filteredBy = '';
+  filter: any = [];
+
+  filteredByColumnDesc = '';
+  selectedStatus = '';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+  showDateSearchWarning = false;
+  showNumberSearchWarning = false;
+  columnChangeDesc = 'Default Columns';
+
   /** Constructor **/
-  constructor(private route: Router, ) {}
+  constructor(
+    private route: Router,
+    public activeRoute: ActivatedRoute,
+    private readonly configProvider: ConfigurationProvider,
+    private readonly intl: IntlService,) {}
 
   ngOnInit(): void {
-    this.loadPharmacyClaimsBatchListGrid();
+    this.initializePharmacyBatchPage()
   }
+
   ngOnChanges(): void {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
+    this.sortType = 'desc';
+    this.initializePharmacyBatchGrid();
+    this.loadPharmacyBatchListGrid();
+  }
+
+  /* Public methods */
+  navToBatchDetails(event : any){
+    this.route.navigate([`/financial-management/pharmacy-claims/batch`],
+    { queryParams :{bid: event.paymentRequestBatchId}});
+  }
+
+  onExportClaims() {
+    const params = {
+      SortType: this.sortType,
+      Sorting: this.sortValue,
+      Filter: JSON.stringify(this.filter)
     };
 
-    this.loadPharmacyClaimsBatchListGrid();
+    this.exportPharmacyClaimsBatchListEvent.emit(params);
   }
 
-
-  private loadPharmacyClaimsBatchListGrid(): void {
-    this.loadRefundBatch(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
-  }
-  loadRefundBatch(
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string
-  ) {
-    this.isPharmacyClaimsBatchGridLoaderShow = true;
-    const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
-    };
-    this.loadPharmacyClaimsBatchListEvent.emit(gridDataRefinerValue);
-    this.gridDataHandle();
+  searchColumnChangeHandler(value: string) {
+    this.filter = [];
+    this.showNumberSearchWarning = this.numericColumns.includes(value);
+    this.showDateSearchWarning = this.dateColumns.includes(value);
+    if (this.searchText) {
+      this.onSearch(this.searchText);
+    }
   }
 
- 
-  onChange(data: any) {
+  onSearch(searchValue: any) {
+    const isDateSearch = searchValue.includes('/');
+    this.showDateSearchWarning =
+      isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    if (isDateSearch && !searchValue) return;
+    this.setFilterBy(false, searchValue, []);
+    this.searchSubject.next(searchValue);
+  }
+
+  performSearch(data: any) {
     this.defaultGridState();
-
+    const operator = [...this.numericColumns, ...this.dateColumns].includes(
+      this.selectedSearchColumn
+    )
+      ? 'eq'
+      : 'startswith';
+    if (
+      this.dateColumns.includes(this.selectedSearchColumn) &&
+      !this.isValidDate(data) &&
+      data !== ''
+    ) {
+      return;
+    }
+    if (
+      this.numericColumns.includes(this.selectedSearchColumn) &&
+      isNaN(Number(data))
+    ) {
+      return;
+    }
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
+              field: this.selectedSearchColumn ?? 'ALL',
+              operator: operator,
               value: data,
             },
           ],
@@ -112,9 +205,25 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
         },
       ],
     };
-    let stateData = this.state;
+    const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+  }
+
+  restGrid() {
+    this.sortValue = 'creationTime';
+    this.sortColumnDesc = 'Creation Time';
+    this.sortType = 'desc';
+    this.initializePharmacyBatchGrid();
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    this.filter = [];
+    this.searchText = '';
+    this.selectedSearchColumn = 'ALL';
+    this.filteredByColumnDesc = '';
+    this.columnChangeDesc = 'Default Columns';
+    this.showDateSearchWarning = false;
+    this.showNumberSearchWarning = false;
+    this.loadPharmacyBatchListGrid();
   }
 
   defaultGridState() {
@@ -135,40 +244,123 @@ export class PharmacyClaimsBatchesListComponent implements OnInit, OnChanges{
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadPharmacyClaimsBatchListGrid();
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+    this.setFilterBy(true, '', this.filter);
+    this.loadPharmacyBatchListGrid();
   }
 
-  // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.loadPharmacyClaimsBatchListGrid();
+    this.loadPharmacyBatchListGrid();
   }
 
-  public filterChange(filter: CompositeFilterDescriptor): void {
+  filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
+  } 
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
+    this.columnChangeDesc =
+      columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 
-  gridDataHandle() {
-    this.pharmacyClaimsBatchGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridPharmacyClaimsBatchDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
-        this.isPharmacyClaimsBatchGridLoaderShow = false;
-      }
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
     });
-    this.isPharmacyClaimsBatchGridLoaderShow = false;
-  }
-  navToBatchDetails(event : any){  
-    this.route.navigate(['/financial-management/pharmacy-claims/batch'] );
   }
 
+  /* Private methods */
+  private initializePharmacyBatchGrid() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: [{ field: 'creationTime', dir: 'desc' }],
+    };
+  }
+
+
+  private initializePharmacyBatchPage() {
+    this.addSearchSubjectSubscription();
+  }
+
+  private loadPharmacyBatchListGrid(): void {
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+
+      JSON.stringify(this.filter)
+    );
+    this.loadPharmacyClaimsBatchListEvent.emit(param);
+  }
+
+  private addSearchSubjectSubscription() {
+    this.searchSubject.pipe(debounceTime(300)).subscribe((searchValue) => {
+      this.performSearch(searchValue);
+    });
+  }
+
+  private setFilterBy(
+    isFromGrid: boolean,
+    searchValue: any = '',
+    filter: any = []
+  ) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters
+            ?.filter((fld: any) => fld.value)
+            ?.map((fld: any) => this.gridColumns[fld.field]);
+          return [...new Set(filteredColumns)];
+        });
+
+        this.filteredByColumnDesc =
+          [...new Set(filteredColumns)]?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc =
+        this.searchColumnList?.find(
+          (i) => i.columnName === this.selectedSearchColumn
+        )?.columnDesc ?? '';
+    }
+  }
+
+  private isValidDate = (searchValue: any) =>
+    isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configProvider?.appSettings?.dateFormat
+        );
+      } else {
+        return '';
+      }
+    }
+    return searchValue;
+  }
 }
 
 
- 

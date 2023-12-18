@@ -14,7 +14,7 @@ import { BehaviorSubject, Observable, take } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-premiums-provider-info',
-  templateUrl: './financial-premiums-provider-info.component.html', 
+  templateUrl: './financial-premiums-provider-info.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsProviderInfoComponent {
@@ -28,11 +28,12 @@ export class FinancialPremiumsProviderInfoComponent {
   vendorProfile$: Observable<any> | undefined;
   @Input() updateProviderPanelSubject$ : Observable<any> | undefined;
   @Input() ddlStates$ : Observable<any> | undefined;
- 
+
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
   isEditProvider = false;
-  vendorProfile: any
+  vendorProfile: any;
+  public isDisabled = true;
   showAddressValidationLoader$= new BehaviorSubject(false);
   profileForm = this.formBuilder.group({
     tin: [''],
@@ -40,23 +41,23 @@ export class FinancialPremiumsProviderInfoComponent {
       vendorAddressId: [''],
       paymentMethod: [''],
       address1: ['', Validators.required],
-      address2: [''],
+      address2: ['',Validators.required],
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
       zip: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
       specialHandlingDesc: [''],
       mailCode: [{ value: '', disabled: true }],
-      acceptsCombinedPaymentsFlags:[''],
+      acceptsCombinedPaymentsFlag:[''],
       acceptsReportsFlag:['']
     }),
     contacts: new FormArray([])
   })
   isSubmitted: boolean = false
   @Input() paymentRequestId:any
-
-  constructor(public formBuilder: FormBuilder, 
+emailscount:number=0;
+  constructor(public formBuilder: FormBuilder,
     public activeRoute: ActivatedRoute,
-    private route: Router,   
+    private route: Router,
     private readonly changeDetectorRef: ChangeDetectorRef) {
 
   }
@@ -85,15 +86,10 @@ export class FinancialPremiumsProviderInfoComponent {
 
   createEmailsFormArray(contact: any): FormArray {
     let emails = new FormArray<FormGroup>([])
-   
-    if(contact.emails && contact.emails.length===0){
-       emails.push(this.formBuilder.group({
-        emailAddress: ['',Validators.required],
-        vendorContactEmailId: null,
-        vendorContactId: contact.vendorContactId
-      }));
-    }
-    else{
+
+    if(contact.emails && contact.emails.length>0){
+
+      this.emailscount=contact.emails.length;
     contact.emails.forEach((email: any) => {
       return emails.push(this.formBuilder.group({
         emailAddress: [email.emailAddress,Validators.required],
@@ -159,11 +155,11 @@ export class FinancialPremiumsProviderInfoComponent {
         mailCode: this.vendorProfile.address.mailCode,
         specialHandlingDesc: this.vendorProfile.address.specialHandlingDesc,
         paymentMethod: this.vendorProfile.address.paymentMethodCode,
-        acceptsCombinedPaymentsFlags : this.vendorProfile.address.acceptsCombinedPaymentsFlags,
+        acceptsCombinedPaymentsFlag : this.vendorProfile.address.acceptsCombinedPaymentsFlag,
         acceptsReportsFlag :this.vendorProfile.address.acceptsReportsFlag
       }
     });
-    this.createContactsFormArray() 
+    this.createContactsFormArray()
   }
 
   get addressForm(){
@@ -205,7 +201,7 @@ export class FinancialPremiumsProviderInfoComponent {
       let emailForm = control as unknown as FormGroup
       emails.push({
         emailAddress: emailForm.controls['emailAddress']?.value,
-        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,  
+        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,
         vendorContactId: emailForm.controls['vendorContactId']?.value
       })
     })
@@ -240,7 +236,7 @@ export class FinancialPremiumsProviderInfoComponent {
         specialHandlingDesc: this.profileForm?.controls.address.controls['specialHandlingDesc']?.value,
         paymentMethodCode: this.profileForm?.controls.address.controls['paymentMethod']?.value,
         address1: this.profileForm?.controls.address.controls['address1']?.value,
-        acceptsCombinedPaymentsFlags : this.profileForm?.controls.address.controls['acceptsCombinedPaymentsFlags'].value,
+        acceptsCombinedPaymentsFlag : this.profileForm?.controls.address.controls['acceptsCombinedPaymentsFlag'].value,
         acceptsReportsFlag : this.profileForm?.controls.address.controls['acceptsReportsFlag'].value,
 
         address2: this.profileForm?.controls.address.controls['address2']?.value,
@@ -248,11 +244,11 @@ export class FinancialPremiumsProviderInfoComponent {
         stateCode: this.profileForm?.controls.address.controls['stateCode']?.value,
         zip: this.profileForm?.controls.address.controls['zip']?.value,
         contacts: this.getContactArrayFormValues()
-      }    
+      }
     }
     this.updateProviderProfileEvent.emit(providerPanelDto)
-    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{       
-        this.loadVendorInfo(); 
+    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{
+        this.loadVendorInfo();
     });
   }
 
@@ -266,9 +262,11 @@ export class FinancialPremiumsProviderInfoComponent {
   }
 
   onVendorProfileViewClicked() {
+
     const query = {
       queryParams: {
-        v_id: this.vendorProfile.vendorId
+        v_id: this.vendorProfile.vendorId,
+        tab_code :FinancialVendorProviderTabCode.InsuranceVendors
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)

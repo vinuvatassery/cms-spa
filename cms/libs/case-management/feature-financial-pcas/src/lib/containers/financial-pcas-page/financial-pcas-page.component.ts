@@ -98,7 +98,7 @@ export class FinancialPcasPageComponent implements OnInit{
     this.financialPcaFacade.loadFinancialPcaReassignmentListGrid(data);
   }
   loadFinancialPcaReportListGrid(data: any) {
-    this.financialPcaFacade.loadFinancialPcaReportListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.filter);
+    this.financialPcaFacade.loadFinancialPcaReportListGrid(data?.skipCount, data?.pagesize, data?.sorting, data?.sortType, data?.filter);
   }
 
   loadAddOrEditPcaEvent(pcaId: any) {
@@ -129,7 +129,7 @@ export class FinancialPcasPageComponent implements OnInit{
     this.pcaAssignmentsFacade.loadPcaCodes()
   }
 
-  loadPcaDates() {
+  loadPcaDates() {    
     this.pcaAssignmentsFacade.loadPcaDates()
     this.getPcaDatesList()
   }
@@ -154,12 +154,14 @@ export class FinancialPcasPageComponent implements OnInit{
     }
   }
 
+
   getPcaAssignment(pcaAssignmentId : string) {
     this.pcaAssignmentsFacade.getPcaAssignment(pcaAssignmentId)
   }
 
   getPcaDatesList()
   {
+    
    this.pcaDatesData$?.pipe()
    .subscribe((data: any) =>
    {

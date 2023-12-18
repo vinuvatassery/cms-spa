@@ -1,4 +1,4 @@
-<div class="app-l-inner-rapper pb-8rem pt-0">
+<div class="app-l-inner-rapper pb-5rem pt-0">
     <common-bread-crumb></common-bread-crumb>
     <div class=" pt-0">
         <section class="app-l-mainTittle">
@@ -8,7 +8,7 @@
             <section class="app-l-wrapper">
                 <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
                     class="app-c-tab case-360-tab">
-                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                    <kendo-tabstrip-tab title="Process" [selected]="tab===1">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-premiums-process-list   [premiumsType]="premiumType"   [financialPremiumsProcessGridLists$]="financialPremiumsProcessGridLists$"
@@ -29,12 +29,17 @@
                                 (savePremiumsEvent)="saveInsurancePremiums($event)"
                                 (updatePremiumEvent)="updatePremium($event)"
                                 (loadPremiumEvent)="loadPremium($event)"
-                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-process-list>
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                (exportGridDataEvent)="exportPremiumsPaymentsGridData()"
+                                [exportButtonShow$]="exportButtonShow$"
+                                [paymentMethodCode$]="paymentMethodCode$"
+                                [paymentStatusCode$]="paymentStatusCode$"
+                                [healthInsuranceTypeLov$]="healthInsuranceTypeLov$"></cms-financial-premiums-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
 
-                    <kendo-tabstrip-tab title="Batches">
+                    <kendo-tabstrip-tab title="Batches" [selected]="tab===2">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-premiums-batches-list
@@ -45,11 +50,13 @@
                                 [sortValue]="sortValueFinancialPremiumsBatch"
                                 [sortType]="sortType"
                                 [sort]="sortBatchList"
-                                (loadFinancialPremiumsBatchListEvent)="loadFinancialPremiumsBatchListGrid($event)"></cms-financial-premiums-batches-list>
+                                (loadFinancialPremiumsBatchListEvent)="loadFinancialPremiumsBatchListGrid($event)"
+                                (exportGridDataEvent)="exportPremiumsBatchPaymentsGridData()"
+                                [exportButtonShow$]="exportButtonShow$"></cms-financial-premiums-batches-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
-                    <kendo-tabstrip-tab title="All Payments">
+                    <kendo-tabstrip-tab title="All Payments" [selected]="tab===3">
                         <ng-template kendoTabContent>
                             <div class="block-section">
                                 <cms-financial-premiums-all-payments-list [premiumsType]="premiumType" [financialPremiumPaymentLoader$]=financialPremiumPaymentLoader$  [financialPremiumsAllPaymentsGridLists$]="financialPremiumsAllPaymentsGridLists$"
@@ -58,8 +65,13 @@
                                 [unbatchPremiums$]="unbatchPremiums$"
                                 (deletePaymentEvent)="deletePayment($event)"
                                 (unBatchPremiumEvent)="unBatchPremiumClick($event)"
+                                [exportButtonShow$]="exportButtonShow$"
+                                (exportGridDataEvent)="exportClaimsPaymentsGridData()"
                                 (loadFinancialPremiumsAllPaymentsListEvent)="loadFinancialPremiumsAllPaymentsListGrid($event)"
-                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-all-payments-list>
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                [letterContentList$]="letterContentList$"
+                                [letterContentLoader$]="letterContentLoader$"
+                                (loadTemplateEvent) = "loadEachLetterTemplate($event)"></cms-financial-premiums-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -71,7 +83,7 @@
         <cms-financial-premiums-provider-info
               [paymentRequestId]="paymentRequestId"
               (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
               (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
               [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
               [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>

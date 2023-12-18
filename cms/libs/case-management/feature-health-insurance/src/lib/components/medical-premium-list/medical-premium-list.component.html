@@ -13,27 +13,27 @@
 
       <kendo-grid-column *ngIf="isCerForm" field="ReviewInsurance" title="Review Insurance" [width]="180" [sortable]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button  
-            *ngIf="dataItem.cerReviewStatusCode === 'PENDING' || dataItem.cerReviewStatusCode === 'START_REVIEW'" 
-            kendoButton look="flat"  
-            themeColor="error" 
-            class="card-link-button" 
+          <button
+            *ngIf="dataItem.cerReviewStatusCode === 'PENDING' || dataItem.cerReviewStatusCode === 'START_REVIEW'"
+            kendoButton look="flat"
+            themeColor="error"
+            class="card-link-button"
             aria-label="Start Review"
             (click)="handleHealthInsuranceOpenClicked('review')"
-            (click)="handleInsuranceType(dataItem)"> 
+            (click)="handleInsuranceType(dataItem)">
             <span class="material-icons"> error  </span>Start Review   </button>
-          <button  
-            *ngIf="dataItem.cerReviewStatusCode === 'REVIEWED'" 
-            kendoButton look="flat"  
-            themeColor="success" 
-            class="card-link-button" 
-            aria-label="Reviewed">  
-            <span class="material-icons"> check_circle </span>  Reviewed   
+          <button
+            *ngIf="dataItem.cerReviewStatusCode === 'REVIEWED'"
+            kendoButton look="flat"
+            themeColor="success"
+            class="card-link-button"
+            aria-label="Reviewed">
+            <span class="material-icons"> check_circle </span>  Reviewed
           </button>
-        
+
         </ng-template>
       </kendo-grid-column>
-        <kendo-grid-column field="FullDetail" title="Full Detail" [width]="160" [sortable]="false">
+        <kendo-grid-column field="FullDetail" title="Full Details" [width]="160" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
               (click)="handleHealthInsuranceOpenClicked('view')" (click)="handleInsuranceType(dataItem)"
               aria-label="View">
@@ -109,7 +109,7 @@
                 [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"
                 (selectionChange)="pageselectionchange($event)" aria-label="Rows Per Page" id="RowsPerPage"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
-              <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+              <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
             </div>
             <div class="d-flex">
               <kendo-pager-input></kendo-pager-input>
@@ -118,18 +118,18 @@
             </div>
           </div>
         </ng-template>
- <!-- grid Loader Template -->  
+ <!-- grid Loader Template -->
  <ng-template kendoGridLoadingTemplate>
   <common-grid-loader-component></common-grid-loader-component>
  </ng-template>
- <!-- grid No data Template -->  
+ <!-- grid No data Template -->
  <ng-template kendoGridNoRecordsTemplate>
    <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
    </div>
    <p>There is no data to display.</p>
- </ng-template> 
+ </ng-template>
       </kendo-grid>
-      <kendo-formerror *ngIf="showInsuranceRequired | async">  <span class="material-icons"> error </span>  A Response is required.</kendo-formerror>
+      <kendo-formerror *ngIf="showInsuranceRequired | async">  <span class="material-icons"> error </span>  A response is required.</kendo-formerror>
     </div>
     <div class="flex-row">
       <div class="flex-col mt-1">
@@ -199,8 +199,8 @@
 <!-- Change Priority Modal -->
 <kendo-dialog *ngIf="isOpenedRemoveConfirm" (close)="onRemoveCloseClicked()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
-  
-  <case-management-deactivate-premium-confirmation  
+
+  <case-management-deactivate-premium-confirmation
    (deactivateConfimEvent)="onRemoveConfirmCloseClicked($event)">
   </case-management-deactivate-premium-confirmation>
 </kendo-dialog>

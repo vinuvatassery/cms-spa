@@ -390,6 +390,7 @@ $pagination-height : 48px;
           border-bottom-left-radius: 0px !important;
           border-top-left-radius: 0px !important;
           border: 1px solid var(--hive-neutral-palette-100) !important;
+          padding-right: 8rem;
 
         }
 
@@ -704,11 +705,13 @@ table,
     &.k-numerictextbox,
     &.k-focus {
       margin: 0 0px;
-      width: 100%;
-      max-width: 30px;
+     
+      width: auto;
+      max-width: 25px;
       border-bottom: 0px;
       background: transparent !important;
       border: 0px !important;
+      display: inline-flex;
     }
 
     &.k-input-solid {
@@ -738,8 +741,9 @@ table,
       font-size: $font-size;
       padding: 0px;
       position: relative;
-      top: -1px;
-
+      top: 0px;
+      width: auto;
+      text-align: right;
     }
   }
 
@@ -880,6 +884,20 @@ table,
         width: 50%; 
         border-bottom: 1px solid rgba($black, 0.1);
       }
+      &.providerContact{
+        td{
+          border-bottom: 0px solid rgba($black, 0.1);
+          padding: 0px;
+         
+        }
+        &:nth-child(4n+4){
+          border-bottom: 1px solid rgba($black, 0.1);
+          td{
+            padding-bottom: 10px;
+          }
+        }
+     
+      }
     }
   }
 }
@@ -959,5 +977,4 @@ table,
    > .k-content.k-focus{
     outline: 0px;
    }
-
 }

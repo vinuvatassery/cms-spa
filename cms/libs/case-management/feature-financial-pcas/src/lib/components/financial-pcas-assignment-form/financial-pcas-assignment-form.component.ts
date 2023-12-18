@@ -33,12 +33,15 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   @Output() loadPcaEvent = new EventEmitter<any>();
   @Output() addPcaDataEvent = new EventEmitter<any>();
 
+  openDateError =false
+  totalAmount = 0
   pcaAssignmentForm!: FormGroup;
   pcaCodesInfo : any
   pcaCodeInfo : any
   objectCodeControl! : FormControl
   editPca = false
   formSubmitted =false
+  remainingAmountValidate = false
   constructor(  
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
@@ -173,6 +176,8 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
                 groupCodes : groupCodeIdsAssignedValue               
               }
             )
+
+            this.totalAmount = this.pcaCodeInfo?.remainingAmount + (this.pcaAssignmentForm.controls['amount'].value ?? 0)
            
            
         }
@@ -184,8 +189,31 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
  }
   onPcaAssignmentFormSubmit()
   {    
+    this.remainingAmountValidate = false
+    this.dateValidate()
+    if(this.openDateError === true)
+    {
+      return
+    }
+    if(this.pcaCodeInfo?.remainingAmount < this.pcaAssignmentForm?.controls["amount"]?.value)
+    {
+    this.pcaAssignmentForm?.controls["amount"].setErrors({'incorrect': true});
+    this.remainingAmountValidate = true
+    return
+    }
+    else
+    {
+      this.remainingAmountValidate = false
+      this.pcaAssignmentForm?.controls["amount"].removeValidators
+    }
+   
+    if(this.pcaAssignmentForm?.controls["unlimited"].value === false && this.pcaAssignmentForm?.controls["amount"].value < 1)
+    {
+      this.pcaAssignmentForm?.controls["amount"].setValue('')
+    }
     this.formSubmitted = true
     this.pcaAssignmentForm.markAllAsTouched();
+  
     if(this.pcaAssignmentForm.valid)
     {
 
@@ -204,7 +232,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
         pcaId: this.pcaAssignmentForm?.controls["pcaId"].value,  
         openDate: this.pcaAssignmentForm?.controls["openDate"].value,  
         closeDate: this.pcaAssignmentForm?.controls["closeDate"].value,  
-        amount: this.pcaAssignmentForm?.controls["amount"].value,  
+        amount: this.pcaAssignmentForm?.controls["unlimited"].value ? 0 :this.pcaAssignmentForm?.controls["amount"].value,  
         unlimitedFlag: this.pcaAssignmentForm?.controls["unlimited"].value === true ? 'Y' : 'N',  
         groupCodeIds : this.groupCodeIdsdValueData,  
       }
@@ -212,6 +240,26 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     }
   }
 
+
+  dateValidate()
+  {
+    if(this.pcaAssignmentForm?.controls["openDate"].value && this.pcaAssignmentForm?.controls["closeDate"].value)
+    {
+        if(this.pcaAssignmentForm?.controls["openDate"].value > this.pcaAssignmentForm?.controls["closeDate"].value)
+        {
+              this.openDateError = true
+              this.pcaAssignmentForm?.controls["openDate"].setErrors({'incorrect': true});
+              this.pcaAssignmentForm?.controls["closeDate"].setErrors({'incorrect': true});
+        }
+        else
+        {
+          this.openDateError = false
+          this.pcaAssignmentForm?.controls["openDate"].removeValidators
+          this.pcaAssignmentForm?.controls["closeDate"].removeValidators
+        }
+    }
+    
+  }
 
   unlimitedCheckChange($event : any)
   {   
@@ -221,15 +269,17 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
    {
     this.pcaAssignmentForm.patchValue(
       {    
-        amount :  0
+        amount :  ''
       }
     )
+    this.pcaAssignmentForm.controls['amount'].reset()
     this.pcaAssignmentForm.controls['amount'].disable();
    }
    else
    {
     this.pcaAssignmentForm.controls['amount'].enable();
    }
+   this.pcaCodeInfo.remainingAmount = this.totalAmount
   }
 
 
@@ -237,11 +287,22 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   onPcaChange(data : any)
   {    
     this.pcaCodeInfo = this.pcaCodesInfo?.find((x : any)=>x.pcaId==data)
-
+    this.totalAmount += this.pcaCodeInfo?.remainingAmount 
+    
     this.pcaAssignmentForm.patchValue(
       {     
         ay:  this.pcaCodeInfo?.ay ?? ''}    
     )
    
+  }
+
+  amountChange(amount : any)
+  {
+    if(this.pcaCodeInfo?.totalAmount)
+    {         
+      const numberOfGroups = this.pcaAssignmentForm?.controls["groupCodes"].value.length 
+      this.pcaCodeInfo.remainingAmount = this.totalAmount - (amount *  numberOfGroups)
+    }
+    
   }
 }

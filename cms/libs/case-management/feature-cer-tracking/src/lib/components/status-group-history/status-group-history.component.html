@@ -26,7 +26,7 @@
             {{dataItem.creationTime |date:'MM/dd/YYYY hh:mm:ss'}}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="by" title="Record Created By" [width]="80">
+    <kendo-grid-column field="by" title="Record Created By" [width]="75" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
             <button  [attr.aria-label]="dataItem.creatorId"  kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
                 [popover]="onUserProfileDetailsHovered" showOn="hover" >
@@ -55,20 +55,21 @@
 <ng-template #eligibilityGroupDetail>
     <kendo-dialog-titlebar (close)="onGroupDetailClosed($event)">Edit Scheduled Group Change </kendo-dialog-titlebar>
     <case-management-group-detail [showDeleteOption]="true" [currentGroup$]="currentGroup$" [ddlGroups$]="ddlGroups$"
+    [groupList]="groupList"
     (isModalGroupCloseClicked)="onGroupDetailClosed($event)"
     (updateGroup)="onGroupChangeUpdateClicked($event)" (deleteGroupChange)="onDeleteGroupClicked($event, deleteScheduleGroupChanges)"
     (cancelGroupChange)="onGroupChangeCancelClicked($event)">
 </case-management-group-detail>
 </ng-template>
     <ng-template #deleteScheduleGroupChanges>
-    <kendo-dialog-titlebar (close)="onCancelDelete()"> Delete scheduled group change </kendo-dialog-titlebar>
+    <kendo-dialog-titlebar (close)="onCancelDelete()"> Delete Scheduled Group Change </kendo-dialog-titlebar>
     <section class="k-dialog-body">
         <p class="text-muted mb-2">
             This action cannot be undone. You may schedule another group change at any time.
         </p>
     </section>
     <kendo-dialog-actions>
-       
+
         <div class="justify-content-end">
             <button
               kendoButton

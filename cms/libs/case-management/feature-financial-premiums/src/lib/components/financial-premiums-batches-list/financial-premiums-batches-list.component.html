@@ -29,6 +29,13 @@
                 (afterValueChanged)="onSearch($event)"> </kendo-textbox>
     </kendo-floatinglabel>
 </span>
+<span class="right-overlay-export">
+  <button kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
+    <span *ngIf="!showExportLoader" class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>
+
+    <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
+  </button>
+</span>
 </section>
 <div class="table-sorted-info">
   <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">
@@ -71,13 +78,11 @@
     [resizable]="true"
     [columnMenu]="{ filter: true }"
     [sort]="state.sort"
-    [filter]="state.filter"
-    [rowClass]="rowClass"
+    [filter]="state.filter" 
     [data]="financialPremiumsBatchGridLists$ | async"
     (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)"
     (columnReorder)="onColumnReorder($event)"
-    [selectable]="true"
      >
       <kendo-grid-column field="batchName" title="Batch #" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
@@ -143,6 +148,7 @@
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="totalAdjustmentsAmount" title="Total Amount of Adjs." [width]="140">
+       
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -150,7 +156,7 @@
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview">{{dataItem.totalAdjustmentsAmount | kendoNumber : "c"}}</span>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAdjustmentsAmount | kendoNumber: 'n2'}}</span>
         </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="totalPaymentsAmount " title="Total Amount of Payments" [width]="140">
@@ -161,7 +167,7 @@
           </kendo-grid-numeric-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview">{{dataItem.totalPaymentsAmount | kendoNumber : "c"}}</span>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalPaymentsAmount | kendoNumber: 'n2'}}</span>
         </ng-template>
       </kendo-grid-column>
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
@@ -172,7 +178,7 @@
               [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
               [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
           </div>
           <div class="d-flex">
             <kendo-pager-input></kendo-pager-input>

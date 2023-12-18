@@ -5,7 +5,7 @@
       <span class="filter-section_items filter--select">
             <kendo-floatinglabel>
                   <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode"
-                        textField="columnDesc" valueField="columnCode" 
+                        textField="columnDesc" valueField="columnCode"
                         [data]="dropDownColumns"
                         [(ngModel)]="selectedColumn"
                         [valuePrimitive]="true"
@@ -29,100 +29,199 @@
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-      Sorted Descending by <span class="sort-items"> Source </span>
-      <span class="sort-items">No Filters</span>
-      <span class="sort-items">Filtered by PCA</span>
-      <span class="sort-items">Default Columns</span>
+      Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+      <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
+      <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+      <span class="sort-items">{{columnChangeDesc}}</span>
+      <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+      <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="restPcaReassignmentGrid()">
+            <a>Set to Default</a>
+      </button>
 </div>
 
 
 <div class="app-c-table">
-      <kendo-grid [resizable]="true" [loading]="isFinancialPcaReassignmentGridLoaderShow" [pageSize]="state.take"
-            [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
-            [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
-            (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [data]="financialPcaReassignmentGridLists$ | async">
+      <kendo-grid
+      #pcaReassignmentGrid
+      [resizable]="true"
+      [loading]="isFinancialPcaReassignmentGridLoaderShow"
+      [pageSize]="state.take"
+      [skip]="state.skip"
+      [pageable]="true"
+      [sortable]="true"
+      [groupable]="false"
+      [reorderable]="true"
+      [resizable]="true"
+      [columnMenu]="{ filter: true }"
+      [sort]="state.sort"
+      [filter]="state.filter"
+      (dataStateChange)="dataStateChange($event)"
+      (filterChange)="filterChange($event)"
+      [data]="financialPcaReassignmentGridLists$ | async"
+      (columnVisibilityChange)="columnChange($event)">
 
-           
-            <kendo-grid-column field="pcaCode" title="PCA #" [width]="100"> </kendo-grid-column>
+            <kendo-grid-column field="pcaCode" title="PCA #" [width]="100">
+                  <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                >
+                  <kendo-grid-string-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="false"
+                    operator="contains"
+                  >
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  </kendo-grid-string-filter-menu>
+                </ng-template>
+            </kendo-grid-column>
             <kendo-grid-column field="objectName" title="Object" [width]="180"> </kendo-grid-column>
-            <kendo-grid-column field="group" title="Group" [width]="160"> </kendo-grid-column>
+            <kendo-grid-column field="group" title="Group" [width]="160">
+            <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                >
+                  <kendo-grid-string-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="false"
+                    operator="contains"
+                  >
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                  </kendo-grid-string-filter-menu>
+            </ng-template>
+            </kendo-grid-column>
 
-            <kendo-grid-column field="closeDate" title="Close Date" [width]="120"> 
+            <kendo-grid-column field="closeDate" title="Close Date" [width]="120">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span>
                           {{dataItem.closeDate | date:'MM/dd/yyyy'}}
                         </span>
-                       
-                      </ng-template>
+
+                  </ng-template>
+                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                        <common-grid-cell-date-range-filter
+                          [field]="'closeDate'"
+                          [filter]="filter"
+                          [filterService]="filterService"
+                        >
+                        </common-grid-cell-date-range-filter>
+                  </ng-template>
             </kendo-grid-column>
             <kendo-grid-column field="originalAmount" title="Original Amount" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.originalAmount}}</span>
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.originalAmount | kendoNumber: 'n2'}}</span>
                   </ng-template>
+                  <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                  format="0"
+                >
+                  <kendo-grid-numeric-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="true"
+                    operator="eq"
+                    format="0"
+                  >
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                  </kendo-grid-numeric-filter-menu>
+                </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="spendAfterExpiration" title="Amount Spend After Expiration" [width]="160">
+            <kendo-grid-column field="amountSpendAfterExpiration" title="Amount Spent After Expiration" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.spendAfterExpiration}}</span>
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.amountSpendAfterExpiration | kendoNumber: 'n2'}}</span>
+                  </ng-template>
+                  <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                  format="0"
+                >
+                  <kendo-grid-numeric-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="true"
+                    operator="eq"
+                    format="0"
+                  >
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                  </kendo-grid-numeric-filter-menu>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="overSpendAmount" title="Overspent Amount" [width]="180">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.overSpendAmount | kendoNumber: 'n2'}}</span>
                   </ng-template> </kendo-grid-column>
-            <kendo-grid-column field="overSpendAmount" title="Overspend Amount" [width]="180"> <ng-template
-                        kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.overSpendAmount}}</span>
-                  </ng-template> </kendo-grid-column>
-            <kendo-grid-column field="totalOverSpendAmount" title="Total Overspend Amount" [width]="180"> <ng-template
-                        kendoGridCellTemplate let-dataItem>
-                        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalOverSpendAmount}}</span>
-                  </ng-template> </kendo-grid-column>
-                  <kendo-grid-column field="unlimitedFlag" title="Unlimited" [width]="100"> <ng-template
+            <kendo-grid-column field="totalOverSpendAmount" title="Total Overspent Amount" [width]="180">
+                  <ng-template kendoGridCellTemplate let-dataItem>
+                        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalOverSpendAmount | kendoNumber: 'n2'}}</span>
+                  </ng-template>
+                  <ng-template
+                  kendoGridFilterMenuTemplate
+                  let-filter
+                  let-column="column"
+                  let-filterService="filterService"
+                  format="0"
+                >
+                  <kendo-grid-numeric-filter-menu
+                    [column]="column"
+                    [filter]="filter"
+                    [filterService]="filterService"
+                    [extra]="true"
+                    operator="eq"
+                    format="0"
+                  >
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                  </kendo-grid-numeric-filter-menu>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="unlimitedFlag" title="Unlimited" [width]="100"> <ng-template
                         kendoGridCellTemplate let-dataItem>
                         <span class="app-checkboxwidtext-wrapper">
-                              <input 
+                              <input
                                 type="checkbox"
                                 kendoCheckBox
                                 id="unlimited"
-                                aria-label="unlimited"                            
+                                aria-label="unlimited"
                                 disabled
                                 [checked]="isUnlimitedFlag(dataItem.unlimitedFlag)"
                               />
-                           
+
                             </span>
-                  </ng-template> </kendo-grid-column>
-                  <kendo-grid-column field="ReassignPca" title="Reassign PCA" [sticky]="true" [columnMenu]="false" [sortable]="false" [width]="220">
-                        <ng-template kendoGridCellTemplate let-dataItem2>
-      
-                             
-                                    <kendo-multicolumncombobox
-                                    [data]="allNotAssignedPcaSList"
-                                    (filterChange)="onSearchTextChange($event,dataItem2)"
-                                    (selectionChange)="onClientSelected($event,dataItem2)"
-                                    (click)="onclick(dataItem2)"
-                                     [itemDisabled]="itemDisabled.bind(this)"
-                                    [allowCustom]="true"
-                                     textField="pcaCode" valueField="pcaCode" 
-                                    [fillMode]="formUiStyle.dropDownFillMode" placeholder="PCA"  [filterable]="true"> 
-                                          <kendo-combobox-column [width]="200"     >
-                                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem  (cellClick)="cellClick($event)" >
-                                                      <span class=""   ><strong> {{ dataItem.pcaCode }}/{{dataItem.fundingSourceCode}}</strong></span> 
-                                                </ng-template>
-                                          </kendo-combobox-column>
-                                         <kendo-combobox-column [width]="180" >
-                                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem disabled >
-                                                      <span class=""><strong class="text-muted">Remaining Amount</strong>
-                                                            <p    class="{{dataItem2.originalAmount>dataItem.pcaRemainingAmount?'lessAmount':''}}"><span *ngIf="dataItem2.originalAmount>dataItem.pcaRemainingAmount">-</span>${{ dataItem.pcaRemainingAmount }}</p>
-                                                      </span>
-                                                </ng-template>
-                                          </kendo-combobox-column> 
-                                          <kendo-combobox-column [width]="140" >
-                                                <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                                      <span><strong class="text-muted">Close Date</strong><p>{{ dataItem.closeDate }}</p>
-                                                            </span>
-                                                </ng-template>
-                                          </kendo-combobox-column> 
-                                    </kendo-multicolumncombobox>
-                            
-                        </ng-template>
-      
-                  </kendo-grid-column>
-            <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50"
+                  </ng-template>
+                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                        <kendo-grid-boolean-filter-menu
+                          [column]="column"
+                          [filter]="filter"
+                          [filterService]="filterService">
+                        </kendo-grid-boolean-filter-menu>
+                      </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column [reorderable]="false" field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="50"
                   class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
 
@@ -141,7 +240,7 @@
                           </ng-container>   </ng-template>
                       </kendo-dropdownbutton>
 
-                  
+
                   </ng-template>
             </kendo-grid-column>
 
@@ -155,7 +254,7 @@
                                     aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
                                     (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                               <kendo-pager-info> </kendo-pager-info>
-                              <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
+                              <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'">
                               </kendo-grid-messages>
 
                         </div>
@@ -175,30 +274,44 @@
                   </div>
                   <p>There is no data to display.</p>
             </ng-template>
-
-      </kendo-grid>
+     </kendo-grid>
 </div>
 
-<div class="bottom-fixed-wrapper text-right flex-gap">
-
-      <button kendoButton [primary]="true" aria-label="Reassign" class=""
-      (click)="onConfirmationPcaReassignmentClicked(confirmationPcaReassignmentDialogTemplate)" [disabled]="reAssignPcaS.length==0" > Reassign
-      </button>
-
-</div>
 <ng-template #addEditPcaReassignmentDialogTemplate>
       <cms-financial-pcas-reassignment-form
             (closeEditPcaReassignmentClickedEvent)="onCloseEditPcaReassignmentClicked($event)"
             [isViewGridOptionClicked]="isViewGridOptionClicked"
             (getPcaAssignmentByIdEvent)="getPcaAssignmentById($event)"
             [editPcaReassignmentItem]="editPcaReassignmentItem"
-            [getPcaAssignmentById$]="getPcaAssignmentById$"  
-            (getPcaAssignmentByIdEvent)="($event)" 
+            [getPcaAssignmentById$]="getPcaAssignmentById$"
+            (getPcaAssignmentByIdEvent)="($event)"
             (saveEditPcaReassignmentClickedEvent)="saveEditPcaReassignmentClicked($event)"
             >
       </cms-financial-pcas-reassignment-form>
 
 </ng-template>
+<ng-template #reassignPcaReassignmentDialogTemplate>
+      <cms-financial-reassignment-pca-form
+
+  [objectCodeIdValue]="objectCodeIdValue"
+      [groupCodeIdsdValue]="groupCodeIdsdValue"
+      [groupCodesData$]="groupCodesData$"
+      [objectCodesData$]="objectCodesData$"
+      [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$"
+      [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$"
+      [pcaCodesInfoData$]="pcaCodesInfoData$"
+      [pcaAssignmentData$]="pcaAssignmentData$"
+      [newForm]="newForm"
+      [pcaAssignmentFormDataModel$]="pcaAssignmentFormData"
+      [groupCodesDataFilter]="groupCodesDataFilter"
+      (closePcaReAssignmentFormClickedEvent)="onClosePcaReAssignmentFormClicked()"
+      (loadPcaEvent)="onLoadPcaEvent($event)"
+      (reassignpcaEvent)="reassignPcaData($event)"
+            >
+      </cms-financial-reassignment-pca-form>
+
+</ng-template>
+
 
 <ng-template #confirmationPcaReassignmentDialogTemplate>
       <cms-financial-pcas-reassignment-confirmation

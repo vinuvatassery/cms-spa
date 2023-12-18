@@ -21,7 +21,7 @@
          </kendo-grid-column>
       <kendo-grid-column field="adjustmentAmount" title="Amount" [width]="60"> 
         <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"> <strong></strong> {{dataItem.adjustmentAmount | kendoNumber : "c"}}</span>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.adjustmentAmount}}</span>
       </ng-template> 
       </kendo-grid-column>
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
@@ -32,7 +32,7 @@
               [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
               [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>  
+            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>  
           </div>
           <div class="d-flex">
             <kendo-pager-input></kendo-pager-input>

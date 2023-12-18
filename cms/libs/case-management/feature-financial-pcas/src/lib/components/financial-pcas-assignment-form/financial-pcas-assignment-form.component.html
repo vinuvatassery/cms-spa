@@ -66,11 +66,13 @@
       <div class="flex-row mt-3">
             <div class="flex-col flex-col-4">
                   <label> PCA Amount </label>
-                  <p> $ {{pcaCodeInfo?.totalAmount}}</p>
+                  <p> ${{pcaCodeInfo?.totalAmount | kendoNumber: 'n2'}}</p>
             </div>
             <div class="flex-col flex-col-4">
                   <label> Remaining </label>
-                  <p class="green-text-color">$ {{pcaCodeInfo?.remainingAmount}}</p>
+                  <p [ngClass]="pcaCodeInfo?.remainingAmount < 0 ? 'red-text-color' : 'green-text-color'">
+                        ${{pcaCodeInfo?.remainingAmount | kendoNumber: 'n2'}}
+                  </p>                  
             </div>
             <div class="flex-col flex-col-4">
                   <label> Close Date</label>
@@ -97,8 +99,8 @@
                                 
                               <kendo-formerror *ngIf="pcaAssignmentFormControls?.openDate?.errors?.required && formSubmitted">
                                     Open Date is required
-                              </kendo-formerror>     
-                       
+                              </kendo-formerror>   
+                                                             
                   </kendo-floatinglabel>
 
             </div>
@@ -122,17 +124,24 @@
                   </kendo-floatinglabel>
 
             </div>
+            <kendo-formerror *ngIf="openDateError">
+                  Open Date must be prior to the PCA Close Date
+            </kendo-formerror>     
       </div>
       <div class="flex-row">
             <div class="flex-col ">
                   <kendo-floatinglabel text="Amount" class="amount-with-symbol">
                         <span class="k-input-prefix custom-currencysymbol"> $ </span>
                         <kendo-numerictextbox placeholder="Amount" aria-label="Amount" [spinners]="false" formControlName="amount"
+                        (valueChange)="amountChange($event)"
                               class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
                   <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required && formSubmitted">
                         Amount is required
+                  </kendo-formerror>   
+                  <kendo-formerror *ngIf="remainingAmountValidate">
+                        Amount should be equal or less than the Remaining PCA balance
                   </kendo-formerror>   
             </div>
             <div class="flex-col flex-col-6 mt-2">

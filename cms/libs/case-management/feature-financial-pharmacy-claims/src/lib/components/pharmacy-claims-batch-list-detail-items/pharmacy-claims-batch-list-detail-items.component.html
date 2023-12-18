@@ -11,7 +11,7 @@
             <section class="app-l-wrapper">
                   <div>
                   <p> <button aria-label="Very Nice Provider"
-                              (click)="onViewProviderDetailClicked(providerDetailsTemplate)" kendoButton look="flat"
+                        (click)="onViewProviderDetailClicked()" kendoButton look="flat"
                               class="mr-3 card-link-button">
                               Very Nice Provider
                         </button> 
@@ -81,7 +81,7 @@
                         <kendo-grid [resizable]="true" [loading]="isBatchLogItemsGridLoaderShow" [pageSize]="state.take"
                               [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"
                               [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
-                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true"
+                              [sort]="state.sort" (dataStateChange)="dataStateChange($event)" 
                               [data]="batchItemsGridLists$ | async">
                               <kendo-grid-checkbox-column [sticky]="true" [columnMenu]="false" [showSelectAll]="true"
                                     [width]="40"></kendo-grid-checkbox-column>
@@ -98,7 +98,7 @@
                                     <kendo-grid-column field="totalAmountReconciled" title="Client Balance" [width]="160"> </kendo-grid-column>  
                                     <kendo-grid-column field="totalAmountReconciled" title="Payment Status" [width]="160"> </kendo-grid-column>  
                                     <kendo-grid-column field="totalAmountReconciled" title="Entry Date" [width]="120"> </kendo-grid-column>  
-                              <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true">
+                              <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true" class="text-center">
                                     <ng-template kendoGridCellTemplate let-dataItem>
                                           <button kendoButton [primary]="true" class="avatar-sm-btn c-default"
                                                 kendoPopoverAnchor [popover]="onUserProfileDetailsHovered"
@@ -125,7 +125,7 @@
                                                       id="RowsPerPage" [(value)]="state.take"
                                                       (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                                                 <kendo-pager-info> </kendo-pager-info>
-                                                <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'"
+                                                <kendo-grid-messages [pagerItems]="'rows'" 
                                                       [pagerPage]="'Page'"> </kendo-grid-messages>
 
                                           </div>

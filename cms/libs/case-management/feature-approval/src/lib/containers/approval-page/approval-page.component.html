@@ -1,0 +1,135 @@
+<common-bread-crumb></common-bread-crumb>
+<div class="app-l-inner-rapper pt-0">
+  <!-- Main Title Section -->
+  <section class="app-l-mainTittle">
+    <h1 class="maintitle_withicon text-bold">
+      <span
+        class="material-icons sidebar-menu_icon"
+        aria-label="task"
+        aria-hidden="true"
+      >
+        task
+      </span>
+      Pending Approvals
+      <button (click)="notificationTriger()" kendoButton fillMode="flat">
+        Show Reminder Snackbar
+      </button>
+    </h1>
+  </section>
+
+  <kendo-tabstrip
+    class="app-c-tab app-c-tab--color"
+    [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
+  >
+    <kendo-tabstrip-tab [selected]="true" title="General">
+      <ng-template kendoTabTitle>
+        General <span class="tab-batch-notify">{{pendingApprovalGeneralCount}}</span></ng-template
+      >
+      <ng-template kendoTabContent>
+        <div class="nm-20 approval_container">
+          <productivity-tools-approvals-general-list
+            [approvalsGeneralLists$]="approvalsGeneralLists$"
+            [submitGenerealRequest$]="submitGenerealRequest$"
+            (loadApprovalsGeneralGridEvent)="loadApprovalsGeneralGrid($event)"
+            (loadCasereassignmentExpanedInfoParentEvent)="loadCasereassignmentExpanedInfoParentEvent($event)"
+            (submitGeneralRequestsEvent)="submitGeneralRequests($event)"
+            [usersByRole$]="usersByRole$"
+            (getMasterDetailsEvent)="getMasterDetails($event)"
+            [selectedMasterDetail$]="selectedMasterDetail$"
+            [clinicVendorList$]="clinicVendorList$"
+            [ddlStates$]="ddlStates$"
+            (editClickedEvent)="editClicked($event)"
+            [healthCareForm]="healthCareForm"
+            (searchClinicVendorClicked)="searchClinicVendorClicked($event)"
+            [clinicVendorLoader$]="clinicVendorLoader$"
+            (updateMasterDetailsClickedEvent)="updateMasterDetailsClicked($event)"
+            (onVendorClickedEvent)="onProviderNameClick($event)"
+            [drugForm]="drugForm"
+            [insurancePlanForm]="insurancePlanForm"
+            [insuranceTypelovForPlan$]="insuranceTypelovForPlan$"
+            [pharmacyForm]="pharmacyForm"
+            [insuranceVendorForm]="insuranceVendorForm"
+            [insuranceProviderForm]="insuranceProviderForm"
+            [pageSizes]="pageSizes"
+            [deliveryMethodLov$]="deliveryMethodLov$"
+          >
+          </productivity-tools-approvals-general-list>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="Payments">
+      <ng-template kendoTabTitle *ngIf="pendingApprovalPaymentCount > 0">
+        Payments
+        <span class="tab-batch-notify">{{
+          pendingApprovalPaymentCount
+        }}</span></ng-template
+      >
+      <ng-template kendoTabContent>
+        <div class="nm-20 approval_container">
+          <productivity-tools-approvals-payments-list
+            [approvalsPaymentsLists$]="approvalsPaymentsLists$"
+            [approvalsPaymentsMainLists$]="approvalsPaymentsMainLists$"
+            [pendingApprovalSubmittedSummary$]="pendingApprovalSubmittedSummary$"
+            [pendingApprovalSubmit$]="pendingApprovalSubmit$"
+            [batchDetailPaymentsList$]="batchDetailPaymentsList$"
+            [pageSizes]="pageSizes"
+            [sortValue]="sortValueApprovalPaymentsApproval"
+            [sortType]="sortType"
+            [sort]="sortApprovalPaymentsList"
+            [exportButtonShow$]="exportButtonShow$"
+            [userLevel]="userLevel"
+            (loadApprovalsPaymentsGridEvent)="loadApprovalsPaymentsGrid($event)"
+            (submitEvent)="submitData($event)"
+            (loadApprovalsPaymentsMainListEvent)="
+              loadApprovalsPaymentsMain($event)
+            "
+            (loadSubmittedSummaryEvent)="loadSubmittedSummary($event)"
+            (loadBatchDetailPaymentsGridEvent)="
+              loadBatchDetailPaymentsGrid($event)
+            "
+            (exportGridDataEvent)="exportPendingApprovalGridData()"
+            class="reminder-list-modal-wrap"
+          ></productivity-tools-approvals-payments-list>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="Imported Claims">
+      <ng-template kendoTabTitle>
+        Imported Claims <span class="tab-batch-notify">{{pendingApprovalImportedClaimCount}}</span></ng-template
+      >
+      <ng-template kendoTabContent>
+        <div class="nm-20 approval_container">
+          <productivity-tools-imported-claims-lists
+            [submitImportedClaims$]="submitImportedClaims$"
+            [approvalsImportedClaimsLists$]="approvalsImportedClaimsLists$"
+            [possibleMatchData$]="possibleMatchData$"
+            [savePossibleMatchData$]="savePossibleMatchData$"
+            [pageSizes]="pageSizes"
+            [sortValue]="sortValueImportedClaimsApproval"
+            [sortType]="sortTypeImportedClaim"
+            [sort]="sortImportedClaimsList"
+            [exportButtonShow$]="exportButtonShow$"
+            (loadImportedClaimsGridEvent)="loadImportedClaimsGrid($event)"
+            (submitImportedClaimsEvent)="submitImportedClaims($event)"
+            (updateClientPolicyEvent) ="updateClientPolicy($event)"
+            class="reminder-list-modal-wrap"
+            (loadPossibleMatchDataEvent)="loadPossibleMatch($event)"
+            (saveReviewPossibleMatchesDialogClickedEvent)="savePossibleMatch($event)"
+            (addAnExceptionEvent)="addAnException($event)"
+            (exportGridDataEvent)="exportImportedClaimsGridData()"
+          ></productivity-tools-imported-claims-lists>
+        </div>
+      </ng-template>
+    </kendo-tabstrip-tab>
+  </kendo-tabstrip>
+
+  <ng-template #providerDetailsTemplate>
+    <cms-financial-claims-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="onEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+</ng-template>
+</div>

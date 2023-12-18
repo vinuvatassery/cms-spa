@@ -28,7 +28,7 @@
         <kendo-grid-column field="mailCode" title="Mail Codes" [width]="130"></kendo-grid-column>
         <kendo-grid-column field="address" title="Address" [width]="200"></kendo-grid-column>
         <kendo-grid-column field="npi" title="NPI" [width]="160"></kendo-grid-column>
-        <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="120">
+        <kendo-grid-column field="effectiveDate" title="Effective Date" [width]="160">
           <ng-template kendoGridCellTemplate let-dataItem>
             <span *ngIf="dataItem.activeFlag == 'Y' ;else endDateBlock">
               {{dataItem.effectiveDate | date:'MM/dd/yyyy'}}
@@ -38,7 +38,7 @@
             </ng-template>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By"  class="text-center"  [width]="75" [sticky]="true">
+        <kendo-grid-column field="by" title="By"  class="text-center"  [width]="70" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -62,7 +62,7 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="Option" title="Options" [width]="110" class="text-center" [sticky]="true">
+        <kendo-grid-column field="Option" title="Options" [width]="100" class="text-center" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem let-clientPharmacy let-pharmacyId="field">
               <kendo-dropdownbutton
               [data]="filterActionButtonOptions( pharmacyOptions,clientPharmacy)"
@@ -95,7 +95,7 @@
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
             [valueField]="'value'" [valuePrimitive]="true" #pharmacieslistrowperpage id="pharmacieslistrowperpage" [(value)]="state.take"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
 
           </div>
           <div class="d-flex">
@@ -151,7 +151,7 @@
   (close)="handleRemoveClientPharmacyClose()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   >
-    <kendo-dialog-titlebar> Remove pharmacy? </kendo-dialog-titlebar>
+    <kendo-dialog-titlebar> Remove Pharmacy? </kendo-dialog-titlebar>
       <case-management-remove-pharmacy
         [clientPharmacyId]="selectClientPharmacyId"
         [isShowHistoricalData]="isShowHistoricalData"
@@ -173,7 +173,7 @@
 <!-- Reactivate-pharmacy Modal -->
 <kendo-dialog *ngIf="isOpenReactivatePharmaciesClicked" (close)="handleCloseReactivatePharmaciesClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Re-activate pharmacy? </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> Re-activate Pharmacy? </kendo-dialog-titlebar>
   <case-management-reactivate-pharmacies   [clientPharmacyDetails]="selectClientPharmacyDetails" [isShowHistoricalData]="isShowHistoricalData"
    (closeReactivatePharmacies)="handleCloseReactivatePharmaciesClicked()">
   </case-management-reactivate-pharmacies>

@@ -8,37 +8,72 @@
             <section class="app-l-wrapper">
                 <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }"
                     class="app-c-tab case-360-tab">
-                    <kendo-tabstrip-tab title="Process" [selected]="true">
+                    <kendo-tabstrip-tab title="Process" [selected]="tab===1">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-process-list      
+                                <cms-pharmacy-claims-process-list
                                 [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
                                 [pharmacyClaimsProcessGridLoader$]="pharmacyClaimsProcessLoader$"
+                                [deliveryMethodLov$]="deliveryMethodLov$"
+                                [paymentRequestType$]="paymentRequestType$"
+                                [addPharmacyClaim$] = "addPharmacyClaim$"
+                                [editPharmacyClaim$] = "editPharmacyClaim$"
+                                [getPharmacyClaim$] = "getPharmacyClaim$"
+                                [searchPharmacies$] = "searchPharmacies$"
+                                [searchClients$] = "searchClients$"
+                                [searchDrugs$] = "searchDrugs$"
+                                [searchPharmaciesLoader$]="searchPharmaciesLoader$"
+                                [searchClientLoader$]="searchClientLoader$"
+                                [searchDrugsLoader$]="searchDrugsLoader$"
+                                [pharmacyClaimsProcessGridLists$]="pharmacyClaimsProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsProcess"
-                                [sortType]="sortType" [sort]="sortProcessList" 
+                                [sortType]="sortType" [sort]="sortProcessList"
+                                (addPharmacyClaimEvent)="addPharmacyClaim($event)"
+                                (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
+                                (getPharmacyClaimEvent)="getPharmacyClaim($event)"
+                                (searchPharmaciesEvent)="searchPharmacies($event)"
+                                (searchClientsEvent)="searchClients($event)"
+                                (searchDrugEvent)="searchDrug($event)"
+                                (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
+                                (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
                                 (loadPharmacyClaimsProcessListEvent)="loadPharmacyClaimsProcessListGrid($event)"
-                                (exportPharmacyClaimsProcessListEvent)="oneExportClaimsInProcess($event)"></cms-pharmacy-claims-process-list>
+                                (exportPharmacyClaimsProcessListEvent)="onExportClaimsInProcess($event)"
+                                (onbatchClaimsClickedEvent)="onbatchClaimsClicked($event)"
+                                (ondeleteClaimsClickedEvent)="ondeleteClaimsClicked($event)"
+                                [batchingClaims$]="batchingClaims$" (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                ></cms-pharmacy-claims-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
 
-                    <kendo-tabstrip-tab title="Batches">
+                    <kendo-tabstrip-tab title="Batches"  [selected]="tab===2">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-batches-list   [pharmacyClaimsBatchGridLists$]="pharmacyClaimsBatchGridLists$"
+                                <cms-pharmacy-claims-batches-list
+                                [PharmacyBatchGridLoader$]="pharmacyClaimsBatchGridLoader$"
+                                [pharmacyClaimsBatchGridLists$]="pharmacyClaimsBatchGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsBatch"
-                                [sortType]="sortType" [sort]="sortBatchList" 
-                                (loadPharmacyClaimsBatchListEvent)="loadPharmacyClaimsBatchListGrid($event)"></cms-pharmacy-claims-batches-list>
+                                [sortType]="sortType" [sort]="sortBatchList"
+                                (loadPharmacyClaimsBatchListEvent)="loadPharmacyClaimsBatchListGrid($event)"
+                                (exportPharmacyClaimsBatchListEvent)="onExportClaimsInBatch($event)"
+                                ></cms-pharmacy-claims-batches-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
-                    <kendo-tabstrip-tab title="All Payments">
+                    <kendo-tabstrip-tab title="All Payments"  [selected]="tab===3">
                         <ng-template kendoTabContent>
                             <div class="block-section">
-                                <cms-pharmacy-claims-all-payments-list  [pharmacyClaimsAllPaymentsGridLists$]="pharmacyClaimsAllPaymentsGridLists$"
+                                <cms-pharmacy-claims-all-payments-list
+                                [pharmacyClaimsAllPaymentsGridLists$]="pharmacyClaimsAllPaymentsGridLists$"
+                                [pharmacyClaimsAllPaymentsGridLoader$]="pharmacyClaimsAllPaymentsGridLoader$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyClaimsPayments"
-                                [sortType]="sortType" [sort]="sortPaymentsList" 
-                                (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"></cms-pharmacy-claims-all-payments-list>
+                                [sortType]="sortType" [sort]="sortPaymentsList"
+                                (loadPharmacyClaimsAllPaymentsListEvent)="loadPharmacyClaimsAllPaymentsListGrid($event)"
+                                (exportGridEvent$)="onExportAllPayments($event)"
+                                (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+                                [letterContentList$]="letterContentList$"
+                                [letterContentLoader$]="letterContentLoader$"
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -46,4 +81,23 @@
             </section>
         </section>
     </div>
+    <ng-template #providerDetailsTemplate>
+        <cms-pharmacy-claims-provider-info
+              [paymentRequestId]="paymentRequestId"
+              (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+              (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+              (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+              [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="onEditProviderProfileClick()"
+              [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
+  </ng-template>
 </div>
+
+
+<ng-template #pcaExceptionDialogTemplate>
+    <common-financial-pca-chosen-alert [chosenPca]="chosenPcaForReAssignment"
+        (confirmChosenPcaAlertClickedEvent)="onConfirmPcaAlertClicked($event)"
+        (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
+    </common-financial-pca-chosen-alert>
+ 
+</ng-template>
+ 

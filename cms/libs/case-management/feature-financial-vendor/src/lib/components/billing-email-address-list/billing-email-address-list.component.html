@@ -21,7 +21,7 @@
           <kendo-grid-column field="startDate" title="Effective Date" [width]="200">
   
           </kendo-grid-column>
-          <kendo-grid-column field="by" title="By" [width]="40">
+          <kendo-grid-column field="by" title="By" [width]="40" class="text-center">
             <ng-template kendoGridCellTemplate let-dataItem>
               <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
                 [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
@@ -67,7 +67,7 @@
                   [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage"  [valuePrimitive]="true" [(value)]="state.take"
                   (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
                 <kendo-pager-info> </kendo-pager-info>
-                <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+                <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
               </div>
               <div class="d-flex">
                 <kendo-pager-input></kendo-pager-input>
@@ -101,19 +101,19 @@
   
 <kendo-dialog *ngIf="isEmailBillingAddressDetailShow" (close)="clickCloseAddEditEmailBillingAddressDetails()"
 class="app-c-modal app-c-modal-sm app-c-modal-np">
-<kendo-dialog-titlebar (close)="clickCloseAddEditEmailBillingAddressDetails()"> Add/Edit email address
+<kendo-dialog-titlebar (close)="clickCloseAddEditEmailBillingAddressDetails()"> Add/Edit Email Address
 </kendo-dialog-titlebar>
 <cms-billing-email-address-details> </cms-billing-email-address-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isEmailBillingAddressDeactivateShow" (close)="clickCloseDeactivateEmailBillingAddress()"
 class="app-c-modal app-c-modal-sm app-c-modal-np">
-<kendo-dialog-titlebar> Deactivate email address?</kendo-dialog-titlebar>
+<kendo-dialog-titlebar> Deactivate Email Address?</kendo-dialog-titlebar>
 <cms-billing-address-deactivate> </cms-billing-address-deactivate>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isEmailBillingAddressDeleteShow" (close)="clickCloseDeleteEmailBillingAddress()"
 class="app-c-modal app-c-modal-sm app-c-modal-np">
-<kendo-dialog-titlebar> Delete email address?</kendo-dialog-titlebar>
+<kendo-dialog-titlebar> Delete Email Address?</kendo-dialog-titlebar>
 <cms-billing-address-delete> </cms-billing-address-delete>
 </kendo-dialog>

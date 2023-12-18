@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { DrugsFacade, FinancialVendorDataService, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, InvoiceFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
-import { LoaderService, NotificationSnackbarService } from '@cms/shared/util-core';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
 
 
@@ -36,18 +37,40 @@ export class FinancialVendorProfileComponent implements OnInit {
   removeprovider$ = this.financialVendorFacade.removeprovider$
   addProviderNew$ = this.financialVendorFacade.addProviderNew$
   vendorProfileSpecialHandling$ = this.financialVendorFacade.vendorProfileSpecialHandling$
+  providerList$ = this.financialVendorFacade.providerList$
+  providerLispageSizes = this.financialVendorFacade.gridPageSizes;
+  providerLissortValue = this.financialVendorFacade.sortValue;
+  providerLissortType = this.financialVendorFacade.sortType;
+  providerLissort = this.financialVendorFacade.sort;
+  filter: any = [];
+  isClinicalVendor = false;
+  vendorName: any;
 
-   providerList$ = this.financialVendorFacade.providerList$
-   providerLispageSizes = this.financialVendorFacade.gridPageSizes;
-   providerLissortValue = this.financialVendorFacade.sortValue;
-   providerLissortType = this.financialVendorFacade.sortType;
-   providerLissort = this.financialVendorFacade.sort;
+    
+  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
+  providerDetailsTemplate!: TemplateRef<any>;
+  
+  providerDetailsDialog: any
 
-  filter:any=[];
-  isClinicalVendor=false;
+ ddlStates$ = this.contactFacade.ddlStates$;
+ isEditForm = false
+ vendorProfilePanel$ = this.financialVendorFacade.providePanelSubject$;
+  paymentMethodCode$ = this.lovFacade.paymentMethodType$;
+  
+  updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
+  hasDrugCreateUpdatePermission = false;
+  vendorProfileId: any;
 
-  constructor(private loaderService:LoaderService,private notificationSnackbarService:NotificationSnackbarService,private activeRoute: ActivatedRoute,private financialVendorFacade : FinancialVendorFacade,
-              private readonly drugsFacade: DrugsFacade,private financialVendorDataService:FinancialVendorDataService) {}
+  constructor(
+    private activeRoute: ActivatedRoute,
+    private financialVendorFacade: FinancialVendorFacade,
+    private readonly drugsFacade: DrugsFacade,
+    private readonly invoiceFacade: InvoiceFacade,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly contactFacade: ContactFacade,
+    private dialogService: DialogService,
+    private lovFacade: LovFacade
+  ) { }
 
   ngOnInit(): void {
     this.loadQueryParams();
@@ -57,6 +80,9 @@ export class FinancialVendorProfileComponent implements OnInit {
     };
     this.loadDrugsListGrid();
     this.loadVendorDetailList();
+    this.setVendorTypeCode('');
+    this.hasDrugCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Drug_Create_Update']);
+
   }
 
   get financeManagementTabs(): typeof FinancialVendorProviderTabCode {
@@ -74,8 +100,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.tabCode = this.activeRoute.snapshot.queryParams['tab_code'];
 
     this.loadVendorInfo();
-    if(this.vendorId && this.tabCode)
-    {
+    if (this.vendorId && this.tabCode) {
       this.loadFinancialVendorProfile(this.vendorId)
     }
   }
@@ -103,8 +128,8 @@ export class FinancialVendorProfileComponent implements OnInit {
         this.profileInfoTitle = 'Pharmacy Info';
         break;
     }
-     this.isClinicalVendor = (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.DentalClinic) ||
-     (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.MedicalClinic)
+    this.isClinicalVendor = (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.DentalClinic) ||
+      (vendorProfile.vendorTypeCode == FinancialVendorTypeCode.MedicalClinic)
   }
   loadVendorInfo() {
     this.financialVendorFacade.getVendorDetails(this.vendorId);
@@ -118,10 +143,10 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.financialVendorFacade.getVendorProfileSpecialHandling(this.vendorId);
   }
 
-  loadFinancialVendorProfile(vendorId : string)
-  {
-    this.financialVendorFacade.getVendorProfile(vendorId,this.tabCode)
-    this.vendorProfile$.subscribe(vendorProfile =>{
+  loadFinancialVendorProfile(vendorId: string) {
+    this.financialVendorFacade.getVendorProfile(vendorId, this.tabCode)
+    this.vendorProfile$.subscribe(vendorProfile => {
+      this.vendorName = vendorProfile.vendorName
       this.setVendorTypeCode(vendorProfile)
     })
   }
@@ -155,15 +180,48 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.loadDrugsListGrid();
   }
 
-  loadVendorDetailList(){
+  loadVendorDetailList() {
     this.financialVendorFacade.loadVendorList(this.vendorTypeCode);
   }
 
-  loadProviderList(data :any){
+  loadProviderList(data: any) {
     this.financialVendorFacade.getProviderList(data)
   }
   removeProvider(providerId: any) {
-   this.financialVendorFacade.removeProvider(providerId);
+    this.financialVendorFacade.removeProvider(providerId);
   }
- 
+
+  loadInvoiceServices(event: any) {
+    this.invoiceFacade.loadPaymentRequestServices(event.dataItem, this.vendorId, this.tabCode)
+  }
+  onProviderNameClick(event:any){
+    this.vendorProfileId = event;
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.providerDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',  
+      }, 
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+  
+  }
+
+  onEditProviderProfileClick() {
+    this.contactFacade.loadDdlStates();
+    this.lovFacade.getPaymentMethodLov();
+  }
+  updateProviderProfile(event: any) {
+    console.log(event);
+    this.financialVendorFacade.updateProviderPanel(event);
+  }
+  getProviderPanel(event: any) {
+    this.financialVendorFacade.getProviderPanelByVendorId(this.vendorProfileId);
+  }
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
+      this.providerDetailsDialog.close();
+    }
+  }
+
 }

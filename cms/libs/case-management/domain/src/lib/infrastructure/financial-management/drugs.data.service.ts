@@ -22,4 +22,18 @@ export class DrugsDataService {
     );
   }
 
+  addDrug(dto: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/drugs`,
+      dto
+    );
+  }
+
+  updateDrugVendor(drugDto:any){
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/drugs`,drugDto
+    );
+  }
 }

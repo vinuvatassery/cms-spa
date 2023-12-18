@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, OnChanges, OnInit } from '@angular/core';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
+import { FilterService,GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
-
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-recent-claims-list',
   templateUrl: './financial-claims-recent-claims-list.component.html',
@@ -21,7 +21,9 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   @Input() vendorId: any;
   @Input() clientId: any;
   @Input() claimsType: any;
+  @Input() includeServiceSubTypeFilter = true;
   dentalOrMedicalServiceField:any;
+  @Input() duplicatePaymentInputObject:any;
   public state!: any;
   sortColumn = 'Entry Date';
   sortDir = 'Ascending';
@@ -36,25 +38,42 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
   recentClaimListDataSubject = new Subject<any>();
   recentClaimListData$ =  this.recentClaimListDataSubject.asObservable();
-  
+  showDuplicatePaymentExceptionHighlight$ = this.financialClaimsFacade.showDuplicatePaymentExceptionHighlight$;
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   addRemoveColumns="Default Columns"
-  columns : any;  
+  columns : any;
   dropDowncolumns : any;
   isFinancialClaimsRecentClaimGridLoaderShow = false;
 
+  selectedPaymentStatus: string | null = null;
+  selectedPaymentMethod: string | null = null;
+  selectedPaymentType: string | null = null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentRequestTypes$= this.lovFacade.paymentRequestType$;
+  paymentMethodTypes: any = [];
+  paymentStatus: any = [];
+  paymentRequestTypes: any = [];
+
+  paymentTypeFilter = '';
   constructor(
     private readonly cdr: ChangeDetectorRef,
+    private readonly lovFacade: LovFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade
   ) { }
-  ngOnInit(): void { 
-    this.loadColumnsData();   
+  ngOnInit(): void {
+    this.loadColumnsData();
+    this.getClaimStatusLov();
+    this.getCoPaymentRequestTypeLov();
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
     };
+    this.showDuplicatePaymentExceptionHighlight$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
     this.loadFinancialRecentClaimListGrid();
   }
   ngOnChanges(): void {
@@ -64,6 +83,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
       sort: this.sort,
     };
     this.loadFinancialRecentClaimListGrid();
+    this.cdr.detectChanges();
   }
 
 loadFinancialRecentClaimListGrid() {
@@ -91,6 +111,7 @@ loadFinancialRecentClaimListGrid() {
     const gridDataRefinerValue = {
       vendorId: vendorId,
       clientId: clientId,
+      includeServiceSubTypeFilter: this.includeServiceSubTypeFilter,
       claimsType : claimType,
       skipCount: skipCountValue,
       pageSize: maxResultCountValue,
@@ -111,7 +132,7 @@ loadFinancialRecentClaimListGrid() {
     {
       operator = "eq"
     }
-    
+
     this.filterData = {
       logic: 'and',
       filters: [
@@ -171,7 +192,11 @@ loadFinancialRecentClaimListGrid() {
       this.filter = "";
       this.isFiltered = false
     }
-    this.loadFinancialRecentClaimListGrid();    
+    if (!this.filteredBy.includes('Payment Status'))
+    this.selectedPaymentStatus = '';
+    if (!this.filteredBy.includes('Payment Type'))
+    this.selectedPaymentType = '';
+    this.loadFinancialRecentClaimListGrid();
   }
 
   pageSelectionChange(data: any) {
@@ -192,7 +217,7 @@ loadFinancialRecentClaimListGrid() {
         this.isFinancialClaimsRecentClaimGridLoaderShow = false;
       }
     });
-  } 
+  }
 
   loadRecentClaimsGrid(data: any) {
     this.financialClaimsFacade.loadRecentClaimListGrid(data);
@@ -244,80 +269,139 @@ loadFinancialRecentClaimListGrid() {
 
   private loadColumnsData()
   {
-    this.dentalOrMedicalServiceField= this.claimsType == "dental" ? "Dental Service":"Medical Service";
+    this.dentalOrMedicalServiceField= this.includeServiceSubTypeFilter ? this.claimsType == "dental" ? "Dental Service":"Medical Service" : 'Service';
     this.columns = {
       invoiceId:"Invoice ID",
       serviceStartDate:"Service Start",
       serviceEndDate:"Service End",
       cptCode:"CPT Code",
-      medicalService:this.dentalOrMedicalServiceField,
+      medicalService: this.dentalOrMedicalServiceField,
       serviceCost:"Service Cost",
       amountDue:"Amount Due",
       paymentTypeDesc:"Payment Type",
       clientAnnualTotal:"Client Annual Total",
       clientBalance:"Client Balance",
       entryDate:"Entry Date",
-      paymentStatusDesc:"Payment Status"   
+      paymentStatusDesc:"Payment Status"
     }
 
     this.dropDowncolumns = [
       {
         "columnCode": "invoiceId",
-        "columnDesc": "Invoice ID"    
+        "columnDesc": "Invoice ID"
       },
       {
         "columnCode": "serviceStartDate",
-        "columnDesc": "Service Start"        
+        "columnDesc": "Service Start"
       },
       {
         "columnCode": "serviceEndDate",
-        "columnDesc": "Service End"     
+        "columnDesc": "Service End"
       }
       ,
       {
         "columnCode": "cptCode",
-        "columnDesc": "CPT Code"         
+        "columnDesc": "CPT Code"
       }
       ,
       {
         "columnCode": "medicalService",
-        "columnDesc": this.dentalOrMedicalServiceField         
+        "columnDesc": this.dentalOrMedicalServiceField
       }
       ,
       {
         "columnCode": "serviceCost",
-        "columnDesc": "Service Cost"         
+        "columnDesc": "Service Cost"
       }
       ,
       {
         "columnCode": "amountDue",
-        "columnDesc": "Amount Due"         
+        "columnDesc": "Amount Due"
       }
       ,
       {
         "columnCode": "paymentTypeDesc",
-        "columnDesc": "Payment Type"         
+        "columnDesc": "Payment Type"
       }
       ,
       {
         "columnCode": "clientAnnualTotal",
-        "columnDesc": "Client Annual Total"         
+        "columnDesc": "Client Annual Total"
       }
       ,
       {
         "columnCode": "clientBalance",
-        "columnDesc": "Client Balance"         
+        "columnDesc": "Client Balance"
       }
       ,
       {
         "columnCode": "entryDate",
-        "columnDesc": "Entry Date"         
+        "columnDesc": "Entry Date"
       }
       ,
       {
         "columnCode": "paymentStatusDesc",
-        "columnDesc": "Payment Status"         
+        "columnDesc": "Payment Status"
       }
     ]
   }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
+    if (field === 'paymentTypeDesc') this.selectedPaymentType = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
+  private getClaimStatusLov() {
+    this.lovFacade.getClaimStatusLov();
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentStatus = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private getCoPaymentRequestTypeLov() {
+    this.lovFacade.getCoPaymentRequestTypeLov();
+    this.paymentRequestTypes$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentRequestTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+   }
+  public rowClass = (args:any) => {
+    let bool =false ;
+    if(this.duplicatePaymentInputObject?.amountDue)
+ {
+   bool = args.dataItem.amountDue == this.duplicatePaymentInputObject?.amountDue
+   && args.dataItem.startDate== this.duplicatePaymentInputObject?.startDate
+   && args.dataItem.endDate== this.duplicatePaymentInputObject?.endDate
+   ;
+ }
+  return {"table-row-disabled" : bool }
+
+  };
 }

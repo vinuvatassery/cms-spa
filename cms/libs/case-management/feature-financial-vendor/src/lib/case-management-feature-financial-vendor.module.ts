@@ -30,7 +30,6 @@ import { ContactsDeleteComponent } from './components/contacts-delete/contacts-d
 import { ContactsDetailsComponent } from './components/contacts-details/contacts-details.component';
 import { FinancialInsuranceProviderListComponent } from './components/financial-insurance-provider-list/financial-insurance-provider-list.component';
 import { FinancialPharmacyClaimsComponent } from './components/financial-pharmacy-claims/financial-pharmacy-claims.component';
-import { FinancialDrugsDetailsComponent } from './components/financial-drugs-details/financial-drugs-details.component';
 import { FinancialDrugsDeactivateComponent } from './components/financial-drugs-deactivate/financial-drugs-deactivate.component';
 import { FinancialDrugsReassignComponent } from './components/financial-drugs-reassign/financial-drugs-reassign.component';
 import { FinancialInsuranceProviderComponent } from './components/financial-insurance-provider/financial-insurance-provider.component';
@@ -54,6 +53,8 @@ import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-to
 import { FinancialClinicProviderListComponent } from './components/financial-clinic-provider-list/financial-clinic-provider-list.component';
 import { FinancialClinicProviderRemoveComponent } from './components/financial-clinic-provider-remove/financial-clinic-provider-remove.component';
 import { FinancialClinicProviderDetailsComponent } from './components/financial-clinic-provider-details/financial-clinic-provider-details.component';
+import { InvoiceServiceComponent } from './components/invoice-service/invoice-service.component';
+import { CaseManagementFeatureFinancialClaimsModule } from '@cms/case-management/feature-financial-claims';
 @NgModule({
   imports: [
     CaseManagementDomainModule,
@@ -65,6 +66,7 @@ import { FinancialClinicProviderDetailsComponent } from './components/financial-
     ProductivityToolsFeatureEventLogModule,
     CaseManagementFeatureCommunicationModule,
     ProductivityToolsFeatureNotificationModule,
+    CaseManagementFeatureFinancialClaimsModule
   ],
   declarations: [
     FinancialVendorPageComponent,
@@ -92,7 +94,6 @@ import { FinancialClinicProviderDetailsComponent } from './components/financial-
     ContactsDeactivateComponent,
     ContactsDeleteComponent,
     ContactsDetailsComponent,
-    FinancialDrugsDetailsComponent,
     FinancialDrugsDeactivateComponent,
     FinancialDrugsReassignComponent,
     FinancialInsuranceProviderComponent,
@@ -113,6 +114,7 @@ import { FinancialClinicProviderDetailsComponent } from './components/financial-
     FinancialClinicProviderListComponent,
     FinancialClinicProviderRemoveComponent,
     FinancialClinicProviderDetailsComponent,
+    InvoiceServiceComponent,
   ],
   exports: [
     FinancialVendorPageComponent,
@@ -139,8 +141,7 @@ import { FinancialClinicProviderDetailsComponent } from './components/financial-
     BillingEmailAddressListComponent,
     ContactsDeactivateComponent,
     ContactsDeleteComponent,
-    ContactsDetailsComponent,
-    FinancialDrugsDetailsComponent,
+    ContactsDetailsComponent,  
     FinancialDrugsDeactivateComponent,
     FinancialDrugsReassignComponent,
     FinancialInsuranceProviderComponent,

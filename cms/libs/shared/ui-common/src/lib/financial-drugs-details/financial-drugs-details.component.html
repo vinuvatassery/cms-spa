@@ -1,0 +1,144 @@
+<!-- employer form details -->
+<form class="k-form" [formGroup]="drugForm">
+    <section class="k-dialog-body">
+        <p class="text-muted mb-1">
+            All fields are required unless otherwise stated.
+        </p>
+        <div class="flex-row">
+            <div class="flex-col mb-1">
+                <kendo-floatinglabel text="Manufacturer">
+                    <kendo-dropdownlist [data]="manufacturers" [fillMode]="formUiStyle.dropDownFillMode"
+                        [valuePrimitive]="true" textField="vendorName" valueField="vendorId" aria-label="Manufacturer"
+                        formControlName="manufacturer" [disabled]="false">
+                    </kendo-dropdownlist>
+                </kendo-floatinglabel>
+            </div>
+            <div class="flex-col mb-1">
+                <kendo-floatinglabel text="NDC Code">
+                    <kendo-maskedtextbox aria-label="NDC Code" [fillMode]="formUiStyle.inputFillMode"
+                        formControlName="ndcNbr" [mask]="ndcMaskFormat">
+                    </kendo-maskedtextbox>
+                </kendo-floatinglabel>
+                <kendo-formerror
+                    *ngIf="(!drugForm.controls['ndcNbr'].valid && drugForm.controls['ndcNbr'].hasError('required')) && isSubmitted">
+                    NDC Code is required.
+                </kendo-formerror>
+                <kendo-formerror *ngIf="drugForm.controls['ndcNbr'].hasError('maxlength')">
+                    NDC Code cannot exceed 13 characters.
+                </kendo-formerror>
+            </div>
+
+            <div class="flex-col mb-1">            
+                <kendo-floatinglabel text="Drug Name">
+                    <div>
+                         <kendo-textarea
+                          #tareaCessation
+                          [fillMode]="formUiStyle.inputFillMode"
+                          [maxlength]="tAreaCessationMaxLength"
+                          [rows]="2"                                          
+                          resizable ="none"
+                          formControlName="drugName" 
+                          (valueChange)="onDrugNameValueChange($event)"
+                          aria-label="Drug Name"
+                          class="form-control table-text-area">                                       
+                        </kendo-textarea>                    
+                    <div class="flex-row">
+                          <div class="flex-col flex-col-6">
+                            <kendo-formerror
+                                *ngIf="(!drugForm.controls['drugName'].valid && drugForm.controls['drugName'].hasError('required')) && isSubmitted">
+                                Drug name is required.
+                            </kendo-formerror>
+                          </div>
+                          <div class="justify-content-end flex-col flex-col-6">                                         
+                                <span class="counter">{{ drugNameCounter }}</span>
+                            </div> 
+                        </div>                                                               
+                    </div>                                         
+              </kendo-floatinglabel>            
+            </div>
+
+            <div class="flex-col mb-1">
+                <kendo-floatinglabel text="Brand Name">
+                    <div>
+                         <kendo-textarea
+                          #tareaCessation
+                          [fillMode]="formUiStyle.inputFillMode"
+                          [maxlength]="tAreaCessationMaxLength"
+                          [rows]="2"                                          
+                          resizable ="none"
+                          formControlName="brandName" 
+                          (valueChange)="onBrandNameValueChange($event)"
+                          aria-label="Brand Name"
+                          class="form-control table-text-area">                                       
+                        </kendo-textarea>                    
+                    <div class="flex-row">
+                          <div class="flex-col flex-col-6">
+                            <kendo-formerror
+                                *ngIf="(!drugForm.controls['brandName'].valid && drugForm.controls['brandName'].hasError('required')) && isSubmitted">
+                                Brand name is required.
+                            </kendo-formerror>
+                          </div>
+                          <div class="justify-content-end flex-col flex-col-6">                                         
+                                <span class="counter">{{ brandNameCounter }}</span>
+                            </div> 
+                        </div>                                                               
+                    </div>                                         
+              </kendo-floatinglabel> 
+            </div>
+
+            <div class="flex-col mb-1">
+                <kendo-floatinglabel text="Unit">
+                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
+                        valueField="lovCode" [data]="deliveryMethodCodesLocal" aria-label="State" [valuePrimitive]="true"
+                        formControlName="deliveryMethodCode">
+                    </kendo-dropdownlist>
+                </kendo-floatinglabel>
+                <kendo-formerror *ngIf="(!drugForm.controls['deliveryMethodCode'].valid) &&isSubmitted">A Delivery
+                    Method code must be
+                    selected</kendo-formerror>
+            </div>
+
+            <div class="flex-col mb-1 mt-1">
+
+                <fieldset class="k-form-fieldset no_margin_fieldset">
+                    <legend class="k-form-legend">
+                        <h5>Drug Type</h5>
+                    </legend>
+                    <div class="component-list-h">
+                        <span class="app-radiobtnwidtext-wrapper">
+
+                            <input type="radio" kendoRadioButton aria-labelledby="manufacturerrebatesyes"
+                                formControlName="drugType" id="manufacturerrebatesyes" class="form-control"
+                                value="HIV" />
+                            <label class="k-radio-label" for="manufacturerrebatesyes">HIV</label>
+                        </span>
+                        <span class="app-radiobtnwidtext-wrapper">
+                            <input type="radio" kendoRadioButton aria-labelledby="manufacturerrebatesno"
+                                formControlName="drugType" id="manufacturerrebatesno" value="HEPA" />
+                            <label class="k-radio-label" for="manufacturerrebatesno">Hepatitis</label>
+                        </span>
+                        <span class="app-radiobtnwidtext-wrapper">
+                            <input type="radio" kendoRadioButton aria-labelledby="manufacturerrebatesno"
+                                formControlName="drugType" id="manufacturerrebatesno" value="OPPO" />
+                            <label class="k-radio-label" for="manufacturerrebatesno">Opportunistic Infection</label>
+                        </span>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </section>
+    <kendo-dialog-actions>
+        <div class="justify-content-between mt-2">
+            <div>
+                <button *ngIf="dialogTitle==='Edit'" kendoButton [primary]="true" look="flat" aria-label="Deactivate">
+                    Deactivate </button>
+            </div>
+            <div class="justify-content-end">
+                <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="onCancelClick()">
+                    Cancel </button>
+                <button kendoButton [primary]="true" attr.aria-label="{{dialogTitle==='Add'?'Add':'Update'}}"
+                    (click)="save()"> {{saveButtonText}} </button>
+            </div>
+        </div>
+    </kendo-dialog-actions>
+</form>

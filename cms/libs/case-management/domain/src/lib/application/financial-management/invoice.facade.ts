@@ -23,13 +23,10 @@ export class InvoiceFacade {
 
   /** Private properties **/
   private invoiceDataSubject = new BehaviorSubject<any>([]);
-  private serviceDataSubject = new BehaviorSubject<any>([]);
   private isInvoiceLoadingSubject = new BehaviorSubject<boolean>(false);
-
   /** Public properties **/
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>(); 
-  serviceData$ = this.serviceDataSubject.asObservable();
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
  
@@ -79,24 +76,7 @@ export class InvoiceFacade {
   }
 
   loadPaymentRequestServices(dataItem:any,vendorId:any,vendorType:any){  
-    this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == dataItem.batchId && x.clientId === dataItem.clientId && x.invoiceNbr ===dataItem.invoiceNbr).IsInvoiceServiceLoader = true;  
-    this.invoiceDataService.loadPaymentRequestServices(dataItem,vendorId,vendorType).subscribe({
-      next: (dataResponse) => {   
-        this.serviceDataSubject.next(dataResponse);
-        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == dataItem.batchId && x.clientId === dataItem.clientId && x.invoiceNbr ===dataItem.invoiceNbr).invoiceServices = dataResponse;
-        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == dataItem.batchId && x.clientId === dataItem.clientId && x.invoiceNbr ===dataItem.invoiceNbr).IsInvoiceServiceLoader = false; 
-        const gridView = {
-          data: this.invoiceDataSubject.value.data,
-          total: this.invoiceDataSubject.value.total,
-        };
-        this.invoiceDataSubject.next(gridView);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
-        this.invoiceDataSubject.value.data.find((x:any)=>x.batchId == dataItem.batchId && x.clientId === dataItem.clientId && x.invoiceNbr ===dataItem.invoiceNbr).IsInvoiceServiceLoader = false; 
-      },
-    });  
-
+    return this.invoiceDataService.loadPaymentRequestServices(dataItem,vendorId,vendorType);
   }
  
 }

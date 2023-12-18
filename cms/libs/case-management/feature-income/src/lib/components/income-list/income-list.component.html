@@ -8,7 +8,7 @@
         <kendo-grid-column
           field="incomeSourceCodeDesc"
           title="Income Source"
-          [width]="140"
+          [width]="160"
         >
           <ng-template
             kendoGridFooterTemplate
@@ -37,7 +37,7 @@
         <kendo-grid-column
           field="incomeStartDate"
           [title]="isClientProfileTab ? 'Income Start' : 'Date of Hire'"
-          [width]="110"
+          [width]="140"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.incomeStartDate| date: 'MM/dd/yyyy'}}
@@ -46,7 +46,7 @@
         <kendo-grid-column
           field="incomeEndDate"
           title="Income End"
-          [width]="110"
+          [width]="130"
         >
         <ng-template kendoGridCellTemplate let-dataItem>
           {{dataItem.incomeEndDate| date: 'MM/dd/yyyy'}}
@@ -71,7 +71,7 @@
         <kendo-grid-column
           field="incomeNote"
           title="Financial Justification or Income Note"
-          [width]="160"
+          [width]="220"
           [sortable]="false"
         >
           <ng-template
@@ -85,7 +85,7 @@
         <kendo-grid-column
           field="monthlyIncome"
           title="Monthly Income"
-          [width]="120"
+          [width]="140"
           format="{0:c2}"
           [sticky]="true"
         >
@@ -100,7 +100,7 @@
           </ng-template>
 
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="65" 
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center" 
         [sticky]="true" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
@@ -164,7 +164,7 @@
                [valueField]="'value'" #RowsPerPage id="RowsPerPage" aria-label ="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
                (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
              <kendo-pager-info> </kendo-pager-info>
-             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
            </div>
            <div class="d-flex">
              <kendo-pager-input></kendo-pager-input>
@@ -232,12 +232,12 @@
           class="text-center"
           [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
         >
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <div class="proof_income-more">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+          <div class="proof_income-more"> 
               <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
               class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
            </span>
-          <kendo-dropdownbutton *ngIf="isAddIncomeButtonAndFooterNoteDisplay"  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"
+          <kendo-dropdownbutton #proofSchoolDropdownOne *ngIf="isAddIncomeButtonAndFooterNoteDisplay"  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button" (close)="onProofSchoolDropdownOneClose($event)"  (blur)="onProofSchoolDropdownOneBlur()"
             aria-label="more actions"  [popupSettings]="{ popupClass: popupClassAction, animate: true }"  >
 
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
@@ -266,7 +266,7 @@
         </div>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="80">
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="80" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -316,7 +316,7 @@
 
 <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened"  (close)="onRemoveIncomeConfirmationClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar class="transform-none"> Delete income source? </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar class="transform-none"> Delete Income Source? </kendo-dialog-titlebar>
   <case-management-remove-income-confirmation
   (closeModal)="onRemoveIncomeConfirmationClosed()"
   [selectedIncome]="selectedIncome"

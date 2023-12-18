@@ -23,12 +23,12 @@ import {
   PriorityCode,
   InsuranceStatusType,
   FinancialVendorTypeCode,
-  FinancialClaimsFacade,
-  ServiceSubTypeCode,
-  FinancialVendorFacade
+  FinancialVendorFacade,
+  InsuranceTypeCode
 } from '@cms/case-management/domain';
+
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
-import { Lov, LovFacade, LovType } from '@cms/system-config/domain';
+import { Lov, LovFacade, LovType, UserManagementFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -65,7 +65,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   @Input() caseEligibilityId: any;
   @Input() clientId: any;
   @Input() medicalHealthPlansCount: any;
-  @Input() insuranceStatus: any; 
+  @Input() insuranceStatus: any;
   @Input() isPaymentDone: any;
 
   /** Output properties **/
@@ -74,6 +74,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   @Output() isDeleteClicked = new EventEmitter<any>();
   @Output() isAddEditClicked = new EventEmitter<any>();
   @Output() isAddPriority = new EventEmitter<any>();
+
+  hasInsurancePlanCreateUpdatePermission: boolean = false;
 
   /** Private properties **/
   private editViewSubscription!: Subscription;
@@ -131,8 +133,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   insuranceEndDateIsgreaterthanStartDate: boolean = false;
   endDateMin!: Date;
   dentalInsuranceSelectedItem = 'DENTAL_INSURANCE';
-  selectedClaimType=FinancialVendorTypeCode.MedicalProviders;
-  insuranceTypeCode:any="MEDICAL";
+  selectedClaimType = FinancialVendorTypeCode.MedicalProviders;
+  insuranceTypeCode = InsuranceTypeCode.Medical;
 
   /** Constructor **/
   constructor(
@@ -147,6 +149,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private readonly snackbarService: NotificationSnackbarService,
     private financialVendorFacade: FinancialVendorFacade,
+    private userManagementFacade: UserManagementFacade,
   ) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
@@ -154,15 +157,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.validateFormMode();
-    
+
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
-this.insuranceTypeCode="DENTAL";
-         this.selectedClaimType=FinancialVendorTypeCode.DentalProviders;
+      this.insuranceTypeCode = InsuranceTypeCode.Dental;
+      this.selectedClaimType = FinancialVendorTypeCode.DentalProviders;
       this.subscribeDentalInsurance();
       this.loadDentalInsuranceLovs();
     }
     else {
-      
       this.loadHealthInsuranceLovs();
     }
     this.viewSelection();
@@ -175,6 +177,8 @@ this.insuranceTypeCode="DENTAL";
       }
     });
     this.isInsuranceTypeLoading = false;
+
+    this.hasInsurancePlanCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Plan_Create_Update']);
   }
 
   ngOnDestroy(): void {
@@ -196,13 +200,14 @@ this.insuranceTypeCode="DENTAL";
   }
   private loadHealthInsuranceLovs() {
     this.lovFacade.getHealthInsuranceTypeLovs();
+    this.lovFacade.getHealthInsuranceTypeLovsForPlan();
     this.lovFacade.getMedicareCoverageTypeLovs();
   }
   private loadDentalInsuranceLovs() {
     this.lovFacade.getDentalInsuranceTypeLovs();
   }
   private validateFormMode() {
-    
+
     if (this.dialogTitle === 'Add' || this.dialogTitle === 'View') {
       this.resetForm();
       this.resetValidators();
@@ -286,16 +291,15 @@ this.insuranceTypeCode="DENTAL";
 
   loadHealthInsurancePolicy() {
     this.editViewSubscription = this.insurancePolicyFacade.healthInsurancePolicy$.subscribe((data: any) => {
-     this.healthInsurancePolicyCopy = data;
-     if(data.insuranceVendorAddressId!=null)
-     {      
-    this.financialVendorFacade.searchProvidorsById(data.insuranceVendorAddressId);     
-     }
+      this.healthInsurancePolicyCopy = data;
+      if (data.insuranceVendorAddressId != null) {
+        this.financialVendorFacade.searchProvidorsById(data.insuranceVendorAddressId);
+      }
       this.bindValues(data);
     });
   }
 
-  bindValues(healthInsurancePolicy: HealthInsurancePolicy) {  
+  bindValues(healthInsurancePolicy: HealthInsurancePolicy) {
     this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(
       healthInsurancePolicy.clientInsurancePolicyId
     );
@@ -432,7 +436,7 @@ this.insuranceTypeCode="DENTAL";
     this.healthInsuranceForm.controls['paymentIdNbr'].setValue(
       healthInsurancePolicy.paymentIdNbr
     );
-    
+
     this.healthInsuranceForm.controls['premiumAmt'].setValue(
       healthInsurancePolicy.premiumAmt
     );
@@ -587,6 +591,7 @@ this.insuranceTypeCode="DENTAL";
     ];
 
     const careassistPayingRequiredFields: Array<string> = [
+      'premiumPaidThruDate',
       'nextPremiumDueDate',
       'premiumAmt',
       'premiumFrequencyCode',
@@ -594,7 +599,7 @@ this.insuranceTypeCode="DENTAL";
       'insuranceVendorAddressId',
       'isClientPolicyHolderFlag',
       'othersCoveredOnPlanFlag'
-     
+
     ];
     const policyHolderRequiredFields: Array<string> = [
       'policyHolderFirstName',
@@ -622,6 +627,7 @@ this.insuranceTypeCode="DENTAL";
         this.summaryFilesExceedsFileSizeLimit = false;
       }
     }
+
     this.validateOthersCoveredOnPlan();
     this.validateReview();
   }
@@ -665,7 +671,8 @@ this.insuranceTypeCode="DENTAL";
       'relationshipCode',
       'firstName',
       'lastName',
-      'dob'
+      'dob',
+      'relationshipSubTypeCode'
     ];
     if (this.healthInsuranceForm.controls['othersCoveredOnPlanFlag'].value === 'Y') {
       if (this.othersCoveredOnPlanNew.controls.length > 0) {
@@ -694,6 +701,7 @@ this.insuranceTypeCode="DENTAL";
     const medicarePlanRequiredFields: Array<string> = [
       'medicareBeneficiaryIdNbr',
       'medicareCoverageTypeCode',
+      'onLisFlag',
     ];
 
     if (this.ddlInsuranceType === HealthInsurancePlan.Medicare) {
@@ -704,7 +712,13 @@ this.insuranceTypeCode="DENTAL";
       if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value?.includes('B') === true) {
         medicarePlanRequiredFields.push('medicarePartBStartDate');
       }
-
+      if(this.healthInsuranceForm.controls['onLisFlag'].value === StatusFlag.Yes)
+      {
+        this.isMedicareCardFileUploaded = (this.copyOfMedicareCardFiles?.length > 0 && !!this.copyOfMedicareCardFiles[0].name) ? true : false;
+        if (!this.isMedicareCardFileUploaded) {
+          this.medicareCardFilesExceedsFileSizeLimit = false;
+        }
+      }
       this.medicareInsInfoCheck(medicarePlanRequiredFields, careassistPayingRequiredFields, policyHolderRequiredFields);
 
       medicarePlanRequiredFields.forEach((key: string) => {
@@ -1079,10 +1093,7 @@ this.insuranceTypeCode="DENTAL";
       this.healthInsurancePolicy.policyHolderFirstName = null;
       this.healthInsurancePolicy.policyHolderLastName = null;
       this.healthInsurancePolicy.insuranceVendorAddressId = null;
-      this.healthInsurancePolicy.insuranceTypeCode = null;
-      
     }
-
     this.healthInsurancePolicy.isCerReview = this.isReviewPopup;
   }
 
@@ -1188,7 +1199,7 @@ this.insuranceTypeCode="DENTAL";
       this.healthInsurancePolicy.careassistPayingPremiumFlag = null;
     }
     this.healthInsurancePolicy.insuranceVendorAddressId = this.healthInsuranceForm.controls["insuranceVendorAddressId"].value;
-    
+
   }
 
   /** Internal event methods **/
@@ -1228,17 +1239,20 @@ this.insuranceTypeCode="DENTAL";
     }
   }
   insuranceCarrierNameChange(value: string) {
+    if (value == null) {
+      return;
+    }
     let insuranceType = null;
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
-      insuranceType =InsuranceStatusType.dentalInsurance;  
+      insuranceType = InsuranceStatusType.dentalInsurance;
     }
-    else{  
+    else {
       insuranceType = InsuranceStatusType.healthInsurance;
     }
 
     this.insurancePlanFacade.planLoaderSubject.next(true);
     this.insurancePlans = [];
-    this.insurancePlanFacade.loadInsurancePlanByProviderId(value,insuranceType).subscribe({
+    this.insurancePlanFacade.loadInsurancePlanByProviderId(value, insuranceType).subscribe({
       next: (data: any) => {
         this.insurancePlanFacade.planNameChangeSubject.next(data);
       },
@@ -1293,7 +1307,7 @@ this.insuranceTypeCode="DENTAL";
             next: (data: any) => {
               this.insurancePolicyFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
-                'Insurance plan updated successfully.'
+                'Insurance Policy has been added successfully'
               );
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
@@ -1312,14 +1326,14 @@ this.insuranceTypeCode="DENTAL";
             }
           });
       } else {
-      
+
         this.insurancePolicyFacade
           .saveHealthInsurancePolicy(this.healthInsurancePolicy)
           .subscribe({
             next: (data: any) => {
               this.insurancePolicyFacade.showHideSnackBar(
                 SnackBarNotificationType.SUCCESS,
-                'Insurance plan saved Successfully.'
+                'Insurance Policy has been added successfully'
               );
               this.onModalCloseClicked();
               this.insurancePolicyFacade.hideLoader();
@@ -1344,28 +1358,28 @@ this.insuranceTypeCode="DENTAL";
   private SaveCopiedInsurancePolicy() {
     this.healthInsurancePolicy.clientInsurancePolicyId = this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
     this.insurancePolicyFacade.copyHealthInsurancePolicy(this.healthInsurancePolicy.clientInsurancePolicyId, this.healthInsurancePolicy)
-    .subscribe({
-      next: (data: any) => {
-        this.insurancePolicyFacade.showHideSnackBar(
-          SnackBarNotificationType.SUCCESS,
-          'Insurance plan copied successfully.'
-        );
-        this.onModalCloseClicked();
-        this.insurancePolicyFacade.hideLoader();
-        this.isAddEditClicked.next(true);
-        this.isAddPriority.next(true);
-      },
-      error: (error: any) => {
-        if (error) {
-          this.btnDisabled = false;
+      .subscribe({
+        next: (data: any) => {
           this.insurancePolicyFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            error
+            SnackBarNotificationType.SUCCESS,
+            'Insurance plan copied successfully.'
           );
+          this.onModalCloseClicked();
           this.insurancePolicyFacade.hideLoader();
+          this.isAddEditClicked.next(true);
+          this.isAddPriority.next(true);
+        },
+        error: (error: any) => {
+          if (error) {
+            this.btnDisabled = false;
+            this.insurancePolicyFacade.showHideSnackBar(
+              SnackBarNotificationType.ERROR,
+              error
+            );
+            this.insurancePolicyFacade.hideLoader();
+          }
         }
-      }
-    });;
+      });;
   }
 
   onDeleteClick() {
@@ -1403,6 +1417,7 @@ this.insuranceTypeCode="DENTAL";
       this.healthInsuranceForm.controls["policyHolderFirstName"].disable();
       this.healthInsuranceForm.controls["policyHolderLastName"].disable();
       this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].disable();
+      this.healthInsuranceForm.controls["insuranceVendorAddressId"].disable();
     }
     else {
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
@@ -1446,6 +1461,7 @@ this.insuranceTypeCode="DENTAL";
       this.healthInsuranceForm.controls["policyHolderFirstName"].enable();
       this.healthInsuranceForm.controls["policyHolderLastName"].enable();
       this.healthInsuranceForm.controls['newOthersCoveredOnPlan'].enable();
+      this.healthInsuranceForm.controls["insuranceVendorAddressId"].enable();
     }
   }
 
@@ -1597,21 +1613,17 @@ this.insuranceTypeCode="DENTAL";
       }
     }
   }
-  handleTypeCodeEvent(e:any)
-  {
-    this.cICTypeCode=e;
+  handleTypeCodeEvent(e: any) {
+    this.cICTypeCode = e;
   }
-  handleSummaryTypeCodeEvent(e:any)
-  {
-    this.cOSTypeCode=e;
+  handleSummaryTypeCodeEvent(e: any) {
+    this.cOSTypeCode = e;
   }
-  handleMedicareTypeCodeEvent(e:any)
-  {
-    this.medicareTypeCode=e;
+  handleMedicareTypeCodeEvent(e: any) {
+    this.medicareTypeCode = e;
   }
-  handleProofTypeCodeEvent(e:any)
-  {
-    this.pOPTypeCode=e;
+  handleProofTypeCodeEvent(e: any) {
+    this.pOPTypeCode = e;
   }
 
   private onFileRemove(fileType: string) {

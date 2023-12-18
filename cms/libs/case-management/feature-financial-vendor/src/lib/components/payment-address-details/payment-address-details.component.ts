@@ -106,7 +106,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
       address2: [''],
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
-      zip: ['', Validators.required],
+      zip: ['',[ Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
       paymentMethodCode: ['', Validators.required],
       paymentRunDateMonthly: ['', Validators.required],
       specialHandlingDesc: [''],
@@ -178,6 +178,11 @@ export class PaymentAddressDetailsComponent implements OnInit {
   }
 
   submit() {
+    this.paymentAddressForm.controls['zip']
+    .setValidators([
+      Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')
+    ]);
+  this.paymentAddressForm.controls['zip'].updateValueAndValidity();
     this.formIsSubmitted = true;
     this.paymentAddressForm.markAllAsTouched();
     if (this.tabCode === FinancialVendorProviderTabCode.Pharmacy)

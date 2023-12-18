@@ -12,7 +12,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { GridFilterParam, PcaAssignmentsFacade } from '@cms/case-management/domain';
+import { GridFilterParam, PcaAssignmentReport, PcaAssignmentsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -47,6 +47,8 @@ export class FinancialPcasAssignmentReportListComponent
   @Output() loadFinancialPcaReportListEvent = new EventEmitter<any>();
   @Output() loadFinancialPcaSubReportListEvent = new EventEmitter<any>();
   @Output() editButtonClick: EventEmitter<any> = new EventEmitter<any>();
+  @Output() loadGroupCodesEvent = new EventEmitter<any>();
+  @Input() groupCodesData$:any
   public state!: State;
   columnsReordered = false;
 
@@ -78,7 +80,7 @@ export class FinancialPcasAssignmentReportListComponent
     },
     {
       columnName: 'pcaCode',
-      columnDesc: 'PCA #',
+      columnDesc: 'PCA',
     },
     {
       columnName: 'objectName',
@@ -107,7 +109,7 @@ export class FinancialPcasAssignmentReportListComponent
   //sorting
   sortColumn = 'pcaCode';
   sortColumnDesc = 'PCA #';
-  sortDir = 'Ascending';
+  sortDir = 'Descending';
 
   //filtering
   filteredBy = '';
@@ -115,12 +117,11 @@ export class FinancialPcasAssignmentReportListComponent
 
   filteredByColumnDesc = '';
   selectedStatus = '';
+  selectedGroupCode ='';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   showDateSearchWarning = false;
-  showNumberSearchWarning = false;
   columnChangeDesc = 'Default Columns';
 
-  numericColumns = ['pcaCode', 'ay'];
   dateColumns = ['openDate', 'closeDate'];
 
   /** Constructor **/
@@ -134,10 +135,12 @@ export class FinancialPcasAssignmentReportListComponent
 
   ngOnInit() {
     this.loadObjectCodes();
+    this.loadGroupCodesEvent.emit()
     this.initializePcaPage();
   }
 
   ngOnChanges(): void {
+    this.sortType = 'desc';
     this.initializePCAGrid();
     this.loadFinancialPcaReportListGrid();
   }
@@ -163,7 +166,6 @@ export class FinancialPcasAssignmentReportListComponent
   /* Public methods */
   searchColumnChangeHandler(value: string) {
     this.filter = [];
-    this.showNumberSearchWarning = this.numericColumns.includes(value);
     this.showDateSearchWarning = this.dateColumns.includes(value);
     if (this.searchText) {
       this.onSearch(this.searchText);
@@ -182,11 +184,11 @@ export class FinancialPcasAssignmentReportListComponent
 
   performSearch(data: any) {
     this.defaultGridState();
-    const operator = [...this.numericColumns, ...this.dateColumns].includes(
+    let operator = [ ...this.dateColumns].includes(
       this.selectedSearchColumn
     )
       ? 'eq'
-      : 'startswith';
+      : 'contains';
     if (
       this.dateColumns.includes(this.selectedSearchColumn) &&
       !this.isValidDate(data) &&
@@ -194,11 +196,9 @@ export class FinancialPcasAssignmentReportListComponent
     ) {
       return;
     }
-    if (
-      this.numericColumns.includes(this.selectedSearchColumn) &&
-      isNaN(Number(data))
-    ) {
-      return;
+    if(this.selectedSearchColumn ==  PcaAssignmentReport.Ay){
+      let matches = data.match(/(\d+)/);
+      data = matches[0];
     }
     this.filterData = {
       logic: 'and',
@@ -222,11 +222,10 @@ export class FinancialPcasAssignmentReportListComponent
 
   restGrid() {
     this.sortValue = 'pcaCode';
-    this.sortType = 'asc';
-    this.initializePCAGrid();
+    this.sortType = 'desc';
     this.sortColumn = 'pcaCode';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.initializePCAGrid();
     this.filter = [];
     this.searchText = '';
     this.selectedSearchColumn = 'ALL';
@@ -234,7 +233,6 @@ export class FinancialPcasAssignmentReportListComponent
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
     this.showDateSearchWarning = false;
-    this.showNumberSearchWarning = false;
     this.loadFinancialPcaReportListGrid();
   }
 
@@ -262,6 +260,14 @@ export class FinancialPcasAssignmentReportListComponent
     this.setFilterBy(true, '', this.filter);
     if (!this.filteredByColumnDesc.includes('Status')) this.selectedStatus = '';
     if (!this.filteredByColumnDesc.includes('Object')) this.selectedObjectCode = '';
+    if(stateData?.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      if(stateFilter.field === PcaAssignmentReport.Ay){
+        let matches = stateFilter.value.match(/(\d+)/);
+        stateFilter.value = matches[0];
+      }
+    }
     this.loadFinancialPcaReportListGrid();
   }
 
@@ -274,10 +280,6 @@ export class FinancialPcasAssignmentReportListComponent
   filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-
-  rowClass = (args: any) => ({
-    'table-row-disabled': !args.dataItem.assigned,
-  });
 
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
@@ -322,7 +324,7 @@ export class FinancialPcasAssignmentReportListComponent
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'pcaCode', dir: 'asc' }],
+      sort: [{ field: 'pcaCode', dir: 'desc' }],
     };
   }
 
@@ -339,7 +341,6 @@ export class FinancialPcasAssignmentReportListComponent
   }
 
   private initializePcaPage() {
-    this.loadFinancialPcaReportListGrid();
     this.addSearchSubjectSubscription();
   }
 
@@ -401,7 +402,7 @@ export class FinancialPcasAssignmentReportListComponent
   }
 
   editAssignmentReport(objectId: any, groupsCoveredId: any) {
-   let selectedGroupCodeIds : string[] = [];
+   const selectedGroupCodeIds : string[] = [];
     selectedGroupCodeIds.push(groupsCoveredId)
     const data = {
       objectId: objectId,

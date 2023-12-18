@@ -1,20 +1,21 @@
 <div>
       <div class="app-c-table" >
-            <kendo-grid 
-                  [reorderable]="true" 
-                  [resizable]="true" 
-                  [columnMenu]="{ filter: true }" 
+            <kendo-grid
+                  [reorderable]="true"
+                  [resizable]="true"
+                  [columnMenu]="{ filter: true }"
                   [sort]="state.sort"
                   [pageSize]="state.take"
                   [pageable]="true"
-                  [sortable]="true" 
+                  [sortable]="true"
                   [skip]="state.skip"
                   [pageable]="true"
-                  [data]="reconcilePaymentBreakoutList$ | async" 
+                  [data]="reconcilePaymentBreakoutList$ | async"
                   [loading]="isGridLoaderShow"
                   (dataStateChange)="dataStateChange($event)"
-                  (filterChange)="filterChange($event)" 
+                  (filterChange)="filterChange($event)"
                   (columnVisibilityChange)="columnChange($event)"
+                  [filter]="state.filter"
                   >
                   <kendo-grid-column field="invoiceNbr" title="Invoice ID" [width]="120">
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -33,7 +34,7 @@
                                     (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)">
                                     {{ dataItem.clientName }}
                               </button>
-                        </ng-template> </kendo-grid-column>
+                        </ng-template>
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                               <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                                 [extra]="false" operator="eq">
@@ -42,7 +43,8 @@
                                 <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
                                 <kendo-filter-contains-operator></kendo-filter-contains-operator>
                               </kendo-grid-string-filter-menu>
-                            </ng-template>
+                        </ng-template>
+                  </kendo-grid-column>
                   <kendo-grid-column field="serviceStartDate" title="Service Start Date" [width]="180">
                         <ng-template kendoGridCellTemplate let-dataItem>
                               {{dataItem.serviceStartDate |date:'MM/dd/YYYY'}}
@@ -51,7 +53,7 @@
                               <common-grid-cell-date-range-filter [field]="'serviceStartDate'" [filter]="filter"
                                 [filterService]="filterService">
                               </common-grid-cell-date-range-filter>
-                            </ng-template>
+                        </ng-template>
                   </kendo-grid-column>
                   <kendo-grid-column field="serviceEndDate" title="Service End Date" [width]="160">
                         <ng-template kendoGridCellTemplate let-dataItem>
@@ -65,25 +67,25 @@
                   </kendo-grid-column>
                   <kendo-grid-column field="amountDue" title="Amount Due" [width]="140">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber:
-                                    'n2'}}</span>
+                              <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber:'n2'}}</span>
                         </ng-template>
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                               <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                                 [extra]="false" operator="eq">
                                 <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                <kendo-filter-gt-operator></kendo-filter-gt-operator>
+                                <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                                <kendo-filter-lt-operator></kendo-filter-lt-operator>
+                                <kendo-filter-lte-operator></kendo-filter-lte-operator>
                               </kendo-grid-numeric-filter-menu>
                             </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160">
+                  <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="160">
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-                              <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-                                    [extra]="false" operator="eq">
-                                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-                                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
-                                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-                                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
-                              </kendo-grid-string-filter-menu>
+                              <kendo-dropdownlist [data]="paymentStatus" textField="lovDesc"
+                              valueField="lovDesc" [value]="selectedPaymentStatus" [valuePrimitive]="true"
+                              (valueChange)="dropdownFilterChange('paymentStatusDesc',$event, filterService)">
+                            </kendo-dropdownlist>
                         </ng-template>
                   </kendo-grid-column>
                   <kendo-grid-column field="warrant" title="Warrant Number" [width]="160">
@@ -110,7 +112,7 @@
                   </kendo-grid-column>
                   <kendo-grid-column field="entryDate" title="Entry Date" [width]="186">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              {{dataItem.serviceEndDate |date:'MM/dd/YYYY'}}
+                              {{dataItem.entryDate |date:'MM/dd/YYYY'}}
                         </ng-template>
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                               <common-grid-cell-date-range-filter [field]="'entryDate'" [filter]="filter"
@@ -129,7 +131,7 @@
                                           aria-label="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
                                           (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
                                     <kendo-pager-info> </kendo-pager-info>
-                                    <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+                                    <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
                               </div>
                               <div class="d-flex">
                                     <kendo-pager-input></kendo-pager-input>
@@ -152,20 +154,29 @@
       </div>
 </div>
 <ng-template #clientRecentClaimsDialog>
-      <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper"> Recent Claims for {{clientName}} </h4></kendo-dialog-titlebar>
-      <section class="k-dialog-body">
-            <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType" (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
-      </section>
-      <kendo-dialog-actions>
-            <div class="justify-content-between">
-                  <div class="justify-content-end">
-                        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-                              Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
-                                    chevron_right
-                              </span>
-                        </button>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">
+    <h4 class="text-upper">Recent Claims for {{clientName}}</h4>
+    <div *ngIf="(recentClaimsGridLists$ | async) as recentClaims" class="k-flex-grow justify-content-end">
+      <span class="d-flex k-wizard-horizontal align-items-fstart">
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
+      </span>
+    </div>
+  </kendo-dialog-titlebar>
+  <section class="k-dialog-body-padding">
+    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
+      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1">
+            chevron_right
+          </span>
+        </button>
 
-                  </div>
-            </div>
-      </kendo-dialog-actions>
+      </div>
+    </div>
+  </kendo-dialog-actions>
 </ng-template>

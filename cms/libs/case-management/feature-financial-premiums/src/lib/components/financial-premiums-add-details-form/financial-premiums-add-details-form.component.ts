@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { ClientInsurancePlans, InsurancePremiumCoverage, FinancialClaimsFacade, InsurancePremium, PolicyPremiumCoverage } from '@cms/case-management/domain';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { ClientInsurancePlans, InsurancePremiumCoverage, FinancialClaimsFacade, InsurancePremium, PolicyPremiumCoverage, ObjectCode } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { RowArgs } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
@@ -13,6 +14,9 @@ import { BehaviorSubject, Observable, Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestroy {
+  @ViewChild('pcaExceptionDialogTemplate', { read: TemplateRef })
+  pcaExceptionDialogTemplate!: TemplateRef<any>;
+
   /* Input Properties */
   @Input() insurancePlans$!: Observable<ClientInsurancePlans[]>;
   @Input() insurancePlansLoader$: any;
@@ -67,15 +71,20 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
   showClientRequiredValidation = false;
   showPlanSelectionRequiredValidation = false;
   showPremiumRequiredValidation = false;
-  exceptionText = 'Make Exception'
+  exceptionText = 'Make Exception';
+  pcaExceptionDialogService: any;
+  chosenPcaForReAssignment: any;
 
   /* Private Properties  */
   private premiumExistCheckingRequired = true;
+  private hasException = false;
 
   /* Constructor */
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider) {
+    private readonly configProvider: ConfigurationProvider,
+    private readonly loaderService: LoaderService,
+    private dialogService: DialogService) {
   }
 
   /* Life cycle events */
@@ -97,7 +106,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     this.financialClaimsFacade.loadClientBySearchText(clientSearchText);
   }
 
-  clientChanged(client: any) {    
+  clientChanged(client: any) {
     this.showClientRequiredValidation = !client;
     this.clientChangeEvent.emit(
       {
@@ -118,7 +127,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
   exceptionReasonCounterChange(coverage: any, ev: string): void {
     const charactersCount = ev.length;
     coverage.exceptionReasonRequired = charactersCount <= 0;
-    coverage.exceptionReasonCount = `${charactersCount}/160`;
+    coverage.exceptionReasonCount = `${charactersCount}/150`;
   }
 
   premiumAmountValuesChanges(coverage: InsurancePremiumCoverage, value: number) {
@@ -127,15 +136,19 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
 
   coverageDatesValueChanges(policyId: string, coverage: InsurancePremiumCoverage, value: any) {
     this.premiumExistCheckingRequired = true;
-    coverage.coverageDateRequired = !value
+    coverage.coverageDateRequired = !value;
+    coverage.premiumExistException = false;
     if (value) {
       this.coverageDateExistChecking(policyId, coverage);
     }
   }
 
-  planSelectionChange(event: any) {
+  planSelectionChange(event: any, plan: ClientInsurancePlans) {
     if (event?.target?.checked ?? false) {
       this.showPlanSelectionRequiredValidation = false;
+      if (!plan?.coverages || plan?.coverages?.length <= 0) {
+        this.addCoverage(plan);
+      }
     }
   }
 
@@ -151,8 +164,12 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
       return;
     }
 
-    const insurancePremiums = this.getPremiumData(selectedPlans);
-    this.savePremiumsEvent.emit(insurancePremiums);
+    if(this.hasException){
+      this.savePremiums(selectedPlans);
+      return;
+    }
+
+    this.checkValidPcaAndSave(selectedPlans);
   }
 
   expandRows({ dataItem }: RowArgs): boolean {
@@ -183,7 +200,8 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
       comment: '',
       commentCount: '0/100',
       exceptionReason: '',
-      exceptionReasonCount: '0/160'
+      exceptionReasonCount: '0/150',
+      premiumAmount: plan?.premiumAmt ?? 0
     };
 
     plan.coverages.push(newCoverage);
@@ -219,6 +237,69 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     }
   }
 
+  private checkValidPcaAndSave(selectedPlans: ClientInsurancePlans[]) {
+    let request: any[] = [];
+    selectedPlans.forEach((plan: any) => {
+      const planPremiums = this.createPcaPayload(plan);
+      if (planPremiums) {
+        request.push(...planPremiums);
+      }
+    });
+
+    this.loaderService.show();
+    const payload = {
+      serviceList: request
+    }
+    this.financialClaimsFacade.getPcaCode(payload)
+      .subscribe({
+        next: (response: any) => {
+          this.loaderService.hide();
+          if (response) {
+            const reAssignPca = response?.filter((i: any) => i.isReAssignmentNeeded ?? false);
+
+            if (reAssignPca.length > 0) {
+              this.chosenPcaForReAssignment = { pcaCode: [...new Set(reAssignPca.map((p: any) => p.pcaCode))].join(", ") };
+              this.onPcaReportAlertClicked(this.pcaExceptionDialogTemplate);
+              return;
+            }
+
+            this.savePremiums(selectedPlans);
+          }
+        },
+        error: (error: any) => {
+          this.loaderService.hide();
+          this.financialClaimsFacade.showHideSnackBar(
+            SnackBarNotificationType.ERROR,
+            error
+          );
+        },
+      });
+  }
+
+  onPcaReportAlertClicked(template: TemplateRef<unknown>): void {
+    this.pcaExceptionDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onPcaAlertCloseClicked(result: any) {
+    if (result) {
+      this.pcaExceptionDialogService.close();
+    }
+  }
+
+  onConfirmPcaAlertClicked(chosenPca: any) {
+    const selectedPlans = this.insurancePlans?.filter(i => i.isPlanSelected);
+    this.savePremiums(selectedPlans);
+    this.pcaExceptionDialogService?.close();
+  }
+
+  private savePremiums(selectedPlans: ClientInsurancePlans[]) {
+    const insurancePremiums = this.getPremiumData(selectedPlans);
+    this.savePremiumsEvent.emit(insurancePremiums);
+  }
+
   private getPremiumData(selectedPlans: ClientInsurancePlans[]) {
     let premiums: InsurancePremium[] = [];
     selectedPlans.forEach((plan: any) => {
@@ -250,8 +331,24 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
         premiumAmount: coverage?.premiumAmount,
         notes: coverage?.comment,
         exceptionFlag: coverage.premiumExistException ? StatusFlag.Yes : StatusFlag.No,
-        exceptionType: 'PREMIUM_EXIST',
+        exceptionType: coverage.premiumExistException ? 'PREMIUM_EXIST' : '',
         exceptionReason: coverage.exceptionReason,
+      };
+    });
+  }
+
+  private createPcaPayload(plan: ClientInsurancePlans): any[] {
+    return plan.coverages.map((coverage: InsurancePremiumCoverage) => {
+      const firstDayOfMonth = coverage?.coverageDates ? new Date(coverage.coverageDates) : new Date();
+      const lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
+
+      return {
+        clientId: this.selectedClient.clientId,
+        claimAmount: coverage.premiumAmount,
+        serviceStartDate: firstDayOfMonth,
+        serviceEndDate: lastDayOfMonth,
+        paymentRequestId: null,
+        objectLedgerName: ObjectCode.InsurancePremium
       };
     });
   }
@@ -367,9 +464,11 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
             }
           })
         }
+        this.hasException = true;
       })
     }
     else {
+      this.hasException = false;
       this.save();
     }
   }

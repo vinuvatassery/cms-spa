@@ -119,7 +119,7 @@ export class FinancialPcasSetupFormComponent implements OnInit, OnDestroy {
 
   private getPcaDetails() {
     return {
-      pcaCode: this.pcaFormControls?.pcaCode?.value,
+      pcaCode: this.pcaFormControls?.pcaCode?.value.toString(),
       appropriationYear: this.pcaFormControls?.appropriationYear?.value,
       pcaDesc: this.pcaFormControls?.pcaDesc?.value,
       openDate: this.intl.formatDate(this.pcaFormControls?.openDate?.value, this.configProvider?.appSettings?.dateFormat),
@@ -149,5 +149,21 @@ export class FinancialPcasSetupFormComponent implements OnInit, OnDestroy {
       this.pcaFormControls?.appropriationYear?.disable();
       this.pcaFormControls?.fundingSourceId?.disable();
   }
+
+  public disabledDates = (date: Date): boolean => {        
+    return date.getDate() != 1;
+  }
+
+  public disabledLastDates = (date: Date): boolean => {        
+    return !this.isLastDay(date);
+  }
+
+  public isLastDay(dt : Date) {
+    let test = new Date(dt.getTime()),
+      month = test.getMonth();
+
+    test.setDate(test.getDate() + 1);
+    return test.getMonth() !== month;
+   }
 }
 

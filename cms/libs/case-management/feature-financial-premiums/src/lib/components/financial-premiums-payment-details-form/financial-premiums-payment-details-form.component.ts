@@ -66,8 +66,8 @@ export class FinancialPremiumsPaymentDetailsFormComponent {
   }
 
   paymentPanelLoadSubscription(){
-    this.premiumPaymentForm.controls['datePaymentSent'].setValue(this.paymentDetailsForm?.sentDate != null?new Date(this.paymentDetailsForm.sentDate):null);
-    this.premiumPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentDetailsForm?.paymentStatusDate != null? new Date(this.paymentDetailsForm.paymentStatusDate):null);
+    this.premiumPaymentForm.controls['datePaymentSent'].setValue(this.paymentDetailsForm?.paymentSentDate != null?new Date(this.paymentDetailsForm.paymentSentDate):null);
+    this.premiumPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentDetailsForm?.paymentReconciledDate != null? new Date(this.paymentDetailsForm.paymentReconciledDate):null);
     if(this.paymentDetailsForm?.amountPaid !== undefined && this.paymentDetailsForm?.amountPaid !== null){
       this.premiumPaymentForm.controls['paymentAmount'].setValue(this.paymentDetailsForm?.amountPaid);
     }
@@ -76,7 +76,7 @@ export class FinancialPremiumsPaymentDetailsFormComponent {
       this.premiumPaymentForm.controls['note'].setValue(this.paymentDetailsForm.notes);
     }
 }
-dateValidate(event: Event, type: any) {
+dateValidate(type: any) {
   const todayDate = new Date();
 
   switch (type.toUpperCase()) {
@@ -152,10 +152,13 @@ validateModel(){
     Validators.required,
   ]);
   this.premiumPaymentForm.controls['datePaymentReconciled'].updateValueAndValidity();
+  this.dateValidate(PremiumPaymentStatus.RECONCILED);
   this.premiumPaymentForm.controls['datePaymentSent'].setValidators([
     Validators.required,
   ]);
   this.premiumPaymentForm.controls['datePaymentSent'].updateValueAndValidity();
+  this.dateValidate(PremiumPaymentStatus.PAYMENT_SENT);
+  this.startDateOnChange();
   this.premiumPaymentForm.controls['paymentAmount'].setValidators([
     Validators.required,
   ]);
@@ -164,6 +167,16 @@ validateModel(){
     Validators.required,
   ]);
   this.premiumPaymentForm.controls['warrantNumber'].updateValueAndValidity();
+  if (this.premiumPaymentForm.controls['datePaymentReconciled'].value === null || 
+      this.premiumPaymentForm.controls['datePaymentReconciled'].value > this.currentDate) {
+    this.dateReconciledValidator = false;
+    this.premiumPaymentForm.controls['datePaymentReconciled'].setErrors({'incorrect': true});
+   }
+   if (this.premiumPaymentForm.controls['datePaymentSent'].value === null || 
+       this.premiumPaymentForm.controls['datePaymentSent'].value > this.currentDate) {
+    this.datePaymentSentValidator = false;
+    this.premiumPaymentForm.controls['datePaymentSent'].setErrors({'incorrect': true});
+   }
 }
 
 populatePaymentPanelModel(){
@@ -171,8 +184,8 @@ populatePaymentPanelModel(){
   this.paymentPanel.CheckRequestId = this.paymentDetailsForm.checkRequestId;
   this.paymentPanel.PaymentRequestBatchId = this.paymentDetailsForm.paymentRequestBatchId;
   this.paymentPanel.PaymentRequestId = this.paymentDetailsForm.paymentRequestId;
-  this.paymentPanel.paymentStatusDate = this.intl.formatDate(this.premiumPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat); 
-  this.paymentPanel.sentDate = this.intl.formatDate(this.premiumPaymentForm.controls['datePaymentSent'].value, this.dateFormat); 
+  this.paymentPanel.paymentReconciledDate = this.intl.formatDate(this.premiumPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat); 
+  this.paymentPanel.paymentSentDate = this.intl.formatDate(this.premiumPaymentForm.controls['datePaymentSent'].value, this.dateFormat); 
   this.paymentPanel.amountPaid = this.premiumPaymentForm.controls['paymentAmount'].value
   this.paymentPanel.checkNbr = this.premiumPaymentForm.controls['warrantNumber'].value
   this.paymentPanel.notes = this.premiumPaymentForm.controls['note'].value

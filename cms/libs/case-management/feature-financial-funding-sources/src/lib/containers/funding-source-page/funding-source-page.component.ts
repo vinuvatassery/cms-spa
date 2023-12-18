@@ -20,7 +20,7 @@ export class FundingSourcePageComponent {
   gridSkipCount = this.financialFundingSourceFacade.skipCount;
 
   sortValueFinancialFundingSourceFacade =
-  this.financialFundingSourceFacade.sortValueFinancialFundingSourceFacade;
+    this.financialFundingSourceFacade.sortValueFinancialFundingSourceFacade;
   sortProcessList = this.financialFundingSourceFacade.sortProcessList;
 
   state!: State;
@@ -41,13 +41,14 @@ export class FundingSourcePageComponent {
   updateFundingSource(event: any) {
     this.financialFundingSourceFacade.updateFundingSource(event)
   }
-   loadFundingSourceHandle(gridDataRefinerValue: any): void {
+
+  loadFundingSourceHandle(gridDataRefinerValue: any): void {
     const gridDataRefiner = {
       skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sort: gridDataRefinerValue.sortColumn,
+      maxResultCount: gridDataRefinerValue.maxResultCount,
+      sort: gridDataRefinerValue.sorting,
       sortType: gridDataRefinerValue.sortType,
-      filter:gridDataRefinerValue.filter
+      filter: gridDataRefinerValue.filter
     };
     this.pageSizes = this.financialFundingSourceFacade.gridPageSizes;
     this.financialFundingSourceFacade.loadFundingSourceList(
@@ -62,7 +63,3 @@ export class FundingSourcePageComponent {
     this.financialFundingSourceFacade.removeFundingSource(fundingSourceId)
   }
 }
-
-
-
-

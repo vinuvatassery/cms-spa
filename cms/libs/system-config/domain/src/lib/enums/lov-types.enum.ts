@@ -41,6 +41,8 @@ export enum LovType {
     EligibilityStatusCp ='ELIGIBILITY_STATUS_CP',
     CoPaymentType ='CO_PAYMENT_TYPE',
     PremiumPaymentType ="PREMIUM_PAYMENT_TYPE",
+    PaymentType = 'PAYMENT_TYPE',
+    PaymentRequestType = 'PAYMENT_REQUEST_TYPE',
     PremiumPaymentReversal = "PREMIUM_PAYMENT_REVERSAL",
     AttachmentsTypes = 'DOCUMENT_TYPE',
     DocumentTypeCode = 'DOCUMENT_TYPE',
@@ -52,5 +54,10 @@ export enum LovType {
     AcceptPaymentsReports = 'ACCEPT_PAYMENTS_REPORTS',
     PendingApprovalPaymentType = 'PENDING_APPROVAL_PAYMENT_TYPE',
     DeliveryMethod = 'DELIVERY_METHOD',
-    VendorTypeCode = 'VENDOR_TYPE_CODE'
+    VendorTypeCode = 'VENDOR_TYPE_CODE',
+    ClaimStatus = 'CLAIM_STATUS',
+    ServiceType ="SERVICE_TYPE",
+    RefundType ="REFUND_TYPE",
+    BatchStatusCode = "BATCH_STATUS_CODE"
+
   }

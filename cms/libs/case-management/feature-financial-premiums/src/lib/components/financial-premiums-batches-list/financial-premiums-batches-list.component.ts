@@ -1,6 +1,7 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -37,7 +38,9 @@ export class FinancialPremiumsBatchesListComponent
   @Input() sort: any;
   @Input() financialPremiumsBatchGridLoader$: any;
   @Input() financialPremiumsBatchGridLists$: any;
+  @Input() exportButtonShow$: any;
   @Output() loadFinancialPremiumsBatchListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   public state!: State;
   columnsReordered = false;
   gridDataResult!: GridDataResult;
@@ -49,23 +52,27 @@ export class FinancialPremiumsBatchesListComponent
   columnDropList$ = this.columnDropListSubject.asObservable();
 
   gridColumns: any = {
-    batchName: 'Status',
-    unbatchedPayments: 'PCA #',
-    batchedPayments: 'Object',
-    paymentsRequested: 'Object Code',
-    paymentsReconciled: 'AY',
-    totalAdjustmentsAmount: 'Open Date',
-    totalPaymentsAmount: 'Close Date'
+    ALL: 'All Columns',
+    batchName: 'Batch #',
+    sendBackNotes: 'Send Back Notes',
+    unbatchedPayments: 'Unbatched Payments',
+    batchedPayments: '# of Payments in Batch',
+    paymentsRequested: '# of Payments Requested',
+    paymentsReconciled: '# of Payments Reconciled',
+    totalAdjustmentsAmount: 'Total Amount of Adjustments',
+    totalPaymentsAmount: 'Total Amount of Payments',
+    creationTime: 'Creation Time'
   };
 
   searchColumnList: { columnName: string; columnDesc: string }[] = [
+    { columnName: 'ALL', columnDesc: 'All Columns' },
     {
       columnName: 'batchName',
       columnDesc: 'Batch #',
     },
     {
       columnName: "sendBackNotes",
-      columnDesc: "Send Back Notes"        
+      columnDesc: "Send Back Notes"
     },
     {
       columnName: 'unbatchedPayments',
@@ -98,13 +105,12 @@ export class FinancialPremiumsBatchesListComponent
 
   //searching
   private searchSubject = new Subject<string>();
-  selectedSearchColumn: null | string = null;
+  selectedSearchColumn: null | string = 'ALL';
   searchText: null | string = null;
 
   //sorting
-  sortColumn = 'batchName';
-  sortColumnDesc = 'Batch #';
-  sortDir = 'Ascending';
+  sortColumnDesc = 'Creation Time';
+  sortDir = 'Descending';
 
   //filtering
   filteredBy = '';
@@ -116,6 +122,7 @@ export class FinancialPremiumsBatchesListComponent
   showDateSearchWarning = false;
   showNumberSearchWarning = false;
   columnChangeDesc = 'Default Columns';
+  showExportLoader = false;
 
   /** Constructor **/
   constructor(
@@ -123,12 +130,14 @@ export class FinancialPremiumsBatchesListComponent
     public activeRoute: ActivatedRoute,
     private readonly configProvider: ConfigurationProvider,
     private readonly intl: IntlService,
+    private readonly cdr: ChangeDetectorRef,
     ) {}
 
   ngOnInit(): void {
     this.initializePremiumsBatchPage()
   }
   ngOnChanges(): void {
+    this.sortType = 'desc';
     this.initializePremiumsBatchGrid();
     this.loadFinancialPremiumsBatchListGrid();
   }
@@ -184,7 +193,7 @@ export class FinancialPremiumsBatchesListComponent
         {
           filters: [
             {
-              field: this.selectedSearchColumn ?? 'batchName',
+              field: this.selectedSearchColumn ?? 'ALL',
               operator: operator,
               value: data,
             },
@@ -199,17 +208,15 @@ export class FinancialPremiumsBatchesListComponent
   }
 
   restGrid() {
-    this.sortValue = 'batchName';
-    this.sortType = 'asc';
+    this.sortColumnDesc = 'Creation Time';
+    this.sortValue = 'creationTime';
+    this.sortType = 'desc';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.initializePremiumsBatchGrid();
-    this.sortColumn = 'batchName';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.filter = [];
     this.searchText = '';
-    this.selectedSearchColumn = null;
+    this.selectedSearchColumn = 'ALL';
     this.filteredByColumnDesc = '';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
     this.showDateSearchWarning = false;
     this.showNumberSearchWarning = false;
@@ -251,10 +258,6 @@ export class FinancialPremiumsBatchesListComponent
     this.filterData = filter;
   }
 
-  rowClass = (args: any) => ({
-    'table-row-disabled': !args.dataItem.assigned,
-  });
-
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
     this.columnChangeDesc =
@@ -278,35 +281,12 @@ export class FinancialPremiumsBatchesListComponent
     });
   }
 
-  onChange(data: any) {
-    this.defaultGridState();
-
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedSearchColumn ?? 'batchName',
-              operator: 'startswith',
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
-  }
-
   /* Private methods */
   private initializePremiumsBatchGrid() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'batchName', dir: 'asc' }],
+      sort: [{ field: 'ALL', dir: 'desc' }],
     };
   }
 
@@ -321,8 +301,7 @@ export class FinancialPremiumsBatchesListComponent
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
-
-      JSON.stringify(this.filter)
+      JSON.stringify(this.state?.filter?.filters)
     );
     this.loadFinancialPremiumsBatchListEvent.emit(param);
   }
@@ -377,6 +356,17 @@ export class FinancialPremiumsBatchesListComponent
       }
     }
     return searchValue;
+  }
+
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
 

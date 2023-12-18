@@ -41,6 +41,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   sortColumn = "";
   sortDir = "";
   columnsReordered = false;
+  isEdit !: boolean;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
@@ -67,9 +68,10 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   public contactAddressActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit',
+      text: 'Edit Contact',
       icon: 'edit',
       click: (data: any): void => {
+        this.isEdit = true
         if (data?.vendorContactId) {
           this.VendorContactId = data;
           this.clickOpenAddEditContactAddressDetails();
@@ -78,7 +80,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Deactivate',
+      text: 'Deactivate Contact',
       icon: 'block',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -89,7 +91,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete',
+      text: 'Delete Contact',
       icon: 'delete',
       click: (data: any): void => {
         if (data?.vendorContactId) {
@@ -148,7 +150,6 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
     })
 
   }
-
   ngOnChanges(changes: SimpleChanges) {
     this.defaultGridState();
     this.initializeGrid();
@@ -192,7 +193,21 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
         this.sortValue,
         this.sortType,
         this.filters
-      );
+      ).subscribe({
+        next: (res: any) => {
+          const gridView: any = {
+            data: res.items,
+            total: res.totalCount,
+          };
+          this.contacts$.next(gridView);
+          this.loader$.next(false);
+        },
+        error: (err: any) => {
+          this.loader$.next(false);
+          this.loggingService.logException(err)
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      })
       this.clickCloseDeleteContactAddress();
     }
   }
@@ -206,7 +221,21 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
         this.sortValue,
         this.sortType,
         this.filters
-      );
+      ).subscribe({
+        next: (res: any) => {
+          const gridView: any = {
+            data: res.items,
+            total: res.totalCount,
+          };
+          this.contacts$.next(gridView);
+          this.loader$.next(false);
+        },
+        error: (err: any) => {
+          this.loader$.next(false);
+          this.loggingService.logException(err)
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      })
       this.clickCloseDeactivateContactAddress();
       this.refreshPaymentAddressList.emit();
       this.initializeGrid();
@@ -226,7 +255,21 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
       this.sortValue,
       this.sortType,
       this.filters
-    );
+    ).subscribe({
+      next: (res: any) => {
+        const gridView: any = {
+          data: res.items,
+          total: res.totalCount,
+        };
+        this.contacts$.next(gridView);
+        this.loader$.next(false);
+      },
+      error: (err: any) => {
+        this.loader$.next(false);
+        this.loggingService.logException(err)
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
   }
 
   public dataStateChange(stateData: any): void {
@@ -240,7 +283,21 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
       this.sortValue,
       this.sortType,
       this.filters
-    );
+    ).subscribe({
+      next: (res: any) => {
+        const gridView: any = {
+          data: res.items,
+          total: res.totalCount,
+        };
+        this.contacts$.next(gridView);
+        this.loader$.next(false);
+      },
+      error: (err: any) => {
+        this.loader$.next(false);
+        this.loggingService.logException(err)
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
   }
   filterChange(filter: CompositeFilterDescriptor): void {
     this.filters = JSON.stringify(filter);
@@ -278,13 +335,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   }
   contactUpdated(res: boolean) {
     if (res) {
-      this.vendocontactsFacade.loadcontacts(this.VendorAddressId,
-        this.state?.skip ?? 0,
-        this.state?.take ?? 0,
-        this.sortValue,
-        this.sortType,
-        this.filters
-      );
+      this.initializeGrid();
     }
   }
   public setGridState(stateData: any): void {

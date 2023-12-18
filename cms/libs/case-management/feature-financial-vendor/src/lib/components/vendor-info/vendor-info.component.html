@@ -1,4 +1,4 @@
-<div class="block-section">
+<div class="block-section" *ngIf="selectedVendorInfo$">
   <div class="flex-row mb-1 align-items-center">
     <div class="flex-col flex-col-6 align-items-center" kendoTooltip>
       <h2 class="title-md mb-0 text-bold">{{profileInfoTitle}}</h2>
@@ -30,7 +30,7 @@
           </tr>
           <tr>
             <td>TIN</td>
-            <td>{{selectedVendorInfo$?.tin}}</td>
+            <td>{{selectedVendorInfo$?.tin | tin}}</td>
           </tr>
           <tr *ngIf="profileInfoTitle == 'Pharmacy Info'">
             <td>Mail Code</td>
@@ -49,20 +49,18 @@
         </tbody>
       </table>
       <!-- Last Updated by -->
-      <p class="mt-1 mb1">
+      <p class="mt-1 mb=1" *ngIf="selectedVendorInfo$?.modifierName">
         <span class="badge-dot-info bdi-left"></span> Last Updated  {{selectedVendorInfo$?.lastModificationTime | date: 'MM/dd/yyyy' }}
-        by  {{selectedVendorInfo$.firstName }} {{selectedVendorInfo$.lastName}} 
-        <button
-          kendoButton
-          [primary]="true"
-          class="avatar-sm-btn c-default"
-          kendoPopoverAnchor
+        by <button 
+          kendoButton 
           [popover]="onUserProfileDetailsHovered"
-          showOn="hover"
-          [attr.aria-label]="selectedVendorInfo$?.lastModifierId"
-        >
-        <common-user-photo-icon  [userId]="selectedVendorInfo$?.lastModifierId"></common-user-photo-icon>
-        </button>
+           look="flat"   
+           showOn="hover"
+           kendoPopoverAnchor 
+           class="card-link-button">
+        <a>{{selectedVendorInfo$?.modifierName}}</a>
+      </button>
+    </p>
         <kendo-popover
           #onUserProfileDetailsHovered
           width="330"
@@ -72,13 +70,8 @@
             <common-user-profile-card [userId]="selectedVendorInfo$?.lastModifierId"></common-user-profile-card>
           </ng-template>
         </kendo-popover>
-      </p>
     </div>
   </div>
-</div>
-
-
-<div >
 </div>
 
 <kendo-dialog *ngIf="openEditDailog" (close)="openEditDailog=false;" class="app-c-modal app-c-modal-sm app-c-modal-np">

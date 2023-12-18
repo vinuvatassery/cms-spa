@@ -18,7 +18,6 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   isProvidersRemoveShow = false;
   selectProviderId!: string;
   gridColumns: { [key: string]: string } = {
-    ALL: 'All Columns',
     vendorName:"Vendor Name",
     tin:"Tin",
     address:"Address",
@@ -33,7 +32,6 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   searchColumnList: { columnName: string, columnDesc: string }[] = [
-    { columnName: 'ALL', columnDesc: 'All Columns' },
     { columnName: 'vendorName', columnDesc: 'Vendor Name' },
     { columnName: 'tin', columnDesc: 'Tin' },
     { columnName: 'address', columnDesc: 'Address' },
@@ -41,7 +39,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   ];
 
   filter!: any;
-  selectedSearchColumn = 'ALL';
+  selectedSearchColumn = 'vendorName';
   filteredByColumnDesc = '';
   showDateSearchWarning = false;
   showNumberSearchWarning = false;
@@ -73,6 +71,8 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
 
   constructor(
     private readonly intl: IntlService,
@@ -110,7 +110,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   searchColumnChangeHandler(value: string) {
     this.filter = [];
     this.showNumberSearchWarning = (['tin']).includes(value);
-    this.showDateSearchWarning = value === 'closeDate';
+    this.showDateSearchWarning = value === 'effectiveDate';
     if (this.searchText) {
       this.onProviderListSearch(this.searchText);
     }
@@ -118,7 +118,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
 
   onProviderListSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'closeDate';
+    this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'effectiveDate';
     searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
@@ -150,7 +150,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
     this.filter = [];
     this.searchText = '';
-    this.selectedSearchColumn = 'ALL';
+    this.selectedSearchColumn = 'vendorName';
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
@@ -302,5 +302,8 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.removeProviderClick.emit(providerId);
     this.clickCloseRemoveProviders();
     this.changeDetector.detectChanges();
+  }
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event.vendorId);
   }
 }

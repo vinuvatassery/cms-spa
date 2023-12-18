@@ -12,7 +12,7 @@ import { PcaAssignmentsDataService } from '../../infrastructure/financial-manage
 
 export class PcaAssignmentsFacade {
 
-    private objectCodesDataSubject = new BehaviorSubject<any>([]);
+    private objectCodesDataSubject = new Subject<any>();
     objectCodesData$ = this.objectCodesDataSubject.asObservable();
 
     private groupCodesDataSubject = new BehaviorSubject<any>([]);
@@ -29,6 +29,9 @@ export class PcaAssignmentsFacade {
 
     private assignPcaResponseDataSubject = new Subject<any>();
     assignPcaResponseData$ = this.assignPcaResponseDataSubject.asObservable();
+
+    private reassignPcaResponseDataSubject = new Subject<any>();
+    reassignPcaResponseData$ = this.reassignPcaResponseDataSubject.asObservable();
     
     private editAssignedPcaResponseDataSubject = new Subject<any>();
     editAssignedPcaResponseData$ = this.editAssignedPcaResponseDataSubject.asObservable();
@@ -171,6 +174,24 @@ export class PcaAssignmentsFacade {
       },
     })
   }
+  reassignPca(assignPcaRequest : any){
+    
+    this.showLoader();
+    return this.pcaAssignmentsDataService.reassignPca(assignPcaRequest).subscribe({
+      next: (updatedResponse: any) => {        
+        if (updatedResponse) {
+          this.reassignPcaResponseDataSubject.next(updatedResponse);            
+         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse?.message)
+          this.hideLoader();      
+        }
+      },
+      error: (err) => {
+        
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
 
   editAssignedPca(assignPcaRequest : any){
     this.showLoader();
@@ -179,7 +200,7 @@ export class PcaAssignmentsFacade {
         if (updatedResponse) {
           this.assignPcaResponseDataSubject.next(updatedResponse);       
           
-          if(updatedResponse?.status === 'warning')
+          if(updatedResponse?.status === 2)
           {
             this.showHideSnackBar(SnackBarNotificationType.WARNING, updatedResponse?.message)
           }

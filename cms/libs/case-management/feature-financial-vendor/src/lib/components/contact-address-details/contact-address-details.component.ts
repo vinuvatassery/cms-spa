@@ -15,6 +15,7 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
   @Input() vendorId: any;
   @Input() VendorContactId: any;
   @Output() isContactDetailPopupClose = new EventEmitter<any>();
+  @Input() isEdit : any;
 
   SpecialHandlingLength = 100;
   mailCodes: any[] = [];
@@ -155,6 +156,15 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
     return contactNameIsvalid.controls['contactName'].status == 'INVALID';
   }
+
+  onValueChange(index:any){
+    let contactForm = this.AddContactForm.at(index) as FormGroup;
+    if(this.isEdit){
+    if(contactForm.controls['contactName'].dirty){
+        this.isSubmitted = true;
+      }
+  }
+  }
   getContactControl(index: number, fieldName: string) {
     return this.AddContactForm.at(index).get(fieldName);
   }
@@ -194,11 +204,13 @@ export class ContactAddressDetailsComponent implements OnInit, OnChanges {
 
   clickCloseDeactivateContactAddress() {
     this.isContactAddressDeactivateShow = false;
+    this.ContactUpdated.emit(true);
+      this.isContactDetailPopupClose.emit(true);
   }
 
   onDeactiveCancel(isCancel: any) {
     if (isCancel) {
-      this.clickCloseDeactivateContactAddress()
+      this.clickCloseDeactivateContactAddress() 
     }
   }
 

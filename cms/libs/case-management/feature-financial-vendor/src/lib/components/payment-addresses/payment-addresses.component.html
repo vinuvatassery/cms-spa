@@ -46,7 +46,7 @@
 
               <kendo-grid-column field="mailCode" title="Mail Code" [width]="150">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                  <button [attr.aria-label]="dataItem.mailCode" kendoButton look="flat" class="card-link-button"
+                  <button [attr.aria-label]="dataItem.mailCode" kendoButton look="flat"
                     >
                     {{ dataItem.mailCode }}
                   </button>
@@ -199,7 +199,7 @@
                   </common-grid-cell-date-range-filter>
                 </ng-template>
               </kendo-grid-column>
-              <kendo-grid-column [sortable]="false" [filterable]="false" field="creatorId" title="By" [width]="70">
+              <kendo-grid-column [sortable]="false" [filterable]="false" field="creatorId" title="By" [width]="70" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                     <button
                       kendoButton
@@ -223,7 +223,7 @@
                     </kendo-popover>
                   </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column [sortable]="false" field="Option" title="Options" [columnMenu]="false" [width]="80" class="text-center">
+                <kendo-grid-column [sortable]="false" field="Option" title="Options" [columnMenu]="false" [width]="75" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
                       <kendo-dropdownbutton [data]="paymentAddressActions" icon="more-vertical"
                           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -232,8 +232,8 @@
                           <span hidden> More Option</span>
                           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
                               let-buttondataItem>
-                              <ng-container>
-                                <div *ngIf="dataItem.activeFlag ==='Y' ; else deactivateButton">
+                              <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete Address') || (dataItem.activeFlag == 'Y')">
+                                <div>
                                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                                       [class]="buttondataItem.buttonType" aria-hidden="false"
 
@@ -278,7 +278,7 @@
                [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage"  [valuePrimitive]="true" [(value)]="state.take"
                (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
              <kendo-pager-info> </kendo-pager-info>
-             <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
            </div>
            <div class="d-flex">
              <kendo-pager-input></kendo-pager-input>
@@ -306,7 +306,7 @@
       Address
     </button>
 
-    <button kendoButton [disabled]="IsAddContactDisabled" aria-label="Contact"   icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
+    <button kendoButton aria-label="Contact" [disabled]="IsAddContactDisabled"  icon="add" [primary]="true" (click)="clickOpenAddContactDetails()" look="flat" aria-label="Add Contact" >
         Contact
       </button>
   </div>
@@ -314,12 +314,12 @@
 
 <kendo-dialog *ngIf="isContactDetailShow" (close)="clickCloseAddEditPaymentAddressDetails()"
 class="app-c-modal app-c-modal-md app-c-modal-np">
-<kendo-dialog-titlebar class="text-normal" (close)="clickCloseAddContactDetails()"> Add Contact(s) </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="clickCloseAddContactDetails()"> Add Contact(s) </kendo-dialog-titlebar>
 <cms-contact-address-details [vendorId]="vendorId" (isContactDetailPopupClose)="onClose($event)"></cms-contact-address-details>
 </kendo-dialog>
 <kendo-dialog *ngIf="isContactAddressDeactivateShow" (close)="clickCloseDeactivateContactAddress()"
 class="app-c-modal app-c-modal-sm app-c-modal-np">
-<kendo-dialog-titlebar> Deactivate contact?</kendo-dialog-titlebar>
+<kendo-dialog-titlebar> Deactivate Contact?</kendo-dialog-titlebar>
 <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)"
   [VendorContactId]="vendorId"> </cms-contacts-deactivate>
 </kendo-dialog>
@@ -327,7 +327,8 @@ class="app-c-modal app-c-modal-sm app-c-modal-np">
 class="app-c-modal app-c-modal-md app-c-modal-np">
 <kendo-dialog-titlebar (close)="clickCloseAddEditPaymentAddressDetails()"> {{tabCode !== financialVendorType.Manufacturers ? addEditTitleText : manufacturerAddEditTitleText}}
 </kendo-dialog-titlebar>
-<cms-payment-address-details (closeEvent)="closePaymentAddressDetails($event)" (editDeactivateClicked)="onEditDeactivateClicked($event)" [isEdit]="isPaymentAddressDetailIsEdit" [billingAddress]="billingAddressObj" > </cms-payment-address-details>
+<cms-payment-address-details (closeEvent)="closePaymentAddressDetails($event)" (editDeactivateClicked)="onEditDeactivateClicked($event)" [isEdit]="isPaymentAddressDetailIsEdit" [billingAddress]="billingAddressObj"
+(paymentAddressAdded)="paymentAddressAdded($event)" > </cms-payment-address-details>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isPaymentAddressDeactivateShow" (close)="clickCloseDeactivatePaymentAddress(false)" class="app-c-modal app-c-modal-sm app-c-modal-np">

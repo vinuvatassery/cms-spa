@@ -1,10 +1,10 @@
-<kendo-dialog-titlebar (close)="closeBatchRefundClicked()"> Batch refunds? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeBatchRefundClicked()"> Batch Refunds? </kendo-dialog-titlebar>
 
 <section class="k-dialog-body">
-    <p class="text-muted mb-1">  You will not be able to add refunds to batches, but you will be able to unbatch, delete, or edit them.    </p>
-    <p class="text-muted mb-2">   Refunds to be batched: 6  </p>
+    <p class="text-muted mb-1">You will not be able to add refunds to batches but you will be able to unbatch, delete or edit them.</p>
+    <p class="text-muted mb-2">Refunds to be batched: {{selectedProcessRefundsCount}}  </p>
   </section>
-  
+
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
@@ -17,10 +17,9 @@
         >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Batch"  >
+        <button kendoButton [primary]="true" aria-label="Batch" (click)="batchClicked()">
           Batch
         </button>
       </div>
     </div>
   </kendo-dialog-actions>
-  

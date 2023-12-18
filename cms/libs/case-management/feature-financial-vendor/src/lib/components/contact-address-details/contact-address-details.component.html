@@ -28,8 +28,8 @@
               </button>
             </div>
             <div class="flex-col">
-              <kendo-floatinglabel text="Contact Name">
-                <kendo-textbox aria-label="Contact Name" formControlName="contactName"  [maxlength]="200" (keypress)="onKeyPress($event.charCode)"
+              <kendo-floatinglabel text="Name">
+                <kendo-textbox aria-label="Name" formControlName="contactName"  (valueChange)="onValueChange(i)" [maxlength]="200" (keypress)="onKeyPress($event.charCode)"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
@@ -40,16 +40,16 @@
               <kendo-floatinglabel text="Description (Optional)">
                 <kendo-textarea [fillMode]="formUiStyle.inputFillMode" (keypress)="onKeyPress($event.charCode)"  [maxlength]="500" (valueChange)="onDescriptionValueChange($event)" formControlName="contactDesc"
                   resizable="vertical">
-             
-  <kendo-textarea-suffix class="justify-content-end">
-    <kendo-formhint class="justify-content-end">{{descriptionCounter}} /500</kendo-formhint>
 
-  </kendo-textarea-suffix>
+                  <kendo-textarea-suffix class="justify-content-end">
+                    <span class="counter">{{ descriptionCounter}} /500</span>
+                  </kendo-textarea-suffix>
+
                 </kendo-textarea>
               </kendo-floatinglabel>
             </div>
             <div class="flex-col">
-              <kendo-floatinglabel text="Phone Number (optional)">             
+              <kendo-floatinglabel text="Phone Number (optional)">
                 <kendo-maskedtextbox [maxlength]="10"  placeholder="Phone Number (optional)"  [mask]="inputMask" aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
           formControlName="phoneNbr"
           [maskOnFocus]="true"
@@ -89,20 +89,20 @@
                     type="checkbox"
                     kendoCheckBox
                     aria-labelledby="AddressesshowHistorical"
-                   value="Y" name="preferredFlag" id="preferredFlagno" 
+                   value="Y" name="preferredFlag" id="preferredFlagno"
                     (change)="oncheckboxClick($event,i)" formControlName="preferredFlag"
                   />
-                  <label class="k-checkbox-label" for="preferredFlagYes">Prefered Contact </label 
+                  <label class="k-checkbox-label" for="preferredFlagYes">Prefered Contact </label
                   >
                 </span>
-              
-               
+
+
               </div>
             </div>
           </ng-container>
         </ng-container>
         <div class="flex-col"  *ngIf="this.contactAddress.vendorContactId==null">
-          <button  kendoButton icon="add" [primary]="true" look="flat" aria-label="Contact" 
+          <button  kendoButton icon="add" [primary]="true" look="flat" aria-label="Contact"
             (click)="onToggleAddNewContactClick()">
             Contact
           </button>
@@ -112,7 +112,7 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      
+
       <button kendoButton [primary]="true"  look="flat" aria-label="Deactivate"
       (click)="onDeactivateContactClick()" *ngIf="this.contactAddress.vendorContactId!=null" >
       Deactivate
@@ -136,7 +136,7 @@
 
   <kendo-dialog *ngIf="isContactAddressDeactivateShow" (close)="clickCloseDeactivateContactAddress()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar> Deactivate contact?</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar> Deactivate Contact?</kendo-dialog-titlebar>
   <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)"
-    [VendorContactId]="this.contactAddress.vendorContactId"> </cms-contacts-deactivate>
+    [VendorContactId]="this.contactAddress.vendorContactId" [vendorId]="vendorId"> </cms-contacts-deactivate>
 </kendo-dialog>

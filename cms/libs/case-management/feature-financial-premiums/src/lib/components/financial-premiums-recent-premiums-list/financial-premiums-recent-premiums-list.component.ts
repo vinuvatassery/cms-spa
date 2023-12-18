@@ -22,6 +22,7 @@ export class FinancialPremiumsRecentPremiumsListComponent {
   @Input() clientId: any;
   @Input() premiumsType: any;
   @Input() paymentRequestId :any
+  @Input() includeServiceSubTypeFilter = true;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   dentalOrMedicalServiceField:any;
   public state!: any;
@@ -89,6 +90,7 @@ export class FinancialPremiumsRecentPremiumsListComponent {
   selectedStatus = 'Active';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   columnChangeDesc = 'Default Columns';
+  @Input() isFromAddRefundPanel=false;
 
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -150,6 +152,7 @@ export class FinancialPremiumsRecentPremiumsListComponent {
     const gridDataRefinerValue = {
       vendorId: vendorId,
       clientId: clientId,
+      includeServiceSubTypeFilter: this.includeServiceSubTypeFilter,
       premiumsType : premiumsType,
       skipCount: skipCountValue,
       pageSize: maxResultCountValue,
@@ -172,7 +175,11 @@ export class FinancialPremiumsRecentPremiumsListComponent {
   }
 
   loadRecentPremiumsGrid(data: any) {
+    if(!this.isFromAddRefundPanel){
     this.financialPremiumsFacade.loadRecentPremiumListGrid(data);
+    }else{
+      this.financialPremiumsFacade.loadRecentPremiumsByClient(data,this.clientId);
+    }
   }
 
     //Column Options Standard Implementation
@@ -314,6 +321,6 @@ export class FinancialPremiumsRecentPremiumsListComponent {
     }
 
     onProviderNameClick(event:any){
-      this.onProviderNameClickEvent.emit(this.paymentRequestId)
+      this.onProviderNameClickEvent.emit(this.paymentRequestId ? this.paymentRequestId : event)
     }
 }

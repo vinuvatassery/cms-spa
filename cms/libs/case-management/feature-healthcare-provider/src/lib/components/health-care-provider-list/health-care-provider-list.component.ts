@@ -1,10 +1,14 @@
 /** Angular **/
 import {
-  Component,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter, OnChanges,} from '@angular/core';
+  Component,  ChangeDetectionStrategy,  Input,  Output,  EventEmitter, OnChanges, ChangeDetectorRef,} from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
-import { CaseFacade } from '@cms/case-management/domain';
+import { CaseFacade,ContactFacade, FinancialVendorFacade } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FormBuilder, FormGroup } from '@angular/forms'; 
+import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-health-care-provider-list',
   templateUrl: './health-care-provider-list.component.html',
@@ -52,7 +56,7 @@ export class HealthCareProviderListComponent implements  OnChanges {
   public  state!: State
   deletebuttonEmitted = false;
   editbuttonEmitted = false;
-  isOpenedbusinessInfo =false;
+  isOpeneHealthcareProvider =false;
   gridHoverDataItem! : any
   existingProviderData! : any
   selectedCustomProviderName! : string
@@ -62,7 +66,13 @@ export class HealthCareProviderListComponent implements  OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   notApplicable :any ='Not Applicable'
-
+  medicalProviderForm: FormGroup;
+  hasHealthcareProviderCreateUpdatePermission=false;
+  ShowClinicProvider: boolean = false;
+  providerTypeCode: string = '';
+  clinicForm: FormGroup;
+  hasClinicCreateUpdatePermission = false;
+  selectedClinicType : string = this.vendorTypes.Clinic;
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -114,11 +124,21 @@ export class HealthCareProviderListComponent implements  OnChanges {
       },
     }
   ];
+  ddlStates=this.contactFacade.ddlStates$;
+  clinicVendorList= this.financialVendorFacade.clinicVendorList$;
+  clinicVendorLoader= this.financialVendorFacade.clinicVendorLoader$;
+  constructor(private caseFacade: CaseFacade,private financialVendorFacade: FinancialVendorFacade,private contactFacade:ContactFacade,
+    private userManagementFacade:UserManagementFacade, private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef,){
+    this.medicalProviderForm = this.formBuilder.group({});
+    this.clinicForm = this.formBuilder.group({});
+  }
 
-  constructor(private caseFacade: CaseFacade){}
-
-  /** Lifecycle hooks **/
-  
+  /** Lifecycle hooks **/ 
+  ngOnInit() { 
+    this.contactFacade.loadDdlStates();  
+    this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Service_Provider_Medical_Dental_Provider_Create_Update']);
+    this.hasClinicCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Clinic_Create_Update']);
+  }
   ngOnChanges(): void {     
     this.state = {
     skip: 0,
@@ -148,7 +168,6 @@ pageselectionchange(data: any) {
 
   onOpenProviderSearchClicked(clientProviderId : string,isEdit : boolean) {
     this.selectedCustomProviderName="";
-   
     this.isEditSearchHealthProvider = isEdit;
     this.clientProviderId = clientProviderId;
     if(isEdit === true)
@@ -167,15 +186,21 @@ pageselectionchange(data: any) {
     this.editformVisibleSubject.next(this.isOpenedProviderSearch);
     this.editbuttonEmitted =false;
   }
-  onBusinessInfoCloseClicked()
+
+  closeVendorDetailModal(type : any)
   {
-    this.isOpenedbusinessInfo = false;
+    if(type == this.vendorTypes.HealthcareProviders){
+      this.isOpeneHealthcareProvider = false;
+    }else{
+      this.ShowClinicProvider = false;
+    }
   }
 
   onOpenBusinessLogicClicked()
-  {
-    this.onCloseProviderSearchClicked()
-    this.isOpenedbusinessInfo = true;
+  { 
+    this.buildVendorForm( this.vendorTypes.HealthcareProviders);
+    this.isOpeneHealthcareProvider = true;
+    this.providerTypeCode = this.vendorTypes.HealthcareProviders
   }
   onDeleteConfirmCloseClicked()
   {
@@ -366,5 +391,90 @@ pageselectionchange(data: any) {
      });
     
    }
-   
+
+   buildVendorForm(providerType?: any) {
+    if (providerType === FinancialVendorTypeCode.Clinic)
+      {
+        this.clinicForm.reset();
+      }
+    else{
+        this.medicalProviderForm.reset(); 
+      }
+      let form = this.formBuilder.group({
+      firstName:[''],
+      lastName:[],
+      providerName: [''],
+      tinNumber: [''],
+      npiNbr: [''],
+      paymentMethod: [''],
+      clinicType: [''],
+      specialHandling: [''],
+      mailCode: [''],
+      nameOnCheck: [''],
+      nameOnEnvolop: [''],
+      addressLine1: [''],
+      addressLine2: [''],
+      city: [''],
+      state: [''],
+      zip: [''],
+      physicalAddressFlag: [''],
+      isPreferedPharmacy: [''],
+      paymentRunDate:[''],
+      isAcceptCombinedPayment:[''],
+      isAcceptReports: [''],
+      newAddContactForm: this.formBuilder.array([
+      ]),
+      activeFlag:[]
+    });
+
+    if (providerType === FinancialVendorTypeCode.Clinic)
+      {
+        this.clinicForm = form;
+      }
+    else{
+      this.medicalProviderForm = form;
+    }      
+  }
+
+  public get vendorTypes(): typeof FinancialVendorTypeCode {
+    return FinancialVendorTypeCode;
+  }
+
+  saveVendorProfile(vendorProfile: any){
+    if(vendorProfile.vendorTypeCode == this.vendorTypes.MedicalProviders){
+      this.providerTypeCode=this.vendorTypes.HealthcareProviders;
+    }
+    this.financialVendorFacade.showLoader();
+    this.financialVendorFacade.addVendorProfile(vendorProfile).subscribe({
+      next:(response:any)=>{
+        this.financialVendorFacade.hideLoader(); 
+        this.closeVendorDetailModal(this.providerTypeCode);
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,response.message);
+        this.cdr.detectChanges();
+      },
+      error:(err:any)=>{
+        this.financialVendorFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      }
+    });
+  }
+
+  searchClinicVendorClicked(clientName:any)
+  {
+    
+    this.financialVendorFacade.searchClinicVendor(clientName);
+  }
+
+  clickOpenClinicProviderDetails(providerTypeForClinic: string) {
+    if (providerTypeForClinic === FinancialVendorTypeCode.DentalProviders)
+      this.selectedClinicType = FinancialVendorTypeCode.DentalProviders;
+    else if (providerTypeForClinic === FinancialVendorTypeCode.MedicalProviders)
+      this.selectedClinicType = FinancialVendorTypeCode.MedicalProviders;
+
+    this.providerTypeCode = this.vendorTypes.Clinic;
+    this.buildVendorForm(this.vendorTypes.Clinic);
+    this.ShowClinicProvider = true;
+  }
+
+  saveVendorEventSubject: Subject<any> = new Subject();
+
 }

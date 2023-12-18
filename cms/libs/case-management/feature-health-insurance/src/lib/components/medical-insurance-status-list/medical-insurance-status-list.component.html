@@ -50,12 +50,12 @@
         </kendo-grid-column>
         <kendo-grid-column
           field="insuranceIdNumber"
-          title="Insurance Id"
+          title="Insurance ID"
           [width]="140"
         >
         </kendo-grid-column>
         <kendo-grid-column
-        field=""
+        field="vendorName"
         title="Vendor"
         [width]="120"
       >
@@ -63,7 +63,7 @@
         <kendo-grid-column
           field="insuranceCarrierName"
           title="Insurance Carrier"
-          [width]="150"
+          [width]="170"
         >
           <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton look="flat" class="card-link-button"
@@ -96,13 +96,13 @@
       <kendo-grid-column
       field="premiumAmt"
       title="Premium Amount"
-      [width]="150"
+      [width]="170"
     >
     </kendo-grid-column>
         <kendo-grid-column
           field="premiumFrequencyDesc"
           title="Premium Frequency"
-          [width]="150"
+          [width]="170"
         >
         </kendo-grid-column>
         <kendo-grid-column field="paymentIdNumer" title="Payment ID" [width]="130">
@@ -110,7 +110,7 @@
         <kendo-grid-column
           field="policyHolderName"
           title="Policy Holder"
-          [width]="100"
+          [width]="160"
         >
         </kendo-grid-column>
         <kendo-grid-column field="aptcCode" title="APTC?" [width]="100">
@@ -121,7 +121,7 @@
           [width]="150"
         >
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="70" [columnMenu]="false" [sticky]="true">
+        <kendo-grid-column field="creatorId" title="By" [width]="70" [columnMenu]="false" class="text-center" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -149,7 +149,7 @@
         <kendo-grid-column
           field="Option"
           title="Options"
-          [width]="100"
+          [width]="75"
           class="text-center"
           [sortable]="false"
           [columnMenu]="false"
@@ -188,7 +188,7 @@
               [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"
               (selectionChange)="pageSelectionChange($event)" aria-label="Rows Per Page" id="RowsPerPage"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
 
           </div>
           <div class="d-flex">

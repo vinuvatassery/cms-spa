@@ -28,8 +28,7 @@ import { FinancialClaimsBatchesReconcilePaymentsBreakoutComponent } from './comp
 import { FinancialClaimsPrintDenialLetterComponent } from './components/financial-claims-print-denial-letter/financial-claims-print-denial-letter.component';
 import { FinancialClaimsInvoiceListComponent } from './components/financial-claims-invoice-list/financial-claims-invoice-list.component';
 import { FinancialClaimsPaymentServiceListComponent } from './components/financial-claims-payment-service-list/financial-claims-payment-service-list.component';
-import { FinancialClaimsPrintAdviceLetterLogListsComponent } from './components/financial-claims-print-advice-letter-log-lists/financial-claims-print-advice-letter-log-lists.component';
-import { FinancialPcaChosenAlertComponent } from './components/financial-pca-chosen-alert/financial-pca-chosen-alert.component';
+
 
 @NgModule({
   imports: [
@@ -63,9 +62,7 @@ import { FinancialPcaChosenAlertComponent } from './components/financial-pca-cho
     FinancialClaimsBatchesReconcilePaymentsBreakoutComponent,
     FinancialClaimsPrintDenialLetterComponent,
     FinancialClaimsInvoiceListComponent,
-    FinancialClaimsPaymentServiceListComponent,
-    FinancialClaimsPrintAdviceLetterLogListsComponent,
-    FinancialPcaChosenAlertComponent
+    FinancialClaimsPaymentServiceListComponent    
   ],
   exports: [
     FinancialClaimsPageComponent,
@@ -92,9 +89,7 @@ import { FinancialPcaChosenAlertComponent } from './components/financial-pca-cho
     FinancialClaimsBatchesReconcilePaymentsBreakoutComponent,
     FinancialClaimsPrintDenialLetterComponent,
     FinancialClaimsInvoiceListComponent,
-    FinancialClaimsPaymentServiceListComponent,
-    FinancialClaimsPrintAdviceLetterLogListsComponent,
-    FinancialPcaChosenAlertComponent
+    FinancialClaimsPaymentServiceListComponent    
   ],
 })
 export class CaseManagementFeatureFinancialClaimsModule {}

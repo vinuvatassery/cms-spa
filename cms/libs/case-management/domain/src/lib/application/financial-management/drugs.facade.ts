@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Subject } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
@@ -25,9 +25,13 @@ export class DrugsFacade {
   drugsData$ = this.drugsDataSubject.asObservable();
   private drugDataLoaderSubject = new Subject<any>();
   drugDataLoader$ = this.drugDataLoaderSubject.asObservable();
-  /** Private properties **/
 
+  private addDrugSubject = new Subject<any>();
+  addDrug$ = this.addDrugSubject.asObservable();
+  /** Private properties **/
+  private updateProviderPanelSubject = new Subject<any>();
   /** Public properties **/
+  updateProviderPanelSubject$ = this.updateProviderPanelSubject.asObservable();
 
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
@@ -84,5 +88,36 @@ export class DrugsFacade {
 
   }
 
+  addDrug(dto: any) {
+    return this.drugsDataService.addDrug(dto);
+  }
 
+  drugAdded$(): Observable<any> {
+    return this.addDrugSubject.asObservable();
+  }
+
+  addDrugData(dto: any): Observable<any> {
+    return this.drugsDataService.addDrug(dto).pipe(
+      tap((response: any) => {
+        this.addDrugSubject.next(response);
+      }),
+    );
+  }
+
+  updateDrugVendor(drugDto: any) {
+    this.showLoader();
+    return this.drugsDataService.updateDrugVendor(drugDto).subscribe({
+      next: (updatedResponse: any) => {
+        if (updatedResponse) {
+          this.updateProviderPanelSubject.next(updatedResponse);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse.Message)
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
 }

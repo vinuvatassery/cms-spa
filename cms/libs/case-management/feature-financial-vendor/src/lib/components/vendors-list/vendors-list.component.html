@@ -24,6 +24,17 @@
   </span>
 </section>
 
+<div class="table-sorted-info">
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showTinSearchWarning">       
+        <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+              warning
+        </span>
+        <span>
+              In correct TIN format .
+        </span>
+  </span>   
+</div>
+
 <!-- Sorted Info -->
 <div class="table-sorted-info">
   Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
@@ -63,6 +74,9 @@
     </kendo-grid-column>
 
     <kendo-grid-column field="tin" title="TIN"  [width]="80">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.tin | tin }}
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -74,14 +88,16 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="paymentMethod" title="Payment Method"  [width]="100" [sortable]="false"
-      *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
+    <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="160" [filterable]="false" [sortable]="false">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-      
+        <kendo-dropdownlist [data]="paymentMethodTypes" textField="lovDesc" valueField="lovDesc"
+          [(ngModel)]="selectedPaymentMethod" [valuePrimitive]="true"
+          (valueChange)="dropdownFilterChange('paymentMethod',$event, filterService)">
+        </kendo-dropdownlist>
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="totalClaims" title="Total Claims" [width]="100"
+    <kendo-grid-column field="totalClaims" title="Total Claims" [width]="140"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -91,7 +107,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="100"  format="0"
+    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="160"  format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -101,7 +117,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="totalPayments" title="Total Payments" [width]="100" format="0"
+    <kendo-grid-column field="totalPayments" title="Total Payments" [width]="160" format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -111,7 +127,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="unreconciledPayments" title="Unreconciled Payments" [width]="100"  format="0"
+    <kendo-grid-column field="unreconciledPayments" title="Unreconciled Payments" [width]="160"  format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -121,7 +137,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="insurancePlans" title="Insurance Plans" [width]="120"  format="0"
+    <kendo-grid-column field="insurancePlans" title="Insurance Plans" [width]="140"  format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -132,7 +148,7 @@
     </kendo-grid-column>
 
     <kendo-grid-column field="clients" title="{{vendorTypeCode===financeVendorTypeCodes.InsuranceVendors?
-      'Clients' : '# of Clients'}}" [width]="100"  format="0"
+      'Clients' : '# of Clients'}}" [width]="140"  format="0"
     [sticky]="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors"
     *ngIf="vendorTypeCode===financeVendorTypeCodes.InsuranceVendors
     || vendorTypeCode===financeVendorTypeCodes.Pharmacy">
@@ -144,7 +160,7 @@
       </ng-template>
     </kendo-grid-column>
    
-    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="100"  format="0"
+    <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="160"  format="0"
     *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -154,7 +170,7 @@
     </ng-template>
   </kendo-grid-column>
 
-    <kendo-grid-column field="totalDrugs" title="Total Drugs" [width]="100"  format="0"
+    <kendo-grid-column field="totalDrugs" title="Total Drugs" [width]="120"  format="0"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -168,14 +184,11 @@
       </ng-template>
     </kendo-grid-column>  
 
-    <kendo-grid-column field="mailCode" title="Mail Code" [width]="100"  [sortable]="false"  
+    <kendo-grid-column field="mailCode" title="Mail Code" [width]="100"  [sortable]="false"   [filterable]="false"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
-      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-      
-      </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="address" title="Address"  [width]="120" [sticky]="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders"
+    <kendo-grid-column field="address" title="Address"  [width]="160" [sticky]="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders"
     *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -217,12 +230,12 @@
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
         <div class="d-flex align-items-center">
-          <label class="mr-1" for="RowsPerPage">Vendors Per Page</label>
+          <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
             [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
             [(value)]="state.take" (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
-          <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Vendors'" [pagerPage]="'Page'"> </kendo-grid-messages>
+          <kendo-grid-messages  [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
 
         </div>
         <div class="d-flex">

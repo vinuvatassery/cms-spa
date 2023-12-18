@@ -4,7 +4,7 @@ import { State } from '@progress/kendo-data-query';
 import {ContactFacade, FinancialPremiumsFacade, FinancialVendorFacade, GridFilterParam, PaymentPanel, PaymentType, PaymentsFacade } from '@cms/case-management/domain'; 
 import { Router, NavigationEnd, ActivatedRoute } from '@angular/router';
 import { filter } from 'rxjs';
-import { LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { DocumentFacade, LoggingService } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
 
@@ -30,7 +30,7 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
    premiumType: any;
    vendorAddressId:any;
    batchId:any;
-  
+   vendorId:any;
    @ViewChild('providerDetailsTemplate', { read: TemplateRef })
    providerDetailsTemplate!: TemplateRef<any>;
    paymentRequestId: any;
@@ -49,7 +49,8 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
      public contactFacade: ContactFacade,
      public lovFacade: LovFacade,
      private dialogService: DialogService,
-     private readonly financialVendorFacade : FinancialVendorFacade
+     private readonly financialVendorFacade : FinancialVendorFacade,
+     private documentFacade : DocumentFacade
    ) {}
 
    ngOnInit(): void {
@@ -77,6 +78,8 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
    private getQueryParams() {
     this.vendorAddressId = this.route.snapshot.queryParams['eid'];
     this.batchId = this.route.snapshot.queryParams['bid'];
+    this.vendorId = this.route.snapshot.queryParams['vid'];
+    this.paymentRequestId = this.route.snapshot.queryParams['pid'];
   }
 
   loadBatchItemListGrid(event: any) { 
@@ -85,12 +88,13 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
     this.financialPremiumsFacade.loadBatchItemsListGrid(this.batchId, itemId, this.premiumType, params);
   }
 
+
   loadPaymentPanel(event:any=null){
-    this.paymentFacade.loadPaymentPanel(this.vendorAddressId,this.batchId);    
+    this.paymentFacade.loadPaymentPanel(this.paymentRequestId,this.batchId);    
   }
 
   updatePaymentPanel(paymentPanel:PaymentPanel){
-    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel);
+    this.paymentFacade.updatePaymentPanel(this.batchId, paymentPanel);
     this.paymentFacade.updatePaymentPanelResponse$.subscribe({
         next: (response: any) => {
           this.loadPaymentPanel();
@@ -136,4 +140,5 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
     this.lovFacade.getPaymentMethodLov()
   }
 
+  
 }

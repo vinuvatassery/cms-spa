@@ -1,0 +1,170 @@
+<kendo-dialog-titlebar (close)="closeAddEditPcaAssignmentClicked()">Reassign PCA </kendo-dialog-titlebar>
+<form [formGroup]="pcaAssignmentForm" (ngSubmit)="onPcaAssignmentFormSubmit()">   
+      <input type="hidden" formControlName="pcaAssignmentId">
+<section class="k-dialog-body">
+      <p class="text-muted">
+            All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row">
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Object">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+                        placeholder="Object"
+                         required [data]="objectCodesData$" 
+                          textField="ledgerName" valueField="objectCodeId" [valuePrimitive]="true"
+                       
+                          formControlName="objectCode"
+                          >
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Group">
+                        <kendo-multiselect 
+                        class="fixed-height-input"                      
+                        [fillMode]="formUiStyle.dropDownFillMode"
+                        [data]="groupCodesData$" 
+                        aria-label="to address"
+                        [textField]="'groupCodeDesc'"
+                        [valueField]="'groupCodeId'"     
+                       
+                        formControlName="groupCodes"
+                        ></kendo-multiselect>
+                        </kendo-floatinglabel>
+
+            </div>
+
+      </div>
+      <div class="flex-row">
+            <div class="flex-col mt-1">
+                  <p class="relative-heading"><strong>PCA Settings</strong></p>
+            </div>
+            <div class="flex-col flex-col-8">
+                  <kendo-floatinglabel text="PCA">
+                        <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode"
+                        [data]="pcaCodesData$"
+                        textField="pcaCode"
+                        valueField="pcaId" 
+                        aria-label="Pca Code"
+                        [valuePrimitive]="true"
+                        formControlName="pcaId"
+                        (valueChange)="onPcaChange($event)"
+                        (filterChange)="onPcaChange($event)" >
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.pcaId?.errors?.required && formSubmitted">
+                        PCA is required
+                  </kendo-formerror>
+            </div>
+            <div class="flex-col flex-col-4">
+                  <kendo-floatinglabel text="AY">
+                        <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode"  formControlName="ay"> </kendo-textbox>
+                  </kendo-floatinglabel>
+            </div>
+      </div>
+      <div class="flex-row mt-3" *ngIf="pcaCodeInfo !=null">
+            <div class="flex-col flex-col-4">
+                  <label> PCA Amount </label>
+                  <p><span class="tableamountview"> <strong>$</strong> {{pcaCodeInfo?.totalAmount|kendoNumber: 'n2'}}</span>
+                  </p>
+
+            </div>
+            <div class="flex-col flex-col-4">
+                  <label> Remaining </label>
+                  <p class="green-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount <= pcaCodeInfo?.remainingAmount" ><span class="tableamountview"> <strong>$</strong> {{pcaCodeInfo?.remainingAmount|kendoNumber: 'n2'}}</span></p>
+                  <p class="red-text-color" *ngIf="pcaAssignmentFormDataModel$.totalOverSpendAmount>pcaCodeInfo?.remainingAmount"><span class="tableamountview"> <strong>$ <span  *ngIf="pcaCodeInfo?.remainingAmount>=0"> -</span></strong> {{pcaCodeInfo?.remainingAmount|kendoNumber: 'n2'}}</span></p>
+            </div>
+            <div class="flex-col flex-col-4">
+                  <label> Close Date</label>
+                  <p>{{pcaCodeInfo?.closeDate}}</p>
+            </div>
+      </div>
+      <div class="flex-row">
+            <div class="flex-col mt-1">
+            
+                  <p class="relative-heading"><strong>Assignment Settings</strong></p>
+            </div>
+            <div class="flex-col flex-col-6">
+                  <kendo-floatinglabel text="Open Date">
+                                    <kendo-dropdownlist class="fixed-height-input"   [fillMode]="formUiStyle.inputFillMode"
+                                    [data]="pcaAssignOpenDatesList$"
+                                    textField="dateValue"
+                                    valueField="dateValue" 
+                                    aria-label="date"
+                                    [valuePrimitive]="true"
+                                    formControlName="openDate"
+                                    (keyup)="openDateValidate()"
+                                    (valueChange)="openDateValidate()">
+                                    </kendo-dropdownlist>
+                                
+                              <kendo-formerror *ngIf="pcaAssignmentFormControls?.openDate?.errors?.required && formSubmitted">
+                                    Open Date is required
+                              </kendo-formerror>  
+                              <kendo-formerror *ngIf="openDateError">{{openDateErrorMsg}}</kendo-formerror>
+                            
+                       
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col flex-col-6">
+                  <kendo-floatinglabel text="Close Date">
+                        
+                                    <kendo-dropdownlist  [fillMode]="formUiStyle.inputFillMode"
+                                    [data]="pcaAssignCloseDatesList$"
+                                    textField="dateValue"
+                                    valueField="dateValue" 
+                                    aria-label="date"
+                                    [valuePrimitive]="true"
+                                    formControlName="closeDate"
+                                    (keyup)="closeDateValidate()"
+                                    (valueChange)="closeDateValidate()">
+                                    </kendo-dropdownlist>
+                               
+                              <kendo-formerror *ngIf="pcaAssignmentFormControls?.closeDate?.errors?.required && formSubmitted">
+                                    Close Date is required
+                              </kendo-formerror> 
+                             
+                  </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="closeDateError"> {{closeDateErrorMsg}}</kendo-formerror>
+
+            </div>
+       
+      </div>
+      <div class="flex-row">
+            <div class="flex-col ">
+                  <kendo-floatinglabel text="Amount" class="amount-with-symbol">
+                        <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                        <kendo-numerictextbox placeholder="Amount" aria-label="Amount" [spinners]="false" formControlName="amount"
+                              class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-numerictextbox>
+                  </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required && formSubmitted">
+                        Amount is required
+                  </kendo-formerror>   
+            </div>
+            <div class="flex-col flex-col-6 mt-2">
+                  <span class="app-checkboxwidtext-wrapper">
+                        <input type="checkbox" kendoCheckBox aria-labelledby="unlimited" id="unlimited"  
+                        formControlName="unlimited" name="unlimited"
+                        (change)="unlimitedCheckChange($event)"/>
+                        <label class="k-checkbox-label" for="unlimited">Unlimited</label>
+                  </span>
+            </div>
+      </div>
+</section>
+
+<kendo-dialog-actions>
+      <div class="justify-content-between">
+            <div class="justify-content-end">
+                  <button kendoButton look="outline" aria-label="Cancel"
+                        (click)="closeAddEditPcaAssignmentClicked()">
+                        Cancel
+                  </button>
+                  <button kendoButton [primary]="true" aria-label="REASSIGN" [disabled]="pcaAssignmentFormDataModel$.totalOverSpendAmount>pcaCodeInfo?.remainingAmount">
+                        REASSIGN 
+                  </button>
+            </div>
+      </div>
+</kendo-dialog-actions>
+</form>

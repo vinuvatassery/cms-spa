@@ -1,13 +1,17 @@
 import {
+  ChangeDetectorRef,
   Component,
+  Input,
   OnInit,
-  ViewEncapsulation,Input, ChangeDetectorRef
+  ViewEncapsulation
 } from '@angular/core';
-import { DrugPharmacyFacade, CaseFacade } from '@cms/case-management/domain';
+import { CaseFacade, DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
+import { FilterService } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
-import {ConfigurationProvider} from '@cms/shared/util-core';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 
 @Component({
   selector: 'case-management-drugs-purchased-list',
@@ -28,44 +32,59 @@ export class DrugsPurchasedListComponent implements OnInit {
   public gridSkipCount = this.drugPharmacyFacade.skipCount;
   public sort = this.drugPharmacyFacade.sort;
   public state!: any;
-  public formUiStyle : UIFormStyle = new UIFormStyle(); 
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isReadOnly$=this.caseFacade.isCaseReadOnly$;
-  isPermiumWithinLastTwelveMonthsData:boolean=true;
+  isReadOnly$ = this.caseFacade.isCaseReadOnly$;
+  isPermiumWithinLastTwelveMonthsData = true;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
 
-
-  filters = "";
-  sortColumn = "";
-  sortDir = "";
+  filters = '';
+  sortColumn = '';
+  sortDir = '';
   columnsReordered = false;
-  filteredBy = "";
-  searchValue = "";
+  filteredBy = '';
+  searchValue = '';
   isFiltered = false;
-  addRemoveColumns="Default Columns";
+  addRemoveColumns = 'Default Columns';
 
   selectedColumn!: any;
-  gridColumns : any ={
-    prescriptionFillDate : "Fill Date",
-    pharmacyName : "Pharmacy",
-    drugName: "Drug",
-    brandName: "Brand Name",
-    ndc: "NDC",
-    qty: "Qty",
-    reversalDate: "Reversal Date",
-    clientGroup: "Client Group",
-    payType: "Pay Type",
-    transType: "Trans Type",
-    payAmount: "Pay Amount",
-    ingrdCost: "Ingrd Cost",
-    phmFee: "Pfm Fee",
-    totalDrug: "Total Drug",
-    pbmFee: "PBM Fee",
-    revenue: "Revenue",
-    uc: "U & c",
-    entryDate: "Entry Date",
-    createdId: "By"
-  }
+  gridColumns: any = {
+    pharmacyName: 'Pharmacy Name',
+    paymentMethodDesc: 'Payment Method',
+    rxNumber: 'RX Number',
+    prescriptionFillDate: 'Fill Date',
+    ndc: 'NDC Code',
+    brandName: 'Brand Name',
+    drugName: 'Drug Name',
+    payTypeDesc: 'Payment Type',
+    transTypeDesc: 'Transaction Type',
+    amountPaid: 'Amount Paid',
+    qty: 'Rx Quantity',
+    clientGroup: 'Client Group',
+    rxType: 'RX Type',
+    rxDaysSupply: 'RX Days Supply',
+    pcaCode: 'PCA Code',
+    objectCode: 'Object Code',
+    paymentStatusDesc: 'Payment Status',
+    warrantNo: 'Warrant Number',
+    reversalDate: 'Reversal Date',
+    entryDate: 'Entry Date',
+    creatorId: 'By',
+  };
+
+  //lov filters
+  selectedPaymentStatus: string | null = null;
+  selectedPaymentMethod: string | null = null;
+  selectedPaymentType: string | null = null;
+  selectedPaymentRequestType: string | null = null;
+  paymentMethodType$ = this.lovFacade.paymentMethodType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
+  paymentType$ = this.lovFacade.paymentRequestType$;
+  paymentRequestType$ = this.lovFacade.paymentRequestsType$;
+  paymentMethodTypes: any = [];
+  paymentStauses: any = [];
+  paymentTypes: any = [];
+  paymentRequestTypes: any = [];
 
   public actions = [
     {
@@ -96,22 +115,86 @@ export class DrugsPurchasedListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly drugPharmacyFacade: DrugPharmacyFacade, private caseFacade: CaseFacade, 
-    private readonly  cdr :ChangeDetectorRef,
-    public readonly  intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider) {}
+  constructor(
+    private readonly drugPharmacyFacade: DrugPharmacyFacade,
+    private caseFacade: CaseFacade,
+    private readonly cdr: ChangeDetectorRef,
+    public readonly intl: IntlService,
+    private readonly configurationProvider: ConfigurationProvider,
+    private readonly lovFacade: LovFacade
+  ) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.defaultGridState();    
+    this.getLovs();
+    this.defaultGridState();
     this.loadDrugsPurchased();
   }
-  
+
   /** Private methods **/
-  private loadDrugsPurchased(  
-    ) {   
-      this.drugPharmacyFacade.getDrugPurchasedList(this.clientId,this.state.skip,this.state.take,this.sortValue,this.sortType,this.filters,this.isPermiumWithinLastTwelveMonthsData);
-    }
+
+  getLovs() {
+    this.getPaymentMethodLov();
+    this.getPaymentStatusLov();
+    this.getPaymentTypeCodeLov();
+    this.getPaymentRequestTypeCodeLov();
+  }
+
+  private getPaymentTypeCodeLov() {
+    this.lovFacade.getCoPaymentRequestTypeLov();
+    this.paymentType$.subscribe({
+      next: (data: any) => {
+        this.paymentTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private getPaymentMethodLov() {
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodType$.subscribe({
+      next: (data: any) => {
+        this.paymentMethodTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private getPaymentStatusLov() {
+    this.lovFacade.getPaymentStatusLov();
+    this.paymentStatus$.subscribe({
+      next: (data: any) => {
+        this.paymentStauses = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private getPaymentRequestTypeCodeLov() {
+    this.lovFacade.getPaymentRequestTypeLov();
+    this.paymentRequestType$.subscribe({
+      next: (data: any) => {
+        this.paymentRequestTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+  }
+
+  private loadDrugsPurchased() {
+    this.drugPharmacyFacade.getDrugPurchasedList(
+      this.clientId,
+      this.state.skip,
+      this.state.take,
+      this.sortValue,
+      this.sortType,
+      this.filters,
+      this.isPermiumWithinLastTwelveMonthsData
+    );
+  }
 
   /** Internal event methods **/
   onOpenPharmacyClicked() {
@@ -144,46 +227,61 @@ export class DrugsPurchasedListComponent implements OnInit {
   }
 
   public dataStateChange(stateData: any): void {
-    this.filters = JSON.stringify(stateData.filter?.filters)
+    this.filters = JSON.stringify(stateData.filter?.filters);
     this.state = stateData;
     this.setGridState(stateData);
-    this.loadDrugsPurchased();
   }
 
   filterChange(filter: CompositeFilterDescriptor): void {
     this.filters = JSON.stringify(filter);
   }
 
-  setToDefault()
-  {
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
+
+  setToDefault() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
       selectedColumn: 'ALL',
       columnName: '',
-      searchValue: ''
-      };
-    this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
-    this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";
-    this.filters = "";
-    this.selectedColumn = "ALL";
-    this.searchValue = "";
+      searchValue: '',
+    };
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
+    this.filters = '';
+    this.selectedColumn = 'ALL';
+    this.searchValue = '';
     this.isFiltered = false;
     this.columnsReordered = false;
     this.loadDrugsPurchased();
   }
 
-  defaultGridState(){
+  defaultGridState() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-      filters:{logic:'and',filters:[]},
+      filters: { logic: 'and', filters: [] },
       selectedColumn: 'ALL',
       columnName: '',
-      searchValue: ''
-      };
+      searchValue: '',
+    };
   }
 
   public setGridState(stateData: any): void {
@@ -191,8 +289,12 @@ export class DrugsPurchasedListComponent implements OnInit {
 
     const filters = stateData.filter?.filters ?? [];
 
-    for (let val of filters) {
-      if (val.field === 'prescriptionFillDate' || val.field === 'entryDate') {
+    for (const val of filters) {
+      if (
+        val.field === 'prescriptionFillDate' ||
+        val.field === 'entryDate' ||
+        val.field === 'reversalDate'
+      ) {
         this.intl.formatDate(val.value, this.dateFormat);
       }
     }
@@ -201,31 +303,31 @@ export class DrugsPurchasedListComponent implements OnInit {
     this.filteredBy = filterList.toString();
 
     if (filters.length > 0) {
-      const filterListData = filters.map((filter:any) => this.gridColumns[filter?.filters[0]?.field]);
+      const filterListData = filters.map(
+        (filter: any) => this.gridColumns[filter?.filters[0]?.field]
+      );
       this.isFiltered = true;
       this.filteredBy = filterListData.toString();
       this.cdr.detectChanges();
-    }
-    else {
+    } else {
       this.isFiltered = false;
     }
 
     this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortType = stateData.sort[0]?.dir ?? "";
+    this.sortValue = stateData.sort[0]?.field ?? '';
+    this.sortType = stateData.sort[0]?.dir ?? '';
     this.state = stateData;
     this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
-    this.sortDir = "";
-    if(this.sort[0]?.dir === 'asc'){
+    this.sortDir = '';
+    if (this.sort[0]?.dir === 'asc') {
       this.sortDir = 'Ascending';
     }
-    if(this.sort[0]?.dir === 'desc'){
+    if (this.sort[0]?.dir === 'desc') {
       this.sortDir = 'Descending';
     }
     this.loadDrugsPurchased();
   }
-  public onClickLoadDrugsPurchasedData()
-  {
+  public onClickLoadDrugsPurchasedData() {
     this.loadDrugsPurchased();
   }
 }

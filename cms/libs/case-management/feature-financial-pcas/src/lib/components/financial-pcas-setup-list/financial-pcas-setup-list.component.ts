@@ -117,11 +117,8 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
 
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     { columnName: 'ALL', columnDesc: 'All Columns' },
-    { columnName: 'pcaCode', columnDesc: 'PCA #' },
-    { columnName: 'appropriationYear', columnDesc: 'AY #' },
-    { columnName: 'pcaDesc', columnDesc: 'Description' },
-    { columnName: 'closeDate', columnDesc: 'Close Date' },
-    { columnName: 'fundingSource', columnDesc: 'Funding Source' },
+    { columnName: 'pcaCode', columnDesc: 'PCA' },
+    { columnName: 'appropriationYear', columnDesc: 'AY' },
     { columnName: 'fundingDesc', columnDesc: 'Funding Name' },
   ];
   selectedSearchColumn = 'ALL';
@@ -280,10 +277,6 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     this.filterData = filter;
   }
 
-  rowClass = (args: any) => ({
-    "table-row-disabled": (!args.dataItem.assigned),
-  });
-
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
@@ -378,6 +371,10 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     }
 
     return searchValue;
+  }
+
+  isNotNumeric(num: any){
+    return isNaN(num)
   }
 
 }

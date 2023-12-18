@@ -22,12 +22,14 @@ export class FinancialClaimsProviderInfoComponent {
   @Output() getProviderPanelEvent = new EventEmitter<any>();
   @Output() updateProviderProfileEvent = new EventEmitter<any>();
   @Output() onEditProviderProfileEvent = new EventEmitter<any>();
- 
+
   @Input()
   vendorProfile$: Observable<any> | undefined;
   @Input() updateProviderPanelSubject$ : Observable<any> | undefined;
   @Input() ddlStates$ : Observable<any> | undefined;
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  accountingNumberValidated = true;
+  tinMaskFormat = '0 00-000000';
   isEditProvider = false;
   vendorProfile: any
   showAddressValidationLoader$= new BehaviorSubject(false);
@@ -49,7 +51,7 @@ export class FinancialClaimsProviderInfoComponent {
   })
   isSubmitted: boolean = false
   @Input() paymentRequestId:any
-  constructor(public formBuilder: FormBuilder, 
+  constructor(public formBuilder: FormBuilder,
     public activeRoute: ActivatedRoute,
     private route: Router,
     private readonly changeDetectorRef: ChangeDetectorRef) {
@@ -80,7 +82,7 @@ export class FinancialClaimsProviderInfoComponent {
 
   createEmailsFormArray(contact: any): FormArray {
     let emails = new FormArray<FormGroup>([])
-   
+
     if(contact.emails && contact.emails.length===0){
        emails.push(this.formBuilder.group({
         emailAddress: ['',Validators.required],
@@ -134,6 +136,16 @@ export class FinancialClaimsProviderInfoComponent {
           phones: this.createPhonesFormArray(contact)
         }));
     });
+
+    if(!this.vendorProfile.address && !this.vendorProfile.address.contact){
+    contacts.push(
+      this.formBuilder.group({
+        contactName: [],
+        vendorContactId: [],
+        emails: this.createEmailsFormArray({emails:[]}),
+        phones: this.createPhonesFormArray({phones :[]})
+      }));
+    }
     return contacts;
   }
 
@@ -154,10 +166,10 @@ export class FinancialClaimsProviderInfoComponent {
         mailCode: this.vendorProfile.address.mailCode,
         specialHandlingDesc: this.vendorProfile.address.specialHandlingDesc,
         paymentMethod: this.vendorProfile.address.paymentMethodCode,
-      
+
       }
     });
-    this.createContactsFormArray() 
+    this.createContactsFormArray()
   }
 
   get addressForm(){
@@ -199,7 +211,7 @@ export class FinancialClaimsProviderInfoComponent {
       let emailForm = control as unknown as FormGroup
       emails.push({
         emailAddress: emailForm.controls['emailAddress']?.value,
-        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,  
+        VendorContactEmailId: emailForm.controls['vendorContactEmailId']?.value,
         vendorContactId: emailForm.controls['vendorContactId']?.value
       })
     })
@@ -239,11 +251,11 @@ export class FinancialClaimsProviderInfoComponent {
         stateCode: this.profileForm?.controls.address.controls['stateCode']?.value,
         zip: this.profileForm?.controls.address.controls['zip']?.value,
         contacts: this.getContactArrayFormValues()
-      }    
+      }
     }
     this.updateProviderProfileEvent.emit(providerPanelDto)
-    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{       
-        this.loadVendorInfo(); 
+    this.updateProviderPanelSubject$?.pipe(take(1)).subscribe(res=>{
+        this.loadVendorInfo();
     });
   }
 
@@ -257,13 +269,36 @@ export class FinancialClaimsProviderInfoComponent {
   }
 
   onVendorProfileViewClicked() {
+    let tabCode = "";
+    if(this.vendorProfile.vendorTypeCode === FinancialVendorTypeCode.DentalProviders)
+    {
+      tabCode = FinancialVendorProviderTabCode.DentalProvider
+    }
+    else if(this.vendorProfile.vendorTypeCode === FinancialVendorTypeCode.MedicalProviders)
+    {
+      tabCode = FinancialVendorProviderTabCode.MedicalProvider
+    }
     const query = {
       queryParams: {
-        v_id: this.vendorProfile.vendorId
+        v_id: this.vendorProfile.vendorId,
+        tab_code: tabCode
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)
     this.closeViewProviderClicked()
+  }
+
+  restrictAccountingNumber() {
+    if(!this.profileForm.controls['tin'].value){
+      this.accountingNumberValidated = true;
+      return;
+    }
+    if (this.profileForm.controls['tin'].value && (parseInt(this.profileForm.controls['tin'].value.charAt(0)) == 1 || parseInt(this.profileForm.controls['tin'].value.charAt(0)) == 3)) {
+      this.accountingNumberValidated = true;
+    } else {
+      this.profileForm.controls['tin'].setErrors({ 'incorrect': true });
+      this.accountingNumberValidated = false;
+    }
   }
 
 }
