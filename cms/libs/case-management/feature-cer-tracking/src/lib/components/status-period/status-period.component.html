@@ -128,7 +128,7 @@
                         </kendo-popover>
                     </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="Option" title="Options" [width]="75" [sortable]="false" class="text-center">
+                <kendo-grid-column field="Option" title="Options" [width]="75" [sortable]="false"  [columnMenu]="false" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
                         <kendo-dropdownbutton [data]="actions" icon="more-vertical" title="More Options"
                             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
