@@ -1,14 +1,14 @@
 <ul class="sidebar-menu" aria-label="sidebar menu" role="menu">
-  <li  role="menuitem" *ngFor="let menu of menus$ | async as menus; let i = index" attr.aria-label="{{ menu.name }}"
+  <li role="menuitem" *ngFor="let menu of menus$ | async as menus; let i = index" 
     [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus.length !== 0 }"
     class="new_sub_sidebar_menu">
-    <a class="sub-menu-item"(click)="onMenuClick(menu)">
-      <span class="material-icons sidebar-menu_icon">
+    <a class="sub-menu-item"(click)="onMenuClick(menu)"  role="region" attr.aria-label="{{ menu.name }}">
+      <span class="material-icons sidebar-menu_icon" aria-disabled="true">
         {{menu.icon}}
       </span>
-      <span class="sidebar-menu_label" >
+      <label class="sidebar-menu_label"  attr.aria-label="{{ menu.name }}">
         {{ menu.name }} <span *ngIf="menu?.hasBadge && isShowBadge(menu.code)" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
-      </span>
+      </label>
     </a>
 
     <ul class="secondary_submenu" *ngIf="menu.subMenus?.length !== 0"
