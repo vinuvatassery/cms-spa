@@ -30,7 +30,7 @@
       .due-item-heading {
         font-family: $font-family-bold;
         margin: 0;
-        line-height: 18px;
+        line-height: 1.125rem;
         margin-bottom: $size-m;
         font-size: $font-size;
         overflow: hidden;
@@ -46,18 +46,12 @@
         span {
           width: 100%;
         }
-        .small-i-btn {
-          // width: $size-xxxx;
-          // height: $size-xxxx;
-          // line-height: $size-xxxx;
-          .k-button {
-            // width: $size-xxxx;
-            // height: $size-xxxx;
+        .small-i-btn { 
+          .k-button { 
             color: var(--hive-neutral-palette-800); 
             box-shadow: none;
             border-radius: 50%;
-            overflow: hidden;
-            // padding: 0px 0px 0px 0px;
+            overflow: hidden; 
             border: 0px;
           }
         }
