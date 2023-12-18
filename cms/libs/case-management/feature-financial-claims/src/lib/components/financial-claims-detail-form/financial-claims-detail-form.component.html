@@ -8,7 +8,7 @@
         <div [formGroup]="claimForm">
 
             <div class="add_new_top_section">
-                <p class="mb-3"> Make changes as needed and click “Update.”</p>
+                <p class="mb-3"> {{informativeText}}</p>
                 <div class="flex-row">
                     <div class="flex-col flex-col-6">
                         <div class="combotable_search_list new_refund_Search new_claims_Search mb-3">
@@ -20,7 +20,7 @@
 
                             <kendo-multicolumncombobox textField="providerFullName" valueField="vendorAddressId"
                                 [fillMode]="formUiStyle.dropDownFillMode"
-                                placeholder="Search {{claimsType | titlecase}} Providers by name , TIN or Mail Code"
+                                placeholder="Search {{claimsType | titlecase}} Providers"
                                 [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                 [filterable]="true" formControlName="medicalProvider"
                                 (filterChange)="searchMedicalProvider($event)" [data]="pharmacySearchResult$ | async"
@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
                             </div>
-                         
+
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
                             </span>
                             <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField="clientFullName"
                                 valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                                placeholder="Search Client by Name, ID, SSN or DOB"
+                                placeholder="Search Clients"
                                 [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                 [filterable]="true" formControlName="client"
                                 (filterChange)="loadClientBySearchText($event)"
@@ -125,7 +125,7 @@
                             <div class="flex-row">
                                 <div class="flex-col">
                                     <kendo-formerror *ngIf="(!claimForm.controls['client'].valid) && isSubmitted" >
-                                    
+
                                     Client is required
                                 </kendo-formerror>
                                 </div>
@@ -135,7 +135,7 @@
                                      </a>
                                  </div>
                             </div>
-                        
+
                         </div>
                     </div>
                 </div>
@@ -168,7 +168,7 @@
             <div class="add_new_bottom_section" *ngIf="showServicesListForm">
 
                 <div class="flex-row">
-                    
+
 
                         <ng-container formArrayName="claimService">
                             <ng-container *ngFor="let contact of addClaimServicesForm.controls; let i=index">
@@ -426,15 +426,15 @@
                             </ng-container>
                         </ng-container>
 
-                    
-                </div> 
+
+                </div>
                 <div class="mt-2">
                     <button class="" kendoButton fillMode="flat" themeColor="primary" aria-label="New Service"
                         (click)="addClaimServiceGroup()">
                         <span class="material-icons" aria-label="New Service" aria-hidden="false">add</span>
                         New Service</button>
                 </div>
-         
+
 
             </div>
 
@@ -450,7 +450,7 @@
                     <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [duplicatePaymentInputObject]="duplicatePaymentObject"
                     [claimsType]="claimsType"></cms-financial-claims-recent-claims-list>
                 </div>
-                <div class="mt-1 text-right">                    
+                <div class="mt-1 text-right">
                     <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
                         Client Profile <span class="material-icons ml-1">
                         chevron_right
@@ -460,16 +460,16 @@
             </div>
         </div>
     </section>
-</section> 
+</section>
 <kendo-dialog-actions>
-    <div class="justify-content-end align-items-center">        
+    <div class="justify-content-end align-items-center">
             <span class="mr-2">1 service(s) to be added</span>
-            <button kendoButton [primary]="true" look="outline"  aria-label="Cancel" 
+            <button kendoButton [primary]="true" look="outline"  aria-label="Cancel"
                 (click)="closeAddEditClaimsFormModalClicked(false)"> Cancel </button>
- 
+
             <button kendoButton [primary]="true" [attr.aria-label]="addOrEdit" (click)="save(false)">
                 {{addOrEdit}}
-            </button>       
+            </button>
     </div>
 </kendo-dialog-actions>
 
@@ -486,16 +486,16 @@
         (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
     </common-financial-pca-chosen-alert>
 </ng-template>
- 
+
 
   <ng-template #providerDetailsTemplate>
     <cms-financial-claims-provider-info
           [paymentRequestId]=""
           (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
           (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
           [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
           [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
 </ng-template>
 
- 
+

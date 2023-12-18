@@ -267,9 +267,9 @@ export class FinancialVendorFacade {
     });
   }
 
-  loadVendorList(vendorTypeCode: any): void {
+  loadVendorList(searchText:any): void {
     this.showLoader();
-    this.financialVendorDataService.loadVendors(vendorTypeCode).subscribe({
+    this.financialVendorDataService.loadVendorList(searchText).subscribe({
       next: (reponse: any) => {
         if (reponse) {
           this.hideLoader();
@@ -381,6 +381,24 @@ export class FinancialVendorFacade {
     })
   }
 
+  validateTinNbr(tinNbr: any) {
+    return this.financialVendorDataService.getValidateTinNbr(tinNbr);
+  }
 
+  loadVendors(searchText:any,vendorTypeCode:any){
+    this.clinicVendorLoaderSubject.next(true);
+    this.financialVendorDataService.loadVendors(searchText,vendorTypeCode).subscribe({
+      next: (reponse: any) => {
+        if (reponse) {
+          this.clinicVendorLoaderSubject.next(false);
+          this.vendorsListSubject.next(reponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.clinicVendorLoaderSubject.next(false);
+      },
+    });
+  }
 
 }

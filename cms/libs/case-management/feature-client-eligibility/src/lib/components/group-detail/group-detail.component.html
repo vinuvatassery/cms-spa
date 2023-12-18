@@ -41,7 +41,7 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <button *ngIf="showDeleteOption" kendoButton aria-label="Delete" class="k-danger-link"
-        (click)="onDeleteGroupChange()" [disabled]="(isReadOnly$ | async) ? true : false">
+        (click)="onDeleteGroupChange()" [disabled]="(isReadOnly$ | async) || !isShowDelete ? true : false">
         Delete
       </button>
       <div class="justify-content-end">
@@ -50,7 +50,7 @@
           Cancel
         </button>
         <button kendoButton aria-label="Change" [primary]="true" (click)="onUpdateGroup()" [disabled]="(isReadOnly$ | async) ? true : false">
-          Change
+          {{buttonText}}
         </button>
       </div>
     </div>

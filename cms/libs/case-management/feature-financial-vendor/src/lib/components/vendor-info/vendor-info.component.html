@@ -49,17 +49,16 @@
         </tbody>
       </table>
       <!-- Last Updated by -->
-      <p class="mt-1 mb1 table-sorted-info">
+      <p class="mt-1 mb=1" *ngIf="selectedVendorInfo$?.modifierName">
         <span class="badge-dot-info bdi-left"></span> Last Updated  {{selectedVendorInfo$?.lastModificationTime | date: 'MM/dd/yyyy' }}
-        by  
-         <button 
+        by <button 
           kendoButton 
           [popover]="onUserProfileDetailsHovered"
            look="flat"   
            showOn="hover"
            kendoPopoverAnchor 
            class="card-link-button">
-        <a>{{selectedVendorInfo$?.lastModifedUserName}}</a>
+        <a>{{selectedVendorInfo$?.modifierName}}</a>
       </button>
     </p>
         <kendo-popover

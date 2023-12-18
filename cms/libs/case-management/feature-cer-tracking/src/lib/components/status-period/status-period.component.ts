@@ -237,6 +237,7 @@ export class StatusPeriodComponent implements OnInit {
       this.isCopyPeriod = false;
       this.clientFacade.runImportedClaimRules(this.clientId);
       this.loadStatusPeriodData();
+      this.clientFacade.copyStatusPeriodTriggeredSubject.next(true);
     }
   }
 

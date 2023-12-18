@@ -15,7 +15,7 @@ export class StatusGroupHistoryComponent implements OnInit {
   groupDeleted$ = this.caseFacade.groupDeleted$;
   ddlGroups$ = this.caseFacade.ddlGroups$;
   statusGroupHistory$: any = new Subject<any>();
-
+  groupList: any;
   isGroupDetailOpened: boolean = false;
   isGroupDeleteModalOpened: boolean = false;
   selectedGroupId!: string;
@@ -24,7 +24,7 @@ export class StatusGroupHistoryComponent implements OnInit {
   private deleteStatusGroupDialog: any;
   constructor(
     private statusPeriodFacade: StatusPeriodFacade,
-    private caseFacade: CaseFacade,    
+    private caseFacade: CaseFacade,
     private dialogService: DialogService) {
   }
 
@@ -38,6 +38,7 @@ export class StatusGroupHistoryComponent implements OnInit {
     this.statusPeriodFacade.loadStatusGroupHistory(this.eligibilityId).subscribe({
       next: (data) => {
         this.statusGroupHistory$.next(data);
+        this.groupList = data;
         this.loader = false;
       },
       error: (err) => {
@@ -64,7 +65,7 @@ export class StatusGroupHistoryComponent implements OnInit {
       this.statusGroupDialog.close();
     }
     this.selectedGroupId = "";
-    
+
   }
 
   onGroupChangeUpdateClicked(group: any) {
@@ -106,7 +107,7 @@ export class StatusGroupHistoryComponent implements OnInit {
       this.isGroupDetailOpened = false;
       this.deleteStatusGroupDialog.close();
       this.statusGroupDialog.close();
-    }   
+    }
   }
 
   onCancelDelete() {

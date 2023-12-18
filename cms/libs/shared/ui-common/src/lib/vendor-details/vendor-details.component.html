@@ -186,6 +186,9 @@
           <kendo-formerror *ngIf="!accountingNumberValidated && providerType != vendorTypes.Pharmacy">
             A 1 or a 3 is required
           </kendo-formerror>
+          <kendo-formerror *ngIf="isDuplicateTin">
+           {{duplicateTinMessage}}
+          </kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mt-1" *ngIf="providerType == vendorTypes.Pharmacy">
@@ -298,7 +301,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="City">
           <kendo-textbox aria-label="City" [maxlength]="50" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="city">
+            formControlName="city" (keypress)="onKeyPressAllowAlphabetOnly($event.charCode)">
           </kendo-textbox>
           <kendo-formerror *ngIf="medicalProviderFormControls?.city.errors?.required && isValidateForm">
             City is required
