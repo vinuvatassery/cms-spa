@@ -424,7 +424,9 @@ pageselectionchange(data: any) {
       isAcceptReports: [''],
       newAddContactForm: this.formBuilder.array([
       ]),
-      activeFlag:[]
+      activeFlag:[],
+      parentVendorId:[''],
+
     });
 
     if (providerType === FinancialVendorTypeCode.Clinic)
