@@ -742,8 +742,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
     if (dataItem.checkNbr !== '') {
       dataItem.isPrintAdviceLetter = true;      
-    }
-    this.assignRowDataToMainList(dataItem);
+    }    
 
     if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined
       && dataItem.checkNbr !== ''){
@@ -767,6 +766,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       dataItem.warrantNumberInValidMsg = null;
       dataItem.warrantNumberInValid = false;
     }
+    this.assignRowDataToMainList(dataItem);
   }
  warrantNumberChangeSubscription(){
   this.warrantNumberChange$.subscribe((response:any) =>{

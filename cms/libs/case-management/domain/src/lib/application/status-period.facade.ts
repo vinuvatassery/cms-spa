@@ -18,7 +18,7 @@ export class StatusPeriodFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'StatusStart'
+  public sortValue = 'eligibilityStartDate'
   public sortType = 'asc'
   public sort: SortDescriptor[] = [{
     field: this.sortValue,

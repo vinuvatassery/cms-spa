@@ -681,7 +681,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   restrictAccountingNumber() {
-    if(((this.providerType == this.vendorTypes.Pharmacy)||(this.providerType==this.vendorTypes.DentalProviders)) && this.medicalProviderForm.controls['tinNumber'].value==''){
+    if(((this.providerType == this.vendorTypes.Pharmacy)||(this.providerType==this.vendorTypes.DentalProviders)||(this.providerType==this.vendorTypes.MedicalProviders )) && this.medicalProviderForm.controls['tinNumber'].value==''){
       this.accountingNumberValidated = true;
       return;
     }
