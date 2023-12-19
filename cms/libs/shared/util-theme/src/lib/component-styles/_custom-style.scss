@@ -1341,3 +1341,14 @@ padding: 8px;
     }
   }
 }
+
+.button-labels{
+  font-size: $font-size;
+  font-weight: 500;
+  letter-spacing: 0.56px;
+  line-height: 16px;
+  text-align: left;
+  white-space: normal; 
+  padding: 5px 0px;
+  font-family: $font-family-medium;
+}
