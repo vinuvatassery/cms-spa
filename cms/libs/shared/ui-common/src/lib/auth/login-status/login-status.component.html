@@ -2,18 +2,34 @@
   <button
     class="header-buttons user-button" 
     kendoButton
-    title="XX"
      (click)="isProfilePopoverOpen = !isProfilePopoverOpen"  >
     <div class="app-c-avatar">
-      <span class="profile-text-avatar">XX</span>
+      <span class="profile-text-avatar">
+        <div  [hidden]="imageLoaderVisible" class="app-c-avatar avatar-img-sm avatar-sm">   
+          <img [hidden]="imageLoaderVisible" [src]="userImageSubject | async" alt="User Profile photo" class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()"/> 
+      </div>
+      <div *ngIf="imageLoaderVisible">    
+        <div mat-card-avatar class="app-c-avatar avatar-sm">
+          <span class="profile-text-avatar">{{userInfo?.firstName?.charAt(0)}}{{userInfo?.lastName?.charAt(0)}}</span>          
+        </div>
+      </div>  
+      </span>
     </div>
   </button>
-  <div class="profile_popover_wrapper"  *ngIf="isProfilePopoverOpen"  >
-   
+  <div class="profile_popover_wrapper"  *ngIf="isProfilePopoverOpen">   
       <div class="app-c-card user-setting-dropdown">
         <div class="app-c-card-header card-header-border-bottom">
           <div class="app-c-avatar avatar-lg">
-            <span class="profile-text-avatar">XX</span>
+            <span class="profile-text-avatar">
+              <div  [hidden]="imageLoaderVisible" class="app-c-avatar avatar-img-sm avatar-sm">   
+                <img [hidden]="imageLoaderVisible" [src]="userImageSubject | async" alt="User Profile photo" class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()"/> 
+            </div>
+            <div *ngIf="imageLoaderVisible">    
+              <div mat-card-avatar class="app-c-avatar avatar-sm">
+                <span class="profile-text-avatar">{{userInfo?.firstName?.charAt(0)}}{{userInfo?.lastName?.charAt(0)}}</span>          
+              </div>
+            </div>  
+            </span>
           </div>
           <div class="app-c-card-header-title">
             <h3 class="card-mainTitle">{{ onGetUser()?.name }}</h3>
