@@ -1,7 +1,8 @@
 <span class="header-menu_profile">
-  <button class="header-buttons user-button" kendoButton #profileAnchor title="XX" (click)="toggleProfilePopoverOpen()">
+  <button class="header-buttons user-button" kendoButton #profileAnchor
+    attr.aria-label="{{ onGetUser()?.name.charAt(0) }}" (click)="toggleProfilePopoverOpen()">
     <div class="app-c-avatar">
-      <span class="profile-text-avatar">XX</span>
+      <span class="profile-text-avatar">{{ onGetUser()?.name.charAt(0) }}</span>
     </div>
   </button>
   <div class="profile_popover_wrapper" *ngIf="isProfilePopoverOpen" #accountSettingsPopover>
@@ -9,10 +10,10 @@
     <div class="app-c-card user-setting-dropdown">
       <div class="app-c-card-header card-header-border-bottom">
         <div class="app-c-avatar avatar-lg">
-          <span class="profile-text-avatar">XX</span>
+          <span class="profile-text-avatar">{{ onGetUser()?.name.charAt(0) }}</span>
         </div>
         <div class="app-c-card-header-title">
-          <h3 class="card-mainTitle">{{ onGetUser()?.name }}</h3>
+          <h3 class="card-mainTitle">{{ onGetUser()?.name }} </h3>
           <p class="card-subTitle">Program coordinator</p>
         </div>
       </div>
