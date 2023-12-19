@@ -69,6 +69,7 @@ export class DocumentUploadComponent  implements OnInit{
         this.cdr.detectChanges();
       });
     }
+    this.handleTypeCodeEvent.emit(this.typeCode??this.selectedTypeCode);
   }
   handleFileSelected(e: SelectEvent) {
     this.handleFileSelectEvent.emit(e);

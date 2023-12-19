@@ -93,6 +93,7 @@ export class LovFacade {
 
   private serviceTypeSubject = new Subject<any>();
   private refundTypeSubject = new Subject<any>();
+  private batchStatusSubject = new Subject<any>();
 
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
@@ -157,7 +158,7 @@ export class LovFacade {
   pendingApprovalPaymentType$ = this.pendingApprovalPaymentTypeSubject.asObservable();
   serviceType$ = this.serviceTypeSubject.asObservable();
   refundType$ = this.refundTypeSubject.asObservable();
-
+  batchStatus$ = this.batchStatusSubject.asObservable();
 
 
   paymentMethodVendorlov$ = this.lovPaymentMethodVendorSubject.asObservable();
@@ -852,6 +853,18 @@ export class LovFacade {
       },
     });
   }
+
+  getBatchStatusLov(): void {
+    this.lovDataService.getLovsbyType(LovType.BatchStatusCode).subscribe({
+      next: (lovResponse) => {
+        this.batchStatusSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
 }
 
 

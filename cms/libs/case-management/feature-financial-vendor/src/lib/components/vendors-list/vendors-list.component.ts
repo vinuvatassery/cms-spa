@@ -97,7 +97,14 @@ dropDowncolumns : any = [
     "columnCode": "tin",
     "columnDesc": "TIN"   ,
     "vendorTypeCode": "ALL",
-  },
+  }
+  ,
+  {
+    "columnCode": "paymentMethod",
+    "columnDesc": "Payment Method"   ,
+    "vendorTypeCode": ["MEDICAL_PROVIDER"],
+  }
+  ,
   {
     "columnCode": "totalClaims",
     "columnDesc": "Total Claims"   ,
@@ -136,6 +143,11 @@ dropDowncolumns : any = [
     "vendorTypeCode": ["MANUFACTURERS"],
   },
   {
+    "columnCode": "mailCode",
+    "columnDesc": "Mail Code"   ,
+    "vendorTypeCode": ["MEDICAL_PROVIDER"],
+  },
+  {
     "columnCode": "address",
     "columnDesc": "Address"   ,
     "vendorTypeCode":  ["MANUFACTURERS","MEDICAL_PROVIDER"],
@@ -150,12 +162,7 @@ dropDowncolumns : any = [
     "columnDesc": "Physical Address"   ,
     "vendorTypeCode": ["PHARMACY"],
   }
-  ,
-  {
-    "columnCode": "mailCode",
-    "columnDesc": "Mail Code"   ,
-    "vendorTypeCode": ["MEDICAL_PROVIDER"],
-  }
+ 
 ]
 constructor(private route: Router,
   private readonly  cdr :ChangeDetectorRef,
