@@ -4,7 +4,7 @@
     <section class="app-l-mainTittle" *ngIf="(paymentBatchName$ | async) as batch; else loading">
       <div class="d-flex">
         <button aria-label="Go Back" title="Go Back" kendoButton look="flat" class="mr-1" (click)="onBackClicked()">
-          <span class="material-icons">
+          <span class="material-icons" aria-hidden="true">
             arrow_back </span> </button>
         <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}} {{receiptLogTitlePart}}</h1> <br />
       </div>
@@ -40,8 +40,7 @@
           <span class="right-overlay-export">
             <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export"
               (click)="onClickedExport()" [disabled]="showExportLoader">
-              <span *ngIf="!showExportLoader" class="material-icons" aria-label="export"
-                aria-invalid="true">exit_to_app</span>
+              <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>
 
               <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i
                 class="exp_button-text">Export</i>
@@ -285,9 +284,9 @@
                   <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                     <ng-container>
                       <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                        [class]="buttondataItem.buttonType" aria-hidden="false"
+                        [class]="buttondataItem.buttonType" 
                         (click)="buttondataItem.click(dataItem)">
-                        <span class="material-icons"
+                        <span class="material-icons" aria-hidden="true"
                           [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                         <label> {{ buttondataItem.text }} </label>
                       </button>
@@ -383,7 +382,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-          Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true" (click)="onClientClicked(clientId)">
             chevron_right
           </span>
         </button>
@@ -403,7 +402,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
-          Client Profile <span class="material-icons ml-1">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true">
             chevron_right
           </span>
         </button>
@@ -423,7 +422,7 @@
     <div class="justify-content-between" >
       <div class="justify-content-end" (click)="onClientClicked(clientId)">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-          Client Profile <span class="material-icons ml-1">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true">
             chevron_right
           </span>
         </button>

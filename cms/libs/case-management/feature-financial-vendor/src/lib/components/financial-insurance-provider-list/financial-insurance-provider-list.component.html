@@ -3,7 +3,7 @@
     <h5 class="title-md mb-0 text-capital">Insurance Providers</h5>
     <span class="right-overlay-export">
       <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-        <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+        <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>         
         
         <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
       </button>
@@ -93,8 +93,8 @@
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <ng-container>
                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                    [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                    <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                    [class]="buttondataItem.buttonType"  (click)="buttondataItem.click(dataItem)">
+                    <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                     <label> {{ buttondataItem.text }} </label>
                   </button>
                 </ng-container>

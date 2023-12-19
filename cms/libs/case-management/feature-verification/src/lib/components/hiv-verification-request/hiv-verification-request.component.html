@@ -95,7 +95,7 @@
         <div class="attachment-from-client-lists-container">
 
           <div class="attachment-from-client-lists">
-            <span class="material-icons">
+            <span class="material-icons" aria-hidden="true">
               file_present
             </span>
             <div>
@@ -108,7 +108,7 @@
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
                 <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
                   aria-hidden="false" (click)="dataItem.click">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                   <label> {{ dataItem.text }} </label>
                 </button>
               </ng-template>

@@ -98,14 +98,14 @@
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <ng-container *ngIf="buttondataItem.text === 'Deactivate Address' && dataItem.activeFlag ==='Y'; else otherButtons">
                   <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
-                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                    <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                     <label>   {{ buttondataItem.text }} </label>
                 </button>
                 </ng-container>
               <ng-template #otherButtons>
                 <ng-container *ngIf="buttondataItem.text === 'Edit Address' && dataItem.activeFlag ==='Y'; else deleteButton">
                   <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
-                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                    <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                     <label>   {{ buttondataItem.text }} </label>
                 </button>
                 </ng-container>
@@ -114,7 +114,7 @@
               <ng-template #deleteButton>
                 <ng-container *ngIf="buttondataItem.text === 'Delete Address'">
                   <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
-                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                    <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                     <label>   {{ buttondataItem.text }} </label>
                 </button>
                 </ng-container>

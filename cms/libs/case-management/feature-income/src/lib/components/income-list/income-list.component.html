@@ -146,7 +146,7 @@
             <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="onIncomeActionClicked(dataItem,buttondataItem.type)" [disabled]="(isReadOnly$ | async) ? true : false">
-                  <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                   <label>   {{ buttondataItem.text }} </label>
               </button>
 
@@ -244,7 +244,7 @@
 
           <button   kendoButton *ngIf="buttondataItem.id === 'attachfromclient' || (buttondataItem.id === 'removefile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
             <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachfromclient'">{{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New  from client\'s attachments" : "Attach from client\'s attachments" }}  </label>
-            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removefile'"><span class="material-icons middleicon">
+            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removefile'"><span class="material-icons middleicon" aria-hidden="true">
               delete
               </span> {{ buttondataItem.text }}  </label>
         </button>

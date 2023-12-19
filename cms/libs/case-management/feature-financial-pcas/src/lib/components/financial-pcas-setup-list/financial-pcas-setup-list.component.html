@@ -78,7 +78,7 @@ aria-label="add"> PCA Setup</button>
             <kendo-grid-column field="isPcaAssigned" title="Assigned" [width]="110">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <div class="text-center">
-                              <span class="material-icons red-text-color " title="Assigned" *ngIf="dataItem.isPcaAssigned">
+                              <span class="material-icons red-text-color" title="Assigned" *ngIf="dataItem.isPcaAssigned">
                                     price_check
                               </span>
 
@@ -199,9 +199,9 @@ aria-label="add"> PCA Setup</button>
                       <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                         <ng-container>
                           <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                            [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)"
+                            [class]="buttondataItem.buttonType"  (click)="buttondataItem.click(dataItem)"
                             [hidden]="dataItem.isPcaAssigned && buttondataItem.text === 'Remove'">
-                            <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                            <span class="material-icons"  aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                             <label> {{ buttondataItem.text }} </label>
                           </button>
                         </ng-container>   </ng-template>

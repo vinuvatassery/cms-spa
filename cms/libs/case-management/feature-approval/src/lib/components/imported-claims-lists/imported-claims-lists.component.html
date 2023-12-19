@@ -40,7 +40,7 @@
       [disabled]="showExportLoader"
       (click)="onClickedExport()"
     >
-    <span *ngIf="!showExportLoader" class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>
+    <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>
     <span *ngIf="showExportLoader" class="k-icon k-i-loading k-input-loading-icon mr-1"></span><i
       class="exp_button-text">Export</i>
     </button>

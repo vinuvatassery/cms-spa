@@ -61,7 +61,7 @@
                                 <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                                     [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem, eligibilityStatusPeriodDetail)" [disabled]="(isReadOnly$ | async) ? true : false">
                                     <span class="material-icons"
-                                        [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                                        [attr.aria-label]="buttondataItem.text" aria-hidden="true">{{buttondataItem.icon}}</span>
                                     <label> {{ buttondataItem.text }} </label>
                                 </button>
                             </ng-template>

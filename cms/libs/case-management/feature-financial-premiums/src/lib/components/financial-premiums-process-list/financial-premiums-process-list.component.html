@@ -19,7 +19,7 @@
   </span>
   <span class="right-overlay-export">
     <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-      <span *ngIf="!showExportLoader" class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>
+      <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>
 
       <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
     </button>
@@ -289,8 +289,8 @@
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                [class]="buttondataItem.buttonType" (click)="buttondataItem.click(dataItem)">
+                <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
               </button>
             </ng-container>  </ng-template>
@@ -341,7 +341,7 @@
 
   <button kendoButton kendoButton class="k-error-button" aria-label="Remove" [disabled]="sendReportCount == 0"
     (click)="onRemovePremiumsOpenClicked(removePremiumsConfirmationDialogTemplate)"  *ngIf="isRemoveBatchClosed"> <span class="material-icons mr-1"
-      aria-label="Remove"> delete</span> Remove </button>
+      aria-label="Remove" aria-hidden="true"> delete</span> Remove </button>
 
   <button kendoButton [primary]="true" aria-label="Batch"
   [disabled]="!selectedProcessClaims.length"
@@ -353,14 +353,14 @@
   <kendo-splitbutton  [data]="premiumsProcessMore" *ngIf="!isBatchPremiumsClicked && !isRemoveBatchClosed && !isSendReportOpened"
     class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-    <div class="btn-inner-block" (click)="onSplitBatchPremiumsClicked()">
-      <span class="material-icons" aria-label="New Premiums" aria-hidden="false">check</span>
+    <div class="btn-inner-block" (click)="onSplitBatchPremiumsClicked()" aria-label="Batch Premium">
+      <span class="material-icons" aria-label="New Premiums" aria-hidden="true">check</span>
       Batch Premiums
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-        aria-hidden="false" (click)="dataItem.click(dataItem)">
-        <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+         (click)="dataItem.click(dataItem)">
+        <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
     </ng-template>
@@ -422,7 +422,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
-          Client Profile <span class="material-icons ml-1">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true">
             chevron_right
           </span>
         </button>

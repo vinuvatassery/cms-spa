@@ -6,7 +6,7 @@
       <div class="vendor-header-top mb-1">
         <div class="d-flex">
           <button aria-label="Go Back" kendoButton look="flat" title="Go Back" (click)="onBackClicked()"  title="Back"> <span
-            class="material-icons">
+            class="material-icons" aria-hidden="true">
             arrow_back </span> </button>
         <h1 class="title_with_bld">
           <span class="bold-text pl-1" [ngClass]="getHeaderPreferredFlag(vendorProfile$)"> {{vendorProfile$?.vendorName}}</span>
@@ -46,8 +46,8 @@
               <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
                 <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-                  aria-hidden="false" (click)="dataItem.click">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                   (click)="dataItem.click">
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                   <label> {{ dataItem.text }} </label>
                 </button>
               </ng-template>
@@ -71,8 +71,8 @@
               <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
                 <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-                  aria-hidden="false" (click)="dataItem.click">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                   (click)="dataItem.click">
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                   <label> {{ dataItem.text }} </label>
                 </button>
               </ng-template>
@@ -96,8 +96,8 @@
               <span hidden> More Option</span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
                 <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-                  aria-hidden="false" (click)="dataItem.click">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                   (click)="dataItem.click">
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                   <label> {{ dataItem.text }} </label>
                 </button>
               </ng-template>
@@ -157,8 +157,8 @@
         <span hidden> More Option</span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
           <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-            aria-hidden="false" (click)="dataItem.click">
-            <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+              (click)="dataItem.click">
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
             <label> {{ dataItem.text }} </label>
           </button>
         </ng-template>
@@ -182,8 +182,8 @@
         <span hidden> More Option</span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
           <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-            aria-hidden="false" (click)="dataItem.click">
-            <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+            (click)="dataItem.click">
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
             <label> {{ dataItem.text }} </label>
           </button>
         </ng-template>
