@@ -89,8 +89,7 @@
     (filterChange)="filterChange($event)"
     [filter]="state.filter"
     [isDetailExpanded]="expandInClaimException"
-    [data]="gridImportedClaimsBatchData$ | async"
-    [navigable]="true"
+    [data]="gridImportedClaimsBatchData$ | async" 
     (columnVisibilityChange)="columnChange($event)"
     (columnReorder)="onColumnReorder($event)"
   >

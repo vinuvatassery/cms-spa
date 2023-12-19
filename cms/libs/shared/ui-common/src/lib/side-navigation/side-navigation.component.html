@@ -27,10 +27,10 @@
         attr.aria-label="{{ subMenu.name }}">
 
         <div *ngIf="subMenu.subMenus?.length !== 0">
-          <p class="submenu_list_heading" [attr.aria-label]="subMenu.name"
+        <p class="submenu_list_heading" [attr.aria-label]="subMenu.name"
             *ngIf="isMenuHeadingVisible(subMenu.subMenus, menu.filterText) || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1">
-            {{ subMenu.name | uppercase }}
-            <span class="sidebar-menu_label-badge" *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code)"> {{ getBadge(subMenu.code)}} </span>
+            <span>  {{ subMenu.name | uppercase }}
+            <span class="tab-batch-notify" *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code)"> {{ getBadge(subMenu.code)}} </span></span>
           </p>
 
           <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus">

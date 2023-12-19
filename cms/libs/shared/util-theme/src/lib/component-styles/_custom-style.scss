@@ -1081,7 +1081,13 @@ color: $app-primary-font-color;
 .grid-list-options-menu{
   text-transform: none;
 }
-
+.submenu_list_heading{
+  .tab-batch-notify {
+  
+  position: relative;
+  top: -2px;
+  }
+}
 .tab-batch-notify {
   display: inline-block;
   padding: 0px 6px;

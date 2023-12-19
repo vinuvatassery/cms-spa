@@ -608,10 +608,22 @@
 
 .cms-button-group {
   display: flex;
+.k-button{
 
+  &:first-child{
+    border-top-right-radius: 0px ;
+    border-bottom-right-radius: 0px;
+
+  }
+
+  &:nth-child(2){
+    border-top-left-radius: 0px ;
+    border-bottom-left-radius: 0px;
+  }
+}
   .k-toggle-button {
     text-transform: unset;
-
+background: $black-e;
     &.k-selected {
       color: $white;
       background: $app-primary;

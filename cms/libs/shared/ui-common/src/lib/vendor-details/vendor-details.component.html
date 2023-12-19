@@ -53,9 +53,10 @@
       <div class="flex-col"
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders || providerType == vendorTypes.HealthcareProviders || providerType == vendorTypes.Clinic">
         <div class="flex-row">
+            <div *ngIf="providerType !== vendorTypes.Clinic && !editVendorInfo"  class="flex-col flex-col-8">
 
-          <div *ngIf="providerType !== vendorTypes.Clinic && !editVendorInfo"
-            class="flex-col flex-col-8 inlineloaderwrapper hidedropicon">
+           
+          <div class="inlineloaderwrapper hidedropicon">
             <span *ngIf="clinicVendorLoader$ | async"
               class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
             <kendo-floatinglabel text="Clinic Name">
@@ -76,6 +77,7 @@
               </kendo-formerror>
             </kendo-floatinglabel>
 
+          </div>
             <button *ngIf="vendorTypes.MedicalProviders == providerType || vendorTypes.DentalProviders == providerType || providerType == vendorTypes.HealthcareProviders"
               kendoButton class="card-link-button ml-1 no-ul fontsize_twel mt-3" [disabled]="isViewContentEditable"
               aria-label="Add New" (click)="addNewClinicOpen()">
@@ -83,7 +85,6 @@
             </button>
 
           </div>
-
           <div *ngIf="providerType === vendorTypes.Clinic && !editVendorInfo"
             class="flex-col flex-col-12 inlineloaderwrapper">
             <span *ngIf="clinicVendorLoader$ | async"
