@@ -538,7 +538,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       if (this.tempTpaInvoiceId != null || this.tempTpaInvoiceId != undefined) {
         formControl.reset();
       } else {
-        let form = this.addClaimServicesForm.value[i];
         this.addClaimServicesForm.removeAt(i);
         this.addExceptionForm.removeAt(i);
       }
