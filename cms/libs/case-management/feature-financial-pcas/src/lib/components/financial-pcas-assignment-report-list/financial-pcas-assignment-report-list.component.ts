@@ -75,28 +75,12 @@ export class FinancialPcasAssignmentReportListComponent
       columnDesc: 'All Columns',
     },
     {
-      columnName: 'status',
-      columnDesc: 'Status',
-    },
-    {
       columnName: 'pcaCode',
       columnDesc: 'PCA',
     },
     {
-      columnName: 'objectName',
-      columnDesc: 'Object',
-    },
-    {
       columnName: 'ay',
       columnDesc: 'AY',
-    },
-    {
-      columnName: 'openDate',
-      columnDesc: 'Open Date',
-    },
-    {
-      columnName: 'closeDate',
-      columnDesc: 'Close Date',
     },
   ];
 
