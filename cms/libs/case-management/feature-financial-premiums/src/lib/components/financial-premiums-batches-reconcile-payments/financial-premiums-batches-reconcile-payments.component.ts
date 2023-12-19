@@ -751,8 +751,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.updateDatePaymentReconciledValidation(dataItem);
     if (dataItem.checkNbr !== '' && dataItem.acceptsReportsFlag == 'Y') {
       dataItem.isPrintAdviceLetter = true;
-    }
-    this.assignRowDataToMainList(dataItem);
+    }    
 
     if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined
       && dataItem.checkNbr !== ''){
@@ -776,6 +775,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       dataItem.warrantNumberInValidMsg = null;
       dataItem.warrantNumberInValid = false;
     }
+
+    this.assignRowDataToMainList(dataItem);
   }
 
   updateDatePaymentReconciledValidation(dataItem: any) {
