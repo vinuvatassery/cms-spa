@@ -236,6 +236,7 @@ cms-sidenav {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
+          line-height: normal;
         }
       }
     }
@@ -276,7 +277,7 @@ cms-sidenav {
         margin-top: 1rem;
 
         .submenu_heading {
-          font-size: 16px;
+          font-size: $font-size-l;
           font-family: $font-family-bold;
         }
 

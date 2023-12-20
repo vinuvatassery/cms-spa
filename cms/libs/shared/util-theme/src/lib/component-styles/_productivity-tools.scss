@@ -4,8 +4,7 @@
     display: flex;
     margin: $size-0 $size-0 $size-xx $size-0;
     font-family: $font-family-bold;
-    align-items: center;
-    text-transform: uppercase;
+    align-items: center; 
     font-size: $font-size !important;
     .material-icons {
       margin-right: $size-m;
@@ -30,7 +29,7 @@
       .due-item-heading {
         font-family: $font-family-bold;
         margin: 0;
-        line-height: 1.125rem;
+        line-height: normal;
         margin-bottom: $size-m;
         font-size: $font-size;
         overflow: hidden;
