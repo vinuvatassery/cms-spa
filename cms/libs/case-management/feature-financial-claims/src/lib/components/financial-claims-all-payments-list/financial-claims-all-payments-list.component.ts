@@ -316,10 +316,6 @@ export class FinancialClaimsAllPaymentsListComponent
   handleAllPaymentsGridData() {
     this.financialClaimsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
       this.gridFinancialClaimsAllPaymentsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
