@@ -1,7 +1,7 @@
 import {
   Component,
   ChangeDetectionStrategy,
-  Output, 
+  Output,
   EventEmitter,
   Input,
   ChangeDetectorRef,
@@ -14,10 +14,10 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-premiums-payment-details-form',
-  templateUrl: './financial-premiums-payment-details-form.component.html', 
+  templateUrl: './financial-premiums-payment-details-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPremiumsPaymentDetailsFormComponent {  
+export class FinancialPremiumsPaymentDetailsFormComponent {
   public formUiStyle: UIFormStyle = new UIFormStyle()
 
   @Input() paymentDetailsForm!: any;
@@ -44,13 +44,13 @@ export class FinancialPremiumsPaymentDetailsFormComponent {
 
   constructor(private formBuilder: FormBuilder, public intl: IntlService,
     private configurationProvider: ConfigurationProvider,
-    private readonly cd: ChangeDetectorRef){  
+    private readonly cd: ChangeDetectorRef){
   }
- 
+
 
   ngOnInit():void{
     this.buildPremiumPaymentForm();
-    this.paymentPanelLoadSubscription();   
+    this.paymentPanelLoadSubscription();
   }
 
   ngOnDestroy(): void {
@@ -60,7 +60,7 @@ export class FinancialPremiumsPaymentDetailsFormComponent {
   changeMinDate() {
     this.endDateMin = this.premiumPaymentForm.controls['datePaymentReconciled'].value;
   }
-  
+
   closePaymentDetailClicked() {
     this.closePaymentDetailFormClickedEvent.emit(true);
   }
@@ -167,14 +167,14 @@ validateModel(){
     Validators.required,
   ]);
   this.premiumPaymentForm.controls['warrantNumber'].updateValueAndValidity();
-  if (this.premiumPaymentForm.controls['datePaymentReconciled'].value === null || 
+  if (this.premiumPaymentForm.controls['datePaymentReconciled'].value === null ||
       this.premiumPaymentForm.controls['datePaymentReconciled'].value > this.currentDate) {
     this.dateReconciledValidator = false;
     this.premiumPaymentForm.controls['datePaymentReconciled'].setErrors({'incorrect': true});
    }
-   if (this.premiumPaymentForm.controls['datePaymentSent'].value === null || 
+   if (this.premiumPaymentForm.controls['datePaymentSent'].value === null ||
        this.premiumPaymentForm.controls['datePaymentSent'].value > this.currentDate) {
-    this.datePaymentSentValidator = false;
+    this.datePaymentSentValidator = true;
     this.premiumPaymentForm.controls['datePaymentSent'].setErrors({'incorrect': true});
    }
 }
@@ -184,8 +184,8 @@ populatePaymentPanelModel(){
   this.paymentPanel.CheckRequestId = this.paymentDetailsForm.checkRequestId;
   this.paymentPanel.PaymentRequestBatchId = this.paymentDetailsForm.paymentRequestBatchId;
   this.paymentPanel.PaymentRequestId = this.paymentDetailsForm.paymentRequestId;
-  this.paymentPanel.paymentReconciledDate = this.intl.formatDate(this.premiumPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat); 
-  this.paymentPanel.paymentSentDate = this.intl.formatDate(this.premiumPaymentForm.controls['datePaymentSent'].value, this.dateFormat); 
+  this.paymentPanel.paymentReconciledDate = this.intl.formatDate(this.premiumPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat);
+  this.paymentPanel.paymentSentDate = this.intl.formatDate(this.premiumPaymentForm.controls['datePaymentSent'].value, this.dateFormat);
   this.paymentPanel.amountPaid = this.premiumPaymentForm.controls['paymentAmount'].value
   this.paymentPanel.checkNbr = this.premiumPaymentForm.controls['warrantNumber'].value
   this.paymentPanel.notes = this.premiumPaymentForm.controls['note'].value
@@ -197,15 +197,15 @@ buildPremiumPaymentForm(){
     datePaymentReconciled: [null],
     datePaymentSent: [null],
     paymentAmount: [null],
-    warrantNumber: [null],      
+    warrantNumber: [null],
     note: [null],
   });
-  
+
 }
-save(){   
+save(){
   this.validateModel();
   if(this.premiumPaymentForm.valid){
-    this.populatePaymentPanelModel();    
+    this.populatePaymentPanelModel();
     this.closePaymentDetailFormClickedEvent.emit(true);
     this.updatePaymentPanel.emit(this.paymentPanel);
   }
