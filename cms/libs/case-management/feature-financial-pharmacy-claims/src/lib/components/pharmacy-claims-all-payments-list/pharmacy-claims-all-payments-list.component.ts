@@ -260,7 +260,6 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   }
 
   onSearch(searchValue: any) {
-    debugger;
     const isDateSearch = searchValue.includes('/');
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
