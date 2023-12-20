@@ -23,6 +23,8 @@ import { BehaviorSubject, Observable, Subject, Subscription, debounceTime } from
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoadTypes, GridFilterParam } from '@cms/case-management/domain';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-pharmacy-claims-all-payments-list',
@@ -132,6 +134,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
   { columnName: 'clientFullName', columnDesc: 'Client Name' },
   { columnName: 'clientId', columnDesc: 'Client ID' },
+  { columnName: 'creationTime', columnDesc: 'Entry Date' },
 ];
    
   public allPaymentsGridActions = [
@@ -194,7 +197,9 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   constructor(private route: Router, 
     private dialogService: DialogService,
     private readonly lovFacade: LovFacade,
-    private readonly cdr: ChangeDetectorRef,) {}
+    private readonly cdr: ChangeDetectorRef,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider) {}
 
   ngOnInit(): void {
     this.sortType = 'asc';
@@ -255,6 +260,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   }
 
   onSearch(searchValue: any) {
+    debugger;
     const isDateSearch = searchValue.includes('/');
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
@@ -292,9 +298,24 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.defaultGridState();
     let operator = 'contains'
     const isClientId = (['clientId']).includes(this.selectedSearchColumn);
+    const isEntryDate = (['creationTime']).includes(this.selectedSearchColumn);
     if(isClientId){
       operator = 'eq';
       data = !isNaN(data) && !isNaN(parseFloat(data)) ? data: '0';
+    }else if(isEntryDate){
+      operator = 'eq';
+      data = this.isValidDate(data) ? this.intl.formatDate(
+        new Date(data),
+        this.configProvider?.appSettings?.dateFormat
+      ): '01/01/0001';
+    }
+    const isDateSearch = data.includes('/');
+    if(isDateSearch)
+    {
+      data = this.isValidDate(data) ? this.intl.formatDate(
+        new Date(data),
+        this.configProvider?.appSettings?.dateFormat
+      ): '01/01/0001';
     }
     this.filterData = {
       logic: 'and',
@@ -315,7 +336,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
-
+  private isValidDate = (searchValue: any) =>
+  isNaN(searchValue) && !isNaN(Date.parse(searchValue));
   private loadPharmacyClaimsAllPaymentsListGrid(): void {
     const params = new GridFilterParam(this.state.skip, this.state.take, this.sortValue, this.sortType, JSON.stringify(this.filter))
     this.loadPharmacyClaimsAllPaymentsListEvent.emit(params);
