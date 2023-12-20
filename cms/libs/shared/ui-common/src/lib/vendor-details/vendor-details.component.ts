@@ -1,8 +1,7 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade,TinValidationFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
@@ -74,6 +73,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   clinicSearchSubscription !: Subscription;
   specialCharAdded: boolean = false;
   accountingNumberValidated: boolean = true;
+  isDuplicateTin = false;
+  duplicateTinMessage = "";
+
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -82,6 +84,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
+    private tinValidationFacade: TinValidationFacade
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
@@ -678,26 +681,50 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   restrictAccountingNumber() {
-    if(((this.providerType == this.vendorTypes.Pharmacy)||(this.providerType==this.vendorTypes.DentalProviders)) && this.medicalProviderForm.controls['tinNumber'].value==''){
+    if(((this.providerType == this.vendorTypes.Pharmacy)||(this.providerType==this.vendorTypes.DentalProviders)||(this.providerType==this.vendorTypes.MedicalProviders )) && this.medicalProviderForm.controls['tinNumber'].value==''){
       this.accountingNumberValidated = true;
       return;
     }
     if (this.medicalProviderForm.controls['tinNumber'].value && (parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 3)) {
       this.accountingNumberValidated = true;
+      if(this.medicalProviderForm.controls['tinNumber'].value.length>=9){
+        this.validateTin(this.medicalProviderForm.controls['tinNumber'].value);
+      }
     } else {
       this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
       this.accountingNumberValidated = false;
+      this.isDuplicateTin = false;
     }
   }
   onKeyPressAllowAlphabetOnly(event:number) {
     if((event > 64 && event < 91) || (event > 96 && event < 123)||event==32)
       {
-        this.medicalProviderForm.controls['city'].setErrors(null); 
+        this.medicalProviderForm.controls['city'].setErrors(null);
         return true;
       }else{
         this.medicalProviderForm.controls['city'].setErrors({ 'incorrect': true });
         return false;
       }
+  }
+
+  validateTin(tinNbr: any) {
+    this.tinValidationFacade.showLoader();
+    this.tinValidationFacade.validateTinNbr(tinNbr).subscribe({
+      next: (response: any) => {
+        if(response){
+          this.isDuplicateTin = false;
+        }
+        this.tinValidationFacade.hideLoader();
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.tinValidationFacade.hideLoader();
+        this.isDuplicateTin = true;
+        this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
+        this.duplicateTinMessage = err.error?.error?.message ?? "";
+        this.cdr.detectChanges();
+        }
+    });
   }
 
 }

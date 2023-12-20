@@ -63,6 +63,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  reconcileGridListsSubscription !: Subscription;
   paymentRequestId!: string;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
@@ -178,6 +179,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     private configurationProvider: ConfigurationProvider,private readonly lovFacade: LovFacade ) {}
   
   ngOnInit(): void {
+    this.reconcilePaymentGridUpdatedResult = [];
     this.loadQueryParams();
     if(this.loadType === LoadTypes.allPayments){
       this.columns.batchName ='Batch #';
@@ -211,6 +213,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
   ngOnDestroy(): void {
     this.paymentMethodLovSubscription.unsubscribe();
+    this.reconcileGridListsSubscription.unsubscribe();
   }
 
   loadQueryParams(){
@@ -356,7 +359,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   dataStateChange(stateData: any): void {
     this.sortBatch = stateData.sort;
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
     this.sortDir = this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.filter = stateData?.filter?.filters;
@@ -500,9 +503,9 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
           itemResponse.data[index].reconciled = true;
         }
       }     
-      this.reconcilePaymentGridPagedResult = itemResponse;      
+         
     });
-
+    this.reconcilePaymentGridPagedResult = itemResponse;   
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -510,7 +513,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   }
 
   gridDataHandle() {
-    this.reconcileGridLists$.subscribe((response: any) => {
+    this.reconcileGridListsSubscription = this.reconcileGridLists$.subscribe((response: any) => {
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.reconcilePaymentGridPagedResult.data);

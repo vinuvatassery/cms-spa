@@ -104,6 +104,7 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
   isExcededMaxBanifitButtonText = 'Make Exception';
   groupedPaymentRequestTypes:any;
   isDisabled: boolean = true;
+  isClientInEligibleForDates= false;
   /** Constructor **/
   constructor(
     private formBuilder: FormBuilder,
@@ -167,8 +168,9 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
 
   checkExceptions()
   {
-
+     this.isClientInEligibleForDates = false;
     this.showIneligibleSubscription = this.showIneligibleException$.subscribe(data => {
+      this.isClientInEligibleForDates = data?.flag;
       if(data?.flag)
       {
         this.resetExceptionFields(data?.indexNumber);
@@ -340,7 +342,9 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
       this.claimForm.markAllAsTouched()
       return;
     }
-
+    if(this.isClientInEligibleForDates){
+   return;
+    }
     let formValues = this.claimForm.value;
 
     let bodyData = {
@@ -641,7 +645,7 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
       });
       this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId,
         index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
-        this.clientCaseEligibilityId);
+        this.clientCaseEligibilityId, this.paymentRequestId);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }
@@ -656,9 +660,10 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
     const startDate = this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat );
     const endDate = this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ) ;
     const dueAmount = serviceFormData.controls['amountDue'].value;
-    const vendorId = this.claimForm.value?.medicalProvider?.vendorId
+    const vendorId = this.claimForm.value?.medicalProvider?.vendorId;
+    const clientId = this.claimForm.value?.client?.clientId;
     if (startDate && endDate && dueAmount && vendorId) {
-      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount,null, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkDuplicatePaymentException(clientId, startDate,endDate, vendorId,dueAmount,null, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   calculateMedicadeRate(index: number) {
@@ -755,6 +760,8 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
     const maxDate = new Date('31/12/2099');
     startDate = new Date(this.intl.formatDate(startDate,  this.dateFormat )) ;
     endDate = new Date(this.intl.formatDate(endDate,  this.dateFormat )) ;
+    if(startDate == "Invalid Date") return;
+    if(endDate == "Invalid Date") return;
     if(startDate < minDate || startDate > maxDate || endDate < minDate || endDate > maxDate){
       return;
     }

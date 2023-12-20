@@ -64,6 +64,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
+  reconcileGridListsSubscription !: Subscription;
   paymentRequestId!:any;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
@@ -173,6 +174,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     public activeRoute: ActivatedRoute) {}
   
   ngOnInit(): void {
+    this.reconcilePaymentGridUpdatedResult = [];
     this.loadQueryParams();   
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodSubscription();
@@ -231,6 +233,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   ngOnDestroy(): void {
     this.paymentMethodLovSubscription.unsubscribe();
+    this.reconcileGridListsSubscription.unsubscribe();
   }
   private loadReconcileListGrid(): void {
     this.loadReconcile(
@@ -526,10 +529,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         if((itemResponse.data[index].checkNbr !== null && itemResponse.data[index].checkNbr !== '' && itemResponse.data[index].checkNbr !== undefined )){
           itemResponse.data[index].reconciled = true;
         }
-      }     
-      this.reconcilePaymentGridPagedResult = itemResponse;      
+      }          
     });
-
     this.reconcilePaymentGridPagedResult = itemResponse;
   }
 
@@ -538,7 +539,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   }
 
   gridDataHandle() {
-    this.reconcileGridLists$.subscribe((response: any) => {
+    this.reconcileGridListsSubscription = this.reconcileGridLists$.subscribe((response: any) => {
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.reconcilePaymentGridPagedResult.data);
@@ -751,8 +752,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.updateDatePaymentReconciledValidation(dataItem);
     if (dataItem.checkNbr !== '' && dataItem.acceptsReportsFlag == 'Y') {
       dataItem.isPrintAdviceLetter = true;
-    }
-    this.assignRowDataToMainList(dataItem);
+    }    
 
     if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined
       && dataItem.checkNbr !== ''){
@@ -776,6 +776,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       dataItem.warrantNumberInValidMsg = null;
       dataItem.warrantNumberInValid = false;
     }
+
+    this.assignRowDataToMainList(dataItem);
   }
 
   updateDatePaymentReconciledValidation(dataItem: any) {

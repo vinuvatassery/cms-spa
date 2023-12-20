@@ -89,7 +89,7 @@
 
     <kendo-grid-column field="batchNumber" title="Batch #" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button (click)="paymentClickHandler(dataItem)" [attr.aria-label]="dataItem.batchNumber" kendoButton look="flat" class="card-link-button">
+        <button (click)="navToBatchDetails(dataItem)" [attr.aria-label]="dataItem.batchNumber" kendoButton look="flat" class="card-link-button">
           {{ dataItem.batchNumber }}
         </button>
       </ng-template>

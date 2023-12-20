@@ -58,7 +58,7 @@
         <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
         <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
         <span class="sort-items">{{columnChangeDesc}}</span>
-        <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+        <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span> 
         <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="restGrid()">
           <a>Set to Default</a>
         </button>
@@ -70,7 +70,7 @@
       </div>
     </div>
       <div class="app-c-table">
-        <kendo-grid [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
+        <kendo-grid (columnReorder)="onColumnReorder($event)" (columnVisibilityChange)="columnChange($event)" [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true"
           [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [columnMenu]="{ filter: true }"
           [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
           [data]="batchLogGridLists$ | async" (filterChange)="filterChange($event)" filterable="menu"
