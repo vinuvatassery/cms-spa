@@ -807,7 +807,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
-            response.messasge
+            response.message
           );
           this.navigationMenuFacade.pcaReassignmentCount();
         }
@@ -831,7 +831,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
         if (response) {
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
-            response.messasge
+            response.message
           );
           this.navigationMenuFacade.pcaReassignmentCount();
           this.closeAddEditClaimsFormModalClicked(true);
