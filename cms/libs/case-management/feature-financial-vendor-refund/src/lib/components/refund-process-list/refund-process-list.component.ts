@@ -432,7 +432,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
       if (data?.total < 1) {
         this.isDataAvailable = false;
       }
-      else 
+      else
       {
         this.isDataAvailable=true;
       }
@@ -476,10 +476,10 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   onModalBatchRefundsButtonClicked(event: any) {
     this.handleBatchRefunds();
 
-    this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
+    this.state?.skip ?? 0;
+    this.state?.take ?? 0;
+    this.sortValue;
+    this.sortType;
 
     const gridDataRefinerValue: any = {
       skipCount: this.state?.skip ?? 0,
