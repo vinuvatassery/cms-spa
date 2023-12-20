@@ -141,7 +141,7 @@
                   </kendo-grid-numeric-filter-menu>
                 </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="amountSpendAfterExpiration" title="Amount Spent After Expiration" [width]="160">
+            <kendo-grid-column field="amountSpendAfterExpiration" title="Amount Spent after Expiration" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.amountSpendAfterExpiration | kendoNumber: 'n2'}}</span>
                   </ng-template>
@@ -221,7 +221,7 @@
                         </kendo-grid-boolean-filter-menu>
                       </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column [reorderable]="false" field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="50"
+            <kendo-grid-column [reorderable]="false" field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="70"
                   class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
 
