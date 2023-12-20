@@ -98,7 +98,7 @@
   padding-bottom: 4rem;
   .TableActionPopup {
     .k-animation-container {
-      z-index: 4;
+      z-index: 4 !important;
     }
   }
 }
@@ -1351,4 +1351,8 @@ padding: 8px;
   white-space: normal; 
   padding: 5px 0px;
   font-family: $font-family-medium;
+}
+
+.k-animation-container{
+  z-index: 100 !important;
 }
