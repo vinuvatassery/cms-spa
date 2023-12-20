@@ -172,12 +172,12 @@ export class FinancialPharmacyClaimsComponent {
 
   rowClickNavigation(field: string, dataItem: any){
     if(field === 'batchName'){
-      this.router.navigate(['financial-management/pharmacy-claims/batch/items'], {
+      this.router.navigate(['financial-management/pharmacy-claims/batch'], {
         queryParams: { bid: dataItem.batchId },
       });
     }
     else if(field === 'itemNbr'){
-      this.router.navigate(['financial-management/pharmacy-claims/batch/items'], {
+      this.router.navigate(['financial-management/pharmacy-claims/batch'], {
         queryParams: { bid: dataItem.batchId, iid:dataItem.itemId },
       });
     }
