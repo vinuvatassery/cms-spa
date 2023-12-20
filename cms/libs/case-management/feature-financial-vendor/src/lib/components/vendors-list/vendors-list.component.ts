@@ -100,12 +100,6 @@ dropDowncolumns : any = [
   }
   ,
   {
-    "columnCode": "paymentMethod",
-    "columnDesc": "Payment Method"   ,
-    "vendorTypeCode": ["MEDICAL_PROVIDER"],
-  }
-  ,
-  {
     "columnCode": "totalClaims",
     "columnDesc": "Total Claims"   ,
     "vendorTypeCode": ["MEDICAL_PROVIDER"],
@@ -141,11 +135,6 @@ dropDowncolumns : any = [
     "columnCode": "totalDrugs",
     "columnDesc": "Total Drugs"   ,
     "vendorTypeCode": ["MANUFACTURERS"],
-  },
-  {
-    "columnCode": "mailCode",
-    "columnDesc": "Mail Code"   ,
-    "vendorTypeCode": ["MEDICAL_PROVIDER"],
   },
   {
     "columnCode": "address",
