@@ -14,7 +14,7 @@
       <section class="app-l-client-wrapper ">
             <section class="app-l-wrapper">
                   <div *ngIf="(paymentDetails$ | async) as payment; else loading">
-                  <p> <button aria-label="view Provider Profile"
+                  <p> <button [attr.aria-label]="payment.vendorName"
                               (click)="onViewProviderDetailClicked()" kendoButton look="flat"
                               class="mr-3 card-link-button">
                               {{payment.vendorName}}
@@ -237,7 +237,7 @@
       </section>
 </div>
 <div class="bottom-fixed-wrapper align-items-center content-start flex-gap">
-      <span class="">Report Sent XX/XX/XXXX by <button aria-label="providerName" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor
+      <span class="">Report Sent XX/XX/XXXX by <button aria-label="provider FName LName" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered" showOn="hover">FName LName</button></span>
       
     </div>

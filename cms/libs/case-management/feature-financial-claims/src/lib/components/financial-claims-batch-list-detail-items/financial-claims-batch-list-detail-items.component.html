@@ -13,7 +13,7 @@
       <section class="app-l-client-wrapper ">
             <section class="app-l-wrapper">
                   <div *ngIf="(paymentDetails$ | async) as payment; else loading">
-                  <p> <button attr.aria-label="view {{payment.vendorName}}"
+                  <p> <button attr.aria-label="{{payment.vendorName}}"
                               (click)="onViewProviderDetailClicked(providerDetailsTemplate)" kendoButton look="flat"
                               class="mr-3 card-link-button">
                               {{payment.vendorName}}

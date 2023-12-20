@@ -83,7 +83,7 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="itemNumber" kendoButton look="flat" class="card-link-button"
+          <button [attr.aria-label]="dataItem.itemNumber" kendoButton look="flat" class="card-link-button"
           (click)="onitemNumberClick(dataItem)">
             {{ dataItem.itemNumber }}
           </button>
@@ -119,7 +119,7 @@
       </kendo-grid-column>
       <kendo-grid-column field="providerName" title="Provider Name" [width]="160">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="providerName" kendoButton look="flat" class="card-link-button"
+          <button [attr.aria-label]="dataItem.providerName" kendoButton look="flat" class="card-link-button"
           (click)="onProviderNameClick(dataItem.paymentRequestId)">
             {{ dataItem.providerName }}
           </button>

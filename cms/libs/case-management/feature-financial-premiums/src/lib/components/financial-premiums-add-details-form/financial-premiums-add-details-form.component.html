@@ -199,7 +199,7 @@
                                 </kendo-formerror>
                                 <kendo-formerror class="align-items-center" *ngIf="dataItem.premiumExistException"> 
                                         <span class="material-icons mr-1" aria-hidden="false">info</span> Premium Already Exists!                                                                             
-                                        <a kendoButton class="ml-1 card-link-button" (click)="onMakeExceptionClick(dataItem)"><u>{{dataItem.exceptionText}}</u></a>
+                                        <a kendoButton class="ml-1 card-link-button" (click)="onMakeExceptionClick(dataItem)" [attr.aria-label]="dataItem.exceptionText"><u>{{dataItem.exceptionText}}</u></a>
                                 </kendo-formerror>
                                 </ng-template>
                             </kendo-grid-column>

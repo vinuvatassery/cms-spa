@@ -80,7 +80,7 @@
           </div>
             <button *ngIf="vendorTypes.MedicalProviders == providerType || vendorTypes.DentalProviders == providerType || providerType == vendorTypes.HealthcareProviders"
               kendoButton class="card-link-button ml-1 no-ul fontsize_twel mt-3" [disabled]="isViewContentEditable"
-              aria-label="Add New" (click)="addNewClinicOpen()">
+              attr.aria-label=" {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}" (click)="addNewClinicOpen()">
               {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}
             </button>
 
@@ -106,7 +106,7 @@
 
             <button *ngIf="vendorTypes.MedicalProviders == providerType || vendorTypes.DentalProviders == providerType"
               kendoButton class="card-link-button ml-1 no-ul fontsize_twel mt-3" [disabled]="isViewContentEditable"
-              aria-label="Add New" (click)="addNewClinicOpen()">
+              attr.aria-label="{{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}" (click)="addNewClinicOpen()">
               {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}
             </button>
 

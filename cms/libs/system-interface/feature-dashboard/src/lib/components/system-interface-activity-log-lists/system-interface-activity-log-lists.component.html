@@ -56,7 +56,7 @@
       <!-- below only in Ramsell -->
       <!-- <kendo-grid-column field="status" title="Status" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button *ngIf="dataItem.status ==='Failed'" [attr.aria-label]="dataItem.failedRecords" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
+          <button *ngIf="dataItem.status ==='Failed'" [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
             View Log
           </button>
           <span *ngIf="dataItem.status ==='Success'">   {{ dataItem.status }} </span>
