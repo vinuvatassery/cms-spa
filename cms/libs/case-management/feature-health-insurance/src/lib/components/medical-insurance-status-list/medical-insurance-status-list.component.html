@@ -65,15 +65,6 @@
           title="Insurance Carrier"
           [width]="170"
         >
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <button kendoButton look="flat" class="card-link-button"
-              [attr.aria-label]="dataItem.insuranceCarrierName"
-              kendoPopoverAnchor
-              [popover]="myPopover"
-              (click)="getCarrierContactInfo(dataItem.insuranceVendorId,'')"
-              >
-              {{ dataItem.insuranceCarrierName }}
-            </button></ng-template>
         </kendo-grid-column>
         <kendo-grid-column  title="Start Date" [width]="130"  field="startDate">
           <ng-template kendoGridCellTemplate let-dataItem>
