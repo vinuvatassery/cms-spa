@@ -18,7 +18,8 @@
                               class="mr-3 card-link-button">
                               {{payment.vendorName}}
                         </button>
-                        <span class="mr-3">Pmt. Requested: {{payment.paymentStatusDate | kendoDate}}</span> <span class="mr-3">{{payment.amountDue | kendoNumber : "c"}} Due</span>
+                        <span class="mr-3">Status Date: {{payment.paymentStatusDate | kendoDate}}</span> 
+                        <span class="mr-3">{{payment.amountDue | kendoNumber : "c"}} Due</span>
                         <span class="mr-3">Status: {{payment.paymentStatusCode}}</span>
                   </p>
                   </div>
