@@ -18,7 +18,7 @@ export class DocumentDataService {
 
   getClientDocumentsViewDownload(clientDocumentId: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${clientDocumentId}/content`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${clientDocumentId}/content`
       , {
         responseType: 'blob'
       });
