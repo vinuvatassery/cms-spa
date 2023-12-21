@@ -12,7 +12,7 @@ cms-sidenav {
   border-color: $theme-border;
   width: $app-left_menu-width;
   transition: ease-in all 0.3s;
-  z-index: 89;
+  z-index: 5;
 
   .drawer-inner-container {
     transition: ease-in all 0.3s;
