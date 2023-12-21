@@ -18,7 +18,7 @@ export class DocumentDataService {
 
   getClientDocumentsViewDownload(clientDocumentId: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${clientDocumentId}/content`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${clientDocumentId}/content`
       , {
         responseType: 'blob'
       });
@@ -46,7 +46,7 @@ export class DocumentDataService {
     )
   }
 
-  getExportFileForSelection(pageAndSortedRequest: any, path: string, apiType: string = ApiType.CaseApi, selectedAllPaymentsList: any, batchId?: any) {
+  getExportFileForSelection(pageAndSortedRequest: any, path: string, selectedAllPaymentsList: any, batchId?: any, apiType: string = ApiType.CaseApi) {
     let apiUrl: any;
     switch (apiType) {
       case ApiType.CaseApi: {

@@ -359,6 +359,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.filterData = filter;
   }
   searchColumnChangeHandler(data:any){
+    this.searchValue = '';
     this.onChange(data)
   }
   pageChange(event:any){
