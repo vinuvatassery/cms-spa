@@ -110,15 +110,14 @@
         >
           <ng-template kendoGridCellTemplate let-clientPhone let-clientPhoneId="field">
             <kendo-dropdownbutton
-              [data]="gridOption"
-              icon="more-vertical"
+              [data]="gridOption" 
               title="More option"
               class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction,  animate: true }"
             >
-            <span hidden> More Option</span>
+            <span class="material-icons" aria-label="More option"> more_vert    </span>
               <ng-template class="app-dropdown-action-list"   kendoDropDownButtonItemTemplate let-dataItem let-clientPhoneId="clientPhoneId">
                 <button kendoButton  [hidden]="(clientPhone.isDeleted === true && (dataItem.buttonName==='deactivate' || dataItem.buttonName ==='preferred'))
                 ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred') ||(hasPhoneDeletePermission === false && dataItem.buttonName ==='delete')" 

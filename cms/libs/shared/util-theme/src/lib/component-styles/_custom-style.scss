@@ -927,7 +927,7 @@ color: $app-primary-font-color;
     background: transparent;
 
     .k-button-text {
-     display: none;
+    //  display: none; 
     }
   }
 
@@ -1351,8 +1351,4 @@ padding: 8px;
   white-space: normal; 
   padding: 5px 0px;
   font-family: $font-family-medium;
-}
-
-.k-animation-container{
-  z-index: 100 !important;
 }

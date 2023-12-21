@@ -59,15 +59,14 @@
         >
           <ng-template kendoGridCellTemplate let-dataItem let-clientPharmacy let-clientPharmacyId="field">
             <kendo-dropdownbutton
-              [data]="actions"
-              icon="more-vertical"
+              [data]="actions" 
               title="More option"
               class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction,  animate: true }"
             >
-            <span hidden> More Option</span>
+            <span class="material-icons" aria-label="More option"> more_vert    </span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-clientPharmacyId="clientPharmacyId">
               <button 
               kendoButton  
