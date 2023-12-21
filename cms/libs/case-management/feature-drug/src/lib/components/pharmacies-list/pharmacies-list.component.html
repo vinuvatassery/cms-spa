@@ -65,14 +65,13 @@
         <kendo-grid-column field="Option" title="Options" [width]="100" class="text-center" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem let-clientPharmacy let-pharmacyId="field">
               <kendo-dropdownbutton
-              [data]="filterActionButtonOptions( pharmacyOptions,clientPharmacy)"
-              icon="more-vertical"
+              [data]="filterActionButtonOptions( pharmacyOptions,clientPharmacy)" 
               title="More Options"
               class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-
+              <span class="material-icons" aria-label="More option"> more_vert    </span>
                   <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                       <button kendoButton  [disabled]="(isReadOnly$ | async) ? true : false" look="flat" [attr.aria-label]="buttondataItem.text"
                           [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(clientPharmacy)">

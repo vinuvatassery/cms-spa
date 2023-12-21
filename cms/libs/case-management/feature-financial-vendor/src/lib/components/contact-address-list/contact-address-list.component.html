@@ -115,10 +115,10 @@
   </kendo-grid-column>
   <kendo-grid-column [sticky]="true" field="" title="Options" [columnMenu]="false" [width]="70" class="text-center">
     <ng-template kendoGridCellTemplate let-dataItem>
-      <kendo-dropdownbutton [data]="contactAddressActions" icon="more-vertical"
+      <kendo-dropdownbutton [data]="contactAddressActions" 
         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
         aria-label="more actions" title="More option" [popupSettings]="{ popupClass: popupClassAction,  animate: true }">
-        <span hidden> More Option</span>
+        <span class="material-icons" aria-label="More option"> more_vert    </span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
           <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete Contact') || (dataItem.activeFlag == 'Y')">
             <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"

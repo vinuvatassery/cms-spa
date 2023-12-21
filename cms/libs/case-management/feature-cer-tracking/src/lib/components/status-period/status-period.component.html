@@ -137,10 +137,10 @@
                 </kendo-grid-column>
                 <kendo-grid-column field="Option" title="Options" [width]="75" [sortable]="false"  [columnMenu]="false" class="text-center">
                     <ng-template kendoGridCellTemplate let-dataItem>
-                        <kendo-dropdownbutton [data]="actions" icon="more-vertical" title="More Options"
+                        <kendo-dropdownbutton [data]="actions"  title="More Options"
                             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                             aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-
+                            <span class="material-icons" aria-label="More option"> more_vert    </span>
                             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                                 <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                                     [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem, eligibilityStatusPeriodDetail)" [disabled]="(isReadOnly$ | async) ? true : false">

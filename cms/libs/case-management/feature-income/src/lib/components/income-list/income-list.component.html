@@ -136,14 +136,14 @@
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton
               [data]="actionsmore"
-              icon="more-vertical"
+              
               title="More option"
               class="TableActionPopup more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction,  animate: true }"
             >
-            <span hidden> More Option</span>
+            <span class="material-icons" aria-label="More option"> more_vert    </span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="onIncomeActionClicked(dataItem,buttondataItem.type)" [disabled]="(isReadOnly$ | async) ? true : false">
                   <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>

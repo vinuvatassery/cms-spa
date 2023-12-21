@@ -290,11 +290,11 @@
           <kendo-grid-column field="Option" title="Options" [reorderable]="false" [draggable]="false" [sortable]="false"
             [columnMenu]="false" [width]="80" class="text-center" [includeInChooser]="false">
             <ng-template kendoGridCellTemplate let-dataItem>
-              <kendo-dropdownbutton [data]="getBatchLogGridActions(dataItem)" icon="more-vertical"
+              <kendo-dropdownbutton [data]="getBatchLogGridActions(dataItem)" 
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                 aria-label="more actions" title="More option"
                 [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-                <span hidden> More Option</span>
+                <span class="material-icons" aria-label="More option"> more_vert    </span>
                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                   <ng-container>
                     <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
