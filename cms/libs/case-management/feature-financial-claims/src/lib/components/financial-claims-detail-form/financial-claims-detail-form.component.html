@@ -50,12 +50,11 @@
                             <kendo-formerror *ngIf="(!claimForm.controls['medicalProvider'].valid) && isSubmitted">Provider Name is required
                             </kendo-formerror>
                             <div *ngIf="getParentExceptionFormValue('providerNotEligibleExceptionFlag')">
-                                <kendo-formerror class="align-items-center"> <span class="material-icons mr-1"
-                                        aria-hidden="false">info</span> Provider not eligible.
-                                    <a kendoButton class="ml-1 card-link-button"
+                                <kendo-formerror class="align-items-center"> <span class="material-icons mr-1" >info</span> Provider not eligible.
+                                    <a kendoButton  class="ml-1 card-link-button" attr.aria-label="{{getParentExceptionFormValue('providerNotEligibleExceptionFlagText')}}"
                                         (click)="onMakeParentExceptionClick('showProviderNotEligibleExceptionReason')">{{getParentExceptionFormValue('providerNotEligibleExceptionFlagText')}}
                                     </a>
-                                    <a kendoButton class="ml-1 card-link-button"
+                                    <a kendoButton class="ml-1 card-link-button" attr.aria-label="{{vendorName??''}}"
                                         (click)="onVendorNameClick()">{{vendorName??''}}
                                     </a>
                                 </kendo-formerror>
@@ -130,7 +129,7 @@
                                 </kendo-formerror>
                                 </div>
                                 <div class="text-right flex-col" *ngIf="isRecentClaimShow" >
-                                    <a  kendoButton look="flat" class="card-link-button" href="#isRecentClaimShow" >
+                                    <a  kendoButton look="flat" aria-label="View Recent Claims" class="card-link-button" href="#isRecentClaimShow" >
                                         View Recent Claims
                                      </a>
                                  </div>
@@ -218,6 +217,7 @@
                                                     <span class="material-icons mr-1" aria-hidden="false">error</span>
                                                     Invoice is over 1 year old. <a kendoButton
                                                         class="ml-1 card-link-button"
+                                                        attr.aria-label="{{getExceptionFormValue('oldInvoiceExceptionFlagText',i)}}"
                                                         (click)="onMakeExceptionClick('oldInvoiceExceptionReason',i)">
                                                         {{getExceptionFormValue('oldInvoiceExceptionFlagText',i)}}
                                                     </a></kendo-formerror>
@@ -307,7 +307,7 @@
                                                     *ngIf="getExceptionFormValue('bridgeUppExceptionFlag',i)"
                                                     class="d-flex align-items-center">
                                                     <span class="material-icons mr-1" aria-hidden="false">info</span>
-                                                    Client not eligible. <a kendoButton class="ml-1 card-link-button"
+                                                    Client not eligible. <a kendoButton class="ml-1 card-link-button" attr.aria-label="{{getExceptionFormValue('bridgeUppExceptionFlagText',i)}}"
                                                         (click)="onMakeExceptionClick('bridgeUppExceptionReason',i)">
                                                         {{getExceptionFormValue('bridgeUppExceptionFlagText',i)}}
                                                     </a></kendo-formerror>
@@ -386,7 +386,7 @@
                                                         class="material-icons mr-1" aria-hidden="false">info</span>
                                                     Client
                                                     exceeded maximum benefits. <a kendoButton
-                                                        class="ml-1 card-link-button"
+                                                        class="ml-1 card-link-button" attr.aria-label="{{getExceptionFormValue('maxBenefitExceptionFlagText',i)}}"
                                                         (click)="onMakeExceptionClick('showMaxBenefitExceptionReason',i)">{{getExceptionFormValue('maxBenefitExceptionFlagText',i)}}
                                                     </a>
                                                 </kendo-formerror>
@@ -395,7 +395,7 @@
                                                 *ngIf="getExceptionFormValue('duplicatePaymentExceptionFlag',i)">
                                                 <kendo-formerror class="align-items-center">
                                                     <span class="material-icons mr-1" aria-hidden="false">info</span>
-                                                    Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
+                                                    Duplicate Payment. <a kendoButton class="ml-1 card-link-button" attr.aria-label="{{getExceptionFormValue('duplicatePaymentExceptionFlagText',i)}}"
                                                         (click)="onMakeExceptionClick('duplicatePaymentExceptionReason',i)">{{getExceptionFormValue('duplicatePaymentExceptionFlagText',i)}}
                                                     </a>
                                                 </kendo-formerror>
@@ -431,7 +431,7 @@
                 <div class="mt-2">
                     <button class="" kendoButton fillMode="flat" themeColor="primary" aria-label="New Service"
                         (click)="addClaimServiceGroup()">
-                        <span class="material-icons" aria-label="New Service" aria-hidden="false">add</span>
+                        <span class="material-icons" aria-label="New Service" aria-hidden="true">add</span>
                         New Service</button>
                 </div>
 
@@ -452,7 +452,7 @@
                 </div>
                 <div class="mt-1 text-right">
                     <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
-                        Client Profile <span class="material-icons ml-1">
+                        Client Profile <span class="material-icons ml-1" aria-hidden="true">
                         chevron_right
                         </span>
                     </button>

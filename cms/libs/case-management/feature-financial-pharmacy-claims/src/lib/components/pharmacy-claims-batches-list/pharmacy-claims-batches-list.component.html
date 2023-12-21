@@ -32,7 +32,7 @@
 <!-- Export -->
 <span class="right-overlay-export">
   <button kendoButton [primary]="true" look="flat"   aria-label="Export" class="button-lg" (click)="onExportClaims()">
-    <span class="material-icons" aria-label="export" aria-invalid="true"
+    <span class="material-icons" aria-hidden="true"
       >exit_to_app</span
     ><i class="exp_button-text">Export</i>
   </button>
@@ -85,7 +85,7 @@
     >
       <kendo-grid-column field="batchName" title="Batch #" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="Batch #" kendoButton look="flat" class="card-link-button"
+          <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
             (click)="navToBatchDetails(dataItem)">
             {{ dataItem.batchName }}
           </button>

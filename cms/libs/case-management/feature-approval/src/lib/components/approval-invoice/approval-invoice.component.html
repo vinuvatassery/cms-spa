@@ -193,14 +193,14 @@
       >
         <div class="grid-custom-paginationtemplates d-flex">
           <div class="d-flex align-items-center">
-            <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+            <label class="mr-1" for="ApprovalRowsPerPage">Rows Per Page</label>
             <kendo-dropdownlist
               [fillMode]="formUiStyle.dropDownFillMode"
               [data]="pageSizes"
               [textField]="'text'"
               [valueField]="'value'"
-              #RowsPerPage
-              id="RowsPerPage"
+              #ApprovalRowsPerPage
+              id="ApprovalRowsPerPage"
               aria-label="Rows Per Page"
               [valuePrimitive]="true"
               [(value)]="state.take"

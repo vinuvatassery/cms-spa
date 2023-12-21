@@ -19,7 +19,7 @@
                   kendoPopoverAnchor
                   [popover]="onUserProfileDetailsHovered"
                   showOn="hover"
-                  aria-label="FName LName"
+                  [attr.aria-label]="item.fullName"
                   kendoButton
                   look="flat"
                   class="card-link-button"

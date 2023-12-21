@@ -204,10 +204,11 @@
     <kendo-grid-column title="Options" [sortable]="false" [width]="70" class="text-center"
       [sticky]="true" [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="gridActions" icon="more-vertical" title="More Options"
+        <kendo-dropdownbutton [data]="gridActions"  title="More Options"
           *ngIf="dataItem.eligibilityEndDate > todayDate && dataItem.eligibilityStatus !== 'DISENROLLED' && dataItem.clientCaseEligibilityCerId !== null && dataItem.clientCaseEligibilityId"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+          <span class="material-icons" aria-label="More option"> more_vert    </span>
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
               aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="false">

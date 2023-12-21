@@ -3,7 +3,7 @@
 
             <div class="d-flex" *ngIf="(paymentDetails$ | async) as payment; else loading">
                   <button aria-label="Go Back"  kendoButton look="flat" class="mr-1"
-                        (click)="backToBatchLog($event)" title="Go Back"> <span class="material-icons">
+                        (click)="backToBatchLog($event)" title="Go Back"> <span class="material-icons" aria-hidden="true">
                               arrow_back </span> </button>
                   <h1 class="maintitle_withicon text-bold">Item # {{payment.itemNbr}} </h1>
             </div>
@@ -14,7 +14,7 @@
       <section class="app-l-client-wrapper ">
             <section class="app-l-wrapper">
                   <div *ngIf="(paymentDetails$ | async) as payment; else loading">
-                  <p> <button aria-label="view Provider Profile"
+                  <p> <button [attr.aria-label]="payment.vendorName"
                               (click)="onViewProviderDetailClicked()" kendoButton look="flat"
                               class="mr-3 card-link-button">
                               {{payment.vendorName}}
@@ -73,7 +73,7 @@
                         <span class="right-overlay-export">
                               <button kendoButton [primary]="true" look="flat"  aria-label="Export" class="button-lg" (click)="onClickedExport()"
                               [disabled]="showExportLoader">
-                                    <span *ngIf="!showExportLoader" class="material-icons"  aria-label="Export" aria-invalid="true">exit_to_app</span>
+                                    <span *ngIf="!showExportLoader" class="material-icons"  aria-hidden="true">exit_to_app</span>
                                     <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
                               </button>
                         </span>
@@ -170,16 +170,16 @@
                               <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50"
                               class="text-center">
                               <ng-template kendoGridCellTemplate let-dataItem>
-                                <kendo-dropdownbutton [data]="batchItemGridActions" icon="more-vertical"
+                                <kendo-dropdownbutton [data]="batchItemGridActions" 
                                   class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                                   aria-label="more actions" title="More option"
                                   [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-                                  <span hidden> More Option</span>
+                                  <span class="material-icons" aria-label="More option"> more_vert    </span>
                                   <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                                     <ng-container>
                                       <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                                        [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                                        <span class="material-icons"
+                                        [class]="buttondataItem.buttonType"  (click)="buttondataItem.click(dataItem)">
+                                        <span class="material-icons" aria-hidden="true"
                                           [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                                         <label> {{ buttondataItem.text }} </label>
                                       </button>
@@ -237,7 +237,7 @@
       </section>
 </div>
 <div class="bottom-fixed-wrapper align-items-center content-start flex-gap">
-      <span class="">Report Sent XX/XX/XXXX by <button aria-label="providerName" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor
+      <span class="">Report Sent XX/XX/XXXX by <button aria-label="provider FName LName" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered" showOn="hover">FName LName</button></span>
       
     </div>
@@ -282,7 +282,7 @@
         <div class="justify-content-between">
           <div class="justify-content-end">
             <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
-              Client Profile <span class="material-icons ml-1">
+              Client Profile <span class="material-icons ml-1" aria-hidden="true">
                 chevron_right
               </span>
             </button>

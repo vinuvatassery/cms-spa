@@ -12,13 +12,13 @@
         <span class="material-icons" aria-label="expand" aria-hidden="true" role="menuitem">arrow_right</span>
         <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem>
           <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-          aria-hidden="false" *ngIf="dataItem.id === 'new_letter'" (click)="dataItem.click(sendLetterDialog)">
-            <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+            *ngIf="dataItem.id === 'new_letter'" (click)="dataItem.click(sendLetterDialog)">
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
             <label> {{ dataItem.text }} </label>
           </button>
           <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-          aria-hidden="false" *ngIf="dataItem.id === 'new_email'" (click)="dataItem.click(sendNewEmailDialog)">
-            <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+           *ngIf="dataItem.id === 'new_email'" (click)="dataItem.click(sendNewEmailDialog)">
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
             <label> {{ dataItem.text }} </label>
           </button>
 

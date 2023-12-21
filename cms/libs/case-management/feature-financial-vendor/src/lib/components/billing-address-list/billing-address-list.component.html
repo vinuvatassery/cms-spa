@@ -44,16 +44,16 @@
         </kendo-grid-column>
         <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="50" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton [data]="billingAddressActions" icon="more-vertical"
+            <kendo-dropdownbutton [data]="billingAddressActions" 
               class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
               aria-label="more actions" title="More option"
               [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-              <span hidden> More Option</span>
+              <span class="material-icons" aria-label="More option"> more_vert    </span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <ng-container>
                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                    [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                    <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                    [class]="buttondataItem.buttonType" (click)="buttondataItem.click(dataItem)">
+                    <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                     <label> {{ buttondataItem.text }} </label>
                   </button>
                 </ng-container>

@@ -30,7 +30,7 @@
         <div class="flex-col app-popover-body">
 
           <p class="app-card-details">
-            <span class="material-icons">email</span>
+            <span class="material-icons" >email</span>
             <a href="mailto:aj.com">exampleemail@gmail.com</a>
           </p>
           <p class="app-card-details">
@@ -204,98 +204,84 @@
               <h5>Days & Hours</h5>
               <div class="flex-row mb-1">
                 <div class="flex-col flex-col-4">
-                  <kendo-floatinglabel
-                  text="Ethnic Identity" 
-                >
-                
-        
-                <kendo-multiselect
-                aria-label="Racial Identity"
-                [checkboxes]="{ checkOnClick: true, enabled: true }"
-                formControlName="RaceAndEthnicity"
-                #racialidentity
-                [autoClose]="true"
-                [fillMode]="formUiStyle.dropDownFillMode"
-                [data]="listItems"
-                [textField]="'lovDesc'"
-                [valueField]="'lovCode'" 
-                [kendoMultiSelectSummaryTag]="2" 
-              >
-          
-            </kendo-multiselect>
-                </kendo-floatinglabel>
-           
+                  <kendo-floatinglabel text="Ethnic Identity">
+
+
+                    <kendo-multiselect aria-label="Racial Identity" [checkboxes]="{ checkOnClick: true, enabled: true }"
+                      #racialidentity [autoClose]="true" [fillMode]="formUiStyle.dropDownFillMode" [data]="listItems"
+                      [textField]="'lovDesc'" [valueField]="'lovCode'" [kendoMultiSelectSummaryTag]="2">
+
+                    </kendo-multiselect>
+                  </kendo-floatinglabel>
+
                 </div>
                 <div class="flex-col flex-col-2">
                   <kendo-floatinglabel class="k-form" text="Start Time">
-                    <kendo-timepicker format="hh:mm a"  [fillMode]="formUiStyle.inputFillMode" [value]="time"></kendo-timepicker>
+                    <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode"
+                      [value]="time"></kendo-timepicker>
                   </kendo-floatinglabel>
                 </div>
                 <div class="flex-col flex-col-2">
                   <kendo-floatinglabel class="k-form" text="End Time">
-                    <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode" [value]="time"></kendo-timepicker>
+                    <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode"
+                      [value]="time"></kendo-timepicker>
                   </kendo-floatinglabel>
                 </div>
                 <div class="flex-col flex-col-4">
                   <kendo-floatinglabel class="k-form" text="Onsite or Telecommute">
-                    <kendo-dropdownlist placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-dropdownlist>
+                    <kendo-dropdownlist placeholder="Message" [fillMode]="formUiStyle.inputFillMode">
+                    </kendo-dropdownlist>
                   </kendo-floatinglabel>
                 </div>
               </div>
               <div class="flex-row mb-1">
                 <div class="flex-col flex-col-4">
-                  <kendo-floatinglabel
-                  text="Ethnic Identity" 
-                >
-                
-        
-                <kendo-multiselect
-                aria-label="Racial Identity"
-                [checkboxes]="{ checkOnClick: true, enabled: true }"
-                formControlName="RaceAndEthnicity"
-                #racialidentity
-                [autoClose]="true"
-                [fillMode]="formUiStyle.dropDownFillMode"
-                [data]="listItems"
-                [textField]="'lovDesc'"
-                [valueField]="'lovCode'" 
-                [kendoMultiSelectSummaryTag]="2" 
-              >
-          
-            </kendo-multiselect>
-                </kendo-floatinglabel>
-           
+                  <kendo-floatinglabel text="Ethnic Identity">
+
+
+                    <kendo-multiselect aria-label="Racial Identity" [checkboxes]="{ checkOnClick: true, enabled: true }"
+                      #racialidentity [autoClose]="true" [fillMode]="formUiStyle.dropDownFillMode" [data]="listItems"
+                      [textField]="'lovDesc'" [valueField]="'lovCode'" [kendoMultiSelectSummaryTag]="2">
+
+                    </kendo-multiselect>
+                  </kendo-floatinglabel>
+
                 </div>
                 <div class="flex-col flex-col-2">
                   <kendo-floatinglabel class="k-form" text="Start Time">
-                    <kendo-timepicker format="hh:mm a"  [fillMode]="formUiStyle.inputFillMode" [value]="time"></kendo-timepicker>
+                    <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode"
+                      [value]="time"></kendo-timepicker>
                   </kendo-floatinglabel>
                 </div>
                 <div class="flex-col flex-col-2">
                   <kendo-floatinglabel class="k-form" text="End Time">
-                    <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode" [value]="time"></kendo-timepicker>
+                    <kendo-timepicker format="hh:mm a" [fillMode]="formUiStyle.inputFillMode"
+                      [value]="time"></kendo-timepicker>
                   </kendo-floatinglabel>
                 </div>
                 <div class="flex-col flex-col-4">
                   <kendo-floatinglabel class="k-form" text="Onsite or Telecommute">
-                    <kendo-dropdownlist placeholder="Message" [fillMode]="formUiStyle.inputFillMode"> </kendo-dropdownlist>
+                    <kendo-dropdownlist placeholder="Message" [fillMode]="formUiStyle.inputFillMode">
+                    </kendo-dropdownlist>
                   </kendo-floatinglabel>
                 </div>
               </div>
 
-              <button kendoButton [primary]="true" look="flat" class="mt-1" aria-label="Schedule Out Of Office" > SCHEDULE OUT OF OFFICE </button>
+              <button kendoButton [primary]="true" look="flat" class="mt-1" aria-label="Schedule Out Of Office">
+                SCHEDULE OUT OF OFFICE </button>
             </div>
-          
+
           </div>
         </div>
         <div class="form-innercontainer">
           <h3>Weekly Schedule</h3>
           <div class="ac-block">
             <div class="ac-block-fields ">
-              <kendo-switch class="mr-1" ></kendo-switch> Receive emails about notification, to do items and other important tasks
-              </div>
-              </div>
+              <kendo-switch class="mr-1"></kendo-switch> Receive emails about notification, to do items and other
+              important tasks
+            </div>
           </div>
+        </div>
       </div>
     </div>
   </section>

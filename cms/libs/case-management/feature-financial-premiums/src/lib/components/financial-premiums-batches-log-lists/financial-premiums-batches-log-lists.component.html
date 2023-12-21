@@ -2,7 +2,7 @@
   <section class="app-l-mainTittle" *ngIf="(paymentBatchName$ | async) as batch; else loading">
     <div class="d-flex" >
         <button aria-label="back to vendor refund" title="Go back" kendoButton look="flat" class="mr-1" (click)="backToBatch($event)"> <span
-            class="material-icons">
+            class="material-icons" aria-hidden="true">
             arrow_back </span> </button>
         <h1 class="maintitle_withicon text-bold">Batch # {{batch.batchName}}</h1> <br />
     </div>
@@ -37,7 +37,7 @@
         </span>
         <span class="right-overlay-export">
           <button kendoButton [primary]="true" aria-label="Export"  look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-            <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+            <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>
 
             <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
           </button>
@@ -222,16 +222,16 @@
           <kendo-grid-column field="Option" title="Options"  [columnMenu]="false" [width]="70"
             class="text-center">
             <ng-template kendoGridCellTemplate let-dataItem>
-              <kendo-dropdownbutton [data]="batchLogGridActions(dataItem)" icon="more-vertical"
+              <kendo-dropdownbutton [data]="batchLogGridActions(dataItem)" 
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                 aria-label="more actions" title="More option"
                 [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-                <span hidden> More Option</span>
+                <span class="material-icons" aria-label="More option"> more_vert    </span>
                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                   <ng-container>
                     <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                      [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                      <span class="material-icons"
+                      [class]="buttondataItem.buttonType"  (click)="buttondataItem.click(dataItem)">
+                      <span class="material-icons" aria-hidden="true"
                         [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                       <label> {{ buttondataItem.text }} </label>
                     </button>
@@ -305,8 +305,8 @@
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-        aria-hidden="false" (click)="dataItem.click(dataItem)" [disabled]="setDisablePropertyOfBulkMore(dataItem)">
-        <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+       (click)="dataItem.click(dataItem)" [disabled]="setDisablePropertyOfBulkMore(dataItem)">
+        <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
     </ng-template>
@@ -348,7 +348,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
-          Client Profile <span class="material-icons ml-1">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true">
             chevron_right
           </span>
         </button>
