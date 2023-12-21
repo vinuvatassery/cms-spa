@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  AfterViewInit,
   Component,
   OnInit,
   ChangeDetectionStrategy,
@@ -7,13 +8,14 @@ import {
   Output,
   EventEmitter,
   ChangeDetectorRef,
+  ViewChild
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey } from '@cms/case-management/domain';
 import { Observable, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade, UserDataService } from '@cms/system-config/domain';
-import { FilterService, ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
+import { FilterService, ColumnVisibilityChangeEvent, ColumnComponent, ColumnBase } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {ConfigurationProvider} from '@cms/shared/util-core';
@@ -25,7 +27,7 @@ import { Router } from '@angular/router';
   templateUrl: './case-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseListComponent implements OnInit {
+export class CaseListComponent implements OnInit, AfterViewInit {
 
 public isGridLoaderShow = true;
 @Input() searchLoaderVisibility$!: Observable<boolean>;
@@ -48,6 +50,16 @@ public state!: any;
   @Input() module: string = '';
   @Input() parentModule: string = '';
   addRemoveColumns="Default Columns"
+  defaultColumns = [
+    "clientFullName",
+    "pronouns",
+    "clientId",
+    "urn",
+    "caseStatus",
+    "group",
+    "eilgibilityStartDate",
+    "eligibilityEndDate"
+    ]
   columns : any = {
     clientFullName:"Client Name",
     officialIdFullName:"Name on Official ID",
@@ -104,6 +116,9 @@ public state!: any;
   loginUserId!:any;
   groupValue = null;
   statusValue = null;
+  @ViewChild('clientsGrid') clientsGrid: any;
+  defaultColumnState: ColumnBase[] = [];
+
 
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
@@ -126,6 +141,10 @@ public state!: any;
   }
   ngOnDestroy(): void {
     this.userProfileSubsriction.unsubscribe();
+  }
+
+  ngAfterViewInit() {
+    this.defaultColumnState = this.clientsGrid.columns.toArray();
   }
 
   public get tabOptions(): typeof CaseScreenTab {
@@ -166,7 +185,7 @@ public state!: any;
  filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
   }
- groupFilterChange(value: any, filterService: FilterService): void {  
+ groupFilterChange(value: any, filterService: FilterService): void {
     filterService.filter({
         filters: [{
           field: "group",
@@ -174,9 +193,9 @@ public state!: any;
           value:value.lovDesc
       }],
         logic: "or"
-    });    
+    });
 }
-dropdownFilterChange(field:string, value: any, filterService: FilterService): void {  
+dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
   filterService.filter({
       filters: [{
         field: field,
@@ -358,10 +377,16 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.searchValue = "";
     this.isFiltered = false;
     this.columnsReordered = false;
+    this.defaultColumnState.forEach((item:any) => {
+      if(this.defaultColumns.includes(item.field) || (item.field === "assignedCw" && this.selectedTab !== this.tabOptions.MY_CASES))
+      {
+        item.hidden = false;
+      }
+    });
     this.saveGridState();
     this.loadProfileCasesList();
   }
-  
+
   onColumnReorder(event:any)
   {
     this.columnsReordered = true;
