@@ -46,7 +46,7 @@ export class DocumentDataService {
     )
   }
 
-  getExportFileForSelection(pageAndSortedRequest: any, path: string, apiType: string = ApiType.CaseApi, selectedAllPaymentsList: any, batchId?: any) {
+  getExportFileForSelection(pageAndSortedRequest: any, path: string, selectedAllPaymentsList: any, batchId?: any, apiType: string = ApiType.CaseApi) {
     let apiUrl: any;
     switch (apiType) {
       case ApiType.CaseApi: {
