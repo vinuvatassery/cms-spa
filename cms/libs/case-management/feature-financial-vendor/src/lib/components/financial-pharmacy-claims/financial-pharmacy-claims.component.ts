@@ -176,11 +176,6 @@ export class FinancialPharmacyClaimsComponent {
         queryParams: { bid: dataItem.batchId },
       });
     }
-    else if(field === 'itemNbr'){
-      this.router.navigate(['financial-management/pharmacy-claims/batch'], {
-        queryParams: { bid: dataItem.batchId, iid:dataItem.itemId },
-      });
-    }
   }
   onExportclaims(){
     this.showExportLoader = true
