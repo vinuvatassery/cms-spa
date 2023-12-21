@@ -123,8 +123,6 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
   ];
   selectedSearchColumn = 'ALL';
   filteredByColumnDesc = '';
-  showDateSearchWarning = false;
-  showNumberSearchWarning = false;
   columnChangeDesc = 'Default Columns'
   /** Constructor **/
   constructor(
@@ -157,8 +155,6 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
 
   searchColumnChangeHandler(value: string) {
     this.filter = [];
-    this.showNumberSearchWarning = (['pcaCode', 'appropriationYear']).includes(value);
-    this.showDateSearchWarning = value === 'closeDate';
     if (this.searchText) {
       this.onPcaSearch(this.searchText);
     }
@@ -166,7 +162,6 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
 
   onPcaSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    this.showDateSearchWarning = isDateSearch || this.selectedSearchColumn === 'closeDate';
     searchValue = this.formatSearchValue(searchValue, isDateSearch);
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
@@ -175,14 +170,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
 
   performPcaSearch(data: any) {
     this.defaultGridState();
-    const operator = (['pcaCode', 'closeDate', 'appropriationYear']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
     data = this.selectedSearchColumn === 'appropriationYear' ? data.toLowerCase().replace('ay', '') : data;
-    if (this.selectedSearchColumn === 'closeDate' && (!this.isValidDate(data) && data !== '')) {
-      return;
-    }
-    if ((['pcaCode', 'appropriationYear']).includes(this.selectedSearchColumn) && isNaN(Number(data))) {
-      return;
-    }
     this.filterData = {
       logic: 'and',
       filters: [
@@ -190,7 +178,7 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
           filters: [
             {
               field: this.selectedSearchColumn ?? 'pcaCode',
-              operator: operator,
+              operator: 'contains',
               value: data,
             },
           ],
@@ -216,8 +204,6 @@ export class FinancialPcasSetupListComponent implements OnInit, OnChanges, OnDes
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
-    this.showDateSearchWarning = false;
-    this.showNumberSearchWarning = false;
     this.loadFinancialPcaSetupListGrid();
   }
 
