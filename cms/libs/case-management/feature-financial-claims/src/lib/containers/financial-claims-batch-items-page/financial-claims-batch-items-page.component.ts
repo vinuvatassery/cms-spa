@@ -95,10 +95,10 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
     const  filter = JSON.stringify(data?.Filter);
      const PagingAndSortedRequest =
      {
-       SortType : data?.sortType,
-       Sorting : data?.sortColumn,
-       SkipCount : data?.skipcount,
-       MaxResultCount : data?.maxResultCount,
+       SortType : data?.SortType,
+       Sorting : data?.Sorting,
+       SkipCount : data?.SkipCount,
+       MaxResultCount : data?.MaxResultCount,
        Filter : filter
      }
      const itemId = this.route.snapshot.queryParams['pid'];
