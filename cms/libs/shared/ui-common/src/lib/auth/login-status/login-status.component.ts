@@ -85,15 +85,17 @@ export class LoginStatusComponent  implements OnInit{
   }
  
   loadProfilePhoto() {
-    this.userDataService.getProfile$.subscribe(users => {
-      this.userInfo = users[0];
-      this.userDataService.getUserImage(users[0].loginUserId).subscribe({
-        next: (userImageResponse: any) => {
-          this.userImageSubject.next(userImageResponse);
-          this.imageLoaderVisible = true;
-          this.cd.detectChanges();
-        },
-      });
+    this.userDataService.getProfile$.subscribe((users: any[]) => {
+      if (users.length > 0) {
+        this.userInfo = users[0];
+        this.userDataService.getUserImage(this.userInfo?.loginUserId).subscribe({
+          next: (userImageResponse: any) => {
+            this.userImageSubject.next(userImageResponse);
+            this.imageLoaderVisible = true;
+            this.cd.detectChanges();
+          },
+        });
+      }
     })
   }
   onLoad() {
