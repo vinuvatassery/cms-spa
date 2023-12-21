@@ -251,7 +251,7 @@ export class FinancialClaimsPrintAuthorizationComponent {
                 this.onItemChange(event);
             }
         this.ref.detectChanges();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!");
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled! Events have been logged");
         },
         error: (err: Error) => {
           this.loaderService.hide();
