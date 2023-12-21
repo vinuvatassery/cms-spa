@@ -118,7 +118,8 @@ public state!: any;
   statusValue = null;
   @ViewChild('clientsGrid') clientsGrid: any;
   defaultColumnState: ColumnBase[] = [];
-
+  selectedGroup="";
+  selectedStatus="";
 
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
@@ -243,6 +244,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.isFiltered = false
     }
     this.state=stateData;
+    if (!this.filteredBy.includes('Status')) this.selectedStatus = '';
+    if (!this.filteredBy.includes('Group')) this.selectedGroup = '';
     this.saveGridState();
     this.setGridState(stateData);
     this.loadProfileCasesList();
@@ -336,16 +339,31 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.defaultGridState()
     this.columnName = this.state.columnName = this.columnDroplist[this.selectedColumn];
     this.sortColumn = this.columns[this.selectedColumn];
-    this.filter = {logic:'and',filters:[{
-      "filters": [
-          {
-              "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
-              "operator": "startswith",
-              "value": event
-          }
-      ],
-      "logic": "and"
-  }]}
+    if(this.columnName=='homeAddress')
+    {
+      this.filter = {logic:'and',filters:[{
+        "filters": [
+            {
+                "field": this.columnDroplist[this.selectedColumn],
+                "operator": "contains",
+                "value": event
+            }
+        ],
+        "logic": "and"
+    }]}
+    }else{
+      this.filter = {logic:'and',filters:[{
+        "filters": [
+            {
+                "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
+                "operator": "startswith",
+                "value": event
+            }
+        ],
+        "logic": "and"
+    }]}
+    }
+ 
   let stateData = this.state
   stateData.filter = this.filter
   this.dataStateChange(stateData);
@@ -367,7 +385,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       columnName: '',
       searchValue: ''
       };
-    this.gridFilter = {logic:'and',filters:[]}
+     this.gridFilter = {logic:'and',filters:[]}
     this.sortColumn = this.columns[this.sort[0]?.field];
     this.sortDir = this.sort[0]?.dir === 'asc'? 'Ascending': "";
     this.sortDir = this.sort[0]?.dir === 'desc'? 'Descending': "";

@@ -132,6 +132,7 @@
       textField="lovDesc"
       valueField="lovDesc"
       [value]="statusValue"
+      [(ngModel)]="selectedStatus"
       (valueChange)="dropdownFilterChange('caseStatus',$event, filterService)"
     >
     </kendo-dropdownlist>
@@ -149,6 +150,7 @@
         textField="lovDesc"
         valueField="lovDesc"
         [value]="groupValue"
+        [(ngModel)]="selectedGroup"
         (valueChange)="dropdownFilterChange('group', $event, filterService)"
       >
       </kendo-dropdownlist>
