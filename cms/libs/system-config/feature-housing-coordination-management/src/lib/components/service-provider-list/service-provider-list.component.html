@@ -39,7 +39,7 @@
             </kendo-floatinglabel>
           </span>
           <span class="filter-section_items filter--search">
-            <span class="material-icons">search</span>
+            <span class="material-icons" aria-hidden="true">search</span>
             <kendo-floatinglabel text="Search">
               <kendo-textbox [fillMode]="formUiStyle.inputFillMode" >
               </kendo-textbox>
@@ -47,7 +47,7 @@
           </span>
           <span>
             <button kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg">
-              <span class="material-icons" aria-label="Export" aria-invalid="true"
+              <span class="material-icons" aria-hidden="true"
                 >exit_to_app</span
               >Export
             </button>
@@ -186,17 +186,17 @@
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton
             [data]="girdMoreActionsList"
-            icon="more-vertical"
+            
             title="More option"
             aria-label="more actions"
             class="TableActionPopup app-dropdown-action more_action_wid"
             buttonClass="k-icon-button"
             [popupSettings]="{ popupClass: popupClassAction, animate: true }"
           >
-          <span hidden> More Option</span>
+          <span class="material-icons" aria-label="More option"> more_vert    </span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
               <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-                <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+                <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                 <label>   {{ dataItem.text }} </label>
             </button>
      

@@ -96,7 +96,7 @@ h5 {
 .mat-body p,
 .mat-body-1 p,
 .mat-typography p {
-  line-height: $size-xxx - $size-s;
+  line-height: 1.125rem;
 }
 .auto-group-heading {
   margin: $size-xl $size-xlg !important;
@@ -113,6 +113,6 @@ h5 {
   .mat-h1,
 .mat-headline,
 h1 {
-  font-size: 22px !important; 
+  font-size: $font-size-xlg-22 !important; 
 }
 }

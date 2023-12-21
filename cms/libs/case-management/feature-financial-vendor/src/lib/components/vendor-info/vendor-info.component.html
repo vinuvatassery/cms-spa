@@ -56,6 +56,7 @@
           [popover]="onUserProfileDetailsHovered"
            look="flat"   
            showOn="hover"
+           [attr.aria-label]="selectedVendorInfo$?.modifierName"
            kendoPopoverAnchor 
            class="card-link-button">
         <a>{{selectedVendorInfo$?.modifierName}}</a>

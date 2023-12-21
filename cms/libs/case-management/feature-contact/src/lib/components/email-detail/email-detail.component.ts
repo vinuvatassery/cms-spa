@@ -53,7 +53,6 @@ export class EmailDetailComponent implements OnInit {
   onDeactivateEmailAddressClosed() {
     this.isDeactivateEmailAddressPopup = !this.isDeactivateEmailAddressPopup;
   }
-
   composeEmailForm() {
     this.clientEmailForm = this.formBuilder.group({
       clientEmailId: [''],

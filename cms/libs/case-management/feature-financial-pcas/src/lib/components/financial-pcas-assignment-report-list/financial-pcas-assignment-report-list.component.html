@@ -180,7 +180,7 @@
       <ng-template kendoGridCellTemplate let-dataItem>
         <button kendoButton themeColor="primary" fillMode="flat" class="clear-icon-btn" aria-label="Edit Reminder"  (click)="editAssignmentReport(dataItem.objectId, dataItem.groupsCoveredId)"
           title="Edit Reminder">
-          <span class="material-icons"> edit </span>
+          <span class="material-icons" aria-hidden="true"> edit </span>
         </button>
       </ng-template>
     </kendo-grid-column>

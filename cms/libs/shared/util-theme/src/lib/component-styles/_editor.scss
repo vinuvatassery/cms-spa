@@ -37,10 +37,10 @@
     }
     .sms-variable-search_close {
       color: var(--hive-neutral-palette-600);
-      font-size: 13px;
+      font-size: $font-size-m;
       margin-left: 0;
       .material-icons {
-        font-size: 14px;
+        font-size: $font-size;
       }
     }
   }

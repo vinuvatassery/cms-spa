@@ -141,7 +141,7 @@
                   </kendo-grid-numeric-filter-menu>
                 </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="amountSpendAfterExpiration" title="Amount Spent After Expiration" [width]="160">
+            <kendo-grid-column field="amountSpendAfterExpiration" title="Amount Spent after Expiration" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                         <span class="tableamountview"> <strong>$</strong> {{dataItem.amountSpendAfterExpiration | kendoNumber: 'n2'}}</span>
                   </ng-template>
@@ -221,20 +221,20 @@
                         </kendo-grid-boolean-filter-menu>
                       </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column [reorderable]="false" field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="50"
+            <kendo-grid-column [reorderable]="false" field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="70"
                   class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
 
-                        <kendo-dropdownbutton [data]="gridMoreActions" icon="more-vertical"
+                        <kendo-dropdownbutton [data]="gridMoreActions" 
                         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                         aria-label="more actions" title="More option"
                         [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-                        <span hidden> More Option</span>
+                        <span class="material-icons" aria-label="More option"> more_vert    </span>
                         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                           <ng-container>
                             <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                              [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                              <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                              [class]="buttondataItem.buttonType"   (click)="buttondataItem.click(dataItem)">
+                              <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                               <label> {{ buttondataItem.text }} </label>
                             </button>
                           </ng-container>   </ng-template>

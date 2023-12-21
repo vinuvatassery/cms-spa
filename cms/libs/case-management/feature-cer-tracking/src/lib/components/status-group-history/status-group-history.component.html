@@ -17,7 +17,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="groupEndDate" title="End Date" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.groupEndDate |date:'MM/dd/YYYY'}}
+            {{dataItem.groupEndDate | date: 'MM/dd/yyyy'}}
         </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="actualDaysInGroup" title="Actual Days in Group" [width]="100"></kendo-grid-column>
