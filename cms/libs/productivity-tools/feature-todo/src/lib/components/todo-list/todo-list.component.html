@@ -5,7 +5,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="TodoItemFor" title="To Do Item For" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover"
+        <button kendoButton look="flat" [attr.aria-label]="dataItem.TodoItemFor" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover"
           aria-label="todo item for">
           {{ dataItem.TodoItemFor }}
         </button>
@@ -27,7 +27,7 @@
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
             <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
               aria-hidden="false" (click)="dataItem.click()">
-              <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+              <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
               <label> {{ dataItem.text }} </label>
             </button>
           </ng-template>

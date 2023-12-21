@@ -66,7 +66,7 @@
                  kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
                   aria-hidden="false" (click)="dataItem.click(manager.clientCaseId,manager.caseManagerId,manager.clientCaseManagerId
                   ,manager.assignmentStartDate,manager.assignmentEndDate);" [disabled]="(isReadOnly$ | async) ? true : false">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                  <span class="material-icons"  aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                   <label> {{ dataItem.text }} </label>
                 </button>
 
@@ -83,7 +83,7 @@
                kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
                 aria-hidden="false" (click)="dataItem.click(manager.clientCaseId,manager.caseManagerId,manager.clientCaseManagerId
                 ,manager.assignmentStartDate,manager.assignmentEndDate);" [disabled]="(isReadOnly$ | async) ? true : false">
-                <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                 <label class="grid-list-options-menu"> {{ dataItem.text }} </label>
               </button>
 

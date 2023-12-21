@@ -10,7 +10,7 @@
           </kendo-floatinglabel>
         </span>
         <span class="filter-section_items filter--search">
-          <span class="material-icons">search</span>
+          <span class="material-icons" aria-hidden="true">search</span>
           <kendo-floatinglabel text="Search">
             <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
             </kendo-textbox>
@@ -18,7 +18,7 @@
         </span>
         <span class="right-overlay-export">
           <button kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg">
-            <span class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>Export
+            <span class="material-icons" aria-hidden="true">exit_to_app</span>Export
           </button>
         </span>
       </div>
@@ -56,7 +56,7 @@
       <!-- below only in Ramsell -->
       <!-- <kendo-grid-column field="status" title="Status" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button *ngIf="dataItem.status ==='Failed'" [attr.aria-label]="dataItem.failedRecords" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
+          <button *ngIf="dataItem.status ==='Failed'" [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
             View Log
           </button>
           <span *ngIf="dataItem.status ==='Success'">   {{ dataItem.status }} </span>

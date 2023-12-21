@@ -124,7 +124,7 @@
                 ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred') ||(hasPhoneDeletePermission === false && dataItem.buttonName ==='delete')" 
                 look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
                 (click)="dataItem.click(clientPhone?.clientPhoneId)" [disabled]="(isReadOnly$ | async) ? true : false">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                   <label>   {{ dataItem.text }} </label>
               </button> 
               </ng-template>

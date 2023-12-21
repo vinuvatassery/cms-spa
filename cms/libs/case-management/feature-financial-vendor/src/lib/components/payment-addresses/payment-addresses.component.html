@@ -235,11 +235,11 @@
                               <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete Address') || (dataItem.activeFlag == 'Y')">
                                 <div>
                                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                                      [class]="buttondataItem.buttonType" aria-hidden="false"
+                                      [class]="buttondataItem.buttonType" 
 
                                       (click)="handleOptionClick(dataItem,buttondataItem.type)"
                                       >
-                                      <span class="material-icons"
+                                      <span class="material-icons" aria-hidden="true"
                                           [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                                       <label> {{ buttondataItem.text }} </label>
                                   </button>
@@ -248,11 +248,11 @@
                               <ng-template #deactivateButton>
                                 <div *ngIf="buttondataItem.text !== 'Deactivate Address'">
                                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                                  [class]="buttondataItem.buttonType" aria-hidden="false"
+                                  [class]="buttondataItem.buttonType"  
 
                                   (click)="handleOptionClick(dataItem,buttondataItem.type)"
                                   >
-                                  <span class="material-icons"
+                                  <span class="material-icons" aria-hidden="true"
                                       [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                                   <label> {{ buttondataItem.text }} </label>
                               </button>

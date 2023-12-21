@@ -121,7 +121,7 @@
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-ClientRelationshipId="ClientRelationshipId">
           <button kendoButton  look="flat" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" [class]="dataItem.buttonType" aria-hidden="false"
           (click)="dataItem.click(dependent.clientRelationshipId,dependent.dependentTypeCode)" [disabled]="(isReadOnly$ | async) ? true : false">
-            <span class="material-icons" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" >{{dataItem.icon}}</span>
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" >{{dataItem.icon}}</span>
             <label>   {{ dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText  }} </label>
         </button>
           </ng-template>

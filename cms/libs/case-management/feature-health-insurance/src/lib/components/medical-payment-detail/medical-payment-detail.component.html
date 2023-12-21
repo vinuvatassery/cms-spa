@@ -44,10 +44,10 @@
                         <div *ngIf="getParentExceptionFormValue('providerNotEligibleExceptionFlag')" >
                           <kendo-formerror class="align-items-center"> <span
                                   class="material-icons mr-1" aria-hidden="false">error</span> Provider not eligible.
-                                  <a kendoButton class="ml-1 card-link-button"
+                                  <a kendoButton class="ml-1 card-link-button" attr.aria-label="{{getParentExceptionFormValue('providerNotEligibleExceptionFlagText')}}"
                                     (click)="onMakeParentExceptionClick('showProviderNotEligibleExceptionReason')">{{getParentExceptionFormValue('providerNotEligibleExceptionFlagText')}}
                                   </a>
-                                  <a kendoButton class="ml-1 card-link-button"
+                                  <a kendoButton class="ml-1 card-link-button" attr.aria-label="{{vendorName??''}}"
                                    >{{vendorName??''}}
                                   </a>
                           </kendo-formerror>
@@ -135,7 +135,7 @@
                                     <div class="ml-2">
                                         <kendo-formerror *ngIf="getExceptionFormValue('oldInvoiceExceptionFlag',i)" class="d-flex align-items-center">
                                             <span class="material-icons mr-1" aria-hidden="false">error</span>
-                                            Invoice is over 1 year old. <a kendoButton
+                                            Invoice is over 1 year old. <a kendoButton attr.aria-label="{{getExceptionFormValue('oldInvoiceExceptionFlagText',i)}}"
                                                 class="ml-1 card-link-button" (click)="onMakeExceptionClick('oldInvoiceExceptionReason',i)">
                                                  {{getExceptionFormValue('oldInvoiceExceptionFlagText',i)}}
                                               </a></kendo-formerror>
@@ -218,7 +218,7 @@
                                       <kendo-formerror *ngIf="getExceptionFormValue('bridgeUppExceptionFlag',i)" class="d-flex align-items-center">
                                           <span class="material-icons mr-1" aria-hidden="false">error</span>
                                           Client not eligible. <a kendoButton
-                                              class="ml-1 card-link-button" (click)="onMakeExceptionClick('bridgeUppExceptionReason',i)">
+                                              class="ml-1 card-link-button" attr.aria-label=" {{getExceptionFormValue('bridgeUppExceptionFlagText',i)}}" (click)="onMakeExceptionClick('bridgeUppExceptionReason',i)">
                                               {{getExceptionFormValue('bridgeUppExceptionFlagText',i)}}
                                             </a></kendo-formerror>
 
@@ -271,14 +271,14 @@
                                     <div class="ml-2" *ngIf="getExceptionFormValue('exceedMaxBenefitExceptionFlag',i)" >
                                         <kendo-formerror class="align-items-center"> <span
                                                 class="material-icons mr-1" aria-hidden="false">error</span> Client
-                                            exceeded maximum benefits. <a kendoButton class="ml-1 card-link-button"
+                                            exceeded maximum benefits. <a kendoButton class="ml-1 card-link-button" attr.aria-label="{{getExceptionFormValue('maxBenefitExceptionFlagText',i)}}"
                                                 (click)="onMakeExceptionClick('showMaxBenefitExceptionReason',i)">{{getExceptionFormValue('maxBenefitExceptionFlagText',i)}}
                                             </a>
                                         </kendo-formerror>
                                     </div>
                                     <div class="ml-2" *ngIf="getExceptionFormValue('duplicatePaymentExceptionFlag',i)" >
                                       <kendo-formerror class="align-items-center"> <span
-                                              class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button"
+                                              class="material-icons mr-1" aria-hidden="false">info</span> Duplicate Payment. <a kendoButton class="ml-1 card-link-button" attr.aria-label="{{getExceptionFormValue('duplicatePaymentExceptionFlagText',i)}}"
                                               (click)="onMakeExceptionClick('duplicatePaymentExceptionReason',i)">{{getExceptionFormValue('duplicatePaymentExceptionFlagText',i)}}
                                           </a>
                                       </kendo-formerror>

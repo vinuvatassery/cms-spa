@@ -100,14 +100,14 @@
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <div *ngIf="dataItem.activeFlag ==='Y' ; else deleteButton">
                   <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
-                    <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                    <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                     <label>   {{ buttondataItem.text }} </label>
                 </button>
                 </div>
                 <ng-template #deleteButton>
                   <div *ngIf="buttondataItem.text === 'Delete Contact'">
                     <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)" [disabled]="(isReadOnly$ | async) ? true : false">
-                      <span class="material-icons" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
+                      <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
                       <label>   {{ buttondataItem.text }} </label>
                   </button>
                   </div>

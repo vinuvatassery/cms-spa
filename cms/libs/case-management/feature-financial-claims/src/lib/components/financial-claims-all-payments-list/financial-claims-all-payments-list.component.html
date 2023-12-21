@@ -19,7 +19,7 @@
   </span>
   <span class="right-overlay-export">
     <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-      <span *ngIf="!showExportLoader" class="material-icons" aria-label="Export" aria-invalid="true">exit_to_app</span>
+      <span *ngIf="!showExportLoader" class="material-icons"  aria-hidden="true">exit_to_app</span>
 
       <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
     </button>
@@ -83,7 +83,7 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="itemNumber" kendoButton look="flat" class="card-link-button"
+          <button [attr.aria-label]="dataItem.itemNumber" kendoButton look="flat" class="card-link-button"
           (click)="onitemNumberClick(dataItem)">
             {{ dataItem.itemNumber }}
           </button>
@@ -119,7 +119,7 @@
       </kendo-grid-column>
       <kendo-grid-column field="providerName" title="Provider Name" [width]="160">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="providerName" kendoButton look="flat" class="card-link-button"
+          <button [attr.aria-label]="dataItem.providerName" kendoButton look="flat" class="card-link-button"
           (click)="onProviderNameClick(dataItem.paymentRequestId)">
             {{ dataItem.providerName }}
           </button>
@@ -252,7 +252,7 @@
               <ng-container>
                 <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
                   [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                  <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                   <label> {{ buttondataItem.text }} </label>
                 </button>
               </ng-container>
@@ -320,7 +320,7 @@
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
           <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
             aria-hidden="false" (click)="dataItem.click(dataItem)">
-            <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
             <label> {{ dataItem.text }} </label>
           </button>
         </ng-template>
@@ -365,7 +365,7 @@
         <div class="justify-content-between">
           <div class="justify-content-end">
             <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
-              Client Profile <span class="material-icons ml-1" >
+              Client Profile <span class="material-icons ml-1" aria-hidden="true">
                 chevron_right
               </span>
             </button>

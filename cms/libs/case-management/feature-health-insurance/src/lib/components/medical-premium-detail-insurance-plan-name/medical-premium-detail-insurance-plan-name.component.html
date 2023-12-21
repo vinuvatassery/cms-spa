@@ -14,7 +14,7 @@
   <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
     <span class="fontsize_twel">Don’t see the Plan you’re looking for?</span>
     <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" [disabled]="isViewContentEditable"
-      aria-label="Add New " (click)="addNewInsurancePlanOpen()">
+      attr.aria-label=" {{ hasCreateUpdatePermission == true ? 'ADD NEW':'REQUEST NEW' }}" (click)="addNewInsurancePlanOpen()">
       {{ hasCreateUpdatePermission == true ? 'ADD NEW':'REQUEST NEW' }}
     </button>
   </div>

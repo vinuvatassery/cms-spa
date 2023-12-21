@@ -52,8 +52,8 @@
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <ng-container>
                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                    [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                    <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                    [class]="buttondataItem.buttonType" (click)="buttondataItem.click(dataItem)">
+                    <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                     <label> {{ buttondataItem.text }} </label>
                   </button>
                 </ng-container>

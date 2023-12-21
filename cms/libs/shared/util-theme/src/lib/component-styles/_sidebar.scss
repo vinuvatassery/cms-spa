@@ -12,7 +12,7 @@ cms-sidenav {
   border-color: $theme-border;
   width: $app-left_menu-width;
   transition: ease-in all 0.3s;
-  z-index: 103;
+  z-index: 89;
 
   .drawer-inner-container {
     transition: ease-in all 0.3s;
@@ -236,6 +236,7 @@ cms-sidenav {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
+          line-height: normal;
         }
       }
     }
@@ -276,7 +277,7 @@ cms-sidenav {
         margin-top: 1rem;
 
         .submenu_heading {
-          font-size: 16px;
+          font-size: $font-size-l;
           font-family: $font-family-bold;
         }
 
