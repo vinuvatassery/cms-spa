@@ -48,7 +48,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="modified by"
+              [attr.aria-label]="possibleMatch?.caseWorkerName"
               kendoButton
               look="flat"
               class="card-link-button"

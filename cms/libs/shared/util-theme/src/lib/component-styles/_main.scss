@@ -4,14 +4,17 @@
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
 }
+html{
+  font-size: 14px !important;
+}
+ 
 body,
 html {
   height: 100%;
   width: 100%;
   background: $white;
   padding: $size-0;
-  margin: $size-0;
-  font-size: $font-size;
+  margin: $size-0; 
   overflow: hidden;
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;

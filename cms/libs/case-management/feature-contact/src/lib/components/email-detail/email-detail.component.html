@@ -13,6 +13,9 @@
           <kendo-textbox aria-label="email address" formControlName="email" placeholder="Email Address"
             [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!clientEmailForm.controls['email'].pristine && !clientEmailForm.controls['email'].valid">
+          Invalid email format
+        </kendo-formerror>
       </div>
       <div class="flex-col">
         <div class="component-list-h">

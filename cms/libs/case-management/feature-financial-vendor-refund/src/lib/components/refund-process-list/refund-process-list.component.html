@@ -19,7 +19,7 @@
   </span>
   <span class="right-overlay-export">
     <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg">
-      <span class="material-icons" aria-label="Export" aria-invalid="true"
+      <span class="material-icons" aria-hidden="true"
         >exit_to_app</span
       ><i class="exp_button-text">Export</i>
     </button>
@@ -222,16 +222,16 @@
 
   <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="70" class="text-center" [sortable]="false" >
     <ng-template kendoGridCellTemplate let-dataItem>
-      <kendo-dropdownbutton [data]="processGridActions(dataItem)" icon="more-vertical"
+      <kendo-dropdownbutton [data]="processGridActions(dataItem)" 
         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
         aria-label="more actions" title="More option"
         [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-        <span hidden> More Option</span>
+        <span class="material-icons" aria-label="More option"> more_vert    </span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
           <ng-container>
             <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-              [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-              <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+              [class]="buttondataItem.buttonType"   (click)="buttondataItem.click(dataItem)">
+              <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
               <label> {{ buttondataItem.text }} </label>
             </button>
           </ng-container>
@@ -278,7 +278,7 @@
   </button>
 
   <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed" [disabled]="!selectedProcessRefunds.length"
-    (click)="onDeleteRefundsOpenClicked(deleteRefundConfirmationDialog)"> <span class="material-icons mr-1"
+    (click)="onDeleteRefundsOpenClicked(deleteRefundConfirmationDialog)"> <span class="material-icons mr-1" aria-hidden="true"
       aria-label="Delete"> delete</span> Delete </button>
 
   <button kendoButton [primary]="true" aria-label="Batch" class="" [disabled]="!selectedProcessRefunds.length"
@@ -287,13 +287,13 @@
   <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="refundProcessMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
     <div class="btn-inner-block" (click)="onClickOpenAddEditRefundFromModal(addEditRefundDialog)">
-      <span class="material-icons" aria-label="New Refund" aria-hidden="false">add</span>
+      <span class="material-icons"  aria-label="New Refund" aria-hidden="false">add</span>
       New Refund
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
         aria-hidden="false" (click)="!isDataAvailable ? null: dataItem.click(dataItem)" [disabled]="!isDataAvailable" >
-        <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+        <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
     </ng-template>
@@ -346,7 +346,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-          Client Profile <span class="material-icons ml-1" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true" (click)="onClientClicked(clientId)">
             chevron_right
           </span>
         </button>
@@ -366,7 +366,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
-          Client Profile <span class="material-icons ml-1">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true">
             chevron_right
           </span>
         </button>
@@ -386,7 +386,7 @@
     <div class="justify-content-between" >
       <div class="justify-content-end" (click)="onClientClicked(clientId)">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-          Client Profile <span class="material-icons ml-1">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true">
             chevron_right
           </span>
         </button>

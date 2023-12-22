@@ -105,7 +105,7 @@
 
           <button   kendoButton *ngIf="buttondataItem.id === 'attachFromClient' || (buttondataItem.id === 'removeFile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
             <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachFromClient'">{{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New  from client\'s attachments" : "Attach from client\'s attachments" }}  </label>
-            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removeFile'"><span class="material-icons middleicon">
+            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removeFile'"><span class="material-icons middleicon" aria-hidden="true">
               delete
               </span> {{ buttondataItem.text }}  </label>
         </button>

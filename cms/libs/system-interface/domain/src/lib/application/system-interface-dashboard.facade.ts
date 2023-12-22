@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'; 
-import { BehaviorSubject, Subject } from 'rxjs'; 
+import { Subject } from 'rxjs'; 
 import { SystemInterfaceDashboardService } from '../infrastructure/system-interface-dashboard.service'; 
 import { SnackBarNotificationType, NotificationSource, LoaderService, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';

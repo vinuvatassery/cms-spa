@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult , ColumnVisibilityChangeEvent, ColumnBase, GridComponent} from '@progress/kendo-angular-grid';
+import { GridDataResult , ColumnVisibilityChangeEvent, ColumnBase} from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State
@@ -367,7 +367,7 @@ export class FinancialPcasReassignmentListComponent
           ?.columnDesc ?? '';
 
           if(this.filter){
-            var filterData = this.filter[0]?.filters[0];
+            let filterData = this.filter[0]?.filters[0];
             if (filterData?.field == 'unlimitedFlag') {
               if (filterData.value) {
                 filterData.value = 'Y';

@@ -14,7 +14,8 @@ export class StatusGroupHistoryComponent implements OnInit {
   currentGroup$ = this.caseFacade.currentGroup$;
   groupDeleted$ = this.caseFacade.groupDeleted$;
   ddlGroups$ = this.caseFacade.ddlGroups$;
-  statusGroupHistory$: any = new Subject<any>();
+  statusGroupHistorySubject: any = new Subject<any>();
+  statusGroupHistory$ = this.statusGroupHistorySubject.asObservable()
   groupList: any;
   isGroupDetailOpened: boolean = false;
   isGroupDeleteModalOpened: boolean = false;
@@ -37,7 +38,7 @@ export class StatusGroupHistoryComponent implements OnInit {
     this.loader = true;
     this.statusPeriodFacade.loadStatusGroupHistory(this.eligibilityId).subscribe({
       next: (data) => {
-        this.statusGroupHistory$.next(data);
+        this.statusGroupHistorySubject.next(data);
         this.groupList = data;
         this.loader = false;
       },

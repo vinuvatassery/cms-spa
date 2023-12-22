@@ -538,7 +538,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       if (this.tempTpaInvoiceId != null || this.tempTpaInvoiceId != undefined) {
         formControl.reset();
       } else {
-        let form = this.addClaimServicesForm.value[i];
         this.addClaimServicesForm.removeAt(i);
         this.addExceptionForm.removeAt(i);
       }
@@ -808,7 +807,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
           this.financialPcaFacade.pcaReassignmentCount();
           this.financialClaimsFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
-            'Claim added! Claim added successfully'
+            response.message
           );
           this.navigationMenuFacade.pcaReassignmentCount();
         }

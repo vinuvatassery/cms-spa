@@ -463,7 +463,7 @@
 
 
 .k-floating-label-container>.k-label {
-  font-size: 14px;
+  font-size: $font-size;
   line-height: 18px;
 }
 
@@ -985,7 +985,7 @@ kendo-timepicker {
   position: relative;
 
   .k-input-prefix {
-    font-size: 16px;
+    font-size: $font-size-l;
 
     &.custom-currencysymbol {
       bottom: 2px;
