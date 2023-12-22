@@ -1,14 +1,14 @@
 <ul class="sidebar-menu" aria-label="sidebar menu" role="menu">
-  <li  role="menuitem" *ngFor="let menu of menus$ | async as menus; let i = index" attr.aria-label="{{ menu.name }}"
+  <li role="menuitem" *ngFor="let menu of menus$ | async as menus; let i = index" 
     [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus.length !== 0 }"
     class="new_sub_sidebar_menu">
-    <a class="sub-menu-item"(click)="onMenuClick(menu)">
-      <span class="material-icons sidebar-menu_icon">
+    <a class="sub-menu-item"(click)="onMenuClick(menu)"  role="region" attr.aria-label="{{ menu.name }}">
+      <span class="material-icons sidebar-menu_icon" aria-disabled="true">
         {{menu.icon}}
       </span>
-      <span class="sidebar-menu_label" >
+      <label class="sidebar-menu_label"  attr.aria-label="{{ menu.name }}">
         {{ menu.name }} <span *ngIf="menu?.hasBadge && isShowBadge(menu.code)" class="sidebar-menu_label-badge"> {{ getBadge(menu.code)}} </span>
-      </span>
+      </label>
     </a>
 
     <ul class="secondary_submenu" *ngIf="menu.subMenus?.length !== 0"
@@ -27,10 +27,10 @@
         attr.aria-label="{{ subMenu.name }}">
 
         <div *ngIf="subMenu.subMenus?.length !== 0">
-          <p class="submenu_list_heading" [attr.aria-label]="subMenu.name"
+        <p class="submenu_list_heading" [attr.aria-label]="subMenu.name"
             *ngIf="isMenuHeadingVisible(subMenu.subMenus, menu.filterText) || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1">
-            {{ subMenu.name | uppercase }}
-            <span class="sidebar-menu_label-badge" *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code)"> {{ getBadge(subMenu.code)}} </span>
+            <span>  {{ subMenu.name | uppercase }}
+            <span class="tab-batch-notify" *ngIf="subMenu?.hasBadge && isShowBadge(subMenu.code)"> {{ getBadge(subMenu.code)}} </span></span>
           </p>
 
           <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus">

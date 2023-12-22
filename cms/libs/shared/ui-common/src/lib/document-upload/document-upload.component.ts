@@ -14,11 +14,13 @@ export class DocumentUploadComponent  implements OnInit{
   @Input() isDisabled!: any
   @Input() typeCode!: any
   @Input() file!: any
+  @Input() fieldName!: any
   @Input() typeCodeLabel!: string;
   @Input() subTypeCodeLabel!: string;
   @Input() currentTypeCode!: string;
   @Input() formSubmitted!: boolean;
   @Input() isFileViewable!: boolean;  
+  @Input() isDownloadShow!: boolean;  
   subTypeCodes: Lov[] = [];
   selectedTypeCode! : any;
   selectedsubTypeCode = "";

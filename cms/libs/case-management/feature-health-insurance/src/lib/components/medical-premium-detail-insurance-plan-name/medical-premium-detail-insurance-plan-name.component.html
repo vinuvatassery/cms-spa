@@ -14,7 +14,7 @@
   <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
     <span class="fontsize_twel">Don’t see the Plan you’re looking for?</span>
     <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" [disabled]="isViewContentEditable"
-      aria-label="Add New " (click)="addNewInsurancePlanOpen()">
+      attr.aria-label=" {{ hasCreateUpdatePermission == true ? 'ADD NEW':'REQUEST NEW' }}" (click)="addNewInsurancePlanOpen()">
       {{ hasCreateUpdatePermission == true ? 'ADD NEW':'REQUEST NEW' }}
     </button>
   </div>
@@ -111,7 +111,7 @@
           <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="InsurancePlanClose()">
             Cancel
           </button>
-          <button kendoButton [primary]="true" aria-label="Add" (click)="addNewInsurancePlanClose()">
+          <button kendoButton [primary]="true" attr.aria-label=" {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}" (click)="addNewInsurancePlanClose()">
             {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}
           </button>
         </div>

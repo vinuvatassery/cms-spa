@@ -138,7 +138,7 @@ export class FinancialPremiumsBatchesLogListsComponent
     },
     {
       buttonType: 'btn-h-danger',
-      text: 'Remove Payment',
+      text: 'Remove Premium',
       icon: 'delete',
       disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {

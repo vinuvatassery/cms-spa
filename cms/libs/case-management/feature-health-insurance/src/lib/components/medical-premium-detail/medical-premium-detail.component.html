@@ -109,14 +109,15 @@
           <h5 class="text-capital">Copy of Medicare Card</h5>
           <common-document-upload
           [file]="copyOfMedicareCardFiles"
+          [fieldName]="'Copy of Medicare Card'"
           [isFileViewable]="true"
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_MEDICARE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'medicareCard')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'medicareCard')"
-          (handleTypeCodeEvent)="handleMedicareTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleMedicareTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
-          <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="medicareCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a
             smaller file. </kendo-formerror>
           <kendo-formerror
@@ -215,14 +216,15 @@
         <h5 class="text-capital">Proof of premium amount</h5>
         <common-document-upload
           [file]="proofOfPremiumFiles"
+          [fieldName]="'Proof of premium amount'"
           [isFileViewable]="true"
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'PROOF_OF_PREMIUM'"
           (handleFileSelectEvent)="handleFileSelected($event,'proof')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'proof')"
-          (handleTypeCodeEvent)="handleProofTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleProofTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror
           *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isProofFileUploaded && !isViewContentEditable && !proofOfPremiumExceedsFileSizeLimit">Proof
           of premium is required. </kendo-formerror>
@@ -237,14 +239,15 @@
         <h5 class="text-capital">Copy of Summary of Benefits</h5>
         <common-document-upload
           [file]="copyOfSummaryFiles"
+          [fieldName]="'Copy of Summary of Benefits'"
           [isFileViewable]="true"
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_SUMMARY_Of_BENEFITS_AND_COVERAGE'"
           (handleFileSelectEvent)="handleFileSelected($event,'summary')"
           (handleFileRemoveEvent)="handleFileRemoved($event, 'summary')"
-          (handleTypeCodeEvent)="handleSummaryTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleSummaryTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="summaryFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a smaller
           file. </kendo-formerror>
         <kendo-formerror *ngIf="!isSummaryFileUploaded && !summaryFilesExceedsFileSizeLimit">
@@ -259,13 +262,14 @@
         <common-document-upload
           [file]="copyOfInsuranceCardFiles"
           [isFileViewable]="true"
+          [fieldName]="'Copy of Insurance Card'"
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_INSURANCE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'copyInsurance')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'copyInsurance')"
-          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="insuranceCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a
           smaller file. </kendo-formerror>
         <kendo-formerror
@@ -290,7 +294,7 @@
     </div>
     <div class="justify-content-end">
       <button kendoButton [primary]="true" look="outline" *ngIf="!isEditViewPopup && isOpenDdl"
-        (click)="onModalCloseClicked()" aria-label="button">
+        (click)="onModalCloseClicked()" aria-label="Cancel">
         Cancel
       </button>
       <button kendoButton [primary]="true" *ngIf="!isEditViewPopup && isOpenDdl" [attr.aria-label]="buttonText"

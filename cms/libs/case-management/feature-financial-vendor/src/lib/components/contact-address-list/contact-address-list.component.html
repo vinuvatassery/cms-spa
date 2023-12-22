@@ -19,7 +19,7 @@
 
   <kendo-grid-column [sticky]="true" field="contactName" title="Name" [width]="100" >
     <ng-template kendoGridCellTemplate let-dataItem>
-      <span class="preferred-phoneNo posi_relative" title="Preferred Contact" *ngIf=" dataItem.preferredFlag === 'Y'&&dataItem.activeFlag === 'Y'">
+      <span class="preferred-phoneNo posi_relative"  aria-label="preferred contact" title="Preferred Contact" *ngIf=" dataItem.preferredFlag === 'Y'&&dataItem.activeFlag === 'Y'">
         <span
           class="material-icons icon-size-md"
           aria-label="preferred contact"
@@ -115,15 +115,15 @@
   </kendo-grid-column>
   <kendo-grid-column [sticky]="true" field="" title="Options" [columnMenu]="false" [width]="70" class="text-center">
     <ng-template kendoGridCellTemplate let-dataItem>
-      <kendo-dropdownbutton [data]="contactAddressActions" icon="more-vertical"
+      <kendo-dropdownbutton [data]="contactAddressActions" 
         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
         aria-label="more actions" title="More option" [popupSettings]="{ popupClass: popupClassAction,  animate: true }">
-        <span hidden> More Option</span>
+        <span class="material-icons" aria-label="More option"> more_vert    </span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
           <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete Contact') || (dataItem.activeFlag == 'Y')">
             <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
-              aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-              <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+              (click)="buttondataItem.click(dataItem)">
+              <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
               <label> {{ buttondataItem.text }} </label>
             </button>
           </ng-container>
@@ -135,9 +135,9 @@
   let-currentPage="currentPage">
   <div class="grid-custom-paginationtemplates d-flex">
     <div class="d-flex align-items-center">
-      <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+      <label class="mr-1" for="AddressRowsPerPage">Rows Per Page</label>
       <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-        [valueField]="'value'" #RowsPerPage id="RowsPerPage" aria-label="Rows Per Page" [valuePrimitive]="true"
+        [valueField]="'value'" #AddressRowsPerPage id="AddressRowsPerPage" aria-label="Rows Per Page" [valuePrimitive]="true"
         [(value)]="state.take" (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
       <kendo-pager-info> </kendo-pager-info>
       <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>

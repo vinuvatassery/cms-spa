@@ -95,7 +95,7 @@
   right: 152px;
   top: 13px;
   .material-icons {
-    font-size: 24px;
+    font-size: $font-size-xx;
   }
 }
 
@@ -271,6 +271,9 @@ max-width: 250px;
   border-color: transparent;
   .k-dropzone {
     border: 1px solid $theme-border;
+    .k-dropzone-hint{
+      color: $black-70;
+    }
   }
 }
 

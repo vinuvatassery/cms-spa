@@ -65,15 +65,6 @@
           title="Insurance Carrier"
           [width]="170"
         >
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <button kendoButton look="flat" class="card-link-button"
-              [attr.aria-label]="dataItem.insuranceCarrierName"
-              kendoPopoverAnchor
-              [popover]="myPopover"
-              (click)="getCarrierContactInfo(dataItem.insuranceVendorId,'')"
-              >
-              {{ dataItem.insuranceCarrierName }}
-            </button></ng-template>
         </kendo-grid-column>
         <kendo-grid-column  title="Start Date" [width]="130"  field="startDate">
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -157,19 +148,19 @@
         >
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton
-            icon="more-vertical"
+            
               [data]="gridOptionData"
               title="More option"
               class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction,  animate: true }">
-            <span hidden> More Option</span>
+            <span class="material-icons" aria-label="More option"> more_vert    </span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttonDataItem>
                 <button kendoButton  look="flat" [attr.aria-label]="buttonDataItem.text" [class]="buttonDataItem.buttonType" aria-hidden="false"
                 (click)="handleOptionClick(dataItem,buttonDataItem.type)" [disabled]="(isReadOnly$ | async) ? true : false"
                 [hidden]="dataItem.isPaymentDone && buttonDataItem.icon ==='delete'">
-                  <span class="material-icons" [attr.aria-label]="buttonDataItem.text" >{{buttonDataItem.icon}}</span>
+                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttonDataItem.text" >{{buttonDataItem.icon}}</span>
                   <label>   {{ buttonDataItem.text }} </label>
               </button>
 
@@ -183,10 +174,10 @@
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
           <div class="d-flex align-items-center">
-            <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+            <label class="mr-1" for="MedicalInsRowsPerPage">Rows Per Page</label>
               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
               [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"
-              (selectionChange)="pageSelectionChange($event)" aria-label="Rows Per Page" id="RowsPerPage"></kendo-dropdownlist>
+              (selectionChange)="pageSelectionChange($event)" aria-label="Rows Per Page" id="MedicalInsRowsPerPage"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
 

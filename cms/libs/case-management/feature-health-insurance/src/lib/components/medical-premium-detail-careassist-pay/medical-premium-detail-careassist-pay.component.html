@@ -77,7 +77,7 @@
       kendoButton
       class="card-link-button ml-1 no-ul fontsize_twel"
       [disabled]="isViewContentEditable"
-      aria-label="add new insurance carrier"
+      attr.aria-label="{{hasinsuranceVendorCreateUpdatePermission==true? 'ADD NEW':'REQUEST NEW'}}"
       (click)="addNewInsuranceProviderOpen()"
     >
       {{hasinsuranceVendorCreateUpdatePermission==true? 'ADD NEW':'REQUEST NEW'}}

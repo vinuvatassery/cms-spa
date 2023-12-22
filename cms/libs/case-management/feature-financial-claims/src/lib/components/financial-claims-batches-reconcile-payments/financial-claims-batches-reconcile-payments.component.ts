@@ -958,9 +958,9 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
-        paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
+        paymentToReconcileCount : this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged && x.entityId == this.entityId  && x.checkNbr !== undefined && x.checkNbr !== '').length
       }
-      
+      this.claimReconcileCount =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged && x.entityId == this.entityId  && x.checkNbr !== undefined && x.checkNbr !== '').length;
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
 

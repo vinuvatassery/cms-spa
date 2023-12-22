@@ -56,34 +56,34 @@
         <kendo-grid-column *ngIf="!managementTab" field="phone" title="Phone" [width]="100"></kendo-grid-column>
         <kendo-grid-column field="clientCaseId" title="Options" [width]="70" class="text-center"  [columnMenu]="false" [sticky]="true">
           <ng-template kendoGridCellTemplate let-manager let-clientCaseId="field">
-            <kendo-dropdownbutton [data]="newAppActions" icon="more-vertical" title="More option" *ngIf="!managementTab"
+            <kendo-dropdownbutton [data]="newAppActions"  title="More option" *ngIf="!managementTab"
               class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
               [popupSettings]="{ popupClass: popupClassAction,  animate: true }" aria-label="more actions">
-              <span hidden> More Option</span>
+              <span class="material-icons" aria-label="More option"> more_vert    </span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem
                 let-clientCaseId="clientCaseId">
                 <button
                  kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
                   aria-hidden="false" (click)="dataItem.click(manager.clientCaseId,manager.caseManagerId,manager.clientCaseManagerId
                   ,manager.assignmentStartDate,manager.assignmentEndDate);" [disabled]="(isReadOnly$ | async) ? true : false">
-                  <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                  <span class="material-icons"  aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                   <label> {{ dataItem.text }} </label>
                 </button>
 
               </ng-template>
             </kendo-dropdownbutton>
 
-            <kendo-dropdownbutton [data]="tabActions" icon="more-vertical" title="More option" *ngIf="managementTab"
+            <kendo-dropdownbutton [data]="tabActions"  title="More option" *ngIf="managementTab"
             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
             [popupSettings]="{ popupClass: popupClassAction,  animate: true }" aria-label="more actions">
-            <span hidden> More Option</span>
+            <span class="material-icons" aria-label="More option"> more_vert    </span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem
               let-clientCaseId="clientCaseId">
               <button [hidden]="(manager.activeFlag === 'Y' && dataItem.buttonName==='reAssignMngr') || (manager.activeFlag === 'N' && dataItem.buttonName==='unAssignMngr')"
                kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
                 aria-hidden="false" (click)="dataItem.click(manager.clientCaseId,manager.caseManagerId,manager.clientCaseManagerId
                 ,manager.assignmentStartDate,manager.assignmentEndDate);" [disabled]="(isReadOnly$ | async) ? true : false">
-                <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
                 <label class="grid-list-options-menu"> {{ dataItem.text }} </label>
               </button>
 
@@ -98,7 +98,7 @@
             <label class="mr-1">Rows Per Page</label>
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
               [valuePrimitive]="true" [(value)]="state.take"
-              (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
+              (selectionChange)="pageselectionchange($event)" aria-label="Rows Per Page"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
 
