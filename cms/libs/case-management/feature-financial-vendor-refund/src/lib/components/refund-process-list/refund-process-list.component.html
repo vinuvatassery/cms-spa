@@ -45,7 +45,8 @@
     [data]="vendorRefundProcessGridLists$ | async"
     kendoGridSelectBy="paymentRequestId"
     (selectedKeysChange)="selectedKeysChange($event)"
-    [(selectedKeys)]="selectedProcessRefunds">
+    [(selectedKeys)]="selectedProcessRefunds"
+    (columnVisibilityChange)="columnChange($event)">
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
       [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"

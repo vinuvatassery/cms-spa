@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import {  GridDataResult, SelectAllCheckboxState } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, GridDataResult, SelectAllCheckboxState } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -454,7 +454,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     this.selectedSearchColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
-    this.sortColumnDesc = 'Creation Time';
+    this.sortColumnDesc = 'Entry Date';
     this.sortValue = 'creationTime';
     this.sortType = 'desc';
     this.sort = this.sortColumn;
@@ -654,5 +654,9 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
+  }
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Columns Added';
   }
 }
