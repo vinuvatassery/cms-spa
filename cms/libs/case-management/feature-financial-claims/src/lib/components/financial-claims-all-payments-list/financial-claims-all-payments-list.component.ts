@@ -212,6 +212,7 @@ export class FinancialClaimsAllPaymentsListComponent
   columns: any = {
     itemNumber: 'Item #',
     batchNumber: 'Batch #',
+    batchNbr: 'Batch #',
     invoiceNbr: 'Invoice ID',
     providerName: 'Provider Name',
     tin: 'Tax ID',
@@ -232,6 +233,10 @@ export class FinancialClaimsAllPaymentsListComponent
     },
     {
       columnCode: 'batchNumber',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnCode: 'batchNbr',
       columnDesc: 'Batch #',
     },
     {
