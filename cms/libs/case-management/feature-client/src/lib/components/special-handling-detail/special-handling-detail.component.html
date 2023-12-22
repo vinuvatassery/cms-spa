@@ -14,7 +14,7 @@
               [maxlength]="tareaCaseWorkerNoteMaxLength"
               [value]="item.note"
               [(ngModel)]="item.note"
-              (valueChange)="onTareaCaseWorkerChanged($event, item.id)"
+              (valueChange)="onTareaCaseWorkerChanged($event, item)"
               aria-label="case worker note"
             >
               <kendo-textarea-suffix class="justify-content-end">

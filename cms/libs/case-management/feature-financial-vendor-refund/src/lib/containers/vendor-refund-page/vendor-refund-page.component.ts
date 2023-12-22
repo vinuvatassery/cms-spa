@@ -16,7 +16,7 @@ export class VendorRefundPageComponent
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
   tab = 1
-  dataExportParameters = null
+  dataExportParameters :any;
   batchesGridExportParameters = null
   sortType = this.financialVendorRefundFacade.sortType;
   pageSizes = this.financialVendorRefundFacade.gridPageSizes;
@@ -103,6 +103,18 @@ export class VendorRefundPageComponent
     }
   }
 
+  exportRefundsGridProcessData()
+  {
+    const RefundPageAndSortedRequestDto =
+    {
+       sortType : this.dataExportParameters?.sortType as string,
+      sorting : this.dataExportParameters?.sortColumn,
+      skipCount : this.dataExportParameters?.skipCount,
+      maxResultCount : this.dataExportParameters?.pagesize,
+      Filter : JSON.stringify (this.dataExportParameters?.filter)
+    }
+      this.documentFacade.getExportFile(RefundPageAndSortedRequestDto, `vendor-refunds`,'Vendor Refunds');
+  }
   exportBatchesGridData()
   {
     if (this.batchesGridExportParameters) {
