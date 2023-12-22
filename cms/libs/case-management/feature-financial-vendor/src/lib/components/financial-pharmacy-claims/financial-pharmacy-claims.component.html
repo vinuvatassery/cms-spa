@@ -52,11 +52,6 @@
                 </kendo-grid-column> 
 
                 <kendo-grid-column field="itemNbr" title="Item #" [width]="100">
-                  <ng-template kendoGridCellTemplate let-dataItem>
-                    <button [attr.aria-label]="dataItem.itemNbr" (click)="rowClickNavigation('itemNbr', dataItem)" kendoButton look="flat" class="card-link-button">
-                      {{ dataItem.itemNbr }}
-                    </button>
-                  </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                     <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                       [extra]="false" operator="eq">
