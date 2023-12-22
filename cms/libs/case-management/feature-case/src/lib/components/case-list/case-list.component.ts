@@ -63,7 +63,7 @@ public state!: any;
   columns : any = {
     clientFullName:"Client Name",
     officialIdFullName:"Name on Official ID",
-    insuranceFullName:"Name on Primary Insurance Card",
+    insuranceFullName:"Name on Insurance Card",
     pronouns:"Pronouns",
     clientId:"Client ID",
     urn:"URN",
