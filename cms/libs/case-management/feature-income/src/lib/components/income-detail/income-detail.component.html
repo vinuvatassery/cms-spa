@@ -89,6 +89,7 @@
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
           <common-document-upload
           [typeCode]="'PROOF_OF_INCOME'"
+          [fieldName]="'No proof of Income'"
           [file]="uploadedIncomeFile"
           [isFileViewable]="true"
           (handleFileSelectEvent)="handleFileSelected($event)"

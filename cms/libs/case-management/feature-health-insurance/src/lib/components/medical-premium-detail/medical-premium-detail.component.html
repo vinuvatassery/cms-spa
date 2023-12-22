@@ -109,6 +109,7 @@
           <h5 class="text-capital">Copy of Medicare Card</h5>
           <common-document-upload
           [file]="copyOfMedicareCardFiles"
+          [fieldName]="'Copy of Medicare Card'"
           [isFileViewable]="true"
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_MEDICARE_CARD'"
@@ -215,6 +216,7 @@
         <h5 class="text-capital">Proof of premium amount</h5>
         <common-document-upload
           [file]="proofOfPremiumFiles"
+          [fieldName]="'Proof of premium amount'"
           [isFileViewable]="true"
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'PROOF_OF_PREMIUM'"
@@ -237,6 +239,7 @@
         <h5 class="text-capital">Copy of Summary of Benefits</h5>
         <common-document-upload
           [file]="copyOfSummaryFiles"
+          [fieldName]="'Copy of Summary of Benefits'"
           [isFileViewable]="true"
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_SUMMARY_Of_BENEFITS_AND_COVERAGE'"
@@ -259,6 +262,7 @@
         <common-document-upload
           [file]="copyOfInsuranceCardFiles"
           [isFileViewable]="true"
+          [fieldName]="'Copy of Insurance Card'"
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_INSURANCE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'copyInsurance')"
