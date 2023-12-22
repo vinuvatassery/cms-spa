@@ -355,7 +355,9 @@
                         <span class="ml-2"><strong>Warrant Total:</strong></span> <span class="ml-2">$&nbsp;{{reconcileBreakoutSummary$ == null ? 0 : reconcileBreakoutSummary$?.warrantTotal | kendoNumber: 'n2'}}</span>
                        
                   </div>
-                  <div><span *ngIf="!onlyPrintAdviceLetter">{{ premiumReconcileCount }} advice letter(s) to be previewed</span>
+                  <div>
+                        <span>{{ paymentToReconcileCount }} payment(s) to reconcile</span>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span *ngIf="!onlyPrintAdviceLetter">{{ premiumReconcileCount }} advice letter(s) to be previewed</span>
                         <button *ngIf="isBreakoutPanelShow" kendoButton class="ml-1" aria-label="Close">
                               <span class="material-icons" aria-label="close" aria-hidden="true"
                                     (click)="toggleBreakoutPanel()">close</span>
