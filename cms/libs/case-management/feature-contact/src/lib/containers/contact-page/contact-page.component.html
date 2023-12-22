@@ -466,22 +466,24 @@
                 />
               <label class="k-checkbox-label" for="noHomeAddressProofFlag">No proof of home address or residency</label>
             </span>
-          </kendo-formfield>
+          </kendo-formfield> 
          
           </div>
         </div>        
         <div class="flex-row mt-2">
           <div class="flex-col flex-col-10">
           <common-document-upload
+          [fieldName]="'Proof of Home Address'"
           [typeCode]="'HOME_ADDRESS_PROOF'"
           [isDisabled]="isNoProofOfHomeChecked"
           [file]="homeAddressProofFile"
           [isFileViewable]="true"
           (handleFileSelectEvent)="handleFileSelected($event)"
           (handleFileRemoveEvent)="handleFileRemoved($event)"
-          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
+          [isDownloadShow]="this.contactInfoForm.value.noHomeAddressProofFlag"
+          >
           </common-document-upload>
-          <kendo-formhint>Max file size 25MB</kendo-formhint> 
           <kendo-formerror *ngIf="showAddressProofRequiredValidation"> Proof of Home Address is required
           </kendo-formerror>
           <kendo-formerror *ngIf="showAddressProofSizeValidation">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>

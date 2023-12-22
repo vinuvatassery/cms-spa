@@ -92,16 +92,17 @@
                         </kendo-grid-column>
                         <kendo-grid-column field="" title="Option" [columnMenu]="false" [width]="80" class="text-center" >
                             <ng-template kendoGridCellTemplate let-dataItem>
-                              <kendo-dropdownbutton [data]="insurancePlansAction" icon="more-vertical"
+                              <kendo-dropdownbutton [data]="insurancePlansAction" 
                                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                                 aria-label="more actions" title="More option"
                                 [popupSettings]="{ popupClass: popupClassAction, animate: true }"
                                 *ngIf="!dataItem?.coverages || dataItem?.coverages?.length === 0">
+                                <span class="material-icons" aria-label="More option"> more_vert    </span>
                                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                                   <ng-container>
                                     <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                                      [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-                                      <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                                      [class]="buttondataItem.buttonType"  (click)="buttondataItem.click(dataItem)">
+                                      <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                                       <label> {{ buttondataItem.text }} </label>
                                     </button>
                                   </ng-container>  </ng-template>
@@ -199,14 +200,14 @@
                                 </kendo-formerror>
                                 <kendo-formerror class="align-items-center" *ngIf="dataItem.premiumExistException"> 
                                         <span class="material-icons mr-1" aria-hidden="false">info</span> Premium Already Exists!                                                                             
-                                        <a kendoButton class="ml-1 card-link-button" (click)="onMakeExceptionClick(dataItem)"><u>{{dataItem.exceptionText}}</u></a>
+                                        <a kendoButton class="ml-1 card-link-button" (click)="onMakeExceptionClick(dataItem)" [attr.aria-label]="dataItem.exceptionText"><u>{{dataItem.exceptionText}}</u></a>
                                 </kendo-formerror>
                                 </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column title="Option" [width]="30" class="text-center">
                                 <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
                                     <button kendoButton fillMode="flat"  class="clear-icon-btn ml-3" themeColor="error"  aria-label="Delete " title="Delete"  (click)="removeCoverage(policyId, dataItem)">
-                                        <span class="material-icons">  delete   </span>
+                                        <span class="material-icons" aria-hidden="true">  delete   </span>
                                     </button>
                                 </ng-template>
                               </kendo-grid-column>

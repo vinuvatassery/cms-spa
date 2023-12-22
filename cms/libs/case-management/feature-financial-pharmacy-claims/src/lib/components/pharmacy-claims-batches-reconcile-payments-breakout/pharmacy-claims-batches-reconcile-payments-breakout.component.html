@@ -117,10 +117,9 @@
                   </kendo-grid-column>
                   <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="160">
                         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                              <label aria-label="Medical Provider" kendoButton look="flat"
-                                    class="card-link-button"  >
+                              <span class="tableamountview" >
                                     <strong>$</strong> {{dataItem.amountPaid | kendoNumber:'n2'}} 
-                              </label>
+                        </span>
                             </ng-template>
                         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                               <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -267,9 +266,9 @@
                         let-currentPage="currentPage">
                         <div class="grid-custom-paginationtemplates d-flex">
                               <div class="d-flex align-items-center">
-                                    <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                                    <label class="mr-1" for="PharmacyClaimsReconcileRowsPerPage">Rows Per Page</label>
                                     <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
-                                          [textField]="'text'" [valueField]="'value'" #RowsPerPage id="RowsPerPage"
+                                          [textField]="'text'" [valueField]="'value'" #PharmacyClaimsReconcileRowsPerPage id="PharmacyClaimsReconcileRowsPerPage"
                                           aria-label="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
                                           (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
                                     <kendo-pager-info> </kendo-pager-info>
@@ -305,7 +304,7 @@
         <div class="justify-content-between" >
           <div class="justify-content-end" (click)="onClientClicked(clientId)">
             <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-              Client Profile <span class="material-icons ml-1">
+              Client Profile <span class="material-icons ml-1" aria-hidden="true">
                 chevron_right
               </span>
             </button>

@@ -245,7 +245,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     {
       operator = "eq"
     }
-    if(this.selectedColumn ==="tin"){
+    if(this.selectedColumn ==="tin" || this.selectedColumn === "ALL"){
       let noOfhypen =   data.split("-").length - 1
       let index = data.lastIndexOf("-")
       if(noOfhypen>=1 && (index!==2 && index !==3)){

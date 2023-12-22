@@ -3,7 +3,7 @@
     <span class="k-icon k-i-loading k-input-loading-icon"></span>
   </section>
   <div *ngIf="!infoObjectValidator(clientProfileImpInfo$)" class="no-data-available">
-    <span class="material-icons"> info </span>
+    <span class="material-icons" aria-hidden="true"> info </span>
     <p> No data found</p>
   </div>
   <div class="flex-row" *ngIf="infoObjectValidator(clientProfileImpInfo$)">

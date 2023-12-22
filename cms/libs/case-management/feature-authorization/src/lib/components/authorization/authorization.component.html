@@ -114,13 +114,15 @@
           <div class="flex-col flex-col-6">
             <common-document-upload
               [typeCode]="'COPY_OF_PAPER_APPLICATION'"
+              [fieldName]="'COPY OF SIGNED APPLICATION'"
               [file]="copyOfSignedApplication"
               [isFileViewable]="true"
               (handleFileSelectEvent)="handleFileSelected($event)"
               (handleFileRemoveEvent)="handleFileRemoved($event)"
-              (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+              (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
+              [isDownloadShow]="true">
             </common-document-upload>
-            <kendo-formhint>Max file size 25MB</kendo-formhint>
+          
             <kendo-formerror *ngIf="showCopyOfSignedApplicationRequiredValidation | async"> Copy of signed application is required</kendo-formerror>
             <kendo-formerror *ngIf="showCopyOfSignedApplicationSizeValidation | async">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         </div>

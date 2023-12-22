@@ -32,7 +32,7 @@
   </div>
   <div class="mt-2"  *ngIf="!isDisabled">
   <kendo-fileselect
-              aria-label="proof of home address"
+              [attr.aria-label]="fieldName"
               name="upload proof"
               [disabled]="isDisabled"
               [restrictions]="fileUploadRestrictions"
@@ -41,8 +41,7 @@
               (remove)="handleFileRemoved($event)"
               [(ngModel)]="file"
               [ngModelOptions]="{standalone: true}"
-              id="homeAddressProofUploaded"
-              #homeAddressProofUploaded>
+              [id]="typeCode" >
               <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
                 <span (click)="documentFacade.viewOrDownloadFile(isFileViewable,files[0]?.documentId,files[0]?.name)">
                 <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>
@@ -54,13 +53,13 @@
                 </span>
               </ng-template>
   </kendo-fileselect>
-
+  <kendo-formhint>Max file size 25MB</kendo-formhint> 
 </div>
-<div class="mt-2" *ngIf="isDisabled">
+<div class="mt-2" *ngIf="isDisabled && file?.length>0 &&isDownloadShow"> 
  <span (click)="documentFacade.viewOrDownloadFile(isFileViewable,file[0]?.documentId,file[0]?.name)">
-                <span *ngIf="!file[0].documentId">{{ file[0].name }} </span>
+                <span *ngIf="!file[0]?.documentId ">{{ file[0]?.name }} </span>
                   <button [attr.aria-label]="file[0].name" *ngIf="file[0]?.documentId" kendoButton look="flat" class="card-link-button"  >
-                    <a>{{ file[0].name }} </a>
+                    <a>{{ file[0]?.name }} </a>
                   </button>
                   <br>
                   <span>{{   file[0]?.size  | fileSize  }}</span>

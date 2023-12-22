@@ -14,7 +14,7 @@
               [maxlength]="tareaCaseWorkerNoteMaxLength"
               [value]="item.note"
               [(ngModel)]="item.note"
-              (valueChange)="onTareaCaseWorkerChanged($event, item.id)"
+              (valueChange)="onTareaCaseWorkerChanged($event, item)"
               aria-label="case worker note"
             >
               <kendo-textarea-suffix class="justify-content-end">
@@ -121,7 +121,7 @@
                 >  
              </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatOther'].valid && specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid) && !specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].disabled "> <span class="material-icons-outlined">
+            <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatOther'].valid && specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid) && !specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].disabled "> <span class="material-icons-outlined" >
               error
               </span> A response is required.</kendo-formerror>  
               </div>
