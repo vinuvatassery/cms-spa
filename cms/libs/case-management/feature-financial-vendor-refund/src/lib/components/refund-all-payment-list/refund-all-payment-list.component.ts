@@ -217,7 +217,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     {
       columnCode: 'refundNote',
       columnDesc: 'Refund Note',
-    }       
+    }
   ];
   showExportLoader = false;
 
@@ -367,7 +367,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     let operator = 'startswith';
 
     if (
-      this.selectedColumn === 'clientId' ||
       this.selectedColumn === 'refundAmount' ||
       this.selectedColumn === 'originalAmount'
     ) {
@@ -421,6 +420,9 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     if (stateData.filter?.filters.length > 0) {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
+      if (stateFilter.field == "clientId") {
+        stateFilter.operator = "dtc";
+      }
       this.isFiltered = true;
       const filterList = [];
       for (const filter of stateData.filter.filters) {
@@ -434,6 +436,13 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
     this.loadVendorRefundAllPaymentsListGrid();
     this.handleAllPaymentsGridData();
+    if (stateData.filter?.filters.length > 0) {
+      const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      this.filter = stateFilter.value;
+      if (stateFilter.field == "clientId") {
+        stateFilter.operator = "contains";
+      }
+    }
   }
 
   pageSelectionChange(data: any) {
@@ -476,7 +485,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       'paymentsUnSelected': this.unCheckedProcessRequest,
       'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
     };
-    
+
     this.showExportLoader = true;
     this.exportReceiptDataEvent.emit(this.selectedAllPaymentsList);
     this.exportButtonShow$.subscribe((response: any) => {
