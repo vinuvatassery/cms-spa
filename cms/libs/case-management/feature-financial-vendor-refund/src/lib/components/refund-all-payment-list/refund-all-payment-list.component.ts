@@ -421,7 +421,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
       if (stateFilter.field == "clientId") {
-        stateFilter.operator = "dtc";
+        stateFilter.operator = "lc";
       }
       this.isFiltered = true;
       const filterList = [];
