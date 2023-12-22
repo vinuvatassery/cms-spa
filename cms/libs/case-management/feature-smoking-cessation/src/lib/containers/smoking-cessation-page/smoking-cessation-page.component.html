@@ -1,16 +1,16 @@
 <div class="client-data-block">
   <h2 hidden>Application</h2>
   
-  <h3>Smoking Cessation</h3>
+  <h3 id="SmokingCessation">Smoking Cessation</h3>
   <section>
     <form [formGroup]="smokingCessationForm" novalidate>
     <div class="block-section pt-1">
       <div class="flex-row">
         <div class="flex-col mb-1">
-          <fieldset class="k-form-fieldset">
+          <fieldset class="k-form-fieldset" role="group" aria-labelledby="SmokingCessation">
             <legend class="k-form-legend"> </legend>
        
-          <div class="component-list-h" class="form-group">
+          <div class="component-list-h" class="form-group" aria-labelledby="SmokingCessation">
             <span class="app-radiobtnwidtext-wrapper">
               <input
                 type="radio"
