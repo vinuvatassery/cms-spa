@@ -10,7 +10,7 @@ export enum CommunicationEventTypeCode {
     InsuranceVendorSubject = "Insurance Vendor Email",
     DentalProviderSubject = "Dental Provider Email",
     PharmacySubject = "Pharmacy Email",
-    CopyOfSignedApplication="COPY_OF_SIGNED_APPLICATION",
+    CopyOfSignedApplication="COPY_OF_PAPER_APPLICATION",
     ManufacuterLetter="MANUFACTURER_LETTER",
     ManufacturerEmail="MANUFACTURER_EMAIL",
     InsuranceVendorLetter="INSURANCE_VENDOR_LETTER",
