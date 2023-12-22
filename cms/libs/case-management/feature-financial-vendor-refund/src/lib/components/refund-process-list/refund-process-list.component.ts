@@ -68,6 +68,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   searchValue = '';
   isFiltered = false;
   filter!: any;
+  selectedSearchColumn='ALL';
   selectedColumn = 'VendorName';
   gridDataResult!: GridDataResult;
   showExportLoader = false;
@@ -84,6 +85,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   };
 
   columns: any = {
+    ALL: 'All Columns',
     VendorName: 'Vendor',
     type: 'Type',
     clientFullName: 'Client Name',
@@ -98,6 +100,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   };
 
   dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'VendorName',
       columnDesc: 'Vendor',
@@ -347,9 +350,9 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     this.defaultGridState();
     let operator = 'contains';
     if (
-      this.selectedColumn === 'refundAmount' ||
-      this.selectedColumn === 'refundWarrentnbr' ||
-      this.selectedColumn === 'indexCode'
+      this.selectedSearchColumn === 'refundAmount' ||
+      this.selectedSearchColumn === 'refundWarrentnbr' ||
+      this.selectedSearchColumn === 'indexCode'
     ) {
       operator = 'eq';
     }
@@ -360,7 +363,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'VendorName',
+              field: this.selectedSearchColumn ?? 'VendorName',
               operator: operator,
               value: data,
             },
@@ -448,7 +451,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     this.sortColumn = 'Vendor';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'VendorName';
+    this.selectedSearchColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
     this.sortColumnDesc = 'Creation Time';
