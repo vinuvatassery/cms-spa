@@ -23,6 +23,8 @@
                                 [vendorRefundProcessGridLists$]="vendorRefundProcessGridLists$"
                                 [pageSizes]="pageSizes" [sortValue]="sortValueRefundProcess"
                                 [sortType]="sortType" [sort]="sortProcessList"
+                                [exportButtonShow$]="exportButtonShow$"
+                                (exportGridDataEvent)="exportRefundsGridProcessData()"
                                 (loadVendorRefundProcessListEvent)="loadFinancialRefundProcessListGrid($event)"
                                 (providerNameClickEvent)="onProviderNameClick($event)"
                                 > </cms-refund-process-list>

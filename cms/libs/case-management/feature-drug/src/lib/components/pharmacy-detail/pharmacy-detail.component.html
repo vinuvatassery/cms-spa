@@ -70,7 +70,7 @@
         [primary]="true"
         look="flat"
         (click)="onOpenNewPharmacyClicked()"
-        aria-label="Add New"
+        attr.aria-label="{{ hasPharmacyCreateUpdatePermission == true ? 'Add New' : 'Request New'}} "
       >
         {{ hasPharmacyCreateUpdatePermission == true ? 'Add New' : 'Request New'}} 
       </button>

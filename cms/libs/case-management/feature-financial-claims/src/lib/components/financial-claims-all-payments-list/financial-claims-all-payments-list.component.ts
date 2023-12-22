@@ -212,6 +212,7 @@ export class FinancialClaimsAllPaymentsListComponent
   columns: any = {
     itemNumber: 'Item #',
     batchNumber: 'Batch #',
+    batchNbr: 'Batch #',
     invoiceNbr: 'Invoice ID',
     providerName: 'Provider Name',
     tin: 'Tax ID',
@@ -232,6 +233,10 @@ export class FinancialClaimsAllPaymentsListComponent
     },
     {
       columnCode: 'batchNumber',
+      columnDesc: 'Batch #',
+    },
+    {
+      columnCode: 'batchNbr',
       columnDesc: 'Batch #',
     },
     {
@@ -316,10 +321,6 @@ export class FinancialClaimsAllPaymentsListComponent
   handleAllPaymentsGridData() {
     this.financialClaimsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
       this.gridFinancialClaimsAllPaymentsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);

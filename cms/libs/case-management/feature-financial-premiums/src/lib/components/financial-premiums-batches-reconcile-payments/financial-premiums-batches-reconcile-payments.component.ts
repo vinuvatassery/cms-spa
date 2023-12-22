@@ -105,6 +105,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   isRecordForPrint:any=0;
   showExportLoader = false;
   bulkNoteCounter:any=0;
+  paymentToReconcileCount:any=0;
   columns : any = {
     ALL: 'ALL',
     vendorName:this.providerTitle,
@@ -968,7 +969,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         }
         this.warrantCalculationArray.push(object);
       });
-
+      this.paymentToReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged && x.entityId == this.entityId).length;
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
@@ -977,7 +978,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
-        paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
+        paymentToReconcileCount : this.paymentToReconcileCount
       }
 
       this.loadIPBreakoutSummary(ReconcilePaymentResponseDto);

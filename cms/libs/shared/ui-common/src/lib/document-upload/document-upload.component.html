@@ -32,7 +32,7 @@
   </div>
   <div class="mt-2"  *ngIf="!isDisabled">
   <kendo-fileselect
-              aria-label="proof of home address"
+              [attr.aria-label]="fieldName"
               name="upload proof"
               [disabled]="isDisabled"
               [restrictions]="fileUploadRestrictions"
@@ -41,8 +41,7 @@
               (remove)="handleFileRemoved($event)"
               [(ngModel)]="file"
               [ngModelOptions]="{standalone: true}"
-              id="homeAddressProofUploaded"
-              #homeAddressProofUploaded>
+              [id]="typeCode" >
               <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
                 <span (click)="documentFacade.viewOrDownloadFile(isFileViewable,files[0]?.documentId,files[0]?.name)">
                 <span *ngIf="!files[0].documentId">{{ files[0].name }} </span>

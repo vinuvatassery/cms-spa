@@ -81,7 +81,7 @@
           <div class="d-flex align-items-center"> 
             <label class="mr-1" for="providerrowperpage">Rows Per Page</label> 
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
-              [valuePrimitive]="true" id="providerrowperpage" [(value)]="pageSize"></kendo-dropdownlist>
+              [valuePrimitive]="true" id="providerrowperpage" [(value)]="pageSize" aria-label="Rows Per Page"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
   

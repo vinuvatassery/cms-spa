@@ -269,7 +269,7 @@ loadFinancialRecentClaimListGrid() {
 
   private loadColumnsData()
   {
-    this.dentalOrMedicalServiceField= this.includeServiceSubTypeFilter ? this.claimsType == "dental" ? "Dental Service":"Medical Service" : 'Service';
+    this.dentalOrMedicalServiceField = this.getServiceField();
     this.columns = {
       invoiceId:"Invoice ID",
       serviceStartDate:"Service Start",
@@ -344,6 +344,13 @@ loadFinancialRecentClaimListGrid() {
         "columnDesc": "Payment Status"
       }
     ]
+  }
+
+  getServiceField(): string {
+    if(this.includeServiceSubTypeFilter){
+      return this.claimsType == 'dental' ? 'Dental Service' : 'Medical Service';
+    }
+    return 'Service';
   }
 
   dropdownFilterChange(
