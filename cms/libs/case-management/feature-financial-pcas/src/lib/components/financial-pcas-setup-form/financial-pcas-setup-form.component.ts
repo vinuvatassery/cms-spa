@@ -135,6 +135,7 @@ export class FinancialPcasSetupFormComponent implements OnInit, OnDestroy {
           this.loader = false;
           data.openDate = new Date(data?.openDate);
           data.closeDate = new Date(data?.closeDate);
+          data.pcaCode = Number(data.pcaCode)
           this.pcaForm?.patchValue(data);
           this.pcaDescChangeHandler(data?.pcaDesc);
         }
