@@ -57,11 +57,11 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   isColumnsReordered = false;
   columnChangeDesc = 'Default Columns';
   filteredByColumnDesc = '';
-  sortColumnDesc = 'Vendor Name';
+  sortColumnDesc = 'Vendor';
   searchText = '';
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'Vendor Name';
+  sortColumn = 'Vendor';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -80,11 +80,11 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   serviceType = '';
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
-    VendorName: 'Vendor Name',
+    VendorName: 'Vendor',
   };
 
   columns: any = {
-    VendorName: 'Vendor Name',
+    VendorName: 'Vendor',
     type: 'Type',
     clientFullName: 'Client Name',
     refundWarrentnbr: 'Refund Warrant #',
@@ -100,7 +100,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   dropDowncolumns: any = [
     {
       columnCode: 'VendorName',
-      columnDesc: 'Vendor Name',
+      columnDesc: 'Vendor',
     },
     {
       columnCode: 'type',
@@ -445,7 +445,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    this.sortColumn = 'Vendor Name';
+    this.sortColumn = 'Vendor';
     this.sortDir = 'Ascending';
     this.filter = '';
     this.selectedColumn = 'VendorName';
