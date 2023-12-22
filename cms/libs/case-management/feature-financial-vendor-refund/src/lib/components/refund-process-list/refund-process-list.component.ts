@@ -267,7 +267,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     this.sortType = 'desc';
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: 20,
       sort: this.sort
     };
     this.loadVendorRefundProcessListGrid();
