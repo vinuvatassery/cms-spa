@@ -19,7 +19,7 @@
 
   <kendo-grid-column [sticky]="true" field="contactName" title="Name" [width]="100" >
     <ng-template kendoGridCellTemplate let-dataItem>
-      <span class="preferred-phoneNo posi_relative" title="Preferred Contact" *ngIf=" dataItem.preferredFlag === 'Y'&&dataItem.activeFlag === 'Y'">
+      <span class="preferred-phoneNo posi_relative"  aria-label="preferred contact" title="Preferred Contact" *ngIf=" dataItem.preferredFlag === 'Y'&&dataItem.activeFlag === 'Y'">
         <span
           class="material-icons icon-size-md"
           aria-label="preferred contact"

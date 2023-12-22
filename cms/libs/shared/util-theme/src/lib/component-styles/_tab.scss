@@ -1,7 +1,7 @@
 .app-c-tab {
   background: $white !important;
   border-radius: $border-radius-md;
-  border: 0 solid rgba(0, 0, 0, 0.125);
+  border: 0 solid rgba($black, 0.125);
   box-shadow: none;
   .k-content,
   .k-tabstrip-content {
@@ -23,6 +23,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      color: $black-70;
 
       &:before {
         width: 0px;

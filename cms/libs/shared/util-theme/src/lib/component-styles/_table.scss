@@ -50,7 +50,7 @@ $pagination-height : 48px;
   .k-header,
   .k-grid-header-sticky {
     padding: $size-xl $size-xl;
-    background-color: var(--hive-neutral-palette-700) !important;
+    background-color: $table-header-color !important;
     color: $white !important;
     font-size: $font-size;
     font-family: $font-family-medium;

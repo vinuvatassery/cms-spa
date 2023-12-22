@@ -98,7 +98,7 @@
             <label class="mr-1">Rows Per Page</label>
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'" [valueField]="'value'"
               [valuePrimitive]="true" [(value)]="state.take"
-              (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
+              (selectionChange)="pageselectionchange($event)" aria-label="Rows Per Page"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
 
