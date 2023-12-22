@@ -137,6 +137,7 @@ export class FinancialPcasAssignmentReportListComponent
     this.pcaAssignmentsFacade.loadObjectCodes();
     this.pcaAssignmentsFacade.objectCodesData$.subscribe({
       next: (data: any) => {
+
         this.objectCodesData = data.map(
           (el: any) =>
             (el.ledgerName = el.ledgerName
