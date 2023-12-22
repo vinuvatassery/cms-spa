@@ -53,7 +53,9 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   @Input() updateProviderPanelSubject$:any
   @Input() ddlStates$ :any
   @Input() paymentMethodCode$ :any
+  @Input() exportButtonShow$: any
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   isColumnsReordered = false;
   columnChangeDesc = 'Default Columns';
   filteredByColumnDesc = '';
@@ -658,5 +660,15 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Columns Added';
+  }
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
