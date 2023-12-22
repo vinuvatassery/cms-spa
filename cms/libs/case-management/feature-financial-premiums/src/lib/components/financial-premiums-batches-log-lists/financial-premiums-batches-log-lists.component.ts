@@ -152,7 +152,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       buttonType: 'btn-h-primary',
       text: 'Edit Premium',
       icon: 'edit',
-      disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
+      disabled: PaymentStatusCode.Denied !== dataItem.paymentStatusCode,
       click: (data: any): void => {
         if (!this.isEditBatchClosed) {
           this.isEditBatchClosed = true;
@@ -665,7 +665,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   onModalRemovePremiumsModalClose(result: any) {
     if (result) {
       this.showDeleteConfirmation = false;
-      this.removePremiumsDialog.close();
+      this.removePremiumsDialog?.close();
     }
   }
 
@@ -937,8 +937,6 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   loadPremium(data:any){
     this.loadPremiumEvent.emit(data)
   }
-
-
 
   private unsubscribeFromActionResponse() {
     if (this.actionResponseSubscription) {
