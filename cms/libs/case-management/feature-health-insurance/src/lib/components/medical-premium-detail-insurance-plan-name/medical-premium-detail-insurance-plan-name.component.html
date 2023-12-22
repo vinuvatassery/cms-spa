@@ -111,7 +111,7 @@
           <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="InsurancePlanClose()">
             Cancel
           </button>
-          <button kendoButton [primary]="true" aria-label="Add" (click)="addNewInsurancePlanClose()">
+          <button kendoButton [primary]="true" attr.aria-label=" {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}" (click)="addNewInsurancePlanClose()">
             {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}
           </button>
         </div>

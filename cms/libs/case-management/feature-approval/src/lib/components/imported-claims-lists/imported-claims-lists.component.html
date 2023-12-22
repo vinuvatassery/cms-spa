@@ -520,7 +520,7 @@
     >
       <div class="grid-custom-paginationtemplates d-flex">
         <div class="d-flex align-items-center">
-          <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+          <label class="mr-1" for="ImportClaimsRowsPerPage">Rows Per Page</label>
           <kendo-dropdownlist
             [fillMode]="formUiStyle.dropDownFillMode"
             [data]="pageSizes"
@@ -528,7 +528,7 @@
             [valueField]="'value'"
             [valuePrimitive]="true"
             aria-label="Rows Per Page"
-            id="RowsPerPage"
+            id="ImportClaimsRowsPerPage"
             [(value)]="state.take"
             (selectionChange)="pageSelectionChange($event)"
           ></kendo-dropdownlist>

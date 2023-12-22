@@ -3,7 +3,7 @@
 
 <button kendoButton icon="add" [primary]="true"
 (click)="onOpenAddPcaSetupClicked(addEditPcaSetupDialogTemplate, null)" class="add-new-button search-with-addbtn"
-aria-label="add"> PCA Setup</button>
+aria-label="PCA Setup"> PCA Setup</button>
 <section class="table-filter-section mat-form-no-b-space">
                   <span class="filter-section_items filter--select">
                         <kendo-floatinglabel>
@@ -206,10 +206,10 @@ aria-label="add"> PCA Setup</button>
                   let-currentPage="currentPage">
                   <div class="grid-custom-paginationtemplates d-flex">
                         <div class="d-flex align-items-center">
-                              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                              <label class="mr-1" for="PcaSetupRowsPerPage">Rows Per Page</label>
                               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
                                     [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true"
-                                    aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
+                                    aria-label="Rows Per Page" id="PcaSetupRowsPerPage" [(value)]="state.take"
                                     (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                               <kendo-pager-info> </kendo-pager-info>
                               <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'">
