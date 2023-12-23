@@ -86,7 +86,7 @@ export class FinancialClaimsAllPaymentsListComponent
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+
   gridDataResult!: GridDataResult;
   showExportLoader = false;
   gridFinancialClaimsAllPaymentsDataSubject = new Subject<any>();
@@ -227,6 +227,10 @@ export class FinancialClaimsAllPaymentsListComponent
 
   dropDowncolumns: any = [
     {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
       columnCode: 'itemNumber',
       columnDesc: 'Item #',
     },
@@ -290,7 +294,7 @@ export class FinancialClaimsAllPaymentsListComponent
   paymentStatus$ = this.lovFacade.paymentStatus$;
   paymentMethodTypes: any = [];
   paymentStauses: any = [];
-
+  selectedColumn = 'ALL';
   constructor(
     private route: Router,
     private dialogService: DialogService,
@@ -553,7 +557,7 @@ pageNumberAndCountChangedInSelectAll() {
     this.searchValue = '';
     this.isFiltered = false;
     this.columnsReordered = false;
-    this.selectedColumn = null;
+    this.selectedColumn = "ALL";
 
     this.sortColumn = 'Batch #';
     this.sortDir = 'Ascending';
