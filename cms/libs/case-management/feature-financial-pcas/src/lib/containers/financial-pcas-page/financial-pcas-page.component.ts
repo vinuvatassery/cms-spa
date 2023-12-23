@@ -65,6 +65,12 @@ export class FinancialPcasPageComponent implements OnInit{
    pcaAssignOpenDatesListSubject = new Subject<any>();
   pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
 
+  pcaAssignOpenDatesSelectedSubject = new Subject<any>();
+  pcaAssignOpenDatesSelected$ = this.pcaAssignOpenDatesSelectedSubject.asObservable();
+
+  pcaAssignCloseDatesSelectedSubject = new Subject<any>();
+  pcaAssignCloseDatesSelected$ = this.pcaAssignCloseDatesSelectedSubject.asObservable();
+
    pcaAssignCloseDatesListSubject = new Subject<any>();
   pcaAssignCloseDatesList$ = this.pcaAssignCloseDatesListSubject.asObservable();
   getPcaAssignmentById$ = this.financialPcaFacade.getPcaAssignmentById$;

@@ -54,7 +54,8 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column *ngIf="!managementTab" field="phone" title="Phone" [width]="100"></kendo-grid-column>
-        <kendo-grid-column field="clientCaseId" title="Options" [width]="70" class="text-center"  [columnMenu]="false" [sticky]="true">
+        <kendo-grid-column field="clientCaseId" title="Options" [width]="70" class="text-center"  [columnMenu]="false" [sticky]="true"
+        [columnMenu]="false">
           <ng-template kendoGridCellTemplate let-manager let-clientCaseId="field">
             <kendo-dropdownbutton [data]="newAppActions"  title="More option" *ngIf="!managementTab"
               class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
