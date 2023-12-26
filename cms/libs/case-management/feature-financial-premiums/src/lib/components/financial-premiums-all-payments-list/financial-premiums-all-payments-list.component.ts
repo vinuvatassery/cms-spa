@@ -528,23 +528,21 @@ deletePremiumPayment(paymentId: string) {
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     if (stateData.filter?.filters.length > 0) { 
       
-      if(stateData.filter?.filters.slice(-1)[0].filters.length>1){
-        const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
-        const stateFilterTo = stateData.filter?.filters.slice(-1)[0].filters[1];
-        this.filter = stateFilter.value;
-        if (stateFilter.field == "paymentRequestedDate" && stateFilter.operator =="gte") {
-          stateFilter.value = this.intl.formatDate(
-            new Date(stateFilter.value),
-            this.configProvider?.appSettings?.dateFormat
-          );
-        }
-        if (stateFilterTo.field == "paymentRequestedDate" && stateFilterTo.operator =="lte") {
-          stateFilterTo.value = this.intl.formatDate(
-            new Date(stateFilterTo.value),
-            this.configProvider?.appSettings?.dateFormat
-          );
-        }
+      if(stateData.filter?.filters.slice(-1)[0].filters.length>1){ 
+        //this.filter = stateFilter.value;  
         this.isFiltered = true;
+        stateData.filter?.filters.slice(-1)[0].filters?.forEach((element: any) => {
+          if ((element.field == "paymentRequestedDate" && element.operator == "gte") ||
+              (element.field == "paymentSentDate" && element.operator == "gte") ||
+              (element.field == "paymentRequestedDate" && element.operator == "lte") || 
+              (element.field == "paymentSentDate" && element.operator == "lte")) { 
+            element.value = this.intl.formatDate(
+              new Date(element.value),
+              this.configProvider?.appSettings?.displaydateFormat
+            );
+          } 
+        });
+        
         const filterList = [];
         for (const filter of stateData.filter.filters) {
           filterList.push(this.gridColumns[filter.filters[0].field]);
