@@ -395,14 +395,10 @@ export class LovFacade {
     });
   }
 
-  getHealthInsuranceTypeLovs(excludeDental: boolean = true): void {
+  getHealthInsuranceTypeLovs(): void {
     this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).pipe(
       map((loveInsuranceTypeResponse) => {
-        if (excludeDental) {
-          return loveInsuranceTypeResponse.filter(item => item.lovCode !== InsurancePlanTypeCodes.DENTAL_INSURANCE);
-        } else {
-          return loveInsuranceTypeResponse;
-        }
+        return loveInsuranceTypeResponse.filter(item => item.lovCode !== InsurancePlanTypeCodes.DENTAL_INSURANCE);
       })
     ).subscribe({
       next: (filteredLoveInsuranceTypeResponse) => {
