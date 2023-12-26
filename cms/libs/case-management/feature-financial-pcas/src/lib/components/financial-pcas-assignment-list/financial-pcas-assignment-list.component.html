@@ -32,8 +32,8 @@ aria-label="Assignment"> Assignment</button>
                                     [textField]="'groupCodeDesc'"
                                     [valueField]="'groupCodeId'"
                                     formControlName="groupCodes" 
-                                    (valueChange)="groupChange($event)"
-                                    (removeTag)="groupChange($event)"
+                                    (valueChange)="groupChange($event,'false')"
+                                    (removeTag)="groupChange($event,'true')"
                                     ></kendo-multiselect>
                                     <kendo-formerror *ngIf="!groupCodesValid">Group is required.</kendo-formerror>
                                     </kendo-floatinglabel>

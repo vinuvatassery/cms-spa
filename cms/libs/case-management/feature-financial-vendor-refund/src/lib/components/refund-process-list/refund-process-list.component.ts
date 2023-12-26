@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import {  GridDataResult, SelectAllCheckboxState } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, GridDataResult, SelectAllCheckboxState } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -53,21 +53,24 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   @Input() updateProviderPanelSubject$:any
   @Input() ddlStates$ :any
   @Input() paymentMethodCode$ :any
+  @Input() exportButtonShow$: any
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   isColumnsReordered = false;
   columnChangeDesc = 'Default Columns';
   filteredByColumnDesc = '';
-  sortColumnDesc = 'Vendor Name';
+  sortColumnDesc = 'Vendor';
   searchText = '';
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'Vendor Name';
+  sortColumn = 'Vendor';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
   isFiltered = false;
   filter!: any;
+  selectedSearchColumn='ALL';
   selectedColumn = 'VendorName';
   gridDataResult!: GridDataResult;
   showExportLoader = false;
@@ -80,11 +83,12 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   serviceType = '';
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
-    VendorName: 'Vendor Name',
+    VendorName: 'Vendor',
   };
 
   columns: any = {
-    VendorName: 'Vendor Name',
+    ALL: 'All Columns',
+    VendorName: 'Vendor',
     type: 'Type',
     clientFullName: 'Client Name',
     refundWarrentnbr: 'Refund Warrant #',
@@ -98,9 +102,10 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   };
 
   dropDowncolumns: any = [
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'VendorName',
-      columnDesc: 'Vendor Name',
+      columnDesc: 'Vendor',
     },
     {
       columnCode: 'type',
@@ -264,7 +269,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     this.sortType = 'desc';
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: 20,
       sort: this.sort
     };
     this.loadVendorRefundProcessListGrid();
@@ -347,9 +352,9 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     this.defaultGridState();
     let operator = 'contains';
     if (
-      this.selectedColumn === 'refundAmount' ||
-      this.selectedColumn === 'refundWarrentnbr' ||
-      this.selectedColumn === 'indexCode'
+      this.selectedSearchColumn === 'refundAmount' ||
+      this.selectedSearchColumn === 'refundWarrentnbr' ||
+      this.selectedSearchColumn === 'indexCode'
     ) {
       operator = 'eq';
     }
@@ -360,7 +365,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'VendorName',
+              field: this.selectedSearchColumn ?? 'VendorName',
               operator: operator,
               value: data,
             },
@@ -445,13 +450,13 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    this.sortColumn = 'Vendor Name';
+    this.sortColumn = 'Vendor';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'VendorName';
+    this.selectedSearchColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
-    this.sortColumnDesc = 'Creation Time';
+    this.sortColumnDesc = 'Entry Date';
     this.sortValue = 'creationTime';
     this.sortType = 'desc';
     this.sort = this.sortColumn;
@@ -651,5 +656,19 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
+  }
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Columns Added';
+  }
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }

@@ -40,7 +40,15 @@ export class CaseManagerEffectiveDatesComponent {
       if(this.startDate < this.min)
       {
          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, "Start date must be a valid date.", NotificationSource.UI)
+         return
       }
+
+      if(this.endDate &&  this.endDate < this.min)
+      {
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, "End date must be a valid date.", NotificationSource.UI)
+         return
+      }
+
       if (this.startDate && this.startDate > this.min) {
         this.showstartDateError = false;
         const existCaseManagerData = {

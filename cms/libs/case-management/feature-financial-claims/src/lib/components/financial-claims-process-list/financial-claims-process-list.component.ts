@@ -73,7 +73,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn='ALL';
+  selectedSearchColumn='ALL';
   gridDataResult!: GridDataResult;
   showExportLoader = false;
   gridFinancialClaimsProcessDataSubject = new Subject<any>();
@@ -281,11 +281,11 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     let operator = 'startswith';
 
     if (
-      this.selectedColumn === 'clientId' ||
-      this.selectedColumn === 'serviceCount' ||
-      this.selectedColumn === 'annualTotal' ||
-      this.selectedColumn === 'amountDue' ||
-      this.selectedColumn === 'balanceAmount'
+      this.selectedSearchColumn === 'clientId' ||
+      this.selectedSearchColumn === 'serviceCount' ||
+      this.selectedSearchColumn === 'annualTotal' ||
+      this.selectedSearchColumn === 'amountDue' ||
+      this.selectedSearchColumn === 'balanceAmount'
     ) {
       operator = 'eq';
     }
@@ -296,7 +296,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'invoiceNbr',
+              field: this.selectedSearchColumn ?? 'invoiceNbr',
               operator: operator,
               value: data,
             },
@@ -525,7 +525,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.sortColumn = 'Invoice ID';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'ALL';
+    this.selectedSearchColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
 

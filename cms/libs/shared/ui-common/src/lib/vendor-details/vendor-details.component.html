@@ -179,7 +179,7 @@
       <div class="flex-col" *ngIf="providerType != vendorTypes.InsuranceProviders">
         <kendo-floatinglabel text="TIN">
           <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
-            placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber()">
+            placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber($event)">
           </kendo-maskedtextbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['tinNumber'].valid && isValidateForm && accountingNumberValidated && providerType != vendorTypes.Pharmacy">
             TIN cannot be less than 9 digits
@@ -606,7 +606,7 @@
     <div class="justify-content-end">
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeVendorModal()"> Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} </button>
+      <button kendoButton [primary]="true" attr.aria-label="{{hasCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}}" (click)="save()"> {{hasCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">

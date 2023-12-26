@@ -138,7 +138,7 @@ export class FinancialPremiumsAllPaymentsListComponent
 
   //searching
   private searchSubject = new Subject<string>();
-  selectedSearchColumn = 'ALL';
+  selectedSearchColumn: null | string = 'ALL';
   searchText: null | string = null;
 
   //sorting
@@ -497,7 +497,7 @@ deletePremiumPayment(paymentId: string) {
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.filter = [];
     this.searchText = '';
-    this.selectedSearchColumn = 'itemNumber';
+    this.selectedSearchColumn = 'ALL';
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';

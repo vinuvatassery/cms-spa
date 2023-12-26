@@ -63,7 +63,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   clinicNameNotApplicable: boolean = false;
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  tinMaskFormat: string = '0 00-000000';
+  tinMaskFormat: string = '0 00-0000000';
   specialhandlingCounter!: string;
   specialHandlingCharachtersCount!: number;
   specialHandlingMaxLength = 100;
@@ -680,18 +680,20 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     return status;
   }
 
-  restrictAccountingNumber() {
-    if(((this.providerType == this.vendorTypes.Pharmacy)||
-    (this.providerType==this.vendorTypes.DentalProviders)||
-    (this.providerType==this.vendorTypes.MedicalProviders) ||
-    (this.providerType==this.vendorTypes.InsuranceVendors)) 
-    && this.medicalProviderForm.controls['tinNumber'].value==''){
+  restrictAccountingNumber(event: any) {
+    const isNumeric=(event.key >= 0 && event.key <= 9);
+    if(( (this.providerType == this.vendorTypes.Pharmacy)||
+      (this.providerType==this.vendorTypes.DentalProviders)||
+      (this.providerType==this.vendorTypes.MedicalProviders) ||
+      (this.providerType==this.vendorTypes.InsuranceVendors))||
+      (this.providerType == this.vendorTypes.Manufacturers) &&
+      this.medicalProviderForm.controls['tinNumber'].value==''){
       this.accountingNumberValidated = true;
       return;
     }
     if (this.medicalProviderForm.controls['tinNumber'].value && (parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 3)) {
       this.accountingNumberValidated = true;
-      if(this.medicalProviderForm.controls['tinNumber'].value.length>=9){
+      if(isNumeric && this.medicalProviderForm.controls['tinNumber'].value.trim().length>=9){
         this.validateTin(this.medicalProviderForm.controls['tinNumber'].value);
       }
     } else {

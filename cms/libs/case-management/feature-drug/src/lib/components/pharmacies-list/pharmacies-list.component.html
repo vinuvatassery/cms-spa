@@ -17,7 +17,7 @@
         <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="220" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div class="d-flex align-items center pos-rel" kendoTooltip>
-              <span class="preferred-phoneNo" title="Primacy Pharmacy Name" *ngIf="dataItem.priorityCode === priority && dataItem.activeFlag === 'Y'">
+              <span class="preferred-phoneNo" aria-label="Primacy Pharmacy Name" title="Primacy Pharmacy Name" *ngIf="dataItem.priorityCode === priority && dataItem.activeFlag === 'Y'">
                <span class="material-icons icon-size-md" aria-label="Primacy Pharmacy Name" aria-hidden="true" >star</span>
               </span>
               <span class="pl-3">{{ dataItem.pharmacyName }}</span></div>
@@ -92,7 +92,7 @@
           <div class="d-flex align-items-center">
             <label class="mr-1" for="pharmacieslistrowperpage">Rows Per Page</label>
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-            [valueField]="'value'" [valuePrimitive]="true" #pharmacieslistrowperpage id="pharmacieslistrowperpage" [(value)]="state.take"></kendo-dropdownlist>
+            [valueField]="'value'" [valuePrimitive]="true" #pharmacieslistrowperpage id="pharmacieslistrowperpage" aria-label="Rows Per Page" [(value)]="state.take"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
 

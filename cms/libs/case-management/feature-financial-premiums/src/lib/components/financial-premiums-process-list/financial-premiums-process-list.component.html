@@ -303,9 +303,9 @@
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
         <div class="d-flex align-items-center">
-          <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+          <label class="mr-1" for="PremiumAllRowsPerPage">Rows Per Page</label>
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
+            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="PremiumAllRowsPerPage"
             [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
           <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
@@ -334,7 +334,7 @@
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span class="" *ngIf="isSendReportOpened">{{sendReportCount}} payment(s) selected</span>
   <span class="" *ngIf="!isProcessGridExpand && !isSendReportOpened && !isRemoveBatchClosed">{{ selectedProcessClaims.length}} payment(s) selected</span>
-  <span class="" *ngIf="isRemoveBatchClosed">{{sendReportCount}} premium(s) to be removed</span>
+  <span class="" *ngIf="isRemoveBatchClosed">{{sendReportCount}} premium(s) to be selected</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchPremiumsGridSelectedCancelClicked()"   *ngIf="isBatchPremiumsClicked || isRemoveBatchClosed || isSendReportOpened"> Cancel
   </button>

@@ -56,7 +56,7 @@ export class EmailDetailComponent implements OnInit {
   composeEmailForm() {
     this.clientEmailForm = this.formBuilder.group({
       clientEmailId: [''],
-      email: ['', [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]],
+      email: ['', [Validators.required,Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]],
       detailMsgFlag: [''],
       preferredFlag: [''],
       paperlessFlag: [''],

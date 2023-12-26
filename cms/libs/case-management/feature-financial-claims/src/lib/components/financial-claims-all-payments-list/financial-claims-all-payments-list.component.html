@@ -89,7 +89,7 @@
           </button>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="batchNumber" title="Batch #" [width]="120">
+      <kendo-grid-column field="batchNbr" title="Batch #" [width]="120">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -271,9 +271,9 @@
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
           <div class="d-flex align-items-center">
-            <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+            <label class="mr-1" for="CalimsPaymentRowsPerPage">Rows Per Page</label>
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-              [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
+              [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="CalimsPaymentRowsPerPage"
               [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
