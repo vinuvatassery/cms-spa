@@ -384,16 +384,6 @@ export class LovFacade {
   getProofOfIncomeTypesLov(parentCode: string) {
     return this.lovDataService.getLovsbyParent(LovType.ProofOfIncomeType, parentCode)
   }
-  getHealthInsuranceTypeLovs1(): void {
-    this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).subscribe({
-      next: (loveInsuranceTypeResponse) => {
-        this.lovInsuranceTypeSubject.next(loveInsuranceTypeResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      },
-    });
-  }
 
   getHealthInsuranceTypeLovs(): void {
     this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).pipe(
