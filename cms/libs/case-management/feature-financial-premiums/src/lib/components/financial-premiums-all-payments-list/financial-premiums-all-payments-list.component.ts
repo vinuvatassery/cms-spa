@@ -532,7 +532,7 @@ deletePremiumPayment(paymentId: string) {
         if ((element.field == "paymentRequestedDate" || element.field == "paymentSentDate")) { 
             element.value = this.intl.formatDate(
               new Date(element.value),
-              this.configProvider?.appSettings?.displaydateFormat
+              this.configProvider?.appSettings?.dateFormat
             );
         } 
       }); 
