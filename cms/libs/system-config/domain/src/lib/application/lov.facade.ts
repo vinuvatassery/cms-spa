@@ -395,7 +395,7 @@ export class LovFacade {
     });
   }
 
-  getHealthInsuranceTypeLovs(excludeDental: boolean = false): void {
+  getHealthInsuranceTypeLovs(excludeDental: boolean = true): void {
     this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).pipe(
       map((loveInsuranceTypeResponse) => {
         if (excludeDental) {

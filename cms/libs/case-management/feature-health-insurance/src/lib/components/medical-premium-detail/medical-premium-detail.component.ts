@@ -199,8 +199,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     });
   }
   private loadHealthInsuranceLovs() {
-    debugger;
-    this.lovFacade.getHealthInsuranceTypeLovs(true);
+    this.lovFacade.getHealthInsuranceTypeLovs();
     this.lovFacade.getHealthInsuranceTypeLovsForPlan();
     this.lovFacade.getMedicareCoverageTypeLovs();
   }
