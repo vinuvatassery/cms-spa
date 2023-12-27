@@ -198,8 +198,8 @@
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                 <ng-container>
                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                    [class]="buttondataItem.buttonType" (click)="buttondataItem.click(dataItem)">
-                    <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                    [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem, dataItem.paymentRequestId)">
+                    <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                     <label> {{ buttondataItem.text }} </label>
                   </button>
                 </ng-container>
@@ -333,5 +333,22 @@
 
 <ng-template #addEditClaimsDialog>
   <cms-pharmacy-claims-detail-form
+  [deliveryMethodLov$]="deliveryMethodLov$"
+  [paymentRequestType$]="paymentRequestType$"
+  [editPharmacyClaim$] = "editPharmacyClaim$"
+  [getPharmacyClaim$] = "getPharmacyClaim$"
+  [searchPharmacies$] = "searchPharmacies$"
+  [searchClients$] = "searchClients$"
+  [searchDrugs$] = "searchDrugs$"
+  [searchPharmaciesLoader$]="searchPharmaciesLoader$"
+  [searchClientLoader$]="searchClientLoader$"
+  [searchDrugsLoader$]="searchDrugsLoader$"
+  (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
+  (searchPharmaciesEvent)="searchPharmacies($event)"
+  (searchClientsEvent)="searchClients($event)"
+  (searchDrugEvent)="searchDrug($event)"
+  (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
+  (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
+  [isEdit]="true"
     (modalCloseAddEditClaimsFormModal)="modalCloseAddEditClaimsFormModal($event)"></cms-pharmacy-claims-detail-form>
 </ng-template>

@@ -42,6 +42,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   editPca = false
   formSubmitted =false
   remainingAmountValidate = false
+  originalRemainingBalance =0
   constructor(  
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
@@ -77,7 +78,6 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     {
       this.pcaCodesInfo = data
       
-    
      }  )   
   }
   closeAddEditPcaAssignmentClicked() {
@@ -179,7 +179,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
 
             this.totalAmount = this.pcaCodeInfo?.remainingAmount + (this.pcaAssignmentForm.controls['amount'].value ?? 0)
            
-           
+           this.originalRemainingBalance = this.pcaCodeInfo?.remainingAmount
         }
    
   }
@@ -195,7 +195,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     {
       return
     }
-    if(this.pcaCodeInfo?.remainingAmount < this.pcaAssignmentForm?.controls["amount"]?.value)
+    if(this.originalRemainingBalance < this.pcaAssignmentForm?.controls["amount"]?.value)
     {
     this.pcaAssignmentForm?.controls["amount"].setErrors({'incorrect': true});
     this.remainingAmountValidate = true
@@ -288,6 +288,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   {    
     this.pcaCodeInfo = this.pcaCodesInfo?.find((x : any)=>x.pcaId==data)
     this.totalAmount += this.pcaCodeInfo?.remainingAmount 
+    this.originalRemainingBalance = this.pcaCodeInfo?.remainingAmount
     
     this.pcaAssignmentForm.patchValue(
       {     

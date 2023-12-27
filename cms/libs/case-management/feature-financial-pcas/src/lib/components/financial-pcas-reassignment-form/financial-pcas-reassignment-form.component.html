@@ -67,7 +67,7 @@
                         </kendo-datepicker>
                   </kendo-floatinglabel>
 
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['openDate'].valid && !pcaReassignmentForm.controls['openDate'].hasError('incorrect')"> Open Date is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['openDate'].valid && pcaReassignmentForm.controls['openDate'].hasError('required')"> Open Date is required.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['openDate'].hasError('incorrect')"> Open Date is after the Close Date.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && isAssignmentpcaCloseDateGreater"> Open Date is after the PCA Close Date.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && isAssignmentpcaOpenDateGreater"> Open Date is before the PCA Open Date.</kendo-formerror>
@@ -82,7 +82,7 @@
                                (valueChange)="closeDateValidate()" >
                         </kendo-datepicker>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['closeDate'].valid && !pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['closeDate'].valid && pcaReassignmentForm.controls['closeDate'].hasError('required')"> Close Date is required.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is before the Open Date.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && ispcaCloseDateGreater"> Close Date is after the PCA Close Date.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && ispcaOpenDateGreater"> Close Date is before the PCA Open Date.</kendo-formerror>

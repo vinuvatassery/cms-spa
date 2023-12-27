@@ -301,6 +301,11 @@ export class FinancialClaimsBatchesLogListsComponent
     this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
     this.batchLogListSubscription();
+    this.paymentBatchName$.subscribe(res =>{
+      if(!res){
+         this.backToBatch(null);
+      }
+    })
   }
 
   batchLogListSubscription() {
