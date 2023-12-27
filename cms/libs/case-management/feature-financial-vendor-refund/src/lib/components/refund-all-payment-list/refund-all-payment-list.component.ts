@@ -416,9 +416,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     if (stateData.filter?.filters.length > 0) {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
-      if (stateFilter.field == "clientId") {
-        stateFilter.operator = "lc";
-      }
       this.isFiltered = true;
       const filterList = [];
       for (const filter of stateData.filter.filters) {
@@ -435,9 +432,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     if (stateData.filter?.filters.length > 0) {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
-      if (stateFilter.field == "clientId") {
-        stateFilter.operator = "contains";
-      }
     }
   }
 
