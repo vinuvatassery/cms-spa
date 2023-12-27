@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import {  ColumnVisibilityChangeEvent, GridDataResult, SelectAllCheckboxState } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, GridDataResult, SelectAllCheckboxState, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -81,6 +81,10 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   serviceType = '';
+  public selectableSettings: SelectableSettings;
+  public checkboxOnly = true;
+  public mode: SelectableMode = 'multiple';
+  public drag = false;
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     VendorName: 'Vendor',
@@ -255,6 +259,12 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly route: Router
   ) {
+    
+    this.selectableSettings = { 
+      checkboxOnly: this.checkboxOnly,
+      mode: this.mode,
+      drag: this.drag,
+    };
   }
 
   ngOnInit(){
@@ -282,6 +292,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
       this.sortType
     );
   }
+ 
   loadRefundProcess(
     skipCountValue: number,
     maxResultCountValue: number,

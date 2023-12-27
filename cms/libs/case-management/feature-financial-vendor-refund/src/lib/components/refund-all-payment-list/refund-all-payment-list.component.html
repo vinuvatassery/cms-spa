@@ -45,7 +45,7 @@
 <div class="app-c-table">
   <kendo-grid [resizable]="true" [loading]="isVendorRefundAllPaymentsGridLoaderShow" [pageSize]="state.take"
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
+    [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="selectableSettings"
     (filterChange)="filterChange($event)" [data]="gridVendorsAllPaymentsData$ | async" [filter]="state.filter"
     kendoGridSelectBy="paymentRequestId" (selectedKeysChange)="selectedKeysChange($event)"
     [(selectedKeys)]="selectedPayments">

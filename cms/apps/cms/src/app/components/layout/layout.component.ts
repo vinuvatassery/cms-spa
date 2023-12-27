@@ -28,9 +28,11 @@ export class LayoutComponent {
   @HostListener('window:resize', ['$event'])
   sizeChange(event: any) {
     let screenSize = event.currentTarget.window.innerWidth;
-    if (screenSize <= 600) {
+    if (screenSize <= 1024) {
       this.isSideMenuToggled = true;
     }
+
+  
   }
 
   @HostListener('window:load', ['$event'])
