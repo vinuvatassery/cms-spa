@@ -356,7 +356,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         "filters": [
             {
                 "field": this.columnDroplist[this.selectedColumn] ?? "clientFullName",
-                "operator": "startswith",
+                "operator": "contains",
                 "value": event
             }
         ],

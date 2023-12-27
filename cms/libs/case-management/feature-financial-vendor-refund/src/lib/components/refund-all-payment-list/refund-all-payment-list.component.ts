@@ -260,10 +260,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   handleAllPaymentsGridData() {
     this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
       this.gridVendorsAllPaymentsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
@@ -373,7 +369,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
 
   onChange(data: any) {
     this.defaultGridState();
-    let operator = 'startswith';
+    let operator = 'contains';
 
     if (
       this.selectedColumn === 'refundAmount' ||
@@ -429,9 +425,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     if (stateData.filter?.filters.length > 0) {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
-      if (stateFilter.field == "clientId") {
-        stateFilter.operator = "lc";
-      }
       this.isFiltered = true;
       const filterList = [];
       for (const filter of stateData.filter.filters) {
@@ -448,9 +441,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     if (stateData.filter?.filters.length > 0) {
       const stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       this.filter = stateFilter.value;
-      if (stateFilter.field == "clientId") {
-        stateFilter.operator = "contains";
-      }
     }
   }
 
@@ -682,7 +672,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   getSelectedReportCount(selectedSendReportList: []) {
-    this.selectionCount = selectedSendReportList.length;
+    this.selectionCount = selectedSendReportList?.length;
   }
 
   selectionChange(dataItem: any, selected: boolean) {

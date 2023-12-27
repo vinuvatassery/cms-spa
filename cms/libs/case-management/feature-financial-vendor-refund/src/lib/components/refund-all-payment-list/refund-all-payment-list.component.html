@@ -5,8 +5,7 @@
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
       <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-        textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"
-        (valueChange)="searchColumnChangeHandler($event)">
+        textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
@@ -334,7 +333,7 @@
     <kendo-grid-column *ngIf="!receiptLogMode" field="Option" title="Options" [sticky]="true" [columnMenu]="false"
       [width]="75" [sortable]="false" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="allPaymentsGridActions" 
+        <kendo-dropdownbutton [data]="allPaymentsGridActions"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">

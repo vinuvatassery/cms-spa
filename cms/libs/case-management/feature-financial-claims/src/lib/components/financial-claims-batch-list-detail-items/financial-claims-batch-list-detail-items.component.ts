@@ -194,6 +194,11 @@ deletemodelbody =
       ];
     })
 
+    this.batchItemsGridLists$.subscribe((res :any) =>{
+      if(res.total <=0){
+        this.backToBatchLog(null);
+      }
+    })
   }
   
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {

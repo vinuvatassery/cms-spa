@@ -525,7 +525,26 @@ deletePremiumPayment(paymentId: string) {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.sortColumnDesc = this.gridColumns[this.sortValue]; 
+    if((stateData.filter?.filters.length > 0) && (stateData.filter?.filters.slice(-1)[0].filters.length>1)){
+      this.isFiltered = true;
+      stateData.filter?.filters.slice(-1)[0].filters?.forEach((element: any) => {
+        if ((element.field == "paymentRequestedDate" || element.field == "paymentSentDate")) { 
+            element.value = this.intl.formatDate(
+              new Date(element.value),
+              this.configProvider?.appSettings?.dateFormat
+            );
+        } 
+      }); 
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.gridColumns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    }else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
     this.filter = stateData?.filter?.filters;
     this.setFilterBy(true, '', this.filter);
     this.loadFinancialPremiumsPaymentsListGrid();

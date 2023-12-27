@@ -127,11 +127,13 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
     const pcaCloseDateWithoutTime = new Date(new Date(this.pcaCloseDate).getFullYear(),new Date(this.pcaCloseDate).getMonth(), new Date(this.pcaCloseDate).getDate());
 
     if(pcaCloseDateWithoutTime < endDateWithoutTime && this.pcaReassignmentForm.controls['closeDate'].value){
+      this.pcaReassignmentForm.controls['closeDate'].setErrors({ 'ispcaCloseDateGreater': true });
       this.ispcaCloseDateGreater = true;
       this.ispcaOpenDateGreater = false;
       return;
     }
     if(this.pcaOpenDate > endDate && this.pcaReassignmentForm.controls['closeDate'].value){
+      this.pcaReassignmentForm.controls['openDate'].setErrors({ 'isAssignmentpcaOpenDateGreater': true });
       this.ispcaOpenDateGreater = true;
       this.ispcaCloseDateGreater = false;
       return;
@@ -151,11 +153,13 @@ constructor(private formBuilder:FormBuilder, private configurationProvider: Conf
       return;
     }
     if(this.pcaCloseDate < startDate && this.pcaReassignmentForm.controls['openDate'].value){
+      this.pcaReassignmentForm.controls['closeDate'].setErrors({ 'ispcaCloseDateGreater': true });
       this.isAssignmentpcaCloseDateGreater = true;
       this.isAssignmentpcaOpenDateGreater = false;
       return;
     }
     if(this.pcaOpenDate > startDate && this.pcaReassignmentForm.controls['openDate'].value){
+      this.pcaReassignmentForm.controls['openDate'].setErrors({ 'isAssignmentpcaOpenDateGreater': true });
       this.isAssignmentpcaOpenDateGreater = true;
       this.isAssignmentpcaCloseDateGreater = false;
       return;
