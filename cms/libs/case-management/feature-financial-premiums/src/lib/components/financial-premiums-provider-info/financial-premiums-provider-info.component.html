@@ -171,7 +171,7 @@
                             </div>
                             <div class="flex-col mt-1">
                                 <kendo-textbox aria-label="City" placeholder="City" [fillMode]="formUiStyle.inputFillMode"
-                                 formControlName="cityCode" [maxlength]="20">
+                                 formControlName="cityCode" [maxlength]="50">
                                 </kendo-textbox>
                                 <kendo-formerror *ngIf="addressForm?.hasError('required','cityCode') && isSubmitted">City is Required
                                 </kendo-formerror>
