@@ -93,12 +93,12 @@
           class="text-center"
           [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
         >
-        <ng-template kendoGridCellTemplate let-dataItem>
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
           <div class="proof_income-more">
               <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
               class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
            </span>
-          <kendo-dropdownbutton #proofSchoolDropdown  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"  (close)="onClose($event)"  (blur)="onBlur()"
+          <kendo-dropdownbutton #proofSchoolDropdown  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"  (close)="onClose($event,rowIndex)"  (blur)="onBlur()"
             aria-label="more actions"  [popupSettings]="{ popupClass: popupClassAction, animate: true }" >
 
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
