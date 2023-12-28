@@ -796,10 +796,6 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       next: (response: any) => {
         this.loaderService.hide();
         if (!response) {
-          this.financialClaimsFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            'An error occure whilie adding claim'
-          );
           this.pcaExceptionDialogService?.close();
         } else {
           this.closeAddEditClaimsFormModalClicked(true);
