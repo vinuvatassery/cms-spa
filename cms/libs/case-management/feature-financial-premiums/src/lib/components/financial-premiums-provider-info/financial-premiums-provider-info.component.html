@@ -73,13 +73,23 @@
                 <tr>
                     <td><strong>TIN</strong></td>
                         <td  [attr.disabled]="false">
-                                <kendo-textbox
+                                <kendo-maskedtextbox
                                 [disabled]="false"
                                 [readonly]="false"
                                 formControlName="tin"
                                 [fillMode]="formUiStyle.inputFillMode"
-                                ></kendo-textbox>
-
+                                [mask]="tinMaskFormat"
+                                (keyup)="restrictAccountingNumber($event)"
+                                ></kendo-maskedtextbox>
+                                <kendo-formerror *ngIf="!profileForm.controls['tin'].valid && isValidateForm && accountingNumberValidated">
+                                    TIN cannot be less than 10 digits
+                                  </kendo-formerror>
+                                  <kendo-formerror *ngIf="!accountingNumberValidated">
+                                    A 1 or a 3 is required
+                                  </kendo-formerror>
+                                  <kendo-formerror *ngIf="isDuplicateTin">
+                                   {{duplicateTinMessage}}
+                                  </kendo-formerror>
                         </td>
                 </tr>
 
