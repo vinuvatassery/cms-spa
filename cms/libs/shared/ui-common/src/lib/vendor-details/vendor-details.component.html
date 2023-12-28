@@ -181,10 +181,10 @@
           <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
             placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber($event)">
           </kendo-maskedtextbox>
-          <kendo-formerror *ngIf="!medicalProviderForm.controls['tinNumber'].valid && isValidateForm && accountingNumberValidated && providerType != vendorTypes.Pharmacy">
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['tinNumber'].valid && isValidateForm && accountingNumberValidated">
             TIN cannot be less than 9 digits
           </kendo-formerror>
-          <kendo-formerror *ngIf="!accountingNumberValidated && providerType != vendorTypes.Pharmacy">
+          <kendo-formerror *ngIf="!accountingNumberValidated">
             A 1 or a 3 is required
           </kendo-formerror>
           <kendo-formerror *ngIf="isDuplicateTin">
