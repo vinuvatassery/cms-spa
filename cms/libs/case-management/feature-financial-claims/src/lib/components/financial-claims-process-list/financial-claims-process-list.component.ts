@@ -122,10 +122,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   dropDowncolumns: any = [
     { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
-      columnCode: 'invoiceNbr',
-      columnDesc: 'Invoice ID',
-    },
-    {
       columnCode: 'vendorFullName',
       columnDesc: 'Provider Name',
     },
@@ -134,29 +130,13 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       columnDesc: 'Tax ID',
     },
     {
-      columnCode: 'paymentMethodCode',
-      columnDesc: 'Payment Method',
-    },
-    {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
     },
     {
-      columnCode: 'insuranceName',
-      columnDesc: 'Name on Primary Insurance Card',
-    },
-    {
       columnCode: 'clientId',
       columnDesc: 'Client ID',
-    },
-    {
-      columnCode: 'serviceCount',
-      columnDesc: 'Service Count',
-    },
-    {
-      columnCode: 'paymentStatusCode',
-      columnDesc: 'Payment Status',
-    },
+    }
   ];
 
   public claimsProcessMore = [
