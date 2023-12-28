@@ -72,12 +72,12 @@
                 </tr>
                 <tr>
                     <td><strong>TIN</strong></td>
-                        <td  [attr.disabled]="true">
+                        <td  [attr.disabled]="false">
                                 <kendo-textbox
-                                [disabled]="true"
-                                [readonly]="true"
-                                  [disabled]="isDisabled"
-                                  formControlName="tin"
+                                [disabled]="false"
+                                [readonly]="false"
+                                formControlName="tin"
+                                [fillMode]="formUiStyle.inputFillMode"
                                 ></kendo-textbox>
 
                         </td>
