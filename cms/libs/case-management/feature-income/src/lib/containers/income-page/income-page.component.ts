@@ -1,7 +1,7 @@
 
 
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, ElementRef, AfterViewInit,ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, ElementRef, AfterViewInit,ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 /** External libraries **/
 import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
@@ -21,7 +21,7 @@ import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
 })
 export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   
-  @ViewChild("proofSchoolDropdown") public proofSchoolDropdown!: DropDownListComponent;
+  @ViewChildren("proofSchoolDropdownOne") public proofSchoolDropdownOne!: QueryList<DropDownListComponent>;
   /** Private properties **/
   private saveClickSubscription !: Subscription;  /** Public Methods **/
   private saveForLaterClickSubscription !: Subscription;
@@ -143,20 +143,16 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
   
   /** Private methods **/
-  public onClose(event: any) {
+  public onClose(event: any , index : any) {
     event.preventDefault();
     // Close the list if the component is no longer focused
     setTimeout(() => {
-      if ( !this.proofSchoolDropdown.wrapper.nativeElement.contains(   document.activeElement  ) ) {
-        this.proofSchoolDropdown.toggle(false); 
-        console.log('preventDefault s');
-      }
+      this.proofSchoolDropdownOne.forEach((element, index) => {element.toggle(false);})
     });
   }
 
   public onBlur() {
-    console.log('onblur');
-    this.proofSchoolDropdown.toggle(false);
+    this.proofSchoolDropdownOne.forEach((element) => {element.toggle(false);})
   }
   private incomeNoteWordCount() {
     this.incomeNoteCharachtersCount = this.incomeNote
