@@ -145,7 +145,7 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
  
       (text : any) =>
       {
-        if(text && text.length > 2)
+        if(text && text.length >=2)
         {
           this.searchFacade.loadCaseBySearchText(text);
           this.showHeaderSearchInputLoader = false;
