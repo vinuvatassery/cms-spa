@@ -8,7 +8,8 @@ import {
   Output,
   EventEmitter,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 /** Facades **/
 import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey } from '@cms/case-management/domain';
@@ -27,7 +28,7 @@ import { Router } from '@angular/router';
   templateUrl: './case-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CaseListComponent implements OnInit, AfterViewInit {
+export class CaseListComponent implements OnInit, AfterViewInit, OnDestroy {
 
 public isGridLoaderShow = true;
 @Input() searchLoaderVisibility$!: Observable<boolean>;
@@ -220,7 +221,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.saveGridState();
     this.loadProfileCasesList()
   }
-  public dataStateChange(stateData: any): void {
+  public dataStateChange(stateData: any, isSearchBarFilter = false): void {
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -246,7 +247,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.state=stateData;
     if (!this.filteredBy.includes('Status')) this.selectedStatus = '';
     if (!this.filteredBy.includes('Group')) this.selectedGroup = '';
+    if(!isSearchBarFilter){
     this.saveGridState();
+    }
     this.setGridState(stateData);
     this.loadProfileCasesList();
   }
@@ -366,8 +369,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
   let stateData = this.state
   stateData.filter = this.filter
-  this.dataStateChange(stateData);
-    this.saveGridState();
+  this.dataStateChange(stateData, true);
     this.loadProfileCasesList();
 }
   setToDefault()
