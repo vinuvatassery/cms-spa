@@ -22,6 +22,7 @@ cms-sidenav {
     overflow-x: hidden;
     width: $app-left_menu-width;
     height: 100%;
+    
   }
 
   .sidebar-hamburger {
@@ -388,7 +389,6 @@ cms-sidenav {
           opacity: 0.8;
         }
       }
-
       .sidebar-menu {
         .sidebar-menu_icon {
 
@@ -454,21 +454,16 @@ cms-sidenav {
           display: none;
         }
       }
-
       .sidebar-hamburger_icon-right {
         display: flex !important;
 
 
       }
-
       .sidebar-hamburger_icon-left {
         // display: none !important;
         transform: rotate(180deg);
 
       }
-
-    
-
       .sidebar-last-visited-cases-container {
         .active-menu-toggled {
           width: $sidebar-width;
@@ -535,6 +530,7 @@ cms-sidenav {
         }
       }
     }
+
 
     .menu-active-session-list {
       padding: $size-xlg1 $size-xlg1 0 $size-xlg1;

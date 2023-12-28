@@ -1015,6 +1015,7 @@ color: $app-primary-font-color;
       position: absolute;
       top: 8px;
       left: 10px;
+      z-index: 1;
     }
 
     .input-inline-loader {

@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -87,7 +87,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   refundEditVendorAddressId = '';
   refundEditVendorName: any;
   inspaymentRequestId: any;
-
+  public selectableSettings: SelectableSettings;
+  public checkboxOnly = true;
+  public mode: SelectableMode = 'multiple';
+  public drag = false;
   @ViewChild('addEditRefundDialog', { read: TemplateRef })
   addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
 
@@ -240,7 +243,13 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     private route: Router, private readonly cdr: ChangeDetectorRef,
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private dialogService: DialogService) { }
+    private dialogService: DialogService) { 
+      this.selectableSettings = { 
+        checkboxOnly: this.checkboxOnly,
+        mode: this.mode,
+        drag: this.drag,
+      };
+    }
 
   ngOnInit(): void {
     this.sortType = 'desc'

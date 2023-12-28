@@ -228,7 +228,7 @@
   }
 
   &.light-blue-banner {
-    background: var(--hive-primary-palette-400, 0.08);
+    background-color:  var(--hive-primary-palette-50);
     color: rgba($color: $black, $alpha: 0.87);
     padding: $size-xlg1 $size-xlg1;
 
