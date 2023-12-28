@@ -1,45 +1,55 @@
-<kendo-dialog-titlebar (click)="onUnAssignConfirm(false)"> Edit Effective Dates </kendo-dialog-titlebar>
+<form [formGroup]="effectiveDatesForm" *ngIf="effectiveDatesForm">
+  <kendo-dialog-titlebar (click)="onUnAssignConfirm(false)"> Edit Effective Dates </kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
     <p>
       The effective dates will be updated. If an End Date is entered, you will be able to assign another one or submit a new referral.
-   
+
     </p>
 
     <div class="flex-row">
       <div class="flex-col flex-col-9">
         <kendo-floatinglabel text="Start Date">
-          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
-           format="MM-dd-yyyy" 
-          formatPlaceholder="formatPattern"           
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+           format="MM-dd-yyyy"
+          formatPlaceholder="formatPattern"
           aria-label="Start Date"
-          placeholder=""
           [(ngModel)]="startDate"
+          placeholder=""
+          formControlName="startDate"
+          (select)="dateValidate('START_DATE')" (keyup)="dateValidate('START_DATE')"
           [min]="min"
          >
-          </kendo-datepicker>       
+          </kendo-datepicker>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="showstartDateError">Start date is required.</kendo-formerror>
-      </div>            
+        <kendo-formerror *ngIf="!effectiveDatesForm.controls['startDate'].valid && startDateValidator">Future dates not allowed.</kendo-formerror>
+      </div>
     </div>
     <div class="flex-row">
         <div class="flex-col flex-col-9">
           <kendo-floatinglabel text="End Date">
-            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  
-             format="MM-dd-yyyy" 
-            formatPlaceholder="formatPattern"           
+            <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"
+             format="MM-dd-yyyy"
+            formatPlaceholder="formatPattern"
             aria-label="End Date"
             placeholder=""
-            [(ngModel)]="endDate">
-            </kendo-datepicker>       
-          </kendo-floatinglabel>       
-        </div>            
+            formControlName="endDate"
+            [(ngModel)]="endDate"
+            (select)="dateValidate('END_DATE')" (keyup)="dateValidate('END_DATE')">
+            </kendo-datepicker>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!effectiveDatesForm.controls['endDate'].valid && endDateValidator">Future dates not allowed.</kendo-formerror>
+          <kendo-formerror
+          *ngIf="!effectiveDatesForm.controls['endDate'].valid && !endDateValidator && startDateIsGreaterThanEndDate">Date
+          cannot be prior to start date.</kendo-formerror>
+        </div>
       </div>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button
-          kendoButton         
+          kendoButton
           look="outline"
           [primary]="false"
           type='button'
@@ -49,7 +59,7 @@
           Cancel
         </button>
         <button
-          kendoButton  [primary]="true"        
+          kendoButton  [primary]="true"
           aria-label="Update"
           (click)="onUnAssignConfirm(true)"
         >
@@ -58,4 +68,6 @@
       </div>
     </div>
   </kendo-dialog-actions>
+</form>
+
 
