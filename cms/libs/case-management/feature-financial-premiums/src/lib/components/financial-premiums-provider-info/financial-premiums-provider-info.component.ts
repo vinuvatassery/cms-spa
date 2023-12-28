@@ -10,6 +10,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { TinValidationFacade } from '@cms/system-config/domain';
 import { BehaviorSubject, Observable, take } from 'rxjs';
 
 @Component({
@@ -55,10 +56,17 @@ export class FinancialPremiumsProviderInfoComponent {
   isSubmitted: boolean = false
   @Input() paymentRequestId: any
   emailscount: number = 0;
+  tinMaskFormat: string = '0 00-0000000';
+  accountingNumberValidated: boolean = true;
+  isDuplicateTin!: boolean;
+  duplicateTinMessage: any;
+  isValidateForm: boolean = false;
   constructor(public formBuilder: FormBuilder,
     public activeRoute: ActivatedRoute,
     private route: Router,
-    private readonly changeDetectorRef: ChangeDetectorRef) {
+    private readonly changeDetectorRef: ChangeDetectorRef,
+    private tinValidationFacade: TinValidationFacade,
+    private readonly cdr: ChangeDetectorRef) {
 
   }
 
@@ -270,6 +278,39 @@ export class FinancialPremiumsProviderInfoComponent {
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)
     this.closeViewProviderClicked()
+  }
+
+  restrictAccountingNumber(event: any){
+    const isNumeric=(event.key >= 0 && event.key <= 10);
+    if (this.profileForm.controls['tin'].value && (parseInt(this.profileForm.controls['tin'].value.charAt(0)) == 1 || parseInt(this.profileForm.controls['tin'].value.charAt(0)) == 3)) {
+      this.accountingNumberValidated = true;
+      if(isNumeric && this.profileForm.controls['tin'].value.trim().length>=10){
+        this.validateTin(this.profileForm.controls['tin'].value);
+      }
+    } else {
+      this.profileForm.controls['tin'].setErrors({ 'incorrect': true });
+      this.accountingNumberValidated = false;
+    }
+  }
+
+  validateTin(tinNbr: any) {
+    this.tinValidationFacade.showLoader();
+    this.tinValidationFacade.validateTinNbr(tinNbr).subscribe({
+      next: (response: any) => {
+        if(response){
+          this.isDuplicateTin = false;
+        }
+        this.tinValidationFacade.hideLoader();
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.tinValidationFacade.hideLoader();
+        this.isDuplicateTin = true;
+        this.profileForm.controls['tin'].setErrors({ 'incorrect': true });
+        this.duplicateTinMessage = err.error?.error?.message ?? "";
+        this.cdr.detectChanges();
+        }
+    });
   }
 
 }
