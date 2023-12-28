@@ -63,7 +63,7 @@ export class NewCaseComponent implements OnInit  {
 
         (text) => 
         {
-          if(text && text.length > 2)
+          if(text && text.length >=2)
           {
             this.searchTextEvent.emit(text)
             this.showInputLoader = false;
@@ -127,7 +127,7 @@ export class NewCaseComponent implements OnInit  {
   onsearchTextChange(text : string)
   { 
 
-    if(text && text.length > 2){ 
+    if(text && text.length >=2){ 
       this.showInputLoader = true;
       this.filterManager.next(text);
     }
