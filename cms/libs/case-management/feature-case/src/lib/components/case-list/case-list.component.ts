@@ -73,7 +73,7 @@ public state!: any;
     eilgibilityStartDate:"Eligibility Start Date",
     eligibilityEndDate:"Eligibility End Date",
     email:"Email",
-    phone:"Phone",
+    phone:"Home Phone",
     genders:"Gender",
     homeAddress:"Home Address",
     ssn:"SSN",
@@ -363,7 +363,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         "logic": "and"
     }]}
     }
- 
+
   let stateData = this.state
   stateData.filter = this.filter
   this.dataStateChange(stateData);
