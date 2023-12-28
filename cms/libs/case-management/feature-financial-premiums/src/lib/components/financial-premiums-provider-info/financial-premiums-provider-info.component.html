@@ -166,8 +166,6 @@
                                 <kendo-textbox aria-label="Address 1" placeholder="Address 2"
                                 [fillMode]="formUiStyle.inputFillMode" formControlName="address2" [maxlength]="50">
                                 </kendo-textbox>
-                                <kendo-formerror *ngIf="addressForm?.hasError('required','address2') && isSubmitted">Address Line 2  is Required
-                                </kendo-formerror>
                             </div>
                             <div class="flex-col mt-1">
                                 <kendo-textbox aria-label="City" placeholder="City" [fillMode]="formUiStyle.inputFillMode"
