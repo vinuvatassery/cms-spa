@@ -211,12 +211,14 @@ pageselectionchange(data: any) {
   {
     this.deletebuttonEmitted =false;
     this.isOpenedDeactivateConfirm = false;
+    this.deactivateButtonEmitted=false;
   }
 
   onReactConfirmCloseClicked()
   {
     this.deletebuttonEmitted =false;
     this.isOpenedReactivateConfirm = false;
+    this.reactivateButtonEmitted=false;
   }
 
   onRemoveClick(clientProviderId : string)
