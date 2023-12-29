@@ -1,6 +1,6 @@
 <!-- Table Top Filter, Search and Export -->
 
-<p class="mt-2"> Click “+ New Refund” to add a new insurance, provider, prescription, or tax refund.</p>
+<p class="mt-2"> Click “+ New Refund” to add a new insurance, provider, prescription or tax refund.</p>
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
@@ -29,7 +29,7 @@
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
   <span class="sort-items"  *ngIf="!filteredByColumnDesc">No Filters</span>
   <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
   <span class="sort-items">{{columnChangeDesc}}</span>
@@ -82,7 +82,7 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="serviceTypeDescription" title="Type" [width]="160">
+    <kendo-grid-column field="type" title="Type" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">

@@ -100,9 +100,10 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     indexCode: 'Index Code',
     pcaCode:'PCA',
     vp:'VP',
-    refunfNotes:'Refund Note',
+    refundNotes:'Refund Notes',
     origionalWarrentnbr:'Original Warrant #',
-    creationTime: 'Creation Time'
+    creationTime: 'Entry Date',
+    depositDate: 'Deposit Date'
   };
 
   dropDowncolumns: any = [
@@ -118,39 +119,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
-    },
-    {
-      columnCode: 'refundWarrentnbr',
-      columnDesc: 'Refund Warrant #',
-    },
-    {
-      columnCode: 'refundAmount',
-      columnDesc: 'Refund Amount',
-    },
-
-    {
-      columnCode: 'indexCode',
-      columnDesc: 'Index Code',
-    },
-
-    {
-      columnCode: 'pcaCode',
-      columnDesc: 'PCA',
-    },
-    {
-      columnCode: 'origionalWarrentnbr',
-      columnDesc: 'Original Warrant #',
-    },
-
-    {
-      columnCode: 'vp',
-      columnDesc: 'VP',
-    },
-
-    {
-      columnCode: 'refundNotes',
-      columnDesc: 'Refund Note',
-    },
+    }
   ];
 
   public selectedProcessRefunds: any[] = [];
