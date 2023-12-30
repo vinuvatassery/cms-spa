@@ -657,15 +657,23 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
       return;
     }
     const serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
-    const startDate = this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat );
-    const endDate = this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ) ;
-    const dueAmount = serviceFormData.controls['amountDue'].value;
-    const vendorId = this.claimForm.value?.medicalProvider?.vendorId;
-    const clientId = this.claimForm.value?.client?.clientId;
-    if (startDate && endDate && dueAmount && vendorId) {
-      this.financialClaimsFacade.checkDuplicatePaymentException(clientId, startDate,endDate, vendorId,dueAmount,null, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+    const data = {
+      invoiceId: this.claimForm.value?.invoiceId,
+      clientId: this.claimForm.value?.client.clientId, 
+      startDate: this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat ),
+      endDate: this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ), 
+      vendorId: this.claimForm.value?.medicalProvider?.vendorId,
+      totalAmountDue:serviceFormData.controls['amountDue'].value,
+      paymentRequestId :null, 
+      indexNumber: index, 
+      typeCode : this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim
+    };
+
+    if (data.startDate && data.endDate && data.totalAmountDue && data.vendorId && data.invoiceId) {
+      this.financialClaimsFacade.checkDuplicatePaymentException(data);
     }
   }
+  
   calculateMedicadeRate(index: number) {
     const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
     let paymentType = serviceForm.controls['paymentType'].value;
@@ -702,7 +710,9 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
     });
     this.calculateMedicadeRate(index);
     this.checkBridgeUppEception(index);
+    this.checkDuplicatePaymentException(index);
   }
+
   checkBridgeUppEception(index:number)
   {
     if(!this.checkPriority(this.bridgeUppPriorityArray,index,'providerNotEligibleExceptionFlag'))
