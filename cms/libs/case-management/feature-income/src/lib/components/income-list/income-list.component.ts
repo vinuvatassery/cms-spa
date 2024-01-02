@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChild
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChildren, QueryList
 } from '@angular/core';
 /** External Libraries **/
 import { Subject } from 'rxjs/internal/Subject';
@@ -19,8 +19,7 @@ import { DropDownListComponent } from '@progress/kendo-angular-dropdowns';
 })
 export class IncomeListComponent implements OnInit {
   /** Input properties **/
-  @ViewChild("proofSchoolDropdownOne") public proofSchoolDropdownOne!: DropDownListComponent;
-  @Input() data!: any;
+  @ViewChildren("proofSchoolDropdownOne") public proofSchoolDropdownOne!: QueryList<DropDownListComponent>;  @Input() data!: any;
   @Input() hasNoIncome!: boolean;
   @Input() clientCaseEligibilityId: string="";
   @Input() clientId: any;
@@ -158,18 +157,16 @@ export class IncomeListComponent implements OnInit {
     })
   }
   /** Private methods **/
-  public onProofSchoolDropdownOneClose(event: any) {
+  public onProofSchoolDropdownOneClose(event: any , index : any) {
     event.preventDefault();
     // Close the list if the component is no longer focused
     setTimeout(() => {
-      if ( !this.proofSchoolDropdownOne.wrapper.nativeElement.contains(   document.activeElement  ) ) {
-        this.proofSchoolDropdownOne.toggle(false); 
-      }
+      this.proofSchoolDropdownOne.forEach((element, index) => {element.toggle(false);})
     });
   }
 
   public onProofSchoolDropdownOneBlur() {
-    this.proofSchoolDropdownOne.toggle(false);
+    this.proofSchoolDropdownOne.forEach((element) => {element.toggle(false);})
   }
 // Grid More action clicl function
 onIncomeActionClicked(

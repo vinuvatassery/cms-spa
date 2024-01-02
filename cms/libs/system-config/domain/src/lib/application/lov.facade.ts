@@ -384,13 +384,18 @@ export class LovFacade {
   getProofOfIncomeTypesLov(parentCode: string) {
     return this.lovDataService.getLovsbyParent(LovType.ProofOfIncomeType, parentCode)
   }
+
   getHealthInsuranceTypeLovs(): void {
-    this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).subscribe({
-      next: (loveInsuranceTypeResponse) => {
-        this.lovInsuranceTypeSubject.next(loveInsuranceTypeResponse);
+    this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).pipe(
+      map((loveInsuranceTypeResponse) => {
+        return loveInsuranceTypeResponse.filter(item => item.lovCode !== InsurancePlanTypeCodes.DENTAL_INSURANCE);
+      })
+    ).subscribe({
+      next: (filteredLoveInsuranceTypeResponse) => {
+        this.lovInsuranceTypeSubject.next(filteredLoveInsuranceTypeResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -833,7 +838,7 @@ export class LovFacade {
     });
   }
 
-  getServiceTypeLov(){
+  getServiceTypeLov() {
     this.lovDataService.getLovsbyType(LovType.ServiceType).subscribe({
       next: (lovResponse) => {
         this.serviceTypeSubject.next(lovResponse);
@@ -843,7 +848,7 @@ export class LovFacade {
       },
     });
   }
-  getRefundTypeLov(){
+  getRefundTypeLov() {
     this.lovDataService.getLovsbyType(LovType.ServiceType).subscribe({
       next: (lovResponse) => {
         this.refundTypeSubject.next(lovResponse);

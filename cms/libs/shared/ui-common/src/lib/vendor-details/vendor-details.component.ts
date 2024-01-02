@@ -266,17 +266,17 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
           Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
+
+      this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.nullValidator,]);
+      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+
       if (this.providerType == this.vendorTypes.Manufacturers) {
         this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.nullValidator,]);
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.nullValidator,]);
-        this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
       }
       else {
         this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.required, Validators.pattern('^[A-Za-z ]+$')]);
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.required, Validators.pattern('^[A-Za-z ]+$')]);
-        this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
       }
 
     }
@@ -604,8 +604,6 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.required,]);
       this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
 
-      this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.required,]);
-      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
     }
     else {
       this.onChange();
@@ -681,19 +679,19 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   }
 
   restrictAccountingNumber(event: any) {
-    const isNumeric=(event.key >= 0 && event.key <= 9);
+    this.isDuplicateTin = false;
     if(( (this.providerType == this.vendorTypes.Pharmacy)||
       (this.providerType==this.vendorTypes.DentalProviders)||
       (this.providerType==this.vendorTypes.MedicalProviders) ||
-      (this.providerType==this.vendorTypes.InsuranceVendors))||
-      (this.providerType == this.vendorTypes.Manufacturers) &&
+      (this.providerType==this.vendorTypes.InsuranceVendors)||
+      (this.providerType == this.vendorTypes.Manufacturers)) &&
       this.medicalProviderForm.controls['tinNumber'].value==''){
       this.accountingNumberValidated = true;
       return;
     }
     if (this.medicalProviderForm.controls['tinNumber'].value && (parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 3)) {
       this.accountingNumberValidated = true;
-      if(isNumeric && this.medicalProviderForm.controls['tinNumber'].value.trim().length>=9){
+      if(this.medicalProviderForm.controls['tinNumber'].value.trim().length>=9){
         this.validateTin(this.medicalProviderForm.controls['tinNumber'].value);
       }
     } else {

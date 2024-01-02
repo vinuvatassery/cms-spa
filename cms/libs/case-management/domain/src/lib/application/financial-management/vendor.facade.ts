@@ -88,7 +88,7 @@ export class FinancialVendorFacade {
     return this.financialVendorDataService.searchProvidorsById(vendoraddressId).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor: any) => {
-          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''} ${vendor.mailCode ?? ''}${vendor.vendorAddress ?? ''}`;
         });
         this.insuranceVendorsSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
@@ -105,7 +105,7 @@ export class FinancialVendorFacade {
     return this.financialVendorDataService.searchInsurnaceVendor(searchText).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor: any) => {
-          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''} ${vendor.mailCode ?? ''}${vendor.vendorAddress ?? ''}`;
         });
         this.insuranceVendorsSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
