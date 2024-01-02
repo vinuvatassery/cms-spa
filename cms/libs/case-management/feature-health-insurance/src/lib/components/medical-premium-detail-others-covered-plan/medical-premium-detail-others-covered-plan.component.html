@@ -94,7 +94,7 @@
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Date of birth">
                         <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" aria-label="Date of birth"
-                            format="MM-DD-YYYY" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern"
+                            format="MM-dd-yyyy" [disabled]="isViewContentEditable" formatPlaceholder="formatPattern"
                             formControlName="dob">
                             <kendo-formerror *ngIf="getPersonControl(i, 'dob')?.valid
                      && isViewContentEditable==false">Date of birth is required.</kendo-formerror>

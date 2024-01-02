@@ -2,8 +2,9 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit,Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 /** Internal Libraries **/
-import { VerificationFacade } from '@cms/case-management/domain';
+import { VerificationFacade, WorkflowFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-hiv-verification',
@@ -26,11 +27,12 @@ export class HivVerificationComponent implements OnInit {
   isHivVerificationRemovalConfirmationOpened : boolean = false;
   clientHivVerificationId!:string;
   removeHivVerification$ = this.verificationFacade.removeHivVerification$;
-
-  constructor(private readonly cd: ChangeDetectorRef, private verificationFacade: VerificationFacade,private readonly lovFacade: LovFacade){
+  private saveForLaterValidationSubscription !: Subscription;
+  constructor(private readonly cd: ChangeDetectorRef, private verificationFacade: VerificationFacade,private readonly lovFacade: LovFacade,private workflowFacade: WorkflowFacade,){
 
   }
   ngOnInit(): void {
+
     this.lovFacade.getVerificationMethodLovs();
     this.hivVerificationForm?.get('providerOption')?.valueChanges.subscribe(val => {
       this.cd.detectChanges();
@@ -43,6 +45,7 @@ export class HivVerificationComponent implements OnInit {
       }
     });
     this.verificationFacade.showHideAttachment.next(true);
+    this.addSaveForLaterValidationsSubscription();
   }
   providerChange(event:any){
     if(this.hivVerificationForm.controls["providerOption"].value=="UPLOAD_ATTACHMENT")
@@ -70,5 +73,12 @@ export class HivVerificationComponent implements OnInit {
   onAttachmentConfirmation(event:any)
   {
     this.onAttachmentConfirmationEvent.emit(event);
+  }
+  private addSaveForLaterValidationsSubscription(): void {
+    this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
+      if (val) {      
+        this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+      }
+    });
   }
 }
