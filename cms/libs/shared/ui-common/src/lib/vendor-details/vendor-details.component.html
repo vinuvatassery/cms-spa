@@ -55,7 +55,7 @@
         <div class="flex-row">
             <div *ngIf="providerType !== vendorTypes.Clinic && !editVendorInfo"  class="flex-col flex-col-8">
 
-           
+
           <div class="inlineloaderwrapper hidedropicon">
             <span *ngIf="clinicVendorLoader$ | async"
               class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
@@ -269,11 +269,11 @@
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
 
-        <kendo-floatinglabel text="Name on Envelope">
+        <kendo-floatinglabel text="Name on Envelope (optional)">
           <kendo-textbox aria-label="Name on Envelope" [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnEnvolop">
           </kendo-textbox>
-          <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnEnvolop.errors?.required && isValidateForm">
+          <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnEnvolop.errors?.required && isValidateForm && providerType != vendorTypes.Pharmacy">
             Name on Envelope is required
 
           </kendo-formerror>
