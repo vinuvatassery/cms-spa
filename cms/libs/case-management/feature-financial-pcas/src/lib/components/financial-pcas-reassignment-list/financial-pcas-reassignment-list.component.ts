@@ -360,23 +360,39 @@ export class FinancialPcasReassignmentListComponent
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
-    if (this.filter !== null) {
-      this.filteredByColumnDesc =
-        this.dropDownColumns?.find((i) => i.columnCode === this.selectedColumn)
-          ?.columnDesc ?? '';
+    if (this.filter) {
+      this.setFilterBy(true, '', this.filter);
 
-          if(this.filter){
-            let filterData = this.filter[0]?.filters[0];
-            if (filterData?.field == 'unlimitedFlag') {
-              if (filterData.value) {
-                filterData.value = 'Y';
-              } else {
-                filterData.value = 'N';
-              }            
-          }
+      let filterData = this.filter[0]?.filters[0];
+      if (filterData?.field == 'unlimitedFlag') {
+        if (filterData.value) {
+          filterData.value = 'Y';
+        } else {
+          filterData.value = 'N';
+        }
       }
     }
     this.loadPcaReassignment();
+  }
+
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    this.filteredByColumnDesc = '';
+    if (isFromGrid) {
+      if (filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+
+        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+      }
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.dropDownColumns?.find(i => i.columnCode === this.selectedColumn)?.columnDesc ?? '';
+    }
   }
 
   pageSelectionChange(data: any) {
