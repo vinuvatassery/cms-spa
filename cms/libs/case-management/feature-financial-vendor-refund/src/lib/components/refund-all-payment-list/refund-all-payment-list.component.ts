@@ -243,8 +243,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     private route: Router, private readonly cdr: ChangeDetectorRef,
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private dialogService: DialogService) { 
-      this.selectableSettings = { 
+    private dialogService: DialogService) {
+      this.selectableSettings = {
         checkboxOnly: this.checkboxOnly,
         mode: this.mode,
         drag: this.drag,
@@ -637,7 +637,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   onProviderNameClick(event: any) {
-    this.onProviderNameClickEvent.emit(event);
+    this.providerNameClickEvent.emit(event);
   }
 
   selectionAllChange() {
