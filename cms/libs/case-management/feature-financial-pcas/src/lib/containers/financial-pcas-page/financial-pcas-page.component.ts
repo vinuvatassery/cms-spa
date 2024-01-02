@@ -64,7 +64,7 @@ export class FinancialPcasPageComponent implements OnInit{
   notAssignPcsLists$ = this.financialPcaFacade.notpcaData$;
    pcaAssignOpenDatesListSubject = new Subject<any>();
   pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
-
+ pcaAssignmentDatesValidation$ = this.pcaAssignmentsFacade. pcaDatesValidation$
   pcaAssignOpenDatesSelectedSubject = new Subject<any>();
   pcaAssignOpenDatesSelected$ = this.pcaAssignOpenDatesSelectedSubject.asObservable();
 
@@ -135,9 +135,13 @@ export class FinancialPcasPageComponent implements OnInit{
     this.pcaAssignmentsFacade.loadPcaCodes()
   }
 
-  loadPcaDates() {    
-    this.pcaAssignmentsFacade.loadPcaDates()
+  loadPcaDates(event:any) {    
+    this.pcaAssignmentsFacade.loadPcaDates(event)
     this.getPcaDatesList()
+  }
+
+  onValidatePcaDates(event:any){
+    this.pcaAssignmentsFacade.validatePcaDates(event.pcaAssignmentId, event.pcaAssignmentDates);
   }
 
   assignPca(assignPcaRequest : any) {

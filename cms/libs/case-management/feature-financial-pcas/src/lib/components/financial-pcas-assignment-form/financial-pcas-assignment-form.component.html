@@ -93,13 +93,21 @@
                                     valueField="date" 
                                     aria-label="date"
                                     [valuePrimitive]="true"
-                                    formControlName="openDate">
+                                    formControlName="openDate"
+                                    (valueChange)="openDateValidate()">
             
                                     </kendo-dropdownlist>
                                 
                               <kendo-formerror *ngIf="pcaAssignmentFormControls?.openDate?.errors?.required && formSubmitted">
                                     Open Date is required
                               </kendo-formerror>   
+                              
+                  <kendo-formerror *ngIf="openDateAfterCloseDate"> Open Date is after the Close Date.</kendo-formerror>
+                  <kendo-formerror *ngIf=" isAssignmentpcaCloseDateGreater"> Open Date must be prior to the PCA Close Date.</kendo-formerror>
+                  <kendo-formerror *ngIf=" isAssignmentpcaOpenDateGreater"> Open Date is before the PCA Open Date.</kendo-formerror>
+
+                  <kendo-formerror *ngIf="ispcaOpenDateDependency">Open Date has a dependency and cannot be changed.</kendo-formerror>
+   
                                                              
                   </kendo-floatinglabel>
 
@@ -113,20 +121,23 @@
                                     valueField="date" 
                                     aria-label="date"
                                     [valuePrimitive]="true"
-                                    formControlName="closeDate">
+                                    formControlName="closeDate"
+                                    (valueChange)="closeDateValidate()">
             
                                     </kendo-dropdownlist>
                                
                               <kendo-formerror *ngIf="pcaAssignmentFormControls?.closeDate?.errors?.required && formSubmitted">
                                     Close Date is required
                               </kendo-formerror>   
-                        
+
+                              <kendo-formerror *ngIf="closeDateIsBeforeOpen"> Close Date is before the Open Date.</kendo-formerror>
+                              <kendo-formerror *ngIf="ispcaCloseDateGreater"> Assignment Close Date cannot exceed the PCA Close Date.</kendo-formerror>
+                              <kendo-formerror *ngIf="ispcaOpenDateGreater"> Close Date is before the PCA Open Date.</kendo-formerror>
+                              
                   </kendo-floatinglabel>
 
             </div>
-            <kendo-formerror *ngIf="openDateError">
-                  Open Date must be before Close Date
-            </kendo-formerror>     
+               
       </div>
       <div class="flex-row">
             <div class="flex-col ">
