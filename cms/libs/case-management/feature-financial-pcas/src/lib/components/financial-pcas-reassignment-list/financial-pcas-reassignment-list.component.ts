@@ -307,7 +307,6 @@ export class FinancialPcasReassignmentListComponent
 
   onChange(data: any) {
     this.defaultGridState();
-    let operator = this.getColumnOperator();
     this.filterData = {
       logic: 'and',
       filters: [
@@ -315,7 +314,7 @@ export class FinancialPcasReassignmentListComponent
           filters: [
             {
               field: this.selectedColumn ?? 'ALL',
-              operator: operator,
+              operator: "contains",
               value: data,
             },
           ],
@@ -325,19 +324,10 @@ export class FinancialPcasReassignmentListComponent
     };
     const stateData = this.state;
     stateData.filter = this.filterData;
+    this.setFilterBy(false, data, null);
     this.dataStateChange(stateData);
   }
 
-  getColumnOperator() {
-    if (
-      this.selectedColumn === 'PcaCode'
-    ) {
-      return 'eq';
-    } else if (this.selectedColumn === 'ALL') {
-      return 'startswith';
-    }
-    return 'contains';
-  }
 
   defaultGridState() {
     this.state = {
@@ -376,17 +366,15 @@ export class FinancialPcasReassignmentListComponent
   }
 
   private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
-    this.filteredByColumnDesc = '';
-    if (isFromGrid) {
-      if (filter.length > 0) {
+    if (isFromGrid && filter.length > 0) {
         const filteredColumns = this.filter?.map((f: any) => {
           const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
             this.gridColumns[fld.field])
           return ([...new Set(filteredColumns)]);
         });
-
-        this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
-      }
+        if (filteredColumns && filteredColumns.length > 0 && filteredColumns[0].toString() != '') {
+          this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+        }        
       return;
     }
 
