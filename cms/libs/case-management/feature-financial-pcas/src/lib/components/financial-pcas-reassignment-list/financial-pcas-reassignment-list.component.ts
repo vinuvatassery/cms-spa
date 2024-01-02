@@ -179,8 +179,8 @@ export class FinancialPcasReassignmentListComponent
       columnDesc: 'Object',
     },
     {
-      columnCode: 'CloseDate',
-      columnDesc: 'Close Date',
+      columnCode: 'Group',
+      columnDesc: 'Group',
     },
   ];
 
@@ -330,8 +330,7 @@ export class FinancialPcasReassignmentListComponent
 
   getColumnOperator() {
     if (
-      this.selectedColumn === 'PcaCode' ||
-      this.selectedColumn === 'CloseDate'
+      this.selectedColumn === 'PcaCode'
     ) {
       return 'eq';
     } else if (this.selectedColumn === 'ALL') {
