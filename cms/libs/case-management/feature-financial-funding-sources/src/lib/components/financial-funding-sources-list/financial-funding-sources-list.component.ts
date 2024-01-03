@@ -219,7 +219,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
 
   performFundSearch(data: any) {
     this.defaultGridState();
-    const operator = 'startswith';
+    const operator = 'contains';
 
     this.filterData = {
       logic: 'and',
