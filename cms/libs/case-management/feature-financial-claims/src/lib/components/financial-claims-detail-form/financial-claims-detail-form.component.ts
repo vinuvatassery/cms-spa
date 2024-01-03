@@ -131,6 +131,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   tempTpaInvoiceId: any;
   specialCharAdded!: boolean;
   informativeText!: string;
+  minServiceDate: Date = new Date(2000, 1, 1);
+
+
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
@@ -408,12 +411,19 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     });
     this.calculateMedicadeRate(index);
     this.checkBridgeUppEception(index);
+    this.checkDuplicatePaymentException(index);
   }
 
-  searchcptcode(cptcode: any) {
+  searchcptcode(cptcode: any, index: number) {
     if (!cptcode || cptcode.length == 0) {
       return;
     }
+    let ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
+    ctpCodeIsvalid.patchValue({
+      serviceDescription: '',
+      medicadeRate: '',
+      cptCodeId: '',
+    });
     this.financialClaimsFacade.searchcptcode(cptcode);
   }
 
@@ -559,7 +569,22 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
   isControlValid(controlName: string, index: any) {
     let control = this.addClaimServicesForm.at(index) as FormGroup;
-    return control.controls[controlName].status == 'INVALID';
+    return control.controls[controlName].status == 'INVALID' && !control.controls[controlName].value;
+  }
+
+  isAmountDueValid(index: any) {
+    let control = this.addClaimServicesForm.at(index) as FormGroup;
+    if(control.controls['amountDue']?.value 
+    && control.controls['serviceCost']?.value 
+    && (control.controls['amountDue']?.value ?? 0) > (control.controls['serviceCost']?.value ?? 0)){
+      control.get('amountDue')?.setErrors({invalid : true});
+      return true;
+    }
+
+    if(control.controls['amountDue']?.value){
+      control.get('amountDue')?.setErrors(null);
+    }
+    return false;
   }
 
   onDateChange(index: any) {
@@ -590,7 +615,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
 
   isStartEndDateValid(startDate: any, endDate: any): boolean {
-    if (startDate != "" && endDate != "" && startDate > endDate) {
+    if (startDate == "" || endDate == "" || startDate < this.minServiceDate || endDate < this.minServiceDate || startDate > endDate) {
       return false;
     }
     return true;
@@ -1243,14 +1268,22 @@ duplicatePaymentObject:any = {};
     {
       return;
     }
+
     const serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
-    const startDate = this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat );
-    const endDate = this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ) ;
-    const dueAmount = serviceFormData.controls['amountDue'].value;
-    const vendorId = this.claimForm.value?.medicalProvider?.vendorId
-    const clientId = this.claimForm.value?.client.clientId;
-    if (startDate && endDate && dueAmount && vendorId) {
-      this.financialClaimsFacade.checkDuplicatePaymentException(clientId, startDate,endDate, vendorId,dueAmount, this.duplicatePaymentFlagPaymentRequestId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+    const data = {
+      invoiceId: this.claimForm.value?.invoiceId,
+      clientId: this.claimForm.value?.client.clientId, 
+      startDate: this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat ),
+      endDate: this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ), 
+      vendorId: this.claimForm.value?.medicalProvider?.vendorId,
+      totalAmountDue:serviceFormData.controls['amountDue'].value,
+      paymentRequestId :this.duplicatePaymentFlagPaymentRequestId, 
+      indexNumber: index, 
+      typeCode : this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim
+    };
+
+    if (data.startDate && data.endDate && data.totalAmountDue && data.vendorId && data.invoiceId) {
+      this.financialClaimsFacade.checkDuplicatePaymentException(data);
     }
   }
   loadServiceCostMethod(index:number){
@@ -1265,9 +1298,11 @@ duplicatePaymentObject:any = {};
       this.addClaimServicesForm.controls.forEach((element, index) => {
           totalServiceCost += + element.get('amountDue')?.value;
       });
-      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index,
-        this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim, this.clientCaseEligibilityId
-        ,this.paymentRequestId);
+      if(totalServiceCost>0){
+        this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index,
+          this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim, this.clientCaseEligibilityId
+          ,this.paymentRequestId);
+      }
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }
@@ -1339,7 +1374,9 @@ duplicatePaymentObject:any = {};
         let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
         let startDate = serviceFormData.controls['serviceStartDate'].value;
         let endDate = serviceFormData.controls['serviceEndDate'].value;
-        this.checkIneligibleEception(startDate, endDate, index);
+        if(startDate && endDate){
+          this.checkIneligibleEception(startDate, endDate, index);
+        }
       });
     }
     this.addClaimServicesForm.controls.forEach((element, index) => {

@@ -477,14 +477,14 @@ export class FinancialClaimsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/group-check?startDate=${startDtae}&endDate=${endDate}&clientId=${clientId}&cptCode=${cptCode}`
     );
   }
-  checkDuplicatePaymentException(clientId: number, startDate: any,endDate: any, vendorId: any,totalAmountDue:any, paymentRequestId :any, typeCode : string ) {
+  checkDuplicatePaymentException(data: any) {
     let path;
-    if (typeCode == ServiceSubTypeCode.medicalClaim) {
+    if (data.typeCode == ServiceSubTypeCode.medicalClaim) {
       path = 'financial-management/claims/medical';
     } else {
       path = 'financial-management/claims/dental';
     }
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${startDate}&serviceEndDate=${endDate}&vendorId=${vendorId}&amount=${totalAmountDue}&paymentRequestId=${paymentRequestId}&clientId=${clientId}`
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/${path}/duplicate-payment-check?serviceStartDate=${data.startDate}&serviceEndDate=${data.endDate}&vendorId=${data.vendorId}&amount=${data.totalAmountDue}&paymentRequestId=${data.paymentRequestId}&clientId=${data.clientId}&invoiceId=${data.invoiceId}`
     );
   }
   searchProvidorsById(VendorAddressId: string, typeCode: string) {

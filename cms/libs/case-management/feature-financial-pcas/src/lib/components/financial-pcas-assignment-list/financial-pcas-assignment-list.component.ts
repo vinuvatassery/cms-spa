@@ -56,10 +56,12 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , OnDestroy
   @Output() loadGroupCodesEvent = new EventEmitter<any>();
   @Output() pcaChangeEvent = new EventEmitter<any>();
   @Output() loadPcaEvent = new EventEmitter<any>();
+  @Output() validatePcaDates = new EventEmitter<any>();
   @Output() getPcaAssignmentEvent = new EventEmitter<any>();
   @Output() addPcaDataEvent = new EventEmitter<any>();
   @Output() loadFinancialPcaAssignmentEvent = new EventEmitter<any>();
   @Output() pcaAssignmentPriorityUpdateEvent = new EventEmitter<any>();
+  @Input() pcaAssignmentDatesValidation$ :any
 
   public state!: State;
   sortColumn = 'vendorName';
@@ -108,6 +110,7 @@ export class FinancialPcasAssignmentListComponent implements OnInit  , OnDestroy
   ];
 
   private currentSubscription!: Subscription;
+  pcaAssignmentId: any;
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -278,8 +281,9 @@ public rowCallback(context: RowClassArgs) {
   });
 
   onOpenAddPcaAssignmentClicked(pcaAssignmentId : any): void {
+    this.pcaAssignmentId = pcaAssignmentId;
     this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;
-
+    this.pcaChangeEvent.emit(pcaAssignmentId)
     if(this.objectCodeIdValue && this.groupCodeIdsdValue.length > 0)
     {
        this.objectCodeValid = true
@@ -374,6 +378,11 @@ public rowCallback(context: RowClassArgs) {
   close()
   {
 
+  }
+
+  onValidatePcaDates(event:any){
+    this.validatePcaDates.emit({pcaAssignmentId : this.pcaAssignmentId,
+                          pcaAssignmentDates : event});
   }
 }
 

@@ -142,7 +142,7 @@
                     <div class="flex-col flex-col-6">
                         <kendo-floatinglabel text="Invoice ID">
                             <kendo-textbox aria-label="Invoice ID" [fillMode]="formUiStyle.inputFillMode"
-                                formControlName="invoiceId" [maxlength]="200" (keypress)="restrictSpecialChar($event)">
+                                formControlName="invoiceId" [maxlength]="20" (keypress)="restrictSpecialChar($event)">
                             </kendo-textbox>
                         </kendo-floatinglabel>
                         <kendo-formerror *ngIf="(!claimForm.controls['invoiceId'].valid) && isSubmitted"
@@ -186,6 +186,7 @@
                                                         aria-label="Service Start Date" format="MM/dd/yyyy"
                                                         formatPlaceholder="formatPattern"
                                                         formControlName="serviceStartDate" placeholder=""
+                                                        [min]="minServiceDate"
                                                         (valueChange)="onDateChange(i)">
                                                     </kendo-datepicker>
                                                 </kendo-floatinglabel>
@@ -200,6 +201,7 @@
                                                         aria-label="Service End Date" format="MM/dd/yyyy"
                                                         formatPlaceholder="formatPattern" placeholder=""
                                                         formControlName="serviceEndDate"
+                                                        [min]="minServiceDate"
                                                         (valueChange)="onDateChange(i)">
                                                     </kendo-datepicker>
                                                 </kendo-floatinglabel>
@@ -281,7 +283,7 @@
                                                     <kendo-autocomplete [fillMode]="formUiStyle.dropDownFillMode"
                                                         [data]="searchCTPCode$ | async" formControlName="cptCode"
                                                         valueField="cptCode1" [filterable]="true"
-                                                        [value]="selectedCPTCode" (filterChange)="searchcptcode($event)"
+                                                        [value]="selectedCPTCode" (filterChange)="searchcptcode($event, i)"
                                                         [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }">
                                                         <ng-template kendoAutoCompleteItemTemplate let-dataItem>
                                                             <span class="pr-1"
@@ -290,7 +292,7 @@
                                                         </ng-template>
                                                     </kendo-autocomplete>
                                                     <kendo-formerror
-                                                        *ngIf="(isControlValid('cptCode', i) && isSubmitted)" > CPT Code is required
+                                                        *ngIf="((isControlValid('cptCode', i) || isControlValid('cptCodeId', i)) && isSubmitted)" > CPT Code is required
                                                     </kendo-formerror>
                                                 </kendo-floatinglabel>
                                             </div>
@@ -358,8 +360,8 @@
                                                     <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                                     <kendo-numerictextbox aria-label="Service Cost" [spinners]="false"
                                                         [fillMode]="formUiStyle.inputFillMode" format="#.00"
+                                                        [maxlength]="15"
                                                         formControlName="serviceCost">
-
                                                     </kendo-numerictextbox>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror
@@ -373,12 +375,15 @@
                                                     <kendo-numerictextbox aria-label="Amount Due" [spinners]="false"
                                                         [fillMode]="formUiStyle.inputFillMode"
                                                         formControlName="amountDue" format="#.00"
+                                                        [maxlength]="15"
                                                         (blur)="onAmountDueChange(i)">
                                                     </kendo-numerictextbox>
                                                 </kendo-floatinglabel>
                                                 <kendo-formerror *ngIf="(isControlValid('amountDue',i) && isSubmitted)"
                                                      >Amount Due is required
                                                 </kendo-formerror>
+                                                <kendo-formerror *ngIf="isAmountDueValid(i)"
+                                                >Amount Due should be less than the Service Cost</kendo-formerror>
                                             </div>
                                             <div class="ml-2"
                                                 *ngIf="getExceptionFormValue('exceedMaxBenefitExceptionFlag',i)">

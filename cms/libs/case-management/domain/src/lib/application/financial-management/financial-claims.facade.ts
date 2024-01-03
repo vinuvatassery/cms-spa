@@ -782,14 +782,14 @@ checkGroupException(startDtae: any,endDate: any, clientId: number,cptCode:any, i
   })
   this.hideLoader();
 }
-checkDuplicatePaymentException(clientId: number, startDate: any,endDate: any, vendorId: any,totalAmountDue:any,paymentRequestId :any, indexNumber: any, typeCode : string){
+checkDuplicatePaymentException(params: any){
   this.showLoader();
-  this.financialClaimsDataService.checkDuplicatePaymentException(clientId, startDate,endDate,vendorId,totalAmountDue, paymentRequestId, typeCode).subscribe({
+  this.financialClaimsDataService.checkDuplicatePaymentException(params).subscribe({
     next: (data:any)=>{
       const flag =  data;
       let response = {
         flag: flag?.status == 0 ? false : true,
-        indexNumber: indexNumber
+        indexNumber: params.indexNumber
       }
       this.showDuplicatePaymentExceptionSubject.next(response);
     },

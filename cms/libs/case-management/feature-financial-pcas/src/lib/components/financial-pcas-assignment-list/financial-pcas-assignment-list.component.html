@@ -139,7 +139,9 @@ aria-label="Assignment"> Assignment</button>
       [groupCodesDataFilter]="groupCodesDataFilter$"
       (closeAddEditPcaAssignmentClickedEvent)="onCloseAddEditPcaAssignmentClicked($event)"
       (loadPcaEvent)="onLoadPcaEvent($event)"
-      (addPcaDataEvent)="addPcaData($event)">
+      (addPcaDataEvent)="addPcaData($event)"
+      (validatePcaDates)="onValidatePcaDates($event)"
+      [pcaAssignmentDatesValidation$]="pcaAssignmentDatesValidation$">
       </cms-financial-pcas-assignment-form>
 
 </ng-template>
