@@ -518,9 +518,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   }
 
   onClaimClick(dataitem: any) {
-    if (!dataitem.vendorId.length) return;
+    if (!dataitem?.vendorId?.length) return;
     this.isEdit = true;
-    this.paymentRequestId = dataitem.paymentRequestId;
+    this.paymentRequestId = dataitem?.paymentRequestId;
     this.openAddEditClaimDialoge();
   }
 
