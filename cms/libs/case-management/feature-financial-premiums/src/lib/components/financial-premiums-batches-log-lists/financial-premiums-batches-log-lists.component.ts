@@ -291,6 +291,13 @@ export class FinancialPremiumsBatchesLogListsComponent
             this.totalReconciled += 1;
           }
         })
+     
+    })
+
+    this.paymentBatchName$.subscribe(res =>{
+      if(!res){
+         this.backToBatch(null);
+      }
     })
   }
 
