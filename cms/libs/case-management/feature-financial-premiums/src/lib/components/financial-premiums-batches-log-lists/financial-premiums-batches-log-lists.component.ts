@@ -290,8 +290,7 @@ export class FinancialPremiumsBatchesLogListsComponent
           if(item.paymentStatusCode == BatchStatusCode.Paid){
             this.totalReconciled += 1;
           }
-        })
-     
+        })   
     })
   }
 
