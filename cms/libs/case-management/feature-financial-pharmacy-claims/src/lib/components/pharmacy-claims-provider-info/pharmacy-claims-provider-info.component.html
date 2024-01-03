@@ -71,15 +71,9 @@
                 <td> 
                         <kendo-floatinglabel text="TIN (optional)">
                             <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
-                              placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tin" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber()">
+                              placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tin" [mask]="tinMaskFormat">
                             </kendo-maskedtextbox>
                           </kendo-floatinglabel>
-                          <kendo-formerror *ngIf="!profileForm.controls['tin'].valid  && accountingNumberValidated">
-                            TIN cannot be less than 9 digits
-                          </kendo-formerror>
-                          <kendo-formerror *ngIf="!accountingNumberValidated">
-                            A 1 or a 3 is required
-                          </kendo-formerror>
                         
                 </td>
             </tr>
@@ -88,9 +82,6 @@
                 <td> 
                         <kendo-textbox aria-label="NPI" [fillMode]="formUiStyle.inputFillMode" formControlName="npiNbr">
                         </kendo-textbox>
-                        <kendo-formerror *ngIf="!profileForm.controls['npiNbr'].valid">
-                            NPI is required.
-                          </kendo-formerror>
                         
                 </td>
             </tr>
@@ -228,7 +219,7 @@
                      <div [formGroupName]="k">
                  <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress" id="{{'emailAddress'+i}}">
                  </kendo-textbox>
-                 <kendo-formerror *ngIf="email.hasError('required','emailAddress') &&  isSubmitted">Email Address is Required
+                 <kendo-formerror *ngIf="email.hasError('required','emailAddress') &&  isSubmitted">EmailAddress is Required
                  </kendo-formerror>
              </div>
 

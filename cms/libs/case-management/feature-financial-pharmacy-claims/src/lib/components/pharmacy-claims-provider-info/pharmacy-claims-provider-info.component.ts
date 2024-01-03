@@ -28,11 +28,10 @@ export class PharmacyClaimsProviderInfoComponent {
   @Input() paymentMethodCode$ : Observable<any> | undefined;
   @Output() onEditProviderProfileEvent = new EventEmitter<any>();
   vendorProfile: any
-  accountingNumberValidated = true;
   tinMaskFormat: string = '0 00-000000';
   profileForm = this.formBuilder.group({
-    tin: ['', Validators.required],
-    npiNbr:['', Validators.required],
+    tin: [''],
+    npiNbr:[''],
     address: this.formBuilder.group({
       vendorAddressId: [''],
       paymentMethod: [''],
@@ -245,16 +244,5 @@ createPhonesFormArray(contact: any): FormArray {
     this.route.navigate(['/financial-management/vendors/profile'], query)
     this.closeViewProviderClicked()
   }
-  restrictAccountingNumber() {
-    if(!this.profileForm.controls['tin'].value){
-      this.accountingNumberValidated = true;
-      return;
-    }
-    if (this.profileForm.controls['tin'].value && (parseInt(this.profileForm.controls['tin'].value.charAt(0)) == 1 || parseInt(this.profileForm.controls['tin'].value.charAt(0)) == 3)) {
-      this.accountingNumberValidated = true;
-    } else {
-      this.profileForm.controls['tin'].setErrors({ 'incorrect': true });
-      this.accountingNumberValidated = false;
-    }
-  }
+   
 }
