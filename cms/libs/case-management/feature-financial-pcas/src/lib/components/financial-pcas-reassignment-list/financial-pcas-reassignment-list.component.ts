@@ -179,8 +179,8 @@ export class FinancialPcasReassignmentListComponent
       columnDesc: 'Object',
     },
     {
-      columnCode: 'CloseDate',
-      columnDesc: 'Close Date',
+      columnCode: 'Group',
+      columnDesc: 'Group',
     },
   ];
 
@@ -307,7 +307,6 @@ export class FinancialPcasReassignmentListComponent
 
   onChange(data: any) {
     this.defaultGridState();
-    let operator = this.getColumnOperator();
     this.filterData = {
       logic: 'and',
       filters: [
@@ -315,7 +314,7 @@ export class FinancialPcasReassignmentListComponent
           filters: [
             {
               field: this.selectedColumn ?? 'ALL',
-              operator: operator,
+              operator: "contains",
               value: data,
             },
           ],
@@ -325,20 +324,10 @@ export class FinancialPcasReassignmentListComponent
     };
     const stateData = this.state;
     stateData.filter = this.filterData;
+    this.setFilterBy(false, data, null);
     this.dataStateChange(stateData);
   }
 
-  getColumnOperator() {
-    if (
-      this.selectedColumn === 'PcaCode' ||
-      this.selectedColumn === 'CloseDate'
-    ) {
-      return 'eq';
-    } else if (this.selectedColumn === 'ALL') {
-      return 'startswith';
-    }
-    return 'contains';
-  }
 
   defaultGridState() {
     this.state = {
@@ -361,23 +350,37 @@ export class FinancialPcasReassignmentListComponent
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
-    if (this.filter !== null) {
-      this.filteredByColumnDesc =
-        this.dropDownColumns?.find((i) => i.columnCode === this.selectedColumn)
-          ?.columnDesc ?? '';
+    if (this.filter) {
+      this.setFilterBy(true, '', this.filter);
 
-          if(this.filter){
-            let filterData = this.filter[0]?.filters[0];
-            if (filterData?.field == 'unlimitedFlag') {
-              if (filterData.value) {
-                filterData.value = 'Y';
-              } else {
-                filterData.value = 'N';
-              }            
-          }
+      let filterData = this.filter[0]?.filters[0];
+      if (filterData?.field == 'unlimitedFlag') {
+        if (filterData.value) {
+          filterData.value = 'Y';
+        } else {
+          filterData.value = 'N';
+        }
       }
     }
     this.loadPcaReassignment();
+  }
+
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    if (isFromGrid && filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+        if (filteredColumns && filteredColumns.length > 0 && filteredColumns[0].toString() != '') {
+          this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+        }        
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.dropDownColumns?.find(i => i.columnCode === this.selectedColumn)?.columnDesc ?? '';
+    }
   }
 
   pageSelectionChange(data: any) {
