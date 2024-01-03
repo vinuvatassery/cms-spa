@@ -334,7 +334,7 @@
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span class="" *ngIf="isSendReportOpened">{{sendReportCount}} payment(s) selected</span>
   <span class="" *ngIf="!isProcessGridExpand && !isSendReportOpened && !isRemoveBatchClosed">{{ selectedProcessClaims.length}} payment(s) selected</span>
-  <span class="" *ngIf="isRemoveBatchClosed">{{sendReportCount}} premium(s) to be selected</span>
+  <span class="" *ngIf="isRemoveBatchClosed">{{sendReportCount}} premium(s) selected</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchPremiumsGridSelectedCancelClicked()"   *ngIf="isBatchPremiumsClicked || isRemoveBatchClosed || isSendReportOpened"> Cancel
   </button>
