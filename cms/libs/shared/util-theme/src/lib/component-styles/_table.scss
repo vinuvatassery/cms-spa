@@ -383,7 +383,14 @@ $pagination-height : 48px;
         z-index: 1;
         opacity: 0.5;
       }
+     &.no-export{
+      .k-floating-label-container {
+        .k-textbox {
+          padding-right: 1rem;
+        }
+      }
 
+      }
       .k-floating-label-container {
         .k-textbox {
           padding-left: 40px;
