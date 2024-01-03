@@ -544,7 +544,6 @@ export class FinancialPcasReassignmentListComponent
   }
   onPcaReassignmentSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    searchValue = this.formatSearchValue(searchValue, isDateSearch);
     this.onChange(searchValue);
   }
 
