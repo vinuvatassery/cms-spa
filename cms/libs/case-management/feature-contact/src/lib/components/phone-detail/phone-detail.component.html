@@ -1,7 +1,10 @@
 <form [formGroup]="clientPhoneForm" (ngSubmit)="onclientPhoneFormSubmit()">
   <input type="hidden" formControlName="clientPhoneId">
   <section class="k-dialog-body">
-    <p class="text-muted mb-2" *ngIf="!isEditValue">
+    <p class="text-muted mb-2" *ngIf="deactivateFlag">
+      To deactivate the current preffered phone number, you must add a new preffered one.
+    </p>
+    <p class="text-muted mb-2" *ngIf="!isEditValue && !deactivateFlag">
       Adding a new phone number will deactivate the current phone number for that
       type. For example, adding a new home phone will deactivate the current home
       phone.
@@ -9,6 +12,7 @@
     <p class="text-muted mb-2" *ngIf="isEditValue">
       Edit or deactivate the client's phone number.
     </p>
+
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="{{ isEditValue ? 'Phone Type' : 'Choose Phone Type' }}">
@@ -57,7 +61,7 @@
           </span>
         </div>
       </div>
-      <div class="flex-col mt-3 mb-3"  *ngIf="isDeleted === false">
+      <div class="flex-col mt-3 mb-3"  *ngIf="isDeleted === false && !deactivateFlag">
         <span class="app-checkboxwidtext-wrapper">
           <input formControlName="preferredFlag" type="checkbox" kendoCheckBox aria-labelledby="preferredContactMethod"
             id="preferredContactMethod" />
@@ -81,8 +85,11 @@
           Cancel
         </button>
 
-        <button kendoButton [primary]="true" attr.aria-label="{{ isEditValue ? 'Update' : 'Add' }}" [disabled]="btnDisabled">
+        <button *ngIf="!deactivateFlag" kendoButton [primary]="true" attr.aria-label="{{ isEditValue ? 'Update' : 'Add' }}" [disabled]="btnDisabled">
           {{ isEditValue ? 'Update' : 'Add' }}
+        </button>
+        <button *ngIf="deactivateFlag" kendoButton [primary]="true" aria-label="Deactivate & Add" (click)="deactivateAndAdd()">
+          DEACTIVATE & ADD
         </button>
       </div>
     </div>

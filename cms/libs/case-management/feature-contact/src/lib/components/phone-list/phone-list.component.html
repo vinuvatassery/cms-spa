@@ -122,7 +122,7 @@
                 <button kendoButton  [hidden]="(clientPhone.isDeleted === true && (dataItem.buttonName==='deactivate' || dataItem.buttonName ==='preferred'))
                 ||(clientPhone.preferredFlag === 'Y' && dataItem.buttonName ==='preferred') ||(hasPhoneDeletePermission === false && dataItem.buttonName ==='delete')" 
                 look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" 
-                (click)="dataItem.click(clientPhone?.clientPhoneId)" [disabled]="(isReadOnly$ | async) ? true : false">
+                (click)="dataItem.click(clientPhone)" [disabled]="(isReadOnly$ | async) ? true : false">
                   <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                   <label>   {{ dataItem.text }} </label>
               </button> 
@@ -184,7 +184,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np"
 >
   <kendo-dialog-titlebar>{{
-    isEditPhoneNumber ? 'Edit Phone Number' : 'Add Phone Number'
+    isEditPhoneNumber ? 'Edit Phone Number' : isDeactivateFlag ? 'Deactivate and Add Phone Number' : 'Add Phone Number'
   }}</kendo-dialog-titlebar>
   <case-management-phone-detail
     [isEditValue]="isEditPhoneNumber"
@@ -194,20 +194,17 @@
     (loadDeviceTypeLovEvent)="loadDeviceTypeLovHandle()" 
     (deactivateClientPhoneEvent)="onDeactivatePhoneNumberClicked($event)"
     (formClientPhoneCloseEvent)="onPhoneNumberDetailClosed()"
+    [deactivateFlag]="isDeactivateFlag"
+    (deactivateandAddClientPhoneEvent)="phoneDeactivateandAddNewPhoneHandle($event)"
   ></case-management-phone-detail>
 </kendo-dialog>
 
-<!-- Address Deactivate Popup-->
-<kendo-dialog
-  *ngIf="isDeactivatePhoneNumberPopup"
-  (close)="onDeactivatePhoneNumberClosed()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Deactivate phone number?"
->
-  <case-management-deactivate-phone-confirmation
-  (deactivateConfimEvent)="handleAcceptPhoneDeactivate($event)"></case-management-deactivate-phone-confirmation>
+<!-- Contact Deactivate Popup-->
+<kendo-dialog *ngIf="isDeactivatePhoneNumberPopup" (close)="onDeactivatePhoneNumberClosed()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np" title="Deactivate phone number?">
+  <case-management-deactivate-phone-confirmation (deactivateConfimEvent)="handleAcceptPhoneDeactivate($event)">
+</case-management-deactivate-phone-confirmation>
 </kendo-dialog>
-
 
 <!-- Delete Modal -->
 <kendo-dialog

@@ -48,6 +48,7 @@ export class ContactFacade {
   private clientPhonesSubject = new Subject<any>();
   private clientPhoneSubject = new Subject<any>();
   private addClientPhoneSubject = new Subject<any>();
+  private deactivateAndAddClientPhoneSubject = new Subject<any>();
   private preferredClientPhoneSubject = new Subject<any>();
   private deactivateClientPhoneSubject = new Subject<any>();
   private removeClientPhoneSubject = new Subject<any>();
@@ -89,6 +90,7 @@ export class ContactFacade {
   deactivateClientPhone$ = this.deactivateClientPhoneSubject.asObservable();
   removeClientPhone$ = this.removeClientPhoneSubject.asObservable();
   paperless$ = this.paperlessSubject.asObservable();
+  deactivateAndAddClientPhone$ = this.deactivateAndAddClientPhoneSubject.asObservable();
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' ';
@@ -109,7 +111,7 @@ export class ContactFacade {
     private readonly snackbarService: NotificationSnackbarService,
     private readonly zipCodeFacade: ZipCodeFacade,
     private configurationProvider: ConfigurationProvider
-  ) {}
+  ) { }
 
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -419,7 +421,7 @@ export class ContactFacade {
       .loadClientPaperLessStatus(clientId, clientCaseEligibilityId)
       .subscribe({
         next: (clientEmailReponse: any) => {
-          if (clientEmailReponse) {            
+          if (clientEmailReponse) {
             this.hideLoader();
             this.paperlessSubject.next(clientEmailReponse);
           }
@@ -588,7 +590,7 @@ export class ContactFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
-  } 
+  }
 
   addClientPhone(phoneData: any) {
     this.showLoader();
@@ -680,5 +682,25 @@ export class ContactFacade {
   deleteClientContact(clientId:any,clientRelationshipId:any){
     return this.contactDataService.deleteClientContact(clientId,clientRelationshipId);
   }
+  deactivateAndAddClientPhone(phoneData: any) {
+    this.showLoader();
+    return this.contactDataService.deactivateAndAddClientPhone(phoneData).subscribe({
+      next: (response) => {
+        this.deactivateAndAddClientPhoneSubject.next(response);
+        if (response === true) {
+          this.hideLoader();
+          const message = 'Phone Data Added Successfully';
+          this.snackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            message
+          );
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
+
   //#endregion client phone//NOSONAR
 }
