@@ -2,7 +2,8 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit,Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 /** Internal Libraries **/
-import { VerificationFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, VerificationFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 
@@ -28,7 +29,10 @@ export class HivVerificationComponent implements OnInit {
   clientHivVerificationId!:string;
   removeHivVerification$ = this.verificationFacade.removeHivVerification$;
   private saveForLaterValidationSubscription !: Subscription;
-  constructor(private readonly cd: ChangeDetectorRef, private verificationFacade: VerificationFacade,private readonly lovFacade: LovFacade,private workflowFacade: WorkflowFacade,){
+  constructor(private readonly cd: ChangeDetectorRef, 
+    private verificationFacade: VerificationFacade,
+    private readonly lovFacade: LovFacade,
+    private readonly workflowFacade: WorkflowFacade){
 
   }
   ngOnInit(): void {
@@ -40,6 +44,7 @@ export class HivVerificationComponent implements OnInit {
     this.removeHivVerification$.subscribe(response=>{
       if(response && this.clientId!=0){
         this.verificationFacade.showAttachmentOptions.next(true);
+        this.updateVerificationCount(false);
         this.onHivRemoveConfirmationClosed();
         this.cd.detectChanges();
       }
@@ -49,9 +54,10 @@ export class HivVerificationComponent implements OnInit {
   }
   providerChange(event:any){
     if(this.hivVerificationForm.controls["providerOption"].value=="UPLOAD_ATTACHMENT")
-    {
+    {      
       this.verificationFacade.showHideAttachment.next(true);
     }
+
     this.verificationFacade.providerValueChange(this.hivVerificationForm.controls["providerOption"].value);
     this.cd.detectChanges();
   }
@@ -63,6 +69,7 @@ export class HivVerificationComponent implements OnInit {
     this.hivVerificationForm.controls["providerOption"].setValue("");
     this.verificationFacade.showHideAttachment.next(false);
     this.cd.detectChanges();
+    this.updateVerificationCount(false);
   }
   onHivRemoveConfirmationOpen(clientHivVerificationId:string) {
     if(clientHivVerificationId && clientHivVerificationId != ""){
@@ -80,5 +87,14 @@ export class HivVerificationComponent implements OnInit {
         this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
     });
+  }
+
+  private updateVerificationCount(isCompleted: boolean) {
+    const workFlowData: CompletionChecklist[] = [{
+      dataPointName: 'verificationMethod',
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowData);
   }
 }
