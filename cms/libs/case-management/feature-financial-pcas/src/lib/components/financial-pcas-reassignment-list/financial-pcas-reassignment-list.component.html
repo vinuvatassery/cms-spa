@@ -18,6 +18,7 @@
             <kendo-floatinglabel text="Search">
                   <kendo-textbox aria-label="Search case" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
                   [(ngModel)]="searchValue"
+                  [clearButton]="true"
                   (afterValueChanged)="onPcaReassignmentSearch($event)">
                   </kendo-textbox>
 
