@@ -117,19 +117,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
    return  [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claim',
-      icon: 'edit',
-      click: (data: any, paymentRequestId :any): void => {
-        if (!this.isAddEditClaimMoreClose) {
-          this.isAddEditClaimMoreClose = true;
-          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog,paymentRequestId);
-        }
-       
-      } 
-      
-    },
-    {
-      buttonType: 'btn-h-primary',
       text: 'Unbatch Claim',
       icon: 'undo',
       disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
@@ -142,18 +129,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
         }
       }
-       
-      }      
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Reverse claim',
-      icon: 'fast_rewind',
-      click: (data: any): void => {
-        if (!this.reverseClaimsDialogClosed) {
-          this.reverseClaimsDialogClosed = true;
-          this.onReverseClaimsOpenClicked(this.reverseClaimsDialogTemplate);
-        }
        
       }      
     },
@@ -188,6 +163,19 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
 
       
     },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Claim',
+      icon: 'edit',
+      click: (data: any, paymentRequestId :any): void => {
+        if (!this.isAddEditClaimMoreClose) {
+          this.isAddEditClaimMoreClose = true;
+          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog,paymentRequestId);
+        }
+       
+      } 
+      
+    }
   ]
 }
   @Input() pageSizes: any;
@@ -337,7 +325,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
     this.batchLogGridLists$.subscribe((res:any)=>{
-      if(res.data.length==0 && res.data.filter == null)
+      if(!res.data || res.data.length==0)
       {
         this.route.navigate(['/financial-management/pharmacy-claims'] );       
       }
