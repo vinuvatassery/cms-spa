@@ -1265,9 +1265,11 @@ duplicatePaymentObject:any = {};
       this.addClaimServicesForm.controls.forEach((element, index) => {
           totalServiceCost += + element.get('amountDue')?.value;
       });
-      this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index,
-        this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim, this.clientCaseEligibilityId
-        ,this.paymentRequestId);
+      if(totalServiceCost>0){
+        this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId, index,
+          this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim, this.clientCaseEligibilityId
+          ,this.paymentRequestId);
+      }
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }
@@ -1339,7 +1341,9 @@ duplicatePaymentObject:any = {};
         let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
         let startDate = serviceFormData.controls['serviceStartDate'].value;
         let endDate = serviceFormData.controls['serviceEndDate'].value;
-        this.checkIneligibleEception(startDate, endDate, index);
+        if(startDate && endDate){
+          this.checkIneligibleEception(startDate, endDate, index);
+        }
       });
     }
     this.addClaimServicesForm.controls.forEach((element, index) => {
