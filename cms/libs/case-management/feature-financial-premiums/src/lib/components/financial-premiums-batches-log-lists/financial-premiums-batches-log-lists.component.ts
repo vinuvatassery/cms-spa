@@ -293,12 +293,6 @@ export class FinancialPremiumsBatchesLogListsComponent
         })
      
     })
-
-    this.paymentBatchName$.subscribe(res =>{
-      if(!res){
-         this.backToBatch(null);
-      }
-    })
   }
 
   onEditPremiumsClick(premiumId: string,vendorId:any,clientId:any,clientName:any,paymentRequestId:any){
