@@ -9,7 +9,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, take } from 'rxjs';
-import { LovFacade,TinValidationFacade } from '@cms/system-config/domain';
+import { TinValidationFacade } from '@cms/system-config/domain';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 
