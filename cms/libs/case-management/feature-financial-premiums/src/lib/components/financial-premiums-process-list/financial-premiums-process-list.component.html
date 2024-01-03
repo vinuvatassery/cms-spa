@@ -12,7 +12,7 @@
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)"  aria-label="Search case" rounded="medium"
+      <kendo-textbox [(ngModel)]="searchValue" [clearButton]="true" (afterValueChanged)="onChange($event)"  aria-label="Search case" rounded="medium"
       [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
