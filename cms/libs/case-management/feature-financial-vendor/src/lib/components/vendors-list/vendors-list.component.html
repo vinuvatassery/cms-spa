@@ -101,8 +101,8 @@
       *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-          [extra]="false" operator="eq">
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          [extra]="false" operator="contains">
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
@@ -111,8 +111,8 @@
       *ngIf="vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-          [extra]="false" operator="eq">
-          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          [extra]="false" operator="contains">
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
