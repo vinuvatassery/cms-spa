@@ -953,7 +953,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   onRowSelection(grid:any, selection:any)
     {
       this.warrantCalculationArray=[];
-      const data = selection.selectedRows[0].dataItem;    
+      const data = selection.dataItem;    
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
       let warrantTotal=0; 

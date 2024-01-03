@@ -32,7 +32,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
-  PrintAuthorizationDialog!: TemplateRef<any>;
+  PrintAuthorizationDialog!: TemplateRef<any>; 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   providerDetailsDialog: any;
@@ -885,8 +885,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
     onRowSelection(grid:any, selection:any)
     {
-     this.warrantCalculationArray=[];
-      const data = selection.selectedRows[0].dataItem;    
+      this.warrantCalculationArray=[];
+      const data = selection.dataItem;    
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
       let warrantTotal=0; 

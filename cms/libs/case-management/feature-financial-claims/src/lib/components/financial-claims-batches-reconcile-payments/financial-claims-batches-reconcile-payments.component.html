@@ -134,7 +134,7 @@
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (filterChange)="filterChange($event)"
                         [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [selectable]="true" filterable="menu" [filter]="state.filter"
                         [data]="reconcilePaymentGridPagedResult" 
-                        (selectionChange)="onRowSelection(grid, $event)">
+                        (cellClick)="onRowSelection(grid, $event)">
                        
                         <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
                               <ng-template kendoGridCellTemplate let-dataItem>
