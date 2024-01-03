@@ -27,6 +27,9 @@ export class PcaAssignmentsFacade {
     private pcaDatesDataSubject = new Subject<any>();
     pcaDatesData$ = this.pcaDatesDataSubject.asObservable();
 
+    private pcaDatesVaidationSubject = new Subject<any>();
+    pcaDatesValidation$ = this.pcaDatesVaidationSubject.asObservable();
+
     private assignPcaResponseDataSubject = new Subject<any>();
     assignPcaResponseData$ = this.assignPcaResponseDataSubject.asObservable();
 
@@ -145,10 +148,24 @@ export class PcaAssignmentsFacade {
     });  
   } 
 
-  loadPcaDates(){
-    this.pcaAssignmentsDataService.loadPcaDates().subscribe({
+  loadPcaDates(assignmentId :any = null){
+    this.pcaAssignmentsDataService.loadPcaDates(assignmentId).subscribe({
       next: (dataResponse) => {
         this.pcaDatesDataSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.hideLoader(); 
+      },
+    });  
+  }
+  
+  validatePcaDates(pcaAssignmentId:any, pcaAssignmentDates:any){
+    this.showLoader();
+    this.pcaAssignmentsDataService.validatePcaDates(pcaAssignmentId,pcaAssignmentDates).subscribe({
+      next: (dataResponse) => {
+        this.pcaDatesVaidationSubject.next(dataResponse);
         this.hideLoader();
       },
       error: (err) => {
