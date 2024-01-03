@@ -438,7 +438,20 @@
 }
 
 @media (max-width: $breakpoint-md) {
-
+ 
+  .sendrequest-fieldwithbtn{
+  
+   .k-textbox{
+    padding-right: 1rem;
+   }
+    .overlay-send-button{
+      position: relative !important;
+      top: auto !important;
+      right: auto !important;
+      margin: 5px 0px;
+    }
+  }
+  
   .client-header-wrapper-stickey {
     position: unset;
   }

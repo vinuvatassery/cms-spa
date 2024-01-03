@@ -1,8 +1,9 @@
 <section [formGroup]="hivVerificationForm">
   <div *ngIf="!isSendRequest">
-    <div class="flex-row "
-      [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
-      <div class="flex-col flex-col-6" *ngIf="isEmailFieldVisible">
+    <div   
+     >
+      <div class="verificaton_email"  [ngClass]="{'sendrequest-fieldwithbtn' : (providerValue$ | async) === 'HEALTHCARE_PROVIDER'} ">
+        <div  *ngIf="isEmailFieldVisible">
         <kendo-floatinglabel text="Healthcare Provider’s Email Address">
           <kendo-textbox aria-label="healthcare providers email address"
             placeholder="Healthcare Provider’s Email Address" [fillMode]="formUiStyle.inputFillMode"
@@ -17,12 +18,14 @@
           Provider Email Address is required.</kendo-formerror>
       </div>
       <div *ngIf="providerOption === 'CASE_MANAGER' || providerOption === 'HEALTHCARE_PROVIDER'"
-        class="mt-2 flex-col flex-col-5">
-        <button kendoButton [primary]="true" class="overlap_right_btn" (click)="onSendRequestClicked()"
-          *ngIf="!isSendRequest" aria-label="send request">
-          Send request
-        </button>
-      </div>
+      class="overlay-send-button">
+      <button kendoButton [primary]="true"   (click)="onSendRequestClicked()"
+        *ngIf="!isSendRequest" aria-label="send request">
+        Send request
+      </button>
+    </div>
+    </div>
+    
     </div>
     <div class="flex-row ">
       <div class="flex-col flex-col-8">
