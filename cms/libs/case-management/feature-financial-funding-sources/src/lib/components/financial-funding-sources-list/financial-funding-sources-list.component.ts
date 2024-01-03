@@ -80,10 +80,6 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
       columnName: "fundingSourceCode",
       columnDesc: "Funding Source"
     },
-    {
-      columnName: "fundingDesc",
-      columnDesc: "Funding Name"
-    },
   ]
   gridFinancialFundingSourcesDataSubject = new Subject<any>();
 
