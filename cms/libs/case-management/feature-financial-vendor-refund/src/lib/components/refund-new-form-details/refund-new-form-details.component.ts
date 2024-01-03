@@ -90,6 +90,10 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
 
   clientSearchLoaderVisibility$ =
   this.financialVendorRefundFacade.clientSearchLoaderVisibility$;
+
+  medicalProviderSearchLoaderVisibility$ =
+  this.financialVendorRefundFacade.medicalProviderSearchLoaderVisibility$;
+
   clientSearchResult$ = this.financialVendorRefundFacade.clients$;
   pharmacySearchResult$ = this.financialVendorRefundFacade.pharmacies$;
   existingRxRefundClaim$ = this.financialVendorRefundFacade.existingRxRefundClaim$;
@@ -225,7 +229,7 @@ if(this.isEdit){
       this.selectedVendor = vendors && vendors[0]
       this.vendorId = vendors[0].vendorId
       this.initForm()
-    })
+          })
   this.debouncedtpaVendors(this.vendorName)
 
   this.financialVendorRefundFacade.tpaVendorsSubject.next([this.selectedVendor])
@@ -243,7 +247,7 @@ if(this.isEdit){
   subscribeLoadRefundClaimDataForRx(){
     this.pharmacySearchResult$.subscribe((res:any)=>{
       this.pharmaciesList = res;
-      const vendors = res.filter((x:any) =>{
+            const vendors = res.filter((x:any) =>{
         return x.vendorAddressId ==  this.vendorAddressId
       })
       this.selectedVendor = vendors && vendors[0]
@@ -558,7 +562,7 @@ addTpa(event:any){
     if (!searchText || searchText.length == 0) {
       return;
     }
-    this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
+        this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
     this.vendorAddressId=null;
