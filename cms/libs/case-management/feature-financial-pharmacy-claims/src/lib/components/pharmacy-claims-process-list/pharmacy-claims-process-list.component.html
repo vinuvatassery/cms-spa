@@ -24,6 +24,7 @@
       rounded="medium"
       [fillMode]="formUiStyle.inputFillMode"
       [(ngModel)]="searchText"
+      [clearButton]="true"
       (afterValueChanged)="onSearch($event)"> </kendo-textbox>
 
     </kendo-floatinglabel>
