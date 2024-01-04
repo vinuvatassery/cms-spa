@@ -24,10 +24,10 @@ aria-label="Funding"
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
-  <span class="filter-section_items filter--search">
+  <span class="filter-section_items filter--search no-export">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox aria-label="Search case" rounded="medium" [(ngModel)]="searchText" (afterValueChanged)="onFundSearch($event)" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
+      <kendo-textbox aria-label="Search case" rounded="medium"  [clearButton]="true"   [(ngModel)]="searchText" (afterValueChanged)="onFundSearch($event)" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
   </span>

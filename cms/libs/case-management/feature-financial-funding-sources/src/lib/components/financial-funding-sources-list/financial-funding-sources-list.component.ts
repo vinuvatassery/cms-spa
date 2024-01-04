@@ -80,10 +80,6 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
       columnName: "fundingSourceCode",
       columnDesc: "Funding Source"
     },
-    {
-      columnName: "fundingDesc",
-      columnDesc: "Funding Name"
-    },
   ]
   gridFinancialFundingSourcesDataSubject = new Subject<any>();
 
@@ -219,7 +215,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
 
   performFundSearch(data: any) {
     this.defaultGridState();
-    const operator = 'startswith';
+    const operator = 'contains';
 
     this.filterData = {
       logic: 'and',

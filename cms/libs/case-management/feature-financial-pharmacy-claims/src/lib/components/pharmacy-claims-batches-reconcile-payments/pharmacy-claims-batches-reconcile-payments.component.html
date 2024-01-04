@@ -130,11 +130,11 @@
                   
                   <div class="app-c-table mb-1">
                         <kendo-grid [resizable]="true" [loading]="isReconcileGridLoaderShow" [pageSize]="state.take" #grid
-                        [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" 
+                        [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false"  
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (filterChange)="filterChange($event)"
                         [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [selectable]="true" filterable="menu" [filter]="state.filter"
-                        [data]="reconcilePaymentGridPagedResult" 
-                        (selectionChange)="onRowSelection(grid, $event)">
+                        [data]="reconcilePaymentGridPagedResult"  
+                        (cellClick)="onRowSelection(grid, $event)">
                        
                         <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
                               <ng-template kendoGridCellTemplate let-dataItem>

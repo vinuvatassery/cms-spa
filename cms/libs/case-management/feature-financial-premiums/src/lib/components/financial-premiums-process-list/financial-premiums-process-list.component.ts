@@ -111,10 +111,6 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       columnDesc: 'Client Name',
     },
     {
-      columnCode: 'insuranceName',
-      columnDesc: 'Name on Primary Insurance Card',
-    },
-    {
       columnCode: 'clientId',
       columnDesc: 'Client ID',
     },
@@ -123,39 +119,11 @@ export class FinancialPremiumsProcessListComponent implements  OnChanges, OnDest
       columnDesc: 'Insurance Vendor',
     },
     {
-      columnCode: 'premiumAmount',
-      columnDesc: 'Premium Amount',
-    },
-
-
-    {
-      columnCode: 'planName',
-      columnDesc: 'Plan Name',
-    },
-    {
-      columnCode: 'insuranceType',
-      columnDesc: 'Insurance Type',
-    },
-    {
-      columnCode: 'paymentMethod',
-      columnDesc: 'Payment Method',
-    },
-    {
       columnCode: 'policyId',
       columnDesc: 'Policy ID',
     },
-    {
-      columnCode: 'groupId',
-      columnDesc: 'Group ID',
-    },
-    {
-      columnCode: 'paymentId',
-      columnDesc: 'Payment ID',
-    },
-    {
-      columnCode: 'paymentStatus',
-      columnDesc: 'Payment Status',
-    },
+   
+   
   ];
 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -303,10 +271,6 @@ healthInsuranceValue ='';
   premiumGridlistDataHandle() {
     this.financialPremiumsProcessGridLists$.subscribe((data: any) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
       this.gridFinancialPremiumsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
@@ -480,7 +444,7 @@ healthInsuranceValue ='';
 
   onChange(data: any) {
     this.defaultGridState();
-    let operator = 'startswith';
+    let operator = 'contains';
 
     if (
       this.selectedColumn === 'clientId' ||
@@ -489,7 +453,7 @@ healthInsuranceValue ='';
       this.selectedColumn === 'groupId' ||
       this.selectedColumn === 'paymentId'
     ) {
-      operator = 'contains';
+      operator = 'eq';
     }
 
     this.filterData = {
@@ -551,7 +515,6 @@ healthInsuranceValue ='';
     }
     else {
       this.filter = '';
-      this.columnName = '';
       this.isFiltered = false;
     }
     this.state = stateData;
@@ -577,7 +540,6 @@ healthInsuranceValue ='';
     }
     else {
       this.filter = "";
-      this.columnName = "";
       this.isFiltered = false;
     }
   }
@@ -1015,5 +977,8 @@ if(!this.selectAll && this.isSendReportOpened){
     });
     this.gridLoaderSubject.next(false);
   }
-  
+  searchColumnChangeHandler(data:any){
+    this.searchValue = '';
+    this.onChange(data)
+  }
 }

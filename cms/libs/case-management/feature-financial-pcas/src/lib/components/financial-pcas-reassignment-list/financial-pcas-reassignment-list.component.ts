@@ -539,12 +539,11 @@ export class FinancialPcasReassignmentListComponent
 
   searchColumnChangeHandler(value: string) {
     if (this.searchValue) {
-      this.onChange(value);
+      this.onChange(this.searchValue);
     }
   }
   onPcaReassignmentSearch(searchValue: any) {
     const isDateSearch = searchValue.includes('/');
-    searchValue = this.formatSearchValue(searchValue, isDateSearch);
     this.onChange(searchValue);
   }
 

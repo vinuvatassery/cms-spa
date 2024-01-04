@@ -630,6 +630,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
    return formattedDate;
   }
   loadClientBySearchText(text : string): void {
+    this.clientSearchLoaderVisibilitySubject.next(true);
     if(text){
       this.financialClaimsDataService.loadClientBySearchText(text).subscribe({
 

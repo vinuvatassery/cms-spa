@@ -10,10 +10,10 @@
             <div class="flex-row">
                 <div class="flex-col flex-col-6">
                     <div class="combotable_search_list new_refund_Search">
-                        <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>
-                        <span *ngIf="isShownSearchLoader"
-                            class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
+                        <span class="material-icons global-search-icon" aria-label="search" aria-hidden="true">search</span>
+                        <span *ngIf="clientSearchLoaderVisibility$ | async"
+                            class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+                        </span>
                         <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField='clientNames'
                         valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
                         placeholder="Search Client Name, ID, SSN"
@@ -67,10 +67,12 @@
                         <div class="combotable_search_list new_refund_Search">  
                             <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>                         
-                                  <span *ngIf="isShownSearchLoader"
+                            <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-
-                                      <kendo-multicolumncombobox [data]="insurancevendors$ | async" textField="providerFullName"
+                                    <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
+                                        class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+                                    </span>
+<kendo-multicolumncombobox [data]="insurancevendors$ | async" textField="providerFullName"
                                       valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
                                       (filterChange)="onInputChange($event)"
                                        placeholder="Search Vendor name or TIN"
@@ -116,11 +118,12 @@
                         <div class="combotable_search_list new_refund_Search">  
                             <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>                         
-                                  <span *ngIf="isShownSearchLoader"
-                                      class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                                      <kendo-multicolumncombobox [data]="tpavendors$ | async"
+                            <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
+                                class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+                            </span>
+                                      <kendo-multicolumncombobox [data]="tpavendors$ | async" 
                                       textField="providerFullName"
-                                      valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
+                                                                   valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
                                       placeholder="Search Vendor Name, ID"
                                       [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                       [filterable]="true"
@@ -165,9 +168,13 @@
                     <div class="combotable_search_list new_refund_Search">
                         <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>
-                        <span></span>
+                       
+                            <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
+                            class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+                        </span>
                     <kendo-multicolumncombobox textField="providerFullName"
                     valueField="vendorAddressId"
+                   
                     [fillMode]="formUiStyle.dropDownFillMode"
                     placeholder="Search Pharmacy name or TIN"
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
