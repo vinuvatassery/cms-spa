@@ -16,9 +16,7 @@ import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, Policy
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
-import {
-  CompositeFilterDescriptor, filterBy
-} from '@progress/kendo-data-query';
+import {CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { BatchPremium } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-premium';
 import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
 @Component({
