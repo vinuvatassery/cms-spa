@@ -214,10 +214,11 @@ export class DrugPharmacyFacade {
     });
   }
 
-  addClientPharmacy(clientId: number, vendorId: string,isShowHistoricalData?:boolean) {
+  addClientPharmacy(clientId: number, vendorId: string,vendorAddressId:string,isShowHistoricalData?:boolean) {
   
     const model = {
-      vendorId: vendorId ,   
+      vendorId: vendorId ,
+      VendorAddressId:vendorAddressId, 
       IsUpdatePriorityCode:false  
     };
 
@@ -241,9 +242,10 @@ export class DrugPharmacyFacade {
     });
   }
 
-  editClientPharmacy(clientId: number, clientPharmacyId: string, vendorId?: string) {
+  editClientPharmacy(clientId: number, clientPharmacyId: string, vendorId?: string,vendorAddressId?:string) {
     const model = {
-      vendorId: vendorId     
+      vendorId: vendorId,
+      vendorAddressId:vendorAddressId     
     };
     this.loaderService.show();
     return this.drugDataService.editClientPharmacy(clientId, clientPharmacyId, model).subscribe({
@@ -290,10 +292,11 @@ export class DrugPharmacyFacade {
     
   }
  
-  addDrugPharmacy(clientId: number, vendorId: string,priorityCode?:string,isShowHistoricalData?:boolean) {
+  addDrugPharmacy(clientId: number, vendorId: string,vendorAddressId:string,priorityCode?:string,isShowHistoricalData?:boolean) {
    return new Promise((resolve,reject) =>{
     const model = {
       vendorId: vendorId,
+      vendorAddressId:vendorAddressId,
       PriorityCode:priorityCode,   
       IsUpdatePriorityCode:priorityCode != "" ? true : false
     };
