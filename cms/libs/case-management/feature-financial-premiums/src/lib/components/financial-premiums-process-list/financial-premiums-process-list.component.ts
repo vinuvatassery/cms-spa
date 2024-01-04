@@ -276,9 +276,13 @@ healthInsuranceValue ='';
         this.gridLoaderSubject.next(false);
       }
       this.financialPremiumsProcessGridLists = this.gridDataResult?.data;
+      if(this.isSendReportOpened === false){
+        this.recordCountWhenSelectallClicked = 0;
+        this.totalGridRecordsCount = 0;
+      }
       if(this.recordCountWhenSelectallClicked == 0){
-        this.recordCountWhenSelectallClicked = this.gridDataResult?.acceptsCombinedPaymentsCount;
-        this.totalGridRecordsCount = this.gridDataResult?.acceptsCombinedPaymentsCount;
+        this.recordCountWhenSelectallClicked = this.gridDataResult?.acceptsReportsQueryCount;
+        this.totalGridRecordsCount = this.gridDataResult?.acceptsReportsQueryCount;
       }
       if(!this.selectAll)
       {
@@ -661,6 +665,7 @@ healthInsuranceValue ='';
     this.selectAll = false;
     this.recordCountWhenSelectallClicked = 0;
     this.sendReportCount = 0;
+    this.totalGridRecordsCount = 0;
     this.loadFinancialPremiumsProcessListGrid();
   }
 
@@ -696,6 +701,7 @@ closeRecentPremiumsModal(result: any){
 
   getSelectedReportCount(selectedSendReportList : []){
     this.sendReportCount = selectedSendReportList.length;
+    this.cdr.detectChanges();
   }
 
   selectionChange(dataItem:any, selected:boolean){
