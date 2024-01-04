@@ -75,7 +75,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   }
 
   setDefaultOpenandCloseDate(){
-    var date = new Date();
+    let date = new Date();
     let monthFistDay = new Date(date.getFullYear(), date.getMonth(), 1);
     this.monthFistDay = monthFistDay.getFullYear() + "-" + monthFistDay.getMonth()+1 + "-01T00:00:00";
 
