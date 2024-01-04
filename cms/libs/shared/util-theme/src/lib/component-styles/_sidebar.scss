@@ -272,7 +272,7 @@ cms-sidenav {
       padding: $size-xlg1;
       max-width: 250px;
       transition: .3s;
-      z-index: 0;
+      z-index: 101;
 
       .menu_search_header {
         margin-top: 1rem;
