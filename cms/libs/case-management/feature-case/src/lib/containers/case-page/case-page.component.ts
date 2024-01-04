@@ -44,7 +44,10 @@ export class CasePageComponent implements OnInit {
   sortValue  = this.caseFacade.sortValue;
   sortType  = this.caseFacade.sortType;
   sort  = this.caseFacade.sort;
-
+  public state: { skip: number; take: number } = {
+    skip: 0,
+    take: 10,
+  };
   /** Constructor**/
 
     constructor(private readonly router: Router,
@@ -134,7 +137,7 @@ export class CasePageComponent implements OnInit {
 
   handleSearchTextChange(text : string)
   {
-    this.caseFacade.loadCaseBySearchText(text);
+    this.caseFacade.loadCaseBySearchText(text,this.state.skip,this.state.take);
   }
 
   loadCasesListEventHandler(gridDataRefinerValue : any)

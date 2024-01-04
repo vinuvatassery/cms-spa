@@ -44,9 +44,9 @@ export class SearchFacade {
     this.hideLoader();   
   }
 
-  loadCaseBySearchText(text : string): void {
+  loadCaseBySearchText(text : string,skip: number,take :number): void {
     if(text){
-      this.caseDataService.loadCaseBySearchText(text).subscribe({
+      this.caseDataService.loadCaseBySearchText(text,skip,take).subscribe({
       
         next: (caseBySearchTextResponse) => {
           this.clientSearchSubject.next(caseBySearchTextResponse);

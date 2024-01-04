@@ -9,7 +9,9 @@ class="global-search header-search field-label-hide combotable_search_list" [ngC
     <span *ngIf="showHeaderSearchInputLoader" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
     <kendo-label text="Search Case Name, Member ID or SSN">
   <kendo-multicolumncombobox
-    [data]="clientSearchResult$  | async"
+
+  #dropdownlist
+    [data]="data"
     textField="clientFullName"
     valueField="clientId"
     [loading] = "showHeaderSearchInputLoader"
@@ -19,7 +21,11 @@ class="global-search header-search field-label-hide combotable_search_list" [ngC
     [filterable]="true"
     (filterChange)="onSearchTextChange($event)"
     (selectionChange)="onSelectChange($event)"
-    formControlName="itemSelected"> 
+    formControlName="itemSelected"
+    [virtual]="virtual"
+    (opened)="onDropDownListOpen()"
+    (closed)="onDropDownListClose()"
+    > 
     <button kendoButton fillMode="clear" icon="image"></button>   
 
     <kendo-combobox-column>

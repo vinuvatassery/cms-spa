@@ -392,8 +392,8 @@ export class CaseFacade {
     }
 }
 
-  loadCaseBySearchText(text: string): void {
-    this.caseDataService.loadCaseBySearchText(text).subscribe({
+  loadCaseBySearchText(text: string,skip:number,take:number): void {
+    this.caseDataService.loadCaseBySearchText(text,skip,take).subscribe({
       next: (caseBySearchTextResponse) => {
         this.caseSearchedSubject.next(caseBySearchTextResponse);
       },

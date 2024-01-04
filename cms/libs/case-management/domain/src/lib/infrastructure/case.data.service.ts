@@ -226,10 +226,10 @@ export class CaseDataService {
     ]);
   }
 
-  loadCaseBySearchText(text: string) {
+  loadCaseBySearchText(text: string,skip: number,take :number) {
     return this.http.get<ClientCase[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clients/SearchText=${text}`
+      `/case-management/clients/SearchText=${text}?SkipCount=${skip}&MaxResultCount=${take}`
     );
 
   }

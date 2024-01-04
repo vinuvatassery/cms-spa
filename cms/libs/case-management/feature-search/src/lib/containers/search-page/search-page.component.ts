@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, AfterViewInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder } from '@angular/forms';
 /** Facades **/
@@ -7,7 +7,13 @@ import { SearchFacade, CaseStatusCode, CaseFacade} from '@cms/case-management/do
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { groupBy } from "@progress/kendo-data-query";
-import {  debounceTime, distinctUntilChanged, Subject } from 'rxjs';
+import {  BehaviorSubject, debounceTime, distinctUntilChanged, Subject, Subscription, switchMap } from 'rxjs';
+import {
+  DropDownListComponent,
+  MultiSelectComponent,
+  VirtualizationSettings,
+} from "@progress/kendo-angular-dropdowns";
+import { ClientCase } from 'libs/case-management/domain/src/lib/entities/client-case';
 export interface VendorList {
   id: number;
   title: string;
@@ -19,96 +25,7 @@ export interface VendorList {
 }
 
 
-export const vendorList: VendorList[] =  [
-  {
-    id: 1,
-    title: "Mod Health",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-  {
-    id: 2,
-    title: "Mod Health",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-  {
-    id: 21,
-    title: "Mod Health",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-  {
-    id: 22,
-    title: "Mod Health",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-  {
-    id: 3,
-    title: "Mods Insurance",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-  {
-    id: 4,
-    title: "Mods Insurance",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-  {
-    id: 5,
-    title: "Mods Insurance",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-  {
-    id: 6,
-    title: "Mods Insurance",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-  {
-    id: 7,
-    title: "Vendor Name",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-  {
-    id: 8,
-    title: "Vendor Name",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-  {
-    id: 9,
-    title: "Vendor Name",
-    address: "xxx, 55 Main St",
-    city: "Portland",
-    state: "OR",
-    zip: "97205",
-  },
-];
+export const vendorList: VendorList[] =  [];
 
 @Component({
   selector: 'case-management-search-page',
@@ -119,7 +36,8 @@ export const vendorList: VendorList[] =  [
 export class SearchPageComponent implements OnInit, AfterViewInit {
   /** Public properties **/
   showHeaderSearchInputLoader = false;
-  clientSearchResult$ = this.searchFacade.clientSearch$;;
+  clientSearchResult$ = this.searchFacade.clientSearch$;
+  data: ClientCase[] = [];
   mobileHeaderSearchOpen = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   filterManager: Subject<string> = new Subject<string>();
@@ -129,6 +47,22 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   searchHeaderType$ = this.searchHeaderTypeSubject.asObservable()
 
   vendorList: any[] = groupBy(vendorList, [{ field: "title" }]);
+  pageSize=20;
+  public virtual: VirtualizationSettings = {
+    itemHeight: 40,
+    pageSize: 5,
+    total:0||0
+  };
+  public state: { skip: number; take: number } = {
+    skip: 0,
+    take: 20,
+  };
+  private stateChange = new BehaviorSubject<any>(this.state);
+  private stateSubscription: Subscription;
+
+  @ViewChild("dropdownlist", { static: false })
+  public dropdownlist!: DropDownListComponent;
+  text: any = '';
   /** Constructor **/
   constructor(private readonly searchFacade: SearchFacade,private router: Router,
     private caseFacade: CaseFacade,
@@ -147,7 +81,18 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
       {
         if(text && text.length >=2)
         {
-          this.searchFacade.loadCaseBySearchText(text);
+          this.text = text;
+          const take = this.virtual.total || 0; // Use 0 if this.virtual.total is undefined
+
+        
+            let takedata=0;
+            if(take>this.state.take){
+              takedata=take-this.state.take
+            }else{
+              takedata=this.state.take-take
+            }
+            
+          this.searchFacade.loadCaseBySearchText(text,this.state.skip,this.pageSize);
           this.showHeaderSearchInputLoader = false;
  
         }
@@ -155,13 +100,35 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
  
     );
   this.showHeaderSearchInputLoader = false;
+
+   this.stateSubscription = this.stateChange
+      .subscribe((state: any) => {  
+          console.log(state);
+          this.state = state;
+          
+          let take = this.virtual.total || 0; // Use 0 if this.virtual.total is undefined
+          let takedata=0;
+              if(take>this.state.take){
+                takedata=take-this.state.take
+              }else{
+                takedata=this.state.take-take
+              }
+          this.showHeaderSearchInputLoader = true;
+          if(this.text.length >=2)
+       
+          this.searchFacade.loadCaseBySearchText(this.text,this.state.skip,this.pageSize);
+
+      });
   }
 
   /** Lifecycle hooks **/
   ngOnInit() {
     this.buildForm();
-      this.clientSearchResult$.subscribe(data=>{
+      this.clientSearchResult$.subscribe((data: any)=>{
+        this.data = data.items;
+        this.virtual.total=data.totalCount;
       this.showHeaderSearchInputLoader = false;
+      this.cdRef.detectChanges();
     }) 
 
   }
@@ -182,6 +149,27 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
          this.cdRef.detectChanges();
       }
     });    
+  }
+
+  public ngOnDestroy(): void {
+    this.stateSubscription.unsubscribe();
+  }
+
+  public onDropDownListOpen(): void {    
+    this.dropdownlist.optionsList.pageChange.subscribe((state) =>{
+      
+      console.log('onDropDownListOpen :'+state)
+      this.stateChange.next(state)
+    }
+    
+      
+    );
+  }
+  public onDropDownListClose(): void {
+    
+    // optionsList is a reference to the internal kendo-list component used in the DropDownList popup
+    // pass the current state to the stateChange BehaviorSubject on each pageChange event
+    console.log('onDropDownListClose')
   }
 
   clickMobileHeaderSearchOpen(){
