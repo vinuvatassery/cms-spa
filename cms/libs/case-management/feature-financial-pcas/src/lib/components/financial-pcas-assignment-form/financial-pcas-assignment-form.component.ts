@@ -55,16 +55,18 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   remainingAmountValidate = false
   originalRemainingBalance =0
   openDateAfterCloseDate= false;
+  monthFistDay: any;
+  monthLastDay: any;
   constructor(  
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
     public intl: IntlService
   ) {}  
-  ngOnInit(): void {   
+  ngOnInit(): void {  
     this.formSubmitted = false
     this.loadPcaEvent.emit()
     this.getPcaInfoData()
-
+    this.setDefaultOpenandCloseDate();
     if(this.newForm === true)
     {
       
@@ -72,6 +74,14 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     }
   }
 
+  setDefaultOpenandCloseDate(){
+    var date = new Date();
+    let monthFistDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    this.monthFistDay = monthFistDay.getFullYear() + "-" + monthFistDay.getMonth()+1 + "-01T00:00:00";
+
+    let lastDay = new Date(monthFistDay.getFullYear(), date.getMonth()+1, 0).getDate();
+    this.monthLastDay = date.getFullYear() + "-" + date.getMonth()+1 + "-" +lastDay +"T00:00:00";
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     
