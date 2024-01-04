@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
-import { ClientInsurancePlans, InsurancePremiumCoverage, FinancialClaimsFacade, InsurancePremium, PolicyPremiumCoverage, ObjectCode } from '@cms/case-management/domain';
+import { ClientInsurancePlans, InsurancePremiumCoverage, FinancialClaimsFacade, InsurancePremium, PolicyPremiumCoverage, ObjectCode, PremiumCoverageDates } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { RowArgs } from '@progress/kendo-angular-grid';
-import { IntlService } from '@progress/kendo-angular-intl';
+import { DatePipe, IntlService } from '@progress/kendo-angular-intl';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-premiums-add-details-form',
   templateUrl: './financial-premiums-add-details-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DatePipe]
 })
 export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestroy {
   @ViewChild('pcaExceptionDialogTemplate', { read: TemplateRef })
@@ -84,7 +85,8 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private datePipe: DatePipe) {
   }
 
   /* Life cycle events */
@@ -164,7 +166,7 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
       return;
     }
 
-    if(this.hasException){
+    if (this.hasException) {
       this.savePremiums(selectedPlans);
       return;
     }
@@ -195,18 +197,32 @@ export class FinancialPremiumsAddDetailsFormComponent implements OnInit, OnDestr
     }
 
     const newCoverageId = `${plan.coverages.length + 1}`;
-    const newCoverage = {
+    const newCoverage: InsurancePremiumCoverage = {
       id: newCoverageId,
       comment: '',
       commentCount: '0/100',
       exceptionReason: '',
       exceptionReasonCount: '0/150',
-      premiumAmount: plan?.premiumAmt ?? 0
+      premiumAmount: plan?.premiumAmt ?? 0,
+      premiumCoverageDateList: this.getPremiumCoverageDates(plan.startDate, plan.endDate, plan.eligibilityEndDate)
     };
 
     plan.coverages.push(newCoverage);
     this.showPremiumRequiredValidation = false;
     this.makeAutoPlanSelection(plan);
+  }
+
+  private getPremiumCoverageDates(startDate: Date, endDate: Date, eligibilityEndDate: Date) {
+    let coverageDate: PremiumCoverageDates[] = [];
+    let firstDayOfMonth = new Date(startDate);
+    endDate =  new Date(endDate ? endDate : eligibilityEndDate);
+    do {
+      const lastDayOfMonth = new Date(firstDayOfMonth.getFullYear(), firstDayOfMonth.getMonth() + 1, 0);
+      coverageDate.push({ coverageStartDate: this.datePipe.transform(firstDayOfMonth, 'yyyy-MM-ddTHH:mm:ss'), coverageDate: `${this.datePipe.transform(firstDayOfMonth, 'MM/dd/yyyy')} - ${this.datePipe.transform(lastDayOfMonth, 'MM/dd/yyyy')}` })
+      firstDayOfMonth = new Date(lastDayOfMonth.setDate(lastDayOfMonth.getDate() + 1));
+    } while (firstDayOfMonth < endDate);
+
+    return coverageDate;
   }
 
   onMakeExceptionClick(coverage: InsurancePremiumCoverage) {
