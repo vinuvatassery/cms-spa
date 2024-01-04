@@ -3,15 +3,7 @@
     <div class="app-c-table">
       <kendo-grid [data]="employment$ | async"  [loading]="isGridLoaderShow" #employersGrid [pageSize]="state.take" [pageable]="true"
         [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
-             <!-- grid column filter template -->
-        <ng-template kendoGridColumnMenuTemplate let-service="service">
-          <span class="k-icon k-i-x" (click)="service.close()"
-            style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
-          <kendo-grid-columnmenu-sort [service]="service">
-          </kendo-grid-columnmenu-sort>
-          <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>        
-        </ng-template>
+        [columnMenu]="{ filter: false }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
         <!-- Column started -->
         <kendo-grid-column field="employerName" title="Name of Employer">
         </kendo-grid-column>
@@ -25,7 +17,7 @@
             {{dataItem.dateOfHire | date: 'MM/dd/yyyy'}} {{dataItem.endDate ? '-' : ''}} {{dataItem.endDate | date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By"  [columnMenu]="false" [width]="70" class="text-center" [sortable]="false">
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center" [filterable]="filterable" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -87,16 +79,16 @@
             </div>
           </div>
         </ng-template>
-       <!-- grid Loader Template -->  
+       <!-- grid Loader Template -->
        <ng-template kendoGridLoadingTemplate>
         <common-grid-loader-component></common-grid-loader-component>
        </ng-template>
-       <!-- grid No data Template -->  
+       <!-- grid No data Template -->
        <ng-template kendoGridNoRecordsTemplate>
          <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
          </div>
          <p>There is no data to display.</p>
-       </ng-template> 
+       </ng-template>
       </kendo-grid>
     </div>
     <kendo-formerror *ngIf="!isEmployerAvailable"> <span class="material-icons"> error </span> A Response is required.</kendo-formerror>
