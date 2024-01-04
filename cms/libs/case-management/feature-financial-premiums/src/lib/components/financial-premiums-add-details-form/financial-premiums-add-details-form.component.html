@@ -82,13 +82,21 @@
                                   />                                 
                             </ng-template>
                         </kendo-grid-column>
+                        <kendo-grid-column field="insuranceId" title="Insurance ID" [width]="150">
+                        </kendo-grid-column>
                         <kendo-grid-column field="vendorName" title="Vendor" [width]="180">
                         </kendo-grid-column>
-                        <kendo-grid-column field="carrierName" title="Insurance Carrier" [width]="160">
+                        <kendo-grid-column field="carrierName" title="Insurance Carrier" [width]="150">
                         </kendo-grid-column>
-                        <kendo-grid-column field="insurancePlanName" title="Plan Name" [width]="180">
+                        <kendo-grid-column field="insurancePlanName" title="Plan Name" [width]="250">
                         </kendo-grid-column>
                         <kendo-grid-column field="healthInsuranceType" title="Insurance Type" [width]="160">
+                        </kendo-grid-column>
+                        <kendo-grid-column field="startDate" title="Coverage Period" [width]="160">
+                            <ng-template kendoGridCellTemplate let-dataItem>
+                              <span>{{ dataItem.startDate | date : 'MM/dd/yyyy' }}</span>  
+                              <span *ngIf="dataItem.endDate"> - {{ dataItem.endDate | date : 'MM/dd/yyyy' }}</span>  
+                              </ng-template>
                         </kendo-grid-column>
                         <kendo-grid-column field="" title="Option" [columnMenu]="false" [width]="80" class="text-center" >
                             <ng-template kendoGridCellTemplate let-dataItem>
@@ -122,7 +130,7 @@
                                 <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">   
                                     <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
                                         placeholder="Coverage Date"
-                                        [data]="coverageDateList"
+                                        [data]="dataItem.premiumCoverageDateList"
                                         textField="coverageDate" 
                                         valueField="coverageStartDate" 
                                         [valuePrimitive]="true"

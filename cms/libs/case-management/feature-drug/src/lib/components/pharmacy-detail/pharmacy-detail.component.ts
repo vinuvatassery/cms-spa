@@ -31,8 +31,8 @@ export class PharmacyDetailComponent implements OnInit {
   /** Output properties  **/
   @Output() closePharmacyEvent = new EventEmitter();
   @Output() searchPharmacyEvent = new EventEmitter<string>();
-  @Output() addPharmacyEvent = new EventEmitter<string>();
-  @Output() editPharmacyEvent = new EventEmitter<string>();
+  @Output() addPharmacyEvent = new EventEmitter<any>();
+  @Output() editPharmacyEvent = new EventEmitter<any>();
   @Output() removePharmacyEvent = new EventEmitter<string>();
   @Output() setAsPrimaryEvent = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -41,8 +41,9 @@ export class PharmacyDetailComponent implements OnInit {
   isSetAsPrimary = false;
   filteredSelectedPharmacy!: any;
   pharmacyForm!: FormGroup;
-  selectedPharmacyForEdit!: string;
+  selectedPharmacyForEdit!: any;
   selectedPharmacyId!: string | null;
+  vendorAddressId:any;
   showSelectPharmacyRequired = false;
   btnDisabled = false;
   medicalProviderForm: FormGroup;
@@ -76,15 +77,19 @@ export class PharmacyDetailComponent implements OnInit {
 
 
   addOrEditPharmacy() {
+    let pharmacyDetailObj = {
+      vendorId:this.selectedPharmacyId,
+      VendorAddressId:this.vendorAddressId
+    }
     if (this.selectedPharmacyId) {
       this.btnDisabled = true
       if (this.isEditPharmacy) {
 
-        this.editPharmacyEvent.emit(this.selectedPharmacyId ?? '');
+        this.editPharmacyEvent.emit(pharmacyDetailObj ?? {});
       }
       else {
         this.setAsPrimaryEvent.emit(this.isSetAsPrimary);
-        this.addPharmacyEvent.emit(this.selectedPharmacyId ?? '');
+        this.addPharmacyEvent.emit(pharmacyDetailObj ?? {});
 
       }
     }
@@ -110,6 +115,7 @@ export class PharmacyDetailComponent implements OnInit {
   onSearchTemplateClick(pharmacy: Pharmacy) {
     if (pharmacy.vendorId) {
       this.selectedPharmacyId = pharmacy.vendorId;
+      this.vendorAddressId = pharmacy?.vendorAddressId;
       this.showSelectPharmacyRequired = false;
     }
     else {

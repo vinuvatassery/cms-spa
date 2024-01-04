@@ -353,9 +353,9 @@
   <kendo-splitbutton  [data]="premiumsProcessMore" *ngIf="!isBatchPremiumsClicked && !isRemoveBatchClosed && !isSendReportOpened"
     class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
-    <div class="btn-inner-block" (click)="onSplitBatchPremiumsClicked()" aria-label="Batch Premium">
-      <span class="material-icons" aria-label="New Premiums" aria-hidden="true">check</span>
-      Batch Premiums
+    <div class="btn-inner-block" (click)="onClickOpenAddPremiumsFromModal()" aria-label="Add Premium">
+      <span class="material-icons" aria-label="New Premiums" aria-hidden="true">add</span>
+      ADD PREMIUMS
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"

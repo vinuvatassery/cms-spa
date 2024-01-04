@@ -94,6 +94,7 @@
                                     aria-label="date"
                                     [valuePrimitive]="true"
                                     formControlName="openDate"
+                                    [(ngModel)]="monthFistDay"
                                     (valueChange)="openDateValidate()">
             
                                     </kendo-dropdownlist>
@@ -122,6 +123,7 @@
                                     aria-label="date"
                                     [valuePrimitive]="true"
                                     formControlName="closeDate"
+                                    [(ngModel)] = monthLastDay
                                     (valueChange)="closeDateValidate()">
             
                                     </kendo-dropdownlist>
