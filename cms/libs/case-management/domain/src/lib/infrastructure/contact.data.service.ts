@@ -348,7 +348,7 @@ export class ContactDataService {
   deactivateAndAddClientPhone(phoneData: any) {
     phoneData.clientPhoneId = '00000000-0000-0000-0000-000000000000'
     return this.http.put(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones/deactivateAndAddPhone`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones/deactivate-and-add`,
       phoneData
     )
   }

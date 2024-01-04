@@ -685,11 +685,11 @@ export class ContactFacade {
   deactivateAndAddClientPhone(phoneData: any) {
     this.showLoader();
     return this.contactDataService.deactivateAndAddClientPhone(phoneData).subscribe({
-      next: (response) => {
+      next: (response:any) => {
         this.deactivateAndAddClientPhoneSubject.next(response);
-        if (response === true) {
+        if (response.status) {
           this.hideLoader();
-          const message = 'Phone Data Added Successfully';
+          const message = response.message;
           this.snackbarService.manageSnackBar(
             SnackBarNotificationType.SUCCESS,
             message
