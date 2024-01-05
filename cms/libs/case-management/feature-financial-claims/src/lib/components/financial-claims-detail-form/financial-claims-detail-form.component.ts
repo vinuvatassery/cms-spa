@@ -416,6 +416,12 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
   searchcptcode(cptcode: any, index: number) {
     if (!cptcode || cptcode.length == 0) {
+      if (this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.value === ExceptionTypeCode.BridgeUpp)
+      {
+        this.addExceptionForm.at(index).get('bridgeUppExceptionFlag')?.setValue(false);
+        this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.setValue('')
+        this.addClaimServicesForm.at(index).get('exceptionFlag')?.setValue(StatusFlag.No)
+      }
       return;
     }
     let ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
@@ -574,8 +580,8 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
   isAmountDueValid(index: any) {
     let control = this.addClaimServicesForm.at(index) as FormGroup;
-    if(control.controls['amountDue']?.value 
-    && control.controls['serviceCost']?.value 
+    if(control.controls['amountDue']?.value
+    && control.controls['serviceCost']?.value
     && (control.controls['amountDue']?.value ?? 0) > (control.controls['serviceCost']?.value ?? 0)){
       control.get('amountDue')?.setErrors({invalid : true});
       return true;
@@ -1272,13 +1278,13 @@ duplicatePaymentObject:any = {};
     const serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     const data = {
       invoiceId: this.claimForm.value?.invoiceId,
-      clientId: this.claimForm.value?.client.clientId, 
+      clientId: this.claimForm.value?.client.clientId,
       startDate: this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat ),
-      endDate: this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ), 
+      endDate: this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ),
       vendorId: this.claimForm.value?.medicalProvider?.vendorId,
       totalAmountDue:serviceFormData.controls['amountDue'].value,
-      paymentRequestId :this.duplicatePaymentFlagPaymentRequestId, 
-      indexNumber: index, 
+      paymentRequestId :this.duplicatePaymentFlagPaymentRequestId,
+      indexNumber: index,
       typeCode : this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim
     };
 
@@ -1322,8 +1328,38 @@ duplicatePaymentObject:any = {};
   }
   onAmountDueChange(index:any)
   {
+    const amountDue = this.addClaimServicesForm.at(index).get('amountDue')?.value;
+    if(!amountDue)
+    {
+      this.removeAmountDueRelatedClaimFlags(index);
+      return;
+    }
     this.loadServiceCostMethod(index);
   }
+
+  removeAmountDueRelatedClaimFlags(index : any)
+  {
+    if (this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.value === ExceptionTypeCode.DuplicatePayment)
+    {
+      this.duplicatePaymentObject = {}
+      this.showDuplicatePaymentHighlightSubject.next(false);
+      this.addExceptionForm.at(index).get('duplicatePaymentExceptionFlag')?.setValue(false);
+      this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.setValue('')
+      this.addClaimServicesForm.at(index).get('exceptionFlag')?.setValue(StatusFlag.No)
+      this.checkOldInvoiceException(index);
+      this.checkBridgeUppEception(index);
+    }
+
+    if (this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.value === ExceptionTypeCode.ExceedMaxBenefits)
+    {
+      this.addExceptionForm.at(index).get('exceedMaxBenefitExceptionFlag')?.setValue(false);
+      this.addClaimServicesForm.at(index).get('exceptionTypeCode')?.setValue('');
+      this.addClaimServicesForm.at(index).get('exceptionFlag')?.setValue(StatusFlag.No);
+      this.checkOldInvoiceException(index);
+      this.checkBridgeUppEception(index);
+    }
+  }
+
   ngOnDestroy(): void {
     this.showExceedMaxBenefitSubscription.unsubscribe();
     this.showIneligibleSubscription.unsubscribe();
