@@ -43,17 +43,7 @@
           </button>
         </span>
       </section>
-      <div class="table-sorted-info">
-        <span class="app-c-badge badge-warn-light" aria-label="search-warning"
-          *ngIf="showDateSearchWarning">
-          <span class="material-icons" aria-label="search-warning" aria-hidden="true">
-            warning
-          </span>
-          <span *ngIf="showDateSearchWarning">
-            The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
-          </span>
-        </span>
-      </div>
+
       <!-- Sorted Info -->
       <div class="table-sorted-info">
         Sorted {{sortDir}} by <span class="sort-items">  {{sortColumn}} </span>
@@ -222,7 +212,7 @@
           <kendo-grid-column field="Option" title="Options"  [columnMenu]="false" [width]="70"
             class="text-center">
             <ng-template kendoGridCellTemplate let-dataItem>
-              <kendo-dropdownbutton [data]="batchLogGridActions(dataItem)" 
+              <kendo-dropdownbutton [data]="batchLogGridActions(dataItem)"
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                 aria-label="more actions" title="More option"
                 [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -386,4 +376,3 @@
       (modalCloseEditPremiumsFormModal)="modalCloseEditPremiumsFormModal($event)"
         (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-edit-detail-form>
   </ng-template>
-  
