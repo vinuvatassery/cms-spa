@@ -35,19 +35,6 @@
   </span>
 </section>
 </div>
-<div class="table-sorted-info">
-  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">
-        <span class="material-icons" aria-label="search-warning" aria-hidden="true">
-              warning
-        </span>
-        <span *ngIf="showDateSearchWarning">
-              The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
-        </span>
-        <span *ngIf="showNumberSearchWarning">
-             {{numberSearchColumnName}} allow only numbers.
-        </span>
-  </span>
-</div>
 
 <div class="table-sorted-info">
   Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>

@@ -26,21 +26,6 @@
   </span>
 </section>
 
-<div class="table-sorted-info">
-  <span class="app-c-badge badge-warn-light" aria-label="search-warning"
-    *ngIf="showDateSearchWarning || showNumberSearchWarning">
-    <span class="material-icons" aria-label="search-warning" aria-hidden="true">
-      warning
-    </span>
-    <span *ngIf="showDateSearchWarning">
-      The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
-    </span>
-    <span *ngIf="showNumberSearchWarning">
-      Item # / Item Count / Total Amount / PCA # allow only numbers.
-    </span>
-  </span>
-</div>
-
 <!-- Sorted Info -->
 <div class="table-sorted-info">
   Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
@@ -235,7 +220,7 @@
     <kendo-grid-column field="Option" title="Options" [sticky]="true" [columnMenu]="false" [width]="70" class="text-center"
       [sortable]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="batchLogGridActions(dataItem)" 
+        <kendo-dropdownbutton [data]="batchLogGridActions(dataItem)"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -288,7 +273,7 @@
 </div>
 
 
- 
+
 <div class="bottom-fixed-wrapper text-right flex-gap">
   <span *ngIf="previewText" class="">{{selectedCount}} premium(s) to be previewed</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"

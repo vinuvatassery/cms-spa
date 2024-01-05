@@ -6,11 +6,11 @@
     <section class="table-filter-section mat-form-no-b-space">
       <span class="filter-section_items filter--select">
         <kendo-floatinglabel>
-          <kendo-dropdownlist 
-          aria-label="All Columns" 
+          <kendo-dropdownlist
+          aria-label="All Columns"
           [fillMode]="formUiStyle.dropDownFillMode"
-          textField="columnDesc" 
-          valueField="columnName" 
+          textField="columnDesc"
+          valueField="columnName"
           [data]="searchColumnList"
           [valuePrimitive]="true"
           [(ngModel)]="selectedSearchColumn"
@@ -21,41 +21,25 @@
       <span class="filter-section_items filter--search">
         <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
         <kendo-floatinglabel text="Search">
-          <kendo-textbox 
-          aria-label="Search case" 
+          <kendo-textbox
+          aria-label="Search case"
           rounded="medium"
           [fillMode]="formUiStyle.inputFillMode"
           [(ngModel)]="searchText"
           (afterValueChanged)="onSearch($event)"> </kendo-textbox>
-    
+
         </kendo-floatinglabel>
       </span>
       <span class="right-overlay-export">
         <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onExportPayments()"  [disabled]="showExportLoader">
-          <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>         
-          
+          <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>
+
           <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
         </button>
       </span>
     </section>
 
-    <div class="table-sorted-info">
-      <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">       
-            <span class="material-icons" aria-label="search-warning" aria-hidden="true">
-                  warning
-            </span>
-            <span *ngIf="searchText.includes('/')">
-              The '/' symbol can only be used with a date.
-            </span>
-            <span *ngIf="showDateSearchWarning">
-                 The date format should be [MM/DD/YYYY].
-            </span>
-            <span *ngIf="showNumberSearchWarning">
-              Item/Item Count/Total Amount/Warrant/PCA  allow only numbers.
-            </span>
-      </span>   
-    </div>
-    
+
     <!-- Sorted Info -->
     <div class="table-sorted-info">
       Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
@@ -68,20 +52,20 @@
       </button>
     </div>
     <div class="app-c-table">
-      <kendo-grid 
-      [resizable]="true" 
-      [loading]="(paymentBatchLoader$ | async) ?? false" 
+      <kendo-grid
+      [resizable]="true"
+      [loading]="(paymentBatchLoader$ | async) ?? false"
       [pageSize]="state.take"
-      [pageable]="true" 
-      [sortable]="true" 
-      [skip]="state.skip" 
-      [groupable]="false" 
+      [pageable]="true"
+      [sortable]="true"
+      [skip]="state.skip"
+      [groupable]="false"
       [reorderable]="true"
-      [resizable]="true" 
-      [columnMenu]="{ filter: true }" 
-      [sort]="state.sort" 
+      [resizable]="true"
+      [columnMenu]="{ filter: true }"
+      [sort]="state.sort"
       [filter]="state.filter"
-      [navigable]="true" 
+      [navigable]="true"
       [data]="paymentBatchesGridView$ | async"
       (filterChange)="filterChange($event)"
       (dataStateChange)="dataStateChange($event)"
@@ -100,7 +84,7 @@
              </kendo-grid-numeric-filter-menu>
          </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="itemCount" title="Item Count" [width]="140"> 
+        <kendo-grid-column field="itemCount" title="Item Count" [width]="140">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq"  format="0">
                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -111,10 +95,10 @@
             </kendo-grid-numeric-filter-menu>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="totalAmount" title="Total Amount" [width]="140"> 
+        <kendo-grid-column field="totalAmount" title="Total Amount" [width]="140">
           <ng-template kendoGridCellTemplate let-dataItem>
             <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount | kendoNumber: 'n2'}}</span>
-          </ng-template> 
+          </ng-template>
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="true" operator="eq">
                   <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -153,11 +137,11 @@
         </kendo-grid-column>
         <kendo-grid-column field="paymentStatusCode" title="Pmt. Status" [width]="120">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-dropdownlist 
-            [data]="batchStatusLov" 
+            <kendo-dropdownlist
+            [data]="batchStatusLov"
             textField="lovDesc"
-            valueField="lovCode" 
-            [value]="paymentStatusFilter" 
+            valueField="lovCode"
+            [value]="paymentStatusFilter"
             [valuePrimitive]="true"
             (valueChange)="dropdownFilterChange('paymentStatusCode',$event, filterService)">
           </kendo-dropdownlist>
@@ -166,7 +150,7 @@
         <kendo-grid-column field="paymentReconciledDate" title="Date Pmt. Reconciled" [width]="160">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.paymentReconciledDate | date:'MM/dd/yyyy' }}
-          </ng-template> 
+          </ng-template>
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <common-grid-cell-date-range-filter
               [field]="'paymentReconciledDate'"
@@ -175,14 +159,14 @@
             </common-grid-cell-date-range-filter>
       </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="warrantNumber" title="Warrant #" [width]="120"> 
+        <kendo-grid-column field="warrantNumber" title="Warrant #" [width]="120">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
              </kendo-grid-numeric-filter-menu>
          </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="pcaCode" title="PCA" [width]="100"> 
+        <kendo-grid-column field="pcaCode" title="PCA" [width]="100">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-grid-numeric-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq" format="0">
                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
@@ -201,7 +185,7 @@
                         showOn="hover"
                         [attr.aria-label]="dataItem.creatorId"
                       >
-                      <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
+                      <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
                       </button>
                       <kendo-popover
                         #onUserProfileDetailsHovered
@@ -217,7 +201,7 @@
         <div *kendoGridDetailTemplate="let dataItem">
           <cms-financial-payment-sub-list [batchId]="dataItem.batchId"></cms-financial-payment-sub-list>
         </div>
-        
+
         <!-- grid Pagination template -->
 
         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
@@ -230,7 +214,7 @@
               [(value)]="state.take" (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'"  [pagerPage]="'Page'"> </kendo-grid-messages>
-  
+
           </div>
           <div class="d-flex">
             <kendo-pager-input></kendo-pager-input>
