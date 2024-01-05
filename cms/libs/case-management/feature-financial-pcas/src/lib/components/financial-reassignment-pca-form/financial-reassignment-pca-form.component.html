@@ -139,7 +139,7 @@
                               class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required && formSubmitted">
+                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required &&pcaCodeInfo !=null">
                         Amount is required
                   </kendo-formerror>   
             </div>
