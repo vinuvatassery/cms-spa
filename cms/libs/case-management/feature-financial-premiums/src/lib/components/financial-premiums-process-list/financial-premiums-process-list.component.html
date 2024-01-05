@@ -74,7 +74,7 @@
                  (change)="selectionAllChange()" kendoCheckBox />
          </ng-template>
          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex rowIndex>
-                <input *ngIf="dataItem.acceptsCombinedPaymentsFlag === 'Y'"
+                <input *ngIf="dataItem.acceptsReportsFlag === 'Y'"
                  type="checkbox"
                  [(ngModel)]="dataItem.selected"
                  (change)="selectionChange(dataItem,dataItem.selected)" kendoCheckBox />

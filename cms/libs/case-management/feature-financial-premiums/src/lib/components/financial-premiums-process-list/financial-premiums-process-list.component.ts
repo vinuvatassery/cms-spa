@@ -16,9 +16,7 @@ import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, Policy
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
-import {
-  CompositeFilterDescriptor, filterBy
-} from '@progress/kendo-data-query';
+import {CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { BatchPremium } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-premium';
 import { Observable, Subject, BehaviorSubject, Subscription } from 'rxjs';
 @Component({
@@ -276,9 +274,13 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
         this.gridLoaderSubject.next(false);
       }
       this.financialPremiumsProcessGridLists = this.gridDataResult?.data;
-      if (this.recordCountWhenSelectallClicked == 0) {
-        this.recordCountWhenSelectallClicked = this.gridDataResult?.acceptsCombinedPaymentsCount;
-        this.totalGridRecordsCount = this.gridDataResult?.acceptsCombinedPaymentsCount;
+      if(this.isSendReportOpened === false){
+        this.recordCountWhenSelectallClicked = 0;
+        this.totalGridRecordsCount = 0;
+      }
+      if(this.recordCountWhenSelectallClicked == 0){
+        this.recordCountWhenSelectallClicked = this.gridDataResult?.acceptsReportsQueryCount;
+        this.totalGridRecordsCount = this.gridDataResult?.acceptsReportsQueryCount;
       }
       if (!this.selectAll) {
         this.financialPremiumsProcessGridLists.forEach((item1: any) => {
@@ -663,6 +665,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     this.selectAll = false;
     this.recordCountWhenSelectallClicked = 0;
     this.sendReportCount = 0;
+    this.totalGridRecordsCount = 0;
     this.loadFinancialPremiumsProcessListGrid();
   }
 
@@ -698,6 +701,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
 
   getSelectedReportCount(selectedSendReportList: []) {
     this.sendReportCount = selectedSendReportList.length;
+    this.cdr.detectChanges();
   }
 
   selectionChange(dataItem: any, selected: boolean) {
