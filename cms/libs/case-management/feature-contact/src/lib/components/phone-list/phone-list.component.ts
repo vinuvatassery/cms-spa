@@ -31,6 +31,7 @@ export class PhoneListComponent implements OnChanges {
   @Input() preferredClientPhone$: any;
   @Input() deactivateClientPhone$: any;
   @Input() removeClientPhone$: any;
+  @Input() deactivateAndAddClientPhone$: any;
 
   @Output() loadClientPhonesListEvent = new EventEmitter<any>();
   @Output() addClientPhoneEvent = new EventEmitter<any>();
@@ -40,10 +41,11 @@ export class PhoneListComponent implements OnChanges {
   @Output() deactivateClientPhoneEvent = new EventEmitter<any>();
   @Output() removeClientPhoneEvent = new EventEmitter<any>();
   @Output() reloadEmailsEvent = new EventEmitter();
-
+  @Output() deactivateAndAddClientPhone = new EventEmitter<any>();
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isEditPhoneNumber!: boolean;
+  isDeactivateFlag = false;
   isPhoneNumberDetailPopup = false;
   isDeactivatePhoneNumberPopup = false;
   deletebuttonEmitted = false;
@@ -72,11 +74,11 @@ export class PhoneListComponent implements OnChanges {
       text: 'Edit Phone Number',
       buttonName: 'edit',
       icon: 'edit',
-      click: (clientPhoneId: string): void => {
+      click: (clientPhone: any): void => {
         if (!this.editbuttonEmitted) {
           this.selectedclientPhoneId = '';
           this.editbuttonEmitted = true;
-          this.onPhoneNumberDetailClicked(true, clientPhoneId);
+          this.onPhoneNumberDetailClicked(true, clientPhone.clientPhoneId);
         }
       },
     },
@@ -85,11 +87,11 @@ export class PhoneListComponent implements OnChanges {
       text: 'Make Preferred',
       icon: 'star',
       buttonName: 'preferred',
-      click: (clientPhoneId: string): void => {
+      click: (clientPhone: any): void => {
         if (!this.preferredButtonEmitted) {
           this.selectedclientPhoneId = '';
           this.preferredButtonEmitted = true;
-          this.onPreferredPhoneClicked(clientPhoneId);
+          this.onPreferredPhoneClicked(clientPhone.clientPhoneId);
         }
       },
     },
@@ -98,11 +100,11 @@ export class PhoneListComponent implements OnChanges {
       text: 'Deactivate Phone',
       icon: 'block',
       buttonName: 'deactivate',
-      click: (clientPhoneId: string): void => {
+      click: (clientPhone: any): void => {
         if (!this.activateButtonEmitted) {
           this.selectedclientPhoneId = '';
           this.activateButtonEmitted = true;
-          this.onDeactivatePhoneNumberClicked(clientPhoneId);
+          this.onDeactivatePhoneNumberClicked(clientPhone);
         }
       },
     },
@@ -111,16 +113,16 @@ export class PhoneListComponent implements OnChanges {
       text: 'Delete Phone',
       icon: 'delete',
       buttonName: 'delete',
-      click: (clientPhoneId: string): void => {
+      click: (clientPhone: any): void => {
         if (!this.deletebuttonEmitted) {
           this.deletebuttonEmitted = true;
-          this.onRemoveClick(clientPhoneId);
+          this.onRemoveClick(clientPhone.clientPhoneId);
         }
       },
     },
   ];
- /** Constructor**/
- constructor( 
+/** Constructor**/
+ constructor(
   private readonly userManage: UserManagementFacade,
   private caseFacade: CaseFacade
 ) {}
@@ -131,7 +133,6 @@ export class PhoneListComponent implements OnChanges {
       sort: this.sort,
     };
     this.loadClientPhonesList();
-    
     this.hasPhoneDeletePermission = this.userManage.hasPermission(["Client_Profile_Client_ContactInfo_Phone_Delete"]);
   }
   pageselectionchange(data: any) {
@@ -142,7 +143,7 @@ export class PhoneListComponent implements OnChanges {
   }
   /** Private methods **/
 
-  private loadClientPhonesList(): void {  
+  private loadClientPhonesList(): void {
     this.loadPhones(
       this.state.skip ?? 0,
       this.state.take ?? 0,
@@ -201,6 +202,7 @@ this.reloadEmailsEvent.emit();
     this.isPhoneNumberDetailPopup = false;
     this.isOpenedPhoneEdit = false;
     this.editformVisibleSubject.next(this.isOpenedPhoneEdit);
+    this.activateButtonEmitted = false;
   }
 
   onPhoneNumberDetailClicked(editValue: boolean, clientPhoneId: string) {
@@ -320,10 +322,15 @@ this.reloadEmailsEvent.emit();
     }
     this.onDeactivatePhoneNumberClosed();
   }
-  onDeactivatePhoneNumberClicked(clientPhoneId: string) {
-    this.isDeactivatePhoneNumberPopup = true;
-    this.selectedclientPhoneId = clientPhoneId;
-    this.onPhoneNumberDetailClosed();
+  onDeactivatePhoneNumberClicked(clientPhone: any) {
+    if (clientPhone.preferredFlag === "Y") {      
+      this.isDeactivateFlag = true;
+      this.onPhoneNumberDetailClicked(false, clientPhone.clientPhoneId);
+    }
+    else {
+      this.isDeactivatePhoneNumberPopup = true;
+      this.selectedclientPhoneId = clientPhone.clientPhoneId;
+    }
   }
 
   onhistorychkBoxChanged() {
@@ -338,4 +345,18 @@ this.reloadEmailsEvent.emit();
     );
     this.loader = true;
   }
+
+  phoneDeactivateandAddNewPhoneHandle(phoneData: any) {
+    this.deactivateAndAddClientPhone.emit(phoneData);
+    this.deactivateAndAddClientPhone$
+      .pipe(first((response: any) => response != null))
+      .subscribe((deleteResponse: any) => {
+        if (deleteResponse ?? false) {
+          this.onPhoneNumberDetailClosed();
+          this.loadClientPhonesList();
+        }
+      });
+
+  }
+
 }

@@ -15,13 +15,15 @@ export class PhoneDetailComponent implements OnInit {
   @Input() isEditValue!: boolean;
   @Input() lovClientPhoneDeviceType$ : any
   @Input() selectedPhoneData: any
+  @Input() deactivateFlag!: boolean;
   @Output() addClientPhoneEvent = new EventEmitter<any>();
-  @Output() loadDeviceTypeLovEvent = new EventEmitter<any>(); 
-  @Output() deactivateClientPhoneEvent = new EventEmitter<any>(); 
-  @Output() formClientPhoneCloseEvent = new EventEmitter<any>(); 
+  @Output() loadDeviceTypeLovEvent = new EventEmitter<any>();
+  @Output() deactivateClientPhoneEvent = new EventEmitter<any>();
+  @Output() formClientPhoneCloseEvent = new EventEmitter<any>();
+  @Output() deactivateandAddClientPhoneEvent = new EventEmitter<any>();
 
   /** Public properties **/
-  selectedclientPhoneId! : string
+  selectedclientPhoneId!: string
   ddlPhoneTypes$ = this.contactFacade.ddlPhoneTypes$;
   isDeactivateValue!: boolean;
   isDeactivatePhoneNumberPopup = true;
@@ -48,7 +50,6 @@ export class PhoneDetailComponent implements OnInit {
   private loadDdlPhoneType() {
     this.loadDeviceTypeLovEvent.emit();
   }
-  
   deviceTypeSelectionChange(codes : any)
   {
     if(codes?.lovCode==='OP')
@@ -81,64 +82,62 @@ export class PhoneDetailComponent implements OnInit {
         otherPhoneNote:['']      
       });     
 
-      if(this.isEditValue === true)
-      {
-        this.onSelectedPhoneFormLoad()
-      }
+    if(this.isEditValue === true)
+    {
+      this.onSelectedPhoneFormLoad()
+    }
   }
 
-  get f(){  
-    return this.clientPhoneForm.controls;  
-  }  
-  
-  onSelectedPhoneFormLoad()
-  {     
-    this.selectedclientPhoneId = this.selectedPhoneData?.clientPhoneId 
-    this.isDeleted = this.selectedPhoneData?.isDeleted 
+  get f(){
+    return this.clientPhoneForm.controls;
+  }
+  onSelectedPhoneFormLoad() {
+    this.selectedclientPhoneId = this.selectedPhoneData?.clientPhoneId
+    this.isDeleted = this.selectedPhoneData?.isDeleted
     this.incomeNoteWordCount(this.selectedPhoneData?.otherPhoneNote)
     this.clientPhoneForm.setValue(
-            {
-              clientPhoneId: this.selectedPhoneData?.clientPhoneId   ,
-              phoneNbr: this.selectedPhoneData?.phoneNbr   ,
-              detailMsgConsentFlag: this.getStatusFlag(this.selectedPhoneData?.detailMsgConsentFlag)   ,
-              deviceTypeCode: this.selectedPhoneData?.deviceTypeCode   ,
-              smsTextConsentFlag: this.getStatusFlag(this.selectedPhoneData?.smsTextConsentFlag)   ,       
-              preferredFlag: this.getStatusFlag(this.selectedPhoneData?.preferredFlag)   , 
-              otherPhoneNote: this.selectedPhoneData?.otherPhoneNote  
-            }) 
-            this.displayPhoneNote = (this.selectedPhoneData?.deviceTypeCode === 'OP')
+      {
+        clientPhoneId: this.selectedPhoneData?.clientPhoneId,
+        phoneNbr: this.selectedPhoneData?.phoneNbr,
+        detailMsgConsentFlag: this.getStatusFlag(this.selectedPhoneData?.detailMsgConsentFlag),
+        deviceTypeCode: this.selectedPhoneData?.deviceTypeCode,
+        smsTextConsentFlag: this.getStatusFlag(this.selectedPhoneData?.smsTextConsentFlag),
+        preferredFlag: this.getStatusFlag(this.selectedPhoneData?.preferredFlag),
+        otherPhoneNote: this.selectedPhoneData?.otherPhoneNote
+      })
+    this.displayPhoneNote = (this.selectedPhoneData?.deviceTypeCode === 'OP')
   }
 
   onclientPhoneFormSubmit()
-  {    
+  {
+    if (this.deactivateFlag)
+      return;
     this.isFormSubmitted =true;
-    if(this.displayPhoneNote && !this.clientPhoneForm?.controls["otherPhoneNote"].value)
-    {
+    if(this.displayPhoneNote && !this.clientPhoneForm?.controls["otherPhoneNote"].value) {
       this.otherNoteError = true;
     }
-    else
-    {
+    else {
       this.otherNoteError = false;
     }
 
-    if(this.clientPhoneForm.valid && !this.otherNoteError)
-       {    
-        this.btnDisabled = true;
-        const phoneData =
-        {         
-          clientPhoneId: this.clientPhoneForm?.controls["clientPhoneId"].value,
-          phoneNbr: this.clientPhoneForm?.controls["phoneNbr"].value   ,
-          detailMsgConsentFlag: this.getFlag(this.clientPhoneForm?.controls["detailMsgConsentFlag"].value)   ,
-          deviceTypeCode: this.clientPhoneForm?.controls["deviceTypeCode"].value   ,
-          smsTextConsentFlag: this.getFlag(this.clientPhoneForm?.controls["smsTextConsentFlag"].value) , 
-          preferredFlag: this.getFlag(this.clientPhoneForm?.controls["preferredFlag"].value),
-          otherPhoneNote : this.clientPhoneForm?.controls["otherPhoneNote"].value   ,
-        }    
-        this.addClientPhoneEvent.emit(phoneData);
-       }   
-   }
+    if (this.clientPhoneForm.valid && !this.otherNoteError)
+    {
+      this.btnDisabled = true;
+      const phoneData =
+      {
+        clientPhoneId: this.clientPhoneForm?.controls["clientPhoneId"].value,
+        phoneNbr: this.clientPhoneForm?.controls["phoneNbr"].value,
+        detailMsgConsentFlag: this.getFlag(this.clientPhoneForm?.controls["detailMsgConsentFlag"].value),
+        deviceTypeCode: this.clientPhoneForm?.controls["deviceTypeCode"].value,
+        smsTextConsentFlag: this.getFlag(this.clientPhoneForm?.controls["smsTextConsentFlag"].value),
+        preferredFlag: this.getFlag(this.clientPhoneForm?.controls["preferredFlag"].value),
+        otherPhoneNote: this.clientPhoneForm?.controls["otherPhoneNote"].value,
+      }
+      this.addClientPhoneEvent.emit(phoneData);
+    }
+  }
 
-   private getFlag(flag?: boolean) {
+  private getFlag(flag?: boolean) {
     return flag ? StatusFlag.Yes : StatusFlag.No;
   }
 
@@ -150,8 +149,35 @@ export class PhoneDetailComponent implements OnInit {
     this.noteCharachtersCount = event.length;
     this.noteCounter = `${this.noteCharachtersCount}/75`;
   }
-  private incomeNoteWordCount(note : string) {
+  private incomeNoteWordCount(note: string) {
     this.noteCharachtersCount = note ? note.length : 0;
     this.noteCounter = `${this.noteCharachtersCount}/75`;
   }
+
+  deactivateAndAdd() {
+    this.isFormSubmitted = true;
+    if (this.displayPhoneNote && !this.clientPhoneForm?.controls["otherPhoneNote"].value) {
+      this.otherNoteError = true;
+    }
+    else {
+      this.otherNoteError = false;
+    }
+
+    if (this.clientPhoneForm.valid && !this.otherNoteError) {
+      this.btnDisabled = true;
+      const phoneData =
+      {
+        previousClientPhoneId: this.selectedPhoneData.clientPhoneId,
+        clientPhoneId: this.clientPhoneForm?.controls["clientPhoneId"].value,
+        phoneNbr: this.clientPhoneForm?.controls["phoneNbr"].value,
+        detailMsgConsentFlag: this.getFlag(this.clientPhoneForm?.controls["detailMsgConsentFlag"].value),
+        deviceTypeCode: this.clientPhoneForm?.controls["deviceTypeCode"].value,
+        smsTextConsentFlag: this.getFlag(this.clientPhoneForm?.controls["smsTextConsentFlag"].value),
+        preferredFlag: 'Y',
+        otherPhoneNote: this.clientPhoneForm?.controls["otherPhoneNote"].value,
+      }
+      this.deactivateandAddClientPhoneEvent.emit(phoneData);
+    }
+  }
 }
+
