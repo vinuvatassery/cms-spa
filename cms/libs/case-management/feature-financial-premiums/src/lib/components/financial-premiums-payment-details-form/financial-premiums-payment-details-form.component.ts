@@ -169,7 +169,7 @@ validateModel(){
   this.premiumPaymentForm.controls['warrantNumber'].updateValueAndValidity();
   if (this.premiumPaymentForm.controls['datePaymentReconciled'].value === null ||
       this.premiumPaymentForm.controls['datePaymentReconciled'].value > this.currentDate) {
-    this.dateReconciledValidator = false;
+    this.dateReconciledValidator = true;
     this.premiumPaymentForm.controls['datePaymentReconciled'].setErrors({'incorrect': true});
    }
    if (this.premiumPaymentForm.controls['datePaymentSent'].value === null ||
