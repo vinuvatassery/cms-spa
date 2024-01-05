@@ -48,6 +48,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
   insuranceTypeListForPlan$ = this.lovFacade.insuranceTypelovForPlan$;
   loadCarrierSubject= this.vendorFacade.loadCarrierSubject;
+  isDentalPlan: boolean = false;
   constructor(private formBuilder: FormBuilder, private readonly lovFacade: LovFacade, private readonly insurancePlanFacade: InsurancePlanFacade,
     private changeDetector: ChangeDetectorRef, private readonly loggingService: LoggingService,
     private readonly loaderService: LoaderService,
@@ -110,6 +111,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
   ngOnInit(): void {
     this.loadInsuranceCarrierName(InsuranceStatusType.insurancePlanRequest);
     this.loadInsurancePlans();
+    this.lovFacade.getHealthInsuranceTypeLovsForPlan();
   }
 
   private loadInsuranceCarrierName(type: string) {
@@ -138,14 +140,13 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     const dto = {
       insuranceProviderId: formValues.insuranceCarrierName,
       insurancePlanName: formValues.insurancePlanName,
-      healthInsuranceTypeCode: formValues.insuranceType,
+      healthInsuranceTypeCode: (!this.isDentalPlan) ? formValues.insuranceType : null,
       startDate: formValues.startDate,
       termDate: formValues.termDate,
       canPayForMedicationFlag: formValues.canPayForMedicationFlag ? StatusFlag.Yes : StatusFlag.No,
       dentalPlanFlag: formValues.dentalPlanFlag ? StatusFlag.Yes : StatusFlag.No,
       activeFlag: hasCreateUpdatePermission ? StatusFlag.Yes : StatusFlag.No,
     };
-
     return dto;
   }
 
