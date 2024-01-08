@@ -205,16 +205,15 @@ export class ClientEligibilityPageComponent
               );
               if (ques)
                 ques.reviewQuestionResponseId = el.reviewQuestionResponseId;
-            });
-
+            });         
             this.showHideSnackBar(
               SnackBarNotificationType.SUCCESS,
               'Eligibility checklist save successfully'
-            );
-            this.loaderService.hide();
+            );       
             this.isSaveAndContinueAcceptance = !this.acceptedApplicationStatus;
             this.ref.detectChanges();
           }
+          this.loaderService.hide();
         },
         error: (error: any) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, error);
