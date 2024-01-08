@@ -93,7 +93,7 @@ export class HealthcareProviderDataService {
     {
       return this.http.post(
         `${this.configurationProvider.appSettings.caseApiUrl}`+
-        `/case-management/healthcare-providers/?clientId=${existProviderData?.clientId}&providerId=${existProviderData?.providerId}&selectedProviderId=${existProviderData?.selectedProviderId}&vendorAddressId=${existProviderData?.vendorAddressId}`,null
+        `/case-management/healthcare-providers/?clientId=${existProviderData?.clientId}&selectedVendorAddressId=${existProviderData?.selectedVendorAddressId}&vendorAddressId=${existProviderData?.vendorAddressId}`,null
       );
     }
   
