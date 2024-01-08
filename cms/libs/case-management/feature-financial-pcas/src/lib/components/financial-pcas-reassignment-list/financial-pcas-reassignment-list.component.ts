@@ -543,7 +543,6 @@ export class FinancialPcasReassignmentListComponent
     }
   }
   onPcaReassignmentSearch(searchValue: any) {
-    const isDateSearch = searchValue.includes('/');
     this.onChange(searchValue);
   }
 
