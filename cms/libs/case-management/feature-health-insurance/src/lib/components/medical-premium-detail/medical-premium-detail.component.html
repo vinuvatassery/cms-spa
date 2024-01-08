@@ -35,13 +35,13 @@
           <h5 class="text-capital">Medicare Info</h5>
         </div>
         <div class="flex-col">
-          <kendo-floatinglabel text="Medicare Benificiary ID Number">
-            <kendo-textbox  aria-label="Medicare Benificiary ID Number"
-              placeholder="Medicare Benificiary ID Number" formControlName="medicareBeneficiaryIdNbr" [maxlength]="20"
+          <kendo-floatinglabel text="Medicare Beneficiary ID Number">
+            <kendo-textbox  aria-label="Medicare Beneficiary ID Number"
+              placeholder="Medicare Beneficiary  ID Number" formControlName="medicareBeneficiaryIdNbr" [maxlength]="20"
               [fillMode]="formUiStyle.inputFillMode">
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].valid && !healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].disabled">Medicare Benificiary
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].valid && !healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].disabled">Medicare Beneficiary 
             ID Number is required.</kendo-formerror>
         </div>
         <div class="flex-col">
@@ -75,12 +75,25 @@
           <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartBStartDate'].valid && !healthInsuranceForm.controls['medicarePartBStartDate'].disabled">Medicare Part B Start
             Date is required.</kendo-formerror>
         </div>
-        <div class="flex-col mt-2">
-          <span class="app-checkboxwidtext-wrapper">
-            <input  type="checkbox" kendoCheckBox aria-labelledby="qmb" id="qmb"
-              formControlName="onQmbFlag" />
-            <label class="k-checkbox-label" for="qmb">On Qualified Medicare Beneficiary (QMB)</label>
-          </span>
+        <div class="flex-col">
+
+          <fieldset class="k-form-fieldset">
+            <legend class="k-form-legend">
+              <h5>On Qualified Medicare Beneficiary (QMB)</h5>
+            </legend>
+            <div class="component-list-h">
+              <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio" kendoRadioButton name="onQmbFlag"
+                  aria-labelledby="LowIncomeSusidyYes" formControlName="onQmbFlag" id="qmbYes" value="Y" />
+                <kendo-label class="k-radio-label" for="qmbYes" text="Yes"></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio"  kendoRadioButton name="onQmbFlag"
+                  aria-labelledby="qmb" formControlName="onQmbFlag" id="qmbNo" value="N" />
+                <kendo-label class="k-radio-label" for="qmbNo" text="No"></kendo-label>
+              </span>
+            </div>
+          </fieldset>
         </div>
         <div class="flex-col">
 

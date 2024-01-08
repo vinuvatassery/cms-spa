@@ -388,12 +388,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         healthInsurancePolicy.onLisFlag
       );
 
-      this.healthInsuranceForm.controls['onQmbFlag'].setValue(healthInsurancePolicy.onQmbFlag === StatusFlag.Yes);
-      if (this.medicareInsuranceInfoCheck) {
-        this.insuranceCarrierNameChange(
-          healthInsurancePolicy.insuranceVendorId as string
-        );
-      }
+      this.healthInsuranceForm.controls['onQmbFlag'].setValue(
+        healthInsurancePolicy.onQmbFlag
+      );
 
     }
     this.healthInsuranceForm.controls['insuranceVendorAddressId'].setValue(
@@ -1156,14 +1153,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     else {
       this.healthInsurancePolicy.medicarePartBStartDate = null;
     }
-    if (this.healthInsuranceForm.controls['onQmbFlag'].value === true) {
+
+    if (
+      this.healthInsuranceForm.controls['onQmbFlag'].value !== StatusFlag.Yes
+    ) {
+      this.healthInsurancePolicy.onQmbFlag = this.healthInsuranceForm.controls['onQmbFlag'].value;
+    } else {
       this.healthInsurancePolicy.onQmbFlag = StatusFlag.Yes;
-    }
-    else if (this.healthInsuranceForm.controls['onQmbFlag'].value === false) {
-      this.healthInsurancePolicy.onQmbFlag = StatusFlag.No;
-    }
-    else {
-      this.healthInsurancePolicy.onQmbFlag = null;
     }
   }
 
