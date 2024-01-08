@@ -383,7 +383,8 @@ pageselectionchange(data: any) {
           {
             selectedProviderId: existProviderData?.providerId  ,
             providerId: existProviderData?.providerId,
-            vendorAddressId: existProviderData?.vendorAddressId
+            vendorAddressId: existProviderData?.vendorAddressId,
+            selectedVendorAddressId: existProviderData?.vendorAddressId,
 
           }
           this.selectedCustomProviderName =existProviderData?.fullName+' '+ existProviderData?.clinicName+' '+ existProviderData?.address

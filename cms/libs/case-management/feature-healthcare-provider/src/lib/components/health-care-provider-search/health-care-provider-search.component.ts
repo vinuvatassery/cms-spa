@@ -80,7 +80,8 @@ export class HealthCareProviderSearchComponent implements OnInit
         providerId: ['',Validators.required]   ,
         selectedProviderId: [''] ,
         providerAutoComplete: ['', Validators.required],
-        vendorAddressId:[''],
+        selectedVendorAddressId: [''],
+        vendorAddressId:['']
       });
       
      if(this.isEditSearchHealthProviderValue === true)
@@ -105,6 +106,7 @@ export class HealthCareProviderSearchComponent implements OnInit
               selectedProviderId: this.existingProviderData?.providerId  ,
               providerId: this.existingProviderData?.providerId  ,
               providerAutoComplete: this.selectedCustomProviderName,
+              selectedVendorAddressId: this.existingProviderData?.vendorAddressId,
               vendorAddressId: this.existingProviderData?.vendorAddressId
             }) 
   }
@@ -125,9 +127,8 @@ export class HealthCareProviderSearchComponent implements OnInit
        {        
         const existProviderData =
         {
-          providerId : this.existHealthProvderForm?.controls["providerId"].value,
-          selectedProviderId: this.existHealthProvderForm?.controls["selectedProviderId"].value,
           vendorAddressId: this.existHealthProvderForm?.controls["vendorAddressId"].value,
+          selectedVendorAddressId: this.existHealthProvderForm?.controls["selectedVendorAddressId"].value,          
         }        
         this.btnDisabled = true
         this.addExistingProviderEvent.emit(existProviderData);
