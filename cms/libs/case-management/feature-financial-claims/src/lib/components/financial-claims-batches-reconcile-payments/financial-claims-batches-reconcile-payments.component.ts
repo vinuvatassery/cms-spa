@@ -760,7 +760,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     && (x.vendorId !== dataItem.vendorId || x.batchId !== dataItem.batchId));
     if (isCheckNumberAlreadyExist.length > 0) {
       dataItem.warrantNumberInValid = true;
-      dataItem.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
+      dataItem.warrantNumberInValidMsg = `Duplicate Warrant Number entered in ${isCheckNumberAlreadyExist[0].batchName}.`;
     }
     else {
       dataItem.warrantNumberInValidMsg = null;
@@ -778,7 +778,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === this.checkingPaymentRequest);
       if (ifExist !== undefined) {
         ifExist.warrantNumberInValid = true;
-        ifExist.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
+        ifExist.warrantNumberInValidMsg = `Duplicate Warrant Number entered in ${ifExist.batchName}.`;
         this.assignUpdatedItemToPagedList();
         this.cd.detectChanges();
       }
