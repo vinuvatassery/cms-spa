@@ -54,7 +54,7 @@
 }
 
 .client-header-wrapper-stickey {
-  z-index: 102;
+  z-index: 4;
   background: $white;
   position: sticky;
   top: 0;
@@ -98,7 +98,7 @@
   padding-bottom: 4rem;
   .TableActionPopup {
     .k-animation-container {
-      z-index: 4;
+      z-index: 4 !important;
     }
   }
 }
@@ -190,7 +190,7 @@
         margin: 0px;
         font-family: $font-family-bold;
         font-weight: normal;
-        font-size: 14px;
+        font-size: $font-size;
       }
 
       &.heading-as-menu {
@@ -581,7 +581,7 @@ color: $app-primary-font-color;
   height: 34px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 20px;
+  font-size: $font-size-xlg;
   align-items: center;
   justify-content: center;
   transition: 0.2s;
@@ -655,7 +655,7 @@ color: $app-primary-font-color;
   margin: 0px;
   font-family: $font-family-bold;
   font-weight: normal;
-  font-size: 14px;
+  font-size: $font-size;
 }
 
 .k-dialog-body {
@@ -735,7 +735,7 @@ color: $app-primary-font-color;
   .k-button {
     font-family: $font-family-medium;
     letter-spacing: 0.18px;
-    color: rgba(51, 51, 51, 0.74);
+    color:$black-70;
     opacity: 1;
     text-transform: capitalize;
     padding: 6px 20px 6px 20px;
@@ -769,8 +769,8 @@ color: $app-primary-font-color;
   .k-button {
     font-family: $font-family-medium;
     letter-spacing: 0.18px;
-    font-size: 12px;
-    color: rgba(112, 112, 112, 1);
+    font-size: $font-size-s;
+    color: $black-70;
     opacity: 1;
     text-transform: capitalize;
     padding: 6px 8px 6px 8px;
@@ -874,7 +874,7 @@ color: $app-primary-font-color;
 
     .material-icons {
       color: $black-6;
-      font-size: 30px;
+      font-size: $font-size-xxx;
     }
   }
 }
@@ -927,7 +927,7 @@ color: $app-primary-font-color;
     background: transparent;
 
     .k-button-text {
-      display: none;
+    //  display: none; 
     }
   }
 
@@ -962,7 +962,7 @@ color: $app-primary-font-color;
   right: 0;
   width: auto;
   left: $app-left_menu-width;
-  z-index: 4;
+  z-index: 2;
   min-height: 40px;
 &.content-start{
   justify-content: flex-start !important;
@@ -1015,6 +1015,7 @@ color: $app-primary-font-color;
       position: absolute;
       top: 8px;
       left: 10px;
+      z-index: 1;
     }
 
     .input-inline-loader {
@@ -1081,7 +1082,13 @@ color: $app-primary-font-color;
 .grid-list-options-menu{
   text-transform: none;
 }
-
+.submenu_list_heading{
+  .tab-batch-notify {
+  
+  position: relative;
+  top: -2px;
+  }
+}
 .tab-batch-notify {
   display: inline-block;
   padding: 0px 6px;
@@ -1124,7 +1131,7 @@ color: $app-primary-font-color;
     margin-bottom: 10px;
     margin-left: 10px;
     color: rgba($black, 0.6);
-    font-size: 16px;
+    font-size: $font-size-l;
   }
 }
 
@@ -1166,7 +1173,7 @@ color: $app-primary-font-color;
 
     .k-icon,
     .k-svg-icon {
-      font-size: 26px;
+      font-size: 1.857rem;
       font-weight: normal;
       color: $black-3;
     }
@@ -1334,4 +1341,15 @@ padding: 8px;
       vertical-align: sub;
     }
   }
+}
+
+.button-labels{
+  font-size: $font-size;
+  font-weight: 500;
+  letter-spacing: 0.56px;
+  line-height: 16px;
+  text-align: left;
+  white-space: normal; 
+  padding: 5px 0px;
+  font-family: $font-family-medium;
 }

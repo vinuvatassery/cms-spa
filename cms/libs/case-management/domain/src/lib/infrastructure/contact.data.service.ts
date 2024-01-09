@@ -344,4 +344,12 @@ export class ContactDataService {
   deleteClientContact(clientId: any, clientRelationshipId: any) {
     return this.http.delete(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/contacts/${clientRelationshipId}`);
   }
+
+  deactivateAndAddClientPhone(phoneData: any) {
+    phoneData.clientPhoneId = '00000000-0000-0000-0000-000000000000'
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones/deactivate-and-add`,
+      phoneData
+    )
+  }
 }

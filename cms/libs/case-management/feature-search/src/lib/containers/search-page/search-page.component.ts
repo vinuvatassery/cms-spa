@@ -6,9 +6,8 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { SearchFacade, CaseStatusCode, CaseFacade} from '@cms/case-management/domain';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {  Subject } from 'rxjs';
 import { groupBy } from "@progress/kendo-data-query";
-
+import {  debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 export interface VendorList {
   id: number;
   title: string;
@@ -137,7 +136,25 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
     private loaderService: LoaderService,private cdRef : ChangeDetectorRef,
     private readonly formBuilder: FormBuilder
    ) {
-  
+    this.filterManager
+    .pipe(
+      debounceTime(500),
+      distinctUntilChanged()
+    )
+    .subscribe(
+ 
+      (text : any) =>
+      {
+        if(text && text.length >=2)
+        {
+          this.searchFacade.loadCaseBySearchText(text);
+          this.showHeaderSearchInputLoader = false;
+ 
+        }
+      }
+ 
+    );
+  this.showHeaderSearchInputLoader = false;
   }
 
   /** Lifecycle hooks **/
@@ -172,10 +189,11 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
   }
   
   onSearchTextChange(selectedValue : string)
-  {  
-    this.showHeaderSearchInputLoader = true;    
-      this.searchFacade.loadCaseBySearchText(selectedValue);     
- 
+  {
+    if(selectedValue && selectedValue.length >=2){
+      this.showHeaderSearchInputLoader = true;
+      this.filterManager.next(selectedValue);
+    }
   }
   onSelectChange(selectedValue: any) {
     if (selectedValue !== undefined) {

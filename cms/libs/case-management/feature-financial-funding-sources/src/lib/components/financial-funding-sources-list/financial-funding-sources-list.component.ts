@@ -13,10 +13,11 @@ import {
 } from '@angular/core';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { DialogService } from '@progress/kendo-angular-dialog';
+import { DialogService, } from '@progress/kendo-angular-dialog';
 import {
   GridDataResult,
-  FilterService
+  FilterService,
+  ColumnVisibilityChangeEvent
 } from '@progress/kendo-angular-grid';
 
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
@@ -79,10 +80,6 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
       columnName: "fundingSourceCode",
       columnDesc: "Funding Source"
     },
-    {
-      columnName: "fundingDesc",
-      columnDesc: "Funding Name"
-    },
   ]
   gridFinancialFundingSourcesDataSubject = new Subject<any>();
 
@@ -113,7 +110,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
       },
       {
         buttonType: 'btn-h-danger',
-        text: 'Delete',
+        text: 'Remove',
         icon: 'delete',
         click: (data: any): void => {
           if (!this.removeFundingOpened && !dataItem.isFundingSourceAssignedToPca) {
@@ -218,7 +215,7 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
 
   performFundSearch(data: any) {
     this.defaultGridState();
-    const operator = 'startswith';
+    const operator = 'contains';
 
     this.filterData = {
       logic: 'and',
@@ -255,6 +252,11 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
 
   filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
+  }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter(x => x.hidden).length
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
   groupFilterChange(value: any, filterService: FilterService): void {
     filterService.filter({

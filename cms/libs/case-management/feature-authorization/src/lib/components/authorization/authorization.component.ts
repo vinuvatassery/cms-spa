@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, TemplateRef, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, TemplateRef, Output, EventEmitter, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** Enums **/
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -20,7 +20,7 @@ import { StatusFlag } from '@cms/shared/ui-common';
   styleUrls: ['./authorization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthorizationComponent   {
+export class AuthorizationComponent   implements OnInit, OnDestroy  {
   /** Input properties **/
   @Input() isCerForm: boolean= false;
   @Input() clientId!: any;
@@ -110,6 +110,9 @@ export class AuthorizationComponent   {
     this.addDiscardChangesSubscription();
   }
 
+  ngOnDestroy(): void {
+    this.saveClickSubscription.unsubscribe();
+  }
   /** Private methods **/
   private loadUserContactInfo(clientId: any, clientCaseEligibilityId: any) {
     this.loaderService.show();

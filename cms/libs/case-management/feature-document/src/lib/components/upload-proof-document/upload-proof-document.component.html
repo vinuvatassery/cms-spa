@@ -17,13 +17,16 @@
           <common-document-upload
           [file]="copyOfUploadedFiles"
           [isFileViewable]="true"
+          [fieldName]="'Attachment Type'"
           [typeCodeLabel]="'Attachment Type'"
+          [typeCode]="'Attachment_Type'"
           [subTypeCodeLabel]="'Attachment Sub Type'"
           [currentTypeCode]="selectedTypeCode"
           [formSubmitted]="isSubmitted"
           (handleFileSelectEvent)="handleFileSelected($event)"
           (handleFileRemoveEvent)="handleFileRemoved($event)"
-          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
           <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="uploadedFileExceedsFileSizeLimit">
@@ -32,7 +35,7 @@
             file.
           </kendo-formerror>
           <kendo-formerror *ngIf="!isFileUploaded && !uploadedFileExceedsFileSizeLimit">
-            document is required.
+            Document is required.
           </kendo-formerror>
         </div>
         <div class="flex-col mt-2">

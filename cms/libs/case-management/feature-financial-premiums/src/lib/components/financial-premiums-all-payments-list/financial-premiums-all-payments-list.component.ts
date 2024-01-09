@@ -138,7 +138,7 @@ export class FinancialPremiumsAllPaymentsListComponent
 
   //searching
   private searchSubject = new Subject<string>();
-  selectedSearchColumn = 'ALL';
+  selectedSearchColumn: null | string = 'ALL';
   searchText: null | string = null;
 
   //sorting
@@ -365,9 +365,6 @@ deletePremiumPayment(paymentId: string) {
   ) {}
 
   ngOnInit(): void {
-    this.financialPremiumsFacade.financialPremiumsAllPaymentsData$.subscribe((response:any) =>{
-
-    })
     this.addSearchSubjectSubscription();
     this.getVedndorTypeCodeLov();
     this.getPaymentMethodLov();
@@ -379,7 +376,7 @@ deletePremiumPayment(paymentId: string) {
       }
       this.financialPremiumsAllPaymentsGridLists = response;
     })
-  
+
 
   }
 
@@ -441,7 +438,7 @@ deletePremiumPayment(paymentId: string) {
   }
 
   onSearch(searchValue: any) {
-    
+
     const isDateSearch = searchValue.includes('/');
     this.showDateSearchWarning =
       isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
@@ -500,7 +497,7 @@ deletePremiumPayment(paymentId: string) {
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.filter = [];
     this.searchText = '';
-    this.selectedSearchColumn = 'itemNumber';
+    this.selectedSearchColumn = 'ALL';
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
@@ -528,12 +525,39 @@ deletePremiumPayment(paymentId: string) {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.sortColumnDesc = this.gridColumns[this.sortValue]; 
+    this.updateGridFilterDateFormat(stateData, false);
     this.filter = stateData?.filter?.filters;
     this.setFilterBy(true, '', this.filter);
     this.loadFinancialPremiumsPaymentsListGrid();
+    this.updateGridFilterDateFormat(stateData, true);
   }
 
+  updateGridFilterDateFormat(stateData: any,isDisplayFormat:boolean){
+    const filterList = [];
+    if((stateData.filter?.filters.length > 0) && (stateData.filter?.filters.slice(-1)[0].filters.length>1)){
+      this.isFiltered = true;
+      stateData.filter?.filters.slice(-1)[0].filters?.forEach((element: any) => {
+        if ((element.field == "paymentRequestedDate" || element.field == "paymentSentDate")) { 
+          if(isDisplayFormat){
+            element.value = new Date(element.value)
+          }else{
+            element.value = this.intl.formatDate(
+              new Date(element.value),
+              this.configProvider?.appSettings?.dateFormat
+            );
+          }
+        } 
+      }); 
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.gridColumns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    }else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
+  }
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
@@ -589,7 +613,7 @@ deletePremiumPayment(paymentId: string) {
         },
       ],
     };
-    
+
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
@@ -783,11 +807,13 @@ deletePremiumPayment(paymentId: string) {
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event)
   }
-  paymentClickHandler(dataItem: any) {
-    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch/items`], {
-      queryParams: { bid: dataItem.batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId,vid:dataItem.vendorId },
-    });
+
+   /* Public methods */
+   navToBatchDetails(event : any){
+    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch`],
+    { queryParams :{bid: event.batchId}});
   }
+
   onClickedExport() {
     this.showExportLoader = true;
     this.exportGridDataEvent.emit();
@@ -938,10 +964,6 @@ onPrintAuthorizationCloseClicked(result: any) {
 handleAllPaymentsGridData() {
   this.financialPremiumsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
     this.gridDataResult = data;
-    this.gridDataResult.data = filterBy(
-      this.gridDataResult.data,
-      this.filterData
-    );
     this.gridFinancialPremiumsAllPaymentsDataSubject.next(this.gridDataResult);
     if (data?.total >= 0 || data?.total === -1) {
       this.gridLoaderSubject.next(false);

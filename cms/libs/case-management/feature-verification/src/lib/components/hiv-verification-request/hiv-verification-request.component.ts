@@ -11,9 +11,12 @@ import { VerificationFacade,
   VerificationTypeCode,
   ProviderOption,
   ClientDocumentFacade,
-  HivVerificationDocument } from '@cms/case-management/domain';
+  HivVerificationDocument, 
+  WorkflowFacade,
+  CompletionChecklist} from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 
 @Component({
@@ -99,7 +102,8 @@ export class HivVerificationRequestComponent implements OnInit{
   constructor( private verificationFacade: VerificationFacade,
     private readonly cdr: ChangeDetectorRef,
     private intl: IntlService, private readonly configurationProvider: ConfigurationProvider,
-    public readonly clientDocumentFacade:ClientDocumentFacade){}
+    public readonly clientDocumentFacade:ClientDocumentFacade,
+    private readonly workflowFacade: WorkflowFacade){}
   /** Internal event methods **/
   ngOnInit(): void {
     this.providerValue$.subscribe(data=>{
@@ -159,6 +163,7 @@ export class HivVerificationRequestComponent implements OnInit{
         this.uploadedDate = data?.verificationUploadedDate;
         this.uploadedBy = data?.uploadedBy
         this.cdr.detectChanges();
+        this.updateVerificationCount(true);
       }
     });
   }
@@ -203,6 +208,7 @@ export class HivVerificationRequestComponent implements OnInit{
       this.clientHivVerification.verificationMethodCode = this.providerOption;
       if(!this.showHivVerificationAttachmentRequiredValidation && !this.showHivVerificationAttachmentSizeValidation)
       {
+        this.updateVerificationCount(true);
         this.onAttachmentConfirmationEvent.emit(this.clientHivVerification);
       }
     }
@@ -212,6 +218,7 @@ export class HivVerificationRequestComponent implements OnInit{
     this.showHivVerificationAttachmentRequiredValidation = true;
     this.verificationFacade.isSaveandContinueSubject.next(this.showHivVerificationAttachmentRequiredValidation);
     this.openRemoveAttachmentConfirmationEvent.emit(this.uploadedAttachment[0].clientHivVerificationId);
+    this.updateVerificationCount(false);
   }
   private populateModel(){
     this.clientHivVerification.clientId = this.clientId;
@@ -266,5 +273,14 @@ export class HivVerificationRequestComponent implements OnInit{
     this.hivVerificationForm.controls["computerAttachment"].removeValidators(Validators.required);
     this.hivVerificationForm.controls['computerAttachment'].updateValueAndValidity();
     this.verificationFacade.isSaveandContinueSubject.next(true);
+  }
+
+  private updateVerificationCount(isCompleted: boolean) {
+    const workFlowData: CompletionChecklist[] = [{
+      dataPointName: 'verificationMethod',
+      status: isCompleted ? StatusFlag.Yes : StatusFlag.No
+    }];
+
+    this.workflowFacade.updateChecklist(workFlowData);
   }
 }

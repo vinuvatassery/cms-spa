@@ -22,7 +22,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 })
 export class FinancialPremiumsPageComponent implements OnInit {
 
-  dataExportParameters! : any
+  dataExportParameters!: any
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
   state!: State;
@@ -48,7 +48,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.financialPremiumsBatchData$;
   financialPremiumsAllPaymentsGridLists$ =
     this.financialPremiumsFacade.financialPremiumsAllPaymentsData$;
-    public sortValue = this.financialPremiumsFacade.clientsSortValue;
+  public sortValue = this.financialPremiumsFacade.clientsSortValue;
   insurancePlans$ = this.financialPremiumsFacade.insurancePlans$;
   insurancePlansLoader$ = this.financialPremiumsFacade.insurancePlansLoader$;
   insuranceCoverageDates$ = this.financialPremiumsFacade.insuranceCoverageDates$;
@@ -67,7 +67,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   paymentStatusCode$ = this.lovFacade.paymentStatus$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
-  
+
 
   healthInsuranceTypeLov$ = this.lovFacade.insuranceTypelov$;
   providerDetailsDialog: any
@@ -85,10 +85,10 @@ export class FinancialPremiumsPageComponent implements OnInit {
     public contactFacade: ContactFacade,
     public lovFacade: LovFacade,
     private dialogService: DialogService,
-    private readonly financialVendorFacade : FinancialVendorFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade,
     private documentFacade: DocumentFacade,
 
-  ) {}
+  ) { }
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(
       (data) => (this.premiumType = data['type'])
@@ -115,14 +115,14 @@ export class FinancialPremiumsPageComponent implements OnInit {
         },
       });
   }
-  deletePayment(paymentId: string){
+  deletePayment(paymentId: string) {
     this.financialPremiumsFacade.deletePremiumPayment(this.premiumType, paymentId);
   }
-  unBatchPremiumClick(event:any){
-    this.financialPremiumsFacade.unbatchPremiums(event.paymentId,event.premiumsType)
+  unBatchPremiumClick(event: any) {
+    this.financialPremiumsFacade.unbatchPremiums(event.paymentId, event.premiumsType)
   }
-  loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any) : void{
-    
+  loadFinancialPremiumsProcessListGrid(gridDataRefinerValue: any): void {
+
     this.lovFacade.getPaymentMethodLov()
     this.lovFacade.getPaymentStatusLov()
     this.lovFacade.getHealthInsuranceTypeLovs()
@@ -134,15 +134,15 @@ export class FinancialPremiumsPageComponent implements OnInit {
       pagesize: gridDataRefinerValue.pagesize,
       sortColumn: gridDataRefinerValue.sortColumn,
       sortType: gridDataRefinerValue.sortType,
-      filter:gridDataRefinerValue.filter
+      filter: gridDataRefinerValue.filter
     };
     this.pageSizes = this.financialPremiumsFacade.gridPageSizes;
-    this.financialPremiumsFacade.loadMedicalPremiumList( gridDataRefiner.skipcount,
+    this.financialPremiumsFacade.loadMedicalPremiumList(gridDataRefiner.skipcount,
       gridDataRefiner.pagesize,
       gridDataRefiner.sortColumn,
       gridDataRefiner.sortType,
       gridDataRefiner.filter,
-      this.premiumType);     
+      this.premiumType);
   }
 
   loadFinancialPremiumsBatchListGrid(data: GridFilterParam) {
@@ -171,7 +171,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.loadInsurancePlansCoverageDates(clientId);
   }
 
-  premiumExistValidation(data: { clientId: number, premiums: PolicyPremiumCoverage[] }){
+  premiumExistValidation(data: { clientId: number, premiums: PolicyPremiumCoverage[] }) {
     this.financialPremiumsFacade.getExistingPremiums(data.clientId, this.premiumType, data.premiums);
   }
 
@@ -179,48 +179,48 @@ export class FinancialPremiumsPageComponent implements OnInit {
     this.financialPremiumsFacade.savePremiums(this.premiumType, premiums);
   }
 
-  OnbatchClaimsClicked(event:any){
+  OnbatchClaimsClicked(event: any) {
     this.financialPremiumsFacade.batchPremium(event, this.premiumType);
   }
 
-  loadPremium(premiumId: string){
+  loadPremium(premiumId: string) {
     this.financialPremiumsFacade.loadPremium(this.premiumType, premiumId);
   }
 
-  updatePremium(premium:any){
+  updatePremium(premium: any) {
     this.financialPremiumsFacade.updatePremium(this.premiumType, premium.premiumId, premium);
   }
 
-  onProviderNameClick(event:any){
+  onProviderNameClick(event: any) {
     this.paymentRequestId = event
     this.providerDetailsDialog = this.dialogService.open({
       content: this.providerDetailsTemplate,
-      animation:{
+      animation: {
         direction: 'left',
-        type: 'slide',  
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-    
+
   }
 
-  onCloseViewProviderDetailClicked(result: any){
-    if(result){
+  onCloseViewProviderDetailClicked(result: any) {
+    if (result) {
       this.providerDetailsDialog.close();
     }
   }
-  
-  
-  getProviderPanel(event:any){
+
+
+  getProviderPanel(event: any) {
     this.financialVendorFacade.getProviderPanel(event)
   }
 
-  updateProviderProfile(event:any){
+  updateProviderProfile(event: any) {
     console.log(event)
     this.financialVendorFacade.updateProviderPanel(event)
   }
 
-  OnEditProviderProfileClick(){
+  OnEditProviderProfileClick() {
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
   }
@@ -228,34 +228,27 @@ export class FinancialPremiumsPageComponent implements OnInit {
   exportClaimsPaymentsGridData() {
     const data = this.dataExportParameters;
     if (data) {
-      const vendorPageAndSortedRequest = {
-        SortType: data?.sortType,
-        Sorting: data?.sortColumn,
-        SkipCount: data?.skipcount,
-        MaxResultCount: data?.maxResultCount,
-        Filter: data?.filter,
-      };
       let fileName =
         this.premiumType[0].toUpperCase() +
         this.premiumType.substr(1).toLowerCase() +
         'Premiums Payments';
 
       this.documentFacade.getExportFile(
-        vendorPageAndSortedRequest,
+        data,
         `premium/${this.premiumType}/payments`,
         fileName
       );
     }
   }
 
-  loadEachLetterTemplate(event:any){
-    this.financialPremiumsFacade.loadEachLetterTemplate(this.premiumType, event);  
+  loadEachLetterTemplate(event: any) {
+    this.financialPremiumsFacade.loadEachLetterTemplate(this.premiumType, event);
   }
 
   exportPremiumsPaymentsGridData() {
     const data = this.dataExportParameters;
     if (data) {
-      const filter = JSON.stringify(data?.filter);
+      const filter = data?.filter;
 
       const param = {
         SortType: data?.sortType,
@@ -277,25 +270,15 @@ export class FinancialPremiumsPageComponent implements OnInit {
     }
   }
 
-  exportPremiumsBatchPaymentsGridData(){
-  const data = this.dataExportParameters;
-    if (data) {
-      const filter = JSON.stringify(data?.filter);
-
-      const param = {
-        SortType: data?.sortType,
-        Sorting: data?.sortColumn,
-        SkipCount: data?.skipcount,
-        MaxResultCount: data?.maxResultCount,
-        Filter: filter,
-      };
+  exportPremiumsBatchPaymentsGridData() {
+    if (this.dataExportParameters) {
       let fileName =
         this.premiumType[0].toUpperCase() +
         this.premiumType.substr(1).toLowerCase() +
         ' Premiums';
 
       this.documentFacade.getExportFile(
-        param,
+        this.dataExportParameters,
         `premium/${this.premiumType}/batches`,
         fileName
       );

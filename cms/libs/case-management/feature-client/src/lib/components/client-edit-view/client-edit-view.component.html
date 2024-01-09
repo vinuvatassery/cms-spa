@@ -3,13 +3,13 @@
   <div kendoRippleContainer *ngIf="isCerForm" class="cerdatefield">
     <input type="hidden"  formControlName="cerSentDate">
     <div class="flex-row">
-      <div class="flex-col flex-col-4">       
+      <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="Date CER Received">
-          <kendo-datepicker aria-label="Date CER Received" [fillMode]="formUiStyle.dateInputFillMode" 
-            formControlName="cerReceivedDate" format="MM-dd-yyyy"    formatPlaceholder="formatPattern" 
+          <kendo-datepicker aria-label="Date CER Received" [fillMode]="formUiStyle.dateInputFillMode"
+            formControlName="cerReceivedDate" format="MM-dd-yyyy"    formatPlaceholder="formatPattern"
             (select)="cerDateValidate($event)" (keyup)="cerDateValidate($event)"
-            placeholder=""></kendo-datepicker>      
-            <kendo-formerror *ngIf="cerDateValidator">Date CER Received cannot be less than CER Sent Date ({{cerSentDateValue | date: 'MM/dd/yyyy'}}).</kendo-formerror>  
+            placeholder=""></kendo-datepicker>
+            <kendo-formerror *ngIf="cerDateValidator">Date CER Received cannot be less than CER Sent Date ({{cerSentDateValue | date: 'MM/dd/yyyy'}}).</kendo-formerror>
           <kendo-formerror *ngIf="!appInfoForm.controls['cerReceivedDate'].valid">Date CER received is
             required.</kendo-formerror>
         </kendo-floatinglabel>
@@ -161,7 +161,7 @@
             formatPlaceholder="formatPattern" (select)="dateValidate($event)" (keyup)="dateValidate($event)"
             placeholder=""></kendo-datepicker>
           <kendo-formerror *ngIf="dateValidator">Date of Birth cannot be greater than Current Date.</kendo-formerror>
-          <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid">Date of Birth is
+          <kendo-formerror *ngIf="!appInfoForm.controls['dateOfBirth'].valid && !dateValidator">Date of Birth is
             required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>

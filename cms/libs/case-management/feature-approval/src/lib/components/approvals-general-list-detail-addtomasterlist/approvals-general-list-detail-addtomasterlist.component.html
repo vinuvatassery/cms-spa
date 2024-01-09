@@ -5,8 +5,7 @@
       class="mb-1 k-icon-button small-i-btn icon-hover-primary"
       icon="edit"
       title="Edit "
-      aria-label="edit"
-      title="Edit List Item"
+      aria-label="edit" 
       (click)="onEditListItemsDetailClicked()"
       *ngIf="selectedMasterDetail$ | async as item"
     ></button>
@@ -17,6 +16,12 @@
       <caption hidden>
         Vendor Info
       </caption>
+      <tr hidden>
+         
+          <th>info</th>
+          <th>details</th>
+        
+      </tr>
       <tbody
         *ngIf="
           subTypeCode === subTypeConst.DentalClinic ||
@@ -129,11 +134,15 @@
           <td>{{vendorData.nameOnEnvelope}}</td>
         </tr>
         <tr>
-          <td>Address</td>
-          <td>{{vendorData.address1}}</td>
+          <td>Email</td>
+          <td>{{vendorData.email}}</td>
         </tr>
         <tr>
-          <td>Contact 1</td>
+          <td>Address</td>
+          <td>{{vendorData.address1}} {{vendorData.address2}}</td>
+        </tr>
+        <tr>
+          <td>Contact Name</td>
           <td>{{vendorData.contactName}}</td>
         </tr>
         <tr>

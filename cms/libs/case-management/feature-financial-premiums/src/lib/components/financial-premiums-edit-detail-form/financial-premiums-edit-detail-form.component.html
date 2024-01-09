@@ -8,7 +8,6 @@
 
 
     <div class="add_new_top_section">
-        <p class="mb-3"> Update the premium amount and add adjustments if needed.</p>
         <div class="flex-row column-labels">
             <div class="flex-col flex-col-3">
                 <label><strong>Client Name:</strong></label>
@@ -46,7 +45,7 @@
                 <p> {{premium.nextPremiumDueDate  | date:'MM/dd/yyyy'}} </p>
             </div>
         </div>
-
+        <p class="mb-0"> Update the premium amount and add adjustments if needed.</p>
         <div class="flex-row">
             <div class="flex-col flex-col-3">
                 <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
@@ -103,22 +102,22 @@
                                 <button 
                                 kendoButton 
                                 [toggleable]="true" 
-                                aria-label="Positive" 
-                                title="Positive"
+                                aria-label="Add" 
+                                title="Add"
                                 themeColor="light" 
                                 [selected]="adjustment.isPositiveAdjustment ?? true"
                                 (selectedChange)="changeAdjustmentSign(true, adjustment)">
-                                    <span class="material-icons" aria-hidden="false">add</span>
+                                    <span class="material-icons" aria-hidden="true">add</span>
                                 </button>
                                 <button 
                                 kendoButton 
                                 [toggleable]="true"  
                                 themeColor="light" 
-                                aria-label="Negative" 
-                                title="Negative"
+                                aria-label="Remove" 
+                                title="Remove"
                                 [selected]="!(adjustment.isPositiveAdjustment ?? true)"
                                 (selectedChange)="changeAdjustmentSign(false, adjustment)">
-                                    <span class="material-icons" aria-hidden="false">remove</span>
+                                    <span class="material-icons" aria-hidden="true">remove</span>
                                 </button>
                             </kendo-buttongroup>
                         </div>
@@ -176,9 +175,10 @@
                         class="" 
                         kendoButton 
                         fillMode="flat" 
+                        aria-label="Add Adjustment"
                         themeColor="primary"
                         (click)="addAdjustment()"> 
-                        <span class="material-icons" aria-label="New Premiums" aria-hidden="false">add</span> ADJUSTMENT</button>
+                        <span class="material-icons" aria-hidden="true">add</span> ADJUSTMENT</button>
                     </div>
                
             </div>
@@ -266,6 +266,13 @@
         </div>
     </div>
 </kendo-dialog-actions>
+
+<ng-template #pcaExceptionDialogTemplate>
+    <common-financial-pca-chosen-alert [chosenPca]="chosenPcaForReAssignment"
+        (confirmChosenPcaAlertClickedEvent)="onConfirmPcaAlertClicked($event)"
+        (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
+    </common-financial-pca-chosen-alert>
+</ng-template>
 
 
  

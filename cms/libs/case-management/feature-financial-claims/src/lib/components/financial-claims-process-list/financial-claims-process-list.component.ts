@@ -24,7 +24,7 @@ import {
   SelectableMode,
   SelectableSettings,
 } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, Subscription, first } from 'rxjs';
 import { Router } from '@angular/router';
 import { LovFacade } from '@cms/system-config/domain';
@@ -65,7 +65,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   @Output() exportGridDataEvent = new EventEmitter<any>();
 
   paymentStatusCode =null
-  public state!: State;
+  public state!: any;
   sortColumn = 'Invoice ID';
   sortDir = 'Ascending';
   columnsReordered = false;
@@ -73,7 +73,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn='invoiceNbr';
+  selectedSearchColumn='ALL';
   gridDataResult!: GridDataResult;
   showExportLoader = false;
   gridFinancialClaimsProcessDataSubject = new Subject<any>();
@@ -98,12 +98,13 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public checkboxOnly = true;
   public mode: SelectableMode = 'multiple';
   public drag = false;
-
+  isDeleteClaimClicked =false;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
 
 
   public selectedProcessClaims: any[] = [];
   columns: any = {
+    ALL: 'All Columns',
     invoiceNbr: 'Invoice ID',
     vendorFullName: 'Provider Name',
     tin: 'Tax ID',
@@ -119,10 +120,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   };
 
   dropDowncolumns: any = [
-    {
-      columnCode: 'invoiceNbr',
-      columnDesc: 'Invoice ID',
-    },
+    { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'vendorFullName',
       columnDesc: 'Provider Name',
@@ -132,41 +130,13 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       columnDesc: 'Tax ID',
     },
     {
-      columnCode: 'paymentMethodCode',
-      columnDesc: 'Payment Method',
-    },
-    {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
     },
     {
-      columnCode: 'insuranceName',
-      columnDesc: 'Name on Primary Insurance Card',
-    },
-    {
       columnCode: 'clientId',
       columnDesc: 'Client ID',
-    },
-    {
-      columnCode: 'serviceCount',
-      columnDesc: 'Service Count',
-    },
-    {
-      columnCode: 'annualTotal',
-      columnDesc: 'Client Annual Total',
-    },
-    {
-      columnCode: 'balanceAmount',
-      columnDesc: 'Client Balance',
-    },
-    {
-      columnCode: 'amountDue',
-      columnDesc: 'Total Due',
-    },
-    {
-      columnCode: 'paymentStatusCode',
-      columnDesc: 'Payment Status',
-    },
+    }
   ];
 
   public claimsProcessMore = [
@@ -189,7 +159,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       click: (data: any): void => {
         if (!this.isDeleteBatchClosed) {
           this.isDeleteBatchClosed = true;
-          this.onBatchClaimsGridSelectedClicked();
+          this.onDeleteClaimsGridSelectedClicked();
         }
       },
     },
@@ -291,11 +261,11 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     let operator = 'startswith';
 
     if (
-      this.selectedColumn === 'clientId' ||
-      this.selectedColumn === 'serviceCount' ||
-      this.selectedColumn === 'annualTotal' ||
-      this.selectedColumn === 'amountDue' ||
-      this.selectedColumn === 'balanceAmount'
+      this.selectedSearchColumn === 'clientId' ||
+      this.selectedSearchColumn === 'serviceCount' ||
+      this.selectedSearchColumn === 'annualTotal' ||
+      this.selectedSearchColumn === 'amountDue' ||
+      this.selectedSearchColumn === 'balanceAmount'
     ) {
       operator = 'eq';
     }
@@ -306,7 +276,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'invoiceNbr',
+              field: this.selectedSearchColumn ?? 'invoiceNbr',
               operator: operator,
               value: data,
             },
@@ -369,11 +339,17 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.filterData = filter;
   }
   searchColumnChangeHandler(data:any){
+    this.searchValue = '';
     this.onChange(data)
+  }
+  pageChange(event:any){
+    if(this.isDeleteClaimClicked){
+        this.selectedProcessClaims =[]
+    }
   }
 
   gridDataHandle() {
-    this.financialClaimsProcessGridLists$.subscribe((data: GridDataResult) => {
+    this.financialClaimsProcessGridLists$.subscribe((data: any) => {
       this.gridDataResult = data;
       this.gridFinancialClaimsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
@@ -448,7 +424,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
-    
+
     if (result) {
       this.isDeleteBatchClosed = false;
       this.isProcessGridExpand = true;
@@ -458,6 +434,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       this.deleteClaimsDialog.close();
       this.cdr.detectChanges();
     }
+    this.isDeleteClaimClicked = false;
   }
 
   onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
@@ -475,6 +452,11 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.isProcessGridExpand = false;
   }
 
+  onDeleteClaimsGridSelectedClicked(){
+    this.isProcessGridExpand = false;
+    this.isDeleteClaimClicked =true;
+  }
+
   onBatchClaimsDeleteGridSelectedClicked() {
     this.isProcessGridExpand = false;
   }
@@ -487,6 +469,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.isDeleteBatchClosed = false;
     this.isProcessBatchClosed = false;
     this.selectedProcessClaims = [];
+    this.isDeleteClaimClicked = false;
   }
 
   clientRecentClaimsModalClicked(
@@ -522,7 +505,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     this.sortColumn = 'Invoice ID';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'invoiceNbr';
+    this.selectedSearchColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
 
@@ -535,9 +518,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   }
 
   onClaimClick(dataitem: any) {
-    if (!dataitem.vendorId.length) return;
+    if (!dataitem?.vendorId?.length) return;
     this.isEdit = true;
-    this.paymentRequestId = dataitem.paymentRequestId;
+    this.paymentRequestId = dataitem?.paymentRequestId;
     this.openAddEditClaimDialoge();
   }
 
@@ -580,5 +563,13 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     if(field == "paymentStatusCode"){
       this.paymentStatusCode = value;
     }
+  }
+
+  sortRecordsByCreationTime(data: GridDataResult) {
+    data.data.sort((a, b) => {
+        const dateA = new Date(a.creationTime);
+        const dateB = new Date(b.creationTime);
+        return dateB.getTime() - dateA.getTime();
+      });
   }
 }

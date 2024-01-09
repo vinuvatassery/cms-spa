@@ -12,7 +12,7 @@
     .k-dialog-titlebar {
       padding: $size-xxxl $size-xxx $size-l $size-xxx;
       white-space: normal;
-      max-width: 90%;
+      max-width: calc(100% - 40px);
       @media (max-width: $breakpoint-md) {
         padding: $size-xxxl $size-xlg $size-l $size-xlg;
       }

@@ -14,7 +14,7 @@
   <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
     <span class="fontsize_twel">Don’t see the Plan you’re looking for?</span>
     <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" [disabled]="isViewContentEditable"
-      aria-label="Add New " (click)="addNewInsurancePlanOpen()">
+      attr.aria-label=" {{ hasCreateUpdatePermission == true ? 'ADD NEW':'REQUEST NEW' }}" (click)="addNewInsurancePlanOpen()">
       {{ hasCreateUpdatePermission == true ? 'ADD NEW':'REQUEST NEW' }}
     </button>
   </div>
@@ -58,7 +58,8 @@
             <kendo-dropdownlist dropdownFieldautofocus aria-label="Health Insurance Type"
               [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeListForPlan$ | async"
               formControlName="insuranceType" textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
-              (valueChange)="onHealthInsuranceTypeChanged()" [loading]="(insuranceTypeList$ | async)?.length===0">
+              (valueChange)="onHealthInsuranceTypeChanged()" [loading]="(insuranceTypeList$ | async)?.length===0"
+              [disabled]="isDentalPlan">
             </kendo-dropdownlist>
             <kendo-formerror *ngIf="!newhealthInsuranceForm.controls['insuranceType'].valid && isValidateForm">Health
               Insurance Type is required.</kendo-formerror>
@@ -76,7 +77,7 @@
 
         <span class="app-checkboxwidtext-wrapper">
           <input class="adjust-attr" type="checkbox" formControlName="dentalPlanFlag" id="dentalPlanFlag"
-            name="dentalPlanFlag" aria-labelledby="Applicable" kendoCheckBox />
+            name="dentalPlanFlag" aria-labelledby="Applicable" kendoCheckBox [(ngModel)]="isDentalPlan"/>
           <label class="k-checkbox-label" for="dentalPlanFlag">This is a dental plan</label>
         </span>
       </div>
@@ -111,7 +112,7 @@
           <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="InsurancePlanClose()">
             Cancel
           </button>
-          <button kendoButton [primary]="true" aria-label="Add" (click)="addNewInsurancePlanClose()">
+          <button kendoButton [primary]="true" attr.aria-label=" {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}" (click)="addNewInsurancePlanClose()">
             {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}
           </button>
         </div>

@@ -37,6 +37,8 @@ export class ProfileContactPageComponent implements OnInit{
   preferredClientPhone$ = this.contactFacade.preferredClientPhone$;
   deactivateClientPhone$ = this.contactFacade.deactivateClientPhone$;
   removeClientPhone$ = this.contactFacade.removeClientPhone$;
+  deactivateAndAddClientPhone$ = this.contactFacade.deactivateAndAddClientPhone$;
+
   addClientPhoneResponse$ = this.contactFacade.addClientPhoneResponse$;
   lovClientPhoneDeviceType$ = this.lovFacade.lovClientPhoneDeviceType$;
   paperless$ = this.contactFacade.paperless$;
@@ -46,13 +48,13 @@ export class ProfileContactPageComponent implements OnInit{
   ngOnInit(): void {
     this. loadQueryParams()   
   }
-     /** Private properties **/
-     loadQueryParams()
-     {
-       this.profileClientId = this.route.snapshot.queryParams['id'];
-       this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];  
-         
-     }
+  /** Private properties **/
+  loadQueryParams()
+  {
+    this.profileClientId = this.route.snapshot.queryParams['id'];
+    this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
+
+  }
 
   //#region client Email//NOSONAR
   loadClientEmailsHandle(gridDataRefinerValue: any): void {
@@ -153,7 +155,6 @@ export class ProfileContactPageComponent implements OnInit{
   addClientPhoneHandle(phoneData: any): void {
     phoneData.clientId = this.profileClientId;
     this.contactFacade.addClientPhone(phoneData);
-    
   }
 
   loadClientPhoneHandle(clientPhoneId: string): void {
@@ -181,5 +182,10 @@ export class ProfileContactPageComponent implements OnInit{
   removeClientPhoneHandle(clientPhoneId: string): void {
     this.contactFacade.removeClientPhone(this.profileClientId, clientPhoneId);
   }
+  deactivateAndAddClientPhoneHandle(phoneData: any): void {
+    phoneData.clientId = this.profileClientId;
+    this.contactFacade.deactivateAndAddClientPhone(phoneData);
+  }
+
   //#endregionclient phone//NOSONAR
 }

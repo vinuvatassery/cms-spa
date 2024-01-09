@@ -17,6 +17,7 @@ import { GroupCode, CaseFacade } from '@cms/case-management/domain';
 export class GroupDetailComponent implements OnInit {
   /** Input Properties **/
   @Input() currentGroup$!: Observable<any>;
+  @Input() groupList: any;
   @Input() ddlGroups$!: Observable<any>;
   @Input() showDeleteOption!: boolean;
   /** Output Properties **/
@@ -34,6 +35,10 @@ export class GroupDetailComponent implements OnInit {
   groupCodesSubscription = new Subscription();
   isScheduledGroupChange$ = new BehaviorSubject(false);
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  isScheduledGroup = false;
+  isShowDelete = true;
+  buttonText!: any;
+
   /** Constructor **/
   constructor(private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
@@ -64,13 +69,20 @@ export class GroupDetailComponent implements OnInit {
         groupDate.setHours(0, 0, 0, 0);
 
         const isScheduled = groupDate > today
+        this.isScheduledGroup = isScheduled;
         this.isScheduledGroupChange$.next(isScheduled);
         this.checkIfSCheduled.emit(isScheduled);
 
         this.groupForm.patchValue({
           groupCodeId: group.groupCodeId,
           groupStartDate: groupDate > today ? new Date(group.groupStartDate) : this.currentDate
-        });       
+        });
+        this.isDisableDelete();
+      }
+      if(this.isScheduledGroup){
+        this.buttonText = 'Update';
+      }else{
+        this.buttonText = 'Change';
       }
     });
   }
@@ -84,9 +96,9 @@ export class GroupDetailComponent implements OnInit {
 
   /* Internal events */
   onCancelGroupChange() {
-    this.isModalGroupCloseClicked.emit(true);  
-    this.cancelGroupChange.emit();    
-    
+    this.isModalGroupCloseClicked.emit(true);
+    this.cancelGroupChange.emit();
+
   }
 
   onDeleteGroupChange() {
@@ -107,11 +119,22 @@ export class GroupDetailComponent implements OnInit {
         groupStartDate: this.intl.formatDate(this.groupForm.controls['groupStartDate'].value, this.configProvider.appSettings.dateFormat)
       };
 
-      this.updateGroup.emit(groupChanged); 
+      this.updateGroup.emit(groupChanged);
     }
   }
 
   get groupFormControls(){
     return (this.groupForm)?.controls as any;
+  }
+
+  isDisableDelete()
+  {
+    if(this.groupList && this.groupList.length === 1 && this.isScheduledGroup)
+    {
+      this.isShowDelete = false;
+    }
+    else{
+      this.isShowDelete = true;
+    }
   }
 }

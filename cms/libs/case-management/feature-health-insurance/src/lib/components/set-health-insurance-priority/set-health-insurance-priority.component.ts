@@ -87,7 +87,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
         return;
       }
-      this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
+      this.PrimeryinsuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
 
     }
     else if (value === PriorityCode.Secondary) {
@@ -111,7 +111,24 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     }
     return false;
   }
+  PrimeryinsuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
+   
+    this.gridList.forEach((row: any) => {
+      row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
+    });
 
+    const primarySelections = this.gridList.filter((m: any) => m.priorityCode === priorityCode&&m.insurancePlanId !=insurance.insurancePlanId);
+   primarySelections.forEach((element:any) => {
+    if (this.dateRangeOverlaps(element.startDate, element.endDate, insurance.startDate, insurance.endDate)) {
+      const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId !== insurance.clientInsurancePolicyId);
+      this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
+      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,errorMessage, NotificationSource.UI)
+      return true;
+    }
+    return false;
+   });   
+    return false;
+  }
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
     if (aEnd === null && bEnd === null && aStart === bStart) return true;
     if (aEnd === null && aStart >= bStart && aStart <= bEnd) return true;

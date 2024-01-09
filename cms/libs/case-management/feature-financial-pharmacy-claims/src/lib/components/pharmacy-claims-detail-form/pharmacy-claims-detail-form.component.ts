@@ -39,9 +39,8 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   state!: State;
   brandName =""
   drugName = ""
-  isEdit = false
+  @Input() isEdit = false
   serviceCount = 0
-
   @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
   @Input() getPharmacyClaim$: any;

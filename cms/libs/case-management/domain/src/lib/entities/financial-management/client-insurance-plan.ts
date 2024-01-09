@@ -2,7 +2,8 @@ export interface ClientInsurancePlans {
     isPlanSelected: boolean
     clientId: number
     clientInsurancePolicyId: string
-    insuranceIdNbr: string,
+    insuranceId: string
+    insuranceIdNbr: string
     insurancePlanId: string
     vendorId: string
     vendorAddressId: string
@@ -12,6 +13,7 @@ export interface ClientInsurancePlans {
     startDate: Date
     endDate: Date
     premiumAmt: number
+    eligibilityEndDate: Date
     coverages: InsurancePremiumCoverage[]
 }
 
@@ -31,6 +33,7 @@ export interface InsurancePremiumCoverage {
     exceptionReasonRequired?: boolean
     makeExceptionFlag?: boolean
     exceptionText?: string
+    premiumCoverageDateList?: PremiumCoverageDates[]
 }
 
 export interface InsurancePremium {
@@ -73,7 +76,7 @@ export interface InsurancePremiumDetails {
     premiumAmount: number
     isSpotsPayment: boolean
     premiumAdjustments: PremiumAdjustment[]
-    premiumAmountRequired: boolean 
+    premiumAmountRequired: boolean
 }
 
 export interface PremiumAdjustment {
@@ -82,8 +85,13 @@ export interface PremiumAdjustment {
     coverageStartDate?: string
     coverageEndDate?: string
     adjustmentAmount?: number
-    isPositiveAdjustment?:boolean
-    adjustmentAmountRequired:boolean
-    coverageDatesRequired:boolean
-    duplicateCoverage:boolean
+    isPositiveAdjustment?: boolean
+    adjustmentAmountRequired: boolean
+    coverageDatesRequired: boolean
+    duplicateCoverage: boolean
+}
+
+export interface PremiumCoverageDates {
+    coverageStartDate?: string
+    coverageDate?: string
 }

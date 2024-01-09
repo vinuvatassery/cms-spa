@@ -3,7 +3,7 @@
         {{ completed }} of {{ total }}
     </span>
 
-    <span *ngIf="completed === total && !(showCountCalculationLoader$ | async)" class="material-icons">
+    <span *ngIf="completed === total && !(showCountCalculationLoader$ | async)" class="material-icons" >
         check_circle
     </span>
     <span class="k-icon k-i-loading nobg-loader k-input-loading-icon " *ngIf="showCountCalculationLoader$ | async"  ></span>

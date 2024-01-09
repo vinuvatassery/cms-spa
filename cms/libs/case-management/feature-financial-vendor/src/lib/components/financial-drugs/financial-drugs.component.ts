@@ -174,7 +174,7 @@ export class FinancialDrugsComponent {
   clickOpenAddEditFinancialDrugsDetails(title: string) {
     this.dialogTitle = title;
     if (title === "Add") {
-      this.dialogTitle = this.hasCreateUpdatePermission ? "Add" : "Request New";
+      this.dialogTitle = this.hasCreateUpdatePermission ? "Add New" : "Request New";
     }
 
     this.isFinancialDrugsDetailShow = true;

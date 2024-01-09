@@ -85,9 +85,9 @@ export class DocumentFacade {
         });
        
       }
-
-    getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, apiType: string = ApiType.CaseApi, selectedIds?: any[], batchId? : any): void {
-        this.documentDataService.getExportFileForSelection(pageAndSortedRequest, path, apiType, selectedIds, batchId).subscribe({
+      
+    getExportFileForSelection(pageAndSortedRequest: any, path: string, fileName: string, selectedAllPaymentsList: any, batchId? : any, apiType: string = ApiType.CaseApi): void {
+        this.documentDataService.getExportFileForSelection(pageAndSortedRequest, path, selectedAllPaymentsList, batchId, apiType).subscribe({
             next: (response: any) => {
                 if (response) {
                     const fileUrl = window.URL.createObjectURL(response);

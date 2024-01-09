@@ -21,6 +21,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   @Input() vendorId: any;
   @Input() clientId: any;
   @Input() claimsType: any;
+  @Input() includeServiceSubTypeFilter = true;
   dentalOrMedicalServiceField:any;
   @Input() duplicatePaymentInputObject:any;
   public state!: any;
@@ -42,7 +43,7 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   addRemoveColumns="Default Columns"
-  columns : any;  
+  columns : any;
   dropDowncolumns : any;
   isFinancialClaimsRecentClaimGridLoaderShow = false;
 
@@ -55,17 +56,17 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   paymentRequestTypes: any = [];
-  
+
   paymentTypeFilter = '';
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade
   ) { }
-  ngOnInit(): void { 
-    this.loadColumnsData(); 
+  ngOnInit(): void {
+    this.loadColumnsData();
     this.getClaimStatusLov();
-    this.getCoPaymentRequestTypeLov();  
+    this.getCoPaymentRequestTypeLov();
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -110,6 +111,7 @@ loadFinancialRecentClaimListGrid() {
     const gridDataRefinerValue = {
       vendorId: vendorId,
       clientId: clientId,
+      includeServiceSubTypeFilter: this.includeServiceSubTypeFilter,
       claimsType : claimType,
       skipCount: skipCountValue,
       pageSize: maxResultCountValue,
@@ -124,6 +126,13 @@ loadFinancialRecentClaimListGrid() {
   onChange(data: any) {
     this.defaultGridState();
     let operator= "startswith"
+
+    if(this.selectedColumn ==="serviceCost" || this.selectedColumn ==="amountDue" || this.selectedColumn ==="clientBalance"
+    || this.selectedColumn ==="clientAnnualTotal" || this.selectedColumn === "balanceAmount")
+    {
+      operator = "eq"
+    }
+
     this.filterData = {
       logic: 'and',
       filters: [
@@ -187,7 +196,7 @@ loadFinancialRecentClaimListGrid() {
     this.selectedPaymentStatus = '';
     if (!this.filteredBy.includes('Payment Type'))
     this.selectedPaymentType = '';
-    this.loadFinancialRecentClaimListGrid();    
+    this.loadFinancialRecentClaimListGrid();
   }
 
   pageSelectionChange(data: any) {
@@ -208,7 +217,7 @@ loadFinancialRecentClaimListGrid() {
         this.isFinancialClaimsRecentClaimGridLoaderShow = false;
       }
     });
-  } 
+  }
 
   loadRecentClaimsGrid(data: any) {
     this.financialClaimsFacade.loadRecentClaimListGrid(data);
@@ -260,81 +269,88 @@ loadFinancialRecentClaimListGrid() {
 
   private loadColumnsData()
   {
-    this.dentalOrMedicalServiceField= this.claimsType == "dental" ? "Dental Service":"Medical Service";
+    this.dentalOrMedicalServiceField = this.getServiceField();
     this.columns = {
       invoiceId:"Invoice ID",
       serviceStartDate:"Service Start",
       serviceEndDate:"Service End",
       cptCode:"CPT Code",
-      medicalService:this.dentalOrMedicalServiceField,
+      medicalService: this.dentalOrMedicalServiceField,
       serviceCost:"Service Cost",
       amountDue:"Amount Due",
       paymentTypeDesc:"Payment Type",
       clientAnnualTotal:"Client Annual Total",
       clientBalance:"Client Balance",
       entryDate:"Entry Date",
-      paymentStatusDesc:"Payment Status"   
+      paymentStatusDesc:"Payment Status"
     }
 
     this.dropDowncolumns = [
       {
         "columnCode": "invoiceId",
-        "columnDesc": "Invoice ID"    
+        "columnDesc": "Invoice ID"
       },
       {
         "columnCode": "serviceStartDate",
-        "columnDesc": "Service Start"        
+        "columnDesc": "Service Start"
       },
       {
         "columnCode": "serviceEndDate",
-        "columnDesc": "Service End"     
+        "columnDesc": "Service End"
       }
       ,
       {
         "columnCode": "cptCode",
-        "columnDesc": "CPT Code"         
+        "columnDesc": "CPT Code"
       }
       ,
       {
         "columnCode": "medicalService",
-        "columnDesc": this.dentalOrMedicalServiceField         
+        "columnDesc": this.dentalOrMedicalServiceField
       }
       ,
       {
         "columnCode": "serviceCost",
-        "columnDesc": "Service Cost"         
+        "columnDesc": "Service Cost"
       }
       ,
       {
         "columnCode": "amountDue",
-        "columnDesc": "Amount Due"         
+        "columnDesc": "Amount Due"
       }
       ,
       {
         "columnCode": "paymentTypeDesc",
-        "columnDesc": "Payment Type"         
+        "columnDesc": "Payment Type"
       }
       ,
       {
         "columnCode": "clientAnnualTotal",
-        "columnDesc": "Client Annual Total"         
+        "columnDesc": "Client Annual Total"
       }
       ,
       {
         "columnCode": "clientBalance",
-        "columnDesc": "Client Balance"         
+        "columnDesc": "Client Balance"
       }
       ,
       {
         "columnCode": "entryDate",
-        "columnDesc": "Entry Date"         
+        "columnDesc": "Entry Date"
       }
       ,
       {
         "columnCode": "paymentStatusDesc",
-        "columnDesc": "Payment Status"         
+        "columnDesc": "Payment Status"
       }
     ]
+  }
+
+  getServiceField(): string {
+    if(this.includeServiceSubTypeFilter){
+      return this.claimsType == 'dental' ? 'Dental Service' : 'Medical Service';
+    }
+    return 'Service';
   }
 
   dropdownFilterChange(
@@ -384,15 +400,15 @@ loadFinancialRecentClaimListGrid() {
     });
    }
   public rowClass = (args:any) => {
-    let bool =false ; 
+    let bool =false ;
     if(this.duplicatePaymentInputObject?.amountDue)
  {
-   bool = args.dataItem.amountDue == this.duplicatePaymentInputObject?.amountDue 
+   bool = args.dataItem.amountDue == this.duplicatePaymentInputObject?.amountDue
    && args.dataItem.startDate== this.duplicatePaymentInputObject?.startDate
    && args.dataItem.endDate== this.duplicatePaymentInputObject?.endDate
-   ; 
+   ;
  }
   return {"table-row-disabled" : bool }
-  
+
   };
 }

@@ -2,7 +2,7 @@
       <section class="app-l-mainTittle">
             <div class="d-flex">
                   <button aria-label="back to vendor refund" kendoButton look="flat" class="mr-1"
-                        (click)="navToReconcilePayments()" title="Go Back"> <span class="material-icons">
+                        (click)="navToReconcilePayments()" title="Go Back"> <span class="material-icons" aria-hidden="true">
                               arrow_back </span> </button>
                   <h1 class="maintitle_withicon text-bold">Reconcile Payments </h1>
             </div>
@@ -94,7 +94,7 @@
                         </span>
                         <span class="right-overlay-export">
                               <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"  [disabled]="showExportLoader">
-                                <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>         
+                                <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>         
                                 
                                 <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
                               </button>
@@ -134,7 +134,7 @@
                         [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  (filterChange)="filterChange($event)"
                         [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [selectable]="true" filterable="menu" [filter]="state.filter"
                         [data]="reconcilePaymentGridPagedResult" 
-                        (selectionChange)="onRowSelection(grid, $event)">
+                        (cellClick)="onRowSelection(grid, $event)">
                        
                         <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
                               <ng-template kendoGridCellTemplate let-dataItem>
@@ -317,9 +317,9 @@
                         let-currentPage="currentPage">
                         <div class="grid-custom-paginationtemplates d-flex">
                               <div class="d-flex align-items-center">
-                                    <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                                    <label class="mr-1" for="ClaimsRowsPerPage">Rows Per Page</label>
                                     <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
-                                          [textField]="'text'" [valueField]="'value'" #RowsPerPage id="RowsPerPage"
+                                          [textField]="'text'" [valueField]="'value'" #ClaimsRowsPerPage id="ClaimsRowsPerPage"
                                           aria-label="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
                                           (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
                                     <kendo-pager-info> </kendo-pager-info>

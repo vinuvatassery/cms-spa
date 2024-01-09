@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
-import { DrugType, DrugsFacade, EmailAddressTypeCode, FinancialVendorFacade, InsurancePlanFacade, PendingApprovalGeneralTypeCode, PhoneTypeCode } from '@cms/case-management/domain';
+import { DrugType, DrugsFacade, EmailAddressTypeCode, FinancialVendorFacade, FinancialVendorTypeCode, InsurancePlanFacade, PendingApprovalGeneralTypeCode, PhoneTypeCode } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoaderService } from '@cms/shared/util-core';
-import { FinancialVendorTypeCode, StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
+import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'productivity-tools-approvals-edit-items',
   templateUrl: './approvals-edit-items.component.html',
@@ -89,14 +89,16 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
     }
 
     if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.InsurancePlan) {
+      this.financialVendorFacade.loadVendors(clinicName,PendingApprovalGeneralTypeCode.InsuranceVendor);
       this.subscribeSearchVendor();
-      this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.InsuranceProviders);
     } else if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.Drug) {
-      this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.Manufacturers);
+      this.financialVendorFacade.loadVendors(clinicName,FinancialVendorTypeCode.Manufacturers);
       this.subscribeSearchVendor();
-    }
-    else {
-      this.financialVendorFacade.loadVendorList(FinancialVendorTypeCode.MedicalClinic);
+    } else if(this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalProvider || this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.MedicalClinic) {
+      this.financialVendorFacade.loadVendors(clinicName,PendingApprovalGeneralTypeCode.MedicalProvider);
+      this.subscribeSearchVendor();
+    } else if (this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalProvider || this.selectedSubtypeCode === PendingApprovalGeneralTypeCode.DentalClinic) {
+      this.financialVendorFacade.loadVendors(clinicName,PendingApprovalGeneralTypeCode.DentalProvider);
       this.subscribeSearchVendor();
     }
     this.selectedClinicVendorId = null;

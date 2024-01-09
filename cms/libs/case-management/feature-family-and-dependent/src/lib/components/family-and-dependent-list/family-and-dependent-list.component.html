@@ -12,8 +12,8 @@
   (dataStateChange)="dataStateChange($event)">
   <ng-template kendoGridColumnMenuTemplate let-service="service">
     <span class="k-icon k-i-x" (click)="service.close()"
-      style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>   
-    <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser> 
+      style="position: absolute; right: 5px; top: 5px;cursor: pointer;"></span>
+    <kendo-grid-columnmenu-chooser [service]="service"> </kendo-grid-columnmenu-chooser>
   </ng-template>
 
     <kendo-grid-column  [width]="180"
@@ -44,7 +44,7 @@
         title="SSN"
         [sortable]="true"
         [columnMenu]="false"
-  
+
       >
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.ssn | ssn }}
@@ -56,14 +56,14 @@
         isAddOrEditFamilyDependentDisplay ? 'Date of Birth' : 'DOB(Age)'
       }}"
       [sortable]="true"
-      [columnMenu]="false"
+      [columnMenu]="true"
 
     >
     <ng-template kendoGridCellTemplate let-dataItem>
       {{ dataItem.dob | date: 'MM/dd/yyyy' }}  (Age {{dataItem.age}})
     </ng-template>
   </kendo-grid-column>
- 
+
     <kendo-grid-column [width]="160"
       field="enrolledInInsuranceFlag"
       title="{{
@@ -109,19 +109,18 @@
     >
       <ng-template kendoGridCellTemplate let-dependent let-ClientRelationshipId="field">
         <kendo-dropdownbutton
-          [data]=  "actions"
-          icon="more-vertical"
+          [data]=  "actions" 
           class="TableActionPopup app-dropdown-action more_action_wid"
           buttonClass="k-icon-button"
           title="More option"
           aria-label="more actions"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }"
         >
-        <span hidden> More Option</span>
+        <span class="material-icons" aria-label="More option"> more_vert    </span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-ClientRelationshipId="ClientRelationshipId">
           <button kendoButton  look="flat" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" [class]="dataItem.buttonType" aria-hidden="false"
           (click)="dataItem.click(dependent.clientRelationshipId,dependent.dependentTypeCode)" [disabled]="(isReadOnly$ | async) ? true : false">
-            <span class="material-icons" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" >{{dataItem.icon}}</span>
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText" >{{dataItem.icon}}</span>
             <label>   {{ dependent.dependentTypeCode !== 'C' ? dataItem.clientText : dataItem.depText  }} </label>
         </button>
           </ng-template>
@@ -133,9 +132,9 @@
   let-currentPage="currentPage">
   <div class="grid-custom-paginationtemplates d-flex">
     <div class="d-flex align-items-center">
-      <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+      <label class="mr-1" for="FamilyRowsPerPage">Rows Per Page</label>
       <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-        [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage"  [valuePrimitive]="true" [(value)]="state.take"
+        [valueField]="'value'" aria-label="Rows Per Page" id="FamilyRowsPerPage"  [valuePrimitive]="true" [(value)]="state.take"
         (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
       <kendo-pager-info> </kendo-pager-info>
       <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
@@ -147,16 +146,16 @@
     </div>
   </div>
 </ng-template>
-    <!-- grid Loader Template -->  
+    <!-- grid Loader Template -->
     <ng-template kendoGridLoadingTemplate>
       <common-grid-loader-component></common-grid-loader-component>
      </ng-template>
-     <!-- grid No data Template -->  
+     <!-- grid No data Template -->
      <ng-template kendoGridNoRecordsTemplate>
        <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
        </div>
        <p>There is no data to display.</p>
-     </ng-template> 
+     </ng-template>
   </kendo-grid>
 </div>
 <kendo-formerror *ngIf="!isDependentAvailable"><span class="material-icons"> error </span> A Response is required.</kendo-formerror>

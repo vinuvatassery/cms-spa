@@ -89,6 +89,7 @@ export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
     this.drugPharmacyFacade.addDrugPharmacy(
       this.profileClientId,
       data.vendorId,
+      data?.vendorAddressId,
       priorityCode,
       data.isShowHistoricalData
     );

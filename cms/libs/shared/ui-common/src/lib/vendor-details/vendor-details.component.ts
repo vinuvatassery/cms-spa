@@ -1,8 +1,7 @@
 import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
-
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade,TinValidationFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
@@ -64,7 +63,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   clinicNameNotApplicable: boolean = false;
   firstLastNameNotApplicable: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  tinMaskFormat: string = '0 00-000000';
+  tinMaskFormat: string = '0 00-0000000';
   specialhandlingCounter!: string;
   specialHandlingCharachtersCount!: number;
   specialHandlingMaxLength = 100;
@@ -74,6 +73,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   clinicSearchSubscription !: Subscription;
   specialCharAdded: boolean = false;
   accountingNumberValidated: boolean = true;
+  isDuplicateTin = false;
+  duplicateTinMessage = "";
+
 
   constructor(
     private readonly formBuilder: FormBuilder,
@@ -82,6 +84,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
+    private tinValidationFacade: TinValidationFacade
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
@@ -92,13 +95,13 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     if (clinicName === '' || !clinicName) {
       this.clinicVendorListLocal = null;
       return;
-    } 
+    }
     this.clinicSearchSubscription = this.clinicVendorList$.subscribe((data: any) => {
       if (data && clinicName !== '') {
         if (this.providerType ===  FinancialVendorTypeCode.MedicalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic);
         } else if (this.providerType === FinancialVendorTypeCode.HealthcareProviders) {
-          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic 
+          this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.MedicalClinic
           || item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic );
         }else if (this.providerType === FinancialVendorTypeCode.DentalProviders) {
           this.clinicVendorListLocal = data.filter((item: any) => item.vendorTypeCode === FinancialVendorTypeCode.DentalClinic);
@@ -187,6 +190,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
   getContactNameValidation(index: number) {
     return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get("isCheckContactNameValid")?.value;
   }
+  getEmailValidation(index: number) {
+    return (<FormArray>this.medicalProviderForm.get('newAddContactForm')).at(index).get("email")?.value;
+  }
 
   checkContactPreference(i: number) {
     for (let index = 0; index < this.AddContactForm.length; index++) {
@@ -209,8 +215,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.markAllAsTouched();
     if (this.providerType == this.vendorTypes.MedicalProviders || this.providerType == this.vendorTypes.DentalProviders || this.providerType == this.vendorTypes.HealthcareProviders) {
       if (!this.clinicNameNotApplicable) {
-        this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
-        this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+        this.medicalProviderForm.controls['parentVendorId'].setValidators([Validators.required]);
+        this.medicalProviderForm.controls['parentVendorId'].updateValueAndValidity();
       }
       if (!this.firstLastNameNotApplicable) {
         this.medicalProviderForm.controls['firstName'].setValidators([Validators.required]);
@@ -230,6 +236,8 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     else {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
+      this.medicalProviderForm.controls['city'].setValidators([Validators.pattern('^[A-Za-z ]+$')]);
+      this.medicalProviderForm.controls['city'].updateValueAndValidity();
     }
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     this.validateMailCode()
@@ -258,17 +266,17 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
           Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')
         ]);
       this.medicalProviderForm.controls['zip'].updateValueAndValidity();
+
+      this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.nullValidator,]);
+      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
+
       if (this.providerType == this.vendorTypes.Manufacturers) {
         this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.nullValidator,]);
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.nullValidator,]);
-        this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
       }
       else {
         this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.required, Validators.pattern('^[A-Za-z ]+$')]);
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
-        this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.required, Validators.pattern('^[A-Za-z ]+$')]);
-        this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
       }
 
     }
@@ -407,13 +415,13 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
 
   onClinicNameChecked() {
     if (this.clinicNameNotApplicable) {
-      this.medicalProviderForm.controls['providerName'].setValue(null);
-      this.medicalProviderForm.controls['providerName'].disable();
+      this.medicalProviderForm.controls['parentVendorId'].setValue(null);
+      this.medicalProviderForm.controls['parentVendorId'].disable();
       this.firstLastNameNotApplicable = false;
       this.onNameChecked();
     }
     else {
-      this.medicalProviderForm.controls['providerName'].enable();
+      this.medicalProviderForm.controls['parentVendorId'].enable();
     }
   }
 
@@ -466,7 +474,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     this.medicalProviderForm.markAllAsTouched();
     if (this.vendorTypes.DentalProviders == this.providerType || this.vendorTypes.MedicalProviders == this.providerType
       || this.vendorTypes.DentalClinic == this.providerType || this.vendorTypes.MedicalClinic == this.providerType) {
-      if (this.vendorDetails.vendorName && this.vendorDetails.vendorTypeCode != this.vendorTypes.DentalProviders) {
+      if (this.vendorDetails.vendorName && this.vendorDetails.vendorTypeCode != this.vendorTypes.DentalProviders && this.vendorDetails.vendorTypeCode != this.vendorTypes.MedicalProviders) {
         this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
         this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
       }
@@ -480,10 +488,6 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     else {
       this.medicalProviderForm.controls['providerName'].setValidators([Validators.required, Validators.maxLength(500)]);
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
-    }
-    if (this.vendorTypes.Pharmacy != this.providerType) {
-      this.medicalProviderForm.controls['npiNbr'].setValidators([Validators.required]);
-      this.medicalProviderForm.controls['npiNbr'].updateValueAndValidity();
     }
 
   }
@@ -538,6 +542,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       PhysicalAddressFlag: (formValues.physicalAddressFlag) ? StatusFlag.Yes : StatusFlag.No,
       emailAddressTypeCode: AddressType.Mailing,
       activeFlag: (this.hasCreateUpdatePermission) ? StatusFlag.Yes : StatusFlag.No,
+      parentVendorId : formValues.parentVendorId,
     }
     if (this.providerType === FinancialVendorTypeCode.Clinic) {
       if (vendorProfileData.clinicType === FinancialVendorTypeCode.MedicalClinic) {
@@ -599,8 +604,6 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.required,]);
       this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
 
-      this.medicalProviderForm.controls['nameOnEnvolop'].setValidators([Validators.required,]);
-      this.medicalProviderForm.controls['nameOnEnvolop'].updateValueAndValidity();
     }
     else {
       this.onChange();
@@ -675,17 +678,57 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     return status;
   }
 
-  restrictAccountingNumber() {
-    if(this.providerType == this.vendorTypes.Pharmacy && this.medicalProviderForm.controls['tinNumber'].value==''){
+  restrictAccountingNumber(event: any) {
+    this.isDuplicateTin = false;
+    if(( (this.providerType == this.vendorTypes.Pharmacy)||
+      (this.providerType==this.vendorTypes.DentalProviders)||
+      (this.providerType==this.vendorTypes.MedicalProviders) ||
+      (this.providerType==this.vendorTypes.InsuranceVendors)||
+      (this.providerType == this.vendorTypes.Manufacturers)) &&
+      this.medicalProviderForm.controls['tinNumber'].value==''){
       this.accountingNumberValidated = true;
       return;
     }
     if (this.medicalProviderForm.controls['tinNumber'].value && (parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 1 || parseInt(this.medicalProviderForm.controls['tinNumber'].value.charAt(0)) == 3)) {
       this.accountingNumberValidated = true;
+      if(this.medicalProviderForm.controls['tinNumber'].value.trim().length>=9){
+        this.validateTin(this.medicalProviderForm.controls['tinNumber'].value);
+      }
     } else {
       this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
       this.accountingNumberValidated = false;
+      this.isDuplicateTin = false;
     }
+  }
+  onKeyPressAllowAlphabetOnly(event:number) {
+    if((event > 64 && event < 91) || (event > 96 && event < 123)||event==32)
+      {
+        this.medicalProviderForm.controls['city'].setErrors(null);
+        return true;
+      }else{
+        this.medicalProviderForm.controls['city'].setErrors({ 'incorrect': true });
+        return false;
+      }
+  }
+
+  validateTin(tinNbr: any) {
+    this.tinValidationFacade.showLoader();
+    this.tinValidationFacade.validateTinNbr(tinNbr).subscribe({
+      next: (response: any) => {
+        if(response){
+          this.isDuplicateTin = false;
+        }
+        this.tinValidationFacade.hideLoader();
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.tinValidationFacade.hideLoader();
+        this.isDuplicateTin = true;
+        this.medicalProviderForm.controls['tinNumber'].setErrors({ 'incorrect': true });
+        this.duplicateTinMessage = err.error?.error?.message ?? "";
+        this.cdr.detectChanges();
+        }
+    });
   }
 
 }

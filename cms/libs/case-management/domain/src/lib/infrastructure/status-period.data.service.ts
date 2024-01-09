@@ -13,9 +13,8 @@ export class StatusPeriodDataService {
   }
 
   /** Public methods **/
-  loadStatusPeriod(caseId:any,clientId:any,showHistorical:any,gridDataRefinerValue:any) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${caseId}/status-periods?clientId=${clientId}&showHistorical=${showHistorical}&SkipCount=${gridDataRefinerValue.skipCount}&MaxResultCount=${gridDataRefinerValue.pagesize}`);
+  loadStatusPeriod(caseId: any, clientId: any, showHistorical: any, gridDataRefinerValue: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/cases/${caseId}/status-periods?clientId=${clientId}&showHistorical=${showHistorical}`, gridDataRefinerValue);
   }
 
   loadStatusGroupHistory(eligibilityId: string) {

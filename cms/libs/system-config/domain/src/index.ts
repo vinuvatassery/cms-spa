@@ -20,6 +20,7 @@ export * from './lib/infrastructure/zip-code.data.service';
 export * from './lib/infrastructure/navigation-menu.data.service';
 export * from './lib/infrastructure/sysconfig-financials.data.service';
 export * from './lib/infrastructure/service_providers.data.service';
+export * from './lib/infrastructure/tin-validation.data.service';
 
 /** Facades **/
 export * from './lib/application/lov.facade';
@@ -30,6 +31,7 @@ export * from './lib/application/zip-code.facade';
 export * from './lib/application/navigation-menu.facade';
 export * from './lib/application/sysconfig-financials.facade';
 export * from './lib/application/service_providers.facade';
+export * from './lib/application/tin-validation.facade';
 
 /** Enums **/
 export * from './lib/enums/lov-types.enum';

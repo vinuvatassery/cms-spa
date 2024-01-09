@@ -348,10 +348,11 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.drugPharmacyFacade.searchPharmacies(searchText);
   }
 
-  addPharmacy(vendorId: string) {
+  addPharmacy(pharmacy: any) {
     this.drugPharmacyFacade.addClientPharmacy(
       this.workflowFacade.clientId ?? 0,
-      vendorId
+      pharmacy.vendorId,
+      pharmacy.VendorAddressId
     );
   }
 
@@ -363,7 +364,8 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.drugPharmacyFacade.editClientPharmacy(
       this.workflowFacade.clientId ?? 0,
       data?.clientPharmacyId,
-      data?.vendorId
+      data?.vendorId,
+      data.vendorAddressId
     );
   }
 

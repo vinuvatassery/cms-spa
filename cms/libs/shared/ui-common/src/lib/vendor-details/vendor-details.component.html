@@ -53,40 +53,38 @@
       <div class="flex-col"
         *ngIf="providerType == vendorTypes.MedicalProviders || providerType == vendorTypes.DentalProviders || providerType == vendorTypes.HealthcareProviders || providerType == vendorTypes.Clinic">
         <div class="flex-row">
+            <div *ngIf="providerType !== vendorTypes.Clinic && !editVendorInfo"  class="flex-col flex-col-8">
 
-          <div *ngIf="providerType !== vendorTypes.Clinic && !editVendorInfo"
-            class="flex-col flex-col-8 inlineloaderwrapper hidedropicon">
+
+          <div class="inlineloaderwrapper hidedropicon">
             <span *ngIf="clinicVendorLoader$ | async"
               class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
             <kendo-floatinglabel text="Clinic Name">
 
               <kendo-combobox placeholder="Clinic Name" [fillMode]="formUiStyle.dropDownFillMode"
                 [popupSettings]="{ popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
-                (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal"
-                [formControlName]="'providerName'" [valuePrimitive]="true" [valueField]="'vendorName'"
-                [textField]="'vendorName'"><button kendoButton fillMode="clear" icon="image"></button>
+                (filterChange)="searchClinic($event)" [data]="clinicVendorListLocal" [formControlName]="'parentVendorId'"
+                [valuePrimitive]="true" [valueField]="'vendorId'" [textField]="'vendorName'"><button kendoButton
+                  fillMode="clear" icon="image"></button>
                 <ng-template kendoComboBoxItemTemplate let-dataItem>
                   <span>{{ dataItem.vendorName }}</span>
                 </ng-template>
               </kendo-combobox>
 
               <kendo-formerror
-                *ngIf="medicalProviderFormControls?.providerName.errors?.required && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
+                *ngIf="medicalProviderFormControls?.parentVendorId.errors?.required && !medicalProviderForm.controls['parentVendorId'].disabled && isValidateForm">
                 Clinic Name is required
-              </kendo-formerror>
-              <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.maxlength">
-                Clinic Name cannot be more than 500 characters
               </kendo-formerror>
             </kendo-floatinglabel>
 
+          </div>
             <button *ngIf="vendorTypes.MedicalProviders == providerType || vendorTypes.DentalProviders == providerType || providerType == vendorTypes.HealthcareProviders"
               kendoButton class="card-link-button ml-1 no-ul fontsize_twel mt-3" [disabled]="isViewContentEditable"
-              aria-label="Add New" (click)="addNewClinicOpen()">
+              attr.aria-label=" {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}" (click)="addNewClinicOpen()">
               {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}
             </button>
 
           </div>
-
           <div *ngIf="providerType === vendorTypes.Clinic && !editVendorInfo"
             class="flex-col flex-col-12 inlineloaderwrapper">
             <span *ngIf="clinicVendorLoader$ | async"
@@ -108,7 +106,7 @@
 
             <button *ngIf="vendorTypes.MedicalProviders == providerType || vendorTypes.DentalProviders == providerType"
               kendoButton class="card-link-button ml-1 no-ul fontsize_twel mt-3" [disabled]="isViewContentEditable"
-              aria-label="Add New" (click)="addNewClinicOpen()">
+              attr.aria-label="{{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}" (click)="addNewClinicOpen()">
               {{hasCreateUpdatePermission==true ? 'ADD NEW':'REQUEST NEW'}}
             </button>
 
@@ -181,13 +179,16 @@
       <div class="flex-col" *ngIf="providerType != vendorTypes.InsuranceProviders">
         <kendo-floatinglabel text="TIN">
           <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
-            placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber()">
+            placeholder="TIN" [maskOnFocus]="true" formControlName="tinNumber" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber($event)">
           </kendo-maskedtextbox>
-          <kendo-formerror *ngIf="!medicalProviderForm.controls['tinNumber'].valid && isValidateForm && accountingNumberValidated && providerType != vendorTypes.Pharmacy">
+          <kendo-formerror *ngIf="!medicalProviderForm.controls['tinNumber'].valid && isValidateForm && accountingNumberValidated">
             TIN cannot be less than 9 digits
           </kendo-formerror>
-          <kendo-formerror *ngIf="!accountingNumberValidated && providerType != vendorTypes.Pharmacy">
+          <kendo-formerror *ngIf="!accountingNumberValidated">
             A 1 or a 3 is required
+          </kendo-formerror>
+          <kendo-formerror *ngIf="isDuplicateTin">
+           {{duplicateTinMessage}}
           </kendo-formerror>
         </kendo-floatinglabel>
       </div>
@@ -268,11 +269,11 @@
 
       <div class="flex-col" *ngIf="providerType != vendorTypes.Manufacturers">
 
-        <kendo-floatinglabel text="Name on Envelope">
+        <kendo-floatinglabel text="Name on Envelope (optional)">
           <kendo-textbox aria-label="Name on Envelope" [maxlength]="200" [fillMode]="formUiStyle.inputFillMode"
             formControlName="nameOnEnvolop">
           </kendo-textbox>
-          <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnEnvolop.errors?.required && isValidateForm">
+          <kendo-formerror *ngIf="medicalProviderFormControls?.nameOnEnvolop.errors?.required && isValidateForm && providerType != vendorTypes.Pharmacy">
             Name on Envelope is required
 
           </kendo-formerror>
@@ -301,7 +302,7 @@
       <div class="flex-col">
         <kendo-floatinglabel text="City">
           <kendo-textbox aria-label="City" [maxlength]="50" [fillMode]="formUiStyle.inputFillMode"
-            formControlName="city">
+            formControlName="city" (keypress)="onKeyPressAllowAlphabetOnly($event.charCode)">
           </kendo-textbox>
           <kendo-formerror *ngIf="medicalProviderFormControls?.city.errors?.required && isValidateForm">
             City is required
@@ -575,8 +576,10 @@
                 formControlName="email" [maxlength]="200">
               </kendo-textbox>
             </kendo-floatinglabel>
+            <kendo-formerror
+            *ngIf="!getContactControl(i, 'email')?.valid&& getEmailValidation(i)">Invalid email format</kendo-formerror>
           </div>
-          <div *ngIf="providerType === vendorTypes.Manufacturers" class="flex-col mt-1">
+          <div *ngIf="providerType != vendorTypes.InsuranceProviders"  class="flex-col mt-1">
             <div class="component-list-h">
               <span class="app-checkboxwidtext-wrapper">
                 <input type="checkbox" kendoCheckBox aria-labelledby="Rebate" id="isPreferedContact{{i}}"
@@ -603,7 +606,7 @@
     <div class="justify-content-end">
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeVendorModal()"> Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Add" (click)="save()"> {{hasCreateUpdatePermission == true ? 'ADD' : 'REQUEST NEW'}} </button>
+      <button kendoButton [primary]="true" attr.aria-label="{{hasCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}}" (click)="save()"> {{hasCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} </button>
     </div>
   </div>
   <div class="justify-content-between" *ngIf="editVendorInfo">

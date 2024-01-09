@@ -410,7 +410,7 @@ loadMedicalPremiumList(
         const gridView = {
           data: dataResponse['items'],
           total: dataResponse['totalCount'],
-          acceptsCombinedPaymentsCount: dataResponse['acceptsCombinedPaymentsQueryCount'],
+          acceptsReportsQueryCount: dataResponse['acceptsReportsQueryCount'],
         };
       this.financialPremiumsProcessDataSubject.next(gridView);
     }},

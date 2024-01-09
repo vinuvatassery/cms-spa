@@ -41,9 +41,9 @@
                               <div class="flex-col flex-col-6">
                                     <div class="grey-cards-banner">For a total amount of
                                           <strong>$ {{item.totalBatchAmount}}</strong> may be charged to the CAREAssist VISA
-                                          Account Ending
+                                          ending in
                                           <strong *ngIf="last4OfVisaCard"> {{last4OfVisaCard}} </strong> 
-                                          <strong *ngIf="!last4OfVisaCard"> #XXXX </strong> expiration date
+                                          <strong *ngIf="!last4OfVisaCard"> #XXXX </strong>, expiration date
                                           <strong *ngIf="cardExpirationMonth">{{cardExpirationMonth}}/{{cardExpirationYear}}</strong>
                                           <strong *ngIf="!cardExpirationMonth">MM/YY</strong>.
                                     </div>

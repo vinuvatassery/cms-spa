@@ -21,7 +21,7 @@
                             <kendo-label class="k-radio-label" for="buyingPremiumNo" text="No"></kendo-label>
                         </span>
                         <kendo-formerror
-                            *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid && isViewContentEditable==false">A Response is Required.</kendo-formerror>
+                            *ngIf="!healthInsuranceForm.controls['careassistPayingPremiumFlag'].valid && isViewContentEditable==false">A response is required.</kendo-formerror>
                     </div>
                 </fieldset>
             </div>
@@ -33,7 +33,7 @@
         placeholder="Insurance Vendor Name"
         [popupSettings]="{popupClass: 'combotable_search_list', animate: true }" [filterable]="true"
         (filterChange)="searchMedicalProvider($event)"
-        [data]="insuranceVendorsSearchResult$ | async" 
+        [data]="insuranceVendorsSearchResult$ | async"
         (valueChange)="onProviderValueChange($event)"
         formControlName="insuranceVendorAddressId"
         [valuePrimitive]="true"
@@ -63,12 +63,12 @@
                 <span class="text-muted"><em> Address:{{ dataItem.vendorAddress}}</em> </span>
             </ng-template>
         </kendo-combobox-column>
-       
+
     </kendo-multicolumncombobox>
      <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceVendorAddressId'].valid && isViewContentEditable==false"
     class="d-flex align-items-center">
-   
-   {{providerName}} Vendor is required
+
+   {{providerName}} Vendor is required.
 </kendo-formerror>
     </kendo-floatinglabel>
     <div class="mt-2">
@@ -76,19 +76,19 @@
     <button
       kendoButton
       class="card-link-button ml-1 no-ul fontsize_twel"
-      [disabled]="isViewContentEditable" 
-      aria-label="add new insurance carrier"
+      [disabled]="isViewContentEditable"
+      attr.aria-label="{{hasinsuranceVendorCreateUpdatePermission==true? 'ADD NEW':'REQUEST NEW'}}"
       (click)="addNewInsuranceProviderOpen()"
-    > 
+    >
       {{hasinsuranceVendorCreateUpdatePermission==true? 'ADD NEW':'REQUEST NEW'}}
     </button>
     </div>
        </div>
-        <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'|| healthInsuranceForm.controls['careassistPayingPremiumFlag'].value == null">
+        <div class="flex-row mt-3" *ngIf="healthInsuranceForm.controls['careassistPayingPremiumFlag'].value === 'Y'">
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Date Currently Paid Through">
                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                        formControlName="premiumPaidThruDate" 
+                        formControlName="premiumPaidThruDate"
                         formatPlaceholder="formatPattern" placeholder="" aria-label="Date Currently Paid Through">
                     </kendo-datepicker>
                 </kendo-floatinglabel>
@@ -97,7 +97,7 @@
             <div class="flex-col flex-col-6">
                 <kendo-floatinglabel text="Next Premium Payment Due Date">
                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-                        formControlName="nextPremiumDueDate" 
+                        formControlName="nextPremiumDueDate"
                         formatPlaceholder="formatPattern" placeholder="" aria-label="Next Premium Payment Due Date">
                     </kendo-datepicker>
                 </kendo-floatinglabel>
@@ -128,7 +128,7 @@
             </div>
             <div class="flex-col">
                 <kendo-floatinglabel text="Payment ID Number">
-                    <kendo-textbox 
+                    <kendo-textbox
                         placeholder="Payment ID Number" formControlName="paymentIdNbr" [maxlength]="20"
                         [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
                     </kendo-textbox>

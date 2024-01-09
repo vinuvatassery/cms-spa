@@ -1,11 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import {
-  LoaderService,
-  LoggingService,
-  NotificationSnackbarService,
-  SnackBarNotificationType,
-} from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
 import { Subject, first } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -93,14 +88,18 @@ export class UserManagementFacade {
     private readonly loaderService: LoaderService
   ) {}
 
-  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
-    if (type == SnackBarNotificationType.ERROR) {
-      const err = subtitle;
-      this.loggingService.logException(err);
+
+    showHideSnackBar(type : SnackBarNotificationType , subtitle : any, title : string = '')
+    {        
+        if(type == SnackBarNotificationType.ERROR)
+        {
+          const err= subtitle;    
+          this.loggingService.logException(err)
+        }  
+          this.notificationSnackbarService.manageSnackBar(type, subtitle, NotificationSource.API, title)
+          this.hideLoader();   
     }
-    this.notificationSnackbarService.manageSnackBar(type, subtitle);
-    this.hideLoader();
-  }
+ 
 
   showLoader() {
     this.loaderService.show();

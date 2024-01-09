@@ -35,8 +35,8 @@ export class RefundBatchPageComponent implements OnInit {
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     public contactFacade: ContactFacade,
     public lovFacade: LovFacade,
-    private paymentFacade:PaymentsFacade,
-    private readonly financialVendorFacade : FinancialVendorFacade,
+    private paymentFacade: PaymentsFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade,
     private dialogService: DialogService,
   ) { }
 
@@ -69,52 +69,52 @@ export class RefundBatchPageComponent implements OnInit {
     }
   }
 
-  dataExportParameters :any;
+  dataExportParameters: any;
   exportReceiptDataEvent(data: any) {
     const gridDataResult = data.gridDataResult;
     if (data) {
       const filter = JSON.stringify(gridDataResult?.filter);
 
       const exportGridParams = {
-        SortType: gridDataResult?.sortType,
-        Sorting: gridDataResult?.sortColumn,
+        SortType: this.sortType,
+        Sorting: this.sortValue,
         SkipCount: gridDataResult?.skipcount,
         MaxResultCount: gridDataResult?.maxResultCount,
         Filter: filter,
       };
       this.dataExportParameters = exportGridParams;
-
       const formattedDate = new Date().toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' }).replace(/\//g, '.');
-      this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/batches/receipt`, `Receipting Log [${formattedDate}]`, ApiType.CaseApi, data.selectedIds, data.batchId);
+      this.documentFacade.getExportFileForSelection(this.dataExportParameters, `vendor-refunds/batches/receipt`, `Receipting Log [${formattedDate}]`, data, data.batchId, ApiType.CaseApi);
     }
   }
-  updateProviderProfile(event:any){
+
+  updateProviderProfile(event: any) {
     this.financialVendorFacade.updateProviderPanel(event)
   }
 
-  OnEditProviderProfileClick(){
+  OnEditProviderProfileClick() {
     this.contactFacade.loadDdlStates()
     this.lovFacade.getPaymentMethodLov()
   }
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
-  providerDetailsDialog:any;
+  providerDetailsDialog: any;
   vendorProfile$ = this.financialVendorFacade.providePanelSubject$
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
-  onProviderNameClick(event:any){
+  onProviderNameClick(event: any) {
     this.paymentRequestId = event
     this.providerDetailsDialog = this.dialogService.open({
       content: this.providerDetailsTemplate,
-      animation:{
+      animation: {
         direction: 'left',
-        type: 'slide',  
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-    
+
   }
   onCloseViewProviderDetailClicked(result: any) {
     if (result) {

@@ -1,74 +1,72 @@
 <span class="header-menu_profile">
-  <button
-    class="header-buttons user-button" 
-    kendoButton
-    title="XX"
-     (click)="isProfilePopoverOpen = !isProfilePopoverOpen"  >
+  <button class="header-buttons user-button" kendoButton #profileAnchor
+    attr.aria-label="{{userInfo?.firstName?.charAt(0)}}{{userInfo?.lastName?.charAt(0)}}"
+    (click)="toggleProfilePopoverOpen()">
     <div class="app-c-avatar">
-      <span class="profile-text-avatar">XX</span>
+      <span class="profile-text-avatar">
+        <div [hidden]="imageLoaderVisible" class="app-c-avatar avatar-img-sm avatar-sm">
+          <img [hidden]="imageLoaderVisible" [src]="userImageSubject | async" alt="User Profile photo"
+            class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()" />
+        </div>
+        <div *ngIf="imageLoaderVisible">
+          <div mat-card-avatar class="app-c-avatar avatar-sm">
+            <span class="profile-text-avatar">{{userInfo?.firstName?.charAt(0)}}{{userInfo?.lastName?.charAt(0)}}</span>
+          </div>
+        </div>
+      </span>
     </div>
   </button>
-  <div class="profile_popover_wrapper"  *ngIf="isProfilePopoverOpen"  >
-   
-      <div class="app-c-card user-setting-dropdown">
-        <div class="app-c-card-header card-header-border-bottom">
-          <div class="app-c-avatar avatar-lg">
-            <span class="profile-text-avatar">XX</span>
-          </div>
-          <div class="app-c-card-header-title">
-            <h3 class="card-mainTitle">{{ onGetUser()?.name }}</h3>
-            <p class="card-subTitle">Program coordinator</p>
-          </div>
+  <div class="profile_popover_wrapper" *ngIf="isProfilePopoverOpen" #accountSettingsPopover>
+    <div class="app-c-card user-setting-dropdown">
+      <div class="app-c-card-header card-header-border-bottom">
+        <div class="app-c-avatar avatar-lg">
+          <span class="profile-text-avatar">
+            <div [hidden]="imageLoaderVisible" class="app-c-avatar avatar-img-sm avatar-sm">
+              <img [hidden]="imageLoaderVisible" [src]="userImageSubject | async" alt="User Profile photo"
+                class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()" />
+            </div>
+            <div *ngIf="imageLoaderVisible">
+              <div mat-card-avatar class="app-c-avatar avatar-sm">
+                <span
+                  class="profile-text-avatar">{{userInfo?.firstName?.charAt(0)}}{{userInfo?.lastName?.charAt(0)}}</span>
+              </div>
+            </div>
+          </span>
         </div>
-        <div class="app-c-card-footer">
-          <button look="flat"
-       
-           kendoButton aria-label="Account Settings"
-           (click)="isAccountSettingsPopup=true"
-           >
-            <span
-              class="material-icons"
-              aria-label="Account Settings"
-              aria-hidden="true"
-            >
-              settings
-            </span>
-            <span>Account Settings</span>
-          </button>
-          <button
-            look="flat"
-            kendoButton
-            (click)="onLogOffClicked()"
-            aria-label="Logout"
-          >
-            <span class="material-icons" aria-label="Logout" aria-hidden="true">
-              logout
-            </span>
-            <span aria-label="logout">Logout</span>
-          </button>
+        <div class="app-c-card-header-title">
+          <h3 class="card-mainTitle">{{ onGetUser()?.name }}</h3>
+          <p class="card-subTitle">Program coordinator</p>
         </div>
       </div>
-    
+
+
+      <div class="app-c-card-footer">
+        <button look="flat" kendoButton aria-label="Account Settings" (click)="isAccountSettingsPopup=true">
+          <span class="material-icons" aria-label="Account Settings" aria-hidden="true">
+            settings
+          </span>
+          <span>Account Settings</span>
+        </button>
+        <button look="flat" kendoButton (click)="onLogOffClicked()" aria-label="Logout">
+          <span class="material-icons" aria-label="Logout" aria-hidden="true">
+            logout
+          </span>
+          <span aria-label="logout">Logout</span>
+        </button>
+      </div>
+    </div>
   </div>
+
+
 </span>
 
 
 <!-- Account Settings Popup -->
-<kendo-dialog
-  kendoRippleContainer
-  *ngIf="isAccountSettingsPopup"
-  (close)="onCloseAccountSettingsClicked()"
-  class="app-c-modal app-c-modal-full"
->
+<kendo-dialog kendoRippleContainer *ngIf="isAccountSettingsPopup" (close)="onCloseAccountSettingsClicked()"
+  class="app-c-modal app-c-modal-full">
   <kendo-dialog-titlebar>
-    <span
-      class="material-icons mr-1"
-      aria-label="account settings"
-      aria-hidden="true"
-      >person</span
-    >
+    <span class="material-icons mr-1" aria-label="account settings" aria-hidden="true">person</span>
     <span class="text-bold">Account Settings</span>
   </kendo-dialog-titlebar>
   <common-account-settings></common-account-settings>
 </kendo-dialog>
-

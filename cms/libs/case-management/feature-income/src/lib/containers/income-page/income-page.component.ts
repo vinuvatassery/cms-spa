@@ -1,7 +1,7 @@
 
 
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, ElementRef, AfterViewInit,ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, ElementRef, AfterViewInit,ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 /** External libraries **/
 import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
@@ -12,7 +12,7 @@ import { LovFacade } from '@cms/system-config/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import {ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
-
+import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
 @Component({
   selector: 'case-management-income-page',
   templateUrl: './income-page.component.html',
@@ -20,7 +20,8 @@ import { StatusFlag } from '@cms/shared/ui-common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
-
+  
+  @ViewChildren("proofSchoolDropdownOne") public proofSchoolDropdownOne!: QueryList<DropDownListComponent>;
   /** Private properties **/
   private saveClickSubscription !: Subscription;  /** Public Methods **/
   private saveForLaterClickSubscription !: Subscription;
@@ -81,6 +82,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       text: "Attach from client/'s attachments",
       id: "attachFromClient",
       click: (event: any,dataItem: any): void => {
+        this.onBlur();
       },
     },
 
@@ -89,7 +91,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       text: "Remove file",
       id: "removeFile",
       click: (event: any,dataItem: any): void => {
-      this.removeDependentsProofofSchoool(dataItem.clientDocumentId)
+      this.removeDependentsProofofSchoool(dataItem.clientDocumentId);
+      this.onBlur();
       },
     },
 
@@ -138,9 +141,19 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(){
     this.workflowFacade.enableSaveButton();
   }
-
+  
   /** Private methods **/
+  public onClose(event: any , index : any) {
+    event.preventDefault();
+    // Close the list if the component is no longer focused
+    setTimeout(() => {
+      this.proofSchoolDropdownOne.forEach((element, index) => {element.toggle(false);})
+    });
+  }
 
+  public onBlur() {
+    this.proofSchoolDropdownOne.forEach((element) => {element.toggle(false);})
+  }
   private incomeNoteWordCount() {
     this.incomeNoteCharachtersCount = this.incomeNote
       ? this.incomeNote.length

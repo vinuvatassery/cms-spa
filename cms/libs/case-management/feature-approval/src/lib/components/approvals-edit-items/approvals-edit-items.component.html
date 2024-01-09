@@ -26,7 +26,7 @@
         </kendo-combobox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">
-        Clinic Name is required
+        Clinic Name is required.
       </kendo-formerror>
       <kendo-formhint>
         Start typing to choose an existing clinic, or enter a new one
@@ -40,7 +40,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.providerName.errors?.required && isValidateForm">
-        Clinic name is required
+        Clinic name is required.
       </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6" *ngIf="selectedMasterData.firstName">
@@ -50,7 +50,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.firstName.errors?.required && isValidateForm">
-        Provider First Name is required
+        Provider First Name is required.
       </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6" *ngIf="selectedMasterData.lastName">
@@ -60,7 +60,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.lastName.errors?.required && isValidateForm">
-        Provider Last Name is required
+        Provider Last Name is required.
       </kendo-formerror>
     </div>
     <div class="flex-col">
@@ -77,7 +77,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.addressLine1.errors?.required && isValidateForm">
-        Address line 1 is required
+        Address line 1 is required.
       </kendo-formerror>
     </div>
     <div class="flex-col">
@@ -94,18 +94,18 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.city.errors?.required && isValidateForm">
-        City is required
+        City is required.
       </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6 ">
       <kendo-floatinglabel text="State">
         <kendo-dropdownlist aria-label="State" [fillMode]="formUiStyle.dropDownFillMode" formControlName="state"
-          [data]="ddlStates$| async" textField="stateCode" valueField="stateCode" [valuePrimitive]="true"
+          [data]="ddlStates$| async" textField="stateName" valueField="stateCode" [valuePrimitive]="true"
           placeholder="State">
         </kendo-dropdownlist>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.state.errors?.required && isValidateForm">
-        State is required
+        State is required.
       </kendo-formerror>
     </div>
     <div class="flex-col flex-col-6 ">
@@ -115,7 +115,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="healthCareFormControls?.zip.errors?.required && isValidateForm">
-        Zip is required
+        Zip is required.
       </kendo-formerror>
       <kendo-formerror *ngIf="healthCareFormControls?.zip.errors?.pattern">
         Special characters are not allowed
@@ -167,7 +167,7 @@
         </kendo-combobox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="drugFormControls?.providerName.errors?.required && isValidateForm">
-        Manufacturer Name is required
+        Manufacturer Name is required.
       </kendo-formerror>
       <kendo-formhint>
         Start typing to choose an existing manufacturer, or enter a new one
@@ -179,7 +179,7 @@
           formControlName="drugName" [maxlength]="50">
         </kendo-textbox>
         <kendo-formerror *ngIf="drugFormControls?.drugName.errors?.required && isValidateForm">
-          Drug Name is required
+          Drug Name is required.
         </kendo-formerror>
       </kendo-floatinglabel>
     </div>
@@ -189,7 +189,7 @@
           formControlName="brandName" [maxlength]="50">
         </kendo-textbox>
         <kendo-formerror *ngIf="drugFormControls?.brandName.errors?.required && isValidateForm">
-          Brand Name is required
+          Brand Name is required.
         </kendo-formerror>
       </kendo-floatinglabel>
     </div>
@@ -225,7 +225,7 @@
 
         </div>
         <kendo-formerror *ngIf="drugFormControls?.drugType.errors?.required && isValidateForm">
-          Drug Type is required
+          Drug Type is required.
         </kendo-formerror>
       </fieldset>
     </div>
@@ -237,7 +237,7 @@
         </kendo-dropdownlist>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="drugFormControls?.deliveryMethod.errors?.required && isValidateForm">
-        Unit is required
+        Unit is required.
       </kendo-formerror>
     </div>
   </div>
@@ -259,7 +259,7 @@
         </kendo-combobox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="insurancePlanFormControls?.providerName.errors?.required && isValidateForm">
-        Insurance Provider Name is required
+        Insurance Provider Name is required.
       </kendo-formerror>
     </div>
     <div class="flex-col ">
@@ -268,7 +268,7 @@
           formControlName="insurancePlanName" [maxlength]="50">
         </kendo-textbox>
         <kendo-formerror *ngIf="insurancePlanFormControls?.insurancePlanName.errors?.required && isValidateForm">
-          Insurance Plan Name is required
+          Insurance Plan Name is required.
         </kendo-formerror>
       </kendo-floatinglabel>
     </div>
@@ -325,7 +325,7 @@
         </kendo-datepicker>
     </kendo-floatinglabel>
     <kendo-formerror *ngIf="insurancePlanFormControls?.startDate.errors?.required && isValidateForm">
-      Start Date is required
+      Start Date is required.
     </kendo-formerror>
     </div>
     <div class="flex-col ">
@@ -347,7 +347,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="insuranceProviderFormControls?.providerName.errors?.required && isValidateForm">
-        Provider Name is required
+        Provider Name is required.
       </kendo-formerror>
     </div>
   </div>
@@ -359,7 +359,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="insuranceVendorFormControls?.vendorName.errors?.required && isValidateForm">
-        Vendor Name is required
+        Vendor Name is required.
       </kendo-formerror>
     </div>
     <div class="flex-col ">
@@ -369,7 +369,7 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="insuranceVendorFormControls?.nameOnCheck.errors?.required && isValidateForm">
-        Name on check is required
+        Name on check is required.
       </kendo-formerror>
     </div>
     <div class="flex-col ">
@@ -379,11 +379,11 @@
         </kendo-textbox>
       </kendo-floatinglabel>
       <kendo-formerror *ngIf="insuranceVendorFormControls?.nameOnEnvelop.errors?.required && isValidateForm">
-        Name on envelope is required
+        Name on envelope is required.
       </kendo-formerror>
     </div>
     <div class="flex-col ">
-      <kendo-floatinglabel text="Tin">
+      <kendo-floatinglabel text="TIN">
         <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
           placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tin" [mask]="tinMaskFormat">
         </kendo-maskedtextbox>
@@ -395,7 +395,7 @@
           formControlName="mailCode" [maxlength]="3">
         </kendo-textbox>
         <kendo-formerror *ngIf="insuranceVendorFormControls?.mailCode.errors?.required && isValidateForm">
-          Mail Code is required
+          Mail Code is required.
         </kendo-formerror>
       </kendo-floatinglabel>
     </div>
@@ -422,7 +422,7 @@
           </span>
         </div>
         <kendo-formerror *ngIf="insuranceVendorFormControls?.paymentMethod.errors?.required && isValidateForm">
-          Payment Method is required
+          Payment Method is required.
         </kendo-formerror>
       </fieldset>
     </div>
@@ -471,12 +471,17 @@
           </kendo-dropdownlist>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="insuranceVendorFormControls?.paymentRunDate.errors?.required && isValidateForm">
-          Payment run date is required
+          Payment run date is required.
         </kendo-formerror>
       </div>
       <div class="flex-col flex-col-4">
         <p class="mt-4">of each month</p>
       </div>
+    <div class="flex-col">
+        <legend class="k-form-legend">
+          <h5 class="mb-0"> Contact 1 </h5>
+        </legend>
+    </div>
     <div class="flex-col ">
       <kendo-floatinglabel text="Contact Name (optional)">
         <kendo-textbox aria-label="Contact Name (optional)" placeholder="Contact Name (optional)" [fillMode]="formUiStyle.inputFillMode"
@@ -513,7 +518,7 @@
           formControlName="pharmacyName" [maxlength]="50">
         </kendo-textbox>
         <kendo-formerror *ngIf="pharmacyFormControl?.pharmacyName.errors?.required && isValidateForm">
-          Pharmacy Name is required
+          Pharmacy Name is required.
         </kendo-formerror>
       </kendo-floatinglabel>
     </div>
@@ -547,7 +552,7 @@
           formControlName="mailCode" [maxlength]="3">
         </kendo-textbox>
         <kendo-formerror *ngIf="pharmacyFormControl?.mailCode.errors?.required && isValidateForm">
-          Mail Code is required
+          Mail Code is required.
         </kendo-formerror>
       </kendo-floatinglabel>
     </div>
@@ -574,7 +579,7 @@
           </span>
         </div>
         <kendo-formerror *ngIf="pharmacyFormControl?.paymentMethod.errors?.required && isValidateForm">
-          Payment Method is required
+          Payment Method is required.
         </kendo-formerror>
       </fieldset>
     </div>

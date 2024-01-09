@@ -6,10 +6,10 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { Observable, Subject, first } from 'rxjs';
+import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
+import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-refund-batch-log-list',
@@ -24,7 +24,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isBatchLogGridLoaderShow = false;
-  
+
   @ViewChild('addEditRefundDialog', { read: TemplateRef })
   addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
 
@@ -33,16 +33,17 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchLogGridLists$: any;
+  batchLogGridLists: any;
   @Input() exportButtonShow$: any
   @Input() paymentBatchName$!: Observable<PaymentBatchName>;
 
   @Output() loadVendorRefundBatchLogListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() exportReceiptDataEvent = new EventEmitter<any>();
-  @Input() vendorProfile$ :any;
-  @Input() updateProviderPanelSubject$:any
-  @Input() ddlStates$ :any
-  @Input() paymentMethodCode$ :any
+  @Input() vendorProfile$: any;
+  @Input() updateProviderPanelSubject$: any
+  @Input() ddlStates$: any
+  @Input() paymentMethodCode$: any
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   private addEditRefundFormDialog: any;
   isUnBatchRefundsClosed = false;
@@ -55,12 +56,12 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   deletemodelbody =
     'This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
 
-    refunEditServiceType = '';
-    refundEditClientId = '';
-    refundEditClientFullName: any;
-    refundEditVendorAddressId = '';
-    refundEditVendorName: any;
-    inspaymentRequestId: any;
+  refunEditServiceType = '';
+  refundEditClientId = '';
+  refundEditClientFullName: any;
+  refundEditVendorAddressId = '';
+  refundEditVendorName: any;
+  inspaymentRequestId: any;
 
   public batchLogGridActions = [
     {
@@ -78,8 +79,8 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
           this.inspaymentRequestId = dataItem.paymentRequestId
           this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
         }
-    }
-  },
+      }
+    },
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Refund',
@@ -217,6 +218,19 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   isBulkUnBatchOpened: any;
   batchId: any;
 
+  //recent claims modal
+  @ViewChild('clientRecentClaimsDialog') clientRecentClaimsDialogRef!: TemplateRef<unknown>
+  @ViewChild('clientRecentPremiumsDialogTemplate') clientRecentPremiumsDialogRef!: TemplateRef<unknown>
+  @ViewChild('clientRecentPharmacyClaimsDialog') clientRecentPharmacyClaimsDialogRef!: TemplateRef<unknown>
+  @Output() providerNameClickEvent = new EventEmitter<any>();
+  vendorId: any;
+  clientId: any;
+  clientName: any;
+  claimsType: any;
+  paymentRequestId: any;
+  private addClientRecentClaimsDialog: any;
+  recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+
   /** Constructor **/
   constructor(
     private route: Router,
@@ -225,7 +239,8 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private activatedRoute: ActivatedRoute,
     private readonly financialVendorFacade: FinancialVendorFacade,
-    
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+
   ) { }
 
   ngOnInit() {
@@ -233,6 +248,76 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       const batchId = params['b_id'];
       this.batchId = batchId;
     });
+    this.handleAllPaymentsGridData();
+  }
+
+  gridLoaderSubject = new BehaviorSubject(false);
+
+  handleAllPaymentsGridData() {
+    this.batchLogGridLists$.subscribe((data: GridDataResult) => {
+      this.gridDataResult = data;
+      this.gridDataResult.data = filterBy(
+        this.gridDataResult.data,
+        this.filterData
+      );
+      this.gridVendorsBatchLogDataSubject.next(this.gridDataResult);
+      if (data?.total >= 0 || data?.total === -1) {
+        this.gridLoaderSubject.next(false);
+      }
+      this.batchLogGridLists = this.gridDataResult?.data;
+      if (this.recordCountWhenSelectallClicked == 0) {
+        this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
+        this.totalGridRecordsCount = this.gridDataResult?.total;
+      }
+      if (!this.selectAll) {
+        this.batchLogGridLists.forEach((item1: any) => {
+          const matchingGridItem = this.selectedAllPaymentsList?.paymentsSelected.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
+          if (matchingGridItem) {
+            item1.selected = true;
+          } else {
+            item1.selected = false;
+          }
+        });
+      }
+      this.currentPageRecords = this.batchLogGridLists;
+      //If the user is selecting the individual check boxes and changing the page count
+      this.handlePageCountSelectionChange();
+      //If the user click on select all header and either changing the page number or page count
+      this.pageNumberAndCountChangedInSelectAll();
+      this.gridLoaderSubject.next(false);
+    });
+  }
+
+  handlePageCountSelectionChange() {
+    if (!this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {
+      // Extract the payment request ids from grid data
+      const idsToKeep: number[] = this.checkedAndUncheckedRecordsFromSelectAll.map((item: any) => item.paymentRequestId);
+      // Remove items from selected records based on the IDs from grid data
+      for (let i = this.selectedAllPaymentsList?.paymentsSelected?.length - 1; i >= 0; i--) {
+        if (!idsToKeep.includes(this.selectedAllPaymentsList?.paymentsSelected[i].paymentRequestId)) {
+          this.selectedAllPaymentsList?.paymentsSelected.splice(i, 1); // Remove the item at index i
+        }
+      }
+      this.getSelectedReportCount(this.selectedAllPaymentsList?.paymentsSelected?.filter((item: any) => item.selected));
+    }
+  }
+
+  pageNumberAndCountChangedInSelectAll() {
+    //If selecte all header checked and either the page count or the page number changed
+    if (this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {
+      this.selectedAllPaymentsList = [];
+      this.selectedAllPaymentsList.paymentsSelected = [];
+      for (const item of this.batchLogGridLists) {
+        // Check if the item is in the second list.
+        const isItemInSecondList = this.unCheckedProcessRequest.find((item2: any) => item2.paymentRequestId === item.paymentRequestId);
+        // If the item is in the second list, mark it as selected true.
+        if (isItemInSecondList) {
+          item.selected = false;
+        } else {
+          item.selected = true;
+        }
+      }
+    }
   }
 
   ngOnChanges(): void {
@@ -254,6 +339,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       this.sortType
     );
   }
+
   loadBatchLog(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -301,6 +387,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+
   }
 
   defaultGridState() {
@@ -317,6 +404,12 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   }
 
   dataStateChange(stateData: any): void {
+    this.activatedRoute.queryParams.subscribe(params => {
+      const batchId = params['b_id'];
+      this.batchId = batchId;
+    });
+
+    this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -338,14 +431,19 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       this.filter = '';
       this.isFiltered = false;
     }
+
     this.loadBatchLogListGrid();
+    this.handleAllPaymentsGridData();
   }
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+    this.isPageCountChanged = true;
+    this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadBatchLogListGrid();
+    this.handleAllPaymentsGridData();
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -478,11 +576,22 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   selectedPayments: any[] = [];
 
   cancelActions() {
-    this.receiptLogTitlePart = "";
     this.selectedPayments = [];
     this.isLogGridExpanded = !this.isLogGridExpanded;
     this.hideActionButton = !this.hideActionButton;
     this.receiptLogMode = !this.receiptLogMode;
+
+
+    this.unCheckedProcessRequest = [];
+    this.checkedAndUncheckedRecordsFromSelectAll = [];
+    this.selectedAllPaymentsList.paymentsSelected = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterUnSelected = [];
+    this.getSelectedReportCount(this.selectedAllPaymentsList?.paymentsSelected);
+    this.selectAll = false;
+    this.recordCountWhenSelectallClicked = 0;
+    this.selectionCount = 0;
+    this.markAsUnChecked(this.selectedAllPaymentsList?.paymentsSelected);
+    this.markAsUnChecked(this.batchLogGridLists);
   }
 
   receiptingLogClicked() {
@@ -493,16 +602,15 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   }
 
   onClickedDownload() {
-    if (!this.selectedPayments.length) {
-      return;
-    }
-    this.showExportLoader = true;
-    let data = {
-      batchId : this.batchId,
-      selectedIds : this.selectedPayments,
-      gridDataResult : this.gridDataResult
+    this.selectedAllPaymentsList =
+    {
+      'selectAll': this.selectAll,
+      'paymentsUnSelected': this.unCheckedProcessRequest,
+      'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
+      'batchId': this.batchId,
     };
-    this.exportReceiptDataEvent.emit(data);
+    this.showExportLoader = true;
+    this.exportReceiptDataEvent.emit(this.selectedAllPaymentsList);
     this.exportButtonShow$.subscribe((response: any) => {
       if (response) {
         this.showExportLoader = false;
@@ -510,6 +618,25 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       }
     });
   }
+
+  // onClickedDownload() {
+  // if (!this.selectedPayments.length) {
+  //   return;
+  // }
+  //   this.showExportLoader = true;
+  //   let data = {
+  //     batchId : this.batchId,
+  //     selectedIds : this.selectedPayments,
+  //     gridDataResult : this.gridDataResult
+  //   };
+  //   this.exportReceiptDataEvent.emit(data);
+  //   this.exportButtonShow$.subscribe((response: any) => {
+  //     if (response) {
+  //       this.showExportLoader = false;
+  //       this.cdr.detectChanges();
+  //     }
+  //   });
+  // }
 
   onEditRefundClaimClicked(template: TemplateRef<unknown>): void {
     this.addEditRefundFormDialog = this.dialogService.open({
@@ -525,7 +652,208 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       this.loadBatchLogListGrid();
     }
   }
-  onProviderNameClick(event: any) {
-    this.onProviderNameClickEvent.emit(event);
+
+  clientRecentClaimsModalClicked(
+    data: any
+  ): void {
+    this.vendorId = data.vendorId;
+    this.clientId = data.clientId;
+    this.clientName = data.clientFullName;
+    this.paymentRequestId = data.paymentRequestId
+    this.claimsType = 'medical'
+    let template;
+
+    switch (data.serviceTypeCode) {
+      case FinancialServiceTypeCode.Tpa: {
+        template = this.clientRecentClaimsDialogRef
+        break;
+      }
+      case FinancialServiceTypeCode.Insurance: {
+        template = this.clientRecentPremiumsDialogRef;
+        break;
+      }
+      case FinancialServiceTypeCode.Pharmacy: {
+        template = this.clientRecentPharmacyClaimsDialogRef;
+        break;
+      }
+      default: break;
+    }
+
+    if (template)
+      this.addClientRecentClaimsDialog = this.dialogService.open({
+        content: template,
+        cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
+        animation: {
+          direction: 'up',
+          type: 'slide',
+          duration: 200,
+        },
+      });
   }
+
+  closeRecentClaimsModal(result: any) {
+    if (result) {
+      this.addClientRecentClaimsDialog.close();
+    }
+  }
+
+  onProviderNameClick(event: any) {
+    this.providerNameClickEvent.emit(event);
+  }
+
+  onClientClicked(clientId: any) {
+    this.route.navigate([`/case-management/cases/case360/${clientId}`]);
+    this.closeRecentClaimsModal(true);
+  }
+
+
+  selectionAllChange() {
+    this.unCheckedProcessRequest = [];
+    this.checkedAndUncheckedRecordsFromSelectAll = [];
+    if (this.selectAll) {
+      this.markAsChecked(this.batchLogGridLists);
+    }
+    else {
+      this.markAsUnChecked(this.batchLogGridLists);
+    }
+
+    this.selectedAllPaymentsList =
+    {
+      'selectAll': this.selectAll,
+      'paymentsUnSelected': this.unCheckedProcessRequest,
+      'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
+      'batchId': this.batchId,
+    };
+
+    this.cdr.detectChanges();
+    if (this.selectAll) {
+      if (this.unCheckedProcessRequest?.length > 0) {
+        this.selectionCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.selectionCount;
+      } else {
+        this.selectionCount = this.totalGridRecordsCount;
+      }
+    } else {
+      this.getSelectedReportCount(this.selectedAllPaymentsList?.paymentsSelected);
+    }
+  }
+
+  getSelectedReportCount(selectedSendReportList: []) {
+    this.selectionCount = selectedSendReportList.length;
+  }
+
+  selectionChange(dataItem: any, selected: boolean) {
+    if (!selected) {
+      this.onRecordSelectionChecked(dataItem);
+    }
+    else {
+      this.onRecordSelectionUnChecked(dataItem);
+    }
+
+    this.selectedAllPaymentsList =
+    {
+      'selectAll': this.selectAll,
+      'paymentsUnSelected': this.unCheckedProcessRequest,
+      'paymentsSelected': this.checkedAndUncheckedRecordsFromSelectAll,
+      'batchId': this.batchId,
+    };
+
+    if (this.selectAll) {
+      if (this.unCheckedProcessRequest?.length > 0) {
+        this.selectionCount = this.totalGridRecordsCount - this.unCheckedProcessRequest?.length;
+        this.recordCountWhenSelectallClicked = this.selectionCount;
+      } else {
+        this.recordCountWhenSelectallClicked = selected ? this.recordCountWhenSelectallClicked + 1 : this.recordCountWhenSelectallClicked - 1;
+        this.selectionCount = this.recordCountWhenSelectallClicked;
+      }
+    } else {
+      this.selectionCount = this.selectedAllPaymentsList?.paymentsSelected?.filter((item: any) => item.selected).length;
+    }
+    this.cdr.detectChanges();
+  }
+
+  markAsChecked(data: any) {
+
+    data.forEach((element: any) => {
+      if (this.selectAll) {
+        element.selected = true;
+      }
+      else {
+        element.selected = false;
+      }
+      if (this.unCheckedPaymentRequest.length > 0 || this.selectedDataIfSelectAllUnchecked.length > 0) {
+        const itemMarkedAsUnChecked = this.unCheckedPaymentRequest.find((x: any) => x.paymentRequestId === element.paymentRequestId);
+        if (itemMarkedAsUnChecked !== null && itemMarkedAsUnChecked !== undefined) {
+          element.selected = false;
+        }
+        const itemMarkedAsChecked = this.selectedDataIfSelectAllUnchecked.find((x: any) => x.paymentRequestId === element.paymentRequestId);
+        if (itemMarkedAsChecked !== null && itemMarkedAsChecked !== undefined) {
+          element.selected = true;
+        }
+      }
+
+    });
+
+  }
+
+  markAsUnChecked(data: any) {
+    data.forEach((element: any) => {
+      element.selected = false;
+    });
+  }
+
+  onRecordSelectionChecked(dataItem: any) {
+    this.unCheckedProcessRequest.push({ 'paymentRequestId': dataItem.paymentRequestId, 'selected': true });
+    this.currentPageRecords?.forEach((element: any) => {
+      if (element.paymentRequestId === dataItem.paymentRequestId) {
+        element.selected = false;
+      }
+    });
+    const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+    if (exist === 0) {
+      this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'selected': false });
+    } else {
+      const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+      if (recordIndex !== -1) {
+        this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+      }
+    }
+  }
+
+  onRecordSelectionUnChecked(dataItem: any) {
+    this.unCheckedProcessRequest = this.unCheckedProcessRequest.filter((item: any) => item.paymentRequestId !== dataItem.paymentRequestId);
+    this.currentPageRecords?.forEach((element: any) => {
+      if (element.paymentRequestId === dataItem.paymentRequestId) {
+        element.selected = true;
+      }
+    });
+    const exist = this.checkedAndUncheckedRecordsFromSelectAll?.filter((x: any) => x.paymentRequestId === dataItem.paymentRequestId).length;
+    if (exist === 0) {
+      this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true, 'batchId': dataItem.batchId });
+    } else {
+      const recordIndex = this.checkedAndUncheckedRecordsFromSelectAll.findIndex((element: any) => element.paymentRequestId === dataItem.paymentRequestId);
+      if (recordIndex !== -1) {
+        this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
+      }
+    }
+  }
+
+  selectedKeysChange(selection: any) {
+    this.selectedPayments = selection;
+  }
+
+  selectAll: boolean = false;
+  unCheckedPaymentRequest: any = [];
+  selectedDataIfSelectAllUnchecked: any = [];
+  currentPageRecords: any = [];
+  selectedAllPaymentsList!: any;
+  isPageCountChanged: boolean = false;
+  isPageChanged: boolean = false;
+  unCheckedProcessRequest: any = [];
+  checkedAndUncheckedRecordsFromSelectAll: any = [];
+  recordCountWhenSelectallClicked: number = 0;
+  totalGridRecordsCount: number = 0;
+  selectionCount: number = 0;
+
+
 }

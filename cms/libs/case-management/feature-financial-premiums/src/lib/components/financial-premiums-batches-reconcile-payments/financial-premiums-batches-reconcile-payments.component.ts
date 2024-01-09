@@ -64,6 +64,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
+  reconcileGridListsSubscription !: Subscription;
   paymentRequestId!:any;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
@@ -104,6 +105,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   isRecordForPrint:any=0;
   showExportLoader = false;
   bulkNoteCounter:any=0;
+  paymentToReconcileCount:any=0;
   columns : any = {
     ALL: 'ALL',
     vendorName:this.providerTitle,
@@ -173,6 +175,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     public activeRoute: ActivatedRoute) {}
   
   ngOnInit(): void {
+    this.reconcilePaymentGridUpdatedResult = [];
     this.loadQueryParams();   
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodSubscription();
@@ -221,7 +224,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === this.checkingPaymentRequest);
         if (ifExist !== undefined) {
           ifExist.warrantNumberInValid = true;
-          ifExist.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
+          ifExist.warrantNumberInValidMsg = `Duplicate Warrant Number entered in ${ifExist.batchName}.`;
           this.assignUpdatedItemToPagedList();
           this.cd.detectChanges();
         }
@@ -231,6 +234,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   ngOnDestroy(): void {
     this.paymentMethodLovSubscription.unsubscribe();
+    this.reconcileGridListsSubscription.unsubscribe();
   }
   private loadReconcileListGrid(): void {
     this.loadReconcile(
@@ -526,10 +530,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         if((itemResponse.data[index].checkNbr !== null && itemResponse.data[index].checkNbr !== '' && itemResponse.data[index].checkNbr !== undefined )){
           itemResponse.data[index].reconciled = true;
         }
-      }     
-      this.reconcilePaymentGridPagedResult = itemResponse;      
+      }          
     });
-
     this.reconcilePaymentGridPagedResult = itemResponse;
   }
 
@@ -538,7 +540,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   }
 
   gridDataHandle() {
-    this.reconcileGridLists$.subscribe((response: any) => {
+    this.reconcileGridListsSubscription = this.reconcileGridLists$.subscribe((response: any) => {
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.reconcilePaymentGridPagedResult.data);
@@ -751,8 +753,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.updateDatePaymentReconciledValidation(dataItem);
     if (dataItem.checkNbr !== '' && dataItem.acceptsReportsFlag == 'Y') {
       dataItem.isPrintAdviceLetter = true;
-    }
-    this.assignRowDataToMainList(dataItem);
+    }    
 
     if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined
       && dataItem.checkNbr !== ''){
@@ -766,7 +767,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     && (x.vendorId !== dataItem.vendorId || x.batchId !== dataItem.batchId));
     if (isCheckNumberAlreadyExist.length > 0) {
       dataItem.warrantNumberInValid = true;
-      dataItem.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
+      dataItem.warrantNumberInValidMsg = `Duplicate Warrant Number entered in ${isCheckNumberAlreadyExist[0].batchName}.`;
     }
     else {
       dataItem.warrantNumberInValidMsg = null;
@@ -776,6 +777,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       dataItem.warrantNumberInValidMsg = null;
       dataItem.warrantNumberInValid = false;
     }
+
+    this.assignRowDataToMainList(dataItem);
   }
 
   updateDatePaymentReconciledValidation(dataItem: any) {
@@ -886,7 +889,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.reconcileAssignValueBatchForm.controls['datePaymentSend'].updateValueAndValidity();
     this.isSaveClicked = true;
     this.validateReconcileGridRecord();
-    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
+    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid || x.warrantNumberInValid);
     const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
     const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
     const warrantNumberInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberInValid);
@@ -950,7 +953,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   onRowSelection(grid:any, selection:any)
     {
       this.warrantCalculationArray=[];
-      const data = selection.selectedRows[0].dataItem;    
+      const data = selection.dataItem;    
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
       let warrantTotal=0; 
@@ -966,7 +969,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         }
         this.warrantCalculationArray.push(object);
       });
-
+      this.paymentToReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged && x.entityId == this.entityId).length;
       const ReconcilePaymentResponseDto =
       {
         batchId : this.batchId,
@@ -975,7 +978,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
-        paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
+        paymentToReconcileCount : this.paymentToReconcileCount
       }
 
       this.loadIPBreakoutSummary(ReconcilePaymentResponseDto);

@@ -16,6 +16,7 @@
           [preferredClientPhone$]="preferredClientPhone$" [deactivateClientPhone$]="deactivateClientPhone$"
           [removeClientPhone$]="removeClientPhone$" (loadClientPhonesListEvent)="loadClientPhonesHandle($event)"
           (loadSelectedPhoneEvent)="loadClientPhoneHandle($event)" (addClientPhoneEvent)="addClientPhoneHandle($event)"
+          [deactivateAndAddClientPhone$]="deactivateAndAddClientPhone$" (deactivateAndAddClientPhone)="deactivateAndAddClientPhoneHandle($event)" 
           (loadDeviceTypeLovEvent)="loadDeviceTypeLovHandle()"
           (preferredClientPhoneEvent)="preferredClientPhoneHandle($event)"
           (deactivateClientPhoneEvent)="deactivateClientPhoneHandle($event)"

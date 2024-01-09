@@ -4,7 +4,7 @@
     <case-management-case-navigation [routes$]="routes$" [completeStaus$]="completeStaus$" [workflowType]="workflowType"
       [navigationEvent]="workflowNavigationEvent" (workflowChange)="applyWorkflowChanges($event)" [currentSession]="currentSession">
     </case-management-case-navigation>
-    <button class="createcase-mobile-menu-btn  createbtn-close"  aria-label="Open Menu" (click)="openInnerLeftMenu()" title="Open Menu"> <span class="material-icons">
+    <button class="createcase-mobile-menu-btn  createbtn-close"  aria-label="Open Menu" (click)="openInnerLeftMenu()" title="Open Menu"> <span class="material-icons" aria-hidden="true">
       menu_open
       </span>
   </button> 
@@ -16,7 +16,7 @@
 
       <common-bread-crumb></common-bread-crumb>
       <div class="casetopsection-rightside">
-        <button class="createcase-mobile-menu-btn" aria-label="Open Left Menu" title="Open Left Menu" (click)="openInnerLeftMenu()"> <span class="material-icons">
+        <button class="createcase-mobile-menu-btn" aria-label="Open Left Menu" title="Open Left Menu" (click)="openInnerLeftMenu()"> <span class="material-icons" aria-hidden="true">
             list
           </span>
         </button>
@@ -31,8 +31,8 @@
             </div>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
               <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-                aria-hidden="false" (click)="dataItem.click" *ngIf="hideButton(dataItem.text)" >
-                <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                 (click)="dataItem.click" *ngIf="hideButton(dataItem.text)" >
+                <span class="material-icons" [attr.aria-label]="dataItem.text" aria-hidden="true">{{dataItem.icon}}</span>
                 <label> {{ dataItem.text }} </label>
               </button> 
             </ng-template>

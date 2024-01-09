@@ -76,10 +76,33 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   isPageChanged: boolean = false;
   unCheckedProcessRequest:any=[];
   deletemodelbody='This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
+
+  @Input() addPharmacyClaim$: any;
+  @Input() editPharmacyClaim$: any;
+  @Input() getPharmacyClaim$: any;
+  @Input() searchPharmacies$: any;
+  @Input() searchClients$: any;
+  @Input() searchDrugs$: any;
+  @Input() searchPharmaciesLoader$: any;
+  @Input() searchClientLoader$: any;
+  @Input() searchDrugsLoader$: any;
+  @Input() paymentRequestType$ : any
+  @Input() deliveryMethodLov$ :any
+
+  @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
+  @Output() searchPharmaciesEvent = new EventEmitter<any>();
+  @Output() searchClientsEvent = new EventEmitter<any>();
+  @Output() searchDrugEvent = new EventEmitter<any>();
+  @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
+  @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
+
   @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
   @Output() unBatchClaimsEvent = new EventEmitter<any>();
   @Output() ondeletebatchesClickedEvent = new EventEmitter<any>();
+
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Output() getPharmacyClaimEvent = new EventEmitter<any>();
+
   @Input() batchId:any
   @Input() unbatchClaim$ :any
   @Input() unbatchEntireBatch$ :any
@@ -94,19 +117,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
    return  [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claim',
-      icon: 'edit',
-      click: (data: any): void => {
-        if (!this.isAddEditClaimMoreClose) {
-          this.isAddEditClaimMoreClose = true;
-          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
-        }
-       
-      } 
-      
-    },
-    {
-      buttonType: 'btn-h-primary',
       text: 'Unbatch Claim',
       icon: 'undo',
       disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
@@ -119,18 +129,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
         }
       }
-       
-      }      
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Reverse claim',
-      icon: 'fast_rewind',
-      click: (data: any): void => {
-        if (!this.reverseClaimsDialogClosed) {
-          this.reverseClaimsDialogClosed = true;
-          this.onReverseClaimsOpenClicked(this.reverseClaimsDialogTemplate);
-        }
        
       }      
     },
@@ -165,6 +163,19 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
 
       
     },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Claim',
+      icon: 'edit',
+      click: (data: any, paymentRequestId :any): void => {
+        if (!this.isAddEditClaimMoreClose) {
+          this.isAddEditClaimMoreClose = true;
+          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog,paymentRequestId);
+        }
+       
+      } 
+      
+    }
   ]
 }
   @Input() pageSizes: any;
@@ -314,7 +325,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
     this.batchLogGridLists$.subscribe((res:any)=>{
-      if(res.data.length==0 && res.data.filter == null)
+      if(!res.data || res.data.length==0)
       {
         this.route.navigate(['/financial-management/pharmacy-claims'] );       
       }
@@ -800,7 +811,11 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     }
   }
 
-  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>, paymentRequestId:any): void {
+    if(paymentRequestId !== '00000000-0000-0000-0000-000000000000')  
+    {
+    this.getPharmacyClaimEvent.emit(paymentRequestId);
+    }
     this.addEditClaimsFormDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
@@ -1021,4 +1036,42 @@ pageNumberAndCountChangedInSelectAll() {
     }
   }
 }
+
+updatePharmacyClaim(data: any) {
+  this.updatePharmacyClaimEvent.emit(data);
+  this.editPharmacyClaim$.pipe(first((editResponse: any ) => editResponse != null))
+  .subscribe((editResponse: any) =>
+  {
+    if(editResponse)
+    {      
+      this.loadBatchLogListGrid();
+      this.modalCloseAddEditClaimsFormModal(true)
+    }
+
+  })
+}
+
+searchPharmacies(searchText: any) {
+  this.searchPharmaciesEvent.emit(searchText);
+}
+
+searchClients(searchText: any) {
+  this.searchClientsEvent.emit(searchText);
+}
+
+
+searchDrug(searchText: string) {
+  this.searchDrugEvent.emit(searchText);
+}
+
+getCoPaymentRequestTypeLov()
+{
+  this.getCoPaymentRequestTypeLovEvent.emit();
+}
+
+getDrugUnitTypeLov()
+{
+  this.getDrugUnitTypeLovEvent.emit();
+}
+
 }

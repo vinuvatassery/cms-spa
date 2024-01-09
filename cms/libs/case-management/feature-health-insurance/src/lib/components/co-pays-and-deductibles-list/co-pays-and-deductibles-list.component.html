@@ -10,7 +10,7 @@
       [columnMenu]="{ filter: true }" [sort]="state.sort"
         (dataStateChange)="dataStateChange($event)">
 
-  
+
         <kendo-grid-column field="vendorName" title="Service Provider Name" [width]="180" [sticky]="true" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button kendoButton look="flat" class="card-link-button" [attr.aria-label]="dataItem.vendorName" kendoPopoverAnchor
@@ -31,7 +31,9 @@
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="cptCode" title="CPT Code" [width]="150" [filterable]="false">
-        </kendo-grid-column>       
+        </kendo-grid-column>
+        <kendo-grid-column field="serviceDesc" title="{{serviceDescription}} Service" [width]="200" [sortable]="false" [filterable]="false">
+        </kendo-grid-column>
         <kendo-grid-column field="serviceCost" title="Service Cost" [width]="140" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
@@ -42,17 +44,16 @@
             <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="140" [filterable]="false">    
+        <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="140" [filterable]="false">
+        </kendo-grid-column>
+        <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="170" [filterable]="false">
         </kendo-grid-column>
         <kendo-grid-column field="entryDate" title="Entry Date" [width]="130" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.entryDate | date:'MM/dd/YYYY' }}
           </ng-template>
         </kendo-grid-column>
-       
         <kendo-grid-column field="CheckNbr" title="Warrant" [width]="130" [sortable]="false" [filterable]="false">
-        </kendo-grid-column>
-        <kendo-grid-column field="serviceDesc" title="Service Description" [width]="200" [sortable]="false" [filterable]="false">
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [sortable]="false" [columnMenu]="false" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
@@ -85,10 +86,10 @@
           let-currentPage="currentPage">
           <div class="grid-custom-paginationtemplates d-flex">
             <div class="d-flex align-items-center">
-              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+              <label class="mr-1" for="CopayRowsPerPage">Rows Per Page</label>
               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
                 [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"  aria-label="Rows Per Page"
-                id="RowsPerPage" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+                id="CopayRowsPerPage" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
               <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages> 
 
@@ -131,6 +132,6 @@
 
 <kendo-popover #myPopover body="Popover Body" >
   <ng-template kendoPopoverBodyTemplate>
-    <case-management-medical-carrier-contact-info [carrierContactInfo]="carrierContactInfo" ></case-management-medical-carrier-contact-info>
+    <case-management-medical-carrier-contact-info [contactInfoType]="'SERVICE_PROVIDER'" [carrierContactInfo]="carrierContactInfo" ></case-management-medical-carrier-contact-info>
   </ng-template>
 </kendo-popover>

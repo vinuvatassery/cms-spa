@@ -196,7 +196,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     if (this.eligibilityPeriodForm.controls['statusEndDate'].value !== null) {
       this.endDateOnChange();
     }
-    
+
   }
   endDateOnChange() {
     this.canChangeEndDate();
@@ -315,8 +315,8 @@ export class EligibilityPeriodDetailComponent implements OnInit {
   }
   private setStartDateEndDateByStatus(status:string)
   {
-    let currentEligibilityEndDate=new Date(this.currentEligibility.eligibilityEndDate);
-    let dayFromDate = this.getDay(this.addDays(new Date(this.currentEligibility.eligibilityEndDate), 1), 'en-US', this.dayOptions);
+    let currentEligibilityEndDate = this.currentEligibility.eligibilityEndDate ? new Date(this.currentEligibility.eligibilityEndDate) : new Date();
+    let dayFromDate = this.getDay(this.addDays(new Date(currentEligibilityEndDate), 1), 'en-US', this.dayOptions);
     this.eligibilityPeriodForm.controls['statusStartDate'].reset();
     this.eligibilityPeriodForm.controls['statusEndDate'].reset();
     this.eligibilityPeriodForm.controls['group'].reset();
@@ -599,5 +599,5 @@ export class EligibilityPeriodDetailComponent implements OnInit {
       }
     }
   }
-  
+
 }

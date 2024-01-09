@@ -14,8 +14,6 @@
           >
           </kendo-datepicker>
         </kendo-floatinglabel>
-        
-        <kendo-formerror *ngIf="dateValidator">Due Date cannot be less than Current Date.</kendo-formerror>
         <kendo-formerror *ngIf="!clientReminderForm.controls['dueDate'].valid">Due Date is required.</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
@@ -51,7 +49,7 @@
         <kendo-floatinglabel text="Link Reminder To">
           <kendo-dropdownlist aria-label="Link Reminder To" [fillMode]="formUiStyle.dropDownFillMode" > </kendo-dropdownlist>
       </kendo-floatinglabel>
-      <span class="material-icons" title="Select an entity if you want this item to be displayed in its profile.">info</span>
+      <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
       </div>
       <div class="flex-col mt-3 field_with_info" *ngIf="isShow">
         <div class="autoSelect-search mat-form-no-b-space">
@@ -82,7 +80,7 @@
             </kendo-multicolumncombobox>
           </div>
         </div>
-        <span class="material-icons" title="Select a client or service provider if you want this reminder to be displayed in their profile.">info</span>
+        <span class="material-icons" aria-hidden="true" title="Select a client or service provider if you want this reminder to be displayed in their profile.">info</span>
       </div>
         <div class="flex-col mt-3" *ngIf="isShow"  >
           <div class="global-search mat-form-no-b-space">

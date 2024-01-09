@@ -72,7 +72,7 @@
 
   .k-notification-wrap>.k-icon {
     margin-top: $size-0;
-    font-size: $font-size-xlg + 2;
+    font-size: $font-size-xlg-22;
   }
 
   .k-notification {
@@ -96,8 +96,7 @@
       margin-top: $size-m;
 
       .k-notification-title {
-        font-family: $font-family-bold;
-        text-transform: capitalize;
+        font-family: $font-family-bold; 
       }
 
       .k-notification-sub-title {
@@ -218,7 +217,7 @@
     border-radius: 50%;
 
     .k-i-loading {
-      font-size: 60px;
+      font-size: $font-size-xxxx-lg;
       color: #ffffff;
 
       &::after {

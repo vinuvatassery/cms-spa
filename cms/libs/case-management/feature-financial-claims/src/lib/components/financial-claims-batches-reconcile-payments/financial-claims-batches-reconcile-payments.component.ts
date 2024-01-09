@@ -62,6 +62,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
+  reconcileGridListsSubscription !: Subscription
   paymentRequestId!:any;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
@@ -176,6 +177,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
 
   ngOnInit(): void {
+    this.reconcilePaymentGridUpdatedResult = [];
+    this.reconcilePaymentGridPagedResult = [];
     this.loadQueryParams();    
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodSubscription();
@@ -218,6 +221,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
   ngOnDestroy(): void {
     this.paymentMethodLovSubscription.unsubscribe();
+    this.reconcileGridListsSubscription.unsubscribe();
   }
 
   loadQueryParams(){
@@ -363,7 +367,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   dataStateChange(stateData: any): void {
     this.sortBatch = stateData.sort;
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
     this.sortDir = this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.filter = stateData?.filter?.filters;
@@ -510,10 +514,10 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         if((itemResponse.data[index].checkNbr !== null && itemResponse.data[index].checkNbr !== '' && itemResponse.data[index].checkNbr !== undefined )){
           itemResponse.data[index].reconciled = true;
         }
-      }     
-      this.reconcilePaymentGridPagedResult = itemResponse;      
+      }   
+       
     });
-
+    this.reconcilePaymentGridPagedResult = itemResponse;     
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -521,7 +525,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   }
 
   gridDataHandle() {
-    this.reconcileGridLists$.subscribe((response: any) => {
+    this.reconcileGridListsSubscription = this.reconcileGridLists$.subscribe((response: any) => {
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.reconcilePaymentGridPagedResult.data);
@@ -742,8 +746,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     }
     if (dataItem.checkNbr !== '') {
       dataItem.isPrintAdviceLetter = true;      
-    }
-    this.assignRowDataToMainList(dataItem);
+    }    
 
     if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined
       && dataItem.checkNbr !== ''){
@@ -757,7 +760,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     && (x.vendorId !== dataItem.vendorId || x.batchId !== dataItem.batchId));
     if (isCheckNumberAlreadyExist.length > 0) {
       dataItem.warrantNumberInValid = true;
-      dataItem.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
+      dataItem.warrantNumberInValidMsg = `Duplicate Warrant Number entered in ${isCheckNumberAlreadyExist[0].batchName}.`;
     }
     else {
       dataItem.warrantNumberInValidMsg = null;
@@ -767,6 +770,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       dataItem.warrantNumberInValidMsg = null;
       dataItem.warrantNumberInValid = false;
     }
+    this.assignRowDataToMainList(dataItem);
   }
  warrantNumberChangeSubscription(){
   this.warrantNumberChange$.subscribe((response:any) =>{
@@ -774,7 +778,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === this.checkingPaymentRequest);
       if (ifExist !== undefined) {
         ifExist.warrantNumberInValid = true;
-        ifExist.warrantNumberInValidMsg = 'Duplicate Warrant Number entered.'
+        ifExist.warrantNumberInValidMsg = `Duplicate Warrant Number entered in ${ifExist.batchName}.`;
         this.assignUpdatedItemToPagedList();
         this.cd.detectChanges();
       }
@@ -928,7 +932,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     onRowSelection(grid:any, selection:any)
     {
       this.warrantCalculationArray=[];
-      const data = selection.selectedRows[0].dataItem;    
+      const data = selection.dataItem;    
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
       let warrantTotal=0; 
@@ -954,9 +958,9 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
-        paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
+        paymentToReconcileCount : this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged && x.entityId == this.entityId  && x.checkNbr !== undefined && x.checkNbr !== '').length
       }
-      
+      this.claimReconcileCount =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged && x.entityId == this.entityId  && x.checkNbr !== undefined && x.checkNbr !== '').length;
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
 

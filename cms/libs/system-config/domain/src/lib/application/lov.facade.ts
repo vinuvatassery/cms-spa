@@ -93,6 +93,7 @@ export class LovFacade {
 
   private serviceTypeSubject = new Subject<any>();
   private refundTypeSubject = new Subject<any>();
+  private batchStatusSubject = new Subject<any>();
 
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
@@ -157,7 +158,7 @@ export class LovFacade {
   pendingApprovalPaymentType$ = this.pendingApprovalPaymentTypeSubject.asObservable();
   serviceType$ = this.serviceTypeSubject.asObservable();
   refundType$ = this.refundTypeSubject.asObservable();
-
+  batchStatus$ = this.batchStatusSubject.asObservable();
 
 
   paymentMethodVendorlov$ = this.lovPaymentMethodVendorSubject.asObservable();
@@ -383,13 +384,18 @@ export class LovFacade {
   getProofOfIncomeTypesLov(parentCode: string) {
     return this.lovDataService.getLovsbyParent(LovType.ProofOfIncomeType, parentCode)
   }
+
   getHealthInsuranceTypeLovs(): void {
-    this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).subscribe({
-      next: (loveInsuranceTypeResponse) => {
-        this.lovInsuranceTypeSubject.next(loveInsuranceTypeResponse);
+    this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).pipe(
+      map((loveInsuranceTypeResponse) => {
+        return loveInsuranceTypeResponse.filter(item => item.lovCode !== InsurancePlanTypeCodes.DENTAL_INSURANCE);
+      })
+    ).subscribe({
+      next: (filteredLoveInsuranceTypeResponse) => {
+        this.lovInsuranceTypeSubject.next(filteredLoveInsuranceTypeResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
@@ -832,7 +838,7 @@ export class LovFacade {
     });
   }
 
-  getServiceTypeLov(){
+  getServiceTypeLov() {
     this.lovDataService.getLovsbyType(LovType.ServiceType).subscribe({
       next: (lovResponse) => {
         this.serviceTypeSubject.next(lovResponse);
@@ -842,7 +848,7 @@ export class LovFacade {
       },
     });
   }
-  getRefundTypeLov(){
+  getRefundTypeLov() {
     this.lovDataService.getLovsbyType(LovType.ServiceType).subscribe({
       next: (lovResponse) => {
         this.refundTypeSubject.next(lovResponse);
@@ -852,6 +858,18 @@ export class LovFacade {
       },
     });
   }
+
+  getBatchStatusLov(): void {
+    this.lovDataService.getLovsbyType(LovType.BatchStatusCode).subscribe({
+      next: (lovResponse) => {
+        this.batchStatusSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
 }
 
 

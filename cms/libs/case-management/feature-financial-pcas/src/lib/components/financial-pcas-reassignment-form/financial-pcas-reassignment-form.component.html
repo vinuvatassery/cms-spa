@@ -6,14 +6,14 @@
             All fields are required unless otherwise stated.
       </p>
       <p class="text-muted" *ngIf="isViewGridOptionClicked">
-            The fields on this window are view only, to edit, use the "Edit" option."
+            The fields on this window are view only, to edit, use the "Edit" option.
       </p>
-     
+
       <div class="flex-row">
             <div class="flex-col mt-1">
                   <p class="relative-heading"><strong>PCA Settings</strong></p>
             </div>
-            <div class="flex-col flex-col-8">
+            <div class="flex-col flex-col-9">
                   <kendo-floatinglabel text="PCA">
                         <kendo-dropdownlist aria-label="PCA" [fillMode]="formUiStyle.inputFillMode"
                         [data]="pcaList"
@@ -23,7 +23,7 @@
                   </kendo-floatinglabel>
 
             </div>
-            <div class="flex-col flex-col-4">
+            <div class="flex-col flex-col-3">
                   <kendo-floatinglabel text="Year">
                         <kendo-textbox aria-label="AT" [fillMode]="formUiStyle.inputFillMode" formControlName="ay" > </kendo-textbox>
                   </kendo-floatinglabel>
@@ -38,20 +38,24 @@
                   <label> Allocated </label>
                   <p> $ {{pcaReassignmentByFundSource.allocatedAmount | kendoNumber: 'n2'}}</p>
             </div>
-            <div class="flex-col flex-col-4">
-                  <label> {{isViewGridOptionClicked ? 'Remaining Amount' : 'Remaining'}} </label>
-                  <p class="green-text-color">$ {{pcaReassignmentByFundSource.remainingAmount}}</p>
+            <div class="flex-col flex-col-4" *ngIf="!isViewGridOptionClicked">
+                  <label>Remaining</label>
+                  <p>$ {{pcaReassignmentByFundSource.remainingAmount  | kendoNumber: 'n2' }}</p>
             </div>
-            <div class="flex-col flex-col-4" *ngIf="isViewGridOptionClicked">
+            <div class="flex-col flex-col-5" *ngIf="isViewGridOptionClicked">
+                  <label> Remaining Amount </label>
+                  <p>$ {{pcaReassignmentByFundSource.remainingAmount  | kendoNumber: 'n2' }}</p>
+            </div>
+            <div class="flex-col flex-col-3" *ngIf="isViewGridOptionClicked">
                   <label> Close Date </label>
-                  <p class="green-text-color">{{pcaReassignmentByFundSource.pcaCloseDate | date: 'dd/MM/yyyy' }}</p>
+                  <p>{{pcaReassignmentByFundSource.pcaCloseDate | date: 'MM/dd/yyyy' }}</p>
             </div>
-            
+
 
       </div>
       <div class="flex-row">
             <div class="flex-col mt-1">
-            
+
                   <p class="relative-heading"><strong> {{isViewGridOptionClicked ? 'Object Settings' : 'Assignment Settings'}}  </strong></p>
             </div>
             <div class="flex-col flex-col-6">
@@ -62,12 +66,12 @@
                                  (valueChange)="openDateValidate()">
                         </kendo-datepicker>
                   </kendo-floatinglabel>
-                  
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['openDate'].valid && !pcaReassignmentForm.controls['openDate'].hasError('incorrect')"> Open Date is required.</kendo-formerror>
+
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['openDate'].valid && pcaReassignmentForm.controls['openDate'].hasError('required')"> Open Date is required.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['openDate'].hasError('incorrect')"> Open Date is after the Close Date.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && isAssignmentpcaCloseDateGreater"> Open Date is after the PCA Close Date.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && isAssignmentpcaOpenDateGreater"> Open Date is before the PCA Open Date.</kendo-formerror>
-            
+
             </div>
             <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Close Date">
@@ -78,7 +82,7 @@
                                (valueChange)="closeDateValidate()" >
                         </kendo-datepicker>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['closeDate'].valid && !pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is required.</kendo-formerror>
+                  <kendo-formerror *ngIf=" !isViewGridOptionClicked && !pcaReassignmentForm.controls['closeDate'].valid && pcaReassignmentForm.controls['closeDate'].hasError('required')"> Close Date is required.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && pcaReassignmentForm.controls['closeDate'].hasError('incorrect')"> Close Date is before the Open Date.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && ispcaCloseDateGreater"> Close Date is after the PCA Close Date.</kendo-formerror>
                   <kendo-formerror *ngIf=" !isViewGridOptionClicked && ispcaOpenDateGreater"> Close Date is before the PCA Open Date.</kendo-formerror>

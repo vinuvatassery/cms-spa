@@ -27,7 +27,7 @@ export class FinancialClaimsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'asc';
+  public sortType = 'desc';
   public selectedClaimsTab = 1
 
   public sortValueFinancialClaimsProcess = 'creationTime';
@@ -630,6 +630,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
    return formattedDate;
   }
   loadClientBySearchText(text : string): void {
+    this.clientSearchLoaderVisibilitySubject.next(true);
     if(text){
       this.financialClaimsDataService.loadClientBySearchText(text).subscribe({
 
@@ -731,9 +732,9 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
 viewAdviceLetterData(printAdviceLetterData: any, claimsType:any) {
   return this.financialClaimsDataService.viewPrintAdviceLetterData(printAdviceLetterData,claimsType);
 }
-loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string,clientCaseEligibilityId : string){
+loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string,clientCaseEligibilityId : string, paymentRequestId:string){
   this.showLoader();
-  this.financialClaimsDataService.checkExceededMaxBenefit(serviceCost,clientId, typeCode,clientCaseEligibilityId).subscribe({
+  this.financialClaimsDataService.checkExceededMaxBenefit(serviceCost,clientId, typeCode,clientCaseEligibilityId, paymentRequestId).subscribe({
     next: (serviceCostResponse:any)=>{
       this.serviceCostFlag =  serviceCostResponse;
       let response = {
@@ -782,14 +783,14 @@ checkGroupException(startDtae: any,endDate: any, clientId: number,cptCode:any, i
   })
   this.hideLoader();
 }
-checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any,paymentRequestId :any, indexNumber: any, typeCode : string){
+checkDuplicatePaymentException(params: any){
   this.showLoader();
-  this.financialClaimsDataService.checkDuplicatePaymentException(startDtae,endDate,vendorId,totalAmountDue, paymentRequestId, typeCode).subscribe({
+  this.financialClaimsDataService.checkDuplicatePaymentException(params).subscribe({
     next: (data:any)=>{
       const flag =  data;
       let response = {
         flag: flag?.status == 0 ? false : true,
-        indexNumber: indexNumber
+        indexNumber: params.indexNumber
       }
       this.showDuplicatePaymentExceptionSubject.next(response);
     },
