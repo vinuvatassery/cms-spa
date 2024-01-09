@@ -35,7 +35,7 @@
               >
               </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror *ngIf="!appInfoForm.controls[DescriptionField]?.valid"
+            <kendo-formerror *ngIf="!appInfoForm.controls[DescriptionField].valid &&textboxDisable==undefined"
               >Please specify sexual orientation.</kendo-formerror
             >
           </span>
