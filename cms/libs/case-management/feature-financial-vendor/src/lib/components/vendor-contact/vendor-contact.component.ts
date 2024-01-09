@@ -17,7 +17,7 @@ export class VendorContactComponent {
 
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
-
+  inputMask ='(999) 000-0000';
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,

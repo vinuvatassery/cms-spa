@@ -39,6 +39,13 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   ngOnInit(): void {
     this.loadSexulaIdentities();
     this.loadApplicantInfoSubscription();
+    if(this.textboxDisable==undefined)
+    {
+      this.appInfoForm.get(this.DescriptionField)?.disable();
+      this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required);
+      this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
+    }
+
   }
   ngOnDestroy(): void {
     this.appInfoSubscription.unsubscribe();
