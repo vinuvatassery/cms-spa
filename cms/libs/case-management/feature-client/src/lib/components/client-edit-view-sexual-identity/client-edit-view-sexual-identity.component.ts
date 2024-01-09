@@ -42,6 +42,7 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
     if(this.textboxDisable==undefined)
     {
       this.appInfoForm.get(this.DescriptionField)?.disable();
+      this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required);
       this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
     }
 
