@@ -12,7 +12,7 @@ import { SystemConfigOtherListsFacade } from '@cms/system-config/domain';
   templateUrl: './domains-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DomainsListComponent {
+export class DomainsListComponent implements OnInit {
   public pageSize = 10;
   public skip = 0;
   public pageSizes = [
@@ -26,7 +26,7 @@ export class DomainsListComponent {
   isDomainsDeletePopupShow = false;
   isDomainsDeactivatePopupShow = false;
   isDomainsReactivatePopupShow = false;
-  indexLists$ = this.systemConfigOtherListsFacade.loadDomainsListsService$;
+  domainsLists$ = this.systemConfigOtherListsFacade.loadDomainsListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public moreActions = [

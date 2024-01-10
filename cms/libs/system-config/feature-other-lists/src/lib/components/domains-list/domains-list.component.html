@@ -17,6 +17,8 @@
       <div class="flex-row">
             <!-- Table header show only in list -->
             <div class="flex-col">
+                  <p class="pt-1">Add, edit or deactivate domains. Once added, they may be associated with Case Manager.
+                  </p>
                   <div class="table-filter-section mat-form-no-b-space">
                         <span class="filter-section_items filter--select">
                               <kendo-floatinglabel text="All Columns">
@@ -48,7 +50,7 @@
 
       <div class="app-c-table">
             <kendo-grid [pageSize]="5" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
-                  [resizable]="true" [columnMenu]="{ filter: true }" [data]="indexLists$ | async">
+                  [resizable]="true" [columnMenu]="{ filter: true }" [data]="domainsLists$ | async">
                   <kendo-grid-column field="domainName" title="Domain Name" [width]="160">
                   </kendo-grid-column>
 
