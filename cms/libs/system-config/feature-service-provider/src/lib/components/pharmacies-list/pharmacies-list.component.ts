@@ -27,7 +27,7 @@ export class PharmaciesListComponent implements OnInit{
   isPharmaciesDetailPopup = false; 
   isPharmaciesDeletePopupShow = false;
   isPharmaciesDeactivatePopupShow = false;
-  indexLists$ = this.systemConfigServiceProviderFacade.loadPharmaciesListsService$;
+  pharmaciesLists$ = this.systemConfigServiceProviderFacade.loadPharmaciesListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [

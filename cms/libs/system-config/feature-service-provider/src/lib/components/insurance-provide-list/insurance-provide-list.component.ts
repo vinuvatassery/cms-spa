@@ -29,7 +29,7 @@ export class InsuranceProvideListComponent implements OnInit{
   isInsuranceProvidersDetailPopup = false; 
   isInsuranceProvidersDeletePopupShow = false;
   isInsuranceProvidersDeactivatePopupShow = false;
-  indexLists$ = this.systemConfigServiceProviderFacade.loadInsuranceProvidersListsService$;
+  insuranceProvidersLists$ = this.systemConfigServiceProviderFacade.loadInsuranceProvidersListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [

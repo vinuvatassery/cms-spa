@@ -27,7 +27,7 @@ export class PcaCodesListComponent implements OnInit{
   ];
   /** Public properties **/ 
   isPcaCodeDetailPopup = false;
-  indexLists$ = this.systemConfigFinancialFacade.loadPcaCodeListsService$;
+  pcaCodeLists$ = this.systemConfigFinancialFacade.loadPcaCodeListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreActions = [

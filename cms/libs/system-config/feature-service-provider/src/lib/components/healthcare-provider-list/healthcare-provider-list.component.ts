@@ -27,7 +27,7 @@ export class HealthcareProviderListComponent implements OnInit{
   isHealthcareProvidersDetailPopup = false; 
   isHealthcareProvidersDeletePopupShow = false;
   isHealthcareProvidersDeactivatePopupShow = false;
-  indexLists$ = this.systemConfigServiceProviderFacade.loadHealthcareProvidersListsService$;
+  healthcareProvidersLists$ = this.systemConfigServiceProviderFacade.loadHealthcareProvidersListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [

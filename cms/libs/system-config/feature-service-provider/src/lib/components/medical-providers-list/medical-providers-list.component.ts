@@ -29,7 +29,7 @@ export class MedicalProvidersListComponent implements OnInit{
   isMedicalProvidersDetailPopup = false; 
   isMedicalProvidersDeletePopupShow = false;
   isMedicalProvidersDeactivatePopupShow = false;
-  indexLists$ = this.systemConfigServiceProviderFacade.loadMedicalProvidersListsService$;
+  medicalProvidersLists$ = this.systemConfigServiceProviderFacade.loadMedicalProvidersListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [

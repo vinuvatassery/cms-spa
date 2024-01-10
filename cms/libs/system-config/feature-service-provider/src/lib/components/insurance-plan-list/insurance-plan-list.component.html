@@ -59,7 +59,7 @@
 
       <div class="app-c-table">
             <kendo-grid [pageSize]="5" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
-                  [resizable]="true" [columnMenu]="{ filter: true }" [data]="indexLists$ | async">
+                  [resizable]="true" [columnMenu]="{ filter: true }" [data]="insurancePlansLists$ | async">
                   <kendo-grid-column field="insuranceProviderName" title="Insurance Provider Name" [width]="180">
                   </kendo-grid-column>
                   <kendo-grid-column field="insurancePlanName" title="Insurance Plans Name" [width]="180">

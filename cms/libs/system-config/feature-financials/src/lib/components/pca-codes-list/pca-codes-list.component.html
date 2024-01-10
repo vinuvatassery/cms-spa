@@ -47,7 +47,7 @@
 
       <div class="app-c-table">
             <kendo-grid [pageSize]="5" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
-                  [resizable]="true" [columnMenu]="{ filter: true }" [data]="indexLists$ | async">
+                  [resizable]="true" [columnMenu]="{ filter: true }" [data]="pcaCodeLists$ | async">
                   <kendo-grid-column field="pcaCode" title="PCA Code" [width]="130">
                   </kendo-grid-column>
                   <kendo-grid-column field="year" title="Year" [width]="130">

@@ -28,7 +28,7 @@ export class CptCodeListComponent implements OnInit{
   isCptCodeDetailPopup = false; 
   isCptCodeDeletePopupShow = false;
   isCptCodeDeactivatePopupShow = false;
-  indexLists$ = this.systemConfigServiceProviderFacade.loadCptCodeListsService$;
+  cptCodeLists$ = this.systemConfigServiceProviderFacade.loadCptCodeListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreActions = [

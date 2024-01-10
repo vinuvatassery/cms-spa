@@ -27,7 +27,7 @@ export class ManufacturersListComponent implements OnInit{
   isManufacturerDetailPopup = false; 
   isManufacturerDeletePopupShow = false;
   isManufacturerDeactivatePopupShow = false;
-  indexLists$ = this.systemConfigServiceProviderFacade.loadManufacturerListsService$;
+  manufacturerLists$ = this.systemConfigServiceProviderFacade.loadManufacturerListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [

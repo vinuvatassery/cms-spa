@@ -28,7 +28,7 @@ export class DrugsListComponent  implements OnInit{
   isDrugsDetailPopup = false; 
   isDrugsReassignPopupShow = false;
   isDrugsDeactivatePopupShow = false;
-  indexLists$ = this.systemConfigServiceProviderFacade.loadDrugsListsService$;
+  drugsLists$ = this.systemConfigServiceProviderFacade.loadDrugsListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [

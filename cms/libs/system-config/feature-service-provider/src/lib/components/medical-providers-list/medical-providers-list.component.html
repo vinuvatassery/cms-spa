@@ -46,7 +46,7 @@
 
       <div class="app-c-table">
             <kendo-grid [pageSize]="5" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
-                  [resizable]="true" [columnMenu]="{ filter: true }" [data]="indexLists$ | async">
+                  [resizable]="true" [columnMenu]="{ filter: true }" [data]="medicalProvidersLists$ | async">
                   <kendo-grid-column field="medicalProviderName" title="Medical Providers Name" [width]="200">
                   </kendo-grid-column>
                   <kendo-grid-column field="tin" title="TIN" [width]="180">

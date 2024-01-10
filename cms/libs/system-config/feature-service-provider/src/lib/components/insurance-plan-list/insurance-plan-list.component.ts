@@ -26,7 +26,7 @@ export class InsurancePlanListComponent implements OnInit {
   isInsurancePlansDeletePopupShow = false;
   isInsurancePlansDeactivatePopupShow = false;
   isInsurancePlansBulkMigrationPopupShow = false;
-  indexLists$ =
+  insurancePlansLists$ =
     this.systemConfigServiceProviderFacade.loadInsurancePlansListsService$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle: UIFormStyle = new UIFormStyle();
