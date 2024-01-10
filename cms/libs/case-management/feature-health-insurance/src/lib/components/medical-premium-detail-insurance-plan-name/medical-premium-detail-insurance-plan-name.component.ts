@@ -211,4 +211,13 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
       }
     });
   }
+
+  onIsDentalCheckClick(check: any){
+    let checkValidator =  this.isDentalPlan ? Validators.nullValidator : Validators.required;
+    this.newhealthInsuranceForm.controls["insuranceType"].setValue("touchecd", this.isDentalPlan);
+    this.newhealthInsuranceForm.controls["insuranceType"].setValidators(
+      checkValidator
+    )
+    this.cdr.detectChanges();
+  }
 }

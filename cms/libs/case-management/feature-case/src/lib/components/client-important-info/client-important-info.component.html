@@ -41,7 +41,7 @@
           {{clientProfileImpInfo$?.caseManagerEmail}}</li>
       </ul>
     </div>
-    <div class="flex-col" *ngIf="clientDisabilitiesValidator(clientProfileImpInfo$?.clientDisabilities)">
+    <div class="flex-col" *ngIf="clientArrayObjectValidator(clientProfileImpInfo$?.clientDisabilities)">
       <h5>Special Handling</h5>
       <ul aria-label="special handling menu" class="user-bullet-list"
         *ngFor="let clientDisability of clientProfileImpInfo$?.clientDisabilities">
