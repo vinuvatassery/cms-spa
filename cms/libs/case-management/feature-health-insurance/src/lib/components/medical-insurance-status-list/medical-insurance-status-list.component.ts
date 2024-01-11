@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, 
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import { HealthInsurancePolicyFacade, CaseFacade, InsuranceStatusType, ClientFacade } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade, CaseFacade, InsuranceStatusType, ClientFacade, PriorityCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subscription } from 'rxjs';
@@ -50,6 +50,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   isOpenedChangePriorityModal:boolean= false;
   isEditInsurancePriorityTitle = false;
   selectedInsurance: any;
+  selectedEligibilityId:any;
+  selectedPolicyPriority:any=null;
   public state!: State;
   sort!:any;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
@@ -181,16 +183,20 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   handleOptionClick(dataItem: any, type: any) {
     if (type == 'Delete') {
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.selectedEligibilityId = dataItem.clientCaseEligibilityId;
+      this.selectedPolicyPriority = dataItem.priorityCode;
       this.onDeleteConfirmOpenClicked();
     }
     if (type.toUpperCase() == 'EDIT') {
       this.isPaymentDone = dataItem.isPaymentDone
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.selectedEligibilityId = dataItem.clientCaseEligibilityId;
       this.handleHealthInsuranceOpenClicked('edit');
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
         this.insurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
     }
     if (type == 'priority') {
+      this.selectedEligibilityId = dataItem.clientCaseEligibilityId;
       this.selectedInsurance=dataItem;
       this.onChangePriorityOpenClicked()
     }
@@ -210,7 +216,12 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     this.isOpenedDeleteConfirm = false;
   }
   deleteInsurancePolicy() {
-    this.isTriggerPriorityPopup = false;
+    if(this.selectedPolicyPriority === PriorityCode.Primary){
+      this.isTriggerPriorityPopup = true;
+    }
+    else{
+      this.isTriggerPriorityPopup = false;
+    }
     this.deleteInsurancePlan.next(this.currentInsurancePolicyId);
   }
 
@@ -286,6 +297,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     this.triggerPriorityPopup$.subscribe((value:boolean)=>{
       if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {
         if(value && this.isTriggerPriorityPopup){
+          this.selectedEligibilityId = this.caseEligibilityId;          
           this.isEditInsurancePriorityTitle = false;
           this.insurancePriorityModalButtonText = 'Save';
           this.onChangePriorityOpenClicked();
