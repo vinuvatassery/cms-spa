@@ -45,19 +45,24 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {  
+  ngOnInit(): void { 
     this.loadDdlMedicalHealthPlanPriority();
     this.insurancePolicyFacade.showLoader();
     this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId,this.insuranceStatus)
     .subscribe({
       next: (data: any) => {
-        this.gridList = data;
-        this.gridList.forEach((row: any) => {
-        this.form.addControl(
-          row.clientInsurancePolicyId,
-          new FormControl(row.priorityCode, Validators.required)
-        );
-      });
+        if(data.length ===0){
+          this.isCloseInsuranceModal.emit();
+        }
+        else{
+          this.gridList = data;
+          this.gridList.forEach((row: any) => {
+          this.form.addControl(
+            row.clientInsurancePolicyId,
+            new FormControl(row.priorityCode, Validators.required)
+          );
+          });
+        }
       this.insurancePolicyFacade.hideLoader();
       this.cdr.detectChanges();
       },
