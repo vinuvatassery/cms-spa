@@ -246,6 +246,9 @@
     .directory_list {
       label{
         font-size: 1.3rem;
+        span{
+          font-family: $font-family;
+        }
     
       }
       &.attachments-lists-wrap { 
