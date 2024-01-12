@@ -11,7 +11,7 @@ import {
 } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 
-import { catchError, forkJoin, mergeMap, of, Subject } from 'rxjs';
+import { catchError, forkJoin, mergeMap, of, Subject, takeUntil } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
@@ -58,6 +58,8 @@ export class CaseFacade {
   private groupDeletedSubject = new BehaviorSubject<boolean>(false);
   private ddlEligPeriodsSubject = new BehaviorSubject<any>([]);
   private searchBarsubject = new Subject<string>();
+  public cancelCaseListCallSubject = new Subject<any>();
+
 
   /** Public properties **/
   cases$ = this.casesSubject.asObservable();
@@ -88,6 +90,7 @@ export class CaseFacade {
   ddlEligPeriods$ = this.ddlEligPeriodsSubject.asObservable();
   isCaseReadOnly$ = this.isCaseReadOnlySubject.asObservable();
   searchBars$ = this.searchBarsubject.asObservable();
+  cancelCaseListCall$ = this.cancelCaseListCallSubject.asObservable();
 
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
@@ -364,7 +367,7 @@ export class CaseFacade {
     this.caseDataService
       .loadCases(
         caseParams
-      )
+      ).pipe(takeUntil(this.cancelCaseListCall$))
       .subscribe({
         next: (casesResponse: any) => {
           this.casesSubject.next(casesResponse);

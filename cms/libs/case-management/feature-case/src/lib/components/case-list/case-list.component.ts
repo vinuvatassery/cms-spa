@@ -101,6 +101,7 @@ public state!: any;
   /** Public properties **/
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
+  cancelCaseListCallSubject = this.caseFacade.cancelCaseListCallSubject;
   groupLov$ = this.lovFacade.groupLov$;
   caseStatusType$ = this.lovFacade.caseStatusType$;
   selectedColumn!: any;
@@ -143,6 +144,7 @@ public state!: any;
   }
   ngOnDestroy(): void {
     this.userProfileSubsriction.unsubscribe();
+    this.cancelCaseListCallSubject.next(true);
   }
 
   ngAfterViewInit() {
