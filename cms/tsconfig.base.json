@@ -15,9 +15,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@cms/system-interface/domain": [
-        "libs/system-interface/domain/src/index.ts"
-      ],
       "@cms/case-management/domain": [
         "libs/case-management/domain/src/index.ts"
       ],
@@ -176,6 +173,9 @@
       ],
       "@cms/system-config/feature-user-management": [
         "libs/system-config/feature-user-management/src/index.ts"
+      ],
+      "@cms/system-interface/domain": [
+        "libs/system-interface/domain/src/index.ts"
       ],
       "@cms/system-interface/feature-dashboard": [
         "libs/system-interface/feature-dashboard/src/index.ts"

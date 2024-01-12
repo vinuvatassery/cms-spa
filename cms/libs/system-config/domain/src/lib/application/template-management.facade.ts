@@ -12,10 +12,12 @@ import { TemplateDataService } from '../infrastructure/template.data.service';
 export class TemplateManagementFacade {
   /** Private properties **/
   private templateSubject = new BehaviorSubject<Template[]>([]);
+  private clientNotificationDefaultsListsSubject = new BehaviorSubject<any>([]);
   private templatesListSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   templates$ = this.templateSubject.asObservable();
+  clientNotificationDefaultsLists$ = this.clientNotificationDefaultsListsSubject.asObservable();
   templatesList$ = this.templatesListSubject.asObservable();
 
   /** Constructor **/
@@ -37,12 +39,21 @@ export class TemplateManagementFacade {
     });
   }
 
-  showSnackBar(type: SnackBarNotificationType, subtitle: any) {
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
       this.loggingService.logException(err)
     }
     this.snackbarService.manageSnackBar(type, subtitle);
+    this.hideLoader();
+  }
+
+  showLoader() {
+    this.loaderService.show();
+  }
+
+  hideLoader() {
+    this.loaderService.hide();
   }
 
   getDirectoryContent(typeCode:string, documentTemplateId?: string): any {
@@ -52,5 +63,23 @@ export class TemplateManagementFacade {
   getFormsandDocumentsViewDownload(id: string) {
     return this.templateDataService.getFormsandDocumentsViewDownload(id);
   }
+
+
+
+  loadClientNotificationDefaultsLists() {
+    this.templateDataService
+      .loadClientNotificationDefaultsListsService()
+      .subscribe({
+        next: (response) => {
+          this.clientNotificationDefaultsListsSubject.next(response);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+
+ 
 
 }

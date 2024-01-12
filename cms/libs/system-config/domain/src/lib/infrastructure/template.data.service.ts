@@ -51,4 +51,36 @@ export class TemplateDataService {
       });
   }
 
+  loadClientNotificationDefaultsListsService() {
+    return of([
+      {
+        id: 1,
+        Scenario: 'domainName',
+        scenarioDescription: 'domainName',
+        defaultMethod: 'domainName',
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 2,
+        Scenario: 'domainName',
+        scenarioDescription: 'domainName',
+        defaultMethod: 'domainName',
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 3,
+        Scenario: 'domainName',
+        scenarioDescription: 'domainName',
+        defaultMethod: 'domainName',
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+    ]);
+  }
+
 }
