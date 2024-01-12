@@ -73,10 +73,7 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
   }
 
   handleShowHistoricalClick(){
-    this.gridDataRefinerValue = {
-      skipCount: this.statusPeriodFacade.skipCount,
-      pagesize: this.statusPeriodFacade.gridPageSizes[0]?.value,
-    };
+    this.gridDataRefinerValue = new GridFilterParam(this.statusPeriodFacade.skipCount, this.statusPeriodFacade.gridPageSizes[0]?.value);
     this.loadStatusPeriod();
   }
 
