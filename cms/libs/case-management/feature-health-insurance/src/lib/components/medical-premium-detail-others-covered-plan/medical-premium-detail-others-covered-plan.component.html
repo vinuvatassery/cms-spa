@@ -87,7 +87,7 @@
                         <kendo-textbox [disabled]="isViewContentEditable" aria-label="last name" placeholder="Last Name"
                             [fillMode]="formUiStyle.inputFillMode" formControlName="lastName" [maxlength]="40">
                         </kendo-textbox>
-                        <kendo-formerror *ngIf="!getPersonControl(i, 'firstName')?.valid
+                        <kendo-formerror *ngIf="!getPersonControl(i, 'lastName')?.valid
                      && isViewContentEditable==false">Last name is required.</kendo-formerror>
                     </kendo-floatinglabel>
                 </div>
