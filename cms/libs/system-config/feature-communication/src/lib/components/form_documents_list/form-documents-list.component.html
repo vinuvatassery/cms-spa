@@ -62,9 +62,9 @@
                                           </button>
                                     </span>
                                     <label *ngIf="dataItem.isFolder===false">{{dataItem.text}}
-                                          <label>({{dataItem.templateSize| number: '1.0-0'}} MB)</label></label>
-                                    <label *ngIf="dataItem.isFolder===true">{{dataItem.text}} </label> <span
-                                          *ngIf="dataItem.isFolder===true">4 Files</span>
+                                          <label>({{dataItem.fileSize| number: '1.0-0'}} MB)</label></label>
+                                    <label *ngIf="dataItem.isFolder===true">{{dataItem.text}}  <span
+                                          *ngIf="dataItem.isFolder===true">{{dataItem.fileCount}} Files</span></label>
                               </div>
                         </div>
                         <span class="attachments-date">Last Updated
