@@ -133,3 +133,42 @@
             </kendo-grid>
       </div>
 </section>
+
+
+
+<kendo-dialog *ngIf="UpdateDefaultNotificationPopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseUpdateDefaultNotificationClicked()"> Update default notification method? </kendo-dialog-titlebar>
+
+      <section class="k-dialog-body">
+            <p class="text-muted mb-2">
+                  This change will take effect immediately.
+            </p>
+                  <div class="flex-row mb-1">
+                       <div class="flex-col flex-col-4">  <b>Scenario:</b>  </div>
+                       <div class="flex-col  flex-col-8"> Application - Approved </div>
+                  </div>
+                  <div class="flex-row mb-1">
+                        <div class="flex-col  flex-col-4">  <b>Old Default:</b>  </div>
+                        <div class="flex-col  flex-col-8"> Client’s Preference </div>
+                   </div>
+                   <div class="flex-row mb-1">
+                        <div class="flex-col  flex-col-4">  <b>New Default:</b>  </div>
+                        <div class="flex-col  flex-col-8"> Letter </div>
+                   </div>
+            
+      </section>
+
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                              (click)="onCloseUpdateDefaultNotificationClicked()">
+                              Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Update">
+                              Update
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>

@@ -28,6 +28,7 @@ export class ClientNotificationDefaultsListComponent implements OnInit {
     { text: 'All', value: 100 },
   ];
   /** Public properties **/
+  UpdateDefaultNotificationPopupShow = false;
   clientNotificationDefaultsLists$ =
     this.templateManagementFacade.clientNotificationDefaultsLists$;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -68,6 +69,7 @@ export class ClientNotificationDefaultsListComponent implements OnInit {
     const product = formGroup.value;
 
     sender.closeRow(rowIndex);
+    this.UpdateDefaultNotificationPopupShow = true;
   }
   private closeEditor(
     grid: GridComponent,
@@ -84,4 +86,8 @@ export class ClientNotificationDefaultsListComponent implements OnInit {
         Validators.required
       ),
     });
+
+    onCloseUpdateDefaultNotificationClicked(){
+this.UpdateDefaultNotificationPopupShow = false;
+    }
 }
