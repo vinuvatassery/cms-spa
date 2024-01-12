@@ -355,8 +355,8 @@ this.reloadEmailsEvent.emit();
           this.onPhoneNumberDetailClosed();
           this.loadClientPhonesList();
         }
+        this.isDeactivateFlag = false;
       });
-
   }
 
 }
