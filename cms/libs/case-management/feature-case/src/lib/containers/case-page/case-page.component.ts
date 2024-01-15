@@ -23,6 +23,7 @@ export class CasePageComponent implements OnInit {
   selectedTab: CaseScreenTab = 0;
   isRightReminderBarEnabled = true;
   isNewCaseDialogClicked = false;
+  isCasesLoaded = false;
   allCases$ = this.caseFacade.cases$;
   myCases$ = this.caseFacade.myCases$;
   recentCases$ = this.caseFacade.lastVisitedCases$;
@@ -81,6 +82,7 @@ export class CasePageComponent implements OnInit {
 
   /** Internal event methods **/
   onTabSelected(e: any) {
+    this.isCasesLoaded = false;
     this.selectedTab = e.index;
     switch(this.selectedTab) {
       case CaseScreenTab.CER_TRACKING: {
@@ -139,21 +141,24 @@ export class CasePageComponent implements OnInit {
 
   loadCasesListEventHandler(gridDataRefinerValue : any)
   {
-    const gridDataRefiner =
-    {
-      caseScreenType: this.selectedTab,
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount : gridDataRefinerValue.pagesize,
-      sort : gridDataRefinerValue.sortColumn,
-      sortType : gridDataRefinerValue.sortType,
-      columnName : gridDataRefinerValue.columnName,
-      filter : gridDataRefinerValue.filter,
-      totalClientsCount : this.totalClientsCount,
-      beforeDate: gridDataRefinerValue.beforeDate,
-      afterDate: gridDataRefinerValue.afterDate
+    if(!this.isCasesLoaded){
+      const gridDataRefiner =
+      {
+        caseScreenType: this.selectedTab,
+        skipcount: gridDataRefinerValue.skipCount,
+        maxResultCount : gridDataRefinerValue.pagesize,
+        sort : gridDataRefinerValue.sortColumn,
+        sortType : gridDataRefinerValue.sortType,
+        columnName : gridDataRefinerValue.columnName,
+        filter : gridDataRefinerValue.filter,
+        totalClientsCount : this.totalClientsCount,
+        beforeDate: gridDataRefinerValue.beforeDate,
+        afterDate: gridDataRefinerValue.afterDate
+      }
+      this.pageSizes = this.caseFacade.gridPageSizes;
+      this.loadCaseList(gridDataRefiner);
     }
-    this.pageSizes = this.caseFacade.gridPageSizes;
-    this.loadCaseList(gridDataRefiner);
+    this.isCasesLoaded = true;
   }
 
   loadColumnDroplist()
