@@ -43,12 +43,12 @@ export class ClientNotificationDefaultsListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadCptCodeLists();
+    this.loadClientNotificationLists();
   }
 
   /** Private  methods **/
 
-  private loadCptCodeLists() {
+  private loadClientNotificationLists() {
     this.templateManagementFacade.loadClientNotificationDefaultsLists();
   }
 

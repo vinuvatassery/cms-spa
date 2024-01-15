@@ -13,11 +13,17 @@ export class TemplateManagementFacade {
   /** Private properties **/
   private templateSubject = new BehaviorSubject<Template[]>([]);
   private clientNotificationDefaultsListsSubject = new BehaviorSubject<any>([]);
+  private emailTemplatesListsSubject = new BehaviorSubject<any>([]); 
+  private letterTemplatesListsSubject = new BehaviorSubject<any>([]); 
+  private smsTemplatesListsSubject = new BehaviorSubject<any>([]); 
   private templatesListSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   templates$ = this.templateSubject.asObservable();
   clientNotificationDefaultsLists$ = this.clientNotificationDefaultsListsSubject.asObservable();
+  emailTemplatesLists$ = this.emailTemplatesListsSubject.asObservable();
+ letterTemplatesLists$ = this.emailTemplatesListsSubject.asObservable();
+  smsTemplatesLists$ = this.emailTemplatesListsSubject.asObservable();
   templatesList$ = this.templatesListSubject.asObservable();
 
   /** Constructor **/
@@ -80,6 +86,42 @@ export class TemplateManagementFacade {
   }
 
 
- 
+  loadEmailTemplateLists() {
+    this.templateDataService
+      .loadEmailTemplatesListsService()
+      .subscribe({
+        next: (response) => {
+          this.emailTemplatesListsSubject.next(response);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+  loadLetterTemplateLists() {
+    this.templateDataService
+      .loadLetterTemplatesListsService()
+      .subscribe({
+        next: (response) => {
+          this.letterTemplatesListsSubject.next(response);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  loadSmsTemplateLists() {
+    this.templateDataService
+      .loadSmsTemplatesListsService()
+      .subscribe({
+        next: (response) => {
+          this.smsTemplatesListsSubject.next(response);
+        },
+        error: (err) => {
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
 
 }
