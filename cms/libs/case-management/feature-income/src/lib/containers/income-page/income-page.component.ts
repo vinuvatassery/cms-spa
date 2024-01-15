@@ -21,7 +21,7 @@ import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
 })
 export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   
-  @ViewChildren("proofSchoolDropdownOne") public proofSchoolDropdownOne!: QueryList<DropDownListComponent>;
+  @ViewChildren("proofSchoolDropdown") public proofSchoolDropdown!: QueryList<DropDownListComponent>;
   /** Private properties **/
   private saveClickSubscription !: Subscription;  /** Public Methods **/
   private saveForLaterClickSubscription !: Subscription;
@@ -147,12 +147,12 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     event.preventDefault();
     // Close the list if the component is no longer focused
     setTimeout(() => {
-      this.proofSchoolDropdownOne.forEach((element, index) => {element.toggle(false);})
+      this.proofSchoolDropdown.forEach((element, index) => {element.toggle(false);})
     });
   }
 
   public onBlur() {
-    this.proofSchoolDropdownOne.forEach((element) => {element.toggle(false);})
+    this.proofSchoolDropdown.forEach((element) => {element.toggle(false);})
   }
   private incomeNoteWordCount() {
     this.incomeNoteCharachtersCount = this.incomeNote
