@@ -102,4 +102,13 @@
       }
     }
   }
+
+  &.editor-height-two{
+    .k-tabstrip-content{
+      padding-inline: 0px;
+    }
+     .k-editor-content {
+     min-height: 35vh; 
+    }
+  }
 }
