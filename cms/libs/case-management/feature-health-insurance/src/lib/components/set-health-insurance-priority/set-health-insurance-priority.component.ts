@@ -80,7 +80,6 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     this.lovFacade.getCaseCodeLovs();
   }
   public onChangePriority(value: any, insurance: any): void {
-    
     if (value === PriorityCode.Primary) {
       if (insurance.canPayForMedicationFlag === "N") {
         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,'Primary insurance always consists of insurance that pays for medications.', NotificationSource.UI)
@@ -92,48 +91,33 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
         return;
       }
-      this.PrimeryinsuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
+      this.InsuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
 
     }
     else if (value === PriorityCode.Secondary) {
-      this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
+      this.InsuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
     }
 
   }
-  insuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
-   
+
+  InsuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
     this.gridList.forEach((row: any) => {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
-    const primarySelections = this.gridList.filter((m: any) => m.priorityCode === priorityCode);
-    if (primarySelections.length === 2) {
-      if (this.dateRangeOverlaps(primarySelections[0].startDate, primarySelections[0].endDate, primarySelections[1].startDate, primarySelections[1].endDate)) {
-        const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId !== insurance.clientInsurancePolicyId);
+    const primarySelections = this.gridList.filter((m: any) => m.priorityCode === priorityCode
+      && m.clientInsurancePolicyId != insurance.clientInsurancePolicyId);
+    let overlapStatus = false;
+    primarySelections.forEach((element: any) => {
+      if (this.dateRangeOverlaps(element.startDate, element.endDate, insurance.startDate, insurance.endDate)) {
+        const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId == element.clientInsurancePolicyId);
         this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,errorMessage, NotificationSource.UI)
-        return true;
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING, errorMessage, NotificationSource.UI)
+        overlapStatus = true;
       }
-    }
-    return false;
-  }
-  PrimeryinsuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
-   
-    this.gridList.forEach((row: any) => {
-      row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
-
-    const primarySelections = this.gridList.filter((m: any) => m.priorityCode === priorityCode&&m.insurancePlanId !=insurance.insurancePlanId);
-   primarySelections.forEach((element:any) => {
-    if (this.dateRangeOverlaps(element.startDate, element.endDate, insurance.startDate, insurance.endDate)) {
-      const previousControl = primarySelections.find((m: any) => m.clientInsurancePolicyId !== insurance.clientInsurancePolicyId);
-      this.form.controls[previousControl.clientInsurancePolicyId].setValue(null);
-      this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.WARNING,errorMessage, NotificationSource.UI)
-      return true;
-    }
-    return false;
-   });   
-    return false;
+    return overlapStatus;
   }
+
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
     if (aEnd === null && bEnd === null && aStart === bStart) return true;
     if (aEnd === null && aStart >= bStart && aStart <= bEnd) return true;
