@@ -27,6 +27,7 @@ export class FormDocumentsListComponent implements OnInit {
   isUploadFileDetailPopup = false;
   isUploadFolderDetailPopup = false;
   isUploadFileVersionDetailPopup = false;
+  isDragDropEnabled = false;
   /** Public properties **/ 
   public moreActions = [
     {
@@ -42,7 +43,7 @@ export class FormDocumentsListComponent implements OnInit {
       text: 'Reorder',
       icon: 'format_list_numbered',
       click: (data: any): void => {
-        this.onFormsDocumentDeactivateClicked();
+        this.isDragDropEnabled = true;
       },
     },
     {
