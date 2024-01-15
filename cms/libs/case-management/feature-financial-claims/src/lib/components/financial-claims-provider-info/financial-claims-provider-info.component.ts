@@ -34,6 +34,9 @@ export class FinancialClaimsProviderInfoComponent {
   vendorProfile: any
   showAddressValidationLoader$= new BehaviorSubject(false);
   @Input() paymentMethodCode$ : Observable<any> | undefined;
+  specialhandlingCounter!: string;
+  specialHandlingCharachtersCount!: number;
+  specialHandlingMaxLength = 100;
   profileForm = this.formBuilder.group({
     tin: [''],
     address: this.formBuilder.group({
@@ -44,7 +47,7 @@ export class FinancialClaimsProviderInfoComponent {
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
       zip: ['', [Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
-      specialHandlingDesc: [''],
+      specialHandlingDesc: ['', Validators.maxLength(100)],
       mailCode: [{ value: '', disabled: true }]
     }),
     contacts: new FormArray([])
@@ -169,6 +172,7 @@ export class FinancialClaimsProviderInfoComponent {
 
       }
     });
+    this.specialhandlingCounter = `${this.vendorProfile.address.specialHandlingDesc?.length}/${this.specialHandlingMaxLength}`;
     this.createContactsFormArray()
   }
 
@@ -299,6 +303,11 @@ export class FinancialClaimsProviderInfoComponent {
       this.profileForm.controls['tin'].setErrors({ 'incorrect': true });
       this.accountingNumberValidated = false;
     }
+  }
+
+  onspecialHandlingTextAreaValueChange(event: any): void {
+    this.specialHandlingCharachtersCount = event.length;
+    this.specialhandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingMaxLength}`;
   }
 
 }
