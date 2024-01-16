@@ -35,7 +35,7 @@ export class DuplicateClientFoundComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.currentClientInfo.ssn != this.matchingClientInfo.ssn) {
-      this.ssn = '000-00-0000'
+      this.ssn =  '___-__-____'
     }
     else {
       this.ssn = this.currentClientInfo.ssn
