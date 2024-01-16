@@ -49,6 +49,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   incomeNoteMaxLength = 300;
   sessionId: any = "";
   clientId: any;
+  isProofOfSchoolDocumentUploaded: boolean = true;
   clientCaseEligibilityId: string = "";
   clientCaseId: any;
   incomeData: any = {};
@@ -195,17 +196,18 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private save() {
+    this.UploadDocumentValidation();
     if(this.hasNoIncome){
       let isValid = true;
       this.submitIncomeDetailsForm();
-      if (this.noIncomeDetailsForm.valid && isValid) {
+      if (this.noIncomeDetailsForm.valid && isValid && this.isProofOfSchoolDocumentUploaded) {
         this.noIncomeData.isCERRequest = this.isCerForm;
         this.loaderService.show();
         return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData);
       }
     }
     else{
-      if (!this.hasNoIncome && this.incomeData.clientIncomes != null)
+      if (!this.hasNoIncome && this.incomeData.clientIncomes != null && this.isProofOfSchoolDocumentUploaded)
       {
         this.loaderService.show();
         this.incomeFacade.incomeValidSubject.next(true);
@@ -224,7 +226,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         })
         )
       }
-      else
+      else if(!this.incomeData.clientIncomes)
       {
         this.incomeFacade.incomeValidSubject.next(false);
         return  of(false);
@@ -315,12 +317,18 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId,skip,pageSize, sortBy, sortType);
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.incomeData = incomeresponse;
+      let uploadedProofOfSchoolDependents = this.dependentsProofOfSchools.filter((item :any) => !!item.documentPath);
+      if(uploadedProofOfSchoolDependents?.length == this.incomeData?.dependents?.length){
+      this.isProofOfSchoolDocumentUploaded=true;
+    }
       this.incomeListRequiredValidation = false;
       this.hasValidIncome=false;
       let todayDate = new Date();
       todayDate = new Date(`${todayDate.getFullYear()}-${todayDate.getMonth()+1}-${todayDate.getDate()}`)
-      if(this.incomeData.clientIncomes?.filter((x:any) => (x.incomeEndDate != null && new Date(x.incomeEndDate.split('T')[0]) >= todayDate) || x.incomeEndDate === null).length>0){
-        this.hasValidIncome=true;
+      if(this.isCerForm==false){ 
+        if(this.incomeData.clientIncomes?.filter((x:any) => (x.incomeEndDate != null && new Date(x.incomeEndDate.split('T')[0]) >= todayDate) || x.incomeEndDate === null).length>0){
+          this.hasValidIncome=true;
+        }
       }
       if (incomeresponse.noIncomeData!=null) {
         this.noIncomeFlag = true;
@@ -344,6 +352,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.loaderService.hide();
 
       this.adjustAttributeChanged();
+       this.cdr.detectChanges();
     })
   }
 
@@ -630,4 +639,16 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     };
     this.loadIncomeListHandle(gridDataRefinerValue);
   }
+ UploadDocumentValidation(){
+    if(this.isCerForm==false){
+    let uploadedProofOfSchoolDependents = this.dependentsProofOfSchools.filter((item :any) => !!item.documentPath);
+  if(uploadedProofOfSchoolDependents?.length == this.incomeData?.dependents?.length){
+  this.isProofOfSchoolDocumentUploaded=true;
+}
+else{
+  this.isProofOfSchoolDocumentUploaded=false;
+}
+this.cdr.detectChanges();
+}
+}
 }
