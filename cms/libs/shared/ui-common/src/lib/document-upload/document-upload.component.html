@@ -1,7 +1,7 @@
 <div *ngIf="!typeCode || selectedTypeCode">
     <kendo-floatinglabel text="{{typeCodeLabel}}"> 
       <kendo-dropdownlist
-                    aria-label="typeCode"
+                    [attr.aria-label]="typeCodeLabel"
                     required
                     [fillMode]="formUiStyle.dropDownFillMode"
                     [data]="documentTypeCodeSubject$ | async"
@@ -19,7 +19,7 @@
   <div  *ngIf="subTypeCodes.length>0">
     <kendo-floatinglabel text="{{subTypeCodeLabel}}"> 
       <kendo-dropdownlist
-                    aria-label="SubTypeCode"
+                     [attr.aria-label]="subTypeCodeLabel"
                     [fillMode]="formUiStyle.dropDownFillMode"
                     [data]="subTypeCodes"
                     textField="lovDesc"
