@@ -19,7 +19,6 @@ export class HealthInsurancePolicyFacade {
   private healthInsuranceStatusSubject = new BehaviorSubject<any>([]);
   private healthInsurancePolicySubject = new Subject<HealthInsurancePolicy>();
   private medicalPremiumPaymentsSubject = new BehaviorSubject<any>([]);
-  private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
   showInsuranceRequiredSubject  = new BehaviorSubject<boolean>(false);
   private medicalHealthPolicySubject = new BehaviorSubject<any>([]);
   private medicalHealthPlansSubject = new BehaviorSubject<any>([]);
@@ -33,6 +32,7 @@ export class HealthInsurancePolicyFacade {
   /** Public properties **/
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>(); 
   coPaysAndDeductibles$ = this.coPaysAndDeductiblesSubject.asObservable();
