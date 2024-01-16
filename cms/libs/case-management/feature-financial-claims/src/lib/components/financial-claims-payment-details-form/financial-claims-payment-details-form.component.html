@@ -11,7 +11,7 @@
             formatPlaceholder="formatPattern" (select)="dateValidate('RECONCILED')" (keyup)="dateValidate('RECONCILED')"
             placeholder="" (valueChange)="startDateOnChange()"></kendo-datepicker>
             <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentReconciled'].valid  && dateReconciledValidator">Future dates not allowed.</kendo-formerror>
-            <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentReconciled'].valid && !dateReconciledValidator">Date payment reconciled is required.</kendo-formerror>
+            <kendo-formerror *ngIf="medicalClaimPaymentForm.controls['datePaymentReconciled'].hasError('required') && !dateReconciledValidator">Date payment reconciled is required.</kendo-formerror>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col ">
@@ -22,9 +22,9 @@
             (blur)="endDateOnChange()" (focus)="changeMinDate()"
             placeholder=""></kendo-datepicker>
             <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && datePaymentSentValidator">Future dates not allowed.</kendo-formerror>
-            <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && !paymentDateIsGreaterThanReconciledDate ">Date payment sent is required.</kendo-formerror>
+            <kendo-formerror *ngIf="medicalClaimPaymentForm.controls['datePaymentSent'].hasError('required')">Date payment sent is required.</kendo-formerror>
             <kendo-formerror
-              *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && paymentDateIsGreaterThanReconciledDate ">Date cannot be prior to date payment is reconciled.</kendo-formerror>
+              *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].hasError('required') && !medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && paymentDateIsGreaterThanReconciledDate ">Date cannot be prior to date payment is reconciled.</kendo-formerror>
           </kendo-floatinglabel>
 
         </div>
