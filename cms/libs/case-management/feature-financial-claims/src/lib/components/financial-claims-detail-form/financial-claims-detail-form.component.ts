@@ -132,6 +132,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   specialCharAdded!: boolean;
   informativeText!: string;
   minServiceDate: Date = new Date(2000, 1, 1);
+  dataLoaded = false;
 
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -921,7 +922,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             this.isRecentClaimShow = true;
             this.clientName = val.clientName;
             this.vendorName = val.vendorName;
-
+            this.dataLoaded = true;
           }
           this.claimForm.controls['parentReasonForException'].setValue(val.exceptionReasonCode);
           this.claimForm.controls['parentExceptionFlag'].setValue(val.exceptionFlag);

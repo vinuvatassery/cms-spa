@@ -243,8 +243,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.filter = "";
       this.columnName = "";
       this.isFiltered = false
-      this.selectedGroup="";
-      this.selectedStatus="";
+      this.selectedStatus ='';
+      this.selectedGroup = '';
+      
     }
     this.state=stateData;
     if (!this.filteredBy.includes('Status')) this.selectedStatus = '';
@@ -398,6 +399,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.selectedColumn = "ALL";
     this.searchValue = "";
     this.isFiltered = false;
+    this.selectedStatus = '';
+    this.selectedGroup = '';
     this.columnsReordered = false;
     this.defaultColumnState.forEach((item:any) => {
       if(this.defaultColumns.includes(item.field) || (item.field === "assignedCw" && this.selectedTab !== this.tabOptions.MY_CASES))
@@ -405,8 +408,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         item.hidden = false;
       }
     });
-    this.selectedGroup="";
-    this.selectedStatus="";
+
   
     this.saveGridState();
     this.loadProfileCasesList();
