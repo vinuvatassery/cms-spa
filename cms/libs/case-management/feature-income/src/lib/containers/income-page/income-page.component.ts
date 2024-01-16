@@ -20,7 +20,7 @@ import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
-  
+
   @ViewChildren("proofSchoolDropdown") public proofSchoolDropdown!: QueryList<DropDownListComponent>;
   /** Private properties **/
   private saveClickSubscription !: Subscription;  /** Public Methods **/
@@ -141,7 +141,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit(){
     this.workflowFacade.enableSaveButton();
   }
-  
+
   /** Private methods **/
   public onClose(event: any , index : any) {
     event.preventDefault();
@@ -201,7 +201,13 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.noIncomeDetailsForm.valid && isValid) {
         this.noIncomeData.isCERRequest = this.isCerForm;
         this.loaderService.show();
-        return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData);
+        return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
+          catchError((err: any) => {
+            this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+            this.loaderService.hide();
+            return  of(false);
+          })
+          )
       }
     }
     else{
@@ -220,6 +226,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
         catchError((err: any) => {
           this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.loaderService.hide();
           return  of(false);
         })
         )
