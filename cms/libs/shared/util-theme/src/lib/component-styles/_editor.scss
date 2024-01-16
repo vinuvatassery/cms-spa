@@ -7,7 +7,7 @@
     right: 5px;
     top: 5px;
     border: 1px solid $theme-border;
-    z-index: 6;
+    z-index: 1;
   }
   .k-toolbar {
     padding: $size-s $size-l;
@@ -48,7 +48,7 @@
   .k-panelbar {
     position: absolute;
     bottom: 0;
-    z-index: 9;
+    z-index: 1;
     height: auto;
     overflow: visible;
     width: 100%;
@@ -65,6 +65,7 @@
         cursor: pointer;
         &.k-selected {
           background-color: var(--hive-primary-palette-200);
+          color: $white;
           &:hover, &.k-focus{
           background-color: var(--hive-primary-palette-300);
   
@@ -115,3 +116,26 @@
     }
   }
 }
+.dash_bordered_big-input{
+ .k-input-outline{
+  &::after{
+    border: 0px !important;
+  }
+  &.k-textbox{
+    border-style: dashed !important;
+    font-size: 30px;
+    font-family:  $font-family-bold;
+    &:focus{
+      border-style: dashed !important;
+    }
+  }
+}
+}
+
+.tab_editors{
+  .k-tabstrip-content{
+    padding-inline: 0px;
+  }
+}
+
+
