@@ -5,7 +5,7 @@
       </button>
 </section>
 
-<div class="mt-2 pb-3">
+<div class="mt-2 pb-3 app-c-tab">
       <kendo-tabstrip #letterHeaderFooter (tabClose)="onOpenRemoveLanguageClicked($event)">
             <kendo-tabstrip-tab *ngFor="let tab of languageTabs" [title]="tab.title" [selected]="tab.selected"
                   [closable]="tab.Closable">
@@ -123,27 +123,7 @@
                                                 </ng-template>
                                           </kendo-toolbar-dropdownbutton>
                                     </kendo-toolbar>
-                              </kendo-editor>
-
-                              <!-- Attachment Panel -->
-                              <!-- <div class="panelbar-wrapper">
-                              <kendo-panelbar>
-                                    <kendo-panelbar-item title="5 attachment(s)">
-                                          <ng-template kendoPanelBarContent>
-                                                <div class="attachment-item-list" kendoTooltip>
-                                                      <a class="attachment-item_name">\attasd asda da sd asd</a>
-                                                      <span class="attachment-item_size">20</span>
-                                                      <button kendoButton
-                                                            class="attachment-item_remove k-icon-button small-i-btn"
-                                                            title="Remove Attachment" aria-label="Remove Attachment">
-                                                            <span class="material-icons" aria-label="Remove Attachment"
-                                                                  aria-hidden="true">close</span>
-                                                      </button>
-                                                </div>
-                                          </ng-template>
-                                    </kendo-panelbar-item>
-                              </kendo-panelbar>
-                        </div> -->
+                              </kendo-editor> 
                         </div>
                   </ng-template>
             </kendo-tabstrip-tab>
@@ -218,3 +198,8 @@
 </kendo-dialog>
 
  
+<kendo-dialog *ngIf="isEmailTemplateLeavePopupShow" (close)="onCloseEmailTemplateLeaveClicked()"
+      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar> Leave this page? </kendo-dialog-titlebar>
+      <system-config-email-template-leave-page></system-config-email-template-leave-page> 
+</kendo-dialog>

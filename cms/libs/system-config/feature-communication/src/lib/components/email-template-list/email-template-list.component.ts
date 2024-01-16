@@ -23,6 +23,11 @@ export class EmailTemplateListComponent implements OnInit {
     { text: 'All', value: 100 },
   ];
   /** Public properties **/ 
+  isEmailTemplateDeletePopupShow = false;
+  isEmailTemplateDeactivatePopupShow = false;
+  isEmailTemplateReactivatePopupShow = false;
+  isEmailTemplateDuplicatePopupShow = false;
+  
   emailTemplatesLists$ =
     this.templateManagementFacade.emailTemplatesLists$
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -57,9 +62,25 @@ export class EmailTemplateListComponent implements OnInit {
       text: "Duplicate",
       icon: "content_copy",
       click: (data: any): void => {
-        
+        this.onEmailTemplateDuplicateClicked();
       },
     }, 
+    {
+      buttonType:"btn-h-primary",
+      text: "Deactivate",
+      icon: "block",
+      click: (data: any): void => {
+        this.onEmailTemplateDeactivateClicked();
+      },
+    }, 
+    {
+      buttonType:"btn-h-danger",
+      text: "Delete",
+      icon: "delete",
+      click: (data: any): void => {
+        this.onEmailTemplateDeleteClicked();
+      },
+    },
   ];
   /** Constructor **/
   constructor(
@@ -78,4 +99,33 @@ export class EmailTemplateListComponent implements OnInit {
   }
   
  
+  onEmailTemplateDeleteClicked() {
+    this.isEmailTemplateDeletePopupShow = true;
+  }
+  onCloseEmailTemplateDeleteClicked() {
+    this.isEmailTemplateDeletePopupShow = false;
+  }
+
+  onEmailTemplateDeactivateClicked() {
+    this.isEmailTemplateDeactivatePopupShow = true;
+  }
+  onCloseEmailTemplateDeactivateClicked() {
+    this.isEmailTemplateDeactivatePopupShow = false;
+  }
+
+  onEmailTemplateReactivateClicked() {
+    this.isEmailTemplateReactivatePopupShow = true;
+  }
+  onCloseEmailTemplateReactivateClicked() {
+    this.isEmailTemplateReactivatePopupShow = false;
+  }
+
+  onEmailTemplateDuplicateClicked() {
+    this.isEmailTemplateDuplicatePopupShow = true;
+  }
+  onCloseEmailTemplateDuplicateClicked() {
+    this.isEmailTemplateDuplicatePopupShow = false;
+  }
+
+
 }

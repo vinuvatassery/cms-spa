@@ -13,10 +13,6 @@ export * from './lib/components/email-template-send-test/email-template-send-tes
 
 export * from './lib/components/email-template-leave-page/email-template-leave-page.component';
 
-export * from './lib/components/email-template-deactivate/email-template-deactivate.component';
-
-export * from './lib/components/email-template-delete/email-template-delete.component';
-
 export * from './lib/components/template-add-language/template-add-language.component';
 
 export * from './lib/components/template-delete-language/template-delete-language.component';

@@ -75,14 +75,14 @@
                   </kendo-grid-column>
                   <kendo-grid-column field="description" title="Description" [width]="280">
                   </kendo-grid-column>
-                  <kendo-grid-column field="program" title="Program" [width]="180">
+                  <kendo-grid-column field="program" title="Program" [width]="160">
                   </kendo-grid-column>
 
 
 
-                  <kendo-grid-column field="lastModified" title="Last Modified" [width]="130">
+                  <kendo-grid-column field="lastModified" title="Last Modified" [width]="110">
                   </kendo-grid-column>
-                  <kendo-grid-column field="modifiedBy" title="Modified By" [width]="100" class="text-center">
+                  <kendo-grid-column field="modifiedBy" title="Modified By" [width]="110" class="text-center">
                         <ng-template kendoGridCellTemplate let-dataItem>
                               <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
                                     [popover]="onUserProfileDetailsHovered" showOn="hover"
@@ -98,8 +98,7 @@
                               </kendo-popover>
                         </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column field="status" title="Status" [width]="130">
-                  </kendo-grid-column>
+                  <kendo-grid-column field="status" title="Status" [width]="100"> </kendo-grid-column>
                   <kendo-grid-column field="" title="" [width]="50" class="text-center" [sticky]="true"
                         [columnMenu]="false">
                         <ng-template kendoGridCellTemplate let-isNew="isNew">
@@ -173,3 +172,103 @@
             </kendo-dropdownbutton> 
       </div>
 </section>
+
+
+<kendo-dialog *ngIf="isEmailTemplateDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseEmailTemplateDeleteClicked()"> Delete email template?</kendo-dialog-titlebar>
+
+      <section class="k-dialog-body mb-2">
+            <p>
+                  This action cannot be undone. It will be permanently deleted from the system. 
+            </p>
+      </section>
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
+                              (click)="onCloseEmailTemplateDeleteClicked()">
+                              Cancel
+                        </button>
+                        <button kendoButton class="k-error-button" aria-label="Delete">
+                              Delete
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isEmailTemplateDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseEmailTemplateDeactivateClicked()"> Deactivate email template?
+      </kendo-dialog-titlebar>
+
+      <section class="k-dialog-body">
+            <p class="text-muted mb-2">
+                  Users will no longer be able to send email using this template. You may re-activate it at any time.
+            </p>
+      </section>
+
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                              (click)="onCloseEmailTemplateDeactivateClicked()">
+                              Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Deactivate">
+                              Deactivate
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isEmailTemplateReactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseEmailTemplateReactivateClicked()"> Re-activate email template?
+      </kendo-dialog-titlebar>
+
+      <section class="k-dialog-body">
+            <p class="text-muted mb-2">
+                  Are you sure you want to reactivate again?
+            </p>
+      </section>
+
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                              (click)="onCloseEmailTemplateReactivateClicked()">
+                              Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Deactivate">
+                              Re-activate
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isEmailTemplateDuplicatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseEmailTemplateDuplicateClicked()">Duplicate email template?
+      </kendo-dialog-titlebar>
+
+      <section class="k-dialog-body">
+            <p class="text-muted mb-2">
+                  Are you sure you want to Duplicate the email template <strong>Template Name</strong>?
+            </p>
+      </section>
+
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                              (click)="onCloseEmailTemplateDuplicateClicked()">
+                              Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Deactivate">
+                              Duplicate
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>
+

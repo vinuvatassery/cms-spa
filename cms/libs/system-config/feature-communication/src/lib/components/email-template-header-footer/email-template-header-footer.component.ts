@@ -17,6 +17,7 @@ export class EmailTemplateHeaderFooterComponent {
   isShowSendTextDialog = false;
   isAddLanguageDetailPopup  = false;
   isRemoveLanguagePopup = false;
+  isEmailTemplateLeavePopupShow = false;
   onToggle(){
     this.isShowPopupClicked = true;
   }
@@ -68,5 +69,12 @@ export class EmailTemplateHeaderFooterComponent {
 
   onCloseRemoveLanguageClicked(){
   this.isRemoveLanguagePopup = false;
+}
+
+onEmailTemplateLeaveClicked() {
+  this.isEmailTemplateLeavePopupShow = true;
+}
+onCloseEmailTemplateLeaveClicked() {
+  this.isEmailTemplateLeavePopupShow = false;
 }
 }

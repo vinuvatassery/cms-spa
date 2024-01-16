@@ -11,8 +11,7 @@ import { EmailTemplateHeaderFooterComponent } from './components/email-template-
 import { EmailTemplateNewFormComponent } from './components/email-template-new-form/email-template-new-form.component';
 import { EmailTemplateSendTestComponent } from './components/email-template-send-test/email-template-send-test.component';
 import { EmailTemplateLeavePageComponent } from './components/email-template-leave-page/email-template-leave-page.component';
-import { EmailTemplateDeactivateComponent } from './components/email-template-deactivate/email-template-deactivate.component';
-import { EmailTemplateDeleteComponent } from './components/email-template-delete/email-template-delete.component';
+ 
 import { TemplateAddLanguageComponent } from './components/template-add-language/template-add-language.component';
 import { TemplateDeleteLanguageComponent } from './components/template-delete-language/template-delete-language.component';
 
@@ -27,9 +26,7 @@ import { TemplateDeleteLanguageComponent } from './components/template-delete-la
     EmailTemplateHeaderFooterComponent,
     EmailTemplateNewFormComponent,
     EmailTemplateSendTestComponent,
-    EmailTemplateLeavePageComponent,
-    EmailTemplateDeactivateComponent,
-    EmailTemplateDeleteComponent,
+    EmailTemplateLeavePageComponent, 
     TemplateAddLanguageComponent,
     TemplateDeleteLanguageComponent,
   ],
@@ -40,8 +37,7 @@ import { TemplateDeleteLanguageComponent } from './components/template-delete-la
     EmailTemplateNewFormComponent,
     EmailTemplateSendTestComponent,
     EmailTemplateLeavePageComponent,
-    EmailTemplateDeactivateComponent,
-    EmailTemplateDeleteComponent,
+ 
     TemplateAddLanguageComponent,
     TemplateDeleteLanguageComponent,
   ],

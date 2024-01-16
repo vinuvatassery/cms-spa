@@ -18,6 +18,7 @@ export class EmailTemplateNewFormComponent {
   isAddLanguageDetailPopup  = false;
   isRemoveLanguagePopup = false;
   isBccEnable = false;
+  isEmailTemplateLeavePopupShow = false;
   onToggle(){
     this.isShowPopupClicked = true;
   }
@@ -39,14 +40,14 @@ export class EmailTemplateNewFormComponent {
     },
   ];
   public listItems: Array<string> = [
-    "Baseball",
-    "Basketball",
-    "Cricket",
-    "Field Hockey",
-    "Football",
-    "Table Tennis",
-    "Tennis",
-    "Volleyball",
+    "oregon@email.com",
+    "oregon1@email.com",
+    "oregon12@email.com",
+    "oregon123@email.com",
+    "oregon2123@email.com",
+    "oregon34@email.com",
+    "oregon23@email.com",
+    "oregon54@email.com",
   ];
   public value: any = [];
   onPreviewEmailHeaderFooterOpenClicked(){
@@ -80,4 +81,13 @@ export class EmailTemplateNewFormComponent {
   onCloseRemoveLanguageClicked(){
   this.isRemoveLanguagePopup = false;
 }
+
+
+onEmailTemplateLeaveClicked() {
+  this.isEmailTemplateLeavePopupShow = true;
+}
+onCloseEmailTemplateLeaveClicked() {
+  this.isEmailTemplateLeavePopupShow = false;
+}
+
 }
