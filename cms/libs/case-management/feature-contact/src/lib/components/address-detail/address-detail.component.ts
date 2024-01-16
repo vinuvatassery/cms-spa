@@ -165,7 +165,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
    if(addressType ===AddressType.Home || addressType === AddressType.Mailing){
       this.addressForm.controls["address1"].setValidators([Validators.required]);
       this.addressForm.controls["address1"].updateValueAndValidity();
-      this.addressForm.controls["zip"].setValidators([Validators.required]);
+     this.addressForm.controls["zip"].setValidators([Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')]);
       this.addressForm.controls["zip"].updateValueAndValidity();
       this.addressForm.controls["state"].setValidators([Validators.required]);
       this.addressForm.controls["state"].updateValueAndValidity();

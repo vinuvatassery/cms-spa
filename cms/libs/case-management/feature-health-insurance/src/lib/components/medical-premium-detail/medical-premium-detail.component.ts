@@ -752,7 +752,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   private validateDental(careassistPayingRequiredFields: any, policyHolderRequiredFields: any) {
     const dentalPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
-      'insuranceEndDate',
       'insuranceIdNumber',
       'insuranceCarrierName',
       'insurancePlanName',

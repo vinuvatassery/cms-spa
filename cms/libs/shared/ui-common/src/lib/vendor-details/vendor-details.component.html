@@ -1,7 +1,7 @@
 <section class="k-dialog-body">
   <div [formGroup]="medicalProviderForm">
     <p class="text-muted mb-2">
-      All fields are required unless otherwise stated. You may view and edit the vendor's profile once it is added.
+      All fields are required unless otherwise stated.<span *ngIf="!editVendorInfo"> You may view and edit the vendor's profile once it is added.</span>
     </p>
     <div class="flex-row">
       <div class="flex-col" *ngIf="providerType == vendorTypes.InsuranceVendors">
@@ -539,7 +539,7 @@
               </kendo-textbox>
             </kendo-floatinglabel>
             <p class="text-muted mb-2">
-              If adding a contact person, Name is required
+              If adding a contact, Name is required
             </p>
             <kendo-formerror
               *ngIf="!getContactControl(i, 'contactName')?.valid && isValidateForm && getContactNameValidation(i)">Contact
