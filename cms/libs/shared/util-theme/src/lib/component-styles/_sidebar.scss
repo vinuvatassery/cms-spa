@@ -12,7 +12,7 @@ cms-sidenav {
   border-color: $theme-border;
   width: $app-left_menu-width;
   transition: ease-in all 0.3s;
-  z-index: 5;
+  z-index: 3;
 
   .drawer-inner-container {
     transition: ease-in all 0.3s;
@@ -22,7 +22,7 @@ cms-sidenav {
     overflow-x: hidden;
     width: $app-left_menu-width;
     height: 100%;
-    
+
   }
 
   .sidebar-hamburger {
@@ -113,13 +113,13 @@ cms-sidenav {
         font-size: $font-size;
         white-space: nowrap;
         cursor: pointer;
-        letter-spacing: .5px; 
+        letter-spacing: .5px;
 
         .sidebar-menu_label-badge {
           background: $badge-alerts;
           color: $white !important;
           border-radius: $border-radius-sm;
-          padding: $size-s $size-m; 
+          padding: $size-s $size-m;
           font-family: $font-family-bold;
           margin-left: $size-l;
         }
@@ -303,17 +303,17 @@ cms-sidenav {
                     transition: ease-in all 0.3s;
 
                   }
-                     
-    
+
+
           }
-    
+
           .sidebar-menu_label-badge {
             background: $badge-alerts;
             color: $white !important;
             border-radius: $border-radius-sm;
-            padding: $size-m $size-m;  
+            padding: $size-m $size-m;
             margin-left: $size-l;
-          }  
+          }
           .submenu_list_click_items {
             justify-content: space-between;
             display: flex;
@@ -364,10 +364,10 @@ cms-sidenav {
   }
   &.menuToggled {
     overflow: visible;
-    position: relative; 
+    position: relative;
     width: $sidebar-width;
-    .new_sub_sidebar_menu { 
-      >.secondary_submenu { 
+    .new_sub_sidebar_menu {
+      >.secondary_submenu {
         left: $sidebar-width;
       }
     }

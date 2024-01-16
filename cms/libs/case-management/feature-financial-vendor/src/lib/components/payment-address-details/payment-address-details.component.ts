@@ -277,7 +277,7 @@ export class PaymentAddressDetailsComponent implements OnInit {
 
  isAlphaNumeric(event: number) {
     return (
-      (event >= 48 && event <= 57) || // Numbers (0-9)
+      //(event >= 48 && event <= 57) || // Numbers (0-9)
       (event >= 65 && event <= 90) || // Uppercase letters (A-Z)
       (event >= 97 && event <= 122) || // Lowercase letters (a-z)
       event === 32 // Space

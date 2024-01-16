@@ -81,7 +81,7 @@ export class CerListComponent implements OnInit, OnChanges {
     cerSentDate :"Date CER Sent",
     cerReceivedDate : "Date CER Received",
     cerCompletedDate : "Date CER Completed",
-    reminderSentDate : "Reminder SentDate",
+    reminderSentDate : "Reminder Sent Date",
     cerResentDate : "CER Re-Sent Date",
     restrictedSentDate : "Restricted Sent Date",
     assignedCmId : "Case Manager" ,

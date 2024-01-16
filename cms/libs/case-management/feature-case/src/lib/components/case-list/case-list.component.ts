@@ -243,6 +243,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.filter = "";
       this.columnName = "";
       this.isFiltered = false
+      this.selectedGroup="";
+      this.selectedStatus="";
     }
     this.state=stateData;
     if (!this.filteredBy.includes('Status')) this.selectedStatus = '';
@@ -403,6 +405,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
         item.hidden = false;
       }
     });
+    this.selectedGroup="";
+    this.selectedStatus="";
+  
     this.saveGridState();
     this.loadProfileCasesList();
   }
