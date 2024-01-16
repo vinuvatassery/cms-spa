@@ -15,6 +15,8 @@ export class EmailTemplateHeaderFooterComponent {
   isShowPopupClicked = false;
   isShowPreviewEmailHeaderFooterDialog = false;
   isShowSendTextDialog = false;
+  isAddLanguageDetailPopup  = false;
+  isRemoveLanguagePopup = false;
   onToggle(){
     this.isShowPopupClicked = true;
   }
@@ -49,4 +51,22 @@ export class EmailTemplateHeaderFooterComponent {
   onSendTestCloseClicked(){
     this.isShowSendTextDialog = false;
   }
+
+
+  onOpenAddLanguageDetailClicked(){
+    this.isAddLanguageDetailPopup  = true;
+  }
+
+  onCloseAddLanguageDetailClicked(){
+    this.isAddLanguageDetailPopup  = false;
+  }
+
+  onOpenRemoveLanguageClicked(event: any){
+    this.isRemoveLanguagePopup = true;
+  }
+
+
+  onCloseRemoveLanguageClicked(){
+  this.isRemoveLanguagePopup = false;
+}
 }

@@ -1,12 +1,12 @@
 <!-- Header Section -->
 <section class="app-l-mainTittle">
       <h1 class="maintitle_withicon text-bold"> CAREAssist Email Header & Footer </h1>
-      <button icon="add" kendoButton [primary]="true" aria-label="New Language" class="add-button-top"> New Language
+      <button icon="add" (click)="onOpenAddLanguageDetailClicked()" kendoButton [primary]="true" aria-label="New Language" class="add-button-top"> New Language
       </button>
 </section>
 
-<div class="mt-2 ">
-      <kendo-tabstrip #tabstrip>
+<div class="mt-2 pb-3">
+      <kendo-tabstrip #letterHeaderFooter (tabClose)="onOpenRemoveLanguageClicked($event)">
             <kendo-tabstrip-tab *ngFor="let tab of languageTabs" [title]="tab.title" [selected]="tab.selected"
                   [closable]="tab.Closable">
                   <ng-template kendoTabContent>
@@ -198,9 +198,23 @@
 
 
 <kendo-dialog *ngIf="isShowSendTextDialog" (close)="onSendTestCloseClicked()"
-      class="app-c-modal app-c-modal-sm app-c-modal-np">
-
-      <kendo-dialog-titlebar> Send Test </kendo-dialog-titlebar>
-
+      class="app-c-modal app-c-modal-sm app-c-modal-np"> 
+      <kendo-dialog-titlebar> Send Test </kendo-dialog-titlebar> 
       <system-config-email-template-send-test></system-config-email-template-send-test>
 </kendo-dialog>
+
+
+<kendo-dialog *ngIf="isAddLanguageDetailPopup" (close)="onCloseAddLanguageDetailClicked()"
+      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar> Add Language </kendo-dialog-titlebar>
+      <system-config-template-add-language></system-config-template-add-language> 
+</kendo-dialog>
+
+
+<kendo-dialog *ngIf="isRemoveLanguagePopup" (close)="onCloseRemoveLanguageClicked()"
+      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar> Delete Spanish version? </kendo-dialog-titlebar>
+      <system-config-template-delete-language></system-config-template-delete-language> 
+</kendo-dialog>
+
+ 
