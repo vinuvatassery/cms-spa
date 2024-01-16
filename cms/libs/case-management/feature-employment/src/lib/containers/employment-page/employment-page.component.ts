@@ -333,8 +333,10 @@ export class EmploymentPageComponent implements OnInit, OnDestroy, AfterViewInit
     this.employmentFacade.showLoader();
     if (this.isEmployedGridDisplay === false && this.employerListCount <= 0) {
       this.employmentFacade.employmentValidSubject.next(false);
+      this.employmentFacade.hideLoader();
       return false;
     }
+    this.employmentFacade.hideLoader();
     return true;
   }
 
