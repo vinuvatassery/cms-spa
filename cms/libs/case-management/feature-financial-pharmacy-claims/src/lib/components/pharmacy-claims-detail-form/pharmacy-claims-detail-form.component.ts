@@ -302,6 +302,7 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
     this.pharmacyClaimForm.controls['prescriptionFillDto'].reset()
     this.vendorId=data?.vendorId
     this.pharmacyClaimForm.controls['vendorId'].setValue(data?.vendorId);
+    this.objectCode = data?.objectCode;
     this.cd.detectChanges();
 
   }

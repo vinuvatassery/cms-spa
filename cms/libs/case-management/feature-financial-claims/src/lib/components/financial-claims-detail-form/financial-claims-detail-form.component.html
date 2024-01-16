@@ -91,7 +91,7 @@
                             </span>
                             <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField="clientFullName"
                                 valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
-                                placeholder="Search Clients"
+                                placeholder="Search for Client"
                                 [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                                 [filterable]="true" formControlName="client"
                                 (filterChange)="loadClientBySearchText($event)"
@@ -209,7 +209,7 @@
                                                     *ngIf="(isControlValid('serviceEndDate', i) && isSubmitted)">  Service End Date is required
                                                 </kendo-formerror>
                                                 <kendo-formerror *ngIf="(isStartEndDateError(i))" >
-                                                    Service End Date cannot be before Service Start Date
+                                                    Service End date must be equal to or greater than start date
                                                 </kendo-formerror>
                                             </div>
                                             <div class="ml-2">
@@ -359,7 +359,7 @@
                                                 <kendo-floatinglabel text="Service Cost" class="amount-with-symbol">
                                                     <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                                     <kendo-numerictextbox aria-label="Service Cost" [spinners]="false"
-                                                        [fillMode]="formUiStyle.inputFillMode" format="#.00"
+                                                        [fillMode]="formUiStyle.inputFillMode" format="n2"
                                                         [maxlength]="15"
                                                         formControlName="serviceCost">
                                                     </kendo-numerictextbox>
@@ -374,7 +374,7 @@
                                                     <span class="k-input-prefix custom-currencysymbol"> $ </span>
                                                     <kendo-numerictextbox aria-label="Amount Due" [spinners]="false"
                                                         [fillMode]="formUiStyle.inputFillMode"
-                                                        formControlName="amountDue" format="#.00"
+                                                        formControlName="amountDue" format="n2"
                                                         [maxlength]="15"
                                                         (blur)="onAmountDueChange(i)">
                                                     </kendo-numerictextbox>
@@ -468,7 +468,7 @@
 </section>
 <kendo-dialog-actions>
     <div class="justify-content-end align-items-center">
-            <span class="mr-2">1 service(s) to be added</span>
+            <span class="mr-2">{{addClaimServicesForm.length}} service(s) to be added</span>
             <button kendoButton [primary]="true" look="outline"  aria-label="Cancel"
                 (click)="closeAddEditClaimsFormModalClicked(false)"> Cancel </button>
 
@@ -489,7 +489,7 @@
     <common-financial-pca-chosen-alert [chosenPca]="chosenPcaForReAssignment"
         (confirmChosenPcaAlertClickedEvent)="onConfirmPcaAlertClicked($event)"
         (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
-    </common-financial-pca-chosen-alert>
+    </common-financial-pca-chosen-alert>-
 </ng-template>
 
 
