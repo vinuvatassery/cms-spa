@@ -46,6 +46,15 @@
 
               <kendo-grid-column field="mailCode" title="Mail Code" [width]="150">
                 <ng-template kendoGridCellTemplate let-dataItem>
+                  <span class="preferred-phoneNo posi_relative"  aria-label="Pharmacy's physical address" title="Pharmacy's physical address"
+                    *ngIf="dataItem.physicalAddressFlag=='Y' && dataItem.activeFlag=='Y'">
+                    <span
+                      class="material-icons icon-size-md"
+                      aria-label="Pharmacy's physical address"
+                      aria-hidden="true"
+                      >storefront</span
+                    >
+                  </span>
                   <button [attr.aria-label]="dataItem.mailCode" kendoButton look="flat"
                     >
                     {{ dataItem.mailCode }}
@@ -226,7 +235,7 @@
                 </kendo-grid-column>
                 <kendo-grid-column [sortable]="false" field="Option" title="Options" [columnMenu]="false" [width]="75" class="text-center">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                      <kendo-dropdownbutton [data]="paymentAddressActions" 
+                      <kendo-dropdownbutton [data]="paymentAddressActions"
                           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                           aria-label="more actions" title="More option"
                           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -236,7 +245,7 @@
                               <ng-container *ngIf="(dataItem.activeFlag == 'N' && buttondataItem.text == 'Delete Address') || (dataItem.activeFlag == 'Y')">
                                 <div>
                                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                                      [class]="buttondataItem.buttonType" 
+                                      [class]="buttondataItem.buttonType"
 
                                       (click)="handleOptionClick(dataItem,buttondataItem.type)"
                                       >
@@ -249,7 +258,7 @@
                               <ng-template #deactivateButton>
                                 <div *ngIf="buttondataItem.text !== 'Deactivate Address'">
                                   <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                                  [class]="buttondataItem.buttonType"  
+                                  [class]="buttondataItem.buttonType"
 
                                   (click)="handleOptionClick(dataItem,buttondataItem.type)"
                                   >
