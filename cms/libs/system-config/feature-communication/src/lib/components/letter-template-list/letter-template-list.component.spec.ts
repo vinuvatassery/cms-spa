@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { LetterTemplateListComponent } from './letter-template-list.component';
 
 describe('LetterTemplateListComponent', () => {
@@ -8,9 +7,8 @@ describe('LetterTemplateListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ LetterTemplateListComponent ]
-    })
-    .compileComponents();
+      declarations: [LetterTemplateListComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(LetterTemplateListComponent);
     component = fixture.componentInstance;

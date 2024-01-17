@@ -16,3 +16,11 @@ export * from './lib/components/email-template-leave-page/email-template-leave-p
 export * from './lib/components/template-add-language/template-add-language.component';
 
 export * from './lib/components/template-delete-language/template-delete-language.component';
+
+export * from './lib/components/letter-template-header-footer/letter-template-header-footer.component';
+
+export * from './lib/components/letter-template-leave-page/letter-template-leave-page.component';
+
+export * from './lib/components/letter-template-list/letter-template-list.component';
+
+export * from './lib/components/letter-template-new-form/letter-template-new-form.component';

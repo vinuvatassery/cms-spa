@@ -11,9 +11,12 @@ import { EmailTemplateHeaderFooterComponent } from './components/email-template-
 import { EmailTemplateNewFormComponent } from './components/email-template-new-form/email-template-new-form.component';
 import { EmailTemplateSendTestComponent } from './components/email-template-send-test/email-template-send-test.component';
 import { EmailTemplateLeavePageComponent } from './components/email-template-leave-page/email-template-leave-page.component';
- 
+
 import { TemplateAddLanguageComponent } from './components/template-add-language/template-add-language.component';
 import { TemplateDeleteLanguageComponent } from './components/template-delete-language/template-delete-language.component';
+import { LetterTemplateHeaderFooterComponent } from './components/letter-template-header-footer/letter-template-header-footer.component';
+import { LetterTemplateLeavePageComponent } from './components/letter-template-leave-page/letter-template-leave-page.component';
+import { LetterTemplateNewFormComponent } from './components/letter-template-new-form/letter-template-new-form.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
@@ -26,9 +29,13 @@ import { TemplateDeleteLanguageComponent } from './components/template-delete-la
     EmailTemplateHeaderFooterComponent,
     EmailTemplateNewFormComponent,
     EmailTemplateSendTestComponent,
-    EmailTemplateLeavePageComponent, 
+    EmailTemplateLeavePageComponent,
     TemplateAddLanguageComponent,
     TemplateDeleteLanguageComponent,
+    LetterTemplateHeaderFooterComponent,
+    LetterTemplateLeavePageComponent,
+    LetterTemplateListComponent,
+    LetterTemplateNewFormComponent,
   ],
   exports: [
     ClientNotificationDefaultsListComponent,
@@ -37,9 +44,13 @@ import { TemplateDeleteLanguageComponent } from './components/template-delete-la
     EmailTemplateNewFormComponent,
     EmailTemplateSendTestComponent,
     EmailTemplateLeavePageComponent,
- 
+
     TemplateAddLanguageComponent,
     TemplateDeleteLanguageComponent,
+    LetterTemplateHeaderFooterComponent,
+    LetterTemplateLeavePageComponent,
+    LetterTemplateListComponent,
+    LetterTemplateNewFormComponent,
   ],
 })
 export class SystemConfigFeatureCommunicationModule {}

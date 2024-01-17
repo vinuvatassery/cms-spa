@@ -5,8 +5,8 @@
       <!-- form inputs elements -->
       <div>
             <div class="flex-col dash_bordered_big-input">
-                  <kendo-textbox aria-label="New Email Template" [fillMode]="formUiStyle.inputFillMode"
-                        value="New Email Template">
+                  <kendo-textbox aria-label="New Letter Template" [fillMode]="formUiStyle.inputFillMode"
+                        value="New Letter Template">
                   </kendo-textbox>
             </div>
             <div class="flex-col">
@@ -39,31 +39,7 @@
                               [checkboxes]="true" [autoClose]="false" [fillMode]="formUiStyle.dropDownFillMode"
                               [data]="listItems" [(ngModel)]="value"></kendo-multiselect>
                   </kendo-floatinglabel>
-            </div>
-            <div class="flex-col">
-                  <div class="d-flex">
-                        <kendo-floatinglabel text="CC">
-                              <kendo-multiselect aria-label="CC" placeholder="CC" [checkboxes]="true"
-                                    [autoClose]="false" [fillMode]="formUiStyle.dropDownFillMode" [data]="listItems"
-                                    [(ngModel)]="value"></kendo-multiselect>
-                        </kendo-floatinglabel>
-                        <div class="mt-3"> <button (click)="isBccEnable=!isBccEnable" fillMode="flat"
-                                    themeColor="primary" aria-label="BCC" kendoButton> BCC </button></div>
-                  </div>
-                  <kendo-formhint>The user sending the email will automatically be CC’d. Add only additional
-                        recipients.</kendo-formhint>
-            </div>
-
-            <div class="flex-col" *ngIf="isBccEnable">
-                  <kendo-floatinglabel text="BCC">
-                        <kendo-multiselect aria-label="BCC" placeholder="BCC" [checkboxes]="true" [autoClose]="false"
-                              [fillMode]="formUiStyle.dropDownFillMode" [data]="listItems"
-                              [(ngModel)]="value"></kendo-multiselect>
-                  </kendo-floatinglabel>
-
-            </div>
-
-
+            </div> 
       </div>
 
       <!-- editors  -->
@@ -76,18 +52,11 @@
             <kendo-tabstrip #letterHeaderFooter (tabClose)="onOpenRemoveLanguageClicked($event)">
                   <kendo-tabstrip-tab *ngFor="let tab of languageTabs" [title]="tab.title" [selected]="tab.selected"
                         [closable]="tab.Closable">
-                        <ng-template kendoTabContent>
-                              <div>
-                                    <h5>{{tab.title | uppercase}} VERSION</h5>
-
-                                    <div class="">
-                                          <kendo-floatinglabel text="Subject">
-                                                <kendo-textbox [fillMode]="formUiStyle.inputFillMode">  </kendo-textbox>
-                                          </kendo-floatinglabel>
-                                    </div>
-                                    <p class="mt-1">Type the body of the English template. Click “Preview Template” to
-                                          see what the client will receive.</p>
-                              </div>
+                        <ng-template kendoTabContent> 
+                               <div>
+                              <h5>{{tab.title | uppercase}} VERSION</h5>
+                              <p>Type the body of the template. Click “Preview Template” to see what the client will receive.</p>
+                        </div>
                               <div class="app-c-editor editor-height-two mt-1">
                                     <!-- Variable dropdown -->
                                     <button kendoButton #anchor (click)="onToggle()"
@@ -236,21 +205,21 @@
 <div class="bottom-fixed-wrapper  flex-space-bw">
       <div>
             <button kendoButton [primary]="true" look="flat" aria-label="Preview Template"
-                  (click)="onPreviewEmailHeaderFooterOpenClicked()">
+                  (click)="onPreviewLetterHeaderFooterOpenClicked()">
                   Preview Template
             </button>
       </div>
       <div>
-            <button kendoButton [primary]="true" class="mr-1" look="outline" aria-label="Cancel" (click)="onEmailTemplateLeaveClicked()"> Cancel </button>
+            <button kendoButton [primary]="true" class="mr-1" look="outline" aria-label="Cancel" (click)="onLetterTemplateLeaveClicked()"> Cancel </button>
             <button kendoButton [primary]="true" aria-label="Save"> Save </button>
 
       </div>
 </div>
 
-<kendo-dialog *ngIf="isShowPreviewEmailHeaderFooterDialog" class="app-c-modal app-c-modal-lg app-c-modal-np"
-      (close)="onPreviewEmailHeaderFooterCloseClicked()">
+<kendo-dialog *ngIf="isShowPreviewLetterHeaderFooterDialog" class="app-c-modal app-c-modal-lg app-c-modal-np"
+      (close)="onPreviewLetterHeaderFooterCloseClicked()">
 
-      <kendo-dialog-titlebar> Preview CAREAssist Header & Footer Preview </kendo-dialog-titlebar>
+      <kendo-dialog-titlebar> Preview Letter Template </kendo-dialog-titlebar>
       <section class="k-dialog-body">
             <p>This is a legal disclaimer. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean at ante a mi
                   luctus placerat quis non neque. Donec sollicitudin elit nec ipsum tristique, id varius sapien
@@ -262,27 +231,21 @@
       <kendo-dialog-actions>
             <div class="justify-content-between  ">
                   <div class="w100">
-                        <button kendoButton [primary]="true" look="flat" aria-label="Send Test"
-                              (click)="onSendTestOpenClicked()">
-                              Print Test
+                        <button kendoButton [primary]="true" look="flat" aria-label="Send Test">
+                              Send Test
                         </button>
                   </div>
                   <div class="justify-content-end align-items-center">
                         <button kendoButton [primary]="true" class="mr-1" look="outline" aria-label="Cancel"
-                              (click)="onPreviewEmailHeaderFooterCloseClicked()"> Cancel </button>
-                        <button kendoButton [primary]="true" aria-label="Save Template"> Save Template
+                              (click)="onPreviewLetterHeaderFooterCloseClicked()"> Cancel </button>
+                        <button kendoButton [primary]="true" aria-label="Save Header & Footer"> Save
                         </button>
                   </div>
             </div>
       </kendo-dialog-actions>
 </kendo-dialog>
 
-
-<kendo-dialog *ngIf="isShowSendTextDialog" (close)="onSendTestCloseClicked()"
-      class="app-c-modal app-c-modal-sm app-c-modal-np">
-      <kendo-dialog-titlebar> Send Test </kendo-dialog-titlebar>
-      <system-config-email-template-send-test></system-config-email-template-send-test>
-</kendo-dialog>
+ 
 
 
 <kendo-dialog *ngIf="isAddLanguageDetailPopup" (close)="onCloseAddLanguageDetailClicked()"
@@ -299,8 +262,8 @@
 </kendo-dialog>
 
 
-<kendo-dialog *ngIf="isEmailTemplateLeavePopupShow" (close)="onCloseEmailTemplateLeaveClicked()"
+<kendo-dialog *ngIf="isLetterTemplateLeavePopupShow" (close)="onCloseLetterTemplateLeaveClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar> Leave this page? </kendo-dialog-titlebar>
-      <system-config-email-template-leave-page></system-config-email-template-leave-page> 
+      <system-config-letter-template-leave-page></system-config-letter-template-leave-page> 
 </kendo-dialog>
