@@ -73,7 +73,7 @@
 
               <kendo-formerror
                 *ngIf="medicalProviderFormControls?.parentVendorId.errors?.required && !medicalProviderForm.controls['parentVendorId'].disabled && isValidateForm">
-                Clinic Name is required
+                Clinic Name Field is required.
               </kendo-formerror>
             </kendo-floatinglabel>
 
@@ -97,7 +97,7 @@
 
               <kendo-formerror
                 *ngIf="medicalProviderFormControls?.providerName.errors?.required && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
-                Clinic Name is required
+                Clinic Name Field is required.
               </kendo-formerror>
               <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.maxlength">
                 Clinic Name cannot be more than 500 characters
