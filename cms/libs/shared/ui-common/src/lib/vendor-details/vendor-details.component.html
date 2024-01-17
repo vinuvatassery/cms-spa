@@ -1,7 +1,7 @@
 <section class="k-dialog-body">
   <div [formGroup]="medicalProviderForm">
     <p class="text-muted mb-2">
-      All fields are required unless otherwise stated.<span *ngIf="!editVendorInfo"> You may view and edit the vendor's profile once it is added.</span>
+      All fields are required unless otherwise stated.
     </p>
     <div class="flex-row">
       <div class="flex-col" *ngIf="providerType == vendorTypes.InsuranceVendors">
@@ -38,11 +38,11 @@
       <!-- for manufacturers -->
       <div class="flex-col" *ngIf="providerType == vendorTypes.Manufacturers">
         <kendo-floatinglabel text="Manufacturer Name">
-          <kendo-textbox aria-label="Manufacturer name" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="Manufacturer ame" [fillMode]="formUiStyle.inputFillMode"
             formControlName="providerName" [maxlength]="500">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Manufacturer name is required
+            Manufacturer Name is required
           </kendo-formerror>
           <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.pattern">
             Special characters and numeric values are not allowed
