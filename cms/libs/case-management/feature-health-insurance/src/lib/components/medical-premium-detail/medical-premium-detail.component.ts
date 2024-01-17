@@ -1572,8 +1572,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  public handleFileRemoved(files: any, fileType: string, resetId?: boolean) {
-    debugger
+  public handleFileRemoved(files: any, fileType: string, resetId?: boolean) {    
     if (files?.files?.length > 0 && !!files?.files[0]?.uid) {
       this.insurancePolicyFacade.showLoader();
       this.clientDocumentFacade.removeDocument(files?.files[0]?.uid ?? '').subscribe({
