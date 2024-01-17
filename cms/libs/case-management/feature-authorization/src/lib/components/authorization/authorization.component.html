@@ -34,6 +34,7 @@
           </kendo-datepicker>
           <kendo-formerror *ngIf="authForm?.applicantSignedDate?.errors?.required">Date Applicant Signed is required</kendo-formerror>
           <kendo-formerror *ngIf="invalidSignatureDate$ | async">Date Applicant Signed cannot be greater than Current Date.</kendo-formerror>
+          <kendo-formerror *ngIf="invalidApplicantSignatureDate$ | async">Date Applicant Signed is not valid.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col flex-col-6">
