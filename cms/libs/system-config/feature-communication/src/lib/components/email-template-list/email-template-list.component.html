@@ -98,7 +98,11 @@
                               </kendo-popover>
                         </ng-template>
                   </kendo-grid-column>
-                  <kendo-grid-column field="status" title="Status" [width]="100"> </kendo-grid-column>
+                  <kendo-grid-column field="status" title="Status" [width]="100">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                              <span *ngIf="dataItem.status === 'active'">  {{dataItem.status}} </span>
+                              <span class="red-text-color align-items-center" *ngIf="dataItem.status === 'incomplete'"> <span class="material-icons red-text-color"> error  </span> {{dataItem.status}}</span>
+                        </ng-template>  </kendo-grid-column>
                   <kendo-grid-column field="" title="" [width]="50" class="text-center" [sticky]="true"
                         [columnMenu]="false">
                         <ng-template kendoGridCellTemplate let-isNew="isNew">
