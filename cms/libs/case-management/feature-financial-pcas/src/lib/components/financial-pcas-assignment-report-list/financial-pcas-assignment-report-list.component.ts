@@ -318,7 +318,6 @@ export class FinancialPcasAssignmentReportListComponent
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
-
       JSON.stringify(this.filter)
     );
     this.loadFinancialPcaReportListEvent.emit(param);
