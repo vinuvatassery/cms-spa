@@ -38,11 +38,11 @@
       <!-- for manufacturers -->
       <div class="flex-col" *ngIf="providerType == vendorTypes.Manufacturers">
         <kendo-floatinglabel text="Manufacturer Name">
-          <kendo-textbox aria-label="Manufacturer name" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="Manufacturer ame" [fillMode]="formUiStyle.inputFillMode"
             formControlName="providerName" [maxlength]="500">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Manufacturer name is required
+            Manufacturer Name is required
           </kendo-formerror>
           <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.pattern">
             Special characters and numeric values are not allowed
@@ -534,7 +534,7 @@
 
           <div class="flex-col">
             <kendo-floatinglabel text=" Name">
-              <kendo-textbox aria-label="Contact Name" [fillMode]="formUiStyle.inputFillMode" [maxlength]="40"
+              <kendo-textbox aria-label="Contact Name" [fillMode]="formUiStyle.inputFillMode" [maxlength]="200"
                 formControlName="contactName">
               </kendo-textbox>
             </kendo-floatinglabel>
