@@ -1,7 +1,7 @@
 <section class="k-dialog-body">
   <div [formGroup]="medicalProviderForm">
     <p class="text-muted mb-2">
-      All fields are required unless otherwise stated.
+      All fields are required unless otherwise stated.<span *ngIf="!editVendorInfo"> You may view and edit the vendor's profile once it is added.</span>
     </p>
     <div class="flex-row">
       <div class="flex-col" *ngIf="providerType == vendorTypes.InsuranceVendors">
