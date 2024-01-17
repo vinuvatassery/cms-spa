@@ -296,7 +296,8 @@ export class FinancialPremiumsDataService {
       Sorting : data.sort,
       SkipCount : data.skipCount,
       MaxResultCount : data.pageSize,
-      Filter : data.filter
+      Filter : data.filter,
+      WarrantCalculation:data.warrantCalculation
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto

@@ -200,7 +200,7 @@ export class StatusPeriodComponent implements OnInit {
   ) {
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
+      pageSize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
       filter : this.filter === undefined?null:this.filter

@@ -81,7 +81,7 @@ dropDowncolumns : any = [
   {
     "columnCode": "vendorName",
     "columnDesc": "Vendor Name"   ,
-    "vendorTypeCode":["INSURANCE_VENDOR","PHARMACY"],
+    "vendorTypeCode":["INSURANCE_VENDOR"],
   },
   {
     "columnCode": "vendorName",
@@ -92,6 +92,11 @@ dropDowncolumns : any = [
     "columnCode": "vendorName",
     "columnDesc": "Manufacturer Name"   ,
     "vendorTypeCode": ["MANUFACTURERS"],
+  },
+  {
+    "columnCode": "vendorName",
+    "columnDesc": "Pharmacy Name"   ,
+    "vendorTypeCode": ["PHARMACY"],
   },
   {
     "columnCode": "tin",
@@ -108,7 +113,7 @@ dropDowncolumns : any = [
   {
     "columnCode": "unreconciledClaims",
     "columnDesc": "Unreconciled Claims"   ,
-    "vendorTypeCode": ["PHARMACY","MEDICAL_PROVIDER"],
+    "vendorTypeCode": ["MEDICAL_PROVIDER"],
   }
   ,
   {
@@ -129,7 +134,7 @@ dropDowncolumns : any = [
   {
     "columnCode": "clients",
     "columnDesc": "Clients"   ,
-    "vendorTypeCode":["INSURANCE_VENDOR","PHARMACY"],
+    "vendorTypeCode":["INSURANCE_VENDOR"],
   },
   {
     "columnCode": "totalDrugs",
@@ -144,12 +149,12 @@ dropDowncolumns : any = [
   {
     "columnCode": "NpiNbr",
     "columnDesc": "Npi Number"   ,
-    "vendorTypeCode": ["PHARMACY"],
+    "vendorTypeCode": [""],
   },
   {
     "columnCode": "physicalAddress",
     "columnDesc": "Physical Address"   ,
-    "vendorTypeCode": ["PHARMACY"],
+    "vendorTypeCode": [""],
   }
 
 ]

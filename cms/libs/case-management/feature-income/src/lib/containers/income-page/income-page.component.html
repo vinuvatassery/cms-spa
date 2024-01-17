@@ -17,8 +17,6 @@
           </span>
         </div>
         <div class="flex-col">
-
-
           <div  *ngIf="hasNoIncome">
             <form [formGroup]="noIncomeDetailsForm">
               <div class="flex-row">
@@ -144,9 +142,10 @@
 </div>
           </div>
           <div *ngIf="!hasNoIncome">
-            <case-management-income-list [isCerForm]="isCerForm" [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
+            <case-management-income-list [isProofOfSchoolDocumentUploaded] = "isProofOfSchoolDocumentUploaded"  [isCerForm]="isCerForm" [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
           </div>
-
+          <kendo-formerror *ngIf="!isProofOfSchoolDocumentUploaded"> Proof of school upload is required
+          </kendo-formerror>
         </div>
       </div>
     </div>

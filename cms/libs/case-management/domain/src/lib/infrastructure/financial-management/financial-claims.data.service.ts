@@ -314,7 +314,8 @@ export class FinancialClaimsDataService {
       Sorting : data.sort,
       SkipCount : data.skipCount,
       MaxResultCount : data.pageSize,
-      Filter : data.filter
+      Filter : data.filter,
+      WarrantCalculation:data.warrantCalculation
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${data.claimsType}/payments/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
