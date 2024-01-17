@@ -156,8 +156,11 @@ dropDowncolumns : any = [
     "columnDesc": "Physical Address"   ,
     "vendorTypeCode": [""],
   }
- 
+
 ]
+
+financialVendorTypeCode = FinancialVendorTypeCode;
+
 constructor(private route: Router,
   private readonly  cdr :ChangeDetectorRef,
   private readonly lovFacade: LovFacade) {
@@ -199,7 +202,7 @@ ngOnInit(): void {
 
 private bindDropdownClumns()
 {
-  
+
   this.dropDowncolumns = this.dropDowncolumns.filter((x : any)=>x.vendorTypeCode.includes(this.vendorTypeCode) || x.vendorTypeCode === 'ALL')
 }
 
@@ -219,8 +222,8 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      pagesize : maxResultCountValue,
      sortColumn : sortValue,
      sortType : sortTypeValue,
-     vendorTypeCode : (this.vendorTypeCode == this.financeVendorTypeCodes.MedicalProviders 
-      || this.vendorTypeCode == this.financeVendorTypeCodes.DentalProviders) 
+     vendorTypeCode : (this.vendorTypeCode == this.financeVendorTypeCodes.MedicalProviders
+      || this.vendorTypeCode == this.financeVendorTypeCodes.DentalProviders)
       ? this.vendorTypeCode + ',' + this.vendorTypeCode.split('_')[0] + '_CLINIC' +',' + this.financeVendorTypeCodes.Clinic : this.vendorTypeCode ,
      filter : this.state?.["filter"]?.["filters"] ?? []
    }
@@ -260,7 +263,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
         this.showTinSearchWarning = false
        data = data.replace("-","")
       }
- 
+
     }
     this.filterData = {logic:'and',filters:[{
       "filters": [
@@ -314,7 +317,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
           this.showTinSearchWarning = false;
           stateFilter.value = stateFilter.value.replace("-","")
         }
-   
+
       }
       this.filter = stateFilter.value;
       this.isFiltered = true;
@@ -363,7 +366,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
   setToDefault()
   {
 
- 
+
     this.showTinSearchWarning = false;
     this.sortColumn = 'Vendor Name';
     this.sortDir = 'Ascending';
@@ -373,8 +376,8 @@ public filterChange(filter: CompositeFilterDescriptor): void {
     this.columnsReordered = false;
 
     this.sortValue  = 'vendorName';
-    this.sortType  = 'asc' 
-   
+    this.sortType  = 'asc'
+
     this.sort = [{
       field: this.sortValue,
     }];
@@ -418,15 +421,15 @@ public filterChange(filter: CompositeFilterDescriptor): void {
         );
       },
     });
-    
+
   }
   dropdownFilterChange(
-    
+
     field: string,
     value: any,
     filterService: FilterService
   ): void {
-    
+
     filterService.filter({
       filters: [
         {

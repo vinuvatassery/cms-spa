@@ -332,7 +332,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.hasValidIncome=false;
       let todayDate = new Date();
       todayDate = new Date(`${todayDate.getFullYear()}-${todayDate.getMonth()+1}-${todayDate.getDate()}`)
-      if(this.isCerForm != true){ 
+      if(this.isCerForm != true){
         if(this.incomeData.clientIncomes?.filter((x:any) => (x.incomeEndDate != null && new Date(x.incomeEndDate.split('T')[0]) >= todayDate) || x.incomeEndDate === null).length>0){
           this.hasValidIncome=true;
         }
@@ -647,8 +647,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadIncomeListHandle(gridDataRefinerValue);
   }
  UploadDocumentValidation(){
-    if(this.isCerForm != true){
-    let uploadedProofOfSchoolDependents = this.dependentsProofOfSchools.filter((item :any) => !!item.documentPath);
+    if(this.isCerForm != true && this.dependentsProofOfSchools?.length > 0){
+    const uploadedProofOfSchoolDependents = this.dependentsProofOfSchools.filter((item :any) => !!item.documentPath);
   if(uploadedProofOfSchoolDependents?.length == this.incomeData?.dependents?.length){
   this.isProofOfSchoolDocumentUploaded=true;
 }

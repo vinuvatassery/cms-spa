@@ -776,8 +776,8 @@ pageNumberAndCountChangedInSelectAll() {
   modalCloseAddEditClaimsFormModal(result: any) {
     if (result === true) {
       this.loadFinancialClaimsAllPaymentsListGrid();
-      this.addEditClaimsFormDialog.close();
     }
+    this.addEditClaimsFormDialog.close();
   }
 
   selectionChange(dataItem:any, selected:boolean){
