@@ -335,6 +335,7 @@ export class AddressDetailComponent implements OnInit, OnDestroy {
         this.addressForm.controls["city"].enable();
         this.addressForm.controls["state"].enable();
         this.addressForm.controls["state"].setValue('OR');
+        this.addressForm.controls["state"].disable();
         this.addressForm.controls["zip"].disable();
         this.addressForm.controls["county"].enable();
         this.addressForm.controls["county"].patchValue(null);
