@@ -1039,6 +1039,18 @@ if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
   }
 }
 }
+onitemNumberClick(dataItem: any) {
+  this.route.navigate(
+    [`/financial-management/premiums/${this.premiumsType}/batch/items`],
+    { queryParams:
+      {
+        bid: dataItem?.batchId,
+        pid: dataItem.paymentRequestId,
+        eid: dataItem.vendorId,
+      }
+    }
+  );
+}
 
 onEditPremiumsClick(premiumId: string, vendorId: any, clientId: any, clientName: any, paymentRequestId: any) {
   this.vendorId = vendorId;
