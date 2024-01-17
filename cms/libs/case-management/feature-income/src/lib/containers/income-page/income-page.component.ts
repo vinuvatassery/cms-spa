@@ -50,6 +50,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   sessionId: any = "";
   clientId: any;
   isProofOfSchoolDocumentUploaded: boolean = true;
+  isInValidDateRange:boolean = false;
   clientCaseEligibilityId: string = "";
   clientCaseId: any;
   incomeData: any = {};
@@ -411,7 +412,14 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       const todayDate= new Date();
       if(signedDate>todayDate){
         this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setErrors({'incorrect':true})
+        this.isInValidDateRange = false;
       }
+      const minSignedDate = new Date(1753,0,1);
+      if(signedDate <= minSignedDate){
+        this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setErrors({'incorrect':true})
+        this.isInValidDateRange = true;
+      }
+
 
       if (this.noIncomeDetailsForm.valid) {
         this.noIncomeData.noIncomeFlag = this.hasNoIncome ? StatusFlag.Yes :StatusFlag.No;
