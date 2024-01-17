@@ -2,7 +2,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DirectMessagesListComponent, GenderListComponent, LanguageListComponent, PronounsListComponent, RacialOrEthnicIdentityListComponent, SexualOrientationListComponent } from '@cms/system-config/feature-client-profile-management';
-import { ClientNotificationDefaultsListComponent, EmailTemplateListComponent, FormDocumentsListComponent, LetterTemplateListComponent, SmsTextTemplateListComponent, EmailTemplateNewFormComponent, EmailTemplateHeaderFooterComponent, LetterTemplateHeaderFooterComponent, LetterTemplateNewFormComponent } from '@cms/system-config/feature-communication';
+import { ClientNotificationDefaultsListComponent, EmailTemplateListComponent, FormDocumentsListComponent, LetterTemplateListComponent, SmsTextTemplateListComponent, EmailTemplateNewFormComponent, EmailTemplateHeaderFooterComponent, LetterTemplateHeaderFooterComponent, LetterTemplateNewFormComponent, SmsTextTemplateNewFormComponent } from '@cms/system-config/feature-communication';
 import { ExpenseTypesListComponent, FundsListComponent, IncomeTypesListComponent, IndexListComponent, PcaCodesListComponent } from '@cms/system-config/feature-financials';
 import { CaseAvailabilityListComponent, EidLifetimePeriodListComponent, HousingAcuityLevelListComponent, IncomeInclusionsExclusionsListComponent, PsMfrZipListComponent, RegionAssignmentListComponent, ServiceProviderListComponent, SlotListComponent } from '@cms/system-config/feature-housing-coordination-management';
 import { RolesAndPermissionsDetailComponent } from './components/roles-and-permissions-detail/roles-and-permissions-detail.component';
@@ -133,7 +133,10 @@ const routes: Routes = [
         path: 'sms-text-template',
         component: SmsTextTemplateListComponent
       },
-     
+      {
+        path: 'sms-text-template/new-sms-template',
+        component: SmsTextTemplateNewFormComponent,
+      },
       {
         path: 'case-assignment',
         component: CaseAssignmentComponent

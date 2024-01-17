@@ -24,3 +24,7 @@ export * from './lib/components/letter-template-leave-page/letter-template-leave
 export * from './lib/components/letter-template-list/letter-template-list.component';
 
 export * from './lib/components/letter-template-new-form/letter-template-new-form.component';
+
+export * from './lib/components/sms-text-template-new-form/sms-text-template-new-form.component';
+
+export * from './lib/components/sms-text-template-send-test/sms-text-template-send-test.component';

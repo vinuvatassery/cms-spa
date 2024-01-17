@@ -17,6 +17,8 @@ import { TemplateDeleteLanguageComponent } from './components/template-delete-la
 import { LetterTemplateHeaderFooterComponent } from './components/letter-template-header-footer/letter-template-header-footer.component';
 import { LetterTemplateLeavePageComponent } from './components/letter-template-leave-page/letter-template-leave-page.component';
 import { LetterTemplateNewFormComponent } from './components/letter-template-new-form/letter-template-new-form.component';
+import { SmsTextTemplateNewFormComponent } from './components/sms-text-template-new-form/sms-text-template-new-form.component';
+import { SmsTextTemplateSendTestComponent } from './components/sms-text-template-send-test/sms-text-template-send-test.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
@@ -36,6 +38,8 @@ import { LetterTemplateNewFormComponent } from './components/letter-template-new
     LetterTemplateLeavePageComponent,
     LetterTemplateListComponent,
     LetterTemplateNewFormComponent,
+    SmsTextTemplateNewFormComponent,
+    SmsTextTemplateSendTestComponent,
   ],
   exports: [
     ClientNotificationDefaultsListComponent,
@@ -51,6 +55,8 @@ import { LetterTemplateNewFormComponent } from './components/letter-template-new
     LetterTemplateLeavePageComponent,
     LetterTemplateListComponent,
     LetterTemplateNewFormComponent,
+    SmsTextTemplateNewFormComponent,
+    SmsTextTemplateSendTestComponent,
   ],
 })
 export class SystemConfigFeatureCommunicationModule {}

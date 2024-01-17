@@ -1,23 +1,43 @@
-/** Angular **/
 import {
-  Component,
   ChangeDetectionStrategy,
+  Component,
+  ElementRef,
   HostListener,
   ViewChild,
-  ElementRef,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 @Component({
-  selector: 'case-management-text-message-editor',
-  templateUrl: './text-message-editor.component.html',
-  styleUrls: ['./text-message-editor.component.scss'],
+  selector: 'system-config-sms-text-template-new-form',
+  templateUrl: './sms-text-template-new-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TextMessageEditorComponent {
+export class SmsTextTemplateNewFormComponent {
   /** Public properties **/
   @ViewChild('smsAnchor') public smsAnchor!: ElementRef;
   @ViewChild('smsPopup', { read: ElementRef }) public smsPopup!: ElementRef;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  public uploadFileRestrictions: UploadFileRistrictionOptions =
+    new UploadFileRistrictionOptions();
   isShowPopupClicked = false;
+  isShowPreviewSmsTextHeaderFooterDialog = false;
+  isShowSendTextDialog = false;
+  isAddLanguageDetailPopup = false;
+  isRemoveLanguagePopup = false;
+  isBccEnable = false;
+  isSmsTextTemplateLeavePopupShow = false;
+  onToggle() {
+    this.isShowPopupClicked = true;
+  }
+
+  public listItems: Array<string> = [
+    'Role Name',
+    'Role Name',
+    'Role Name',
+    'Role Name',
+    'Role Name',
+  ];
+  public value: any = [];
+
   isSearchOpened = true;
   tareaMessagesCounter = 0;
   tareaMessageMaxLength = 140;
@@ -28,9 +48,9 @@ export class TextMessageEditorComponent {
       wordCount: 0,
     },
   ];
-  smsPopupClass1 = 'more-action-dropdown app-dropdown-action-list';
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  /** Private methods **/
+  popupClass1 = 'more-action-dropdown app-dropdown-action-list';
+
+  /** Internal event methods **/
   private contains(target: any): boolean {
     return (
       this.smsAnchor.nativeElement.contains(target) ||
@@ -49,8 +69,6 @@ export class TextMessageEditorComponent {
   private onKeydown(event: any): void {
     this.onToggleInsertVariableClicked(false);
   }
-
-  /** Internal event methods **/
   onToggleInsertVariableClicked(show?: boolean): void {
     this.isShowPopupClicked =
       show !== undefined ? show : !this.isShowPopupClicked;
@@ -85,5 +103,41 @@ export class TextMessageEditorComponent {
 
   onSearchClosed() {
     this.isSearchOpened = false;
+  }
+  onPreviewSmsTextHeaderFooterOpenClicked() {
+    this.isShowPreviewSmsTextHeaderFooterDialog = true;
+  }
+  onPreviewSmsTextHeaderFooterCloseClicked() {
+    this.isShowPreviewSmsTextHeaderFooterDialog = false;
+  }
+
+  onSendTestOpenClicked() {
+    this.isShowSendTextDialog = true;
+  }
+  onSendTestCloseClicked() {
+    this.isShowSendTextDialog = false;
+  }
+
+  onOpenAddLanguageDetailClicked() {
+    this.isAddLanguageDetailPopup = true;
+  }
+
+  onCloseAddLanguageDetailClicked() {
+    this.isAddLanguageDetailPopup = false;
+  }
+
+  onOpenRemoveLanguageClicked(event: any) {
+    this.isRemoveLanguagePopup = true;
+  }
+
+  onCloseRemoveLanguageClicked() {
+    this.isRemoveLanguagePopup = false;
+  }
+
+  onSmsTextTemplateLeaveClicked() {
+    this.isSmsTextTemplateLeavePopupShow = true;
+  }
+  onCloseSmsTextTemplateLeaveClicked() {
+    this.isSmsTextTemplateLeavePopupShow = false;
   }
 }

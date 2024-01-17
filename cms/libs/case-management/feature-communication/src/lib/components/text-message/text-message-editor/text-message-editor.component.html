@@ -5,7 +5,7 @@
       <div>
         <button
           kendoButton
-          #anchor
+          #smsAnchor
           (click)="onToggleInsertVariableClicked()"
           class="text-t-normal"
           aria-label="Insert a variable"
@@ -20,8 +20,8 @@
           >
         </button>
         <kendo-popup
-          #popup
-          [anchor]="$any(anchor)"
+          #smsPopup
+          [anchor]="$any(smsAnchor)"
           popupClass="content"
           *ngIf="isShowPopupClicked"
           popupClass="notification-inner"
