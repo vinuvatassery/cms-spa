@@ -257,7 +257,6 @@ export class FamilyAndDependentDetailComponent implements OnInit {
         dob: this.familyMemberForm?.controls["dob"].value,
         enrolledInInsuranceFlag: this.familyMemberForm?.controls["enrolledInInsuranceFlag"].value
       }
-      this.btnDisabled = true;
     this.addUpdateDependentEvent.next(dependent);
    }
   }
