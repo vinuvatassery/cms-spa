@@ -23,7 +23,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { PremiumType, LoadTypes } from '@cms/case-management/domain';
+import { LoadTypes } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-premiums-batches-reconcile-payments',
