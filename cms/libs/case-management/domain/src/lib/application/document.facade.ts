@@ -100,7 +100,7 @@ export class DocumentFacade {
   }
 
   getDocumentsByClientCaseEligibilityId(
-    clientCaseEligibilityId: string, 
+    clientId: number, 
     skipcount: number, 
     maxResultCount: number, 
     sort: string, 
@@ -111,7 +111,7 @@ export class DocumentFacade {
     this.documentGridLoaderSubject.next(true);
     this.documentDataService
       .getDocumentsByClientCaseEligibilityId(
-        clientCaseEligibilityId,
+        clientId,
         skipcount,
         maxResultCount,
         sort,
