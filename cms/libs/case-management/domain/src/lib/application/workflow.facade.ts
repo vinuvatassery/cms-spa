@@ -765,8 +765,6 @@ export class WorkflowFacade {
   handleSendNewsLetterpopup(showHideValue: boolean) {
     if (showHideValue) {
       this.showSendEmailLetterPopup(true);
-    } else {
-      this.router.navigate([`/case-management/cases`]);
-    }
+    } 
   }
 }
