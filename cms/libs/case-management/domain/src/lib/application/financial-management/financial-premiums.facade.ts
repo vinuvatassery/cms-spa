@@ -239,6 +239,7 @@ export class FinancialPremiumsFacade {
           const gridView = {
             data: dataResponse["items"],
             total: dataResponse["totalCount"],
+            lovs: dataResponse["lovs"],
             acceptsReportsCount: dataResponse['acceptReportsFlagQueryCount'],
           };
           this.financialPremiumsAllPaymentsDataSubject.next(gridView);

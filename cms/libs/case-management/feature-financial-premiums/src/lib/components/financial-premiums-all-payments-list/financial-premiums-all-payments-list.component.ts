@@ -61,6 +61,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() unBatchPremiumEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
+  paymentStatusCode="PAYMENT_STATUS_CODE"
   gridColumns: any = {
     itemNumber: 'Item #',
     batchNumber: 'Batch #',
@@ -383,9 +384,9 @@ deletePremiumPayment(paymentId: string) {
     this.addSearchSubjectSubscription();
     this.getVedndorTypeCodeLov();
     this.getPaymentMethodLov();
-    this.getPaymentStatusLov();
     this.financialPremiumsAllPaymentsGridLists$.subscribe((response:any) =>{
       this.totalGridRecordsCount = response?.acceptsReportsCount;
+      this.paymentStauses = response?.lovs[this.paymentStatusCode]
       if(this.selectAll){
       this.markAsChecked(response.data);
       }
