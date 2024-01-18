@@ -69,7 +69,7 @@ public state!: any;
     clientId:"Client ID",
     urn:"URN",
     preferredContact:"Preferred Contact",
-    caseStatus:"Status",
+    eligibilityStatusCode:"Status",
     group:"Group",
     eilgibilityStartDate:"Eligibility Start Date",
     eligibilityEndDate:"Eligibility End Date",
@@ -211,7 +211,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   if(field == "group"){
     this.groupValue = value;
   }
-  if(field == "caseStatus"){
+  if(field == "eligibilityStatusCode"){
     this.statusValue = value;
   }
 }
@@ -512,6 +512,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? "";
+    this.sortValue = this.sortValue === "eligibilityStatusCode" ? "caseStatus" : this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? "";
     this.columnName = filterList.length > 0 ? filterList[0]?.filters[0]?.field : "";
     this.state = stateData;
