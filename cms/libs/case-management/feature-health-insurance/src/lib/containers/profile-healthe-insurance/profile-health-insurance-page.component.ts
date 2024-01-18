@@ -137,7 +137,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       gridDataRefiner.sortType
     );
   }
-  deleteInsurancePolicy(insurancePolicyId: any) {
+  deleteInsurancePolicy(insurancePolicyId: any, priority:any = null) {
     if (insurancePolicyId != undefined) {
       this.loaderService.show();
       this.closeDeleteModal = false;
@@ -155,6 +155,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
           this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy deleted successfully");
           this.loaderService.hide();
           this.ref.detectChanges();
+          this.insurancePolicyFacade.triggerPriorityPopupSubject.next(true);
         },
         error: (error: any) => {
           this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
