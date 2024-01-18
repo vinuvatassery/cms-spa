@@ -440,6 +440,9 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
       {     
         ay:  this.pcaCodeInfo?.ay ?? ''}    
     )
+
+    this.openDateValidate()
+    this.closeDateValidate()
    
   }
 
@@ -451,5 +454,13 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
       this.pcaCodeInfo.remainingAmount = this.totalAmount - (amount *  numberOfGroups)
     }
     
+    if(this.originalRemainingBalance < this.pcaAssignmentForm?.controls["amount"]?.value && ! this.pcaAssignmentForm.controls['unlimited'].value)
+    {
+    this.pcaAssignmentForm?.controls["amount"].setErrors({'incorrect': true});
+    this.remainingAmountValidate = true
+    return;
+    }else{
+      this.remainingAmountValidate = false
+    }
   }
 }
