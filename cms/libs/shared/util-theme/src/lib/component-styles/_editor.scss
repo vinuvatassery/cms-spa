@@ -156,3 +156,14 @@
     }
   }
 }
+
+.sms-text-header-inner{
+  position: relative;
+  .notification-inner{
+    left: auto !important;
+    top: auto !important;
+    right: 10px !important;
+    max-width: 300px; 
+    margin-top: 47px;
+  }
+}
