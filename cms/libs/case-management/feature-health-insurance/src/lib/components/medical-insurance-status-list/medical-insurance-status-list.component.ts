@@ -296,6 +296,10 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   private priorityPopupShowSubscription(){
     this.triggerPriorityPopup$.subscribe((value:boolean)=>{
       if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {
+        if(this.selectedEligibilityId === null || 
+          this.selectedEligibilityId === undefined){
+            this.selectedEligibilityId = this.caseEligibilityId;
+          }
         if(value && this.isTriggerPriorityPopup){
           this.isEditInsurancePriorityTitle = false;
           this.insurancePriorityModalButtonText = 'Save';
