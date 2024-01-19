@@ -135,8 +135,9 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   { columnName: 'clientFullName', columnDesc: 'Client Name' },
   { columnName: 'clientId', columnDesc: 'Client ID' },
   { columnName: 'creationTime', columnDesc: 'Entry Date' },
+  { columnName: 'warrantNumber', columnDesc: 'Warrant Number' },
 ];
-   
+
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
