@@ -1,6 +1,7 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -37,7 +38,9 @@ export class FinancialPremiumsBatchesListComponent
   @Input() sort: any;
   @Input() financialPremiumsBatchGridLoader$: any;
   @Input() financialPremiumsBatchGridLists$: any;
+  @Input() exportButtonShow$: any;
   @Output() loadFinancialPremiumsBatchListEvent = new EventEmitter<any>();
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   public state!: State;
   columnsReordered = false;
   gridDataResult!: GridDataResult;
@@ -119,6 +122,7 @@ export class FinancialPremiumsBatchesListComponent
   showDateSearchWarning = false;
   showNumberSearchWarning = false;
   columnChangeDesc = 'Default Columns';
+  showExportLoader = false;
 
   /** Constructor **/
   constructor(
@@ -126,6 +130,7 @@ export class FinancialPremiumsBatchesListComponent
     public activeRoute: ActivatedRoute,
     private readonly configProvider: ConfigurationProvider,
     private readonly intl: IntlService,
+    private readonly cdr: ChangeDetectorRef,
     ) {}
 
   ngOnInit(): void {
@@ -253,10 +258,6 @@ export class FinancialPremiumsBatchesListComponent
     this.filterData = filter;
   }
 
-  rowClass = (args: any) => ({
-    'table-row-disabled': !args.dataItem.assigned,
-  });
-
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
     this.columnChangeDesc =
@@ -285,7 +286,7 @@ export class FinancialPremiumsBatchesListComponent
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: [{ field: 'ALL', dir: 'desc' }],
+      sort: [{ field: 'creationTime', dir: 'desc' }],
     };
   }
 
@@ -300,8 +301,7 @@ export class FinancialPremiumsBatchesListComponent
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
-
-      JSON.stringify(this.filter)
+      JSON.stringify(this.state?.filter?.filters)
     );
     this.loadFinancialPremiumsBatchListEvent.emit(param);
   }
@@ -356,6 +356,17 @@ export class FinancialPremiumsBatchesListComponent
       }
     }
     return searchValue;
+  }
+
+  onClickedExport() {
+    this.showExportLoader = true;
+    this.exportGridDataEvent.emit();
+    this.exportButtonShow$.subscribe((response: any) => {
+      if (response) {
+        this.showExportLoader = false;
+        this.cdr.detectChanges();
+      }
+    });
   }
 }
 

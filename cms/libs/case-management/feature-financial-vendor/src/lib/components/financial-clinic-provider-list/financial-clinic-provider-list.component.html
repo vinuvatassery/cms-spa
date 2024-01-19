@@ -1,4 +1,4 @@
- 
+
 <!-- Provider -->
 <div class=" ">
       <div class="flex-col flex-space-bw align-items-center">
@@ -10,11 +10,11 @@
                   <section class="table-filter-section mat-form-no-b-space">
                         <span class="filter-section_items filter--select">
                               <kendo-floatinglabel>
-                                    <kendo-dropdownlist 
-                                          aria-label="All Columns" 
+                                    <kendo-dropdownlist
+                                          aria-label="All Columns"
                                           [fillMode]="formUiStyle.dropDownFillMode"
-                                          textField="columnDesc" 
-                                          valueField="columnName" 
+                                          textField="columnDesc"
+                                          valueField="columnName"
                                           [data]="searchColumnList"
                                           [valuePrimitive]="true"
                                           [(ngModel)]="selectedSearchColumn"
@@ -25,31 +25,18 @@
                         <span class="filter-section_items filter--search">
                               <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
                               <kendo-floatinglabel text="Search">
-                                    <kendo-textbox 
-                                          aria-label="Search case" 
+                                    <kendo-textbox
+                                          aria-label="Search case"
                                           rounded="medium"
                                           [fillMode]="formUiStyle.inputFillMode"
                                           [(ngModel)]="searchText"
                                           (afterValueChanged)="onProviderListSearch($event)"> </kendo-textbox>
                               </kendo-floatinglabel>
                         </span>
-                  </section>      
+                  </section>
             </div>
       </div>
 
-      <div class="table-sorted-info">
-            <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">       
-                  <span class="material-icons" aria-label="search-warning" aria-hidden="true">
-                        warning
-                  </span>
-                  <span *ngIf="showDateSearchWarning">
-                        The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
-                  </span>
-                  <span *ngIf="showNumberSearchWarning">
-                        tin # allow only numbers.
-                  </span>
-            </span>   
-      </div>
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
@@ -63,26 +50,33 @@
       </button>
 </div>
 
-      <kendo-grid 
-      [resizable]="true" 
-      [loading]="(providerList$ | async) === true" 
+      <kendo-grid
+      [resizable]="true"
+      [loading]="(providerList$ | async) === true"
       [pageSize]="state.take"
-      [skip]="state.skip" 
-      [pageable]="true" 
-      [sortable]="true" 
-      [groupable]="false" 
+      [skip]="state.skip"
+      [pageable]="true"
+      [sortable]="true"
+      [groupable]="false"
       [reorderable]="true"
-      [resizable]="true" 
-      [columnMenu]="{ filter: true }" 
+      [resizable]="true"
+      [columnMenu]="{ filter: true }"
       [sort]="state.sort"
-      [data]="providerList$ | async" 
+      [data]="providerList$ | async"
       [filter]="state.filter"
-      (dataStateChange)="dataStateChange($event)" 
+      (dataStateChange)="dataStateChange($event)"
       (filterChange)="filterChange($event)"
       (columnReorder)="onColumnReorder($event)"
       (columnVisibilityChange)="columnChange($event)">
 
-      <kendo-grid-column field="vendorName" title="Vendor Name" [width]="100"> 
+      <kendo-grid-column field="vendorName" title="Provider Name" [width]="160">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                  <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button"
+                    (click)="onProviderNameClick(dataItem)">
+                    {{ dataItem.vendorName }}
+                  </button>
+                </ng-template>
+
             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                   <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
                        <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
@@ -99,8 +93,8 @@
                   </kendo-grid-numeric-filter-menu>
               </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="address" title="Address" [width]="250"> 
-          
+      <kendo-grid-column field="address" title="Address" [width]="250">
+
             <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                   <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
                        <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
@@ -120,7 +114,7 @@
           </ng-template>
           </kendo-grid-column>
 
-      <kendo-grid-column field="creatorId" title="Record Created By" [width]="80" class="text-center">
+      <kendo-grid-column field="creatorId" title="By" [width]="80" class="text-center">
             <ng-template kendoGridCellTemplate let-dataItem>
               <button
                 kendoButton
@@ -155,20 +149,20 @@
 
           <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="70" class="text-center">
             <ng-template kendoGridCellTemplate let-dataItem>
-              <kendo-dropdownbutton [data]="processGridActions" icon="more-vertical"
+              <kendo-dropdownbutton [data]="processGridActions"
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                 aria-label="more actions" title="More option"
                 [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-                <span hidden> More Option</span>
+                <span class="material-icons" aria-label="More option"> more_vert    </span>
                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                   <ng-container>
                     <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                      [class]="buttondataItem.buttonType" aria-hidden="false"
+                      [class]="buttondataItem.buttonType"
                       (click)="removedClick(dataItem.vendorId); buttondataItem.click(dataItem)" >
-                      <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                      <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                       <label> {{ buttondataItem.text }} </label>
                     </button>
-                  </ng-container> 
+                  </ng-container>
                    </ng-template>
               </kendo-dropdownbutton>
             </ng-template>
@@ -177,13 +171,13 @@
           let-currentPage="currentPage">
           <div class="grid-custom-paginationtemplates d-flex">
             <div class="d-flex align-items-center">
-              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+              <label class="mr-1" for="ClinicProviderRowsPerPage">Rows Per Page</label>
               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-                [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
+                [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="ClinicProviderRowsPerPage"
                 [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
               <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
-    
+
             </div>
             <div class="d-flex">
               <kendo-pager-input></kendo-pager-input>
@@ -201,7 +195,7 @@
           </div>
           <p>There is no data to display.</p>
         </ng-template>
- </kendo-grid>     
+ </kendo-grid>
       <div class="flex-col mt-1">
             <button kendoButton [primary]="true" icon="add" aria-label="Provider"
                   (click)="clickOpenAddEditProvidersDetails()">
@@ -214,15 +208,15 @@
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar (close)="clickCloseAddEditProvidersDetails()"> Add/Edit Provider
       </kendo-dialog-titlebar>
-      <cms-financial-clinic-provider-details 
+      <cms-financial-clinic-provider-details
       (closeProviderEvent)="clickCloseAddEditProvidersDetails()"
-      (loadProviderListEvent)="loadProviderListGrid()" 
+      (loadProviderListEvent)="loadProviderListGrid()"
       [parentVendorId]="ParentVendorId" [addProviderNew$]="addProviderNew$" [vendorTypeCode]="vendorTypeCode"> </cms-financial-clinic-provider-details>
 </kendo-dialog>
 <kendo-dialog *ngIf="isProvidersRemoveShow" (close)="clickCloseRemoveProviders()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar> Remove Provider?</kendo-dialog-titlebar>
-      <cms-financial-clinic-provider-remove (closeRemoveProviderEvent)="clickCloseRemoveProviders()" 
+      <cms-financial-clinic-provider-remove (closeRemoveProviderEvent)="clickCloseRemoveProviders()"
       (removeConfirmEvent)="removeProvider()"
       [vendorId]="selectProviderId"> </cms-financial-clinic-provider-remove>
 </kendo-dialog>

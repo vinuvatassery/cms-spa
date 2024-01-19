@@ -1,17 +1,17 @@
 <div *ngIf="isExistDependent">
-  <form [formGroup]="existFamilyMemberForm" (ngSubmit)="onExistDependentSubmit()">   
-    <input type="hidden" formControlName="clientId"> 
-    <input type="hidden" formControlName="clientDependentId">     
-    <input type="hidden" formControlName="dependentType">  
-    <input type="hidden" formControlName="dependentClientId">  
-    <input type="hidden" formControlName="selectedClientDependentId">   
+  <form [formGroup]="existFamilyMemberForm" (ngSubmit)="onExistDependentSubmit()">
+    <input type="hidden" formControlName="clientId">
+    <input type="hidden" formControlName="clientDependentId">
+    <input type="hidden" formControlName="dependentType">
+    <input type="hidden" formControlName="dependentClientId">
+    <input type="hidden" formControlName="selectedClientDependentId">
       <kendo-dialog-titlebar (close)="onFamilyMemberClosed()">
         {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }}
       </kendo-dialog-titlebar>
     <section class="k-dialog-body">
       <p class="text-muted mb-2">
         {{ isAddFamilyMember ? 'Search to see if the family member is already in the system. If they are not in the system, manually add a new family member.' : 'Edit the family member as needed' }}
-        
+
       </p>
       <div class="flex-row">
         <div class="flex-col">
@@ -26,20 +26,20 @@
               <kendo-autocomplete
               autofocusfield
               aria-label="search member"
-              [fillMode]="formUiStyle.dropDownFillMode" 
-              [data]="searchResult$ | async"           
+              [fillMode]="formUiStyle.dropDownFillMode"
+              [data]="searchResult$ | async"
               [value]="fullClientName"
-              valueField ="fullCustomName"              
+              valueField ="fullCustomName"
               placeholder="Search Name, DOB(MM/dd/yyyy) or SSN(Last 4 Digits)"
-              [popupSettings]="{ popupClass: popupClass, animate: true }"                 
-              [filterable]="true" 
+              [popupSettings]="{ popupClass: popupClass, animate: true }"
+              [filterable]="true"
               (close)="searchCloseEvent();"
-              (filterChange)="onsearchTextChange($event)"           
-            >    
-              <ng-template kendoAutoCompleteItemTemplate let-dataItem >               
+              (filterChange)="onsearchTextChange($event)"
+            >
+              <ng-template kendoAutoCompleteItemTemplate let-dataItem >
                 <span class="pr-1 namecolumn" (click)="onSearchTemplateClick(dataItem)">{{ dataItem.fullName}}</span>
                 <span class="pr-1 dobcolumn" (click)="onSearchTemplateClick(dataItem)">DOB {{ dataItem.dob }}</span>
-                <span *ngIf="dataItem.ssn" class="pr-1 ssmcolumn" (click)="onSearchTemplateClick(dataItem)">SSN {{ dataItem.ssn }}</span>            
+                <span *ngIf="dataItem.ssn" class="pr-1 ssmcolumn" (click)="onSearchTemplateClick(dataItem)">SSN {{ dataItem.ssn }}</span>
               </ng-template>
               <ng-template kendoAutoCompleteFooterTemplate>
                 <div class="app-c-globalSearch app-c-globalSearch-footer p-0 k-table-footer">
@@ -61,9 +61,9 @@
                     </div>
                   </div>
                 </div>
-              
+
               </ng-template>
-            </kendo-autocomplete>      
+            </kendo-autocomplete>
             </kendo-label>
             <kendo-formerror *ngIf="(existFamilyMemberForm?.hasError('required','clientDependentId')&& existFamilyMemberForm?.hasError('required','clientId')) && isExistSubmitted">Dependent
               is required</kendo-formerror>
@@ -73,11 +73,11 @@
         </div>
         <div class="flex-col mb-1">
           <kendo-floatinglabel text="Relationship to Client">
-            <kendo-dropdownlist  
-            [fillMode]="formUiStyle.dropDownFillMode" 
+            <kendo-dropdownlist
+            [fillMode]="formUiStyle.dropDownFillMode"
             [data]="relationshipList"
             textField="lovDesc"
-            valueField="lovCode" 
+            valueField="lovCode"
             aria-label="Relationship to Client"
             [valuePrimitive]="true"
             formControlName="existRelationshipCode">
@@ -120,25 +120,26 @@
 <!-- Add Family Member Modal -->
 <div
   *ngIf="isOpenedNewFamilyMember"
-  
+
   class="app-c-modal app-c-modal-md app-c-modal-np"
 >
 <form [formGroup]="familyMemberForm" (ngSubmit)="onDependentSubmit()">
   <input type="hidden" formControlName="concurrencyStamp">
-  <input type="hidden" formControlName="clientId">  
-  <input type="hidden" formControlName="clientDependentId">  
-  <input type="hidden" formControlName="dependentTypeCode">  
+  <input type="hidden" formControlName="clientId">
+  <input type="hidden" formControlName="clientDependentId">
+  <input type="hidden" formControlName="dependentTypeCode">
   <kendo-dialog-titlebar (close)="onFamilyMemberClosed()">  {{ isAddFamilyMember ? 'Add Family Member' : 'Edit Family Member' }} </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-2">   {{ !isAddFamilyMember ? 'Edit or remove this family member' : 'Enter the family member’s information' }}.</p>
     <div class="flex-row">
       <div class="flex-col">
         <kendo-floatinglabel text="Relationship to Client">
-          <kendo-dropdownlist dropdownFieldautofocus  [fillMode]="formUiStyle.dropDownFillMode" 
+          <kendo-dropdownlist dropdownFieldautofocus  [fillMode]="formUiStyle.dropDownFillMode"
           aria-label ="Relationship to Client"
           [data]="relationshipList"
           formControlName="relationshipCode"
-          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
+          textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"
+          (valueChange)="dropdownFilterChange()">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','relationshipCode') && isSubmitted">Relationship to Client
@@ -149,22 +150,22 @@
           <kendo-textbox    aria-label="Legal First Name"  [maxlength]="40"
            [fillMode]="formUiStyle.inputFillMode" placeholder="Legal First Name"
            formControlName="firstName">   </kendo-textbox>
- 
+
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','firstName') && isSubmitted">Legal First Name
           is required</kendo-formerror>
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Legal Last Name">
-          <kendo-textbox aria-label="legal last name"  
+          <kendo-textbox aria-label="legal last name"
           [fillMode]="formUiStyle.inputFillMode"  placeholder="Legal Last Name"
-          formControlName="lastName" [maxlength]="40">   </kendo-textbox> 
+          formControlName="lastName" [maxlength]="40">   </kendo-textbox>
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="familyMemberForm?.hasError('required','lastName') && isSubmitted">Legal Last Name
           is required</kendo-formerror>
       </div>
       <div class="flex-col">
-        <kendo-floatinglabel text="Date of Birth">         
+        <kendo-floatinglabel text="Date of Birth">
           <kendo-datepicker aria-label="Date of Birth"  [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" formatPlaceholder="formatPattern"
           formControlName="dob" [max]="currentDate" placeholder="Date of Birth">
         </kendo-datepicker>
@@ -176,16 +177,16 @@
       </div>
       <div class="flex-col">
         <kendo-floatinglabel text="SSN (optional)">
-          <kendo-maskedtextbox aria-label="social security number optional" 
+          <kendo-maskedtextbox aria-label="social security number optional"
            [fillMode]="formUiStyle.inputFillMode" placeholder="Social Security Number (optional)"
            [maskOnFocus]="true"
-           formControlName="ssn"   [mask]="ssnMaskFormat"   
-           >   </kendo-maskedtextbox> 
+           formControlName="ssn"   [mask]="ssnMaskFormat"
+           >   </kendo-maskedtextbox>
         </kendo-floatinglabel>
          <kendo-formerror *ngIf="familyMemberForm?.hasError('pattern','ssn') && isSubmitted">Enter a valid SSN</kendo-formerror>
       </div>
       <div class="flex-col mb-3 mt-2">
-        
+
         <fieldset class="k-form-fieldset">
           <legend class="k-form-legend">    <h5>Currently enrolled in client’s health insurance plan?</h5></legend>
           <span class="app-radiobtnwidtext-wrapper">
@@ -193,16 +194,16 @@
               type="radio"
               #enrolledInHealthInsurancePlanYes
               kendoRadioButton
-              name="enrolledInInsuranceFlag"             
+              name="enrolledInInsuranceFlag"
               id="enrolledInHealthInsurancePlanYes"
               formControlName="enrolledInInsuranceFlag"
-              aria-labelledby="enrolledInHealthInsurancePlanYes"  
+              aria-labelledby="enrolledInHealthInsurancePlanYes"
               value="Y"
             />
             <kendo-label
               class="k-radio-label"
               for="enrolledInHealthInsurancePlanYes"
-              text="Yes"             
+              text="Yes"
             ></kendo-label>
           </span>
           <span class="app-radiobtnwidtext-wrapper">
@@ -210,7 +211,7 @@
               type="radio"
               #enrolledInHealthInsurancePlanNo
               kendoRadioButton
-              name="enrolledInInsuranceFlag"  
+              name="enrolledInInsuranceFlag"
               id="enrolledInHealthInsurancePlanNo"
               formControlName="enrolledInInsuranceFlag"
               aria-labelledby="enrolledInHealthInsurancePlanNo"
@@ -221,9 +222,9 @@
               for="enrolledInHealthInsurancePlanNo"
               text="No"            >
           </kendo-label>
-         
+
           </span>
-          
+
         </fieldset>
         <div class="flex-col">
           <kendo-formerror *ngIf="familyMemberForm?.hasError('required','enrolledInInsuranceFlag') && isSubmitted">Enrolled in client’s health insurance plan is required</kendo-formerror>
@@ -236,7 +237,7 @@
     <div class="justify-content-between">
       <div>
         <button
-          kendoButton 
+          kendoButton
           class="k-danger-link"
           *ngIf="isOpenedEditFamilyMember && !isAddFamilyMember"
           aria-label="Delete"

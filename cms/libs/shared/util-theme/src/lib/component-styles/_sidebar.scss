@@ -12,7 +12,7 @@ cms-sidenav {
   border-color: $theme-border;
   width: $app-left_menu-width;
   transition: ease-in all 0.3s;
-  z-index: 103;
+  z-index: 5;
 
   .drawer-inner-container {
     transition: ease-in all 0.3s;
@@ -22,6 +22,7 @@ cms-sidenav {
     overflow-x: hidden;
     width: $app-left_menu-width;
     height: 100%;
+    
   }
 
   .sidebar-hamburger {
@@ -236,6 +237,7 @@ cms-sidenav {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
+          line-height: normal;
         }
       }
     }
@@ -270,13 +272,13 @@ cms-sidenav {
       padding: $size-xlg1;
       max-width: 250px;
       transition: .3s;
-      z-index: 0;
+      z-index: 101;
 
       .menu_search_header {
         margin-top: 1rem;
 
         .submenu_heading {
-          font-size: 16px;
+          font-size: $font-size-l;
           font-family: $font-family-bold;
         }
 
@@ -387,7 +389,6 @@ cms-sidenav {
           opacity: 0.8;
         }
       }
-
       .sidebar-menu {
         .sidebar-menu_icon {
 
@@ -453,21 +454,16 @@ cms-sidenav {
           display: none;
         }
       }
-
       .sidebar-hamburger_icon-right {
         display: flex !important;
 
 
       }
-
       .sidebar-hamburger_icon-left {
         // display: none !important;
         transform: rotate(180deg);
 
       }
-
-    
-
       .sidebar-last-visited-cases-container {
         .active-menu-toggled {
           width: $sidebar-width;
@@ -534,6 +530,7 @@ cms-sidenav {
         }
       }
     }
+
 
     .menu-active-session-list {
       padding: $size-xlg1 $size-xlg1 0 $size-xlg1;

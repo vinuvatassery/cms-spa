@@ -18,7 +18,11 @@
     </div>
 
   </div>
-  <case-management-status-period [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="profileClientId" [clientCaseId]="clientCaseId" (loadStatusPeriodEvent)="loadStatusPeriodData($event)"> </case-management-status-period>
+  <case-management-status-period [clientCaseEligibilityId]="clientCaseEligibilityId" 
+  [clientId]="profileClientId" [clientCaseId]="clientCaseId" 
+  (loadStatusPeriodEvent)="loadStatusPeriodData($event)"
+  [eligibilityStatus$]="eligibilityStatus$"
+  [ddlGroups$]="ddlGroups$"> </case-management-status-period>
 </div>
 
 

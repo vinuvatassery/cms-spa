@@ -79,11 +79,10 @@
       display: flex;
       align-items: flex-start;
       margin-bottom: 10px;
-      line-height: 20px;
+      line-height: 1.25rem;
       .material-icons {
-        opacity: 0.6;
-        // margin-right: 10px;
-        font-size: 20px;
+        opacity: 0.6; 
+        font-size:$font-size-xlg;
       }
       a{
         word-break: break-all;

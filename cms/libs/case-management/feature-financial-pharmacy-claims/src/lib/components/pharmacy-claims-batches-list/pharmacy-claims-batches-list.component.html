@@ -32,26 +32,13 @@
 <!-- Export -->
 <span class="right-overlay-export">
   <button kendoButton [primary]="true" look="flat"   aria-label="Export" class="button-lg" (click)="onExportClaims()">
-    <span class="material-icons" aria-label="export" aria-invalid="true"
+    <span class="material-icons" aria-hidden="true"
       >exit_to_app</span
     ><i class="exp_button-text">Export</i>
   </button>
 </span>
 
 </section>
-<div class="table-sorted-info">
-  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning || showNumberSearchWarning">
-        <span class="material-icons" aria-label="search-warning" aria-hidden="true">
-              warning
-        </span>
-        <span *ngIf="showDateSearchWarning">
-              The '/' symbol can only be used with a date. The date format should be [MM/DD/YYYY].
-        </span>
-        <span *ngIf="showNumberSearchWarning">
-          Unbatched Payments / # of Payments in Batch / # of Payments Requested / # of Payments Reconciled / Total Amount of Adjustments / Total Amount of Payments # allow only numbers.
-        </span>
-  </span>
-</div>
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
@@ -78,7 +65,6 @@
     [columnMenu]="{ filter: true }"
     [sort]="state.sort"
     [filter]="state.filter"
-    [rowClass]="rowClass"
     [data]="pharmacyClaimsBatchGridLists$ | async"
     (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)"
@@ -86,7 +72,7 @@
     >
       <kendo-grid-column field="batchName" title="Batch #" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="Batch #" kendoButton look="flat" class="card-link-button"
+          <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
             (click)="navToBatchDetails(dataItem)">
             {{ dataItem.batchName }}
           </button>
@@ -164,9 +150,9 @@
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
           <div class="d-flex align-items-center">
-            <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+            <label class="mr-1" for="PharmacyBatchRowsPerPage">Rows Per Page</label>
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-              [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
+              [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="PharmacyBatchRowsPerPage"
               [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'"  [pagerPage]="'Page'"> </kendo-grid-messages>

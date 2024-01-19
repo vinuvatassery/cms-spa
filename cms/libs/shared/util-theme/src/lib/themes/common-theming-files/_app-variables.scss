@@ -6,15 +6,18 @@ $font-family-bold: 'Neue Helvetica Bold' !important;
 $font-family-Material-icon: 'Material Icons', sans-serif;
 
 /* Font Size */
-$font-size: 14px;
-$font-size-m: 13px;
-$font-size-s: 12px;
-$font-size-l: 16px;
-$font-size-xl: 18px;
-$font-size-xlg: 20px;
-$font-size-xx: 24px;
-$font-size-xxx: 30px;
-$base-line-height: 16px;
+$font-size: 1rem;   /*14px*/
+$font-size-m: 0.929rem; /*13px*/
+$font-size-s: 0.857rem; /*12px*/
+$font-size-l: 1.143rem; /*16px*/
+$font-size-xl: 1.286rem; /*18px*/
+$font-size-xlg: 1.429rem; /*20px*/
+$font-size-xlg-22: 1.571rem; /*22px*/
+$font-size-xx: 1.714rem; /*24px*/
+$font-size-xxx: 2.143rem; /*30px*/
+$font-size-xxxx: 2.857rem; /*40px*/
+$font-size-xxxx-lg: 4.286rem; /*60px*/
+$base-line-height: 16px;  
 
 /* Size Matrix */
 $size-0: 0px; /*0px*/

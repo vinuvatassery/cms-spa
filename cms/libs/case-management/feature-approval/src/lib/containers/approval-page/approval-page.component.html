@@ -23,7 +23,7 @@
   >
     <kendo-tabstrip-tab [selected]="true" title="General">
       <ng-template kendoTabTitle>
-        General <span class="tab-batch-notify">4</span></ng-template
+        General <span class="tab-batch-notify">{{pendingApprovalGeneralCount}}</span></ng-template
       >
       <ng-template kendoTabContent>
         <div class="nm-20 approval_container">
@@ -50,16 +50,18 @@
             [pharmacyForm]="pharmacyForm"
             [insuranceVendorForm]="insuranceVendorForm"
             [insuranceProviderForm]="insuranceProviderForm"
+            [pageSizes]="pageSizes"
+            [deliveryMethodLov$]="deliveryMethodLov$"
           >
           </productivity-tools-approvals-general-list>
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Payments">
-      <ng-template kendoTabTitle>
+      <ng-template kendoTabTitle *ngIf="pendingApprovalPaymentCount > 0">
         Payments
         <span class="tab-batch-notify">{{
-          pendingApprovalCount
+          pendingApprovalPaymentCount
         }}</span></ng-template
       >
       <ng-template kendoTabContent>
@@ -93,7 +95,7 @@
     </kendo-tabstrip-tab>
     <kendo-tabstrip-tab title="Imported Claims">
       <ng-template kendoTabTitle>
-        Imported Claims <span class="tab-batch-notify">4</span></ng-template
+        Imported Claims <span class="tab-batch-notify">{{pendingApprovalImportedClaimCount}}</span></ng-template
       >
       <ng-template kendoTabContent>
         <div class="nm-20 approval_container">
@@ -101,10 +103,12 @@
             [submitImportedClaims$]="submitImportedClaims$"
             [approvalsImportedClaimsLists$]="approvalsImportedClaimsLists$"
             [possibleMatchData$]="possibleMatchData$"
+            [savePossibleMatchData$]="savePossibleMatchData$"
             [pageSizes]="pageSizes"
-            [sortValue]="sortValueImportedClaimsAPproval"
-            [sortType]="sortType"
+            [sortValue]="sortValueImportedClaimsApproval"
+            [sortType]="sortTypeImportedClaim"
             [sort]="sortImportedClaimsList"
+            [exportButtonShow$]="exportButtonShow$"
             (loadImportedClaimsGridEvent)="loadImportedClaimsGrid($event)"
             (submitImportedClaimsEvent)="submitImportedClaims($event)"
             (updateClientPolicyEvent) ="updateClientPolicy($event)"
@@ -112,6 +116,7 @@
             (loadPossibleMatchDataEvent)="loadPossibleMatch($event)"
             (saveReviewPossibleMatchesDialogClickedEvent)="savePossibleMatch($event)"
             (addAnExceptionEvent)="addAnException($event)"
+            (exportGridDataEvent)="exportImportedClaimsGridData()"
           ></productivity-tools-imported-claims-lists>
         </div>
       </ng-template>

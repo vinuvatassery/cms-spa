@@ -14,13 +14,18 @@
           [fillMode]="formUiStyle.inputFillMode"
           resizable="auto"
           aria-label="Reason for Exception"
-          class="form-control"
+          class="form-control"  
           [(ngModel)]="exceptiontext"
+          [maxlength]="textMaxLength"
         >
         </kendo-textarea>
         <kendo-textarea-suffix class="justify-content-end">
-          <span class="counter">1/100</span>
-        </kendo-textarea-suffix>
+          <span class="tareacounter">
+              {{serviceDescCharCount()}}</span>
+      </kendo-textarea-suffix>
+      <kendo-formerror *ngIf="exceptiontext.length <= 0">
+        Reason for Exception is required.
+      </kendo-formerror>
       </kendo-floatinglabel>
     </div>
   </div>
@@ -31,7 +36,7 @@
       <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closeMakeExpectation()">
         CANCEL
       </button>
-      <button kendoButton [primary]="true" aria-label="APPROVE CLAIM" (click)="makeException()">
+      <button kendoButton [primary]="true" aria-label="APPROVE" (click)="makeException()" [disabled]="exceptiontext.length <= 0">
         APPROVE
       </button>
     </div>

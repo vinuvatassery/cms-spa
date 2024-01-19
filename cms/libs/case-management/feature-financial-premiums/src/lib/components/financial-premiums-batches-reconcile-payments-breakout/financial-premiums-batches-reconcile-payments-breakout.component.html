@@ -12,6 +12,7 @@
             [loading]="isGridLoaderShow"
             (dataStateChange)="dataStateChange($event)"
             (filterChange)="filterChange($event)" 
+            [filter]="state.filter"
             (columnVisibilityChange)="columnChange($event)"
             [data]="reconcileBreakoutList$ | async">
            
@@ -119,9 +120,9 @@
                   let-currentPage="currentPage">
                   <div class="grid-custom-paginationtemplates d-flex">
                         <div class="d-flex align-items-center">
-                              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                              <label class="mr-1" for="PremiumReconcileBreakOutRowsPerPageRowsPerPage">Rows Per Page</label>
                               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
-                                    [textField]="'text'" [valueField]="'value'" #RowsPerPage id="RowsPerPage"
+                                    [textField]="'text'" [valueField]="'value'" #PremiumReconcileBreakOutRowsPerPageRowsPerPage id="PremiumReconcileBreakOutRowsPerPageRowsPerPage"
                                     aria-label="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
                                     (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
                               <kendo-pager-info> </kendo-pager-info>

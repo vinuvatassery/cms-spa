@@ -8,16 +8,14 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import { Router } from '@angular/router';
-import {  GridDataResult } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
@@ -45,9 +43,9 @@ export class RefundBatchesListComponent implements  OnChanges{
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn  = 'batchName'
+  selectedColumn  = 'ALL'
   gridDataResult!: GridDataResult;
-
+  columnChangeDesc = 'Default Columns';
   gridVendorsBatchDataSubject = new Subject<any>();
   gridVendorsBatchData$ = this.gridVendorsBatchDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -65,6 +63,10 @@ export class RefundBatchesListComponent implements  OnChanges{
   };
 
   dropDowncolumns: any = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
     {
       columnCode: 'batchName',
       columnDesc: 'Batch #',
@@ -162,6 +164,12 @@ export class RefundBatchesListComponent implements  OnChanges{
     if (
       this.selectedColumn === 'bulkPayment' ||
       this.selectedColumn === 'totalRefund'
+      ||
+      this.selectedColumn === 'insRefunds'
+      ||
+      this.selectedColumn === 'rxRefunds'
+      ||
+      this.selectedColumn === 'tpaRefunds'
     ) {
       operator = 'eq';
     }
@@ -265,7 +273,7 @@ export class RefundBatchesListComponent implements  OnChanges{
     this.sortColumn = 'Batch #';
     this.sortDir = 'Ascending';
     this.filter = '';
-    this.selectedColumn = 'batchName';
+    this.selectedColumn = 'ALL';
     this.isFiltered = false;
     this.columnsReordered = false;
 
@@ -275,5 +283,11 @@ export class RefundBatchesListComponent implements  OnChanges{
     this.searchValue =''
 
     this.loadVendorRefundBatchListGrid();
+  }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
+    this.columnChangeDesc =
+      columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
 }

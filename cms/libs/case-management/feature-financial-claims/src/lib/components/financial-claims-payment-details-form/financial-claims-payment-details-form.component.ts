@@ -9,7 +9,7 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { PaymentPanel} from '@cms/case-management/domain';
+import { PaymentPanel,PremiumPaymentStatus} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -63,8 +63,8 @@ import { Subscription } from 'rxjs';
   }
 
   paymentPanelLoadSubscription(){
-      this.medicalClaimPaymentForm.controls['datePaymentSent'].setValue(this.paymentPanelDetails?.sentDate != null?new Date(this.paymentPanelDetails.sentDate):null);
-      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentPanelDetails?.paymentStatusDate != null? new Date(this.paymentPanelDetails.paymentStatusDate):null);
+      this.medicalClaimPaymentForm.controls['datePaymentSent'].setValue(this.paymentPanelDetails?.paymentSentDate != null?new Date(this.paymentPanelDetails.paymentSentDate):null);
+      this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValue(this.paymentPanelDetails?.paymentReconciledDate != null? new Date(this.paymentPanelDetails.paymentReconciledDate):null);
       if(this.paymentPanelDetails?.amountPaid !== undefined && this.paymentPanelDetails?.amountPaid !== null){
         this.medicalClaimPaymentForm.controls['paymentAmount'].setValue(this.paymentPanelDetails?.amountPaid);
       }
@@ -74,11 +74,11 @@ import { Subscription } from 'rxjs';
       }
 
   }
-  dateValidate(event: Event, type: any) {
+  dateValidate(type: any) {
     const todayDate = new Date();
 
     switch (type.toUpperCase()) {
-      case "RECONCILED":
+      case PremiumPaymentStatus.RECONCILED:
         this.dateReconciledValidator = false;
         const datePaymentReconciled = this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value;
         if (datePaymentReconciled > todayDate) {
@@ -86,7 +86,7 @@ import { Subscription } from 'rxjs';
           this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setErrors({ 'incorrect': true });
         }
         break;
-      case "PAYMENT_SENT":
+        case PremiumPaymentStatus.PAYMENT_SENT:
         this.datePaymentSentValidator = false;
         const datePaymentSent = this.medicalClaimPaymentForm.controls['datePaymentSent'].value;
         if (datePaymentSent > todayDate) {
@@ -150,10 +150,13 @@ import { Subscription } from 'rxjs';
       Validators.required,
     ]);
     this.medicalClaimPaymentForm.controls['datePaymentReconciled'].updateValueAndValidity();
+    this.dateValidate(PremiumPaymentStatus.RECONCILED);
     this.medicalClaimPaymentForm.controls['datePaymentSent'].setValidators([
       Validators.required,
     ]);
     this.medicalClaimPaymentForm.controls['datePaymentSent'].updateValueAndValidity();
+    this.dateValidate(PremiumPaymentStatus.PAYMENT_SENT);
+    this.startDateOnChange();
     this.medicalClaimPaymentForm.controls['paymentAmount'].setValidators([
       Validators.required,
     ]);
@@ -169,8 +172,8 @@ import { Subscription } from 'rxjs';
     this.paymentPanel.CheckRequestId = this.paymentPanelDetails.checkRequestId;
     this.paymentPanel.PaymentRequestBatchId = this.paymentPanelDetails.paymentRequestBatchId;
     this.paymentPanel.PaymentRequestId = this.paymentPanelDetails.paymentRequestId;
-    this.paymentPanel.paymentStatusDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat); 
-    this.paymentPanel.sentDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentSent'].value, this.dateFormat); 
+    this.paymentPanel.paymentReconciledDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentReconciled'].value, this.dateFormat); 
+    this.paymentPanel.paymentSentDate = this.intl.formatDate(this.medicalClaimPaymentForm.controls['datePaymentSent'].value, this.dateFormat); 
     this.paymentPanel.amountPaid = this.medicalClaimPaymentForm.controls['paymentAmount'].value
     this.paymentPanel.checkNbr = this.medicalClaimPaymentForm.controls['warrantNumber'].value
     this.paymentPanel.notes = this.medicalClaimPaymentForm.controls['note'].value
@@ -188,6 +191,7 @@ import { Subscription } from 'rxjs';
     });
     
   }
+  isModalValid : any = true;
   save(){   
     this.validateModel();
     if(this.medicalClaimPaymentForm.valid){

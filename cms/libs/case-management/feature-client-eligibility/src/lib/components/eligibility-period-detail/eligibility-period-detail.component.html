@@ -2,8 +2,7 @@
 <div >
 <section class="k-dialog-body" [formGroup]="eligibilityPeriodForm" >
   <p *ngIf="!isEdit && !isStatusPeriodEdit && !isCopyPeriod" class="text-muted mb-2">
-    Except for PENDING, changing the status initiates a new Eligibility Period. The
-    new Eligibility Period may not overlap with a previous one.
+    Except for PENDING, changing the status initiates a new Status Period. The new Status Period may not overlap with a previous one.
   </p>
   <p *ngIf="isEdit" class="text-muted mb-2">
     Specify the new start and end dates for this Status Period.

@@ -14,6 +14,9 @@ import { DialogService } from '@progress/kendo-angular-dialog';
   templateUrl: './pharmacy-claims-page.component.html',
 })
 export class PharmacyClaimsPageComponent implements OnInit {
+
+  @ViewChild('pcaExceptionDialogTemplate', { read: TemplateRef })
+  pcaExceptionDialogTemplate!: TemplateRef<any>;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
@@ -48,13 +51,16 @@ export class PharmacyClaimsPageComponent implements OnInit {
   searchPharmacies$ = this.financialPharmacyClaimsFacade.searchPharmacies$;
   searchClients$ = this.financialPharmacyClaimsFacade.searchClients$;
   searchDrugs$ = this.financialPharmacyClaimsFacade.searchDrugs$;
-
+  claimData : any
   searchPharmaciesLoader$ = this.financialPharmacyClaimsFacade.searchPharmaciesLoader$;
   searchClientLoader$ = this.financialPharmacyClaimsFacade.searchClientLoader$;
   searchDrugsLoader$ = this.financialPharmacyClaimsFacade.searchDrugsLoader$;
   tab = 1;
   updateProviderPanelSubject$ =
   this.financialVendorFacade.updateProviderPanelSubject$;
+  isShowReasonForException = false;
+  pcaExceptionDialogService: any;
+  chosenPcaForReAssignment: any;
   
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
@@ -62,7 +68,7 @@ export class PharmacyClaimsPageComponent implements OnInit {
   providerDetailsDialog: any
 
  ddlStates$ = this.contactFacade.ddlStates$;
-
+ isEditForm = false
  vendorProfile$ = this.financialVendorFacade.providePanelSubject$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
@@ -143,37 +149,33 @@ export class PharmacyClaimsPageComponent implements OnInit {
   }
 
   private getPcaCode(claim: any,edit : any) {
+    this.isEditForm = edit
     const totalAmountDue = (claim.prescriptionFillDto as []).reduce((acc, cur) => acc + (cur as any)?.copayAmountPaid ?? 0, 0);
     const minServiceStartDate = this.getMinServiceStartDate(claim.prescriptionFillDto);
     const maxServiceEndDate = this.getMaxServiceEndDate(claim.prescriptionFillDto);
     const request = {
+      clientId: claim.clientId,
       clientCaseEligibilityId: claim.clientCaseEligibilityId,
       claimAmount: totalAmountDue,
       serviceStartDate: minServiceStartDate,
       serviceEndDate: maxServiceEndDate,
       paymentRequestId: claim.paymentRequestId,
-      objectLedgerName : 'Pharmaceutical Drugs(ADAP)'
+      objectLedgerName : 'Pharmacy'
     };
     this.financialClaimsFacade.showLoader();
     this.financialClaimsFacade.getPcaCode(request) .subscribe({
       next: (response: any) => {
         this.financialClaimsFacade.hideLoader()
         if (response) {
-          
-          if (response?.isReAssignmentNeeded ?? true) {
-            this.financialClaimsFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "PCA ReAssignment Needed");
-           
-          }
           claim.pcaSelectionResponseDto = response;
-        
-          if(edit === true)
-          {
-            this.financialPharmacyClaimsFacade.updatePharmacyClaim(claim);
+          this.claimData = claim
+          if (response?.isReAssignmentNeeded === true) {
+            this.chosenPcaForReAssignment = response;
+            this.onPcaReportAlertClicked(this.pcaExceptionDialogTemplate);
+            return;
           }
-          else
-          {
-            this.financialPharmacyClaimsFacade.addPharmacyClaim(claim);
-          }
+         
+       this.save(edit, this.claimData)
         
         }
       },
@@ -186,6 +188,36 @@ export class PharmacyClaimsPageComponent implements OnInit {
       },
     });
   }
+  onConfirmPcaAlertClicked(chosenPca: any) {
+    this.chosenPcaForReAssignment = chosenPca;
+    this.save(this.isEditForm , this.claimData);
+  }
+
+  save(isEdit : boolean , claimData : any)
+  { 
+    if(isEdit === true)
+    {
+      this.financialPharmacyClaimsFacade.updatePharmacyClaim(claimData);
+    }
+    else
+    {
+      this.financialPharmacyClaimsFacade.addPharmacyClaim(claimData);
+    }
+    this.onPcaAlertCloseClicked(true)
+  }
+  onPcaReportAlertClicked(template: TemplateRef<unknown>): void {
+    this.pcaExceptionDialogService = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onPcaAlertCloseClicked(result: any) {
+    if (result) {
+      this.pcaExceptionDialogService.close();
+    }
+  }
+
 
   getMinServiceStartDate(arr: any) {
     const timestamps = arr.map((a: any) => new Date(a.prescriptionFillDate));

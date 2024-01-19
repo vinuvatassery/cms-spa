@@ -7,81 +7,51 @@ import {
   OnInit,
   ChangeDetectorRef,
 } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'productivity-tools-approvals-review-possible-matches',
   templateUrl: './approvals-review-possible-matches.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalsReviewPossibleMatchesComponent implements OnInit { 
+export class ApprovalsReviewPossibleMatchesComponent implements OnInit {
   @Input() claimData:any;
   @Input() possibleMatchData$:any;
-  @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();  
+  @Output() loadPossibleMatchDataEvent = new EventEmitter<any>();
   @Output() closeReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
-  @Output() saveReviewPossibleMatchesDialogClickedEvent = new EventEmitter<any>();
   isMatch: any=false;
   isNotMatch: any=false;
   possibleMatch:any;
   hasSaveButtonEnabled:boolean=false;
+  warningMessage:any="";
   ngOnInit(): void {
-    let request={
-      firstName:this.claimData.firstName,
-      lastName:this.claimData.lastName,
-      dateOfBirth:this.claimData.dateOfBirth
-    }
-    this.loadPossibleMatch(request); 
-    if(this.claimData.dateOfBirth != null && this.claimData.dateOfBirth != undefined && this.claimData.dateOfBirth != '')
-    {
-      this.loadPossibleMatch(request);      
-    }
+    this.loadPossibleMatch(this.claimData);
   }
 
-  closePossibleMatches() { 
-    this.closeReviewPossibleMatchesDialogClickedEvent.emit(true);
-  } 
+  closePossibleMatches($event:any) {
+    this.closeReviewPossibleMatchesDialogClickedEvent.emit($event);
+  }
 
-  loadPossibleMatch(data?: any) {    
+  loadPossibleMatch(data?: any) {
     this.loadPossibleMatchDataEvent.emit(data);
     this.possibleMatchData$.subscribe((response: any) => {
-      if (response !== undefined && response !== null) {
-        this.possibleMatch=response[0];
+      if (response !== undefined && response !== null && response.status == 2)
+      {
+        this.warningMessage = response.message;
+        this.cd.detectChanges();
+      }
+      else if (response !== undefined && response !== null) {
+        this.hasSaveButtonEnabled = true;
+        this.possibleMatch=response;
         this.cd.detectChanges();
       }
     });
   }
 
-  onMatchClicked()
-  {
-    this.isMatch =  true;
-    this.isNotMatch = !this.isMatch;
-    this.hasSaveButtonEnabled = true;
+  onGoToProfileClick(data:any) {
+    this.closeReviewPossibleMatchesDialogClickedEvent.emit(true);
+    this.route.navigate([`/case-management/cases/case360/${data.clientId}`]);      
   }
 
-  onNotMatchClicked()
-  {
-    this.isNotMatch =  true;
-    this.isMatch = !this.isNotMatch;
-    this.hasSaveButtonEnabled = true;
-  }
-
-  savePossibleMatches(data?:any)
-  {
-    let request = {
-      clientId:data.clientId,
-      policyId:data.policyId,
-      invoiceExceptionId:this.claimData.invoiceExceptionId,
-      claimId:this.claimData.importedClaimId,
-      serviceDate:this.claimData.dateOfService,
-      isPossibleMatch: this.isMatch ? true : false,
-      entityTypeCode: this.claimData.entityTypeCode
-    }
-    this.save(request);
-  }
-
-  save(data:any)
-  {
-    this.saveReviewPossibleMatchesDialogClickedEvent.emit(data);
-  }
-
-  constructor(private readonly cd: ChangeDetectorRef) {}
+  constructor(private readonly cd: ChangeDetectorRef,private route: Router,) {}
 }

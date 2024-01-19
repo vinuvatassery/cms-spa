@@ -32,7 +32,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
-  PrintAuthorizationDialog!: TemplateRef<any>;
+  PrintAuthorizationDialog!: TemplateRef<any>; 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   providerDetailsDialog: any;
@@ -54,6 +54,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
   @Input() reconcilePaymentBreakoutLoaderList$:any;
+  @Input() deliveryMethodLov$:any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
@@ -62,6 +63,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  reconcileGridListsSubscription !: Subscription;
   paymentRequestId!: string;
   entityId: any;
   public isBreakoutPanelShow:boolean=true;
@@ -74,7 +76,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn: any='ALL';
   searchItem:any=null;
   gridDataResult!: GridDataResult;
   selectedDataRows: any[] = [];
@@ -100,6 +102,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   pageValidationMessage:any=null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentRequestType$ = this.lovFacade.paymentRequestType$;
+  paymentStatus$ = this.lovFacade.paymentStatus$;
   paymentMethodType:any;
   pageValidationMessageFlag:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -118,16 +121,21 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   loadType:any = null;
   loadTypeAllPayments:any = LoadTypes.allPayments
   columns : any = {
+    ALL: 'ALL',
     vendorName:this.providerTitle,
     tin:"TIN",
     paymentMethodDesc:"Pmt. Method",
     paymentReconciledDate:"Date Pmt. Reconciled",
     paymentSentDate:"Date Pmt. Sent",
-    amountDue:"Amount Due",
+    amountDue:"Pmt. Amount",
     checkNbr:"Warrant Number",
     comments:"Note (optional)"
   }
   dropDropdownColumns : any = [
+    {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
     {
       columnCode: 'vendorName',
       columnDesc: this.providerTitle,
@@ -150,7 +158,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     },
     {
       columnCode: 'amountDue',
-      columnDesc: 'Amount Due',
+      columnDesc: 'Pmt. Amount',
     },
     {
       columnCode: 'checkNbr',
@@ -171,13 +179,15 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     private configurationProvider: ConfigurationProvider,private readonly lovFacade: LovFacade ) {}
   
   ngOnInit(): void {
+    this.reconcilePaymentGridUpdatedResult = [];
     this.loadQueryParams();
     if(this.loadType === LoadTypes.allPayments){
       this.columns.batchName ='Batch #';
       let batch = {columnCode:'batchName',columnDesc:'Batch #'};
-      this.dropDropdownColumns.splice(0, 0, batch);
+      this.dropDropdownColumns.splice(1, 0, batch);
     }
     this.lovFacade.getPaymentMethodLov();
+    this.lovFacade.getPaymentStatusLov();
     this.lovFacade.getCoPaymentRequestTypeLov();
     this.paymentMethodSubscription();
     this.state = {
@@ -203,6 +213,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
   ngOnDestroy(): void {
     this.paymentMethodLovSubscription.unsubscribe();
+    this.reconcileGridListsSubscription.unsubscribe();
   }
 
   loadQueryParams(){
@@ -285,7 +296,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     let operator = 'contains';
 
     if (
-      this.selectedColumn === 'amountPaid' 
+      this.selectedColumn === 'amountDue' 
     ) {
       operator = 'eq';
     }
@@ -348,7 +359,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   dataStateChange(stateData: any): void {
     this.sortBatch = stateData.sort;
     this.sortValueBatch = stateData.sort[0]?.field ?? this.sortValueBatch;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
     this.sortDir = this.sortBatch[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.filter = stateData?.filter?.filters;
@@ -492,9 +503,9 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
           itemResponse.data[index].reconciled = true;
         }
       }     
-      this.reconcilePaymentGridPagedResult = itemResponse;      
+         
     });
-
+    this.reconcilePaymentGridPagedResult = itemResponse;   
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -502,7 +513,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   }
 
   gridDataHandle() {
-    this.reconcileGridLists$.subscribe((response: any) => {
+    this.reconcileGridListsSubscription = this.reconcileGridLists$.subscribe((response: any) => {
       if (response.data.length > 0) {
         this.assignDataFromUpdatedResultToPagedResult(response);
         this.tAreaVariablesInitiation(this.reconcilePaymentGridPagedResult.data);
@@ -874,33 +885,33 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
     onRowSelection(grid:any, selection:any)
     {
-     this.warrantCalculationArray=[];
-      const data = selection.selectedRows[0].dataItem;    
+      this.warrantCalculationArray=[];
+      const data = selection.dataItem;    
       this.isBreakoutPanelShow=true;
       this.entityId=data.entityId; 
       let warrantTotal=0; 
       this.batchId=data.batchId;    
-
       this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined 
-      && x.checkNbr !== '' && x.entityId == this.entityId && x.batchId==data.batchId).forEach((item: any) => {  
+      && x.checkNbr !== '' && x.checkNbr=== data.checkNbr).forEach((item: any) => {  
         let object={
           vendorId:item?.entityId,
           batchId:item?.batchId,
           paymentRequestId:item?.paymentRequestId,
           warrantNumber:item?.checkNbr,  
+          amountDue:item?.amountDue
         }
         this.warrantCalculationArray.push(object);
       });
-
       const ReconcilePaymentResponseDto =
       {
-        batchId : this.batchId,
+        batchId : data?.batchId,
         entityId : data.entityId,
         amountTotal : data.amountTotal,
         warrantTotal : warrantTotal,
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
-        paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1
+        paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1,
+        loadType:this.loadType 
       }      
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
@@ -919,7 +930,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       pageSize:event.pagesize,
       sort:event.sortColumn,
       sortType:event.sortType,
-      filter:event.filter
+      filter:event.filter,
+      loadType:this.loadType 
     });
   }
   getItemNumber() {

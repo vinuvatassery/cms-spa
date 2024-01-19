@@ -9,7 +9,9 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, take } from 'rxjs';
+import { TinValidationFacade } from '@cms/system-config/domain';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-provider-info',
@@ -27,7 +29,10 @@ export class PharmacyClaimsProviderInfoComponent {
   @Input() paymentMethodCode$ : Observable<any> | undefined;
   @Output() onEditProviderProfileEvent = new EventEmitter<any>();
   vendorProfile: any
+  isDuplicateTin = false;
+  accountingNumberValidated = true;
   tinMaskFormat: string = '0 00-000000';
+  duplicateTinMessage = "";
   profileForm = this.formBuilder.group({
     tin: [''],
     npiNbr:[''],
@@ -50,8 +55,11 @@ export class PharmacyClaimsProviderInfoComponent {
   constructor(  
     private readonly changeDetectorRef: ChangeDetectorRef,
      public formBuilder: FormBuilder,
+     private readonly cdr: ChangeDetectorRef,
      private route: Router,
-    public activeRoute: ActivatedRoute) {
+    public activeRoute: ActivatedRoute,
+    private tinValidationFacade: TinValidationFacade
+    ) {
 
   }
   ngOnInit(): void {
@@ -236,11 +244,49 @@ createPhonesFormArray(contact: any): FormArray {
   onVendorProfileViewClicked() {
     const query = {
       queryParams: {
-        v_id: this.vendorProfile.vendorId
+        v_id: this.vendorProfile.vendorId,
+        tab_code: FinancialVendorProviderTabCode.Pharmacy
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query)
     this.closeViewProviderClicked()
   }
-   
+  restrictAccountingNumber() {
+    this.isDuplicateTin = false;
+    if(!this.profileForm.controls['tin'].value){
+      this.accountingNumberValidated = true;
+      return;
+    }
+    if (this.profileForm.controls['tin'].value && (parseInt(this.profileForm.controls['tin'].value.charAt(0)) == 1 || parseInt(this.profileForm.controls['tin'].value.charAt(0)) == 3)) {
+      this.accountingNumberValidated = true;
+    } 
+    else {
+      this.profileForm.controls['tin'].setErrors({ 'incorrect': true });
+      this.accountingNumberValidated = false;
+      this.isDuplicateTin = false;
+    }
+    
+    if(this.profileForm.controls['tin'].value.trim().length>=9){
+      this.validateTin(this.profileForm.controls['tin'].value);
+    }
+  }
+  validateTin(tinNbr: any) {
+    this.tinValidationFacade.showLoader();
+    this.tinValidationFacade.validateTinNbr(tinNbr).subscribe({
+      next: (response: any) => {
+        if(response){
+          this.isDuplicateTin = false;
+        }
+        this.tinValidationFacade.hideLoader();
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.tinValidationFacade.hideLoader();
+        this.isDuplicateTin = true;
+        this.profileForm.controls['tin'].setErrors({ 'incorrect': true });
+        this.duplicateTinMessage = err.error?.error?.message ?? "";
+        this.cdr.detectChanges();
+        }
+    });
+  }
 }

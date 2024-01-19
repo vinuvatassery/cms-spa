@@ -3,9 +3,9 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  ChangeDetectorRef,EventEmitter,Output
+  ChangeDetectorRef,EventEmitter,Output, OnDestroy, OnInit
 } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormArray, FormControl, AbstractControl } from '@angular/forms';
 
 /** Facades **/
 import {
@@ -32,13 +32,14 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 import { groupBy } from '@progress/kendo-data-query';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-medical-payment-detail',
   templateUrl: './medical-payment-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalPaymentDetailComponent {
+export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isPaymentAddForm = true;
   copayPaymentForm!: FormGroup;
@@ -69,7 +70,7 @@ export class MedicalPaymentDetailComponent {
     caseSensitive: false,
     operator: 'startsWith',
   };
-
+  private showIneligibleSubscription !: Subscription;
   statusEndDateIsGreaterThanStartDate: boolean = true;
   paymentRequest !: PaymentRequest;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -82,6 +83,7 @@ export class MedicalPaymentDetailComponent {
   clientName: any;
   providerTin: any;
   claimForm!: FormGroup;
+  showIneligibleException$ = this.financialClaimsFacade.showIneligibleException$;
   providerNotEligiblePriorityArray = ['ineligibleExceptionFlag'];
   exceedMaxBenefitPriorityArray = ['ineligibleExceptionFlag'];
   duplicatePaymentPriorityArray = ['ineligibleExceptionFlag', 'exceedMaxBenefitExceptionFlag'];
@@ -102,6 +104,7 @@ export class MedicalPaymentDetailComponent {
   isExcededMaxBanifitButtonText = 'Make Exception';
   groupedPaymentRequestTypes:any;
   isDisabled: boolean = true;
+  isClientInEligibleForDates= false;
   /** Constructor **/
   constructor(
     private formBuilder: FormBuilder,
@@ -115,6 +118,7 @@ export class MedicalPaymentDetailComponent {
     private readonly vendorFacade: VendorFacade,
     private readonly insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private cd: ChangeDetectorRef,
   ) {
     this.copayPaymentForm = this.formBuilder.group({});
 
@@ -126,6 +130,7 @@ export class MedicalPaymentDetailComponent {
     {
       this.financialProvider="Dental";
     }
+    this.checkExceptions();
     this.paymentRequestType$.subscribe((paymentRequestTypes) => {
       let parentRequestTypes = paymentRequestTypes.filter(x => x.parentCode == null);
       let refactoredPaymentRequestTypeArray :Lov[] =[]
@@ -160,6 +165,47 @@ export class MedicalPaymentDetailComponent {
     }
     this.addClaimServiceGroup();
   }
+
+  checkExceptions()
+  {
+     this.isClientInEligibleForDates = false;
+    this.showIneligibleSubscription = this.showIneligibleException$.subscribe(data => {
+      this.isClientInEligibleForDates = data?.flag;
+      if(data?.flag)
+      {
+        this.resetExceptionFields(data?.indexNumber);
+        this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlagText')?.setValue(this.isExcededMaxBanifitButtonText);
+        this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue(ExceptionTypeCode.Ineligible)
+        this.addClaimServicesForm.at(data?.indexNumber).get('reasonForException')?.setValue('');
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.Yes)
+      }
+      else if (this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.value === ExceptionTypeCode.Ineligible)
+      {
+        this.addExceptionForm.at(data?.indexNumber).get('ineligibleExceptionFlag')?.setValue(data?.flag);
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionTypeCode')?.setValue('')
+        this.addClaimServicesForm.at(data?.indexNumber).get('exceptionFlag')?.setValue(StatusFlag.No)
+        this.checkProviderNotEligibleException(this.providerTin);
+        this.loadServiceCostMethod(data?.indexNumber);
+
+      }
+
+      this.cd.detectChanges();
+    });
+
+  }
+
+  resetExceptionFields(indexNumber:any)
+  {
+    this.addExceptionForm.at(indexNumber).reset();
+    this.claimForm.controls['parentReasonForException'].setValue('');
+    this.claimForm.controls['parentExceptionFlag'].setValue(StatusFlag.No);
+    this.claimForm.controls['parentExceptionTypeCode'].setValue('');
+    this.claimForm.controls['providerNotEligibleExceptionFlag'].setValue('');
+    this.claimForm.controls['showProviderNotEligibleExceptionReason'].setValue('');
+    this.claimForm.controls['providerNotEligibleExceptionFlagText'].setValue(this.isExcededMaxBanifitButtonText);
+  }
+
   resetForm() {
     this.copayPaymentForm.reset();
     this.copayPaymentForm.updateValueAndValidity();
@@ -296,7 +342,9 @@ export class MedicalPaymentDetailComponent {
       this.claimForm.markAllAsTouched()
       return;
     }
-
+    if(this.isClientInEligibleForDates){
+   return;
+    }
     let formValues = this.claimForm.value;
 
     let bodyData = {
@@ -364,7 +412,7 @@ export class MedicalPaymentDetailComponent {
       this.insurancePolicyFacade.showLoader();
       this.insurancePolicyFacade.savePaymentRequest(bodyData).subscribe({
         next: () => {
-          
+
           this.insurancePolicyFacade.getMedicalClaimMaxbalance(this.clientId,this.caseEligibilityId);
           if(this.tabStatus=='hlt-ins-co-pay'){
             this.insurancePolicyFacade.showHideSnackBar(
@@ -416,7 +464,7 @@ export class MedicalPaymentDetailComponent {
     this.copayPaymentForm.controls['amountRequested'].setValidators([Validators.required,]);
     this.copayPaymentForm.controls['paymentTypeCode'].setValidators([Validators.required,]);
     this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
-    this.copayPaymentForm.controls['entryDate'].setValidators([Validators.required,]);
+    this.copayPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
 
     this.copayPaymentForm.controls['vendorId'].updateValueAndValidity();
     this.copayPaymentForm.controls['clientInsurancePolicyId'].updateValueAndValidity();
@@ -536,6 +584,12 @@ export class MedicalPaymentDetailComponent {
   }
   isControlValid(controlName: string, index: any) {
     let control = this.addClaimServicesForm.at(index) as FormGroup;
+    const selectedDate = new Date(control.value);
+    const currentDate = new Date();
+
+    if (selectedDate < currentDate) {
+      return { 'INVALID': true };
+    }
     return control.controls[controlName].status == 'INVALID';
   }
   getExceptionFormValue(controlName: string, index: any)
@@ -591,7 +645,7 @@ export class MedicalPaymentDetailComponent {
       });
       this.financialClaimsFacade.loadExceededMaxBenefit(totalServiceCost,formValues.client.clientId,
         index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim,
-        this.clientCaseEligibilityId);
+        this.clientCaseEligibilityId, this.paymentRequestId);
       this.exceedMaxBenefitFlag = this.financialClaimsFacade.serviceCostFlag;
     }
   }
@@ -603,14 +657,23 @@ export class MedicalPaymentDetailComponent {
       return;
     }
     const serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
-    const startDate = this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat );
-    const endDate = this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ) ;
-    const dueAmount = serviceFormData.controls['amountDue'].value;
-    const vendorId = this.claimForm.value?.medicalProvider?.vendorId
-    if (startDate && endDate && dueAmount && vendorId) {
-      this.financialClaimsFacade.checkDuplicatePaymentException(startDate,endDate, vendorId,dueAmount,null, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+    const data = {
+      invoiceId: this.claimForm.value?.invoiceId,
+      clientId: this.claimForm.value?.client.clientId, 
+      startDate: this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat ),
+      endDate: this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ), 
+      vendorId: this.claimForm.value?.medicalProvider?.vendorId,
+      totalAmountDue:serviceFormData.controls['amountDue'].value,
+      paymentRequestId :null, 
+      indexNumber: index, 
+      typeCode : this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim
+    };
+
+    if (data.startDate && data.endDate && data.totalAmountDue && data.vendorId && data.invoiceId) {
+      this.financialClaimsFacade.checkDuplicatePaymentException(data);
     }
   }
+  
   calculateMedicadeRate(index: number) {
     const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
     let paymentType = serviceForm.controls['paymentType'].value;
@@ -647,7 +710,9 @@ export class MedicalPaymentDetailComponent {
     });
     this.calculateMedicadeRate(index);
     this.checkBridgeUppEception(index);
+    this.checkDuplicatePaymentException(index);
   }
+
   checkBridgeUppEception(index:number)
   {
     if(!this.checkPriority(this.bridgeUppPriorityArray,index,'providerNotEligibleExceptionFlag'))
@@ -677,10 +742,10 @@ export class MedicalPaymentDetailComponent {
   checkIneligibleEception(startDate:any, endDate:any, index:number)
   {
     const formValues = this.claimForm.value
-    if (startDate && endDate && formValues.client?.clientId) {
+    if (startDate && endDate && formValues.client) {
       startDate = this.intl.formatDate(startDate,  this.dateFormat ) ;
       endDate = this.intl.formatDate(endDate,  this.dateFormat ) ;
-      this.financialClaimsFacade.checkIneligibleException(startDate,endDate, formValues.client?.clientId, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
+      this.financialClaimsFacade.checkIneligibleException(startDate,endDate, formValues.client, index, this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim);
     }
   }
   serviceDescCharCount(i: number) {
@@ -700,6 +765,16 @@ export class MedicalPaymentDetailComponent {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
+
+    const minDate = new Date('1/1/1900');
+    const maxDate = new Date('31/12/2099');
+    startDate = new Date(this.intl.formatDate(startDate,  this.dateFormat )) ;
+    endDate = new Date(this.intl.formatDate(endDate,  this.dateFormat )) ;
+    if(startDate == "Invalid Date") return;
+    if(endDate == "Invalid Date") return;
+    if(startDate < minDate || startDate > maxDate || endDate < minDate || endDate > maxDate){
+      return;
+    }
     if(this.isStartEndDateValid(startDate, endDate))
     {
       this.checkIneligibleEception(startDate,endDate,index);
@@ -734,16 +809,15 @@ export class MedicalPaymentDetailComponent {
     this.isSubmitted = false;
     this.addClaimServiceGroup();
   }
-  
   addClaimServiceGroup() {
     let claimForm = this.formBuilder.group({
       serviceStartDate: new FormControl(
-        this.medicalClaimServices.serviceStartDate,
-        [Validators.required]
+        this.addClaimServicesForm.value[0]?.serviceStartDate,
+        [Validators.required,this.dateValidator]
       ),
       serviceEndDate: new FormControl(
-        this.medicalClaimServices.serviceEndDate,
-        [Validators.required]
+        this.addClaimServicesForm.value[0]?.serviceEndDate,
+        [Validators.required,this.dateValidator]
       ),
       paymentType: new FormControl(this.medicalClaimServices.paymentType, [
         Validators.required,
@@ -753,7 +827,9 @@ export class MedicalPaymentDetailComponent {
       ]),
       pcaCode: new FormControl(this.medicalClaimServices.pcaCode),
       serviceDescription: new FormControl(
-        this.medicalClaimServices.serviceDescription
+        this.medicalClaimServices.serviceDescription,[
+          Validators.required,
+        ]
       ),
       serviceCost: new FormControl(this.medicalClaimServices.serviceCost, [
         Validators.required,
@@ -799,5 +875,19 @@ export class MedicalPaymentDetailComponent {
     });
     this.addExceptionForm.push(exceptionForm);
   }
+  dateValidator(control: AbstractControl): { [key: string]: any } | null {
+    const selectedDate = new Date(control.value);
+    const currentDate = new Date('1/1/1900');
 
+    if (selectedDate < currentDate) {
+      return { 'invalidDate': true };
+    }
+
+    return null;
+  }
+
+  ngOnDestroy(): void {
+    this.showIneligibleSubscription.unsubscribe();
+
+  }
 }

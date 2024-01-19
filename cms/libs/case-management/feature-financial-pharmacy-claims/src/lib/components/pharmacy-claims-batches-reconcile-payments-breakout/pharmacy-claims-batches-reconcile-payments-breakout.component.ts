@@ -25,7 +25,9 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   @Input() batchId:any;
   @Input() entityId:any;
   @Input() paymentRequestType$: any;
+  @Input() paymentStatus$:any
   @Input() reconcilePaymentBreakoutLoaderList$:any;
+  @Input() deliveryMethodLov$:any;
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
   vendorId:any;
   clientId:any;
@@ -49,6 +51,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   addRemoveColumns="Default Columns";
   reconcilePaymentBreakoutLoader:any=true;
+  deliveryMethods!:any;
   columns : any = {
     clientName:"Client Name",
     nameOnPrimaryInsuranceCard:"Name on Primary Insurance Card",
@@ -73,6 +76,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   gridReconcilePaymentBreakoutListSubject = new Subject<any>();
   gridReconcilePaymentBreakout$ = this.gridReconcilePaymentBreakoutListSubject.asObservable();
   selectedPaymentType: string | null = null;
+  selectedPaymentStatus: string | null = null;
+  selectedDeliveryMethod: string | null = null;
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   claimsType:any;
@@ -90,9 +95,15 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
     this.paymentRequestType$.subscribe((paymentRequestType:any) => {
       this.paymentRequestType= paymentRequestType;
     });
+    this.paymentStatus$.subscribe((paymentStatus:any) => {
+      this.paymentStatus= paymentStatus;
+    });
     this.reconcilePaymentBreakoutLoaderList$.subscribe((reconcilePaymentBreakoutLoader:any)=>{
       this.reconcilePaymentBreakoutLoader = reconcilePaymentBreakoutLoader;
-    })
+    });
+    this.deliveryMethodLov$.subscribe((deliveryMethods:any)=>{
+      this.deliveryMethods = deliveryMethods;
+    });
   }
 
   ngOnChanges(): void {
@@ -295,8 +306,9 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
     value: any,
     filterService: FilterService
   ): void {
-    ;
     if (field === 'paymentTypeDesc') this.selectedPaymentType = value;
+    if (field === 'paymentStatusDesc') this.selectedPaymentStatus = value;
+    if (field === 'unit') this.selectedDeliveryMethod = value;
     filterService.filter({
       filters: [
         {

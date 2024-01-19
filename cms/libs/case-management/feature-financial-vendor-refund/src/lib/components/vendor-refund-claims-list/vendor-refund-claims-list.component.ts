@@ -21,7 +21,7 @@ import {
   filterBy,
 } from '@progress/kendo-data-query';
 import { Subject, Subscription } from 'rxjs';
-
+ 
 @Component({
   selector: 'cms-vendor-refund-claims-list',
   templateUrl: './vendor-refund-claims-list.component.html',
@@ -43,6 +43,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   @Input() vendorId: any;
   @Input() clientId: any;
   @Output() loadVendorRefundProcessListEvent = new EventEmitter<any>();
+  @Output() onProviderNameClickEvent = new EventEmitter<any>()
   public state!: State;
   @Input() claimsListData$: any;
   @Output() loadClaimsListEvent = new EventEmitter<any>();
@@ -56,7 +57,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   @Input() tpaPaymentReqIds:any[]=[]
- 
+  providerDetailsDialog: any;
   gridClaimsDataSubject = new Subject<any>();
   gridClaimsData$ = this.gridClaimsDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
@@ -70,10 +71,10 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   @Output() claimsCount = new EventEmitter<any>();
   cliams:any[]=[];
   constructor( private readonly financialClaimsFacade: FinancialClaimsFacade, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade){
-
+ 
   }
-
-
+ 
+ 
   ngOnInit(): void {
     this.lovFacade.getPaymentStatusLov()
     this.paymentStatusSubscription();
@@ -85,7 +86,7 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
     this.tpaData$.subscribe((res:any)=>{
       this.claimsCount.emit(this.selectedTpaClaims.length)
       this.tpaData$.subscribe((res:any)=>{
-      
+     
         this.cliams=res.data;
       })
   })
@@ -93,15 +94,15 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take:20,
+      take: 5,
       sort: this.sort,
     };
-
+ 
     this.loadRefundClaimsListGrid();
   }
-
-
-  loadClaimsList (   
+ 
+ 
+  loadClaimsList (  
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
@@ -119,31 +120,20 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges {
   }
  
   dataStateChange(stateData: any): void {
-    
-        this.openResetDialog(this.filterResetConfirmationDialogTemplate);
+   
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-
-
+    
+    this.loadRefundClaimsListGrid();
+ 
   }
-
-  selectedKeysChange(selection: any) {
-  
- const includeClaim =  this.cliams.filter(obj => selection.includes(obj.paymentRequestId));
-const uniqueOriginalWarrants = [...new Set(includeClaim.map(obj => obj.originalWarrant))];
-if(uniqueOriginalWarrants.length>1)
-{
-  this.financialClaimsFacade.errorShowHideSnackBar("Select a claim with Same warrant number")
-  this.claimsCount.emit(0)
-}
-  if(uniqueOriginalWarrants.length==1)
-    {
+ 
+  selectedKeysChange(selection: any) {  
       this.selectedTpaClaims = selection;
-      this.claimsCount.emit(this.selectedTpaClaims.length)
-    }  
+      this.claimsCount.emit(this.selectedTpaClaims.length)    
   }
   pageSelectionChange(data: any) {
     this.filterResetDialog.close();
@@ -151,7 +141,7 @@ if(uniqueOriginalWarrants.length>1)
     this.state.skip = 0;
     this.loadRefundClaimsListGrid();
   }
-
+ 
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
@@ -189,52 +179,40 @@ if(uniqueOriginalWarrants.length>1)
     };
     this. loadRefundClaimsGrid(gridDataRefinerValue);
     this.gridDataHandle();
-  
+ 
   }
   gridDataHandle() {
     this.tpaData$.subscribe((data: GridDataResult) => {
-      
+     
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
       );
       this.gridClaimsDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
+      if (data?.total >= 0 || data?.total === -1) {
         this.isClaimsLoaderShow = false;
       }
     });
     this.isClaimsLoaderShow = false;
+ 
+  }
 
-  }
-  openResetDialog( template: TemplateRef<unknown>)
-  {
-    this.filterResetDialog = this.dialogService.open({
-      content: template,
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-    });
-  }
   resetButtonClosed(result: any) {
     if (result) {
  
       this.filterResetDialog.close();
     }
   }
-  
-  resetFilterClicked(action: any,) {
-    if (action) {
-      this.selectedTpaClaims=[];    
-      this.loadRefundClaimsListGrid();
-     this.filterResetDialog.close();
-    }
-  }
+ 
+
   paymentStatusSubscription()
   {
     this.paymentStatusLovSubscription = this.paymentStatuses$.subscribe(data=>{
       this.paymentStatusType = data;
     });
   }
-
+ 
   ngOnDestroy(): void {
     this.paymentStatusLovSubscription.unsubscribe();
   }
@@ -250,6 +228,12 @@ if(uniqueOriginalWarrants.length>1)
     if(field == "paymentStatusCode"){
       this.paymentStatusCode = value;
     }
-  } 
+  }
+ 
+    
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event)
+  }
+
 
 }

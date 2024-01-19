@@ -22,8 +22,9 @@ import {
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade } from '@cms/system-config/domain';
-import { LoadTypes } from '@cms/case-management/domain';
-import { GridFilterParam } from '@cms/case-management/domain';
+import { LoadTypes, GridFilterParam } from '@cms/case-management/domain';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-pharmacy-claims-all-payments-list',
@@ -79,7 +80,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   deleteClaimsDialog: any;
   showExportLoader = false;
  sortDir = 'Ascending';
- sortColumnDesc = 'Entry Date';
+ sortColumnDesc = 'Batch #';
  filteredByColumnDesc = '';
  columnChangeDesc = 'Default Columns';
  isColumnsReordered = false;
@@ -94,7 +95,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  selectAll:boolean=false;
  unCheckedPaymentRequest:any=[];
  selectedDataIfSelectAllUnchecked:any=[];
- financialClaimsAllPaymentsGridLists: any = [];
+ pharmacyClaimsAllPaymentsGridLists: any = [];
  currentPageRecords: any = [];
  selectedAllPaymentsList!: any;
  isPageCountChanged: boolean = false;
@@ -110,6 +111,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  claimsType: any;
  clientName: any;
  gridLoaderSubject = new BehaviorSubject(false);
+ allPaymentsPrintAdviceLetterPagedList: any;
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
   itemNbr:'Item #',
@@ -132,6 +134,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
   { columnName: 'clientFullName', columnDesc: 'Client Name' },
   { columnName: 'clientId', columnDesc: 'Client ID' },
+  { columnName: 'creationTime', columnDesc: 'Entry Date' },
 ];
    
   public allPaymentsGridActions = [
@@ -194,16 +197,29 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   constructor(private route: Router, 
     private dialogService: DialogService,
     private readonly lovFacade: LovFacade,
-    private readonly cdr: ChangeDetectorRef,) {}
+    private readonly cdr: ChangeDetectorRef,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider) {}
 
   ngOnInit(): void {
+    this.sortType = 'asc';
     this.addSearchSubjectSubscription();
-    this.handleAllPaymentsGridData();
+    this.pharmacyClaimsAllPaymentsSubscription();
+  }
+
+  pharmacyClaimsAllPaymentsSubscription() {
+    this.pharmacyClaimsAllPaymentsGridLists$.subscribe((response:any) =>{
+      this.totalGridRecordsCount = response?.spotsPaymentsQueryCount;
+      if(this.selectAll){
+      this.markAsChecked(response.data);
+      }
+      this.allPaymentsPrintAdviceLetterPagedList= response;
+    })
   }
 
 
   ngOnChanges(): void {
-    this.sortType = 'desc';
+    this.sortType = 'asc';
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -215,8 +231,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
 
   resetGrid(){
     this.defaultGridState();
-    this.sortValue = 'creationTime';
-    this.sortType = 'desc';
+    this.sortValue = 'batchName';
+    this.sortType = 'asc';
     this.sortDir = this.sortType === 'desc' ? 'Descending' : "Ascending";
     this.filter = [];
     this.searchText = '';
@@ -281,9 +297,24 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.defaultGridState();
     let operator = 'contains'
     const isClientId = (['clientId']).includes(this.selectedSearchColumn);
+    const isEntryDate = (['creationTime']).includes(this.selectedSearchColumn);
     if(isClientId){
       operator = 'eq';
       data = !isNaN(data) && !isNaN(parseFloat(data)) ? data: '0';
+    }else if(isEntryDate){
+      operator = 'eq';
+      data = this.isValidDate(data) ? this.intl.formatDate(
+        new Date(data),
+        this.configProvider?.appSettings?.dateFormat
+      ): '01/01/0001';
+    }
+    const isDateSearch = data.includes('/');
+    if(isDateSearch)
+    {
+      data = this.isValidDate(data) ? this.intl.formatDate(
+        new Date(data),
+        this.configProvider?.appSettings?.dateFormat
+      ): '01/01/0001';
     }
     this.filterData = {
       logic: 'and',
@@ -304,7 +335,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
-
+  private isValidDate = (searchValue: any) =>
+  isNaN(searchValue) && !isNaN(Date.parse(searchValue));
   private loadPharmacyClaimsAllPaymentsListGrid(): void {
     const params = new GridFilterParam(this.state.skip, this.state.take, this.sortValue, this.sortType, JSON.stringify(this.filter))
     this.loadPharmacyClaimsAllPaymentsListEvent.emit(params);
@@ -316,18 +348,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     sortTypeValue: string
   ) {
     this.isPharmacyClaimsAllPaymentsGridLoaderShow = true;
-    const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
-      filter: JSON.stringify(this.filter)
-    };
-        //this.gridDataHandle();
   }
 
-  
-  
   onChange(data: any) {
     this.defaultGridState();
 
@@ -365,7 +387,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'desc';
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
@@ -415,8 +437,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   onBulkOptionCancelClicked(){
     this.isRequestPaymentClicked = false;
     this.isPrintAuthorizationClicked = false;
+    this.markAsUnChecked(this.allPaymentsPrintAdviceLetterPagedList?.data);
     this.markAsUnChecked(this.selectedAllPaymentsList?.PrintAdviceLetterSelected);
-    this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists?.data);
     this.unCheckedProcessRequest = [];
     this.checkedAndUncheckedRecordsFromSelectAll = [];
     this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
@@ -424,6 +446,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.selectAll = false;
     this.recordCountWhenSelectallClicked = 0;
     this.sendReportCount = 0;
+    this.loadPharmacyClaimsAllPaymentsListGrid();
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
@@ -609,10 +632,10 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.unCheckedProcessRequest=[];
     this.checkedAndUncheckedRecordsFromSelectAll=[];
     if(this.selectAll){
-      this.markAsChecked(this.financialClaimsAllPaymentsGridLists);
+      this.markAsChecked(this.allPaymentsPrintAdviceLetterPagedList?.data);
     }
     else{
-      this.markAsUnChecked(this.financialClaimsAllPaymentsGridLists);
+      this.markAsUnChecked(this.allPaymentsPrintAdviceLetterPagedList?.data);
     }
     this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedProcessRequest,
     'PrintAdviceLetterSelected':this.checkedAndUncheckedRecordsFromSelectAll,'print':true,
@@ -660,25 +683,11 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   }
 
   getSelectedReportCount(selectedSendReportList : []){
-    this.sendReportCount = selectedSendReportList.length;
+    this.sendReportCount = selectedSendReportList?.length;
   }
 
     loadEachLetterTemplate(event:any){
       this.loadTemplateEvent.emit(event);
-    }
-
-    onitemNumberClick(dataItem: any) {
-        this.route.navigate(
-            [`/financial-management/pharmacy-claims/batch/items`],
-            {
-                queryParams:
-                {
-                    bid: dataItem?.batchId,
-                    pid: dataItem.paymentRequestId,
-                    eid: dataItem.vendorId,
-                }
-            }
-        );
     }
 
     onbatchNumberClick(dataItem: any) {
@@ -695,18 +704,17 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
           this.gridDataResult.data,
           this.filterData
         );
-        //this.financialClaimsAllPaymentsGridLists.next(this.gridDataResult);
         if (data?.total >= 0 || data?.total === -1) {
           this.gridLoaderSubject.next(false);
         }
-        this.financialClaimsAllPaymentsGridLists = this.gridDataResult?.data;
+        this.pharmacyClaimsAllPaymentsGridLists = this.gridDataResult?.data;
         if(this.recordCountWhenSelectallClicked == 0){
           this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
           this.totalGridRecordsCount = this.gridDataResult?.total;
         }
         if(!this.selectAll)
         {
-        this.financialClaimsAllPaymentsGridLists.forEach((item1: any) => {
+        this.pharmacyClaimsAllPaymentsGridLists.forEach((item1: any) => {
           const matchingGridItem = this.selectedAllPaymentsList?.PrintAdviceLetterSelected.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
           if (matchingGridItem) {
             item1.selected = true;
@@ -715,7 +723,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
           }
         });
       }
-      this.currentPageRecords = this.financialClaimsAllPaymentsGridLists;
+      this.currentPageRecords = this.pharmacyClaimsAllPaymentsGridLists;
       //If the user is selecting the individual check boxes and changing the page count
       this.handlePageCountSelectionChange();
       //If the user click on select all header and either changing the page number or page count
@@ -743,7 +751,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
       this.selectedAllPaymentsList = [];
       this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
-      for (const item of this.financialClaimsAllPaymentsGridLists) {
+      for (const item of this.pharmacyClaimsAllPaymentsGridLists) {
         // Check if the item is in the second list.
         const isItemInSecondList = this.unCheckedProcessRequest.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
         // If the item is in the second list, mark it as selected true.

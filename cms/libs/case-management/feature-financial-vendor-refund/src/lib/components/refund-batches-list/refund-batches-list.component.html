@@ -21,7 +21,7 @@
   <span class="right-overlay-export">
     <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"
       [disabled]="showExportLoader">
-      <span *ngIf="!showExportLoader" class="material-icons" aria-label="export" aria-invalid="true">exit_to_app</span>
+      <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>
 
       <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i
         class="exp_button-text">Export</i>
@@ -34,7 +34,7 @@
   Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
   <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
   <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
-  <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+  <span class="sort-items">{{columnChangeDesc}}</span>
   <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
   <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
     <a>Set to Default</a>
@@ -47,8 +47,9 @@
   <kendo-grid [resizable]="true" [loading]="isVendorRefundBatchGridLoaderShow" [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
     [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
-    (filterChange)="filterChange($event)" [data]="gridVendorsBatchData$ | async">
-  
+    (filterChange)="filterChange($event)" [data]="gridVendorsBatchData$ | async" [filter]="state.filter"
+    (columnVisibilityChange)="columnChange($event)">
+
     <kendo-grid-column field="batchName" title="Batch #" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
@@ -75,6 +76,7 @@
           <kendo-filter-gte-operator></kendo-filter-gte-operator>
           <kendo-filter-lt-operator></kendo-filter-lt-operator>
           <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
@@ -87,6 +89,7 @@
           <kendo-filter-gte-operator></kendo-filter-gte-operator>
           <kendo-filter-lt-operator></kendo-filter-lt-operator>
           <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
@@ -99,6 +102,7 @@
           <kendo-filter-gte-operator></kendo-filter-gte-operator>
           <kendo-filter-lt-operator></kendo-filter-lt-operator>
           <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
@@ -134,9 +138,9 @@
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
         <div class="d-flex align-items-center">
-          <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+          <label class="mr-1" for="RefundBatchListRowsPerPage">Rows Per Page</label>
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
+            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RefundBatchListRowsPerPage"
             [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
           <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>

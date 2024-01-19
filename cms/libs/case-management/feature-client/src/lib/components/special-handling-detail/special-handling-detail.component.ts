@@ -501,10 +501,12 @@ export class SpecialHandlingDetailComponent implements OnInit {
   /** Internal event methods **/
   onTareaCaseWorkerChanged(
     onHandleCaseWorkerCharacterEvent: any,
-    id: any
+    item: any
   ): void {
+    onHandleCaseWorkerCharacterEvent = onHandleCaseWorkerCharacterEvent?.trim();
+    item.note = item?.note?.trim();
     this.tareacaseWorkerNote.forEach((res) => {
-      if (res.id === id) {
+      if (res.id ===item.id) {
         res.tareaCaseWorkerNoteCounter =
           onHandleCaseWorkerCharacterEvent.length;
       }

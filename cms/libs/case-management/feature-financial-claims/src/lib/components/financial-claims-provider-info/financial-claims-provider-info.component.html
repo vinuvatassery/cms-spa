@@ -11,15 +11,15 @@
                   <th>Field</th>
                   <th> Details</th>
               </tr>
-              <tr> 
+              <tr>
                 <td><strong>TIN</strong></td>
                 <td> {{vendorProfile.tin | tin }}</td>
             </tr>
-            <tr> 
+            <tr>
                 <td><strong>Mail Code</strong></td>
                 <td>{{vendorProfile.address.mailCode}}</td>
             </tr>
-            <tr> 
+            <tr>
                 <td><strong>Payment Method</strong></td>
                 <td> {{vendorProfile.address.paymentMethodCode}}</td>
             </tr>
@@ -66,9 +66,15 @@
                     <tr>
                         <td><strong>TIN</strong></td>
                         <td>
-                            <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode"
-                                formControlName="tin">
-                            </kendo-textbox>
+                            <kendo-maskedtextbox aria-label="tin" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10"
+                              placeholder="TIN" [maskOnFocus]="true" formControlName="tin" [mask]="tinMaskFormat" (keyup)="restrictAccountingNumber()">
+                            </kendo-maskedtextbox>
+                            <kendo-formerror *ngIf="!profileForm.controls['tin'].valid  && accountingNumberValidated">
+                              TIN cannot be less than 9 digits
+                            </kendo-formerror>
+                            <kendo-formerror *ngIf="!accountingNumberValidated">
+                              A 1 or a 3 is required
+                            </kendo-formerror>
 
                         </td>
                     </tr>
@@ -111,7 +117,7 @@
                                     <div class="flex-col mt-1">
                                         <kendo-textbox aria-label="Address 1" placeholder="Address 1"
                                             [fillMode]="formUiStyle.inputFillMode" formControlName="address1"
-                                            [maxlength]="100">
+                                            [maxlength]="200">
                                         </kendo-textbox>
                                         <kendo-formerror
                                             *ngIf="addressForm?.hasError('required','address1') && isSubmitted">Address
@@ -122,13 +128,13 @@
                                     <div class="flex-col mt-1">
                                         <kendo-textbox aria-label="Address 1" placeholder="Address 2"
                                             [fillMode]="formUiStyle.inputFillMode" formControlName="address2"
-                                            [maxlength]="100">
+                                            [maxlength]="50">
                                         </kendo-textbox>
                                     </div>
                                     <div class="flex-col mt-1">
                                         <kendo-textbox aria-label="City" placeholder="City"
                                             [fillMode]="formUiStyle.inputFillMode" formControlName="cityCode"
-                                            [maxlength]="20">
+                                            [maxlength]="50">
                                         </kendo-textbox>
                                         <kendo-formerror
                                             *ngIf="addressForm?.hasError('required','cityCode') && isSubmitted">City is
@@ -201,7 +207,7 @@
                                     </div>
                                 </td>
                             </tr>
-        
+
                             <tr class="providerContact">
                                 <td>
                                     <div class="flex-row fiel-column-label"><strong>  Phone</strong> </div>
@@ -215,14 +221,14 @@
                                                 id="{{'phoneNbr'+i}}">
                                             </kendo-maskedtextbox>
                                             <kendo-formerror
-                                                *ngIf="phone.hasError('required','phoneNbr') && isSubmitted">phoneNbr is
+                                                *ngIf="phone.hasError('required','phoneNbr') && isSubmitted">Phone Number is
                                                 Required
                                             </kendo-formerror>
                                         </div>
                                     </div>
                                 </td>
                             </tr>
-        
+
                             <tr class="providerContact">
                                 <td>
                                     <div class="flex-row fiel-column-label"><strong>  Email</strong> </div>
@@ -235,18 +241,18 @@
                                                 formControlName="emailAddress" id="{{'emailAddress'+i}}">
                                             </kendo-textbox>
                                             <kendo-formerror
-                                                *ngIf="email.hasError('required','emailAddress') &&  isSubmitted">EmailAddress
+                                                *ngIf="email.hasError('required','emailAddress') &&  isSubmitted">Email Address
                                                 is Required
                                             </kendo-formerror>
                                         </div>
-        
+
                                     </div>
                                 </td>
                             </tr>
                         </ng-container>
                     </ng-container>
-            
-           
+
+
             </table>
 </ng-container>
 </div>
@@ -259,7 +265,7 @@
     <div class="justify-content-between" *ngIf="!isEditProvider">
 
         <button *ngIf="vendorProfile" kendoButton [primary]="true" look="flat" class="" aria-label="Provider profile"
-            (click)="onVendorProfileViewClicked()"> Provider profile <span class="material-icons ml-1">
+            (click)="onVendorProfileViewClicked()"> Provider profile <span class="material-icons ml-1" aria-hidden="true">
                 chevron_right
             </span></button>
 

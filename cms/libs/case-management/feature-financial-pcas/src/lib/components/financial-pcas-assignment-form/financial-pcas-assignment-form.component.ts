@@ -24,14 +24,25 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   @Input() pcaAssignmentFormDataModel$ : any
   @Input() newForm : any
   @Input() groupCodesDataFilter : any
+  @Input() pcaAssignmentDatesValidation$ :any
 
+  pcaCloseDate!: Date;
+  pcaOpenDate!: Date;
+  isAssignmentpcaCloseDateGreater = false;
+  isAssignmentpcaOpenDateGreater = false;
+  ispcaCloseDateGreater = false
+  ispcaOpenDateGreater = false
+  ispcaOpenDateDependency = false
+  closeDateIsBeforeOpen = false
   groupCodeIdsdValueData : any=[];
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @Output() closeAddEditPcaAssignmentClickedEvent = new EventEmitter();
   @Output() pcaChangeEvent = new EventEmitter<any>();
+  @Output() validatePcaDates = new EventEmitter<any>();
   @Output() loadPcaEvent = new EventEmitter<any>();
   @Output() addPcaDataEvent = new EventEmitter<any>();
+
 
   openDateError =false
   totalAmount = 0
@@ -41,16 +52,21 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   objectCodeControl! : FormControl
   editPca = false
   formSubmitted =false
+  remainingAmountValidate = false
+  originalRemainingBalance =0
+  openDateAfterCloseDate= false;
+  monthFistDay: any;
+  monthLastDay: any;
   constructor(  
     private readonly ref: ChangeDetectorRef,
     private formBuilder: FormBuilder,
     public intl: IntlService
   ) {}  
-  ngOnInit(): void {   
+  ngOnInit(): void {  
     this.formSubmitted = false
     this.loadPcaEvent.emit()
     this.getPcaInfoData()
-
+    this.setDefaultOpenandCloseDate();
     if(this.newForm === true)
     {
       
@@ -58,6 +74,14 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     }
   }
 
+  setDefaultOpenandCloseDate(){
+    let date = new Date();
+    let monthFistDay = new Date(date.getFullYear(), date.getMonth(), 1);
+    this.monthFistDay = monthFistDay.getFullYear() + "-" + monthFistDay.getMonth()+1 + "-01T00:00:00";
+
+    let lastDay = new Date(monthFistDay.getFullYear(), date.getMonth()+1, 0).getDate();
+    this.monthLastDay = date.getFullYear() + "-" + date.getMonth()+1 + "-" +lastDay +"T00:00:00";
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     
@@ -76,9 +100,9 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     {
       this.pcaCodesInfo = data
       
-    
      }  )   
   }
+
   closeAddEditPcaAssignmentClicked() {
     this.closeAddEditPcaAssignmentClickedEvent.emit(true);
   }
@@ -162,7 +186,8 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
             {
               this.pcaAssignmentForm.controls['amount'].disable();  
             }
-            
+            const openDate =   this.pcaAssignmentFormDataModel$?.openDate.split('T')[0]+'T00:00:00'
+            const closeDate =   this.pcaAssignmentFormDataModel$?.closeDate.split('T')[0]+'T00:00:00'
             this.pcaAssignmentForm.patchValue(
               {     
                 pcaAssignmentId:  this.pcaAssignmentFormDataModel$?.pcaAssignmentId ,  
@@ -178,7 +203,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
 
             this.totalAmount = this.pcaCodeInfo?.remainingAmount + (this.pcaAssignmentForm.controls['amount'].value ?? 0)
            
-           
+           this.originalRemainingBalance = this.pcaCodeInfo?.remainingAmount
         }
    
   }
@@ -188,13 +213,31 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
  }
   onPcaAssignmentFormSubmit()
   {    
+    this.remainingAmountValidate = false
     this.dateValidate()
+    if(this.openDateError === true)
+    {
+      return
+    }
+    if(this.originalRemainingBalance < this.pcaAssignmentForm?.controls["amount"]?.value)
+    {
+    this.pcaAssignmentForm?.controls["amount"].setErrors({'incorrect': true});
+    this.remainingAmountValidate = true
+    return
+    }
+    else
+    {
+      this.remainingAmountValidate = false
+      this.pcaAssignmentForm?.controls["amount"].removeValidators
+    }
+   
     if(this.pcaAssignmentForm?.controls["unlimited"].value === false && this.pcaAssignmentForm?.controls["amount"].value < 1)
     {
       this.pcaAssignmentForm?.controls["amount"].setValue('')
     }
     this.formSubmitted = true
     this.pcaAssignmentForm.markAllAsTouched();
+  
     if(this.pcaAssignmentForm.valid)
     {
 
@@ -229,13 +272,133 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
         if(this.pcaAssignmentForm?.controls["openDate"].value > this.pcaAssignmentForm?.controls["closeDate"].value)
         {
               this.openDateError = true
+              this.pcaAssignmentForm?.controls["openDate"].setErrors({'incorrect': true});
+              this.pcaAssignmentForm?.controls["closeDate"].setErrors({'incorrect': true});
         }
         else
         {
           this.openDateError = false
+          this.pcaAssignmentForm?.controls["openDate"].removeValidators
+          this.pcaAssignmentForm?.controls["closeDate"].removeValidators
         }
     }
+    if( this.ispcaOpenDateDependency ||
+      this.ispcaCloseDateGreater ||
+      this.ispcaOpenDateGreater || this.isAssignmentpcaCloseDateGreater ||this.isAssignmentpcaOpenDateGreater  || this.closeDateIsBeforeOpen){
+        this.openDateError = true
+      }
+
     
+  }
+
+  closeDateValidate()
+  {
+    this.ispcaOpenDateDependency = false
+    this.ispcaCloseDateGreater = false;
+    this.ispcaOpenDateGreater = false;
+  this.closeDateIsBeforeOpen = false;
+    const endDate = this.pcaAssignmentForm.controls['closeDate'].value;
+    const startDate = this.pcaAssignmentForm.controls['openDate'].value;
+    const startDateWithoutTime = new Date(new Date(startDate).getFullYear(), new Date(startDate).getMonth(), new Date(startDate).getDate());
+    const endDateWithoutTime = new Date(new Date(endDate).getFullYear(), new Date(endDate).getMonth(), new Date(endDate).getDate());
+
+    if (endDateWithoutTime < startDateWithoutTime && this.pcaAssignmentForm.controls['closeDate'].value) {
+      this.pcaAssignmentForm.controls['closeDate'].setErrors({ 'incorrect': true });
+      this.closeDateIsBeforeOpen = true
+      this.ispcaCloseDateGreater = false;
+      this.ispcaOpenDateGreater = false;
+      return;
+    }
+    if (endDateWithoutTime > startDateWithoutTime && this.pcaAssignmentForm.controls['closeDate'].value) {
+      this.openDateAfterCloseDate = false;
+      this.pcaAssignmentForm?.controls["openDate"].clearValidators()
+      this.pcaAssignmentForm?.controls["openDate"].updateValueAndValidity()
+    }
+
+  
+    const pcaCloseDateWithoutTime = this.pcaCloseDate
+
+    if(new Date(pcaCloseDateWithoutTime) < endDateWithoutTime && this.pcaAssignmentForm.controls['closeDate'].value){
+      this.pcaAssignmentForm.controls['closeDate'].setErrors({ 'ispcaCloseDateGreater': true });
+      this.ispcaCloseDateGreater = true;
+      this.ispcaOpenDateGreater = false;
+      return;
+    }
+    if(new Date(this.pcaOpenDate) > endDate && this.pcaAssignmentForm.controls['closeDate'].value){
+      this.pcaAssignmentForm.controls['openDate'].setErrors({ 'isAssignmentpcaOpenDateGreater': true });
+      this.ispcaOpenDateGreater = true;
+      this.ispcaCloseDateGreater = false;
+      return;
+    }
+
+
+    if(!this.newForm){
+      this.pcaAssignmentDatesValidation$.subscribe((res:Boolean) =>{
+        if(res){
+          this.pcaAssignmentForm.controls['openDate'].setErrors({ 'ispcaOpenDateDependency': true });
+           this.ispcaOpenDateDependency = true
+        }
+      })
+    this.validatePcaDates.emit({
+      openDate : startDateWithoutTime,
+      closeDate : endDateWithoutTime
+    })
+    }
+  }
+
+  openDateValidate()
+  {
+    this.ispcaOpenDateDependency = false
+    this.isAssignmentpcaCloseDateGreater = false;
+    this.isAssignmentpcaOpenDateGreater = false;
+    this.openDateAfterCloseDate = false
+    const endDate = this.pcaAssignmentForm.controls['closeDate'].value;
+    const startDate = this.pcaAssignmentForm.controls['openDate'].value;
+    const startDateWithoutTime = new Date(new Date(startDate).getFullYear(), new Date(startDate).getMonth(), new Date(startDate).getDate());
+    const endDateWithoutTime = new Date(new Date(endDate).getFullYear(), new Date(endDate).getMonth(), new Date(endDate).getDate());
+
+    if ( endDate !='' && new Date(endDate) < startDateWithoutTime && this.pcaAssignmentForm.controls['openDate'].value) {
+      this.pcaAssignmentForm.controls['openDate'].setErrors({ 'incorrect': true });
+      this.openDateAfterCloseDate = true;
+      this.isAssignmentpcaCloseDateGreater = false;
+      this.isAssignmentpcaOpenDateGreater = false;
+      return;
+    }
+    if (endDateWithoutTime > startDateWithoutTime && this.pcaAssignmentForm.controls['closeDate'].value) {
+      this.closeDateIsBeforeOpen = false;
+      this.pcaAssignmentForm?.controls["closeDate"].clearValidators()
+      this.pcaAssignmentForm?.controls["closeDate"].updateValueAndValidity()
+    }
+
+    if(new Date(this.pcaOpenDate) > startDateWithoutTime && this.pcaAssignmentForm.controls['openDate'].value){
+      this.pcaAssignmentForm.controls['openDate'].setErrors({ 'isAssignmentpcaOpenDateGreater': true });
+      this.isAssignmentpcaOpenDateGreater = true;
+      this.isAssignmentpcaCloseDateGreater = false;
+  
+      return;
+    }
+
+    if(new Date(this.pcaCloseDate) < startDateWithoutTime && this.pcaAssignmentForm.controls['openDate'].value){
+      this.pcaAssignmentForm.controls['closeDate'].setErrors({ 'ispcaCloseDateGreater': true });
+      this.isAssignmentpcaCloseDateGreater = true;
+      this.isAssignmentpcaOpenDateGreater = false;
+      return;
+    }
+
+
+
+    if(!this.newForm){
+      this.pcaAssignmentDatesValidation$.subscribe((res:Boolean) =>{
+        if(res){
+          this.pcaAssignmentForm.controls['openDate'].setErrors({ 'ispcaOpenDateDependency': true });
+           this.ispcaOpenDateDependency = true
+        }
+      })
+      this.validatePcaDates.emit({
+        openDate : startDateWithoutTime,
+        closeDate : endDateWithoutTime
+      })
+      }
   }
 
   unlimitedCheckChange($event : any)
@@ -256,6 +419,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
    {
     this.pcaAssignmentForm.controls['amount'].enable();
    }
+   this.pcaCodeInfo.remainingAmount = this.totalAmount
   }
 
 
@@ -264,6 +428,9 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   {    
     this.pcaCodeInfo = this.pcaCodesInfo?.find((x : any)=>x.pcaId==data)
     this.totalAmount += this.pcaCodeInfo?.remainingAmount 
+   this.pcaCloseDate = this.pcaCodeInfo.closeDate
+   this.pcaOpenDate = this.pcaCodeInfo.openDate
+    this.originalRemainingBalance = this.pcaCodeInfo?.remainingAmount
     
     this.pcaAssignmentForm.patchValue(
       {     
@@ -275,8 +442,9 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
   amountChange(amount : any)
   {
     if(this.pcaCodeInfo?.totalAmount)
-    {     
-      this.pcaCodeInfo.remainingAmount = this.totalAmount - amount
+    {         
+      const numberOfGroups = this.pcaAssignmentForm?.controls["groupCodes"].value.length 
+      this.pcaCodeInfo.remainingAmount = this.totalAmount - (amount *  numberOfGroups)
     }
     
   }

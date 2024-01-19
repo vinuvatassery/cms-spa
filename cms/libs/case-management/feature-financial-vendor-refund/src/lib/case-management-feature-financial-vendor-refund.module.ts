@@ -19,15 +19,21 @@ import { RefundBatchPageComponent } from './containers/refund-batch-page/refund-
 import { VendorRefundPharmacyPaymentsListComponent } from './components/vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { CaseManagementFeatureFinancialPremiumsModule } from '@cms/case-management/feature-financial-premiums';
 import { UnbatchRefundConfirmationComponent } from './components/unbatch-refund-confirmation/unbatch-refund-confirmation.component';
-import { filterResetConfirmationComponent } from './components/reset-filter-confirmation/reset-filter-confirmation.component';
-
+import { RefundClaimsProviderInfoComponent } from './components/refund-claims-provider-info/refund-claims-provider-info.component';
+import { VednorRefundTpaClaimsListComponent } from './components/vednor-refund-tpa-claims-list/vednor-refund-tpa-claims-list.component';
+import { VednorRefundTpaSelectedClaimsListComponent } from './components/vednor-refund-tpa-selected-claims-list/vednor-refund-tpa-selected-claims-list.component';
+import { CaseManagementFeatureFinancialClaimsModule } from '@cms/case-management/feature-financial-claims';
+import { CaseManagementFeatureFinancialPharmacyClaimsModule } from '@cms/case-management/feature-financial-pharmacy-claims';
+import { FilterResetConfirmationComponent } from './components/reset-filter-confirmation/reset-filter-confirmation.component';
 @NgModule({
   imports: [
     CommonModule,
     CaseManagementFeatureFinancialVendorRefundRoutingModule,
     SharedUiTpaModule,
     SharedUiCommonModule,
-    CaseManagementFeatureFinancialPremiumsModule
+    CaseManagementFeatureFinancialPremiumsModule,
+    CaseManagementFeatureFinancialClaimsModule,
+    CaseManagementFeatureFinancialPharmacyClaimsModule
   ],
   declarations: [
     VendorRefundPageComponent,
@@ -45,7 +51,10 @@ import { filterResetConfirmationComponent } from './components/reset-filter-conf
     VendorRefundSelectedPremiumListComponent,
     VendorRefundClientClaimsListComponent,
     VendorRefundPharmacyPaymentsListComponent,
-    filterResetConfirmationComponent
+    FilterResetConfirmationComponent,
+    RefundClaimsProviderInfoComponent,
+    VednorRefundTpaClaimsListComponent,
+    VednorRefundTpaSelectedClaimsListComponent,
   ],
 })
 export class CaseManagementFeatureFinancialVendorRefundModule {}

@@ -12,7 +12,7 @@
     .k-dialog-titlebar {
       padding: $size-xxxl $size-xxx $size-l $size-xxx;
       white-space: normal;
-      max-width: 90%;
+      max-width: calc(100% - 40px);
       @media (max-width: $breakpoint-md) {
         padding: $size-xxxl $size-xlg $size-l $size-xlg;
       }
@@ -444,9 +444,9 @@
   }
   &.pharmacy_print_auth{
     .k-dialog .k-dialog-body{
-      max-height: 79vh; 
+      max-height: 75vh; 
     .custom_scroll_view .k-scrollview{
-      min-height: 100vh;
+      min-height: 87vh;
       max-height: 100%;
       overflow-y: auto;
     }

@@ -11,7 +11,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { GridFilterParam, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
+import { FinancialPremiumsFacade, GridFilterParam, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -79,6 +79,10 @@ export class FinancialPremiumsAllPaymentsListComponent
 
   searchColumnList: { columnName: string; columnDesc: string }[] = [
     {
+      columnName: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
       columnName: 'itemNumber',
       columnDesc: 'Item #',
     },
@@ -134,7 +138,7 @@ export class FinancialPremiumsAllPaymentsListComponent
 
   //searching
   private searchSubject = new Subject<string>();
-  selectedSearchColumn = 'itemNumber';
+  selectedSearchColumn: null | string = 'ALL';
   searchText: null | string = null;
 
   //sorting
@@ -192,6 +196,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   isSendReportOpened = false;
   isUnBatchPaymentOpen = false;
   isDeletePaymentOpen = false;
+  isEditBatchClosed = false;
   isUnBatchPaymentPremiumsClosed = false;
   showDeleteConfirmation = false;
   @ViewChild('removePremiumsConfirmationDialogTemplate', { read: TemplateRef })
@@ -205,6 +210,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   @Input() exportButtonShow$: any;
   @Output() deletePaymentEvent = new EventEmitter();
   @Output() exportGridDataEvent = new EventEmitter<any>();
+
   UnBatchPaymentDialog: any;
   removePremiumsDialog: any;
   isPrintAdviceLetterClicked = false;
@@ -276,6 +282,16 @@ export class FinancialPremiumsAllPaymentsListComponent
          }
        },
      },
+     {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Premium',
+      icon: 'edit',
+      click: (data: any): void => {
+        if (!this.isEditBatchClosed) {
+          this.isEditBatchClosed = true;
+        }
+      },
+    },
    ];
  }
  onUnBatchPaymentCloseClicked(result: any) {
@@ -320,7 +336,7 @@ deletePremiumPayment(paymentId: string) {
   public bulkMore = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Reconcile Payments',
+      text: 'RECONCILE PAYMENTS',
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
@@ -328,7 +344,7 @@ deletePremiumPayment(paymentId: string) {
     },
     {
       buttonType: 'btn-h-primary',
-      text: 'Print Advice Letters',
+      text: 'PRINT ADVICE LETTERS',
       icon: 'print',
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
@@ -345,6 +361,7 @@ deletePremiumPayment(paymentId: string) {
     private readonly intl: IntlService,
     private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
+    private readonly financialPremiumsFacade: FinancialPremiumsFacade,
   ) {}
 
   ngOnInit(): void {
@@ -359,6 +376,8 @@ deletePremiumPayment(paymentId: string) {
       }
       this.financialPremiumsAllPaymentsGridLists = response;
     })
+
+
   }
 
   ngOnChanges(): void {
@@ -419,7 +438,7 @@ deletePremiumPayment(paymentId: string) {
   }
 
   onSearch(searchValue: any) {
-    
+
     const isDateSearch = searchValue.includes('/');
     this.showDateSearchWarning =
       isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
@@ -478,7 +497,7 @@ deletePremiumPayment(paymentId: string) {
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.filter = [];
     this.searchText = '';
-    this.selectedSearchColumn = 'itemNumber';
+    this.selectedSearchColumn = 'ALL';
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
@@ -506,12 +525,39 @@ deletePremiumPayment(paymentId: string) {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.sortColumnDesc = this.gridColumns[this.sortValue]; 
+    this.updateGridFilterDateFormat(stateData, false);
     this.filter = stateData?.filter?.filters;
     this.setFilterBy(true, '', this.filter);
     this.loadFinancialPremiumsPaymentsListGrid();
+    this.updateGridFilterDateFormat(stateData, true);
   }
 
+  updateGridFilterDateFormat(stateData: any,isDisplayFormat:boolean){
+    const filterList = [];
+    if((stateData.filter?.filters.length > 0) && (stateData.filter?.filters.slice(-1)[0].filters.length>1)){
+      this.isFiltered = true;
+      stateData.filter?.filters.slice(-1)[0].filters?.forEach((element: any) => {
+        if ((element.field == "paymentRequestedDate" || element.field == "paymentSentDate")) { 
+          if(isDisplayFormat){
+            element.value = new Date(element.value)
+          }else{
+            element.value = this.intl.formatDate(
+              new Date(element.value),
+              this.configProvider?.appSettings?.dateFormat
+            );
+          }
+        } 
+      }); 
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.gridColumns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    }else {
+      this.filter = '';
+      this.isFiltered = false;
+    }
+  }
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
@@ -567,6 +613,7 @@ deletePremiumPayment(paymentId: string) {
         },
       ],
     };
+
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
@@ -760,11 +807,13 @@ deletePremiumPayment(paymentId: string) {
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event)
   }
-  paymentClickHandler(dataItem: any) {
-    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch/items`], {
-      queryParams: { bid: dataItem.batchId, pid: dataItem.paymentRequestId,eid:dataItem.vendorAddressId },
-    });
+
+   /* Public methods */
+   navToBatchDetails(event : any){
+    this.route.navigate([`/financial-management/premiums/${this.premiumsType}/batch`],
+    { queryParams :{bid: event.batchId}});
   }
+
   onClickedExport() {
     this.showExportLoader = true;
     this.exportGridDataEvent.emit();
@@ -915,10 +964,6 @@ onPrintAuthorizationCloseClicked(result: any) {
 handleAllPaymentsGridData() {
   this.financialPremiumsAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
     this.gridDataResult = data;
-    this.gridDataResult.data = filterBy(
-      this.gridDataResult.data,
-      this.filterData
-    );
     this.gridFinancialPremiumsAllPaymentsDataSubject.next(this.gridDataResult);
     if (data?.total >= 0 || data?.total === -1) {
       this.gridLoaderSubject.next(false);

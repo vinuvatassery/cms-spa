@@ -22,6 +22,7 @@ export class FinancialPremiumsRecentPremiumsListComponent {
   @Input() clientId: any;
   @Input() premiumsType: any;
   @Input() paymentRequestId :any
+  @Input() includeServiceSubTypeFilter = true;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   dentalOrMedicalServiceField:any;
   public state!: any;
@@ -151,6 +152,7 @@ export class FinancialPremiumsRecentPremiumsListComponent {
     const gridDataRefinerValue = {
       vendorId: vendorId,
       clientId: clientId,
+      includeServiceSubTypeFilter: this.includeServiceSubTypeFilter,
       premiumsType : premiumsType,
       skipCount: skipCountValue,
       pageSize: maxResultCountValue,

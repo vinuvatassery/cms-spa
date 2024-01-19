@@ -53,11 +53,10 @@ export class EmailDetailComponent implements OnInit {
   onDeactivateEmailAddressClosed() {
     this.isDeactivateEmailAddressPopup = !this.isDeactivateEmailAddressPopup;
   }
-
   composeEmailForm() {
     this.clientEmailForm = this.formBuilder.group({
       clientEmailId: [''],
-      email: ['', Validators.required],
+      email: ['', [Validators.required,Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]],
       detailMsgFlag: [''],
       preferredFlag: [''],
       paperlessFlag: [''],
@@ -65,13 +64,7 @@ export class EmailDetailComponent implements OnInit {
 
     if (this.isEditValue === true) {
       this.onSelectedEmailFormLoad();
-    }   
-    else
-    {      
-      this.clientEmailForm.patchValue({     
-        paperlessFlag: this.getStatusFlag(this.paperlessFlag),
-      });
-    }
+    }       
   }
 
   onSelectedEmailFormLoad() {

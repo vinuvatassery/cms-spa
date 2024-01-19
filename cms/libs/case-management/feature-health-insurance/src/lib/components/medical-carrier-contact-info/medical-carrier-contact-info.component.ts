@@ -7,4 +7,5 @@ import { Component, Input } from '@angular/core';
 export class MedicalCarrierContactInfoComponent {
   @Input() carrierContactInfo: any;
   @Input() insurancePlan: any;
+  @Input() contactInfoType: any;
 }

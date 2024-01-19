@@ -47,7 +47,7 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
   isFiltered = false;
   filter!: any;
   claimType: any;
-  selectedColumn!: any;
+  selectedColumn ='ALL'
   gridDataResult!: GridDataResult;
   showExportLoader = false;
   gridFinancialClaimsBatchDataSubject = new Subject<any>();
@@ -70,7 +70,11 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
 
   dropDowncolumns: any = [
     {
-      columnCode: 'creationTime',
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
+      columnCode: 'batchName',
       columnDesc: 'Batch #',
     },
     {
@@ -149,7 +153,7 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
     this.defaultGridState();
     let operator = 'startswith';
 
-    if (this.selectedColumn !== 'creationTime') {
+    if (this.selectedColumn !== 'creationTime'  && this.selectedColumn !==  'batchName') {
       operator = 'eq';
     }
 
@@ -245,7 +249,7 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
     this.columnsReordered = false;
 
     this.sortValue = 'creationTime';
-    this.sortType = 'asc';
+    this.sortType = 'desc';
     this.sort = this.sortColumn;
 
     this.loadFinancialClaimsBatchListGrid();

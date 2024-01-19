@@ -1,15 +1,15 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core'; 
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { ColumnComponent, ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { FinancialPharmacyClaimsFacade } from 'libs/case-management/domain/src/lib/application/financial-management/pharmacy-claims.facade';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'cms-pharmacy-claims-recent-claims-list',
-  templateUrl: './pharmacy-claims-recent-claims-list.component.html', 
+  templateUrl: './pharmacy-claims-recent-claims-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyClaimsRecentClaimsListComponent {
@@ -43,8 +43,8 @@ export class PharmacyClaimsRecentClaimsListComponent {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   addRemoveColumns="Default Columns"
-  columns : any;  
-  dropDowncolumns : any; 
+  columns : any;
+  dropDowncolumns : any;
   isFinancialClaimsRecentClaimGridLoaderShow = false;
 
   selectedPaymentStatus: string | null = null;
@@ -56,7 +56,7 @@ export class PharmacyClaimsRecentClaimsListComponent {
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   paymentRequestTypes: any = [];
-  
+
   paymentTypeFilter = '';
   iseditView:string="";
   defaultPageSize=20;
@@ -64,13 +64,13 @@ export class PharmacyClaimsRecentClaimsListComponent {
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
     private readonly financialPharmacyClaimsFacade:FinancialPharmacyClaimsFacade
-   
+
   ) { }
-  ngOnInit(): void { 
-    this.loadColumnsData(); 
+  ngOnInit(): void {
+    this.loadColumnsData();
     this.getClaimStatusLov();
-    this.getCoPaymentRequestTypeLov(); 
-    this.getPaymentMethodLov(); 
+    this.getCoPaymentRequestTypeLov();
+    this.getPaymentMethodLov();
     this.state = {
       skip: this.gridSkipCount,
       take: this.defaultPageSize
@@ -94,12 +94,12 @@ export class PharmacyClaimsRecentClaimsListComponent {
     });
   }
   ngOnChanges(): void {
-    
+
     this.state = {
       skip: 0,
       take: this.defaultPageSize,
       sort: this.sortDir,
-      
+
     };
     this.loadFinancialRecentClaimListGrid();
     this.cdr.detectChanges();
@@ -150,7 +150,7 @@ loadFinancialRecentClaimListGrid() {
     {
       operator = "eq"
     }
-    
+
     this.filterData = {
       logic: 'and',
       filters: [
@@ -214,7 +214,7 @@ loadFinancialRecentClaimListGrid() {
     this.selectedPaymentStatus = '';
     if (!this.filteredBy.includes('Payment Type'))
     this.selectedPaymentType = '';
-    this.loadFinancialRecentClaimListGrid();    
+    this.loadFinancialRecentClaimListGrid();
   }
 
   pageSelectionChange(data: any) {
@@ -235,10 +235,10 @@ loadFinancialRecentClaimListGrid() {
         this.isFinancialClaimsRecentClaimGridLoaderShow = false;
       }
     });
-  } 
+  }
 
   loadRecentClaimsGrid(data: any) {
-    
+
     this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
   }
 
@@ -301,103 +301,85 @@ loadFinancialRecentClaimListGrid() {
       clientAnnualTotal:"Client Annual Total",
       clientBalance:"Client Balance",
       fillDate:"Fill Date",
-      paymentStatusDesc:"Payment Status"   
+      paymentStatusDesc:"Payment Status"
     }
 
     this.dropDowncolumns = [
       {
         "columnCode": "brandName",
-        "columnDesc": "Brand Name"    
+        "columnDesc": "Brand Name"
       },
       {
         "columnCode": "drugName",
-        "columnDesc": "Drug Name"        
+        "columnDesc": "Drug Name"
       },
       {
         "columnCode": "nDCCode",
-        "columnDesc": "NDC Code"     
-      }
-      ,
+        "columnDesc": "NDC Code"
+      },
       {
         "columnCode": "cptCode",
-        "columnDesc": "CPT Code"         
-      }
-      ,
+        "columnDesc": "CPT Code"
+      },
       {
         "columnCode": "payment Type",
-        "columnDesc": "PaymentTypeDesc"         
-      }
-      ,
-    
-      ,
+        "columnDesc": "PaymentTypeDesc"
+      },
       {
         "columnCode": "amountPaid",
-        "columnDesc": "Amount Paid"         
-      }
-      ,
+        "columnDesc": "Amount Paid"
+      },
       {
         "columnCode": "qty",
-        "columnDesc": "Qty"         
-      }
-      ,
+        "columnDesc": "Qty"
+      },
       {
         "columnCode": "rxType",
-        "columnDesc": "RX Type"         
-      }
-      ,
+        "columnDesc": "RX Type"
+      },
       {
         "columnCode": "daysSupply",
-        "columnDesc": "Days Supply"         
-      }
-      ,
+        "columnDesc": "Days Supply"
+      },
       {
         "columnCode": "fillDate",
-        "columnDesc": "Fill Date"         
-      }
-      ,
+        "columnDesc": "Fill Date"
+      },
       {
         "columnCode": "prescriptionNumber",
-        "columnDesc": "Prescription Number"         
-      }
-      ,
+        "columnDesc": "Prescription Number"
+      },
       {
         "columnCode": "indexCode",
-        "columnDesc": "Index Code"         
-      }
-      ,
+        "columnDesc": "Index Code"
+      },
       {
         "columnCode": "pCACode",
-        "columnDesc": "PCA Code"         
-      }
-      ,
+        "columnDesc": "PCA Code"
+      },
       {
         "columnCode": "objectCode",
-        "columnDesc": "Object Code"         
-      }
-      ,
+        "columnDesc": "Object Code"
+      },
       {
         "columnCode": "paymentMethodDesc",
-        "columnDesc": "Payment Method"         
-      }
-      ,
+        "columnDesc": "Payment Method"
+      },
       {
         "columnCode": "warrantSPOTNumber",
-        "columnDesc": "Warrant SPOTs Number"         
-      }
-      ,
+        "columnDesc": "Warrant SPOTs Number"
+      },
       {
         "columnCode": "paymentStatusCode",
-        "columnDesc": "Payment Status "         
-      }
-      ,
+        "columnDesc": "Payment Status "
+      },
       {
         "columnCode": "pharmacyName",
-        "columnDesc": "Pharmacy Name"         
-      }
-      ,
+        "columnDesc": "Pharmacy Name"
+      },
       {
         "columnCode": "by",
-        "columnDesc": "By"         
+        "columnDesc": "By"
       }
     ]
   }
@@ -449,15 +431,15 @@ loadFinancialRecentClaimListGrid() {
     });
    }
   public rowClass = (args:any) => {
-    let bool =false ; 
+    let bool =false ;
     if(this.duplicatePaymentInputObject?.amountDue)
  {
-   bool = args.dataItem.amountDue == this.duplicatePaymentInputObject?.amountDue 
+   bool = args.dataItem.amountDue == this.duplicatePaymentInputObject?.amountDue
    && args.dataItem.startDate== this.duplicatePaymentInputObject?.startDate
    && args.dataItem.endDate== this.duplicatePaymentInputObject?.endDate
-   ; 
+   ;
  }
   return {"table-row-disabled" : bool }
-  
+
   };
 }

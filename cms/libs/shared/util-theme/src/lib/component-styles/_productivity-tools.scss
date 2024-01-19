@@ -4,8 +4,7 @@
     display: flex;
     margin: $size-0 $size-0 $size-xx $size-0;
     font-family: $font-family-bold;
-    align-items: center;
-    text-transform: uppercase;
+    align-items: center; 
     font-size: $font-size !important;
     .material-icons {
       margin-right: $size-m;
@@ -29,8 +28,7 @@
       }
       .due-item-heading {
         font-family: $font-family-bold;
-        margin: 0;
-        line-height: 18px;
+        margin: 0; 
         margin-bottom: $size-m;
         font-size: $font-size;
         overflow: hidden;
@@ -46,18 +44,12 @@
         span {
           width: 100%;
         }
-        .small-i-btn {
-          // width: $size-xxxx;
-          // height: $size-xxxx;
-          // line-height: $size-xxxx;
-          .k-button {
-            // width: $size-xxxx;
-            // height: $size-xxxx;
-            color: var(--hive-neutral-palette-800); 
+        .small-i-btn { 
+          .k-button { 
+            color: var(--hive-neutral-palette-900); 
             box-shadow: none;
             border-radius: 50%;
-            overflow: hidden;
-            // padding: 0px 0px 0px 0px;
+            overflow: hidden; 
             border: 0px;
           }
         }

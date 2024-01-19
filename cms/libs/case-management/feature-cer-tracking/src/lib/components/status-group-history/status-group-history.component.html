@@ -17,7 +17,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="groupEndDate" title="End Date" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.groupEndDate |date:'MM/dd/YYYY'}}
+            {{dataItem.groupEndDate | date: 'MM/dd/yyyy'}}
         </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="actualDaysInGroup" title="Actual Days in Group" [width]="100"></kendo-grid-column>
@@ -55,6 +55,7 @@
 <ng-template #eligibilityGroupDetail>
     <kendo-dialog-titlebar (close)="onGroupDetailClosed($event)">Edit Scheduled Group Change </kendo-dialog-titlebar>
     <case-management-group-detail [showDeleteOption]="true" [currentGroup$]="currentGroup$" [ddlGroups$]="ddlGroups$"
+    [groupList]="groupList"
     (isModalGroupCloseClicked)="onGroupDetailClosed($event)"
     (updateGroup)="onGroupChangeUpdateClicked($event)" (deleteGroupChange)="onDeleteGroupClicked($event, deleteScheduleGroupChanges)"
     (cancelGroupChange)="onGroupChangeCancelClicked($event)">
@@ -68,7 +69,7 @@
         </p>
     </section>
     <kendo-dialog-actions>
-       
+
         <div class="justify-content-end">
             <button
               kendoButton

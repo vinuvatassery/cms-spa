@@ -5,8 +5,7 @@
       class="mb-1 k-icon-button small-i-btn icon-hover-primary"
       icon="edit"
       title="Edit "
-      aria-label="edit"
-      title="Edit List Item"
+      aria-label="edit" 
       (click)="onEditListItemsDetailClicked()"
       *ngIf="selectedMasterDetail$ | async as item"
     ></button>
@@ -17,6 +16,12 @@
       <caption hidden>
         Vendor Info
       </caption>
+      <tr hidden>
+         
+          <th>info</th>
+          <th>details</th>
+        
+      </tr>
       <tbody
         *ngIf="
           subTypeCode === subTypeConst.DentalClinic ||
@@ -29,11 +34,11 @@
           <td>Clinic Name</td>
           <td>{{ vendorData.clinicName }}</td>
         </tr>
-        <tr>
+        <tr *ngIf="subTypeCode !== subTypeConst.DentalClinic && subTypeCode !== subTypeConst.MedicalClinic">
           <td>Provider First Name</td>
           <td>{{ vendorData.firstName }}</td>
         </tr>
-        <tr>
+        <tr *ngIf="subTypeCode !== subTypeConst.DentalClinic && subTypeCode !== subTypeConst.MedicalClinic">
           <td>Provider Last Name</td>
           <td>{{ vendorData.lastName }}</td>
         </tr>
@@ -60,7 +65,7 @@
           <td>{{ vendorData.address1 }}</td>
         </tr>
       </tbody>
-      <tbody *ngIf="subTypeCode === subTypeConst.Drug">
+      <tbody *ngIf="subTypeCode.toUpperCase() === subTypeConst.Drug">
         <tr>
           <td>Manufacturer</td>
           <td>{{ vendorData.manufacturerName }}</td>
@@ -129,12 +134,28 @@
           <td>{{vendorData.nameOnEnvelope}}</td>
         </tr>
         <tr>
-          <td>Billing Email</td>
+          <td>Email</td>
           <td>{{vendorData.email}}</td>
         </tr>
         <tr>
-          <td>Billing Address</td>
-          <td>{{vendorData.address1}}</td>
+          <td>Address</td>
+          <td>{{vendorData.address1}} {{vendorData.address2}}</td>
+        </tr>
+        <tr>
+          <td>Contact Name</td>
+          <td>{{vendorData.contactName}}</td>
+        </tr>
+        <tr>
+          <td>Phone</td>
+          <td>{{vendorData.phoneNumber}}</td>
+        </tr>
+        <tr>
+          <td>Fax</td>
+          <td>{{vendorData.fax}}</td>
+        </tr>
+        <tr>
+          <td>Email</td>
+          <td>{{vendorData.email}}</td>
         </tr>
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.InsurancePlan">
@@ -175,15 +196,15 @@
       </tbody>
       <tbody *ngIf="subTypeCode === subTypeConst.Pharmacy">
         <tr>
-          <td>Pharmacy</td>
+          <td>Pharmacy Name</td>
           <td>{{vendorData.vendorName}}</td>
         </tr>
         <tr>
-          <td>Tin</td>
+          <td>TIN</td>
           <td>{{vendorData.tin}}</td>
         </tr>
         <tr>
-          <td>NPI </td>
+          <td>NPI</td>
           <td>{{vendorData.npiNbr}}</td>
         </tr>
       </tbody>

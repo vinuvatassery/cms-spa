@@ -54,11 +54,10 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="flat" aria-label="Cancel" look="outline"
-          (click)="onCancel()">
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCancel()">
           Cancel
         </button> 
-        <button  kendoButton [primary]="true" look="flat" aria-label="Submit" (click)="save()">
+        <button  kendoButton [primary]="true" aria-label="Submit" (click)="save()">
           {{hasReassignPermission ? 'Re-assign' : 'Submit'}}
         </button>
       </div>

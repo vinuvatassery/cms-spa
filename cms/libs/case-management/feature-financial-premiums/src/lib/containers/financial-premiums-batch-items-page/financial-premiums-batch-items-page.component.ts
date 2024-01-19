@@ -30,7 +30,7 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
    premiumType: any;
    vendorAddressId:any;
    batchId:any;
-  
+   vendorId:any;
    @ViewChild('providerDetailsTemplate', { read: TemplateRef })
    providerDetailsTemplate!: TemplateRef<any>;
    paymentRequestId: any;
@@ -78,6 +78,8 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
    private getQueryParams() {
     this.vendorAddressId = this.route.snapshot.queryParams['eid'];
     this.batchId = this.route.snapshot.queryParams['bid'];
+    this.vendorId = this.route.snapshot.queryParams['vid'];
+    this.paymentRequestId = this.route.snapshot.queryParams['pid'];
   }
 
   loadBatchItemListGrid(event: any) { 
@@ -88,11 +90,11 @@ export class FinancialPremiumsBatchItemsPageComponent implements OnInit {
 
 
   loadPaymentPanel(event:any=null){
-    this.paymentFacade.loadPaymentPanel(this.vendorAddressId,this.batchId);    
+    this.paymentFacade.loadPaymentPanel(this.paymentRequestId,this.batchId);    
   }
 
   updatePaymentPanel(paymentPanel:PaymentPanel){
-    this.paymentFacade.updatePaymentPanel(this.vendorAddressId,this.batchId, paymentPanel);
+    this.paymentFacade.updatePaymentPanel(this.batchId, paymentPanel);
     this.paymentFacade.updatePaymentPanelResponse$.subscribe({
         next: (response: any) => {
           this.loadPaymentPanel();

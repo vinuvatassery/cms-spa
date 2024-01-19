@@ -1,36 +1,37 @@
 <!-- Table Top Filter, Search and Export -->
 
-<p class="mt-2"> Click “+ New Refund” to add a new insurance, provider, prescription, or tax refund.</p>
+<p class="mt-2"> Click “+ New Refund” to add a new insurance, provider, prescription or tax refund.</p>
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
       <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
+      textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedSearchColumn">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)"  aria-label="Search case" rounded="medium"
+      <kendo-textbox [(ngModel)]="searchValue" [clearButton]="true" (afterValueChanged)="onChange($event)"  aria-label="Search case" rounded="medium"
       [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
   </span>
   <span class="right-overlay-export">
-    <button kendoButton [primary]="true" aria-label="Export" look="flat" class="button-lg">
-      <span class="material-icons" aria-label="Export" aria-invalid="true"
-        >exit_to_app</span
-      ><i class="exp_button-text">Export</i>
+    <button kendoButton [primary]="true" look="flat" class="button-lg" aria-label="Export" (click)="onClickedExport()"
+      [disabled]="showExportLoader">
+      <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>
+      <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i
+        class="exp_button-text">Export</i>
     </button>
   </span>
 </section>
 
 <!-- Sorted Info -->
 <div class="table-sorted-info">
-  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
-  <span class="sort-items"  *ngIf="!filteredByColumnDesc">No Filters</span>
-  <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
+  <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+  <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
   <span class="sort-items">{{columnChangeDesc}}</span>
   <span class="sort-items" *ngIf="isColumnsReordered">Columns Re-ordered</span>
   <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)=" setToDefault()">
@@ -44,16 +45,30 @@
     [columnMenu]="{ filter: true }" [sort]="state.sort"  (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
     [data]="vendorRefundProcessGridLists$ | async"
     kendoGridSelectBy="paymentRequestId"
+    [selectable]="selectableSettings"
     (selectedKeysChange)="selectedKeysChange($event)"
-    [(selectedKeys)]="selectedProcessRefunds">
+    [(selectedKeys)]="selectedProcessRefunds"
+    (columnVisibilityChange)="columnChange($event)">
     <kendo-grid-checkbox-column *ngIf="!isProcessGridExpand" [headerClass]="{ 'text-center': true }"
       [class]="{ 'text-center': true }" [resizable]="false" [columnMenu]="false" [showSelectAll]="true"
       [width]="40"
-      [sticky]="true"></kendo-grid-checkbox-column>
+      [sticky]="true">
+      <ng-template *ngIf="this.isProcessBatchClosed" kendoGridHeaderTemplate>
+        <input
+          type="checkbox"
+          kendoCheckBox
+          id="selectAllCheckboxId"
+          kendoGridSelectAllCheckbox
+          [state]="selectAllState"
+          (selectAllChange)="onSelectAllChange($event)"
+        />
+        <label class="k-checkbox-label" for="selectAllCheckboxId"></label>
+      </ng-template>
+    </kendo-grid-checkbox-column>
 
-    <kendo-grid-column field="VendorName" title="Vendor Name" [width]="160">
+    <kendo-grid-column field="VendorName" title="Vendor" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button">
+        <button  [attr.aria-label]="dataItem.vendorName" (click)="onProviderNameClick(dataItem.paymentRequestId)"kendoButton look="flat" class="card-link-button">
           {{ dataItem.vendorName  }}
         </button>
       </ng-template>
@@ -67,7 +82,7 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="serviceTypeDescription" title="Type" [width]="160">
+    <kendo-grid-column field="type" title="Type" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -79,6 +94,12 @@
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
+          (click)="clientRecentClaimsModalClicked(dataItem)">
+          {{ dataItem.clientFullName }}
+        </button>
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -105,20 +126,15 @@
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-gte-operator></kendo-filter-gte-operator>
+          <kendo-filter-gt-operator></kendo-filter-gt-operator>
+          <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          <kendo-filter-lt-operator></kendo-filter-lt-operator>
         </kendo-grid-string-filter-menu>
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         <span class="tableamountview"> <strong>$</strong> {{dataItem.refundAmount | kendoNumber:'n2'}}</span>
   </ng-template>
-    </kendo-grid-column>
-    <kendo-grid-column field="depositDate" title="Deposit Date" [width]="160">
-      <ng-template kendoGridCellTemplate let-dataItem>
-        {{ dataItem.depositDate | date : 'MM/dd/yyyy' }}
-      </ng-template>
-      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <common-grid-cell-date-range-filter [field]="'depositDate'" [filter]="filter" [filterService]="filterService">
-        </common-grid-cell-date-range-filter>
-      </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="origionalWarrentnbr" title="Original Warrant #" [width]="160">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -129,6 +145,15 @@
           <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="depositDate" title="Deposit Date" [width]="160">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.depositDate | date : 'MM/dd/yyyy' }}
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter [field]="'depositDate'" [filter]="filter" [filterService]="filterService">
+        </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="indexCode" title="Index Code" [width]="160">
@@ -185,7 +210,7 @@
         </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
-  <kendo-grid-column field="creatorId" title="By" [width]="70" class="text-center" [sortable]="false" >
+  <kendo-grid-column field="creatorId" title="By" [width]="70" class="text-center" [sortable]="false" [filterable]="false">
     <ng-template kendoGridCellTemplate let-dataItem>
       <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
         [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
@@ -204,16 +229,16 @@
 
   <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="70" class="text-center" [sortable]="false" >
     <ng-template kendoGridCellTemplate let-dataItem>
-      <kendo-dropdownbutton [data]="processGridActions(dataItem)" icon="more-vertical"
+      <kendo-dropdownbutton [data]="processGridActions(dataItem)" 
         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
         aria-label="more actions" title="More option"
         [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-        <span hidden> More Option</span>
+        <span class="material-icons" aria-label="More option"> more_vert    </span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
           <ng-container>
             <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-              [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-              <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+              [class]="buttondataItem.buttonType"   (click)="buttondataItem.click(dataItem)">
+              <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
               <label> {{ buttondataItem.text }} </label>
             </button>
           </ng-container>
@@ -225,9 +250,9 @@
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
         <div class="d-flex align-items-center">
-          <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+          <label class="mr-1" for="RefundProcessRowsPerPage">Rows Per Page</label>
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RowsPerPage"
+            [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="RefundProcessRowsPerPage"
             [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
           <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
@@ -253,29 +278,29 @@
 </div>
 
 <div class="bottom-fixed-wrapper text-right flex-gap">
-  <span *ngIf="isProcessBatchClosed" class="">{{selectedProcessRefunds.length}} refunds(s) to be batched</span>
+  <span *ngIf="isProcessBatchClosed" class="">{{selectAllState === "checked" ? vendorRefundProcessGridLists.total : selectedProcessRefunds.length}} refunds(s) to be batched</span>
   <span *ngIf="isDeleteBatchClosed" class="">{{selectedProcessRefunds.length}} refunds(s) to be deleted</span>
   <button kendoButton [primary]="true" look="outline" class="" aria-label="Cancel"
     (click)="onBatchRefundsGridSelectedCancelClicked()" *ngIf="isDeleteBatchClosed || isProcessBatchClosed"> Cancel
   </button>
 
   <button kendoButton kendoButton class="k-error-button" aria-label="Delete" *ngIf="isDeleteBatchClosed" [disabled]="!selectedProcessRefunds.length"
-    (click)="onDeleteRefundsOpenClicked(deleteRefundConfirmationDialog)"> <span class="material-icons mr-1"
+    (click)="onDeleteRefundsOpenClicked(deleteRefundConfirmationDialog)"> <span class="material-icons mr-1" aria-hidden="true"
       aria-label="Delete"> delete</span> Delete </button>
 
   <button kendoButton [primary]="true" aria-label="Batch" class="" [disabled]="!selectedProcessRefunds.length"
     (click)="onBatchRefundsClicked(batchRefundConfirmationDialog)" *ngIf="isProcessBatchClosed"> Batch </button>
 
-  <kendo-splitbutton [data]="refundProcessMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
+  <kendo-splitbutton *ngIf="!isDeleteBatchClosed && !isProcessBatchClosed" [data]="refundProcessMore" class="app-c-split-button app-dropdown-action" buttonClass="k-split-button" [tabindex]="0"
     [popupSettings]="{ popupClass: 'app-c-split-button app-dropdown-action-list', animate: true }">
     <div class="btn-inner-block" (click)="onClickOpenAddEditRefundFromModal(addEditRefundDialog)">
-      <span class="material-icons" aria-label="New Refund" aria-hidden="false">add</span>
+      <span class="material-icons"  aria-label="New Refund" aria-hidden="true">add</span>
       New Refund
     </div>
     <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
         aria-hidden="false" (click)="!isDataAvailable ? null: dataItem.click(dataItem)" [disabled]="!isDataAvailable" >
-        <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+        <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
     </ng-template>
@@ -286,7 +311,7 @@
   <cms-batch-refund-confirmation
       (isModalBatchRefundsCloseClicked)="onModalBatchRefundsModalClose($event)"
       (isModalBatchRefundsButtonClicked)="onModalBatchRefundsButtonClicked($event)"
-      [selectedProcessRefundsCount]="selectedProcessRefunds.length">
+      [selectedProcessRefundsCount]="selectAllState === 'checked' ? vendorRefundProcessGridLists.total : selectedProcessRefunds.length">
     </cms-batch-refund-confirmation>
 </ng-template>
 <ng-template #deleteRefundConfirmationDialog>
@@ -300,11 +325,80 @@
 </ng-template>
 
 <ng-template #addEditRefundDialog>
-  <cms-refund-new-form-details [isEdit]="isEditRefund" 
+  <cms-refund-new-form-details [isEdit]="isEditRefund"
   [serviceType]="refunEditServiceType" [clientId]="refundEditClientId"
   [clientName]="refundEditClientFullName"
   [vendorAddressId]="refundEditVendorAddressId"
   [vendorName]="refundEditVendorName"
   (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"
-  [inspaymentRequestId]="inspaymentRequestId"></cms-refund-new-form-details>
+  [inspaymentRequestId]="inspaymentRequestId"
+  [vendorId]="refundEditVendorId"></cms-refund-new-form-details>
+</ng-template>
+
+<ng-template #clientRecentClaimsDialog>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)">
+    <h4 class="text-upper">Recent Claims for {{clientName}}</h4>
+    <div *ngIf="(recentClaimsGridLists$ | async) as recentClaims" class="k-flex-grow justify-content-end">
+      <span class="d-flex k-wizard-horizontal align-items-fstart">
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Annual Total: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientAnnualTotal | kendoNumber: 'n2'}}</span></div>
+        <div class="flex-space-bw w100" style="gap: 4px;">Client Balance: <span class=""> <strong>$</strong> {{recentClaims.data[0]?.clientBalance | kendoNumber: 'n2'}}</span></div>
+      </span>
+    </div>
+  </kendo-dialog-titlebar>
+  <section class="k-dialog-body-padding">
+    <cms-financial-claims-recent-claims-list [vendorId]="vendorId" [clientId]="clientId" [includeServiceSubTypeFilter]="false" [claimsType]="claimsType"
+      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)"></cms-financial-claims-recent-claims-list>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true" (click)="onClientClicked(clientId)">
+            chevron_right
+          </span>
+        </button>
+
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</ng-template>
+
+<ng-template #clientRecentPremiumsDialogTemplate>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
+  <section class="k-dialog-body">
+    <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="claimsType" [includeServiceSubTypeFilter]="false"
+      (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-recent-premiums-list>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true">
+            chevron_right
+          </span>
+        </button>
+
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</ng-template>
+
+<ng-template #clientRecentPharmacyClaimsDialog>
+  <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}} </h4></kendo-dialog-titlebar>
+  <section class="k-dialog-body">
+    <cms-pharmacy-claims-recent-claims-list
+      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between" >
+      <div class="justify-content-end" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true">
+            chevron_right
+          </span>
+        </button>
+
+      </div>
+    </div>
+  </kendo-dialog-actions>
 </ng-template>

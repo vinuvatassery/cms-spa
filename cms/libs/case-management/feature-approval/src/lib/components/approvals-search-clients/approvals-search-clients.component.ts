@@ -4,8 +4,10 @@ import {
   Output,
   EventEmitter,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
-import { FinancialClaimsFacade, ImportedClaimFacade } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
+import { ImportedClaimFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
@@ -21,14 +23,17 @@ export class ApprovalsSearchClientsComponent {
 
   @Input() selectedClaim: any;
   isShownSearchLoader = false;
-  clientSearchResult$ = this.financialClaimsFacade.clients$;
+  clientSearchResult$ = this.importedClaimFacade.clients$;
   selectedClient: any;
+  isButtonDisable = true;
 
-  constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
+  constructor(
     private readonly importedClaimFacade: ImportedClaimFacade,
     private readonly loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService,){}
+    private readonly loaderService: LoaderService,
+    private router: Router,
+    private changeDetector: ChangeDetectorRef){}
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {
@@ -51,44 +56,17 @@ export class ApprovalsSearchClientsComponent {
       this.loaderService.hide();
     }
 
-  clientSearchResult = [
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-    {
-      clientId: '12',
-      clientFullName: 'Fname Lname',
-      ssn: '2434324324234',
-      dob: '23/12/2023',
-    },
-  ];
   closeSearchCase() {
     this.closeSearchClientsDialogClickedEvent.emit();
   }
 
   onClientValueChange(client: any){
+    if(client == undefined) {
+      this.isButtonDisable = true;
+      this.changeDetector.detectChanges();
+    }
     this.selectedClient = client;
+    this.isButtonDisable = false;
   }
 
   loadClientBySearchText(clientSearchText: any) {
@@ -97,7 +75,8 @@ export class ApprovalsSearchClientsComponent {
     }
     clientSearchText = clientSearchText.replace("/", "-");
     clientSearchText = clientSearchText.replace("/", "-");
-    this.financialClaimsFacade.loadClientBySearchText(clientSearchText);
+    this.importedClaimFacade.loadClientBySearchText(clientSearchText);
+    this.changeDetector.detectChanges();
   }
 
   onClientSaveClick(){
@@ -105,7 +84,9 @@ export class ApprovalsSearchClientsComponent {
       dateOfService: this.selectedClaim.dateOfService,
       clientId: this.selectedClient.clientId,
       policyId: this.selectedClaim.policyId,
-      importedClaimId: this.selectedClaim.importedClaimId
+      importedClaimId: this.selectedClaim.importedClaimId,
+      invoiceExceptionId: this.selectedClaim.invoiceExceptionId,
+      entityTypeCode: this.selectedClaim.entityTypeCode,
     }
     this.clientValueChangeEvent.emit(importedclaimDto);
   }
@@ -123,5 +104,14 @@ export class ApprovalsSearchClientsComponent {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       }
     });
+  }
+
+  onGoToProfileClick() {
+    this.router.navigate([`/case-management/cases/case360/${this.selectedClient.clientId}`]);
+    this.closeSearchCase();
+  }
+
+  onCancelClick(){
+    this.closeSearchCase();
   }
 }

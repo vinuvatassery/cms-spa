@@ -28,7 +28,7 @@ export class PharmacyListComponent implements OnInit {
   @Input() isCer:any = false;
   /** Output Properties **/
   @Output() searchPharmacy = new EventEmitter<string>();
-  @Output() addPharmacyClick = new EventEmitter<string>();
+  @Output() addPharmacyClick = new EventEmitter<any>();
   @Output() editPharmacyInit = new EventEmitter<string>();
   @Output() editPharmacyClick = new EventEmitter<{ clientPharmacyId: string, vendorId: string }>();
   @Output() removePharmacyClick = new EventEmitter<string>();
@@ -195,12 +195,12 @@ export class PharmacyListComponent implements OnInit {
     this.searchPharmacy.emit(searchText);
   }
 
-  addPharmacyEvent(pharmacyId: string) {
-    this.addPharmacyClick.emit(pharmacyId);
+  addPharmacyEvent(pharmacy:any) {
+    this.addPharmacyClick.emit(pharmacy);
   }
 
-  editPharmacyEvent(pharmacyId: string) {
-    const data = { clientPharmacyId: this.selectClientPharmacyId, vendorId: pharmacyId }
+  editPharmacyEvent(pharmacy:any) {
+    const data = { clientPharmacyId: this.selectClientPharmacyId, vendorId: pharmacy.vendorId,vendorAddressId:pharmacy.VendorAddressId }
     this.editPharmacyClick.emit(data);
   }
 

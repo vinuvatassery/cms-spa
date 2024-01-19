@@ -58,5 +58,6 @@ export enum LovType {
     ClaimStatus = 'CLAIM_STATUS',
     ServiceType ="SERVICE_TYPE",
     RefundType ="REFUND_TYPE",
+    BatchStatusCode = "BATCH_STATUS_CODE"
 
   }

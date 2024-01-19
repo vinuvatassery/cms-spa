@@ -1,11 +1,12 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, TemplateRef, ViewChild } from '@angular/core';
 /** Facades **/
-import { CaseFacade, StatusPeriodFacade, ClientEligibilityFacade } from '@cms/case-management/domain';
+import { CaseFacade, StatusPeriodFacade, ClientEligibilityFacade, ClientFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridComponent } from '@progress/kendo-angular-grid';
+import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
+
 @Component({
   selector: 'case-management-status-period',
   templateUrl: './status-period.component.html',
@@ -14,11 +15,12 @@ import { GridComponent } from '@progress/kendo-angular-grid';
 })
 export class StatusPeriodComponent implements OnInit {
 
-    @Input() clientCaseId!: any;
-    @Input() clientId!: any;
-    @Input() clientCaseEligibilityId!: any;
-
-    @Output() loadStatusPeriodEvent  = new EventEmitter<any>();
+  @Input() clientCaseId!: any;
+  @Input() clientId!: any;
+  @Input() clientCaseEligibilityId!: any;
+  @Input() eligibilityStatus$:any;
+  @Input() ddlGroups$:any;
+  @Output() loadStatusPeriodEvent  = new EventEmitter<any>();
   /** Public properties **/
   @ViewChild(GridComponent) statusGrid!: GridComponent;
   StatusPeriod$ = this.statusPeriodFacade.statusPeriod$;
@@ -37,6 +39,30 @@ export class StatusPeriodComponent implements OnInit {
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   isStatusPeriodEdit = false;
   isCopyPeriod = false;
+  sortColumn = 'eligibilityStartDate';
+  sortDir = 'Ascending';
+  columnsReordered = false;
+  filteredBy = '';
+  searchValue = '';
+  isFiltered = false;
+  filter!: any;
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  columns: any = {
+    eligibilityStartDate: 'Status Start',
+    eligibilityEndDate: 'Status End',
+    eligibilityStatusDesc: 'Status',
+    groupCodeDesc: 'Current Group',
+    daysInGroup: 'Days in Group',
+    familySize: 'Family Size',
+    grossMonthlyIncome: 'Gross Monthly Income',
+    fplspStart: 'FPL@SP Start',
+    currentFPL:'Current FPL',
+    reviewCompletedDate:'Review Completed'
+  };
+  eligibilityStatus:any;
+  ddlGroups:any;
+  eligibilityStatusDesc = null;
+  groupCodeDesc = null
   private statusPeriodDialog: any;
   public actions = [
     {
@@ -68,7 +94,8 @@ export class StatusPeriodComponent implements OnInit {
     private caseFacade: CaseFacade,
     private cdr: ChangeDetectorRef,
     private clientEligibilityFacade: ClientEligibilityFacade,
-    private dialogService: DialogService) { }
+    private dialogService: DialogService,
+    private readonly clientFacade: ClientFacade) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -86,6 +113,12 @@ export class StatusPeriodComponent implements OnInit {
       this.cdr.detectChanges();
     });
     this.fetchStatusPeriodDetails();
+    this.eligibilityStatus$.subscribe((eligibilityStatus:any)=>{
+      this.eligibilityStatus = eligibilityStatus;
+    });
+    this.ddlGroups$.subscribe((ddlGroups:any) => {
+      this.ddlGroups = ddlGroups;
+    });
   }
 
   pageSelectionChange(data: any) {
@@ -94,8 +127,58 @@ export class StatusPeriodComponent implements OnInit {
     this.loadStatusPeriodData();
   }
 
+  public filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+
+  dropdownFilterChange(field: string, value: any, filterService: FilterService): void {
+    if (field == "groupCodeDesc") {
+      filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value: value.groupCodeDesc
+        }],
+        logic: "or"
+      });
+      this.groupCodeDesc = value;
+    }
+    else {
+      filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value: value.lovCode
+        }],
+        logic: "or"
+      });
+      if (field == "eligibilityStatusDesc") {
+        this.eligibilityStatusDesc = value;
+      }
+    }
+  }
+
   public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.filter = stateData?.filter?.filters;
+
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+
+    if (stateData.filter?.filters.length > 0) {
+      this.isFiltered = true;
+      const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+      this.filteredBy = filterList.toString();
+    } else {
+      this.filter = null;
+      this.isFiltered = false;
+    }
     this.loadStatusPeriodData();
   }
 
@@ -103,17 +186,24 @@ export class StatusPeriodComponent implements OnInit {
    private loadStatusPeriodData(): void {
     this.LoadStatusPeriodList(
       this.state?.skip ?? 0,
-      this.state?.take ?? 0
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType     
     );
   }
 
   LoadStatusPeriodList(
     skipCountValue: number,
-    maxResultCountValue: number
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string
   ) {
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue
+      pagesize: maxResultCountValue,
+      sortColumn: sortValue,
+      sortType: sortTypeValue,
+      filter : this.filter === undefined?null:this.filter
     };
     this.loadStatusPeriodEvent.next(gridDataRefinerValue);
   }
@@ -122,7 +212,7 @@ export class StatusPeriodComponent implements OnInit {
     this.StatusPeriod$.subscribe((res: any) => {
       if(res['data'].length > 0) {
         res['data'].forEach((x:any, index: number) => {
-          this.statusGrid.collapseRow(index);
+          this.statusGrid?.collapseRow(index);
         });
       }
     })
@@ -145,7 +235,9 @@ export class StatusPeriodComponent implements OnInit {
       this.isStatusPeriodDetailOpened=false;
       this.isStatusPeriodEdit = false;
       this.isCopyPeriod = false;
+      this.clientFacade.runImportedClaimRules(this.clientId);
       this.loadStatusPeriodData();
+      this.clientFacade.copyStatusPeriodTriggeredSubject.next(true);
     }
   }
 

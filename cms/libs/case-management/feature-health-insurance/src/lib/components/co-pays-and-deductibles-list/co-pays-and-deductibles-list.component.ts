@@ -37,6 +37,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   clientmaxmumbalance:number=0;
   groupValue = null;
   statusValue = null;
+  serviceDescription="Medical";
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly formBuilder: FormBuilder, private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
@@ -48,9 +49,13 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
 
   ngOnInit(): void {
     this.insurancePolicyFacade.getMedicalClaimMaxbalance(this.clientId,this.caseEligibilityId);
-   this.insurancePolicyFacade.clientmaxmumbalance$.subscribe((res:any)=>{
-    
+   this.insurancePolicyFacade.clientmaxmumbalance$.subscribe((res:any)=>{    
    this.clientmaxmumbalance=res.maximumAmount;
+   if(this.tabStatus != ClientProfileTabs.HEALTH_INSURANCE_COPAY )
+   {
+    this.serviceDescription="Dental";
+    this.cdr.detectChanges();
+   }
    })
     this.state = {
       skip: this.gridSkipCount,

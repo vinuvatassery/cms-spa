@@ -1,5 +1,5 @@
 /** Angular **/
-import {  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, TemplateRef } from '@angular/core';
+import {  ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {  FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -26,6 +26,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
    @Input() pageSizes :any
    @Input() sortType :any
    @Input() editPaymentRequestId:any
+   isSpotPayment = false
      public state!: State;
      filter!: any;  
   @Output() insuranceRefundInformationConfirmClicked = new EventEmitter<any>();
@@ -44,20 +45,24 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   @Input() insuraceAddRefundClick$:any
   @Output() Reqpayload = new EventEmitter<any>()
   refundForm! :FormGroup
+  
+  @Input() insurancePremiumPaymentReqIds:any[] =[]
   public constructor(private formBuilder : FormBuilder,
     private readonly changeDetectorRef: ChangeDetectorRef){
     
   }
 
- 
+
  ngOnInit(): void {
   this.initForm()
   this.initializeRefunInformationGrid()
   this.insuraceAddRefundClick$.subscribe((res:any) =>{
     this.changeDetectorRef.markForCheck()
     this.isSubmitted = true;
-    let refundError =   this.financialPremiumsRefundGridLists.filter(x=>x.refundAmountError)
-    if (this.refundForm.invalid && refundError) {
+    let refundError =   this.financialPremiumsRefundGridLists.filter((x) =>{
+      return   !!x.refundAmountError 
+    })
+    if (this.refundForm.invalid || (refundError && refundError.length >0)) {
       return;
     }else{
        const refundRequests :any[] =[]
@@ -68,7 +73,8 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
           refundWarantNumber: this.refundForm.controls['warantNumber']?.value,
           depositDate:this.refundForm.controls['depositDate']?.value,
           refundNote:this.refundForm.controls['refundNote']?.value,
-          creditNumber:this.refundForm.controls['creditNumber']?.value
+          creditNumber:this.refundForm.controls['creditNumber']?.value,
+          isSpotPayment: this.isSpotPayment
         })
       })
 
@@ -80,6 +86,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
         warrantNumber: this.refundForm.controls['warantNumber']?.value,
         depositDate:this.refundForm.controls['depositDate']?.value,
         notes:this.refundForm.controls['refundNote']?.value,
+        isSpotPayment: this.isSpotPayment,
         addRefundDto: refundRequests,
         refundType:"insurance"
       }
@@ -115,7 +122,7 @@ initForm(){
 
   refundAmountChange(dataItem:any){
    if(dataItem.amountPaid < dataItem.refundAmount ){
-     dataItem.refundAmountError="Refund amount cannot be greater than claim amount"
+     dataItem.refundAmountError="Refund amount is greater than the claim."
    }else{
     dataItem.refundAmountError=""
    }
@@ -156,8 +163,9 @@ initForm(){
       this.insuranceRefundInformation$.subscribe((res:any) =>{
         this.financialPremiumsRefundGridLists = res.data
        this.totalRefundAmount = this.financialPremiumsRefundGridLists.map(x=> x.refundAmount).reduce((a, b) => a + b, 0)       
-       this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountPaid).reduce((a, b) => a + b, 0)  
-      const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
+       this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountDue).reduce((a, b) => a + b, 0)  
+       const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
+       this.isSpotPayment = formData.isSpotPayment
       this.refundForm.patchValue({
         vp: formData.voucherPayabeNbr,
         creditNumber:formData.creditNumber,
@@ -166,7 +174,11 @@ initForm(){
        })
       this.refundForm.controls['depositDate'].setValue(new Date(formData.depositDate));
     })
-    this.insuranceRefundInformationConfirmClicked.emit(param);
+    this.insuranceRefundInformationConfirmClicked.emit(
+      {...param, 
+        paymentRequestsId : this.insurancePremiumPaymentReqIds
+      }
+      );
   }
 
 

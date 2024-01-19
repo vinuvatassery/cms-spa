@@ -15,7 +15,7 @@ export class FinancialVendorDataService {
   ) {}
 
   /** Public methods **/
-  getVendors(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, vendorTypeCode: string,filter : string ) 
+  getVendors(skipcount: number,  maxResultCount: number,  sort: string,  sortType: string, vendorTypeCode: string,filter : string )
   {
     const VendorPageAndSortedRequest =
     {
@@ -36,17 +36,17 @@ export class FinancialVendorDataService {
     );
   }
   searchInsurnaceVendor(searchText: string) {
-    
+
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/providers/SearchText=${searchText}`
-      );   
+      );
   }
-  searchProvidorsById(VendorAddressId: string) {    
+  searchProvidorsById(VendorAddressId: string) {
 
       return this.http.get<Pharmacy[]>(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/health-insurance/providers/by-vendor-address/${VendorAddressId}`
       );
-    
+
   }
 
   updateVendorDetails(details: any) {
@@ -85,7 +85,7 @@ export class FinancialVendorDataService {
     );
   }
 
-  
+
   getProviderPanel(paymentRequestId:string){
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
@@ -106,14 +106,19 @@ export class FinancialVendorDataService {
     );
   }
 
-  getVendorProfileSpecialHandling(vendorId: string) {  
+  getVendorProfileSpecialHandling(vendorId: string) {
 
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
         `/financial-management/vendors/${vendorId}/profile/special-handling`
     );
   }
-
+  getProviderPanelByVendorId(vendorId:string){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/${vendorId}`
+    );
+  }
 
   addVendorProfile(vendorProfile:any) {
     return this.http.post(
@@ -146,18 +151,18 @@ export class FinancialVendorDataService {
   }
 
   getProvidersList(providerPageAndSortedRequest:any) {
-      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/children`, providerPageAndSortedRequest);   
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/children`, providerPageAndSortedRequest);
   }
-  searchProvider(payload: any) 
+  searchProvider(payload: any)
   {
     return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/search`,payload);
   }
-  removeprovider(providerId: any) 
+  removeprovider(providerId: any)
   {
     return this.http.delete<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${providerId}`);
   }
   addProvider(provider:any)
-  {   
+  {
     return this.http.patch(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors`,provider);
   }
 
@@ -167,4 +172,20 @@ export class FinancialVendorDataService {
         `/financial-management/vendors/vendor-profile`,providePanelDto
     );
   }
+
+
+  getValidateTinNbr(tinNbr:any){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/ValidateTin/${tinNbr}`
+        );
+      }
+
+  loadVendors(searchText:any,vendorType:any){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/financial-management/vendors/clinic-search?searchText=${searchText}&vendorType=${vendorType}`
+    );
+  }
+
 }

@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (close)="closeAddEditPcaAssignmentClicked()">PCA Reassignment  </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="closeAddEditPcaAssignmentClicked()">Reassign PCA </kendo-dialog-titlebar>
 <form [formGroup]="pcaAssignmentForm" (ngSubmit)="onPcaAssignmentFormSubmit()">   
       <input type="hidden" formControlName="pcaAssignmentId">
 <section class="k-dialog-body">
@@ -9,7 +9,7 @@
             <div class="flex-col">
                   <kendo-floatinglabel text="Object">
                         <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
-                        placeholder="Object 34534553"
+                        placeholder="Object"
                          required [data]="objectCodesData$" 
                           textField="ledgerName" valueField="objectCodeId" [valuePrimitive]="true"
                        
@@ -93,13 +93,16 @@
                                     valueField="dateValue" 
                                     aria-label="date"
                                     [valuePrimitive]="true"
-                                    formControlName="openDate">
-            
+                                    formControlName="openDate"
+                                    (keyup)="openDateValidate()"
+                                    (valueChange)="openDateValidate()">
                                     </kendo-dropdownlist>
                                 
                               <kendo-formerror *ngIf="pcaAssignmentFormControls?.openDate?.errors?.required && formSubmitted">
                                     Open Date is required
-                              </kendo-formerror>     
+                              </kendo-formerror>  
+                              <kendo-formerror *ngIf="openDateError">{{openDateErrorMsg}}</kendo-formerror>
+                            
                        
                   </kendo-floatinglabel>
 
@@ -113,23 +116,20 @@
                                     valueField="dateValue" 
                                     aria-label="date"
                                     [valuePrimitive]="true"
-                                    formControlName="closeDate">
-            
+                                    formControlName="closeDate"
+                                    (keyup)="closeDateValidate()"
+                                    (valueChange)="closeDateValidate()">
                                     </kendo-dropdownlist>
                                
                               <kendo-formerror *ngIf="pcaAssignmentFormControls?.closeDate?.errors?.required && formSubmitted">
                                     Close Date is required
-                              </kendo-formerror>   
-                        
+                              </kendo-formerror> 
+                             
                   </kendo-floatinglabel>
+                  <kendo-formerror *ngIf="closeDateError"> {{closeDateErrorMsg}}</kendo-formerror>
 
             </div>
-            <kendo-formerror *ngIf="openDateError">
-                  Open Date must be before Close Date
-            </kendo-formerror> 
-            <kendo-formerror *ngIf="pcaCodeInfo?.closeDate< this.pcaAssignmentForm.value.closeDate">
-                  Assignment Close Date cannot exceed the PCA Close Date
-            </kendo-formerror> 
+       
       </div>
       <div class="flex-row">
             <div class="flex-col ">
@@ -139,7 +139,7 @@
                               class="input-icon-right" placeholder="00.00" [fillMode]="formUiStyle.inputFillMode">
                         </kendo-numerictextbox>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required && formSubmitted">
+                  <kendo-formerror *ngIf="pcaAssignmentFormControls?.amount?.errors?.required &&pcaCodeInfo !=null">
                         Amount is required
                   </kendo-formerror>   
             </div>
@@ -162,7 +162,7 @@
                         Cancel
                   </button>
                   <button kendoButton [primary]="true" aria-label="REASSIGN" [disabled]="pcaAssignmentFormDataModel$.totalOverSpendAmount>pcaCodeInfo?.remainingAmount">
-                        REASSIGN
+                        REASSIGN 
                   </button>
             </div>
       </div>

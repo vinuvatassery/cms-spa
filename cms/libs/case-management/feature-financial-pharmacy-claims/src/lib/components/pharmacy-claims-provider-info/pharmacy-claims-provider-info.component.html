@@ -71,9 +71,19 @@
                 <td> 
                         <kendo-floatinglabel text="TIN (optional)">
                             <kendo-maskedtextbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode" [maxlength]="9"
-                              placeholder="TIN (optional)" [maskOnFocus]="true" formControlName="tin" [mask]="tinMaskFormat">
+                              placeholder="TIN (optional)"  (keyup)="restrictAccountingNumber()" [maskOnFocus]="true" formControlName="tin" [mask]="tinMaskFormat">
                             </kendo-maskedtextbox>
-                          </kendo-floatinglabel>
+                        </kendo-floatinglabel>
+                          <kendo-formerror *ngIf="!profileForm.controls['tin'].valid  && accountingNumberValidated && !isDuplicateTin">
+                            TIN cannot be less than 9 digits
+                          </kendo-formerror>
+                          <kendo-formerror *ngIf="!accountingNumberValidated">
+                            A 1 or a 3 is required
+                          </kendo-formerror>
+                          <kendo-formerror *ngIf="isDuplicateTin">
+                            {{duplicateTinMessage}}
+                           </kendo-formerror>
+                        
                         
                 </td>
             </tr>
@@ -239,7 +249,7 @@
     <div class="justify-content-between" *ngIf="!isEditProvider">
 
         <button kendoButton [primary]="true" look="flat" class="" aria-label="Provider profile" (click)="onVendorProfileViewClicked()"> Provider profile <span
-                class="material-icons ml-1">
+                class="material-icons ml-1" aria-hidden="true">
                 chevron_right
             </span></button>
 

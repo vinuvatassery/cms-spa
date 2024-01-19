@@ -14,6 +14,7 @@ import { DialItemAnimation } from '@progress/kendo-angular-buttons';
 import {
   ClientEligibilityFacade,
   CaseFacade,
+  ClientFacade
 } from '@cms/case-management/domain';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -51,7 +52,8 @@ export class Case360HeaderComponent implements OnInit {
     private readonly clientEligibilityFacade: ClientEligibilityFacade,
     private readonly caseFacade: CaseFacade,
     private dialogService: DialogService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private clientFacade: ClientFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -63,6 +65,11 @@ export class Case360HeaderComponent implements OnInit {
       }
     );
     this.addGroupUpdatedSubscription();
+    this.clientFacade.copyStatusPeriodTriggeredResponse$.subscribe(data=>{
+      if(data){
+        this.loadClientProfileInfoEvent.emit();
+      }
+    })
   }
 
   /** Internal event methods **/
@@ -132,7 +139,7 @@ export class Case360HeaderComponent implements OnInit {
         this.loadedClientHeader.eligibilityEndDate = eligibilityDate?.eligibilityEndDate;
         this.cdr.detectChanges();
       }
-      
+
     })
   }
 
@@ -146,6 +153,7 @@ export class Case360HeaderComponent implements OnInit {
     if (result) {
       this.isStatusPeriodDetailOpened = false;
       this.statusPeriodDialog.close();
+      this.clientFacade.runImportedClaimRules(this.clientId);
       this.loadClientProfileInfoEvent.emit();
     }
   }

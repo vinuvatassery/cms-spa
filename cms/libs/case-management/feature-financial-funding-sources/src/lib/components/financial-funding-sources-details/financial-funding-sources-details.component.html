@@ -13,7 +13,7 @@
                [maxlength]="200"> </kendo-textbox>
           </kendo-floatinglabel>
           <kendo-textarea-suffix class="justify-content-end">
-            <span class="counter">{{ FundingSourceCounter }}</span>
+            <span class="counter">{{ fundingSourceCounter }}</span>
           </kendo-textarea-suffix>
           <kendo-formerror *ngIf="fundingSourceForm.hasError('required','fundingSourceCode') && isSubmitted">Funding Source is required.
           </kendo-formerror>
@@ -28,7 +28,7 @@
            </kendo-textbox>
           </kendo-floatinglabel>
           <kendo-textarea-suffix class="justify-content-end">
-            <span class="counter">{{ FundingDescriptionCounter }}</span>
+            <span class="counter">{{ fundingDescriptionCounter }}</span>
           </kendo-textarea-suffix>
           <kendo-formerror *ngIf="fundingSourceForm.hasError('required','fundingDesc') && isSubmitted">Funding Name is required.
           </kendo-formerror>

@@ -88,7 +88,7 @@ export class FinancialVendorFacade {
     return this.financialVendorDataService.searchProvidorsById(vendoraddressId).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor: any) => {
-          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''} ${vendor.mailCode ?? ''}${vendor.vendorAddress ?? ''}`;
         });
         this.insuranceVendorsSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
@@ -105,7 +105,7 @@ export class FinancialVendorFacade {
     return this.financialVendorDataService.searchInsurnaceVendor(searchText).subscribe({
       next: (response: Pharmacy[]) => {
         response?.forEach((vendor: any) => {
-          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
+          vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''} ${vendor.mailCode ?? ''}${vendor.vendorAddress ?? ''}`;
         });
         this.insuranceVendorsSubject.next(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
@@ -218,7 +218,7 @@ export class FinancialVendorFacade {
       next: (updatedResponse: any) => {
         if (updatedResponse) {
           this.updateProviderPanelSubject.next(updatedResponse);
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Updated success fully')
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Updated successfully')
           this.hideLoader();
         }
       },
@@ -229,7 +229,21 @@ export class FinancialVendorFacade {
     })
   }
 
-
+  getProviderPanelByVendorId(vendorId: string) {
+    this.showLoader();
+    this.financialVendorDataService.getProviderPanelByVendorId(vendorId).subscribe({
+      next: (vendorsResponse: any) => {
+        if (vendorsResponse) {
+          this.providePanelSubject.next(vendorsResponse);
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
   updateManufacturerProfile(vendorProfile: any) {
     return this.financialVendorDataService.updateManufacturerProfile(vendorProfile);
   }
@@ -253,9 +267,9 @@ export class FinancialVendorFacade {
     });
   }
 
-  loadVendorList(vendorTypeCode: any): void {
+  loadVendorList(searchText:any): void {
     this.showLoader();
-    this.financialVendorDataService.loadVendorList(vendorTypeCode).subscribe({
+    this.financialVendorDataService.loadVendorList(searchText).subscribe({
       next: (reponse: any) => {
         if (reponse) {
           this.hideLoader();
@@ -367,6 +381,24 @@ export class FinancialVendorFacade {
     })
   }
 
+  validateTinNbr(tinNbr: any) {
+    return this.financialVendorDataService.getValidateTinNbr(tinNbr);
+  }
 
+  loadVendors(searchText:any,vendorTypeCode:any){
+    this.clinicVendorLoaderSubject.next(true);
+    this.financialVendorDataService.loadVendors(searchText,vendorTypeCode).subscribe({
+      next: (reponse: any) => {
+        if (reponse) {
+          this.clinicVendorLoaderSubject.next(false);
+          this.vendorsListSubject.next(reponse);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.clinicVendorLoaderSubject.next(false);
+      },
+    });
+  }
 
 }

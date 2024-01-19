@@ -18,10 +18,11 @@ export class ImportedClaimService {
       Sorting: data.sort,
       SkipCount: data.skipCount,
       MaxResultCount: data.pageSize,
+      ColumnName : data.columnName,
       Filter: JSON.stringify(data.filter),
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/`,
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/claims-data`,
       importedClaimsRequestDto
     );
   }
@@ -35,8 +36,8 @@ export class ImportedClaimService {
 
 
   loadPossibleMatch(event:any) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match?firstName=${event.firstName}&lastName=${event.lastName}&dateOfBirth=${event.dateOfBirth}`
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/possible-match`,event
     );
   }
 
@@ -63,10 +64,16 @@ export class ImportedClaimService {
     );
   }
 
-  updateClientPolicy(importedclaimDto : any){    
+  updateClientPolicy(importedclaimDto : any){
     return this.http.put<any>(
       `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/client-policy`,
       importedclaimDto
+    );
+  }
+
+  loadClientBySearchText(text: string) {
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/SearchText=${text}`
     );
   }
 }

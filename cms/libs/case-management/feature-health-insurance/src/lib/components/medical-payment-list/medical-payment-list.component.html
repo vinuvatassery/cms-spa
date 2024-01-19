@@ -124,10 +124,10 @@
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
           <div class="d-flex align-items-center">
-            <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+            <label class="mr-1" for="MedicalPaymentRowsPerPage">Rows Per Page</label>
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
               [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"  aria-label="Rows Per Page"
-              id="RowsPerPage" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+              id="MedicalPaymentRowsPerPage" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages> 
 
@@ -181,6 +181,6 @@
 
 <kendo-popover #myPopover body="Popover Body" >
   <ng-template kendoPopoverBodyTemplate>
-    <case-management-medical-carrier-contact-info [carrierContactInfo]="carrierContactInfo" ></case-management-medical-carrier-contact-info>
+    <case-management-medical-carrier-contact-info [contactInfoType]="'SERVICE_PROVIDER'" [carrierContactInfo]="carrierContactInfo" ></case-management-medical-carrier-contact-info>
   </ng-template>
 </kendo-popover>

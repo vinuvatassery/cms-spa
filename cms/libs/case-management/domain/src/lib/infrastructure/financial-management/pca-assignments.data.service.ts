@@ -28,8 +28,18 @@ export class PcaAssignmentsDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/pca-codes`);
   }
 
-  loadPcaDates() {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/dates`);
+  loadPcaDates(pcaAssignmentId :any =null ) {
+    if(pcaAssignmentId){
+      return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/dates?pcaAssignmentId=${pcaAssignmentId}`);
+
+    }else{
+      return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/dates?pcaAssignmentId`);
+
+    }
+  }
+
+  validatePcaDates(pcaAssignmentId:any, pcaAssignmentDates:any){
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-assignments/${pcaAssignmentId}/validate`,pcaAssignmentDates);
   }
 
   assignPca(assignPcaRequest : any) {

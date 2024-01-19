@@ -1,14 +1,13 @@
-<div class="sidebar-last-visited-cases-container">
-  <button class="active-menu-toggled" aria-label="Bookmark" title="Bookmark" kendoButton look="flat">
+<div class="sidebar-last-visited-cases-container" kendoTooltip>
+  <button class="active-menu-toggled" aria-label="active sessions" title="Active Sessions" kendoButton look="flat">
     <span class="material-icons" aria-label="last visited case" aria-hidden="true">
       bookmark
     </span>
   </button>
   <div class="sidebar-last-visited-cases">
     <div class="last-visited-cases_header">
-      <span class="ash-main">Active Sessions</span><span class="ash-sub">
-        {{activeSessionCur.length}} of 10
-      </span>
+      <label class="ash-main" role="region" aria-label="Active Sessions">Active Sessions</label>
+      <label class="ash-sub" role="region" attr.aria-label="{{activeSessionCur.length}} of 10" >  {{activeSessionCur.length}} of 10 </label>
     </div>
     <div class="menu-active-session-list" [ngClass]="{'active-session-loader-active': (orderUpdateLoader$ | async)}">
       <div class="active-session-loader" *ngIf="(orderUpdateLoader$ | async)">
@@ -18,12 +17,12 @@
         <kendo-sortable [kendoSortableBinding]="activeSessionCur" [animation]="true"
           (dragEnd)="onDragEnd($event)" [emptyItemClass]="'secession-empty-state'" [emptyText]="'There are no active sessions'">
           <ng-template let-item="item">
-            <div class="last-visited-case">
-              <button aria-label="Remove" (click)="deleteActiveSession(item)"
+            <div class="last-visited-case"  >
+              <button aria-label="Remove" title="Remove" (click)="deleteActiveSession(item)"
                 kendoButton icon="close" look="flat" class="last-visited-case-close"></button>
-              <p class="last-visited-case-heading" (click)="onCaseClicked(item)"><strong>{{ item.clientName }}</strong>
+              <p class="last-visited-case-heading" role="region" attr.aria-label="{{item.clientName}}" (click)="onCaseClicked(item)" ><strong>{{ item.clientName }}</strong>
               </p>
-              <p class="last-visited-case-details" (click)="onCaseClicked(item)" title="ID: {{ item.clientId }}">ID {{ item.clientId ?? '000' }}</p>
+              <p class="last-visited-case-details" role="region" attr.aria-label="ID: {{ item.clientId }}" (click)="onCaseClicked(item)" title="ID: {{ item.clientId }}">ID {{ item.clientId ?? '000' }}</p>
             </div>
           </ng-template>
         </kendo-sortable>

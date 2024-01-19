@@ -1,9 +1,9 @@
 <div class="app-popover-body">
-  <div class="flex-col flex-col-4 mt-3 mb-3 inlineloaderwrapper" *ngIf="!carrierContactInfo"> 
-      <span class="k-icon k-i-loading k-input-loading-icon "></span> 
+  <div class="flex-col flex-col-4 mt-3 mb-3 inlineloaderwrapper" *ngIf="!carrierContactInfo">
+      <span class="k-icon k-i-loading k-input-loading-icon "></span>
   </div>
   <div class="flex-col mt-3 mb-3" *ngIf="carrierContactInfo">
-    <h5 class="text-capital">Insurance Carrier Contact Info</h5>
+    <h5 class="text-capital">{{contactInfoType ? 'Service Provider Contact Info' : 'Insurance Carrier Contact Info'}}</h5>
     <div class="block-section">
       <p class="bold-text">Address</p>
       <p>{{ carrierContactInfo.address1}}</p>
@@ -26,7 +26,7 @@
       <p>{{ carrierContactInfo.phoneNbr | phone}}</p>
     </div>
     <div class="block-section mt-2" *ngIf="insurancePlan">
-      <p class="bold-text">Summary of Benifits:</p>
+      <p class="bold-text">Summary of Benefits:</p>
       <p>{{insurancePlan}}</p>
     </div>
   </div>

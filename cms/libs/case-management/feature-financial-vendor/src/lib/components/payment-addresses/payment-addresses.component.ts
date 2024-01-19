@@ -90,12 +90,7 @@ export class PaymentAddressesComponent {
 
  //filtering
  filteredBy = '';
- filter: any = [
-   {
-     filters: [],
-     logic: 'and',
-   },
- ];
+filter: any = [];
 
  filteredByColumnDesc = '';
  selectedStatus = 'Active';
@@ -170,7 +165,6 @@ export class PaymentAddressesComponent {
     this.loadVenderPaymentMethodsLovs();
     this.loadYesOrNoLovs();
     this.vendorcontactFacade.loadMailCodes(this.vendorId);
-    this.checkMailCode();
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -178,6 +172,8 @@ export class PaymentAddressesComponent {
     this.tabCode = this.route.snapshot.queryParams['tab_code'];
     this.getTabCode();
     this.loadPaymentsAddressListGrid();
+    this.checkMailCode();
+  
   }
 
   private checkMailCode() {
@@ -280,7 +276,11 @@ export class PaymentAddressesComponent {
     this.isPaymentAddressDeactivateShow = false;
     this.clickCloseAddEditPaymentAddressDetails();
     if (isSuccess)
+    {
       this.loadPaymentsAddressListGrid();
+      this.vendorcontactFacade.loadMailCodes(this.vendorId);
+      this.checkMailCode();
+    }  
   }
 
   clickOpenDeletePaymentAddressDetails() {
@@ -290,8 +290,8 @@ export class PaymentAddressesComponent {
     this.isPaymentAddressDeleteShow = false;
     if (isSuccess) {
       this.vendorcontactFacade.loadMailCodes(this.vendorId);
-      this.checkMailCode();
       this.loadPaymentsAddressListGrid();
+      this.checkMailCode();
     }
   }
 
@@ -339,6 +339,8 @@ export class PaymentAddressesComponent {
   onGetHistoricalPaymentAddressData()
   {
     this.loadPaymentsAddressListGrid();
+    this.vendorcontactFacade.loadMailCodes(this.vendorId);
+    this.checkMailCode();
   }
   onEditDeactivateClicked(event:any)
   {
@@ -436,6 +438,7 @@ export class PaymentAddressesComponent {
   }
 
   dataStateChange(stateData: any): void {
+  
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -443,6 +446,9 @@ export class PaymentAddressesComponent {
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.column[this.sortValue];
     this.filter = stateData?.filter?.filters;
+    if(!this.filter){
+      this.filter = [];
+    }
     this.setFilterBy(true, '', this.filter);
     if (!this.filteredByColumnDesc.includes('Status')) this.selectedStatus = '';
     this.loadPaymentsAddressListGrid();

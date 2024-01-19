@@ -20,13 +20,14 @@ import { BatchClaim } from '../../entities/financial-management/batch-claim';
 import { GridFilterParam } from '../../entities/grid-filter-param';
 import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
 import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
+import { IntlService } from '@progress/kendo-angular-intl';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'asc';
+  public sortType = 'desc';
   public selectedClaimsTab = 1
 
   public sortValueFinancialClaimsProcess = 'creationTime';
@@ -72,7 +73,7 @@ export class FinancialClaimsFacade {
     field: this.sortValueBatchItem, dir: 'desc'
   }];
 
-
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   public sortValueReconcile = 'vendorName';
   public sortReconcileList: SortDescriptor[] = [
     {
@@ -238,6 +239,7 @@ export class FinancialClaimsFacade {
     private configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
+    public intl: IntlService,
   ) {}
 
   /** Public methods **/
@@ -609,13 +611,36 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       },
     });
   }
+  formatDateString(originalDate: string): string {
+   // Parse the ISO 8601 formatted date
+   const dateObject: Date = new Date(originalDate);
 
+   // Check if the date is valid
+   if (isNaN(dateObject.getTime())) {
+     return 'Invalid Date';
+   }
+
+   // Format the date as needed
+   const formattedDate: string = dateObject.toLocaleDateString('en-US', {
+     day: '2-digit',
+     month: '2-digit',
+     year: 'numeric',
+   });
+
+   return formattedDate;
+  }
   loadClientBySearchText(text : string): void {
     this.clientSearchLoaderVisibilitySubject.next(true);
     if(text){
       this.financialClaimsDataService.loadClientBySearchText(text).subscribe({
 
         next: (caseBySearchTextResponse) => {
+          caseBySearchTextResponse?.forEach((data:any) => {
+            
+            let date =this.formatDateString(data.dob); 
+            data.providerFullName = `${data.clientFullName ?? ''} `+' '+`${data.clientId?? ''}  `+' '+`${date?? ''}` +' '+`${data.ssn?? ''}`;
+        });
+          
           this.clientSubject.next(caseBySearchTextResponse);
           this.clientSearchLoaderVisibilitySubject.next(false);
         },
@@ -629,6 +654,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       this.clientSearchLoaderVisibilitySubject.next(false);
     }
   }
+
   batchClaims(batchClaims: BatchClaim, claimsType: string) {
     this.showLoader();
     return this.financialClaimsDataService
@@ -706,9 +732,9 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
 viewAdviceLetterData(printAdviceLetterData: any, claimsType:any) {
   return this.financialClaimsDataService.viewPrintAdviceLetterData(printAdviceLetterData,claimsType);
 }
-loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string,clientCaseEligibilityId : string){
+loadExceededMaxBenefit(serviceCost: number, clientId: number, indexNumber: any, typeCode : string,clientCaseEligibilityId : string, paymentRequestId:string){
   this.showLoader();
-  this.financialClaimsDataService.checkExceededMaxBenefit(serviceCost,clientId, typeCode,clientCaseEligibilityId).subscribe({
+  this.financialClaimsDataService.checkExceededMaxBenefit(serviceCost,clientId, typeCode,clientCaseEligibilityId, paymentRequestId).subscribe({
     next: (serviceCostResponse:any)=>{
       this.serviceCostFlag =  serviceCostResponse;
       let response = {
@@ -757,14 +783,14 @@ checkGroupException(startDtae: any,endDate: any, clientId: number,cptCode:any, i
   })
   this.hideLoader();
 }
-checkDuplicatePaymentException(startDtae: any,endDate: any, vendorId: any,totalAmountDue:any,paymentRequestId :any, indexNumber: any, typeCode : string){
+checkDuplicatePaymentException(params: any){
   this.showLoader();
-  this.financialClaimsDataService.checkDuplicatePaymentException(startDtae,endDate,vendorId,totalAmountDue, paymentRequestId, typeCode).subscribe({
+  this.financialClaimsDataService.checkDuplicatePaymentException(params).subscribe({
     next: (data:any)=>{
       const flag =  data;
       let response = {
         flag: flag?.status == 0 ? false : true,
-        indexNumber: indexNumber
+        indexNumber: params.indexNumber
       }
       this.showDuplicatePaymentExceptionSubject.next(response);
     },

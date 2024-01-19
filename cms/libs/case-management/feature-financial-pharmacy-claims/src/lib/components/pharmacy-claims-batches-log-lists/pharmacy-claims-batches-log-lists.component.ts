@@ -19,7 +19,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, first, Subscription } from 'rxjs';
+import { Observable, Subject, first, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -67,67 +67,54 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   paymentRequestId!: string;
   isLogGridExpand = true;
   isBulkUnBatchOpened =false;
+  gridLoaderSubject = new BehaviorSubject(false);
+  recordCountWhenSelectallClicked: number = 0;
+  totalGridRecordsCount: number = 0;
+  currentPageRecords: any = [];
+  selectedAllPaymentsList!: any;
+  isPageCountChanged: boolean = false;
+  isPageChanged: boolean = false;
+  unCheckedProcessRequest:any=[];
   deletemodelbody='This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
+
+  @Input() addPharmacyClaim$: any;
+  @Input() editPharmacyClaim$: any;
+  @Input() getPharmacyClaim$: any;
+  @Input() searchPharmacies$: any;
+  @Input() searchClients$: any;
+  @Input() searchDrugs$: any;
+  @Input() searchPharmaciesLoader$: any;
+  @Input() searchClientLoader$: any;
+  @Input() searchDrugsLoader$: any;
+  @Input() paymentRequestType$ : any
+  @Input() deliveryMethodLov$ :any
+
+  @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
+  @Output() searchPharmaciesEvent = new EventEmitter<any>();
+  @Output() searchClientsEvent = new EventEmitter<any>();
+  @Output() searchDrugEvent = new EventEmitter<any>();
+  @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
+  @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
+
   @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
   @Output() unBatchClaimsEvent = new EventEmitter<any>();
   @Output() ondeletebatchesClickedEvent = new EventEmitter<any>();
+
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Output() getPharmacyClaimEvent = new EventEmitter<any>();
+
   @Input() batchId:any
   @Input() unbatchClaim$ :any
   @Input() unbatchEntireBatch$ :any
   @Input() deleteClaims$ :any
   @Input() exportButtonShow$ :any;
   @Input() paymentBatchName$!: Observable<PaymentBatchName>;
-  public bulkMore = [ 
-    
-    {
-      buttonType: 'btn-h-primary',
-      text: 'RECONCILE PAYMENTS',
-      icon: 'edit',
-      click: (data: any): void => {
-        this.navToReconcilePayments(data);
-      },  
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'PRINT VISA AUTHORIZATIONS',
-      icon: 'print',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = false;
-        this.isPrintVisaAuthorizationClicked = true;
-          
-        },
-
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Unbatch Entire Batch',
-      icon: 'undo',
-      click: (data: any): void => {
-        if (!this.isBulkUnBatchOpened) {
-          this.isBulkUnBatchOpened = true;
-          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
-        }
-      },
-    }
-  ];
+  public bulkMore !:any
   selected: any;
+  batchStatus!:any;
 
   public batchLogGridActions(dataItem:any){ 
    return  [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Edit Claim',
-      icon: 'edit',
-      click: (data: any): void => {
-        if (!this.isAddEditClaimMoreClose) {
-          this.isAddEditClaimMoreClose = true;
-          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
-        }
-       
-      } 
-      
-    },
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Claim',
@@ -142,18 +129,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
         }
       }
-       
-      }      
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Reverse claim',
-      icon: 'fast_rewind',
-      click: (data: any): void => {
-        if (!this.reverseClaimsDialogClosed) {
-          this.reverseClaimsDialogClosed = true;
-          this.onReverseClaimsOpenClicked(this.reverseClaimsDialogTemplate);
-        }
        
       }      
     },
@@ -188,6 +163,19 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
 
       
     },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Edit Claim',
+      icon: 'edit',
+      click: (data: any, paymentRequestId :any): void => {
+        if (!this.isAddEditClaimMoreClose) {
+          this.isAddEditClaimMoreClose = true;
+          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog,paymentRequestId);
+        }
+       
+      } 
+      
+    }
   ]
 }
   @Input() pageSizes: any;
@@ -233,7 +221,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   selectedDataRows: any;
   disablePrwButton = true;
   currentPrintAdviceLetterGridFilter: any;
-  batchLogListItemsSubscription!: Subscription;
   gridColumns: { [key: string]: string } = {
     itemNbr: 'Item #',
     vendorName: 'Pharmacy Name',
@@ -338,11 +325,54 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
     this.batchLogGridLists$.subscribe((res:any)=>{
-      if(res.data.length==0)
+      if(!res.data || res.data.length==0)
       {
         this.route.navigate(['/financial-management/pharmacy-claims'] );       
       }
+      this.batchStatus = res && res.data[0].batchStatus
+      this.initiateBulkMore()
     })
+    this.handleBatchPaymentsGridData();
+  }
+  initiateBulkMore() {
+   this.bulkMore = [ 
+    
+      {
+        buttonType: 'btn-h-primary',
+        text: 'RECONCILE PAYMENTS',
+        icon: 'edit',
+        click: (data: any): void => {
+          this.navToReconcilePayments(data);
+        },  
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'PRINT VISA AUTHORIZATIONS',
+        icon: 'print',
+        click: (data: any): void => {
+          this.isRequestPaymentClicked = false;
+          this.isPrintVisaAuthorizationClicked = true;
+            
+          },
+  
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'UNBATCH ENTIRE BATCH',
+        icon: 'undo',
+        disabled: [
+          PaymentStatusCode.Paid,
+          PaymentStatusCode.PaymentRequested,
+          PaymentStatusCode.ManagerApproved,
+        ].includes(this.batchStatus),
+        click: (data: any): void => {
+          if (!this.isBulkUnBatchOpened) {
+            this.isBulkUnBatchOpened = true;
+            this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+          }
+        },
+      }
+    ];
   }
   ngOnChanges(): void {
     this.state = {
@@ -355,17 +385,13 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   }
 
   pharmacyBatchLogListSubscription(){
-    this.batchLogListItemsSubscription = this.batchLogGridLists$.subscribe((response:any) =>{
-      this.totalRecord = response.total;
+    this.batchLogGridLists$.subscribe((response:any) =>{
+      this.totalRecord = response.spotsPaymentsQueryCount;
       if(this.selectAll){
       this.markAsChecked(response.data);
       }
       this.batchLogPrintAdviceLetterPagedList = response;
     });
-  }
-
-  ngOnDestroy(): void {
-    this.batchLogListItemsSubscription.unsubscribe();
   }
 
   private loadBatchLogListGrid(): void {
@@ -500,6 +526,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   }
 
   dataStateChange(stateData: any): void {
+    this.isPageCountChanged = false;
+    this.isPageChanged = true;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -509,6 +537,9 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.sortColumnName = this.gridColumns[this.sortColumn];
     this.filter = stateData?.filter?.filters;
     this.loadBatchLogListGrid();
+    if(this.isPrintVisaAuthorizationClicked){
+      this.handleBatchPaymentsGridData();
+    }
   }
   dropdownFilterChange(
     field: string,
@@ -555,9 +586,14 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
 
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
+    this.isPageCountChanged = true;
+    this.isPageChanged = false;
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadBatchLogListGrid();
+    if(this.isPrintVisaAuthorizationClicked){
+      this.handleBatchPaymentsGridData();
+    }
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -579,9 +615,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     });
     this.isBatchLogGridLoaderShow = false;
   }
-  public rowClass = (args:any) => ({
-    "table-row-orange": (args.dataItem.item === 1),
-  });
+
    backToBatch(event : any){  
     this.route.navigate(['/financial-management/pharmacy-claims'] );
   }
@@ -777,7 +811,11 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     }
   }
 
-  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>, paymentRequestId:any): void {
+    if(paymentRequestId !== '00000000-0000-0000-0000-000000000000')  
+    {
+    this.getPharmacyClaimEvent.emit(paymentRequestId);
+    }
     this.addEditClaimsFormDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-full add_claims_modal',
@@ -808,19 +846,19 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.unCheckedPaymentRequest=[];
     this.selectedDataIfSelectAllUnchecked=[];
     if(this.selectAll){
-      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList?.data);
       this.noOfRecordToPrint = this.totalRecord;
       this.selectedCount = this.noOfRecordToPrint;
     }
     else{
-      this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList?.data);
       this.noOfRecordToPrint = 0;
       this.selectedCount = this.noOfRecordToPrint
     }
-    let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+    this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
     'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
-    this.disablePreviewButton(returnResult);
+    this.disablePreviewButton(this.selectedAllPaymentsList);
   }
 
   markAsUnChecked(data:any){
@@ -868,10 +906,10 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       this.selectedDataIfSelectAllUnchecked.push({'paymentRequestId':dataItem.paymentRequestId,'vendorAddressId':dataItem.vendorAddressId,'selected':true,'batchId':dataItem.batchId, 'checkNbr':dataItem.checkNbr});
       }
     }
-    let returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
+     this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
     'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
-    this.disablePreviewButton(returnResult);
+    this.disablePreviewButton(this.selectedAllPaymentsList);
   }
 
   disablePreviewButton(result: any) {
@@ -932,4 +970,108 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   onProviderNameClick(event: any) {
     this.onProviderNameClickEvent.emit(event);
   }
+
+  handleBatchPaymentsGridData() {
+    this.batchLogGridLists$.subscribe((data: GridDataResult) => {
+      this.gridDataResult = data;
+      this.gridDataResult.data = filterBy(
+        this.gridDataResult.data,
+        this.filterData
+      );
+      if (data?.total >= 0 || data?.total === -1) {
+        this.gridLoaderSubject.next(false);
+      }
+      this.batchLogGridLists = this.gridDataResult?.data;
+      if(this.recordCountWhenSelectallClicked == 0){
+        this.recordCountWhenSelectallClicked = this.gridDataResult?.total;
+        this.totalGridRecordsCount = this.gridDataResult?.total;
+      }
+      if(!this.selectAll)
+      {
+      this.batchLogGridLists.forEach((item1: any) => {
+        const matchingGridItem = this.selectedAllPaymentsList?.PrintAdviceLetterSelected.find((item2: any) => item2.paymentRequestId === item1.paymentRequestId);
+        if (matchingGridItem) {
+          item1.selected = true;
+        } else {
+          item1.selected = false;
+        }
+      });
+    }
+    this.currentPageRecords = this.batchLogGridLists;
+    //If the user is selecting the individual check boxes and changing the page count
+    this.handlePageCountSelectionChange();
+    //If the user click on select all header and either changing the page number or page count
+    this.pageNumberAndCountChangedInSelectAll();
+    this.gridLoaderSubject.next(false);
+    });
+  }
+
+  handlePageCountSelectionChange() {
+    if(!this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
+      // Extract the payment request ids from grid data
+      const idsToKeep: number[] = this.selectedDataIfSelectAllUnchecked.map((item: any) => item.paymentRequestId);
+      // Remove items from selected records based on the IDs from grid data
+      for (let i = this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.length - 1; i >= 0; i--) {
+        if (!idsToKeep.includes(this.selectedAllPaymentsList?.PrintAdviceLetterSelected[i].paymentRequestId)) {
+          this.selectedAllPaymentsList?.PrintAdviceLetterSelected.splice(i, 1); // Remove the item at index i
+        }
+      }
+    }
+}
+
+pageNumberAndCountChangedInSelectAll() {
+  //If selecte all header checked and either the page count or the page number changed
+  if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){
+    this.selectedAllPaymentsList = [];
+    this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
+    for (const item of this.batchLogGridLists) {
+      // Check if the item is in the second list.
+      const isItemInSecondList = this.unCheckedProcessRequest.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
+      // If the item is in the second list, mark it as selected true.
+      if (isItemInSecondList) {
+        item.selected = false;
+      }else{
+        item.selected = true;
+      }
+    }
+  }
+}
+
+updatePharmacyClaim(data: any) {
+  this.updatePharmacyClaimEvent.emit(data);
+  this.editPharmacyClaim$.pipe(first((editResponse: any ) => editResponse != null))
+  .subscribe((editResponse: any) =>
+  {
+    if(editResponse)
+    {      
+      this.loadBatchLogListGrid();
+      this.modalCloseAddEditClaimsFormModal(true)
+    }
+
+  })
+}
+
+searchPharmacies(searchText: any) {
+  this.searchPharmaciesEvent.emit(searchText);
+}
+
+searchClients(searchText: any) {
+  this.searchClientsEvent.emit(searchText);
+}
+
+
+searchDrug(searchText: string) {
+  this.searchDrugEvent.emit(searchText);
+}
+
+getCoPaymentRequestTypeLov()
+{
+  this.getCoPaymentRequestTypeLovEvent.emit();
+}
+
+getDrugUnitTypeLov()
+{
+  this.getDrugUnitTypeLovEvent.emit();
+}
+
 }

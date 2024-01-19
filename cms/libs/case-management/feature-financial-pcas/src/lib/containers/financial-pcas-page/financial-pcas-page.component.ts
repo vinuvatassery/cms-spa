@@ -64,6 +64,12 @@ export class FinancialPcasPageComponent implements OnInit{
   notAssignPcsLists$ = this.financialPcaFacade.notpcaData$;
    pcaAssignOpenDatesListSubject = new Subject<any>();
   pcaAssignOpenDatesList$ = this.pcaAssignOpenDatesListSubject.asObservable();
+ pcaAssignmentDatesValidation$ = this.pcaAssignmentsFacade. pcaDatesValidation$
+  pcaAssignOpenDatesSelectedSubject = new Subject<any>();
+  pcaAssignOpenDatesSelected$ = this.pcaAssignOpenDatesSelectedSubject.asObservable();
+
+  pcaAssignCloseDatesSelectedSubject = new Subject<any>();
+  pcaAssignCloseDatesSelected$ = this.pcaAssignCloseDatesSelectedSubject.asObservable();
 
    pcaAssignCloseDatesListSubject = new Subject<any>();
   pcaAssignCloseDatesList$ = this.pcaAssignCloseDatesListSubject.asObservable();
@@ -98,7 +104,7 @@ export class FinancialPcasPageComponent implements OnInit{
     this.financialPcaFacade.loadFinancialPcaReassignmentListGrid(data);
   }
   loadFinancialPcaReportListGrid(data: any) {
-    this.financialPcaFacade.loadFinancialPcaReportListGrid(data?.skipCount, data?.pagesize, data?.sortColumn, data?.sortType, data?.filter);
+    this.financialPcaFacade.loadFinancialPcaReportListGrid(data?.skipCount, data?.pagesize, data?.sorting, data?.sortType, data?.filter);
   }
 
   loadAddOrEditPcaEvent(pcaId: any) {
@@ -129,9 +135,13 @@ export class FinancialPcasPageComponent implements OnInit{
     this.pcaAssignmentsFacade.loadPcaCodes()
   }
 
-  loadPcaDates() {    
-    this.pcaAssignmentsFacade.loadPcaDates()
+  loadPcaDates(event:any) {    
+    this.pcaAssignmentsFacade.loadPcaDates(event)
     this.getPcaDatesList()
+  }
+
+  onValidatePcaDates(event:any){
+    this.pcaAssignmentsFacade.validatePcaDates(event.pcaAssignmentId, event.pcaAssignmentDates);
   }
 
   assignPca(assignPcaRequest : any) {

@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Output,
   EventEmitter,
-  Input,
 } from '@angular/core';
 
 @Component({
@@ -12,7 +11,7 @@ import {
   templateUrl: './reset-filter-confirmation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class filterResetConfirmationComponent  {
+export class FilterResetConfirmationComponent  {
   @Output() isModalfilterResetsCloseClicked = new EventEmitter();
   @Output() isModalfilterResetButtonClicked = new EventEmitter<boolean>();
 

@@ -13,6 +13,7 @@
     [loading]="isFinancialClaimsRecentClaimGridLoaderShow"
     (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)"
+    [filter]="state.filter"
     [rowClass]="rowClass"
     (columnVisibilityChange)="columnChange($event)">
     <kendo-grid-column field="invoiceId" title="Invoice ID" [width]="120" [sticky]="true">
@@ -78,6 +79,10 @@
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-gt-operator></kendo-filter-gt-operator>
+          <kendo-filter-gte-operator></kendo-filter-gte-operator>
+          <kendo-filter-lt-operator></kendo-filter-lt-operator>
+          <kendo-filter-lte-operator></kendo-filter-lte-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
@@ -90,6 +95,10 @@
         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-gt-operator></kendo-filter-gt-operator>
+          <kendo-filter-gte-operator></kendo-filter-gte-operator>
+          <kendo-filter-lt-operator></kendo-filter-lt-operator>
+          <kendo-filter-lte-operator></kendo-filter-lte-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
@@ -137,9 +146,9 @@
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
         <div class="d-flex align-items-center">
-          <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+          <label class="mr-1" for="RecentClaimsRowsPerPage">Rows Per Page</label>
           <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-            [valueField]="'value'" #RowsPerPage id="RowsPerPage" aria-label="Rows Per Page" [valuePrimitive]="true"
+            [valueField]="'value'" #RecentClaimsRowsPerPage id="RecentClaimsRowsPerPage" aria-label="Rows Per Page" [valuePrimitive]="true"
             [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
           <kendo-pager-info> </kendo-pager-info>
           <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>

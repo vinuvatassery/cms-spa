@@ -202,7 +202,7 @@
     padding: $size-l;
 
     &.k-button-flat-primary {
-      color: rgba($color: $black-30, $alpha: 0.5);
+      color: rgba($color: $black-30, $alpha: 0.7);
 
       &:hover {
         color: $app-primary;
@@ -241,7 +241,7 @@
     background: var(--hive-error-palette-800);
     background-color: var(--hive-error-palette-800);
     color: $white;
-    font-family: $font-family-medium;_
+    font-family: $font-family-medium;
 
     &.k-state-disabled,
     &.k-disabled {
@@ -305,6 +305,7 @@
   .k-button-text {
     display: inline-flex;
     align-items: center;
+    user-select: text;
   }
 }
 
@@ -608,10 +609,22 @@
 
 .cms-button-group {
   display: flex;
+.k-button{
 
+  &:first-child{
+    border-top-right-radius: 0px ;
+    border-bottom-right-radius: 0px;
+
+  }
+
+  &:nth-child(2){
+    border-top-left-radius: 0px ;
+    border-bottom-left-radius: 0px;
+  }
+}
   .k-toggle-button {
     text-transform: unset;
-
+background: $black-e;
     &.k-selected {
       color: $white;
       background: $app-primary;

@@ -5,7 +5,7 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { Observable } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { StatusFlag } from '../enums/status-flag.enum';
-
+import { DrugUnit } from '../enums/drug_unit_enum';
 @Component({
   selector: 'common-financial-drugs-details',
   templateUrl: './financial-drugs-details.component.html',
@@ -21,17 +21,22 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   @Input() deliveryMethodCodes: any;
   @Input() manufacturers: any;
   @Input() hasCreateUpdatePermission = false;
-  @Input() addDrug$ : any ;
+  @Input() addDrug$: any;
 
   @Output() close = new EventEmitter<any>();
   @Output() addDrugEvent = new EventEmitter<any>();
 
-  drug : any;
+  drug: any;
   drugForm!: FormGroup;
   isSubmitted: boolean = false;
   ndcMaskFormat: string = "00000-0000-00"
   isLoading = false;
-
+  tAreaCessationMaxLength = 200;
+  drugNameCounter!: string;
+  brandNameCounter!:string;
+  drugNameCharactersCount!: number;
+  brandNameCharactersCount!:number;
+  deliveryMethodCodesLocal: any;
   showLoader() {
     this.loaderService.show();
   }
@@ -52,13 +57,31 @@ export class FinancialDrugsDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.hideLoader()
     this.drugForm.get('manufacturer')?.patchValue(this.vendorId);
-    if (this.dialogTitle === "Add New") {
-      this.saveButtonText = "Add"
-    } else if (this.dialogTitle === "Request New") {
-      this.saveButtonText = "Request"
+    if (this.dialogTitle === "Add New" || this.dialogTitle === "Request New") {
+      this.saveButtonText = this.dialogTitle;
     } else {
-      this.saveButtonText = "Update"
+      this.saveButtonText = "Update";
     }
+
+    // modify delivery methods for that results [ ML , MG , Tablet , Each ]
+    this.normalizeDeliveryMethods();
+    this.onDrugNameValueChange();
+    this.onBrandNameValueChange();
+  }
+
+  private normalizeDeliveryMethods() {
+    const orderMapping: Record<DrugUnit, number> = {
+      [DrugUnit.ML]: 1, [DrugUnit.MG]: 2, [DrugUnit.TABLET]: 3, [DrugUnit.EACH]: 4,
+    };
+
+    const convertToAbbreviation = (description: string): string => ({
+      "Milliliter": DrugUnit.ML,
+      "Milligram": DrugUnit.MG,
+    }[description] || description);
+    this.deliveryMethodCodesLocal = this.deliveryMethodCodes
+      .filter((item: any) => Object.values(DrugUnit).includes(item.lovCode))
+      .map(({ lovCode, lovDesc, ...rest }: { lovCode: string; lovDesc: string; }) => ({ lovCode: lovCode.toUpperCase(), lovDesc: convertToAbbreviation(lovDesc), ...rest }))
+      .sort((a: any, b: any) => (orderMapping[a.lovCode as DrugUnit] || 999) - (orderMapping[b.lovCode as DrugUnit] || 999));
   }
 
   createDrugForm() {
@@ -69,8 +92,18 @@ export class FinancialDrugsDetailsComponent implements OnInit {
       deliveryMethodCode: [this.drug?.deliveryMethodCode, Validators.required],
       drugName: [this.drug?.drugName, [Validators.required, Validators.maxLength(200)]],
       brandName: [this.drug?.brandName, [Validators.required, Validators.maxLength(200)]],
-      drugType: [this.drug?.drugCategoryCode, Validators.required]
+      drugType: [this.drug?.drugCategoryCode]
     });
+  }
+
+  onDrugNameValueChange(event: any= null): void {
+    this.drugNameCharactersCount = event== null?0:event.length;
+    this.drugNameCounter = `${this.drugNameCharactersCount}/${this.tAreaCessationMaxLength}`;
+  }
+
+  onBrandNameValueChange(event: any= null): void {
+    this.brandNameCharactersCount = event== null?0:event.length;
+    this.brandNameCounter = `${this.brandNameCharactersCount}/${this.tAreaCessationMaxLength}`;
   }
 
   atLeastOneDrugTypeSelected(): ValidatorFn {
@@ -112,7 +145,7 @@ export class FinancialDrugsDetailsComponent implements OnInit {
       deliveryMethodCode: formValues.deliveryMethodCode,
       drugName: formValues.drugName,
       brandName: formValues.brandName,
-      drugType: formValues.drugType,
+      drugType: formValues.drugType || 'Not Applicable',
       activeFlag: this.hasCreateUpdatePermission ? StatusFlag.Yes : StatusFlag.No,
     };
     return dto;
@@ -132,22 +165,20 @@ export class FinancialDrugsDetailsComponent implements OnInit {
     if (this.drugForm.valid) {
       let finalData = this.mapFormValues();
       this.showLoader();
-       this.addDrugEvent.emit(finalData)
+      this.addDrugEvent.emit(finalData)
       this.addDrug$
-      .subscribe((addResponse: any) =>
-      {
-        if(addResponse)
-        {      
-          this.onCancelClick();
-          let notificationMessage = addResponse.message;
-          this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
-          this.hideLoader();
-          this.drugForm.reset();
-          this.isValidateForm = false;
-          this.cd.detectChanges();
-        }
-  
-      })     
+        .subscribe((addResponse: any) => {
+          if (addResponse) {
+            this.onCancelClick();
+            let notificationMessage = addResponse.message;
+            this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
+            this.hideLoader();
+            this.drugForm.reset();
+            this.isValidateForm = false;
+            this.cd.detectChanges();
+          }
+
+        })
     }
   }
 

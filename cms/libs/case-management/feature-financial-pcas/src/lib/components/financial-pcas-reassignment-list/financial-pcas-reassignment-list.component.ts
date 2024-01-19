@@ -1,5 +1,6 @@
 /** Angular **/
 import {
+  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -12,7 +13,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult , ColumnVisibilityChangeEvent} from '@progress/kendo-angular-grid';
+import { GridDataResult , ColumnVisibilityChangeEvent, ColumnBase} from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State
@@ -21,6 +22,9 @@ import { Subject } from 'rxjs';
 import { FinancialPcaFacade, PcaAssignmentsFacade } from '@cms/case-management/domain';
 import { NavigationMenuFacade } from '@cms/system-config/domain';
 import { FormGroup } from '@angular/forms';
+import { IntlService } from '@progress/kendo-angular-intl';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+
 @Component({
   selector: 'cms-financial-pcas-reassignment-list',
   templateUrl: './financial-pcas-reassignment-list.component.html',
@@ -28,7 +32,7 @@ import { FormGroup } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialPcasReassignmentListComponent
-  implements OnInit, OnChanges
+  implements OnInit, OnChanges, AfterViewInit
 {
   @ViewChild('addEditPcaReassignmentDialogTemplate', { read: TemplateRef })
   addEditPcaReassignmentDialogTemplate!: TemplateRef<any>;
@@ -74,17 +78,19 @@ export class FinancialPcasReassignmentListComponent
   editPcaReassignmentItem: any;
   @Output() getPcaAssignmentByIdEvent = new EventEmitter<any>();
   @Output() updatePcaAssignmentByEvent = new EventEmitter<any>();
-  @Input() getPcaAssignmentById$ :any;
+  @Input() getPcaAssignmentById$: any;
   @Output() loadPcaReassignmentListEvent = new EventEmitter();
   @Input() notAssignPcaLists$: any;
-  inputvalue!:string;
-  reAssignPcaS:any[]=[];
-  allNotAssignedPcaSList:any;
-  notSelectedPcaS:any;
-  selectedPcaData:any;
+  inputvalue!: string;
+  reAssignPcaS: any[] = [];
+  allNotAssignedPcaSList: any;
+  notSelectedPcaS: any;
+  selectedPcaData: any;
   filteredByColumnDesc = '';
   sortColumnDesc = 'PCA #';
   columnChangeDesc = 'Default Columns';
+  defaultColumnState: ColumnBase[] = [];
+  @ViewChild('pcaReassignmentGrid') pcaReassinmentGrid: any;
 
   public gridMoreActions = [
     {
@@ -94,9 +100,12 @@ export class FinancialPcasReassignmentListComponent
       click: (data: any): void => {
         if (!this.isViewGridOptionClicked) {
           this.isViewGridOptionClicked = true;
-          this.isEditGridOptionClicked=false;
-          this.isreAssignGridOptionClicked=false;
-          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
+          this.isEditGridOptionClicked = false;
+          this.isreAssignGridOptionClicked = false;
+          this.onOpenViewEditPcaReassignmentClicked(
+            this.addEditPcaReassignmentDialogTemplate,
+            data
+          );
         }
       },
     },
@@ -108,8 +117,11 @@ export class FinancialPcasReassignmentListComponent
         if (!this.isEditGridOptionClicked) {
           this.isEditGridOptionClicked = true;
           this.isViewGridOptionClicked = false;
-          this.isreAssignGridOptionClicked=false;
-          this.onOpenViewEditPcaReassignmentClicked(this.addEditPcaReassignmentDialogTemplate,data);
+          this.isreAssignGridOptionClicked = false;
+          this.onOpenViewEditPcaReassignmentClicked(
+            this.addEditPcaReassignmentDialogTemplate,
+            data
+          );
         }
       },
     },
@@ -118,40 +130,42 @@ export class FinancialPcasReassignmentListComponent
       text: 'Reassign PCA',
       icon: 'edit',
       click: (data: any): void => {
-        
         if (!this.isEditGridOptionClicked) {
           this.isEditGridOptionClicked = false;
           this.isViewGridOptionClicked = false;
-          this.isreAssignGridOptionClicked=true;
-          this.onOpenReassignPcaReassignmentClicked(this.reassignPcaReassignmentDialogTemplate,data);
+          this.isreAssignGridOptionClicked = true;
+          this.onOpenReassignPcaReassignmentClicked(
+            this.reassignPcaReassignmentDialogTemplate,
+            data
+          );
         }
       },
     },
   ];
   isEditAssignmentClosed = false;
   isRemoveAssignmentClosed = false;
-  pcaAssignmentFormData : any
-  @Input() objectCodeIdValue : any
-  @Input() groupCodeIdsdValue : any=[];
-  @Input() groupCodesData$ : any
-  @Input() objectCodesData$ : any
-  @Input() pcaCodesData$ : any
-  @Input() pcaAssignOpenDatesList$ : any
-  @Input() pcaAssignCloseDatesList$ : any
-  @Input() pcaAssignmentData$ : any
-  @Input() pcaAssignmentFormDataModel$ : any
-  @Input() newForm : any
-  @Input() pcaCodesInfoData$ : any;
+  pcaAssignmentFormData: any;
+  @Input() objectCodeIdValue: any;
+  @Input() groupCodeIdsdValue: any = [];
+  @Input() groupCodesData$: any;
+  @Input() objectCodesData$: any;
+  @Input() pcaCodesData$: any;
+  @Input() pcaAssignOpenDatesList$: any;
+  @Input() pcaAssignCloseDatesList$: any;
+  @Input() pcaAssignmentData$: any;
+  @Input() pcaAssignmentFormDataModel$: any;
+  @Input() newForm: any;
+  @Input() pcaCodesInfoData$: any;
   @Output() addPcaDataEvent = new EventEmitter<any>();
   @Output() reassignpcaEvent = new EventEmitter<any>();
-  @Input() groupCodesDataFilter : any
+  @Input() groupCodesDataFilter: any;
   @Output() loadPcaEvent = new EventEmitter<any>();
-  @Input() assignPcaResponseData$ : any;
+  @Input() assignPcaResponseData$: any;
   @Output() getPcaAssignmentEvent = new EventEmitter<any>();
   @Output() pcaChangeEvent = new EventEmitter<any>();
   @Output() loadObjectCodesEvent = new EventEmitter<any>();
   @Output() loadGroupCodesEvent = new EventEmitter<any>();
-  dropDownColumns : { columnCode: string, columnDesc: string }[] = [
+  dropDownColumns: { columnCode: string; columnDesc: string }[] = [
     {
       columnCode: 'ALL',
       columnDesc: 'All Columns',
@@ -165,8 +179,8 @@ export class FinancialPcasReassignmentListComponent
       columnDesc: 'Object',
     },
     {
-      columnCode: 'CloseDate',
-      columnDesc: 'CloseDate',
+      columnCode: 'Group',
+      columnDesc: 'Group',
     },
   ];
 
@@ -174,105 +188,94 @@ export class FinancialPcasReassignmentListComponent
     ALL: 'All Columns',
     pcaCode: 'PCA #',
     objectName: 'Object',
-    group:'Group',
+    group: 'Group',
     closeDate: 'Close Date',
-    originalAmount:'Orignal Amount',
-    amountSpendAfterExpiration : 'Amount Spend After Expiration',
-    overSpendAmount:'Overspend Amount',
-    totalOverSpendAmount:'Total Overspend Amount',
-    unlimitedFlag:'Unlimited'
+    originalAmount: 'Orignal Amount',
+    amountSpendAfterExpiration: 'Amount Spend After Expiration',
+    overSpendAmount: 'Overspend Amount',
+    totalOverSpendAmount: 'Total Overspend Amount',
+    unlimitedFlag: 'Unlimited',
   };
 
   /** Constructor **/
   constructor(
     private dialogService: DialogService,
-    private financialPcaFacade:FinancialPcaFacade,
+    private financialPcaFacade: FinancialPcaFacade,
     private readonly navigationMenuFacade: NavigationMenuFacade,
-    private readonly pcaAssignmentsFacade : PcaAssignmentsFacade,
+    private readonly pcaAssignmentsFacade: PcaAssignmentsFacade,
+    private readonly intl: IntlService,
+    private readonly configProvider: ConfigurationProvider
   ) {}
-  reassignPcaData(pcaAssignmentData : any)
-  {
-          this.pcaAssignmentsFacade.reassignPca(pcaAssignmentData);
-          this.pcaAssignmentsFacade.reassignPcaResponseData$.subscribe((res:any)=>{
-            
-            this.onClosePcaReAssignmentFormClicked();
-            this.loadPcaReassignment();
-            this.navigationMenuFacade.pcaReassignmentCount();
-            this.groupChange(true)
-          }) 
-        
-      
-  this.reassignpcaEvent.emit(pcaAssignmentData)
+  reassignPcaData(pcaAssignmentData: any) {
+    this.pcaAssignmentsFacade.reassignPca(pcaAssignmentData);
+    this.pcaAssignmentsFacade.reassignPcaResponseData$.subscribe((res: any) => {
+      this.onClosePcaReAssignmentFormClicked();
+      this.loadPcaReassignment();
+      this.navigationMenuFacade.pcaReassignmentCount();
+      this.groupChange(true);
+    });
+
+    this.reassignpcaEvent.emit(pcaAssignmentData);
   }
-  objectCodeValid = true
-  groupCodesValid = true
+  objectCodeValid = true;
+  groupCodesValid = true;
   isFinancialPcaAssignmentGridLoaderShow = false;
   pcaAssignmentGroupForm!: FormGroup;
   @Output() loadFinancialPcaAssignmentEvent = new EventEmitter<any>();
   editButtonClicked = false;
-  pcaAssignmentAddEditDialogService : any;
-  groupChange($event : any)
-  {    
-    this.groupCodeIdsdValue = this.pcaAssignmentGroupForm.controls['groupCodes']?.value;
-    let  groupCodeIdsdValueData= []
+  pcaAssignmentAddEditDialogService: any;
+  groupChange($event: any) {
+    this.groupCodeIdsdValue =
+      this.pcaAssignmentGroupForm.controls['groupCodes']?.value;
+    let groupCodeIdsdValueData = [];
 
-    for (const key in this.groupCodeIdsdValue)
-    {
-      groupCodeIdsdValueData.push(this.groupCodeIdsdValue[key]?.groupCodeId)
+    for (const key in this.groupCodeIdsdValue) {
+      groupCodeIdsdValueData.push(this.groupCodeIdsdValue[key]?.groupCodeId);
     }
 
-    if(this.objectCodeIdValue)
-    {
-      this.objectCodeValid = true
+    if (this.objectCodeIdValue) {
+      this.objectCodeValid = true;
     }
-    if(this.groupCodeIdsdValue.length > 0)
-    {
-      this.groupCodesValid = true
+    if (this.groupCodeIdsdValue.length > 0) {
+      this.groupCodesValid = true;
+    } else {
+      this.groupCodesValid = false;
     }
-    else
-    {
-      this.groupCodesValid = false
-    }
-    if(this.groupCodeIdsdValue.length > 0 && this.objectCodeIdValue)
-    {
+    if (this.groupCodeIdsdValue.length > 0 && this.objectCodeIdValue) {
       this.isFinancialPcaAssignmentGridLoaderShow = true;
-      const pcaAssignmentGridArguments =
-      {
-        objectId : this.objectCodeIdValue,
-        groupIds : groupCodeIdsdValueData
-      }
+      const pcaAssignmentGridArguments = {
+        objectId: this.objectCodeIdValue,
+        groupIds: groupCodeIdsdValueData,
+      };
 
-      this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments)     
+      this.loadFinancialPcaAssignmentEvent.emit(pcaAssignmentGridArguments);
       this.gridDataHandle();
     }
   }
   onClosePcaReAssignmentFormClicked() {
-      this.isEditAssignmentClosed = false;
-      this.editButtonClicked = false
-      this.reassignmentDialogService.close();
+    this.isEditAssignmentClosed = false;
+    this.editButtonClicked = false;
+    this.reassignmentDialogService.close();
   }
-  onLoadPcaEvent($event :  any)
-  {
-  this.loadPcaEvent.emit()
+  onLoadPcaEvent($event: any) {
+    this.loadPcaEvent.emit();
   }
   ngOnInit(): void {
-    this.pcaChangeEvent.emit()
-    this.loadObjectCodesEvent.emit()
-    this.loadGroupCodesEvent.emit()
+    this.pcaChangeEvent.emit();
+    this.loadObjectCodesEvent.emit();
+    this.loadGroupCodesEvent.emit();
     this.defaultGridState();
-    this.financialPcaFacade.getPcaUnAssignments();
-    this.notAssignPcaLists$.subscribe((res:any)=>{
-      this.allNotAssignedPcaSList=res;
-      this.notSelectedPcaS=this.allNotAssignedPcaSList;
+    this.notAssignPcaLists$.subscribe((res: any) => {
+      this.allNotAssignedPcaSList = res;
+      this.notSelectedPcaS = this.allNotAssignedPcaSList;
       this.loadPcaReassignment();
-    })
-    this.financialPcaFacade.pcaActionIsSuccess$.subscribe((res:string) => {
-      if(res=='reassignment')
-      {
+    });
+    this.financialPcaFacade.pcaActionIsSuccess$.subscribe((res: string) => {
+      if (res == 'reassignment') {
         this.navigationMenuFacade.pcaReassignmentCount();
         this.loadPcaReassignment();
       }
-    })
+    });
   }
 
   ngOnChanges(): void {
@@ -284,6 +287,10 @@ export class FinancialPcasReassignmentListComponent
     this.loadPcaReassignment();
   }
 
+  ngAfterViewInit() {
+    this.defaultColumnState = this.pcaReassinmentGrid.columns.toArray();
+  }
+
   loadPcaReassignment() {
     this.isFinancialPcaReassignmentGridLoaderShow = true;
     const gridDataRefinerValue = {
@@ -291,9 +298,9 @@ export class FinancialPcasReassignmentListComponent
       maxResultCount: this.state?.take ?? 0,
       sorting: this.sortValue,
       sortType: this.sortType,
-      columnname: this.selectedColumn,       
-      filter: JSON.stringify(this.filter)
-    }
+      columnname: this.selectedColumn,
+      filter: JSON.stringify(this.filter),
+    };
     this.loadFinancialPcaReassignmentListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
@@ -307,7 +314,7 @@ export class FinancialPcasReassignmentListComponent
           filters: [
             {
               field: this.selectedColumn ?? 'ALL',
-              operator: 'startswith',
+              operator: "contains",
               value: data,
             },
           ],
@@ -317,8 +324,10 @@ export class FinancialPcasReassignmentListComponent
     };
     const stateData = this.state;
     stateData.filter = this.filterData;
+    this.setFilterBy(false, data, null);
     this.dataStateChange(stateData);
   }
+
 
   defaultGridState() {
     this.state = {
@@ -341,10 +350,37 @@ export class FinancialPcasReassignmentListComponent
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
-    if (this.filter !== null) {
-      this.filteredByColumnDesc = this.dropDownColumns?.find(i => i.columnCode === this.selectedColumn)?.columnDesc ?? ''; 
+    if (this.filter) {
+      this.setFilterBy(true, '', this.filter);
+
+      let filterData = this.filter[0]?.filters[0];
+      if (filterData?.field == 'unlimitedFlag') {
+        if (filterData.value) {
+          filterData.value = 'Y';
+        } else {
+          filterData.value = 'N';
+        }
+      }
     }
     this.loadPcaReassignment();
+  }
+
+  private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
+    if (isFromGrid && filter.length > 0) {
+        const filteredColumns = this.filter?.map((f: any) => {
+          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+            this.gridColumns[fld.field])
+          return ([...new Set(filteredColumns)]);
+        });
+        if (filteredColumns && filteredColumns.length > 0 && filteredColumns[0].toString() != '') {
+          this.filteredByColumnDesc = ([...new Set(filteredColumns)])?.sort()?.join(', ') ?? '';
+        }        
+      return;
+    }
+
+    if (searchValue !== '') {
+      this.filteredByColumnDesc = this.dropDownColumns?.find(i => i.columnCode === this.selectedColumn)?.columnDesc ?? '';
+    }
   }
 
   pageSelectionChange(data: any) {
@@ -353,7 +389,7 @@ export class FinancialPcasReassignmentListComponent
     this.loadPcaReassignment();
   }
 
-  public filterChange(filter: CompositeFilterDescriptor): void {
+  public filterChange(filter: any): void {
     this.filterData = filter;
   }
 
@@ -364,12 +400,17 @@ export class FinancialPcasReassignmentListComponent
         if (data?.total >= 0 || data?.total === -1) {
           this.isFinancialPcaReassignmentGridLoaderShow = false;
         }
+      },
+      (error: any) => {
+        this.isFinancialPcaReassignmentGridLoaderShow = false;
       }
     );
-    this.isFinancialPcaReassignmentGridLoaderShow = false;  
   }
 
-  onOpenViewEditPcaReassignmentClicked(template: TemplateRef<unknown>,data:any): void {
+  onOpenViewEditPcaReassignmentClicked(
+    template: TemplateRef<unknown>,
+    data: any
+  ): void {
     this.pcaReassignmentAddEditDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
@@ -377,18 +418,24 @@ export class FinancialPcasReassignmentListComponent
     this.editPcaReassignmentItem = data;
   }
 
-  onOpenReassignPcaReassignmentClicked(template: TemplateRef<unknown>,data:any): void {
-        
-    this.groupCodesData$=this.groupCodesData$.filter((x:any)=>x.groupCodeId==data.groupId[0]);
-    this.objectCodesData$=this.objectCodesData$.filter((x:any)=>x.objectCodeId==data.objectId);
-   
+  onOpenReassignPcaReassignmentClicked(
+    template: TemplateRef<unknown>,
+    data: any
+  ): void {
+    this.groupCodesData$ = this.groupCodesData$.filter(
+      (x: any) => x.groupCodeId == data.groupId[0]
+    );
+    this.objectCodesData$ = this.objectCodesData$.filter(
+      (x: any) => x.objectCodeId == data.objectId
+    );
+
     this.reassignmentDialogService = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     });
-        this.newForm = false
-        this.getPcaAssignmentEvent.emit(data.pcaAssignmentId)
-       this.pcaAssignmentFormData=data;
+    this.newForm = false;
+    this.getPcaAssignmentEvent.emit(data.pcaAssignmentId);
+    this.pcaAssignmentFormData = data;
   }
 
   onCloseEditPcaReassignmentClicked(result: any) {
@@ -412,81 +459,91 @@ export class FinancialPcasReassignmentListComponent
     }
   }
 
-  getPcaAssignmentById(pcaAssignmentId:any){
+  getPcaAssignmentById(pcaAssignmentId: any) {
     this.getPcaAssignmentByIdEvent.emit(pcaAssignmentId);
   }
 
-  saveEditPcaReassignmentClicked(updateReassignmentValue:any){
+  saveEditPcaReassignmentClicked(updateReassignmentValue: any) {
     this.updatePcaAssignmentByEvent.emit(updateReassignmentValue);
     this.isViewGridOptionClicked = false;
     this.isEditGridOptionClicked = false;
-    this.isreAssignGridOptionClicked=false;
-      this.pcaReassignmentAddEditDialogService.close();
-      this.loadPcaReassignmentListEvent.emit(true);
+    this.isreAssignGridOptionClicked = false;
+    this.pcaReassignmentAddEditDialogService.close();
+    this.loadPcaReassignmentListEvent.emit(true);
   }
 
-  onSearchTextChange(text : any,data:any)
-  {
-     let  pcaCodes=this.reAssignPcaS.find((x:any)=>x.pcaAssignmentId==data.pcaAssignmentId);
-     if(text!=pcaCodes.pcaCode)
-           {
-            let idx = this.reAssignPcaS.findIndex((x:any)=>x.pcaCode==pcaCodes.pcaCode);
-            if (idx !== -1) {
-              this.reAssignPcaS.splice(idx, 1);
-          }
-      this.allNotAssignedPcaSList=this.notSelectedPcaS;    }
-   this.allNotAssignedPcaSList=this.notSelectedPcaS.filter((obj:any) =>
-                         String(obj.pcaCode).includes(text)||String(obj.fundingSourceCode).includes(text))
+  onSearchTextChange(text: any, data: any) {
+    let pcaCodes = this.reAssignPcaS.find(
+      (x: any) => x.pcaAssignmentId == data.pcaAssignmentId
+    );
+    if (text != pcaCodes.pcaCode) {
+      let idx = this.reAssignPcaS.findIndex(
+        (x: any) => x.pcaCode == pcaCodes.pcaCode
+      );
+      if (idx !== -1) {
+        this.reAssignPcaS.splice(idx, 1);
+      }
+      this.allNotAssignedPcaSList = this.notSelectedPcaS;
+    }
+    this.allNotAssignedPcaSList = this.notSelectedPcaS.filter(
+      (obj: any) =>
+        String(obj.pcaCode).includes(text) ||
+        String(obj.fundingSourceCode).includes(text)
+    );
   }
 
-  onClientSelected(event: any,data:any) {
-          let isPcAalreadySelected = this.reAssignPcaS.findIndex((x:any)=>x.pcaAssignmentId==data.pcaAssignmentId);
-              if (isPcAalreadySelected !== -1)
-              {
-                 this.reAssignPcaS.splice(isPcAalreadySelected, 1);
-              }
-                 let obj={"pcaId":event.pcaId,"pcaAssignmentId":data.pcaAssignmentId,"pcaCode":event.pcaCode};
-             this.reAssignPcaS.push(obj);
+  onClientSelected(event: any, data: any) {
+    let isPcAalreadySelected = this.reAssignPcaS.findIndex(
+      (x: any) => x.pcaAssignmentId == data.pcaAssignmentId
+    );
+    if (isPcAalreadySelected !== -1) {
+      this.reAssignPcaS.splice(isPcAalreadySelected, 1);
+    }
+    let obj = {
+      pcaId: event.pcaId,
+      pcaAssignmentId: data.pcaAssignmentId,
+      pcaCode: event.pcaCode,
+    };
+    this.reAssignPcaS.push(obj);
   }
   onPcaReassignmentClicked(action: any) {
     this.pcaReassignmentConfirmationDialogService.close();
     this.financialPcaFacade.pcaReassignment(this.reAssignPcaS);
-}
-
-onclick(data:any)
-  {
-     this.selectedPcaData=data;
   }
 
-public itemDisabled(itemArgs:any)
-  {
-    if(this.selectedPcaData ==undefined)
-    return false;
-    else if(this.selectedPcaData.unlimitedFlag=='Y')
-    return false
-    else if(itemArgs.dataItem.pcaRemainingAmount<this.selectedPcaData.originalAmount)
-    {
+  onclick(data: any) {
+    this.selectedPcaData = data;
+  }
+
+  public itemDisabled(itemArgs: any) {
+    if (this.selectedPcaData == undefined) return false;
+    else if (this.selectedPcaData.unlimitedFlag == 'Y') return false;
+    else if (
+      itemArgs.dataItem.pcaRemainingAmount < this.selectedPcaData.originalAmount
+    ) {
       return true;
-    }
-    else if(this.reAssignPcaS.findIndex((x:any)=>x.pcaCode==itemArgs.dataItem.pcaCode)!==-1)
-    {
+    } else if (
+      this.reAssignPcaS.findIndex(
+        (x: any) => x.pcaCode == itemArgs.dataItem.pcaCode
+      ) !== -1
+    ) {
       return true;
-    }else{
-      return false
+    } else {
+      return false;
     }
   }
 
-  isUnlimitedFlag(flag : string){
-    return flag == "Y";
+  isUnlimitedFlag(flag: string) {
+    return flag == 'Y';
   }
 
   searchColumnChangeHandler(value: string) {
-    if(this.searchValue){
-      this.onChange(value);
+    if (this.searchValue) {
+      this.onChange(this.searchValue);
     }
   }
-  onPcaReassignmentSearch(searchValue : any){
-      this.onChange(searchValue);
+  onPcaReassignmentSearch(searchValue: any) {
+    this.onChange(searchValue);
   }
 
   restPcaReassignmentGrid() {
@@ -494,18 +551,22 @@ public itemDisabled(itemArgs:any)
     this.sortType = 'asc';
     this.initializePCAReassignmentGrid();
     this.sortColumn = 'pcaCode';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : "";
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : "";
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
     this.filter = [];
     this.searchValue = '';
     this.selectedColumn = 'ALL';
     this.filteredByColumnDesc = '';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.columnChangeDesc = 'Default Columns';
+    this.defaultColumnState.forEach((item) => {
+      item.hidden = false;
+    });
+    this.pcaReassinmentGrid.columns = this.defaultColumnState;
     this.loadPcaReassignment();
   }
 
-  private initializePCAReassignmentGrid(){
+  private initializePCAReassignmentGrid() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -514,7 +575,25 @@ public itemDisabled(itemArgs:any)
   }
 
   columnChange(event: ColumnVisibilityChangeEvent) {
-    const columnsRemoved = event?.columns.filter(x => x.hidden).length
-    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+    const columnsRemoved = event?.columns.filter((x) => x.hidden).length;
+    this.columnChangeDesc =
+      columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
   }
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configProvider?.appSettings?.dateFormat
+        );
+      } else {
+        return '';
+      }
+    }
+    return searchValue;
+  }
+
+  private isValidDate = (searchValue: any) =>
+    isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 }

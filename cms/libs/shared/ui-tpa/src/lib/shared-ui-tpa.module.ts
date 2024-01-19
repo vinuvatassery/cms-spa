@@ -29,8 +29,9 @@ import { SortableModule } from "@progress/kendo-angular-sortable";
 import { ScrollViewModule } from "@progress/kendo-angular-scrollview";
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { TreeViewModule } from "@progress/kendo-angular-treeview";
-import { ChartsModule } from "@progress/kendo-angular-charts";
+import { ChartsModule } from "@progress/kendo-angular-charts"; 
 import {GridsterComponent, GridsterItemComponent} from 'angular-gridster2';
+ 
 const MODULES = [
   InputsModule,
   DropDownsModule,
@@ -55,9 +56,10 @@ const MODULES = [
   SortableModule, 
   ScrollViewModule,
   TreeListModule,
-  TreeViewModule,
+  TreeViewModule, 
   ChartsModule,
   GridsterComponent, GridsterItemComponent
+ 
 ];
 
 @NgModule({

@@ -62,7 +62,7 @@
           [primary]="true"
           look="flat"
           (click)="onOpenBusinessLogicClicked()"        
-          aria-label="Add New"
+          attr.aria-label="{{hasCreateUpdatePermission==true ? 'Add New':'Request New'}} "
           *ngIf="!isEditSearchHealthProviderValue"
         >
          {{hasCreateUpdatePermission==true ? 'Add New':'Request New'}} 

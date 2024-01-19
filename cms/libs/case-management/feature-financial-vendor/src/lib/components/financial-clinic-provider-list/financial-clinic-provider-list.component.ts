@@ -71,6 +71,8 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  
+  @Output() onProviderNameClickEvent = new EventEmitter<any>();
 
   constructor(
     private readonly intl: IntlService,
@@ -300,5 +302,8 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.removeProviderClick.emit(providerId);
     this.clickCloseRemoveProviders();
     this.changeDetector.detectChanges();
+  }
+  onProviderNameClick(event:any){
+    this.onProviderNameClickEvent.emit(event.vendorId);
   }
 }

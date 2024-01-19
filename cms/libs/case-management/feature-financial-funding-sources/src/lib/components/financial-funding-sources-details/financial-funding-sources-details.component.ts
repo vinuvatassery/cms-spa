@@ -6,7 +6,7 @@ import {
   Output,
   EventEmitter,
   Input,
-  OnInit,
+  OnInit
 } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -25,11 +25,11 @@ export class FinancialFundingSourcesDetailsComponent implements OnInit {
   @Output() onUpdateFundingSourceEvent = new EventEmitter<any>();
   @Input() addFundingSource$: Observable<any> | undefined;
   @Input() updateFundingSource$: Observable<any> | undefined;
-  FundingSourceCharachtersCount: any;
+  fundingSourceCharachtersCount=0;
   maxlength = 200;
-  FundingSourceCounter: any;
-  FundingDescriptionCounter: any
-  FundingDescriptionCharachtersCount: any
+  fundingSourceCounter: any;
+  fundingDescriptionCounter :any;
+  fundingDescriptionCharachtersCount =0
   fundingSourceForm = this.formBuilder.group({
     fundingSourceId: [null],
     fundingSourceCode: ['', Validators.required],
@@ -57,6 +57,7 @@ export class FinancialFundingSourcesDetailsComponent implements OnInit {
 
   addUpdateFundingSource() {
     this.isSubmitted = true;
+    this.fundingSourceForm.markAllAsTouched()
     if (this.fundingSourceForm.invalid) {
       return;
     }
@@ -79,13 +80,13 @@ export class FinancialFundingSourcesDetailsComponent implements OnInit {
   }
 
   onFundingSourceValueChange(event: any) {
-    this.FundingSourceCharachtersCount = event.length;
-    this.FundingSourceCounter = `${this.FundingSourceCharachtersCount}/${this.maxlength}`;
+    this.fundingSourceCharachtersCount = event.length;
+    this.fundingSourceCounter = `${this.fundingSourceCharachtersCount}/${this.maxlength}`;
   }
 
   onFundingDescValueChange(event: any) {
-    this.FundingDescriptionCharachtersCount = event.length;
-    this.FundingDescriptionCounter = `${this.FundingDescriptionCharachtersCount}/${this.maxlength}`;
+    this.fundingDescriptionCharachtersCount = event.length;
+    this.fundingDescriptionCounter = `${this.fundingDescriptionCharachtersCount}/${this.maxlength}`;
   }
 
 }

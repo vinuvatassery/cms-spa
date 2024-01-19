@@ -47,7 +47,7 @@
                               [pcaAssignmentPriorityUpdate$]="pcaAssignmentPriorityUpdate$"
                               (loadObjectCodesEvent)="loadObjectCodes()"
                               (loadGroupCodesEvent)="loadGroupCodes()"
-                              (pcaChangeEvent)="loadPcaDates()"
+                              (pcaChangeEvent)="loadPcaDates($event)"
                               (loadPcaEvent)="loadPcaCodes()"
                               (getPcaAssignmentEvent)="getPcaAssignment($event)"
                               (addPcaDataEvent)="assignPca($event)"
@@ -55,6 +55,8 @@
                               (pcaAssignmentPriorityUpdateEvent)="pcaAssignmentPriorityUpdate($event)"
                               [assignmentInfo]="assignmentInfo"
                               (resetAssignmentInfoObject)="resetAssignmentInfo()"
+                              (validatePcaDates)="onValidatePcaDates($event)"
+                              [pcaAssignmentDatesValidation$]="pcaAssignmentDatesValidation$"
                               >
                               ></cms-financial-pcas-assignment-list>
 
@@ -75,7 +77,7 @@
                               [getPcaAssignmentById$]="getPcaAssignmentById$"
                               [notAssignPcaLists$]="notAssignPcsLists$"
                               (loadPcaReassignmentListEvent)="loadPcaReassignmentList($event)"
-                              (pcaChangeEvent)="loadPcaDates()"
+                              (pcaChangeEvent)="loadPcaDates($event)"
                               [pcaAssignOpenDatesList$]="pcaAssignOpenDatesList$ | async"
                               [pcaAssignCloseDatesList$]="pcaAssignCloseDatesList$ | async"
                               [objectCodesData$]="objectCodesData$ | async"
@@ -100,6 +102,8 @@
                           (loadFinancialPcaReportListEvent)="loadFinancialPcaReportListGrid($event)"
                           [financialPcaSubReportGridLists$]="financialPcaSubReportGridLists$"
                           (loadFinancialPcaSubReportListEvent)="loadFinancialPcaSubReportListGrid($event)"
+                          [groupCodesData$]="groupCodesData$ | async"
+                          (loadGroupCodesEvent)="loadGroupCodes()"
                           (editButtonClick)="onAssignmentReportEditClick($event)"></cms-financial-pcas-assignment-report-list>
                       </div>
                       </ng-template>
