@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter,
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
@@ -35,7 +35,7 @@ export class UploadProofDocumentComponent implements OnInit {
   isFileUploaded: boolean = true;
   copyOfUploadedFiles: any;
   btnDisabled = false;
-  uploadedFileExceedsFileSizeLimit = false;  
+  uploadedFileExceedsFileSizeLimit = false;
   documentName?: string = '';
   clientDocumentId?: string = '';
   tareaNotesMaxLength = 200;
@@ -51,7 +51,8 @@ export class UploadProofDocumentComponent implements OnInit {
     private formBuilder: FormBuilder,
     private configurationProvider: ConfigurationProvider,
     public documentFacade: DocumentFacade,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly cdr: ChangeDetectorRef,
   ) { }
 
   /** Lifecycle hooks **/
@@ -60,15 +61,15 @@ export class UploadProofDocumentComponent implements OnInit {
     this.registerFormData();
     this.tAreaVariablesInitiation();
     if(this.documentId != null && this.documentId !=undefined && this.documentId != ''){
-          this.getDocumentDataByDocumentId(); 
-    } 
+          this.getDocumentDataByDocumentId();
+    }
   }
 
   /** Private methods **/
   private registerFormData() {
     this.uploadform = this.formBuilder.group({
       concurrencyStamp: [''],
-      attachmentType: [''],
+      attachmentType: ['', Validators.required],
       clientDocumentDescription: ['', Validators.required],
       clientId: [0,]
     });
@@ -93,18 +94,18 @@ export class UploadProofDocumentComponent implements OnInit {
         clientCaseId: this.clientCaseId,
         clientCaseEligibilityId : this.caseEligibilityId,
         document: this.copyOfUploadedFiles[0].document.rawFile,
-        documentName: this.copyOfUploadedFiles[0].name,       
+        documentName: this.copyOfUploadedFiles[0].name,
         documentSize: this.copyOfUploadedFiles[0].size ,
         clientDocumentDescription: this.uploadform.controls['clientDocumentDescription'].value,
-        documentTypeCode: this.documentTypeCode ?? this.selectedTypeCode      
+        documentTypeCode: this.documentTypeCode ?? this.selectedTypeCode
       };
       this.documentFacade.saveDocument(saveDocument);
       this.btnDisabled = false;
       this.documentFacade.saveDocumentResponse$.subscribe((saveResponse: any) => {
         if(saveResponse){
           this.onAttachmentPopupClosed();
-        }        
-      }) 
+        }
+      })
     }
     else{
       let updateDocument : Document  = {
@@ -113,26 +114,26 @@ export class UploadProofDocumentComponent implements OnInit {
         clientCaseId: this.clientCaseId,
         clientCaseEligibilityId : this.caseEligibilityId,
         document: this.copyOfUploadedFiles[0].uid == ''? this.copyOfUploadedFiles[0].document.rawFile:'',
-        documentName: this.copyOfUploadedFiles[0].name,       
+        documentName: this.copyOfUploadedFiles[0].name,
         documentSize: this.copyOfUploadedFiles[0].size ,
         clientDocumentDescription: this.uploadform.controls['clientDocumentDescription'].value,
-        documentTypeCode: this.documentTypeCode ?? this.selectedTypeCode       
+        documentTypeCode: this.documentTypeCode ?? this.selectedTypeCode
       };
       this.documentFacade.updateDocument(updateDocument);
       this.btnDisabled = false;
       this.documentFacade.updateDocumentResponse$.subscribe((updateResponse: any) => {
         if(updateResponse){
           this.onAttachmentPopupClosed();
-        }        
-      }) 
-    }   
+        }
+      })
+    }
   }
 
-  private validateForm() {    
+  private validateForm() {
     this.isSubmitted = true;
     this.isFileUploaded = true;
     this.uploadform.markAllAsTouched();
-    this.validateFileSize();   
+    this.validateFileSize();
   }
 
   private validateFileSize() {
@@ -146,11 +147,11 @@ export class UploadProofDocumentComponent implements OnInit {
     this.documentFacade.getDocumentByDocumentId(this.documentId)
     this.documentFacade.document$.subscribe((documentData: any) => {
         this.bindValues(documentData);
-      }); 
+      });
   }
- 
-  private bindValues(document:Document){  
-    this.clientDocumentId = document.clientDocumentId;    
+
+  private bindValues(document:Document){
+    this.clientDocumentId = document.clientDocumentId;
     this.uploadform.controls['attachmentType'].setValue(document.documentTypeCode);
     this.selectedTypeCode = document.documentTypeCode;
     this.documentTypeCode = document.documentTypeCode;
@@ -176,17 +177,24 @@ export class UploadProofDocumentComponent implements OnInit {
   }
 
   submitForm() {
+    if(this.documentTypeCode){
+      this.uploadform.controls['attachmentType'].setValue(this.documentTypeCode);
+    }else{
+      this.uploadform.controls['attachmentType'].setErrors({ 'incorrect': true });
+      this.selectedTypeCode = null;
+    }
+    this.cdr.detectChanges();
     this.validateForm();
-    if (this.uploadform.valid && this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {  
-      if (this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {       
+    if (this.uploadform.valid && this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {
+      if (this.isFileUploaded && !this.uploadedFileExceedsFileSizeLimit) {
       this.btnDisabled = true;
       if(!this.isEdit){
         this.clientDocumentId = '';
       }
-      this.populateModel();      
+      this.populateModel();
     }
   }
-} 
+}
 
   handleFileSelected(event: any) {
     this.copyOfUploadedFiles = null;
@@ -204,11 +212,11 @@ export class UploadProofDocumentComponent implements OnInit {
     }
   }
 
-  handleFileRemoved(files: any) {    
+  handleFileRemoved(files: any) {
       this.copyOfUploadedFiles = [];
       this.isFileUploaded = false;
-      this.uploadedFileExceedsFileSizeLimit = false; 
-  } 
+      this.uploadedFileExceedsFileSizeLimit = false;
+  }
   handleTypeCodeEvent(e:any)
   {
     this.documentTypeCode = e;
@@ -216,5 +224,5 @@ export class UploadProofDocumentComponent implements OnInit {
   OnNoteValueChange(event: any): void{
     this.tareaUploadNotesharactersCount = event.length;
     this.tareaUploadNotesCounter = `${this.tareaUploadNotesharactersCount}/${this.tareaNotesMaxLength}`;
-  }  
+  }
 }
