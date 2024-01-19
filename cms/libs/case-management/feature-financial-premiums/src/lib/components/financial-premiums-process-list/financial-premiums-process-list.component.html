@@ -279,7 +279,8 @@
             </cms-financial-premium-adjustment>
         </div>
       </ng-container>
-    <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [width]="50" class="text-center">
+    <kendo-grid-column field="Option" title="Options" [columnMenu]="false"  [width]="70" class="text-center"
+    [sortable]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="processGridActions" 
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
