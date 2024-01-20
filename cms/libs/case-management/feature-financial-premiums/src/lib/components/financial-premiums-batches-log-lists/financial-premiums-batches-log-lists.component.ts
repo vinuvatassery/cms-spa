@@ -88,37 +88,9 @@ export class FinancialPremiumsBatchesLogListsComponent
     @Output() updatePremiumEvent = new EventEmitter<any>();
     @Output() loadPremiumEvent = new EventEmitter<string>();
 
-  public bulkMore = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'RECONCILE PAYMENTS',
-      icon: 'edit',
-      click: (data: any): void => {
-        this.navToReconcilePayments(data);
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'PRINT ADVICE LETTERS',
-      icon: 'print',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = false;
-        this.isPrintAdviceLetterClicked = true;
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'UNBATCH ENTIRE BATCH',
-      icon: 'undo',
-      click: (data: any): void => {
-        if (!this.isBulkUnBatchOpened && !this.disableBtnUnbatchEntireBatch) {
-          this.isBulkUnBatchOpened = true;
-          this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
-        }
-      },
-    }
-  ];
+
   disableBtnUnbatchEntireBatch= true;
+  batchStatus:any;
 
   public batchLogGridActions(dataItem:any){
    return [
@@ -264,6 +236,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   sendReportDialog: any;
   selectedCount = 0;
   disablePrwButton = true;
+  public bulkMore !:any
   batchLogListSubscription!: Subscription;
   @Input() insuranceCoverageDates$: any;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
@@ -284,16 +257,55 @@ export class FinancialPremiumsBatchesLogListsComponent
       this.totalPaymentsCount=data.total;
       this.totalReconciled = 0;
         data.data.forEach(item =>{
+          this.batchStatus = item.batchStatusCode
           if(!([BatchStatusCode.Paid, BatchStatusCode.PaymentRequested, BatchStatusCode.ManagerApproved].includes(item.batchStatusCode))){
             this.disableBtnUnbatchEntireBatch = false
           }
           if(item.paymentStatusCode == BatchStatusCode.Paid){
             this.totalReconciled += 1;
           }
-        })   
+        }) 
+        this.initiateBulkMore()  
     })
   }
 
+  initiateBulkMore() {
+     this.bulkMore = [
+      {
+        buttonType: 'btn-h-primary',
+        text: 'RECONCILE PAYMENTS',
+        icon: 'edit',
+        click: (data: any): void => {
+          this.navToReconcilePayments(data);
+        },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'PRINT ADVICE LETTERS',
+        icon: 'print',
+        click: (data: any): void => {
+          this.isRequestPaymentClicked = false;
+          this.isPrintAdviceLetterClicked = true;
+        },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'UNBATCH ENTIRE BATCH',
+        icon: 'undo',
+        disabled: [
+          PaymentStatusCode.Paid,
+          PaymentStatusCode.PaymentRequested,
+          PaymentStatusCode.ManagerApproved,
+        ].includes(this.batchStatus),
+        click: (data: any): void => {
+          if (!this.isBulkUnBatchOpened && !this.disableBtnUnbatchEntireBatch) {
+            this.isBulkUnBatchOpened = true;
+            this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
+          }
+        },
+      }
+    ];
+   }
   onEditPremiumsClick(premiumId: string,vendorId:any,clientId:any,clientName:any,paymentRequestId:any){
     this.vendorId=vendorId;
     this.clientId=clientId;
@@ -650,6 +662,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
       .subscribe((unbatchEntireBatchResponse: any) => {
         if (unbatchEntireBatchResponse ?? false) {
           this.loadBatchLogListGrid();
+          this.backToBatch(null)
         }
       });
   }

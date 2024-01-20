@@ -70,7 +70,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   public isBreakoutPanelShow:boolean=true;
   public state!: State;
   searchItem:any=null;
-  sortColumn = 'Medical Provider';
+  sortColumn = 'Insurance Vendor';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -99,7 +99,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   paymentMethodType:any;
   pageValidationMessageFlag:boolean=false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  providerTitle:any = 'Medical Provider';
   premiumReconcileCount:any =0;
   paymentMethodLovSubscription!:Subscription;
   isRecordForPrint:any=0;
@@ -108,7 +107,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   paymentToReconcileCount:any=0;
   columns : any = {
     ALL: 'ALL',
-    vendorName:this.providerTitle,
+    vendorName:'Insurance Vendor',
     tin:"TIN",
     paymentMethodDesc:"Pmt. Method",
     paymentReconciledDate:"Date Pmt. Reconciled",
@@ -124,7 +123,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     },
     {
       columnCode: 'vendorName',
-      columnDesc: this.providerTitle,
+      columnDesc: 'insurance Vendor',
     },
     {
       columnCode: 'tin',
@@ -179,12 +178,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.loadQueryParams();   
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodSubscription();
-    if(this.premiumsType === PremiumType.Dental){
-      this.providerTitle = 'Dental Provider';
-      this.sortColumn = this.providerTitle;
-      this.columns['vendorName'] = this.providerTitle;
-      this.dropDropdownColumns.find((x:any)=>x.columnCode === 'vendorName').columnDesc = this.providerTitle;
-    }
     if(this.loadType === LoadTypes.allPayments){
       this.columns.batchName ='Batch #';
       let batch = {columnCode:'batchName',columnDesc:'Batch #'};
@@ -224,7 +217,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === this.checkingPaymentRequest);
         if (ifExist !== undefined) {
           ifExist.warrantNumberInValid = true;
-          ifExist.warrantNumberInValidMsg = `Duplicate Warrant Number entered in ${ifExist.batchName}.`;
+          ifExist.warrantNumberInValidMsg = `Duplicate Warrant Number entered in ${response[0].batchName}.`;
           this.assignUpdatedItemToPagedList();
           this.cd.detectChanges();
         }
@@ -400,7 +393,6 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       sort: this.sort,
     };
 
-    this.sortColumn = this.providerTitle;
     this.sortDir = 'Ascending';
     this.filter = null;
     this.searchValue = '';
@@ -694,7 +686,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   printAdviceLetterChange(dataItem: any) {
     let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
-    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChange){           
+    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChanged){           
       this.reconcilePaymentGridUpdatedResult = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.paymentRequestId !== dataItem.paymentRequestId);    
     }
     else{

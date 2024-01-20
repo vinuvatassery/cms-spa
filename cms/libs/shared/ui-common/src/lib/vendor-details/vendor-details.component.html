@@ -1,7 +1,8 @@
 <section class="k-dialog-body">
   <div [formGroup]="medicalProviderForm">
     <p class="text-muted mb-2">
-      All fields are required unless otherwise stated.<span *ngIf="!editVendorInfo"> You may view and edit the vendor's profile once it is added.</span>
+      All fields are required unless otherwise stated.
+      <span *ngIf="!editVendorInfo  && providerType !== vendorTypes.Pharmacy"> You may view and edit the vendor's profile once it is added.</span>
     </p>
     <div class="flex-row">
       <div class="flex-col" *ngIf="providerType == vendorTypes.InsuranceVendors">
@@ -38,11 +39,11 @@
       <!-- for manufacturers -->
       <div class="flex-col" *ngIf="providerType == vendorTypes.Manufacturers">
         <kendo-floatinglabel text="Manufacturer Name">
-          <kendo-textbox aria-label="Manufacturer name" [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="Manufacturer ame" [fillMode]="formUiStyle.inputFillMode"
             formControlName="providerName" [maxlength]="500">
           </kendo-textbox>
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
-            Manufacturer name is required
+            Manufacturer Name is required
           </kendo-formerror>
           <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.pattern">
             Special characters and numeric values are not allowed
@@ -73,7 +74,7 @@
 
               <kendo-formerror
                 *ngIf="medicalProviderFormControls?.parentVendorId.errors?.required && !medicalProviderForm.controls['parentVendorId'].disabled && isValidateForm">
-                Clinic Name is required
+                Clinic Name Field is required.
               </kendo-formerror>
             </kendo-floatinglabel>
 
@@ -97,7 +98,7 @@
 
               <kendo-formerror
                 *ngIf="medicalProviderFormControls?.providerName.errors?.required && !medicalProviderForm.controls['providerName'].disabled && isValidateForm">
-                Clinic Name is required
+                Clinic Name Field is required.
               </kendo-formerror>
               <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.maxlength">
                 Clinic Name cannot be more than 500 characters
@@ -534,7 +535,7 @@
 
           <div class="flex-col">
             <kendo-floatinglabel text=" Name">
-              <kendo-textbox aria-label="Contact Name" [fillMode]="formUiStyle.inputFillMode" [maxlength]="40"
+              <kendo-textbox aria-label="Contact Name" [fillMode]="formUiStyle.inputFillMode" [maxlength]="200"
                 formControlName="contactName">
               </kendo-textbox>
             </kendo-floatinglabel>

@@ -239,6 +239,7 @@ export class FinancialPremiumsFacade {
           const gridView = {
             data: dataResponse["items"],
             total: dataResponse["totalCount"],
+            lovs: dataResponse["lovs"],
             acceptsReportsCount: dataResponse['acceptReportsFlagQueryCount'],
           };
           this.financialPremiumsAllPaymentsDataSubject.next(gridView);
@@ -655,9 +656,9 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
       return this.financialPremiumsDataService.removeSelectedPremiums(selectedPremiumPayments, premiumsType);
     }
 
-    checkWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    checkWarrantNumber(batchId:any,warrantNumber:any,vendorId:any,premiumType:any){
       this.warrantNumberChangeLoaderSubject.next(true);
-      this.financialPremiumsDataService.checkWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+      this.financialPremiumsDataService.checkWarrantNumber(batchId,warrantNumber,vendorId,premiumType).subscribe({
         next: (dataResponse:any) => {
           this.warrantNumberChangeSubject.next(dataResponse);
           this.warrantNumberChangeLoaderSubject.next(false);
