@@ -677,10 +677,10 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       });
   }
 
-  unbatchEntireBatch(paymentRequestBatchIds: string[], claimsType: string) {
+  unbatchEntireBatch(paymentRequestBatchId: string, claimsType: string) {
     this.showLoader();
     return this.financialClaimsDataService
-      .unbatchEntireBatch(paymentRequestBatchIds, claimsType)
+      .unbatchEntireBatch(paymentRequestBatchId, claimsType)
       .subscribe({
         next: (response:any) => {
           this.unbatchEntireBatchSubject.next(response);
@@ -699,10 +699,10 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       });
   }
 
-  unbatchClaims(paymentRequestIds: string[], claimsType: string) {
+  unbatchClaims(paymentRequestId: string, claimsType: string) {
     this.showLoader();
     return this.financialClaimsDataService
-      .unbatchClaims(paymentRequestIds, claimsType)
+      .unbatchClaims(paymentRequestId, claimsType)
       .subscribe({
         next: (response:any) => {
           this.unbatchClaimsSubject.next(response);

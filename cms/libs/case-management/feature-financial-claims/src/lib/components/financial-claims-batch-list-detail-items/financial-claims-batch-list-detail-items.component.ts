@@ -530,7 +530,7 @@ deletemodelbody =
     if (result) {
         this.handleUnbatchClaims();
         this.financialClaimsFacade.unbatchClaims(
-          [this.paymentRequestId],
+          this.paymentRequestId,
           this.claimsType
         );
       }

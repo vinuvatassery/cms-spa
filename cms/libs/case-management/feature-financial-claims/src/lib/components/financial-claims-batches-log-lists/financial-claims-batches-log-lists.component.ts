@@ -590,13 +590,13 @@ export class FinancialClaimsBatchesLogListsComponent
       if (this.isBulkUnBatchOpened) {
         this.handleUnbatchEntireBatch();
         this.financialClaimsFacade.unbatchEntireBatch(
-          [this.batchId],
+          this.batchId,
           this.claimsType
         );
       } else {
         this.handleUnbatchClaims();
         this.financialClaimsFacade.unbatchClaims(
-          [this.selected.paymentRequestId],
+          this.selected.paymentRequestId,
           this.claimsType
         );
       }

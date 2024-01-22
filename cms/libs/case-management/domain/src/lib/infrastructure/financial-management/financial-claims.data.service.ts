@@ -405,12 +405,12 @@ export class FinancialClaimsDataService {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batch`, batchClaims);
   }
 
-  unbatchEntireBatch(paymentRequestBatchIds: string[], claimsType: string) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/unbatch`, paymentRequestBatchIds);
+  unbatchEntireBatch(paymentRequestBatchId: string, claimsType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/batches/${paymentRequestBatchId}/unbatch`,null);
   }
 
-  unbatchClaims(paymentRequestIds: string[], claimsType: string) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payment-requests/unbatch`, paymentRequestIds);
+  unbatchClaims(paymentRequestId: string, claimsType: string) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payment-requests/${paymentRequestId}/unbatch`, null);
   }
   loadRecentClaimListService(data:any): Observable<any> {
     const recentClaimsPageAndSortedRequestDto =

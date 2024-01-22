@@ -704,7 +704,7 @@ pageNumberAndCountChangedInSelectAll() {
     if (result) {
       this.handleUnbatchClaims();
       this.financialClaimsFacade.unbatchClaims(
-        [this.selected.paymentRequestId],
+        this.selected.paymentRequestId,
         this.claimsType
       );
     }
