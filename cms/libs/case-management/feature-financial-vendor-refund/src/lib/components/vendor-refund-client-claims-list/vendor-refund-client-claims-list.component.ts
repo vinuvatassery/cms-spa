@@ -84,7 +84,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   ngOnInit(): void {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.pageSizes[2]?.value,
       sort: this.sort,
     };
     this.selectedPharmacyClaimsPayments =  (this.selectedpharmacyClaimsPaymentReqIds && this.selectedpharmacyClaimsPaymentReqIds.length >0)?
@@ -100,6 +100,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
       this.clearSelection();
       this.loadRefundClaimsListGrid();
      this.filterResetDialog.close();
+     this.sort.close();
     }
   }
   resetButtonClosed(result: any) {
@@ -123,7 +124,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   ngOnChanges(): void {
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: this.pageSizes[2]?.value,
       sort: this.sort,
     };
     this.loadRefundClaimsListGrid();
@@ -162,7 +163,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
         this.isClientClaimsLoaderShow = false;
       }
     });
-    this.isClientClaimsLoaderShow = false;
+    this.isClientClaimsLoaderShow = true;
 
   }
   private loadRefundClaimsListGrid(): void {
@@ -185,7 +186,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isClientClaimsLoaderShow = true;
+    this.isClientClaimsLoaderShow = false;
     const gridDataRefinerValue = {
       vendorId: vendorId,
       clientId: clientId,
