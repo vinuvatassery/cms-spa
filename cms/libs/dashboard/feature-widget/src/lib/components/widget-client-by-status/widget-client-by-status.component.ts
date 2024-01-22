@@ -1,7 +1,8 @@
 
 import { Component,ChangeDetectionStrategy, Input, OnInit, ViewChild } from '@angular/core';
 import { WidgetFacade, WidgetChartModel } from '@cms/dashboard/domain';
-import {ChartComponent, PlaceholderDirective } from '@cms/shared/ui-common';
+import { ChartComponent } from '@cms/dashboard/feature-dashboard';
+import {  PlaceholderDirective } from '@cms/shared/ui-common';
 @Component({
   selector: 'cms-widget-client-by-status',
   templateUrl: './widget-client-by-status.component.html',

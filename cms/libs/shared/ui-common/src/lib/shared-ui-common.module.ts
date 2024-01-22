@@ -17,8 +17,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
 import { ReminderNotificationSnackBarComponent } from './reminder-notification-snack-bar/reminder-notification-snack-bar.component';
-import { ReAssignCaseComponent } from './re-assign-case/re-assign-case.component';
-import { ChartComponent } from './chart/chart.component';
+import { ReAssignCaseComponent } from './re-assign-case/re-assign-case.component'; 
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 
@@ -80,8 +79,7 @@ import { NdcCodePipe } from './pipes/ndc-code.pipe';
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
     TinPipe,
-    ReAssignCaseComponent,
-    ChartComponent,
+    ReAssignCaseComponent, 
     PlaceholderDirective, 
     FinancialDrugsDetailsComponent,
     FinancialPcaChosenAlertComponent,
@@ -119,8 +117,7 @@ import { NdcCodePipe } from './pipes/ndc-code.pipe';
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
     TinPipe,
-    ReAssignCaseComponent,
-    ChartComponent,
+    ReAssignCaseComponent, 
     PlaceholderDirective, 
     FinancialDrugsDetailsComponent,
     FinancialPcaChosenAlertComponent,

@@ -8,5 +8,6 @@ export interface DashboardContent {
   y: number;
   x: number; 
   component?: any;
+  isVisible:boolean;
   widgetChartConfig?:WidgetChartModel
 };

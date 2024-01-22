@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { WidgetFacade, WidgetChartModel } from '@cms/dashboard/domain';
-import {ChartComponent, PlaceholderDirective } from '@cms/shared/ui-common';
+import { ChartComponent } from '@cms/dashboard/feature-dashboard';
+import {  PlaceholderDirective } from '@cms/shared/ui-common';
 // import { KendoInput } from '@progress/kendo-angular-common';
 
 

@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { WidgetChartModel } from '@cms/dashboard/domain';
-import { ChartComponent, PlaceholderDirective } from '@cms/shared/ui-common';
+import { ChartComponent } from '@cms/dashboard/feature-dashboard';
+import {  PlaceholderDirective } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'cms-widget-program-income',
