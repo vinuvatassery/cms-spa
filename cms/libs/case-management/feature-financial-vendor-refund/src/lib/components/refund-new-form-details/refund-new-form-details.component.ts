@@ -569,6 +569,7 @@ addTpa(event:any){
     if($event==undefined){
       this.vendorAddressId=null;
     }
+    this.isConfirmationClicked = false;
     this.vendorId=$event?.vendorId;
     this.vendorAddressId = $event?.vendorAddressId;
     this.vendorName = $event?.vendorName;
