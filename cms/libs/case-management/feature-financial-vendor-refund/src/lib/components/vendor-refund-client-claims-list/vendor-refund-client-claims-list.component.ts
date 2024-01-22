@@ -55,6 +55,7 @@ export class VendorRefundClientClaimsListComponent implements OnInit, OnChanges 
   columnsReordered = false;
   filterResetDialog: any;
   filteredBy = '';
+  gridState : any;
   paymentStatusType:any;
   public selectedClaims: any[] = [];
   paymentStatusCode =null
@@ -96,6 +97,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   }
   resetFilterClicked(action: any,) {
     if (action) {
+      this.setGridDataState();
       this.selectedClaims=[]
       this.clearSelection();
       this.loadRefundClaimsListGrid();
@@ -105,7 +107,8 @@ private clientClaimsListDataSubject =  new Subject<any>();
   }
   resetButtonClosed(result: any) {
     if (result) {
- 
+      this.state.sort = [];
+      this.cdr.detectChanges();
       this.filterResetDialog.close();
     }
   }
@@ -135,11 +138,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   }
   dataStateChange(stateData: any): void {
     this.openResetDialog(this.filterResetConfirmationDialogTemplate);
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
-    this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+   this.gridState = stateData;
   }
 
   // updating the pagination infor based on dropdown selection
@@ -186,7 +185,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isClientClaimsLoaderShow = false;
+    this.isClientClaimsLoaderShow = true;
     const gridDataRefinerValue = {
       vendorId: vendorId,
       clientId: clientId,
@@ -197,6 +196,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
       sortType: sortTypeValue,
       filter : this.state?.["filter"]?.["filters"] ?? []
     };
+    this.cdr.detectChanges();
     this. loadRefundClaimsGrid(gridDataRefinerValue);
     this.gridDataHandle();
   
@@ -208,5 +208,12 @@ private clientClaimsListDataSubject =  new Subject<any>();
     this.selectedPharmacyClaims = this.gridData.data.filter((i: any) => selection.includes( i.perscriptionFillId));
     this.claimsCount.emit(this.selectedPharmacyClaims.length)
     this.selectedClaimsChangeEvent.emit(selection)
+  }
+  setGridDataState(){
+    this.sort = this.gridState.sort;
+    this.sortValue = this.gridState.sort[0]?.field ?? this.sortValue;
+    this.sortType = this.gridState.sort[0]?.dir ?? 'asc';
+    this.state = this.gridState;
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
   }
 }
