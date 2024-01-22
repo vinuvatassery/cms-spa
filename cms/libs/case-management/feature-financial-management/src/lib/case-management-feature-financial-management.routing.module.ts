@@ -38,7 +38,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialVendorRefundModule
       ),
     data: {
-      title: null,
+      title: 'Vendor Refund(s)',
     },
   },
   {
@@ -90,7 +90,7 @@ const routes: Routes = [
         (m) => m.CaseManagementFeatureFinancialPcasModule
       ),
     data: {
-      title: null,
+      title: "PCA's",
     },
   },
 ];
