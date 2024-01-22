@@ -694,7 +694,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   printAdviceLetterChange(dataItem: any) {
     let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
-    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChange){           
+    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChanged){           
       this.reconcilePaymentGridUpdatedResult = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.paymentRequestId !== dataItem.paymentRequestId);    
     }
     else{
