@@ -904,7 +904,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.reconcileAssignValueBatchForm.controls['datePaymentSend'].updateValueAndValidity();
     this.isSaveClicked = true;
     this.validateReconcileGridRecord();
-    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid || x.warrantNumberInValid);
+    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
     const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
     const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
     const warrantNumberInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberInValid);
