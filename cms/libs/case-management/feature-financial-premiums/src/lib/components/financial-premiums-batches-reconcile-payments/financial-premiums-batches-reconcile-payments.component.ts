@@ -166,7 +166,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   warrantNumberChanged: any = false;
   checkingPaymentRequest!:any;
   loadType:any = null;
-  loadTypeAllPayments:any = LoadTypes.allPayments
+  loadTypeAllPayments:any = LoadTypes.allPayments;
+  warrantInfoArray:any[]=[];
 
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, 
@@ -982,6 +983,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       }
 
       this.loadIPBreakoutSummary(ReconcilePaymentResponseDto);
+      this.warrantInfoArray = [];
+      this.warrantInfoArray = ReconcilePaymentResponseDto.warrantCalculation;
     }
 
     loadIPBreakoutSummary(ReconcilePaymentResponseDto:any)
@@ -998,7 +1001,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       pageSize:event.pagesize,
       sort:event.sortColumn,
       sortType:event.sortType,
-      filter:event.filter
+      filter:event.filter,
+      warrantCalculation : event.warrantCalculation
     });
   }
   getItemNumber() {

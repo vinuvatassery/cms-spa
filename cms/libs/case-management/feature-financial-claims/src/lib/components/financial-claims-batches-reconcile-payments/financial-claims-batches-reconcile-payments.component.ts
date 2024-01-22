@@ -168,6 +168,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   ];
 
   warrantCalculationArray:any[]=[];
+  warrantInfoArray:any[]=[];
   warrantNumberChanged: any = false;
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
@@ -962,6 +963,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       }
       this.claimReconcileCount =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged && x.entityId == this.entityId  && x.checkNbr !== undefined && x.checkNbr !== '').length;
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
+      this.warrantInfoArray = [];
+      this.warrantInfoArray = ReconcilePaymentResponseDto.warrantCalculation;      
     }
 
     loadReconcilePaymentSummary(ReconcilePaymentResponseDto:any)
@@ -978,7 +981,8 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       pageSize:event.pagesize,
       sort:event.sortColumn,
       sortType:event.sortType,
-      filter:event.filter
+      filter:event.filter,
+      warrantCalculation : event.warrantCalculation
     });
   }
   getItemNumber() {
