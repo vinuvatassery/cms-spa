@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain';
 
 @Component({
@@ -6,7 +6,7 @@ import { WidgetFacade } from '@cms/dashboard/domain';
   templateUrl: './widget-direct-messages.component.html',
   styleUrls: ['./widget-direct-messages.component.scss'],
 })
-export class WidgetDirectMessagesComponent implements OnInit {
+export class WidgetDirectMessagesComponent   {
   constructor(private widgetFacade: WidgetFacade) {}
-  ngOnInit(): void {}
+ 
 }

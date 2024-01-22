@@ -15,6 +15,11 @@ import { WidgetActiveClientsByGroupComponent } from './components/widget-active-
 import { WidgetPharmacyClaimsComponent } from './components/widget-pharmacy-claims/widget-pharmacy-claims.component';
 import { WidgetServiceTrackingComponent } from './components/widget-service-tracking/widget-service-tracking.component';
 import { WidgetLiheapComponent } from './components/widget-liheap/widget-liheap.component';
+import { WidgetNetIncomeComponent } from './components/widget-net-income/widget-net-income.component';
+import { WidgetPremiumExpensesByInsuranceTypeComponent } from './components/widget-premium-expenses-by-insurance-type/widget-premium-expenses-by-insurance-type.component';
+import { WidgetRentOveragesComponent } from './components/widget-rent-overages/widget-rent-overages.component';
+import { WidgetSlotsAllocationComponent } from './components/widget-slots-allocation/widget-slots-allocation.component';
+import { WidgetInsuranceTypeFplComponent } from './components/widget-insurance-type-fpl/widget-insurance-type-fpl.component';
 // import { WIDGET_COMPONENT } from '@cms/dashboard/domain';
 
 // import { COMPONENTS } from './conponent-config';
@@ -24,30 +29,24 @@ const COMPONENTS = [
   WidgetRecentlyViewedComponent,
   WidgetProgramExpensesComponent,
   WidgetProgramIncomeComponent,
+  WidgetClientByStatusComponent,
+  WidgetTodayAtAGlanceComponent,
+  WidgetApplicationsCersComponent,
+  WidgetQuickLinksComponent,
+  WidgetActiveClientsByGroupComponent,
+  WidgetPharmacyClaimsComponent,
+  WidgetServiceTrackingComponent,
+  WidgetLiheapComponent,
+  WidgetNetIncomeComponent,
+  WidgetPremiumExpensesByInsuranceTypeComponent,
+  WidgetRentOveragesComponent,
+  WidgetSlotsAllocationComponent,
+  WidgetInsuranceTypeFplComponent,
 ];
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, FormsModule, SharedUiCommonModule],
-  declarations: [
-    COMPONENTS,
-    WidgetClientByStatusComponent,
-    WidgetTodayAtAGlanceComponent,
-    WidgetApplicationsCersComponent,
-    WidgetQuickLinksComponent,
-    WidgetActiveClientsByGroupComponent,
-    WidgetPharmacyClaimsComponent,
-    WidgetServiceTrackingComponent,
-    WidgetLiheapComponent,
-  ],
-  exports: [
-    WidgetClientByStatusComponent,
-    WidgetTodayAtAGlanceComponent,
-    WidgetApplicationsCersComponent,
-    WidgetQuickLinksComponent,
-    WidgetActiveClientsByGroupComponent,
-    WidgetPharmacyClaimsComponent,
-    WidgetServiceTrackingComponent,
-    WidgetLiheapComponent,
-  ],
+  declarations: [COMPONENTS ],
+  exports: [COMPONENTS],
 })
 export class DashboardFeatureWidgetModule {}
