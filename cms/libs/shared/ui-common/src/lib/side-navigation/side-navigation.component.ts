@@ -56,11 +56,10 @@ export class SideNavigationComponent implements OnInit {
     this.navigationMenuFacade.getNavigationMenu();
     this.getUserRole();
     this.getMenuCount();
-     // Subscribe to NavigationEnd event
-    
-        const currentRoute = this.router.url.split('/')[1]; // Adjust the logic based on your routing structure
-        this.setActive(currentRoute);
-    
+    // Subscribe to NavigationEnd event
+
+    const currentRoute = this.router.url.split('/')[1]; // Adjust the logic based on your routing structure
+    this.setActive(currentRoute);
   }
 
   ngOnDestroy() {
@@ -86,25 +85,26 @@ export class SideNavigationComponent implements OnInit {
   }
 
   onMenuClick(type: any, menu: any, item: any, $event: any, mainMenuName: any) {
-    if (type === 'main') {
-      // For Main Menu Click
-      this.selected['main'] = this.selected['main'] === item ? null : item;
-      this.selected['sub'] = null; // Reset sub-menu selection
-    } else if (type === 'sub') {
-      // For Sub-Menu Click
-      this.selected['sub'] = this.selected['sub'] === item ? null : item;
-    }
+    if (menu.subMenus.length > 0 && !menu.parentId) {
+      $event ? $event.stopPropagation() : null;
+    } else {
+      if (type === 'main') {
+        this.selected['main'] = item;
+        this.selected['sub'] = null; // Reset sub-menu selection
+      } else if (type === 'sub') {
+        this.selected['sub'] = item;
+        // Highlight the parent navigation for sub-menu click
+        if (menu.parentId && mainMenuName) {
+          this.selected['main'] = mainMenuName;
+        }
+      }
 
-    // Highlight the parent navigation for sub-menu click
-    if (type === 'sub' && menu.parentId && mainMenuName) {
-      this.selected['main'] = mainMenuName;
-    }
-
-    if (menu?.url) {
-      if (menu?.target === '_blank') {
-        window.open(menu?.url, '_blank');
-      } else {
-        this.router.navigate([menu?.url]);
+      if (menu?.url) {
+        if (menu?.target === '_blank') {
+          window.open(menu?.url, '_blank');
+        } else {
+          this.router.navigate([menu?.url]);
+        }
       }
     }
   }

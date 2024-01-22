@@ -34,12 +34,12 @@
                 getBadge(subMenu.code)}} </span></span>
           </p>
 
-          <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus">
+          <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus" [ngClass]="{'submenu_list_active_item': isActive('sub', sprSubMenu.name)}">
             <div
-              *ngIf="(menu?.filterText === '' || (sprSubMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1 || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)">
+              *ngIf="(menu?.filterText === '' || (sprSubMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1 || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)" >
               <a class="submenu_list_click_items" [attr.aria-label]="sprSubMenu.name"
                 (click)="onMenuClick('sub', sprSubMenu,sprSubMenu.name, $event, menu.name )"
-                [ngClass]="{'submenu_list_active_item': isActive('sub', sprSubMenu.name)}">
+                >
                 <span>
                   {{ sprSubMenu.name }}
                   <span *ngIf="sprSubMenu?.hasBadge" class="tab-batch-notify"> {{ getBadge(sprSubMenu.code)}}
