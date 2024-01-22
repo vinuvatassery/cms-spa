@@ -1,6 +1,7 @@
 /** Angular **/
-import { Component, OnInit } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 /** Internal Library **/
 import {
   NavigationMenu,
@@ -16,7 +17,7 @@ import { MenuBadge } from '../enums/menu-badge.enum';
   templateUrl: './side-navigation.component.html',
   styleUrls: ['./side-navigation.component.scss'],
 })
-export class SideNavigationComponent implements OnInit {
+export class SideNavigationComponent implements OnInit, OnDestroy {
   /** Public properties **/
   isProductivityMenuActivated = false;
   subMenuExpandStatus: boolean[] = [];
@@ -43,7 +44,8 @@ export class SideNavigationComponent implements OnInit {
 
   productivityToolsCount = 0;
   selected: any = {};
-
+  menuSubscription!: Subscription;
+  menuItems: NavigationMenu[] = [];
   /** Constructor **/
   constructor(
     private readonly router: Router,
@@ -56,14 +58,12 @@ export class SideNavigationComponent implements OnInit {
     this.navigationMenuFacade.getNavigationMenu();
     this.getUserRole();
     this.getMenuCount();
-    // Subscribe to NavigationEnd event
-
-    const currentRoute = this.router.url.split('/')[1]; // Adjust the logic based on your routing structure
-    this.setActive(currentRoute);
+    this.addMenuSubscription();
   }
 
   ngOnDestroy() {
     this.navigationMenuFacade.pcaReassignmentCount$.subscribe().unsubscribe();
+    this.menuSubscription.unsubscribe();
   }
 
   /** Internal event methods **/
@@ -72,10 +72,7 @@ export class SideNavigationComponent implements OnInit {
       this.subMenuExpandStatus[index] ?? false
     );
   }
-  setActive(item: string) {
-    this.selected['main'] = item;
-    // Add logic for setting the active state for sub-menu items if needed
-  }
+
   getBadge(key: string) {
     return this.menuBadges.find((i) => i.key === key)?.value ?? 0;
   }
@@ -84,21 +81,11 @@ export class SideNavigationComponent implements OnInit {
     return (this.menuBadges.find((i) => i.key === key)?.value ?? 0) > 0;
   }
 
-  onMenuClick(type: any, menu: any, item: any, $event: any, mainMenuName: any) {
+  onMenuClick(menu: NavigationMenu, $event: any) {
     if (menu.subMenus.length > 0 && !menu.parentId) {
       $event ? $event.stopPropagation() : null;
     } else {
-      if (type === 'main') {
-        this.selected['main'] = item;
-        this.selected['sub'] = null; // Reset sub-menu selection
-      } else if (type === 'sub') {
-        this.selected['sub'] = item;
-        // Highlight the parent navigation for sub-menu click
-        if (menu.parentId && mainMenuName) {
-          this.selected['main'] = mainMenuName;
-        }
-      }
-
+      this.clearActiveMenu();
       if (menu?.url) {
         if (menu?.target === '_blank') {
           window.open(menu?.url, '_blank');
@@ -106,11 +93,107 @@ export class SideNavigationComponent implements OnInit {
           this.router.navigate([menu?.url]);
         }
       }
+      this.activateMenu(menu);
     }
   }
-  isActive(type: any, item: any) {
-    return this.selected[type] === item;
+
+  private activateMenuBasedOnRouter() {
+    const currentUrl = this.router.url;
+
+    // Find the menu corresponding to the current URL
+    const menuToActivate = this.findMenuByUrl(currentUrl);
+
+    if (menuToActivate) {
+      this.activateMenu(menuToActivate);
+    }
   }
+
+  private findMenuByUrl(url: string) {
+    const foundMenu = this.findMenuRecursive(this.menuItems, url);
+    return foundMenu;
+  }
+
+  private findMenuRecursive(
+    menus: NavigationMenu[],
+    url: string
+  ): NavigationMenu | undefined {
+    for (const menu of menus) {
+      if (menu.url === url) {
+        return menu; // Found the menu with the matching URL
+      }
+
+      if (menu.subMenus?.length) {
+        const foundSubMenu = this.findMenuRecursive(menu.subMenus, url);
+        if (foundSubMenu) {
+          return foundSubMenu; // Found the menu in a submenu
+        }
+      }
+    }
+
+    return undefined; // Menu not found
+  }
+
+  private activateMenu(menu: NavigationMenu) {
+    // Activate the main menu
+    menu.isActive = true;
+
+    // Activate the parent menus if it's a submenu
+    let parentMenu = menu;
+    while (parentMenu.parentId) {
+      parentMenu = this.findMenuById(parentMenu.parentId) || parentMenu;
+      parentMenu.isActive = true;
+    }
+  }
+  private clearActiveMenu() {
+    const activeMenus = this.menuItems.filter((menu) => menu.isActive === true);
+    activeMenus.forEach((menu) => {
+      menu.isActive = false;
+      if (menu.subMenus.length > 0) {
+        const submenu = menu.subMenus;
+        submenu.forEach((submenu) => {
+          submenu.isActive = false;
+          if (submenu.subMenus.length > 0) {
+            const submenus = submenu.subMenus;
+            submenus.forEach((supSubmenus) => {
+              supSubmenus.isActive = false;
+            });
+          }
+        });
+      }
+    });
+  }
+
+  private findMenuById(menuId: string) {
+    const foundMenu = this.findMenuByIdRecursive(this.menuItems, menuId);
+    return foundMenu;
+  }
+  private addMenuSubscription() {
+    this.menuSubscription = this.menus$.subscribe((menus) => {
+      this.menuItems = menus;
+      this.activateMenuBasedOnRouter();
+    });
+  }
+
+  private findMenuByIdRecursive(
+    menus: NavigationMenu[],
+    menuId: string
+  ): NavigationMenu | undefined {
+    for (const menu of menus) {
+      if (menu.menuId === menuId) {
+        return menu; // Found the menu with the matching ID
+      }
+
+      if (menu.subMenus?.length) {
+        const foundSubMenu = this.findMenuByIdRecursive(menu.subMenus, menuId);
+        if (foundSubMenu) {
+          return foundSubMenu; // Found the menu in a submenu
+        }
+      }
+    }
+
+    return undefined; // Menu not found
+  }
+
   isMenuHeadingVisible = (menus: NavigationMenu[], filterText: string) =>
     menus?.findIndex(
       (menu: any) =>

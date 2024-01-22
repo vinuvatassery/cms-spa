@@ -1,9 +1,9 @@
 <ul class="sidebar-menu" aria-label="sidebar menu" role="menu" kendoTooltip>
   <li role="menuitem" *ngFor="let menu of (menus$ | async) as menus; let i = index"
-    [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus.length !== 0, 'active-item': isActive('main', menu.name) }"
+    [ngClass]="{ 'sidebar-menu_items':true, 'with-sub-menu': menu.subMenus.length !== 0, 'active-item': menu.isActive}"
     class="new_sub_sidebar_menu">
     <a class="sub-menu-item" role="region" attr.aria-label="{{ menu.name }}"
-      (click)="onMenuClick('main', menu, menu.name, $event, menu.name)">
+      (click)="onMenuClick( menu, $event)">
       <span class="material-icons sidebar-menu_icon" aria-disabled="true">
         {{menu.icon}}
       </span>
@@ -24,7 +24,7 @@
           </kendo-floatinglabel>
         </div>
       </li>
-      <li class="submenu_list_wrapper" *ngFor="let subMenu of menu.subMenus" attr.aria-label="{{ subMenu.name }}">
+      <li class="submenu_list_wrapper" *ngFor="let subMenu of menu.subMenus" attr.aria-label="{{ subMenu.name }}" >
 
         <div *ngIf="subMenu.subMenus?.length !== 0">
           <p class="submenu_list_heading" [attr.aria-label]="subMenu.name"
@@ -34,11 +34,11 @@
                 getBadge(subMenu.code)}} </span></span>
           </p>
 
-          <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus" [ngClass]="{'submenu_list_active_item': isActive('sub', sprSubMenu.name)}">
+          <div class="submenu_list_container" *ngFor="let sprSubMenu of subMenu.subMenus" [ngClass]="{ 'submenu_list_active_item': sprSubMenu.isActive }">
             <div
               *ngIf="(menu?.filterText === '' || (sprSubMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1 || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)" >
               <a class="submenu_list_click_items" [attr.aria-label]="sprSubMenu.name"
-                (click)="onMenuClick('sub', sprSubMenu,sprSubMenu.name, $event, menu.name )"
+                (click)="onMenuClick(sprSubMenu, $event)"
                 >
                 <span>
                   {{ sprSubMenu.name }}
@@ -51,9 +51,9 @@
         </div>
         <div
           *ngIf="subMenu.subMenus?.length === 0 && (menu?.filterText === '' || (subMenu.name |  lowercase).indexOf(menu.filterText |  lowercase) != -1)"
-          class="submenu_list_container" [ngClass]="{'submenu_list_active_item': isActive('sub', subMenu.name)}">
+          class="submenu_list_container" [ngClass]="{ 'submenu_list_active_item': subMenu.isActive }">
           <a class="submenu_list_click_items" [attr.aria-label]="subMenu.name"
-            (click)="onMenuClick('sub', subMenu, subMenu.name, $event, menu.name)">
+            (click)="onMenuClick(subMenu, $event)">
             <span [attr.aria-label]="subMenu.name">
               {{ subMenu.name }}
               <span *ngIf="subMenu?.hasBadge" class="tab-batch-notify"> {{ getBadge(subMenu.code)}} </span>
