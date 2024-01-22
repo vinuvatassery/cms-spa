@@ -17,8 +17,6 @@
           </span>
         </div>
         <div class="flex-col">
-
-
           <div  *ngIf="hasNoIncome">
             <form [formGroup]="noIncomeDetailsForm">
               <div class="flex-row">
@@ -36,7 +34,9 @@
                   <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['noIncomeClientSignedDate'].valid && !noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')"> Date Client
                     Signed is required
                   </kendo-formerror>
-                  <kendo-formerror *ngIf="noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')"> Future date is not allowed
+                  <kendo-formerror *ngIf=" !isInValidDateRange && noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')"> Future date is not allowed
+                  </kendo-formerror>
+                  <kendo-formerror *ngIf="isInValidDateRange && noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')"> Date must be between 1/1/1753 and 12/31/9999
                   </kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-6">
@@ -144,9 +144,10 @@
 </div>
           </div>
           <div *ngIf="!hasNoIncome">
-            <case-management-income-list [isCerForm]="isCerForm" [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
+            <case-management-income-list [isProofOfSchoolDocumentUploaded] = "isProofOfSchoolDocumentUploaded"  [isCerForm]="isCerForm" [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
           </div>
-
+          <kendo-formerror *ngIf="!isProofOfSchoolDocumentUploaded"> Proof of school upload is required
+          </kendo-formerror>
         </div>
       </div>
     </div>

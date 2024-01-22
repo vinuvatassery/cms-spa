@@ -132,6 +132,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   specialCharAdded!: boolean;
   informativeText!: string;
   minServiceDate: Date = new Date(2000, 1, 1);
+  dataLoaded = false;
 
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -562,7 +563,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
     if(this.addClaimServicesForm.length > 1 ){
     let form = this.addClaimServicesForm.value[i];
-    this.deletedServices.push(form.tpaInvoiceId);
+    if (form.tpaInvoiceId) {
+      this.deletedServices.push(form.tpaInvoiceId);
+    }
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
     }
@@ -674,7 +677,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
-      paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : PaymentMethodCode.ACH,
+      paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : formValues.medicalProvider.paymentMethodCode,
       exceptionFlag: formValues.parentExceptionFlag,
       exceptionTypeCode: formValues.parentExceptionTypeCode,
       exceptionReasonCode: formValues.parentReasonForException,
@@ -921,7 +924,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
             this.isRecentClaimShow = true;
             this.clientName = val.clientName;
             this.vendorName = val.vendorName;
-
+            this.dataLoaded = true;
           }
           this.claimForm.controls['parentReasonForException'].setValue(val.exceptionReasonCode);
           this.claimForm.controls['parentExceptionFlag'].setValue(val.exceptionFlag);

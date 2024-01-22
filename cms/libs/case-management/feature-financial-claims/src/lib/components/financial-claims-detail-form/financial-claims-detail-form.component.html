@@ -47,7 +47,7 @@
                                 </kendo-combobox-column>
 
                             </kendo-multicolumncombobox>
-                            <kendo-formerror *ngIf="(!claimForm.controls['medicalProvider'].valid) && isSubmitted">Provider is required
+                            <kendo-formerror *ngIf="(!claimForm.controls['medicalProvider'].valid) && (isSubmitted || (isEdit && dataLoaded))">Provider is required
                             </kendo-formerror>
                             <div *ngIf="getParentExceptionFormValue('providerNotEligibleExceptionFlag')">
                                 <kendo-formerror class="align-items-center"> <span class="material-icons mr-1" >info</span> Provider not eligible.
@@ -123,7 +123,7 @@
                             </kendo-multicolumncombobox>
                             <div class="flex-row">
                                 <div class="flex-col">
-                                    <kendo-formerror *ngIf="(!claimForm.controls['client'].valid) && isSubmitted" >
+                                    <kendo-formerror *ngIf="(!claimForm.controls['client'].valid) && (isSubmitted || (isEdit && dataLoaded))" >
 
                                     Client is required
                                 </kendo-formerror>
@@ -145,7 +145,7 @@
                                 formControlName="invoiceId" [maxlength]="20" (keypress)="restrictSpecialChar($event)">
                             </kendo-textbox>
                         </kendo-floatinglabel>
-                        <kendo-formerror *ngIf="(!claimForm.controls['invoiceId'].valid) && isSubmitted"
+                        <kendo-formerror *ngIf="(!claimForm.controls['invoiceId'].valid) && (isSubmitted || (isEdit && dataLoaded))"
                             >
                             Invoice ID is required
                         </kendo-formerror>

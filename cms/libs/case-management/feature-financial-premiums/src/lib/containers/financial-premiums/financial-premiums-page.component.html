@@ -71,7 +71,12 @@
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"
                                 [letterContentList$]="letterContentList$"
                                 [letterContentLoader$]="letterContentLoader$"
-                                (loadTemplateEvent) = "loadEachLetterTemplate($event)"></cms-financial-premiums-all-payments-list>
+                                (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+                                [insurancePremium$]="insurancePremium$"
+                                [insuranceCoverageDates$]="insuranceCoverageDates$"
+                                (updatePremiumEvent)="updatePremium($event)"
+                                (loadPremiumEvent)="loadPremium($event)"
+                               ></cms-financial-premiums-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

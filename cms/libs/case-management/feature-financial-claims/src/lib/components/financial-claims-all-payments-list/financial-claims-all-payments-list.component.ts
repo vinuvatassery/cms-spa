@@ -225,69 +225,7 @@ export class FinancialClaimsAllPaymentsListComponent
     paymentStatusDesc: 'Payment Status',
   };
 
-  dropDowncolumns: any = [
-    {
-      columnCode: 'ALL',
-      columnDesc: 'All Columns',
-    },
-    {
-      columnCode: 'itemNumber',
-      columnDesc: 'Item #',
-    },
-    {
-      columnCode: 'batchNumber',
-      columnDesc: 'Batch #',
-    },
-    {
-      columnCode: 'invoiceNbr',
-      columnDesc: 'Invoice ID',
-    },
-    {
-      columnCode: 'providerName',
-      columnDesc: 'Provider Name',
-    },
-    {
-      columnCode: 'tin',
-      columnDesc: 'Tax ID',
-    },
-    {
-      columnCode: 'paymentMethodDesc',
-      columnDesc: 'Payment Method',
-    },
-    {
-      columnCode: 'clientFullName',
-      columnDesc: 'Client Name',
-    },
-    {
-      columnCode: 'insuranceName',
-      columnDesc: 'Name on Primary Insurance Card',
-    },
-    {
-      columnCode: 'clientId',
-      columnDesc: 'Client ID',
-    },
-    {
-      columnCode: 'serviceCount',
-      columnDesc: 'Service Count',
-    },
-    {
-      columnCode: 'totalCost',
-      columnDesc: 'Total Cost',
-    },
-    {
-      columnCode: 'totalDue',
-      columnDesc: 'Total Due',
-    },
-    {
-      columnCode: 'amountDue',
-      columnDesc: 'Total Due',
-    },
-    {
-      columnCode: 'paymentStatusDesc',
-      columnDesc: 'Payment Status',
-    },
-  ];
-
+  dropDowncolumns!: any[];
   selectedPaymentStatus: string | null = null;
   selectedpaymentMethod: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
@@ -312,9 +250,64 @@ export class FinancialClaimsAllPaymentsListComponent
   }
 
   ngOnInit(): void {
+    this.setDropDownColumns();
     this.getPaymentMethodLov();
     this.getPaymentStatusLov();
     this.handleAllPaymentsGridData();
+  }
+  setDropDownColumns() {
+    if(this.claimsType == 'medical') {
+      this.dropDowncolumns = [
+        {
+          columnCode: 'ALL',
+          columnDesc: 'All Columns',
+        },
+        {
+          columnCode: 'batchNumber',
+          columnDesc: 'Batch #',
+        },
+        {
+          columnCode: 'providerName',
+          columnDesc: 'Provider Name',
+        },
+        {
+          columnCode: 'tin',
+          columnDesc: 'Tax ID',
+        },
+        {
+          columnCode: 'clientFullName',
+          columnDesc: 'Client Name',
+        },
+        {
+          columnCode: 'clientId',
+          columnDesc: 'Client ID',
+        },
+      ];
+    } else if (this.claimsType == 'dental') {
+      this.dropDowncolumns = [
+        {
+          columnCode: 'ALL',
+          columnDesc: 'All Columns',
+        },
+        {
+          columnCode: 'batchNumber',
+          columnDesc: 'Batch #',
+        },
+        {
+          columnCode:  'invoiceNbr',
+          columnDesc:  'Invoice ID',
+        },
+        {
+          columnCode: 'clientFullName',
+          columnDesc: 'Client Name',
+        },
+        {
+          columnCode: 'clientId',
+          columnDesc: 'Client ID',
+        },
+      ];
+    }
+  
   }
 
   handleAllPaymentsGridData() {
@@ -783,8 +776,8 @@ pageNumberAndCountChangedInSelectAll() {
   modalCloseAddEditClaimsFormModal(result: any) {
     if (result === true) {
       this.loadFinancialClaimsAllPaymentsListGrid();
-      this.addEditClaimsFormDialog.close();
     }
+    this.addEditClaimsFormDialog.close();
   }
 
   selectionChange(dataItem:any, selected:boolean){

@@ -23,7 +23,6 @@ export class CasePageComponent implements OnInit {
   selectedTab: CaseScreenTab = 0;
   isRightReminderBarEnabled = true;
   isNewCaseDialogClicked = false;
-  isCasesLoaded = false;
   allCases$ = this.caseFacade.cases$;
   myCases$ = this.caseFacade.myCases$;
   recentCases$ = this.caseFacade.lastVisitedCases$;
@@ -45,6 +44,9 @@ export class CasePageComponent implements OnInit {
   sortValue  = this.caseFacade.sortValue;
   sortType  = this.caseFacade.sortType;
   sort  = this.caseFacade.sort;
+  myClients$ = this.caseFacade.myClients$;
+  recentClients$ = this.caseFacade.recentClients$;
+  allClients$ = this.caseFacade.allClients$;
 
   /** Constructor**/
 
@@ -82,7 +84,6 @@ export class CasePageComponent implements OnInit {
 
   /** Internal event methods **/
   onTabSelected(e: any) {
-    this.isCasesLoaded = false;
     this.selectedTab = e.index;
     switch(this.selectedTab) {
       case CaseScreenTab.CER_TRACKING: {
@@ -141,7 +142,6 @@ export class CasePageComponent implements OnInit {
 
   loadCasesListEventHandler(gridDataRefinerValue : any)
   {
-    if(!this.isCasesLoaded){
       const gridDataRefiner =
       {
         caseScreenType: this.selectedTab,
@@ -157,8 +157,7 @@ export class CasePageComponent implements OnInit {
       }
       this.pageSizes = this.caseFacade.gridPageSizes;
       this.loadCaseList(gridDataRefiner);
-    }
-    this.isCasesLoaded = true;
+
   }
 
   loadColumnDroplist()

@@ -77,7 +77,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   serviceGridColumnName = ''; 
   @Input() exportButtonShow$:any
   columnChangeDesc = 'Default Columns'
-  selectedSearchColumn='creationTime';
+  selectedSearchColumn='ALL';
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
   addClientRecentClaimsDialog: any;
   vendorId: any;
@@ -93,6 +93,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   deleteClaimsConfirmationDialogTemplate!: TemplateRef<any>;
   isDeleteClaimClosed = false
   gridColumns : {[key: string]: string} = {
+            ALL: 'All Columns',
             clientFullName: 'Client Name',
             nameOnInsuranceCard: 'Name on Primary Insurance Card',
             paymentStatus: 'Payment Status',
@@ -135,18 +136,9 @@ deletemodelbody =
     this.serviceGridColumnName = this.claimsType.charAt(0).toUpperCase() + this.claimsType.slice(1);
     this.gridColumns['serviceDesc'] = `${this.serviceGridColumnName} Service`;
     this.searchColumnList = [
-      { columnName: 'clientFullName',  columnDesc: 'Client Name'},
-      { columnName: "nameOnInsuranceCard",columnDesc: "Name on Primary Insurance Card"},
+      { columnName: 'ALL', columnDesc: 'All Columns' },
       { columnName: "clientId",columnDesc: "Client ID" },
-      { columnName: "serviceStartDate",columnDesc: "Service Date" },
-      { columnName: "invoiceNbr",columnDesc: "Invoice ID" },
-      { columnName: "cptCode",columnDesc: "CPT Code" },
-      { columnName: "serviceDesc",columnDesc: this.serviceGridColumnName+' Service' },
-      { columnName: "serviceCost",columnDesc: "Service Cost" },
-      { columnName: "amountDue",columnDesc: "Client Co-Pay" },
-      { columnName: "paymentStatus",columnDesc: "Payment Status" },
-      { columnName: "creationTime",columnDesc: "Entry Date" },
-      { columnName: "By",columnDesc: "creatorId" }
+      { columnName: 'clientFullName',  columnDesc: 'Client Name'},
     ]
     this.initializeGridState();
     this.loadBatchLogItemsListGrid(); 
@@ -239,17 +231,14 @@ deletemodelbody =
 
   performSearch(data: any) {
     this.defaultGridState();
-    const operator = (['serviceStartDate','creationTime','clientId','invoiceNbr','serviceCost','amountDue']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
-
-
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedSearchColumn ?? 'creationTime',
-              operator: operator,
+              field: this.selectedSearchColumn ?? 'all',
+              operator: 'contains',
               value: data,
             },
           ],
