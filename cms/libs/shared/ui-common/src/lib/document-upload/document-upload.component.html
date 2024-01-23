@@ -53,7 +53,6 @@
                 </span>
               </ng-template>
   </kendo-fileselect>
-  <kendo-formhint>Max file size 25MB</kendo-formhint> 
 </div>
 <div class="mt-2" *ngIf="isDisabled && file?.length>0 &&isDownloadShow"> 
  <span (click)="documentFacade.viewOrDownloadFile(isFileViewable,file[0]?.documentId,file[0]?.name)">
