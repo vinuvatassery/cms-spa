@@ -5,10 +5,10 @@ export * from './lib/dashboard-domain.module';
 export * from './lib/entities/dashboard';
 
 /** Data services **/
-export * from './lib/infrastructure/dashboard.data.service';
+ 
 
 /** Facades **/
-export * from './lib/application/dashboard.facade';
+ 
  
 export * from './lib/entities/dashboard-content';
 export * from './lib/entities/dashboard-master'; 

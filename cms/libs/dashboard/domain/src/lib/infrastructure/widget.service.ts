@@ -44,8 +44,8 @@ export class WidgetService {
     ]);
   }
 
-  getChartData(){
-    const chartData:WidgetChartModel={ 
+  getChartData():Observable<any> {
+    return of({
       title:{
         text:'Program Expensessssssssssss'
       },
@@ -89,7 +89,145 @@ export class WidgetService {
           color:'purple'
         }
       ]
-    };
-    return chartData
+    });
   }
+  getClientRecordSendChart(): Observable<any> {
+    return of({
+      component: 'ClientRecordsSent',
+      chartData: {
+        title: {
+          visible: false,
+          text: 'Client Records Sent',
+        },
+        legend: {
+          visible: false,
+          position: 'right',
+          orientation: 'vertical',
+        },
+        categoryAxis: {
+          categories: [
+            '05/01/21',
+            '05/02/21',
+            '05/03/21',
+            '05/04/21',
+            '05/05/21',
+            '05/06/21',
+            '05/07/21',
+            '05/08/21',
+            '05/09/21',
+          ],
+          labels: { format: 'd', rotation: 'auto' },
+        },
+        tooltip: {
+          visible: true,
+          shared: true,
+        },
+        series: [
+          {
+            data: [10, 12, 23, 34, 12, 23, 10, 12, 23],
+
+            type: 'column',
+            color: '#005994',
+          },
+          {
+            data: [10, 12, 23, 34, 12, 23, 10, 12, 23],
+
+            type: 'line',
+            color: '#005994',
+            style: 'smooth',
+          },
+        ],
+      },
+    });
+  }
+  getActiveClientsByGroup() :Observable<any>{
+    return of({
+      component: 'ActiveClientsByGroup',
+      chartData: {
+      title: {
+        text: 'ACTIVE CLIENTS BY GROUP',
+      },
+      legend: {
+        position: 'top',
+        orientation: 'horizontal',
+      },
+      categoryAxis: {
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+      },
+      series: [
+        {
+          data: [
+            {
+              category: 'UPP',
+              value: 45,
+              color: '#FFD064',
+            },
+            {
+              category: 'GROUP I',
+              value: 15,
+              color: '#ED6363',
+            },
+            {
+              category: 'GROUP II',
+              value: 10,
+              color: '#57BAC3',
+            },
+            {
+              category: 'BRIDGE',
+              value: 10,
+              color: '#0063A6',
+            },
+            {
+              category: 'GROUP I / INS GAP',
+              value: 10,
+              color: '#BF61A5',
+            },
+            {
+              category: 'GROUP II / INS GAP',
+              value: 10,
+              color: '#D8D365',
+            },
+          ],
+          type: 'donut',
+          color: 'red',
+        },
+      ],
+    }});
+  }
+  getActiveClientByStatus(){
+
+  }
+  getNetIncome(){
+
+  }
+  getDirectMessages(){
+
+  }
+  getInsuranceTypeFpl(){
+
+  }
+  GetLineHeap(){
+
+  }
+
+
+  getPharmacyClaims(){}
+  getPremiumExpensesByInsurance(){
+    
+  }
+  getProgramExpenses(){
+
+  }
+  getProgramIncome(){
+
+  }
+  getQuickClinks(){
+
+  }
+  getRentOverages(){}
+  getServiceTracking(){}
+  getSlotsAllocation(){}
+  getTodayGlance(){}
+  GetApplicationsCers(){}
+
 }
