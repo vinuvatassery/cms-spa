@@ -79,8 +79,12 @@ export class FinancialPcasAssignmentReportListComponent
       columnDesc: 'PCA',
     },
     {
-      columnName: 'ay',
-      columnDesc: 'AY',
+      columnName: 'objectName',
+      columnDesc: 'Object',
+    },
+    {
+      columnName: 'objectCode',
+      columnDesc: 'Object Code',
     },
   ];
 
