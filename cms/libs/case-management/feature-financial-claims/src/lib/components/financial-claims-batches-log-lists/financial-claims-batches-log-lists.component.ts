@@ -901,8 +901,8 @@ export class FinancialClaimsBatchesLogListsComponent
       'PrintAdviceLetterSelected': this.selectedDataIfSelectAllUnchecked, 'print': true,
       'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print'
     }
-    this.disablePreviewButton(this.selectedAllPaymentsList);
-    this.selectedDataRows = this.batchLogPrintAdviceLetterPagedList?.data;
+    this.disablePreviewButton(this.selectedAllPaymentsList); 
+    this.selectedDataRows = this.selectedAllPaymentsList;
   }
 
   markAsUnChecked(data: any) {
