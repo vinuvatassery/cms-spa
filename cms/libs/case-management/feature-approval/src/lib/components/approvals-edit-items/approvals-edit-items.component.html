@@ -390,6 +390,57 @@
       </kendo-floatinglabel>
     </div>
     <div class="flex-col ">
+      <kendo-floatinglabel text="Address Line 1">
+        <kendo-textbox aria-label="Address Line 1" placeholder="Address Line 1" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="addressline1" [maxlength]="200">
+        </kendo-textbox>
+        <kendo-formerror *ngIf="insuranceVendorFormControls?.addressline1.errors?.required && isValidateForm">
+          Address Line 1 is required.
+        </kendo-formerror>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col ">
+      <kendo-floatinglabel text="Address Line 2">
+        <kendo-textbox aria-label="Address Line 2" placeholder="Address Line 2" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="addressline2" [maxlength]="50">
+        </kendo-textbox>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col ">
+      <kendo-floatinglabel text="City">
+        <kendo-textbox aria-label="City" placeholder="City" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="city" [maxlength]="50">
+        </kendo-textbox>
+        <kendo-formerror *ngIf="insuranceVendorFormControls?.city.errors?.required && isValidateForm">
+          City is required.
+        </kendo-formerror>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6 ">
+      <kendo-floatinglabel text="State">
+        <kendo-dropdownlist aria-label="State" [fillMode]="formUiStyle.dropDownFillMode" formControlName="state"
+          [data]="ddlStates$| async" textField="stateName" valueField="stateCode" [valuePrimitive]="true"
+          placeholder="State">
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>
+      <kendo-formerror *ngIf="insuranceVendorFormControls?.state.errors?.required && isValidateForm">
+        State is required.
+      </kendo-formerror>
+    </div>
+    <div class="flex-col ">
+      <kendo-floatinglabel text="Zip">
+        <kendo-textbox aria-label="Zip" placeholder="Zip" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="zip" [maxlength]="10">
+        </kendo-textbox>
+        <kendo-formerror *ngIf="insuranceVendorFormControls?.zip.errors?.required && isValidateForm">
+          Zip is required.
+        </kendo-formerror>
+        <kendo-formerror *ngIf="insuranceVendorFormControls?.zip.errors?.pattern">
+          Special characters are not allowed
+        </kendo-formerror>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col ">
       <kendo-floatinglabel text="Mail Code">
         <kendo-textbox aria-label="Mail Code" placeholder="Mail Code" [fillMode]="formUiStyle.inputFillMode"
           formControlName="mailCode" [maxlength]="3">
