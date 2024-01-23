@@ -69,7 +69,7 @@ public state!: any;
     clientId:"Client ID",
     urn:"URN",
     preferredContact:"Preferred Contact",
-    caseStatus:"Status",
+    eligibilityStatusCode:"Status",
     group:"Group",
     eilgibilityStartDate:"Eligibility Start Date",
     eligibilityEndDate:"Eligibility End Date",
@@ -121,6 +121,7 @@ public state!: any;
   defaultColumnState: ColumnBase[] = [];
   selectedGroup="";
   selectedStatus="";
+  casesLoaded=false;
 
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
@@ -210,7 +211,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   if(field == "group"){
     this.groupValue = value;
   }
-  if(field == "caseStatus"){
+  if(field == "eligibilityStatusCode"){
     this.statusValue = value;
   }
 }
@@ -245,7 +246,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.isFiltered = false
       this.selectedStatus ='';
       this.selectedGroup = '';
-      
+
     }
     this.state=stateData;
     if (!this.filteredBy.includes('Status')) this.selectedStatus = '';
@@ -284,7 +285,11 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
        this.loginUserId= profile[0]?.loginUserId;
-       this.getGridState();
+       if(!this.casesLoaded){
+        this.getGridState();
+        this.casesLoaded = true;
+       }
+
       }
     })
   }
@@ -409,7 +414,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       }
     });
 
-  
+
     this.saveGridState();
     this.loadProfileCasesList();
   }
@@ -507,6 +512,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
 
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? "";
+    this.sortValue = this.sortValue === "eligibilityStatusCode" ? "caseStatus" : this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? "";
     this.columnName = filterList.length > 0 ? filterList[0]?.filters[0]?.field : "";
     this.state = stateData;
@@ -518,6 +524,6 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     if(this.sort[0]?.dir === 'desc'){
       this.sortDir = 'Descending';
     }
-    this.loadProfileCasesList();
+
   }
 }

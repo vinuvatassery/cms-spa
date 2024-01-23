@@ -61,10 +61,10 @@ export class DocumentDataService {
     return this.http.post(this.getUrl(), documentFormData, { reportProgress: true });
   }
 
-  getDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string, skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: any, columnName: any) {
+  getDocumentsByClientCaseEligibilityId(clientId: number, skipcount: number, maxResultCount: number, sort: string, sortType: string, filter: any, columnName: any) {
     return this.http.get<any[]>(
       `${this.configurationProvider.appSettings.caseApiUrl}` +
-      `/case-management/clientdocuments/${clientCaseEligibilityId}/documents?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${filter}&ColumnName=${columnName}`
+      `/case-management/clientdocuments/${clientId}/documents?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}&Filter=${filter}&ColumnName=${columnName}`
     );
   }
 

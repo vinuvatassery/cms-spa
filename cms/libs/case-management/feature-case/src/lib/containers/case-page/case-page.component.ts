@@ -142,21 +142,22 @@ export class CasePageComponent implements OnInit {
 
   loadCasesListEventHandler(gridDataRefinerValue : any)
   {
-    const gridDataRefiner =
-    {
-      caseScreenType: this.selectedTab,
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount : gridDataRefinerValue.pagesize,
-      sort : gridDataRefinerValue.sortColumn,
-      sortType : gridDataRefinerValue.sortType,
-      columnName : gridDataRefinerValue.columnName,
-      filter : gridDataRefinerValue.filter,
-      totalClientsCount : this.totalClientsCount,
-      beforeDate: gridDataRefinerValue.beforeDate,
-      afterDate: gridDataRefinerValue.afterDate
-    }
-    this.pageSizes = this.caseFacade.gridPageSizes;
-    this.loadCaseList(gridDataRefiner);
+      const gridDataRefiner =
+      {
+        caseScreenType: this.selectedTab,
+        skipcount: gridDataRefinerValue.skipCount,
+        maxResultCount : gridDataRefinerValue.pagesize,
+        sort : gridDataRefinerValue.sortColumn,
+        sortType : gridDataRefinerValue.sortType,
+        columnName : gridDataRefinerValue.columnName,
+        filter : gridDataRefinerValue.filter,
+        totalClientsCount : this.totalClientsCount,
+        beforeDate: gridDataRefinerValue.beforeDate,
+        afterDate: gridDataRefinerValue.afterDate
+      }
+      this.pageSizes = this.caseFacade.gridPageSizes;
+      this.loadCaseList(gridDataRefiner);
+
   }
 
   loadColumnDroplist()
