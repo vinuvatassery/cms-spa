@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { WidgetFacade, WidgetChartModel } from '@cms/dashboard/domain';
-import { ChartComponent } from '@cms/dashboard/feature-dashboard';
+import { DashboardChartComponent } from '@cms/dashboard/feature-dashboard';
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
 // import { KendoInput } from '@progress/kendo-angular-common';
 
@@ -19,7 +19,7 @@ export class WidgetProgramExpensesComponent implements OnInit  {
   ngOnInit(): void {
     const chartview= this.chartPlaceholder.viewContainerRef;
     chartview.clear();
-    const componentRef= chartview.createComponent(ChartComponent);
+    const componentRef= chartview.createComponent(DashboardChartComponent);
     componentRef.instance.chartConfig= this.widgetChartConfig;
       
   }

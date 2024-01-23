@@ -26,8 +26,8 @@
     *ngFor="let item of dashboardContentList$ | async"
     [item]="item" 
   > 
-    <div class="box" *ngIf="item.isVisible">
-      <div class="box-content" >
+    <div  *ngIf="item.isVisible">
+      <div  >
         <ndc-dynamic
           class="no-drag"
           [ndcDynamicComponent]="item.component"   [ngComponentOutletNdcDynamicInputs]="{widgetChartConfig:item?.widgetChartConfig}"

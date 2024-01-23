@@ -3,10 +3,10 @@ import { WidgetChartModel } from '@cms/dashboard/domain';
 
 @Component({
   selector: 'dashboard-chart',
-  templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.scss']
+  templateUrl: './dashboard-chart.component.html',
+  styleUrls: ['./dashboard-chart.component.scss']
 })
-export class ChartComponent{
+export class DashboardChartComponent{
   @Input() chartConfig!:WidgetChartModel;
 
 }

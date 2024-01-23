@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { WidgetChartModel } from '@cms/dashboard/domain';
-import { ChartComponent } from '@cms/dashboard/feature-dashboard';
+import { DashboardChartComponent } from '@cms/dashboard/feature-dashboard';
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
 @Component({
   selector: 'cms-widget-premium-expenses-by-insurance-type',
@@ -43,7 +43,7 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
   ngOnInit(): void {
     const hostview= this.chartPlaceholder.viewContainerRef;
     hostview.clear();
-    const componentRef= hostview.createComponent(ChartComponent);
+    const componentRef= hostview.createComponent(DashboardChartComponent);
     componentRef.instance.chartConfig= this.incomeData;
 
   }

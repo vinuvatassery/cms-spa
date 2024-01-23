@@ -1,8 +1,8 @@
 
 import { Component,ChangeDetectionStrategy, Input, OnInit, ViewChild } from '@angular/core';
-import { WidgetFacade, WidgetChartModel } from '@cms/dashboard/domain';
-import { ChartComponent } from '@cms/dashboard/feature-dashboard';
-import {  PlaceholderDirective } from '@cms/shared/ui-common';
+import { WidgetFacade, WidgetChartModel, } from '@cms/dashboard/domain';
+import { DashboardChartComponent } from '@cms/dashboard/feature-dashboard';
+import { PlaceholderDirective } from '@cms/shared/ui-common';
 @Component({
   selector: 'cms-widget-client-by-status',
   templateUrl: './widget-client-by-status.component.html',
@@ -17,7 +17,7 @@ export class WidgetClientByStatusComponent implements OnInit{
    ngOnInit(): void {
      const chartview= this.chartPlaceholder.viewContainerRef;
      chartview.clear();
-     const componentRef= chartview.createComponent(ChartComponent);
+     const componentRef= chartview.createComponent(DashboardChartComponent);
      componentRef.instance.chartConfig= this.widgetChartConfig;
        
    }

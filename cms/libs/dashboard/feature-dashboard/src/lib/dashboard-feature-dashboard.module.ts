@@ -11,7 +11,7 @@ import { DashboardPageComponent } from './containers/dashboard-page/dashboard-pa
 // import { DashboardFeatureWidgetModule } from '@cms/dashboard/feature-widget'; 
 import { GridsterModule } from 'angular-gridster2';
 import { DynamicModule } from 'ng-dynamic-component';
-import { ChartComponent } from './containers/chart/chart.component';
+import { DashboardChartComponent} from './containers/dashboard-chart/dashboard-chart.component';
 
 @NgModule({
   imports: [
@@ -23,7 +23,7 @@ import { ChartComponent } from './containers/chart/chart.component';
     GridsterModule,
     DynamicModule,
   ],
-  declarations: [DashboardPageComponent, ChartComponent],
-  exports: [DashboardPageComponent, ChartComponent],
+  declarations: [DashboardPageComponent, DashboardChartComponent],
+  exports: [DashboardPageComponent, DashboardChartComponent],
 })
 export class DashboardFeatureDashboardModule {}
