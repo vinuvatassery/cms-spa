@@ -257,7 +257,10 @@ export class FinancialPremiumsBatchesLogListsComponent
       this.totalPaymentsCount=data.total;
       this.totalReconciled = 0;
         data.data.forEach(item =>{
-          this.batchStatus = item.batchStatusCode
+         if([BatchStatusCode.Paid, BatchStatusCode.PaymentRequested, BatchStatusCode.ManagerApproved].includes(item.paymentStatusCode)){
+          this.batchStatus = item.paymentStatusCode
+         }
+         
           if(!([BatchStatusCode.Paid, BatchStatusCode.PaymentRequested, BatchStatusCode.ManagerApproved].includes(item.batchStatusCode))){
             this.disableBtnUnbatchEntireBatch = false
           }
