@@ -102,7 +102,6 @@ private clientClaimsListDataSubject =  new Subject<any>();
       this.clearSelection();
       this.loadRefundClaimsListGrid();
      this.filterResetDialog.close();
-     this.sort.close();
     }
   }
   resetButtonClosed(result: any) {
