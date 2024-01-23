@@ -44,6 +44,9 @@ export class CasePageComponent implements OnInit {
   sortValue  = this.caseFacade.sortValue;
   sortType  = this.caseFacade.sortType;
   sort  = this.caseFacade.sort;
+  myClients$ = this.caseFacade.myClients$;
+  recentClients$ = this.caseFacade.recentClients$;
+  allClients$ = this.caseFacade.allClients$;
 
   /** Constructor**/
 
