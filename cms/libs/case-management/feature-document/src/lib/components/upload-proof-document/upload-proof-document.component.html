@@ -19,7 +19,6 @@
           [isFileViewable]="true"
           [fieldName]="'Attachment Type'"
           [typeCodeLabel]="'Attachment Type'"
-          [typeCode]="'Attachment_Type'"
           [subTypeCodeLabel]="'Attachment Sub Type'"
           [currentTypeCode]="selectedTypeCode"
           [formSubmitted]="isSubmitted"
@@ -28,7 +27,6 @@
           (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
           [isDownloadShow]="true">
           </common-document-upload>
-          <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="uploadedFileExceedsFileSizeLimit">
             File size is limited to 25 MB. Please select a
             smaller
