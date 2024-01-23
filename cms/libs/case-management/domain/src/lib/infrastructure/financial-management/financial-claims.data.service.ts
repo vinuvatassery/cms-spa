@@ -76,9 +76,9 @@ export class FinancialClaimsDataService {
     );
   }
 
-  loadPaymentsByBatch(batchId: string, params:GridFilterParam, claimType:string){
+  loadPaymentsByBatch(batchId: string, isReconciled: boolean, params:GridFilterParam, claimType:string){
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments`, params);
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments?isReconciled=${isReconciled}`, params);
   }
 
   loadBatchName(batchId: string){

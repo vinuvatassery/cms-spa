@@ -562,9 +562,9 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
   }
 
 
-  loadBatchLogListGrid(batchId: string, params:GridFilterParam, claimType:string){
+  loadBatchLogListGrid(batchId: string, isReconciled: boolean, params:GridFilterParam, claimType:string){
     this.paymentByBatchGridLoaderSubject.next(true);
-    this.financialClaimsDataService.loadPaymentsByBatch(batchId, params, claimType).subscribe({
+    this.financialClaimsDataService.loadPaymentsByBatch(batchId, isReconciled, params, claimType).subscribe({
       next: (dataResponse) => {
         const gridView: any = {
           data: dataResponse['items'],
