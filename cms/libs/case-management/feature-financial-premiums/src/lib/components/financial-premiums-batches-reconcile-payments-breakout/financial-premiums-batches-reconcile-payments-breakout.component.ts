@@ -271,7 +271,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
   }
 
   onProviderNameClick(event:any){
-    this.onProviderNameClickEvent.emit(this.paymentRequestId)
+    this.onProviderNameClickEvent.emit(event.paymentRequestId)
   }
 
   dropdownFilterChange(
