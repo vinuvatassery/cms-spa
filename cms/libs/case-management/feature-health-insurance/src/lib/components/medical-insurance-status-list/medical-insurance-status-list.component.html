@@ -159,7 +159,8 @@
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttonDataItem>
                 <button kendoButton  look="flat" [attr.aria-label]="buttonDataItem.text" [class]="buttonDataItem.buttonType" aria-hidden="false"
                 (click)="handleOptionClick(dataItem,buttonDataItem.type)" [disabled]="(isReadOnly$ | async) ? true : false"
-                [hidden]="dataItem.isPaymentDone && buttonDataItem.icon ==='delete'">
+                [hidden]="(dataItem.isPaymentDone && buttonDataItem.icon ==='delete') || 
+                (dataItem.clientCaseEligibilityId !== caseEligibilityId && buttonDataItem.type !=='Copy' && buttonDataItem.type !=='Delete')">
                   <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttonDataItem.text" >{{buttonDataItem.icon}}</span>
                   <label>   {{ buttonDataItem.text }} </label>
               </button>
