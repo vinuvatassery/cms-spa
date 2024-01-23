@@ -1,1 +1,5 @@
-<ng-template commonPlaceholder ></ng-template>
+<kendo-chart  *ngIf="activeClientsByStatus" [series]="activeClientsByStatus?.chartData?.series"
+[legend]="activeClientsByStatus?.chartData?.legend" [title]="activeClientsByStatus?.chartData?.title"
+[categoryAxis]="activeClientsByStatus?.chartData?.categoryAxis"
+[tooltip]="activeClientsByStatus?.chartData?.tooltip">
+</kendo-chart>

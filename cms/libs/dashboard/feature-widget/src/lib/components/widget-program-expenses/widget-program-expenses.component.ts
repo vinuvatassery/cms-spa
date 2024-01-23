@@ -2,6 +2,7 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { WidgetFacade, WidgetChartModel } from '@cms/dashboard/domain';
 import { DashboardChartComponent } from '@cms/dashboard/feature-dashboard';
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
+import { Subject, takeUntil } from 'rxjs';
 // import { KendoInput } from '@progress/kendo-angular-common';
 
 
@@ -12,15 +13,29 @@ import {  PlaceholderDirective } from '@cms/shared/ui-common';
 })
 
 export class WidgetProgramExpensesComponent implements OnInit  {
- @ViewChild(PlaceholderDirective, {static:true}) chartPlaceholder!:PlaceholderDirective;
- @Input() widgetChartConfig!:WidgetChartModel;
-  constructor(private widgetFacade:WidgetFacade){
+  
+  programExpenses: any; 
+  private destroy$ = new Subject<void>();
+  constructor(private widgetFacade: WidgetFacade) {}
+
+  ngOnInit(): void { 
+    this.loadProgramExpensesChart();
   }
-  ngOnInit(): void {
-    const chartview= this.chartPlaceholder.viewContainerRef;
-    chartview.clear();
-    const componentRef= chartview.createComponent(DashboardChartComponent);
-    componentRef.instance.chartConfig= this.widgetChartConfig;
-      
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  loadProgramExpensesChart() {
+    this.widgetFacade.loadProgramExpensesChart();
+    this.widgetFacade.programExpensesChart$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response) {
+            this.programExpenses = response;
+          }
+        }
+      });
   }
 }

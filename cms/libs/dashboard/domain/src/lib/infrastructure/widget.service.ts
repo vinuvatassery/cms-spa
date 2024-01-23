@@ -44,109 +44,12 @@ export class WidgetService {
     ]);
   }
 
-  getChartData():Observable<any> {
+  getChartData(): Observable<any> {
     return of({
-      title:{
-        text:'Program Expensessssssssssss'
-      },
-      
-      legend:{
-        position:'top',
-        orientation: 'horizontal'
-      },
-      categoryAxis:{
-        categories:['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul']
-      },
-      series:[
-        {
-          name: 'Med Claims',
-          data: [300, 200, 250, 400, 300, 350, 500],
-          type:'line',
-          color:'red'
-        },
-        {
-          name: 'Med Prem',
-          data: [75, 130, 170, 220, 100, 180, 50],
-          type:'line',
-          color:'blue'
-        },
-        {
-          name: 'Dental Claims',
-          data: [10, 30, 20, 10, 40, 70, 60],
-          type:'line',
-          color:'green'
-        },
-        {
-          name: 'Dental Prem',
-          data: [20, 10, 30, 60, 40, 80, 60],
-          type:'line',
-          color:'yellow'
-        },
-        {
-          name: 'Pharm Claim',
-          data: [100, 10, 60, 60, 40, 70, 60],
-          type:'line',
-          color:'purple'
-        }
-      ]
-    });
-  }
-  getClientRecordSendChart(): Observable<any> {
-    return of({
-      component: 'ClientRecordsSent',
-      chartData: {
-        title: {
-          visible: false,
-          text: 'Client Records Sent',
-        },
-        legend: {
-          visible: false,
-          position: 'right',
-          orientation: 'vertical',
-        },
-        categoryAxis: {
-          categories: [
-            '05/01/21',
-            '05/02/21',
-            '05/03/21',
-            '05/04/21',
-            '05/05/21',
-            '05/06/21',
-            '05/07/21',
-            '05/08/21',
-            '05/09/21',
-          ],
-          labels: { format: 'd', rotation: 'auto' },
-        },
-        tooltip: {
-          visible: true,
-          shared: true,
-        },
-        series: [
-          {
-            data: [10, 12, 23, 34, 12, 23, 10, 12, 23],
-
-            type: 'column',
-            color: '#005994',
-          },
-          {
-            data: [10, 12, 23, 34, 12, 23, 10, 12, 23],
-
-            type: 'line',
-            color: '#005994',
-            style: 'smooth',
-          },
-        ],
-      },
-    });
-  }
-  getActiveClientsByGroup() :Observable<any>{
-    return of({
-      component: 'ActiveClientsByGroup',
-      chartData: {
       title: {
-        text: 'ACTIVE CLIENTS BY GROUP',
+        text: 'Program Expensessssssssssss',
       },
+
       legend: {
         position: 'top',
         orientation: 'horizontal',
@@ -156,78 +59,441 @@ export class WidgetService {
       },
       series: [
         {
-          data: [
-            {
-              category: 'UPP',
-              value: 45,
-              color: '#FFD064',
-            },
-            {
-              category: 'GROUP I',
-              value: 15,
-              color: '#ED6363',
-            },
-            {
-              category: 'GROUP II',
-              value: 10,
-              color: '#57BAC3',
-            },
-            {
-              category: 'BRIDGE',
-              value: 10,
-              color: '#0063A6',
-            },
-            {
-              category: 'GROUP I / INS GAP',
-              value: 10,
-              color: '#BF61A5',
-            },
-            {
-              category: 'GROUP II / INS GAP',
-              value: 10,
-              color: '#D8D365',
-            },
-          ],
-          type: 'donut',
+          name: 'Med Claims',
+          data: [300, 200, 250, 400, 300, 350, 500],
+          type: 'line',
           color: 'red',
         },
+        {
+          name: 'Med Prem',
+          data: [75, 130, 170, 220, 100, 180, 50],
+          type: 'line',
+          color: 'blue',
+        },
+        {
+          name: 'Dental Claims',
+          data: [10, 30, 20, 10, 40, 70, 60],
+          type: 'line',
+          color: 'green',
+        },
+        {
+          name: 'Dental Prem',
+          data: [20, 10, 30, 60, 40, 80, 60],
+          type: 'line',
+          color: 'yellow',
+        },
+        {
+          name: 'Pharm Claim',
+          data: [100, 10, 60, 60, 40, 70, 60],
+          type: 'line',
+          color: 'purple',
+        },
       ],
-    }});
-  }
-  getActiveClientByStatus(){
-
-  }
-  getNetIncome(){
-
-  }
-  getDirectMessages(){
-
-  }
-  getInsuranceTypeFpl(){
-
-  }
-  GetLineHeap(){
-
+    });
   }
 
-
-  getPharmacyClaims(){}
-  getPremiumExpensesByInsurance(){
-    
+  getActiveClientsByGroup(): Observable<any> {
+    return of({
+      component: 'ActiveClientsByGroup',
+      chartData: {
+        title: {
+          text: 'ACTIVE CLIENTS BY GROUP',
+        },
+        legend: {
+          position: 'top',
+          orientation: 'horizontal',
+        },
+        categoryAxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        },
+        series: [
+          {
+            data: [
+              {
+                category: 'UPP',
+                value: 45,
+                color: '#FFD064',
+              },
+              {
+                category: 'GROUP I',
+                value: 15,
+                color: '#ED6363',
+              },
+              {
+                category: 'GROUP II',
+                value: 10,
+                color: '#57BAC3',
+              },
+              {
+                category: 'BRIDGE',
+                value: 10,
+                color: '#0063A6',
+              },
+              {
+                category: 'GROUP I / INS GAP',
+                value: 10,
+                color: '#BF61A5',
+              },
+              {
+                category: 'GROUP II / INS GAP',
+                value: 10,
+                color: '#D8D365',
+              },
+            ],
+            type: 'donut',
+            color: 'red',
+          },
+        ],
+      },
+    });
   }
-  getProgramExpenses(){
+  getActiveClientsByStatus(): Observable<any> {
+    return of({
+      component: 'ClientByStatus',
+      chartData: {
+        title: {
+          text: 'Active Client By Status',
+        },
+        legend: {
+          position: 'right',
+          orientation: 'vertical',
+        },
+        categoryAxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        },
+        series: [
+          {
+            data: [
+              {
+                category: 'UPP',
+                value: 45,
+                color: '#FFD064',
+              },
+              {
+                category: 'GROUP I',
+                value: 15,
+                color: '#ED6363',
+              },
+              {
+                category: 'GROUP II',
+                value: 10,
+                color: '#57BAC3',
+              },
+              {
+                category: 'BRIDGE',
+                value: 10,
+                color: '#0063A6',
+              },
+              {
+                category: 'GROUP I / INS GAP',
+                value: 10,
+                color: '#BF61A5',
+              },
+              {
+                category: 'GROUP II / INS GAP',
+                value: 10,
+                color: '#D8D365',
+              },
+            ],
 
+            type: 'donut',
+            color: 'red',
+          },
+        ],
+      },
+    });
   }
-  getProgramIncome(){
-
+  getNetIncome(): Observable<any> {
+    return of({
+      component: 'netIncome',
+      chartData: {
+        chartType: 'line',
+        title: {
+          text: 'Net Income',
+        },
+        legend: {
+          position: 'top',
+          orientation: 'horizontal',
+          align: 'end',
+        },
+        series: [
+          {
+            name: 'Insurance Revenue',
+            data: [120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230],
+            color: '#57C395',
+            type: 'column',
+          },
+          {
+            name: 'Replenishment Costs',
+            data: [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210],
+            color: '#F56F7B',
+            type: 'column',
+          },
+          
+        ],
+        valueAxis: {
+          title:"Income asdsa",
+          labels: {
+            format: '{0}k',
+            skip: 2,
+            step: 2,
+          },
+          line: {
+            visible: false,
+          },
+          axisCrossingValue: -10000,
+        },
+ 
+        categoryAxis: {
+          categories: [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'June',
+            'Jul',
+            'Aug',
+            'Sept',
+            'Oct',
+            'Nov',
+            'Dec',
+          ],
+          line: {
+            visible: false,
+          },
+          labels: {
+            format: 'M',
+            rotation: 'auto'
+          },
+        },
+      
+        tooltip: {
+          visible: true,
+          format: '{0}%',
+          template: '#= series.name #: #= value #',
+        },
+      },
+    });
   }
-  getQuickClinks(){
+  getDirectMessages() {}
+  getInsuranceTypeFpl() {}
+  GetLineHeap() {}
 
+  getPharmacyClaims(): Observable<any> {
+    return of({
+      component: 'pharmacyClaims',
+      chartData: {
+        title: {
+          text: 'Pharmacy Claims',
+        },
+        legend: {
+          position: 'right',
+          orientation: 'vertical',
+        },
+        categoryAxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        },
+        series: [
+          {
+            data: [
+              {
+                category: 'UPP',
+                value: 45,
+                color: '#FFD064',
+              },
+              {
+                category: 'GROUP I',
+                value: 15,
+                color: '#ED6363',
+              },
+              {
+                category: 'GROUP II',
+                value: 10,
+                color: '#57BAC3',
+              },
+              {
+                category: 'BRIDGE',
+                value: 10,
+                color: '#0063A6',
+              },
+              {
+                category: 'GROUP I / INS GAP',
+                value: 10,
+                color: '#BF61A5',
+              },
+              {
+                category: 'GROUP II / INS GAP',
+                value: 10,
+                color: '#D8D365',
+              },
+            ],
+
+            type: 'donut',
+            color: 'red',
+          },
+        ],
+      },
+    });
   }
-  getRentOverages(){}
-  getServiceTracking(){}
-  getSlotsAllocation(){}
-  getTodayGlance(){}
-  GetApplicationsCers(){}
+  getPremiumExpensesByInsurance(): Observable<any> {
+    return of({
+      component: 'premiumInsurance',
+      chartData: {
+        title: {
+          text: 'Premium Expenses By Insurance',
+        },
+        legend: {
+          position: 'right',
+          orientation: 'vertical',
+        },
+        categoryAxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        },
+        series: [
+          {
+            data: [
+              {
+                category: 'UPP',
+                value: 45,
+                color: '#FFD064',
+              },
+              {
+                category: 'GROUP I',
+                value: 15,
+                color: '#ED6363',
+              },
+              {
+                category: 'GROUP II',
+                value: 10,
+                color: '#57BAC3',
+              },
+              {
+                category: 'BRIDGE',
+                value: 10,
+                color: '#0063A6',
+              },
+              {
+                category: 'GROUP I / INS GAP',
+                value: 10,
+                color: '#BF61A5',
+              },
+              {
+                category: 'GROUP II / INS GAP',
+                value: 10,
+                color: '#D8D365',
+              },
+            ],
 
+            type: 'donut',
+            color: 'red',
+          },
+        ],
+      },
+    });
+  }
+  getProgramExpenses() {
+    return of({
+      component: 'ProgramExpenses',
+      chartData: {
+        title: {
+          text: 'Program Expenses',
+        },
+        legend: {
+          position: 'top',
+          orientation: 'horizontal',
+        },
+        categoryAxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        },
+        series: [
+          {
+            name: 'Med Claims',
+            data: [300, 200, 250, 400, 300, 350, 500],
+            type: 'bar',
+            color: 'red',
+          },
+          {
+            name: 'Med Prem',
+            data: [75, 130, 170, 220, 100, 180, 50],
+            type: 'bar',
+            color: 'blue',
+          },
+          {
+            name: 'Dental Claims',
+            data: [10, 30, 20, 10, 40, 70, 60],
+            type: 'bar',
+            color: 'green',
+          },
+          {
+            name: 'Dental Prem',
+            data: [20, 10, 30, 60, 40, 80, 60],
+            type: 'bar',
+            color: 'yellow',
+          },
+          {
+            name: 'Pharm Claim',
+            data: [100, 10, 60, 60, 40, 70, 60],
+            type: 'bar',
+            color: 'purple',
+          },
+        ],
+      },
+    });
+  }
+  getProgramIncome() {
+    return of({
+      component: 'ProgramIncome',
+      chartData: {
+        title: {
+          text: 'Program Income',
+        },
+        legend: {
+          position: 'top',
+          orientation: 'horizontal',
+        },
+        categoryAxis: {
+          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        },
+        series: [
+          {
+            name: 'Med Claims',
+            data: [300, 200, 250, 400, 300, 350, 500],
+            type: 'bar',
+            color: 'red',
+          },
+          {
+            name: 'Med Prem',
+            data: [75, 130, 170, 220, 100, 180, 50],
+            type: 'bar',
+            color: 'blue',
+          },
+          {
+            name: 'Dental Claims',
+            data: [10, 30, 20, 10, 40, 70, 60],
+            type: 'bar',
+            color: 'green',
+          },
+          {
+            name: 'Dental Prem',
+            data: [20, 10, 30, 60, 40, 80, 60],
+            type: 'bar',
+            color: 'yellow',
+          },
+          {
+            name: 'Pharm Claim',
+            data: [100, 10, 60, 60, 40, 70, 60],
+            type: 'bar',
+            color: 'purple',
+          },
+        ],
+      },
+    });
+  }
+  getQuickClinks() {}
+  getRentOverages() {}
+  getServiceTracking() {}
+  getSlotsAllocation() {}
+  getTodayGlance() {}
+  GetApplicationsCers() {}
 }

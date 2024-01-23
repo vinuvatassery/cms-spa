@@ -17,8 +17,7 @@ import { Subject, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
-  activeClientsByGroup: any;
-  activeClientsByGroup$ = this.widgetFacade.activeClientsByGroup$; 
+  activeClientsByGroup: any; 
   private destroy$ = new Subject<void>();
   constructor(private widgetFacade: WidgetFacade) {}
 
@@ -32,7 +31,7 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
   }
   loadActiveClientsByGroupChart() {
     this.widgetFacade.loadActiveClientsByGroupChart();
-    this.widgetFacade.activeClientsByGroup$
+    this.widgetFacade.activeClientsByGroupChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {

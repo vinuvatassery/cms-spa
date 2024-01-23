@@ -1,1 +1,5 @@
-<ng-template commonPlaceholder></ng-template>
+<kendo-chart  *ngIf="programIncome" [series]="programIncome?.chartData?.series"
+[legend]="programIncome?.chartData?.legend" [title]="programIncome?.chartData?.title"
+[categoryAxis]="programIncome?.chartData?.categoryAxis"
+[tooltip]="programIncome?.chartData?.tooltip">
+</kendo-chart>

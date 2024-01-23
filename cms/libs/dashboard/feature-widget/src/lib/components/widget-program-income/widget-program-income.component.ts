@@ -1,7 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { WidgetChartModel } from '@cms/dashboard/domain';
+import { WidgetChartModel, WidgetFacade } from '@cms/dashboard/domain';
 import { DashboardChartComponent } from '@cms/dashboard/feature-dashboard';
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'cms-widget-program-income',
@@ -9,42 +10,30 @@ import {  PlaceholderDirective } from '@cms/shared/ui-common';
   styleUrls: ['./widget-program-income.component.scss']
 })
 export class WidgetProgramIncomeComponent implements OnInit {
-  @ViewChild(PlaceholderDirective, {static:true}) chartPlaceholder!:PlaceholderDirective;
-  incomeData:WidgetChartModel={ 
-    title:{
-      text:"Program Income"
-    },
-    legend:{
-      position:'top',
-      orientation:'horizontal'
-    },
-    categoryAxis:{
-      categories:['Q1 2020', 'Q2 2020', 'Q3 2020', 'Q4 2020']
-    },
-    series:[{
-      name:'Rebates',
-      data:[12, 19, 3, 5],
-      color:'skyblue',
-      type:'bar'
-    },
-    {
-      name:'Replenishment',
-      data: [2, 3, 3, 5],
-      color:'orange',
-      type:'bar'
-    }
-  ]
+    
+  programIncome: any; 
+  private destroy$ = new Subject<void>();
+  constructor(private widgetFacade: WidgetFacade) {}
 
-  };
+  ngOnInit(): void { 
+    this.loadProgramIncomeChart();
+  }
 
-
-
-  ngOnInit(): void {
-    const hostview= this.chartPlaceholder.viewContainerRef;
-    hostview.clear();
-    const componentRef= hostview.createComponent(DashboardChartComponent);
-    componentRef.instance.chartConfig= this.incomeData;
-
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+  loadProgramIncomeChart() {
+    this.widgetFacade.loadProgramIncomeChart();
+    this.widgetFacade.programIncomeChart$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (response) => {
+          if (response) {
+            this.programIncome = response;
+          }
+        }
+      });
   }
 }
 
