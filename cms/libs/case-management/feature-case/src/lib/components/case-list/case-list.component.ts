@@ -122,7 +122,7 @@ public state!: any;
   selectedGroup="";
   selectedStatus="";
   casesLoaded=false;
-
+  hiddenColumns: ColumnComponent[]=[];
   /** Constructor**/
   constructor(private readonly caseFacade: CaseFacade,private readonly lovFacade: LovFacade, public readonly  intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider, private readonly  cdr :ChangeDetectorRef,
@@ -325,6 +325,15 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
             this.state.filter = this.filter;
             this.columnName = this.state.columnName;
             this.selectedColumn = this.state.selectedColumn;
+          }
+
+          const filters = this.state.filter?.filters ?? [];
+          for (let item of filters) {
+            this.hiddenColumns = this.defaultColumnState.filter(x => x.hidden === true) as ColumnComponent[];
+            const columnField = item['filters'][0].field;
+            const isHiddenColumn = this.hiddenColumns.find(k => k.field === columnField);
+            if (isHiddenColumn) 
+                isHiddenColumn.hidden = false;
           }
           this.setGridState(this.state);
           this.cdr.detectChanges();
