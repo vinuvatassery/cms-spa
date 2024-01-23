@@ -676,7 +676,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
-      aymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : formValues.medicalProvider.paymentMethodCode,
+      paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : formValues.medicalProvider.paymentMethodCode,
       exceptionFlag: formValues.parentExceptionFlag,
       exceptionTypeCode: formValues.parentExceptionTypeCode,
       exceptionReasonCode: formValues.parentReasonForException,
