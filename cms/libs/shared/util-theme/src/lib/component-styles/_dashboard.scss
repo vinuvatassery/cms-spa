@@ -157,9 +157,10 @@
 
 .reorder_wrapper_enabled {
   gridster-item {
-    background: #F7F7F7 !important; 
+    background: #F7F7F7 !important;
     border-radius: 6px !important;
     padding: 0;
+
     // position: relative;
     &::before {
       content: "\e945";
@@ -333,5 +334,23 @@
     margin: 0;
     font-family: $font-family-light;
 
+  }
+}
+
+
+.dash_quick_links_wrapper {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px;
+  padding: 10px;
+
+  .light-blue-btn {
+    padding: 12px 10px;
+    word-wrap: break-word;
+
+    .k-button-text {
+      word-wrap: break-word;
+      white-space: pre-line;
+    }
   }
 }
