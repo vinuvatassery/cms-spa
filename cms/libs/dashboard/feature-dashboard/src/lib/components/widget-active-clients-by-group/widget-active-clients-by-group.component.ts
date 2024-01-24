@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain';
 import { Subject, takeUntil } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -9,14 +15,13 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
-  activeClientsByGroup: any; 
+  activeClientsByGroup: any;
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(private widgetFacade: WidgetFacade) {}
-  data = ['All Clients','All Clients']
-    
-  
-  ngOnInit(): void { 
+  data = ['Group 1', 'Group 2'];
+
+  ngOnInit(): void {
     this.loadActiveClientsByGroupChart();
   }
 
@@ -33,8 +38,7 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
           if (response) {
             this.activeClientsByGroup = response;
           }
-        }
+        },
       });
   }
-
 }

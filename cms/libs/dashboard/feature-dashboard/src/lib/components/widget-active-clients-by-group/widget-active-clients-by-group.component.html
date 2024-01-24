@@ -5,8 +5,8 @@
                 </kendo-dropdownlist></div>
       </div>
       <div class="dashboard-cards-container">
-            <kendo-chart *ngIf="activeClientsByGroup" [series]="activeClientsByGroup?.chartData?.series"
-                  [legend]="activeClientsByGroup?.chartData?.legend" [title]="activeClientsByGroup?.chartData?.title"
+            <kendo-chart class="dash_chart" *ngIf="activeClientsByGroup" [series]="activeClientsByGroup?.chartData?.series"
+                  [legend]="activeClientsByGroup?.chartData?.legend"  
                   [categoryAxis]="activeClientsByGroup?.chartData?.categoryAxis"
                   [tooltip]="activeClientsByGroup?.chartData?.tooltip">
             </kendo-chart>

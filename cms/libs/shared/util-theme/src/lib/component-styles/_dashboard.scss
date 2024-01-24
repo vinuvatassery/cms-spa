@@ -159,13 +159,13 @@
   gridster-item {
     background: #F7F7F7 !important;
     border-radius: 6px !important;
-    padding: 0;
-
+    padding: 10px !important;
+    padding-left: 2rem !important;
     // position: relative;
     &::before {
       content: "\e945";
       font-family: "Material Icons";
-      width: 12px;
+      font-size: 22px;
       height: 100%;
       position: absolute;
       left: 0;
@@ -361,6 +361,21 @@
   justify-content: space-between;
   margin-bottom: 8px;
   .k-dropdownlist{
-    min-width: 150px;
+    min-width: 100px;
+    max-width: 100px;
+    font-size: $font-size;
+    .k-button.k-icon-button{
+      padding: 2px;
+    }
+    .k-input-inner{
+      padding-right: 0;
+      padding-left: 10px;
+    }
   }
+  h5{
+    margin: 0px;
+  }
+}
+.dash_chart{
+  max-height: 340px;
 }

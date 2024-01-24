@@ -1,5 +1,20 @@
-<kendo-chart  *ngIf="premiumExpensesByInsurance" [series]="premiumExpensesByInsurance?.chartData?.series"
-[legend]="premiumExpensesByInsurance?.chartData?.legend" [title]="premiumExpensesByInsurance?.chartData?.title"
-[categoryAxis]="premiumExpensesByInsurance?.chartData?.categoryAxis"
-[tooltip]="premiumExpensesByInsurance?.chartData?.tooltip">
-</kendo-chart>
+<div class="dashboard-cards-wrapper">
+      <div class="dash-header-with-filters">
+            <h5>PREMIUM EXPENSES BY INSURANCE TYPE</h5>
+            <div>
+                  <kendo-dropdownlist size="small" value="YTD" rounded="medium" class="mr-1"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="data">
+                  </kendo-dropdownlist>
+
+            </div>
+      </div>
+
+      <div class="dashboard-cards-container">
+            <kendo-chart class="dash_chart" *ngIf="premiumExpensesByInsurance"
+                  [series]="premiumExpensesByInsurance?.chartData?.series"
+                  [legend]="premiumExpensesByInsurance?.chartData?.legend"
+                  [categoryAxis]="premiumExpensesByInsurance?.chartData?.categoryAxis"
+                  [tooltip]="premiumExpensesByInsurance?.chartData?.tooltip">
+            </kendo-chart>
+      </div>
+</div>

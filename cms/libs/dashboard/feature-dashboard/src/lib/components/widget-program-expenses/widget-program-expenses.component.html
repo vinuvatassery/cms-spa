@@ -1,5 +1,25 @@
-<kendo-chart  *ngIf="programExpenses" [series]="programExpenses?.chartData?.series"
-[legend]="programExpenses?.chartData?.legend" [title]="programExpenses?.chartData?.title"
-[categoryAxis]="programExpenses?.chartData?.categoryAxis"
-[tooltip]="programExpenses?.chartData?.tooltip">
-</kendo-chart>
+<div class="dashboard-cards-wrapper">
+      <div class="dash-header-with-filters">
+            <h5>PROGRAM EXPENSES</h5>
+            <div>
+                  <kendo-dropdownlist size="small" value="All Expenses" rounded="medium" class="mr-1"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="dataExp">
+                  </kendo-dropdownlist>
+                  <kendo-dropdownlist size="small" value="Monthly" rounded="medium" class="mr-1"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="dataMonth">
+                  </kendo-dropdownlist>
+                  <kendo-dropdownlist size="small" value="Last Year" rounded="medium" class="mr-1"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="dataYear">
+                  </kendo-dropdownlist>
+
+            </div>
+      </div>
+
+      <div class="dashboard-cards-container">
+            <kendo-chart class="dash_chart" *ngIf="programExpenses" [series]="programExpenses?.chartData?.series"
+                  [legend]="programExpenses?.chartData?.legend" [title]="programExpenses?.chartData?.title"
+                  [categoryAxis]="programExpenses?.chartData?.categoryAxis"
+                  [tooltip]="programExpenses?.chartData?.tooltip">
+            </kendo-chart>
+      </div>
+</div>

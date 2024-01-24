@@ -1,5 +1,15 @@
-<kendo-chart  *ngIf="activeClientsByStatus" [series]="activeClientsByStatus?.chartData?.series"
-[legend]="activeClientsByStatus?.chartData?.legend" [title]="activeClientsByStatus?.chartData?.title"
-[categoryAxis]="activeClientsByStatus?.chartData?.categoryAxis"
-[tooltip]="activeClientsByStatus?.chartData?.tooltip">
-</kendo-chart>
+<div class="dashboard-cards-wrapper">
+      <div class="dash-header-with-filters">
+            <h5>ACTIVE CLIENTS BY STATUS</h5>
+            <div><kendo-dropdownlist size="small" value="All Clients" rounded="medium"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="data">
+                  </kendo-dropdownlist></div>
+      </div>
+      <div class="dashboard-cards-container">
+            <kendo-chart  class="dash_chart" *ngIf="activeClientsByStatus" [series]="activeClientsByStatus?.chartData?.series"
+                  [legend]="activeClientsByStatus?.chartData?.legend"
+                  [categoryAxis]="activeClientsByStatus?.chartData?.categoryAxis"
+                  [tooltip]="activeClientsByStatus?.chartData?.tooltip">
+            </kendo-chart>
+      </div>
+</div>

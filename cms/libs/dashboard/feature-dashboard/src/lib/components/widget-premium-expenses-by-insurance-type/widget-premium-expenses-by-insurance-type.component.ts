@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { WidgetChartModel, WidgetFacade } from '@cms/dashboard/domain'; 
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'dashboard-widget-premium-expenses-by-insurance-type',
@@ -12,6 +13,8 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
 
   premiumExpensesByInsurance: any; 
   private destroy$ = new Subject<void>();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  data  = ['Last Month','August']
   constructor(private widgetFacade: WidgetFacade) {}
 
   ngOnInit(): void { 

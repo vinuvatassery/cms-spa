@@ -1,5 +1,22 @@
-<kendo-chart  *ngIf="pharmacyClaims" [series]="pharmacyClaims?.chartData?.series"
-[legend]="pharmacyClaims?.chartData?.legend" [title]="pharmacyClaims?.chartData?.title"
-[categoryAxis]="pharmacyClaims?.chartData?.categoryAxis"
-[tooltip]="pharmacyClaims?.chartData?.tooltip">
-</kendo-chart>
+<div class="dashboard-cards-wrapper">
+      <div class="dash-header-with-filters">
+            <h5>PHARMACY CLAIMS</h5>
+            <div >
+                  <kendo-dropdownlist size="small" value="Claims Count" rounded="medium" class="mr-1"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="dataCount">
+                  </kendo-dropdownlist>
+           
+            <kendo-dropdownlist size="small" value="This Month" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
+                  [data]="dataMonth">
+            </kendo-dropdownlist>
+      </div>
+      </div>
+
+      <div class="dashboard-cards-container">
+            <kendo-chart  class="dash_chart" *ngIf="pharmacyClaims" [series]="pharmacyClaims?.chartData?.series"
+                  [legend]="pharmacyClaims?.chartData?.legend" [title]="pharmacyClaims?.chartData?.title"
+                  [categoryAxis]="pharmacyClaims?.chartData?.categoryAxis"
+                  [tooltip]="pharmacyClaims?.chartData?.tooltip">
+            </kendo-chart>
+      </div>
+</div>

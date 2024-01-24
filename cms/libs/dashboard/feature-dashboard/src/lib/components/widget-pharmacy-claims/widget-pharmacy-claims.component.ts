@@ -3,6 +3,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/core';
 import { WidgetChartModel, WidgetFacade } from '@cms/dashboard/domain'; 
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'dashboard-widget-pharmacy-claims',
@@ -14,6 +15,9 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
 
   pharmacyClaims: any; 
   private destroy$ = new Subject<void>();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  dataMonth = ['Last Month','August']
+  dataCount = ['100','200']
   constructor(private widgetFacade: WidgetFacade) {}
 
   ngOnInit(): void { 

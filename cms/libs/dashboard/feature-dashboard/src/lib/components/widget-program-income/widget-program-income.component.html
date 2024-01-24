@@ -1,5 +1,19 @@
-<kendo-chart  *ngIf="programIncome" [series]="programIncome?.chartData?.series"
-[legend]="programIncome?.chartData?.legend" [title]="programIncome?.chartData?.title"
-[categoryAxis]="programIncome?.chartData?.categoryAxis"
-[tooltip]="programIncome?.chartData?.tooltip">
-</kendo-chart>
+<div class="dashboard-cards-wrapper">
+      <div class="dash-header-with-filters">
+            <h5>PROGRAM INCOME</h5>
+            <div>
+                 
+                  <kendo-dropdownlist size="small" value="Last Year" rounded="medium" class="mr-1"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="dataYear">
+                  </kendo-dropdownlist>
+
+            </div>
+      </div>
+
+      <div class="dashboard-cards-container">
+            <kendo-chart  class="dash_chart" *ngIf="programIncome" [series]="programIncome?.chartData?.series"
+                  [legend]="programIncome?.chartData?.legend" [categoryAxis]="programIncome?.chartData?.categoryAxis"
+                  [tooltip]="programIncome?.chartData?.tooltip">
+            </kendo-chart>
+      </div>
+</div>

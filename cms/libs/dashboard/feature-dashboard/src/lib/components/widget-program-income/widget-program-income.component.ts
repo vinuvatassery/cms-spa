@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild, } from '@angular/core';
 import { WidgetChartModel, WidgetFacade } from '@cms/dashboard/domain'; 
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -12,6 +13,9 @@ export class WidgetProgramIncomeComponent implements OnInit, OnDestroy {
     
   programIncome: any; 
   private destroy$ = new Subject<void>();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+ 
+  dataYear  = ['Last Year','2023']
   constructor(private widgetFacade: WidgetFacade) {}
 
   ngOnInit(): void { 
