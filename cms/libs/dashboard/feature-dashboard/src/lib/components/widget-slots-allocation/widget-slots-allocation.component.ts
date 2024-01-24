@@ -6,4 +6,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./widget-slots-allocation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WidgetSlotsAllocationComponent {}
+export class WidgetSlotsAllocationComponent {
+  public categories: string[] = ['FORMULA', 'OHBHI', 'OSSCR', 'SECURE'];
+  public data: number[] = [50, 21, 10, 30];
+
+  public salesData: number[] = [20, 40, 45, 30,  ];
+  public purchaseData: number[] = [12, 30, 30, 45,  ]; 
+
+  
+}

@@ -161,6 +161,7 @@
     border-radius: 6px !important;
     padding: 10px !important;
     padding-left: 2rem !important;
+
     // position: relative;
     &::before {
       content: "\e945";
@@ -230,7 +231,7 @@
   padding: 8px 0px;
   border-bottom: 1px solid $black-e;
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
+  grid-template-columns: 1.2fr .9fr 1.1fr;
   grid-gap: 4px;
   align-items: flex-end;
   justify-content: flex-start;
@@ -256,6 +257,20 @@
     .icon-frame {
       background: rgba($color: $dash-orange-1, $alpha: 0.1);
       color: $dash-orange-1 ;
+    }
+  }
+
+  .lightpink-frame-icon {
+    .icon-frame {
+      background: rgba($color: $role-color-1, $alpha: 0.1);
+      color: $role-color-1 ;
+    }
+  }
+
+  .lightpurple-frame-icon {
+    .icon-frame {
+      background: rgba($color: $dash-purple-2, $alpha: 0.1);
+      color: $dash-purple-2 ;
     }
   }
 
@@ -289,6 +304,7 @@
     font-family: $font-family-medium;
     font-size: $font-size-s;
     text-decoration: none;
+    color: $black-16;
 
     .material-icons {
       line-height: 1rem;
@@ -355,27 +371,58 @@
   }
 }
 
-.dash-header-with-filters{
+.dash-header-with-filters {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
-  .k-dropdownlist{
+
+  .k-dropdownlist {
     min-width: 100px;
     max-width: 100px;
     font-size: $font-size;
-    .k-button.k-icon-button{
+
+    .k-button.k-icon-button {
       padding: 2px;
     }
-    .k-input-inner{
+
+    .k-input-inner {
       padding-right: 0;
       padding-left: 10px;
     }
   }
-  h5{
+
+  h5 {
     margin: 0px;
   }
 }
-.dash_chart{
+
+.dash_chart {
   max-height: 340px;
+}
+
+.slots-bottom-section {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 10px;
+
+  h5 {
+    margin: 0px;
+    font-family: $font-family;
+    color: $black-9;
+  }
+
+  p {
+    font-family: $font-family;
+    color: $black-9;
+    font-size: $font-size-s;
+  }
+}
+
+
+.gridster-preview {
+  background: #0063A614 0% 0% no-repeat padding-box !important;
+  border: 2px dashed #0063A6 !important;
+  border-radius: 6px;
 }

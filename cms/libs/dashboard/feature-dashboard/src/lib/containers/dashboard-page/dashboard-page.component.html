@@ -11,7 +11,7 @@
  
     <div>
       <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
-          (click)="editDashboardClicked()"> dashboard </span></button>
+          (click)="editDashboardClicked(configSubscriptionItems)"> dashboard </span></button>
       <div *ngIf="isReorderEnable">
         <button kendoButton (click)="editDashboardCancelClicked()" class="mr-1" [primary]="true" aria-label="Save">
           Save</button>
@@ -21,7 +21,7 @@
     </div>
   </section>
   <div class="mt-1" [ngClass]="{'reorder_wrapper_enabled': isReorderEnable}">
-<gridster [options]="config" *ngIf="dashboardConfiguration$ | async as config">
+<gridster [options]="configSubscriptionItems" *ngIf="configSubscriptionItems">
   <gridster-item
     *ngFor="let item of dashboardContentList$ | async"
     [item]="item" 
@@ -30,7 +30,7 @@
       <div  >
         <ndc-dynamic
           class="no-drag"
-          [ndcDynamicComponent]="item.component"   [ngComponentOutletNdcDynamicInputs]="{widgetChartConfig:item?.widgetChartConfig}"
+          [ndcDynamicComponent]="item.component"  
         ></ndc-dynamic>
       </div>
       </div>

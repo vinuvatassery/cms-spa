@@ -272,7 +272,7 @@ export class DashboardWrapperService {
       {
         id: 12,
         cols: 6,
-        rows: 2,
+        rows: 3,
         x: 0,
         y: 8,
         component: 'SlotsAllocation',
@@ -282,7 +282,7 @@ export class DashboardWrapperService {
       {
         id: 13,
         cols: 6,
-        rows: 2,
+        rows: 4,
         x: 0,
         y: 8,
         component: 'ServiceTracking',
@@ -307,15 +307,15 @@ export class DashboardWrapperService {
         component: 'RentOverages',
         isVisible: true,
       },
-      {
-        id: 16,
-        cols: 6,
-        rows: 4,
-        x: 0,
-        y: 8,
-        component: 'DirectMessages',
-        isVisible: true,
-      },
+      // {
+      //   id: 16,
+      //   cols: 6,
+      //   rows: 4,
+      //   x: 0,
+      //   y: 8,
+      //   component: 'DirectMessages',
+      //   isVisible: true,
+      // },
     ]);
   }
 
@@ -323,7 +323,7 @@ export class DashboardWrapperService {
     return of({
       gridType: GridType.VerticalFixed,
       displayGrid: DisplayGrid.OnDragAndResize,
-      resizable: { enabled: true },
+      resizable: { enabled: false },
       swap: true,
       pushItems: false,
       outerMargin: true,
@@ -344,7 +344,7 @@ export class DashboardWrapperService {
       keepFixedWidthInMobile: false,
       keepFixedHeightInMobile: true,
       draggable: {
-        enabled: true,
+        enabled: false,
         ignoreContent: false, // if true drag will start only from elements from `dragHandleClass`
         dragHandleClass: 'drag-handle', // drag event only from this class. If `ignoreContent` is true.
       },
