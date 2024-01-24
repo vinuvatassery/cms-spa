@@ -71,37 +71,7 @@ export class FinancialClaimsBatchesLogListsComponent
     PaymentStatusCode.PaymentRequested,
     PaymentStatusCode.ManagerApproved,
   ];
-  public bulkMore = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'RECONCILE PAYMENTS',
-      icon: 'edit',
-      click: (data: any): void => {
-        this.navToReconcilePayments(data);
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'PRINT ADVICE LETTER',
-      icon: 'print',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = false;
-        this.isPrintAdviceLetterClicked = true;
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'UNBATCH ENTIRE BATCH',
-      icon: 'undo',
-      click: (data: any): void => {
-        if (!this.isBulkUnBatchOpened) {
-          this.isBulkUnBatchOpened = true;
-          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
-        }
-      },
-    },
-  ];
-
+  public bulkMore !:any
   @Input() claimsType: any;
   @Input() batchId: any;
   @Input() pageSizes: any;
@@ -216,7 +186,7 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedPaymentStatus: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
-
+  batchStatus = PaymentStatusCode.PendingApproval
   getBatchLogGridActions(dataItem: any) {
     return [{
       buttonType: 'btn-h-primary',
@@ -302,15 +272,60 @@ export class FinancialClaimsBatchesLogListsComponent
     this.loadBatchLogListGrid();
     this.batchLogListSubscription();
     this.paymentBatchName$.subscribe(res =>{
-      if(!res){
-         this.backToBatch(null);
-      }
+
     })
+  }
+
+  initializeBulkMore(){
+    this.bulkMore = [
+      {
+        buttonType: 'btn-h-primary',
+        text: 'RECONCILE PAYMENTS',
+        icon: 'edit',
+        click: (data: any): void => {
+          this.navToReconcilePayments(data);
+        },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'PRINT ADVICE LETTER',
+        icon: 'print',
+        click: (data: any): void => {
+          this.isRequestPaymentClicked = false;
+          this.isPrintAdviceLetterClicked = true;
+        },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'UNBATCH ENTIRE BATCH',
+        icon: 'undo',
+        disabled: [
+          PaymentStatusCode.Paid,
+          PaymentStatusCode.PaymentRequested,
+          PaymentStatusCode.ManagerApproved,
+        ].includes(this.batchStatus),
+        click: (data: any): void => {
+          if (!this.isBulkUnBatchOpened) {
+            this.isBulkUnBatchOpened = true;
+            this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+          }
+        },
+      },
+    ];
   }
 
   batchLogListSubscription() {
     this.batchLogListItemsSubscription = this.batchLogGridLists$.subscribe((response: any) => {
       this.totalRecord = response.total;
+     
+      var payments =  response && response.data
+      
+      payments.forEach((item :any) =>{
+        if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(item.paymentStatusCode)){
+          this.batchStatus = item.paymentStatusCode
+         }
+        })
+      this.initializeBulkMore()
       if (this.selectAll) {
         this.markAsChecked(response.data);
       }

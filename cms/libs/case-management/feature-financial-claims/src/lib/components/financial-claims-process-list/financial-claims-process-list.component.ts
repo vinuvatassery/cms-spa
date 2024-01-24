@@ -258,10 +258,9 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
 
   onChange(data: any) {
     this.defaultGridState();
-    let operator = 'startswith';
+    let operator = 'contains';
 
     if (
-      this.selectedSearchColumn === 'clientId' ||
       this.selectedSearchColumn === 'serviceCount' ||
       this.selectedSearchColumn === 'annualTotal' ||
       this.selectedSearchColumn === 'amountDue' ||
