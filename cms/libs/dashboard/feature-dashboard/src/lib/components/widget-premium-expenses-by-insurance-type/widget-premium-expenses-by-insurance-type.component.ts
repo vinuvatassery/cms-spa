@@ -3,7 +3,7 @@ import { WidgetChartModel, WidgetFacade } from '@cms/dashboard/domain';
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
 import { Subject, takeUntil } from 'rxjs';
 @Component({
-  selector: 'cms-widget-premium-expenses-by-insurance-type',
+  selector: 'dashboard-widget-premium-expenses-by-insurance-type',
   templateUrl: './widget-premium-expenses-by-insurance-type.component.html',
   styleUrls: ['./widget-premium-expenses-by-insurance-type.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

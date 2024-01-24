@@ -1,16 +1,9 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
-import { WidgetChartModel } from '@cms/dashboard/domain'; 
-import { PlaceholderDirective } from '@cms/shared/ui-common';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain';
 import { Subject, takeUntil } from 'rxjs';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
-  selector: 'cms-widget-active-clients-by-group',
+  selector: 'dashboard-widget-active-clients-by-group',
   templateUrl: './widget-active-clients-by-group.component.html',
   styleUrls: ['./widget-active-clients-by-group.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,8 +11,11 @@ import { Subject, takeUntil } from 'rxjs';
 export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
   activeClientsByGroup: any; 
   private destroy$ = new Subject<void>();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(private widgetFacade: WidgetFacade) {}
-
+  data = ['All Clients','All Clients']
+    
+  
   ngOnInit(): void { 
     this.loadActiveClientsByGroupChart();
   }

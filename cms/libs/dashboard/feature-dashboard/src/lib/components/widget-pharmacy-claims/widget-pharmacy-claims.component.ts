@@ -5,7 +5,7 @@ import { WidgetChartModel, WidgetFacade } from '@cms/dashboard/domain';
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
 import { Subject, takeUntil } from 'rxjs';
 @Component({
-  selector: 'cms-widget-pharmacy-claims',
+  selector: 'dashboard-widget-pharmacy-claims',
   templateUrl: './widget-pharmacy-claims.component.html',
   styleUrls: ['./widget-pharmacy-claims.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

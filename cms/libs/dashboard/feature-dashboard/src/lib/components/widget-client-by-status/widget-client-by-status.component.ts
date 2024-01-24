@@ -4,7 +4,7 @@ import { WidgetFacade, WidgetChartModel, } from '@cms/dashboard/domain';
 import { PlaceholderDirective } from '@cms/shared/ui-common';
 import { Subject, takeUntil } from 'rxjs';
 @Component({
-  selector: 'cms-widget-client-by-status',
+  selector: 'dashboard-widget-client-by-status',
   templateUrl: './widget-client-by-status.component.html',
   styleUrls: ['./widget-client-by-status.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

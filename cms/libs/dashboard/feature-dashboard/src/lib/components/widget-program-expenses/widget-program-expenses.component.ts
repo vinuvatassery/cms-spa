@@ -5,7 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 
 
 @Component({
-  selector: 'cms-widget-program-expenses',
+  selector: 'dashboard-widget-program-expenses',
   templateUrl: './widget-program-expenses.component.html',
   styleUrls: ['./widget-program-expenses.component.scss']
 })

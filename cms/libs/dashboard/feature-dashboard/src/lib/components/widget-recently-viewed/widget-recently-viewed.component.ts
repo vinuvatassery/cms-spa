@@ -24,7 +24,7 @@ export const closest = (node: any, predicate: any) => {
 };
 
 @Component({
-  selector: 'cms-widget-recently-viewed',
+  selector: 'dashboard-widget-recently-viewed',
   templateUrl: './widget-recently-viewed.component.html',
   styleUrls: ['./widget-recently-viewed.component.scss'],
   encapsulation: ViewEncapsulation.None,

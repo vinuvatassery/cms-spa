@@ -3,7 +3,7 @@ import { WidgetFacade } from '@cms/dashboard/domain';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'cms-widget-today-at-a-glance',
+  selector: 'dashboard-widget-today-at-a-glance',
   templateUrl: './widget-today-at-a-glance.component.html',
   styleUrls: ['./widget-today-at-a-glance.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -5,7 +5,7 @@ import {  PlaceholderDirective } from '@cms/shared/ui-common';
 import { Subject, takeUntil } from 'rxjs';
  
 @Component({
-  selector: 'cms-widget-net-income',
+  selector: 'dashboard-widget-net-income',
   templateUrl: './widget-net-income.component.html',
   styleUrls: ['./widget-net-income.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

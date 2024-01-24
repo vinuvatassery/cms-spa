@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
-  selector: 'cms-widget-rent-overages',
+  selector: 'dashboard-widget-rent-overages',
   templateUrl: './widget-rent-overages.component.html',
   styleUrls: ['./widget-rent-overages.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
