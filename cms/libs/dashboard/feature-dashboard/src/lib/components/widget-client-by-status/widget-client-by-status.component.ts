@@ -3,6 +3,7 @@ import { Component,ChangeDetectionStrategy, Input, OnInit, ViewChild, OnDestroy 
 import { WidgetFacade, WidgetChartModel, } from '@cms/dashboard/domain'; 
 import { PlaceholderDirective } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
 import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'dashboard-widget-client-by-status',
@@ -20,7 +21,9 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
   ngOnInit(): void { 
     this.loadActiveClientsByStatusChart();
   }
-
+  public labelContent(e: SeriesLabelsContentArgs): string {
+    return `${e.category}: \n ${e.value}%`;
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

@@ -100,11 +100,16 @@ export class WidgetService {
           text: 'ACTIVE CLIENTS BY GROUP',
         },
         legend: {
-          position: 'top',
-          orientation: 'horizontal',
-        },
-        categoryAxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          position: 'right',
+          orientation: 'vertical',     
+          labels: {
+            useSeriesColor: true
+          },
+          markers: {
+            type: "circle",
+            width: 10,
+            height: 10,
+          }
         },
         series: [
           {
@@ -156,10 +161,19 @@ export class WidgetService {
         },
         legend: {
           position: 'right',
-          orientation: 'vertical',
-        },
-        categoryAxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          orientation: 'vertical',     
+          labels: {
+            useSeriesColor: true
+          },
+          margin:{
+            top: 8,
+            bottom: 8,
+          },
+          markers: {
+            type: "circle",
+            width: 10,
+            height: 10,
+          }
         },
         series: [
           {

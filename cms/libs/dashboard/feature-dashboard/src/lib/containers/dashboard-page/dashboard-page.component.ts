@@ -47,7 +47,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     
   }
  
-
   editDashboardClicked(config: any){
     this.configSubscriptionItems = {
       draggable: { enabled: true },

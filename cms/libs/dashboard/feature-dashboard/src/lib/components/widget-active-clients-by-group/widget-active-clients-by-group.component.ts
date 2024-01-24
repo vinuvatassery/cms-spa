@@ -8,6 +8,7 @@ import {
 import { WidgetFacade } from '@cms/dashboard/domain';
 import { Subject, takeUntil } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
 @Component({
   selector: 'dashboard-widget-active-clients-by-group',
   templateUrl: './widget-active-clients-by-group.component.html',
@@ -20,11 +21,13 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   constructor(private widgetFacade: WidgetFacade) {}
   data = ['Group 1', 'Group 2'];
-
   ngOnInit(): void {
     this.loadActiveClientsByGroupChart();
   }
-
+ 
+  public labelContent(e: SeriesLabelsContentArgs): string {
+    return `${e.category}: \n ${e.value}%`;
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
