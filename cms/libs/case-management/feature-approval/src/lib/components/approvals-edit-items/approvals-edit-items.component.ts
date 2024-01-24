@@ -58,11 +58,6 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
               ) {}
 
   ngOnInit(): void {
-    console.log(
-      62,
-    this.selectedMasterData
-    );
-    
     this.getPaymentRunDate();
     this.getPaymentMethods();
     this.getDrugType();
@@ -748,7 +743,6 @@ export class ApprovalsEditItemsComponent implements OnInit, OnDestroy {
           form : insuraceVendorData,
           subTypeCode: this.selectedSubtypeCode
         }
-        console.log('751',formData.form);
         this.updateMasterDetailsClickedEvent.emit(formData);
     }
   }
