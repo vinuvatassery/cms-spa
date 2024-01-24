@@ -4,9 +4,6 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {  DashboardWrapperFacade } from '@cms/dashboard/domain';
 /** Services **/
 import { LocalStorageService } from '@cms/shared/util-core';
-import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
-import { TileLayoutReorderEvent } from "@progress/kendo-angular-layout";
-import { TileLayoutResizeEvent } from "@progress/kendo-angular-layout";
 import { AuthService } from '@cms/shared/util-oidc';
 @Component({
   selector: 'dashboard-dashboard-page',

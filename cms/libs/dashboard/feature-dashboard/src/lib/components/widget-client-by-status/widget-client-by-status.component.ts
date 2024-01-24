@@ -1,7 +1,6 @@
 
 import { Component,ChangeDetectionStrategy, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { WidgetFacade, WidgetChartModel, } from '@cms/dashboard/domain';
-import { DashboardChartComponent } from '@cms/dashboard/feature-dashboard';
+import { WidgetFacade, WidgetChartModel, } from '@cms/dashboard/domain'; 
 import { PlaceholderDirective } from '@cms/shared/ui-common';
 import { Subject, takeUntil } from 'rxjs';
 @Component({

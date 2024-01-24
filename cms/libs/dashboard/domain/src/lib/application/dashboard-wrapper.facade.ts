@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { WidgetRegistry } from '@cms/dashboard/feature-widget';
+import { Injectable } from '@angular/core'; 
 import { GridsterConfig } from 'angular-gridster2';
 import { BehaviorSubject } from 'rxjs';
 import { DashboardContent } from '../..';
 import { DashboardWrapperService } from '../infrastructure/dashboard-wrapper.service';
+import { WidgetRegistry } from 'libs/dashboard/feature-dashboard/src/lib/widget-registry';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardWrapperFacade {

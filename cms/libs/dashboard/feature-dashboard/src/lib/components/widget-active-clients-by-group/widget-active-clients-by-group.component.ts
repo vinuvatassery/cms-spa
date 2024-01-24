@@ -5,8 +5,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { WidgetChartModel } from '@cms/dashboard/domain';
-import { DashboardChartComponent } from '@cms/dashboard/feature-dashboard';
+import { WidgetChartModel } from '@cms/dashboard/domain'; 
 import { PlaceholderDirective } from '@cms/shared/ui-common';
 import { WidgetFacade } from '@cms/dashboard/domain';
 import { Subject, takeUntil } from 'rxjs';

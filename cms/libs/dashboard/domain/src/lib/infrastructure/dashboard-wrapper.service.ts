@@ -24,7 +24,7 @@ export class DashboardWrapperService {
         isVisible: true,
       },
       {
-        id: 8,
+        id: 2,
         cols: 6,
         rows: 4,
         x: 0,
@@ -33,7 +33,7 @@ export class DashboardWrapperService {
         isVisible: true,
       },
       {
-        id: 6,
+        id: 3,
         cols: 6,
         rows: 4,
         x: 0,
@@ -42,7 +42,7 @@ export class DashboardWrapperService {
         isVisible: true,
       },
       {
-        id: 18,
+        id: 4,
         cols: 6,
         rows: 4,
         x: 0,
@@ -51,7 +51,7 @@ export class DashboardWrapperService {
         isVisible: true,
       },
       {
-        id: 9,
+        id: 5,
         cols: 6,
         rows: 4,
         x: 0,
@@ -60,7 +60,7 @@ export class DashboardWrapperService {
         isVisible: true,
       },
       {
-        id: 17,
+        id: 6,
         cols: 6,
         rows: 4,
         x: 0,
@@ -121,7 +121,7 @@ export class DashboardWrapperService {
       },
 
       {
-        id: 3,
+        id: 7,
         cols: 6,
         rows: 4,
         x: 0,
@@ -180,7 +180,7 @@ export class DashboardWrapperService {
         },
       },
       {
-        id: 2,
+        id: 8,
         cols: 6,
         rows: 4,
         x: 0,
@@ -242,7 +242,7 @@ export class DashboardWrapperService {
         },
       },
       {
-        id: 14,
+        id: 9,
         cols: 6,
         rows: 4,
         x: 0,
@@ -251,7 +251,7 @@ export class DashboardWrapperService {
         isVisible: true,
       },
       {
-        id: 11,
+        id: 10,
         cols: 6,
         rows: 4,
         x: 0,
@@ -260,7 +260,7 @@ export class DashboardWrapperService {
         isVisible: true,
       },
       {
-        id: 15,
+        id: 11,
         cols: 6,
         rows: 4,
         x: 0,
@@ -270,7 +270,7 @@ export class DashboardWrapperService {
       },
 
       {
-        id: 10,
+        id: 12,
         cols: 6,
         rows: 2,
         x: 0,
@@ -280,7 +280,7 @@ export class DashboardWrapperService {
       },
 
       {
-        id: 12,
+        id: 13,
         cols: 6,
         rows: 2,
         x: 0,
@@ -289,7 +289,7 @@ export class DashboardWrapperService {
         isVisible: true,
       },
       {
-        id: 13,
+        id: 14,
         cols: 6,
         rows: 4,
         x: 0,
@@ -299,7 +299,7 @@ export class DashboardWrapperService {
       },
 
       {
-        id: 16,
+        id: 15,
         cols: 6,
         rows: 1,
         x: 0,
@@ -308,7 +308,7 @@ export class DashboardWrapperService {
         isVisible: true,
       },
       {
-        id: 5,
+        id: 16,
         cols: 6,
         rows: 4,
         x: 0,
