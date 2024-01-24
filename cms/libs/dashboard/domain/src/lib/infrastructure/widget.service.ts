@@ -494,6 +494,32 @@ export class WidgetService {
   getRentOverages() {}
   getServiceTracking() {}
   getSlotsAllocation() {}
-  getTodayGlance() {}
+  getTodayGlance(): Observable<any>  {
+
+    return of(
+      {
+        todoItems: {
+          count: 10,
+          isVisible : true
+        },
+        pendingApprovals: {
+          count: 20,
+          isVisible : true
+        },
+        directMessages: {
+          count: 5,
+          isVisible : true
+        },
+        todayReminder: {
+          count: 8,
+          isVisible : true
+        },
+        newNotification: {
+          count: 12,
+          isVisible : true
+        },
+      },
+    );
+  }
   GetApplicationsCers() {}
 }

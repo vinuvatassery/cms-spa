@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, } from '@angular/core';
 import { WidgetChartModel, WidgetFacade } from '@cms/dashboard/domain'; 
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
 import { Subject, takeUntil } from 'rxjs';
@@ -8,7 +8,7 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './widget-program-income.component.html',
   styleUrls: ['./widget-program-income.component.scss']
 })
-export class WidgetProgramIncomeComponent implements OnInit {
+export class WidgetProgramIncomeComponent implements OnInit, OnDestroy {
     
   programIncome: any; 
   private destroy$ = new Subject<void>();

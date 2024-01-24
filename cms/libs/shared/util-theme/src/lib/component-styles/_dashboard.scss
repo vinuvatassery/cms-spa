@@ -1,17 +1,8 @@
-.table td {
-  border: 1px solid;
-  padding: 10px;
-}
-
-.k-calendar {
-  margin: 0 auto;
-}
 
 
 .dash-top-cards-wrapper {
-  display: grid;
-  grid-template-columns: auto auto auto auto auto;
-  grid-gap: 10px;
+  display: flex;
+  
 }
 
 .dash-info-card {
@@ -20,6 +11,7 @@
   border-radius: 4px;
   padding: 1rem;
   border-left: 5px solid;
+  width: 100%;
   p{
     letter-spacing: 0px;
     color: #00000099;
@@ -201,3 +193,14 @@ color: #000000DE;
     margin: 0;
   }
 }
+
+
+.dashboard-cards-wrapper{
+
+}
+
+.dashboard-cards-container{
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+border: 1px solid #0000000F;
+border-radius: 4px;
+opacity: 1;}

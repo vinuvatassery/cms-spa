@@ -29,6 +29,9 @@ export class WidgetFacade {
   private programIncomeSubject = new BehaviorSubject<any>([]);
   public  programIncomeChart$ = this.programIncomeSubject.asObservable();
 
+  private todayGlanceSubject = new BehaviorSubject<any>([]);
+  public  todayGlance$ = this.todayGlanceSubject.asObservable();
+
   constructor(private widgetService: WidgetService) {}
 
   loadRecentlyViewedProfiles(): void {
@@ -119,6 +122,18 @@ export class WidgetFacade {
     this.widgetService.getProgramIncome().subscribe({
       next: (result) => { 
         this.programIncomeSubject.next(result);
+      },
+       
+      error: (err) => { 
+        console.error('err', err);
+      },
+    });
+  }
+
+  loadTodayGlance() {
+    this.widgetService.getTodayGlance().subscribe({
+      next: (result) => { 
+        this.todayGlanceSubject.next(result);
       },
        
       error: (err) => { 
