@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild, } from '@angular/core';
 import { WidgetChartModel, WidgetFacade } from '@cms/dashboard/domain'; 
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -21,7 +22,9 @@ export class WidgetProgramIncomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void { 
     this.loadProgramIncomeChart();
   }
-
+  public labelContent(e: SeriesLabelsContentArgs): string {
+    return `${e.category}: \n ${e.value}%`;
+  }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();

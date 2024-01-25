@@ -458,41 +458,42 @@ export class WidgetService {
         legend: {
           position: 'top',
           orientation: 'horizontal',
+          align:'end'
         },
         categoryAxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          title:{
+            text: 'Quarter',
+          },
+          rotation: 'auto',
+          categories: ['Q1 2020', 'Q2 2020', 'Q3 2020', 'Q4 2020', ],
         },
+        YAxis:{
+          visible: true,
+          title:{
+            text: 'Dollar Amount in Thousands',
+          },
+        },
+        valueAxis: {
+          visible: true,
+          title: {
+          text: "Value Axis Title",}
+          },
         series: [
           {
-            name: 'Med Claims',
-            data: [300, 200, 250, 400, 300, 350, 500],
-            type: 'bar',
-            color: 'red',
+            name: 'Rebates',
+            data: [300, 200, 350, 500],
+            type: 'column',
+            color: '#57BAC3',
+            stack: true,
           },
           {
-            name: 'Med Prem',
-            data: [75, 130, 170, 220, 100, 180, 50],
-            type: 'bar',
-            color: 'blue',
+            name: 'Replenishment',
+            data: [75, 130, 180, 50],
+            type: 'column',
+            color: '#FFD064',
+            stack: true,
           },
-          {
-            name: 'Dental Claims',
-            data: [10, 30, 20, 10, 40, 70, 60],
-            type: 'bar',
-            color: 'green',
-          },
-          {
-            name: 'Dental Prem',
-            data: [20, 10, 30, 60, 40, 80, 60],
-            type: 'bar',
-            color: 'yellow',
-          },
-          {
-            name: 'Pharm Claim',
-            data: [100, 10, 60, 60, 40, 70, 60],
-            type: 'bar',
-            color: 'purple',
-          },
+         
         ],
       },
     });
