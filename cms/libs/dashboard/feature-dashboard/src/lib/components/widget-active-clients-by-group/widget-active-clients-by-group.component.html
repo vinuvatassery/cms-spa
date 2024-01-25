@@ -55,8 +55,8 @@
                                  [type]="series.type" [startAngle]="150"
                                   [data]="series.data"
                                  field="value" categoryField="category" colorField="color">
-          <kendo-chart-series-item-labels *ngIf="outermost"
-                                          position="outsideEnd" background="none"
+          <kendo-chart-series-item-labels *ngIf="outermost" [distance]="0"
+                                          position="auto" background="none"
                                           [content]="labelContent">
           </kendo-chart-series-item-labels>
         </kendo-chart-series-item>

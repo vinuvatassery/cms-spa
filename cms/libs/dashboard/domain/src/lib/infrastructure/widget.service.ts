@@ -111,6 +111,10 @@ export class WidgetService {
             height: 10,
           }
         },
+        chartArea: { 
+          padding: 0,
+          margin: 0, 
+      },
         series: [
           {
             data: [
@@ -164,54 +168,43 @@ export class WidgetService {
           orientation: 'vertical',     
           labels: {
             useSeriesColor: true
-          },
-          margin:{
-            top: 8,
-            bottom: 8,
-          },
+          }, 
           markers: {
             type: "circle",
             width: 10,
             height: 10,
           }
         },
+        chartArea: { 
+          padding: 0,
+          margin: 0, 
+      },
         series: [
           {
             data: [
               {
-                category: 'UPP',
+                category: 'ACCEPT',
                 value: 45,
                 color: '#FFD064',
               },
               {
-                category: 'GROUP I',
+                category: 'PENDING',
                 value: 15,
                 color: '#ED6363',
               },
               {
-                category: 'GROUP II',
+                category: 'WAITLIST',
                 value: 10,
                 color: '#57BAC3',
               },
               {
-                category: 'BRIDGE',
+                category: 'RESTRICTED',
                 value: 10,
                 color: '#0063A6',
-              },
-              {
-                category: 'GROUP I / INS GAP',
-                value: 10,
-                color: '#BF61A5',
-              },
-              {
-                category: 'GROUP II / INS GAP',
-                value: 10,
-                color: '#D8D365',
-              },
+              }, 
             ],
 
-            type: 'donut',
-            color: 'red',
+            type: 'donut', 
           },
         ],
       },

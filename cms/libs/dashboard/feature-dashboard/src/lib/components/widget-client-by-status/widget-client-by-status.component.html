@@ -12,7 +12,7 @@
                   [tooltip]="activeClientsByStatus?.chartData?.tooltip">
             </kendo-chart> -->
 
-            <kendo-chart *ngIf="activeClientsByStatus">
+            <kendo-chart *ngIf="activeClientsByStatus" [chartArea]="activeClientsByStatus?.chartArea">
                   <ng-template kendoChartDonutCenterTemplate >
                         <h3>1000</h3>
                         Clients
@@ -33,7 +33,7 @@
                                               [data]="series.data"
                                              field="value" categoryField="category" colorField="color">
                       <kendo-chart-series-item-labels *ngIf="outermost"
-                                                      position="outsideEnd" background="none"
+                      position="above" background="none" [distance]="5"
                                                       [content]="labelContent">
                       </kendo-chart-series-item-labels>
                     </kendo-chart-series-item>
