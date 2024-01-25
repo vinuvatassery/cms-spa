@@ -4,7 +4,8 @@ import { ChangeDetectionStrategy, Component, OnInit, ViewChild } from '@angular/
 import { WidgetChartModel, WidgetFacade } from '@cms/dashboard/domain'; 
 import {  PlaceholderDirective } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs'; 
+import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
 @Component({
   selector: 'dashboard-widget-pharmacy-claims',
   templateUrl: './widget-pharmacy-claims.component.html',
@@ -27,6 +28,9 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  public labelContent(e: SeriesLabelsContentArgs): string {
+    return `${e.category}: \n ${e.value}%`;
   }
   loadPharmacyClaimsChart() {
     this.widgetFacade.loadPharmacyClaimsChart();

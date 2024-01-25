@@ -6,13 +6,9 @@
                   </kendo-dropdownlist></div>
       </div>
       <div class="dashboard-cards-container">
-            <!-- <kendo-chart  class="dash_chart" *ngIf="activeClientsByStatus" [series]="activeClientsByStatus?.chartData?.series"
-                  [legend]="activeClientsByStatus?.chartData?.legend"
-                  [categoryAxis]="activeClientsByStatus?.chartData?.categoryAxis"
-                  [tooltip]="activeClientsByStatus?.chartData?.tooltip">
-            </kendo-chart> -->
+ 
 
-            <kendo-chart *ngIf="activeClientsByStatus" [chartArea]="activeClientsByStatus?.chartArea">
+            <kendo-chart  class="dash_chart" *ngIf="activeClientsByStatus" [chartArea]="activeClientsByStatus?.chartArea">
                   <ng-template kendoChartDonutCenterTemplate >
                         <h3>1000</h3>
                         Clients

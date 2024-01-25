@@ -6,37 +6,8 @@
       </kendo-dropdownlist></div>
   </div>
   <div class="dashboard-cards-container">
-    <!-- <kendo-chart class="dash_chart" *ngIf="activeClientsByGroup" [series]="activeClientsByGroup?.chartData?.series"
-                  [legend]="activeClientsByGroup?.chartData?.legend"  
-                  [categoryAxis]="activeClientsByGroup?.chartData?.categoryAxis"
-                  [tooltip]="activeClientsByGroup?.chartData?.tooltip">
-            </kendo-chart> -->
-    <!-- <kendo-chart>
-                  <ng-template kendoChartDonutCenterTemplate>
-                    <h3>1000</h3>
-                    Clients
-                  </ng-template>
-      
-                  <kendo-chart-series>
-                    <kendo-chart-series-item type="donut" [data]="clientByGroup" categoryField="kind" field="share">
-                      <kendo-chart-series-item-labels background="none"></kendo-chart-series-item-labels>
-                    </kendo-chart-series-item>
-                  </kendo-chart-series>
-                  <kendo-chart-legend [visible]="true" position="right"></kendo-chart-legend>
-                  <kendo-chart-tooltip> </kendo-chart-tooltip>
-                </kendo-chart> -->
-
-    <!-- <kendo-chart *ngIf="activeClientsByGroup"  [series]="activeClientsByGroup?.chartData?.series"
-[legend]="activeClientsByGroup?.chartData?.legend"  
-[categoryAxis]="activeClientsByGroup?.chartData?.categoryAxis"
-[tooltip]="activeClientsByGroup?.chartData?.tooltip">
-  <ng-template kendoChartDonutCenterTemplate>
-    <h3>1000</h3>
-    Clients
-  </ng-template>
-  <kendo-chart-tooltip format="Default Content {0}"> </kendo-chart-tooltip>
-</kendo-chart> -->
-    <kendo-chart *ngIf="activeClientsByGroup">
+    
+    <kendo-chart *ngIf="activeClientsByGroup"  class="dash_chart">
       <ng-template kendoChartDonutCenterTemplate>
         <h3>1000</h3>
         Clients

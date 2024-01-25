@@ -177,12 +177,13 @@
       justify-content: center;
       border-radius: 10px;
       transition: .2s;
-
+      cursor: move;
     }
 
     &:hover {
       &::before {
         background: #dcdcdc;
+        cursor: move;
       }
     }
   }

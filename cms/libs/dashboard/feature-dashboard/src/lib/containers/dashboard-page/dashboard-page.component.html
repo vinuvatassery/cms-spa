@@ -25,8 +25,7 @@
   <gridster-item
     *ngFor="let item of dashboardContentList$ | async"
     [item]="item" 
-  > 
-    <div  *ngIf="item.isVisible">
+  >     <div  *ngIf="item.isVisible">
       <div  >
         <ndc-dynamic
           class="no-drag"

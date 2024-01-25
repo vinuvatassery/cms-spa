@@ -265,6 +265,9 @@ export class WidgetService {
           title: {
             text: 'Dollar Amount in Thousands',
           },
+          majorGridLines: { 
+            visible: false,
+          },
         },
         series: [
           {
@@ -290,6 +293,7 @@ export class WidgetService {
   GetLineHeap() {}
 
   getPharmacyClaims(): Observable<any> {
+    
     return of({
       component: 'pharmacyClaims',
       chartData: {
@@ -299,47 +303,36 @@ export class WidgetService {
         legend: {
           position: 'right',
           orientation: 'vertical',
+          labels: {
+            useSeriesColor: true,
+          },
+          markers: {
+            type: 'circle',
+            width: 10,
+            height: 10,
+          },
         },
-        categoryAxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+        chartArea: {
+          padding: 0,
+          margin: 0,
         },
         series: [
           {
             data: [
               {
-                category: 'UPP',
-                value: 45,
-                color: '#FFD064',
+                category: 'FULL PAY',
+                value: 60,
+                color: '#FFA35A',
               },
               {
-                category: 'GROUP I',
-                value: 15,
-                color: '#ED6363',
-              },
-              {
-                category: 'GROUP II',
-                value: 10,
-                color: '#57BAC3',
-              },
-              {
-                category: 'BRIDGE',
-                value: 10,
+                category: 'REGULAR PAY',
+                value: 40,
                 color: '#0063A6',
               },
-              {
-                category: 'GROUP I / INS GAP',
-                value: 10,
-                color: '#BF61A5',
-              },
-              {
-                category: 'GROUP II / INS GAP',
-                value: 10,
-                color: '#D8D365',
-              },
+             
             ],
 
             type: 'donut',
-            color: 'red',
           },
         ],
       },
@@ -353,50 +346,65 @@ export class WidgetService {
           text: 'Premium Expenses By Insurance',
         },
         legend: {
-          position: 'right',
-          orientation: 'vertical',
+          visible:false,
+          position: 'top',
+          orientation: 'horizontal',
+          align: 'end',
+          markers: {
+            type: 'circle',
+            width: 10,
+            height: 10,
+          },
+        },
+        tooltip: {
+          visible: true,
+          format: '{0}%',
+          template: '#= series.name #: #= value #',
         },
         categoryAxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          title: {
+            text: 'Month',
+          },
+          rotation: 'auto',
+          spacing: 0,
+          categories: [
+            'OHP',
+            'QHP',
+            'Off Exchange',
+            'Group',
+            'COBRA',
+            'VA',
+            'Medicare', 
+          ],
+          line: {
+            visible: false,
+          },
+          labels: {
+            rotation: 'auto',
+          },
+        },
+
+        valueAxis: {
+          visible: true,
+          title: {
+            text: 'Dollar Amount in Thousands',
+          },
+         
+          majorGridLines: { 
+            visible: false,
+          },
+        
+        
         },
         series: [
           {
-            data: [
-              {
-                category: 'UPP',
-                value: 45,
-                color: '#FFD064',
-              },
-              {
-                category: 'GROUP I',
-                value: 15,
-                color: '#ED6363',
-              },
-              {
-                category: 'GROUP II',
-                value: 10,
-                color: '#57BAC3',
-              },
-              {
-                category: 'BRIDGE',
-                value: 10,
-                color: '#0063A6',
-              },
-              {
-                category: 'GROUP I / INS GAP',
-                value: 10,
-                color: '#BF61A5',
-              },
-              {
-                category: 'GROUP II / INS GAP',
-                value: 10,
-                color: '#D8D365',
-              },
-            ],
-
-            type: 'donut',
-            color: 'red',
+            name: 'Insurance Revenue',
+            data: [120, 130, 140, 150, 160, 170, 180],
+            color: '#F56F7B',
+            type: 'column',
+            spacing: 0,
           },
+       
         ],
       },
     });
@@ -430,6 +438,9 @@ export class WidgetService {
           visible: true,
           title: {
             text: 'Dollar Amount in Thousands',
+          },
+          majorGridLines: { 
+            visible: false,
           },
         },
 
@@ -497,6 +508,9 @@ export class WidgetService {
           visible: true,
           title: {
             text: 'Dollar Amount in Thousands',
+          },
+          majorGridLines: { 
+            visible: false,
           },
         },
         series: [

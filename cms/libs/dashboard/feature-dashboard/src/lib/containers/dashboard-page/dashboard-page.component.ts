@@ -79,6 +79,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     });
   }
   editDashboardCancelClicked(){ 
+    this.configSubscriptionItems = {
+      draggable: { enabled: false },
+      resizable: { enabled: false },
+    }
     this.isReorderEnable = false;
   }
   
