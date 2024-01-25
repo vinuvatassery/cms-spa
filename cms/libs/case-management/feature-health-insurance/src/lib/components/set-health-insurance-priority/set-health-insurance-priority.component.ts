@@ -11,7 +11,7 @@ import { LovFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { HealthInsurancePolicyFacade, PriorityCode } from '@cms/case-management/domain';
 import { SnackBarNotificationType, NotificationSnackbarService, NotificationSource } from '@cms/shared/util-core';
-import { Subscribable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-set-health-insurance-priority',
   templateUrl: './set-health-insurance-priority.component.html',
