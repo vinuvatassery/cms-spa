@@ -17,7 +17,7 @@ export class DashboardWrapperService {
       {
         id: 1,
         cols: 12,
-        rows: 2,
+        rows: 1.5,
         x: 0,
         y: 0,
         component: 'TodayAtAGlance',
@@ -26,7 +26,7 @@ export class DashboardWrapperService {
       {
         id: 2,
         cols: 6,
-        rows: 4,
+        rows: 3,
         x: 0,
         y: 1,
         component: 'ApplicationsCers',
@@ -35,7 +35,7 @@ export class DashboardWrapperService {
       {
         id: 3,
         cols: 6,
-        rows: 4,
+        rows: 3,
         x: 0,
         y: 2,
         component: 'RecentlyViewed',
@@ -44,7 +44,7 @@ export class DashboardWrapperService {
       {
         id: 4,
         cols: 6,
-        rows: 4,
+        rows: 3,
         x: 0,
         y: 3,
         component: 'InsuranceTypeFpl',
@@ -53,7 +53,7 @@ export class DashboardWrapperService {
       {
         id: 5,
         cols: 6,
-        rows: 4,
+        rows: 3,
         x: 0,
         y: 3,
         component: 'QuickLinks',
