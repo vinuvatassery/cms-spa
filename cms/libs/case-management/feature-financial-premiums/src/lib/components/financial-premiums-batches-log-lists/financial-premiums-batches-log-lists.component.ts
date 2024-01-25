@@ -598,8 +598,6 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     this.noOfRecordToPrint = 0;
     this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
     this.markAsUnChecked(this.selectedDataIfSelectAllUnchecked);
-    // this.selectedDataRows.PrintAdviceLetterSelected = [];
-    // this.selectedDataRows.PrintAdviceLetterUnSelected = [];
     this.unCheckedPaymentRequest=[];
     this.selectedDataIfSelectAllUnchecked=[];
     this.loadBatchLogListGrid();
