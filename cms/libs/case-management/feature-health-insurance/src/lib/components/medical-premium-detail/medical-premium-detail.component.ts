@@ -1298,39 +1298,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     this.policySubscription = this.insurancePolicyFacade.currentEligibilityPolicies$.subscribe((policies: any)=> {
       if (this.isEdit && !this.isCopyPopup) {
         policies = policies.filter((x: any) => x.clientInsurancePolicyId !== this.healthInsuranceForm.controls['clientInsurancePolicyId'].value);
-      }
-      let policyAlreadyExist = false;
-      policies.forEach((policy: any) => {
-        if (this.healthInsuranceForm.controls['insuranceType'].value === HealthInsurancePlan.Veterans &&
-          this.healthInsuranceForm.controls['insuranceType'].value == policy.healthInsuranceTypeCode) {
-          policyAlreadyExist = true;
-        }
-        if (this.healthInsuranceForm.controls['insuranceType'].value === HealthInsurancePlan.Medicare &&
-          this.healthInsuranceForm.controls['insuranceType'].value == policy.healthInsuranceTypeCode &&
-          [MedicareCoverageType.A, MedicareCoverageType.B, MedicareCoverageType.AB]
-            .includes(this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value)) {
-          let currentMedicarePartAStartDate = this.intl.formatDate(this.healthInsuranceForm.controls['medicarePartAStartDate'].value, this.dateFormat);
-          let currentMedicarePartBStartDate = this.intl.formatDate(this.healthInsuranceForm.controls['medicarePartBStartDate'].value, this.dateFormat);
-          let extMedicarePartAStartDate = this.intl.formatDate(new Date(policy.medicarePartAStartDate), this.dateFormat);
-          let extMedicarePartBStartDate = this.intl.formatDate(new Date(policy.medicarePartBStartDate), this.dateFormat);
-          if (currentMedicarePartAStartDate === extMedicarePartAStartDate &&
-            currentMedicarePartBStartDate === extMedicarePartBStartDate &&
-            this.healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].value === policy.medicareBeneficiaryIdNumber) {
-            policyAlreadyExist = true;
-          }
-        }
-        else if (this.healthInsuranceForm.controls['insuranceType'].value == policy.healthInsuranceTypeCode
-          && policy.insurancePlanId === this.healthInsuranceForm.controls['insurancePlanName'].value
-          && policy.insuranceIdNumber === this.healthInsuranceForm.controls['insuranceIdNumber'].value) {
-          let startDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceStartDate'].value, this.dateFormat);
-          let endDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceEndDate'].value, this.dateFormat);
-          let policyStartDate = this.intl.formatDate(new Date(policy.startDate), this.dateFormat);
-          let policyEndDate = this.intl.formatDate(new Date(policy.endDate), this.dateFormat);
-          if (this.dateRangeOverlaps(new Date(policyStartDate), new Date(policyEndDate), new Date(startDate), new Date(endDate))) {
-            policyAlreadyExist = true;
-          }
-        }
-      });
+      } 
+
+      let policyAlreadyExist =this.policyExistCheck(policies);
+      
       if (policyAlreadyExist) {
         this.insurancePolicyFacade.showHideSnackBar(
           SnackBarNotificationType.ERROR,
@@ -1407,15 +1378,51 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-    dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
-      if (aEnd === null && bEnd === null && aStart === bStart) return true;
-      if (aEnd === null && aStart >= bStart && aStart <= bEnd) return true;
-      if (bEnd === null && bStart >= aStart && bStart <= aEnd) return true;
-      if (aStart <= bStart && bStart <= aEnd) return true;
-      if (aStart <= bEnd && bEnd <= aEnd) return true;
-      if (bStart < aStart && aEnd < bEnd) return true;
-      return false;
-    }
+  policyExistCheck(policies:any): boolean {
+    let policyAlreadyExist = false;
+    policies.forEach((policy: any) => {
+      if (this.healthInsuranceForm.controls['insuranceType'].value === HealthInsurancePlan.Veterans &&
+        this.healthInsuranceForm.controls['insuranceType'].value == policy.healthInsuranceTypeCode) {
+        policyAlreadyExist = true;
+      }
+      if (this.healthInsuranceForm.controls['insuranceType'].value === HealthInsurancePlan.Medicare &&
+        this.healthInsuranceForm.controls['insuranceType'].value == policy.healthInsuranceTypeCode &&
+        [MedicareCoverageType.A, MedicareCoverageType.B, MedicareCoverageType.AB]
+          .includes(this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value)) {
+        let currentMedicarePartAStartDate = this.intl.formatDate(this.healthInsuranceForm.controls['medicarePartAStartDate'].value, this.dateFormat);
+        let currentMedicarePartBStartDate = this.intl.formatDate(this.healthInsuranceForm.controls['medicarePartBStartDate'].value, this.dateFormat);
+        let extMedicarePartAStartDate = this.intl.formatDate(new Date(policy.medicarePartAStartDate), this.dateFormat);
+        let extMedicarePartBStartDate = this.intl.formatDate(new Date(policy.medicarePartBStartDate), this.dateFormat);
+        if (currentMedicarePartAStartDate === extMedicarePartAStartDate &&
+          currentMedicarePartBStartDate === extMedicarePartBStartDate &&
+          this.healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].value === policy.medicareBeneficiaryIdNumber) {
+          policyAlreadyExist = true;
+        }
+      }
+      else if (this.healthInsuranceForm.controls['insuranceType'].value == policy.healthInsuranceTypeCode
+        && policy.insurancePlanId === this.healthInsuranceForm.controls['insurancePlanName'].value
+        && policy.insuranceIdNumber === this.healthInsuranceForm.controls['insuranceIdNumber'].value) {
+        let startDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceStartDate'].value, this.dateFormat);
+        let endDate = this.intl.formatDate(this.healthInsuranceForm.controls['insuranceEndDate'].value, this.dateFormat);
+        let policyStartDate = this.intl.formatDate(new Date(policy.startDate), this.dateFormat);
+        let policyEndDate = this.intl.formatDate(new Date(policy.endDate), this.dateFormat);
+        if (this.dateRangeOverlaps(new Date(policyStartDate), new Date(policyEndDate), new Date(startDate), new Date(endDate))) {
+          policyAlreadyExist = true;
+        }
+      }
+    });
+    return policyAlreadyExist
+  }
+
+  dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
+    if (aEnd === null && bEnd === null && aStart === bStart) return true;
+    if (aEnd === null && aStart >= bStart && aStart <= bEnd) return true;
+    if (bEnd === null && bStart >= aStart && bStart <= aEnd) return true;
+    if (aStart <= bStart && bStart <= aEnd) return true;
+    if (aStart <= bEnd && bEnd <= aEnd) return true;
+    if (bStart < aStart && aEnd < bEnd) return true;
+    return false;
+  }
   private SaveCopiedInsurancePolicy() {
     this.healthInsurancePolicy.clientInsurancePolicyId = this.healthInsuranceForm.controls['clientInsurancePolicyId'].value;
     this.insurancePolicyFacade.copyHealthInsurancePolicy(this.healthInsurancePolicy.clientInsurancePolicyId, this.healthInsurancePolicy)
