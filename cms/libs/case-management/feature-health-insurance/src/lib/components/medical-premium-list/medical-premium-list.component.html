@@ -68,6 +68,8 @@
             {{dataItem.endDate |date: 'MM/dd/yyyy'}}
           </ng-template>
         </kendo-grid-column>
+        <kendo-grid-column *ngIf="isCerForm" title="Elig. Period" [width]="130" field ="eligibilityPeriods"  [columnMenu]="false"  [sortable]="false">        
+        </kendo-grid-column>
         <kendo-grid-column field="careassistPayingPremiumFlag" title="CAREAssist paying premium?" [width]="200"
           class="text-center">
         </kendo-grid-column>
@@ -144,6 +146,7 @@
     [healthInsuranceForm]="healthInsuranceForm" (isDeleteClicked)="deleteButonClicked($event)" (isAddEditClicked)="addOrEditClicked($event)"
     [medicalHealthPlansCount]="medicalHealthPlansCount"
     (isAddPriority)="isAddPriority($event)"
+    (getPoliciesEventEmitter)="getPolicies($event)"
     [caseEligibilityId]="caseEligibilityId"
     [clientId] ="clientId">
   </case-management-medical-premium-detail>

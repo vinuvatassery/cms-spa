@@ -76,6 +76,8 @@
             {{ dataItem.endDate  | date: 'MM/dd/yyyy'}}
             </ng-template>
         </kendo-grid-column>
+        <kendo-grid-column title="Elig. Period" [width]="130" field ="eligibilityPeriods"  [columnMenu]="false"  [sortable]="false">        
+        </kendo-grid-column>
         <kendo-grid-column field="careassistPayingPremiumFlag" title="Help Pay?" [width]="150">
         </kendo-grid-column>
         <kendo-grid-column
@@ -112,7 +114,7 @@
           [width]="150"
         >
         </kendo-grid-column>
-        <kendo-grid-column field="creatorId" title="By" [width]="70" [columnMenu]="false" class="text-center" [sticky]="true">
+        <kendo-grid-column field="creatorId" title="By" [width]="70" [columnMenu]="false" class="text-center" [sticky]="true"  [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -229,6 +231,7 @@ class="app-c-modal app-c-modal-mdl app-c-modal-np">
   [clientId] ="clientId"
   [isPaymentDone]="isPaymentDone"
   (isAddPriority)="isAddPriority($event)"
+  (getPoliciesEventEmitter)="getPolicies($event)"
   (isAddEditClicked)="addOrEditClicked($event)"
   [medicalHealthPlansCount]="medicalHealthPlansCount"
   (isDeleteClicked)="deleteButtonClicked($event)"

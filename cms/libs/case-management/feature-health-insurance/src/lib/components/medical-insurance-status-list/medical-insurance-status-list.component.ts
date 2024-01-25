@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
@@ -14,7 +14,7 @@ import { Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class MedicalInsuranceStatusListComponent implements OnInit {
+export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
 
    /** Private properties **/
   private dentalInsuranceListSubscription!: Subscription;
@@ -39,6 +39,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   @Output() deleteInsurancePlan = new EventEmitter<any>();
   @Output() loadHistoricalPlan = new EventEmitter<boolean>();
+  @Output() getPoliciesEventEmitter = new EventEmitter<any>();
   showHistoricalFlag:boolean = true;
   carrierContactInfo:any;
   insurancePlanName:any;
@@ -180,6 +181,13 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   {
     this.isTriggerPriorityPopup = event;
   }
+
+  getPolicies(event: any) {
+    if (event) {
+      this.getPoliciesEventEmitter.next(true);
+    }
+  }
+
   handleOptionClick(dataItem: any, type: any) {
     if (type == 'Delete') {
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
