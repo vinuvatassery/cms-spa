@@ -101,20 +101,20 @@ export class WidgetService {
         },
         legend: {
           position: 'right',
-          orientation: 'vertical',     
+          orientation: 'vertical',
           labels: {
-            useSeriesColor: true
+            useSeriesColor: true,
           },
           markers: {
-            type: "circle",
+            type: 'circle',
             width: 10,
             height: 10,
-          }
+          },
         },
-        chartArea: { 
+        chartArea: {
           padding: 0,
-          margin: 0, 
-      },
+          margin: 0,
+        },
         series: [
           {
             data: [
@@ -165,20 +165,20 @@ export class WidgetService {
         },
         legend: {
           position: 'right',
-          orientation: 'vertical',     
+          orientation: 'vertical',
           labels: {
-            useSeriesColor: true
-          }, 
+            useSeriesColor: true,
+          },
           markers: {
-            type: "circle",
+            type: 'circle',
             width: 10,
             height: 10,
-          }
+          },
         },
-        chartArea: { 
+        chartArea: {
           padding: 0,
-          margin: 0, 
-      },
+          margin: 0,
+        },
         series: [
           {
             data: [
@@ -201,10 +201,10 @@ export class WidgetService {
                 category: 'RESTRICTED',
                 value: 10,
                 color: '#0063A6',
-              }, 
+              },
             ],
 
-            type: 'donut', 
+            type: 'donut',
           },
         ],
       },
@@ -222,64 +222,66 @@ export class WidgetService {
           position: 'top',
           orientation: 'horizontal',
           align: 'end',
-        },
-        series: [
-          {
-            name: 'Insurance Revenue',
-            data: [120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230],
-            color: '#57C395',
-            type: 'column',
-          },
-          {
-            name: 'Replenishment Costs',
-            data: [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210],
-            color: '#F56F7B',
-            type: 'column',
-          },
-          
-        ],
-        valueAxis: {
-          title:"Income asdsa",
-          labels: {
-            format: '{0}k',
-            skip: 2,
-            step: 2,
-          },
-          line: {
-            visible: false,
-          },
-          axisCrossingValue: -10000,
-        },
- 
-        categoryAxis: {
-          categories: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'June',
-            'Jul',
-            'Aug',
-            'Sept',
-            'Oct',
-            'Nov',
-            'Dec',
-          ],
-          line: {
-            visible: false,
-          },
-          labels: {
-            format: 'M',
-            rotation: 'auto'
+          markers: {
+            type: 'circle',
+            width: 10,
+            height: 10,
           },
         },
-      
         tooltip: {
           visible: true,
           format: '{0}%',
           template: '#= series.name #: #= value #',
         },
+        categoryAxis: {
+          title: {
+            text: 'Month',
+          },
+          rotation: 'auto',
+          spacing: 0,
+          categories: [
+            '01/21 (1)',
+            '01/21 (2)',
+            '02/21 (1)',
+            '02/21 (2)',
+            '03/21 (1)',
+            '03/21 (2)',
+            '04/21 (1)',
+            '04/21 (2)',
+            '05/21 (1)',
+            '05/21 (2)',
+            '06/21 (1)',
+          ],
+          line: {
+            visible: false,
+          },
+          labels: {
+            rotation: 'auto',
+          },
+        },
+
+        valueAxis: {
+          visible: true,
+          title: {
+            text: 'Dollar Amount in Thousands',
+          },
+        },
+        series: [
+          {
+            name: 'Insurance Revenue',
+            data: [120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220],
+            color: '#57C395',
+            type: 'column',
+            spacing: 0,
+          },
+          {
+            name: 'Replenishment Costs',
+            data: [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200],
+            color: '#F56F7B',
+            type: 'column',
+            spacing: 0,
+          },
+        ],
       },
     });
   }
@@ -409,27 +411,28 @@ export class WidgetService {
         legend: {
           position: 'top',
           orientation: 'horizontal',
-          align:'end'
+          align: 'end',
+          markers: {
+            type: 'circle',
+            width: 10,
+            height: 10,
+          },
         },
         categoryAxis: {
-          title:{
+          title: {
             text: 'Month',
           },
           rotation: 'auto',
           categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
         },
-        YAxis:{
-          visible: true,
-          title:{
-            text: 'Dollar Amount in Thousands',
-          },
-        },
+
         valueAxis: {
           visible: true,
           title: {
-          text: "Value Axis Title",}
+            text: 'Dollar Amount in Thousands',
           },
-       
+        },
+
         series: [
           {
             name: 'Med Claims',
@@ -475,26 +478,27 @@ export class WidgetService {
         legend: {
           position: 'top',
           orientation: 'horizontal',
-          align:'end'
+          align: 'end',
+          markers: {
+            type: 'circle',
+            width: 10,
+            height: 10,
+          },
         },
         categoryAxis: {
-          title:{
+          title: {
             text: 'Quarter',
           },
           rotation: 'auto',
-          categories: ['Q1 2020', 'Q2 2020', 'Q3 2020', 'Q4 2020', ],
+          categories: ['Q1 2020', 'Q2 2020', 'Q3 2020', 'Q4 2020'],
         },
-        YAxis:{
-          visible: true,
-          title:{
-            text: 'Dollar Amount in Thousands',
-          },
-        },
+
         valueAxis: {
           visible: true,
           title: {
-          text: "Value Axis Title",}
+            text: 'Dollar Amount in Thousands',
           },
+        },
         series: [
           {
             name: 'Rebates',
@@ -510,7 +514,6 @@ export class WidgetService {
             color: '#FFD064',
             stack: true,
           },
-         
         ],
       },
     });
@@ -519,32 +522,29 @@ export class WidgetService {
   getRentOverages() {}
   getServiceTracking() {}
   getSlotsAllocation() {}
-  getTodayGlance(): Observable<any>  {
-
-    return of(
-      {
-        todoItems: {
-          count: 10,
-          isVisible : true
-        },
-        pendingApprovals: {
-          count: 20,
-          isVisible : true
-        },
-        directMessages: {
-          count: 5,
-          isVisible : true
-        },
-        todayReminder: {
-          count: 8,
-          isVisible : true
-        },
-        newNotification: {
-          count: 12,
-          isVisible : true
-        },
+  getTodayGlance(): Observable<any> {
+    return of({
+      todoItems: {
+        count: 10,
+        isVisible: true,
       },
-    );
+      pendingApprovals: {
+        count: 20,
+        isVisible: true,
+      },
+      directMessages: {
+        count: 5,
+        isVisible: true,
+      },
+      todayReminder: {
+        count: 8,
+        isVisible: true,
+      },
+      newNotification: {
+        count: 12,
+        isVisible: true,
+      },
+    });
   }
   GetApplicationsCers() {}
 }
