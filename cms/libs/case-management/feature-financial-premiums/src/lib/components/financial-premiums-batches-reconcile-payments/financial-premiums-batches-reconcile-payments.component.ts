@@ -105,6 +105,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   showExportLoader = false;
   bulkNoteCounter:any=0;
   paymentToReconcileCount:any=0;
+  totalCount:any;
+  isSubmitted:any = false;
   columns : any = {
     ALL: 'ALL',
     vendorName:'Insurance Vendor',
@@ -219,11 +221,29 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
           ifExist.warrantNumberInValid = true;
           ifExist.warrantNumberInValidMsg = `Duplicate Warrant Number entered in ${response[0].batchName}.`;
           this.assignUpdatedItemToPagedList();
+          this.checkErrorCount();
           this.cd.detectChanges();
         }
       }
     })
    }
+
+   checkErrorCount() {    
+    const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
+    const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
+    const warrantNumberInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberInValid);
+    this.totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length + warrantNumberInValidCount.length;
+    if (this.totalCount === 0) {
+      if( this.isSubmitted){
+      this.pageValidationMessageFlag = false;
+      this.pageValidationMessage = "validation errors are cleared.";
+      }
+    }
+    else {
+      this.pageValidationMessageFlag = true;
+      this.pageValidationMessage = this.totalCount + " validation errors found, please review each page for errors. ";
+    }
+  }
 
   ngOnDestroy(): void {
     this.paymentMethodLovSubscription.unsubscribe();
@@ -682,6 +702,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
         break;
     }
     this.assignRowDataToMainList(dataItem);
+    this.checkErrorCount();
   }
 
   printAdviceLetterChange(dataItem: any) {
@@ -771,6 +792,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     }
 
     this.assignRowDataToMainList(dataItem);
+    this.checkErrorCount();
   }
 
   updateDatePaymentReconciledValidation(dataItem: any) {
@@ -867,6 +889,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.isSubmitted = true;
     this.reconcileAssignValueBatchForm.controls['note'].removeValidators([
       Validators.required,
     ]);
@@ -881,14 +904,14 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
     this.reconcileAssignValueBatchForm.controls['datePaymentSend'].updateValueAndValidity();
     this.isSaveClicked = true;
     this.validateReconcileGridRecord();
-    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid || x.warrantNumberInValid);
+    const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
     const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
     const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
     const warrantNumberInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberInValid);
-    const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length + warrantNumberInValidCount.length;
+    this.totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length + warrantNumberInValidCount.length;
     if (isValid.length > 0) {
       this.pageValidationMessageFlag = true;
-      this.pageValidationMessage = totalCount +" validation errors found, please review each page for errors. " ;
+      this.pageValidationMessage = this.totalCount +" validation errors found, please review each page for errors. " ;
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
       this.pageValidationMessage = "No data for reconcile and print.";

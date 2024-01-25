@@ -666,7 +666,6 @@ this.loaderService.show();
     });
   }
   loadRefundClaimsListGrid(ClaimsPageAndSortedRequestDto:any) {
-    this.showLoader();
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
     this.financialVendorRefundDataService. loadRefundClaimsService(ClaimsPageAndSortedRequestDto).subscribe({
       next: (dataResponse) => {

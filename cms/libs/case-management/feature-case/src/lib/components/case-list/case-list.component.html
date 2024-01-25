@@ -121,7 +121,10 @@
         </kendo-grid-string-filter-menu>
          </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="caseStatus" title="Status" [width]="120">
+    <kendo-grid-column field="eligibilityStatusCode" title="Status" [width]="120">
+       <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.caseStatus }}
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate
       let-column="column"
       let-filter="filter"
@@ -130,10 +133,10 @@
       <kendo-dropdownlist
       [data]="caseStatusTypes"
       textField="lovDesc"
-      valueField="lovDesc"
+      valueField="lovCode"
       [value]="statusValue"
       [(ngModel)]="selectedStatus"
-      (valueChange)="dropdownFilterChange('caseStatus',$event, filterService)"
+      (valueChange)="dropdownFilterChange('eligibilityStatusCode',$event, filterService)"
     >
     </kendo-dropdownlist>
  </ng-template>

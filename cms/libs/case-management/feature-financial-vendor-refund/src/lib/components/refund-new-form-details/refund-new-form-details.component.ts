@@ -302,7 +302,9 @@ if(this.isEdit){
 }
 
   selectionChange(event: any){
-    this.isConfirmationClicked = false
+    this.isConfirmationClicked = false;
+    this.claimsCount = 0;
+    this.pharmacyClaimsPaymentReqIds = [];
     this.vendorId=null;
     this.vendorAddressId=null;
     this.selectedProvider=null;
@@ -556,6 +558,8 @@ addTpa(event:any){
     }
     else{
       this.clientId=null;
+      this.claimsCount = 0;
+      this.pharmacyClaimsPaymentReqIds = [];
     }
   }
   searchPharmacy(searchText: any , ) {;
@@ -568,7 +572,10 @@ addTpa(event:any){
     this.vendorAddressId=null;
     if($event==undefined){
       this.vendorAddressId=null;
+      this.claimsCount = 0;
+      this.pharmacyClaimsPaymentReqIds = [];
     }
+    this.isConfirmationClicked = false;
     this.vendorId=$event?.vendorId;
     this.vendorAddressId = $event?.vendorAddressId;
     this.vendorName = $event?.vendorName;
