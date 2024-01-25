@@ -11,10 +11,7 @@
       </div>
 
       <div class="dashboard-cards-container">
-            <!-- <kendo-chart  class="dash_chart" *ngIf="programIncome" [series]="programIncome?.chartData?.series"
-                  [legend]="programIncome?.chartData?.legend" [categoryAxis]="programIncome?.chartData?.categoryAxis"
-                  [tooltip]="programIncome?.chartData?.tooltip">
-            </kendo-chart> -->
+ 
 
             <kendo-chart class="dash_chart" *ngIf="programIncome" [series]="programIncome?.chartData?.series"
                   [categoryAxis]="programIncome?.chartData?.categoryAxis"
@@ -25,34 +22,11 @@
 
                         <ng-template kendoChartSeriesTooltipTemplate let-value="value" let-category="category"
                               let-series="series">
-                              : {{ value }}%
+                              : {{ value }}$
                         </ng-template>
                   </kendo-chart-tooltip>
             </kendo-chart>
 
-
-            <!-- <kendo-chart class="dash_chart" *ngIf="programIncome" >
-            <kendo-chart-legend  [item]="programIncome?.chartData?.legend" [padding]="20">
-                  <kendo-chart-legend-item class="mt-1"></kendo-chart-legend-item>
-            </kendo-chart-legend>
-            <kendo-chart-area background="none"></kendo-chart-area>
-            <kendo-chart-tooltip>
-              <ng-template kendoChartSeriesTooltipTemplate
-                           let-value="value" let-category="category" let-series="series">
-                  {{ category }}: {{ value }}%
-              </ng-template>
-            </kendo-chart-tooltip>
-            <kendo-chart-series>
-              <kendo-chart-series-item *ngFor="let series of programIncome?.chartData?.series; let outermost = last;"
-                                       [type]="series.type" [startAngle]="150"
-                                        [data]="series.data"
-                                       field="value" categoryField="category" colorField="color">
-                <kendo-chart-series-item-labels *ngIf="outermost"
-                position="above" background="none" [distance]="5"
-                                                [content]="labelContent">
-                </kendo-chart-series-item-labels>
-              </kendo-chart-series-item>
-            </kendo-chart-series>
-      </kendo-chart> -->
+ 
       </div>
 </div>

@@ -409,39 +409,56 @@ export class WidgetService {
         legend: {
           position: 'top',
           orientation: 'horizontal',
+          align:'end'
         },
         categoryAxis: {
+          title:{
+            text: 'Month',
+          },
+          rotation: 'auto',
           categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
         },
+        YAxis:{
+          visible: true,
+          title:{
+            text: 'Dollar Amount in Thousands',
+          },
+        },
+        valueAxis: {
+          visible: true,
+          title: {
+          text: "Value Axis Title",}
+          },
+       
         series: [
           {
             name: 'Med Claims',
             data: [300, 200, 250, 400, 300, 350, 500],
-            type: 'bar',
+            type: 'line',
             color: 'red',
           },
           {
             name: 'Med Prem',
             data: [75, 130, 170, 220, 100, 180, 50],
-            type: 'bar',
+            type: 'line',
             color: 'blue',
           },
           {
             name: 'Dental Claims',
             data: [10, 30, 20, 10, 40, 70, 60],
-            type: 'bar',
+            type: 'line',
             color: 'green',
           },
           {
             name: 'Dental Prem',
             data: [20, 10, 30, 60, 40, 80, 60],
-            type: 'bar',
+            type: 'line',
             color: 'yellow',
           },
           {
             name: 'Pharm Claim',
             data: [100, 10, 60, 60, 40, 70, 60],
-            type: 'bar',
+            type: 'line',
             color: 'purple',
           },
         ],
