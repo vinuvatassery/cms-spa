@@ -899,7 +899,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.selectedAllPaymentsList = {
       'selectAll': this.selectAll, 'PrintAdviceLetterUnSelected': this.unCheckedPaymentRequest,
       'PrintAdviceLetterSelected': this.selectedDataIfSelectAllUnchecked, 'print': true,
-      'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print'
+      'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print', 'isReconciled': this.isReconciled
     }
     this.disablePreviewButton(this.selectedAllPaymentsList); 
     this.selectedDataRows = this.selectedAllPaymentsList;
@@ -952,7 +952,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.selectedAllPaymentsList = {
       'selectAll': this.selectAll, 'PrintAdviceLetterUnSelected': this.unCheckedPaymentRequest,
       'PrintAdviceLetterSelected': this.selectedDataIfSelectAllUnchecked, 'print': true,
-      'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print'
+      'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print', 'isReconciled': this.isReconciled
     }
     this.disablePreviewButton(this.selectedAllPaymentsList);
   }

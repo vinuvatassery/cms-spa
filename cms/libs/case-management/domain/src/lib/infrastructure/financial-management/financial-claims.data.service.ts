@@ -429,8 +429,8 @@ export class FinancialClaimsDataService {
     );
   }
 
-  getPrintAdviceLetterData(batchId:any,selectedProviders: any, claimsType:any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/print-advice-letter-summary`,selectedProviders);
+  getPrintAdviceLetterData(isReconciled: boolean, batchId:any,selectedProviders: any, claimsType:any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/print-advice-letter-summary?isReconciled=${isReconciled}`,selectedProviders);
   }
 
   reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData: any, claimsType:any) {
