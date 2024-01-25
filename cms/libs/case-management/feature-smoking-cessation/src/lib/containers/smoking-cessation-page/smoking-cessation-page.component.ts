@@ -4,11 +4,11 @@ import { FormControl, FormGroup, Validators,AbstractControl, ValidationErrors, V
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, SmokingCessationFacade, NavigationType, CompletionChecklist, SmokingCessation, YesNoFlag} from '@cms/case-management/domain';
+import { WorkflowFacade, SmokingCessationFacade, NavigationType, CompletionChecklist, SmokingCessation} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { StatusFlag } from '@cms/shared/ui-common';
+import { StatusFlag,YesNoFlag } from '@cms/shared/ui-common';
 
 
 @Component({
