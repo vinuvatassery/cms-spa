@@ -263,9 +263,9 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadBatchLogListGrid(premiumType : string ,batchId : string,paginationParameters : any){
+  loadBatchLogListGrid(isReconciled: boolean, premiumType : string ,batchId : string, paginationParameters : any){
     this.paymentByBatchGridLoaderSubject.next(true);
-    this.financialPremiumsDataService.loadBatchLogListService(premiumType ,batchId ,paginationParameters ).subscribe({
+    this.financialPremiumsDataService.loadBatchLogListService(isReconciled, premiumType ,batchId ,paginationParameters ).subscribe({
       next: (dataResponse : any) => {
         const gridView = {
           data: dataResponse['items'],
@@ -382,8 +382,8 @@ export class FinancialPremiumsFacade {
       });
     }
 
-  loadPremiumPrintAdviceLetterData(printAdviceLetterData: any, premiumType: any) {
-    return this.financialPremiumsDataService.loadPremiumPrintAdviceLetterData(printAdviceLetterData, premiumType);
+  loadPremiumPrintAdviceLetterData(isReconciled: boolean, printAdviceLetterData: any, premiumType: any) {
+    return this.financialPremiumsDataService.loadPremiumPrintAdviceLetterData(isReconciled, printAdviceLetterData, premiumType);
   }
 
   reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any, premiumType:any) {

@@ -237,6 +237,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   selectedCount = 0;
   disablePrwButton = true;
   public bulkMore !:any
+  isReconciled: boolean = false;
   batchLogListSubscription!: Subscription;
   @Input() insuranceCoverageDates$: any;
   @Input() insurancePremium$!: Observable<InsurancePremiumDetails>;
@@ -284,6 +285,8 @@ export class FinancialPremiumsBatchesLogListsComponent
         text: 'PRINT ADVICE LETTERS',
         icon: 'print',
         click: (data: any): void => {
+          this.isReconciled = true;
+          this.loadBatchLogListGrid();
           this.isRequestPaymentClicked = false;
           this.isPrintAdviceLetterClicked = true;
         },
@@ -383,6 +386,7 @@ export class FinancialPremiumsBatchesLogListsComponent
       sortColumn: sortValue ?? 'itemNbr',
       sortType: sortTypeValue ?? 'asc',
       filter: this.state?.['filter']?.['filters'] ?? [],
+      isReconciled: this.isReconciled
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
     this.currentPrintAdviceLetterGridFilter = this.state?.['filter']?.['filters'] ?? [];
@@ -585,6 +589,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   }
 
   onBulkOptionCancelClicked() {
+    this.isReconciled = false;
     this.selectAll = false;
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
@@ -593,8 +598,8 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     this.noOfRecordToPrint = 0;
     this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
     this.markAsUnChecked(this.selectedDataIfSelectAllUnchecked);
-    this.selectedDataRows.PrintAdviceLetterSelected = [];
-    this.selectedDataRows.PrintAdviceLetterUnSelected = [];
+    // this.selectedDataRows.PrintAdviceLetterSelected = [];
+    // this.selectedDataRows.PrintAdviceLetterUnSelected = [];
     this.unCheckedPaymentRequest=[];
     this.selectedDataIfSelectAllUnchecked=[];
     this.loadBatchLogListGrid();
@@ -833,7 +838,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
   disablePreviewButton(result: any) {
     this.selectedDataRows = result;
     this.selectedDataRows.batchId = this.batchId
-    if(result.selectAll){
+    if(result.selectAll && this.batchLogPrintAdviceLetterPagedList.data?.length > 0){
       this.disablePrwButton = false;
     }
     else if(result.PrintAdviceLetterSelected.length>0)
@@ -854,7 +859,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     this.unCheckedPaymentRequest=[];
     this.selectedDataIfSelectAllUnchecked=[];
     if(this.selectAll){
-      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList?.data);
       this.noOfRecordToPrint = this.totalRecord;
       this.selectedCount = this.noOfRecordToPrint;
     }
@@ -865,8 +870,9 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     }
     const returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
-    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print', 'isReconciled': this.isReconciled}
     this.disablePreviewButton(returnResult);
+    this.selectedDataRows = returnResult;
   }
 
   selectionChange(dataItem:any,selected:boolean){
@@ -889,7 +895,7 @@ private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     }
     const returnResult = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
-    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print', 'isReconciled': this.isReconciled}
     this.disablePreviewButton(returnResult);
   }
 
