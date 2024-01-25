@@ -888,13 +888,13 @@ export class FinancialClaimsBatchesLogListsComponent
     this.batchLogPrintAdviceLetterPagedList.data = this.batchLogPrintAdviceLetterPagedList?.data.filter((x:any)=>x.checkNbr !== null && x.checkNbr !== undefined && x.checkNbr !== '');
     if (this.selectAll) {
       this.markAsChecked(this.batchLogPrintAdviceLetterPagedList?.data);
-      this.noOfRecordToPrint = this.batchLogPrintAdviceLetterPagedList.data?.length;
+      this.noOfRecordToPrint = this.totalRecord;
       this.selectedCount = this.noOfRecordToPrint;
     }
     else {
       this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
       this.noOfRecordToPrint = 0;
-      this.selectedCount = this.noOfRecordToPrint
+      this.selectedCount = this.noOfRecordToPrint;
     }
     this.selectedAllPaymentsList = {
       'selectAll': this.selectAll, 'PrintAdviceLetterUnSelected': this.unCheckedPaymentRequest,
@@ -902,7 +902,6 @@ export class FinancialClaimsBatchesLogListsComponent
       'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print', 'isReconciled': this.isReconciled
     }
     this.disablePreviewButton(this.selectedAllPaymentsList); 
-    this.selectedDataRows = this.selectedAllPaymentsList;
   }
 
   markAsUnChecked(data: any) {
@@ -944,6 +943,7 @@ export class FinancialClaimsBatchesLogListsComponent
     }
     else {
       this.noOfRecordToPrint = this.noOfRecordToPrint + 1;
+      this.selectedCount = this.noOfRecordToPrint
       this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item: any) => item.paymentRequestId !== dataItem.paymentRequestId);
       if (!this.selectAll) {
         this.selectedDataIfSelectAllUnchecked.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true, 'batchId': dataItem.batchId, 'checkNbr': dataItem.checkNbr });
