@@ -8,7 +8,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 /** Internal libraries **/
 import { ConfigurationProvider, LoggingService, NotificationSnackbarService, SnackBarNotificationType, LoaderService } from '@cms/shared/util-core';
 import { FinancialVendorDataService } from '../../infrastructure/financial-management/vendor.data.service';
-import { FinancialVendorTypeCode } from '../../enums/financial-vendor-type-code';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { Pharmacy } from '../../entities/client-pharmacy';
 
 @Injectable({ providedIn: 'root' })
