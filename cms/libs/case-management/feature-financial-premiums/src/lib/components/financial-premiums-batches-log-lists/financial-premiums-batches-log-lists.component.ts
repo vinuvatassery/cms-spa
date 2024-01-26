@@ -85,7 +85,6 @@ export class FinancialPremiumsBatchesLogListsComponent
   isEditBatchClosed =false;
   premiumId!:string;
   paymentRequestId!:any
-  public bulkMore !:any
     @Output() updatePremiumEvent = new EventEmitter<any>();
     @Output() loadPremiumEvent = new EventEmitter<string>();
 

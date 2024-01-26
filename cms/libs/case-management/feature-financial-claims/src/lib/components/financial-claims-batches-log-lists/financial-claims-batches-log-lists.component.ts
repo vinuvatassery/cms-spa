@@ -180,7 +180,6 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedStatus = '';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   columnChangeDesc = 'Default Columns';
-  batchStatus :any
   //export
   showExportLoader = false;
 
