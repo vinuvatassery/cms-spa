@@ -85,12 +85,10 @@ export class FinancialPremiumsBatchesLogListsComponent
   isEditBatchClosed =false;
   premiumId!:string;
   paymentRequestId!:any
+  public bulkMore !:any
     @Output() updatePremiumEvent = new EventEmitter<any>();
     @Output() loadPremiumEvent = new EventEmitter<string>();
 
-
-  disableBtnUnbatchEntireBatch= true;
-  batchStatus:any;
 
   public batchLogGridActions(dataItem:any){
    return [
@@ -209,7 +207,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() exportButtonShow$: any
   @Input() actionResponse$: any;
   @Input() paymentBatchName$!: Observable<PaymentBatchName>;
-
+  batchStatus = PaymentStatusCode.PendingApproval
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   @Output() loadFinancialPremiumBatchInvoiceListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
@@ -257,55 +255,57 @@ export class FinancialPremiumsBatchesLogListsComponent
       this.totalPaymentsCount=data.total;
       this.totalReconciled = 0;
         data.data.forEach(item =>{
-          this.batchStatus = item.batchStatusCode
-          if(!([BatchStatusCode.Paid, BatchStatusCode.PaymentRequested, BatchStatusCode.ManagerApproved].includes(item.batchStatusCode))){
-            this.disableBtnUnbatchEntireBatch = false
-          }
+          if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(item.paymentStatusCode)){
+            this.batchStatus = item.paymentStatusCode
+           }
           if(item.paymentStatusCode == BatchStatusCode.Paid){
             this.totalReconciled += 1;
           }
-        }) 
+
+        })   
         this.initiateBulkMore()  
     })
   }
 
   initiateBulkMore() {
-     this.bulkMore = [
-      {
-        buttonType: 'btn-h-primary',
-        text: 'RECONCILE PAYMENTS',
-        icon: 'edit',
-        click: (data: any): void => {
-          this.navToReconcilePayments(data);
-        },
-      },
-      {
-        buttonType: 'btn-h-primary',
-        text: 'PRINT ADVICE LETTERS',
-        icon: 'print',
-        click: (data: any): void => {
-          this.isRequestPaymentClicked = false;
-          this.isPrintAdviceLetterClicked = true;
-        },
-      },
-      {
-        buttonType: 'btn-h-primary',
-        text: 'UNBATCH ENTIRE BATCH',
-        icon: 'undo',
-        disabled: [
-          PaymentStatusCode.Paid,
-          PaymentStatusCode.PaymentRequested,
-          PaymentStatusCode.ManagerApproved,
-        ].includes(this.batchStatus),
-        click: (data: any): void => {
-          if (!this.isBulkUnBatchOpened && !this.disableBtnUnbatchEntireBatch) {
-            this.isBulkUnBatchOpened = true;
-            this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
-          }
-        },
-      }
-    ];
-   }
+    this.bulkMore = [
+     {
+       buttonType: 'btn-h-primary',
+       text: 'RECONCILE PAYMENTS',
+       icon: 'edit',
+       click: (data: any): void => {
+         this.navToReconcilePayments(data);
+       },
+     },
+     {
+       buttonType: 'btn-h-primary',
+       text: 'PRINT ADVICE LETTERS',
+       icon: 'print',
+       click: (data: any): void => {
+         this.isRequestPaymentClicked = false;
+         this.isPrintAdviceLetterClicked = true;
+       },
+     },
+     {
+       buttonType: 'btn-h-primary',
+       text: 'UNBATCH ENTIRE BATCH',
+       icon: 'undo',
+       disabled: [
+         PaymentStatusCode.Paid,
+         PaymentStatusCode.PaymentRequested,
+         PaymentStatusCode.ManagerApproved,
+       ].includes(this.batchStatus),
+       click: (data: any): void => {
+         if (!this.isBulkUnBatchOpened) {
+           this.isBulkUnBatchOpened = true;
+           this.onUnBatchPaymentOpenClicked(this.unBatchPaymentPremiumsDialogTemplate);
+         }
+       },
+     }
+   ];
+  }
+ 
+
   onEditPremiumsClick(premiumId: string,vendorId:any,clientId:any,clientName:any,paymentRequestId:any){
     this.vendorId=vendorId;
     this.clientId=clientId;
@@ -354,7 +354,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   }
 
   setDisablePropertyOfBulkMore(dataItem : any){
-  return dataItem.text=='Unbatch Entire Batch' && this.disableBtnUnbatchEntireBatch
+  return dataItem.text=='Unbatch Entire Batch' 
   }
 
   loadFinancialPremiumBatchInvoiceList(data: any) {

@@ -26,6 +26,7 @@ import { ClientProfileTabs } from '../enums/client-profile-tabs.enum';
 import { SearchHeaderType } from '../enums/search-header-type.enum';
 import { GridColumnFilter} from '../enums/grid-column-filter.enum';
 import { CaseScreenTab } from '../enums/case-screen-tab.enum';
+import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {

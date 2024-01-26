@@ -424,6 +424,7 @@ export class FinancialPcasAssignmentFormComponent implements OnInit,OnChanges, A
     this.pcaAssignmentForm.controls['amount'].enable();
    }
    this.pcaCodeInfo.remainingAmount = this.totalAmount
+     this.remainingAmountValidate = false   
   }
 
 

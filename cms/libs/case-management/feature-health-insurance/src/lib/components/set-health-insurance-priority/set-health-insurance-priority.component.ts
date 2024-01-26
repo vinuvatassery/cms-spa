@@ -45,34 +45,32 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.loadDdlMedicalHealthPlanPriority();
     this.insurancePolicyFacade.showLoader();
-    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId,this.insuranceStatus)
-    .subscribe({
-      next: (data: any) => {
-        if(data.length ===0){
-          this.isCloseInsuranceModal.emit();
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.caseEligibilityId, this.insuranceStatus)
+      .subscribe({
+        next: (data: any) => {
+          if (data.length === 0) {
+            this.isCloseInsuranceModal.emit();
+          }
+          else {
+            this.gridList = data;
+            this.gridList.forEach((row: any) => {
+              this.form.addControl(
+                row.clientInsurancePolicyId,
+                new FormControl(row.priorityCode, Validators.required)
+              );
+            });
+          }
+          this.insurancePolicyFacade.hideLoader();
+          this.cdr.detectChanges();
+        },
+        error: (error: any) => {
+          this.insurancePolicyFacade.hideLoader();
+          this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
         }
-        else{
-          this.gridList = data;
-          this.gridList.forEach((row: any) => {
-          this.form.addControl(
-            row.clientInsurancePolicyId,
-            new FormControl(row.priorityCode, Validators.required)
-          );
-          });
-        }
-      this.insurancePolicyFacade.hideLoader();
-      this.cdr.detectChanges();
-      },
-      error: (error: any) => {
-        this.insurancePolicyFacade.hideLoader();
-      this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
-      }
-    });
-
-
+      });
   }
 
   /** Private methods **/
@@ -91,16 +89,16 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
         return;
       }
-      this.InsuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
+      this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
 
     }
     else if (value === PriorityCode.Secondary) {
-      this.InsuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
+      this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
     }
 
   }
 
-  InsuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
+  insuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
     this.gridList.forEach((row: any) => {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
@@ -117,7 +115,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit {
     });
     return overlapStatus;
   }
-
+  
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
     if (aEnd === null && bEnd === null && aStart === bStart) return true;
     if (aEnd === null && aStart >= bStart && aStart <= bEnd) return true;
