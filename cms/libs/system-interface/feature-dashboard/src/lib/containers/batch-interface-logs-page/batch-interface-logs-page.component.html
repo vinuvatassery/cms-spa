@@ -1,0 +1,19 @@
+<common-bread-crumb></common-bread-crumb>
+<div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+    <!-- Main Title Section -->
+    <div class="app-l-mainTittle" kendoRippleContainer>
+      <h2>
+        <span class="material-icons sidebar-menu_icon" aria-hidden="true">
+          insights
+        </span>
+        Batch Interface Activity Logs
+      </h2>
+    </div>
+    
+        <div class="interface-chart-cards mt-2">
+            <cms-system-interface-web-service-logs [activityEventLogList$]="activityEventLogLists$"
+            [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
+            (loadActivityLogListEvent)="loadActivityEventLog()"></cms-system-interface-web-service-logs>
+        </div>
+    
+</div>
