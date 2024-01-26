@@ -3,7 +3,7 @@
     <div class="align-items-center mat-form-no-b-space bg-white mar-0 flex-row">
         <span class="text-bold" for="eemploymentep flex-col">Interface:&nbsp;</span>
         <div class="fmly-epdorpdown flex-col flex-col-3">
-          <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode">
+          <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"  [data]="lovsList$ | async" textField="lovDesc" valueField="lovCode">
           </kendo-dropdownlist>
         </div>
       </div>

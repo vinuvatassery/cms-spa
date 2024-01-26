@@ -28,6 +28,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   @Input() sortType: any;
   @Input() sort: any;
   @Input() activityEventLogList$: any;
+  @Input() lovsList$: any;
   public state!: State;
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   /** Public properties **/

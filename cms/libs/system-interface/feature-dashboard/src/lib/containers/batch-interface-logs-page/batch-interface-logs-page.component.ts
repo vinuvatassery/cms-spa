@@ -14,33 +14,42 @@ import { State } from '@progress/kendo-data-query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-
-export class BatchInterfaceLogsPageComponent implements OnInit{
+export class BatchInterfaceLogsPageComponent implements OnInit {
   activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
+  batchLovs$ = this.systemInterfaceDashboardFacade.lovInterfaceBatch$;
+
   public state!: State;
   pageSizes = this.systemInterfaceDashboardFacade.gridPageSizes;
   sort = this.systemInterfaceDashboardFacade.sort;
   sortValue = this.systemInterfaceDashboardFacade.sortValue;
   sortType = this.systemInterfaceDashboardFacade.sortType;
-constructor(
-  private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
-) {}
 
-ngOnInit(): void {
+  constructor(
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
+  ) { }
 
-  this.state = {
-    skip: 0,
-    take: this.pageSizes[0]?.value,
-    sort: this.sort
+  ngOnInit(): void {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort
     };
-  this.loadActivityEventLog();  
+    this.loadActivityEventLog();
 
-  this.systemInterfaceDashboardFacade.getInterfaceBatchLovs();
+    this.systemInterfaceDashboardFacade.getInterfaceBatchLovs();
+    //this.loadBatchLovs();
+  }
 
-}
+  // batchLovsData: any = [];
+  // private loadBatchLovs() {
+  //   this.batchLovs.subscribe((data: any) => {
+  //     if (!Array.isArray(data)) return;
+  //     this.batchLovsData = data;
+  //   });
+  // }
 
-loadActivityEventLog( ) {
-  this.systemInterfaceDashboardFacade.getEventLogLists();
-}
+  loadActivityEventLog() {
+    this.systemInterfaceDashboardFacade.getEventLogLists();
+  }
 
 }
