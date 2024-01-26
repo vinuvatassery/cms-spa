@@ -94,7 +94,7 @@
                         </kendo-grid-numeric-filter-menu>
                       </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="fplspStart" title="FPL@SP Start" [width]="140">
+                <kendo-grid-column field="fplspStart" title="FPL@SP Start" format="{0}%" [width]="140">
                     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                           [extra]="false" operator="eq">
@@ -102,7 +102,7 @@
                         </kendo-grid-numeric-filter-menu>
                       </ng-template>
                 </kendo-grid-column>
-                <kendo-grid-column field="currentFPL" title="Current FPL" [width]="100">
+                <kendo-grid-column field="currentFPL" title="Current FPL" format="{0}%" [width]="100">
                     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                         <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
                           [extra]="false" operator="eq">

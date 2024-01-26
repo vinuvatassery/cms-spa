@@ -108,6 +108,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   providerTitle:any = 'Pharmacy Provider';
   checkingPaymentRequest!:any;
+  totalCount:any;
+  isSubmitted:any = false;
   public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
     datePaymentReconciled: new FormControl('', []),
     datePaymentSend: new FormControl('', []),
@@ -266,6 +268,22 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     }
   }
   
+  checkErrorCount() {    
+    const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
+    const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
+    const warrantNumberInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberInValid);
+    this.totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length + warrantNumberInValidCount.length;
+    if (this.totalCount === 0) {
+      if( this.isSubmitted){
+      this.pageValidationMessageFlag = false;
+      this.pageValidationMessage = "validation errors are cleared.";
+      }
+    }
+    else {
+      this.pageValidationMessageFlag = true;
+      this.pageValidationMessage = this.totalCount + " validation errors found, please review each page for errors. ";
+    }
+  }
 
   paymentMethodSubscription(){
     this.paymentMethodLovSubscription = this.paymentMethodType$.subscribe(data=>{
@@ -664,11 +682,12 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         break;
     }
     this.assignRowDataToMainList(dataItem);
+    this.checkErrorCount();
   }
 
   printAdviceLetterChange(dataItem: any) {
     let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
-    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChange){           
+    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChanged){           
       this.reconcilePaymentGridUpdatedResult = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.paymentRequestId !== dataItem.paymentRequestId);
     }
     else{
@@ -744,6 +763,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     else{
       dataItem.warrantNumberChanged = false;
     }
+    this.checkErrorCount();
   }
 
   validateReconcileGridRecord() {
@@ -824,6 +844,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   }
 
   public onPrintAuthorizationOpenClicked(template: TemplateRef<unknown>): void {
+    this.isSubmitted = true;
     this.reconcileAssignValueBatchForm.controls['note'].removeValidators([
       Validators.required,
     ]);
@@ -841,10 +862,10 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     const isValid = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid || x.datePaymentRecInValid);
     const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
     const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
-    const totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length ;
+    this.totalCount = datePaymentSentInValidCount.length + datePaymentRecInValidCount.length ;
     if (isValid.length > 0) {
       this.pageValidationMessageFlag = true;
-      this.pageValidationMessage = totalCount +" validation errors found, please review each page for errors. " ;
+      this.pageValidationMessage = this.totalCount +" validation errors found, please review each page for errors. " ;
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
       this.pageValidationMessage = "No data for reconcile and print";

@@ -22,11 +22,10 @@ import {
   DependentTypeCode,
   PriorityCode,
   InsuranceStatusType,
-  FinancialVendorTypeCode,
   FinancialVendorFacade,
   InsuranceTypeCode
 } from '@cms/case-management/domain';
-
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Lov, LovFacade, LovType, UserManagementFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
@@ -752,7 +751,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   private validateDental(careassistPayingRequiredFields: any, policyHolderRequiredFields: any) {
     const dentalPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
-      'insuranceEndDate',
       'insuranceIdNumber',
       'insuranceCarrierName',
       'insurancePlanName',
@@ -1099,14 +1097,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.copyOfInsuranceCardFileName = this.copyOfInsuranceCardFiles[0].name;
       this.healthInsurancePolicy.copyOfInsuranceCardFileSize = this.copyOfInsuranceCardFiles[0].size;
       this.healthInsurancePolicy.copyOfInsuranceCardFileTypeCode = this.cICTypeCode;
-      this.healthInsurancePolicy.copyOfInsuranceCardFileId = this.copyOfInsuranceCardFiles[0].uid;
+      this.healthInsurancePolicy.copyOfInsuranceCardFileId = this.healthInsurancePolicyCopy?.copyOfInsuranceCardFileId;
     }
     else if (this.copyOfInsuranceCardFiles?.length > 0 && this.copyOfInsuranceCardFiles[0].uid != "") {
       this.healthInsurancePolicy.copyOfInsuranceCardFile = this.healthInsurancePolicyCopy.copyOfInsuranceCardFile;
       this.healthInsurancePolicy.copyOfInsuranceCardFileName = this.healthInsurancePolicyCopy.copyOfInsuranceCardFileName;
       this.healthInsurancePolicy.copyOfInsuranceCardFileSize = this.healthInsurancePolicyCopy.copyOfInsuranceCardFileSize;
       this.healthInsurancePolicy.copyOfInsuranceCardFileTypeCode = this.cICTypeCode;
-      this.healthInsurancePolicy.copyOfInsuranceCardFileId = this.healthInsurancePolicyCopy.copyOfInsuranceCardFileId;
+      this.healthInsurancePolicy.copyOfInsuranceCardFileId = this.healthInsurancePolicyCopy?.copyOfInsuranceCardFileId;
     }
   }
 
@@ -1116,14 +1114,14 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       this.healthInsurancePolicy.proofOfPremiumFileName = this.proofOfPremiumFiles[0].name;
       this.healthInsurancePolicy.proofOfPremiumFileSize = this.proofOfPremiumFiles[0].size;
       this.healthInsurancePolicy.proofOfPremiumFileTypeCode = this.pOPTypeCode;
-      this.healthInsurancePolicy.proofOfPremiumFileId = this.proofOfPremiumFiles[0].uid;
+      this.healthInsurancePolicy.proofOfPremiumFileId = this.healthInsurancePolicyCopy?.proofOfPremiumFileId;
     }
     else if (this.proofOfPremiumFiles?.length > 0 && this.proofOfPremiumFiles[0].uid != "") {
       this.healthInsurancePolicy.proofOfPremiumFile = this.healthInsurancePolicyCopy.proofOfPremiumFile;
       this.healthInsurancePolicy.proofOfPremiumFileName = this.healthInsurancePolicyCopy.proofOfPremiumFileName;
       this.healthInsurancePolicy.proofOfPremiumFileSize = this.healthInsurancePolicyCopy.proofOfPremiumFileSize;
       this.healthInsurancePolicy.proofOfPremiumFileTypeCode = this.pOPTypeCode;
-      this.healthInsurancePolicy.proofOfPremiumFileId = this.healthInsurancePolicyCopy.proofOfPremiumFileId;
+      this.healthInsurancePolicy.proofOfPremiumFileId = this.healthInsurancePolicyCopy?.proofOfPremiumFileId;
     }
   }
 
@@ -1573,7 +1571,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  public handleFileRemoved(files: any, fileType: string) {
+  public handleFileRemoved(files: any, fileType: string, resetId?: boolean) {    
     if (files?.files?.length > 0 && !!files?.files[0]?.uid) {
       this.insurancePolicyFacade.showLoader();
       this.clientDocumentFacade.removeDocument(files?.files[0]?.uid ?? '').subscribe({
@@ -1593,6 +1591,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       if (fileType == 'proof') {
         this.proofOfPremiumFiles = [];
         this.isProofFileUploaded = false;
+        if(this.healthInsurancePolicyCopy&&resetId)
+        this.healthInsurancePolicyCopy.proofOfPremiumFileId = '';
       }
       else if (fileType == 'summary') {
         this.copyOfSummaryFiles = [];
@@ -1601,6 +1601,8 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       else if (fileType == 'copyInsurance') {
         this.copyOfInsuranceCardFiles = [];
         this.isInsuranceFileUploaded = false;
+        if(this.healthInsurancePolicyCopy&&resetId) 
+        this.healthInsurancePolicyCopy.copyOfInsuranceCardFileId = '';
       }
       else if (fileType == 'medicareCard') {
         this.copyOfMedicareCardFiles = [];

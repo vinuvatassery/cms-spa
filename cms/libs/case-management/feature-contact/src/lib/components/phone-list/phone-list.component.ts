@@ -203,6 +203,7 @@ this.reloadEmailsEvent.emit();
     this.isOpenedPhoneEdit = false;
     this.editformVisibleSubject.next(this.isOpenedPhoneEdit);
     this.activateButtonEmitted = false;
+    this.isDeactivateFlag = false;
   }
 
   onPhoneNumberDetailClicked(editValue: boolean, clientPhoneId: string) {
@@ -219,6 +220,7 @@ this.reloadEmailsEvent.emit();
   onDeactivatePhoneNumberClosed() {
     this.isDeactivatePhoneNumberPopup = false;
     this.activateButtonEmitted = false;
+    this.isDeactivateFlag = false;
   }
 
   addClientPhoneHandle(phoneData: any): void {
@@ -315,6 +317,7 @@ this.reloadEmailsEvent.emit();
       this.deactivateClientPhone$
         .pipe(first((deactResponse: any) => deactResponse != null))
         .subscribe((deactResponse: any) => {
+          this.isDeactivateFlag = false;
           if (deactResponse ?? false) {
             this.loadClientPhonesList();
           }
@@ -355,8 +358,7 @@ this.reloadEmailsEvent.emit();
           this.onPhoneNumberDetailClosed();
           this.loadClientPhonesList();
         }
+        this.isDeactivateFlag = false;
       });
-
   }
-
 }

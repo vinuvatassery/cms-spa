@@ -325,10 +325,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
     this.batchLogGridLists$.subscribe((res:any)=>{
-      if(!res.data || res.data.length==0)
-      {
-        this.route.navigate(['/financial-management/pharmacy-claims'] );       
-      }
       this.batchStatus = res && res.data[0].batchStatus
       this.initiateBulkMore()
     })
@@ -722,6 +718,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       )
       .subscribe((unbatchEntireBatchResponse: any) => {
         if (unbatchEntireBatchResponse ?? false) {
+         this.backToBatch(null)
           this.loadBatchLogListGrid();
         }
       });

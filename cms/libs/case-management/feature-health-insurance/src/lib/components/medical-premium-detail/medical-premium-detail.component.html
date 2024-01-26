@@ -279,7 +279,7 @@
           [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_INSURANCE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'copyInsurance')"
-          (handleFileRemoveEvent)="handleFileRemoved($event,'copyInsurance')"
+          (handleFileRemoveEvent)="handleFileRemoved($event,'copyInsurance',true)"
           (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
           [isDownloadShow]="true">
           </common-document-upload>

@@ -24,6 +24,7 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
   @Input() claimsType: any;
   @Input() batchId:any;
   @Input() entityId:any;
+  @Input() warrantInfoArray:any[]=[];
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
   vendorId:any;
   clientId:any;
@@ -159,7 +160,8 @@ export class FinancialClaimsBatchesReconcilePaymentsBreakoutComponent implements
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
-      filter : this.state?.["filter"]?.["filters"] ?? []
+      filter : this.state?.["filter"]?.["filters"] ?? [],
+      warrantCalculation : this.warrantInfoArray ?? []
     };
    this.loadPaymentBreakout(gridDataRefinerValue);
   }

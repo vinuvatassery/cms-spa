@@ -136,25 +136,16 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
     private loaderService: LoaderService,private cdRef : ChangeDetectorRef,
     private readonly formBuilder: FormBuilder
    ) {
-    this.filterManager
-    .pipe(
+    this.filterManager.pipe(
       debounceTime(500),
       distinctUntilChanged()
-    )
-    .subscribe(
- 
-      (text : any) =>
-      {
-        if(text && text.length >=2)
-        {
-          this.searchFacade.loadCaseBySearchText(text);
-          this.showHeaderSearchInputLoader = false;
- 
-        }
+    ).subscribe((text: any) => {
+      if (text && text.length >= 2) {
+        this.searchFacade.loadCaseBySearchText(text);
+        this.showHeaderSearchInputLoader = false;
       }
- 
-    );
-  this.showHeaderSearchInputLoader = false;
+    });
+    this.showHeaderSearchInputLoader = false;
   }
 
   /** Lifecycle hooks **/
@@ -225,10 +216,10 @@ export class SearchPageComponent implements OnInit, AfterViewInit {
         }
       }
       this.searchForm.controls["itemSelected"].setValue(null);
+      this.showHeaderSearchInputLoader = false;
       this.cdRef.detectChanges();
     }
   }
-
 }
 
 

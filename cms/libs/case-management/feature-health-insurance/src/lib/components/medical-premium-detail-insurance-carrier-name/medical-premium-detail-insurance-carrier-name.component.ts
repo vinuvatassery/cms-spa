@@ -2,7 +2,8 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } fro
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
-import { VendorFacade, HealthInsurancePolicyFacade, InsurancePlanFacade, InsuranceStatusType, FinancialVendorTypeCode, FinancialVendorFacade} from '@cms/case-management/domain';
+import { VendorFacade, HealthInsurancePolicyFacade, InsurancePlanFacade, InsuranceStatusType, FinancialVendorFacade} from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({

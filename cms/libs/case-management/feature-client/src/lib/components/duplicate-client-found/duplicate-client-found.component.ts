@@ -35,7 +35,7 @@ export class DuplicateClientFoundComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.currentClientInfo.ssn != this.matchingClientInfo.ssn) {
-      this.ssn = '000-00-0000'
+      this.ssn =  '___-__-____'
     }
     else {
       this.ssn = this.currentClientInfo.ssn
@@ -44,7 +44,9 @@ export class DuplicateClientFoundComponent implements OnInit {
       this.currentClientInfo.dob=null
     }
   }
-
+  formatSSN(ssn: string): string {
+    return ssn.replace(/(\d{3})(\d{2})(\d{4})/, '$1-$2-$3');
+  }
   onDuplicateFoundClick() {
     this.duplicateBtnDisabled = true;
     this.loaderService.show();

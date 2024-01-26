@@ -296,7 +296,8 @@ export class FinancialPremiumsDataService {
       Sorting : data.sort,
       SkipCount : data.skipCount,
       MaxResultCount : data.pageSize,
-      Filter : data.filter
+      Filter : data.filter,
+      WarrantCalculation:data.warrantCalculation
     }
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${data.premiumsType}/payment-reconcile-breakout`,BreakoutPanelPageAndSortedRequestDto
@@ -436,7 +437,7 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumssType}/batches/print-advice-letter`,templateParams);
   }
 
-  checkWarrantNumber(batchId:any, warrantNumber:any, vendorId:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
+  checkWarrantNumber(batchId:any, warrantNumber:any, vendorId:any,premiumType:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
   }
 }

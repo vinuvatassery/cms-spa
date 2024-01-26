@@ -419,6 +419,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy deleted successfully");
           this.HideLoader();
           this.ref.detectChanges();
+          this.insurancePolicyFacade.triggerPriorityPopupSubject.next(true);
         },
         error: (error: any) => {
           this.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)

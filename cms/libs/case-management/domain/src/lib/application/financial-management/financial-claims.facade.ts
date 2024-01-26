@@ -823,9 +823,9 @@ loadFinancialClaimsInvoiceList(paymentRequestId : string, skipcount: number,  ma
   return this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType) 
 }
 
-  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any, claimsType:any){
     this.warrantNumberChangeLoaderSubject.next(true);
-    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId,claimsType).subscribe({
       next: (dataResponse:any) => {       
         this.warrantNumberChangeSubject.next(dataResponse);
         this.warrantNumberChangeLoaderSubject.next(false);

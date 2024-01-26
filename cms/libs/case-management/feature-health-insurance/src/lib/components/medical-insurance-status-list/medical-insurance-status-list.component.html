@@ -245,7 +245,7 @@ class="app-c-modal app-c-modal-mdl app-c-modal-np">
     }}</kendo-dialog-titlebar>
   <case-management-set-health-insurance-priority [insurancePriorityModalButtonText]="insurancePriorityModalButtonText"
   [selectedInsurance]="selectedInsurance" [insuranceStatus]="insuranceStatus"
-   [clientId]="clientId" [caseEligibilityId]="caseEligibilityId" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"
+   [clientId]="clientId" [caseEligibilityId]="selectedEligibilityId" (isCloseInsuranceModal)="onChangePriorityCloseClicked()"
    (priorityAdded)="priorityAdded()"></case-management-set-health-insurance-priority>
 </kendo-dialog>
 </div>
