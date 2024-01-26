@@ -495,7 +495,6 @@ pageNumberAndCountChangedInSelectAll() {
   }
 
   dataStateChange(stateData: any): void {
-    debugger
     this.financialClaimsAllPaymentsGridLists$.pipe(take(1)).subscribe(({data}: any)=>{
       data.forEach((item:any, idx:number) => {
         this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
