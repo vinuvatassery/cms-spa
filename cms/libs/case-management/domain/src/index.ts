@@ -185,9 +185,7 @@ export * from './lib/infrastructure/financial-management/pharmacy-claims.data.se
 export * from './lib/infrastructure/financial-management/financial-funding-source.data.service';
 export * from './lib/infrastructure/financial-management/financial-pca.data.service';
 export * from './lib/infrastructure/financial-management/pca-assignments.data.service';
-export * from './lib/infrastructure/approval/productivity-invoice.data.service';
 export * from './lib/infrastructure/approval/pending-approval-general.data.service';
-export * from './lib/infrastructure/approval/approval.data.service';
 
 
 
@@ -244,7 +242,6 @@ export * from './lib/application/financial-management/pharmacy-claims.facade';
 export * from './lib/application/financial-management/financial-funding-source.facade';
 export * from './lib/application/financial-management/financial-pca.facade';
 export * from './lib/application/financial-management/pca-assignments.facade';
-export * from './lib/application/approval/productivity-invoice.facade';
 export * from './lib/application/approval/pending-approval-payment.facade';
 export * from './lib/application/approval/pending-approval-general.facade';
 export * from './lib/application/approval/approval.facade';

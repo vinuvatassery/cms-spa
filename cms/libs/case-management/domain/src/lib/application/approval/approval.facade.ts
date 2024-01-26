@@ -8,8 +8,6 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
 /** Entities **/ 
 /** Data services **/
-import { ApprovalDataService } from '../../infrastructure/approval/approval.data.service';
-
 @Injectable({ providedIn: 'root' })
 export class ApprovalFacade {
   
@@ -72,34 +70,10 @@ export class ApprovalFacade {
 
   /** Constructor **/ 
   constructor(
-    public approvalDataService: ApprovalDataService,
     private loggingService: LoggingService,  
     private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService
   ) { }
-
-  /** Public methods **/
-  loadApprovalsPayments(): void {
-    this.approvalDataService.loadPendingPaymentsListsServices().subscribe({
-      next: (approvalsPaymentsResponse) => {
-        this.approvalsPaymentsSubject.next(approvalsPaymentsResponse);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
-
-  loadImportedClaimsLists(): void {
-    this.approvalDataService.loadImportedClaimsListServices().subscribe({
-      next: (Response) => {
-        this.ImportedClaimsSubject.next(Response);
-      },
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
 }
