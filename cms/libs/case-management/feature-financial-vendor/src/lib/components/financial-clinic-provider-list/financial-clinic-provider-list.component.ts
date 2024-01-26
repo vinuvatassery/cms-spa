@@ -332,7 +332,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     }
     let fileName = (this.vendorName[0].toUpperCase() + this.vendorName.substr(1).toLowerCase())+' Providers'
    
-    this.documentFacade.getExportFile(vendorCleintPageAndSortedRequest, `vendors/children/${this.ParentVendorId}/${this.vendorTypeCode}`,fileName)
+    this.documentFacade.getExportFile(vendorCleintPageAndSortedRequest, `vendors/${this.ParentVendorId}/children/${this.vendorTypeCode}`,fileName)
     this.exportButtonShow$
     .subscribe((response: any) =>
     {
