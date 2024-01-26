@@ -1,11 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { Lov } from '@cms/system-config/domain';
 import { Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class SystemInterfaceDashboardService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider : ConfigurationProvider) {}
 
   getClientRecordSendChart(): Observable<any> {
     return of({
@@ -153,5 +156,14 @@ export class SystemInterfaceDashboardService {
         standTime: '00:00:00 AM',
       },
     ]);
+  }
+
+  /** Public methods **/
+  getLovsbyType(lovType : string) {
+
+    return this.http.get<Lov[]>(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+        `/system-config/lovs/${lovType}`
+    );
   }
 }

@@ -4,10 +4,14 @@ import { SystemInterfaceDashboardService } from '../infrastructure/system-interf
 import { SnackBarNotificationType, NotificationSource, LoaderService, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { Lov } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class SystemInterfaceDashboardFacade {
   private ClientRecordSendChartSubject = new Subject<any>();
+
+  private lovInterfaceBatchSubject = new Subject<Lov[]>();
+  lovInterfaceBatch$ = this.lovInterfaceBatchSubject.asObservable();
 
   public ClientRecordSendChart$ =
     this.ClientRecordSendChartSubject.asObservable(); 
@@ -41,7 +45,7 @@ export class SystemInterfaceDashboardFacade {
     private configurationProvider : ConfigurationProvider ,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService ) {}
+    public intl: IntlService, private service : SystemInterfaceDashboardService ) {}
 
   /** Public methods **/
   showLoader()
@@ -89,6 +93,18 @@ export class SystemInterfaceDashboardFacade {
        
       error: (err) => { 
         console.error('err', err);
+      },
+    });
+  }
+
+  
+  getInterfaceBatchLovs(): void {
+    this.service.getLovsbyType('INTERFACE_BATCH').subscribe({
+      next: (relationsResponse) => {
+        this.lovInterfaceBatchSubject.next(relationsResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }

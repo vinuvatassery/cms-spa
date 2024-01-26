@@ -34,6 +34,9 @@ ngOnInit(): void {
     sort: this.sort
     };
   this.loadActivityEventLog();  
+
+  this.systemInterfaceDashboardFacade.getInterfaceBatchLovs();
+
 }
 
 loadActivityEventLog( ) {
