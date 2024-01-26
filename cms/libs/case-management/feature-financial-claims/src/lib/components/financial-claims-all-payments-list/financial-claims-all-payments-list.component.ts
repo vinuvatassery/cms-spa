@@ -7,8 +7,10 @@ import {
   OnChanges,
   OnInit,
   Output,
+  QueryList,
   TemplateRef,
-  ViewChild
+  ViewChild,
+  ViewChildren
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialClaimsFacade, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
@@ -16,13 +18,13 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
+import { FilterService, GridComponent, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
   filterBy
 } from '@progress/kendo-data-query';
-import { BehaviorSubject, Subject, first } from 'rxjs';
+import { BehaviorSubject, Subject, first, take } from 'rxjs';
 
 @Component({
   selector: 'cms-financial-claims-all-payments-list',
@@ -58,6 +60,7 @@ export class FinancialClaimsAllPaymentsListComponent
   deleteClaimsConfirmationDialogTemplate!: TemplateRef<any>;
   @ViewChild('addEditClaimsDialog')
   private addEditClaimsDialog!: TemplateRef<any>;
+  @ViewChildren(GridComponent) private grid!: QueryList<GridComponent>;
 
   isEdit!: boolean;
   paymentRequestId!: string;
@@ -492,6 +495,16 @@ pageNumberAndCountChangedInSelectAll() {
   }
 
   dataStateChange(stateData: any): void {
+    debugger
+    this.financialClaimsAllPaymentsGridLists$.pipe(take(1)).subscribe(({data}: any)=>{
+      data.forEach((item:any, idx:number) => {
+        this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
+      })
+    })
+
+
+
+
     this.isPageCountChanged = false;
     this.isPageChanged = true;
     this.sort = stateData.sort;
@@ -784,7 +797,7 @@ pageNumberAndCountChangedInSelectAll() {
     if (result === true) {
       this.loadFinancialClaimsAllPaymentsListGrid();
     }
-    
+
     this.addEditClaimsFormDialog.close();
   }
 
