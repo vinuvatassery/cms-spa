@@ -1,3 +1,25 @@
+<div class="mb-2 mt-2" *ngIf="showAttachmentUpload">
+  <kendo-upload   (select)="handleFileSelected($event)" [ngModel]="uploadedAttachedFile" (remove)="handleFileRemoved($event)"
+  #uploadsystemfile [ngModelOptions]="{standalone: true}" [removeUrl]="uploadRemoveUrl" [restrictions]="uploadFileRestrictions.fileRestrictions">
+    <ng-template kendoUploadFileInfoTemplate let-files let-state="state">
+      <span >
+        <span>{{ files[0].name }} </span> 
+        <br>
+        <span>{{   files[0].size | fileSize }}</span> 
+      </span>
+    </ng-template>
+  </kendo-upload>
+  <kendo-formhint >Max file size 25MB</kendo-formhint>
+  <kendo-formerror *ngIf="attachedFileValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
+</div>
+<!-- Select file form client attachment -->
+<div *ngIf="showClientAttachmentUpload" class="mb-2 mt-2">
+  <common-clients-attachment
+  [clientAttachmentForm]="cerAuthorizationForm"
+  [clientDocumentList$]="clientAllDocumentList$"
+  (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
+  ></common-clients-attachment>
+</div>
 <div class="app-c-editor letter-editor-height">
   <!-- Variable dropdown -->
   <button
@@ -6,7 +28,8 @@
     (click)="onToggle()"
     class="text-t-normal editor-variable-button"
     look="outline"
-    aria-label="insert a variable for email editor"
+    aria-label="Insert a variable"
+    title="Insert a variable"
   >
     Insert a variable
     <span class="material-icons" aria-label="dropdown arrow" aria-hidden="true"
@@ -14,13 +37,11 @@
     >
   </button>
   <kendo-popup
-    #popup
-    [anchor]="$any(anchor)"
+  #popup [anchor]="anchor.element"
     popupClass="content"
     *ngIf="isShowPopupClicked"
-    popupClass="notification-inner"
   >
-    <div class="sms-popup-content" *ngIf="isSearchOpened">
+    <div class="sms-popup-content">
       <div class="variable-search-block">
         <div class="input-search mat-form-no-b-space">
           <div  class="medium-input-form sms-variable-search_input"  >
@@ -31,11 +52,12 @@
           kendoButton
           class="k-icon-button sms-variable-search_close"
           (click)="onSearchClosed()"
-          aria-label="close search email"
+          aria-label="Close"
+          title="Close"
         >
           <span
             class="material-icons"
-            aria-label="close search email"
+            aria-label="Close"
             aria-hidden="true"
             >close</span
           >
@@ -47,9 +69,9 @@
           <ul
             class="var-list-item"
             aria-label="client variables"
-            *ngFor="let item of clientVariables$ | async"
+            *ngFor="let item of clientVariables"
           >
-            <li aria-label="client variables item">{{ item }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CER_CLIENT_VARIABLE'" aria-label="client variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
         <section>
@@ -57,16 +79,32 @@
           <ul
             class="var-list-item"
             aria-label="my variables"
-            *ngFor="let item of clientVariables$ | async"
+            *ngFor="let item of clientVariables"
           >
-            <li aria-label="my variables item">{{ item }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CER_CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ item.lovDesc }}</li>
+          </ul>
+        </section>
+        <section>
+          <h5>Other Variables</h5>
+          <ul
+            class="var-list-item"
+            aria-label="other variables"
+            *ngFor="let item of clientVariables"
+          >
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CER_OTHER_VARIABLE'" aria-label="other variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
       </div>
     </div>
   </kendo-popup>
   <!-- Editor -->
-  <kendo-editor [(value)]="emailEditorvalue">
+  <kendo-editor #editor [(value)]="emailEditorvalue">
+  <case-management-send-email
+  (editorValue)="emailEditorValueEvent($event)"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [clientId]="clientId"
+  (cerEmailAttachments)="ceremailAttachmentEvent($event)"
+></case-management-send-email>
     <kendo-toolbar>
       <kendo-toolbar-buttongroup>
         <kendo-toolbar-button
@@ -137,78 +175,43 @@
         aria-label="insert image"
       ></kendo-toolbar-button>
       <kendo-toolbar-dropdownbutton
+      aria-label="attachment"
         icon="attachment"
-        [data]="ddlEditorVariables$ | async"
+        [data]="editorUploadOptions"
       >
         <ng-template kendoDropDownButtonItemTemplate let-dataItem>
-          <span>{{ dataItem.text }}</span>
+        <label  [for]="dataItem.id">{{ dataItem.text }}</label>       
         </ng-template>
       </kendo-toolbar-dropdownbutton>
     </kendo-toolbar>
   </kendo-editor>
+  
   <!-- Attachment Panel -->
+  <div class="panelbar-wrapper">
   <kendo-panelbar>
-    <kendo-panelbar-item title="3 attachment(s)">
+    <kendo-panelbar-item *ngIf="selectedAttachedFile.length > 0" title="{{selectedAttachedFile.length}} attachment(s)">
       <ng-template kendoPanelBarContent>
-        <div class="attachment-item-list" kendoTooltip>
-          <a class="attachment-item_name">attachment-doc.pdf</a>
-          <div> 
-          <span class="attachment-item_size">(2MB)</span>
-          <button
+        <div class="attachment-item-list" kendoTooltip *ngFor="let item of selectedAttachedFile;let index = index">
+          <a class="attachment-item_name" (click)="item.typeCode ==='CER_DEF_ATTACHMENT' ? clientAttachmentClick(item) : null">{{item.name}}</a>
+          <span class="attachment-item_size">{{item.size | fileSize}}</span>
+          <button *ngIf="item.typeCode !=='CER_DEF_ATTACHMENT'"
             kendoButton
             class="attachment-item_remove k-icon-button small-i-btn"
-            title="Remove attachment"
-            aria-label="remove attachment"
+            title="Remove Attachment"
+            aria-label="Remove Attachment"
           >
             <span
               class="material-icons"
-              aria-label="close attachment"
+              aria-label="Remove Attachment"
               aria-hidden="true"
+              (click)="item.typeCode ==='CER_ATTACHMENT' ? removeFile(item, index) : removeAddedFile(index)"
               >close</span
             >
           </button>
-        </div>
-        </div>
-        <div class="attachment-item-list" kendoTooltip>
-          <a class="attachment-item_name">attachment-doc-01.pdf</a>
-          <div>
-            <span class="attachment-item_size">(1.5MB)</span>
-            <button
-              kendoButton
-              class="attachment-item_remove k-icon-button small-i-btn"
-              title="Remove attachment"
-              aria-label="remove attachment"
-            >
-              <span
-                class="material-icons"
-                aria-label="close attachment"
-                aria-hidden="true"
-                >close</span
-              >
-            </button>
-          </div>
-        
-        </div>
-        <div class="attachment-item-list" kendoTooltip>
-          <a class="attachment-item_name">attachment-doc-new.pdf</a>
-          <div>
-          <span class="attachment-item_size">(1MB)</span>
-          <button
-            kendoButton
-            class="attachment-item_remove k-icon-button small-i-btn"
-            title="Remove attachment"
-            aria-label="remove attachment"
-          >
-            <span
-              class="material-icons"
-              aria-label="close attachment"
-              aria-hidden="true"
-              >close</span
-            >
-          </button>
-        </div>
         </div>
       </ng-template>
     </kendo-panelbar-item>
   </kendo-panelbar>
+  </div>
 </div>
+

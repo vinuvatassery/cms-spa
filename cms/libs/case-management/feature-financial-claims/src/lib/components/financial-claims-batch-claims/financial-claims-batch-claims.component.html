@@ -1,0 +1,27 @@
+<kendo-dialog-titlebar (close)="closeBatchClaimsClicked()"> Batch Claims and Submit for Review? </kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+  <div class="flex-col">
+    <p class="text-muted mb-1"> Once batched, you will not be able to edit claims. The batch will be sent to the approval queue for final approval. </p>
+    <p class="text-muted mb-2"> Claims to be batched and reviewed: {{selectedProcessClaimsCount}} </p>
+  </div>
+</section>
+
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="Cancel"
+          (click)="closeBatchClaimsClicked()"
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Batch" (click)="batchClaimsClicked()">
+          Batch
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

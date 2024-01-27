@@ -1,9 +1,10 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommunicationEvents, ContactFacade, ScreenType, StatusFlag } from '@cms/case-management/domain';
+import { CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
 import { Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-case360-header-tools',
   templateUrl: './case360-header-tools.component.html',
@@ -106,7 +107,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   private addEmailSubscription() {
     this.emailSubscription$ = this.emailAddress$.subscribe((email: any) => {
-      this.sendActions[1].isVisible = email?.length > 0;
+      const isEmailOk = email.filter((email:any) => email.detailMsgFlag === StatusFlag.Yes && email.paperlessFlag === StatusFlag.Yes)?.length > 0;
+      this.sendActions[1].isVisible = isEmailOk;
       this.refreshButtonList();
     });
   }

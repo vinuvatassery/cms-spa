@@ -6,15 +6,18 @@ $font-family-bold: 'Neue Helvetica Bold' !important;
 $font-family-Material-icon: 'Material Icons', sans-serif;
 
 /* Font Size */
-$font-size: 14px;
-$font-size-m: 13px;
-$font-size-s: 12px;
-$font-size-l: 16px;
-$font-size-xl: 18px;
-$font-size-xlg: 20px;
-$font-size-xx: 24px;
-$font-size-xxx: 30px;
-$base-line-height: 16px;
+$font-size: 1rem;   /*14px*/
+$font-size-m: 0.929rem; /*13px*/
+$font-size-s: 0.857rem; /*12px*/
+$font-size-l: 1.143rem; /*16px*/
+$font-size-xl: 1.286rem; /*18px*/
+$font-size-xlg: 1.429rem; /*20px*/
+$font-size-xlg-22: 1.571rem; /*22px*/
+$font-size-xx: 1.714rem; /*24px*/
+$font-size-xxx: 2.143rem; /*30px*/
+$font-size-xxxx: 2.857rem; /*40px*/
+$font-size-xxxx-lg: 4.286rem; /*60px*/
+$base-line-height: 16px;  
 
 /* Size Matrix */
 $size-0: 0px; /*0px*/
@@ -25,20 +28,20 @@ $size-xl: $size-l + 2; /*8px*/
 $size-xx: $size-xl + 2; /*10px*/
 $size-xlg: $size-xx + $size-m; /*14px*/
 $size-xlg1: $size-xx + $size-l; /*16px*/
-$size-xxx: $size-xx * 2; /*20px*/
+$size-xxx: calc($size-xx * 2) ; /*20px*/
 $size-xxxl: $size-xxx + $size-m; /*24px*/
-$size-xxxx: $size-xx * 3; /*30px*/
+$size-xxxx: calc($size-xx * 3); /*30px*/
 $header-height: 62px;
 $sidebar-width: 55px;
 $logo-width: 100px;
 $logo-height: 38px;
-$app-left_menu-width : 230px;
+$app-left_menu-width : 260px;
 
 /* Border-radius */
 $border-radius-sm: $size-m; /*4px*/
 $border-radius-md: $size-xl; /*8px*/
 $border-radius-xl: $size-xxx; /*20px*/
-$border-radius-xlg: $size-xxx * 5; /*100px*/
+$border-radius-xlg: calc($size-xxx * 5); /*100px*/
 
 /* Breakpoints */
 $breakpoint-xxl: 1250px;
@@ -48,8 +51,8 @@ $breakpoint-md: 767px;
 $breakpoint-sm: 600px;
 
 /* Box Shadow */
-$primary-box-shadow: rgb(34 41 47 / 10%);
+$primary-box-shadow: rgba(34, 41, 47,  10%);
 $secondary-box-shadow: $primary-box-shadow;
 $box-shadow: rgba(168, 189, 201, 0.555);
-$button-box-shadow: 0 3px 1px -2px rgb(0 0 0 / 20%),
-  0 2px 2px 0 rgb(0 0 0 / 14%), 0 1px 5px 0 rgb(0 0 0 / 12%);
+$button-box-shadow: 0 3px 1px -2px rgba(0, 0, 0,  20%),
+  0 2px 2px 0 rgb(0, 0, 0, 14%), 0 1px 5px 0 rgb(0, 0, 0, 12%);

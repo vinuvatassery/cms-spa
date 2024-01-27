@@ -12,7 +12,7 @@ cms-sidenav {
   border-color: $theme-border;
   width: $app-left_menu-width;
   transition: ease-in all 0.3s;
-  z-index: 103;
+  z-index: 5;
 
   .drawer-inner-container {
     transition: ease-in all 0.3s;
@@ -22,6 +22,7 @@ cms-sidenav {
     overflow-x: hidden;
     width: $app-left_menu-width;
     height: 100%;
+    
   }
 
   .sidebar-hamburger {
@@ -118,8 +119,7 @@ cms-sidenav {
           background: $badge-alerts;
           color: $white !important;
           border-radius: $border-radius-sm;
-          padding: $size-s $size-m;
-          min-width: $font-size-xlg + $font-size-s;
+          padding: $size-s $size-m; 
           font-family: $font-family-bold;
           margin-left: $size-l;
         }
@@ -193,7 +193,7 @@ cms-sidenav {
 
       .last-visited-case {
         transition: ease-in all 0.3s;
-        background: material-color($hive-primary-palette, 600);
+        background: var(--hive-primary-palette-600);
         border-radius: $border-radius-md;
         padding: $size-xx $size-xx $size-xx $size-xx * 4;
         position: relative;
@@ -202,7 +202,7 @@ cms-sidenav {
         min-width: 170px;
 
         &:hover {
-          background: material-color($hive-primary-palette, 700);
+          background: var(--hive-primary-palette-700);
         }
 
         .last-visited-case-close {
@@ -237,6 +237,7 @@ cms-sidenav {
           text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
+          line-height: normal;
         }
       }
     }
@@ -259,25 +260,25 @@ cms-sidenav {
     >.secondary_submenu {
       display: none;
       position: fixed;
-      left: $app-left_menu-width;
+      left: $app-left_menu-width - 6;
       top: $header-height;
       background: $white;
       height: 100%;
       max-height: calc(100% - $header-height);
       overflow: auto;
-      border-left: 1px solid material-color($hive-primary-palette, 600);
+      border-left: 1px solid var(--hive-primary-palette-600);
       width: 250px;
       box-shadow:5px 0px 3px 0px rgba(61, 69, 76, 0.1);
       padding: $size-xlg1;
       max-width: 250px;
       transition: .3s;
-      z-index: 0;
+      z-index: 101;
 
       .menu_search_header {
         margin-top: 1rem;
 
         .submenu_heading {
-          font-size: 16px;
+          font-size: $font-size-l;
           font-family: $font-family-bold;
         }
 
@@ -297,16 +298,22 @@ cms-sidenav {
         .submenu_list_container {
                 &.submenu_list_active_item {
                   .submenu_list_click_items {
-                    background: material-color($hive-success-palette, 50);
+                    background: var(--hive-success-palette-50);
                     color: $app-primary;
                     transition: ease-in all 0.3s;
 
                   }
-           
+                     
     
           }
     
-   
+          .sidebar-menu_label-badge {
+            background: $badge-alerts;
+            color: $white !important;
+            border-radius: $border-radius-sm;
+            padding: $size-m $size-m;  
+            margin-left: $size-l;
+          }  
           .submenu_list_click_items {
             justify-content: space-between;
             display: flex;
@@ -321,7 +328,7 @@ cms-sidenav {
 
             .material-icons {
               font-size: $font-size-xlg;
-              color: material-color($hive-success-palette, 900);
+              color: var(--hive-success-palette-900);
               position: absolute;
               right: 14px;
               top: 8px;
@@ -331,7 +338,7 @@ cms-sidenav {
             &:active,
             &:focus,
             &.active-item {
-              background: material-color($hive-success-palette, 50);
+              background: var(--hive-success-palette-50);
 
               color: $app-primary;
 
@@ -343,7 +350,7 @@ cms-sidenav {
             &.sub-menu-disabled {
               cursor: default;
               pointer-events: none;
-              opacity: 0.4;
+              opacity: 0.7;
               user-select: none;
             }
           }
@@ -382,7 +389,6 @@ cms-sidenav {
           opacity: 0.8;
         }
       }
-
       .sidebar-menu {
         .sidebar-menu_icon {
 
@@ -448,21 +454,16 @@ cms-sidenav {
           display: none;
         }
       }
-
       .sidebar-hamburger_icon-right {
         display: flex !important;
 
 
       }
-
       .sidebar-hamburger_icon-left {
         // display: none !important;
         transform: rotate(180deg);
 
       }
-
-    
-
       .sidebar-last-visited-cases-container {
         .active-menu-toggled {
           width: $sidebar-width;
@@ -504,7 +505,7 @@ cms-sidenav {
             height: 100%;
             max-height: calc(100% - $header-height);
             overflow: auto;
-            border-left: 1px solid material-color($hive-primary-palette, 600);
+            border-left: 1px solid var(--hive-primary-palette-600);
 
             .menu-active-session-list {
               &:hover {
@@ -529,6 +530,7 @@ cms-sidenav {
         }
       }
     }
+
 
     .menu-active-session-list {
       padding: $size-xlg1 $size-xlg1 0 $size-xlg1;

@@ -1,16 +1,16 @@
 <section class="k-dialog-body">
     <p class="text-muted mb-2">
-        It will still be viewable in the profile. You may add a new one at any time.
+      It will still be viewable in the profile. Any active contacts for this address will also be deactivated. You may add a new payment address anytime.
     </p>
   </section>
 
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel deactivation of confirmation" (click)="onCloseDeactivatePaymentAddressClicked(false)">
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCloseDeactivatePaymentAddressClicked(false)">
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="deactivate" (click)="deactivatePaymentAddress()" >
+        <button kendoButton [primary]="true" aria-label="Deactivate" (click)="deactivatePaymentAddress()" >
           Deactivate
         </button>
       </div>

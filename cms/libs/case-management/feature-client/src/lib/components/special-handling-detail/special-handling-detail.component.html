@@ -14,12 +14,12 @@
               [maxlength]="tareaCaseWorkerNoteMaxLength"
               [value]="item.note"
               [(ngModel)]="item.note"
-              (valueChange)="onTareaCaseWorkerChanged($event, item.id)"
+              (valueChange)="onTareaCaseWorkerChanged($event, item)"
               aria-label="case worker note"
             >
               <kendo-textarea-suffix class="justify-content-end">
                 <span class="tareacounter"
-                  >{{ item?.note.length }}/{{
+                  >{{ item?.note?.length }}/{{
                     tareaCaseWorkerNoteMaxLength
                   }}</span
                 >
@@ -32,12 +32,13 @@
           <button
             kendoButton
             class="k-icon-button small-i-btn fade-5 btn-h-danger mt-3"
-            aria-label="delete case worker note"
+            aria-label="Delete"
+            title="Delete"
           >
             <span
               class="material-icons"
               (click)="deleteClientNote(item)"
-              aria-label="delete case worker note"
+              aria-label="Delete"
               aria-hidden="true"
               >delete</span
             >
@@ -53,7 +54,7 @@
         [primary]="true"
         icon="add"
         (click)="onAddCaseWorkerNote()"
-        aria-label="add case worker note"
+        aria-label="Note"
       >
         Note
       </button>
@@ -120,7 +121,9 @@
                 >  
              </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatOther'].valid && specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid) && !specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].disabled ">A response is required.</kendo-formerror>  
+            <kendo-formerror *ngIf="(!specialCaseHandlingForm.controls['materialInAlternateFormatOther'].valid && specialCaseHandlingForm.controls['materialInAlternateFormatCode'].valid) && !specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].disabled "> <span class="material-icons-outlined" >
+              error
+              </span> A response is required.</kendo-formerror>  
               </div>
              
             </div>
@@ -578,11 +581,11 @@
         [primary]="true"
         look="outline"
         (click)="onEditSpecialHandlingClosed()"
-        aria-label="cancle special handling"
+        aria-label="Cancel"
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="update special handling" [disabled]="specialCaseHandlingForm.invalid" (click)="onUpdateSpecialCaseHandlingDetail()" >
+      <button kendoButton [primary]="true" aria-label="Update" [disabled]="specialCaseHandlingForm.invalid" (click)="onUpdateSpecialCaseHandlingDetail()" >
         Update
       </button>
     </div>

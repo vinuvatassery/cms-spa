@@ -1,25 +1,24 @@
 <section class="k-dialog-body">
-    <p class="text-muted mb-2">
-      You must send the Eligibility {{paperlessFlag === 'Y' ? 'Email' : 'Letter'}} within 14 days
-    </p>
-  </section>
-  
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button
-          kendoButton
-          aria-label="cancel status"
-          [primary]="true"
-          look="outline"
-          (click)="onModalClose()"
-        >
-          Cancel
-        </button>
-        <button kendoButton aria-label="deny status" [primary]="true" (click)="navigateProfile()">
-          SAVE & EXIT
-        </button>
-      </div>
+  <p class="text-muted mb-2">
+    You must send the Eligibility {{paperlessFlag === 'Y' ? 'Email' : 'Letter'}} within 14 days
+  </p>
+</section>
+
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button
+        kendoButton
+        aria-label="Cancel"
+        [primary]="true"
+        look="outline"
+        (click)="onModalClose()"
+      >
+        Cancel
+      </button>
+      <button kendoButton aria-label="Save & Exit" [primary]="true" (click)="navigateProfile()">
+        SAVE & EXIT
+      </button>
     </div>
-  </kendo-dialog-actions>
-  
+  </div>
+</kendo-dialog-actions>

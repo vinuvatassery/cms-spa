@@ -21,9 +21,9 @@ export class ClientImportantInfoComponent implements OnInit{
        this.loadClientImpInfoEvent.emit()  
     }
 
-    clientDisabilitiesValidator(object : any)
+    clientArrayObjectValidator(object : any)
     {
-     if(object?.filter((x : any)=>x !="").length > 0)
+     if(object?.filter((x : any)=>x).length > 0)
      {
       return true
      }
@@ -33,7 +33,7 @@ export class ClientImportantInfoComponent implements OnInit{
     infoObjectValidator(object : any)
     {
       if(object == null || object?.caseManagerEmail || object?.caseManagerFullName || object?.caseManagerPhone 
-        || this.clientDisabilitiesValidator(object?.clientDisabilities) || object?.clientNotes.length > 0
+        || this.clientArrayObjectValidator(object?.clientDisabilities) || this.clientArrayObjectValidator(object?.clientNotes)
         || object?.preferredContact)
       {        
       return true;

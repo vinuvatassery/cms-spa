@@ -1,54 +1,61 @@
 <div class="flex-row">
   <div class="flex-col flex-space-bw align-items-center">
-    <h2 class="title-md mb-0 text-bold">Co-Pays & Deductibles</h2>
+    <h2 class="title-md mb-0 text-bold">Co-Pays & Deductibles  </h2>
   </div>
   <div class="flex-col mt-1">
+    <p class="text-right">Client Balance : <strong>{{clientmaxmumbalance|currency}}</strong></p>
     <div class="app-c-table">
       <kendo-grid [resizable]="true" [data]="coPaysAndDeductibles$ | async"
       [pageSize]="state.take" [pageable]="true"  [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
       [columnMenu]="{ filter: true }" [sort]="state.sort"
         (dataStateChange)="dataStateChange($event)">
-        <kendo-grid-column field="vendorName" title="Service Provider" [width]="150" [sticky]="true">
+
+
+        <kendo-grid-column field="vendorName" title="Service Provider Name" [width]="180" [sticky]="true" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button kendoButton look="flat" class="card-link-button" aria-label="provider name" kendoPopoverAnchor
+            <button kendoButton look="flat" class="card-link-button" [attr.aria-label]="dataItem.vendorName" kendoPopoverAnchor
               [popover]="myPopover" (click)="getCarrierContactInfo(dataItem.vendorId)">
               {{ dataItem.vendorName }}
             </button></ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="serviceTypeDesc" title="Service Description" [width]="150">
+        <kendo-grid-column field="invoiceId" title="Invoice ID" [width]="150" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="amountRequested" title="Amount" [width]="100">
-        </kendo-grid-column>
-        <kendo-grid-column field="serviceStartDate" title="Service Start Date" [width]="130">
+        <kendo-grid-column field="ServiceStartDate" title="Service Start Date" [width]="150" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.serviceStartDate | date:'MM/dd/YYYY' }}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="serviceEndDate" title="Service End Date" [width]="130">
+        <kendo-grid-column field="serviceEndDate" title="Service End Date" [width]="150" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.serviceEndDate | date:'MM/dd/YYYY' }}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="checkReconcileDate" title="Check Request" [width]="130">
+        <kendo-grid-column field="cptCode" title="CPT Code" [width]="150" [filterable]="false">
+        </kendo-grid-column>
+        <kendo-grid-column field="serviceDesc" title="{{serviceDescription}} Service" [width]="200" [sortable]="false" [filterable]="false">
+        </kendo-grid-column>
+        <kendo-grid-column field="serviceCost" title="Service Cost" [width]="140" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{ dataItem.checkReconcileDate | date:'MM/dd/YYYY' }}
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.serviceCost | kendoNumber: 'n2'}}</span>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="txtDate" title="Entry Date" [width]="130">
+        <kendo-grid-column field="amountDue" title="Amount Due" [width]="140" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{ dataItem.txtDate | date:'MM/dd/YYYY' }}
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.amountDue | kendoNumber: 'n2'}}</span>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="warrant" title="Warrant" [width]="130" [sortable]="false">
+        <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="140" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="comments" title="Comment" [width]="150">
+        <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="170" [filterable]="false">
+        </kendo-grid-column>
+        <kendo-grid-column field="entryDate" title="Entry Date" [width]="130" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="grid-line-clip"> {{ dataItem.comments }}</span>
+            {{ dataItem.entryDate | date:'MM/dd/YYYY' }}
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="paymentTypeDesc" title="Type" [width]="130">
+        <kendo-grid-column field="CheckNbr" title="Warrant" [width]="130" [sortable]="false" [filterable]="false">
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="80" [sortable]="false" [columnMenu]="false" [sticky]="true">
+        <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [sortable]="false" [columnMenu]="false" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
               kendoButton
@@ -57,7 +64,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="profile avatar"
+              [attr.aria-label]="dataItem.by"
             >
             <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
@@ -79,12 +86,12 @@
           let-currentPage="currentPage">
           <div class="grid-custom-paginationtemplates d-flex">
             <div class="d-flex align-items-center">
-              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+              <label class="mr-1" for="CopayRowsPerPage">Rows Per Page</label>
               <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
                 [valueField]="'value'" [valuePrimitive]="true" [(value)]="state.take"  aria-label="Rows Per Page"
-                id="RowsPerPage" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+                id="CopayRowsPerPage" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
               <kendo-pager-info> </kendo-pager-info>
-              <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages> 
+              <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages> 
 
             </div>
             <div class="d-flex">
@@ -108,7 +115,7 @@
     </div>
   </div>
   <div class="flex-col mt-1">
-    <button kendoButton [primary]="true" icon="add" aria-label="add medical payment"
+    <button kendoButton [primary]="true" icon="add" attr.aria-label="{{tabStatus === 'dnt-ins-co-pay' ? 'Dental Payment' :'Medical Payment'}}"
       (click)="openCoPaymentDetailsOpened()" [disabled]="(isReadOnly$ | async) ? true : false">
       {{tabStatus === 'dnt-ins-co-pay' ? 'Dental Payment' :'Medical Payment'}}
     </button>
@@ -125,6 +132,6 @@
 
 <kendo-popover #myPopover body="Popover Body" >
   <ng-template kendoPopoverBodyTemplate>
-    <case-management-medical-carrier-contact-info [carrierContactInfo]="carrierContactInfo" ></case-management-medical-carrier-contact-info>
+    <case-management-medical-carrier-contact-info [contactInfoType]="'SERVICE_PROVIDER'" [carrierContactInfo]="carrierContactInfo" ></case-management-medical-carrier-contact-info>
   </ng-template>
 </kendo-popover>

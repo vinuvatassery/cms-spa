@@ -7,10 +7,11 @@ import { DateInputSize, DateInputRounded, DateInputFillMode, } from '@progress/k
 import { forkJoin, mergeMap, of, Subscription, tap, first, filter } from 'rxjs';
 
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, StatusFlag, ButtonType, CaseStatusCode, ContactFacade } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, NavigationType, CaseFacade, WorkflowFacade, ButtonType, CaseStatusCode, ContactFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-case-detail-page',
   templateUrl: './case-detail-page.component.html',
@@ -165,7 +166,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
         );
         this.onCloseDeleteConfirmClicked();
         this.loaderService.hide()
-        this.router.navigateByUrl(`dashboard`);
+        this.router.navigateByUrl(`case-management/cases`);
       },
       error: (error: any) => {
         if (error) {

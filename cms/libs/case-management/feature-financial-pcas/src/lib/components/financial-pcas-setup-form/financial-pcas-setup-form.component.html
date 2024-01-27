@@ -1,0 +1,182 @@
+<kendo-dialog-titlebar (close)="closeAddEditPcaSetupClicked()"> {{pcaId != null ? 'Edit':'Add'}} PCA's </kendo-dialog-titlebar>
+
+<section class="k-dialog-body" [formGroup]="pcaForm">
+      <p class="text-muted">
+            All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row">
+            <div class="flex-col flex-col-8">
+                  <kendo-formfield>
+                         <kendo-floatinglabel text="PCA Number">
+                              <kendo-numerictextbox  
+                              aria-label="PCA Number" 
+                              [fillMode]="formUiStyle.inputFillMode"
+                              [spinners]="false"
+                              [maxlength]="8"
+                              [readonly]="pcaId != null"
+                              format="0"
+                              formControlName="pcaCode"                             
+                              > 
+                              </kendo-numerictextbox >
+                        </kendo-floatinglabel> 
+                        <kendo-formerror *ngIf="pcaFormControls?.pcaCode?.errors?.required">
+                              PCA Number is required
+                        </kendo-formerror>
+                  </kendo-formfield>
+            </div>
+            <div class="flex-col flex-col-4">
+                  <kendo-formfield>
+                        <kendo-floatinglabel text="AY">
+                              <kendo-numerictextbox 
+                              aria-label="AY" 
+                              [maxlength]="2" 
+                              [spinners]="false"
+                              [fillMode]="formUiStyle.inputFillMode"
+                              [readonly]="pcaId != null"
+                              format="##"
+                              formControlName="appropriationYear"
+                        > 
+                        </kendo-numerictextbox>
+                        </kendo-floatinglabel>
+                        <kendo-formerror *ngIf="pcaFormControls?.appropriationYear?.errors?.required">
+                              AY is required
+                        </kendo-formerror>
+                  </kendo-formfield>
+            </div>
+      </div>
+      <div class="flex-row">
+            <div class="flex-col">
+                  <kendo-formfield>
+                        <kendo-floatinglabel text="Description" [ngClass]="{'text-area-readonly': pcaId != null}">
+                              <kendo-textarea 
+                                    aria-label="Description" 
+                                    [maxlength]="300" 
+                                    [rows]="4"
+                                    [fillMode]="formUiStyle.inputFillMode"
+                                    resizable="none"
+                                    [readonly]="pcaId != null"
+                                    (valueChange)="pcaDescChangeHandler($event)"
+                                    formControlName="pcaDesc"> 
+                                    <kendo-textarea-suffix class="justify-content-end">
+                                          <span class="counter">{{ counter }}</span>
+                                    </kendo-textarea-suffix>
+                              </kendo-textarea>
+                        </kendo-floatinglabel>
+                        <kendo-formerror *ngIf="pcaFormControls?.pcaDesc?.errors?.required">
+                              Description is required
+                        </kendo-formerror>
+                  </kendo-formfield>
+            </div>
+            <div class="flex-col">
+                  <kendo-formfield>
+                        <kendo-floatinglabel text="Funding Name" class="inline-search-loader">
+                              <span *ngIf="!(fundingSourceLookup$ | async)" class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"  ></span>
+                              <kendo-dropdownlist 
+                                    aria-label="Funding Name" 
+                                    [fillMode]="formUiStyle.inputFillMode"
+                                    [data]="fundingSourceLookup$ | async"
+                                    [readonly]="pcaId != null"
+                                    textField="fundingSource"
+                                    valueField="fundingSourceId"
+                                    [valuePrimitive]="true"
+                                    formControlName="fundingSourceId"
+                              >
+                              </kendo-dropdownlist>
+                        </kendo-floatinglabel>
+                        <kendo-formerror *ngIf="pcaFormControls?.fundingSourceId?.errors?.required">
+                              Funding Name is required
+                        </kendo-formerror>
+                  </kendo-formfield>
+            </div>
+      </div>
+      <div class="flex-row">
+            <div class="flex-col flex-col-6">
+                  <kendo-formfield>
+                        <kendo-floatinglabel text="Open Date">
+                              <kendo-datepicker 
+                              [fillMode]="formUiStyle.dateInputFillMode" 
+                              format="MM-dd-yyyy"
+                              formatPlaceholder="formatPattern" 
+                              placeholder=""
+                              formControlName="openDate"
+                              (valueChange)="validateOpenAndCloseDates()"
+                              [disabledDates]="disabledDates">
+                              </kendo-datepicker>
+                        </kendo-floatinglabel>
+                        <kendo-formerror *ngIf="pcaFormControls?.openDate?.errors?.required">
+                              Open Date is required
+                        </kendo-formerror>
+                        <kendo-formerror *ngIf="pcaFormControls?.openDate?.errors?.incorrect">
+                              Open Date is after Close Date
+                        </kendo-formerror>
+                  </kendo-formfield>
+            </div>
+            <div class="flex-col flex-col-6">
+                  <kendo-formfield>
+                        <kendo-floatinglabel text="Close Date">
+                              <kendo-datepicker 
+                              [fillMode]="formUiStyle.dateInputFillMode" 
+                              format="MM-dd-yyyy"
+                              formatPlaceholder="formatPattern" 
+                              placeholder=""
+                              formControlName="closeDate"
+                              (valueChange)="validateOpenAndCloseDates()"
+                              [disabledDates]="disabledLastDates">
+                              </kendo-datepicker>
+                        </kendo-floatinglabel>
+                        <kendo-formerror *ngIf="pcaFormControls?.closeDate?.errors?.required">
+                              Close Date is required
+                        </kendo-formerror>
+                        <kendo-formerror *ngIf="pcaFormControls?.closeDate?.errors?.incorrect">                              
+                              Close Date is before Open Date
+                        </kendo-formerror>
+                  </kendo-formfield>
+            </div>
+      </div>
+      <div class="flex-row">
+            <div class="flex-col">
+                  <kendo-formfield>
+                        <kendo-floatinglabel text="Amount" class="amount-with-symbol">
+                              <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                              <kendo-numerictextbox 
+                                    [autoCorrect]="true"
+                                    placeholder="Amount" 
+                                    aria-label="Amount" 
+                                    [spinners]="false"
+                                    class="input-icon-right" 
+                                    placeholder="00.00"     
+                                    [fillMode]="formUiStyle.inputFillMode"                                    
+                                    [min]="0"
+                                    [decimals]="2"
+                                    [maxlength]="15"
+                                    formControlName="totalAmount"
+                              >
+                              </kendo-numerictextbox>
+                        </kendo-floatinglabel>
+                        <kendo-formerror *ngIf="pcaFormControls?.totalAmount?.errors?.required">
+                              Amount is required
+                        </kendo-formerror>
+                  </kendo-formfield>
+            </div>
+      </div>
+</section>
+
+<kendo-dialog-actions>
+      <div class="justify-content-between" *ngIf="!loader">
+            <div class="justify-content-end">
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                        (click)="closeAddEditPcaSetupClicked()">
+                        Cancel
+                  </button>
+                  <button kendoButton [primary]="true" [attr.aria-label]="saveButtonText" (click)="savePca()">
+                       {{saveButtonText}}
+                  </button>
+            </div>
+      </div>
+      <div class="justify-content-between" *ngIf="loader">
+            <div class="justify-content-end">
+                  <kendo-skeleton shape="rectangle" animation="pulse" height="20px" width="20%"></kendo-skeleton>
+                  <kendo-skeleton shape="rectangle" animation="pulse" height="20px" width="20%" [ngStyle]="{marginLeft: '2px' }"></kendo-skeleton>
+            </div>
+      </div>
+</kendo-dialog-actions>

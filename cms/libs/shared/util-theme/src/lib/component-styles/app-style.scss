@@ -21,18 +21,21 @@
 @import 'breadcrumb';
 @import 'editor';
 @import 'expansion-panel';
+@import 'direct-message-chat';
+@import 'account_settings';
 
-/*Common styles*/
+// /*Common styles*/
 @import 'main';
 @import 'custom-style';
 
-/*Overding Mat or Kendo CSS styles*/
+// /*Overding Mat or Kendo CSS styles*/
 @import 'mat-component-overwrite';
 
-/*Work stream based styles*/
+// /*Work stream based styles*/
 @import 'notification';
 @import 'productivity-tools';
 @import 'system-configuration';
+@import 'letter-templates';
 
 /*helper styles*/
 @import 'helpers';
@@ -40,3 +43,5 @@
 
 /*responsive css styles*/
 @import 'responsive-custom-style';
+
+

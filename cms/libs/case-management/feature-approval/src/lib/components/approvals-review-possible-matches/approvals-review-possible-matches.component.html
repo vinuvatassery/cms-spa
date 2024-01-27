@@ -1,0 +1,92 @@
+<kendo-dialog-titlebar (close)="closePossibleMatches(true)">
+  Review Possible Match
+</kendo-dialog-titlebar>
+<section class="k-dialog-body">
+  <p class="text-muted mb-1">
+    If the client is found, navigate to their profile and update their information. Once corrected If the claim passes all criteria it will be submitted for processing when you return to the queue. If it still fails one or more criteria, it will stay in your approval queue.
+  </p>
+
+  <div class="flex-row">
+    <div class="flex-col mt-1" *ngIf="possibleMatch == null && warningMessage != ''">
+      <div class="info-banners canyon-banner d-flex mt-1 mb-1">
+        <span class="material-icons" aria-label="warning" aria-hidden="true">error</span>              
+        <div>              
+          <p > {{warningMessage}} </p>       
+        </div>              
+      </div>      
+    </div>
+    <div class="flex-col mt-1">
+      <table class="table_view_data_info">
+        <caption hidden>
+          CLAIM & CLIENT INFO
+        </caption>
+        <tr>
+          <th></th>
+          <th><strong> CLAIM INFORMATION</strong></th>
+          <th><strong> CLIENT INFORMATION</strong></th>
+        </tr>
+        <tr>
+          <td><strong>Name:</strong></td>
+          <td>{{claimData.nameOnPrimaryInsuranceCard}}</td>
+          <td>{{possibleMatch?.clientName}}</td>
+        </tr>
+        <tr>
+          <td><strong>DOB:</strong></td>
+          <td>{{claimData.dateOfBirth | date : 'MM/dd/yyyy'}}</td>
+          <td>{{possibleMatch?.dateOfBirth | date : 'MM/dd/yyyy'}}</td>
+        </tr>
+        <tr>
+          <td><strong>Policy ID:</strong></td>
+          <td>{{claimData.policyId}}</td>
+          <td>{{possibleMatch?.policyId}}</td>
+        </tr>
+        <tr>
+          <td><strong>Case Worker:</strong></td>
+          <td>&nbsp;</td>
+          <td>
+            <button
+              kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered"
+              showOn="hover"
+              [attr.aria-label]="possibleMatch?.caseWorkerName"
+              kendoButton
+              look="flat"
+              class="card-link-button"
+            >
+              {{possibleMatch?.caseWorkerName}}
+            </button>
+            <kendo-popover
+                  #onUserProfileDetailsHovered
+                  width="330"
+                  position="right"
+                >
+                  <ng-template kendoPopoverBodyTemplate>
+                    <common-user-profile-card
+                      [userId]="possibleMatch.caseWorkerId"
+                      [reassign]="false"
+                    >
+                    </common-user-profile-card>
+                  </ng-template>
+                </kendo-popover>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<kendo-popover #onUserProfileDetailsHovered width="330" position="right">
+  <ng-template kendoPopoverBodyTemplate>
+    <common-user-profile-card> </common-user-profile-card>
+  </ng-template>
+</kendo-popover>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="closePossibleMatches(true)">
+        CANCEL
+      </button>
+      <button kendoButton [primary]="true" aria-label="GO TO PROFILE" (click)="onGoToProfileClick(possibleMatch)" [disabled]="!hasSaveButtonEnabled">GO TO PROFILE</button>
+    </div>
+  </div>
+</kendo-dialog-actions>

@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import {  Subject } from 'rxjs'; 
 /** Entities **/
 import { Event } from '../entities/event';
 /** Data services **/
@@ -10,8 +10,8 @@ import { EventDataService } from '../infrastructure/event.data.service';
 @Injectable({ providedIn: 'root' })
 export class EventLogFacade {
   /** Private properties **/
-  private eventsSubject = new BehaviorSubject<Event[]>([]);
-  private ddlEventsSubject = new BehaviorSubject<any[]>([]);
+  private eventsSubject = new Subject<Event[]>();
+  private ddlEventsSubject = new Subject<any[]>();
 
   /** Public properties **/
   events$ = this.eventsSubject.asObservable();

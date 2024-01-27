@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (click)="onReAssignConfirm(false)"> Reassign Case Manager? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (click)="onReAssignConfirm(false)"> Re-assign Case Manager? </kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
     <p>
         The active Case Manager will be unassigned from the client
@@ -12,15 +12,15 @@
           kendoButton
           [primary]="true"
           look="outline"
-          aria-label="cancel removing case manager"
+          aria-label="Cancel"
           (click)="onReAssignConfirm(false)"
         >
-          CANCEL
+        Cancel
         </button>
         <button
           kendoButton
           class="k-error-button"
-          aria-label="remove case manager"
+          aria-label="Re-Assign"
           (click)="onReAssignConfirm(true)"
         >
         RE-ASSIGN

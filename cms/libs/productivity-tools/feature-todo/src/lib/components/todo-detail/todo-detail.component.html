@@ -1,4 +1,4 @@
-<section class="k-dialog-body">
+<section class="k-dialog-body" kendoTooltip>
   <p class="text-muted mb-2">
     All fields are required unless otherwise stated.
   </p>
@@ -10,13 +10,13 @@
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Due Date (Optional)">
-        <kendo-datepicker [(ngModel)]="date" format="MM-dd-yyyy" [fillMode]="formUiStyle.dateInputFillMode" formatPlaceholder="formatPattern">
+        <kendo-datepicker  format="MM-dd-yyyy" [fillMode]="formUiStyle.dateInputFillMode" formatPlaceholder="formatPattern">
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Repeat">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlCaseOrigins$ | async">
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  >
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
@@ -26,7 +26,7 @@
           format="MM-dd-yyyy"
           formatPlaceholder="formatPattern"
           [fillMode]="formUiStyle.dateInputFillMode"
-          [(ngModel)]="date"
+        
         >
         </kendo-datepicker>
       </kendo-floatinglabel>
@@ -50,8 +50,15 @@
         </kendo-textarea>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col mt-2">
-      <div class="autoSelect-search mat-form-no-b-space">
+    <div class="flex-col mt-2 field_with_info">
+      <kendo-floatinglabel text="Link Reminder To">
+        <kendo-dropdownlist aria-label="Link Reminder To" [fillMode]="formUiStyle.dropDownFillMode" > </kendo-dropdownlist>
+    </kendo-floatinglabel>
+    <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
+    
+      </div>
+    <div class="flex-col mt-2 field_with_info">
+      <div class="autoSelect-search mat-form-no-b-space ">
         <div class="global-search">
           <span
             class="material-icons global-search-icon"
@@ -59,8 +66,7 @@
             aria-hidden="true"
             >search</span
           >
-          <kendo-multicolumncombobox
-            [data]="search$ | async"
+          <kendo-multicolumncombobox 
             textField="name"
             valueField="id"
             [fillMode]="formUiStyle.dropDownFillMode"
@@ -79,6 +85,7 @@
           </kendo-multicolumncombobox>
         </div>
       </div>
+      <span class="material-icons" aria-hidden="true" title="Select a client or service provider if you want this reminder to be displayed in their profile.">info</span>
     </div>
     <div class="flex-col mt-2">
       <div class="global-search mat-form-no-b-space">
@@ -88,9 +95,7 @@
           aria-hidden="true"
           >search</span
         >
-        <kendo-multicolumncombobox
-           
-          [data]="caseSearched$ | async"
+        <kendo-multicolumncombobox 
           textField="name"
           valueField="id"
           placeholder="Search Case Name, Member ID or SSN"
@@ -116,19 +121,22 @@
 </section>
 
 
-<kendo-dialog-actions>
+<kendo-dialog-actions kendoTooltip>
   <div class="justify-content-between">
+    <div>
+      <button kendoButton aria-label="Delete" class="k-danger-link">  Delete     </button>
+    </div>
     <div class="justify-content-end">
       <button
         kendoButton
         [primary]="true"
         look="outline"
-        aria-label="cancel todo"
+        aria-label="Cancel"
         (click)="closeTodoDetailsClicked()"
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="add todo">Create</button>
+      <button kendoButton [primary]="true" aria-label="Create">Create</button>
     </div>
   </div>
 </kendo-dialog-actions>

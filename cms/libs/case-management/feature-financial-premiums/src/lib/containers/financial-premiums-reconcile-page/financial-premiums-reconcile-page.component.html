@@ -1,0 +1,33 @@
+ 
+<cms-financial-premiums-batches-reconcile-payments  [premiumsType]="premiumType"
+[reconcileGridLists$]="reconcileGridLists$"
+[pageSizes]="pageSizes" [sortValue]="sortValue"
+[sortType]="sortType" [sort]="sort" 
+[sortValueBatch]="sortValueBatch"
+[sortBatch]="sortBatch"
+[batchId] = "batchId"
+(loadReconcileListEvent)="loadReconcileListGrid($event)"
+[exportButtonShow$]="exportButtonShow$"   
+[reconcileBreakoutSummary$]="reconcileBreakoutSummary$ | async"
+[reconcileBreakoutList$]="reconcileBreakoutList$"
+(loadReconcileBreakoutSummaryEvent)="loadReconcileBreakoutSummary($event)"
+(loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"
+(exportGridDataEvent)="exportPremiumBatchesGridData()"
+(onProviderNameClickEvent)="onProviderNameClick($event)"
+(warrantNumberChangeEvent)="warrantNumberChange($event)"
+[warrantNumberChange$]="warrantNumberChange$"
+[warrantNumberChangeLoader$]="warrantNumberChangeLoader$"
+(loadTemplateEvent) = "loadEachLetterTemplate($event)"
+[letterContentList$]="letterContentList$"
+[letterContentLoader$]="letterContentLoader$"></cms-financial-premiums-batches-reconcile-payments>
+
+<ng-template #providerDetailsTemplate>
+    <cms-financial-premiums-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$" 
+          ></cms-financial-premiums-provider-info>
+</ng-template>

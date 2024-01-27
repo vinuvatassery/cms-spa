@@ -1,6 +1,6 @@
 <section class="k-dialog-body">
     <p class="text-muted mb-2">
-        It will still be viewable in the profile. You may add a new one at any time.
+        They will still be viewable in the profile. You may add a new one at any time.
     </p>
   </section>
   
@@ -11,12 +11,12 @@
           kendoButton
           [primary]="true"
           look="outline"
-          aria-label="cancel deactivation of confirmation"
+          aria-label="Cancel"
           
-       (click)="onCloseDeactivateContactAddressClicked()" >
+       (click)="onCloseDeactivateContactAddressClicked(true)" >
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="deactivate" (click)="deactiveContactAddress()" >
+        <button kendoButton [primary]="true" aria-label="Deactivate" (click)="deactiveContactAddress()" >
           Deactivate
         </button>
       </div>

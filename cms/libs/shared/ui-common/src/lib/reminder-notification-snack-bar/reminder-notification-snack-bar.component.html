@@ -1,0 +1,34 @@
+<div kendoTooltip #reminderNotificationTemplateContainer class="remainder_container" (click)="reminderContainerClicked();$event.stopPropagation()" [ngClass]="{'expand_view': isReminderExpand === true, 'collapse_view' : isReminderExpand === false}" id="reminder_notify">
+
+</div>
+
+ 
+<ng-template #reminderNotificationTemplate>
+  <button class="reminder_list_show_btn" title="Reminder Notification List" kendoButton *ngIf="isReminderExpands"> <span class="material-icons" aria-hidden="true"> alarm </span> <span class="app-c-badge badge-round-right badge-warn">{{messageCount.length}}</span></button>
+  <div class="reminder-snack-bar-wrapper">
+    <div class="reminder-col-one">
+      <span class="material-icons" aria-hidden="true"> alarm </span>
+    </div>
+    <div class="reminder-col-two">
+      <p class="reminder-description"> {{ snackbarMessage.subtitle }}  </p>
+      <div class="flex-space-bw align-items-center mt-1">
+        <div>
+          <span> Today</span>
+        </div>
+        <div class="d-flex">
+          <kendo-dropdownbutton themeColor="primary" fillMode="flat"  [data]="data" (click)="$event.stopPropagation()">
+            Options <span class="material-icons" aria-hidden="true">   arrow_drop_down    </span>
+          </kendo-dropdownbutton>
+
+          <button kendoButton themeColor="primary" aria-label="Dismiss"  fillMode="flat"  (click)="removePreviousMessage();$event.stopPropagation()"> DISMISS</button>
+        </div>
+      </div>
+    </div>
+    <div class="reminder-col-three">
+      <button kendoButton fillMode="clear" aria-label="Move Reminder Notification on Side" class="snakbar-close-btn" themeColor="light"
+        (click)="moveSideReminderNotification();$event.stopPropagation()">
+        <span class="material-icons" aria-hidden="true"> chevron_right </span>
+      </button>
+    </div> 
+  </div>
+</ng-template>

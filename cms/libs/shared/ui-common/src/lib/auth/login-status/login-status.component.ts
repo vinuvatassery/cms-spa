@@ -1,28 +1,41 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, ElementRef, OnInit, ChangeDetectorRef,   HostListener, ViewEncapsulation } from '@angular/core';
 /** Services **/
 import { AuthService } from '@cms/shared/util-oidc';
+import { UserDataService } from '@cms/system-config/domain';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'common-login-status',
   templateUrl: './login-status.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
-export class LoginStatusComponent {
+export class LoginStatusComponent  implements OnInit{
   /** Constructor **/
- 
+  @ViewChild('accountSettingsPopover', { read: ElementRef })
+  public accountSettingsPopover!: ElementRef;
+  @ViewChild('profileAnchor')
+  profileAnchor!: ElementRef;
+
   isAccountSettingsPopup = false;
+  isProfilePopoverOpen = false;
 
-  constructor(private authService: AuthService) { }
-
-  @ViewChild('anchor')
-  anchor!: ElementRef;
-  @ViewChild('popup', { read: ElementRef })
-  popup!: ElementRef;
-
+  userImageSubject = new Subject<any>();
+  imageLoaderVisible = true;
   data: Array<any> = [{}];
   popupClass = 'user-setting-dropdown';
+  userInfo!:any;
+
+  
+  constructor(private authService: AuthService, 
+    private readonly userDataService: UserDataService,private readonly cd: ChangeDetectorRef) { }
+
  
 
+
+  ngOnInit(): void {
+    this.loadProfilePhoto();
+  }
   user() {
     return this.authService.getUser();
   }
@@ -40,6 +53,54 @@ export class LoginStatusComponent {
     return this.authService.isAuthenticated;
   }
 
+  @HostListener('document:keydown', ['$event'])
+  public keydown(event: KeyboardEvent): void {
+    if (event) {
+      if (event.code === 'Escape') {
+        this.toggleProfilePopoverOpen(false);
+      }
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  public documentClick(event: KeyboardEvent): void {
+    if (event) {
+      if (!this.contains(event.target)) {
+        this.toggleProfilePopoverOpen(false);
+      }
+    }
+  }
+
+  public toggleProfilePopoverOpen(show?: boolean): void {
+    this.isProfilePopoverOpen = show ?? !this.isProfilePopoverOpen;
+  }
+
+  private contains(target: any): boolean {
+    return (
+      this.profileAnchor.nativeElement.contains(target) ||
+      (this.accountSettingsPopover
+        ? this.accountSettingsPopover.nativeElement.contains(target)
+        : false)
+    );
+  }
+ 
+  loadProfilePhoto() {
+    this.userDataService.getProfile$.subscribe((users: any[]) => {
+      if (users.length > 0) {
+        this.userInfo = users[0];
+        this.userDataService.getUserImage(this.userInfo?.loginUserId).subscribe({
+          next: (userImageResponse: any) => {
+            this.userImageSubject.next(userImageResponse);
+            this.imageLoaderVisible = true;
+            this.cd.detectChanges();
+          },
+        });
+      }
+    })
+  }
+  onLoad() {
+    this.imageLoaderVisible = false;
+  }
   onCloseAccountSettingsClicked() { this.isAccountSettingsPopup = false; }
   onAccountSettingsClicked() { this.isAccountSettingsPopup = true; }
 }

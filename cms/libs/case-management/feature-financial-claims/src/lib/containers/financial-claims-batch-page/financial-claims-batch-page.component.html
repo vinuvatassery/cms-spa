@@ -1,0 +1,21 @@
+ <cms-financial-claims-batches-log-lists  [claimsType]="claimsType" [batchId]="batchId" [batchLogGridLists$]="paymentsByBatchGridLists$"
+ [loader$]="paymentByBatchGridLoader$" [pageSizes]="pageSizes" [sortValue]="sortValue"
+ [sortType]="sortType" [sort]="sort" [paymentBatchName$]="paymentBatchName$"
+ [exportButtonShow$]="exportButtonShow$"
+ (exportGridDataEvent)="exportClaimsBatchGridData()"
+ (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
+ (onProviderNameClickEvent)="onProviderNameClick($event)"
+ (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+ [letterContentList$]="letterContentList$"
+ [letterContentLoader$]="letterContentLoader$">
+</cms-financial-claims-batches-log-lists>
+
+ <ng-template #providerDetailsTemplate>
+    <cms-financial-claims-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+</ng-template>

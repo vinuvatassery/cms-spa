@@ -1,0 +1,284 @@
+<div class="flex-row app-c-expansion-panel-two">
+  <div class="flex-col">
+    <kendo-panelbar
+      (expand)="onPanelExpand(item)"
+      *ngFor="let item of approvalsPaymentsGridPagedResult; let i = index"
+    >
+      <kendo-panelbar-item
+        *ngIf="getTitle(item.approvalTypeCode, item.subTypeCode)"
+        [expanded]="item.isExpanded && item.status === approveStatus &&  item.approvalTypeCode ===
+        pendingApprovalGeneralTypeCode.GeneralExceptions"
+      >
+        <ng-template kendoPanelBarItemTitle>
+          <div class="flex-row rw-100" (click)="$event.stopPropagation()">
+            <div class="flex-col flex-col-6">
+              <h5>{{ getTitle(item.approvalTypeCode, item.subTypeCode) }}</h5>
+              <p>
+                {{ item.creationTime | date : 'MM/dd/yyyy' }} by
+                <button
+                  kendoPopoverAnchor
+                  [popover]="onUserProfileDetailsHovered"
+                  showOn="hover"
+                  [attr.aria-label]="item.fullName"
+                  kendoButton
+                  look="flat"
+                  class="card-link-button"
+                >
+                  {{ item.fullName }}
+                </button>
+                <kendo-popover
+                  #onUserProfileDetailsHovered
+                  width="330"
+                  position="right"
+                >
+                  <ng-template kendoPopoverBodyTemplate>
+                    <common-user-profile-card
+                      [userId]="item.creatorId"
+                      [reassign]="false"
+                    >
+                    </common-user-profile-card>
+                  </ng-template>
+                </kendo-popover>
+              </p>
+              <div *ngIf="(item.approvalTypeCode == pendingApprovalGeneralTypeCode.GeneralAddToMasterList ||
+                          item.subTypeCode == subTypeConst.InsuranceVendor ||
+                          item.subTypeCode == subTypeConst.MedicalProvider ||
+                          item.subTypeCode == subTypeConst.DentalProvider  ||
+                          item.subTypeCode == subTypeConst.MedicalClinic   ||
+                          item.subTypeCode == subTypeConst.DentalClinic) &&
+                          (item.contactName)" class="mt-4">
+                Contact Name {{item.contactName}}
+              </div>
+            </div>
+            <div class="flex-col flex-col-6">
+              <div class="cms-button-group">
+                <button
+                  kendoButton
+                  (selectedChange)="
+                    onRowLevelApproveClicked($event, item)
+                  "
+                  [selected]="item.status == approveStatus"
+                  aria-label="Approve"
+                  id="approve{{ i }}"
+                  [toggleable]="true"
+                >
+                  APPROVE
+                </button>
+                <button
+                  kendoButton
+                  (selectedChange)="
+                    onRowLevelDenyClicked($event, item)
+                  "
+                  [selected]="item.status == denyStatus"
+                  aria-label="Deny"
+                  id="deny{{ i }}"
+                  [toggleable]="true"
+                >
+                  DENY
+                </button>
+              </div>
+              <div
+                *ngIf="
+                  item.status == approveStatus &&
+                  item.approvalTypeCode ==
+                    pendingApprovalGeneralTypeCode.GeneralAddToMasterList
+                "
+              >
+                <i>The user will be notified of your changes.</i>
+              </div>
+              <div *ngIf="item.status == denyStatus">
+                <kendo-floatinglabel text="Reason for Denial">
+                  <kendo-textarea
+                    #tareaCessation
+                    [fillMode]="formUiStyle.inputFillMode"
+                    [maxlength]="tAreaCessationMaxLength"
+                    [rows]="2"
+                    resizable="none"
+                    [(ngModel)]="item.sendBackNotes"
+                    (valueChange)="sendBackNotesChange(item)"
+                    aria-label="smoking cessation note"
+                    title="{{ item.sendBackNotes }}"
+                    [ngClass]="ngDirtyInValid(item, 'sendBackNotes', i)"
+                    id="sendBackNotes{{ i }}"
+                  >
+                  <kendo-textarea-suffix class="justify-content-end">
+                    <span class="counter">{{
+                      item.tAreaCessationCounter
+                    }}</span>
+                  </kendo-textarea-suffix>
+                </kendo-textarea>
+
+
+                  <kendo-formerror *ngIf="item.sendBackNotesInValid">{{
+                    item.sendBackNotesInValidMsg
+                  }}</kendo-formerror>
+                </kendo-floatinglabel>
+              </div>
+              <div
+                *ngIf="
+                  item.status == approveStatus &&
+                  item.approvalTypeCode ==
+                    pendingApprovalGeneralTypeCode.GeneralCaseReassignment
+                "
+              >
+                <kendo-floatinglabel text="New Case Worker">
+                  <kendo-dropdownlist
+                    aria-label="New Case Worker"
+                    [fillMode]="formUiStyle.dropDownFillMode"
+                    [data]="usersByRole$ | async"
+                    textField="fullName"
+                    valueField="loginUserId"
+                    [valuePrimitive]="true"
+                    [(ngModel)]="
+                      approvalsPaymentsGridPagedResult[i].caseWorkerId
+                    "
+                  >
+                  </kendo-dropdownlist>
+                </kendo-floatinglabel>
+              </div>
+            </div>
+          </div>
+          <kendo-popover
+            #onUserProfileDetailsHovered
+            width="330"
+            position="right"
+          >
+            <ng-template kendoPopoverBodyTemplate>
+              <common-user-profile-card [userId]="item.creatorId">
+              </common-user-profile-card>
+            </ng-template>
+          </kendo-popover>
+        </ng-template>
+
+        <ng-template kendoPanelBarContent>
+          <ng-switch
+            [ngSwitch]="item.approvalTypeCode"
+
+          >
+            <ng-template
+              ngSwitchCase="{{
+                pendingApprovalGeneralTypeCode.GeneralCaseReassignment
+              }}"
+            >
+              <productivity-tools-approvals-general-list-detail-reassignment
+                [approvalId]="item.generalPendingApprovalId"
+                (loadCasereassignmentExpanedInfoEvent)="
+                  loadCasereassignmentExpanedInfoEvent($event)
+                "
+              >
+              </productivity-tools-approvals-general-list-detail-reassignment>
+            </ng-template>
+            <ng-template
+              ngSwitchCase="{{
+                pendingApprovalGeneralTypeCode.GeneralAddToMasterList
+              }}"
+            >
+              <productivity-tools-approvals-general-list-detail-addtomasterlist
+                [approvalId]="item.generalPendingApprovalId"
+                (openEditModal)="openEditModal($event)"
+                [subTypeCode]="item.subTypeCode"
+                [selectedMasterDetail$]="selectedMasterDetail$"
+              >
+              </productivity-tools-approvals-general-list-detail-addtomasterlist>
+            </ng-template>
+            <ng-template
+              ngSwitchCase="{{
+                pendingApprovalGeneralTypeCode.GeneralExceptions
+              }}"
+            >
+              <productivity-tools-approvals-general-list-detail-exceptions
+                [approvalId]="item.generalPendingApprovalId"
+                [exceptionId]="item.approvalEntityId"
+                (onVendorClickedEvent)="onProviderNameClick($event)"
+              >
+              </productivity-tools-approvals-general-list-detail-exceptions>
+            </ng-template>
+            <ng-template ngSwitchDefault>
+              <p>Unknown approval request type.</p>
+            </ng-template>
+          </ng-switch>
+        </ng-template>
+      </kendo-panelbar-item>
+    </kendo-panelbar>
+  </div>
+</div>
+<div class="bottom-fixed-wrapper text-right flex-gap">
+  <button
+    kendoButton
+    [primary]="true"
+    aria-label="Submit"
+    class=""
+    (click)="onSubmitPendingApprovalGeneralClicked()"
+    [disabled]="hasDisabledSubmit"
+  >
+    Submit
+  </button>
+</div>
+
+<ng-template #editListItemDialogModal>
+  <kendo-dialog-titlebar (close)="onCloseEditListItemsDetailClicked()">
+    Edit List Item</kendo-dialog-titlebar
+  >
+  <productivity-tools-approvals-edit-items
+    [selectedSubtypeCode]="selectedSubtypeCode"
+    [clinicVendorList$]="clinicVendorList$"
+    [ddlStates$]="ddlStates$"
+    [healthCareForm]="healthCareForm"
+    (searchClinicVendorClicked)="searchClinicClicked($event)"
+    [clinicVendorLoader$]="clinicVendorLoader$"
+    [selectedMasterData]="selectedMasterData"
+    (updateMasterDetailsClickedEvent)="updateMasterDetailsClicked($event)"
+    (close)="onCloseEditListItemsDetailClicked()"
+    [selectedMasterDetail$]="selectedMasterDetail$"
+    [drugForm]="drugForm"
+    [insurancePlanForm]="insurancePlanForm"
+    [insuranceTypelovForPlan$]="insuranceTypelovForPlan$"
+    (recordUpdatedEvent)="recordUpdate($event)"
+    [pharmacyForm]="pharmacyForm"
+    [insuranceVendorForm]="insuranceVendorForm"
+    [insuranceProviderForm]="insuranceProviderForm"
+    [deliveryMethodLov$]="deliveryMethodLov$"
+  >
+  </productivity-tools-approvals-edit-items>
+</ng-template>
+
+<ng-template #submitRequestModalDialog>
+
+  <kendo-dialog-titlebar (close)="onCloseSubmitGeneralRequestClicked()">
+    Submit Item(s)?</kendo-dialog-titlebar>
+    <section class="k-dialog-body newcase">
+      <p *ngIf="caseReassignmentsCount > 0" class="mb-1">
+        Case re-assignments to be submitted:
+        <strong>{{ caseReassignmentsCount }}</strong>
+      </p>
+      <p *ngIf="exceptionsCount > 0" class="mb-1">
+        Max benefits exceptions to be submitted: <strong>{{ exceptionsCount }}</strong>
+      </p>
+      <p *ngIf="listManagementItemsCount > 0" class="mb-1">
+        List management items to be submitted:
+        <strong>{{ listManagementItemsCount }}</strong>
+      </p>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button
+            aria-label="Cancel"
+            kendoButton
+            look="outline"
+            (click)="onCloseSubmitGeneralRequestClicked()"
+          >
+            CANCEL
+          </button>
+          <button
+            aria-label="Submit"
+            kendoButton
+            [primary]="true"
+            (click)="makeRequestData()"
+          >
+            SUBMIT
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>
+</ng-template>

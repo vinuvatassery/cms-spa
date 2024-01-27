@@ -10,18 +10,24 @@
   padding: $size-l $size-xlg;
   border-radius: $border-radius-sm;
   letter-spacing: 0.56px;
+
   //  height: 32px;
+  &.noshadow-btn {
+    box-shadow: none;
+  }
 
   &.k-button-outline-primary {
     border: 1px solid;
     color: $app-primary;
     border-color: $app-primary;
+
     &.k-state-disabled,
     &.k-disabled {
-      border-color: material-color($hive-neutral-palette, 600) !important;      
-      color: material-color($hive-neutral-palette, 600) !important;
+      border-color: var(--hive-neutral-palette-600) !important;
+      color: var(--hive-neutral-palette-600) !important;
     }
   }
+
   &.k-primary,
   &.k-button-solid-primary {
     background: $app-primary;
@@ -29,22 +35,25 @@
     color: $white;
     font-family: $font-family-medium;
     border-color: $app-primary;
+
     &:hover,
     &:active {
-      background: material-color($hive-primary-palette, 800) !important;
-      background-color: material-color($hive-primary-palette, 800) !important;
+      background: var(--hive-primary-palette-800) !important;
+      background-color: var(--hive-primary-palette-800) !important;
       color: $white !important;
     }
+
     &:focus,
     &.k-focus {
-      background: material-color($hive-primary-palette, 900) !important;
-      background-color: material-color($hive-primary-palette, 900) !important;
+      background: var(--hive-primary-palette-900) !important;
+      background-color: var(--hive-primary-palette-900) !important;
       color: $white !important;
     }
+
     &.k-state-disabled,
     &.k-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;
-      color: $black-30 !important;
+      background: var(--hive-neutral-palette-50) !important;
+      color: rgba($black-3, 0.60) !important;
     }
 
     &.k-outline {
@@ -56,7 +65,7 @@
       &.k-state-disabled,
       &.k-disabled {
         background: $white !important;
-        color: $black-30 !important;
+        color: rgba($black-3, 0.60) !important;
         border-color: $black-12 !important;
       }
     }
@@ -71,13 +80,24 @@
     }
   }
 
+  &.k-button-solid-error {
+    background-color: var(--hive-error-palette-800) !important;
+    border-color: var(--hive-error-palette-800) !important;
+    color: $white;
+  }
+
+  &.k-button-flat-error {
+    color: var(--hive-error-palette-800) !important;
+  }
+
   &.k-danger-link {
-    color: material-color($hive-error-palette, 800) !important;
+    color: var(--hive-error-palette-800) !important;
     background: transparent;
+
     &.k-state-disabled,
     &.k-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;      
-      color: material-color($hive-neutral-palette, 600) !important;
+      background: var(--hive-neutral-palette-50) !important;
+      color: var(--hive-neutral-palette-600) !important;
     }
   }
 
@@ -89,7 +109,7 @@
   }
 
   &.k-warn-link {
-    color: material-color($hive-warn-palette, 800) !important;
+    color: var(--hive-warn-palette-800) !important;
     background: transparent !important;
   }
 
@@ -109,15 +129,19 @@
     font-family: $font-family-medium;
     padding: $size-0;
     height: auto;
+
     .material-icons {
       margin-right: 4px;
     }
+
     &.k-button-flat-success {
-      color: material-color($hive-success-palette, 500) !important;
+      color: var(--hive-success-palette-500) !important;
     }
+
     &.k-button-flat-error {
-      color: material-color($hive-error-palette, 400) !important;
+      color: var(--hive-error-palette-400) !important;
     }
+
     &.no-ul {
       text-decoration: none;
     }
@@ -155,10 +179,10 @@
     }
 
     &.icon-hover-primary {
-      color: material-color($hive-neutral-palette, 600);
+      color: var(--hive-neutral-palette-600);
 
       span {
-        color: material-color($hive-neutral-palette, 600);
+        color: var(--hive-neutral-palette-600);
       }
 
       &:hover {
@@ -169,6 +193,31 @@
         }
       }
     }
+  }
+
+  &.clear-icon-btn {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: $size-l;
+
+    &.k-button-flat-primary {
+      color: rgba($color: $black-30, $alpha: 0.7);
+
+      &:hover {
+        color: $app-primary;
+      }
+
+    }
+
+    &.k-button-flat-error {
+      color: rgba($color: $black-30, $alpha: 0.5) !important;
+
+      &:hover {
+        color: var(--hive-error-palette-800) !important;
+      }
+    }
+
   }
 
   &.avatar-sm-btn {
@@ -189,15 +238,16 @@
   }
 
   &.k-error-button {
-    background: material-color($hive-error-palette, 800);
-    background-color: material-color($hive-error-palette, 800);
+    background: var(--hive-error-palette-800);
+    background-color: var(--hive-error-palette-800);
     color: $white;
     font-family: $font-family-medium;
 
-    &.k-state-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;
-      background-color: material-color($hive-neutral-palette, 50) !important;
-      color: $black-30 !important;
+    &.k-state-disabled,
+    &.k-disabled {
+      background: var(--hive-neutral-palette-50) !important;
+      background-color: var(--hive-neutral-palette-50) !important;
+      color: rgba($black-3, 0.60) !important;
     }
   }
 
@@ -211,6 +261,7 @@
       font-size: $font-size;
       height: 100%;
       padding: $size-l $size-xlg;
+
       .material-icons {
         font-size: $font-size-xl;
       }
@@ -218,6 +269,7 @@
   }
 
   &.btn-h-primary {
+
     &:hover,
     &:active {
       color: $app-primary !important;
@@ -225,16 +277,18 @@
   }
 
   &.btn-h-warn {
+
     &:hover,
     &:active {
-      color: material-color($hive-warn-palette, 600) !important;
+      color: var(--hive-warn-palette-600) !important;
     }
   }
 
   &.btn-h-danger {
+
     &:hover,
     &:active {
-      color: material-color($hive-error-palette, 800) !important;
+      color: var(--hive-error-palette-800) !important;
       opacity: 1;
     }
   }
@@ -251,6 +305,7 @@
   .k-button-text {
     display: inline-flex;
     align-items: center;
+    user-select: text;
   }
 }
 
@@ -262,14 +317,15 @@
 
     &:hover,
     &:active {
-      background: material-color($hive-primary-palette, 800) !important;
-      background-color: material-color($hive-primary-palette, 800) !important;
+      background: var(--hive-primary-palette-800) !important;
+      background-color: var(--hive-primary-palette-800) !important;
       color: $white !important;
     }
 
-    &.k-state-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;
-      color: $black-30 !important;
+    &.k-state-disabled,
+    &.k-disabled {
+      background: var(--hive-neutral-palette-50) !important;
+      color: rgba($black-3, 0.60) !important;
     }
   }
 }
@@ -278,7 +334,7 @@
   box-shadow: none;
 
   .k-toggle-button {
-    background: material-color($hive-neutral-palette, 100);
+    background: var(--hive-neutral-palette-100);
     text-transform: capitalize;
 
     &.k-state-selected,
@@ -286,8 +342,13 @@
       color: $white;
       background: $app-primary;
       opacity: 1;
+
       &::before {
         opacity: 0;
+      }
+
+      &.select-error {
+        background: var(--hive-error-palette-800) !important;
       }
     }
   }
@@ -299,6 +360,24 @@
       width: 100%;
     }
   }
+}
+
+.k-selected {
+  &.select-error {
+    background: var(--hive-error-palette-800) !important;
+    color: $white;
+  }
+
+  &.select-primary {
+    background: $app-primary !important;
+    color: $white;
+  }
+}
+
+.cc-fwc {
+  text-transform: capitalize;
+  min-width: 120px;
+  text-align: center;
 }
 
 .btn-ico-spacer {
@@ -319,38 +398,47 @@
     &.k-split-button-arrow {
       border-left: 1px solid $white;
       margin-left: 0px;
+
       &.k-focus,
       &:focus {
-        background: material-color($hive-primary-palette, 400) !important;
+        background: var(--hive-primary-palette-400) !important;
       }
+
       span {
         color: $white;
       }
     }
+
     &.k-disabled {
-      background: material-color($hive-neutral-palette, 50) !important;
-      color: $black-30 !important;
+      background: var(--hive-neutral-palette-50) !important;
+      color: rgba($black-3, 0.60) !important;
+
       .k-icon {
-        color: $black-30 !important;
+        color: rgba($black-3, 0.60) !important;
       }
     }
+
     &.k-split-button-arrow {
       padding: $size-xl;
     }
+
     &.k-focus,
     &:focus {
-      background: material-color($hive-primary-palette, 400) !important;
+      background: var(--hive-primary-palette-400) !important;
     }
   }
+
   &.k-focus,
   &:focus {
     .k-button {
-      background: material-color($hive-primary-palette, 400) !important;
+      background: var(--hive-primary-palette-400) !important;
+
       &.k-disabled {
-        background: material-color($hive-neutral-palette, 50) !important;
-        color: $black-30 !important;
+        background: var(--hive-neutral-palette-50) !important;
+        color: rgba($black-3, 0.60) !important;
+
         .k-icon {
-          color: $black-30 !important;
+          color: rgba($black-3, 0.60) !important;
         }
       }
     }
@@ -359,7 +447,7 @@
 
 .app-c-split-button {
   padding: $size-0;
-  max-width: 230px;
+  max-width: 300px;
 
   .k-list .k-item,
   .k-list-optionlabel {
@@ -375,18 +463,20 @@
 
   .k-button-solid-base {
     transition: 0.2s;
+
     &:hover {
-      background: material-color($hive-primary-palette, 800) !important;
-      background-color: material-color($hive-primary-palette, 800) !important;
+      background: var(--hive-primary-palette-800) !important;
+      background-color: var(--hive-primary-palette-800) !important;
       color: $white !important;
     }
   }
 
   .k-split-button-arrow {
     transition: 0.2s;
+
     &:hover {
-      background: material-color($hive-primary-palette, 800) !important;
-      background-color: material-color($hive-primary-palette, 800) !important;
+      background: var(--hive-primary-palette-800) !important;
+      background-color: var(--hive-primary-palette-800) !important;
       color: $white !important;
     }
   }
@@ -425,6 +515,7 @@
     box-shadow: $button-box-shadow;
   }
 }
+
 .app-dropdown-action {
   &.k-dropdown-button {
     .k-icon-button {
@@ -434,32 +525,41 @@
     }
   }
 }
+
 .app-dropdown-action-list {
   .k-menu-group {
     padding: 8px;
   }
+
   .k-menu-item {
     background: transparent;
     margin: 4px;
+    border-radius: 4px;
+
     &:hover {
       background: transparent;
     }
+
     .k-menu-link {
       padding: 0px;
       padding-inline-end: 0;
       background: transparent;
       text-transform: capitalize;
+
       &:hover {
         background: transparent;
       }
+
       .k-button {
         width: 100%;
         text-transform: capitalize;
         justify-content: flex-start;
         padding: 8px 14px;
+
         .k-menu-group {
           padding: 8px;
         }
+
         label {
           cursor: pointer;
           margin-left: 8px;
@@ -468,18 +568,22 @@
     }
   }
 }
+
 .k-menu-group {
   .k-item {
 
     >.k-link:active,
     >.k-link.k-active,
-    >.k-link.k-selected { color: $app-primary;}
+    >.k-link.k-selected {
+      color: $app-primary;
+    }
   }
 }
 
 .k-menu {
   &.k-context-men {
     .k-context-men {
+
       >.k-link:active,
       >.k-link.k-active,
       >.k-link.k-selected {
@@ -488,4 +592,51 @@
     }
   }
 }
- 
+
+.k-switch .k-switch-thumb {
+  box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+}
+
+.k-switch-on {
+  .k-switch-thumb {
+    background-color: $app-primary;
+  }
+
+  .k-switch-track {
+    background-color: rgba($app-primary, 0.54);
+  }
+}
+
+.cms-button-group {
+  display: flex;
+.k-button{
+
+  &:first-child{
+    border-top-right-radius: 0px ;
+    border-bottom-right-radius: 0px;
+
+  }
+
+  &:nth-child(2){
+    border-top-left-radius: 0px ;
+    border-bottom-left-radius: 0px;
+  }
+}
+  .k-toggle-button {
+    text-transform: unset;
+background: $black-e;
+    &.k-selected {
+      color: $white;
+      background: $app-primary;
+      opacity: 1;
+
+      &::before {
+        opacity: 0;
+      }
+
+      &.select-error {
+        background: var(--hive-error-palette-800) !important;
+      }
+    }
+  }
+}

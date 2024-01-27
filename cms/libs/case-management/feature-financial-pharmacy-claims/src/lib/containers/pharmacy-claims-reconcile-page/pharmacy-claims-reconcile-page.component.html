@@ -1,0 +1,30 @@
+<cms-pharmacy-claims-batches-reconcile-payments 
+[reconcileGridLists$]="reconcileGridLists$"
+[pageSizes]="pageSizes"
+[sortValueBreakOut]="sortValueBreakOut"
+[sortType]="sortType" [sort]="sort" 
+[sortValueBatch]="sortValueBatch"
+[sortBatch]="sortBatch"
+[batchId] = "batchId"
+(loadReconcileListEvent)="loadReconcileListGrid($event)"
+[exportButtonShow$]="exportButtonShow$"
+(exportGridDataEvent)="exportClaimBatchesGridData()"
+(loadTemplateEvent) = "loadEachLetterTemplate($event)"
+[letterContentList$]="letterContentList$"
+[letterContentLoader$]="letterContentLoader$"
+[reconcileBreakoutSummary$]="reconcileBreakoutSummary$ | async"
+[reconcilePaymentBreakoutList$]="reconcilePaymentBreakoutList$"
+(loadReconcileBreakoutSummaryEvent)="loadReconcileBreakoutSummary($event)"
+(loadReconcilePaymentBreakoutListEvent)="loadReconcilePaymentBreakoutList($event)"
+[reconcilePaymentBreakoutLoaderList$]="reconcilePaymentBreakoutLoaderList$"
+(onProviderNameClickEvent)="onProviderNameClick($event)"
+[deliveryMethodLov$]="deliveryMethodLov$"></cms-pharmacy-claims-batches-reconcile-payments>
+<ng-template #providerDetailsTemplate>
+    <cms-pharmacy-claims-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="onEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
+</ng-template>

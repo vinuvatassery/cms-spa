@@ -27,7 +27,6 @@ import {
   ApplicantInfo,
   Client,
   ClientCaseEligibility,
-  StatusFlag,
   ClientPronoun,
   ClientGender,
   ClientRace,
@@ -41,7 +40,7 @@ import {
   CompletionChecklist,
   NavigationType,
   PronounCode,
-  TransGenderCode  
+  TransGenderCode
 } from '@cms/case-management/domain';
 import {
   LoaderService,
@@ -49,6 +48,7 @@ import {
   SnackBarNotificationType,
   ConfigurationProvider,
 } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-client-page',
@@ -352,7 +352,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.message = 'Applicant info saved successfully';
         return this.clientFacade.save(this.applicantInfo).pipe(
           catchError((error: any) => {
-            if (error) {              
+            if (error) {
               this.clientFacade.showHideSnackBar(
                 SnackBarNotificationType.ERROR,
                 error
@@ -381,7 +381,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  private populateClient() {    
+  private populateClient() {
     if (this.applicantInfo.client == undefined) {
       this.applicantInfo.client = new Client();
     }
@@ -394,7 +394,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         )
       );
     }
-   
+
 
     this.applicantInfo.client.firstName =
       this.appInfoForm.controls['firstName'].value.trim() === ''
@@ -422,7 +422,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     );
 
     this.populateClientCERForm();
-   
+
     if (this.appInfoForm.controls['ssnNotApplicable'].value) {
       this.applicantInfo.client.ssn = null;
       this.applicantInfo.client.ssnNotApplicableFlag = StatusFlag.Yes;
@@ -940,10 +940,20 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.appInfoForm.controls['yesTransgender'].setValidators(
         Validators.required
       );
+      this.appInfoForm.controls[
+        'yesTransgender'
+      ].updateValueAndValidity();
+    }else{
+      this.appInfoForm.controls['yesTransgender'].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls[
+        'yesTransgender'
+      ].updateValueAndValidity();
     }
   }
 
-  private setValidationsSectionOne() {    
+  private setValidationsSectionOne() {
     if (this.isCerForm) {
       this.appInfoForm.controls['cerReceivedDate'].setValidators([
         Validators.required,
@@ -955,7 +965,15 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.appInfoForm.controls['dateOfBirth'].setValidators([
       Validators.required,
     ]);
-    this.appInfoForm.controls['dateOfBirth'].updateValueAndValidity();
+    if(this.appInfoForm.controls['dateOfBirth'].value){
+      const hasDateError = this.appInfoForm.controls['dateOfBirth'].errors;
+      this.appInfoForm.controls['dateOfBirth'].updateValueAndValidity();
+      if(hasDateError){
+        this.appInfoForm.controls['dateOfBirth'].setErrors(hasDateError);
+      }
+    }else{
+      this.appInfoForm.controls['dateOfBirth'].updateValueAndValidity();
+    }
     if (this.appInfoForm.controls['chkmiddleName'].value) {
       this.appInfoForm.controls['middleName'].removeValidators(
         Validators.required

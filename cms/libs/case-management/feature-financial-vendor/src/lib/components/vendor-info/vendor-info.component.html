@@ -1,90 +1,84 @@
-<div class="block-section">
-  <div class="flex-row mb-1">
+<div class="block-section" *ngIf="selectedVendorInfo$">
+  <div class="flex-row mb-1 align-items-center">
     <div class="flex-col flex-col-6 align-items-center" kendoTooltip>
-      <h2 class="title-md mb-0 text-bold">Vendor Info</h2>
-      <button kendoButton class="ml-2 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit Client Info"
-        aria-label="edit client info" (click)="openEditDailog=true;"></button>
+      <h2 class="title-md mb-0 text-bold">{{profileInfoTitle}}</h2>
+      <button kendoButton class="ml-2 k-icon-button small-i-btn icon-hover-primary" icon="edit" title="Edit Vendor Info"
+        aria-label="Edit Vendor Info" (click)="openEditInfoDialog();"></button>
+    </div>
+    <div *ngIf="providerType == vendorTypes.MedicalProviders && selectedVendorInfo$?.parentVendorId">
+      <span>{{selectedVendorInfo$?.vendorName}} (Parent)</span>
     </div>
   </div>
   <div class="flex-row">
     <div class="flex-col flex-col-6">
       <table class="info-table-custom">
-        <caption hidden> Vendor Info</caption>
+        <caption hidden> {{profileInfoTitle}}</caption>
         <tr hidden>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
-          <th scope="col"></th>
+          <th scope="col">Fields</th>
+          <th scope="col">Details</th> 
         </tr>
         <tbody>
           <tr>
-            <td>Vendor Name</td>
-            <td>{{(selectedVendorInfo$ | async)?.vendorName}}</td>
+            <td>{{profileInfoTitle.split(' ')[0]}} Name</td>
+            <td *ngIf="(!!selectedVendorInfo$ && (selectedVendorInfo$.vendorTypeCode == vendorTypes.MedicalProviders || selectedVendorInfo$.vendorTypeCode == vendorTypes.DentalProviders))">
+              {{selectedVendorInfo$?.firstName + ' ' + selectedVendorInfo$?.lastName}}
+            </td>
+            <td *ngIf="!(!!selectedVendorInfo$ && (selectedVendorInfo$.vendorTypeCode == vendorTypes.MedicalProviders || selectedVendorInfo$.vendorTypeCode == vendorTypes.DentalProviders))">
+              {{selectedVendorInfo$?.vendorName}}
+              <span *ngIf="selectedVendorInfo$?.vendorTypeCode == 'DENTAL_CLINIC'">(Parent)</span>
+            </td>
           </tr>
           <tr>
             <td>TIN</td>
-            <td>{{(selectedVendorInfo$ | async)?.tin}}</td>
+            <td>{{selectedVendorInfo$?.tin | tin}}</td>
+          </tr>
+          <tr *ngIf="profileInfoTitle == 'Pharmacy Info'">
+            <td>Mail Code</td>
+            <td>{{vendorProfile$?.mailCodes }}</td>
+          </tr>
+          <tr *ngIf="profileInfoTitle == 'Pharmacy Info'">
+            <td>NPI</td>
+            <td>{{selectedVendorInfo$?.npiNbr }}</td>
+          </tr>
+          <tr *ngIf="providerType == vendorTypes.Pharmacy">
+            <td>Preferred Pharmacy?</td>
+            <td>{{selectedVendorInfo$?.preferredFlag == 'Y' ? 'Yes' :
+              (selectedVendorInfo$?.preferredFlag == 'N' ? 'No' : '' )}}
+            </td>
           </tr>
         </tbody>
       </table>
       <!-- Last Updated by -->
-      <p class="mt-1 mb1">
-        <span class="badge-dot-info bdi-left"></span> Last Updated {{(selectedVendorInfo$ | async)?.lastModificationTime | date: 'MM/dd/yyyy' }}
-        by
-        <button
-          kendoButton
-          [primary]="true"
-          class="avatar-sm-btn c-default"
-          kendoPopoverAnchor
+      <p class="mt-1 mb=1" *ngIf="selectedVendorInfo$?.lastModifierId">
+        <span class="badge-dot-info bdi-left"></span> Last Updated  {{selectedVendorInfo$?.lastModificationTime | date: 'MM/dd/yyyy' }}
+        by <button 
+          kendoButton 
           [popover]="onUserProfileDetailsHovered"
-          showOn="hover"
-          aria-label="profile avathar"
-        >
-        <common-user-photo-icon  [userId]="(selectedVendorInfo$ | async)?.lastModifierId"></common-user-photo-icon>
-        </button>
+           look="flat"   
+           showOn="hover"
+           [attr.aria-label]="selectedVendorInfo$?.modifierName"
+           kendoPopoverAnchor 
+           class="card-link-button">
+        <a>{{selectedVendorInfo$?.modifierName}}</a>
+      </button>
+    </p>
         <kendo-popover
           #onUserProfileDetailsHovered
           width="330"
-          position="left"
+          position="right"
         >
           <ng-template kendoPopoverBodyTemplate>
-            <common-user-profile-card [userId]="(selectedVendorInfo$ | async)?.lastModifierId"></common-user-profile-card>
+            <common-user-profile-card [userId]="selectedVendorInfo$?.lastModifierId"></common-user-profile-card>
           </ng-template>
         </kendo-popover>
-      </p>
     </div>
   </div>
 </div>
-<div class="mt-2">
-  <cms-billing-address-list></cms-billing-address-list>
-
-</div>
-<div class="mt-2">
-  <cms-billing-email-address-list></cms-billing-email-address-list>
-</div>
-
-<div >
-</div>
 
 <kendo-dialog *ngIf="openEditDailog" (close)="openEditDailog=false;" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar class="transform-none"> Edit Insurance Vendor Info </kendo-dialog-titlebar>
-  <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="vendorDetail" (closeModal)="closeEditModal($event)"></cms-vendor-details>
+    <kendo-dialog-titlebar class="transform-none" *ngIf="selectedVendorInfo$.vendorTypeCode!='MANUFACTURERS'"> Edit {{editTitlePrefix + profileInfoTitle}} </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar *ngIf="selectedVendorInfo$.vendorTypeCode=='MANUFACTURERS'" class="transform-none"> Edit Manufacturer Info </kendo-dialog-titlebar>
+  <cms-vendor-details [editVendorInfo]="true" [vendorDetails]="selectedVendorInfo$" [providerType]="providerType"
+                      [profileInfoTitle]="profileInfoTitle" [medicalProviderForm]="medicalProviderForm" (closeModalEventClicked)="closeEditModal($event)"
+                      [medicalProviderForm] = medicalProviderForm (saveProviderEventClicked)="saveVendorProfile($event)" (updateVendorDetailsClicked)="updateVendorDetailsClicked($event)" ></cms-vendor-details>
 </kendo-dialog>

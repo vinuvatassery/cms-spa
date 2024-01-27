@@ -3,49 +3,8 @@
   <section>
     <div class="border-box">
       <div class="flex-row">
-        <div class="flex-col mb-2">
-          <p class="text-bold">Oregon Health Authority</p>
-          <p>170 NORTH DR APT 23</p>
-          <p>BAVIERA CA 98760-8797</p>
-        </div>
-        <div class="flex-col mb-2">
-          <p>Donna Summer</p>
-          <p>345 EAST DR APT 76</p>
-          <p>BAVIERA CA 98760-8797</p>
-        </div>
-        <div class="flex-col">
-          <p>Member ID: ID190890</p>
-        </div>
         <div class="flex-col letter-preview-box mb-3">
-          <p>Dear Donna Summer,</p>
-          {{ letterContent }}
-          <p>
-            This letter is to notify you of your proin eleifend, libero quis
-            ullamcorper dictum, nunc est mattis turpis, eu iaculis felis ipsum
-            facilisis tortor. Vivamus imperdiet egestas tellus vitae faucibus.
-            Suspendisse efficitur nulla nec nunc sollicitudin, non maximus purus
-            ultrices. In semper nisi justo, at ullamcorper lorem auctor non.
-          </p>
-          <p>
-            Cras id turpis euismod, posuere arcu et, aliquam orci. Donec
-            lobortis tellus nulla, at convallis est lobortis sed. Vestibulum
-            ante ipsum primis in faucibus orci luctus et ultrices posuere
-            cubilia curae; Aenean auctor leo id consectetur interdum. Morbi eu
-            quam ac dui vehicula convallis. Duis posuere est suscipit sem
-            euismod tincidunt. Etiam euismod.
-          </p>
-          <p>
-            Magna a ex sollicitudin eleifend. Nunc sit amet massa at enim
-            euismod mattis. Morbi eu quam ac dui vehicula convallis. Duis
-            posuere est suscipit sem euismod tincidunt. Etiam euismod magna a ex
-            sollicitudin eleifend. Nunc sit amet massa at enim euismod mattis.
-          </p>
-        </div>
-        <div class="flex-col">
-          <p>Regards,</p>
-          <p>John Vicky</p>
-          <p class="text-bold">Program Coordinator</p>
-          <p>(900) 999 6789 | email@example.com</p>
+          <div [innerHTML]="letterContent"></div>         
         </div>
       </div>
     </div>

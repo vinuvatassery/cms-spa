@@ -2,8 +2,7 @@
 <div >
 <section class="k-dialog-body" [formGroup]="eligibilityPeriodForm" >
   <p *ngIf="!isEdit && !isStatusPeriodEdit && !isCopyPeriod" class="text-muted mb-2">
-    Except for PENDING, changing the status initiates a new Eligibility Period. The
-    new Eligibility Period may not overlap with a previous one.
+    Except for PENDING, changing the status initiates a new Status Period. The new Status Period may not overlap with a previous one.
   </p>
   <p *ngIf="isEdit" class="text-muted mb-2">
     Specify the new start and end dates for this Status Period.
@@ -114,17 +113,17 @@
     <div class="justify-content-end">
       <button
         kendoButton
-        aria-label="cancel new status period"
+        aria-label="Cancel"
         [primary]="true"
         look="outline"
         (click)="onModalCloseClicked()"
       >
         CANCEL
       </button>
-      <button *ngIf="!isEdit && !isStatusPeriodEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="startNewEligibility()" [disabled]="(isReadOnly$ | async) ? true : false">
+      <button *ngIf="!isEdit && !isStatusPeriodEdit" kendoButton aria-label="start" [primary]="true"(click)="startNewEligibility()" [disabled]="(isReadOnly$ | async) ? true : false">
         START
       </button>
-      <button *ngIf="isEdit || isStatusPeriodEdit" kendoButton aria-label="start new status period" [primary]="true"(click)="updateCurrentEligibility()" [disabled]="(isReadOnly$ | async) ? true : false || statusEndDateIsGreaterThanStartDate ? false:true">
+      <button *ngIf="isEdit || isStatusPeriodEdit" kendoButton aria-label="Update" [primary]="true"(click)="updateCurrentEligibility()" [disabled]="(isReadOnly$ | async) ? true : false || statusEndDateIsGreaterThanStartDate ? false:true">
         UPDATE
       </button>
     </div>

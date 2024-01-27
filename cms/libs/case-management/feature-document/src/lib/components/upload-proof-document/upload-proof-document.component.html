@@ -17,22 +17,23 @@
           <common-document-upload
           [file]="copyOfUploadedFiles"
           [isFileViewable]="true"
+          [fieldName]="'Attachment Type'"
           [typeCodeLabel]="'Attachment Type'"
           [subTypeCodeLabel]="'Attachment Sub Type'"
           [currentTypeCode]="selectedTypeCode"
           [formSubmitted]="isSubmitted"
           (handleFileSelectEvent)="handleFileSelected($event)"
           (handleFileRemoveEvent)="handleFileRemoved($event)"
-          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
-          <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="uploadedFileExceedsFileSizeLimit">
             File size is limited to 25 MB. Please select a
             smaller
             file.
           </kendo-formerror>
           <kendo-formerror *ngIf="!isFileUploaded && !uploadedFileExceedsFileSizeLimit">
-            document is required.
+            Document is required.
           </kendo-formerror>
         </div>
         <div class="flex-col mt-2">
@@ -57,11 +58,11 @@
     <kendo-dialog-actions>
       <div class="justify-content-between">
         <div class="justify-content-end">
-          <button kendoButton [primary]="true" look="outline" aria-label="cancel adding attachment"
+          <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
                   (click)="onAttachmentPopupClosed()">
             Cancel
           </button>
-          <button kendoButton [primary]="true" aria-label="add or update attachment" [disabled]="btnDisabled">
+          <button kendoButton [primary]="true" attr.aria-label="{{!isEdit ? 'UPLOAD' : 'UPDATE'}}" [disabled]="btnDisabled">
             {{!isEdit ? 'UPLOAD' : 'UPDATE'}}
           </button>
         </div>

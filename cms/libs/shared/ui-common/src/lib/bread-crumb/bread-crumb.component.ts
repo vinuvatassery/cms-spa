@@ -4,13 +4,14 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BreadCrumbItem } from '@progress/kendo-angular-navigation';
 import { filter, Subscription, BehaviorSubject } from 'rxjs';
-
+import { shapeLineIcon, SVGIcon } from "@progress/kendo-svg-icons";
 @Component({
   selector: 'common-bread-crumb',
   templateUrl: './bread-crumb.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BreadCrumbComponent {
+  public lIcon: SVGIcon = shapeLineIcon;
   private routesData!: Subscription;
   private readonly breadcrumbsSubject = new BehaviorSubject<any[]>([]);
   readonly breadcrumbs$ = this.breadcrumbsSubject.asObservable();

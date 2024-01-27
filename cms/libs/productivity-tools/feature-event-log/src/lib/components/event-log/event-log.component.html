@@ -7,8 +7,8 @@
         kendoButton
         class="k-icon-button small-i-btn"
         title="New event"
-        aria-label="add event log"
-        (click)="onOpenEventDetailsClicked()"
+        aria-label="New event"
+        (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
       >
         <span
           class="material-icons"
@@ -26,30 +26,31 @@
       <button
         kendoButton
         class="k-icon-button small-i-btn"
-        aria-label="search event"
+        aria-label="Search"
+        title="Search"
         (click)="onShowSearchClicked()"
         *ngIf="!isShownSearch"
       >
         <span
           class="material-icons"
-          aria-label="search event"
+          aria-label="Search"
           aria-hidden="true"
           >search</span
         >
       </button>
       <kendo-dropdownbutton
         [data]="actions"
-        icon="more-vertical"
+        
         title="More option"
         class="TableActionPopup app-dropdown-action more_action_wid"
         buttonClass="k-icon-button"
         aria-label="more actions"
         [popupSettings]="{ popupClass: popupClassAction, animate: true }"
       >
-      <span hidden> More Option</span>
+      <span class="material-icons" aria-label="More option"> more_vert    </span>
       <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
         <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-          <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+          <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
           <label>   {{ dataItem.text }} </label>
       </button>
         </ng-template>
@@ -57,12 +58,13 @@
       <button
         kendoButton
         class="k-icon-button small-i-btn"
-        aria-label="close event log"
+        aria-label="close"
         (click)="onCloseEventLogClicked()"
+        title="close"
       >
         <span
           class="material-icons"
-          aria-label="close event log"
+          aria-label="close"
           aria-hidden="true"
           >close</span
         >
@@ -85,12 +87,12 @@
               kendoButton
               class="k-icon-button small-i-btn add-sub-button"
               title="New sub-event"
-              (click)="onOpenEventDetailsClicked()"
-              aria-label="add event log"
+              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+              aria-label="New sub-event"
             >
               <span
                 class="material-icons"
-                aria-label="add event log"
+                aria-label="New sub-event"
                 aria-hidden="true"
                 >add</span
               >
@@ -122,12 +124,12 @@
                   kendoButton
                   class="k-icon-button small-i-btn add-sub-button"
                   title="New sub-event"
-                  (click)="onOpenEventDetailsClicked()"
-                  aria-label="add event log details"
+                  (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+                  aria-label="New sub-event"
                 >
                   <span
                     class="material-icons"
-                    aria-label="add event log details"
+                    aria-label="New sub-event"
                     aria-hidden="true"
                     >add</span
                   >
@@ -160,12 +162,12 @@
                   kendoButton
                   class="k-icon-button small-i-btn add-sub-button"
                   title="New sub-event"
-                  (click)="onOpenEventDetailsClicked()"
-                  aria-label="add event log details"
+                  (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+                  aria-label="New sub-event"
                 >
                   <span
                     class="material-icons"
-                    aria-label="add event log details"
+                    aria-label="New sub-event"
                     aria-hidden="true"
                     >add</span
                   >
@@ -199,12 +201,12 @@
               kendoButton
               class="k-icon-button small-i-btn add-sub-button"
               title="New sub-event"
-              (click)="onOpenEventDetailsClicked()"
-              aria-label="add event log details"
+              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+              aria-label="New sub-event"
             >
               <span
                 class="material-icons"
-                aria-label="add event log details"
+                aria-label="New sub-event"
                 aria-hidden="true"
                 >add</span
               >
@@ -233,12 +235,12 @@
               kendoButton
               class="k-icon-button small-i-btn add-sub-button"
               title="New sub-event"
-              (click)="onOpenEventDetailsClicked()"
-              aria-label="add event log details"
+              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+              aria-label="New sub-event"
             >
               <span
                 class="material-icons"
-                aria-label="add event log details"
+                aria-label="New sub-event"
                 aria-hidden="true"
                 >add</span
               >
@@ -267,12 +269,12 @@
               kendoButton
               class="k-icon-button small-i-btn add-sub-button"
               title="New sub-event"
-              (click)="onOpenEventDetailsClicked()"
-              aria-label="add event log details"
+              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+              aria-label="New sub-event"
             >
               <span
                 class="material-icons"
-                aria-label="add event log details"
+                aria-label="New sub-event"
                 aria-hidden="true"
                 >add</span
               >
@@ -291,11 +293,8 @@
   </div>
 </div>
 <!-- Add Event Modal Html-->
-<kendo-dialog
-  *ngIf="isOpenEventLogDetails"
-  (close)="onCloseEventDetailsClicked()"
-  class="app-c-modal app-c-modal-lg app-c-modal-np"
->
-  <kendo-dialog-titlebar> Add Event </kendo-dialog-titlebar>
-  <productivity-tools-event-detail></productivity-tools-event-detail>
-</kendo-dialog>
+<ng-template #eventDetailsDialogTemplate> 
+ 
+  <kendo-dialog-titlebar  (close)="onCloseEventDetailsClicked($event)"> Add Event </kendo-dialog-titlebar>
+  <productivity-tools-event-detail  (closeEventDetailsClickedEmitter)="onCloseEventDetailsClicked($event)"></productivity-tools-event-detail>
+</ng-template>

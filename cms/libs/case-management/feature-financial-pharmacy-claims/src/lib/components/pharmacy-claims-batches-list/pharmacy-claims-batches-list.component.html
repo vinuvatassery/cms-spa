@@ -1,0 +1,178 @@
+
+
+<!-- Table Top Filter, Search and Export -->
+
+<p class="mt-2"> Select a batch to manage claims for.</p>
+<section class="table-filter-section mat-form-no-b-space">
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel>
+      <kendo-dropdownlist
+            aria-label="All Columns"
+            [fillMode]="formUiStyle.dropDownFillMode"
+            textField="columnDesc"
+            valueField="columnName"
+            [data]="searchColumnList"
+            [valuePrimitive]="true"
+            [(ngModel)]="selectedSearchColumn"
+            (valueChange)="searchColumnChangeHandler($event)">
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
+    <kendo-floatinglabel text="Search">
+          <kendo-textbox
+                aria-label="Search case"
+                rounded="medium"
+                [fillMode]="formUiStyle.inputFillMode"
+                [(ngModel)]="searchText"
+                (afterValueChanged)="onSearch($event)"> </kendo-textbox>
+    </kendo-floatinglabel>
+</span>
+<!-- Export -->
+<span class="right-overlay-export">
+  <button kendoButton [primary]="true" look="flat"   aria-label="Export" class="button-lg" (click)="onExportClaims()">
+    <span class="material-icons" aria-hidden="true"
+      >exit_to_app</span
+    ><i class="exp_button-text">Export</i>
+  </button>
+</span>
+
+</section>
+
+<!-- Sorted Info -->
+<div class="table-sorted-info">
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+  <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
+  <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+  <span class="sort-items">{{columnChangeDesc}}</span>
+  <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="restGrid()">
+        <a>Set to Default</a>
+  </button>
+</div>
+
+  <!-- Case List table -->
+  <div class="app-c-table">
+    <kendo-grid [loading]="(PharmacyBatchGridLoader$ | async)??true"
+    [pageSize]="state.take"
+    [pageable]="true"
+    [sortable]="true"
+    [skip]="state.skip"
+    [groupable]="false"
+    [reorderable]="true"
+    [resizable]="true"
+    [columnMenu]="{ filter: true }"
+    [sort]="state.sort"
+    [filter]="state.filter"
+    [data]="pharmacyClaimsBatchGridLists$ | async"
+    (dataStateChange)="dataStateChange($event)"
+    (filterChange)="filterChange($event)"
+    (columnReorder)="onColumnReorder($event)"
+    >
+      <kendo-grid-column field="batchName" title="Batch #" [width]="120">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
+            (click)="navToBatchDetails(dataItem)">
+            {{ dataItem.batchName }}
+          </button>
+        </ng-template>
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="sendBackNotes" title="Send Back Notes" [width]="300">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span [title]="dataItem.sendBackNotes" class="grid-line-clip"> {{ (dataItem.sendBackNotes?.length>50)? dataItem.sendBackNotes?.substring(0, 50)+'...' : dataItem.sendBackNotes}}</span>
+        </ng-template>
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="totalPharmacy" title="# of Pharmacies" [width]="120">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="totalClaims" title="# of Claims" [width]="120">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="totalReconciled" title="# of Pmts Reconciled" [width]="150">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="totalAmountPaid" title="Total Amt. Paid" [width]="150">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmountPaid | kendoNumber: 'n2'}}</span>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="totalAmountReconciled" title="Total Amt. Reconciled" [width]="150">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+            [extra]="false" operator="eq">
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmountReconciled | kendoNumber: 'n2'}}</span>
+        </ng-template>
+      </kendo-grid-column>
+      <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
+        <div class="grid-custom-paginationtemplates d-flex">
+          <div class="d-flex align-items-center">
+            <label class="mr-1" for="PharmacyBatchRowsPerPage">Rows Per Page</label>
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+              [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="PharmacyBatchRowsPerPage"
+              [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+            <kendo-pager-info> </kendo-pager-info>
+            <kendo-grid-messages [pagerItems]="'rows'"  [pagerPage]="'Page'"> </kendo-grid-messages>
+          </div>
+          <div class="d-flex">
+            <kendo-pager-input></kendo-pager-input>
+            <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+            <kendo-pager-next-buttons></kendo-pager-next-buttons>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+      </ng-template>
+      <!-- grid No data Template -->
+      <ng-template kendoGridNoRecordsTemplate>
+        <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        </div>
+        <p>There is no data to display.</p>
+      </ng-template>
+
+    </kendo-grid>
+  </div>

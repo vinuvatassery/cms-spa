@@ -5,7 +5,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { CompletionChecklist, StatusFlag, WorkflowFacade, SexualIdentityCode, ClientFacade, ControlPrefix } from '@cms/case-management/domain';
+import { CompletionChecklist, WorkflowFacade, SexualIdentityCode, ClientFacade, ControlPrefix } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
@@ -38,6 +39,13 @@ export class ClientEditViewSexualIdentityComponent implements OnInit, OnDestroy 
   ngOnInit(): void {
     this.loadSexulaIdentities();
     this.loadApplicantInfoSubscription();
+    if(this.textboxDisable==undefined)
+    {
+      this.appInfoForm.get(this.DescriptionField)?.disable();
+      this.appInfoForm.controls[this.DescriptionField].removeValidators(Validators.required);
+      this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
+    }
+
   }
   ngOnDestroy(): void {
     this.appInfoSubscription.unsubscribe();

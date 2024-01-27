@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, 
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import { HealthInsurancePolicyFacade, CaseFacade, InsuranceStatusType } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade, CaseFacade, InsuranceStatusType, ClientFacade, PriorityCode} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subscription } from 'rxjs';
@@ -21,10 +21,10 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   /** Public properties **/
   healthInsuranceStatus$ = this.insurancePolicyFacade.healthInsuranceStatus$;
   medicalHealthPlans$ = this.insurancePolicyFacade.medicalHealthPlans$;
-  isCopyInsuranceConfirm = false;  
+  isCopyInsuranceConfirm = false;
   medicalHealthPlansCount :any;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
-  public formUiStyle : UIFormStyle = new UIFormStyle(); 
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isOpenedHealthInsuranceModal:boolean= false;
@@ -50,6 +50,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   isOpenedChangePriorityModal:boolean= false;
   isEditInsurancePriorityTitle = false;
   selectedInsurance: any;
+  selectedEligibilityId:any;
+  selectedPolicyPriority:any=null;
   public state!: State;
   sort!:any;
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
@@ -84,12 +86,13 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       click: (): void => {
       },
     }
-    
+
   ];
 
   /** Constructor **/
   constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade,
-     private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade) {
+     private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
+     private readonly clientFacade: ClientFacade) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 
@@ -101,8 +104,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     };
     this.sort ={ field : 'creationTime' ,  dir: 'asc' };
     this.loadInsurancePolicies();
-    if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {  
-      this.buttonText ="MEDICAL INSURANCE";  
+    if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {
+      this.buttonText ="MEDICAL INSURANCE";
       this.gridOptionData.push({
         buttonType: "btn-h-primary",
         text: "Change Priority",
@@ -112,9 +115,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       })
     }
     else{
-      this.buttonText ="DENTAL INSURANCE"; 
+      this.buttonText ="DENTAL INSURANCE";
     }
-    this.priorityPopupShowSubscription();  
+    this.priorityPopupShowSubscription();
     this.dentalInsuranceListSubscription =  this.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
       this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
 
@@ -130,7 +133,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
       this.handleHealthInsuranceCloseClicked();
     }
   }
-  
+
   deleteButtonClicked(deleteButtonClicked: any) {
     if (deleteButtonClicked) {
       this.onDeleteConfirmOpenClicked();
@@ -180,20 +183,24 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   handleOptionClick(dataItem: any, type: any) {
     if (type == 'Delete') {
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.selectedEligibilityId = dataItem.clientCaseEligibilityId;
+      this.selectedPolicyPriority = dataItem.priorityCode;
       this.onDeleteConfirmOpenClicked();
     }
     if (type.toUpperCase() == 'EDIT') {
       this.isPaymentDone = dataItem.isPaymentDone
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.selectedEligibilityId = dataItem.clientCaseEligibilityId;
       this.handleHealthInsuranceOpenClicked('edit');
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
         this.insurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
     }
     if (type == 'priority') {
+      this.selectedEligibilityId = dataItem.clientCaseEligibilityId;
       this.selectedInsurance=dataItem;
       this.onChangePriorityOpenClicked()
     }
-    if(type.toUpperCase() == 'COPY'){     
+    if(type.toUpperCase() == 'COPY'){
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
       this.handleHealthInsuranceOpenClicked('copy');
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
@@ -201,7 +208,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     }
     this.cdr.detectChanges();
   }
-  
+
   onDeleteConfirmOpenClicked() {
     this.isOpenedDeleteConfirm = true;
   }
@@ -209,7 +216,12 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
     this.isOpenedDeleteConfirm = false;
   }
   deleteInsurancePolicy() {
-    this.isTriggerPriorityPopup = false;
+    if(this.selectedPolicyPriority === PriorityCode.Primary){
+      this.isTriggerPriorityPopup = true;
+    }
+    else{
+      this.isTriggerPriorityPopup = false;
+    }
     this.deleteInsurancePlan.next(this.currentInsurancePolicyId);
   }
 
@@ -253,6 +265,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
   addOrEditClicked(addEditButonClicked:any){
     if(addEditButonClicked){
      this.loadInsurancePolicies();
+     this.clientFacade.runImportedClaimRules(this.clientId);
     }
   }
   loadInsurancePolicyList(
@@ -282,7 +295,11 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
 
   private priorityPopupShowSubscription(){
     this.triggerPriorityPopup$.subscribe((value:boolean)=>{
-      if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {      
+      if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {
+        if(this.selectedEligibilityId === null || 
+          this.selectedEligibilityId === undefined){
+            this.selectedEligibilityId = this.caseEligibilityId;
+          }
         if(value && this.isTriggerPriorityPopup){
           this.isEditInsurancePriorityTitle = false;
           this.insurancePriorityModalButtonText = 'Save';
@@ -294,8 +311,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit {
           this.insurancePriorityModalButtonText = 'Update';
         }
       }
-     
-     
+
+
     })
   }
 

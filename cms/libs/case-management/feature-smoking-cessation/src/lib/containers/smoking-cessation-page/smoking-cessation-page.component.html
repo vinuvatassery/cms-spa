@@ -1,16 +1,16 @@
 <div class="client-data-block">
   <h2 hidden>Application</h2>
   
-  <h3>Smoking Cessation</h3>
+  <h3 id="SmokingCessation">Smoking Cessation</h3>
   <section>
     <form [formGroup]="smokingCessationForm" novalidate>
     <div class="block-section pt-1">
       <div class="flex-row">
         <div class="flex-col mb-1">
-          <fieldset class="k-form-fieldset">
+          <fieldset class="k-form-fieldset" role="group" aria-labelledby="SmokingCessation">
             <legend class="k-form-legend"> </legend>
        
-          <div class="component-list-h" class="form-group">
+          <div class="component-list-h" class="form-group" aria-labelledby="SmokingCessation">
             <span class="app-radiobtnwidtext-wrapper">
               <input
                 type="radio"
@@ -68,7 +68,7 @@
             ></kendo-label>
             </span>
             <kendo-formerror *ngIf="!smokingCessationForm.controls['smokingCessation'].valid">
-              {{smokingCessationForm.controls['smokingCessation'].errors?.['DidNotAnswer'] ? 'Smoking Cessation answer is required.':'Smoking Cessation is required.'}}
+              A Yes or No response is required.
             </kendo-formerror>
           </div>
       
@@ -100,7 +100,7 @@
           <div class="info-banners blue-banner d-flex mt-2 align-item-fstart" *ngIf="!isDisabled">
             <span class="material-icons" aria-label="info" aria-hidden="true">info</span>
             <div>
-    <p>If you have medical insurance, most insurance now cover smoking cessation.  You can check what cessation benefits are available to you by calling the customer service number on your insurance ID card</p>
+    <p>If you have medical insurance, most insurance now cover smoking cessation.  You can check what cessation benefits are available to you by calling the customer service number on your insurance ID card.</p>
   
     <p class="mt-1">Another great free resource to explore is the Oregon Quit Line:  "<a href="https://smokefreeoregon.com/resource/i-want-to-quit/" target="_blank" rel="noopener">https://smokefreeoregon.com/resource/i-want-to-quit/</a>"</p>
   </div>

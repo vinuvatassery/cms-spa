@@ -31,11 +31,6 @@ const routes: Routes = [
     redirectTo: 'eligibility',
     pathMatch: 'full',
   },
-  {
-    path: '',
-    redirectTo: 'eligibility',
-    pathMatch: 'full',
-  },
 ];
 
 @NgModule({

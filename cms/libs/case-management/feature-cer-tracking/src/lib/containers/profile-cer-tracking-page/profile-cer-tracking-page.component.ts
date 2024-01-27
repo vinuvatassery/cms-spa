@@ -2,7 +2,8 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 /** Facades **/
-import { CerTrackingFacade, ClientProfileTabs, StatusPeriodFacade } from '@cms/case-management/domain';
+import { CaseFacade, CerTrackingFacade, ClientProfileTabs, GridFilterParam, StatusPeriodFacade } from '@cms/case-management/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { filter, Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -22,13 +23,18 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
   clientCaseId!: any;
   showHistoricalFlag!: any;
   gridDataRefinerValue!: any;
+  eligibilityStatus$ = this.lovFacade.eligibilityStatus$;
+  ddlGroups$ = this.caseFacade.ddlGroups$;
   /** Constructor**/
   constructor(private readonly cerTrackingFacade: CerTrackingFacade,
     private route: ActivatedRoute, private readonly router: Router,
-    private readonly statusPeriodFacade: StatusPeriodFacade) {}
+    private readonly statusPeriodFacade: StatusPeriodFacade,private readonly lovFacade: LovFacade,
+    private readonly caseFacade: CaseFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.lovFacade.getEligibilityStatusLovs();
+    this.caseFacade.loadGroupCode()
     this.loadCer();
     this.loadQueryParams();
     this.routeChangeSubscription()
@@ -67,10 +73,7 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
   }
 
   handleShowHistoricalClick(){
-    this.gridDataRefinerValue = {
-      skipCount: this.statusPeriodFacade.skipCount,
-      pagesize: this.statusPeriodFacade.gridPageSizes[0]?.value,
-    };
+    this.gridDataRefinerValue = new GridFilterParam(this.statusPeriodFacade.skipCount, this.statusPeriodFacade.gridPageSizes[0]?.value);
     this.loadStatusPeriod();
   }
 
@@ -83,7 +86,8 @@ export class ProfileCerTrackingPageComponent implements OnInit , OnDestroy {
   }
 
   loadStatusPeriodData(gridDataRefinerValue:any){
-    this.gridDataRefinerValue=gridDataRefinerValue;
+    this.gridDataRefinerValue = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));    
     this.loadStatusPeriod();
   }
+ 
 }

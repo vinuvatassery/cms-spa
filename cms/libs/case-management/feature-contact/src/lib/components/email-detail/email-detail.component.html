@@ -13,6 +13,9 @@
           <kendo-textbox aria-label="email address" formControlName="email" placeholder="Email Address"
             [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf=" clientEmailForm?.hasError('required','email') && isFormSubmitted">Email
+          is required</kendo-formerror>
+        <kendo-formerror *ngIf="clientEmailForm?.get('email')?.invalid &&clientEmailForm?.get('email')?.errors?.['pattern'] && (clientEmailForm?.get('email')?.touched)">Incorrect Email Format.</kendo-formerror>
       </div>
       <div class="flex-col">
         <div class="component-list-h">
@@ -43,15 +46,15 @@
     <div class="justify-content-between">
       <div *ngIf="isEditValue === true && isDeleted === false">
         <button kendoButton [primary]="false" look="flat" (click)="onDeactivateClicked()"
-          aria-label="deactivate email address" type='button'>
+          aria-label="Deactivate" type='button'>
           Deactivate
         </button>
       </div>
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" (click)="formEmailClose()" look="outline" aria-label="cancel edit or add email" type='button'>
+        <button kendoButton [primary]="true" (click)="formEmailClose()" look="outline" aria-label="Cancel" type='button'>
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="add or update email">
+        <button kendoButton [primary]="true" attr.aria-label="{{ isEditValue ? 'Update' : 'Add' }}">
           {{ isEditValue ? 'Update' : 'Add' }}
         </button>
       </div>

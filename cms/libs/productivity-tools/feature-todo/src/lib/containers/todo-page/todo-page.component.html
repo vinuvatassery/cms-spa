@@ -6,7 +6,7 @@
     [primary]="true"
     class="add-new-button"
     (click)="onOpenTodoClicked(todoDetailTemplate)"
-    aria-label="add todo item"
+    aria-label="To-Do Item"
   >
     To-Do Item
   </button>
@@ -15,7 +15,7 @@
     <h2>
       <span
         class="material-icons sidebar-menu_icon"
-        aria-label="task"
+        aria-label="To Do Items"
         aria-hidden="true"
       >
         task
@@ -23,18 +23,22 @@
       To Do Items
     </h2>
   </section>
-  <!-- Page Content Section -->
-  <section class="app-l-client-wrapper" kendoRippleContainer>
-    <productivity-tools-todo-list
-    (isModalTodoDetailsOpenClicked)="onOpenTodoClicked(todoDetailTemplate)"
-    ></productivity-tools-todo-list>
-  </section>
 </div>
+ <!-- Page Content Section -->
+<section>
+  <productivity-tools-todo-list
+  (isModalTodoDetailsOpenClicked)="onOpenTodoClicked(todoDetailTemplate)"
+  (isLoadTodoGridEvent)="onloadTodoGrid($event)"
+  [isToDODetailsActionOpen]="isToDODetailsActionOpen"
+  (todoGrid$)="todoGrid$"
+  ></productivity-tools-todo-list>
+</section>
 
 <!-- Create To Do Modal Html-->
 <ng-template #todoDetailTemplate>
-  <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">Create aCustom To Do Item </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">Create a Custom To Do Item </kendo-dialog-titlebar>
   <productivity-tools-todo-detail 
+  (isLoadTodoGridEvent)="onloadTodoGrid($event)" 
   (isModalTodoDetailsCloseClicked)="onCloseTodoClicked($event)"
   ></productivity-tools-todo-detail>
 </ng-template>

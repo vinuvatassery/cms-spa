@@ -1,0 +1,67 @@
+<div>
+  <kendo-grid [pageSize]="state.take" [pageable]="true" [skip]="state.skip" [sort]="state.sort" [resizable]="true"
+    [sortable]="false" [data]="financialPcaSubReportGridLists$ | async" (dataStateChange)="dataStateChange($event)"
+    [loading]="(loader$ | async) === true">
+    <!-- financialPcaReportGridLists$ | async -->
+    <kendo-grid-column field="priority" title="Priority" [width]="100"> </kendo-grid-column>
+
+    <kendo-grid-column field="pcaCode" title="PCA" [width]="100"> </kendo-grid-column>
+
+    <kendo-grid-column field="ay" title="AY#" [width]="80"> 
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span>AY{{dataItem.ay}}</span>
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="openDate" title="Open Date" [width]="120">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.openDate | date:'MM/dd/YYYY'}}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="closeDate" title="Close Date" [width]="120">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.closeDate | date:'MM/dd/YYYY'}}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="totalAmount" title="Amount Assigned" [width]="170">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.totalAmount | kendoNumber: 'n2'}}</span>
+      </ng-template> </kendo-grid-column>
+    <kendo-grid-column field="remainingAmount" title="Amount Remaining" [width]="180"> <ng-template
+        kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview"> <strong>$</strong> {{dataItem.remainingAmount | kendoNumber: 'n2'}}</span>
+      </ng-template> </kendo-grid-column>
+
+    <!-- Pagination Template -->
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+      let-currentPage="currentPage">
+      <div class="grid-custom-paginationtemplates d-flex">
+        <div class="d-flex align-items-center">
+          <label class="mr-1" for="PCAAssignmentRowsPerPage">Rows Per Page</label>
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+            [valueField]="'value'" #PCAAssignmentRowsPerPage id="PCAAssignmentRowsPerPage" aria-label="Rows Per Page" [valuePrimitive]="true"
+            [(value)]="state.take" (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+          <kendo-pager-info> </kendo-pager-info>
+          <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+        </div>
+        <div class="d-flex">
+          <kendo-pager-input></kendo-pager-input>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+    </ng-template>
+    <!-- grid No data Template -->
+    <ng-template kendoGridNoRecordsTemplate>
+      <div> <kendo-badge-container> <span class="material-icons"> info </span>
+        </kendo-badge-container>
+      </div>
+      <p>There is no data to display.</p>
+    </ng-template>
+  </kendo-grid>
+</div>

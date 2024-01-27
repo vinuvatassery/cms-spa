@@ -1,40 +1,50 @@
-.upoadlistbtn{
-padding: 0;
-display: block;
-text-align: left;
-.k-button-text{
-display: block;
-width: 100%;
-}
-label{
- padding: 6px 14px;
- display: block;
- width: 100%;
- }
-}
-.middleicon{
-    vertical-align: middle;
-    margin-right: 6px;
-}
 
-
-.proof_income-more{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    .TableActionPopup{
-        margin: 0 5px;
+.k-button{
+    &.upoadlistbtn{
+      padding: 0 !important;
+      display: block;
+      text-align: left;
+     
+     ::ng-deep {
+      .k-button-text {
+        display: flex !important; 
+      }
+     }
+      > span{
+        display: block;
+      }
+      
+      label{
+       padding: 8px 14px;
+       display: block;
+       width: 100%;
+       }
+      }
     }
-}
-
-.income-grid {
-    ::ng-deep .k-table-tfoot {
-        .k-footer-template {
-            .k-table-td{
-                background-color: #54667b !important;
-                border-left-color: rgb(255 255 255 / 50%) !important;
-                border-right-color: rgb(255 255 255 / 50%) !important;
-            }
-        }
-    }
-}
+    
+      .middleicon{
+          vertical-align: middle;
+          margin-right: 6px;
+      }
+      
+      
+      .proof_income-more{
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          .TableActionPopup{
+              margin: 0 5px;
+          }
+      }
+      
+      .income-grid {
+          ::ng-deep .k-table-tfoot {
+              .k-footer-template {
+                  .k-table-td{
+                      background-color: #33414D !important;
+                      border-left-color: rgb(255 255 255 / 50%) !important;
+                      border-right-color: rgb(255 255 255 / 50%) !important;
+                  }
+              }
+          }
+      }

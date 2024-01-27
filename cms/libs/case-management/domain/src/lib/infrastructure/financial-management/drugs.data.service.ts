@@ -2,8 +2,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 /** External libraries **/
-import { of } from 'rxjs/internal/observable/of';
-import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class DrugsDataService {
@@ -15,20 +15,25 @@ export class DrugsDataService {
 
   /** Public methods **/
 
- 
-  loadDrugsListService() {
-    return of([
-      {
-        NDC: 'XXXXXXXXXX `',
-        brandName:'Very Nice Brand Name', 
-        drugName: 'Drug Name',
-        deliveryMethod: 'Tablet',
-        includedInRebates: 'Yes',
-        hivDrugs: 'Yes',
-        hepDrugs: 'No',
-        oiDrugs: 'No',
-      },
-    ]);
+
+  loadDrugList(vendorId: string, skipCount: number, maxResultCount: number, sort: string, sortType: string, filters:any) : Observable<any> {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/drugs?SortType=${sortType}&Sorting=${sort}&SkipCount=${skipCount}&MaxResultCount=${maxResultCount}&Filter=${filters}`, null
+    );
   }
 
+  addDrug(dto: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/drugs`,
+      dto
+    );
+  }
+
+  updateDrugVendor(drugDto:any){
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        `/case-management/drugs`,drugDto
+    );
+  }
 }

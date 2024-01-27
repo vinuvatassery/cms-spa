@@ -1,0 +1,22 @@
+<div class="app-l-inner-rapper pb-8rem pt-0">
+    <common-bread-crumb></common-bread-crumb>
+    <div class=" pt-0">
+        <section class="app-l-mainTittle">
+            <h1 class="maintitle_withicon text-bold text-capitalize">Funding Sources</h1>
+        </section>
+                <cms-financial-funding-sources-list
+                    [fundingSourceList$]="fundingSourceList$"
+                     [pageSizes]="pageSizes"
+                    [sortValue]="sortValueFinancialFundingSourceFacade" [sortType]="sortType"
+                     [sort]="sortProcessList"
+                     (loadFinancialFundingSourcesListEvent)="loadFundingSourceHandle($event)"
+                     (onAddFundingSourceEvent)="addFundingSource($event)"
+                     [addFundingSource$]="addFundingSource$"
+                     [updateFundingSource$]="updateFundingSource$"
+                     (onUpdateFundingSourceEvent)="updateFundingSource($event)"
+                     [removeFundingSource$]="removeFundingSource$"
+                     (removeFundingSourceClick)="removeFundingSource($event)"
+                    (loadFinancialFundingSourceFacadeListEvent)="loadFinancialFundingSourceFacadeListGrid($event)">
+                </cms-financial-funding-sources-list>
+    </div>
+</div>

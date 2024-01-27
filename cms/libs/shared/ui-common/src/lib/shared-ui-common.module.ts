@@ -16,9 +16,12 @@ import { UserProfileCardComponent } from './user-profile-card/user-profile-card.
 import { LoaderComponent } from './loader/loader.component';
 import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
+import { ReminderNotificationSnackBarComponent } from './reminder-notification-snack-bar/reminder-notification-snack-bar.component';
+import { ReAssignCaseComponent } from './re-assign-case/re-assign-case.component';
 
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
+
 import { FileSizePipe } from './pipes/fileSize.pipe';
 // directive
 import {
@@ -37,7 +40,11 @@ import { GridCellDateRangeFilterComponent } from './grid-cell-date-range-filter/
 import { DocumentUploadComponent } from './document-upload/document-upload.component';
 import { ClientsAttachmentComponent } from './clients-attachment/clients-attachment.component';
 import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
-
+import { VendorDetailsComponent } from './vendor-details/vendor-details.component';
+import { TinPipe } from './pipes/tin.pipe';
+import { FinancialDrugsDetailsComponent } from './financial-drugs-details/financial-drugs-details.component';
+import { FinancialPcaChosenAlertComponent } from './financial-pca-chosen-alert/financial-pca-chosen-alert.component';
+import { NdcCodePipe } from './pipes/ndc-code.pipe';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -68,7 +75,14 @@ import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
     GridCellDateRangeFilterComponent,
     DocumentUploadComponent,
     ClientsAttachmentComponent,
-    YesOrNoPipe
+    YesOrNoPipe,
+    ReminderNotificationSnackBarComponent,
+    VendorDetailsComponent,
+    TinPipe,
+    ReAssignCaseComponent,
+    FinancialDrugsDetailsComponent,
+    FinancialPcaChosenAlertComponent,
+    NdcCodePipe
   ],
   exports: [
     LoginStatusComponent,
@@ -98,7 +112,14 @@ import { YesOrNoPipe } from './pipes/yes-or-no.pipe';
     GridCellDateRangeFilterComponent,
     DocumentUploadComponent,
     ClientsAttachmentComponent,
-    YesOrNoPipe
+    YesOrNoPipe,
+    ReminderNotificationSnackBarComponent,
+    VendorDetailsComponent,
+    TinPipe,
+    ReAssignCaseComponent,
+    FinancialDrugsDetailsComponent,
+    FinancialPcaChosenAlertComponent,
+    NdcCodePipe
   ],
 })
 export class SharedUiCommonModule {}

@@ -1,0 +1,38 @@
+<kendo-dialog-titlebar (close)="closeReverseClicked()"> Reverse Claim?</kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1"> This action cannot be undone. The prescription will be unbatched and put back in the Process tab. Enter the reason for reversal below. </p>
+    <div class="flex-row">
+      <div class="flex-col">
+          <kendo-floatinglabel text="Reason for Reversal">
+              <kendo-textarea [fillMode]="formUiStyle.inputFillMode" 
+                  resizable="none" aria-label="Reason for Reversal" [rows]="4" > 
+                  <kendo-textarea-suffix class="justify-content-end">
+                    <span class="tareacounter"> 10/300</span>
+                </kendo-textarea-suffix>
+              </kendo-textarea>
+         
+          </kendo-floatinglabel>
+      </div>
+  </div>
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="Cancel"
+         (click)="closeReverseClicked()"
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Reverse"  >
+          Reverse
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

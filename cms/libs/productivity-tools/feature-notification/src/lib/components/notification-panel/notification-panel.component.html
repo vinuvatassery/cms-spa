@@ -1,14 +1,13 @@
-<span class="header-menu_notifications ml-1 mr-1">
+<span class="header-menu_notifications ml-1 mr-1" >
   <button
     kendoButton
     #anchor
     (click)="onNotificationButtonToggleClicked()"
     look="flat"
-    class="header-buttons user-button"
-    aria-label="notifications"
+    class="header-buttons user-button" 
     title="Notifications"
   >
-    <span class="material-icons" aria-hidden="true" aria-label="notifications"
+    <span class="material-icons" aria-hidden="true" aria-label="Notifications"
       >notifications</span
     >
     <span class="notification-badge">0</span>
@@ -57,17 +56,17 @@
           </div>
           <kendo-dropdownbutton
             [data]="data"
-            icon="more-vertical"
+            
             title="More option"
             look="bare"
             aria-label="more actions"
             class="small-i-btn app-dropdown-action more_action_wid"
             [popupSettings]="{ popupClass: popupClass1, animate: true }"
           >
-          <span hidden> More Option</span>
+          <span class="material-icons" aria-label="More option"> more_vert    </span>
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
             <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-              <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+              <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
               <label>   {{ dataItem.text }} </label>
           </button>          
             </ng-template>
@@ -94,17 +93,17 @@
           </div>
           <kendo-dropdownbutton
             [data]="dataTwo"
-            icon="more-vertical"
+            
             title="More option"
             look="bare"
             aria-label="more actions"
             class="small-i-btn app-dropdown-action more_action_wid"
             [popupSettings]="{ popupClass: popupClass1, animate: true }"
           >
-          <span hidden> More Option</span>
+          <span class="material-icons" aria-label="More option"> more_vert    </span>
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
             <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-              <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+              <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
               <label>   {{ dataItem.text }} </label>
           </button>             
             </ng-template>
@@ -127,17 +126,17 @@
           </div>
           <kendo-dropdownbutton
           [data]="dataTwo"
-          icon="more-vertical"
+          
           title="More option"
           look="bare"
           aria-label="more actions"
           class="small-i-btn app-dropdown-action more_action_wid"
           [popupSettings]="{ popupClass: popupClass1, animate: true }"
         >
-        <span hidden> More Option</span>
+        <span class="material-icons" aria-label="More option"> more_vert    </span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
           <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-            <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
             <label>   {{ dataItem.text }} </label>
         </button>           
           </ng-template>
@@ -160,17 +159,17 @@
           </div>
           <kendo-dropdownbutton
           [data]="data"
-          icon="more-vertical"
+          
           title="More option"
           look="bare"
           aria-label="more actions"
           class="small-i-btn app-dropdown-action more_action_wid"
           [popupSettings]="{ popupClass: popupClass1, animate: true }"
         >
-        <span hidden> More Option</span>
+        <span class="material-icons" aria-label="More option"> more_vert    </span>
         <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
           <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-            <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
             <label>   {{ dataItem.text }} </label>
         </button>        
           </ng-template>
@@ -194,6 +193,7 @@
           icon=""
           (click)="onNewReminderOpenClicked(NewReminderTemplate)"
           aria-label="add reminder"
+          title="Add Reminder"
         >
           <span
             class="material-icons"
@@ -214,7 +214,10 @@
  
 </ng-template>
 
-
+<ng-template #deleteReminderTemplate> 
+  <productivity-tools-delete-reminder-confirmation
+    (isModalDeleteReminderCloseClicked)="onDeleteReminderClosed($event)"></productivity-tools-delete-reminder-confirmation>
+</ng-template>
 
 
 <!-- Create New Reminder Popup -->
@@ -229,38 +232,6 @@
     >
     <span class="text-bold">Notifications and Reminders</span>
   </kendo-dialog-titlebar>
-  <kendo-tabstrip class="app-c-tab app-c-tab--color reminder_lists">
- 
-    <kendo-tabstrip-tab [selected]="true">
-      <ng-template kendoTabTitle>
-        <span
-          class="material-icons mr-1"
-          aria-hidden="true"
-          aria-label="notifications"
-          >notifications</span
-        >
-        Notifications
-      </ng-template>
-      <ng-template kendoTabContent>
-        <productivity-tools-notification-list></productivity-tools-notification-list>
-      </ng-template>
-    </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Reminders">
-      <ng-template kendoTabTitle>
-        <span
-          class="material-icons mr-1"
-          aria-label="reminders"
-          aria-hidden="true"
-          >alarm</span
-        >
-        Reminders
-      </ng-template>
-      <ng-template kendoTabContent>
-        <productivity-tools-reminder-list
-          class="reminder-list-modal-wrap"
-        ></productivity-tools-reminder-list>
-      </ng-template>
-    </kendo-tabstrip-tab>
-  </kendo-tabstrip>
- 
+
+ <productivity-tools-notification-and-reminder-page></productivity-tools-notification-and-reminder-page>
 </ng-template>

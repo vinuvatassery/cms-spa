@@ -1,0 +1,58 @@
+
+<div class="app-l-inner-rapper pt-0" kendoRippleContainer>
+ 
+  <!-- Main Title Section -->
+  <section class="app-l-mainTittle" >
+    <h2>
+      
+      <span
+        class="material-icons sidebar-menu_icon"
+        aria-label="task"
+        aria-hidden="true"
+      >
+      assignment_turned_in
+      </span>
+      Direct Messages
+    </h2>
+  </section>
+</div>
+<div class="app-c-drag-row-table">
+    <kendo-grid [data]="directMessageGridLists$ | async" [columnMenu]="true" [sortable]="true" >
+      <kendo-grid-column field="from" title="From" [width]="200">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button [attr.aria-label]="dataItem.from" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover"
+            aria-label="Message From">
+            {{ dataItem.from }}
+          </button>
+        </ng-template>
+      </kendo-grid-column>
+ 
+    
+      <kendo-grid-column field="unreadMsg" title="Unread Messages" [width]="200"></kendo-grid-column>
+      <kendo-grid-column field="lastMessage" title="Last Message Received" [width]="180"></kendo-grid-column>
+     
+      <!-- grid Loader Template -->
+      <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+      </ng-template>
+      <!-- grid No data Template -->
+      <ng-template kendoGridNoRecordsTemplate>
+        <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        </div>
+        <p>There is no data to display.</p>
+      </ng-template>
+    </kendo-grid>
+  </div>
+  
+  <!-- User Card -->
+  <kendo-popover #userCard width="330">
+    <ng-template kendoPopoverBodyTemplate>
+      <common-user-profile-card></common-user-profile-card>
+    </ng-template>
+  </kendo-popover>
+  
+  
+ 
+  
+  
+   

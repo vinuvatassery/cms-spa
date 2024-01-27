@@ -21,7 +21,7 @@
   .k-content .k-selected.k-today {
     color: $app-primary !important;
     span {
-      background-color: material-color($hive-primary-palette, 100) !important;
+      background-color: var(--hive-primary-palette-100) !important;
       font-family: $font-family-medium;
       color: $app-primary !important;
     }
@@ -65,7 +65,7 @@
 /* Time Picker */
 .k-timeselector {
   .k-time-header .k-time-now {
-    background-color: material-color($hive-primary-palette, 100);
+    background-color: var(--hive-primary-palette-100);
     border: 1px solid $app-primary !important;
     font-family: $font-family;
     color: $app-primary !important;
@@ -74,7 +74,7 @@
     padding: $size-s $size-xx !important;
   }
   .k-time-highlight {
-    background: material-color($hive-primary-palette, 100);
+    background: var(--hive-primary-palette-100);
   }
   .k-time-footer.k-action-buttons {
     padding-top: 0;
@@ -95,7 +95,7 @@
   right: 152px;
   top: 13px;
   .material-icons {
-    font-size: 24px;
+    font-size: $font-size-xx;
   }
 }
 
@@ -106,7 +106,7 @@
     left: 9px;
     top: 8px;
     z-index: 1;
-    color: material-color($hive-neutral-palette, 800);
+    color: var(--hive-neutral-palette-800);
   }
   .k-input-md .k-input-inner,
   .k-picker-md .k-input-inner {
@@ -122,8 +122,8 @@
     }
   }
   .k-clear-value {
-    height: 36px;
-    padding: $size-xlg;
+    // height: 36px;
+    // padding: $size-xlg;
   }
   &.header-search {
     // position: fixed;
@@ -205,15 +205,17 @@
 
 /* Tooltip */
 .k-tooltip-wrapper{
-z-index: 105;
+z-index: 10000005 !important;
+max-width: 250px;
 }
 .k-tooltip {
-  background: material-color($hive-neutral-palette, 900);
+  background: var(--hive-neutral-palette-900);
+  word-break: break-word;
   .k-tooltip-content {
     font-size: $font-size-s;
   }
   .k-callout {
-    color: material-color($hive-neutral-palette, 900);
+    color: var(--hive-neutral-palette-900);
     display: none;
   }
 }
@@ -231,7 +233,7 @@ z-index: 105;
     -webkit-animation: click-wave 0.8s;
     -moz-animation: click-wave 0.8s;
     animation: click-wave 0.8s;
-    background: material-color($hive-primary-palette, 200);
+    background: var(--hive-primary-palette-200);
     display: block;
     position: relative;
     z-index: 100;
@@ -269,6 +271,9 @@ z-index: 105;
   border-color: transparent;
   .k-dropzone {
     border: 1px solid $theme-border;
+    .k-dropzone-hint{
+      color: $black-70;
+    }
   }
 }
 
@@ -308,6 +313,17 @@ z-index: 105;
   }
 }
 
+.combo-search-wrapper{
+  position: relative;
+  .global-search-icon{
+    position: absolute;
+    top: 8px;
+    left: 10px; 
+  }
+  .k-input-inner{
+    padding-left: 40px;
+  }
+}
 .k-no-data,
 .k-nodata {
   min-height: 40px;

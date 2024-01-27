@@ -1,8 +1,8 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import { Subject } from 'rxjs';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Observable, Subject, tap } from 'rxjs';
+
 /** internal libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
 import { SortDescriptor } from '@progress/kendo-data-query';
@@ -15,23 +15,27 @@ export class DrugsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'address1';
+  public sortValue = 'ndcNbr';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
   }];
 
-  private drugsDataSubject = new BehaviorSubject<any>([]);
+  private drugsDataSubject = new Subject<any>();
   drugsData$ = this.drugsDataSubject.asObservable();
+  private drugDataLoaderSubject = new Subject<any>();
+  drugDataLoader$ = this.drugDataLoaderSubject.asObservable();
 
-  
+  private addDrugSubject = new Subject<any>();
+  addDrug$ = this.addDrugSubject.asObservable();
   /** Private properties **/
- 
+  private updateProviderPanelSubject = new Subject<any>();
   /** Public properties **/
- 
+  updateProviderPanelSubject$ = this.updateProviderPanelSubject.asObservable();
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>(); 
+  snackbarSubject = new Subject<SnackBar>();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -59,19 +63,61 @@ export class DrugsFacade {
   ) { }
 
   /** Public methods **/
-  loadDrugsListGrid(){
-    this.drugsDataService.loadDrugsListService().subscribe({
+  loadDrugsListGrid(vendorId:string, skipCount: number, maxResultCount: number, sort: string, sortType: string, filters: any) {
+    this.drugDataLoaderSubject.next(true);
+    this.drugsDataService.loadDrugList(vendorId,skipCount,maxResultCount,sort,sortType,filters).subscribe({
       next: (dataResponse) => {
         this.drugsDataSubject.next(dataResponse);
-        this.hideLoader();
+
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.drugsDataSubject.next(gridView);
+          this.drugDataLoaderSubject.next(false);
+        }
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.hideLoader(); 
+        this.drugsDataSubject.next(false);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.drugDataLoaderSubject.next(false);
       },
     });
-   
-  
+
+
   }
- 
+
+  addDrug(dto: any) {
+    return this.drugsDataService.addDrug(dto);
+  }
+
+  drugAdded$(): Observable<any> {
+    return this.addDrugSubject.asObservable();
+  }
+
+  addDrugData(dto: any): Observable<any> {
+    return this.drugsDataService.addDrug(dto).pipe(
+      tap((response: any) => {
+        this.addDrugSubject.next(response);
+      }),
+    );
+  }
+
+  updateDrugVendor(drugDto: any) {
+    this.showLoader();
+    return this.drugsDataService.updateDrugVendor(drugDto).subscribe({
+      next: (updatedResponse: any) => {
+        if (updatedResponse) {
+          this.updateProviderPanelSubject.next(updatedResponse);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, updatedResponse.Message)
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
 }

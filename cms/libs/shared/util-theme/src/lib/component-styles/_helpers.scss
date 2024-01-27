@@ -7,6 +7,12 @@ section {
 .d-flex {
   display: flex;
 }
+.d-in-flex {
+  display: inline-flex !important;
+}
+.d-inline-flex {
+  display: inline-flex;
+}
 .justify-content-end {
   justify-content: flex-end;
   display: flex;
@@ -24,7 +30,7 @@ section {
   align-items: flex-start;
 }
 .align-items-end{
-  align-items: end;
+  align-items: flex-end;
 }
 .align-items-fstart{
   align-items: flex-start !important;
@@ -32,6 +38,19 @@ section {
 .align-items-center {
   align-items: center;
   display: flex;
+}
+.text-capitalize{
+  text-transform: capitalize;
+
+}
+.text-upper{
+  text-transform: uppercase;
+}
+.text-normal{
+  text-transform: none;
+  .k-window-title{
+    text-transform: none !important;
+  }
 }
 .text {
   &-noWrap {
@@ -70,10 +89,10 @@ section {
   margin-right: $size-0 !important;
 }
 .ml--3 {
-  margin-left: -$size-xxx !important;
+  margin-left: neg($size-xxx) !important;
 }
 .mr--3 {
-  margin-right: -$size-xxx !important;
+  margin-right: neg($size-xxx) !important;
 }
 .p-2 {
   padding: $size-xlg !important;
@@ -192,6 +211,14 @@ section {
   &-5 {
     padding-bottom: $size-xxx + $size-xx  + $size-xx +  $size-xxx !important;
   }
+  &-12rem{
+    padding-bottom: 12rem;
+  }
+}
+.mar{
+  &-0{
+    margin: 0;
+  }
 }
 .pl {
   &-0 {
@@ -227,9 +254,48 @@ section {
     padding-right: $size-xxx + $size-xx !important;
   }
 }
+ 
 .gap-m {
   gap: $size-xx;
 }
 .fade-5 {
   opacity: 0.5;
+}
+
+.nm-20{
+  margin-left: -20px;
+  margin-right: -20px;
+}
+
+.rw-100{
+  width: 100%;
+}
+
+.border-top-line{
+  border-top: 1px solid $grey-c;
+}
+
+.row-border{
+  border-top-color: $grey-c;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.green-text-color{
+  color: $success-green;
+}
+
+.red-text-color{
+  color:  var(--hive-error-palette-400);
+}
+.warn-text-color{
+  color:  var(--hive-warn-palette-300);
+}
+.break-word{
+  word-wrap: break-word;
+}
+
+// Watermark Disable 
+div[kendowatermarkoverlay]{
+  display: none;
 }

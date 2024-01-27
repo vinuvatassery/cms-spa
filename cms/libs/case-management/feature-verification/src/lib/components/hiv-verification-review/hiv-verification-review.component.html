@@ -28,11 +28,11 @@
               kendoButton
               look="flat"
               title="Download"
-              aria-label="download file"
+              aria-label="Download"
             >
               <span
                 class="material-icons"
-                aria-label="download file"
+                aria-label="Download"
                 aria-hidden="true"
                 >file_download</span
               >
@@ -42,12 +42,12 @@
               look="flat"
               class="mr-0 ml-1"
               title="Open in new tab"
-              aria-label="open in new tab"
+              aria-label="Open in new tab"
              
             >
               <span
                 class="material-icons"
-                aria-label="open in new tab"
+                aria-label="Open in new tab"
                 aria-hidden="true"
                 >open_in_new</span
               >
@@ -61,14 +61,14 @@
         <button
           kendoButton
           [toggleable]="true"
-          aria-label="accept hiv verification"
+          aria-label="Accept"
         >
           Accept
         </button>
         <button
           kendoButton
           [toggleable]="true"
-          aria-label="reject hiv verification"
+          aria-label="Reject"
         >
           Reject
         </button>
@@ -83,12 +83,15 @@
               [rows]="3"
               [fillMode]="formUiStyle.inputFillMode"
               [cols]="40"
-              aria-label="describe reason for the rejection"
+              aria-label="Reason for Rejection"
             >
+            
+            <kendo-textarea-suffix class="justify-content-end">
+              <span class="counter">0/250</span>
+            </kendo-textarea-suffix>
             </kendo-textarea>
             <kendo-formhint class="justify-content-between">
-              <span>This will be sent to Case Manager if re-requested</span>
-              <span>0/250</span>
+              <span>This will be sent to Case Manager if re-requested</span> 
             </kendo-formhint>
           </kendo-floatinglabel>
         </div>
@@ -117,11 +120,11 @@
         kendoButton
         [primary]="true"
         look="outline"
-        aria-label="cancel hiv verification"
+        aria-label="Cancel"
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="submit hiv verification">
+      <button kendoButton [primary]="true" aria-label="Submit">
         Submit
       </button>
     </div>

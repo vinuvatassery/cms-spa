@@ -23,7 +23,7 @@ export class BillingAddressDataService {
   updateBillingAddress(paymentAddress:any,vendorId:any) {
     return this.http.put(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/${vendorId}/address`, paymentAddress);
   }
- 
+
   loadBillingAddressListService( ) {
     return of([
       {
@@ -38,10 +38,9 @@ export class BillingAddressDataService {
     ]);
   }
 
-  loadBillingPaymentsAddressListService(vendorTypeCode: string, skipcount: number, maxResultCount: number, sort: string, sortType: string) : Observable<any> {
-    return this.http.get<any>(
-     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/address?VendorTypeCode=${vendorTypeCode}&SortType=${sortType}&Sorting=${sort}&SkipCount=${skipcount}&MaxResultCount=${maxResultCount}`
-    );
+  loadBillingPaymentsAddressListService(params:any) : Observable<any> {
+    return this.http.post<any>(
+     `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/address?isShowHistoricalData=${params.isShowHistoricalData}&VendorId=${params.vendorId}&VendorTypeCode=${params.vendorTypeCode}&SortType=${params.sortType}&Sorting=${params.sort}&SkipCount=${params.skipcount}&MaxResultCount=${params.maxResultCount}&Filter=${params.filters}`, null);
   }
 
   getPaymentsAddressContacts(addressId: string) {

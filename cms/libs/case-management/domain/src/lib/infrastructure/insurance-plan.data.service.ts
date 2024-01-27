@@ -4,13 +4,28 @@ import { ConfigurationProvider } from "@cms/shared/util-core";
 import { InsurancePlan } from "../entities/insurance-plan";
 
 @Injectable({ providedIn: 'root' })
-export class InsurancePlanDataService{
-    constructor(private readonly http: HttpClient,private configurationProvider: ConfigurationProvider) {
-     
-    }
-    
-      loadInsurancePlanByProviderId(insurancePlanId:string,insuranceType:any){
-        return this.http.get<InsurancePlan>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans/${insurancePlanId}?type=${insuranceType}`);
-      }
+export class InsurancePlanDataService {
+  constructor(private readonly http: HttpClient, private configurationProvider: ConfigurationProvider) {
+
+  }
+
+  loadInsurancePlanByProviderId(insurancePlanId: string, insuranceType: any) {
+    return this.http.get<InsurancePlan>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/insurance-plans/${insurancePlanId}?type=${insuranceType}`);
+  }
+
+  addPlan(dto: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/insurance-plans`,
+      dto
+    );
+  }
+
+  updateInsurancePlan(insurancePlanDto: any) {
+    return this.http.put<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/case-management/insurance-plans`, insurancePlanDto
+    );
+  }
 }

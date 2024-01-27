@@ -1,0 +1,66 @@
+<form class="k-form" [formGroup]="caseReassignForm">
+  <section class="k-dialog-body">
+    <p class="text-muted mb-2" *ngIf="hasReassignPermission">
+      Start typing to search for a new Case Worker for {{clientName}} and enter the reason
+      the case is being re-assigned.
+    </p>
+    <p class="text-muted mb-2" *ngIf="!hasReassignPermission">
+      This will send a request to re-assign {{clientName}} to a different Case Worker. Enter your reason below.
+    </p>
+    <div class="flex-row">
+      <div class="flex-col hidedropicon" *ngIf="hasReassignPermission">
+        <kendo-floatinglabel text="New Case Worker" class="inline-search-loader">
+                <kendo-combobox   
+                [fillMode]="formUiStyle.dropDownFillMode" 
+                formControlName="newCaseWorkerId" 
+                [data]="caseOwnersObject"   
+                textField="fullName" 
+                valueField="loginUserId"
+                [valuePrimitive]="true"       
+                [filterable]="true"     
+                [kendoDropDownFilter]="caseOwnerfilterSettings" 
+                placeholder="New Case Worker"     
+              >
+              </kendo-combobox>
+          <kendo-formerror *ngIf="!caseReassignForm.controls['newCaseWorkerId'].valid && isValidateForm">
+            New Case Worker is required
+          </kendo-formerror>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel [text]="hasReassignPermission ? 'Reason for Re-assignment' : 'Reason for Re-assignment Request?'">
+          <kendo-textarea
+          #tAreaReasonForReassign
+          [fillMode]="formUiStyle.inputFillMode"
+          [maxlength]="tAreaReasonForReassignMaxLength"
+          [rows]="3"
+          resizable ="none"
+          (valueChange)="calculateCharacterCount($event)"
+          aria-label="Reason for Re-assign"
+          formControlName="reasonForReassign">
+          <kendo-textarea-suffix class="justify-content-end">
+            <span class="counter">{{ tAreaReasonForReassignCounter }}</span>
+          </kendo-textarea-suffix>
+          </kendo-textarea>
+    
+          <kendo-formerror
+            *ngIf="!caseReassignForm.controls['reasonForReassign'].valid && isValidateForm">
+              Reason for Re-assignment is required.
+          </kendo-formerror>
+        </kendo-floatinglabel>        
+      </div>
+    </div>
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCancel()">
+          Cancel
+        </button> 
+        <button  kendoButton [primary]="true" aria-label="Submit" (click)="save()">
+          {{hasReassignPermission ? 'Re-assign' : 'Submit'}}
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+</form>

@@ -1,0 +1,14 @@
+<kendo-dialog-titlebar (close)="closeRemovePcaSetupClicked()"> Remove PCA Number </kendo-dialog-titlebar>
+<section class="k-dialog-body break-word">
+  <p class="text-muted mb-1"> Are you sure you want to remove <strong>{{pcaDesc}}</strong> from
+    <strong>{{fundingSource}}?</strong> </p>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeRemovePcaSetupClicked()">
+        Cancel </button>
+      <button *ngIf="pcaId" kendoButton class="k-error-button" aria-label="Remove" (click)="removePcaHandler()">Remove </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

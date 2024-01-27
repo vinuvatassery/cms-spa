@@ -12,7 +12,6 @@ import {
   DrugPharmacyFacade,
   WorkflowFacade,
   Pharmacy,
-  StatusFlag,
   CompletionChecklist,
   PriorityCode,
   CaseFacade,
@@ -21,6 +20,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { Observable, Subject } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-pharmacies-list',
   templateUrl: './pharmacies-list.component.html',
@@ -155,6 +155,7 @@ export class PharmaciesListComponent implements OnInit {
             ClientId: this.clientId,
             IsActive: true,
             vendorId: clientPharmacy.vendorId,
+            vendorAddressId: clientPharmacy.vendorAddressId
           };
           this.OpenReactivatePharmaciesClicked(pharmacy);
         }
@@ -340,6 +341,7 @@ export class PharmaciesListComponent implements OnInit {
             this.drugPharmacyFacade.addDrugPharmacy(
               this.clientId,
               data.newPharmacy.vendorId,
+              data?.newPharmacy.vendorAddressId,
               PriorityCode.Primary,
               this.isShowHistoricalData
             );
@@ -409,7 +411,7 @@ export class PharmaciesListComponent implements OnInit {
       .removeClientPharmacy(this.clientId ?? 0, this.pharmacyId, this.isShowHistoricalData)
       .then((isSuceed) => {
         if (isSuceed) {
-          this.drugPharmacyFacade.addDrugPharmacy(this.clientId, data.newPharmacy.vendorId, PriorityCode.Primary, this.isShowHistoricalData);
+          this.drugPharmacyFacade.addDrugPharmacy(this.clientId, data.newPharmacy.vendorId,data.vendorAddressId, PriorityCode.Primary, this.isShowHistoricalData);
         }
       });
 
@@ -472,10 +474,11 @@ export class PharmaciesListComponent implements OnInit {
     };
     this.removePharmacyClick.emit(data);
   }
-  addPharmacyEvent(pharmacyId: string) {
+  addPharmacyEvent(pharmacy:any) {
     this.triggerPriorityPopupNumber = 0;
     let data = {
-      vendorId: pharmacyId,
+      vendorId: pharmacy?.vendorId,
+      vendorAddressId:pharmacy?.VendorAddressId,
       isShowHistoricalData: this.isShowHistoricalData,
       isSetAsPrimary: this.isSetAsPrimary,
     };

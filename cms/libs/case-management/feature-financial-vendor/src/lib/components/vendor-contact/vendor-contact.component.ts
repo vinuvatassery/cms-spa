@@ -17,7 +17,7 @@ export class VendorContactComponent {
 
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
-
+  inputMask ='(999) 000-0000';
   constructor(
     private readonly formBuilder: FormBuilder,
     private readonly cdr: ChangeDetectorRef,
@@ -46,9 +46,9 @@ export class VendorContactComponent {
           let addContactForm = this.formBuilder.group({
             contactName: new FormControl(item.contactName, Validators.required),
             description: new FormControl(item.contactDesc),
-            phoneNumber: new FormControl(item.vendorContactPhone[0]?.phoneNbr),
-            fax: new FormControl(item.vendorContactPhone[0]?.faxNbr),
-            email: new FormControl(item.vendorContactEmail[0]?.emailAddress)
+            phoneNumber: new FormControl(item.vendorContactPhone[0]?.phoneNbr, Validators.pattern('[0-9]+')),
+            fax: new FormControl(item.vendorContactPhone[0]?.faxNbr, Validators.pattern('[0-9]+')),
+            email: new FormControl(item.vendorContactEmail[0]?.emailAddress,  Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/))
           });
 
           this.AddContactForm.push(addContactForm);
@@ -77,9 +77,9 @@ export class VendorContactComponent {
     let addContactForm = this.formBuilder.group({
       contactName: new FormControl('', Validators.required),
       description: new FormControl(),
-      phoneNumber: new FormControl(),
-      fax: new FormControl(),
-      email: new FormControl()
+      phoneNumber: new FormControl('', Validators.pattern('[0-9]+')),
+      fax: new FormControl('', Validators.pattern('[0-9]+')),
+      email: new FormControl('', Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/))
     });
     this.AddContactForm.push(addContactForm);
     this.cdr.detectChanges();
@@ -87,5 +87,9 @@ export class VendorContactComponent {
 
   removeContact(i: number) {
     this.AddContactForm.removeAt(i);
+  }
+  restrictSpecialChar(event:number) {
+    return (event > 64 &&
+      event < 91) || (event > 96 && event < 123)||event==32
   }
 }

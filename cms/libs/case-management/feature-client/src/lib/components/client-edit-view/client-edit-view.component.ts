@@ -31,12 +31,12 @@ import {
   ApplicantInfo,
   ClientFacade,
   CompletionChecklist,
-  StatusFlag,
   TransGenderCode,
   WorkflowFacade,
 } from '@cms/case-management/domain';
 import { UIFormStyle, IntlDateService, DataQuery } from '@cms/shared/ui-tpa';
 import { LovFacade, LovType } from '@cms/system-config/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-client-edit-view',
@@ -45,7 +45,7 @@ import { LovFacade, LovType } from '@cms/system-config/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ClientEditViewComponent implements OnInit, OnDestroy {
-  
+
   @Input() isCerForm =false
   @Input() clientCaseEligibilityId: string ='';
   /** Output Properties **/
@@ -1167,7 +1167,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
     let ssnNotApplicable = this.appInfoForm.controls['ssnNotApplicable'].value;
     if (ssnNotApplicable) {
       clientSsn = '';
-    }   
+    }
     let data = {
       firstName: firstName,
       lastName: lastName,
@@ -1229,10 +1229,12 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
 
   dateValidate(event: Event) {
     this.dateValidator = false;
+    this.appInfoForm.controls['dateOfBirth'].setErrors(null);
     const signedDate = this.appInfoForm.controls['dateOfBirth'].value;
     const todayDate = new Date();
     if (signedDate > todayDate) {
       this.dateValidator = true;
+      this.appInfoForm.controls['dateOfBirth'].setErrors({ incorrect: true });
     }
   }
 

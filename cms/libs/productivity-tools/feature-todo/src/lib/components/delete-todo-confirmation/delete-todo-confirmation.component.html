@@ -1,9 +1,7 @@
+<kendo-dialog-titlebar (close)="onCloseDeleteToDOClicked()"> Delete TO DO Item? </kendo-dialog-titlebar>
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-    <!-- Once deleted the to do item won't be available anymore. If needed a new to
-    de item can be created. -->
-    This feature is part of a future scope of work for the ORCares project.
-  </p>
+  Once deleted the to do item won't be available anymore. If needed a new to  de item can be created. </p>
 </section>
 
 <kendo-dialog-actions>
@@ -13,11 +11,12 @@
         kendoButton
         [primary]="true"
         look="outline"
-        aria-label="cancel deleting todo"
+        aria-label="Cancel"
+        (click)="onCloseDeleteToDOClicked()"
       >
         Cancel
       </button>
-      <button kendoButton class="k-error-button" aria-label="delete todo">
+      <button kendoButton class="k-error-button" aria-label="Delete">
         Delete
       </button>
     </div>

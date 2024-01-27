@@ -5,6 +5,13 @@ import { CaseDetailPageComponent, CaseSummaryComponent } from '@cms/case-managem
 
 const routes: Routes = [ 
   {
+    path: 'approval',
+    loadChildren: () =>
+      import('@cms/case-management/feature-approval').then(
+        (m) => m.CaseManagementFeatureApprovalModule
+      ),
+  }, 
+  {
     path: 'cases',
     loadChildren: () =>
       import('@cms/case-management/feature-case').then(

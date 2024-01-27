@@ -19,19 +19,19 @@
             for="aptcFlag{{aptc.lovCode}}"
           ></kendo-label>
         </span>
-      
-        <kendo-formerror *ngIf="(!healthInsuranceForm.controls['aptcFlag'].valid && isViewContentEditable==false)">A Response is required.</kendo-formerror>
+
+        <kendo-formerror *ngIf="(!healthInsuranceForm.controls['aptcFlag'].valid && isViewContentEditable==false)">A response is required.</kendo-formerror>
       </div>
-  
+
       </fieldset>
       <div class="block-section mt-2" *ngIf="healthInsuranceForm.controls['aptcFlag'].value==='YES'">
         <kendo-floatinglabel text="Monthly APTC Amount (may be $0)" class="amount-with-symbol">
-          <span class="k-input-prefix custom-currencysymbol"> $ </span>  
-          <kendo-textbox  aria-label="monthly aptc amount" placeholder="" 
+          <span class="k-input-prefix custom-currencysymbol"> $ </span>
+          <kendo-textbox  aria-label="monthly aptc amount" placeholder=""
             formControlName="aptcMonthlyAmt"
-            [fillMode]="formUiStyle.inputFillMode"> 
+            [fillMode]="formUiStyle.inputFillMode">
           </kendo-textbox>
-           
+
         </kendo-floatinglabel>
         <kendo-formerror *ngIf="(!healthInsuranceForm.controls['aptcMonthlyAmt'].valid && isViewContentEditable==false)">Monthly APTC Amount is required.</kendo-formerror>
       </div>

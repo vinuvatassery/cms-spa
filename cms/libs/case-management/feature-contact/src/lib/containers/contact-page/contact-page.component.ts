@@ -11,11 +11,12 @@ import {
   NavigationType, ContactInfo, ClientAddress, AddressTypeCode,
   ClientPhone, deviceTypeCode, ClientEmail, FriendsOrFamilyContact,
   CompletionChecklist, ClientDocument, ClientCaseElgblty,
-  ClientDocumentFacade, HomeAddressProof, StatesInUSA, StatusFlag
+  ClientDocumentFacade, HomeAddressProof, StatesInUSA
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-contact-page',

@@ -5,7 +5,7 @@
     <kendo-grid-column field="groupStartDate" title="Start Date" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.isFutureStartDate">
-                <button aria-label="scheduled link" kendoButton look="flat" class="card-link-button"
+                <button [attr.aria-label]="dataItem.groupStartDate | date:'MM/dd/yyyy'"  kendoButton look="flat" class="card-link-button"
                     (click)="loadEligibilityChangeModal(dataItem, eligibilityGroupDetail)">
                     Scheduled for {{dataItem.groupStartDate | date:'MM/dd/yyyy'}}
                 </button>
@@ -17,7 +17,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="groupEndDate" title="End Date" [width]="100">
         <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.groupEndDate |date:'MM/dd/YYYY'}}
+            {{dataItem.groupEndDate | date: 'MM/dd/yyyy'}}
         </ng-template>
     </kendo-grid-column>
     <kendo-grid-column field="actualDaysInGroup" title="Actual Days in Group" [width]="100"></kendo-grid-column>
@@ -26,10 +26,10 @@
             {{dataItem.creationTime |date:'MM/dd/YYYY hh:mm:ss'}}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="by" title="Record Created By" [width]="80">
+    <kendo-grid-column field="by" title="Record Created By" [width]="75" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
-            <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avathar">
+            <button  [attr.aria-label]="dataItem.creatorId"  kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+                [popover]="onUserProfileDetailsHovered" showOn="hover" >
                 <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
             </button>
             <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
@@ -55,26 +55,27 @@
 <ng-template #eligibilityGroupDetail>
     <kendo-dialog-titlebar (close)="onGroupDetailClosed($event)">Edit Scheduled Group Change </kendo-dialog-titlebar>
     <case-management-group-detail [showDeleteOption]="true" [currentGroup$]="currentGroup$" [ddlGroups$]="ddlGroups$"
+    [groupList]="groupList"
     (isModalGroupCloseClicked)="onGroupDetailClosed($event)"
     (updateGroup)="onGroupChangeUpdateClicked($event)" (deleteGroupChange)="onDeleteGroupClicked($event, deleteScheduleGroupChanges)"
     (cancelGroupChange)="onGroupChangeCancelClicked($event)">
 </case-management-group-detail>
 </ng-template>
     <ng-template #deleteScheduleGroupChanges>
-    <kendo-dialog-titlebar (close)="onCancelDelete()"> Delete scheduled group change </kendo-dialog-titlebar>
+    <kendo-dialog-titlebar (close)="onCancelDelete()"> Delete Scheduled Group Change </kendo-dialog-titlebar>
     <section class="k-dialog-body">
         <p class="text-muted mb-2">
             This action cannot be undone. You may schedule another group change at any time.
         </p>
     </section>
     <kendo-dialog-actions>
-       
+
         <div class="justify-content-end">
             <button
               kendoButton
               [primary]="true"
               look="outline"
-              aria-label="cancel "
+              aria-label="Cancel"
               (click)="onCancelDelete()"
             >
               Cancel
@@ -82,7 +83,7 @@
             <button
               kendoButton
               class="k-error-button"
-              aria-label="delete "
+              aria-label="Delete"
               (click)="onConfirmGroupDelete()"
             >
               DELETE

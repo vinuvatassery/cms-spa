@@ -5,7 +5,7 @@
   </p>
   <section>
     <div class="flex-row">
-      <div class="flex-col">
+      <div class="flex-col mb-2">
         <div class="global-search field-label-hide mat-form-no-b-space search-case">
           <span
             class="material-icons global-search-icon"
@@ -59,7 +59,7 @@
                       Don’t see who you are looking for?
                     </p>
                     <button
-                      aria-label=" create new case"
+                      aria-label="Start New Application"
                       kendoButton
                       [primary]="true"
                       class="btn-full-no-radius"
@@ -109,7 +109,7 @@
     <div class="justify-content-between">
       <div class="justify-content-end">
         <button
-          aria-label="cancel new case"
+          aria-label="Cancel"
           kendoButton
           (click)="onCloseProgramSelectionClicked()"
           look="outline"
@@ -117,7 +117,7 @@
           Cancel
         </button>
         <button
-          aria-label="save and continue"
+          aria-label="Save & Continue"
           kendoButton
           [primary]="true"     
           [disabled]="formButtonDisabled || !parentForm.valid"    

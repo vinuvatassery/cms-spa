@@ -1,0 +1,88 @@
+<kendo-dialog-titlebar (close)="closeSearchCase()">
+  Search Clients
+</kendo-dialog-titlebar>
+<section class="k-dialog-body">
+  <p class="text-muted mb-2">
+    If the client is found, navigate to their profile and update their information. 
+    Once corrected If the claim passes all criteria it will be submitted for processing when you return to the queue. 
+    If it still fails one or more criteria, it will stay in your approval queue.
+  </p>
+
+  <div class="flex-row">
+    <div class="flex-col">
+      <div class="combotable_search_list pending_app_search_clients">
+        <span
+          class="material-icons global-search-icon"
+          aria-label="search"
+          aria-hidden="true"
+          >search</span
+        >
+        <span
+          *ngIf="isShownSearchLoader"
+          class="k-icon k-i-loading k-input-loading-icon input-inline-loader"
+        ></span>
+        <kendo-multicolumncombobox
+          [data]="clientSearchResult$ | async"
+          textField="clientFullName"
+          valueField="clientId"
+          [fillMode]="formUiStyle.dropDownFillMode"
+          placeholder="Search Client Name, Client ID, SSN or Policy ID"
+          [popupSettings]="{
+            popupClass: 'combotable_search_list',
+            animate: true
+          }"
+          [filterable]="true"
+          (valueChange)="onClientValueChange($event)"
+          (filterChange)="loadClientBySearchText($event)"
+        >
+          <button kendoButton fillMode="clear" icon="image"></button>
+
+          <kendo-combobox-column>
+            <ng-template
+              kendoMultiColumnComboBoxColumnCellTemplate
+              let-dataItem
+            >
+              <span>{{ dataItem.clientFullName }}</span>
+            </ng-template>
+          </kendo-combobox-column>
+          <kendo-combobox-column [width]="100">
+            <ng-template
+              kendoMultiColumnComboBoxColumnCellTemplate
+              let-dataItem
+            >
+              <span class="text-muted">
+                <em>Client ID:</em> {{ dataItem.clientId }}</span
+              >
+            </ng-template>
+          </kendo-combobox-column>          
+          <kendo-combobox-column [width]="150">
+            <ng-template
+              kendoMultiColumnComboBoxColumnCellTemplate
+              let-dataItem
+            >
+              <span class="text-muted"><em> SSN:</em> {{ dataItem.ssn }}</span>
+            </ng-template>
+          </kendo-combobox-column>
+          <kendo-combobox-column [width]="125">
+            <ng-template
+              kendoMultiColumnComboBoxColumnCellTemplate
+              let-dataItem
+            >
+              <span class="text-muted"> <em>Policy ID:</em> {{ dataItem.policyId }}</span>
+            </ng-template>
+          </kendo-combobox-column>
+        </kendo-multicolumncombobox>
+      </div>
+    </div>
+  </div>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCancelClick()">
+        Cancel
+      </button>
+      <button kendoButton [primary]="true" aria-label="GOT TO PROFILE" (click)="onGoToProfileClick()" [disabled]="isButtonDisable">GO TO PROFILE</button>
+    </div>
+  </div>
+</kendo-dialog-actions>

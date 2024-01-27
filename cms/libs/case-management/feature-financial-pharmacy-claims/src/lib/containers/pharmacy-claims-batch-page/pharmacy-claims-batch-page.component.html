@@ -1,0 +1,60 @@
+
+ <cms-pharmacy-claims-batches-log-lists [batchLogGridLists$]="batchLogGridLists$"
+ [batchId]="batchId"
+ [loader$]="paymentByBatchGridLoader$"
+ [pageSizes]="pageSizes" [sortValue]="sortValue" [claimsType]="claimsType"
+ [sortType]="sortType" [sort]="sort" 
+ (exportGridDataEvent)="exportPharmacyBatchesGridData()"
+ [exportButtonShow$]="exportButtonShow$" 
+ (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
+ [batchId]="batchId"
+ (unBatchEntireBatchEvent)="unBatchEntireBatchClick()"
+ (unBatchClaimsEvent)="unBatchClaimClick($event)"
+ [unbatchClaim$]="unbatchClaim$"
+ [unbatchEntireBatch$]="unbatchEntireBatch$"
+ [deleteClaims$]="deleteClaims$"
+ (ondeletebatchesClickedEvent)="ondeletebatchesClicked($event)"
+ (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
+ (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+ [letterContentList$]="letterContentList$"      
+ [letterContentLoader$]="letterContentLoader$"
+ (onProviderNameClickEvent)="onProviderNameClick($event)"
+ [paymentBatchName$]="paymentBatchName$"
+ [deliveryMethodLov$]="deliveryMethodLov$"
+ [paymentRequestType$]="paymentRequestType$"
+ [editPharmacyClaim$] = "editPharmacyClaim$"
+ [getPharmacyClaim$] = "getPharmacyClaim$"
+ [searchPharmacies$] = "searchPharmacies$"
+ [searchClients$] = "searchClients$"
+ [searchDrugs$] = "searchDrugs$"
+ [searchPharmaciesLoader$]="searchPharmaciesLoader$"
+ [searchClientLoader$]="searchClientLoader$"
+ [searchDrugsLoader$]="searchDrugsLoader$"
+ (getPharmacyClaimEvent)="getPharmacyClaim($event)"
+ (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
+ (getPharmacyClaimEvent)="getPharmacyClaim($event)"
+ (searchPharmaciesEvent)="searchPharmacies($event)"
+ (searchClientsEvent)="searchClients($event)"
+ (searchDrugEvent)="searchDrug($event)"
+ (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
+ (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
+ >
+</cms-pharmacy-claims-batches-log-lists>
+
+<ng-template #providerDetailsTemplate>
+    <cms-pharmacy-claims-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="onEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
+</ng-template>
+
+<ng-template #pcaExceptionDialogTemplate>
+    <common-financial-pca-chosen-alert [chosenPca]="chosenPcaForReAssignment"
+        (confirmChosenPcaAlertClickedEvent)="onConfirmPcaAlertClicked($event)"
+        (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
+    </common-financial-pca-chosen-alert>
+ 
+</ng-template>

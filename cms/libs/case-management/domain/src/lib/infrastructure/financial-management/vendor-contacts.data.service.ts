@@ -28,8 +28,17 @@ export class VendorContactsDataService {
       },
     ]);
   }
-  loadcontacts(vendorAddressId: string) {
-    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/addresses/${vendorAddressId}/contacts`);
+  loadcontacts(vendorAddressId: string,skip: any, pageSize: any, sortBy: any, sortType: any, filters:any) {
+    const VendorContactsPageAndSortedRequestDto =
+    {
+      SortType : sortType,
+      Sorting : sortBy,
+      SkipCount : skip,
+      MaxResultCount : pageSize,
+      Filter : filters
+    }
+
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/addresses/${vendorAddressId}/contacts`,VendorContactsPageAndSortedRequestDto);
   }
   saveContactAddress(contact: any) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/vendors/contacts`, contact);
@@ -51,5 +60,8 @@ export class VendorContactsDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}` +
       `/financial-management/vendors/${vendorId}/addresses`
     );
+  }
+  loadVendorAllContacts(vendorId: string) {
+    return this.http.get<any>(`${this.configurationProvider.appSettings.caseApiUrl}` + `/financial-management/vendors/${vendorId}/active-contacts`);
   }
 }

@@ -36,7 +36,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   @Input() existingProviderData: any;  
   @Input() searchProviderLoaded$: any;
   @Input() selectedCustomProviderName: any;  
- 
+  @Input() hasCreateUpdatePermission:boolean=false; //Healtcare provider Add/Request
 
   /** Public properties **/
   providers$ = this.drugPharmacyFacade.healthCareProviders$;
@@ -79,7 +79,9 @@ export class HealthCareProviderSearchComponent implements OnInit
       this.existHealthProvderForm = this.formBuilder.group({   
         providerId: ['',Validators.required]   ,
         selectedProviderId: [''] ,
-        providerAutoComplete : ['',Validators.required]       
+        providerAutoComplete: ['', Validators.required],
+        selectedVendorAddressId: [''],
+        vendorAddressId:['']
       });
       
      if(this.isEditSearchHealthProviderValue === true)
@@ -101,9 +103,11 @@ export class HealthCareProviderSearchComponent implements OnInit
     
     this.existHealthProvderForm.setValue(
             {
-               selectedProviderId: this.existingProviderData?.providerId  ,
+              selectedProviderId: this.existingProviderData?.providerId  ,
               providerId: this.existingProviderData?.providerId  ,
-              providerAutoComplete : this.selectedCustomProviderName             
+              providerAutoComplete: this.selectedCustomProviderName,
+              selectedVendorAddressId: this.existingProviderData?.vendorAddressId,
+              vendorAddressId: this.existingProviderData?.vendorAddressId
             }) 
   }
 
@@ -111,7 +115,8 @@ export class HealthCareProviderSearchComponent implements OnInit
   {    
     this.existHealthProvderForm.patchValue(
       {
-        providerId: dataItem?.providerId  
+        providerId: dataItem?.providerId,
+        vendorAddressId: dataItem?.vendorAddressId
       })  
   }
 
@@ -122,8 +127,8 @@ export class HealthCareProviderSearchComponent implements OnInit
        {        
         const existProviderData =
         {
-          providerId : this.existHealthProvderForm?.controls["providerId"].value,
-          selectedProviderId  : this.existHealthProvderForm?.controls["selectedProviderId"].value         
+          vendorAddressId: this.existHealthProvderForm?.controls["vendorAddressId"].value,
+          selectedVendorAddressId: this.existHealthProvderForm?.controls["selectedVendorAddressId"].value,          
         }        
         this.btnDisabled = true
         this.addExistingProviderEvent.emit(existProviderData);
@@ -151,7 +156,7 @@ export class HealthCareProviderSearchComponent implements OnInit
   }
   onOpenBusinessLogicClicked()
   {
-    this.businessLogicEvent.emit();
+        this.businessLogicEvent.emit();
   }
 
   onsearchTextChange(text : string)

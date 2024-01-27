@@ -18,6 +18,7 @@ export interface Pharmacy {
     vendorId?: string;
     vendorName?: string;
     vendorNbr?: string;
+    vendorAddressId?:string;
     address1?: string;
     address2?: string;
     cityCode?: string;

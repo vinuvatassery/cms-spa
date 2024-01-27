@@ -1,0 +1,70 @@
+ 
+  <kendo-dialog-titlebar  (close)="onCloseNewLetterClicked()">Send New Letter </kendo-dialog-titlebar>
+  <section class="k-dialog-body" >
+    <p class="text-muted mb-1">
+      Select an existing template or draft a custom letter.
+    </p>
+    <div class="flex-row pb-2">
+      <div class="flex-col">
+          <kendo-floatinglabel text="Letter Templates">
+            <kendo-dropdownlist
+              [fillMode]="formUiStyle.dropDownFillMode"
+              [data]="ddlTemplates"
+              textField="description"
+              valueField="documentTemplateId"              
+            >
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+      </div>
+      <div *ngIf="false" class="mt-2">
+       <div class="flex-col mb-2">
+          <p class="text-capital text-bold">Mailing Address</p>
+          <span >
+            <p> address1 </p>
+            <p>address2 </p>
+            <p>city , state zip</p>
+          </span>
+          <div style="width:60%">
+            <kendo-skeleton shape="text" animation="pulse" width="40%"></kendo-skeleton>
+            <p></p>
+            <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
+            <p></p>
+            <kendo-skeleton shape="text" animation="pulse" width="60%"></kendo-skeleton>
+          </div>
+        </div>
+        <div class="flex-col">
+          <p>
+            Type the body of the letter. Click “Preview Letter” to see what the
+            client will receive. Attachments will not appear in the preview, but
+            will be printed with the letter.
+          </p>
+        </div>
+    
+      </div>
+    </div>
+  </section>
+
+  <kendo-dialog-actions *ngIf="false">
+    <div class="justify-content-between bigbtn-wrapper">
+      <div class="w100">
+        <button kendoButton [primary]="true" look="flat"  aria-label="Save for Later">
+          Save for Later
+        </button>
+        <button kendoButton [primary]="true" look="flat"  aria-label="Preview Letter">
+          Preview Letter
+        </button>
+      </div>
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" (click)="onCloseNewLetterClicked()"
+          aria-label="Cancel">
+          Cancel
+        </button>
+        <button kendoButton [primary]="true"  aria-label="Send To Print">
+          Send To Print
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+ 
+
+

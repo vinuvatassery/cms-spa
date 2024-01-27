@@ -4,14 +4,17 @@
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
 }
+html{
+  font-size: 14px !important;
+}
+ 
 body,
 html {
   height: 100%;
   width: 100%;
   background: $white;
   padding: $size-0;
-  margin: $size-0;
-  font-size: $font-size;
+  margin: $size-0; 
   overflow: hidden;
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
@@ -72,7 +75,7 @@ li {
 .app-l-body-container {
   width: 100%;
   overflow-y: auto;
-  max-height: calc(100vh - $header-height);
+  max-height: calc(100vh - $header-height); 
 }
 .app-l-inner-rapper {
   padding: $size-xxx;
@@ -91,7 +94,7 @@ li {
 /* End layout styles*/
 /* Scroll to top */
 .scroll-to-top {
-  background: material-color($hive-neutral-palette, 200);
+  background: var(--hive-neutral-palette-200);
   padding: $size-s $size-l;
   position: fixed;
   bottom: $size-0;
@@ -99,11 +102,11 @@ li {
   display: flex;
   align-items: center;
   transition: ease-in all 0.4s;
-  color: material-color($hive-neutral-palette, 600);
+  color: var(--hive-neutral-palette-600);
   cursor: pointer;
   border-radius: $border-radius-sm $border-radius-sm $size-0 $size-0;
   z-index: 999;
   &:hover {
-    background: material-color($hive-neutral-palette, 100);
+    background: var(--hive-neutral-palette-100);
   }
 }

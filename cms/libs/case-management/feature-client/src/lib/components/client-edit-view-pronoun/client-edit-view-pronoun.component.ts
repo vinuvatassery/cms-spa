@@ -3,7 +3,8 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { CompletionChecklist, StatusFlag, WorkflowFacade,PronounCode, ClientFacade,ControlPrefix } from '@cms/case-management/domain';
+import { CompletionChecklist, WorkflowFacade,PronounCode, ClientFacade,ControlPrefix } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-client-edit-view-pronoun',
   templateUrl: './client-edit-view-pronoun.component.html',
@@ -110,7 +111,7 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
     }
 
     private onDoNotKnowSelected(){
-      if(!this.appInfoForm.controls[ControlPrefix.pronoun + PronounCode.dontWant].value === true){
+      if(!this.appInfoForm.controls[ControlPrefix.pronoun + PronounCode.dontWant]?.value === true){
         this.disablePronouns.forEach((pronoun:any) => {
           this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].enable();
         });
@@ -118,9 +119,9 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
      }
 
      private onDoNotWantSelected(){
-      if(!this.appInfoForm.controls[ControlPrefix.pronoun + PronounCode.dontKnow].value === true){
+      if(!this.appInfoForm.controls[ControlPrefix.pronoun + PronounCode.dontKnow]?.value === true){
         this.disablePronouns.forEach((pronoun:any) => {
-          this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode].enable();
+          this.appInfoForm.controls[ControlPrefix.pronoun + pronoun.lovCode]?.enable();
         });
      }
     }
@@ -170,9 +171,9 @@ export class ClientEditViewPronounComponent implements OnInit,OnDestroy {
       }
 
     }
-    if(!this.appInfoForm.controls[ControlPrefix.pronoun + PronounCode.notListed].value){
-      this.appInfoForm.controls['pronoun'].removeValidators(Validators.required);
-      this.appInfoForm.controls['pronoun'].updateValueAndValidity();
+    if(!this.appInfoForm.controls[ControlPrefix.pronoun + PronounCode.notListed]?.value){
+      this.appInfoForm.controls['pronoun']?.removeValidators(Validators.required);
+      this.appInfoForm.controls['pronoun']?.updateValueAndValidity();
     }
    }
 

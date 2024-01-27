@@ -71,8 +71,22 @@ export class CaseEligibilityPeriodsComponent {
       this.updateHistoryStatus.emit(false);
     }
     else {
-      this.updateHistoryStatus.emit(true);
+
+      this.updateHistoryStatus.emit(this.isPreviousEligibilityPeriod(historyData[0], selectedData[0]));
     }
+  }
+
+  isPreviousEligibilityPeriod(historyData : any, selectedData : any)
+  {
+    const historyDataStartDate = new Date(historyData.eligibilityStartDate);
+    const selectedDataStartDate = new Date(selectedData.eligibilityStartDate);
+    const selectedDataEndDate = new Date(selectedData.eligibilityEndDate);
+
+    if(historyDataStartDate > selectedDataEndDate && historyDataStartDate > selectedDataStartDate)
+    {
+      return true;
+    }
+    return false;
   }
 
 }

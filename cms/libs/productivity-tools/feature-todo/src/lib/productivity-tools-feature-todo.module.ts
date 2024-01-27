@@ -18,6 +18,7 @@ import { DeleteTodoConfirmationComponent } from './components/delete-todo-confir
 import { TodoAndRemindersPageComponent } from './containers/todo-and-reminders-page/todo-and-reminders-page.component';
 import { TodoItemComponent } from './components/todo-item/todo-item.component';
 import { ReminderItemComponent } from './components/reminder-item/reminder-item.component';
+import { SubEventsDetailsComponent } from './components/sub-events-details/sub-events-details.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { ReminderItemComponent } from './components/reminder-item/reminder-item.
     TodoAndRemindersPageComponent,
     TodoItemComponent,
     ReminderItemComponent,
+    SubEventsDetailsComponent,
   ],
   exports: [
     TodoPageComponent,

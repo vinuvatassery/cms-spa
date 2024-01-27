@@ -1,0 +1,26 @@
+<kendo-dialog-titlebar (close)="closeBatchPremiumsClicked()"> Batch Premiums and Submit for Review? </kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1"> Payments will be combined based on each insurance vendor's profile settings. Once batched, you will not be able to edit premiums.   </p>
+    <p class="text-muted mb-2"> Premiums to be batched and reviewed: {{selectedProcessClaimsCount}} </p>
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="Cancel"
+          (click)="closeBatchPremiumsClicked()"
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Batch"  (click)="OnbatchClaimsClicked()">
+          Batch
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

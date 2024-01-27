@@ -6,7 +6,7 @@
 }
 .sidePanel-event-log {
   .sidePanel_body {
-    max-height: 360px;
+    max-height: calc(100vh - 40vh);
     overflow: auto;
   }
 }
@@ -27,7 +27,7 @@
     .items-head {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      font-size: 0.857rem;
       color: #666666;
       &_info {
         &-user {
@@ -71,3 +71,6 @@
     }
   }
 }
+
+
+ 

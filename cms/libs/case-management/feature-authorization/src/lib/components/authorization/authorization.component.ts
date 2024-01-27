@@ -1,14 +1,18 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, TemplateRef, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, TemplateRef, Output, EventEmitter, ChangeDetectorRef, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 /** Enums **/
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, NavigationType, ScreenType, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+
+/** External Libraries **/
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserDataService } from '@cms/system-config/domain';
+import { AuthorizationApplicationSignature, AuthorizationFacade, ClientDocumentFacade, CommunicationEvents, CompletionChecklist, NavigationType, ScreenType, WorkflowFacade, ContactFacade, CommunicationFacade, EsignFacade, EsignStatusCode, CommunicationEventTypeCode } from '@cms/case-management/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService, formatDate } from '@progress/kendo-angular-intl';
 import { SelectEvent } from '@progress/kendo-angular-upload';
 import { BehaviorSubject, Subscription, forkJoin, mergeMap, of, tap } from 'rxjs';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-authorization',
@@ -16,65 +20,135 @@ import { BehaviorSubject, Subscription, forkJoin, mergeMap, of, tap } from 'rxjs
   styleUrls: ['./authorization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AuthorizationComponent {
-  @Input() isCerForm: boolean = false;
+export class AuthorizationComponent   implements OnInit, OnDestroy  {
+  /** Input properties **/
+  @Input() isCerForm: boolean= false;
+  @Input() clientId!: any;
   @Input() clientCaseEligibilityId!: any;
   @Input() templateNotice$ : any
+
+  /** Output properties **/
+  @Output() cerDateSignatureEvent = new EventEmitter<any>();
   @Output() loadAuthorizationData = new EventEmitter();
   @Output() saveAuthorizationData = new EventEmitter<any>();
   @Output() loadAuthorizationNotice = new EventEmitter();
   @Output() setStartButtonVisibility = new EventEmitter<any>();
-  copyOfSignedApplication: any;
-  uploadedCopyOfSignedApplication: any;
 
   /** Public properties **/
   currentDate = new Date();
+  emailSentDate?:any = null;
   invalidSignatureDate$ = new BehaviorSubject(false);
   showCopyOfSignedApplicationRequiredValidation = new BehaviorSubject(false);
   showCopyOfSignedApplicationSizeValidation = new BehaviorSubject(false);
   documentTypeCode!: string;
   screenName = ScreenType.Authorization;
   isPrintClicked!: boolean;
-  isSendEmailClicked!: boolean;  
+  isSendEmailClicked!: boolean;
   isAuthorizationNoticePopupOpened = false;
-  formUiStyle: UIFormStyle = new UIFormStyle();
-  dateFormat = this.configurationProvider.appSettings.dateFormat;
+  uploadedDocument!: File | undefined;
+  public formUiStyle : UIFormStyle = new UIFormStyle();
   authorizationForm!: FormGroup;
+  cerDateValidator: boolean = false;
+  copyOfSignedApplication: any;
+  copyOfSignedApplicationSizeValidation: boolean = false;
+  prevClientCaseEligibilityId!: string;
+  isGoPaperlessOpted: boolean = false;
+  toEmail: Array<string> = [];
+  typeCode!: string;
+  subTypeCode!: string;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   authApplicationSignatureDetails$ = this.authorizationFacade.authApplicationSignatureDetails$;
   signedApplication!: AuthorizationApplicationSignature;
+  incompleteDateValidation!: any;
+  loginUserName!:any;
+  isSendEmailSuccess: boolean = false;
+  isCERApplicationSigned: boolean = false;
   private saveClickSubscription !: Subscription;
   private discardChangesSubscription !: Subscription;
   private isSendLetterOpenedDialog : any;
   private isSendEmailOpenedDialog : any;
+  uploadedCopyOfSignedApplication: any;
+  isSendNewEmailPopupOpened = false;
+  isSendNewLetterPopupOpened = false;
+  dateSignatureNoted!: any;
+  errorMessage!: string;
+  isSendEmailFailed: boolean = false;
+  signedClietDocumentId!: string;
+  paperlessFlag: any;
+  communicationLetterTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
+  communicationEmailTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+  emailSubject: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
 
-    /** Constructor **/
+  /** Private properties **/
+  private userProfileSubsriction !: Subscription;
+
   constructor(
     private readonly configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
     private readonly workflowFacade: WorkflowFacade,
     private readonly loggingService: LoggingService,
+    private readonly contactFacade: ContactFacade,
     private readonly intl: IntlService,
+    private readonly ref: ChangeDetectorRef,
+    private readonly userDataService: UserDataService,
+    private readonly communicationFacade: CommunicationFacade,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private dialogService: DialogService,
     private readonly authorizationFacade: AuthorizationFacade,
     private readonly clientDocumentFacade: ClientDocumentFacade,
-    private readonly notificationSnackbarService: NotificationSnackbarService,
-    private dialogService: DialogService
-  ) { }
-
-
+    private readonly esignFacade: EsignFacade
+  ) {   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {
+  ngOnInit(): void
+  {
+    this.loadUserContactInfo(this.clientId, this.clientCaseEligibilityId);
     this.buildForm();
     this.addApplicationSignatureDetailsSubscription();
     this.addSaveSubscription();
     this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
-
   }
 
   ngOnDestroy(): void {
     this.saveClickSubscription.unsubscribe();
-    this.discardChangesSubscription.unsubscribe();
+  }
+  /** Private methods **/
+  private loadUserContactInfo(clientId: any, clientCaseEligibilityId: any) {
+    this.loaderService.show();
+      this.contactFacade.loadContactInfo(this.clientId ?? 0, this.clientCaseEligibilityId ?? '')
+      .subscribe({
+        next: (data: any) =>{
+          if (data) {
+              if(data?.clientCaseEligibility?.paperlessFlag === StatusFlag.Yes)
+              {
+                this.isGoPaperlessOpted = true;
+                this.paperlessFlag = data?.clientCaseEligibility?.paperlessFlag;
+                this.ref.detectChanges();
+                if(data?.email?.email !== null){
+                  this.toEmail.push(data?.email?.email.trim());
+                }
+              }
+              this.loadPendingEsignRequestInfo();
+            }
+            this.loaderService.hide();
+      },
+      error: (err: any) => {
+        this.loaderService.hide();
+        this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+
+  getLoggedInUserProfile(){
+    this.loaderService.show();
+    this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
+      if(profile?.length>0){
+       this.loginUserName= profile[0]?.firstName+' '+profile[0]?.lastName;
+      }
+    })
+    this.loaderService.hide();
   }
 
   ngAfterViewInit() {
@@ -107,7 +181,6 @@ export class AuthorizationComponent {
             },
           ];
         }
-
         this.updateInitialDataPoints(resp?.applicantSignedDate, resp.signedApplication);
         this.setStartButtonVisibility.emit(this.isStartButtonEnabled());
       }
@@ -154,7 +227,6 @@ export class AuthorizationComponent {
         signedApplicationDocument: this.uploadedCopyOfSignedApplication,
         signedApplication: {}
       }
-
       if (this.uploadedCopyOfSignedApplication) {
         const documentId = this.copyOfSignedApplication?.length > 0 ? (this.copyOfSignedApplication[0]?.uid ?? null) : null;
         authorization.signedApplication = {
@@ -206,18 +278,19 @@ export class AuthorizationComponent {
   /** Internal event methods **/
 
   onSendNewLetterClicked(template: TemplateRef<unknown>): void {
-    this.isSendLetterOpenedDialog = this.dialogService.open({ 
-      content: template, 
+    this.isSendLetterOpenedDialog = this.dialogService.open({
+      content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
-    }); 
+    });
   }
 
   onSendNewEmailClicked(template: TemplateRef<unknown>): void {
-    this.isSendEmailOpenedDialog = this.dialogService.open({ 
-      content: template, 
+    this.isSendEmailOpenedDialog = this.dialogService.open({
+      content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
-    }); 
+    });
   }
+
   onCloseAuthorizationNoticeClicked() {
     this.isAuthorizationNoticePopupOpened = false;
   }
@@ -250,22 +323,29 @@ export class AuthorizationComponent {
       case CommunicationEvents.Close:
         this.isSendEmailOpenedDialog.close(event);
         break;
-      case CommunicationEvents.Print: 
+      case CommunicationEvents.Print:
+        this.isSendNewEmailPopupOpened = false;
+        if(this.isSendEmailSuccess){
         this.isSendEmailClicked = true;
-        break;
+        this.loadPendingEsignRequestInfo();
+      }else{
+        this.isSendEmailClicked = false;
+      }
+      break;
       default:
-        break;
+      break;
     }
   }
 
   handleCloseSendNewLetterClicked(event: CommunicationEvents) {
     switch (event) {
       case CommunicationEvents.Close:
-     
+
         this.isSendLetterOpenedDialog.close(event);
         break;
-      case CommunicationEvents.Print: 
+      case CommunicationEvents.Print:
         this.isPrintClicked = true;
+        this.getLoggedInUserProfile();
         break;
       default:
         break;
@@ -344,6 +424,106 @@ export class AuthorizationComponent {
 
     this.workflowFacade.updateChecklist(workFlowData);
   }
-} 
+
+  loadDateSignature(){
+  this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+  }
+
+  onChange(event : Date) {
+    this.cerDateValidator = false;
+    const signedDate = event;
+    const todayDate = new Date();
+    if (signedDate == null) {
+      this.currentDate = signedDate;
+      this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
+      this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+    }
+    else if (signedDate > todayDate) {
+      this.currentDate = signedDate;
+      this.cerDateValidator = true;
+      this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.patchValue(null);
+      this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+    }else{
+      this.currentDate = event;
+      this.dateSignatureNoted = this.authorizationForm?.get('signatureNotedDate')?.value;
+      this.cerDateSignatureEvent.emit(this.dateSignatureNoted);
+    }
+  }
 
 
+
+updateSendEmailSuccessStatus(event:any){
+ this.isSendEmailSuccess = event;
+}
+
+loadPendingEsignRequestInfo(){
+  this.loaderService.show();
+    this.esignFacade.getEsignRequestInfo(this.workflowFacade.clientCaseEligibilityId ?? '')
+    .subscribe({
+      next: (data: any) =>{
+        if (data?.esignRequestId != null) {
+          if(data?.esignRequestStatusCode == EsignStatusCode.Pending || data?.esignRequestStatusCode == EsignStatusCode.InProgress){
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+            this.isSendEmailClicked=true;
+            this.getLoggedInUserProfile();
+          }
+          else if(data?.esignRequestStatusCode == EsignStatusCode.Complete){
+            this.emailSentDate = this.intl.formatDate(new Date(data.creationTime), this.dateFormat);
+            this.isSendEmailClicked=true;
+            this.isCERApplicationSigned = true;
+            this.loadCompletedEsignRequestInfo();
+            this.getLoggedInUserProfile();
+          }else if(data?.esignRequestStatusCode == EsignStatusCode.Failed){
+            this.isSendEmailFailed = true;
+            this.errorMessage = data?.errorMessage;
+          }
+            this.ref.detectChanges();
+          }
+          this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      this.loggingService.logException(err);
+    },
+  });
+}
+
+loadCompletedEsignRequestInfo(){
+  this.loaderService.show();
+  this.typeCode=CommunicationEventTypeCode.CopyOfSignedApplication;
+  this.clientDocumentFacade.getSignedDocumentInfo(this.typeCode ?? ' ', this.subTypeCode ?? ' ',this.workflowFacade.clientCaseEligibilityId ?? '')
+    .subscribe({
+      next: (data: any) =>{
+        if (data?.clientDocumentId != null) {
+          this.signedClietDocumentId = data?.clientDocumentId;
+          this.isCERApplicationSigned = true;
+          this.ref.detectChanges();
+          }
+          this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      this.loggingService.logException(err);
+    },
+  });
+}
+
+onGetSignedApplicationClicked(){
+  this.loaderService.show()
+    this.clientDocumentFacade.getClientDocumentsViewDownload(this.signedClietDocumentId??'')
+    .subscribe({
+      next: (data: any) => {
+        const fileUrl = window.URL.createObjectURL(data);
+        window.open(fileUrl, "_blank");
+        this.loaderService.hide();
+      },
+      error: (error) => {
+        this.loaderService.hide();
+        this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error);
+        this.loggingService.logException(error);
+      }
+    });
+}
+}

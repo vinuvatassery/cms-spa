@@ -2,9 +2,9 @@
 <common-loader-component></common-loader-component>
 
 <h1 hidden>CMS</h1>
-<section class="app-l-header" role="header" >
+<header class="app-l-header" kendoTooltip>
   <div class="header_menu-left_most_section"  >
-    <button class="mobile-menu-icon" (click)="openMobileMenu()" *ifPermission='["Layout_Logo_View_Only"]'> <span class="material-icons">
+    <button  aria-label="Mobile Menu Icon" class="mobile-menu-icon" (click)="openMobileMenu()" *ifPermission='["Layout_Logo_View_Only"]'> <span class="material-icons">
       menu
       </span></button>
     <div class="header-logo" [routerLink]="['/']" *ifPermission='["Layout_Logo_View_Only"]'>
@@ -19,9 +19,9 @@
     <productivity-tools-notification-panel  *ifPermission='["Layout_Notifications_View_Only"]'></productivity-tools-notification-panel>
     <common-login-status></common-login-status>
   </div>
-</section>
+</header>
 
-<section class="app-l-container" [ngClass]="{'mobile_menu-opened': isOpenMobileMenu}"  kendoRippleContainer role="main">
+<section class="app-l-container" [ngClass]="{'mobile_menu-opened': isOpenMobileMenu}"  kendoRippleContainer>
   <section
     mode="side"
     #sidenav
@@ -30,14 +30,15 @@
     class="app-l-sidebar"
     [class.menuToggled]="isSideMenuToggled"  
   >
-    <div class="drawer-inner-container" role="menuitem" *ifPermission='["Layout_Menu_View_Only"]'>  
+    <div class="drawer-inner-container"  *ifPermission='["Layout_Menu_View_Only"]'>  
       <div class="sidebar-hamburger">
         <button
           (click)="onSideMenuToggleClicked()"
           class="sidebar-hamburger_button"
           kendoButton
           look="flat"
-          aria-label="side navigation"
+          aria-label="Main menu expand and collapse"
+   
         >
           <span
             class="material-icons sidebar-hamburger_icon-left"
@@ -48,16 +49,17 @@
           </span>
         </button>
       </div>   
-      <cms-side-navigation></cms-side-navigation>
+      <cms-side-navigation ></cms-side-navigation>
 
       <!-- Selector for active sessions -->
-      <case-management-last-visited-cases></case-management-last-visited-cases>
+      <case-management-last-visited-cases ></case-management-last-visited-cases>
     </div>
   </section>
-  <section class="app-l-body-container">
-    <section class="app-l-body">
-      <ng-content select="[body]"></ng-content>
+  <section class="app-l-body-container"   role="main" id="main" [class.menuSectionToggled]="isSideMenuToggled">
+    <section class="app-l-body" kendoTooltip>
+      <ng-content select="[body]" ></ng-content>
     </section>
   </section>
 </section>
 <div kendoDialogContainer></div>
+<common-reminder-notification-snack-bar [data$]="commonReminderSnackbar$"> </common-reminder-notification-snack-bar>

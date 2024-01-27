@@ -3,12 +3,11 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject, catchError, of } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
-import { SnackBar } from '@cms/shared/ui-common';
+import { SnackBar, StatusFlag } from '@cms/shared/ui-common';
 import { NotificationSnackbarService, SnackBarNotificationType, LoggingService, LoaderService,ConfigurationProvider } from '@cms/shared/util-core';
 import { HealthInsurancePolicy } from '../entities/health-insurance-policy';
 import { HealthInsurancePolicyDataService } from '../infrastructure/health-insurance-policy.data.service';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
-import { StatusFlag } from '../enums/status-flag.enum';
 import { WorkflowFacade } from './workflow.facade';
 
 
@@ -20,7 +19,6 @@ export class HealthInsurancePolicyFacade {
   private healthInsuranceStatusSubject = new BehaviorSubject<any>([]);
   private healthInsurancePolicySubject = new Subject<HealthInsurancePolicy>();
   private medicalPremiumPaymentsSubject = new BehaviorSubject<any>([]);
-  private triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
   showInsuranceRequiredSubject  = new BehaviorSubject<boolean>(false);
   private medicalHealthPolicySubject = new BehaviorSubject<any>([]);
   private medicalHealthPlansSubject = new BehaviorSubject<any>([]);
@@ -30,10 +28,11 @@ export class HealthInsurancePolicyFacade {
   private premiumPaymentsSubject = new BehaviorSubject<any>([]);
   triggeredPremiumPaymentSaveSubject = new BehaviorSubject<boolean>(false);
   triggeredCoPaySaveSubject = new BehaviorSubject<boolean>(false);
-
+  private clientmaxmumbalanceSubject = new Subject<any>();
   /** Public properties **/
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public triggerPriorityPopupSubject = new BehaviorSubject<boolean>(false);
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>(); 
   coPaysAndDeductibles$ = this.coPaysAndDeductiblesSubject.asObservable();
@@ -50,6 +49,7 @@ export class HealthInsurancePolicyFacade {
   premiumPayments$ = this.premiumPaymentsSubject.asObservable();
   triggeredPremiumPaymentSave$ = this.triggeredPremiumPaymentSaveSubject.asObservable();
   triggeredCoPaySave$ = this.triggeredCoPaySaveSubject.asObservable();
+  clientmaxmumbalance$ = this.clientmaxmumbalanceSubject.asObservable();
 
   public dateFields: Array<string> = [
     'startDate',
@@ -90,6 +90,7 @@ export class HealthInsurancePolicyFacade {
   }
 
   saveHealthInsurancePolicy(healthInsurancePolicy: HealthInsurancePolicy) {
+
     const formData = new FormData();
     if (!!healthInsurancePolicy?.copyOfInsuranceCardFile) {
       formData.append('CopyOfInsuranceCardFile', healthInsurancePolicy?.copyOfInsuranceCardFile ?? '');
@@ -136,6 +137,18 @@ export class HealthInsurancePolicyFacade {
       next: (response) => {
         this.hideLoader();
         this.healthInsurancePolicySubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader();
+      },
+    });
+  }  
+  getMedicalClaimMaxbalance(clientId: number,caseEligibilityId:string): void {    
+    this.showLoader();
+    this.healthInsurancePolicyService.getMedicalClaimMaxbalance(clientId,caseEligibilityId).subscribe({
+      next: (response) => {
+        this.hideLoader();
+        this.clientmaxmumbalanceSubject.next(response);
       },
       error: (err) => {
         this.hideLoader();
@@ -261,7 +274,7 @@ export class HealthInsurancePolicyFacade {
   loadCoPaysAndDeductibles(clientId: any, clientCaseId: any, clientCaseEligibilityId: any, gridDataRefinerValue: any) {
     this.showLoader()
     this.healthInsurancePolicyService.loadPaymentRequest(clientId, clientCaseId, clientCaseEligibilityId, gridDataRefinerValue).subscribe({
-      next: (coPaysAndDeductiblesResponse: any) => {
+      next: (coPaysAndDeductiblesResponse: any) => {        
         const gridView = {
           data: coPaysAndDeductiblesResponse['items'],
           total: coPaysAndDeductiblesResponse['totalCount'],
@@ -278,6 +291,7 @@ export class HealthInsurancePolicyFacade {
   }
   loadPremiumPayments(clientId: any, clientCaseId: any, clientCaseEligibilityId: any, gridDataRefinerValue: any) {
     this.showLoader()
+    
     this.healthInsurancePolicyService.loadPaymentRequest(clientId, clientCaseId, clientCaseEligibilityId, gridDataRefinerValue).subscribe({
       next: (premiumPaymentsResponse: any) => {
         const gridView = {

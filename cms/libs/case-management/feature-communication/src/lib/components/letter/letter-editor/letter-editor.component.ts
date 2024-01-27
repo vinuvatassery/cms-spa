@@ -22,7 +22,9 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 export class LetterEditorComponent implements OnInit {
   /** Input properties **/
   @Input() dataEvent!: EventEmitter<any>;
- 
+  @Input() currentValue!: any;
+  @Input() clientCaseEligibilityId!:string;
+  @Input() clientId!:any;
   /** Output properties  **/
   @Output() editorValue = new EventEmitter<any>();
 
@@ -34,6 +36,7 @@ export class LetterEditorComponent implements OnInit {
   letterEditorValue!: any;
   isSearchOpened = true;
   isShowPopupClicked = false;
+
   public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade) {}
@@ -96,5 +99,5 @@ export class LetterEditorComponent implements OnInit {
   onSearchclosed() {
     this.isSearchOpened = false;
   }
-  
+
 }

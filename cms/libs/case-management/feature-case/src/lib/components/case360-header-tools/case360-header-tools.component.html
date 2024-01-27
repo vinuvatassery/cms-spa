@@ -1,4 +1,4 @@
-<div class="tab-over-icon-btn" kendoTooltip>
+<div class="tab-over-icon-btn" >
   <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item"  (click)="onTodoDetailsClicked(todoDetailTemplate)">
     <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true"
      >playlist_add</span>
@@ -14,22 +14,22 @@
     <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
       aria-hidden="false" *ngIf="dataItem.id === 'new_letter'" (click)="dataItem.click(sendLetterDialog)">
-        <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+        <span class="material-icons" [attr.aria-label]="dataItem.text" aria-hidden="true">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
       aria-hidden="false" *ngIf="dataItem.id === 'new_email'" (click)="dataItem.click(sendNewEmailDialog)">
-        <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+        <span class="material-icons" [attr.aria-label]="dataItem.text" aria-hidden="true">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
       aria-hidden="false" *ngIf="dataItem.id === 'new_sms_text'" (click)="dataItem.click(sendTextMessageDialog)">
-        <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+        <span class="material-icons" [attr.aria-label]="dataItem.text" aria-hidden="true">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
       aria-hidden="false" *ngIf="dataItem.id === 'new_id_card'" (click)="dataItem.click(sendNewIDcardDialog )">
-        <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+        <span class="material-icons" [attr.aria-label]="dataItem.text" aria-hidden="true">{{dataItem.icon}}</span>
         <label> {{ dataItem.text }} </label>
       </button>
     </ng-template>
@@ -69,7 +69,7 @@
 <!-- New ID Card Modal Html-->
 <ng-template #sendNewIDcardDialog>
   <case-management-send-id-card [mailingAddress$]="mailingAddress$" (closeSendIdEvent)="handleIdCardClosed($event)"
-  (loadInitialData)="loadMailingAddress()"></case-management-send-id-card>
+  (loadInitialData)="loadMailingAddress()" kendoTooltip></case-management-send-id-card>
 </ng-template>
 
 

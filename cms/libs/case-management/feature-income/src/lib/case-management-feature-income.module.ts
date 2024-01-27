@@ -13,7 +13,6 @@ import { RemoveIncomeConfirmationComponent } from './components/remove-income-co
 import { IncomePageComponent } from './containers/income-page/income-page.component';
 import { ProfileIncomePageComponent } from './containers/profile-income-page/profile-income-page.component';
 
-
 @NgModule({
   imports: [
     CommonModule,

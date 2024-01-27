@@ -3,7 +3,7 @@
 
   <section class="k-dialog-body">
     <p class="text-muted mb-2">
-      Select which mail code to add the contact(s) for. All fields are required unless otherwise stated.
+    <span *ngIf="this.contactAddress.vendorContactId==null">Select which mail code to add the contact(s) for.</span> All fields are required unless otherwise stated.
     </p>
 
     <!-- Contacts -->
@@ -20,55 +20,89 @@
       <ng-container formArrayName="vendorContacts">
         <ng-container *ngFor="let contact of AddContactForm.controls; let i=index">
           <ng-container [formGroupName]="i">
-            <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i" *ngIf="this.contactAddress.vendorContactId==null">
-              <h4 class="mb-0">CONTACT {{i+1}} (OPTIONAL)</h4>
-              <button kendoButton class="card-link-button no-ul text-bold k-danger-link" aria-label="delete contact"
+            <div class="flex-col d-flex align-iems-center justify-content-between" [formGroupName]="i"*ngIf="this.contactAddress.vendorContactId==null">
+              <h4 class="mb-0">CONTACT {{i+1}}  <span *ngIf="i>0"> (OPTIONAL)</span></h4>
+              <button kendoButton class="card-link-button no-ul text-bold k-danger-link" aria-label="Delete Contact" *ngIf="i>0"
                 (click)="removeContact(i)">
                 DELETE CONTACT
               </button>
             </div>
             <div class="flex-col">
-              <kendo-floatinglabel text=" Name">
-                <kendo-textbox aria-label="Contact Name" formControlName="contactName"
+              <kendo-floatinglabel text="Contact Name">
+                <kendo-textbox aria-label="Contact Name" formControlName="contactName"  (valueChange)="onValueChange(i)" [maxlength]="200" (keypress)="onKeyPress($event.charCode)"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
-              <kendo-formerror *ngIf="IsContactNameValid(i)&&isSubmitted">A Contact Name is
+              <kendo-formerror *ngIf="isContactNameValid(i)&&isSubmitted">Contact Name is
                 required</kendo-formerror>
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text="Description (Optional)">
-                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" formControlName="contactDesc"
-                  resizable="vertical"></kendo-textarea>
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" (keypress)="onKeyPress($event.charCode)"  [maxlength]="500" (valueChange)="onDescriptionValueChange($event)" formControlName="contactDesc"
+                  resizable="vertical">
+
+                  <kendo-textarea-suffix class="justify-content-end">
+                    <span class="counter">{{ descriptionCounter}} /500</span>
+                  </kendo-textarea-suffix>
+
+                </kendo-textarea>
               </kendo-floatinglabel>
             </div>
             <div class="flex-col">
               <kendo-floatinglabel text="Phone Number (optional)">
-                <kendo-textbox aria-label="Phone Number (optional)" formControlName="phoneNbr"
-                  [fillMode]="formUiStyle.inputFillMode">
-                </kendo-textbox>
+                <kendo-maskedtextbox [maxlength]="10"  placeholder="Phone Number (optional)"  [mask]="inputMask" aria-label="Phone Number (optional)" [fillMode]="formUiStyle.inputFillMode"
+          formControlName="phoneNbr"
+          [maskOnFocus]="true"
+         >
+      </kendo-maskedtextbox>
               </kendo-floatinglabel>
+              <kendo-formerror *ngIf="isSubmitted && getContactControl(i, 'phoneNbr')?.errors?.['pattern']">
+                Contact's Phone Number must have 10 digits
+              </kendo-formerror>
             </div>
             <div class="flex-col mb-1">
-              <kendo-floatinglabel text="Fax (optional)">
-                <kendo-textbox aria-label="Fax (optional)" formControlName="faxNbr"
-                  [fillMode]="formUiStyle.inputFillMode">
-                </kendo-textbox>
+              <kendo-floatinglabel text="Fax Number (optional)">
+                <kendo-maskedtextbox [maxlength]="10" aria-label="Fax Number (optional)" placeholder="Fax (optional)" [mask]="inputMask" [fillMode]="formUiStyle.inputFillMode"
+                formControlName="faxNbr"
+                [maskOnFocus]="true">
+            </kendo-maskedtextbox>
               </kendo-floatinglabel>
+              <kendo-formerror *ngIf="isSubmitted && getContactControl(i, 'faxNbr')?.errors?.['pattern']">
+                Contact's Fax must have 10 digits
+              </kendo-formerror>
             </div>
 
             <div class="flex-col mb-1">
               <kendo-floatinglabel text="Email Address (optional)">
-                <kendo-textbox aria-label="Email Address (optional)" formControlName="emailAddress"
+                <kendo-textbox aria-label="Email Address (optional)" [maxlength]="200" formControlName="emailAddress"
                   [fillMode]="formUiStyle.inputFillMode">
                 </kendo-textbox>
               </kendo-floatinglabel>
+              <kendo-formerror *ngIf="isSubmitted && getContactControl(i, 'emailAddress')?.errors?.['pattern']">
+                Not a valid email format
+              </kendo-formerror>
             </div>
+            <div class="flex-col mb-1  mt-checkbox">
+              <div class="component-list-h">
+                <span class="app-checkboxwidtext-wrapper" role="group">
+                  <input
+                    type="checkbox"
+                    kendoCheckBox
+                    aria-labelledby="AddressesshowHistorical"
+                   value="Y" name="preferredFlag" id="preferredFlagno"
+                    (change)="oncheckboxClick($event,i)" formControlName="preferredFlag"
+                  />
+                  <label class="k-checkbox-label" for="preferredFlagYes">Prefered Contact </label
+                  >
+                </span>
 
+
+              </div>
+            </div>
           </ng-container>
         </ng-container>
         <div class="flex-col"  *ngIf="this.contactAddress.vendorContactId==null">
-          <button  kendoButton icon="add" [primary]="true" look="flat" aria-label="Add Contact" 
+          <button  kendoButton icon="add" [primary]="true" look="flat" aria-label="Contact"
             (click)="onToggleAddNewContactClick()">
             Contact
           </button>
@@ -78,18 +112,31 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
+
+      <button kendoButton [primary]="true"  look="flat" aria-label="Deactivate"
+      (click)="onDeactivateContactClick()" *ngIf="this.contactAddress.vendorContactId!=null" >
+      Deactivate
+    </button>
+
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="cancel adding phone detail"
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
           (click)="onCancel()">
           Cancel
         </button>
 
-        <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="save()" *ngIf="this.contactAddress.vendorContactId==null" >
+        <button kendoButton [primary]="true" aria-label="Add" (click)="save()" *ngIf="this.contactAddress.vendorContactId==null" >
             Add
         </button>
-        <button kendoButton [primary]="true" aria-label="update or add phone detail" (click)="Update()" *ngIf="this.contactAddress.vendorContactId!=null" >
-          Edit
+        <button kendoButton [primary]="true" aria-label="Update" (click)="update()" *ngIf="this.contactAddress.vendorContactId!=null" >
+          Update
       </button>
       </div>
     </div>
   </kendo-dialog-actions>
+
+  <kendo-dialog *ngIf="isContactAddressDeactivateShow" (close)="clickCloseDeactivateContactAddress()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Deactivate Contact?</kendo-dialog-titlebar>
+  <cms-contacts-deactivate (closeDeactivateContactAddress)="onDeactiveCancel($event)"
+    [VendorContactId]="this.contactAddress.vendorContactId" [vendorId]="vendorId"> </cms-contacts-deactivate>
+</kendo-dialog>

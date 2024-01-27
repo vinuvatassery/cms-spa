@@ -14,7 +14,7 @@
       icon="add"
       kendoButton
       [primary]="true"
-      aria-label="add racial or ethnic identity"
+      aria-label="Identity"
       class="add-button-top"
       (click)="onIdentityDetailClicked()"
     >
@@ -36,15 +36,15 @@
             </kendo-floatinglabel>
           </span>
           <span class="filter-section_items filter--search">
-            <span class="material-icons">search</span>
+            <span class="material-icons" aria-hidden="true">search</span>
             <kendo-floatinglabel text="Search">
               <kendo-textbox [fillMode]="formUiStyle.dropDownFillMode" >
               </kendo-textbox>
             </kendo-floatinglabel>
           </span>
           <span>
-            <button kendoButton [primary]="true" look="flat" class="button-lg">
-              <span class="material-icons" aria-label="export" aria-invalid="true"
+            <button kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg">
+              <span class="material-icons" aria-hidden="true"
                 >exit_to_app</span
               >Export
             </button>
@@ -87,7 +87,7 @@
               kendoPopoverAnchor
               [popover]="onUserProfileDetailsHovered"
               showOn="hover"
-              aria-label="modified by"
+              [attr.aria-label]="dataItem.modifiedBy"
             >
               <div class="app-c-avatar avatar-sm">
                 <span class="profile-text-avatar">AK</span>
@@ -116,17 +116,17 @@
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton
             [data]="moreactions"
-            icon="more-vertical"
+            
             title="More option"
             aria-label="more actions"
             class="TableActionPopup app-dropdown-action more_action_wid"
             buttonClass="k-icon-button"
             [popupSettings]="{ popupClass: popupClassAction, animate: true }"
           >
-          <span hidden> More Option</span>
+          <span class="material-icons" aria-label="More option"> more_vert    </span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
               <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-                <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+                <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                 <label>   {{ dataItem.text }} </label>
             </button>
      
@@ -154,7 +154,7 @@
         icon="add"
         kendoButton
         [primary]="true"
-        aria-label="add racial or ethnic identity"
+        aria-label="Identity"
         (click)="onIdentityDetailClicked()"
       >
         Identity
@@ -186,10 +186,10 @@
     <kendo-dialog-actions>
       <div class="justify-content-between">
         <div class="justify-content-end">
-          <button kendoButton [primary]="true" look="outline" aria-label="cancel">
+          <button kendoButton [primary]="true" look="outline" aria-label="Cancel">
             Cancel
           </button>
-          <button kendoButton [primary]="true" aria-label="deactivate">
+          <button kendoButton [primary]="true" aria-label="Deactivate">
             Deactivate
           </button>
         </div>

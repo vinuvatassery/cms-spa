@@ -25,6 +25,7 @@ import { Router } from '@angular/router';
 import { ClientProfileTabs } from '../enums/client-profile-tabs.enum';
 import { SearchHeaderType } from '../enums/search-header-type.enum';
 import { GridColumnFilter} from '../enums/grid-column-filter.enum';
+import { CaseScreenTab } from '../enums/case-screen-tab.enum';
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -58,8 +59,14 @@ export class CaseFacade {
   private groupDeletedSubject = new BehaviorSubject<boolean>(false);
   private ddlEligPeriodsSubject = new BehaviorSubject<any>([]);
   private searchBarsubject = new Subject<string>();
+  private myClientsSubject = new Subject<any>();
+  private recentClientsSubject = new Subject<any>();
+  private allClientsSubject = new Subject<any>();
 
   /** Public properties **/
+  myClients$ = this.myClientsSubject.asObservable();
+  recentClients$ = this.recentClientsSubject.asObservable();
+  allClients$ = this.allClientsSubject.asObservable();
   cases$ = this.casesSubject.asObservable();
   myCases$ = this.myCasesSubject.asObservable();
   recentCases$ = this.recentCaseSubject.asObservable();
@@ -322,6 +329,13 @@ export class CaseFacade {
       next: (clientProfileResponse) => {
         this.clientProfileHeaderSubject.next(clientProfileResponse);
         this.hideLoader();
+        if (clientProfileResponse) {
+          const activeSession = {
+            clientCaseId: clientProfileResponse?.clientCaseId,
+            clientId: clientProfileResponse?.clientId,
+          };
+          this.createActiveSession(activeSession);
+        }
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -360,13 +374,24 @@ export class CaseFacade {
       )
       .subscribe({
         next: (casesResponse: any) => {
-          this.casesSubject.next(casesResponse);
           if (casesResponse) {
+
             const gridView = {
               data: casesResponse['items'],
               total: casesResponse['totalCount'],
             };
-            this.casesSubject.next(gridView);
+
+            if(caseParams?.caseScreenType === CaseScreenTab.ALL)
+            {
+              this.allClientsSubject.next(gridView);
+            }
+            else if(caseParams?.caseScreenType === CaseScreenTab.MY_CASES)
+            {
+              this.myClientsSubject.next(gridView);
+            }
+            else{
+              this.recentClientsSubject.next(gridView);
+            }
           }
           this.searchLoaderVisibilitySubject.next(false);
         },

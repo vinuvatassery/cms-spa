@@ -90,25 +90,13 @@ export class BillingAddressFacade {
 
   }
 
-  loadPaymentsAddressListGrid(
-    vendorTypeCode: string,
-    skipcount: number,
-    maxResultCount: number,
-    sort: string,
-    sortType: string
-  ) {
+  loadPaymentsAddressListGrid(paymentAddressListParams:any) {
     this.showLoader();
 
     this.searchLoaderVisibilitySubject.next(true);
 
     this.billingAddressDataService
-      .loadBillingPaymentsAddressListService(
-        vendorTypeCode,
-        skipcount,
-        maxResultCount,
-        sort,
-        sortType
-      )
+      .loadBillingPaymentsAddressListService(paymentAddressListParams)
       .subscribe({
         next: (dataResponse) => {
           this.billingAddressDataSubject.next(dataResponse);
@@ -134,7 +122,7 @@ export class BillingAddressFacade {
     this.loaderService.show();
     return this.billingAddressDataService.deactivatePaymentAddress(addressId).pipe(
       map((response) => {
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Payment Address De-Activated Successfully');
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Payment address de-activated successfully!');
         this.hideLoader();
         return response;
       }),
@@ -151,7 +139,7 @@ export class BillingAddressFacade {
     this.loaderService.show();
     return this.billingAddressDataService.deletePaymentAddress(addressId).pipe(
       map((response) => {
-        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Payment Address Deleted Successfully');
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Payment address deleted successfully!');
         this.hideLoader();
         return response;
       }),

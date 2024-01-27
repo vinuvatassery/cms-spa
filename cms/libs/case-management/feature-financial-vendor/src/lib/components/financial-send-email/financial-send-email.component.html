@@ -1,0 +1,89 @@
+<kendo-dialog-titlebar (close)="onCloseSendEmailClicked()">Send New Email </kendo-dialog-titlebar>
+<kendo-dialog
+  *ngIf="true"
+  (close)="onCloseSendEmailClicked()"
+  class="app-c-modal app-c-modal-lg app-c-modal-np"
+  title="Send New Email "
+>
+  <section class="k-dialog-body">
+    <p class="text-muted mb-1">
+      Select an existing template or draft a custom email.
+    </p>
+    <div class="flex-row pb-2">
+      <div class="flex-col">      
+      </div>
+      <div>
+        <div class="flex-col">
+          <kendo-floatinglabel text="Email">
+            <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode" [maxlength]="40" [(ngModel)]="email"></kendo-textbox>
+            
+        </kendo-floatinglabel>
+        </div>
+        <div class="flex-col">
+          <kendo-floatinglabel text="CC" class="inline-search-loader">
+            <kendo-multiselect
+          [fillMode]="formUiStyle.dropDownFillMode"        
+          [(ngModel)]="selectedCCEmail"
+          aria-label="cc of email"
+          ></kendo-multiselect>
+          </kendo-floatinglabel>
+        </div>
+        <div class="flex-col">
+          <kendo-floatinglabel text="Subject">
+            <kendo-textbox  placeholder="Subject"  aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+          </kendo-floatinglabel>
+        </div>
+        <div class="flex-col mt-3">
+          <p>
+            Type the body of the email. The email header and footer generate
+            from Admin settings. Click "Preview Email" to see what the client will
+            receive.
+          </p>
+        </div>
+        <div class="flex-col  ">
+         
+        </div>
+      </div>
+    </div>
+  </section>
+  <kendo-dialog-actions *ngIf="false">
+    <div class="justify-content-between bigbtn-wrapper">
+      <div class="w100">
+        <button
+          kendoButton
+          [primary]="true"
+          look="flat"        
+          aria-label="Save for Later"
+        >
+          Save for Later
+        </button>
+        <button
+          kendoButton
+          [primary]="true"
+          look="flat"        
+          aria-label="Preview Email"
+        >
+          Preview Email
+        </button>
+      </div>
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          (click)="onCloseSendEmailClicked()"
+          aria-label="Cancel"
+        >
+          Cancel
+        </button>
+        <button
+          kendoButton
+          [primary]="true"        
+          aria-label="Send Email"
+        >
+          Send Email
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+ 

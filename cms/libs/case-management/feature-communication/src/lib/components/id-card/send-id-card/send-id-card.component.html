@@ -25,7 +25,7 @@
         [primary]="true"
         look="outline"
         (click)="onCloseSendIdClicked()"
-        aria-label="cancel send id"
+        aria-label="Cancel"
       >
         Cancel
       </button>
@@ -33,7 +33,7 @@
         kendoButton
         [primary]="true"
         (click)="sendNewIdCard()"
-        aria-label="send id"
+        aria-label="Send"
         [disabled]="!(mailingAddress$ | async)"
       >
         Send

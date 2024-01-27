@@ -1,5 +1,6 @@
 /** Angular **/
 import { Component, HostListener } from '@angular/core';
+import { ReminderNotificationSnackbarService } from '@cms/shared/util-core';
 import { UserDataService } from '@cms/system-config/domain';
 
 @Component({
@@ -7,7 +8,8 @@ import { UserDataService } from '@cms/system-config/domain';
   templateUrl: './layout.component.html',
 })
 export class LayoutComponent {
-  constructor(private readonly userDataService: UserDataService) {}
+  commonReminderSnackbar$   = this.reminderNotificationSnackbarService.snackbar$
+  constructor(private readonly userDataService: UserDataService, private readonly reminderNotificationSnackbarService : ReminderNotificationSnackbarService) {}
 
   /** Public properties **/
   isSideMenuToggled = false;
@@ -26,9 +28,11 @@ export class LayoutComponent {
   @HostListener('window:resize', ['$event'])
   sizeChange(event: any) {
     let screenSize = event.currentTarget.window.innerWidth;
-    if (screenSize <= 600) {
+    if (screenSize <= 1024) {
       this.isSideMenuToggled = true;
     }
+
+  
   }
 
   @HostListener('window:load', ['$event'])

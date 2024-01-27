@@ -9,7 +9,7 @@
     </p>
     <p class="text-muted mb-2" *ngIf="!isEditSearchHealthProviderValue">
      
-      Start typing the provider's name, then select one from the suggestions. If you don't see the correct provider, click on "Add New" to add a new Healthcare Provider to the master list.
+      Start typing the provider's name, then select one from the suggestions. If you don't see the correct provider, click on  {{hasCreateUpdatePermission==true ? '"Add New"':'"Request New"'}} to add a new Healthcare Provider to the master list.
       
     </p>
     <div class="flex-row">
@@ -58,22 +58,23 @@
       <div>
         <button
           kendoButton
+          type="button"
           [primary]="true"
           look="flat"
           (click)="onOpenBusinessLogicClicked()"        
-          aria-label="add new provider"
+          attr.aria-label="{{hasCreateUpdatePermission==true ? 'Add New':'Request New'}} "
           *ngIf="!isEditSearchHealthProviderValue"
         >
-          ADD NEW
+         {{hasCreateUpdatePermission==true ? 'Add New':'Request New'}} 
         </button>
         <button
           kendoButton
           class="k-danger-link"
           *ngIf="isEditSearchHealthProviderValue"
-          aria-label="remove provider"
+          aria-label="Remove"
           (click)="onDeleteConfirm()"
         >
-          REMOVE
+          Remove
         </button>
       </div>
       <div class="justify-content-end">
@@ -82,11 +83,11 @@
           [primary]="true"
           look="outline"
           (click)="onCloseProviderClicked()"
-          aria-label="cancel adding provider"
+          aria-label="Cancel"
         >
-          CANCEL
+          Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="add or update pharmacy"  [disabled]="btnDisabled">
+        <button kendoButton [primary]="true" attr.aria-label="{{ isEditSearchHealthProviderValue ? 'Update' : 'Add' }}"   [disabled]="btnDisabled">
           {{ isEditSearchHealthProviderValue ? 'Update' : 'Add' }}
         </button>
       </div>

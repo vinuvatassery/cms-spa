@@ -5,9 +5,10 @@ import { State } from '@progress/kendo-data-query';
 import { Observable } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 /** Facades **/
-import { CompletionChecklist, HealthInsurancePolicyFacade, StatusFlag, WorkflowFacade } from '@cms/case-management/domain';
+import { CompletionChecklist, HealthInsurancePolicyFacade, PriorityCode, WorkflowFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-medical-premium-list',
@@ -39,6 +40,9 @@ export class MedicalPremiumListComponent implements OnInit {
   gridList = [];
   carrierContactInfo: any;
   insurancePlanName: string = '';
+  selectedEligibilityId:any;
+  selectedPolicyPriority:any=null;
+  isDeletePolicy:any= false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   showInsuranceRequired = this.healthInsurancePolicyFacade.showInsuranceRequired$;
   /** Input properties **/
@@ -128,6 +132,7 @@ export class MedicalPremiumListComponent implements OnInit {
       if (value && this.isTriggerPriorityPopup) {
         this.isEditInsurancePriorityTitle = false;
         this.insurancePriorityModalButtonText = 'Save';
+        this.selectedEligibilityId = this.caseEligibilityId;
         this.onChangePriorityOpenClicked();
       }
       else {
@@ -271,26 +276,39 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   deleteInsurancePolicy() {
-    this.isTriggerPriorityPopup = false;
+    if(this.selectedPolicyPriority === PriorityCode.Primary){
+      this.isTriggerPriorityPopup = true;
+    }
+    else{
+      this.isTriggerPriorityPopup = false;
+    }
     this.deleteInsurancePlan.next(this.currentInsurancePolicyId);
   }
 
   handleOptionClick(dataItem: any, type: any) {
     if (type == 'Delete') {
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.selectedEligibilityId = dataItem.clientCaseEligibilityId;
+      this.selectedPolicyPriority = dataItem.priorityCode;
+      this.isDeletePolicy = true;
       this.onDeleteConfirmOpenClicked();
     }
     else if (type == 'Edit') {
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
+      this.selectedEligibilityId = dataItem.clientCaseEligibilityId;
+      this.isDeletePolicy = false;
       this.handleHealthInsuranceOpenClicked('edit');
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);
       this.healthInsurancePolicyFacade.getHealthInsurancePolicyById(dataItem.clientInsurancePolicyId);
     }
     else if (type == 'priority') {
+      this.isDeletePolicy = false;
       this.selectedInsurance = dataItem;
+      this.selectedEligibilityId = dataItem.clientCaseEligibilityId;
       this.onChangePriorityOpenClicked()
     }
     else if(type == 'Copy'){
+      this.isDeletePolicy = false;
       this.currentInsurancePolicyId = dataItem.clientInsurancePolicyId;
       this.handleHealthInsuranceOpenClicked('copy');
       this.healthInsuranceForm.controls['clientInsurancePolicyId'].setValue(dataItem.clientInsurancePolicyId);

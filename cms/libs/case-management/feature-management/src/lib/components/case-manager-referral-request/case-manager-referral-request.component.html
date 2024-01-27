@@ -1,4 +1,4 @@
-<kendo-dialog-titlebar (click)="onSubmitConfirm(false)"> Submit Case Manager referral </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (click)="onSubmitConfirm(false)"> Submit Case Manager Referral </kendo-dialog-titlebar>
   <section class="k-dialog-body mb-2">
     <p>
         A referral will be sent to an Intake Coordinator. You will be notified once the client is assigned a Case Manager.
@@ -13,11 +13,11 @@
         [primary]="true"
         look="outline"
         (click)="onSubmitConfirm(false)"
-        aria-label="cancel adding provider"
+        aria-label="Cancel"
       >
         CANCEL
       </button>
-      <button kendoButton [primary]="true" aria-label="add or update case manager" (click)=onSubmitConfirm(false) >
+      <button kendoButton [primary]="true" aria-label="Submit" (click)=onSubmitConfirm(false) >
        SUBMIT
       </button>
       </div>

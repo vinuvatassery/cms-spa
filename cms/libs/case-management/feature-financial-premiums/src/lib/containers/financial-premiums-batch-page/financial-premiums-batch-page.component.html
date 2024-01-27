@@ -1,0 +1,37 @@
+
+ <cms-financial-premiums-batches-log-lists [premiumsType]="premiumType" [paymentBatchName$]="paymentBatchName$"
+  [batchLogGridLists$]="batchLogGridLists$"
+  [batchLogServicesData$]="batchLogServicesData$"
+ [pageSizes]="pageSizes" [sortValue]="sortValue"
+ [sortType]="sortType" [sort]="sort" 
+ [exportButtonShow$]="exportButtonShow$"   
+ [actionResponse$]="actionResponse$"
+ (loadBatchLogListEvent)="loadBatchLogListGrid($event)"
+ (loadFinancialPremiumBatchInvoiceListEvent)=loadFinancialPremiumBatchInvoiceList($event)
+ (exportGridDataEvent)="exportPremiumBatchesGridData()"
+ (unBatchEntireBatchEvent)="unBatchEntireBatchClick($event)"
+ (unBatchPremiumEvent)="unBatchPremiumClick($event)"
+ [unbatchPremiums$]="unbatchPremiums$"
+ [unbatchEntireBatch$]="unbatchEntireBatch$"
+ [batchId]="batchId"
+ (deletePaymentEvent)="deletePayment($event)"
+ (onProviderNameClickEvent)="onProviderNameClick($event)"
+ [paymentByBatchGridLoader$]="paymentByBatchGridLoader$"
+ (loadTemplateEvent) = "loadEachLetterTemplate($event)"
+ [letterContentList$]="letterContentList$"
+ [insuranceCoverageDates$]="insuranceCoverageDates$"
+ [letterContentLoader$]="letterContentLoader$"
+ (updatePremiumEvent)="updatePremium($event)"
+ (loadPremiumEvent)="loadPremiumEvent($event)"
+ [insurancePremium$]="insurancePremium$"
+ ></cms-financial-premiums-batches-log-lists>
+
+ <ng-template #providerDetailsTemplate>
+    <cms-financial-premiums-provider-info
+          [paymentRequestId]="paymentRequestId"
+          (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+          (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$" 
+          (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+          [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+</ng-template>

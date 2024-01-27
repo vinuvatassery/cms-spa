@@ -1,12 +1,14 @@
 
 <case-management-authorization
   [isCerForm] = "isCerForm"
+  [clientId]="clientId"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   [templateNotice$]="templateNotice$"
   (loadAuthorizationData)="loadAuthorization()"
   (saveAuthorizationData)="saveAuthorization($event)"
   (loadAuthorizationNotice)="loadAuthorizationNotice()"
   (setStartButtonVisibility)="setStartButtonVisibility($event)"
+  (cerDateSignatureEvent)="loadDateSignature($event)"
 ></case-management-authorization>
 
 <!-- Application Review -->
@@ -20,6 +22,7 @@
           [primary]="true"  
           [disabled]="!(startReviewButtonVisibility$ | async)"      
           (click)="onStartButtonClick()"
+          aria-label="Start"
         >
           Start
         </button>

@@ -1,0 +1,278 @@
+<kendo-dialog-titlebar (close)="closeAddEditPremiumsFormModalClicked()">
+    <section class="app-l-mainTittle">
+        <h1 class="maintitle_withicon text-bold">Edit Premium </h1>
+    </section>
+</kendo-dialog-titlebar>
+<section class="k-dialog-body">
+<section class="add_main_popup_screen" *ngIf="insurancePremium$ | async as premium">
+
+
+    <div class="add_new_top_section">
+        <div class="flex-row column-labels">
+            <div class="flex-col flex-col-3">
+                <label><strong>Client Name:</strong></label>
+                <p> {{premium.clientFullName}}</p>
+            </div>
+            <div class="flex-col flex-col-3">
+                <label><strong>Client ID:</strong></label>
+                <p>{{premium.clientId}}</p>
+            </div>
+
+            <div class="flex-col flex-col-3">
+                <label><strong>Insurance Vendor:</strong></label>
+                <p> {{premium.vendorName}} </p>
+            </div>
+
+            <div class="flex-col flex-col-3">
+                <label><strong>Plan Name:</strong></label>
+                <p>{{premium.insurancePlanName}} </p>
+            </div>
+
+            <div class="flex-col flex-col-3">
+                <label><strong>Insurance Type:</strong></label>
+                <p>{{premium.healthInsuranceType}}</p>
+            </div>
+            <div class="flex-col flex-col-3">
+                <label><strong>Coverage Start Date:</strong></label>
+                <p>{{premium.coverageStartDate  | date:'MM/dd/yyyy'}}</p>
+            </div>
+            <div class="flex-col flex-col-3">
+                <label><strong>Coverage End Date:</strong></label>
+                <p> {{premium.coverageEndDate  | date:'MM/dd/yyyy'}} </p>
+            </div>
+            <div class="flex-col flex-col-3">
+                <label><strong>Next Premium Due Date:</strong></label>
+                <p> {{premium.nextPremiumDueDate  | date:'MM/dd/yyyy'}} </p>
+            </div>
+        </div>
+        <p class="mb-0"> Update the premium amount and add adjustments if needed.</p>
+        <div class="flex-row">
+            <div class="flex-col flex-col-3">
+                <kendo-floatinglabel text="Premium Amount" class="amount-with-symbol">
+                    <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                    <kendo-numerictextbox 
+                        placeholder="Premium Amount" 
+                        aria-label="Payment Amount"
+                        class="input-icon-right" 
+                        placeholder="00.00" 
+                        [spinners]="false"
+                        [fillMode]="formUiStyle.inputFillMode"                         
+                        [min]="0"
+                        [decimals]="2"
+                        [maxlength]="15"
+                        [ngClass]="{'ng-invalid ng-dirty':premium.premiumAmountRequired}"
+                        (valueChange)="premiumAmountChanged()"
+                        [(ngModel)]="premium.premiumAmount">
+                    </kendo-numerictextbox>
+                    <kendo-formerror *ngIf="premium.premiumAmountRequired">
+                        Premium Amount is required
+                    </kendo-formerror>
+                </kendo-floatinglabel>
+            </div>
+            <div class="flex-col flex-col-3">
+                <span class="app-checkboxwidtext-wrapper mt-4">
+                    <input 
+                        kendoCheckBox              
+                        type="checkbox" 
+                        id="spots-payment" 
+                        name="spots-payment"
+                        aria-labelledby="spots-payment"
+                        [(ngModel)]="premium.isSpotsPayment"/>
+                    <label class="k-checkbox-label" for="spots-payment">This is a SPOTS payment</label>
+                </span>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="add_new_bottom_section">
+        <div class="flex-row">
+            <div class="flex-col flex-col-6">
+            
+                <div  *ngFor="let adjustment of premium.premiumAdjustments;index as i" class="mb-2">   
+                    <div class="flex-space-bw align-items-center">
+                        <h4 class="mar-0">ADJUSTMENT {{i+1}}</h4>
+                        <button class="" kendoButton fillMode="flat" aria-label="Delete" themeColor="error" (click)="deleteAdjustment(i)">DELETE</button>
+                    </div>
+                    <div class="flex-row">
+                        <div class="flex-col flex-col-2">
+                            <div class="mt-3">
+                            <kendo-buttongroup selection="single" class="height-btn">
+                                <button 
+                                kendoButton 
+                                [toggleable]="true" 
+                                aria-label="Add" 
+                                title="Add"
+                                themeColor="light" 
+                                [selected]="adjustment.isPositiveAdjustment ?? true"
+                                (selectedChange)="changeAdjustmentSign(true, adjustment)">
+                                    <span class="material-icons" aria-hidden="true">add</span>
+                                </button>
+                                <button 
+                                kendoButton 
+                                [toggleable]="true"  
+                                themeColor="light" 
+                                aria-label="Remove" 
+                                title="Remove"
+                                [selected]="!(adjustment.isPositiveAdjustment ?? true)"
+                                (selectedChange)="changeAdjustmentSign(false, adjustment)">
+                                    <span class="material-icons" aria-hidden="true">remove</span>
+                                </button>
+                            </kendo-buttongroup>
+                        </div>
+                        </div>
+                        <div class="flex-col flex-col-5">
+                            <kendo-floatinglabel text="Amount" class="amount-with-symbol">
+                                <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                                <kendo-numerictextbox 
+                                placeholder="Amount" 
+                                aria-label="Amount" 
+                                [spinners]="false"
+                                class="input-icon-right" 
+                                placeholder="00.00" 
+                                [spinners]="false"
+                                [fillMode]="formUiStyle.inputFillMode"                                                            
+                                [decimals]="2"
+                                [maxlength]="15"
+                                [fillMode]="formUiStyle.inputFillMode"
+                                [ngClass]="{'ng-invalid ng-dirty':adjustment.adjustmentAmountRequired}"
+                                (valueChange)="adjustmentAmountChanged(adjustment)"
+                                [(ngModel)]="adjustment.adjustmentAmount"
+                               >
+                                </kendo-numerictextbox>
+                                <kendo-formerror *ngIf="adjustment.adjustmentAmountRequired">
+                                    Amount is required
+                                </kendo-formerror>
+                            </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col flex-col-5">
+                            <kendo-floatinglabel text="Coverage Dates">
+                                <kendo-dropdownlist 
+                                [fillMode]="formUiStyle.dropDownFillMode"
+                                placeholder="Coverage Date"
+                                [data]="coverageDateList"
+                                textField="coverageDate" 
+                                valueField="coverageStartDate"
+                                [valuePrimitive]="true"
+                                [ngClass]="{'ng-invalid ng-dirty':(adjustment.coverageDatesRequired || adjustment.duplicateCoverage)}"
+                                (valueChange)="adjustmentDateChanged(adjustment)"
+                                [(ngModel)]="adjustment.coverageStartDate"
+                                >
+                            </kendo-dropdownlist>
+                            <kendo-formerror *ngIf="adjustment.coverageDatesRequired">
+                                Coverage Dates is required
+                            </kendo-formerror>
+                            <kendo-formerror *ngIf="adjustment.duplicateCoverage">
+                                Coverage Dates already exists
+                            </kendo-formerror>
+                          </kendo-floatinglabel>
+                        </div>
+                    </div>
+                </div>
+                    <div class="mt-2">
+                        <button 
+                        class="" 
+                        kendoButton 
+                        fillMode="flat" 
+                        aria-label="Add Adjustment"
+                        themeColor="primary"
+                        (click)="addAdjustment()"> 
+                        <span class="material-icons" aria-hidden="true">add</span> ADJUSTMENT</button>
+                    </div>
+               
+            </div>
+        </div>
+
+    </div>
+
+    <div>
+        <h5 class="text-upper">Recent Premiums for this client</h5>
+  
+            <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [paymentRequestId]="paymentRequestId" [clientId]="clientId" [premiumsType]="premiumsType"
+            (onProviderNameClickEvent)="onProviderNameClick($event)"
+            ></cms-financial-premiums-recent-premiums-list>
+       
+ 
+    </div>
+    
+</section>
+<!-- Skeleton Loader -->
+  
+<div class="add_new_top_section" *ngIf="!(insurancePremium$ | async)">
+    <p class="mb-3"> Update the premium amount and add adjustments if needed.</p>
+    <div class="flex-row column-labels">
+        <div class="flex-col flex-col-3">
+            <label><strong>Client Name:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+        <div class="flex-col flex-col-3">
+            <label><strong>Client ID:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+
+        <div class="flex-col flex-col-3">
+            <label><strong>Insurance Vendor:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+
+        <div class="flex-col flex-col-3">
+            <label><strong>Plan Name:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+
+        <div class="flex-col flex-col-3">
+            <label><strong>Insurance Type:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+        <div class="flex-col flex-col-3">
+            <label><strong>Coverage Start Date:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+        <div class="flex-col flex-col-3">
+            <label><strong>Coverage End Date:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+        <div class="flex-col flex-col-3">
+            <label><strong>Next Premium Due Date:</strong></label>
+            <kendo-skeleton shape="text" animation="pulse" width="30%"></kendo-skeleton>
+        </div>
+        </div>
+   
+    <div class="flex-row">
+        <div class="flex-col flex-col-3">
+            <kendo-floatinglabel text="" class="amount-with-symbol">
+                <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                <kendo-skeleton shape="text" animation="pulse" width="60%" height="50px"></kendo-skeleton>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col mt-1">
+            <p>This will update the premium amount going forward</p>
+        </div>
+    </div>
+
+</div>
+</section>
+  
+
+
+<kendo-dialog-actions>
+
+    <div class="justify-content-between align-items-center">
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" class="ml-2" aria-label="Cancel" (click)="closeAddEditPremiumsFormModalClicked()"> Cancel </button>
+            <button kendoButton [primary]="true" aria-label="Update"  (click)="save()"> Update </button>
+      
+        </div>
+    </div>
+</kendo-dialog-actions>
+
+<ng-template #pcaExceptionDialogTemplate>
+    <common-financial-pca-chosen-alert [chosenPca]="chosenPcaForReAssignment"
+        (confirmChosenPcaAlertClickedEvent)="onConfirmPcaAlertClicked($event)"
+        (closeChosenPcaAlertClickedEvent)="onPcaAlertCloseClicked($event)">
+    </common-financial-pca-chosen-alert>
+</ng-template>
+
+
+ 

@@ -45,7 +45,7 @@
           [primary]="true"
           look="flat"
           (click)="onSaveForLaterClicked()"
-          aria-label="save for later"
+          aria-label="Save for Later"
         >
           Save for Later
         </button>
@@ -56,7 +56,7 @@
           [primary]="true"
           look="outline"
           (click)="onCloseSendMessageClicked()"
-          aria-label="cancel send message"
+          aria-label="Cancel"
         >
           Cancel
         </button>
@@ -64,7 +64,7 @@
           kendoButton
           [primary]="true"
           (click)="onSendMessageConfirmClicked()"
-          aria-label="send messages"
+          aria-label="Send Message(s)"
         >
           Send Message(s)
         </button>
@@ -93,7 +93,7 @@
           kendoButton
           [primary]="true" 
           (click)="onCloseSaveForLaterClicked()"
-          aria-label="confirmation for close send message"
+          aria-label="OK"
         >
           OK
         </button>
@@ -104,11 +104,10 @@
 
 <!-- Send SMS text message Modal -->
 <kendo-dialog
-  *ngIf="isShowSendMessageConfirmPopupClicked"
-  (close)="onCloseSendMessageConfirmClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  title="Send SMS text message(s)?"
->
+  *ngIf="isShowSendMessageConfirmPopupClicked" 
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+<kendo-dialog-titlebar (close)="onCloseSendMessageConfirmClicked()">  Send SMS Text Message(s)? </kendo-dialog-titlebar>
+
   <section class="k-dialog-body">
     <p class="mb-3">This action cannot be undone.</p>
   </section>
@@ -120,7 +119,7 @@
           [primary]="true"
           look="flat"
           (click)="onEditMessagesClicked()"
-          aria-label="edit message"
+          aria-label="Edit Message(s)"
         >
           Edit Message(s)
         </button>
@@ -130,7 +129,7 @@
           kendoButton
           [primary]="true"
           (click)="onCloseSendMessageConfirmClicked()"
-          aria-label="send messages"
+          aria-label="Send"
         >
           Send
         </button>

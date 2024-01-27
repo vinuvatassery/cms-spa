@@ -5,8 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
-import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, StatusFlag, NavigationType } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-health-insurance-page',
@@ -131,7 +132,10 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       proofOfPremium: [''],
       copyOfInsuranceCard: [''],
       copyOfSummary: [''],
-      cerReviewType:['']
+      cerReviewType:[''],
+      insuranceVendorAddressId:[''],
+      vendorAddressId:[''],
+      insuranceTypeCode:['']
     });
 
   }
@@ -142,7 +146,6 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       groupPolicyEligibleFlag: [null]
     });
   }
-
   private addSaveSubscription(): void {
     this.saveClickSubscription = this.workflowFacade.saveAndContinueClicked$.pipe(
       tap(() => this.workflowFacade.disableSaveButton()),
@@ -164,7 +167,6 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
       }
     });
   }
-
   private saveAndContinue() {
     if (this.insuranceFlagForm.controls['currentInsuranceFlag'].value == StatusFlag.No) {
       this.insurancePolicyFacade.showInsuranceRequiredSubject.next(false);
@@ -417,6 +419,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.ShowHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy deleted successfully");
           this.HideLoader();
           this.ref.detectChanges();
+          this.insurancePolicyFacade.triggerPriorityPopupSubject.next(true);
         },
         error: (error: any) => {
           this.ShowHideSnackBar(SnackBarNotificationType.ERROR, error)

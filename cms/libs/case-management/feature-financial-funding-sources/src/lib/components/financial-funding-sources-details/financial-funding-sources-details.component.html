@@ -1,0 +1,50 @@
+<kendo-dialog-titlebar (close)="closeDetailsFundingSourcesClicked()">   {{ isEditFundingSource ? 'Edit' : 'Add ' }} Funding Source</kendo-dialog-titlebar>
+<section class="k-dialog-body">
+      <p class="text-muted mb-2">
+            All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row"  [formGroup]="fundingSourceForm">
+        <div class="flex-col">
+          <kendo-floatinglabel text="Funding Source">
+            <kendo-textbox     aria-label="Funding Source" 
+              [fillMode]="formUiStyle.inputFillMode" 
+               formControlName="fundingSourceCode" 
+               (valueChange)="onFundingSourceValueChange($event)"
+               [maxlength]="200"> </kendo-textbox>
+          </kendo-floatinglabel>
+          <kendo-textarea-suffix class="justify-content-end">
+            <span class="counter">{{ fundingSourceCounter }}</span>
+          </kendo-textarea-suffix>
+          <kendo-formerror *ngIf="fundingSourceForm.hasError('required','fundingSourceCode') && isSubmitted">Funding Source is required.
+          </kendo-formerror>
+        </div>
+        <div class="flex-col mb-1">
+          <kendo-floatinglabel  text="Funding Name">
+            <kendo-textbox     aria-label="Funding Name" 
+            [fillMode]="formUiStyle.inputFillMode"   
+            formControlName="fundingDesc"
+            (valueChange)="onFundingDescValueChange($event)"
+            [maxlength]="200">
+           </kendo-textbox>
+          </kendo-floatinglabel>
+          <kendo-textarea-suffix class="justify-content-end">
+            <span class="counter">{{ fundingDescriptionCounter }}</span>
+          </kendo-textarea-suffix>
+          <kendo-formerror *ngIf="fundingSourceForm.hasError('required','fundingDesc') && isSubmitted">Funding Name is required.
+          </kendo-formerror>
+        </div>
+      </div>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+     
+        <div class="justify-content-end">
+          <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDetailsFundingSourcesClicked()">
+            Cancel
+          </button>
+          <button kendoButton [primary]="true" attr.aria-label=" {{ isEditFundingSource ? 'Update' : 'Add' }}" (click)="addUpdateFundingSource()" >
+               {{ isEditFundingSource ? 'Update' : 'Add' }}
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>

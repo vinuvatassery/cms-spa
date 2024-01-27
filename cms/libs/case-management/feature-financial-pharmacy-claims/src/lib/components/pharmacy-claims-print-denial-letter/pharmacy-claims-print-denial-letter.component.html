@@ -1,0 +1,25 @@
+<kendo-dialog-titlebar  > Print Denial Letters </kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1">  A letter will be printed for the client and Pharmacy provider. If there is an issue with the template, Please contact your Administrator.   </p>
+     
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="Cancel" 
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Print Letter"  >
+          Print Letter
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

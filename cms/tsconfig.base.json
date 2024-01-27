@@ -15,8 +15,14 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@cms/system-interface/domain": [
+        "libs/system-interface/domain/src/index.ts"
+      ],
       "@cms/case-management/domain": [
         "libs/case-management/domain/src/index.ts"
+      ],
+      "@cms/case-management/feature-approval": [
+        "libs/case-management/feature-approval/src/index.ts"
       ],
       "@cms/case-management/feature-authorization": [
         "libs/case-management/feature-authorization/src/index.ts"
@@ -54,23 +60,23 @@
       "@cms/case-management/feature-family-and-dependent": [
         "libs/case-management/feature-family-and-dependent/src/index.ts"
       ],
-      "@cms/case-management/feature-financial-dental-claims": [
-        "libs/case-management/feature-financial-dental-claims/src/index.ts"
+      "@cms/case-management/feature-financial-claims": [
+        "libs/case-management/feature-financial-claims/src/index.ts"
       ],
-      "@cms/case-management/feature-financial-dental-premiums": [
-        "libs/case-management/feature-financial-dental-premiums/src/index.ts"
-      ],
-      "@cms/case-management/feature-financial-insurance-premiums": [
-        "libs/case-management/feature-financial-insurance-premiums/src/index.ts"
+      "@cms/case-management/feature-financial-funding-sources": [
+        "libs/case-management/feature-financial-funding-sources/src/index.ts"
       ],
       "@cms/case-management/feature-financial-management": [
         "libs/case-management/feature-financial-management/src/index.ts"
       ],
-      "@cms/case-management/feature-financial-medical-claims": [
-        "libs/case-management/feature-financial-medical-claims/src/index.ts"
+      "@cms/case-management/feature-financial-pcas": [
+        "libs/case-management/feature-financial-pcas/src/index.ts"
       ],
       "@cms/case-management/feature-financial-pharmacy-claims": [
         "libs/case-management/feature-financial-pharmacy-claims/src/index.ts"
+      ],
+      "@cms/case-management/feature-financial-premiums": [
+        "libs/case-management/feature-financial-premiums/src/index.ts"
       ],
       "@cms/case-management/feature-financial-replenishment": [
         "libs/case-management/feature-financial-replenishment/src/index.ts"
@@ -114,9 +120,6 @@
       ],
       "@cms/productivity-tools/domain": [
         "libs/productivity-tools/domain/src/index.ts"
-      ],
-      "@cms/productivity-tools/feature-approval": [
-        "libs/productivity-tools/feature-approval/src/index.ts"
       ],
       "@cms/productivity-tools/feature-direct-message": [
         "libs/productivity-tools/feature-direct-message/src/index.ts"
@@ -164,6 +167,9 @@
       ],
       "@cms/system-config/feature-user-management": [
         "libs/system-config/feature-user-management/src/index.ts"
+      ],
+      "@cms/system-interface/feature-dashboard": [
+        "libs/system-interface/feature-dashboard/src/index.ts"
       ]
     }
   },

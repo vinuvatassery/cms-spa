@@ -89,13 +89,14 @@
         <div class="flex-col" *ngIf="!hasNoProofOfIncome">
           <common-document-upload
           [typeCode]="'PROOF_OF_INCOME'"
+          [fieldName]="'No proof of Income'"
           [file]="uploadedIncomeFile"
           [isFileViewable]="true"
           (handleFileSelectEvent)="handleFileSelected($event)"
           (handleFileRemoveEvent)="handleFileRemoved($event)"
-          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
-          <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="proofOfIncomeValidator"> Upload proof is required </kendo-formerror>
           <kendo-formerror *ngIf="proofOfIncomeValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
 
@@ -144,23 +145,23 @@
     <kendo-dialog-actions>
       <div class="justify-content-between">
         <div>
-          <button kendoButton class="k-danger-link" *ngIf="isEditValue" aria-label="delete income" (click)="onDeleteIncomeClicked()">
+          <button kendoButton class="k-danger-link" *ngIf="isEditValue" aria-label="Delete" (click)="onDeleteIncomeClicked()">
             Delete
           </button>
         </div>
         <div class="justify-content-end">
-          <button kendoButton [primary]="true" look="outline"  aria-label="cancel editing income"
+          <button kendoButton [primary]="true" look="outline"  aria-label="Cancel"
             (click)="closeIncomeDetailPoup()">
             Cancel
           </button>
-          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" aria-label="add income"
+          <button kendoButton (click)="submitIncomeDetailsForm()" [primary]="true" attr.aria-label="{{ isEditValue ? 'Update' : 'Add ' }}"
           [disabled]="btnDisabled">  {{ isEditValue ? 'Update' : 'Add ' }}</button>
         </div>
       </div>
     </kendo-dialog-actions>
   </form>
   <kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened" (close)="onRemoveIncomeConfirmationClosed()" class="app-c-modal app-c-modal-sm app-c-modal-np">
-    <kendo-dialog-titlebar class="transform-none"> Delete income source? </kendo-dialog-titlebar>
+    <kendo-dialog-titlebar class="transform-none"> Delete Income Source? </kendo-dialog-titlebar>
     <case-management-remove-income-confirmation
   (closeModal)="onRemoveIncomeConfirmationClosed()"
   [selectedIncome]="selectedIncome"

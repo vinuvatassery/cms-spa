@@ -5,9 +5,11 @@ import { Router } from '@angular/router';
 
 
 /** Internal Libraries **/
-import { CaseFacade, CaseScreenTab, WorkflowFacade,  UserDefaultRoles, SearchHeaderType,ModuleCode  } from '@cms/case-management/domain';
+import { CaseFacade, CaseScreenTab, WorkflowFacade, SearchHeaderType,ModuleCode  } from '@cms/case-management/domain';
+import { ReminderFacade } from '@cms/productivity-tools/domain';
 import {UITabStripScroll} from '@cms/shared/ui-tpa'
-import { LovFacade , UserManagementFacade} from '@cms/system-config/domain'
+import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { LovFacade , UserManagementFacade, UserDefaultRoles} from '@cms/system-config/domain'
 
 
 @Component({
@@ -42,6 +44,9 @@ export class CasePageComponent implements OnInit {
   sortValue  = this.caseFacade.sortValue;
   sortType  = this.caseFacade.sortType;
   sort  = this.caseFacade.sort;
+  myClients$ = this.caseFacade.myClients$;
+  recentClients$ = this.caseFacade.recentClients$;
+  allClients$ = this.caseFacade.allClients$;
 
   /** Constructor**/
 
@@ -50,7 +55,8 @@ export class CasePageComponent implements OnInit {
       private readonly workflowFacade :WorkflowFacade,
       private readonly loginUserFacade : UserManagementFacade,
       private readonly lovFacade : LovFacade,
-      private readonly  cdr :ChangeDetectorRef
+      private readonly  cdr :ChangeDetectorRef,
+      private reminderFacade: ReminderFacade
     ) {}
 
   /** Lifecycle hooks **/
@@ -167,4 +173,10 @@ export class CasePageComponent implements OnInit {
       this.cdr.detectChanges();
     }
 
-}
+    onReminderDoneClicked(event:any) {
+      this.reminderFacade.showHideSnackBar(
+        SnackBarNotificationType.SUCCESS,
+        'Item  updated to Done successfully'
+      );
+    }
+  }

@@ -179,14 +179,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
       .subscribe((clientHeaderData: any) => {
         if (clientHeaderData?.clientId > 0) {
           
-          if(clientHeaderData?.clientId !== this.clientId && clientHeaderData?.clientCaseId !== this.clientCaseId){
-            const activeSession = {
-              clientCaseId: clientHeaderData?.clientCaseId,
-              clientId: clientHeaderData?.clientId,
-            }; 
-            
-            this.caseFacade.createActiveSession(activeSession);
-          }
           this.clientId = clientHeaderData?.clientId;
           this.clientCaseEligibilityId =
             clientHeaderData?.clientCaseEligibilityId;

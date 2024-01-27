@@ -1,0 +1,55 @@
+<kendo-dialog-titlebar>Add Sub-Events</kendo-dialog-titlebar>
+<section class="k-dialog-body" kendoTooltip>
+    <p class="text-muted mb-2">
+        Choose the type of event, enter a description, and upload a file it needed. Event cannot be edited or deleted
+        once added.
+    </p>
+    <div class="flex-row">
+
+
+        <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Choose Event Type">
+                <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode">
+                </kendo-dropdownlist>
+            </kendo-floatinglabel>
+        </div>
+
+        <div class="flex-col">
+            <kendo-floatinglabel text="Event Description">
+                <kendo-textarea [fillMode]="formUiStyle.inputFillMode" aria-label="Event Description" #tareaCustomTodo
+                    resizable="auto" [maxlength]="tareaCustomTodoMaxLength" [cols]="8"
+                    [value]="tareaCustomTodoDescription" (valueChange)="onTareaCustomTodoValueChange($event)">
+                    <kendo-textarea-suffix class="justify-content-end">
+                        <span class="tareacustomtodocounter">{{
+                            tareaCustomTodoCounter
+                            }}</span>
+                    </kendo-textarea-suffix>
+                </kendo-textarea>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col mt-2">
+            <kendo-floatinglabel text="Attachment Type (attachment upload optional)">
+                <kendo-dropdownlist aria-label="Attachment Type" [fillMode]="formUiStyle.dropDownFillMode">
+                </kendo-dropdownlist>
+            </kendo-floatinglabel>
+            <span class="material-icons" aria-hidden="true"
+                title="Select an entity if you want this item to be displayed in its profile.">info</span>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<kendo-dialog-actions kendoTooltip>
+    <div class="justify-content-between">
+        <div>
+            <button kendoButton aria-label="Delete" class="k-danger-link"> Delete </button>
+        </div>
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel  </button>
+            <button kendoButton [primary]="true" aria-label="Create">Create</button>
+        </div>
+    </div>
+</kendo-dialog-actions>

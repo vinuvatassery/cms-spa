@@ -22,7 +22,7 @@ export class VendorContactsFacade {
   public gridPageSizes =
     this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'address1';
+  public sortValue = 'contactName';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [
     {
@@ -33,16 +33,20 @@ export class VendorContactsFacade {
   /** Private properties **/
   private contactsDataSubject = new BehaviorSubject<any>([]);
   private contactsSubject = new BehaviorSubject<any>([]);
+  private allContactsSubject = new BehaviorSubject<any>([]);
   private deActiveContactAddressSubject = new BehaviorSubject<boolean>(false);
   private removeContactAddressSubject = new BehaviorSubject<boolean>(false);
   private mailCodeSubject = new Subject<any>();
+
   /** Public properties **/
-  contactsData$ = this.contactsDataSubject.asObservable();  
+  contactsData$ = this.contactsDataSubject.asObservable();
   contacts$ = this.contactsSubject.asObservable();
+  allContacts$ = this.allContactsSubject.asObservable();
 
   deActiveContactAddressObs = this.deActiveContactAddressSubject.asObservable();
   removeContactAddressObs = this.removeContactAddressSubject.asObservable();
   mailCodes$ = this.mailCodeSubject.asObservable();
+
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -90,21 +94,14 @@ export class VendorContactsFacade {
       },
     });
   }
-  loadcontacts(vendorAddressId:string)
-  { 
-    this.showLoader();
-    this.vendorcontactsDataService.loadcontacts(vendorAddressId).subscribe({
-      next:(res:any)=>{
-      this.contactsSubject.next(res);
-      this.hideLoader();
-      },
-      error:(err:any)=>{
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-     this.hideLoader(); 
-      }
-    })
+  loadcontacts(vendorAddressId:string, skip: any, pageSize: any, sortBy: any, sortType: any, filters:any)
+  {
+   return  this.vendorcontactsDataService.loadcontacts(vendorAddressId,skip,pageSize, sortBy, sortType, filters)
   }
-  saveContactAddress(contactAddress: any) {  
+
+  
+
+  saveContactAddress(contactAddress: any) {
 
     this.showLoader();
     return this.vendorcontactsDataService.saveContactAddress(contactAddress).pipe(
@@ -119,7 +116,7 @@ export class VendorContactsFacade {
       })
     );
   }
-  deactiveContactAddress(vendorContactId: string){ 
+  deactiveContactAddress(vendorContactId: string){
     return new Promise((resolve,reject) =>{
       this.loaderService.show();
       this.vendorcontactsDataService.deactiveContactAddress(vendorContactId).subscribe({
@@ -130,7 +127,7 @@ export class VendorContactsFacade {
           this.loaderService.hide();
          }
          this.loaderService.hide();
-         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, ' Address De-Activated Successfully');       
+         this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact  De-Activated Successfully');
        },
        error: (err) => {
         resolve(false);
@@ -140,7 +137,7 @@ export class VendorContactsFacade {
        },
      });
     })
-    
+
   }
 
   removeContactAddress( vendorContactId: string) {
@@ -151,7 +148,7 @@ export class VendorContactsFacade {
           if (response === true) {
             this.removeContactAddressSubject.next(true);
             resolve(true);
-            this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Address Removed Successfully');
+            this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Contact Removed Successfully');
             this.loaderService.hide();
           }
           this.loaderService.hide();
@@ -165,9 +162,9 @@ export class VendorContactsFacade {
         },
       });
     })
-    
+
   }
-  updateContactAddress(contact:any){  
+  updateContactAddress(contact:any){
     this.loaderService.show();
     return this.vendorcontactsDataService.updateContactAddress(contact).pipe(
       catchError((err: any) => {
@@ -198,6 +195,21 @@ export class VendorContactsFacade {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
+  }
+
+  loadVendorAllContacts(vendorId:string)
+  {
+    this.showLoader();
+    this.vendorcontactsDataService.loadVendorAllContacts(vendorId).subscribe({
+      next:(res:any)=>{
+      this.allContactsSubject.next(res);
+      this.hideLoader();
+      },
+      error:(err:any)=>{
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+     this.hideLoader();
+      }
+    })
   }
 }
 

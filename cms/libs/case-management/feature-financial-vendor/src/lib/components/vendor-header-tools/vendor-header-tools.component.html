@@ -1,23 +1,60 @@
 <section class="client-tab-section vendor-tab">
     <div class="tab-over-icon-btn">
-      <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item">
+      <button kendoButton class="k-icon-button small-i-btn" title="New To-Do Item" aria-label="New To-Do Item" (click)="onTodoDetailsClicked(todoDetailTemplate)">
         <span class="material-icons" role="button" aria-label="New To-Do Item" aria-hidden="true">playlist_add</span>
       </button>
-      <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder">
+      <button kendoButton class="k-icon-button small-i-btn" title="New Reminder" aria-label="New Reminder" (click)="onNewReminderClicked(NewReminderTemplate)">
         <span class="material-icons" role="button" aria-label="New Reminder" aria-hidden="true">add_alarm</span>
       </button>
-      <kendo-dropdownbutton [data]="sendActions" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
-        buttonClass="k-flat-button" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-        Send
+        <kendo-dropdownbutton [data]="buttonList" class="TableActionPopup app-dropdown-action k-border-s-dropdown"
+    (click)="onSendMenuClick()" buttonClass="k-flat-button" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+    Send
         <span class="material-icons" aria-label="expand" aria-hidden="true" role="menuitem">arrow_right</span>
         <ng-template class="app-dropdown-action-list" kendoSplitButtonItemTemplate let-dataItem>
           <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-            aria-hidden="false" (click)="dataItem.click">
-            <span class="material-icons" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+            *ngIf="dataItem.id === 'new_letter'" (click)="dataItem.click(sendLetterDialog)">
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
             <label> {{ dataItem.text }} </label>
           </button>
+          <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+           *ngIf="dataItem.id === 'new_email'" (click)="dataItem.click(sendNewEmailDialog)">
+            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+            <label> {{ dataItem.text }} </label>
+          </button>
+
         </ng-template>
       </kendo-dropdownbutton>
     </div>
-   
-  </section> 
+  </section>
+
+   <!-- Create New To Do Modal Html-->
+<ng-template #todoDetailTemplate>
+  <kendo-dialog-titlebar (close)="onTodoDetailsClosed($event)">Create To Do Item for Donna </kendo-dialog-titlebar>
+  <productivity-tools-todo-detail
+  (isModalTodoDetailsCloseClicked)="onTodoDetailsClosed($event)"
+  ></productivity-tools-todo-detail>
+</ng-template>
+
+<!-- Create New Reminder Popup -->
+<ng-template #NewReminderTemplate>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">Create New Reminder for {{vendorProfile$?.vendorName}} </kendo-dialog-titlebar>
+  <productivity-tools-reminder-detail   (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
+</ng-template>
+
+<!-- Send New Letter Popup -->
+<ng-template #sendLetterDialog>
+  <case-management-send-letter  [data]="letterScreenName" [mailingAddress$]="mailCodes$"
+  [vendorId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
+  (loadInitialData)="loadMailingAddress()"
+  [communicationLetterTypeCode]="communicationLetterTypeCode"
+  kendoTooltip></case-management-send-letter>
+</ng-template>
+
+<!-- Send New Email Popup -->
+<ng-template #sendNewEmailDialog>
+  <case-management-send-email [data]="emailScreenName"
+  [communicationEmailTypeCode]="communicationEmailTypeCode"
+  [emailSubject]="emailSubject"
+  [toEmail]="toEmail"
+  (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
+</ng-template>

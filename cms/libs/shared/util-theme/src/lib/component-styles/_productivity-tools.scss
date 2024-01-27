@@ -4,8 +4,7 @@
     display: flex;
     margin: $size-0 $size-0 $size-xx $size-0;
     font-family: $font-family-bold;
-    align-items: center;
-    text-transform: uppercase;
+    align-items: center; 
     font-size: $font-size !important;
     .material-icons {
       margin-right: $size-m;
@@ -22,15 +21,14 @@
       cursor: pointer;
       transition: ease-in all 0.4s;
       &:hover {
-        background: material-color($hive-neutral-palette, 100);
+        background: var(--hive-neutral-palette-100);
       }
       &:first-child {
         border-top-width: 1px;
       }
       .due-item-heading {
         font-family: $font-family-bold;
-        margin: 0;
-        line-height: 18px;
+        margin: 0; 
         margin-bottom: $size-m;
         font-size: $font-size;
         overflow: hidden;
@@ -46,18 +44,12 @@
         span {
           width: 100%;
         }
-        .small-i-btn {
-          // width: $size-xxxx;
-          // height: $size-xxxx;
-          // line-height: $size-xxxx;
-          .k-button {
-            // width: $size-xxxx;
-            // height: $size-xxxx;
-            color: material-color($hive-neutral-palette, 800); 
+        .small-i-btn { 
+          .k-button { 
+            color: var(--hive-neutral-palette-900); 
             box-shadow: none;
             border-radius: 50%;
-            overflow: hidden;
-            // padding: 0px 0px 0px 0px;
+            overflow: hidden; 
             border: 0px;
           }
         }
@@ -76,34 +68,57 @@
         }
       }
       &.red-item-block {
-        background: material-color($hive-error-palette, 100);
+        background: var(--hive-error-palette-100);
         transition: ease-in all 0.4s;
         .due-item-heading,
         .due-item-details {
-          color: material-color($hive-error-palette, 900);
+          color: var(--hive-error-palette-900);
         }
         &:hover {
-          background: material-color($hive-error-palette, 200);
+          background: var(--hive-error-palette-200);
         }
         .item-list-icon {
-          color: material-color($hive-error-palette, 900);
+          color: var(--hive-error-palette-900);
         }
       }
       &.canyon-item-block {
-        background: material-color($hive-canyon-palette, 100);
+        background: var(--hive-canyon-palette-100);
         transition: ease-in all 0.4s;
         .due-item-heading,
         .due-item-details {
-          color: material-color($hive-canyon-palette, 900);
+          color: var(--hive-canyon-palette-900);
         }
         &:hover {
-          background: material-color($hive-canyon-palette, 200);
+          background: var(--hive-canyon-palette-200);
         }
         .item-list-icon {
-          color: material-color($hive-canyon-palette, 900);
+          color: var(--hive-canyon-palette-900);
         }
       }
     }
   }
 }
  
+.reminder_lists{
+  .k-content, .k-tabstrip-content{
+    background: #f8fafb;
+    max-height: calc(100vh - 100px) !important;
+    overflow: auto !important; 
+    height: auto !important;
+  }
+  .card-list{
+    max-height: 100%;
+    overflow: visible;
+  }
+  .card-list_items {
+    &:hover {
+      box-shadow: $size-0 $size-0 $size-xx $black-12;
+    }}
+ 
+}
+
+.sidePanel-todo-reminders{
+  .card-list{
+    max-height: 100%;
+  }
+}

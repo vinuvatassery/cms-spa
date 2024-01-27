@@ -1,7 +1,7 @@
 <div class="app-l-inner-rapper pt-0" kendoRippleContainer>
   <common-bread-crumb></common-bread-crumb>
   <button
-    aria-label="new case"
+    aria-label="New Client"
     kendoButton
     icon="add"
     [primary]="true"
@@ -14,7 +14,7 @@
   <section class="app-l-mainTittle">
     <h1 class="maintitle_withicon text-bold">
       <span
-        aria-label="cases"
+        aria-label="Clients"
         class="material-icons sidebar-menu_icon "
         aria-hidden="true"
       >
@@ -32,7 +32,7 @@
         <kendo-tabstrip-tab title="My Clients" [selected]="selectedTab === caseScreenTab.MY_CASES">
           <ng-template kendoTabContent>
             <case-management-case-list
-              [cases]="allCases$"
+              [cases]="myClients$"
               [pageSizes]="pageSizes"
               [sortValue]="sortValue"
               [sortType]="sortType"
@@ -49,7 +49,7 @@
         <kendo-tabstrip-tab title="Recent" [selected]="selectedTab === caseScreenTab.RECENT">
           <ng-template kendoTabContent>
             <case-management-case-list
-              [cases]="allCases$"
+              [cases]="recentClients$"
               [pageSizes]="pageSizes"
               [sortValue]="sortValue"
               [sortType]="sortType"
@@ -66,7 +66,7 @@
         <kendo-tabstrip-tab title="All" [selected]="selectedTab === caseScreenTab.ALL">
           <ng-template kendoTabContent>
             <case-management-case-list
-              [cases]="allCases$"
+              [cases]="allClients$"
               [pageSizes]="pageSizes"
               [sortValue]="sortValue"
               [sortType]="sortType"
@@ -90,10 +90,8 @@
     <!-- Right Reminders-->
     <div
       class="app-l-client-right todo-list"
-      *ngIf="isRightReminderBarEnabled"
-    >
-      <productivity-tools-reminder-list
-        class="reminder-list-case-wrap"
+      *ngIf="isRightReminderBarEnabled">
+      <productivity-tools-reminder-list class="reminder-list-case-wrap" (ReminderEventClicked)="onReminderDoneClicked($event)"
       ></productivity-tools-reminder-list>
     </div>
   </section>

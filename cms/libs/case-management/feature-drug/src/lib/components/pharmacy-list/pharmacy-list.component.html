@@ -1,7 +1,7 @@
 <div class="flex-row">
   <div class="flex-col">
     <div class="app-c-table">
-      <kendo-grid [pageSize]="5" [data]="(clientpharmacies$ | async)" *ngIf="showPharmacyGrid && (clientpharmacies$ | async).length > 0">
+      <kendo-grid [resizable]="true" [pageSize]="5" [data]="(clientpharmacies$ | async)" *ngIf="showPharmacyGrid && (clientpharmacies$ | async).length > 0">
         <kendo-grid-column
           field="pharmacyNameAndNumber"
           title="Pharmacy Name and Number"
@@ -11,17 +11,17 @@
         <kendo-grid-column
           field="city"
           title="City"
-          [width]="100"
+          [width]="110"
         ></kendo-grid-column>
         <kendo-grid-column
           field="state"
           title="State"
-          [width]="100"
+          [width]="110"
         ></kendo-grid-column>
         <kendo-grid-column
           field="priorityName"
           title="Priority"
-          [width]="100"
+          [width]="120"
         ></kendo-grid-column>
       
         <kendo-grid-column *ngIf="isCer" field="fax" title="Fax" [width]="130"></kendo-grid-column>
@@ -59,15 +59,14 @@
         >
           <ng-template kendoGridCellTemplate let-dataItem let-clientPharmacy let-clientPharmacyId="field">
             <kendo-dropdownbutton
-              [data]="actions"
-              icon="more-vertical"
+              [data]="actions" 
               title="More option"
               class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button"
               aria-label="more actions"
               [popupSettings]="{ popupClass: popupClassAction,  animate: true }"
             >
-            <span hidden> More Option</span>
+            <span class="material-icons" aria-label="More option"> more_vert    </span>
             <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem let-clientPharmacyId="clientPharmacyId">
               <button 
               kendoButton  
@@ -75,7 +74,7 @@
               [class]="dataItem.buttonType" 
               aria-hidden="false" 
               (click)="dataItem.click(clientPharmacy.clientPharmacyId, clientPharmacy.vendorId)" [disabled]="(isReadOnly$ | async) ? true : false">
-                <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+                <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
                 <label>   {{ dataItem.text }} </label>
             </button>
               </ng-template>
@@ -103,7 +102,7 @@
           [primary]="true"
           icon="add"
           (click)="onOpenPharmacyClicked()"
-          aria-label="add pharmacy"
+          aria-label="Pharmacy"
           [disabled]="(isReadOnly$ | async) ? true : false"
         >
           Pharmacy
@@ -163,7 +162,7 @@
   (close)="handleRemoveClientPharmacyClose()"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
   >
-    <kendo-dialog-titlebar> Remove pharmacy? </kendo-dialog-titlebar>
+    <kendo-dialog-titlebar> Remove Pharmacy? </kendo-dialog-titlebar>
       <case-management-remove-pharmacy
         [clientPharmacyId]="selectClientPharmacyId"
         [isClientProfile]="false"

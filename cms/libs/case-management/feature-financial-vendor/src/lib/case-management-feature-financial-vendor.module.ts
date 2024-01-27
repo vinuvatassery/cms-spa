@@ -12,7 +12,6 @@ import { CaseManagementDomainModule } from '@cms/case-management/domain';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { VendorsListComponent } from './components/vendors-list/vendors-list.component';
-import { VendorDetailsComponent } from './components/vendor-details/vendor-details.component';
 import { FinancialReminderComponent } from './components/financial-reminder/financial-reminder.component';
 import { VendorInfoComponent } from './components/vendor-info/vendor-info.component';
 import { VendorHeaderToolsComponent } from './components/vendor-header-tools/vendor-header-tools.component';
@@ -31,23 +30,31 @@ import { ContactsDeleteComponent } from './components/contacts-delete/contacts-d
 import { ContactsDetailsComponent } from './components/contacts-details/contacts-details.component';
 import { FinancialInsuranceProviderListComponent } from './components/financial-insurance-provider-list/financial-insurance-provider-list.component';
 import { FinancialPharmacyClaimsComponent } from './components/financial-pharmacy-claims/financial-pharmacy-claims.component';
-import { FinancialDrugsDetailsComponent } from './components/financial-drugs-details/financial-drugs-details.component';
 import { FinancialDrugsDeactivateComponent } from './components/financial-drugs-deactivate/financial-drugs-deactivate.component';
 import { FinancialDrugsReassignComponent } from './components/financial-drugs-reassign/financial-drugs-reassign.component';
 import { FinancialInsuranceProviderComponent } from './components/financial-insurance-provider/financial-insurance-provider.component';
-import {FinancialInsurancePlanDetailsComponent} from './components/financial-insurance-plan-details/financial-insurance-plan-details.component';
-import {FinancialInsurancePlanDeleteComponent} from './components/financial-insurance-plan-delete/financial-insurance-plan-delete.component';
-import {FinancialInsurancePlanDeactivateComponent} from './components/financial-insurance-plan-deactivate/financial-insurance-plan-deactivate.component';
-import {PaymentAddressDetailsComponent} from './components/payment-address-details/payment-address-details.component';
-import {PaymentAddressDeactivateComponent} from './components/payment-address-deactivate/payment-address-deactivate.component';
-import {PaymentAddressDeleteComponent} from './components/payment-address-delete/payment-address-delete.component';
-import {VendorContactComponent} from './components/vendor-contact/vendor-contact.component';
-import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log'; 
+import { FinancialInsurancePlanDetailsComponent } from './components/financial-insurance-plan-details/financial-insurance-plan-details.component';
+import { FinancialInsurancePlanDeleteComponent } from './components/financial-insurance-plan-delete/financial-insurance-plan-delete.component';
+import { FinancialInsurancePlanDeactivateComponent } from './components/financial-insurance-plan-deactivate/financial-insurance-plan-deactivate.component';
+import { PaymentAddressDetailsComponent } from './components/payment-address-details/payment-address-details.component';
+import { PaymentAddressDeactivateComponent } from './components/payment-address-deactivate/payment-address-deactivate.component';
+import { PaymentAddressDeleteComponent } from './components/payment-address-delete/payment-address-delete.component';
+import { VendorContactComponent } from './components/vendor-contact/vendor-contact.component';
+import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log';
 import { VendorSpecialHandlingComponent } from './components/vendor-special-handling/vendor-special-handling.component';
 import { FinancialPaymentBatchSubListComponent } from './components/financial-payment-sub-list/financial-payment-sub-list.component';
 import { FinancialInsurancePlanListComponent } from './components/financial-insurance-plan-list/financial-insurance-plan-list.component';
 import { ContactAddressDetailsComponent } from './components/contact-address-details/contact-address-details.component';
 import { ContactAddressListComponent } from './components/contact-address-list/contact-address-list.component';
+import { CaseManagementFeatureCommunicationModule } from '@cms/case-management/feature-communication';
+import { FinancialSendLetterComponent } from './components/financial-send-letter/financial-send-letter.component';
+import { FinancialSendEmailComponent } from './components/financial-send-email/financial-send-email.component';
+import { ProductivityToolsFeatureNotificationModule } from '@cms/productivity-tools/feature-notification';
+import { FinancialClinicProviderListComponent } from './components/financial-clinic-provider-list/financial-clinic-provider-list.component';
+import { FinancialClinicProviderRemoveComponent } from './components/financial-clinic-provider-remove/financial-clinic-provider-remove.component';
+import { FinancialClinicProviderDetailsComponent } from './components/financial-clinic-provider-details/financial-clinic-provider-details.component';
+import { InvoiceServiceComponent } from './components/invoice-service/invoice-service.component';
+import { CaseManagementFeatureFinancialClaimsModule } from '@cms/case-management/feature-financial-claims';
 @NgModule({
   imports: [
     CaseManagementDomainModule,
@@ -55,8 +62,11 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     SharedUiCommonModule,
     CommonModule,
     CaseManagementFeatureFinancialVendorRoutingModule,
-    ProductivityToolsFeatureTodoModule, 
-    ProductivityToolsFeatureEventLogModule
+    ProductivityToolsFeatureTodoModule,
+    ProductivityToolsFeatureEventLogModule,
+    CaseManagementFeatureCommunicationModule,
+    ProductivityToolsFeatureNotificationModule,
+    CaseManagementFeatureFinancialClaimsModule
   ],
   declarations: [
     FinancialVendorPageComponent,
@@ -67,7 +77,6 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     VendorProfileHeaderComponent,
     VendorsListComponent,
     FinancialReminderComponent,
-    VendorDetailsComponent,
     VendorInfoComponent,
     VendorHeaderToolsComponent,
     PaymentAddressesComponent,
@@ -85,7 +94,6 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     ContactsDeactivateComponent,
     ContactsDeleteComponent,
     ContactsDetailsComponent,
-    FinancialDrugsDetailsComponent,
     FinancialDrugsDeactivateComponent,
     FinancialDrugsReassignComponent,
     FinancialInsuranceProviderComponent,
@@ -100,7 +108,13 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     VendorSpecialHandlingComponent,
     FinancialPaymentBatchSubListComponent,
     FinancialInsurancePlanListComponent,
-    VendorContactComponent
+    VendorContactComponent,
+    FinancialSendLetterComponent,
+    FinancialSendEmailComponent,
+    FinancialClinicProviderListComponent,
+    FinancialClinicProviderRemoveComponent,
+    FinancialClinicProviderDetailsComponent,
+    InvoiceServiceComponent,
   ],
   exports: [
     FinancialVendorPageComponent,
@@ -111,7 +125,6 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     VendorProfileHeaderComponent,
     VendorsListComponent,
     FinancialReminderComponent,
-    VendorDetailsComponent,
     VendorInfoComponent,
     VendorHeaderToolsComponent,
     PaymentAddressesComponent,
@@ -128,8 +141,7 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     BillingEmailAddressListComponent,
     ContactsDeactivateComponent,
     ContactsDeleteComponent,
-    ContactsDetailsComponent,
-    FinancialDrugsDetailsComponent,
+    ContactsDetailsComponent,  
     FinancialDrugsDeactivateComponent,
     FinancialDrugsReassignComponent,
     FinancialInsuranceProviderComponent,
@@ -143,7 +155,9 @@ import { ContactAddressListComponent } from './components/contact-address-list/c
     ContactAddressListComponent,
     VendorSpecialHandlingComponent,
     FinancialPaymentBatchSubListComponent,
-    FinancialInsurancePlanListComponent
+    FinancialInsurancePlanListComponent,
+    FinancialSendLetterComponent,
+    FinancialSendEmailComponent,
   ],
 })
 export class CaseManagementFeatureFinancialVendorModule {}

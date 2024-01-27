@@ -1,0 +1,25 @@
+<kendo-dialog-titlebar (close)="closeEPcaReassignmentClicked()" > Reassign Confirmation </kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1">  Are you sure you want to reassign <strong>{{selectedPcaCount}}</strong> record in the list.  </p>
+     
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="Cancel" 
+          (click)="closeEPcaReassignmentClicked()"
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Reassign"  (click)="ConfirmationPcaReassignmentClicked()" >
+          Reassign
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

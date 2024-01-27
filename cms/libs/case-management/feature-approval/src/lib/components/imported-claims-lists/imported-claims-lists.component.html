@@ -1,0 +1,636 @@
+<!-- Table Top Filter, Search and Export -->
+
+<section class="table-filter-section mat-form-no-b-space bg-white">
+  <span class="filter-section_items filter--select">
+    <kendo-floatinglabel>
+      <kendo-dropdownlist
+        aria-label="All Columns"
+        [fillMode]="formUiStyle.dropDownFillMode"
+        textField="columnDesc"
+        valueField="columnCode"
+        [data]="dropDownColumns"
+        [valuePrimitive]="true"
+        [(ngModel)]="selectedColumn"
+        (valueChange)="searchColumnChangeHandler($event)"
+      >
+      </kendo-dropdownlist>
+    </kendo-floatinglabel>
+  </span>
+  <span class="filter-section_items filter--search">
+    <span class="material-icons" aria-label="search cases" aria-hidden="true"
+      >search</span
+    >
+    <kendo-floatinglabel text="Search">
+      <kendo-textbox
+        aria-label="Search imported claims"
+        rounded="medium"
+        [fillMode]="formUiStyle.inputFillMode"
+        [(ngModel)]="searchValue" (afterValueChanged)="onApprovalSearch($event)"
+      >
+      </kendo-textbox>
+    </kendo-floatinglabel>
+  </span>
+  <span class="right-overlay-export">
+    <button
+      kendoButton
+      [primary]="true"
+      look="flat"
+      aria-label="Export"
+      class="button-lg"
+      [disabled]="showExportLoader"
+      (click)="onClickedExport()"
+    >
+    <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>
+    <span *ngIf="showExportLoader" class="k-icon k-i-loading k-input-loading-icon mr-1"></span><i
+      class="exp_button-text">Export</i>
+    </button>
+  </span>
+</section>
+
+<div class="table-sorted-info">
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning">
+    <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+      warning
+    </span>
+    <span *ngIf="showDateSearchWarning">
+      The '/' symbol can only be used with a date. The date format should be
+      [MM/DD/YYYY].
+    </span>
+  </span>
+</div>
+
+<!-- Sorted Info -->
+<div class="table-sorted-info">
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+  <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
+  <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+  <span class="sort-items">{{columnChangeDesc}}</span>
+  <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetImportedClaimsGrid()">
+        <a>Set to Default</a>
+  </button>
+</div>
+
+<!-- Case List table -->
+<div class="app-c-table alternative_row_table">
+  <kendo-grid
+    [resizable]="true"
+    [loading]="isImportedClaimsGridLoaderShow"
+    [pageSize]="state.take"
+    [pageable]="true"
+    [sortable]="true"
+    [skip]="state.skip"
+    [groupable]="false"
+    [reorderable]="true"
+    [resizable]="true"
+    [columnMenu]="{ filter: true }"
+    [sort]="state.sort"
+    (dataStateChange)="dataStateChange($event)"
+    (filterChange)="filterChange($event)"
+    [filter]="state.filter"
+    [isDetailExpanded]="expandInClaimException"
+    [data]="gridImportedClaimsBatchData$ | async" 
+    (columnVisibilityChange)="columnChange($event)"
+    (columnReorder)="onColumnReorder($event)"
+  >
+    <kendo-grid-column field="clientName" title="Client Name" [width]="160">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button *ngIf="dataItem.clientName != 'N/A'" [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button"
+        (click)="onClientClicked(dataItem.clientId)">
+          {{ dataItem.clientName }}
+        </button>
+        <span *ngIf="dataItem.clientName == 'N/A'"> {{ dataItem.clientName }}</span>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+             <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+             <kendo-filter-eq-operator></kendo-filter-eq-operator>
+             <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+             <kendo-filter-contains-operator></kendo-filter-contains-operator>
+         </kendo-grid-string-filter-menu>
+     </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="nameOnPrimaryInsuranceCard"
+      title="Name on Primary Insurance Card"
+      [width]="200"
+    >
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+           <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+           <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+           <kendo-filter-contains-operator></kendo-filter-contains-operator>
+       </kendo-grid-string-filter-menu>
+   </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="invoiceNbr"
+      title="Invoice #"
+      [width]="150"
+    >
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+           <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+           <kendo-filter-eq-operator></kendo-filter-eq-operator>
+           <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+           <kendo-filter-contains-operator></kendo-filter-contains-operator>
+       </kendo-grid-string-filter-menu>
+   </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="requestType"
+      title="Request Type"
+      [width]="180"
+    >
+    <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="requestTypeList"
+          [value]="requestTypeFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'requestType',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="claimSource" title="Claim Source" [width]="150">
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="claimSourceList"
+          [value]="claimSourceFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'claimSource',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="policyId" title="Policy ID" [width]="120">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+             <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+             <kendo-filter-eq-operator></kendo-filter-eq-operator>
+             <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+             <kendo-filter-contains-operator></kendo-filter-contains-operator>
+         </kendo-grid-string-filter-menu>
+     </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="amountDue" title="Amount Due" [width]="160">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <span class="tableamountview">
+          <strong>$</strong>
+          {{ dataItem.amountDue | kendoNumber : 'n2' }}</span
+        >
+      </ng-template>
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-grid-numeric-filter-menu
+          [column]="column"
+          [filter]="filter"
+          [filterService]="filterService"
+          [extra]="false"
+          operator="eq"
+        >
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-gt-operator></kendo-filter-gt-operator>
+          <kendo-filter-gte-operator></kendo-filter-gte-operator>
+          <kendo-filter-lt-operator></kendo-filter-lt-operator>
+          <kendo-filter-lte-operator></kendo-filter-lte-operator>
+        </kendo-grid-numeric-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="dateOfService"
+      title="Date of Service"
+      [width]="160"
+    >
+    <ng-template kendoGridCellTemplate let-dataItem>
+      {{dataItem.dateOfService | date:'MM/dd/yyyy'}}
+    </ng-template>
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <common-grid-cell-date-range-filter
+        [field]="'dateOfService'"
+        [filter]="filter"
+        [filterService]="filterService"
+      >
+      </common-grid-cell-date-range-filter>
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="policyIdMatch"
+      title="Policy ID match?"
+      [width]="180"
+    >
+    <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="matchList"
+          [value]="policyIdMatchFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'policyIdMatch',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="eligibilityMatch"
+      title="Eligibility match?"
+      [width]="180"
+    >
+    <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="matchList"
+          [value]="eligibilityMatchFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'eligibilityMatch',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="validInsurance"
+      title="Valid insurance?"
+      [width]="180"
+    >
+    <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="matchList"
+          [value]="validInsuranceFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'validInsurance',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      field="belowMaxBenefits"
+      title="Below max benefits?"
+      [width]="150"
+    >
+    <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-dropdownlist
+          [data]="matchList"
+          [value]="belowMaxBenefitsFilter"
+          [valuePrimitive]="true"
+          valueField="code"
+          textField="desc"
+          (valueChange)="
+            dropdownFilterChange(
+              'belowMaxBenefits',
+              $event,
+              filterService
+            )
+          "
+        >
+        </kendo-dropdownlist>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="entryDate" title="Entry Date" [width]="120">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.entryDate | date:'MM/dd/yyyy'}}
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <common-grid-cell-date-range-filter
+          [field]="'entryDate'"
+          [filter]="filter"
+          [filterService]="filterService"
+        >
+        </common-grid-cell-date-range-filter>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+      [sortable]="false"
+      [filterable] = "false"
+      field="isDelete"
+      title="Delete or Deny"
+      [width]="160"
+    >
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button
+          *ngIf="dataItem.policyIdMatch === yesNoFlag.Yes && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
+          kendoButton
+          aria-label="Deny Claim"
+          class="select-primary cc-fwc"
+          illMode="flat"
+          [toggleable]="true"
+          [selected]="dataItem.claimStatus === deniedStatus"
+          (selectedChange)="
+          onRowLevelDenyClicked(
+                dataItem
+              )
+            "
+        >
+          DENY CLAIM
+        </button>
+        <button
+          *ngIf="dataItem.policyIdMatch === yesNoFlag.No || dataItem.isDuplicatePayment || dataItem.isPcaReassignmentException"
+          kendoButton
+          aria-label="Delete Claim"
+          class="select-error cc-fwc"
+          illMode="flat"
+          [toggleable]="true"
+          [selected]="dataItem.claimStatus === deletedStatus"
+          (selectedChange)="
+          onRowLevelDeleteClicked(
+                dataItem
+              )
+            "
+        >
+          DELETE CLAIM
+        </button>
+      </ng-template>
+    </kendo-grid-column>
+    <ng-template kendoGridDetailTemplate let-dataItem>
+      <section >
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.validInsurance === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
+        >
+          <span class="material-icons">info</span>
+          The client's insurance is not valid for the date of service. Deny the claim
+          or update the client's insurance in their profile.
+          <button
+            aria-label="Go To Profile"
+            kendoButton
+            look="flat"
+            class="card-link-button"
+            (click)="onClientClicked(dataItem.clientId)"
+          >
+            GO TO PROFILE
+          </button>
+        </p>
+
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.isPossibleMatch === yesNoFlag.No && dataItem.policyIdMatch === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
+        >
+          <span class="material-icons">info</span>
+          The system could not match the Policy ID to a client. Delete the claim
+          or match it to a client.
+          <button
+            aria-label="Search Clients"
+            kendoButton
+            look="flat"
+            class="card-link-button"
+            (click)="onSearchClientsDialogClicked(searchClientsDialogModal, dataItem)"
+          >
+            SEARCH CLIENTS
+          </button>
+        </p>
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.eligibilityMatch === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
+        >
+          <span class="material-icons">info</span>
+          The client was not eligible for the date of service. Deny the claim
+          or update the client's eligibility dates in their profile.
+          <button
+            aria-label="GO TO PROFILE"
+            kendoButton
+            look="flat"
+            class="card-link-button"
+            (click)="onClientClicked(dataItem.clientId)"
+          >
+            GO TO PROFILE
+          </button>
+        </p>
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.isPossibleMatch === yesNoFlag.Yes && dataItem.policyIdMatch === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException"
+        >
+        <span class="material-icons">info</span>
+          The  system could not match the Policy ID to a client. Delete the claim or match it to a client.
+          <button
+            aria-label="REVIEW POSSIBLE MATCH"
+            kendoButton
+            look="flat"
+            class="card-link-button"
+            (click)="onReviewPossibleMatchesDialogClicked(possibleMatchesDialogModal,dataItem)"
+          >
+              REVIEW POSSIBLE MATCH
+          </button>
+        </p>
+        <p class="table_sub_row warning_info_row" *ngIf="dataItem.belowMaxBenefits === yesNoFlag.No && !dataItem.isDuplicatePayment && !dataItem.isPcaReassignmentException">
+          <span class="material-icons">info</span>
+          This claim puts the client ${{dataItem.exceededAmount | kendoNumber : 'n2'}} over their max benefits. Deny the
+          claim or make an exception.
+            <button
+              aria-label="Make an Exception"
+              kendoButton
+              look="flat"
+              class="card-link-button"
+              (click)="onMakeExpectationClicked(expectationReasonDialogModal,dataItem)"
+            >
+              MAKE AN EXCEPTION
+            </button>
+        </p>
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.isDuplicatePayment"
+        >
+          <span class="material-icons">info</span>
+          Duplicate claim found!
+        </p>
+        <p
+          class="table_sub_row warning_info_row"
+          *ngIf="dataItem.isPcaReassignmentException"
+        >
+          <span class="material-icons">info</span>
+          PCA unable to be assigned.
+        </p>
+      </section>
+    </ng-template>
+    <ng-template
+      kendoPagerTemplate
+      let-totalPages="totalPages"
+      let-pagerFirstPage="pagerFirstPage"
+      let-currentPage="currentPage"
+    >
+      <div class="grid-custom-paginationtemplates d-flex">
+        <div class="d-flex align-items-center">
+          <label class="mr-1" for="ImportClaimsRowsPerPage">Rows Per Page</label>
+          <kendo-dropdownlist
+            [fillMode]="formUiStyle.dropDownFillMode"
+            [data]="pageSizes"
+            [textField]="'text'"
+            [valueField]="'value'"
+            [valuePrimitive]="true"
+            aria-label="Rows Per Page"
+            id="ImportClaimsRowsPerPage"
+            [(value)]="state.take"
+            (selectionChange)="pageSelectionChange($event)"
+          ></kendo-dropdownlist>
+          <kendo-pager-info> </kendo-pager-info>
+          <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'">
+          </kendo-grid-messages>
+        </div>
+        <div class="d-flex">
+          <kendo-pager-input></kendo-pager-input>
+          <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+          <kendo-pager-next-buttons></kendo-pager-next-buttons>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+    </ng-template>
+    <!-- grid No data Template -->
+    <ng-template kendoGridNoRecordsTemplate>
+      <div>
+        <kendo-badge-container>
+          <span class="material-icons"> info </span>
+        </kendo-badge-container>
+      </div>
+      <p>There is no data to display.</p>
+    </ng-template>
+  </kendo-grid>
+</div>
+
+<div class="bottom-fixed-wrapper text-right flex-gap">
+  <span class="">
+    {{ deniedCount }} claim(s) to be denied,
+    {{ deletedCount }} claim(s) to be delete
+</span>
+
+  <button kendoButton [primary]="true" aria-label="Submit" class="" [disabled]="disableSubmit"
+  (click)="onSubmitImportedClaimsClicked()">
+    Submit
+  </button>
+</div>
+
+<ng-template #submitModalDialog>
+
+  <kendo-dialog-titlebar (close)="onCloseSubmitClicked()">
+    Submit claims?</kendo-dialog-titlebar>
+    <section class="k-dialog-body newcase">
+      <p class="mb-2">
+        Denied claims will be saved to the clients' profiles with the status "Denied." Deleted claims will be soft deleted from the system.
+      </p>
+      <p class="mb-1">
+        Claims to be denied:
+        <strong>{{ deniedCount }}</strong>
+      </p>
+      <p class="mb-1">
+        Claims to be deleted: <strong>{{ deletedCount }}</strong>
+      </p>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button
+            aria-label="Cancel"
+            kendoButton
+            look="outline"
+            (click)="onCloseSubmitClicked()"
+          >
+            Cancel
+          </button>
+          <button
+            aria-label="Submit"
+            kendoButton
+            [primary]="true"
+            (click)="makeRequestData()"
+          >
+            SUBMIT
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>
+</ng-template>
+
+<ng-template #searchClientsDialogModal>
+  <productivity-tools-approvals-search-clients
+    (closeSearchClientsDialogClickedEvent)="onCloseSearchClientsDialogClicked()"
+    (clientValueChangeEvent)="onClientValueChange($event)"
+    [selectedClaim] = "selectedClaim"
+  ></productivity-tools-approvals-search-clients>
+</ng-template>
+
+<ng-template #expectationReasonDialogModal>
+  <productivity-tools-approvals-expectation-reason
+    (closeMakeExpectationDialogClickedEvent)="onCloseMakeExpectationDialogClicked()"
+    (addAnExceptionEvent)="addAnException($event)"
+  ></productivity-tools-approvals-expectation-reason>
+</ng-template>
+
+<ng-template #possibleMatchesDialogModal>
+  <productivity-tools-approvals-review-possible-matches
+    (closeReviewPossibleMatchesDialogClickedEvent)="onCloseReviewPossibleMatchesDialogClicked($event)"
+    [claimData]="claimData"
+    [possibleMatchData$]="possibleMatchData$"
+    (loadPossibleMatchDataEvent)="loadPossibleMatch($event)"
+    (saveReviewPossibleMatchesDialogClickedEvent)="savePossibleMatch($event)"
+  ></productivity-tools-approvals-review-possible-matches>
+</ng-template>

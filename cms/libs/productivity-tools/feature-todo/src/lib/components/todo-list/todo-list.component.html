@@ -1,75 +1,49 @@
 <!-- Case List table -->
 <div class="app-c-drag-row-table">
-  <kendo-grid [data]="todoGrid$ | async" [columnMenu]="true" [sortable]="true">
+  <kendo-grid [data]="todoGrid$ | async" [columnMenu]="true" [sortable]="true" >
     <kendo-grid-column field="Title" title="Title" [width]="100">
     </kendo-grid-column>
     <kendo-grid-column field="TodoItemFor" title="To Do Item For" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button
-          kendoButton
-          look="flat"
-          class="card-link-button"
-          kendoPopoverAnchor
-          [popover]="userCard"
-          showOn="hover"
-          aria-label="todo item for"
-        >
+        <button kendoButton look="flat" [attr.aria-label]="dataItem.TodoItemFor" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover"
+          aria-label="todo item for">
           {{ dataItem.TodoItemFor }}
         </button>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column
-      field="Type"
-      title="Type"
-      [width]="100"
-    ></kendo-grid-column>
-    <kendo-grid-column
-      field="Description"
-      title="Description"
-      [width]="300"
-    ></kendo-grid-column>
-    <kendo-grid-column
-      field="DueDate"
-      title="Due Date"
-      [width]="80"
-    ></kendo-grid-column>
-    <kendo-grid-column
-      field="Option"
-      title=""
-      [width]="40"
-      class="text-center"
-      [columnMenu]="false"
-    >
+    <kendo-grid-column field="Type" title="Type" [width]="100">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton
-          [data]="moreactions"
-          icon="more-vertical"
-          title="More option"
-          aria-label="more actions"
-          class="TableActionPopup app-dropdown-action more_action_wid"
-          buttonClass="k-icon-button"
-          [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-        >
-        <span hidden> More Option</span>
+      <span class="text-upper">  {{ dataItem.Type }}</span>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="Description" title="Description" [width]="300"></kendo-grid-column>
+    <kendo-grid-column field="DueDate" title="Due Date" [width]="100"></kendo-grid-column>
+    <kendo-grid-column field="Option" title="" [width]="40" class="text-center" [columnMenu]="false">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <kendo-dropdownbutton [data]="moreactions"  title="More option" aria-label="more actions"
+          class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
+          [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+          <span class="material-icons" aria-label="More option"> more_vert    </span>
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-            <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click()">
-              <span class="material-icons" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-              <label>   {{ dataItem.text }} </label>
-          </button>
+            <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+              aria-hidden="false" (click)="dataItem.click()">
+              <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+              <label> {{ dataItem.text }} </label>
+            </button>
           </ng-template>
         </kendo-dropdownbutton>
       </ng-template>
     </kendo-grid-column>
-                      <!-- grid Loader Template -->  
-                      <ng-template kendoGridLoadingTemplate>
-                        <common-grid-loader-component></common-grid-loader-component>
-                       </ng-template>
-                       <!-- grid No data Template -->  
-                       <ng-template kendoGridNoRecordsTemplate>
-                         <div> <kendo-badge-container>   <span class="material-icons">    info   </span>    </kendo-badge-container>
-                         </div>
-                         <p>There is no data to display.</p>
-                       </ng-template> 
+    <!-- grid Loader Template -->
+    <ng-template kendoGridLoadingTemplate>
+      <common-grid-loader-component></common-grid-loader-component>
+    </ng-template>
+    <!-- grid No data Template -->
+    <ng-template kendoGridNoRecordsTemplate>
+      <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+      </div>
+      <p>There is no data to display.</p>
+    </ng-template>
   </kendo-grid>
 </div>
 
@@ -81,12 +55,9 @@
 </kendo-popover>
 
 
-<!-- Delete To Do Modal Html-->
-<kendo-dialog
-  *ngIf="isOpenDeleteTodo"
-  (close)="onCloseDeleteTodoClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
->
-  <kendo-dialog-titlebar> Delete To Do Item </kendo-dialog-titlebar>
-  <productivity-tools-delete-todo-confirmation></productivity-tools-delete-todo-confirmation>
-</kendo-dialog>
+<ng-template #deleteToDODialogTemplate>   
+  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+</ng-template>
+
+
+ 

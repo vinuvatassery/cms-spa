@@ -4,13 +4,15 @@ import { HttpClient } from '@angular/common/http';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 /** Entities **/
 import { Email } from '../entities/email';
 
 @Injectable({ providedIn: 'root' })
 export class EmailDataService {
   /** Constructor**/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider: ConfigurationProvider) {}
 
   /** Public methods **/
   loadEmails(): Observable<Email[]> {
@@ -82,5 +84,76 @@ export class EmailDataService {
       },
     ]);
   }
+
+  loadEmailTemplates(typeCode: string, channelTypeCode: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates?channelTypeCode=${channelTypeCode}`
+    );
+  }
+
+  loadCERAuthorizationEmailVariables(lovType:string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${lovType}/variables`
+    );
+  }
+
+  replaceAndGenerateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
+      return this.http.post<string>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate/${clientId}/${clientCaseEligibilityId}?requestType=${requestType}`,selectedTemplate
+      );
+    }
+
+    loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${clientId}/${clientCaseEligibilityId}/${templateId}`
+        , {
+          responseType: 'blob'
+        });
+    }
+
+    sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
+      return this.http.post(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate/${clientId}/${clientCaseEligibilityId}?requestType=${requestType}`, selectedTemplate,
+        {responseType: 'blob'}
+      )
+    }
+
+    saveEmailForLater(draftTemplate: any){
+      return this.http.post<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates`,draftTemplate
+      );
+    }
+
+    getClientDocumentsViewDownload(clientDocumentId: string) {
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${clientDocumentId}/content`
+        , {
+          responseType: 'blob'
+        });
+    }
+
+    getTemplateAttachment(typeCode: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates`
+      );
+    }
+
+    getDraftTemplateAttachment(esignRequestId: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?esignRequestId=${esignRequestId}`,
+      );
+    }
+
+    getCCEmailListForCER(clientId: number, loginUserId: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/${loginUserId}`,
+      );
+    }
+
+    getLetterAttachment(templateId: string, typeCode: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates?templateId=${templateId}`
+      );
+    }
 }
  

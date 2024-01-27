@@ -1,0 +1,15 @@
+<kendo-dialog-titlebar (close)="closeDeleteClaimsClicked()"> Delete Claim(s)?</kendo-dialog-titlebar>
+<section class="k-dialog-body mb-2">
+   
+        <p class="text-muted mb-1"> {{deletemodelbody}}</p>
+        <p class="text-muted mb-2" *ngIf="selectedProcessClaimsCount!=0">   Claims to be deleted: {{selectedProcessClaimsCount}}   </p>
+     
+  </section>
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDeleteClaimsClicked()"> Cancel  </button>
+        <button kendoButton class="k-error-button" aria-label="Delete" (click)="deleteClaimsClicked()">Delete  </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import {
   ClientProfile, ClientFacade, Client,
-  ClientCaseEligibility, StatusFlag, ClientPronoun, ClientGender,
+  ClientCaseEligibility, ClientPronoun, ClientGender,
   ClientRace, ClientSexualIdentity, ClientCaseEligibilityFlag,
   ClientCaseEligibilityAndFlag, YesNoFlag, ControlPrefix,
   MaterialFormat, PronounCode, TransGenderCode, ApplicantInfo,
@@ -12,6 +12,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { of } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'case-management-client-read-only-view',
   templateUrl: './client-read-only-view.component.html',
@@ -27,7 +28,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
   @Input() userImage$: any
   @Input() clientId!:any;
   @Input() clientCaseEligibilityId!:any;
-  @Input() clientCaseId!:any; 
+  @Input() clientCaseId!:any;
   @Input() ramsellInfo!: any;
   applicantInfo = {} as ApplicantInfo;
   //public client! : ClientProfile
@@ -69,25 +70,25 @@ export class ClientReadOnlyViewComponent implements OnInit{
     const caseManagerData =
     {
       caseManagerId : clientData?.caseManagerId ,
-      caseManagerName   : clientData?.caseManagerName , 
+      caseManagerName   : clientData?.caseManagerName ,
       pNumber   : clientData?.caseManagerPNumber ,
-      domainCode   : clientData?.caseManagerDomainCode ,  
-      assisterGroup   : clientData?.caseManagerAssisterGroup ,  
-      email   : clientData?.caseManagerEmail , 
-      phone   : clientData?.caseManagerPhone ,  
-      fax   : clientData?.caseManagerFax , 
-      address1   : clientData?.caseManagerAddress1 , 
-      address2   : clientData?.caseManagerAddress2 ,  
-      city   : clientData?.caseManagerCity ,  
-      state   : clientData?.caseManagerState , 
+      domainCode   : clientData?.caseManagerDomainCode ,
+      assisterGroup   : clientData?.caseManagerAssisterGroup ,
+      email   : clientData?.caseManagerEmail ,
+      phone   : clientData?.caseManagerPhone ,
+      fax   : clientData?.caseManagerFax ,
+      address1   : clientData?.caseManagerAddress1 ,
+      address2   : clientData?.caseManagerAddress2 ,
+      city   : clientData?.caseManagerCity ,
+      state   : clientData?.caseManagerState ,
       zip   : clientData?.caseManagerZip ,
     }
     this.caseManagerHoverDataItem = caseManagerData;
   }
 
   loadprofilePhotoEventHandler(caseManagerId : any)
-  {    
-   this.loadprofilePhotoEvent.emit(caseManagerId) 
+  {
+   this.loadprofilePhotoEvent.emit(caseManagerId)
   }
 
   private loadApplicantInfo() {
@@ -204,8 +205,8 @@ export class ClientReadOnlyViewComponent implements OnInit{
               SnackBarNotificationType.SUCCESS,
               'Applicant Info updated Successfully'
             );
+            this.clientFacade.runImportedClaimRules(this.clientId);
             this.onCloseEditClientInformationClicked();
-            this.clientFacade.clientProfileReloadSubject.next(true);
             this.onUpdateApplicantInfo.emit();
           },
           error: (error: any) => {
@@ -238,11 +239,11 @@ export class ClientReadOnlyViewComponent implements OnInit{
     this.setLimitingConditionCodeValidation();
     this.setWalkingClimbingDifficultyCodeValidation();
     this.setDifficultyCodeValidation();
-    this.setLanguageValidation(); 
-    this.setRaceAndGenderValidation(); 
+    this.setLanguageValidation();
+    this.setRaceAndGenderValidation();
     this.appInfoForm.updateValueAndValidity();
   }
-  
+
   private setValidationforSexAtBirth(){
     let sexAtBirthValue=this.appInfoForm.controls['BirthGender'].value;
     if (sexAtBirthValue === 'NOT_LISTED') {

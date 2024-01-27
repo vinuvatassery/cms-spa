@@ -1,16 +1,19 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'cms-vendor-profile-header',
-  templateUrl: './vendor-profile-header.component.html',
+  templateUrl: './vendor-profile-header.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VendorProfileHeaderComponent {
 @Input() vendorProfileSpecialHandling$ : any
 @Input() vendorProfile$ : any
+@Input() clientCaseEligibilityId!: any;
+@Input() clientId!: any;
 @Output() loadSpecialHandlingEvent =  new EventEmitter();
-
+notificationReminderDialog : any;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   showMoreAlert = false;
   public list = [
@@ -24,7 +27,7 @@ export class VendorProfileHeaderComponent {
       text: 'New Letter',
       icon: 'markunread_mailbox',
       isVisible: true,
-      click: (): void => { 
+      click: (): void => {
       },
     },
     {
@@ -33,10 +36,10 @@ export class VendorProfileHeaderComponent {
       icon: 'mail_outline',
       isVisible: false,
       click: (): void => {
-     
+
       },
     },
-     
+
   ];
 
   public reminderActions = [
@@ -45,7 +48,7 @@ export class VendorProfileHeaderComponent {
       text: "Done",
       icon: "done",
       click: (): void => {
-      
+
       },
     },
     {
@@ -53,7 +56,7 @@ export class VendorProfileHeaderComponent {
       text: "Edit",
       icon: "edit",
       click: (): void => {
- 
+
       },
     },
     {
@@ -61,15 +64,16 @@ export class VendorProfileHeaderComponent {
       text: "Delete",
       icon: "delete",
       click: (): void => {
-    
+
       },
     },
   ];
   reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
-  constructor(private route: Router,private activeRoute : ActivatedRoute) {
- 
+  constructor(private route: Router,private activeRoute : ActivatedRoute, 
+    private dialogService: DialogService) {
+
   }
-  
+
   onBackClicked()
   {
     this.route.navigate(['financial-management/vendors'])
@@ -77,6 +81,24 @@ export class VendorProfileHeaderComponent {
 
   loadSpecialHandling()
   {
-    this.loadSpecialHandlingEvent.emit()  
+    this.loadSpecialHandlingEvent.emit()
   }
+
+  getHeaderPreferredFlag(vendorProfile : any)
+  {    
+     return vendorProfile?.preferredFlag === 'Y' ? 'preferred-heading' : ''
+  }
+
+
+  onNotificationsAndRemindersClosed() { 
+    this.notificationReminderDialog.close()
+  }
+
+  onNotificationsAndRemindersOpenClicked(template: TemplateRef<unknown>): void {
+    this.notificationReminderDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
+    });  
+  }
+   
 }

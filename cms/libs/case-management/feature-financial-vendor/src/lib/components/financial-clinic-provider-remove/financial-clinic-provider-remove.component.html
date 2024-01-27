@@ -1,0 +1,17 @@
+<section class="k-dialog-body mb-2">
+      <p>
+          This provider will no longer be associated with this clinic
+      </p>
+    </section>
+    <kendo-dialog-actions>
+      <div class="justify-content-between">
+        <div class="justify-content-end">
+          <button kendoButton [primary]="true" aria-label="Cancel" (click)="closeRemovePopup()" look="outline" >
+            Cancel
+          </button>
+          <button kendoButton class="k-error-button" aria-label="button" (click)="removeproviderEvent()">
+            Remove
+          </button>
+        </div>
+      </div>
+    </kendo-dialog-actions>

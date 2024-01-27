@@ -11,10 +11,10 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'approval',
+    path: 'direct-message',
     loadChildren: () =>
-      import('@cms/productivity-tools/feature-approval').then(
-        (m) => m.ProductivityToolsFeatureApprovalModule
+      import('@cms/productivity-tools/feature-direct-message').then(
+        (m) => m.ProductivityToolsFeatureDirectMessageModule
       ),
   },
   {
@@ -22,13 +22,9 @@ const routes: Routes = [
     redirectTo: 'todo-items',
     pathMatch: 'full',
   },
-
 ];
 
 @NgModule({
-  imports: [
-    CommonModule, 
-    RouterModule.forChild(routes)
-  ]
+  imports: [CommonModule, RouterModule.forChild(routes)],
 })
 export class ProductivityToolsFeatureHomeModule {}

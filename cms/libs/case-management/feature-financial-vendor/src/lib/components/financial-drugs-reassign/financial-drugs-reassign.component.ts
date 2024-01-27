@@ -34,7 +34,7 @@ export class FinancialDrugsReassignComponent {public formUiStyle: UIFormStyle = 
  
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadTodosearch();
+    this.loadToDoSearch();
     this.tareaVaribalesIntialization();
   }
 
@@ -45,8 +45,8 @@ export class FinancialDrugsReassignComponent {public formUiStyle: UIFormStyle = 
       : 0;
     this.tareaCustomTodoCounter = `${this.tareaCustomTodoCharactersCount}/${this.tareaCustomTodoMaxLength}`;
   }
-  private loadTodosearch() {
-    this.todoFacade.loadTodosearch();
+  private loadToDoSearch() {
+    this.todoFacade.loadToDoSearch();
   }
 
   /** Internal event methods **/

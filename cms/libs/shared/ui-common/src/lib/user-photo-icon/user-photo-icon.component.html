@@ -1,11 +1,11 @@
 
 <div class="app-popover-header use-profile-card-wrapper">    
       <div  [hidden]="imageLoaderVisible" class="app-c-avatar avatar-img-sm avatar-sm">   
-          <img [hidden]="imageLoaderVisible" [src]="userImage$ | async" alt="user image" class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()"/> 
+          <img [hidden]="imageLoaderVisible" [src]="userImageSubject | async" alt="User Profile photo" class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()"/> 
       </div>
       <div *ngIf="imageLoaderVisible">    
-        <div mat-card-avatar class="app-c-avatar avatar-sm" *ngIf="userById$ | async as userById;">
-          <span class="profile-text-avatar">{{userById.firstName.charAt(0)}}{{userById?.lastName?.charAt(0)}}</span>          
+        <div mat-card-avatar class="app-c-avatar avatar-sm" *ngIf="userByIdSubject | async as userById;">
+          <span class="profile-text-avatar">{{userById?.firstName?.charAt(0)}}{{userById?.lastName?.charAt(0)}}</span>          
         </div>
       </div>      
 </div>

@@ -22,7 +22,7 @@
         {{dataItem.creationTime |date:'MM/dd/YYYY hh:mm:ss'}}
     </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="by" title="Record Created By" [width]="80">
+    <kendo-grid-column field="by" title="Record Created By" [width]="80" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button
             kendoButton
@@ -31,7 +31,7 @@
             kendoPopoverAnchor
             [popover]="onUserProfileDetailsHovered"
             showOn="hover"
-            aria-label="profile avathar"
+            [attr.aria-label]="dataItem.creatorId" 
           >
           <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
           </button>

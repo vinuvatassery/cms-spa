@@ -1,1 +1,41 @@
-<p>delete-reminder-confirmation works!</p>
+<kendo-dialog-titlebar (close)="onCloseDeleteReminderClicked()">Delete Reminder for Donna </kendo-dialog-titlebar>
+<section class="k-dialog-body" kendoTooltip>
+    <p class="text-muted mb-2">
+      <!-- Once deleted the to do item won't be available anymore. If needed a new to
+      de item can be created. -->
+      Once deleted the reminder won't be available anymore. If needed a new reminder can be created.
+    </p>
+    <div class="flex-col mb-1 mt-2">
+        <span class="app-checkboxwidtext-wrapper">
+          <input
+            type="checkbox"
+            id="deleteEventOutlookCalender"
+            kendoCheckBox
+            aria-labelledby="deleteEventOutlookCalender" 
+          />
+          <label class="k-checkbox-label" for="deleteEventOutlookCalender"
+            >Delete event in Outlook calendar</label
+          >
+        </span>
+      </div>
+  </section>
+  
+  <kendo-dialog-actions kendoTooltip>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="Cancel"
+          (click)="onCloseDeleteReminderClicked()"
+        >
+          Cancel
+        </button>
+        <button kendoButton class="k-error-button" aria-label="Delete">
+          Delete
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, OnInit, Component, EventEmitter, Output, Input, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {  AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
+import {FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {  AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, VendorContactsFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
+import { StatusFlag } from '@cms/shared/ui-common';
 type NewType = LovFacade;
 
 @Component({
@@ -14,9 +15,11 @@ type NewType = LovFacade;
 })
 export class PaymentAddressDetailsComponent implements OnInit {
   @Output() closeEvent = new EventEmitter<any>();
+  @Output() editDeactivateClicked = new EventEmitter<any>();
   @Input() isEdit!: any
   @Input() billingAddress!: any
-  SpecialHandlingLength = 100;
+  isValidateForm: boolean = false;
+  specialHandlingLength = 100;
   ddlStates$ = this.contactFacade.ddlStates$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   paymentAddressForm!: FormGroup;
@@ -28,6 +31,14 @@ export class PaymentAddressDetailsComponent implements OnInit {
   paymentRunDatelov$ = this.lovFacade.paymentRunDatelov$;
   financialVendorProviderTabCode: any = FinancialVendorProviderTabCode;
   vendorAddressId: string = '';
+  specialHandling = '';
+  specialHandlingCharachtersCount!: number;
+  specialHandlingCounter!: string;
+  statusFlag : any = StatusFlag;
+  specialCharAdded: boolean = false;
+  @Output() paymentAddressAdded = new EventEmitter<any>();
+  mailCodeLengthError: boolean=false;
+
   /** Constructor**/
   constructor(
     private readonly billingAddressFacade: BillingAddressFacade,
@@ -36,11 +47,13 @@ export class PaymentAddressDetailsComponent implements OnInit {
     private readonly formBuilder: FormBuilder,
     private readonly activatedRoute: ActivatedRoute,
     private readonly cdr: ChangeDetectorRef,
-  ) { }
+    private readonly vendorContactFacade: VendorContactsFacade)
+    { }
 
   ngOnInit(): void {
     this.vendorId = this.activatedRoute.snapshot.queryParams['v_id'];
     this.tabCode = this.activatedRoute.snapshot.queryParams['tab_code'];
+    this.specialHandlingWordCount();
     this.setAddressTypeCode();
     this.loadDdlStates();
     this.loadVenderPaymentMethos();
@@ -63,12 +76,23 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.paymentAddressForm.controls['stateCode'].setValue(this.billingAddress.stateCode);
     this.paymentAddressForm.controls['zip'].setValue(this.billingAddress.zip);
     this.paymentAddressForm.controls['paymentMethodCode'].setValue(this.billingAddress.paymentMethodCode);
+    this.paymentAddressForm.controls['paymentRunDateMonthly'].setValue(this.billingAddress.paymentRunDateMonthly?.toString());
     this.paymentAddressForm.controls['specialHandlingDesc'].setValue(this.billingAddress.specialHandlingDesc);
     if (this.tabCode === FinancialVendorProviderTabCode.InsuranceVendors) {
       this.paymentAddressForm.controls['acceptsReportsFlag'].setValue(this.billingAddress.acceptsReportsFlag);
       this.paymentAddressForm.controls['acceptsCombinedPaymentsFlag'].setValue(this.billingAddress.acceptsCombinedPaymentsFlag);
     }
+    if (this.tabCode === FinancialVendorProviderTabCode.Pharmacy) {
+      this.paymentAddressForm.controls['physicalAddressFlag'].setValue(this.billingAddress.physicalAddressFlag == StatusFlag.Yes?true:null);
+    }
     this.cdr.detectChanges();
+  }
+
+  private specialHandlingWordCount() {
+    this.specialHandlingCharachtersCount = this.specialHandling
+      ? this.specialHandling.length
+      : 0;
+    this.specialHandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingLength}`;
   }
 
   private buildForm() {
@@ -82,18 +106,42 @@ export class PaymentAddressDetailsComponent implements OnInit {
       address2: [''],
       cityCode: ['', Validators.required],
       stateCode: ['', Validators.required],
-      zip: ['', Validators.required],
+      zip: ['',[ Validators.required, Validators.pattern('^[A-Za-z0-9 \-]+$')]],
       paymentMethodCode: ['', Validators.required],
       paymentRunDateMonthly: ['', Validators.required],
       specialHandlingDesc: [''],
       newAddContactForm: this.formBuilder.array([]),
     });
 
+    this.paymentAddressForm.controls['zip']
+        .setValidators([
+          Validators.required,Validators.required
+        ]);
+      this.paymentAddressForm.controls['zip'].updateValueAndValidity();
+
     if (this.tabCode === FinancialVendorProviderTabCode.InsuranceVendors) {
       this.paymentAddressForm.addControl('acceptsReportsFlag', new FormControl('', [Validators.required]))
       this.paymentAddressForm.addControl('acceptsCombinedPaymentsFlag', new FormControl('', [Validators.required]))
     }
+    if(this.tabCode === FinancialVendorProviderTabCode.Manufacturers)
+    {
+      this.paymentAddressForm.controls['paymentMethodCode'].removeValidators([Validators.required]);
+    }
+    if(this.tabCode !== FinancialVendorProviderTabCode.InsuranceVendors)
+    {
+      this.paymentAddressForm.controls['paymentRunDateMonthly'].removeValidators([Validators.required]);
+      this.paymentAddressForm.controls['paymentRunDateMonthly'].setValue(null);
+    }
+    if(this.tabCode === FinancialVendorProviderTabCode.Pharmacy)
+    {
+      this.paymentAddressForm.addControl('physicalAddressFlag', new FormControl(''))
+    }
   }
+
+  get paymentAddressFormControls() {
+    return this.paymentAddressForm.controls as any;
+  }
+
   private setAddressTypeCode() {
     switch (this.tabCode) {
       case FinancialVendorProviderTabCode.Manufacturers:
@@ -130,7 +178,17 @@ export class PaymentAddressDetailsComponent implements OnInit {
   }
 
   submit() {
+    this.paymentAddressForm.controls['zip']
+    .setValidators([
+      Validators.required, Validators.required, Validators.pattern('^[A-Za-z0-9 -]+$')
+    ]);
+  this.paymentAddressForm.controls['zip'].updateValueAndValidity();
     this.formIsSubmitted = true;
+    this.paymentAddressForm.markAllAsTouched();
+    if (this.tabCode === FinancialVendorProviderTabCode.Pharmacy)
+    {
+      this.paymentAddressForm.patchValue({physicalAddressFlag: this.paymentAddressForm.controls['physicalAddressFlag'].value ? StatusFlag.Yes:null});
+    }
     if (!this.paymentAddressForm.valid) return;
 
     let formValues = this.paymentAddressForm.value;
@@ -150,10 +208,18 @@ export class PaymentAddressDetailsComponent implements OnInit {
     this.billingAddressFacade.showLoader();
     this.addUpdateBillingAddress(this.vendorId, formValues).subscribe({
       next: (resp) => {
+        this.paymentAddressAdded.emit(true)
         if (resp) {
-          this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment Address Added Successfully')
+          if (!this.isEdit) {
+            this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment address added successfully!')
+          }
+          else
+          {
+            this.billingAddressFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Payment address updated successfully!')
+          }
         }
         this.billingAddressFacade.hideLoader();
+        this.vendorContactFacade.loadVendorAllContacts(this.vendorId);
         this.closeModal('saved');
       },
       error: (err) => {
@@ -169,5 +235,52 @@ export class PaymentAddressDetailsComponent implements OnInit {
     }
     return this.billingAddressFacade.saveBillingAddress(this.vendorId, formValues);
   }
+  onSpecialHandlingValueChange(event: any): void {
+    this.specialHandlingCharachtersCount = event.length;
+    this.specialHandlingCounter = `${this.specialHandlingCharachtersCount}/${this.specialHandlingLength}`;
+  }
+  deactivatePaymentAddress()
+  {
+    this.editDeactivateClicked.emit(this.billingAddress);
+  }
+  OncheckboxClick(event: Event) {
+    const isChecked = (<HTMLInputElement>event.target).checked;
+    if (isChecked) {
+      this.paymentAddressForm.patchValue({physicalAddressFlag: true});
+    } else {
+      this.paymentAddressForm.patchValue({physicalAddressFlag: null});
+    }
+    this.cdr.detectChanges();
+  }
+  restrictSpecialChar(event:number) {
+    return (
+      (event >= 48 && event <= 57) ||
+      (event > 64 && event < 91) ||
+      (event > 96 && event < 123) ||
+      event == 8 ||
+      event == 45
+    );
+  }
+  onKeyPress(event:number) {
+    return (event > 64 &&
+      event < 91) || (event > 96 && event < 123)||event==32
+  }
+  onMailCodeKeyUp() {
+    let mailCode = this.paymentAddressForm.controls['mailCode'].value;
+    if (mailCode.length !== 3 && mailCode !="") {
+      this.mailCodeLengthError = true;
+    }
+    else if (mailCode.length <=0 || mailCode.length==3){
+      this.mailCodeLengthError = false;
+    }
+ }
 
-}
+ isAlphaNumeric(event: number) {
+    return (
+      (event >= 48 && event <= 57) || // Numbers (0-9)
+      (event >= 65 && event <= 90) || // Uppercase letters (A-Z)
+      (event >= 97 && event <= 122) || // Lowercase letters (a-z)
+      event === 32 // Space
+    );
+  }
+ }

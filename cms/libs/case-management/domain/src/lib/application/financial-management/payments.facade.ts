@@ -9,13 +9,15 @@ import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { PaymentsDataService } from '../../infrastructure/financial-management/payments.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { PaymentDetail } from '../../entities/financial-management/Payment-details';
+import { GridFilterParam } from '../../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class PaymentsFacade {
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortValue = 'address1';
+  public sortValue = 'mailCode';
   public sortType = 'asc';
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
@@ -25,11 +27,16 @@ export class PaymentsFacade {
   private paymentBatchSubListSubject = new BehaviorSubject<any>([]);
   private paymentsAddressDataSubject = new BehaviorSubject<any>([]);
   private paymentBatchLoaderSubject = new BehaviorSubject<boolean>(false);
+  private paymentPanelSubject = new Subject<any>();
+  private paymentDetailsSubject = new Subject<PaymentDetail>();
+  private updatePaymentPanelResponseSubject = new BehaviorSubject<any>([]);
   paymentBatches$ = this.paymentBatchesSubject.asObservable();
   paymentBatchSubList$ = this.paymentBatchSubListSubject.asObservable();
   paymentsAddressData$ = this.paymentsAddressDataSubject.asObservable();
   paymentBatchLoader$ = this.paymentBatchLoaderSubject.asObservable();
-
+  paymentPanelData$ = this.paymentPanelSubject.asObservable();
+  paymentDetails$ = this.paymentDetailsSubject.asObservable();
+  updatePaymentPanelResponse$ = this.updatePaymentPanelResponseSubject.asObservable();
   /** Private properties **/
 
   /** Public properties **/
@@ -63,7 +70,7 @@ export class PaymentsFacade {
   ) { }
 
   /** Public methods **/
-  loadPaymentsListGrid(vendorId: string, paginationParameters: State) {
+  loadPaymentsListGrid(vendorId: string, paginationParameters: GridFilterParam) {
     this.paymentBatchLoaderSubject.next(true);
     this.paymentsDataService.loadPaymentsListService(vendorId, paginationParameters).subscribe({
       next: (dataResponse: any) => {
@@ -75,7 +82,7 @@ export class PaymentsFacade {
         this.paymentBatchLoaderSubject.next(false);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err); 
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.paymentBatchLoaderSubject.next(false);
       },
     });
@@ -97,5 +104,40 @@ export class PaymentsFacade {
       },
     });
   }
+  loadPaymentPanel(paymentRequestId:any,batchId:any):any{
+    this.paymentsDataService.loadPaymentPanel(paymentRequestId,batchId).subscribe({
+      next: (dataResponse) => {
+        this.paymentPanelSubject.next(dataResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.hideLoader();
+      },
+    });
+  }
+  updatePaymentPanel(batchId:any,paymentPanel:any){
+    this.paymentsDataService.updatePaymentPanel(batchId,paymentPanel).subscribe({
+      next: (response: any) => {        
+        this.updatePaymentPanelResponseSubject.next(response);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+        this.hideLoader();   
+      },
+      error: (err) => {       
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      }
+    });
+  }
 
+  loadPaymentDetails(paymentId: string, type: string){
+    return this.paymentsDataService.loadPaymentDetails(paymentId, type).subscribe({
+      next: (dataResponse: any) => {
+        this.paymentDetailsSubject.next(dataResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
 }

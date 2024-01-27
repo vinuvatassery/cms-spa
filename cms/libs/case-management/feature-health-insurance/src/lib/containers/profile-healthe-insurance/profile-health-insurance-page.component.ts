@@ -2,7 +2,7 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { ClientProfileTabs, HealthInsurancePolicyFacade } from '@cms/case-management/domain';
+import { ClientProfileTabs, HealthInsurancePolicyFacade, ClientFacade } from '@cms/case-management/domain';
 import { filter, Subject, Subscription } from 'rxjs';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 
@@ -15,12 +15,13 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
 
   constructor(
-    private route: ActivatedRoute,  
+    private route: ActivatedRoute,
     private readonly router: Router,
     private formBuilder: FormBuilder,
     private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly loaderService: LoaderService,
-    private readonly ref: ChangeDetectorRef
+    private readonly ref: ChangeDetectorRef,
+    private readonly clientFacade: ClientFacade
   ) { }
 
   tabChangeSubscription$ = new Subscription();
@@ -37,7 +38,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   closeDeleteModal: boolean = false;
   isHistoricalDataLoad:boolean = false;
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this.routeChangeSubscription();
     this.loadQueryParams()
     this.buildForm();
@@ -48,11 +49,11 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     return ClientProfileTabs;
   }
   loadQueryParams()
-  {    
+  {
     this.clientId = this.route.snapshot.queryParams['id'];
     this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
-    this.clientCaseId = this.route.snapshot.queryParams['cid'];  
-    this.tabId = this.route.snapshot.queryParams['tid']; 
+    this.clientCaseId = this.route.snapshot.queryParams['cid'];
+    this.tabId = this.route.snapshot.queryParams['tid'];
     this.tabIdSubject.next(this.tabId);
     this.isHistoricalDataLoad = false;
   }
@@ -60,8 +61,8 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   private routeChangeSubscription() {
     this.tabChangeSubscription$ = this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {    
-          this.loadQueryParams()  
+      .subscribe(() => {
+          this.loadQueryParams()
       });
   }
 
@@ -102,7 +103,11 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       policyHolderLastName: [''],
       proofOfPremium: [''],
       copyOfInsuranceCard: [''],
-      copyOfSummary: ['']
+      copyOfSummary: [''],
+      insuranceVendorAddressId:[''],
+      vendorAddressId:[''],
+      insuranceTypeCode:[''],
+
     });
 
   }
@@ -110,7 +115,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   ngOnDestroy(): void {
     this.tabChangeSubscription$.unsubscribe();
   }
- 
+
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
     let typeParam ={type:'INSURANCEDEPENDENTS',insuranceStatusType:this.tabId};
     const gridDataRefiner = {
@@ -132,7 +137,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
       gridDataRefiner.sortType
     );
   }
-  deleteInsurancePolicy(insurancePolicyId: any) {
+  deleteInsurancePolicy(insurancePolicyId: any, priority:any = null) {
     if (insurancePolicyId != undefined) {
       this.loaderService.show();
       this.closeDeleteModal = false;
@@ -145,10 +150,12 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
+          this.clientFacade.runImportedClaimRules(this.clientId);
           this.loadHealthInsuranceHandle(gridDataRefinerValue);
           this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Insurance policy deleted successfully");
           this.loaderService.hide();
           this.ref.detectChanges();
+          this.insurancePolicyFacade.triggerPriorityPopupSubject.next(true);
         },
         error: (error: any) => {
           this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)

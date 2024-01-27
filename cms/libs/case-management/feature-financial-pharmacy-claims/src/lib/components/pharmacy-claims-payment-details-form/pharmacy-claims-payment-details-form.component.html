@@ -1,0 +1,73 @@
+<kendo-dialog-titlebar (close)="closePaymentDetailClicked()"> Edit Payment</kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1">  Edit payment info and click “Update”. All fields are required unless otherwise stated. </p>
+    <div class="flex-row">
+      <div class="flex-col ">
+        <kendo-floatinglabel text="Date Payment Reconciled">
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+            formatPlaceholder="formatPattern" aria-label="Date Payment Reconciled"    placeholder="" >
+          </kendo-datepicker>
+        </kendo-floatinglabel>
+   
+
+      </div>
+      <div class="flex-col ">
+        <kendo-floatinglabel text="Date Payment Sent">
+          <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+            formatPlaceholder="formatPattern" aria-label="Date Payment Sent"    placeholder="" >
+          </kendo-datepicker>
+        </kendo-floatinglabel>
+   
+
+      </div>
+      <div class="flex-col flex-col-6">
+        <kendo-floatinglabel text="Payment Amount" class="amount-with-symbol">
+          <span class="k-input-prefix custom-currencysymbol"> $ </span>
+          <kendo-numerictextbox placeholder="Payment Amount" aria-label="Payment Amount" [spinners]="false" class="input-icon-right" placeholder="00.00"
+            [fillMode]="formUiStyle.inputFillMode" > 
+          </kendo-numerictextbox>
+        </kendo-floatinglabel> 
+      </div>
+      <div class="flex-col flex-col-6">
+        <kendo-floatinglabel text="Warrant Number">
+          <kendo-textbox  placeholder="Warrant Number" [fillMode]="formUiStyle.dropDownFillMode" aria-label="Warrant Number" >
+          </kendo-textbox>
+        </kendo-floatinglabel>
+   
+
+      </div>
+      <div class="flex-col">
+        <kendo-floatinglabel text="Note">
+          <kendo-textarea [fillMode]="formUiStyle.inputFillMode"  aria-label="Note" [rows]="1" >
+            <kendo-textarea-suffix class="justify-content-end">
+              <span class="counter">6/100</span>
+        </kendo-textarea-suffix>
+          </kendo-textarea> 
+        </kendo-floatinglabel>
+      </div>
+ 
+ 
+  
+    </div>
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="cancel"
+         (click)="closePaymentDetailClicked()"
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Batch"  >
+          Batch
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

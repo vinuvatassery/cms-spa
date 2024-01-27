@@ -28,4 +28,19 @@ export class DirectMessageDataService {
       },
     ]);
   }
+
+  loadDirectMessagesLists()  {
+    return of([
+      { id: 1, 
+        from: 'Lorem ipsum', 
+        unreadMessage: 'Lorem ipsum dolor sit amet', 
+        lastReceived: '22/22/2023' },
+        { id: 1, 
+          from: 'Lorem ipsum', 
+          unreadMessage: 'Lorem ipsum dolor sit amet', 
+          lastReceived: '22/22/2023' },
+
+      
+    ]);
+  }
 }

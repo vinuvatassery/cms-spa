@@ -19,4 +19,28 @@ export class NavigationMenuService {
         `/system-config/menu`
     );
   }
+
+  pcaReassignmentCount(){
+    return this.http.get<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/count`
+    )
+  }
+
+  getPendingApprovalPaymentCount(userLevel:any) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/payments/count?level=${userLevel}`
+    );
+  }
+
+  getPendingApprovalGeneralCount() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/count`
+    );
+  }
+
+  getPendingApprovalImportedClaimCount() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/imported-claims/count`
+    );
+  }
 }

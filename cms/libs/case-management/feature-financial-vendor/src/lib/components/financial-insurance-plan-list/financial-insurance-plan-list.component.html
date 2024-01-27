@@ -1,41 +1,52 @@
-<kendo-grid [resizable]="true" [loading]="(loader$ | async) ?? false" [pageSize]="state.take" [pageable]="true" [sortable]="true"
-    [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [sort]="state.sort"
-    (dataStateChange)="dataStateChange($event)" [data]="vendorInsurancePlanList$ | async">
-    <kendo-grid-column field="insurancePlanName" title="Insurance Plan Name" [width]="150"> </kendo-grid-column>
-    <kendo-grid-column field="insuranceType" title="Health Insurance Type" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="canPayForMedicationFlag" title="Can pay for meds?" [width]="20">
+<kendo-grid 
+    [resizable]="true" 
+    [loading]="(loader$ | async) ?? false" 
+    [pageSize]="state.take" 
+    [pageable]="true" 
+    [sortable]="true"
+    [skip]="state.skip" 
+    [groupable]="false" 
+    [reorderable]="true" 
+    [resizable]="true" 
+    [sort]="state.sort"
+    [columnMenu]="{ filter: false }" 
+    (dataStateChange)="dataStateChange($event)" 
+    [data]="vendorInsurancePlanList$ | async">
+    <kendo-grid-column field="insurancePlanName" title="Insurance Plan Name" [width]="200"> </kendo-grid-column>
+    <kendo-grid-column field="insuranceType" title="Health Insurance Type" [width]="200"> </kendo-grid-column>
+    <kendo-grid-column field="canPayForMedicationFlag" title="Can pay for meds?" [width]="200">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.canPayForMedicationFlag | yesOrNo }}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="dentalPlanFlag" title="Dental plan?" [width]="20">
+    <kendo-grid-column field="dentalPlanFlag" title="Dental plan?" [width]="140">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.dentalPlanFlag | yesOrNo }}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="startDate" title="Start Date" [width]="50">
+    <kendo-grid-column field="startDate" title="Start Date" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.startDate | date:'MM/dd/yyyy' }}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="termDate" title="Term Date" [width]="50">
+    <kendo-grid-column field="termDate" title="Term Date" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
             {{ dataItem.termDate | date:'MM/dd/yyyy' }}
         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="Option" title=" " [columnMenu]="false" [width]="20" class="text-center">
+    <kendo-grid-column field="Option" title="Options" [columnMenu]="false" [sticky]="true" [sortable]="false" [width]="75" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton [data]="actionsButtons" icon="more-vertical"
+            <kendo-dropdownbutton [data]="actionsButtons" 
                 class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                 aria-label="more actions" title="More option"
                 [popupSettings]="{ popupClass: popupClassAction,  animate: true }">
-                <span hidden> More Option</span>
+                <span class="material-icons" aria-label="More option"> more_vert    </span>
                 <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                     <ng-container>
                         <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                            [class]="buttondataItem.buttonType" aria-hidden="false"
+                            [class]="buttondataItem.buttonType" 
                             (click)="buttondataItem.click(dataItem)">
-                            <span class="material-icons"
+                            <span class="material-icons" aria-hidden="true"
                                 [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                             <label> {{ buttondataItem.text }} </label>
                         </button>
@@ -49,12 +60,12 @@
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
             <div class="d-flex align-items-center">
-                <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                <label class="mr-1" for="InsPlanRowsPerPage">Rows Per Page</label>
                 <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-                    [valueField]="'value'" aria-label="Rows Per Page" id="RowsPerPage" [valuePrimitive]="true"
+                    [valueField]="'value'" aria-label="Rows Per Page" id="InsPlanRowsPerPage" [valuePrimitive]="true"
                     [(value)]="state.take" (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
                 <kendo-pager-info> </kendo-pager-info>
-                <kendo-grid-messages [pagerItems]="' '" [pagerPage]="'Page'"> </kendo-grid-messages>
+                <kendo-grid-messages [pagerItems]="'Rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
             </div>
             <div class="d-flex">
                 <kendo-pager-input></kendo-pager-input>

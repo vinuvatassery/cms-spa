@@ -4,14 +4,15 @@ import {
   import { ActivatedRoute, Router } from '@angular/router';
 /** Internal Libraries **/
 import { CaseFacade, WorkflowFacade,
-   UserDefaultRoles, NavigationType, CompletionChecklist, StatusFlag, CaseOriginCode  } from '@cms/case-management/domain';
+  NavigationType, CompletionChecklist, CaseOriginCode  } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {LovFacade , UserManagementFacade} from '@cms/system-config/domain'
+import {LovFacade , UserManagementFacade, UserDefaultRoles} from '@cms/system-config/domain'
 
 /**external libraries */
 import { catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-case-summary',

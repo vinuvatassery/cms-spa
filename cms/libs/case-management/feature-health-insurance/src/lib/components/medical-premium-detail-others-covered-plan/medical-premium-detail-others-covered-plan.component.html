@@ -26,7 +26,7 @@
     <div class="flex-col mt-2" >
         <fieldset class="k-form-fieldset">
             <legend class="k-form-legend">
-                <h5>Others covered on the plan(Select all that apply)</h5>
+                <h5>Others Covered on the Plan (select all that apply)</h5>
             </legend>
             <div class="component-list-h" formArrayName="othersCoveredOnPlan">
                 <span class="app-c-badge  mt-3" *ngIf="otherCoveredPlanLoader">       
@@ -56,7 +56,7 @@
                 <div class="flex-col d-flex align-iems-center justify-content-between">
                     <h5 class="mb-0">Person {{i+1}}</h5>
                     <button kendoButton *ngIf="!isViewContentEditable" class="card-link-button no-ul text-bold k-danger-link"
-                        aria-label="delete person" (click)="removePerson(i)">
+                        aria-label="Delete Person" (click)="removePerson(i)">
                         DELETE PERSON
                     </button>
                 </div>
@@ -107,8 +107,8 @@
     <div class="flex-row pl-3 mt-2" *ngIf="!isViewContentEditable">
         <div class="flex-col" >
             <button kendoButton class="card-link-button no-ul" (click)="onToggleNewPersonClicked()"
-                aria-label="add new person">
-                <span class="material-icons" aria-label="add new person" aria-hidden="true">add</span>NEW PERSON
+                aria-label="Add New Person">
+                <span class="material-icons" aria-label="add" aria-hidden="false">add </span> NEW PERSON
             </button>
         </div>
     </div>

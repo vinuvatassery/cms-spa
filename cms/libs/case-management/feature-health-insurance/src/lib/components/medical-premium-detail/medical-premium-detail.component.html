@@ -2,7 +2,7 @@
   <p class="text-muted mb-2" *ngIf="dialogTitle === 'View' || dialogTitle === 'Add' || dialogTitle === 'Edit'">
     {{
     isEditViewPopup
-    ? 'Click "Edit" to make changes to the insurance '
+    ? 'Click "Edit" to make changes to the Insurance '
     : 'All fields are required unless otherwise stated.'
     }}
   </p>
@@ -35,13 +35,13 @@
           <h5 class="text-capital">Medicare Info</h5>
         </div>
         <div class="flex-col">
-          <kendo-floatinglabel text="Medicare Benificiary ID Number">
-            <kendo-textbox  aria-label="Medicare Benificiary ID Number"
-              placeholder="Medicare Benificiary ID Number" formControlName="medicareBeneficiaryIdNbr" [maxlength]="20"
+          <kendo-floatinglabel text="Medicare Beneficiary ID Number">
+            <kendo-textbox  aria-label="Medicare Beneficiary ID Number"
+              placeholder="Medicare Beneficiary  ID Number" formControlName="medicareBeneficiaryIdNbr" [maxlength]="20"
               [fillMode]="formUiStyle.inputFillMode">
             </kendo-textbox>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].valid && !healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].disabled">Medicare Benificiary
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].valid && !healthInsuranceForm.controls['medicareBeneficiaryIdNbr'].disabled">Medicare Beneficiary 
             ID Number is required.</kendo-formerror>
         </div>
         <div class="flex-col">
@@ -75,12 +75,25 @@
           <kendo-formerror *ngIf="!healthInsuranceForm.controls['medicarePartBStartDate'].valid && !healthInsuranceForm.controls['medicarePartBStartDate'].disabled">Medicare Part B Start
             Date is required.</kendo-formerror>
         </div>
-        <div class="flex-col mt-2">
-          <span class="app-checkboxwidtext-wrapper">
-            <input  type="checkbox" kendoCheckBox aria-labelledby="qmb" id="qmb"
-              formControlName="onQmbFlag" />
-            <label class="k-checkbox-label" for="qmb">On Qualified Medicare Beneficiary (QMB)</label>
-          </span>
+        <div class="flex-col">
+
+          <fieldset class="k-form-fieldset">
+            <legend class="k-form-legend">
+              <h5>On Qualified Medicare Beneficiary (QMB)</h5>
+            </legend>
+            <div class="component-list-h">
+              <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio" kendoRadioButton name="onQmbFlag"
+                  aria-labelledby="LowIncomeSusidyYes" formControlName="onQmbFlag" id="qmbYes" value="Y" />
+                <kendo-label class="k-radio-label" for="qmbYes" text="Yes"></kendo-label>
+              </span>
+              <span class="app-radiobtnwidtext-wrapper">
+                <input type="radio"  kendoRadioButton name="onQmbFlag"
+                  aria-labelledby="qmb" formControlName="onQmbFlag" id="qmbNo" value="N" />
+                <kendo-label class="k-radio-label" for="qmbNo" text="No"></kendo-label>
+              </span>
+            </div>
+          </fieldset>
         </div>
         <div class="flex-col">
 
@@ -109,13 +122,15 @@
           <h5 class="text-capital">Copy of Medicare Card</h5>
           <common-document-upload
           [file]="copyOfMedicareCardFiles"
+          [fieldName]="'Copy of Medicare Card'"
           [isFileViewable]="true"
+          [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_MEDICARE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'medicareCard')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'medicareCard')"
-          (handleTypeCodeEvent)="handleMedicareTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleMedicareTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
-          <kendo-formhint>Max file size 25MB</kendo-formhint>
           <kendo-formerror *ngIf="medicareCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a
             smaller file. </kendo-formerror>
           <kendo-formerror
@@ -133,7 +148,7 @@
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Insurance Start Date">
             <kendo-datepicker aria-label="Insurance Start Date" [fillMode]="formUiStyle.dateInputFillMode"
-              format="MM-dd-yyyy" formControlName="insuranceStartDate" 
+              format="MM-dd-yyyy" formControlName="insuranceStartDate"
               formatPlaceholder="formatPattern" placeholder="" (valueChange)="startDateOnChange()">
             </kendo-datepicker>
           </kendo-floatinglabel>
@@ -144,7 +159,7 @@
           <kendo-floatinglabel text="Insurance End Date">
             <kendo-datepicker aria-label="Insurance End Date" [fillMode]="formUiStyle.dateInputFillMode"
               format="MM-dd-yyyy" [min]="endDateMin" (focus)="changeMinDate()" (blur)="endDateOnChange()"
-              (valueChange)="endDateValueChange($event)" 
+              (valueChange)="endDateValueChange($event)"
               formControlName="insuranceEndDate" formatPlaceholder="formatPattern" placeholder="">
             </kendo-datepicker>
           </kendo-floatinglabel>
@@ -171,12 +186,12 @@
             [isViewContentEditable]="isViewContentEditable"
             (insuranceCarrierNameChange)="insuranceCarrierNameChange($event)"
             (insuranceCarrierNameData)="insuranceCarrierNameData($event)"
-            [insuranceStatus]="insuranceStatus"></case-management-medical-premium-detail-insurance-carrier-name>
+            [insuranceStatus]="insuranceStatus"  [insuranceTypeCode]="insuranceTypeCode"></case-management-medical-premium-detail-insurance-carrier-name>
         </div>
 
         <div class="flex-col mat-form-sm-b-space ">
           <case-management-medical-premium-detail-insurance-plan-name [healthInsuranceForm]="healthInsuranceForm"
-          [insurancePlans]="insurancePlans"
+          [insurancePlans]="insurancePlans" [hasCreateUpdatePermission]="hasInsurancePlanCreateUpdatePermission"
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-insurance-plan-name>
         </div>
         <div class="flex-col"
@@ -203,7 +218,7 @@
           <case-management-medical-premium-detail-careassist-pay [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable" [sameAsInsuranceIdFlag]="sameAsInsuranceIdFlag"
             [ddlInsuranceType]="ddlInsuranceType"
-            [clientId]="clientId" [caseEligibilityId]="caseEligibilityId"></case-management-medical-premium-detail-careassist-pay>
+            [clientId]="clientId" [caseEligibilityId]="caseEligibilityId" [claimsType]="selectedClaimType"></case-management-medical-premium-detail-careassist-pay>
         </div>
 
       </div>
@@ -214,13 +229,15 @@
         <h5 class="text-capital">Proof of premium amount</h5>
         <common-document-upload
           [file]="proofOfPremiumFiles"
+          [fieldName]="'Proof of premium amount'"
           [isFileViewable]="true"
+          [isDisabled] ="isViewContentEditable"
           [typeCode]="'PROOF_OF_PREMIUM'"
           (handleFileSelectEvent)="handleFileSelected($event,'proof')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'proof')"
-          (handleTypeCodeEvent)="handleProofTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleProofTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror
           *ngIf="healthInsuranceForm.value.careassistPayingPremiumFlag === 'Y' && !isProofFileUploaded && !isViewContentEditable && !proofOfPremiumExceedsFileSizeLimit">Proof
           of premium is required. </kendo-formerror>
@@ -235,13 +252,15 @@
         <h5 class="text-capital">Copy of Summary of Benefits</h5>
         <common-document-upload
           [file]="copyOfSummaryFiles"
+          [fieldName]="'Copy of Summary of Benefits'"
           [isFileViewable]="true"
+          [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_SUMMARY_Of_BENEFITS_AND_COVERAGE'"
           (handleFileSelectEvent)="handleFileSelected($event,'summary')"
           (handleFileRemoveEvent)="handleFileRemoved($event, 'summary')"
-          (handleTypeCodeEvent)="handleSummaryTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleSummaryTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="summaryFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a smaller
           file. </kendo-formerror>
         <kendo-formerror *ngIf="!isSummaryFileUploaded && !summaryFilesExceedsFileSizeLimit">
@@ -256,12 +275,14 @@
         <common-document-upload
           [file]="copyOfInsuranceCardFiles"
           [isFileViewable]="true"
+          [fieldName]="'Copy of Insurance Card'"
+          [isDisabled] ="isViewContentEditable"
           [typeCode]="'COPY_OF_INSURANCE_CARD'"
           (handleFileSelectEvent)="handleFileSelected($event,'copyInsurance')"
           (handleFileRemoveEvent)="handleFileRemoved($event,'copyInsurance')"
-          (handleTypeCodeEvent)="handleTypeCodeEvent($event)">
+          (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
+          [isDownloadShow]="true">
           </common-document-upload>
-        <kendo-formhint>Max file size 25MB</kendo-formhint>
         <kendo-formerror *ngIf="insuranceCardFilesExceedsFileSizeLimit">File size is limited to 25 MB. Please select a
           smaller file. </kendo-formerror>
         <kendo-formerror
@@ -276,25 +297,25 @@
   <div class="justify-content-between">
     <div>
       <button kendoButton class="k-danger-link" *ngIf="isDeleteEnabled && !isPaymentDone" (click)="onDeleteClick()"
-        aria-label="delete medical premium">
+        aria-label="Delete">
         Delete
       </button>
       <button kendoButton [primary]="true" (click)="onRedirectModalClicked()" *ngIf="isEditViewPopup" look="outline"
-        aria-label="edit medical premium">
+        aria-label="Edit">
         Edit
       </button>
     </div>
     <div class="justify-content-end">
       <button kendoButton [primary]="true" look="outline" *ngIf="!isEditViewPopup && isOpenDdl"
-        (click)="onModalCloseClicked()" aria-label="cancel adding medical premium">
+        (click)="onModalCloseClicked()" aria-label="Cancel">
         Cancel
       </button>
-      <button kendoButton [primary]="true" *ngIf="!isEditViewPopup && isOpenDdl" aria-label="add new medical premium"
+      <button kendoButton [primary]="true" *ngIf="!isEditViewPopup && isOpenDdl" [attr.aria-label]="buttonText"
         (click)="save()" [disabled]="btnDisabled">
         {{buttonText}}
       </button>
       <button kendoButton [primary]="true" *ngIf="isEditViewPopup" (click)="onModalCloseClicked()"
-        aria-label="close medical premium">
+        aria-label="Close">
         Close
       </button>
     </div>

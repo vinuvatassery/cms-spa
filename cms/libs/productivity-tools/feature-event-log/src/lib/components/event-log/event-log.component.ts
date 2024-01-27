@@ -5,10 +5,12 @@ import {
   EventEmitter,
   OnInit,
   Output,
-} from '@angular/core';
+  TemplateRef,
+} from '@angular/core'; 
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'productivity-tools-event-log',
@@ -25,6 +27,7 @@ export class EventLogComponent implements OnInit {
   isShowEventLog = false;
   isOpenEventLogDetails = false;
   isShownSearch = false;
+  isAddEventDialogOpen : any;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -53,7 +56,8 @@ export class EventLogComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly eventLogFacade: EventLogFacade) {}
+  
+  constructor(private readonly eventLogFacade: EventLogFacade, private dialogService: DialogService) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -65,13 +69,8 @@ export class EventLogComponent implements OnInit {
     this.eventLogFacade.loadEvents();
   }
 
-  /** Internal event methods **/
-  onCloseEventDetailsClicked() {
-    this.isOpenEventLogDetails = false;
-  }
-  onOpenEventDetailsClicked() {
-    this.isOpenEventLogDetails = true;
-  }
+ 
+ 
 
   onShowSearchClicked() {
     this.isShownSearch = !this.isShownSearch;
@@ -80,5 +79,17 @@ export class EventLogComponent implements OnInit {
   onCloseEventLogClicked() {
     this.closeAction.emit();
     this.isShowEventLog = !this.isShowEventLog;
+  }
+
+  onOpenEventDetailsClicked(template: TemplateRef<unknown>): void {
+    this.isAddEventDialogOpen = this.dialogService.open({
+      content: template, 
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+    }); 
+  }
+  onCloseEventDetailsClicked(data: any) {
+    if (data) { 
+      this.isAddEventDialogOpen.close();
+    }
   }
 }

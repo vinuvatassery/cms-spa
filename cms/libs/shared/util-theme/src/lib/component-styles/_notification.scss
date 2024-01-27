@@ -2,77 +2,123 @@
   display: inline-flex;
   align-items: center;
   gap: $size-m;
-  background: material-color($hive-neutral-palette, 100);
+  background: var(--hive-neutral-palette-100);
   padding: $size-l $size-xx;
   border-radius: $border-radius-sm;
   color: $app-primary-font-color;
   font-size: $font-size-m;
   margin-right: $size-s;
   margin-bottom: $size-s;
+
   &.full-rounded {
     border-radius: $border-radius-xl;
   }
+
   .material-icons {
     font-size: $font-size-xlg;
   }
-  .input-inline-loader{
+
+  .input-inline-loader {
     position: relative;
     top: auto;
     left: auto;
     right: auto !important;
     background: transparent;
   }
+
   &.badge-primary {
-    background: material-color($hive-primary-palette, 500);
+    background: var(--hive-primary-palette-500);
     color: $white;
   }
+
   &.badge-error {
-    background: material-color($hive-error-palette, 500);
+    background: var(--hive-error-palette-500);
     color: $white;
   }
+
   &.badge-warn {
     background: $badge-alerts;
     color: $white;
   }
+
   &.badge-warn-light {
-    background: material-color($hive-warn-palette, 400);
+    background: var(--hive-warn-palette-400);
     color: $black-3;
   }
 }
-.k-notification-group {
-  z-index: 999999999;  
-  padding-top: $size-xxxx;
-  .k-notification-wrap > .k-icon {
-    margin-top: $size-0;
-    font-size: $font-size-xlg + 2;
+
+.k-notification-container {
+  max-width: 500px;
+  box-shadow: 0 2px 4px -1px rgba($black, 0.2),
+    0 4px 5px 0 rgba($black, 0.14),
+    0 1px 10px 0 rgba($black, 0.12);
+  border-radius: 4px;
+
+  @media (max-width: $breakpoint-sm) {
+    max-width: 95%;
+    margin: auto;
   }
+}
+
+.k-notification-group {
+  z-index: 999999999;
+  padding-top: $size-xxxx;
+
+  @media (max-width: $breakpoint-sm) {
+    left: 0 !important;
+    right: 0 !important;
+    margin: auto !important;
+  }
+
+  .k-notification-wrap>.k-icon {
+    margin-top: $size-0;
+    font-size: $font-size-xlg-22;
+  }
+
   .k-notification {
     min-width: 500px;
     width: 100%;
-    max-width: 500px;
+    max-width: 100%;
+    box-shadow: none;
+    align-items: flex-start;
+
+    @media (max-width: $breakpoint-sm) {
+      min-width: 280px;
+      max-width: 100%;
+      margin: auto;
+    }
+
+    .k-notification-status {
+      margin-top: 4px;
+    }
+
     .k-notification-content {
       margin-top: $size-m;
+
       .k-notification-title {
-        font-family: $font-family-bold;
-        text-transform: capitalize;
+        font-family: $font-family-bold; 
       }
+
       .k-notification-sub-title {
         font-family: $font-family;
-        padding-left: $size-l;
+        padding-left: 0;
         word-break: break-word;
-        margin-left: 10px;
+        margin-left: 0;
       }
     }
+
     .k-i-close {
       &:before {
         content: '\e5cd';
         font-family: $font-family-Material-icon;
       }
     }
+
     &.k-notification-success {
-      border-color: material-color($hive-success-palette, 500);
+      border-color: var(--hive-success-palette-500);
       color: $white;
-      background-color: material-color($hive-success-palette, 500);
+      background-color: var(--hive-success-palette-500);
+
       .k-i-success {
         &:before {
           content: '\e86c';
@@ -80,10 +126,12 @@
         }
       }
     }
+
     &.k-notification-error {
-      border-color: material-color($hive-error-palette, 400);
-      background-color: material-color($hive-error-palette, 400);
+      border-color: var(--hive-error-palette-400);
+      background-color: var(--hive-error-palette-400);
       color: $white;
+
       .k-i-error {
         &:before {
           content: '\e5c9';
@@ -91,20 +139,29 @@
         }
       }
     }
+
     &.k-notification-warning {
-      border-color: material-color($hive-warn-palette, 400);
-      background-color: material-color($hive-warn-palette, 400);
+      border-color: var(--hive-warn-palette-400);
+      background-color: var(--hive-warn-palette-400);
       color: $black-3;
+
       .k-i-warning {
         &:before {
           content: '\e000';
           font-family: $font-family-Material-icon;
         }
       }
+
+      .k-notification-actions,
+      .snakbar-close-btn {
+        color: $black-3;
+      }
     }
+
     &.k-notification-info {
-      border-color: material-color($hive-primary-palette, 400);
-      background-color: material-color($hive-primary-palette, 400);
+      border-color: var(--hive-primary-palette-400);
+      background-color: var(--hive-primary-palette-400);
+
       .k-i-info {
         &:before {
           content: '\e88e';
@@ -114,15 +171,17 @@
     }
   }
 }
+
 .badge-dot-info {
   width: $size-m;
   height: $size-m;
   display: inline-flex;
   border-radius: $border-radius-xl;
-  background: material-color($hive-primary-palette, 300);
+  background: var(--hive-primary-palette-300);
 }
+
 .app-page_loader-on {
-  common-loader-component{
+  common-loader-component {
     position: fixed;
     z-index: 9999999;
     left: 0px;
@@ -132,6 +191,7 @@
   }
 
 }
+
 .loader-wrap {
   display: flex;
   align-items: center;
@@ -146,22 +206,26 @@
   z-index: 99999999;
   pointer-events: none;
   user-select: none;
-  cursor: pointer; 
+  cursor: pointer;
+
   .loader-item {
     width: 80px;
     height: 80px;
     align-items: center;
     justify-content: center;
-    display: flex; 
+    display: flex;
     border-radius: 50%;
+
     .k-i-loading {
-      font-size: 60px;
+      font-size: $font-size-xxxx-lg;
       color: #ffffff;
+
       &::after {
-        color: material-color($hive-primary-palette, 500);
+        color: var(--hive-primary-palette-500);
       }
+
       &::before {
-        color: material-color($hive-primary-palette, 800);
+        color: var(--hive-primary-palette-800);
       }
     }
   }
@@ -172,6 +236,7 @@
   0% {
     -webkit-transform: rotate(0deg);
   }
+
   100% {
     -webkit-transform: rotate(360deg);
   }
@@ -181,6 +246,7 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -190,6 +256,7 @@
   position: relative;
   height: 100%;
   width: 100%;
+
   .loader-wrap {
     position: relative;
     height: 100%;
@@ -199,16 +266,209 @@
     margin: 0;
   }
 }
-.snack-barwrapper{
+
+.snack-barwrapper {
   display: grid;
-  grid-template-columns: 40px auto auto;
   align-items: center;
-  grid-gap: 10px;
-  .snakbar-close-btn{
-  width: 30px;
-  height: 30px;
-  position:absolute;
-  top: 9px;
-  right: 9px;
+  grid-gap: 4px;
+
+  .snakbar-close-btn {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    top: 9px;
+    right: 9px;
+  }
+}
+
+$notificationReminderWidth: 360px;
+
+.remainder_container {
+  position: inherit !important;
+  overflow-y: auto;
+
+  .k-notification-group {
+    // display: flex;
+    // flex-direction: row-reverse;
+    // position: fixed;
+    // right: 0;
+    // top: 0;
+    // bottom: 0;
+    // overflow: scroll;
+    // z-index: 9999;
+    // width: 100%;
+    // max-width: 390px;
+    transition: all 2s;
+    flex-wrap: unset !important;
+
+    // overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .k-notification {
+      min-width: $notificationReminderWidth;
+    }
+
+    .reminder-notification-bar {
+      border-left: 3px solid $primary;
+      padding-right: 40px;
+      position: relative;
+      max-width: $notificationReminderWidth;
+      cursor: pointer;
+      overflow: hidden;
+      box-shadow: inherit !important;
+      .k-icon-wrapper-host {
+        display: none;
+      }
+
+      .k-notification-content {
+        margin: 0px;
+      }
+
+      .reminder-snack-bar-wrapper {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .k-notification-actions {
+        display: none;
+      }
+
+      .reminder-col-two {
+        .k-button {
+          padding: 2px 2px;
+        }
+      }
+
+      .reminder-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-height: 36px;
+        height: 36px;
+
+        &:hover {
+          display: block;
+          overflow: auto;
+          max-height: 250px;
+          height: 100%;
+        }
+
+      }
+
+      .reminder-col-three {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        bottom: 0;
+        background: $grey-f7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .k-button {
+          padding: 2px;
+          color: rgba($black, 0.5);
+          height: 100%;
+        }
+      }
+    }
+
+  }
+
+  &.expand_view {
+    transition: all 2s;
+
+    .k-notification-group {
+      overflow: auto;
+      padding-left: 20px !important;
+      transition: all 2s;
+
+      .k-notification-container {
+        position: relative;
+        bottom: auto !important;
+        left: auto;
+        transition: all 2s;
+      }
+    }
+  }
+
+  &.collapse_view {
+    transition: all 2s;
+
+    .k-notification-group {
+      .k-notification-container {     
+        position: absolute;
+        bottom: 0;
+        right: 5px;
+        left: auto;
+        transition: all 2s;
+        $max-list-items: 50;
+        /* loop through max list items */
+        @for $i from 1 through $max-list-items {
+          &:nth-child(#{$i}) {
+            /* set bottom by index minus 1 multiple by .5 rem */
+            bottom: ($i - 1) *.5rem;
+          }
+
+        }
+      }
+    }
+
+  }
+
+  &.move_notify_aside {
+    transition: all 2s;
+
+    .k-notification-group {
+      right: -($notificationReminderWidth + 50px) !important;
+
+      .k-notification-container {
+        position: absolute;
+        bottom: 0;
+        right: 5px;
+        left: auto;
+        transition: all 2s;
+        $max-list-items: 50;
+        /* loop through max list items */
+        @for $i from 1 through $max-list-items {
+          &:nth-child(#{$i}) {
+            /* set bottom by index minus 1 multiple by .5 rem */ 
+            bottom: ($i - 1) *.5rem !important;
+          }
+
+        }
+      }
+    }
+  }
+}
+
+.reminder_list_show_btn{
+  position: fixed;
+  right: -10px;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: 30px 0px 0px 30px;
+  background: $primary;
+  color: $white;
+  border: 0;
+  transition: .2s;
+  box-shadow: 0px 0px 8px rgba($black, 0.1) !important;
+  &:hover{
+    width: 46px;
+    right: 0px;
+  }
+  .app-c-badge{
+    border-radius: 50%;
+    top: 23px;
+    position: absolute;
+    right: 18px;
+    padding: 2px 6px;
+    line-height: normal;
   }
 }

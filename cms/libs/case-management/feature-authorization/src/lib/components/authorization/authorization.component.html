@@ -4,7 +4,7 @@
   <h4 hidden>Authorization Notice</h4>
 
   <section class="pt-1">
-    <p> 
+    <p>
      {{isCerForm?  'Send the CER to the client to sign. They may also sign through their online portal.':'Send the application to the applicant to sign. They may also sign through  their online portal.'}}
     </p>
     <div class="flex-row">
@@ -13,7 +13,7 @@
           kendoButton
           class="k-primary-link text-t-normal text-underline"
           (click)="onAuthorizationNoticeClicked()"
-          aria-label="view authorization notice"
+          aria-label="View Authorization Notice"
         >
           View Authorization Notice
         </button>
@@ -23,11 +23,13 @@
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Date Applicant Signed">
           <kendo-datepicker
+          [incompleteDateValidation]="true"
           [fillMode]="formUiStyle.dateInputFillMode"
             format="MM-dd-yyyy"
             formControlName="applicantSignedDate"
             [max]="currentDate"
             formatPlaceholder="formatPattern"
+            (valueChange)="onChange($event)"
           >
           </kendo-datepicker>
           <kendo-formerror *ngIf="authForm?.applicantSignedDate?.errors?.required">Date Applicant Signed is required</kendo-formerror>
@@ -36,31 +38,32 @@
       </div>
       <div class="flex-col flex-col-6">
         <kendo-floatinglabel text="Date Signature Noted">
-          <kendo-textbox 
-          placeholder="Date Signature Noted" 
-          aria-label="Date Signature Noted" 
-          [disabled]="true" 
+          <kendo-textbox
+          placeholder="Date Signature Noted"
+          aria-label="Date Signature Noted"
+          [disabled]="true"
           [fillMode]="formUiStyle.inputFillMode"
           formControlName="signatureNotedDate"
-          >   </kendo-textbox>
+          >
+        </kendo-textbox>
         </kendo-floatinglabel>
       </div>
       <!-- Hide after sent letter or email -->
-      <div class="flex-col mt-1" *ngIf="!isPrintClicked && !isSendEmailClicked && !authForm?.applicantSignedDate?.value">
-        <button
+      <div class="flex-col mt-1" *ngIf="!isSendEmailClicked && !isPrintClicked">
+        <button *ngIf="!isGoPaperlessOpted" [disabled]="dateSignatureNoted != null"
           kendoButton
           [primary]="true"
-          (click)="onSendNewLetterClicked(sendLetterDialog)"
-          aria-label="send letter"
+          (click)="!cerDateValidator ? onSendNewLetterClicked(sendLetterDialog) : null"
+          aria-label="Send Letter"
         >
           Send Letter
         </button>
-        <button
+        <button *ngIf="isGoPaperlessOpted" [disabled]="dateSignatureNoted != null"
           kendoButton
           [primary]="true"
           class="ml-2"
-          (click)="onSendNewEmailClicked(sendEmailDialog)"
-          aria-label="send email"
+          (click)="!cerDateValidator ? onSendNewEmailClicked(sendEmailDialog) : null"
+          aria-label="Send Email"
         >
           Send Email
         </button>
@@ -70,12 +73,12 @@
         <div class="flex-row">
           <div class="flex-col align-items-center">
             <span
-              >Letter sent 01-01-2022 by
+              >Letter sent {{emailSentDate}} by
               <a
                 kendoPopoverAnchor
                 [popover]="onUserProfileCardHovered"
                 showOn="hover"
-                >Sara John</a
+                >{{loginUserName}}</a
               ></span
             >
             <button
@@ -84,87 +87,92 @@
               look="flat"
               class="ml-1"
               (click)="onSendNewLetterClicked(sendLetterDialog)"
-              aria-label="re send letter"
+              aria-label="Re-Send Letter"
             >
               Re-Send Letter
             </button>
-            <button
+            <button *ngIf="toEmail[0] != undefined || toEmail[0] != null"
               kendoButton
               [primary]="true"
               look="flat"
               class="ml-1"
               (click)="onSendNewEmailClicked(sendEmailDialog)"
-              aria-label="send email"
+              aria-label="Send Email"
             >
               Send Email
             </button>
-          </div>        
+          </div>
           </div>
         </div>
       </div>
 
       <div class="flex-col">
-        <div class="flex-row">
+        <div class="flex-row" *ngIf="(dateSignatureNoted != null || isSendEmailClicked || isPrintClicked)">
           <div class="flex-col mt-2">
             <h5>COPY OF SIGNED APPLICATION</h5>
           </div>
           <div class="flex-col flex-col-6">
             <common-document-upload
-              [typeCode]="'COPY_OF_SIGNED_APPLICATION'"
+              [typeCode]="'COPY_OF_PAPER_APPLICATION'"
+              [fieldName]="'COPY OF SIGNED APPLICATION'"
               [file]="copyOfSignedApplication"
               [isFileViewable]="true"
               (handleFileSelectEvent)="handleFileSelected($event)"
               (handleFileRemoveEvent)="handleFileRemoved($event)"
-              (handleTypeCodeEvent)="handleTypeCodeEvent($event)"> 
+              (handleTypeCodeEvent)="handleTypeCodeEvent($event)"
+              [isDownloadShow]="true">
             </common-document-upload>
-            <kendo-formhint>Max file size 25MB</kendo-formhint> 
+          
             <kendo-formerror *ngIf="showCopyOfSignedApplicationRequiredValidation | async"> Copy of signed application is required</kendo-formerror>
             <kendo-formerror *ngIf="showCopyOfSignedApplicationSizeValidation | async">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
         </div>
       </div>
 
       <!-- Show after send email -->
-      <div class="flex-col" *ngIf="isSendEmailClicked">
-        <div class="flex-row">
-          <div class="flex-col align-items-center">
-            <span
-              >Email sent 01-01-2022 by
+        <div class="flex-col mt-2" *ngIf="isSendEmailClicked">
+          <div>
+              <p>Send the application to the applicant to sign.</p>
+              <span>Email sent {{emailSentDate}} by
               <a
                 kendoPopoverAnchor
                 [popover]="onUserProfileCardHovered"
                 showOn="hover"
-                >Sara John</a
-              ></span
-            >
+                >{{loginUserName}}</a>
+              </span>
             <button
               kendoButton
               [primary]="true"
               look="flat"
               class="ml-1"
               (click)="onSendNewEmailClicked(sendEmailDialog)"
-              aria-label="re send email"
+              aria-label="Re-Send Email"
             >
               Re-Send Email
             </button>
-            <button
+            <button *ngIf="!isCERApplicationSigned"
               kendoButton
               [primary]="true"
               look="flat"
               class="ml-1"
               (click)="onSendNewLetterClicked(sendLetterDialog)"
-              aria-label="send letter"
+              aria-label="Send Letter"
             >
               Send Letter
             </button>
-          </div>
-          <div class="flex-col mt-2">
-            <h5>COPY OF SIGNED APPLICATION</h5>
-          </div>
-          <div class="flex-col flex-col-6">
-            <kendo-upload></kendo-upload>
-            <kendo-formhint>Max file size 25MB</kendo-formhint>
+            <button *ngIf="isCERApplicationSigned"
+            kendoButton
+            [primary]="true"
+            look="flat"
+            class="ml-1"
+            (click)="onGetSignedApplicationClicked()"
+            aria-label="View Signed Application"
+          >
+            View Signed Application
+          </button>
           </div>
         </div>
+        <div class="flex-col mt-2" *ngIf="isSendEmailFailed">
+          <p  style="color:red">ERROR: {{errorMessage}}</p>
       </div>
     </div>
   </section>
@@ -184,8 +192,12 @@
 
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
-<case-management-send-letter 
+<case-management-send-letter
   [data]="screenName"
+  [clientId]="clientId"
+  [isCerForm]="isCerForm"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [communicationLetterTypeCode] = "communicationLetterTypeCode"
   (closeSendLetterEvent)="handleCloseSendNewLetterClicked($event)"
   kendoTooltip
 >
@@ -193,7 +205,18 @@
 </ng-template>
 <!-- Send New Email Modal -->
 <ng-template #sendEmailDialog>
-<case-management-send-email [data]="screenName" (closeSendEmailEvent)="handleCloseSendNewEmailClicked($event)" kendoTooltip
+<case-management-send-email
+  [data]="screenName"
+  [toEmail]="toEmail"
+  [paperlessFlag]="paperlessFlag"
+  [clientId]="clientId"
+  [isCerForm]="isCerForm"
+  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  (closeSendEmailEvent)="handleCloseSendNewEmailClicked($event)"
+  (isSendEmailSuccess)="updateSendEmailSuccessStatus($event)"
+  [emailSubject] = "emailSubject"
+  [communicationEmailTypeCode] = "communicationEmailTypeCode"
+  kendoTooltip
 ></case-management-send-email>
 </ng-template>
 <!-- User Profile Card -->

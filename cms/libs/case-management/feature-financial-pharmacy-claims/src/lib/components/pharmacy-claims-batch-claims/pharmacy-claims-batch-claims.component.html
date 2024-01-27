@@ -1,0 +1,26 @@
+<kendo-dialog-titlebar (close)="closeBatchClaimsClicked()"> Batch Claims? </kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1">  Once batched, you will not be able to edit claims. Clicking "Batch" will initiate the printing of authorization letters.   </p>
+    <p class="text-muted mb-2">    Claims to be batched: {{selectedProcessClaimsCount}}   </p>
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="Cancel"
+          (click)="closeBatchClaimsClicked()"
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Batch"  (click)="OnbatchClaimsClicked()" >
+          Batch
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

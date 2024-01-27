@@ -1,0 +1,26 @@
+<kendo-dialog-titlebar (close)="closeUnBatchClicked()"> Unbatch Premium?</kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1">  This action cannot be undone, but you may add this premium to a new batch at any time.   </p>
+    <p class="text-muted mb-2">   Premium to be batched: 6  </p>
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="Cancel"
+         (click)="closeUnBatchClicked()"
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Batch"  >
+          Batch
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

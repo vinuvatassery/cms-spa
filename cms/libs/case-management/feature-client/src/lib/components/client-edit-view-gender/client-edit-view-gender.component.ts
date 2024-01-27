@@ -5,7 +5,8 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
-import { CompletionChecklist, StatusFlag, WorkflowFacade,GenderCode,ClientFacade, ControlPrefix } from '@cms/case-management/domain';
+import { CompletionChecklist, WorkflowFacade,GenderCode,ClientFacade, ControlPrefix } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
@@ -164,7 +165,7 @@ export class ClientEditViewGenderComponent implements OnInit,OnDestroy {
       }
 
     }
-    if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.notListed].value){
+    if(!this.appInfoForm.controls[ControlPrefix.gender + GenderCode.notListed]?.value){
       this.appInfoForm.controls[this.DescriptionField].removeValidators( Validators.required );
       this.appInfoForm.controls[this.DescriptionField].updateValueAndValidity();
     }

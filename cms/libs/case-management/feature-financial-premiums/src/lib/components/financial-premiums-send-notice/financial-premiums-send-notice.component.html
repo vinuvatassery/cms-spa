@@ -1,0 +1,26 @@
+<kendo-dialog-titlebar (close)="closeSendNoticeClicked()"> Save Payments and Send Notices?</kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1">  Notices will be sent to insurance carriers via email. This action cannot be undone. You may edit payment information at any time.     </p>
+    <p class="text-muted ">  Payments to be saved: 2   </p>
+    <p class="text-muted ">   Carriers to receive notices: 1  </p>
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button
+          kendoButton
+          [primary]="true"
+          look="outline"
+          aria-label="Cancel"
+          (click)="closeSendNoticeClicked()" 
+        >
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Save & Send"  >
+            Save & Send
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>

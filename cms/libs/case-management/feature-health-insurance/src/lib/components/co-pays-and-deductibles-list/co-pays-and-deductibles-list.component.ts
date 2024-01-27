@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, 
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import {  HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs } from '@cms/case-management/domain';
+import {  HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -33,7 +33,11 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
   carrierContactInfo!: any;
-  sort!: any;
+  sort!: any; 
+  clientmaxmumbalance:number=0;
+  groupValue = null;
+  statusValue = null;
+  serviceDescription="Medical";
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly formBuilder: FormBuilder, private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
@@ -44,6 +48,15 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   /** Lifecycle hooks **/
 
   ngOnInit(): void {
+    this.insurancePolicyFacade.getMedicalClaimMaxbalance(this.clientId,this.caseEligibilityId);
+   this.insurancePolicyFacade.clientmaxmumbalance$.subscribe((res:any)=>{    
+   this.clientmaxmumbalance=res.maximumAmount;
+   if(this.tabStatus != ClientProfileTabs.HEALTH_INSURANCE_COPAY )
+   {
+    this.serviceDescription="Dental";
+    this.cdr.detectChanges();
+   }
+   })
     this.state = {
       skip: this.gridSkipCount,
       take: this.pageSizes[0]?.value
@@ -86,6 +99,7 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   // Loading the grid data based on pagination
 
   private loadCoPayDeductiblesData(): void {
+    
     this.loadCoPayDeductiblesList(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -132,4 +146,6 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
       },
     });
   }
+
+  
 }

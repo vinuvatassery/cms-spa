@@ -36,8 +36,8 @@ export class ClientFacade {
   applicationInfoSubject = new Subject<any>();
   pronounListSubject = new  BehaviorSubject<any>([]);
   specialHandlingChangeDetectionSubject = new  BehaviorSubject<any>([]);
-  clientProfileReloadSubject = new Subject<any>();
-
+  private clientProfileReloadSubject = new BehaviorSubject<any>([]);
+  public copyStatusPeriodTriggeredSubject = new BehaviorSubject(false);
 
   /** Public properties **/
   ddlCaseOrigins$ = this.ddlCaseOriginsSubject.asObservable();
@@ -67,6 +67,7 @@ export class ClientFacade {
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
   clientFacadesnackbar$ = this.snackbarSubject.asObservable();
+  copyStatusPeriodTriggeredResponse$ = this.copyStatusPeriodTriggeredSubject.asObservable();
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
   {
@@ -289,6 +290,7 @@ export class ClientFacade {
       return this.clientDataService.save(applicantInfo);
   }
   load(clientId:any,clientCaseId:any,eligibilityId:any) {
+      this.clientProfileReloadSubject.next(true)
       return this.clientDataService.load(clientId,clientCaseId,eligibilityId);
   }
   update(applicantInfo:ApplicantInfo,clientId:any) {
@@ -312,6 +314,17 @@ export class ClientFacade {
         this.sendNewIDCardSubject.next(sendNewIDCardResponse);
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'New card has sent')
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+  runImportedClaimRules(clientId: number):void{
+    this.clientDataService.runImportedClaimRules(clientId).subscribe({
+      next: (response) => {
+
       },
       error: (err) => {
         this.hideLoader();

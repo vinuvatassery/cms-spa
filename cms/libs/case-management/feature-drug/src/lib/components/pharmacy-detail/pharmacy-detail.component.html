@@ -70,15 +70,15 @@
         [primary]="true"
         look="flat"
         (click)="onOpenNewPharmacyClicked()"
-        aria-label="add new pharmacy"
+        attr.aria-label="{{ hasPharmacyCreateUpdatePermission == true ? 'Add New' : 'Request New'}} "
       >
-        Add New
+        {{ hasPharmacyCreateUpdatePermission == true ? 'Add New' : 'Request New'}} 
       </button>
       <button
         kendoButton
         class="k-danger-link"
         *ngIf="isEditPharmacy"
-        aria-label="remove pharmacy"
+        aria-label="Remove"
         (click)="removePharmacy()"
       >
         Remove
@@ -89,14 +89,14 @@
         [primary]="true"
         look="outline"
         (click)="onClosePharmacyClicked()"
-        aria-label="cancel adding pharmacy"
+        aria-label="Cancel"
       >
         Cancel
       </button>
       <button 
       kendoButton 
       [primary]="true" 
-      aria-label="add or update pharmacy"
+      attr.aria-label="{{ isEditPharmacy ? 'Update' : 'Add' }}"
       (click)="addOrEditPharmacy()" [disabled]="btnDisabled"
       >
         {{ isEditPharmacy ? 'Update' : 'Add' }}
@@ -105,28 +105,12 @@
   </div>
 </kendo-dialog-actions>
 
-<!-- Add New Pharmacy Modal -->
-<kendo-dialog
-  *ngIf="isOpenNewPharmacyClicked"
-  (close)="onCloseNewPharmacyClicked()"
-  class="app-c-modal app-c-modal-sm app-c-modal-np"
-  >
-    <kendo-dialog-titlebar> Add New Pharmacy </kendo-dialog-titlebar>
-    <section class="k-dialog-body mb-2">
-      <p>
-          This feature is part of a future scope of work for the ORCares project.
-      </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-        <div class="justify-content-end">    
-            <button kendoButton [primary]="true"  aria-label="add new pharmacy"
-                (click)="onCloseNewPharmacyClicked()">
-                Ok
-            </button>
-        </div>
-    </div>
-</kendo-dialog-actions>
+<kendo-dialog kendoRippleContainer *ngIf="isOpenNewPharmacyClicked" (close)="onCloseNewPharmacyClicked()"
+  class="app-c-modal app-c-modal-md app-c-modal-np" title="{{ hasPharmacyCreateUpdatePermission == true ? 'Add New Pharmacy' : 'Request New Pharmacy'}}" kendoTooltip>
+  <cms-vendor-details [medicalProviderForm]=medicalProviderForm [providerType]="vendorTypes.Pharmacy"
+    (saveProviderEventClicked)="saveVendorProfile($event)" (closeModalEventClicked)="onCloseNewPharmacyClicked()"
+    [ddlStates$]="ddlStates" [hasCreateUpdatePermission]="hasPharmacyCreateUpdatePermission"
+    (searchClinicVendorClicked)="searchClinicVendorClicked($event)"></cms-vendor-details>
 </kendo-dialog>
 
 <!-- //NOSONAR  <kendo-dialog

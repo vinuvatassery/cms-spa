@@ -31,24 +31,36 @@ export class ClientDocumentDataService {
     }
 
     removeDocument(documentId: string) {
-        const url = `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${documentId}`;
+        const url = `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${documentId}`;
         return this.http.delete(url);
     }
 
     /** private methods**/
     private getUrl() {
-        return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-document/upload`
+        return `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/upload`
     }
     getClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
         return this.http.get<ClientDocument>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/clientCaseEligibilityId=${clientCaseEligibilityId}`
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${clientCaseEligibilityId}`
         );
     }
 
     getClientDocumentsViewDownload(clientDocumentId: string) {
         return this.http.get(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${clientDocumentId}`
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${clientDocumentId}/content`
          , {
             responseType: 'blob'} );
+    }
+
+    getAllClientDocumentsByClientCaseEligibilityId(clientCaseEligibilityId: string) {
+        return this.http.get<ClientDocument>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/clientCaseEligibilityId=${clientCaseEligibilityId}`,
+        );
+    }
+
+    getSignedDocumentInfo(typeCode: string, subTypeCode: string, clientCaseEligibilityId: string) {
+        return this.http.get(
+            `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clientdocuments/${typeCode}/${subTypeCode}/${clientCaseEligibilityId}`,
+          );
     }
 }

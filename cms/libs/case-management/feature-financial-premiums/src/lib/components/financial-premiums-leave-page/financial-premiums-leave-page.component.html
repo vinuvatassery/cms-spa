@@ -1,0 +1,15 @@
+<kendo-dialog-titlebar (close)="closeLeavePageClicked()"> Leave Page?</kendo-dialog-titlebar>
+
+<section class="k-dialog-body">
+    <p class="text-muted mb-1"> All unsaved payments will be lost.</p> 
+  </section>
+  
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+            <button kendoButton class="k-error-button" aria-label="Leave" (click)="navToBatchDetails($event)">Leave  </button>
+        <button kendoButton [primary]="true" aria-label="Stay"  (click)="closeLeavePageClicked()"> Stay </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
+  

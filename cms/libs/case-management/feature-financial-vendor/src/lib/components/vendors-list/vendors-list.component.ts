@@ -2,8 +2,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { Router } from '@angular/router';
 import { FinancialVendorTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import {  GridDataResult } from '@progress/kendo-angular-grid';
-import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
+import { LovFacade } from '@cms/system-config/domain';
+import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'cms-financial-vendors-list',
@@ -20,9 +21,11 @@ export class VendorsListComponent implements OnChanges , OnInit{
 @Input() sortType : any;
 @Input() sort : any;
 @Input() vendorsList$ : any
+@Input() exportButtonShow$ : any
 
 @Output() loadFinancialVendorsListEvent = new EventEmitter<any>();
-
+@Output() exportGridDataEvent = new EventEmitter<any>();
+showExportLoader = false;
 vndorId! : string
 public  state!: State
 groupData:any=[]
@@ -35,7 +38,7 @@ sortColumn = "Vendor Name";
   isFiltered = false;
   filter! : any
 
-  selectedColumn!: any;
+  selectedColumn!:any;
 
 gridDataResult! : GridDataResult
 gridVendorsDataSubject = new Subject<any>();
@@ -44,11 +47,15 @@ columnDroplistSubject =  new Subject<any[]>();
 columnDroplist$ = this.columnDroplistSubject.asObservable();
 filterData : CompositeFilterDescriptor={logic:'and',filters:[]};
 loader = false;
-
+vendorNameTitle ="Vendor Name"
+vendorNameTitleDataSubject = new Subject<any>();
+vendornameTitleData$ = this.vendorNameTitleDataSubject.asObservable();
+paymentMethodType$ = this.lovFacade.paymentMethodType$;
+paymentMethodTypes: any = [];
+selectedPaymentMethod: string | null = null;showTinSearchWarning = false;
 columns : any = {
   vendorName:"Vendor Name",
   tin:"Tin",
-  paymentMethod:"Payment Method",
   totalPayments:"Total Payments",
   unreconciledPayments:"Unreconciled Payments",
   insurancePlans:"Insurance Plans",
@@ -58,7 +65,6 @@ columns : any = {
   openInvoices:"Open Invoices",
   phones:"Phones",
   emails:"Emails",
-  mailCode:"Mail Code",
   address:"Address",
   preferredFlag:"Preferred Flag",
   nabp:"Nabp",
@@ -68,125 +74,88 @@ columns : any = {
 
 dropDowncolumns : any = [
   {
-    "columnCode": "vendorName",
-    "columnDesc": "Vendor Name"   ,
+    "columnCode": "ALL",
+    "columnDesc": "All Columns",
     "vendorTypeCode": "ALL",
   },
   {
+    "columnCode": "vendorName",
+    "columnDesc": "Vendor Name"   ,
+    "vendorTypeCode":["INSURANCE_VENDOR","PHARMACY"],
+  },
+  {
+    "columnCode": "vendorName",
+    "columnDesc": "Provider Name"   ,
+    "vendorTypeCode": ["DENTAL_PROVIDER","MEDICAL_PROVIDER"],
+  },
+  {
+    "columnCode": "vendorName",
+    "columnDesc": "Manufacturer Name"   ,
+    "vendorTypeCode": ["MANUFACTURERS"],
+  },
+  {
     "columnCode": "tin",
-    "columnDesc": "Tin"   ,
+    "columnDesc": "TIN"   ,
     "vendorTypeCode": "ALL",
   }
   ,
   {
-    "columnCode": "paymentMethod",
-    "columnDesc": "Payment Method"   ,
-    "vendorTypeCode": "INSURANCE_PROVIDER",
+    "columnCode": "totalClaims",
+    "columnDesc": "Total Claims"   ,
+    "vendorTypeCode": ["MEDICAL_PROVIDER"],
+  }
+  ,
+  {
+    "columnCode": "unreconciledClaims",
+    "columnDesc": "Unreconciled Claims"   ,
+    "vendorTypeCode": ["PHARMACY","MEDICAL_PROVIDER"],
   }
   ,
   {
     "columnCode": "totalPayments",
     "columnDesc": "Total Payments"   ,
-    "vendorTypeCode": "INSURANCE_PROVIDER",
-  }
-  ,
+    "vendorTypeCode": ["INSURANCE_VENDOR"],
+  },
   {
     "columnCode": "unreconciledPayments",
     "columnDesc": "Unreconciled Payments"   ,
-    "vendorTypeCode": "INSURANCE_PROVIDER",
-  }
-  ,
+    "vendorTypeCode": ["INSURANCE_VENDOR"],
+  },
   {
     "columnCode": "insurancePlans",
     "columnDesc": "Insurance Plans"   ,
-    "vendorTypeCode": "INSURANCE_PROVIDER",
-  }
-  ,
+    "vendorTypeCode": ["INSURANCE_VENDOR"],
+  },
   {
     "columnCode": "clients",
     "columnDesc": "Clients"   ,
-    "vendorTypeCode": "INSURANCE_PROVIDER",
-  }
-  ,
-  {
-    "columnCode": "invoiceDelivery",
-    "columnDesc": "Invoice Delivery"   ,
-    "vendorTypeCode": "MANUFACTURERS",
-  }
-
-  ,
+    "vendorTypeCode":["INSURANCE_VENDOR","PHARMACY"],
+  },
   {
     "columnCode": "totalDrugs",
     "columnDesc": "Total Drugs"   ,
-    "vendorTypeCode": "MANUFACTURERS",
+    "vendorTypeCode": ["MANUFACTURERS"],
   },
-  {
-    "columnCode": "openInvoices",
-    "columnDesc": "Open Invoices"   ,
-    "vendorTypeCode": "MANUFACTURERS",
-  }
-  ,
-  {
-    "columnCode": "phones",
-    "columnDesc": "Phones"   ,
-    "vendorTypeCode": "MANUFACTURERS",
-  }
-  ,
-  {
-    "columnCode": "emails",
-    "columnDesc": "Emails"   ,
-    "vendorTypeCode": "MANUFACTURERS",
-  }
-  ,
-  {
-    "columnCode": "mailCode",
-    "columnDesc": "Mail Code"   ,
-    "vendorTypeCode": "MANUFACTURERS",
-  }
-  ,
   {
     "columnCode": "address",
     "columnDesc": "Address"   ,
-    "vendorTypeCode": "MANUFACTURERS",
+    "vendorTypeCode":  ["MANUFACTURERS","MEDICAL_PROVIDER"],
   },
   {
-    "columnCode": "unreconciledPayments",
-    "columnDesc": "Unreconciled Payments"   ,
-    "vendorTypeCode": "PHARMACY",
-  }
-  ,
-  {
-    "columnCode": "emails",
-    "columnDesc": "Emails"   ,
-    "vendorTypeCode": "PHARMACY",
-  }
-  ,
-  {
-    "columnCode": "preferredFlag",
-    "columnDesc": "Preferred Flag"   ,
-    "vendorTypeCode": "PHARMACY",
-  }
-  ,
-  {
-    "columnCode": "nabp",
-    "columnDesc": "Nabp"   ,
-    "vendorTypeCode": "PHARMACY",
-  }
-  ,
-  {
-    "columnCode": "ncpdp",
-    "columnDesc": "Ncpdp"   ,
-    "vendorTypeCode": "PHARMACY",
-  }
-  ,
+    "columnCode": "NpiNbr",
+    "columnDesc": "Npi Number"   ,
+    "vendorTypeCode": ["PHARMACY"],
+  },
   {
     "columnCode": "physicalAddress",
     "columnDesc": "Physical Address"   ,
-    "vendorTypeCode": "PHARMACY",
+    "vendorTypeCode": ["PHARMACY"],
   }
+ 
 ]
 constructor(private route: Router,
-  private readonly  cdr :ChangeDetectorRef) {
+  private readonly  cdr :ChangeDetectorRef,
+  private readonly lovFacade: LovFacade) {
 }
 ngOnChanges(): void {
   this.state = {
@@ -196,22 +165,37 @@ ngOnChanges(): void {
     };
   if(this.vendorTypeCode)
   {
+    switch(this.vendorTypeCode)
+    {
+      case FinancialVendorTypeCode.Manufacturers:
+          this.vendorNameTitle = "Manufacturer Name"
+          break;
+      case FinancialVendorTypeCode.Pharmacy:
+          this.vendorNameTitle = "Pharmacy Name"
+          break;
+      case FinancialVendorTypeCode.MedicalProviders:
+      case FinancialVendorTypeCode.DentalProviders:
+          this.vendorNameTitle = "Provider Name"
+          break;
+    }
    this.loadFinancialVendorsList()
   }
 }
 
 ngOnInit(): void {
+  this.getPaymentMethodLov();
   this.bindDropdownClumns()
   if(!this.selectedColumn)
       {
-        this.selectedColumn = "vendorName";
+        this.selectedColumn = "ALL";
       }
 }
 
 
 private bindDropdownClumns()
 {
-  this.dropDowncolumns = this.dropDowncolumns.filter((x : any)=>x.vendorTypeCode === this.vendorTypeCode || x.vendorTypeCode === 'ALL')
+  
+  this.dropDowncolumns = this.dropDowncolumns.filter((x : any)=>x.vendorTypeCode.includes(this.vendorTypeCode) || x.vendorTypeCode === 'ALL')
 }
 
 get financeVendorTypeCodes(): typeof FinancialVendorTypeCode {
@@ -230,8 +214,12 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      pagesize : maxResultCountValue,
      sortColumn : sortValue,
      sortType : sortTypeValue,
-     vendorTypeCode : this.vendorTypeCode
+     vendorTypeCode : (this.vendorTypeCode == this.financeVendorTypeCodes.MedicalProviders 
+      || this.vendorTypeCode == this.financeVendorTypeCodes.DentalProviders) 
+      ? this.vendorTypeCode + ',' + this.vendorTypeCode.split('_')[0] + '_CLINIC' +',' + this.financeVendorTypeCodes.Clinic : this.vendorTypeCode ,
+     filter : this.state?.["filter"]?.["filters"] ?? []
    }
+
    this.loadFinancialVendorsListEvent.emit(gridDataRefinerValue)
    this.gridDataHandle()
  }
@@ -241,8 +229,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     const query = {
       queryParams: {
         v_id: vendorId ,
-        tab_code :  this.financeTabTypeCode,
-        vendor_type_code: this.vendorTypeCode
+        tab_code :  this.financeTabTypeCode
       },
     };
     this.route.navigate(['/financial-management/vendors/profile'], query )
@@ -251,19 +238,36 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
   onChange(data: any)
   {
     this.defaultGridState()
-
-    this.sortColumn = this.columns[this.selectedColumn];
+    let operator= "startswith"
+    if(this.selectedColumn ==="totalClaims" || this.selectedColumn ==="unreconciledClaims" || this.selectedColumn ==="totalPayments"
+    || this.selectedColumn ==="unreconciledPayments" || this.selectedColumn ==="insurancePlans"  || this.selectedColumn ==="clients"
+    || this.selectedColumn ==="totalDrugs")
+    {
+      operator = "eq"
+    }
+    if(this.selectedColumn ==="tin" || this.selectedColumn === "ALL"){
+      let noOfhypen =   data.split("-").length - 1
+      let index = data.lastIndexOf("-")
+      if(noOfhypen>=1 && (index!==2 && index !==3)){
+        this.showTinSearchWarning = true;
+        return;
+      }else{
+        this.showTinSearchWarning = false
+       data = data.replace("-","")
+      }
+ 
+    }
     this.filterData = {logic:'and',filters:[{
       "filters": [
           {
               "field": this.selectedColumn ?? "vendorName",
-              "operator": "startswith",
+              "operator": operator,
               "value": data
           }
       ],
       "logic": "and"
   }]}
-  let stateData = this.state
+  const stateData = this.state
   stateData.filter = this.filterData
   this.dataStateChange(stateData);
   }
@@ -283,6 +287,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
   }
 
   dataStateChange(stateData: any): void {
+    this.showTinSearchWarning = false;
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc'
@@ -294,6 +299,18 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      if(stateFilter.field ==="tin"){
+        let noOfhypen =   stateFilter.value.split("-").length - 1
+        let index = stateFilter.value.lastIndexOf("-")
+        if(noOfhypen>=1 && (index!==2 && index !==3)){
+          this.showTinSearchWarning = true;
+          return;
+        }else{
+          this.showTinSearchWarning = false;
+          stateFilter.value = stateFilter.value.replace("-","")
+        }
+   
+      }
       this.filter = stateFilter.value;
       this.isFiltered = true;
       const filterList = []
@@ -329,8 +346,8 @@ public filterChange(filter: CompositeFilterDescriptor): void {
     this.vendorsList$.subscribe((data: GridDataResult) => {
 
       this.gridDataResult = data
-      this.gridDataResult.data = filterBy(this.gridDataResult.data, this.filterData)
       this.gridVendorsDataSubject.next(this.gridDataResult);
+      this.vendorNameTitleDataSubject.next(this.vendorNameTitle)
         if (data?.total >= 0 || data?.total === -1) {
           this.loader = false;
         }
@@ -338,4 +355,82 @@ public filterChange(filter: CompositeFilterDescriptor): void {
 
   }
 
+  setToDefault()
+  {
+
+ 
+    this.showTinSearchWarning = false;
+    this.sortColumn = 'Vendor Name';
+    this.sortDir = 'Ascending';
+    this.filter = "";
+    this.searchValue = "";
+    this.isFiltered = false;
+    this.columnsReordered = false;
+
+    this.sortValue  = 'vendorName';
+    this.sortType  = 'asc' 
+   
+    this.sort = [{
+      field: this.sortValue,
+    }];
+
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      };
+
+    this.loadFinancialVendorsList();
+  }
+  public rowClass = (args:any) => ({
+    "preferred-yellow": (args.dataItem.preferredFlag === 'Y' && this.vendorTypeCode === 'PHARMACY'),
+  });
+
+  onClickedExport(){
+    this.showExportLoader = true
+    this.exportGridDataEvent.emit()
+
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {
+        this.showExportLoader = false
+        this.cdr.detectChanges()
+      }
+
+    })
+  }
+  private getPaymentMethodLov() {
+    this.lovFacade.getPaymentMethodLov();
+    this.paymentMethodType$.subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.paymentMethodTypes = data.sort(
+          (value1: any, value2: any) => value1.sequenceNbr - value2.sequenceNbr
+        );
+      },
+    });
+    
+  }
+  dropdownFilterChange(
+    
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'and',
+    });
+  }
 }
