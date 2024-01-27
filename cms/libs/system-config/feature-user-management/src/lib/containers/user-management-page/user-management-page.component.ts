@@ -19,5 +19,4 @@ export class UserManagementPageComponent {
   openInnerLeftMenu(){
     this.isInnerLeftMenuOpen = !this.isInnerLeftMenuOpen
   }
- 
 }
