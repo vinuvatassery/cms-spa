@@ -12,11 +12,6 @@
 
 
         <kendo-grid-column field="vendorName" title="Service Provider Name" [width]="180" [sticky]="true" [filterable]="false">
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <button kendoButton look="flat" class="card-link-button" [attr.aria-label]="dataItem.vendorName" kendoPopoverAnchor
-              [popover]="myPopover" (click)="getCarrierContactInfo(dataItem.vendorId)">
-              {{ dataItem.vendorName }}
-            </button></ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="invoiceId" title="Invoice ID" [width]="150" [filterable]="false">
         </kendo-grid-column>
@@ -129,9 +124,3 @@
   <case-management-medical-payment-detail [caseEligibilityId]="caseEligibilityId"
     [clientId]="clientId" [tabStatus]="tabStatus"(closeCoPaymentDetailsEvent)="closeCoPaymentTriggered($event)"></case-management-medical-payment-detail>
 </kendo-dialog>
-
-<kendo-popover #myPopover body="Popover Body" >
-  <ng-template kendoPopoverBodyTemplate>
-    <case-management-medical-carrier-contact-info [contactInfoType]="'SERVICE_PROVIDER'" [carrierContactInfo]="carrierContactInfo" ></case-management-medical-carrier-contact-info>
-  </ng-template>
-</kendo-popover>
