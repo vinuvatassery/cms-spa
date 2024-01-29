@@ -3,7 +3,7 @@ export * from './lib/dashboard-feature-dashboard.module';
 export * from './lib/widget-registry';
 
 /** Components **/
-export * from './lib/containers/dashboard-page/dashboard-page.component'; 
+export * from './lib/containers/dashboard-page/dashboard-page.component';
 export * from '../../feature-dashboard/src/lib/components/widget-direct-messages/widget-direct-messages.component';
 export * from '../../feature-dashboard/src/lib/components/widget-recently-viewed/widget-recently-viewed.component';
 export * from '../../feature-dashboard/src/lib/components/widget-program-expenses/widget-program-expenses.component';
@@ -18,3 +18,7 @@ export * from '../../feature-dashboard/src/lib/components/widget-pharmacy-claims
 export * from '../../feature-dashboard/src/lib/components/widget-service-tracking/widget-service-tracking.component';
 export * from '../../feature-dashboard/src/lib/components/widget-liheap/widget-liheap.component';
 export * from '../../feature-dashboard/src/lib/components/widget-insurance-type-fpl/widget-insurance-type-fpl.component';
+
+export * from './lib/containers/add-more-widgets-container/add-more-widgets-container.component';
+
+export * from './lib/containers/add-more-widgets-container/add-more-widgets-container.component';

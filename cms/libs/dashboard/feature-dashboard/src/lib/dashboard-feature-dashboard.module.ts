@@ -7,7 +7,7 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { DashboardFeatureDashboardRoutingModule } from './dashboard-feature-dashboard-routing.module';
 /** Components **/
-import { DashboardPageComponent } from './containers/dashboard-page/dashboard-page.component'; 
+import { DashboardPageComponent } from './containers/dashboard-page/dashboard-page.component';
 import { GridsterModule } from 'angular-gridster2';
 import { DynamicModule } from 'ng-dynamic-component';
 import { WidgetActiveClientsByGroupComponent } from './components/widget-active-clients-by-group/widget-active-clients-by-group.component';
@@ -27,8 +27,9 @@ import { WidgetRentOveragesComponent } from './components/widget-rent-overages/w
 import { WidgetServiceTrackingComponent } from './components/widget-service-tracking/widget-service-tracking.component';
 import { WidgetSlotsAllocationComponent } from './components/widget-slots-allocation/widget-slots-allocation.component';
 import { WidgetTodayAtAGlanceComponent } from './components/widget-today-at-a-glance/widget-today-at-a-glance.component';
- 
-const  WidgetComponents = [
+import { AddMoreWidgetsContainerComponent } from './containers/add-more-widgets-container/add-more-widgets-container.component';
+
+const WidgetComponents = [
   WidgetDirectMessagesComponent,
   WidgetRecentlyViewedComponent,
   WidgetProgramExpensesComponent,
@@ -54,11 +55,21 @@ const  WidgetComponents = [
     DashboardFeatureDashboardRoutingModule,
     DashboardDomainModule,
     SharedUiCommonModule,
-    SharedUiTpaModule,  
+    SharedUiTpaModule,
     GridsterModule,
     DynamicModule,
   ],
-  declarations: [DashboardPageComponent, WidgetComponents ],
-  exports: [DashboardPageComponent, WidgetComponents],
+  declarations: [
+    DashboardPageComponent,
+    WidgetComponents,
+    AddMoreWidgetsContainerComponent,
+    AddMoreWidgetsContainerComponent,
+  ],
+  exports: [
+    DashboardPageComponent,
+    WidgetComponents,
+    AddMoreWidgetsContainerComponent,
+    AddMoreWidgetsContainerComponent,
+  ],
 })
 export class DashboardFeatureDashboardModule {}

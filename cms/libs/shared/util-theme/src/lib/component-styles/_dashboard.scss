@@ -377,6 +377,7 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 8px;
+  min-height: 31px;
 
   .k-dropdownlist {
     min-width: 100px;
@@ -426,4 +427,70 @@
   background: #0063A614 0% 0% no-repeat padding-box !important;
   border: 2px dashed #0063A6 !important;
   border-radius: 6px;
+}
+
+gridster .gridster-column,
+gridster .gridster-row {
+  border: 2px solid $greyShade !important;
+}
+
+.add-more-wrapper {
+  background: #00000008;
+  padding: 2rem;
+
+  .add-more-container {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 10px;
+
+    .chart-view-point {
+      pointer-events: none;
+      cursor: default;
+      zoom: .5;
+      max-width: 70%;
+      margin: 0 auto;
+      margin-bottom: 4rem;
+      position: relative;
+      user-select: none;
+
+      &::before {
+        position: absolute;
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+    }
+
+    .add-more-list {
+      background: $white;
+      box-shadow: 0px 0px 12px #0000000F;
+      border-radius: 10px;
+      padding-top: 2rem;
+
+      .bottom-title {
+        background: $role-blue-3;
+        border-radius: 0px 0px 10px 10px;
+        font-size: $font-size-xx;
+        color: $white;
+        text-shadow: 0px 3px 6px #0000002E;
+        display: flex;
+        align-items: center;
+        padding: 1.5rem;
+        width: 100%;
+        cursor: pointer;
+        border: 0px;
+
+        &:hover {
+          background: $app-primary;
+        }
+
+        span {
+          margin-right: 8px;
+        }
+      }
+    }
+  }
 }
