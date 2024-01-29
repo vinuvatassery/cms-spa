@@ -199,7 +199,7 @@ export class DashboardWrapperService {
       {
         id: 14,
         cols: 6,
-        rows: 6,
+        rows: 4,
         x: 0,
         y: 8,
         component: 'Liheap',

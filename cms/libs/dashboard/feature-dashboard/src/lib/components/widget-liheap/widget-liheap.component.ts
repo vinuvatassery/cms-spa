@@ -6,4 +6,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./widget-liheap.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WidgetLiheapComponent {}
+export class WidgetLiheapComponent {
+ 
+}

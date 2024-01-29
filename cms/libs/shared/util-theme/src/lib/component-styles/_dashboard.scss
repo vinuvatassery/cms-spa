@@ -494,3 +494,51 @@ gridster .gridster-row {
     }
   }
 }
+
+.lihead-container{
+  display: grid;
+  grid-template-columns: 1fr auto;
+  .progress_container{
+    padding-right: 1rem;
+    margin-right: 1rem;
+    border-right: 1px solid $black-9;
+    .k-progressbar{
+      border-radius: 15px;
+      height: 12px;
+      overflow: hidden;
+      background: $grey-f7;
+      width: 100%;
+      .k-selected{
+        background: $dash-green-1;
+      }
+ 
+    }
+    h4{
+      font-family: $font-family;
+      margin: 0;
+      margin-top: 8px;
+      color: $black-59;
+    }
+    p{
+      font-family: $font-family-medium;
+      margin: 0;
+      color: $black-6;
+    }
+    
+  }
+  h2{
+    font-family: $font-family-light;
+    color: $black-59;
+  }
+}
+.rendoverage-container{ 
+  h3{
+    font-family: $font-family-light;
+    font-size: $font-size-xx;
+    color: $black-59;
+  }
+  p{
+    font-family: $font-family-medium;
+    color: $black-59;
+  }
+}
