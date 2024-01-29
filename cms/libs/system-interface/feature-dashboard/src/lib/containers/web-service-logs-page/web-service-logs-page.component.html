@@ -11,7 +11,7 @@
     </div>
     
         <div class="interface-chart-cards mt-2">
-            <cms-system-interface-web-service-logs [activityEventLogList$]="activityEventLogLists$"
+            <cms-system-interface-web-service-logs [activityEventLogList$]="activityEventLogLists$" [lovsList$]="webLogLovs$"
             [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
             (loadActivityLogListEvent)="loadActivityEventLog()"></cms-system-interface-web-service-logs>
         </div>

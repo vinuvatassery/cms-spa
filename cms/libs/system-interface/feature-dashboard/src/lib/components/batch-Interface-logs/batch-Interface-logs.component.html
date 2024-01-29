@@ -1,44 +1,45 @@
- 
 <section>
-    <div class="align-items-center mat-form-no-b-space bg-white mar-0 flex-row">
-        <span class="text-bold" for="eemploymentep flex-col">Interface:&nbsp;</span>
-        <div class="fmly-epdorpdown flex-col flex-col-3">
-          <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"  [data]="lovsList$ | async" textField="lovDesc" valueField="lovCode">
-          </kendo-dropdownlist>
-        </div>
-      </div>
-      <section class="table-filter-section mat-form-no-b-space bg-white">
-        </section>
-    <!-- Sorted Info show only in list -->
-    <div class="table-sorted-info">
-        Sorted {{"sortDir"}} by <span class="sort-items"> {{"sortColumnDesc"}} </span>
-        <span class="sort-items">{{"columnChangeDesc"}}</span>
-        <span *ngIf="true" class="sort-items">Columns Re-ordered</span>
-        <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" >
-              <a>Set to Default</a>
-        </button>
-      </div>
-    
-    <div class="app-c-table">
-      <kendo-grid [data]="activityEventLogList$ | async" [loading]="isActivityLogLoaderShow"    [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
-      [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort">
-      
-        <kendo-grid-column field="interface" title="Interface" [width]="180">
-        </kendo-grid-column>
-        <kendo-grid-column field="process" title="Process" [width]="180">
-        </kendo-grid-column>
-        <kendo-grid-column field="processStartDate" title="Process Start Date" [width]="150">
-        </kendo-grid-column>
-        <kendo-grid-column field="processEndDate" title="Process End Date" [width]="150">
-        </kendo-grid-column>
-        <kendo-grid-column field="status" title="Status" [width]="150">
-        </kendo-grid-column>
-        <kendo-grid-column field="totalRecords" title="Total Records" [width]="130">
-        </kendo-grid-column>
-        <kendo-grid-column field="failedRecords" title="Failed Records" [width]="130">
-        </kendo-grid-column>
-        <!-- below only in Ramsell -->
-        <!-- <kendo-grid-column field="status" title="Status" [width]="100">
+  <div class="align-items-center mat-form-no-b-space bg-white mar-0 flex-row">
+    <span class="text-bold" for="eemploymentep flex-col">Interface:&nbsp;</span>
+    <div class="fmly-epdorpdown flex-col flex-col-3">
+      <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode" [data]="lovsList$ | async"
+        textField="lovDesc" valueField="lovCode">
+      </kendo-dropdownlist>
+    </div>
+  </div>
+  <section class="table-filter-section mat-form-no-b-space bg-white">
+  </section>
+  <!-- Sorted Info show only in list -->
+  <div class="table-sorted-info">
+    Sorted {{"sortDir"}} by <span class="sort-items"> {{"sortColumnDesc"}} </span>
+    <span class="sort-items">{{"columnChangeDesc"}}</span>
+    <span *ngIf="true" class="sort-items">Columns Re-ordered</span>
+    <button aria-label="Set to Default" kendoButton look="flat" class="sort-items">
+      <a>Set to Default</a>
+    </button>
+  </div>
+
+  <div class="app-c-table">
+    <kendo-grid [data]="activityEventLogList$ | async" [loading]="isActivityLogLoaderShow" [pageSize]="state.take"
+      [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
+      [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort">
+
+      <kendo-grid-column field="interface" title="Interface" [width]="180">
+      </kendo-grid-column>
+      <kendo-grid-column field="process" title="Process" [width]="180">
+      </kendo-grid-column>
+      <kendo-grid-column field="processStartDate" title="Process Start Date" [width]="150">
+      </kendo-grid-column>
+      <kendo-grid-column field="processEndDate" title="Process End Date" [width]="150">
+      </kendo-grid-column>
+      <kendo-grid-column field="status" title="Status" [width]="150">
+      </kendo-grid-column>
+      <kendo-grid-column field="totalRecords" title="Total Records" [width]="130">
+      </kendo-grid-column>
+      <kendo-grid-column field="failedRecords" title="Failed Records" [width]="130">
+      </kendo-grid-column>
+      <!-- below only in Ramsell -->
+      <!-- <kendo-grid-column field="status" title="Status" [width]="100">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button *ngIf="dataItem.status ==='Failed'" [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
               View Log
@@ -54,34 +55,35 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column> -->
-        <ng-template kendoGridDetailTemplate let-dataItem>
-          <kendo-grid [data]="activityEventLogSubList" *ngIf="dataItem.status ==='Failed'">
-          
-            <kendo-grid-column field="errorCode" title="Error Code" [width]="100">
-            </kendo-grid-column>
-            <kendo-grid-column field="errorDesc" title="Error Description" [width]="180">
-            </kendo-grid-column>
-            <kendo-grid-column field="rowNumber" title="File Row Number" [width]="120">
-            </kendo-grid-column>
-            </kendo-grid>
-  
-            <div *ngIf="dataItem.status ==='Success'" class="text-center">
-              <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-              </div>
-              <p>There is no error log.</p>
-            </div>
-          </ng-template>
-        <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+      <ng-template kendoGridDetailTemplate let-dataItem>
+        <kendo-grid [data]="activityEventLogSubList" *ngIf="dataItem.status ==='Failed'">
+
+          <kendo-grid-column field="errorCode" title="Error Code" [width]="100">
+          </kendo-grid-column>
+          <kendo-grid-column field="errorDesc" title="Error Description" [width]="180">
+          </kendo-grid-column>
+          <kendo-grid-column field="rowNumber" title="File Row Number" [width]="120">
+          </kendo-grid-column>
+        </kendo-grid>
+
+        <div *ngIf="dataItem.status ==='Success'" class="text-center">
+          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+          </div>
+          <p>There is no error log.</p>
+        </div>
+      </ng-template>
+      <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
           <div class="d-flex align-items-center">
             <label class="mr-1" for="systemActivityLogRowsPerPage">Rows Per Page</label>
             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-              [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page" id="systemActivityLogRowsPerPage"
-              [(value)]="state.take" (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
+              [valueField]="'value'" [valuePrimitive]="true" aria-label="Rows Per Page"
+              id="systemActivityLogRowsPerPage" [(value)]="state.take"
+              (selectionChange)="pageSelectionchange($event)"></kendo-dropdownlist>
             <kendo-pager-info> </kendo-pager-info>
-            <kendo-grid-messages  [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
-  
+            <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+
           </div>
           <div class="d-flex">
             <kendo-pager-input></kendo-pager-input>
@@ -90,19 +92,19 @@
           </div>
         </div>
       </ng-template>
-        <!-- grid Loader Template -->
-        <ng-template kendoGridLoadingTemplate>
-          <common-grid-loader-component></common-grid-loader-component>
-        </ng-template>
-        <!-- grid No data Template -->
-        <ng-template kendoGridNoRecordsTemplate>
-          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-          </div>
-          <p>There is no data to display.</p>
-        </ng-template>
-      </kendo-grid>
-    </div>
-  
-  
-  
-  </section>
+      <!-- grid Loader Template -->
+      <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+      </ng-template>
+      <!-- grid No data Template -->
+      <ng-template kendoGridNoRecordsTemplate>
+        <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        </div>
+        <p>There is no data to display.</p>
+      </ng-template>
+    </kendo-grid>
+  </div>
+
+
+
+</section>

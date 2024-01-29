@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { State } from '@progress/kendo-data-query';
+import { LovFacade } from '../../../../../../system-config/domain/src/lib/application/lov.facade';
 @Component({
   selector: 'cms-system-interface-batch-interface-logs-page',
   templateUrl: './batch-interface-logs-page.component.html',
@@ -16,16 +17,16 @@ import { State } from '@progress/kendo-data-query';
 
 export class BatchInterfaceLogsPageComponent implements OnInit {
   activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
-  batchLovs$ = this.systemInterfaceDashboardFacade.lovInterfaceBatch$;
-
   public state!: State;
   pageSizes = this.systemInterfaceDashboardFacade.gridPageSizes;
   sort = this.systemInterfaceDashboardFacade.sort;
   sortValue = this.systemInterfaceDashboardFacade.sortValue;
   sortType = this.systemInterfaceDashboardFacade.sortType;
 
+  BatchInterfaceActivityLogLovs$ = this.lovFacade.BatchInterfaceActivityLogLovs$;
   constructor(
-    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
+    private lovFacade: LovFacade
   ) { }
 
   ngOnInit(): void {
@@ -36,17 +37,8 @@ export class BatchInterfaceLogsPageComponent implements OnInit {
     };
     this.loadActivityEventLog();
 
-    this.systemInterfaceDashboardFacade.getInterfaceBatchLovs();
-    //this.loadBatchLovs();
+    this.lovFacade.getBatchInterfaceActivityLogLovs();
   }
-
-  // batchLovsData: any = [];
-  // private loadBatchLovs() {
-  //   this.batchLovs.subscribe((data: any) => {
-  //     if (!Array.isArray(data)) return;
-  //     this.batchLovsData = data;
-  //   });
-  // }
 
   loadActivityEventLog() {
     this.systemInterfaceDashboardFacade.getEventLogLists();
