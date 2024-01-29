@@ -1017,7 +1017,7 @@ export class FinancialClaimsBatchesLogListsComponent
       this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
       for (const item of this.batchLogGridLists) {
         // Check if the item is in the second list.
-        const isItemInSecondList = this.unCheckedProcessRequest.find((item2: any) => item2.paymentRequestId === item.paymentRequestId);
+        const isItemInSecondList = this.unCheckedPaymentRequest.find((item2: any) => item2.paymentRequestId === item.paymentRequestId);
         // If the item is in the second list, mark it as selected true.
         if (isItemInSecondList) {
           item.selected = false;
