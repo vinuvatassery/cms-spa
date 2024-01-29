@@ -5,7 +5,12 @@ import {  DashboardWrapperFacade } from '@cms/dashboard/domain';
 /** Services **/
 import { LocalStorageService } from '@cms/shared/util-core';
 import { AuthService } from '@cms/shared/util-oidc';
-import { GridsterConfig } from 'angular-gridster2';
+import {  DisplayGrid,
+  GridsterComponent,
+  GridsterConfig,
+  GridsterItem,
+  GridsterItemComponent,
+  GridType } from 'angular-gridster2';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'dashboard-dashboard-page',
@@ -30,6 +35,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     "ORHIVE Client Details Dashboard",
   ];
   public selectedValue = "ORHIVE Case Worker Dashboard";
+  options: GridsterConfig;
+  dashboard: Array<GridsterItem>;
   /** Constructor **/
   constructor(
     private authService: AuthService, 
@@ -37,6 +44,44 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private readonly dashboardWrapperFacade: DashboardWrapperFacade
   ) {
     this.loadConfigSubscription();
+    this.options = {
+      gridType: GridType.Fit,
+      displayGrid: DisplayGrid.Always,
+      pushItems: true,
+      draggable: {
+        enabled: true
+      },
+      resizable: {
+        enabled: true
+      },
+      minCols: 1,
+      maxCols: 2,
+      minRows: 1,
+      maxRows: 100,
+      maxItemCols: 2,
+      minItemCols: 1,
+      maxItemRows: 100,
+      minItemRows: 1,
+      maxItemArea: 2500,
+      minItemArea: 1,
+      defaultItemCols: 1,
+      defaultItemRows: 1, 
+    };
+
+    this.dashboard = [
+      { cols: 2, rows: 1, y: 0, x: 0 },
+      { cols: 2, rows: 10, y: 0, x: 2 },
+      { cols: 1, rows: 1, y: 0, x: 4 },
+      { cols: 2, rows: 2, y: 1, x: 4 },
+      { cols: 1, rows: 1, y: 4, x: 5 },
+      { cols: 1, rows: 1, y: 2, x: 1 },
+      { cols: 2, rows: 2, y: 5, x: 5 },
+      { cols: 2, rows: 2, y: 3, x: 2 },
+      { cols: 2, rows: 1, y: 2, x: 2 },
+      { cols: 1, rows: 1, y: 3, x: 4 },
+      { cols: 1, rows: 1, y: 0, x: 6 }
+    ];
+    
   }
 
   /** Lifecycle hooks **/
@@ -44,7 +89,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     
     this.ConfigureDashboard();
     this.loadDashboadContent();
-    
+   
   }
  
   editDashboardClicked(config: any){

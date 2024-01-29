@@ -1,6 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
+import {
+  CompactType,
+  DisplayGrid,
+  GridsterConfig,
+  GridType,
+} from 'angular-gridster2';
 import { Observable, of } from 'rxjs';
 import { DashboardContent } from '../..';
 
@@ -16,7 +21,7 @@ export class DashboardWrapperService {
     return of([
       {
         id: 1,
-        cols: 12,
+        cols: 2,
         rows: 3,
         x: 0,
         y: 0,
@@ -25,26 +30,26 @@ export class DashboardWrapperService {
       },
       {
         id: 2,
-        cols: 6,
-        rows: 8,
-        x: 0,
-        y: 0,
+        cols: 1,
+        rows: 9,
+        x: 1,
+        y: 1,
         component: 'ApplicationsCers',
         isVisible: true,
       },
       {
         id: 3,
-        cols: 6,
-        rows: 8,
-        x: 0,
-        y: 0,
+        cols: 1,
+        rows: 9,
+        x: 2,
+        y: 1,
         component: 'RecentlyViewed',
         isVisible: true,
       },
       {
         id: 4,
-        cols: 6,
-        rows: 8,
+        cols: 1,
+        rows: 7,
         x: 0,
         y: 3,
         component: 'InsuranceTypeFpl',
@@ -52,8 +57,8 @@ export class DashboardWrapperService {
       },
       {
         id: 5,
-        cols: 6,
-        rows: 8,
+        cols: 1,
+        rows: 7,
         x: 0,
         y: 3,
         component: 'QuickLinks',
@@ -61,78 +66,26 @@ export class DashboardWrapperService {
       },
       {
         id: 6,
-        cols: 6,
+        cols: 1,
         rows: 9,
         x: 0,
         y: 4,
         component: 'ClientByStatus',
         isVisible: true,
-        widgetChartConfig: {
-          title: {
-            text: 'Client By Status',
-          },
-          legend: {
-            position: 'right',
-            orientation: 'vertical',
-          },
-          categoryAxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-          },
-          series: [
-            {
-              data: [
-                {
-                  category: 'UPP',
-                  value: 45,
-                  color: '#FFD064',
-                },
-                {
-                  category: 'GROUP I',
-                  value: 15,
-                  color: '#ED6363',
-                },
-                {
-                  category: 'GROUP II',
-                  value: 10,
-                  color: '#57BAC3',
-                },
-                {
-                  category: 'BRIDGE',
-                  value: 10,
-                  color: '#0063A6',
-                },
-                {
-                  category: 'GROUP I / INS GAP',
-                  value: 10,
-                  color: '#BF61A5',
-                },
-                {
-                  category: 'GROUP II / INS GAP',
-                  value: 10,
-                  color: '#D8D365',
-                },
-              ],
-
-              type: 'donut',
-              color: 'red',
-            },
-          ],
-        },
       },
 
       {
         id: 7,
-        cols: 6,
+        cols: 1,
         rows: 9,
         x: 0,
         y: 4,
         component: 'ActiveClientsByGroup',
         isVisible: true,
-       
       },
       {
         id: 8,
-        cols: 6,
+        cols: 1,
         rows: 9,
         x: 0,
         y: 5,
@@ -141,17 +94,16 @@ export class DashboardWrapperService {
       },
       {
         id: 4,
-        cols: 6,
+        cols: 1,
         rows: 9,
         x: 0,
         y: 5,
         component: 'ProgramExpenses',
         isVisible: true,
-       
       },
       {
         id: 9,
-        cols: 6,
+        cols: 1,
         rows: 9,
         x: 0,
         y: 6,
@@ -160,7 +112,7 @@ export class DashboardWrapperService {
       },
       {
         id: 10,
-        cols: 6,
+        cols: 1,
         rows: 9,
         x: 0,
         y: 7,
@@ -169,7 +121,7 @@ export class DashboardWrapperService {
       },
       {
         id: 11,
-        cols: 6,
+        cols: 1,
         rows: 9,
         x: 0,
         y: 7,
@@ -179,7 +131,7 @@ export class DashboardWrapperService {
 
       {
         id: 12,
-        cols: 6,
+        cols: 1,
         rows: 6,
         x: 0,
         y: 8,
@@ -189,8 +141,8 @@ export class DashboardWrapperService {
 
       {
         id: 13,
-        cols: 6,
-        rows:9,
+        cols: 1,
+        rows: 8,
         x: 0,
         y: 9,
         component: 'ServiceTracking',
@@ -198,8 +150,8 @@ export class DashboardWrapperService {
       },
       {
         id: 14,
-        cols: 6,
-        rows: 4,
+        cols: 1,
+        rows: 3,
         x: 0,
         y: 8,
         component: 'Liheap',
@@ -208,42 +160,32 @@ export class DashboardWrapperService {
 
       {
         id: 15,
-        cols: 6,
+        cols: 1,
         rows: 3,
         x: 0,
         y: 8,
         component: 'RentOverages',
         isVisible: true,
-      },
-      // {
-      //   id: 16,
-      //   cols: 6,
-      //   rows: 4,
-      //   x: 0,
-      //   y: 8,
-      //   component: 'DirectMessages',
-      //   isVisible: true,
-      // },
+      }, 
     ]);
   }
 
   getDashboardConfiguration(): Observable<GridsterConfig> {
     return of({
-      gridType: GridType.VerticalFixed,
-      displayGrid: DisplayGrid.OnDragAndResize,
+      gridType: GridType.VerticalFixed, 
       resizable: { enabled: false },
       swap: true,
       pushItems: false,
       outerMargin: true,
       enableEmptyCellDrop: false,
-      maxItemCols: 12,
-      maxCols: 12,  
+      maxItemCols: 2,
+      maxCols: 2,  
       minItemRows: 1,
       minItemArea: 1,
       setGridSize: true,
       useBodyForBreakpoint: true,
       fixedRowHeight: 38,
-      disableWindowResize: false,
+      disableWindowResize: true,
       disableWarnings: true,
       scrollSpeed: 10, 
       keepFixedWidthInMobile: false,
