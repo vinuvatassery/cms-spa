@@ -1,13 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class SystemInterfaceDashboardService {
-  constructor(private readonly http: HttpClient,
-    private configurationProvider: ConfigurationProvider) { }
+  constructor(private http: HttpClient) {}
 
   getClientRecordSendChart(): Observable<any> {
     return of({
@@ -87,7 +85,7 @@ export class SystemInterfaceDashboardService {
 
             type: 'column',
             color: '#ec891d',
-            gap: 2,
+            gap:2,
             spacing: .25
           },
           {
@@ -96,7 +94,7 @@ export class SystemInterfaceDashboardService {
             type: 'area',
             color: '#f9dcbb',
             style: 'smooth',
-            gap: 2,
+            gap:2,
             spacing: .25
           },
         ],
@@ -156,7 +154,4 @@ export class SystemInterfaceDashboardService {
       },
     ]);
   }
-
-  /** Public methods **/
-
 }
