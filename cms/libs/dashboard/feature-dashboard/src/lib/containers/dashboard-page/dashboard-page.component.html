@@ -25,20 +25,18 @@
   <gridster-item
     *ngFor="let item of dashboardContentList$ | async"
     [item]="item" 
-  >     <div  *ngIf="item.isVisible">
-      <div  >
+  >     
         <ndc-dynamic
           class="no-drag"
-          [ndcDynamicComponent]="item.component">
+          [ndcDynamicComponent]="item.component" *ngIf="item.isVisible">
           <div class="button-holder">
             <button 
             >
              Delete
             </button>
           </div>
-        </ndc-dynamic>
-      </div>
-      </div>
+        </ndc-dynamic> 
+      
     
   </gridster-item>
 </gridster>
