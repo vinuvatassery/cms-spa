@@ -1256,23 +1256,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
         this.loggingService.logException(err);
       }
     });
-    if (this.ddlInsuranceType !== this.InsurancePlanTypes.DentalInsurance &&
-      this.ddlInsuranceType !== this.InsurancePlanTypes.Veterans) {
-      this.insurancePolicyFacade.getCarrierContactInfo(value).subscribe({
-        next: (data) => {
-          this.carrierContactInfo = data;
-          this.changeDetector.detectChanges();
-        },
-        error: (err) => {
-          if (err) {
-            this.insurancePolicyFacade.showHideSnackBar(
-              SnackBarNotificationType.ERROR,
-              err
-            );
-          }
-        },
-      });
-    }
   }
   onMedicareCoverageTypeChanged() {
     if (this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("P") || this.healthInsuranceForm.controls['medicareCoverageTypeCode'].value.includes("M")) {
@@ -1572,7 +1555,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  public handleFileRemoved(files: any, fileType: string, resetId?: boolean) {    
+  public handleFileRemoved(files: any, fileType: string, resetId?: boolean) {
     if (files?.files?.length > 0 && !!files?.files[0]?.uid) {
       this.insurancePolicyFacade.showLoader();
       this.clientDocumentFacade.removeDocument(files?.files[0]?.uid ?? '').subscribe({
@@ -1602,7 +1585,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
       else if (fileType == 'copyInsurance') {
         this.copyOfInsuranceCardFiles = [];
         this.isInsuranceFileUploaded = false;
-        if(this.healthInsurancePolicyCopy&&resetId) 
+        if(this.healthInsurancePolicyCopy&&resetId)
         this.healthInsurancePolicyCopy.copyOfInsuranceCardFileId = '';
       }
       else if (fileType == 'medicareCard') {
