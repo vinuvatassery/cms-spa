@@ -97,9 +97,6 @@ export class FinancialPremiumsBatchesLogListsComponent
     @Output() loadPremiumEvent = new EventEmitter<string>();
 
 
-  disableBtnUnbatchEntireBatch= true;
-  batchStatus:any;
-
   public batchLogGridActions(dataItem:any){
    return [
     {
@@ -217,7 +214,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   @Input() exportButtonShow$: any
   @Input() actionResponse$: any;
   @Input() paymentBatchName$!: Observable<PaymentBatchName>;
-
+  batchStatus = PaymentStatusCode.PendingApproval
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
   @Output() loadFinancialPremiumBatchInvoiceListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
@@ -266,14 +263,14 @@ export class FinancialPremiumsBatchesLogListsComponent
       this.totalPaymentsCount=data.total;
       this.totalReconciled = 0;
         data.data.forEach(item =>{
-          this.batchStatus = item.batchStatusCode
-          if(!([BatchStatusCode.Paid, BatchStatusCode.PaymentRequested, BatchStatusCode.ManagerApproved].includes(item.batchStatusCode))){
-            this.disableBtnUnbatchEntireBatch = false
-          }
+          if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(item.paymentStatusCode)){
+            this.batchStatus = item.paymentStatusCode
+           }
           if(item.paymentStatusCode == BatchStatusCode.Paid){
             this.totalReconciled += 1;
           }
-        }) 
+
+        })   
         this.initiateBulkMore()  
     })
   }
@@ -365,7 +362,7 @@ export class FinancialPremiumsBatchesLogListsComponent
   }
 
   setDisablePropertyOfBulkMore(dataItem : any){
-  return dataItem.text=='Unbatch Entire Batch' && this.disableBtnUnbatchEntireBatch
+  return dataItem.text=='Unbatch Entire Batch' 
   }
 
   loadFinancialPremiumBatchInvoiceList(data: any) {

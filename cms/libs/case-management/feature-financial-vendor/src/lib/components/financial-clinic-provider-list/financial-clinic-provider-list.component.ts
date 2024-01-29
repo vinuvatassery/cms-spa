@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';  
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
 import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
@@ -29,7 +29,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   sortColumnDesc = 'Vendor Name';
   columnsReordered = false;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+  showExportLoader = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     { columnName: 'vendorName', columnDesc: 'Vendor Name' },
@@ -53,6 +53,8 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   @Input() vendorTypeCode :any
   @Input() removeprovider$ : any
   @Input() addProviderNew$ : any
+  @Input() vendorName :any
+  @Input() exportButtonShow$ =    this.documentFacade.exportButtonShow$
   public processGridActions = [
     {
       buttonType: 'btn-h-danger',
@@ -77,7 +79,8 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   constructor(
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
-    private readonly changeDetector: ChangeDetectorRef
+    private readonly changeDetector: ChangeDetectorRef,
+    private documentFacade: DocumentFacade,
   ) { }
 
   
@@ -305,5 +308,39 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   }
   onProviderNameClick(event:any){
     this.onProviderNameClickEvent.emit(event.vendorId);
+  }
+
+  onClickedExport(){
+    
+    this.showExportLoader = true
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      JSON.stringify(this.filter));
+    const vendorCleintPageAndSortedRequest =
+    {
+      SortType : param?.sortType,
+      Sorting : param?.sorting,
+      SkipCount : param?.skipCount,
+      MaxResultCount : param?.maxResultCount,
+      Filter : param?.filter,
+      vendorId:this.ParentVendorId,
+      vendorTypeCode :this.vendorTypeCode
+     
+    }
+    let fileName = (this.vendorName[0].toUpperCase() + this.vendorName.substr(1).toLowerCase())+' Providers'
+   
+    this.documentFacade.getExportFile(vendorCleintPageAndSortedRequest, `vendors/${this.ParentVendorId}/children/${this.vendorTypeCode}`,fileName)
+    this.exportButtonShow$
+    .subscribe((response: any) =>
+    {
+      if(response)
+      {        
+        this.showExportLoader = false
+        this.changeDetector.detectChanges()
+      }
+    })
   }
 }
