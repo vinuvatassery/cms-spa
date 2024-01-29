@@ -308,8 +308,7 @@ export class ApprovalPageComponent implements OnInit {
       this.documentFacade.getExportFile(
         approvalPageAndSortedRequest,
         `payment-batches?serviceType=${data.selectedPaymentType}&level=${this.userLevel}`,
-        fileName,
-        ApiType.ProductivityToolsApi
+        fileName
       );
     }
   }
@@ -331,8 +330,7 @@ export class ApprovalPageComponent implements OnInit {
       this.documentFacade.getExportFile(
         approvalPageAndSortedRequest,
         `imported-claims`,
-        fileName,
-        ApiType.ProductivityToolsApi
+        fileName
       );
     }
   }
