@@ -86,7 +86,9 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initialize();
     this.routeChangeSubscription();
-    this.clientProfileReloadSubscription$ = this.clientProfileReload$.subscribe();
+    this.clientProfileReloadSubscription$ = this.clientProfileReload$.subscribe((data)=>{
+      this.loadClientProfileInfoEventHandler();
+    });
   }
 
   ngOnDestroy(): void {
@@ -145,7 +147,6 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
           this.clientCaseEligibilityId = '';
           this.initialize();
-          this.loadClientProfileInfoEventHandler();
         }
       });
   }
