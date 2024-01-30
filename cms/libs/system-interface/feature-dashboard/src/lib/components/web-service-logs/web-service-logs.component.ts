@@ -23,13 +23,17 @@ export class WebServiceLogsComponent  implements OnChanges, OnInit
 {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() activityEventLogList$: any;
-  public state!: State;
+  @Input() lovsList$: any;
+
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
+
+  public state!: State;
   /** Public properties **/
   isActivityLogLoaderShow = false;
   activityEventLogSubList =[

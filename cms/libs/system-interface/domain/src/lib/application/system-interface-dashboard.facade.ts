@@ -4,14 +4,10 @@ import { SystemInterfaceDashboardService } from '../infrastructure/system-interf
 import { SnackBarNotificationType, NotificationSource, LoaderService, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { SortDescriptor } from '@progress/kendo-data-query';
-import { Lov } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class SystemInterfaceDashboardFacade {
   private ClientRecordSendChartSubject = new Subject<any>();
-
-  private lovInterfaceBatchSubject = new Subject<Lov[]>();
-  lovInterfaceBatch$ = this.lovInterfaceBatchSubject.asObservable();
 
   public ClientRecordSendChart$ =
     this.ClientRecordSendChartSubject.asObservable(); 
@@ -39,27 +35,24 @@ export class SystemInterfaceDashboardFacade {
        const err= subtitle;
       this.loggingService.logException(err)
     }
-    this.notificationSnackbarService.manageSnackBar(type,subtitle, source)
+    this.notificationSnackbarService.manageSnackBar(type, subtitle, source)
     this.hideLoader();
   }
 
-
   /** Constructor**/
   constructor(private systemInterfaceDashboardService: SystemInterfaceDashboardService,
-   private readonly loaderService: LoaderService ,
-    private configurationProvider : ConfigurationProvider ,
-    private loggingService : LoggingService,
-    private readonly notificationSnackbarService : NotificationSnackbarService,
-    public intl: IntlService, private service : SystemInterfaceDashboardService ) {}
+    private readonly loaderService: LoaderService,
+    private configurationProvider: ConfigurationProvider,
+    private loggingService: LoggingService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    public intl: IntlService, private service: SystemInterfaceDashboardService) { }
 
   /** Public methods **/
-  showLoader()
-  {
+  showLoader() {
     this.loaderService.show();
   }
 
-  hideLoader()
-  {
+  hideLoader() {
     this.loaderService.hide();
   }
 
@@ -68,72 +61,37 @@ export class SystemInterfaceDashboardFacade {
     this.systemInterfaceDashboardService.loadActivityLogListsServices().subscribe({
       next: (activityEventLogResponse) => {
         this.activityEventLogListSubject.next(activityEventLogResponse);
-       
+
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-     
+
       },
     });
   }
-
-
 
   loadClientRecordSendChart() {
     this.systemInterfaceDashboardService.getClientRecordSendChart().subscribe({
-      next: (ClientRecordSendChart) => { 
+      next: (ClientRecordSendChart) => {
         this.ClientRecordSendChartSubject.next(ClientRecordSendChart);
       },
-       
-      error: (err) => { 
-        console.error('err', err);
-      },
-    });
-  }
-  loadCardsRequestChart() {
-    this.systemInterfaceDashboardService.getCardsRequestChart().subscribe({
-      next: (cardsRequestChart) => { 
-        this.cardsRequestChartSubject.next(cardsRequestChart);
-      },
-       
-      error: (err) => { 
+
+      error: (err) => {
         console.error('err', err);
       },
     });
   }
 
-  
-  getInterfaceBatchLovs(): void {
-    this.service.getLovsbyType('INTERFACE_BATCH').subscribe({
-      next: (relationsResponse) => {
-        this.lovInterfaceBatchSubject.next(relationsResponse);
+  loadCardsRequestChart() {
+    this.systemInterfaceDashboardService.getCardsRequestChart().subscribe({
+      next: (cardsRequestChart) => {
+        this.cardsRequestChartSubject.next(cardsRequestChart);
       },
+
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        console.error('err', err);
       },
     });
-  }
- 
-  loadBatchLogsList(interfaceTypeCode: string, paginationParameters: any){
-    this.batchLogsDataLoaderSubject.next(true);
-    this.service.loadBatchLogsList(interfaceTypeCode, paginationParameters).subscribe({
-      next: (dataResponse:any) => {
-        debugger
-        const gridView: any = {
-          data: dataResponse['items'],
-          total: dataResponse?.totalCount,
-        };
-        this.activityEventLogListSubject.next(gridView);
-        this.batchLogsDataLoaderSubject.next(false);
-      },
-      error: (err) => {
-        debugger
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
-        this.batchLogsDataLoaderSubject.next(false);
-      },
-    });
-   
-  
   }
 
 }
