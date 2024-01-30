@@ -181,6 +181,10 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   loadPremiumPaymentEventHandle(gridDataRefinerValue: any) {
     this.insurancePolicyFacade.loadPremiumPayments(this.clientId, this.clientCaseId, this.clientCaseEligibilityId, gridDataRefinerValue);
   }
+  
+  getPolicies(event:any){
+    this.insurancePolicyFacade.getHealthInsurancePolicyPriorities(this.clientId, this.clientCaseEligibilityId,this.tabId);
+   }
 
 }
 

@@ -79,6 +79,7 @@
             [triggerPriorityPopup$]="triggerPriorityPopup$" [closeDeleteModal]="closeDeleteModal"
             [isCerForm]="isCerForm"
             (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
+            (getPoliciesEventEmitter)="getPolicies($event)"
             (deleteInsurancePlan)="delteInsurancePolicy($event)"
             (removeInsurancePlan)="removeInsurancePolicy($event)">
           </case-management-medical-premium-list>
