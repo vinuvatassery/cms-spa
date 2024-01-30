@@ -49,7 +49,7 @@ export class BatchInterfaceLogsPageComponent implements OnInit {
   // }
 
   loadActivityEventLog() {
-    this.systemInterfaceDashboardFacade.getEventLogLists();
+   // this.systemInterfaceDashboardFacade.getEventLogLists();
   }
 
 }

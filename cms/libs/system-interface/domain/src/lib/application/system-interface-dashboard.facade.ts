@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'; 
-import { Subject } from 'rxjs'; 
+import { BehaviorSubject, Subject } from 'rxjs'; 
 import { SystemInterfaceDashboardService } from '../infrastructure/system-interface-dashboard.service'; 
 import { SnackBarNotificationType, NotificationSource, LoaderService, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -18,11 +18,16 @@ export class SystemInterfaceDashboardFacade {
     private cardsRequestChartSubject = new Subject<any>();
     public cardsRequestChart$ =
     this.cardsRequestChartSubject.asObservable(); 
-    private activityEventLogListSubject = new Subject<any>();
+    private activityEventLogListSubject = new BehaviorSubject<any>([]);
     activityEventLogLists$ =
     this.activityEventLogListSubject.asObservable();
+   
+    private batchLogsDataLoaderSubject = new BehaviorSubject<boolean>(false);
+    batchLogsDataLoader$ = this.batchLogsDataLoaderSubject.asObservable();
+  
+   
     public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
-    public sortValue = 'interface'
+    public sortValue = 'startDate'
     public sortType = 'asc'
     public sort: SortDescriptor[] = [{
       field: this.sortValue,
@@ -109,4 +114,26 @@ export class SystemInterfaceDashboardFacade {
     });
   }
  
+  loadBatchLogsList(interfaceTypeCode: string, paginationParameters: any){
+    this.batchLogsDataLoaderSubject.next(true);
+    this.service.loadBatchLogsList(interfaceTypeCode, paginationParameters).subscribe({
+      next: (dataResponse:any) => {
+        debugger
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.activityEventLogListSubject.next(gridView);
+        this.batchLogsDataLoaderSubject.next(false);
+      },
+      error: (err) => {
+        debugger
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
+        this.batchLogsDataLoaderSubject.next(false);
+      },
+    });
+   
+  
+  }
+
 }

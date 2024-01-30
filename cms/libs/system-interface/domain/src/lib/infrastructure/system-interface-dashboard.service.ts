@@ -155,6 +155,66 @@ export class SystemInterfaceDashboardService {
         stampDate: 'MM/DD/YYYY',
         standTime: '00:00:00 AM',
       },
+      {
+        id: 4,
+        interface: 'Surveillance',
+        process: 'Order',
+        processStartDate: 'MM/DD/YYYY',
+        processEndDate: 'MM/DD/YYYY',
+        status: 'Success',
+        totalRecords: 100,
+        failedRecords: 0,
+        stampDate: 'MM/DD/YYYY',
+        standTime: '00:00:00 AM',
+      },
+      {
+        id: 4,
+        interface: 'Surveillance',
+        process: 'Order',
+        processStartDate: 'MM/DD/YYYY',
+        processEndDate: 'MM/DD/YYYY',
+        status: 'Success',
+        totalRecords: 100,
+        failedRecords: 0,
+        stampDate: 'MM/DD/YYYY',
+        standTime: '00:00:00 AM',
+      },
+      {
+        id: 4,
+        interface: 'Surveillance',
+        process: 'Order',
+        processStartDate: 'MM/DD/YYYY',
+        processEndDate: 'MM/DD/YYYY',
+        status: 'Success',
+        totalRecords: 100,
+        failedRecords: 0,
+        stampDate: 'MM/DD/YYYY',
+        standTime: '00:00:00 AM',
+      },
+      {
+        id: 4,
+        interface: 'Surveillance',
+        process: 'Order',
+        processStartDate: 'MM/DD/YYYY',
+        processEndDate: 'MM/DD/YYYY',
+        status: 'Success',
+        totalRecords: 100,
+        failedRecords: 0,
+        stampDate: 'MM/DD/YYYY',
+        standTime: '00:00:00 AM',
+      },
+      {
+        id: 4,
+        interface: 'Surveillance',
+        process: 'Order',
+        processStartDate: 'MM/DD/YYYY',
+        processEndDate: 'MM/DD/YYYY',
+        status: 'Success',
+        totalRecords: 100,
+        failedRecords: 0,
+        stampDate: 'MM/DD/YYYY',
+        standTime: '00:00:00 AM',
+      },
     ]);
   }
 
@@ -165,5 +225,9 @@ export class SystemInterfaceDashboardService {
         `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
         `/system-config/lovs/${lovType}`
     );
+  }
+
+  loadBatchLogsList(interfaceTypeCode: string, paginationParameters: any) {  
+  return this.http.post(`${this.configurationProvider.appSettings.interfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`,paginationParameters);
   }
 }
