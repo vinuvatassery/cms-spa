@@ -234,6 +234,6 @@ export class SystemInterfaceDashboardService {
   }
 
   GetRamsellInterfaceActivity(interfaceTypeCode: string) {
-    return this.http.get(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/dashboard/GetRamsellInterfaceActivity/${interfaceTypeCode}`);
+    return this.http.get(`${this.configurationProvider.appSettings.interfaceApiUrl}/system-interface/web-logs/${interfaceTypeCode}`);
   }
 }
