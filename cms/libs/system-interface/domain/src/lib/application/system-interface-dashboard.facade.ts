@@ -114,4 +114,26 @@ export class SystemInterfaceDashboardFacade {
   
   }
 
+  private webLogListSubject = new BehaviorSubject<any>([]);
+  webLogLists$ = this.activityEventLogListSubject.asObservable();
+  private webLogsDataLoaderSubject = new BehaviorSubject<boolean>(false);
+  webLogsDataLoader$ = this.webLogsDataLoaderSubject.asObservable();
+  loadWebLogsList() {
+    this.webLogsDataLoaderSubject.next(true);
+    this.service.GetRamsellInterfaceActivity("RAMSELL").subscribe({
+      next: (dataResponse: any) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.webLogListSubject.next(gridView);
+        this.webLogsDataLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.webLogsDataLoaderSubject.next(false);
+      },
+    });
+  }
+
 }
