@@ -80,7 +80,9 @@ export class SetHealthInsurancePriorityComponent implements OnInit,OnDestroy {
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
     }
 
-  }  getPolicySubscription() {
+  }  
+  
+  getPolicySubscription() {
     this.policySubscription = this.insurancePolicyFacade.currentEligibilityPolicies$.subscribe((policies: any) => {
       if (policies.length === 0) {
         this.isCloseInsuranceModal.emit();
