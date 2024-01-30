@@ -102,7 +102,6 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   }
 
   loadClaimsListGrid() {
-    debugger
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,

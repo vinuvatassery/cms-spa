@@ -98,7 +98,6 @@ export class SystemInterfaceDashboardFacade {
     this.batchLogsDataLoaderSubject.next(true);
     this.service.loadBatchLogsList(interfaceTypeCode, paginationParameters).subscribe({
       next: (dataResponse:any) => {
-        debugger
         const gridView: any = {
           data: dataResponse['items'],
           total: dataResponse?.totalCount,
@@ -107,7 +106,6 @@ export class SystemInterfaceDashboardFacade {
         this.batchLogsDataLoaderSubject.next(false);
       },
       error: (err) => {
-        debugger
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.batchLogsDataLoaderSubject.next(false);
       },
