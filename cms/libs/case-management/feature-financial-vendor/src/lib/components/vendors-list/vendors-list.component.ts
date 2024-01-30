@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
 import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';

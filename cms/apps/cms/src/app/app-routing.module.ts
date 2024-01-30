@@ -37,6 +37,15 @@ const routes: Routes = [
   {
     path: 'productivity-tools',
     loadChildren: () =>
+      import('@cms/feature-productivity-tools').then(
+        (m) => m.CaseManagementFeatureProductivityToolsModule
+      ),
+ 
+    canLoad: [AutoLoginAllRoutesGuard],
+  },
+  {
+    path: 'productivity-tools',
+    loadChildren: () =>
       import('@cms/productivity-tools/feature-home').then(
         (m) => m.ProductivityToolsFeatureHomeModule
       ),

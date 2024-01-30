@@ -22,12 +22,11 @@ import {
   DependentTypeCode,
   PriorityCode,
   InsuranceStatusType,
-  FinancialVendorTypeCode,
   FinancialVendorFacade,
   InsuranceTypeCode,
   MedicareCoverageType
 } from '@cms/case-management/domain';
-
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Lov, LovFacade, LovType, UserManagementFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';

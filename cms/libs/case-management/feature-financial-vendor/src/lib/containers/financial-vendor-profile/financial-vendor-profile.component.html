@@ -112,7 +112,7 @@
         </div>
       </ng-template>
     </kendo-tabstrip-tab>
-    <kendo-tabstrip-tab title="Provider" *ngIf="(tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider) && isClinicalVendor " >
+    <kendo-tabstrip-tab title="Provider" *ngIf="(tabCode === financeManagementTabs.MedicalProvider || tabCode === financeManagementTabs.DentalProvider)" >
       <ng-template kendoTabContent>
         <div class="block-section">
 
@@ -127,6 +127,7 @@
           [vendorTypeCode]="vendorTypeCode"
           [removeprovider$]="removeprovider$"
           [addProviderNew$]="addProviderNew$"
+          [vendorName]="vendorName"
           (onProviderNameClickEvent)="onProviderNameClick($event)"
           ></cms-financial-clinic-provider-list>
           </div>

@@ -20,7 +20,7 @@ import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
-
+  
   @ViewChildren("proofSchoolDropdown") public proofSchoolDropdown!: QueryList<DropDownListComponent>;
   /** Private properties **/
   private saveClickSubscription !: Subscription;  /** Public Methods **/
