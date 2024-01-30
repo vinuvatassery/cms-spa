@@ -870,6 +870,34 @@ export class LovFacade {
     });
   }
 
+  private WebLogInterfaceLovsSubject = new Subject<Lov[]>();
+  WebInterfaceLogLovs$ = this.WebLogInterfaceLovsSubject.asObservable();
+  getInterfaceWebLogLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.WebServiceInterface).subscribe({
+      next: (relationsResponse) => {
+        this.WebLogInterfaceLovsSubject.next(relationsResponse);
+      },
+
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  private BatchInterfaceActivityLogSubject = new Subject<Lov[]>();
+  BatchInterfaceActivityLogLovs$ = this.BatchInterfaceActivityLogSubject.asObservable();
+  getBatchInterfaceActivityLogLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.BatchInterface).subscribe({
+      next: (relationsResponse) => {
+        this.BatchInterfaceActivityLogSubject.next(relationsResponse);
+      },
+
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
 }
 
 

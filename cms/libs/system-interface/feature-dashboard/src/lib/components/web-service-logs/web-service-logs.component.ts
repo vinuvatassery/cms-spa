@@ -6,16 +6,20 @@ import {
   OnInit,
   OnChanges,
   Output,
+  ViewEncapsulation,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
+
+
 @Component({
-  selector: 'cms-system-interface-activity-log-lists',
-  templateUrl: './system-interface-activity-log-lists.component.html',
+  selector: 'cms-system-interface-web-service-logs',
+  templateUrl: './web-service-logs.component.html',
+  styleUrls: ['./web-service-logs.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SystemInterfaceActivityLogListsComponent
-  implements OnChanges, OnInit
+export class WebServiceLogsComponent  implements OnChanges, OnInit
 {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -25,11 +29,11 @@ export class SystemInterfaceActivityLogListsComponent
   @Input() sortType: any;
   @Input() sort: any;
   @Input() activityEventLogList$: any;
+  @Input() lovsList$: any;
 
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
-  
-  public state!: State;
 
+  public state!: State;
   /** Public properties **/
   isActivityLogLoaderShow = false;
   activityEventLogSubList =[
@@ -59,7 +63,7 @@ export class SystemInterfaceActivityLogListsComponent
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    this.loadActivityLogList();
+    this.loadActivityLogLists();
   }
   ngOnChanges(): void {
     this.state = {
@@ -69,10 +73,10 @@ export class SystemInterfaceActivityLogListsComponent
     };
   }
 
-  private loadActivityLogList() {
+  private loadActivityLogLists() {
     this.loadActivityLogListEvent.emit();
   }
   pageSelectionchange(data: any) {
-    this.loadActivityLogList();
+    this.loadActivityLogLists();
   }
 }
