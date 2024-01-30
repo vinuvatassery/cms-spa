@@ -34,22 +34,11 @@ export class BatchInterfaceLogsPageComponent implements OnInit {
       take: this.pageSizes[0]?.value,
       sort: this.sort
     };
-    this.loadActivityEventLog();
-
+   
     this.systemInterfaceDashboardFacade.getInterfaceBatchLovs();
-    //this.loadBatchLovs();
   }
 
-  // batchLovsData: any = [];
-  // private loadBatchLovs() {
-  //   this.batchLovs.subscribe((data: any) => {
-  //     if (!Array.isArray(data)) return;
-  //     this.batchLovsData = data;
-  //   });
-  // }
 
-  loadActivityEventLog() {
-   // this.systemInterfaceDashboardFacade.getEventLogLists();
-  }
+
 
 }
