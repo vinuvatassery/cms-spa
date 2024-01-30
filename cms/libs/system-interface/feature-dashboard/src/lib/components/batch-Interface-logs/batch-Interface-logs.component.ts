@@ -37,6 +37,12 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   filter!: any;
   columns : any;  
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  filteredByColumnDesc = '';
+  selectedStatus = '';
+  showDateSearchWarning = false;
+  columnChangeDesc = 'Default Columns';
+
+  dateColumns = ['openDate', 'closeDate'];
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   /** Public properties **/
   isActivityLogLoaderShow = false;
@@ -62,6 +68,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
       rowNumber: 14
     },
   ]
+  lovsList!: any[];
   /** Lifecycle hooks **/
 
   constructor(
@@ -74,6 +81,13 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
       sort: this.sort,
     };
     this.loadClaimsListGrid();
+    this.loadLovList();
+  }
+  loadLovList(){
+    this.lovsList$.subscribe((data: any[]) => {
+      this.lovsList = data.sort((a, b) => a.sequenceNbr - b.sequenceNbr);
+    });
+    
   }
   ngOnChanges(): void {
    
@@ -120,6 +134,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.state = stateData;
     this.sortType = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
     this.filter = stateData?.filter?.filters;
+    this.filter = stateData?.filter?.filters;
     this.loadClaimsListGrid();
   }
   
@@ -132,4 +147,5 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
+  
 }
