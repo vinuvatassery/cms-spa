@@ -232,4 +232,8 @@ export class SystemInterfaceDashboardService {
 
     return this.http.post(`${this.configurationProvider.appSettings.interfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`,paginationParameters);
   }
+
+  GetRamsellInterfaceActivity(interfaceTypeCode: string) {
+    return this.http.get(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/dashboard/GetRamsellInterfaceActivity/${interfaceTypeCode}`);
+  }
 }

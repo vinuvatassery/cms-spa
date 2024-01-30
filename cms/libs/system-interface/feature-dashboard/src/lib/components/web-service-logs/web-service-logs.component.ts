@@ -56,6 +56,7 @@ export class WebServiceLogsComponent  implements OnChanges, OnInit
       rowNumber: 14
     },
   ]
+
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.state = {
