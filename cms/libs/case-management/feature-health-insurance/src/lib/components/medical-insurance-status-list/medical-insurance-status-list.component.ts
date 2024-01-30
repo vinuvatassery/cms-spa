@@ -3,7 +3,7 @@ import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, 
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
-import { HealthInsurancePolicyFacade, CaseFacade, InsuranceStatusType, ClientFacade, PriorityCode } from '@cms/case-management/domain';
+import { HealthInsurancePolicyFacade, CaseFacade, InsuranceStatusType, ClientFacade, PriorityCode} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subscription } from 'rxjs';
@@ -304,7 +304,11 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   private priorityPopupShowSubscription(){
     this.triggerPriorityPopup$.subscribe((value:boolean)=>{
       if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {
-        if(value && this.isTriggerPriorityPopup){         
+        if(this.selectedEligibilityId === null || 
+          this.selectedEligibilityId === undefined){
+            this.selectedEligibilityId = this.caseEligibilityId;
+          }
+        if(value && this.isTriggerPriorityPopup){
           this.isEditInsurancePriorityTitle = false;
           this.insurancePriorityModalButtonText = 'Save';
           this.selectedEligibilityId = this.caseEligibilityId;  

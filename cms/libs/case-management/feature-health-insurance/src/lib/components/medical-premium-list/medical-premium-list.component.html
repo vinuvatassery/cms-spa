@@ -160,7 +160,7 @@
         ? 'Change Insurance Priority'
         : 'Select Insurance Priority'
     }}</kendo-dialog-titlebar>
-  <case-management-set-health-insurance-priority 
+    <case-management-set-health-insurance-priority 
       [insurancePriorityModalButtonText]="insurancePriorityModalButtonText"
       [selectedInsurance]="selectedInsurance"  
       [clientId]="clientId" 
@@ -168,7 +168,7 @@
       (isCloseInsuranceModal)="onChangePriorityCloseClicked()"
       (priorityAdded)="priorityAdded()">
   </case-management-set-health-insurance-priority>
-</kendo-dialog>
+  </kendo-dialog>
 
 <!-- Delete Modal -->
 <kendo-dialog *ngIf="isOpenedDeleteConfirm" (close)="onDeleteConfirmCloseClicked()"

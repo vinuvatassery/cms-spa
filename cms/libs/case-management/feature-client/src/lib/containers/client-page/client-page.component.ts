@@ -34,14 +34,14 @@ import {
   ClientCaseEligibilityFlag,
   ClientCaseEligibilityAndFlag,
   CaseFacade,
-  YesNoFlag,
   ControlPrefix,
-  MaterialFormat,
   CompletionChecklist,
   NavigationType,
   PronounCode,
   TransGenderCode
 } from '@cms/case-management/domain';
+import { MaterialFormat,YesNoFlag } from '@cms/shared/ui-common';
+
 import {
   LoaderService,
   LoggingService,

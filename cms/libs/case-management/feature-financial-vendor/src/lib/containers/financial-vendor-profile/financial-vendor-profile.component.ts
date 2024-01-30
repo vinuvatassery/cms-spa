@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, FinancialVendorTypeCode, InvoiceFacade } from '@cms/case-management/domain';
+import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, InvoiceFacade } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';

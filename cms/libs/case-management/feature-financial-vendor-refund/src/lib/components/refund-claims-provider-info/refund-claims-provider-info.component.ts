@@ -8,7 +8,8 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FinancialVendorProviderTabCode, FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { BehaviorSubject, Observable, take } from 'rxjs';
 

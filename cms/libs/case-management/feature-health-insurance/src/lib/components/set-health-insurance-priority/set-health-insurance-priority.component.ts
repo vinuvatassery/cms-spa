@@ -47,7 +47,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit,OnDestroy {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.loadDdlMedicalHealthPlanPriority();
     this.insurancePolicyFacade.showLoader();
     this.getPolicySubscription();
@@ -73,16 +73,14 @@ export class SetHealthInsurancePriorityComponent implements OnInit,OnDestroy {
         this.form.controls[insurance.clientInsurancePolicyId].setValue(null);
         return;
       }
-      this.InsuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
+      this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Primary Insurance Policies with overlapping date ranges.');
 
     }
     else if (value === PriorityCode.Secondary) {
-      this.InsuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
+      this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
     }
 
-  }
-
-  getPolicySubscription() {
+  }  getPolicySubscription() {
     this.policySubscription = this.insurancePolicyFacade.currentEligibilityPolicies$.subscribe((policies: any) => {
       if (policies.length === 0) {
         this.isCloseInsuranceModal.emit();
@@ -99,9 +97,9 @@ export class SetHealthInsurancePriorityComponent implements OnInit,OnDestroy {
       this.cdr.detectChanges();
       this.insurancePolicyFacade.hideLoader();
     });
-  }
+  } 
 
-  InsuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
+  insuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
     this.gridList.forEach((row: any) => {
       row.priorityCode = this.form.controls[row.clientInsurancePolicyId].value;
     });
@@ -118,7 +116,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit,OnDestroy {
     });
     return overlapStatus;
   }
-
+  
   dateRangeOverlaps(aStart: Date, aEnd: Date, bStart: Date, bEnd: Date) {
     if (aEnd === null && bEnd === null && aStart === bStart) return true;
     if (aEnd === null && aStart >= bStart && aStart <= bEnd) return true;

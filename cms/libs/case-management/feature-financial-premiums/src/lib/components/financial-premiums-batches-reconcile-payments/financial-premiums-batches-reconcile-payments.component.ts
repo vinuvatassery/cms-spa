@@ -167,8 +167,9 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   warrantNumberChanged: any = false;
   checkingPaymentRequest!:any;
   loadType:any = null;
-  loadTypeAllPayments:any = LoadTypes.allPayments
+  loadTypeAllPayments:any = LoadTypes.allPayments;
   warrantInfoArray:any[]=[];
+
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, 
     private readonly cd: ChangeDetectorRef, private configurationProvider: ConfigurationProvider, 

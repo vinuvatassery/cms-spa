@@ -132,8 +132,8 @@ export class MedicalPremiumListComponent implements OnInit {
     this.triggerPriorityPopup$.subscribe((value: boolean) => {
       if (value && this.isTriggerPriorityPopup) {
         this.isEditInsurancePriorityTitle = false;
-        this.insurancePriorityModalButtonText = 'Save'
-        this.selectedEligibilityId = this.caseEligibilityId;    
+        this.insurancePriorityModalButtonText = 'Save';
+        this.selectedEligibilityId = this.caseEligibilityId;
         this.onChangePriorityOpenClicked();
       }
       else {

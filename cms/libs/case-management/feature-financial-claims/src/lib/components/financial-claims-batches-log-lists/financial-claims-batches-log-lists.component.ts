@@ -180,7 +180,6 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedStatus = '';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   columnChangeDesc = 'Default Columns';
-  batchStatus :any
   //export
   showExportLoader = false;
 
@@ -189,7 +188,7 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedPaymentStatus: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
-
+  batchStatus = PaymentStatusCode.PendingApproval
   getBatchLogGridActions(dataItem: any) {
     return [{
       buttonType: 'btn-h-primary',
@@ -317,7 +316,14 @@ export class FinancialClaimsBatchesLogListsComponent
   batchLogListSubscription() {
     this.batchLogListItemsSubscription = this.batchLogGridLists$.subscribe((response: any) => {
       this.totalRecord = response.total;
-      this.batchStatus = response && response.data[0].batchStatus
+     
+      var payments =  response && response.data
+      
+      payments.forEach((item :any) =>{
+        if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(item.paymentStatusCode)){
+          this.batchStatus = item.paymentStatusCode
+         }
+        })
       this.initializeBulkMore()
       if (this.selectAll) {
         this.markAsChecked(response.data);
