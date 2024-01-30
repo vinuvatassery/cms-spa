@@ -4,8 +4,8 @@ import { WidgetService } from '../infrastructure/widget.service';
 
 @Injectable({ providedIn: 'root' })
 export class WidgetFacade {
-  private recentlyViewedProfileSubject = new BehaviorSubject<any>([]);  
-  public recentlyViewedProfileList$ = this.recentlyViewedProfileSubject.asObservable(); 
+  private recentlyViewedClientsSubject = new BehaviorSubject<any>([]);  
+  public recentlyViewedClientsList$ = this.recentlyViewedClientsSubject.asObservable(); 
  
   private activeClientsByGroupSubject = new BehaviorSubject<any>([]);
   public activeClientsByGroupChart$ = this.activeClientsByGroupSubject.asObservable(); 
@@ -34,10 +34,10 @@ export class WidgetFacade {
 
   constructor(private widgetService: WidgetService) {}
 
-  loadRecentlyViewedProfiles(): void {
-    this.widgetService.getRecentlyViewedProfiles().subscribe({
-      next: (profiles: any) => {
-        this.recentlyViewedProfileSubject.next(profiles);
+  loadRecentlyViewedClients(): void {
+    this.widgetService.getRecentlyViewedClients().subscribe({
+      next: (clients: any) => {
+        this.recentlyViewedClientsSubject.next(clients);
       },
       error: (err: any) => {
         console.error('err', err);

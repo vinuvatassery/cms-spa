@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { WidgetChartModel } from '../entities/widget-chart';
+import { Observable, of } from 'rxjs'; 
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +8,7 @@ import { WidgetChartModel } from '../entities/widget-chart';
 export class WidgetService {
   constructor(private http: HttpClient) {}
 
-  getRecentlyViewedProfiles(): Observable<any> {
+  getRecentlyViewedClients(): Observable<any> {
     return of([
       {
         ProfileName: 'Donna Summer',
@@ -47,7 +46,7 @@ export class WidgetService {
   getChartData(): Observable<any> {
     return of({
       title: {
-        text: 'Program Expensessssssssssss',
+        text: 'Program Expenses',
       },
 
       legend: {
@@ -288,9 +287,7 @@ export class WidgetService {
       },
     });
   }
-  getDirectMessages() {}
-  getInsuranceTypeFpl() {}
-  GetLineHeap() {}
+ 
 
   getPharmacyClaims(): Observable<any> {
     
@@ -532,10 +529,7 @@ export class WidgetService {
       },
     });
   }
-  getQuickClinks() {}
-  getRentOverages() {}
-  getServiceTracking() {}
-  getSlotsAllocation() {}
+ 
   getTodayGlance(): Observable<any> {
     return of({
       todoItems: {
@@ -560,5 +554,5 @@ export class WidgetService {
       },
     });
   }
-  GetApplicationsCers() {}
+ 
 }

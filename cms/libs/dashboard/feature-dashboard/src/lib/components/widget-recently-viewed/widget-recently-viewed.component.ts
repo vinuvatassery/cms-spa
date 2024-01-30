@@ -23,16 +23,16 @@ import { Subscription, fromEvent } from 'rxjs';
 export class WidgetRecentlyViewedComponent
   implements OnInit,  OnDestroy
 {
-  public recentlyViewedProfileList$ =
-    this.widgetFacade.recentlyViewedProfileList$;
+  public recentlyViewedClientsList$ =
+    this.widgetFacade.recentlyViewedClientsList$;
 
-  public recentlyViewedProfileList: any;
+  public recentlyViewedClientsList: any;
   public state: State = {
     skip: 0,
     take: 10,
   };
   public gridData: any;
-  private currentSubscription!: Subscription;
+  private recentlyViewedClientsSubscription!: Subscription;
 
   constructor(
     private renderer: Renderer2,
@@ -41,13 +41,12 @@ export class WidgetRecentlyViewedComponent
   ) {}
 
   ngOnInit(): void {
-    this.loadRecentlyViewedProfiles();
+    this.loadRecentlyViewedClients();
 
-    this.recentlyViewedProfileList$.subscribe({
-      next: (profiles) => {
-        console.log(profiles);
-        this.recentlyViewedProfileList = profiles;
-        this.gridData = process(this.recentlyViewedProfileList, this.state);
+   this.recentlyViewedClientsSubscription = this.recentlyViewedClientsList$.subscribe({
+      next: (data) => { 
+        this.recentlyViewedClientsList = data;
+        this.gridData = process(this.recentlyViewedClientsList, this.state);
       },
       error: (err) => {
         console.error('err', err);
@@ -57,18 +56,17 @@ export class WidgetRecentlyViewedComponent
     console.log('original', this.gridData);
   }
 
-  loadRecentlyViewedProfiles() {
-    this.widgetFacade.loadRecentlyViewedProfiles();
+  loadRecentlyViewedClients() {
+    this.widgetFacade.loadRecentlyViewedClients();
   }
 
  
 
   public ngOnDestroy(): void {
-    this.currentSubscription.unsubscribe();
+    if(this.recentlyViewedClientsSubscription){
+      this.recentlyViewedClientsSubscription.unsubscribe();
+
+    }
   }
-
- 
- 
-
  
 }
