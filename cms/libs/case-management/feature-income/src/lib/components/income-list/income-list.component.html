@@ -100,7 +100,7 @@
           </ng-template>
 
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center" 
+        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center"
         [sticky]="true" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <button
@@ -136,7 +136,7 @@
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton
               [data]="actionsmore"
-              
+
               title="More option"
               class="TableActionPopup more_action_wid"
               buttonClass="k-icon-button"
@@ -211,7 +211,7 @@
 </div>
 
 <!-- Dependents' Proof of School -->
-<div class="flex-row mt-3" *ngIf="dependentsProofofSchools.length > 0 && !isCerForm">
+<div class="flex-row mt-3" *ngIf="dependentsProofofSchools.length > 0">
   <div class="flex-col">
     <h5 class="text-capital align-items-center">Dependents' Proof of School</h5>
     <div class="app-c-table">
@@ -233,7 +233,7 @@
           [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
         >
         <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-          <div class="proof_income-more"> 
+          <div class="proof_income-more">
               <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
               class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
            </span>
