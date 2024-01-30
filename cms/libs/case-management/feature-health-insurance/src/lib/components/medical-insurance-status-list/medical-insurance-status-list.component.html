@@ -30,15 +30,18 @@
       [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"  
       [sort]="state.sort" (dataStateChange)="dataStateChange($event)"  [selectable]="true" filterable="menu" [filter]="state.filter"
       [data]="medicalHealthPlans$ |async">
-        <kendo-grid-column field="healthInsuranceTypeDesc" title="Insurance Type" [width]="150" [sticky]="true">
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-            [extra]="false" operator="eq">
-            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-            <kendo-filter-eq-operator></kendo-filter-eq-operator>
-            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-            <kendo-filter-contains-operator></kendo-filter-contains-operator>
-          </kendo-grid-string-filter-menu>
+        <kendo-grid-column field="healthInsuranceTypeDesc" title="Insurance Type" [width]="150" [sticky]="true"> 
+          <ng-template kendoGridFilterMenuTemplate
+          let-column="column"
+          let-filter="filter"
+          let-filterService="filterService">
+              <kendo-dropdownlist
+              [data]="insuranceTypeList$ | async"
+              textField="lovDesc"
+              valueField="lovCode"
+              [value]="healthInsuranceTypeDesc"
+              (valueChange)="dropdownFilterChange('healthInsuranceTypeDesc',$event, filterService)">
+            </kendo-dropdownlist>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="insurancePlanName" title="Plan Name" [width]="150">
@@ -63,16 +66,18 @@
         <kendo-grid-column *ngIf ="insuranceStatus ==='hlt-ins-st'"
           field="priorityDesc"
           title="Priority"
-          [width]="120"
-          >
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-            [extra]="false" operator="eq">
-            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-            <kendo-filter-eq-operator></kendo-filter-eq-operator>
-            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-            <kendo-filter-contains-operator></kendo-filter-contains-operator>
-          </kendo-grid-string-filter-menu>
+          [width]="120"> 
+          <ng-template kendoGridFilterMenuTemplate
+          let-column="column"
+          let-filter="filter"
+          let-filterService="filterService">
+              <kendo-dropdownlist
+              [data]="priorityCodeType$ | async"
+              textField="lovDesc"
+              valueField="lovCode"
+              [value]="priorityDesc"
+              (valueChange)="dropdownFilterChange('priorityDesc',$event, filterService)">
+            </kendo-dropdownlist>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
@@ -196,15 +201,18 @@
         <kendo-grid-column
           field="premiumFrequencyDesc"
           title="Premium Frequency"
-          [width]="170">
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-            [extra]="false" operator="eq">
-            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-            <kendo-filter-eq-operator></kendo-filter-eq-operator>
-            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-            <kendo-filter-contains-operator></kendo-filter-contains-operator>
-          </kendo-grid-string-filter-menu>
+          [width]="170"> 
+          <ng-template kendoGridFilterMenuTemplate
+          let-column="column"
+          let-filter="filter"
+          let-filterService="filterService">
+              <kendo-dropdownlist
+              [data]="premiumFrequencyList$ | async"
+              textField="lovDesc"
+              valueField="lovCode"
+              [value]="premiumFrequencyDesc"
+              (valueChange)="dropdownFilterChange('premiumFrequencyDesc',$event, filterService)">
+            </kendo-dropdownlist>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="paymentIdNumer" title="Payment ID" [width]="130">
@@ -372,7 +380,8 @@ class="app-c-modal app-c-modal-mdl app-c-modal-np">
   (isAddEditClicked)="addOrEditClicked($event)"
   [medicalHealthPlansCount]="medicalHealthPlansCount"
   (isDeleteClicked)="deleteButtonClicked($event)"
-  [insuranceStatus]="insuranceStatus">
+  [insuranceStatus]="insuranceStatus"
+  [insuranceTypeList$]="insuranceTypeList$">
 </case-management-medical-premium-detail>
 </kendo-dialog>
 

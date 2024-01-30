@@ -1,6 +1,5 @@
 /** Angular **/
 import { Component, OnInit, Output, ChangeDetectionStrategy, Input, ChangeDetectorRef, EventEmitter, OnDestroy } from '@angular/core';
-import { Component, OnInit, Output, ChangeDetectionStrategy, Input, ChangeDetectorRef, EventEmitter, OnDestroy } from '@angular/core';
 import {
   FormBuilder,
   FormControl,

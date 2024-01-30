@@ -21,7 +21,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly loaderService: LoaderService,
     private readonly ref: ChangeDetectorRef,
-    private readonly clientFacade: ClientFacade
+    private readonly clientFacade: ClientFacade,    
   ) { }
 
   tabChangeSubscription$ = new Subscription();
@@ -139,7 +139,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -161,7 +161,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
     this.isHistoricalDataLoad =isLoadHistoricalData;
     const gridDataRefinerValue = {
       skipCount: this.insurancePolicyFacade.skipCount,
-      maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+      pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
       sortColumn: 'creationTime',
       sortType: 'asc',
       loadHistoricalData:isLoadHistoricalData

@@ -9,6 +9,7 @@ import { CompletionChecklist, HealthInsurancePolicyFacade, PriorityCode, Workflo
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { FilterService } from '@progress/kendo-angular-grid';
 
 @Component({
   selector: 'case-management-medical-premium-list',
@@ -46,6 +47,9 @@ export class MedicalPremiumListComponent implements OnInit {
   filter!: any;
   sortValue:any ='healthInsuranceTypeDesc';
   sortType:any='asc';
+  healthInsuranceTypeDesc:any;
+  priorityDesc:any;
+  premiumFrequencyDesc:any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   showInsuranceRequired = this.healthInsurancePolicyFacade.showInsuranceRequired$;
   /** Input properties **/
@@ -55,6 +59,9 @@ export class MedicalPremiumListComponent implements OnInit {
   @Input() clientId: any;
   @Input() triggerPriorityPopup$!: Observable<boolean>;
   @Input() isCerForm: boolean = false;
+  @Input() insuranceTypeList$: any;
+  @Input() premiumFrequencyList$:any;
+  @Input() priorityCodeType$:any;
 
   @Output() loadInsurancePlanEvent = new EventEmitter<any>();
   @Output() deleteInsurancePlan = new EventEmitter<any>();
@@ -115,7 +122,7 @@ export class MedicalPremiumListComponent implements OnInit {
           this.handleHealthInsuranceOpenClicked('copy');
         },
       });
-    }
+    }   
   }
   ngOnChanges(): void {
     this.state = {
@@ -161,6 +168,26 @@ export class MedicalPremiumListComponent implements OnInit {
     this.isOpenedDeleteConfirm = false;
   }
 
+  dropdownFilterChange(field: string, value: any, filterService: FilterService): void {
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value: value.lovDesc
+      }],
+      logic: "or"
+    });
+    if (field == "healthInsuranceTypeDesc") {
+      this.healthInsuranceTypeDesc = value;
+    }
+    if (field == "priorityDesc") {
+      this.priorityDesc = value;
+    }
+    if (field == "premiumFrequencyDesc") {
+      this.premiumFrequencyDesc = value;
+    }
+  }
+
   onDeleteConfirmOpenClicked() {
     if (this.isCerForm) {
       this.isOpenedRemoveConfirm = true;
@@ -182,9 +209,11 @@ export class MedicalPremiumListComponent implements OnInit {
       this.isOpenedRemoveConfirm = false;
     }
   }
+
   onRemoveCloseClicked() {
     this.isOpenedRemoveConfirm = false;
   }
+
   onRemoveConfirmOpenClicked() {
     this.isOpenedRemoveConfirm = true;
   }
@@ -242,7 +271,7 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   // updating the pagination infor based on dropdown selection
-  pageselectionchange(data: any) {
+  pageSelectionchange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
     this.sort = { field: 'creationTime', dir: 'asc' };

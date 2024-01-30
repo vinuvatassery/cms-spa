@@ -8,6 +8,7 @@ import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pair
 import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType, InsuranceStatusType, GridFilterParam } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-health-insurance-page',
@@ -35,6 +36,9 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
   isInsuranceAvailable: boolean = false;
   isCerForm = false;
   prevClientCaseEligibilityId!: string;
+  insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
+  premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
+  priorityCodeType$ = this.lovFacade.priorityCodeType$;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private loadSessionSubscription!: Subscription;
@@ -50,7 +54,8 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
-    private readonly router: Router
+    private readonly router: Router,
+    private lovFacade: LovFacade
   ) { }
 
   /** Lifecycle Hooks **/
@@ -63,6 +68,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
     this.addHealthInsuranceStatusSubscription();
+    this.loadHealthInsuranceLovs();
   }
 
   ngOnDestroy(): void {
@@ -83,6 +89,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.HideLoader();
+  }
+
+  private loadHealthInsuranceLovs() {
+    this.lovFacade.getHealthInsuranceTypeLovs();
+    this.lovFacade.getPremiumFrequencyLovs();
+    this.lovFacade.getCaseCodeLovs();
   }
 
   ShowLoader() {
@@ -394,7 +406,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
     );
   }
 
-  delteInsurancePolicy(insurancePolicyId: any) {
+  deleteInsurancePolicy(insurancePolicyId: any) {
     if (insurancePolicyId != undefined) {
       this.ShowLoader();
       this.closeDeleteModal = false;
@@ -403,7 +415,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -430,7 +442,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            pageSize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
