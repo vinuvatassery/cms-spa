@@ -1,0 +1,21 @@
+<div class="dashboard-cards-wrapper">
+  <div class="dash-header-with-filters">
+    <h5>PROGRAM EXPENSES</h5>
+  </div>
+  <div class="dashboard-cards-container">
+    <div class="app-c-drag-row-table recently-view">
+    <kendo-grid [data]="gridData" >
+      <kendo-grid-column field="ProfileName" [width]="100"> </kendo-grid-column>
+      <kendo-grid-column field="ProfileId" [width]="100"> </kendo-grid-column>
+      <kendo-grid-column field="DOB" [width]="100"> </kendo-grid-column>
+      <kendo-grid-column field="Status"  [width]="100"> </kendo-grid-column>
+      <kendo-grid-column [width]="40">
+        <ng-template kendoGridCellTemplate>
+          <a href="https://dev.azure.com/OregonADAP/" target="_blank">
+            <span class="k-icon k-i-arrow-chevron-right"></span></a>
+        </ng-template>
+      </kendo-grid-column>
+    </kendo-grid>
+  </div>
+  </div>
+</div>

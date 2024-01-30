@@ -1,0 +1,55 @@
+<div class="dashboard-cards-wrapper"> 
+  <h5>TODAY AT A GLANCE</h5>
+  <div class="flex-row dashboard-page-wrapper">
+    <section class="flex-col">
+      <div class="dash-top-cards-wrapper">
+        <div class="dash-info-card yellow_card" *ngIf="todayGlance.todoItems.isVisible">
+          <p>TO DO ITEMS</p>
+          <div class="justify-content-between">
+            <span class="material-icons">playlist_add_check</span>
+            <h3>{{todayGlance.todoItems.count}}</h3>
+          </div>
+        </div>
+        <div class="dash-info-card red_card" *ngIf="todayGlance.pendingApprovals.isVisible">
+          <p>PENDING APPROVALS</p>
+          <div class="justify-content-between">
+            <span class="material-icons">
+              assignment_turned_in
+            </span>
+            <h3>{{todayGlance.pendingApprovals.count}}</h3>
+          </div>
+        </div>
+        <div class="dash-info-card green_card" *ngIf="todayGlance.directMessages.isVisible">
+          <p>DIRECT MESSAGES</p>
+          <div class="justify-content-between">
+            <span class="material-icons">
+              send
+            </span>
+            <h3>{{todayGlance.directMessages.count}}</h3>
+          </div>
+        </div>
+        <div class="dash-info-card blue_card" *ngIf="todayGlance.todayReminder.isVisible">
+          <p>REMINDERS TODAY</p>
+          <div class="justify-content-between">
+            <span class="material-icons">
+              alarm
+            </span>
+
+            <h3>{{todayGlance.todayReminder.count}}</h3>
+          </div>
+        </div>
+        <div class="dash-info-card purple_card" *ngIf="todayGlance.newNotification.isVisible">
+          <p>NEW NOTIFICATIONS</p>
+          <div class="justify-content-between">
+            <span class="material-icons">
+              notifications_active
+            </span>
+            <h3>{{todayGlance.newNotification.count}}</h3>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </div>
+</div>

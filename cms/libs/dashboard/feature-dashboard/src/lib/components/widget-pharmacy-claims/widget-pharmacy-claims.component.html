@@ -1,0 +1,44 @@
+<div class="dashboard-cards-wrapper">
+      <div class="dash-header-with-filters">
+            <h5>PHARMACY CLAIMS</h5>
+            <div >
+                  <kendo-dropdownlist size="small" value="Claims Count" rounded="medium" class="mr-1"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="dataCount">
+                  </kendo-dropdownlist>
+           
+            <kendo-dropdownlist size="small" value="This Month" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
+                  [data]="dataMonth">
+            </kendo-dropdownlist>
+      </div>
+      </div>
+
+      <div class="dashboard-cards-container">
+
+            <kendo-chart  class="dash_chart" *ngIf="pharmacyClaims">
+                  <ng-template kendoChartDonutCenterTemplate>
+                    <h3>$10,000</h3>
+                     
+                  </ng-template>
+                  <kendo-chart-legend [item]="pharmacyClaims?.chartData?.legend" [padding]="20">
+                    <kendo-chart-legend-item class="mt-1"></kendo-chart-legend-item>
+                  </kendo-chart-legend>
+                  <kendo-chart-area background="none"></kendo-chart-area>
+                  <kendo-chart-tooltip>
+                    <ng-template kendoChartSeriesTooltipTemplate let-value="value" let-category="category" let-series="series">
+                      {{ category }}: {{ value }}%
+                    </ng-template>
+                  </kendo-chart-tooltip>
+                  <kendo-chart-series>
+                    <kendo-chart-series-item *ngFor="let series of pharmacyClaims?.chartData?.series; let outermost = last;"
+                      [type]="series.type" [startAngle]="-10" [data]="series.data" field="value" categoryField="category"
+                      colorField="color">
+                      <kendo-chart-series-item-labels *ngIf="outermost" [distance]="0" position="bottom" background="none"
+                        [content]="labelContent">
+                      </kendo-chart-series-item-labels>
+                    </kendo-chart-series-item>
+                  </kendo-chart-series>
+                </kendo-chart>
+
+ 
+      </div>
+</div>

@@ -1,31 +1,58 @@
-<div class="app-l-inner-rapper">
-  <div class="flex-row">
-    <div class="flex-col mb-3">
-      <!-- //NOSONAR <common-signature-pad></common-signature-pad> -->
+<div class="app-l-inner-rapper ">
  
-      <h2> 
-        <span      
-            class="material-icons"     
-            aria-label="home"
-            aria-hidden="true"
-        >home</span>
-         &nbsp; Dashboard
-      </h2>
+  <section class="app-l-mainTittle justify-content-between">
+    <div>
+      <h1 class="maintitle_withicon text-bold">
+        <span aria-label="Clients" class="material-icons sidebar-menu_icon " aria-hidden="true"> home </span>
+        Welcome back, {{ onGetUser()?.name }}
+      </h1>
+     
     </div>
-    <div class="flex-col mb-3">
-      <table class="table" >
-        <caption hidden> dashboard</caption>
-        <tr hidden>
-          <th scope="col">id</th>
-          <th scope="col">name</th>
-          <th scope="col">description</th>
-        </tr>
-        <tr *ngFor="let dashboard of dashboard$ | async">
-          <td>{{ dashboard.id }}</td>
-          <td>{{ dashboard.name }}</td>
-          <td>{{ dashboard.description }}</td>
-        </tr>
-      </table>
+ 
+    <div>
+      <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
+          (click)="editDashboardClicked(configSubscriptionItems)"> dashboard </span></button>
+      <div *ngIf="isReorderEnable">
+        <button kendoButton (click)="editDashboardCancelClicked()" class="mr-1" [primary]="true" aria-label="Save">
+          Save</button>
+        <button kendoButton fillMode="outline" (click)="editDashboardCancelClicked()"> Cancel </button>
+
+      </div>
     </div>
-  </div>
+  </section>
+  <div class="mt-1" [ngClass]="{'reorder_wrapper_enabled': isReorderEnable}">
+<gridster [options]="configSubscriptionItems" *ngIf="configSubscriptionItems">
+  <gridster-item
+    *ngFor="let item of dashboardContentList$ | async"
+    [item]="item" 
+  >     
+        <ndc-dynamic
+          class="no-drag"
+          [ndcDynamicComponent]="item.component" *ngIf="item.isVisible">
+          <div class="button-holder">
+            <button 
+            >
+             Delete
+            </button>
+          </div>
+        </ndc-dynamic> 
+      
+    
+  </gridster-item>
+</gridster>
+
 </div>
+</div>
+
+<!-- <gridster [options]="options">
+  <gridster-item [item]="item" *ngFor="let item of dashboard">
+    <div class="button-holder">
+      <button 
+        
+      >
+        delete 
+      </button>
+    </div>
+  </gridster-item>
+  </gridster> -->
+<dashboard-add-more-widgets-container *ngIf="isReorderEnable"></dashboard-add-more-widgets-container>
