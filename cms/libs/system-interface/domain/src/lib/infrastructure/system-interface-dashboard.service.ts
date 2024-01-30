@@ -1,11 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { Lov } from '@cms/system-config/domain';
 import { Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class SystemInterfaceDashboardService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider : ConfigurationProvider) {}
 
   getClientRecordSendChart(): Observable<any> {
     return of({
@@ -216,9 +219,17 @@ export class SystemInterfaceDashboardService {
   }
 
   /** Public methods **/
- 
+  getLovsbyType(lovType : string) {
 
-  loadBatchLogsList(interfaceTypeCode: string, paginationParameters: any) {  
-  return this.http.post(`${this.configurationProvider.appSettings.interfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`,paginationParameters);
+    return this.http.get<Lov[]>(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+        `/system-config/lovs/${lovType}`
+    );
+  }
+
+  loadBatchLogsList(interfaceTypeCode: string, paginationParameters: any) {
+    
+
+    return this.http.post(`${this.configurationProvider.appSettings.interfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`,paginationParameters);
   }
 }
