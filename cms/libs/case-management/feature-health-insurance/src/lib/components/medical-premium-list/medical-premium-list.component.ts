@@ -43,6 +43,9 @@ export class MedicalPremiumListComponent implements OnInit {
   selectedEligibilityId:any;
   selectedPolicyPriority:any=null;
   isDeletePolicy:any= false;
+  filter!: any;
+  sortValue:any ='healthInsuranceTypeDesc';
+  sortType:any='asc';
   public formUiStyle: UIFormStyle = new UIFormStyle();
   showInsuranceRequired = this.healthInsurancePolicyFacade.showInsuranceRequired$;
   /** Input properties **/
@@ -247,8 +250,11 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
-    this.sort = { field: stateData?.sort[0]?.field ?? 'creationTime', dir: stateData?.sort[0]?.dir ?? 'asc' };
+    this.filter = stateData?.filter?.filters;
     this.loadInsurancePolicies();
   }
   // Loading the grid data based on pagination
@@ -256,8 +262,9 @@ export class MedicalPremiumListComponent implements OnInit {
     this.loadInsurancePolicyList(
       this.state.skip ?? 0,
       this.state.take ?? 0,
-      this.sort?.field ?? 'creationTime',
-      this.sort?.dir ?? 'asc'
+      this.sortValue,
+      this.sortType,
+      this.filter === undefined?null:this.filter
     );
   }
 
@@ -265,13 +272,15 @@ export class MedicalPremiumListComponent implements OnInit {
     skipcountValue: number,
     maxResultCountValue: number,
     sortColumn: any,
-    sortType: any
+    sortType: any,
+    filter:any
   ) {
     const gridDataRefinerValue = {
       skipCount: skipcountValue,
       pagesize: maxResultCountValue,
       sortColumn: sortColumn,
-      sortType: sortType
+      sortType: sortType,
+      filter:filter
     };
     this.loadInsurancePlanEvent.next(gridDataRefinerValue);
   }

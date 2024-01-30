@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal libraries **/
-import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType, InsuranceStatusType } from '@cms/case-management/domain';
+import { WorkflowFacade, HealthInsurancePolicyFacade, HealthInsurancePolicy, CompletionChecklist, NavigationType, InsuranceStatusType, GridFilterParam } from '@cms/case-management/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 
@@ -297,7 +297,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           }
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -356,7 +356,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.showTable = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -385,20 +385,12 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
 
   loadHealthInsuranceHandle(gridDataRefinerValue: any): void {
     let typeParam = { type: 'INSURANCE', insuranceStatusType: 'ALL' }
-    const gridDataRefiner = {
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sortColumn: gridDataRefinerValue.sortColumn,
-      sortType: gridDataRefinerValue.sortType,
-    };
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
     this.insurancePolicyFacade.loadMedicalHealthPlans(
       this.clientId,
       this.clientCaseEligibilityId,
       typeParam,
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sortColumn,
-      gridDataRefiner.sortType
+      gridFilterParam
     );
   }
 
@@ -411,7 +403,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };
@@ -438,7 +430,7 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
           this.closeDeleteModal = true;
           const gridDataRefinerValue = {
             skipCount: this.insurancePolicyFacade.skipCount,
-            pagesize: this.insurancePolicyFacade.gridPageSizes[0]?.value,
+            maxResultCount: this.insurancePolicyFacade.gridPageSizes[0]?.value,
             sortColumn: 'creationTime',
             sortType: 'asc',
           };

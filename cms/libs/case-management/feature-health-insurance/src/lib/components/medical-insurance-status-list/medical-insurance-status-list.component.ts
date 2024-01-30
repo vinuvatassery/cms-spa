@@ -55,6 +55,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   selectedPolicyPriority:any=null;
   public state!: State;
   sort!:any;
+  filter!: any;
+  sortValue:any ='healthInsuranceTypeDesc';
+  sortType:any='asc';
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
   isOpenedDeleteConfirm:boolean = false;
   buttonText:string ="MEDICAL INSURANCE";
@@ -237,9 +240,13 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     this.isOpenedChangePriorityModal = true;
   }
   public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
-    this.sort ={ field : stateData?.sort[0]?.field ?? 'creationTime' ,  dir: stateData?.sort[0]?.dir  ?? 'asc'  };
+    this.filter = stateData?.filter?.filters;
     this.loadInsurancePolicies();
+
   }
   getCarrierContactInfo(carrierId:string,insurancePlanName:string){
     this.carrierContactInfo='';
@@ -280,14 +287,16 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     skipcountValue: number,
     maxResultCountValue: number,
     sortColumn: any,
-    sortType: any
+    sortType: any,
+    filter:any
   ) {
     const gridDataRefinerValue = {
       skipCount: skipcountValue,
-      pagesize: maxResultCountValue,
+      pageSize: maxResultCountValue,
       sortColumn: sortColumn,
       sortType: sortType,
-      loadHistoricalData:this.showHistoricalFlag
+      loadHistoricalData:this.showHistoricalFlag,
+      filter:filter
     };
     this.loadInsurancePlanEvent.next(gridDataRefinerValue);
   }
@@ -296,8 +305,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     this.loadInsurancePolicyList(
       this.state.skip ?? 0,
       this.state.take ?? 0,
-      this.sort?.field ?? 'creationTime',
-      this.sort?.dir ?? 'asc'
+      this.sortValue,
+      this.sortType,
+      this.filter === undefined?null:this.filter
     );
   }
 
