@@ -1,4 +1,4 @@
-import { Border } from '@progress/kendo-angular-charts';
+
 
 export interface WidgetChartModel{ 
   title:{

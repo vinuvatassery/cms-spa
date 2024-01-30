@@ -5,11 +5,9 @@ import {  DashboardWrapperFacade } from '@cms/dashboard/domain';
 /** Services **/
 import { LocalStorageService } from '@cms/shared/util-core';
 import { AuthService } from '@cms/shared/util-oidc';
-import {  DisplayGrid,
-  GridsterComponent,
+import {  DisplayGrid, 
   GridsterConfig,
-  GridsterItem,
-  GridsterItemComponent,
+  GridsterItem, 
   GridType } from 'angular-gridster2';
 import { Subscription } from 'rxjs';
 @Component({

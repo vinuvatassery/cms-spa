@@ -1,8 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {
-  CompactType,
-  DisplayGrid,
+import { 
   GridsterConfig,
   GridType,
 } from 'angular-gridster2';

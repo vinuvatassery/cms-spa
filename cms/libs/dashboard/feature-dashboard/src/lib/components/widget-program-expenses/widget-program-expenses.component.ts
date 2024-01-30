@@ -1,8 +1,7 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
-import { WidgetFacade, WidgetChartModel } from '@cms/dashboard/domain';  
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { Subject, takeUntil } from 'rxjs';
-// import { KendoInput } from '@progress/kendo-angular-common';
+import { Subject, takeUntil } from 'rxjs'; 
 
 
 @Component({
@@ -11,7 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./widget-program-expenses.component.scss']
 })
 
-export class WidgetProgramExpensesComponent implements OnInit  {
+export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
   
   programExpenses: any; 
   private destroy$ = new Subject<void>();

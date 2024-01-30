@@ -1,7 +1,6 @@
 
-import { Component,ChangeDetectionStrategy, Input, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { WidgetFacade, WidgetChartModel, } from '@cms/dashboard/domain'; 
-import { PlaceholderDirective } from '@cms/shared/ui-common';
+import { Component,ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { WidgetFacade, } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
 import { Subject, takeUntil } from 'rxjs';

@@ -1,16 +1,15 @@
-import { AnimationKeyframesSequenceMetadata } from '@angular/animations';
+ 
 import {
   Component,
   Renderer2,
-  NgZone,
-  AfterViewInit,
+  NgZone, 
   OnInit,
   OnDestroy,
   ViewEncapsulation,
 } from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain'; 
 import { State, process } from '@progress/kendo-data-query';
-import { Subscription, fromEvent } from 'rxjs'; 
+import { Subscription } from 'rxjs'; 
  
 
  
