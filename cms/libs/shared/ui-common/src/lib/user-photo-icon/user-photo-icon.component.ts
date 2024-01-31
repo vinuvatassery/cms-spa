@@ -12,9 +12,11 @@ import { Subject } from 'rxjs';
 })
 export class UserPhotoIconComponent implements OnChanges {
   @Input() userId!: any;
+  @Input() userData!: any;
+  @Input() linkType!: any;
 
   imageLoaderVisible = true;
-  userData!: any;
+  // userData!: any;
   userImageSubject = new Subject<any>();
   userByIdSubject = new Subject<any>();
 
@@ -32,8 +34,9 @@ export class UserPhotoIconComponent implements OnChanges {
   }
 
   loadprofilePhoto() {
-    if (this.userId) {
-      this.userDataService.getUserImage(this.userId).subscribe({
+    if (this.userData?.creatorId) {
+      const userId = this.userData?.creatorId;
+      this.userDataService.getUserImage(userId).subscribe({
         next: (userImageResponse: any) => {
           this.userImageSubject.next(userImageResponse);
         },
@@ -48,18 +51,19 @@ export class UserPhotoIconComponent implements OnChanges {
   }
 
   loadprofileData() {
-    if (this.userId) {
-      this.userDataService.getUserById(this.userId).subscribe({
-        next: (userDataResponse: any) => {
-          this.userByIdSubject.next(userDataResponse);
-        },
-        error: (err) => {
-          this.userManagementFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            err
-          );
-        },
-      });
+    if (this.userData) {
+      this.userByIdSubject.next(this.userData);
+      // this.userDataService.getUserById(this.userId).subscribe({
+      //   next: (userDataResponse: any) => {
+      //     this.userByIdSubject.next(userDataResponse);
+      //   },
+      //   error: (err) => {
+      //     this.userManagementFacade.showHideSnackBar(
+      //       SnackBarNotificationType.ERROR,
+      //       err
+      //     );
+      //   },
+      // });
     }
   }
 

@@ -9,6 +9,7 @@ import {
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserManagementFacade, UserDefaultRoles } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'common-user-profile-card',
@@ -17,10 +18,12 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 })
 export class UserProfileCardComponent implements OnInit {
   @Input() userId!: any;
+  @Input() userData!: any;
   @Input() reassign?: boolean = false;
   @Input() sendEmail?: boolean = false;
   @Input() clientName: any;
   @Input() clientCaseId: any;
+  userByIdSubject = new Subject<any>(); 
   userImage$ = this.userManagementFacade.userImage$;
   userById$ = this.userManagementFacade.usersById$;
   caseOwners$ = this.userManagementFacade.usersByRole$;
@@ -53,6 +56,7 @@ export class UserProfileCardComponent implements OnInit {
 
   loadProfileData() {
     if (this.userId) {
+      // this.userByIdSubject.next(this.userData);
       this.userManagementFacade.getUserById(this.userId);
     }
   }
