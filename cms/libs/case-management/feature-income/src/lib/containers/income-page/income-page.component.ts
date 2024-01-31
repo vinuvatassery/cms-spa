@@ -20,7 +20,7 @@ import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
-  
+
   @ViewChildren("proofSchoolDropdown") public proofSchoolDropdown!: QueryList<DropDownListComponent>;
   /** Private properties **/
   private saveClickSubscription !: Subscription;  /** Public Methods **/
@@ -655,7 +655,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadIncomeListHandle(gridDataRefinerValue);
   }
  UploadDocumentValidation(){
-    if(this.isCerForm != true && this.dependentsProofOfSchools?.length > 0){
+    if(this.dependentsProofOfSchools?.length > 0){
     const uploadedProofOfSchoolDependents = this.dependentsProofOfSchools.filter((item :any) => !!item.documentPath);
   if(uploadedProofOfSchoolDependents?.length == this.incomeData?.dependents?.length){
   this.isProofOfSchoolDocumentUploaded=true;
