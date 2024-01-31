@@ -302,7 +302,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   getTitle(approvalTypeCode: string, subTypeCode: string) {
     switch (approvalTypeCode) {
-      case PendingApprovalGeneralTypeCode.ClaimExceptions:
+      case PendingApprovalGeneralTypeCode.ClaimException:
         return 'Request to Exceed Max Benefits';
       case PendingApprovalGeneralTypeCode.CaseReassignment:
         return 'Request for Case Re-Assignment';
@@ -437,7 +437,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
       this.exceptionsCount = this.approvalsPaymentsGridUpdatedResult.filter(
         (x: any) =>
           x.approvalTypeCode ===
-          this.pendingApprovalGeneralTypeCode.ClaimExceptions
+          this.pendingApprovalGeneralTypeCode.ClaimException
       ).length;
       
       this.onSubmitClicked(this.submitRequestModalDialog);

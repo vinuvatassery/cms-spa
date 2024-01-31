@@ -7,7 +7,7 @@
       <kendo-panelbar-item
         *ngIf="getTitle(item.approvalTypeCode, item.subTypeCode)"
         [expanded]="item.isExpanded && item.status === approveStatus &&  item.approvalTypeCode ===
-        pendingApprovalGeneralTypeCode.ClaimExceptions"
+        pendingApprovalGeneralTypeCode.ClaimException"
       >
         <ng-template kendoPanelBarItemTitle>
           <div class="flex-row rw-100" (click)="$event.stopPropagation()">
@@ -183,7 +183,7 @@
             </ng-template>
             <ng-template
               ngSwitchCase="{{
-                pendingApprovalGeneralTypeCode.ClaimExceptions
+                pendingApprovalGeneralTypeCode.ClaimException
               }}"
             >
               <productivity-tools-approvals-general-list-detail-exceptions

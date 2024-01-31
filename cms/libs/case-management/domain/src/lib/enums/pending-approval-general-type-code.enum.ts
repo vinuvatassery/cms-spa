@@ -1,5 +1,5 @@
 export enum PendingApprovalGeneralTypeCode {
-  ClaimExceptions = 'CLAIM_EXCEPTION',
+  ClaimException = 'CLAIM_EXCEPTION',
   CaseReassignment = 'CASE_REASSIGNMENT',
   MasterList = 'MASTER_LIST',
   DentalClinic = 'DENTAL_CLINIC',
