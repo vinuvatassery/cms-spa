@@ -1873,7 +1873,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
-      if (this.checkValidations()) {
+      if (this.checkValidations() && this.contactInfoForm.valid) {
         this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
       else {
