@@ -232,4 +232,9 @@ export class SystemInterfaceDashboardService {
 
     return this.http.post(`${this.configurationProvider.appSettings.interfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`,paginationParameters);
   }
+  GetBatchlogsExceptions(EntityId: string, params:any ){
+    debugger
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/system-interface/interface-exceptions/${EntityId}`, params);
+  }
 }
