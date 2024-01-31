@@ -403,6 +403,7 @@ cms-sidenav {
               display: block !important;
               position: absolute;
               left: 60px;
+              z-index: 99;
               padding: $size-l $size-xx;
               background: $black-3;
               border-radius: $border-radius-sm;
@@ -506,7 +507,7 @@ cms-sidenav {
             max-height: calc(100% - $header-height);
             overflow: auto;
             border-left: 1px solid var(--hive-primary-palette-600);
-
+            z-index: 5;
             .menu-active-session-list {
               &:hover {
                 visibility: visible;

@@ -137,6 +137,7 @@ export * from './lib/enums/column-names.enum';
 export * from './lib/enums/financial-service-type.enum';
 export * from './lib/enums/object-code.enum';
 export * from './lib/enums/pca-assignment-report.enum';
+export * from './lib/enums/medicare-coverage-type.enum';
 
 /** Data services **/
 export * from './lib/infrastructure/authorization.data.service';
