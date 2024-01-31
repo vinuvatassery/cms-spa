@@ -6,6 +6,9 @@ import {
   OnInit,
   OnDestroy,
   ViewEncapsulation,
+  EventEmitter,
+  Input,
+  Output,
 } from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain'; 
 import { State, process } from '@progress/kendo-data-query';
@@ -32,13 +35,19 @@ export class WidgetRecentlyViewedComponent
   };
   public gridData: any;
   private recentlyViewedClientsSubscription!: Subscription;
-
+  @Input() isEditDashboard!: any; 
+  @Output() removeWidget = new EventEmitter<string>();
+ 
   constructor(
     private renderer: Renderer2,
     private zone: NgZone,
     private widgetFacade: WidgetFacade
   ) {}
 
+
+  removeWidgetCard(){
+    this.removeWidget.emit();
+  }
   ngOnInit(): void {
     this.loadRecentlyViewedClients();
 

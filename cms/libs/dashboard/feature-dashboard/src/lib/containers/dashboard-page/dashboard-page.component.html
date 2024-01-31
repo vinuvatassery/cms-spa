@@ -28,13 +28,9 @@
   >     
         <ndc-dynamic
           class="no-drag"
-          [ndcDynamicComponent]="item.component" *ngIf="item.isVisible">
-          <div class="button-holder">
-            <button 
-            >
-             Delete
-            </button>
-          </div>
+          [ndcDynamicComponent]="item.component" *ngIf="item.isVisible"    [ndcDynamicInputs]="inputs"
+          [ndcDynamicOutputs]="outputs">
+         
         </ndc-dynamic> 
       
     

@@ -1,4 +1,12 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -9,11 +17,17 @@ import { Subject, takeUntil } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
-  todayGlance: any; 
+  todayGlance: any;
   private destroy$ = new Subject<void>();
+  @Input() isEditDashboard!: any;
+  @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
 
-  ngOnInit(): void { 
+  removeWidgetCard() {
+    this.removeWidget.emit();
+  }
+
+  ngOnInit(): void {
     this.loadTodayGlance();
   }
 
@@ -23,14 +37,12 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
   }
   loadTodayGlance() {
     this.widgetFacade.loadTodayGlance();
-    this.widgetFacade.todayGlance$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          if (response) {
-            this.todayGlance = response;
-          }
+    this.widgetFacade.todayGlance$.pipe(takeUntil(this.destroy$)).subscribe({
+      next: (response) => {
+        if (response) {
+          this.todayGlance = response;
         }
-      });
+      },
+    });
   }
 }

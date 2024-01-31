@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, Input, Output } from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs'; 
@@ -18,7 +18,14 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
   dataExp  = ['Some','August']
   dataMonth  = ['Last Month','August']
   dataYear  = ['Last Year','2023']
+  @Input() isEditDashboard!: any; 
+  @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
+
+
+  removeWidgetCard(){
+    this.removeWidget.emit();
+  }
 
   ngOnInit(): void { 
     this.loadProgramExpensesChart();

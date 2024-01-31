@@ -1,5 +1,5 @@
  
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {  WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs';
@@ -16,7 +16,14 @@ export class WidgetNetIncomeComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   data = ['2023','2022']
+  @Input() isEditDashboard!: any; 
+  @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
+
+
+  removeWidgetCard(){
+    this.removeWidget.emit();
+  }
 
   ngOnInit(): void { 
     this.loadNetIncomeChart();

@@ -18,6 +18,12 @@ import { Subscription } from 'rxjs';
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
   /** Public properties **/
+  inputs = {
+    isEditDashboard: false, 
+  };
+  outputs = {
+    removeWidget: (type: any) => this.removeDashboardWidget(type),
+  };
     //#region Variables
  public dashboardContentList$ =  this.dashboardWrapperFacade.dashboardContentList$;
   public dashboardConfiguration$ =  this.dashboardWrapperFacade.dashboardConfiguration$;
@@ -90,12 +96,18 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
    
   }
  
+  removeDashboardWidget(data:any){
+    alert(data);
+  }
   editDashboardClicked(config: any){
     this.configSubscriptionItems = {
       draggable: { enabled: true },
       resizable: { enabled: true },
     }
     this.isReorderEnable = true;
+    this.inputs = {
+      isEditDashboard: this.isReorderEnable, 
+    };
   }
   user() {
     return this.authService.getUser();
@@ -127,6 +139,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       resizable: { enabled: false },
     }
     this.isReorderEnable = false;
+    this.inputs = {
+      isEditDashboard: this.isReorderEnable, 
+    };
   }
   
 }

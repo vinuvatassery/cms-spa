@@ -1,4 +1,7 @@
 <div class="dashboard-cards-wrapper"> 
+  <button *ngIf="isEditDashboard" (click)="removeWidgetCard()" kendoButton class="widget_remove_btn"><span class="material-icons">
+    remove
+    </span></button>
   <h5>TODAY AT A GLANCE</h5>
   <div class="flex-row dashboard-page-wrapper">
     <section class="flex-col">

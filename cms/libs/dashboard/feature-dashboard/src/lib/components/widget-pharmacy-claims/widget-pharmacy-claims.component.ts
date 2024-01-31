@@ -1,6 +1,6 @@
  
  
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {  WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs'; 
@@ -18,7 +18,14 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   dataMonth = ['Last Month','August']
   dataCount = ['100','200']
+  @Input() isEditDashboard!: any; 
+  @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
+
+
+  removeWidgetCard(){
+    this.removeWidget.emit();
+  }
 
   ngOnInit(): void { 
     this.loadPharmacyClaimsChart();

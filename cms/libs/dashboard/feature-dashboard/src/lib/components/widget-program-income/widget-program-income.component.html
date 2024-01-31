@@ -1,7 +1,10 @@
 <div class="dashboard-cards-wrapper">
+      <button *ngIf="isEditDashboard" (click)="removeWidgetCard()" kendoButton class="widget_remove_btn"><span class="material-icons">
+            remove
+            </span></button>
       <div class="dash-header-with-filters">
             <h5>PROGRAM INCOME</h5>
-            <div>
+            <div *ngIf="!isEditDashboard">
 
                   <kendo-dropdownlist size="small" value="Last Year" rounded="medium" class="mr-1"
                         [fillMode]="formUiStyle.inputFillMode" [data]="dataYear">

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { WidgetFacade } from '@cms/dashboard/domain';
 
 @Component({
   selector: 'dashboard-widget-quick-links',
@@ -6,4 +7,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./widget-quick-links.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WidgetQuickLinksComponent {}
+export class WidgetQuickLinksComponent {
+  @Input() isEditDashboard!: any; 
+  @Output() removeWidget = new EventEmitter<string>();
+  constructor(private widgetFacade: WidgetFacade) {}
+
+
+  removeWidgetCard(){
+    this.removeWidget.emit();
+  }
+}

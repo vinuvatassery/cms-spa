@@ -1,5 +1,5 @@
 
-import { Component,ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component,ChangeDetectionStrategy, OnInit, OnDestroy, EventEmitter, Input, Output } from '@angular/core';
 import { WidgetFacade, } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
@@ -15,8 +15,15 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
   data = ['Active','Inactive']
+
+  @Input() isEditDashboard!: any; 
+  @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
 
+
+  removeWidgetCard(){
+    this.removeWidget.emit();
+  }
   ngOnInit(): void { 
     this.loadActiveClientsByStatusChart();
   }

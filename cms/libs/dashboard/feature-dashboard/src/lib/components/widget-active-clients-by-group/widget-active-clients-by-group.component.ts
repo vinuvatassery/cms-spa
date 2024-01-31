@@ -1,8 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
+  Input,
   OnDestroy,
-  OnInit, 
+  OnInit,
+  Output, 
 } from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain';
 import { Subject, takeUntil } from 'rxjs';
@@ -18,18 +21,27 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
   activeClientsByGroup: any;
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  @Input() isEditDashboard!: any; 
+  @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
   data = ['Group 1', 'Group 2'];
+
+
+
+ 
   ngOnInit(): void {
     this.loadActiveClientsByGroupChart();
   }
- 
+
   public labelContent(e: SeriesLabelsContentArgs): string {
     return `${e.category}: \n ${e.value}%`;
   }
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+  removeWidgetCard(){
+    this.removeWidget.emit();
   }
   loadActiveClientsByGroupChart() {
     this.widgetFacade.loadActiveClientsByGroupChart();

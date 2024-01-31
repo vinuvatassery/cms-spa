@@ -1,7 +1,10 @@
 <div class="dashboard-cards-wrapper">
+      <button *ngIf="isEditDashboard" (click)="removeWidgetCard()" kendoButton class="widget_remove_btn"><span class="material-icons">
+            remove
+            </span></button>
       <div class="dash-header-with-filters">
             <h5>ACTIVE CLIENTS BY STATUS</h5>
-            <div><kendo-dropdownlist size="small" value="All Clients" rounded="medium"
+            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" value="All Clients" rounded="medium"
                         [fillMode]="formUiStyle.inputFillMode" [data]="data">
                   </kendo-dropdownlist></div>
       </div>

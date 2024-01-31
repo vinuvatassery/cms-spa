@@ -178,6 +178,7 @@ export class DashboardWrapperService {
       enableEmptyCellDrop: false,
       maxItemCols: 2,
       maxCols: 2,  
+      margin:10,
       minItemRows: 1,
       minItemArea: 1,
       setGridSize: true,

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, } from '@angular/core';
 import {   WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
@@ -16,7 +16,14 @@ export class WidgetProgramIncomeComponent implements OnInit, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
  
   dataYear  = ['Last Year','2023']
+  @Input() isEditDashboard!: any; 
+  @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
+
+
+  removeWidgetCard(){
+    this.removeWidget.emit();
+  }
 
   ngOnInit(): void { 
     this.loadProgramIncomeChart();

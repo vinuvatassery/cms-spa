@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'dashboard-widget-applications-cers',
@@ -6,4 +6,12 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   styleUrls: ['./widget-applications-cers.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WidgetApplicationsCersComponent {}
+export class WidgetApplicationsCersComponent {
+
+  @Input() isEditDashboard!: any; 
+  @Output() removeWidget = new EventEmitter<string>();
+
+  removeWidgetCard(){
+    this.removeWidget.emit();
+  }
+}
