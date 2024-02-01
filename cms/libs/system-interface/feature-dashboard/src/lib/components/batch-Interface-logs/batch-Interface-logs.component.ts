@@ -34,6 +34,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   @Input() sortType: any;
   @Input() sort: any;
   @Input() activityEventLogList$: any;
+  showHistoricalFlag:boolean = true;
   //@Input() batchLogExcptionLists$:any;
   batchLogExcptionLists$ = this.systemInterfaceDashboardFacade.batchLogExcptionLists$;
   @Input() lovsList$: any;
@@ -156,7 +157,9 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.state.skip = 0;
     this.loadClaimsListGrid();
   }
-
+  handleShowHistoricalClick(){
+    this.showHistoricalFlag=!this.showHistoricalFlag;
+  }
   loadClaimsListGrid() {
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
@@ -291,6 +294,17 @@ defaultGridState() {
     sort: this.sort,
     filter: { logic: 'and', filters: [] },
   };
+}
+public onDetailExpand(e: any): void {
+  debugger
+  const param = new GridFilterParam(
+    this.state?.skip ?? 0,
+    this.state?.take ?? 0,
+    this.sortValue,
+    this.sortType,
+    JSON.stringify({ logic: 'and', filters: [] }));
+    this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.processTypeCode, param);
+
 }
 restGrid() {
   this.sortType = 'asc';

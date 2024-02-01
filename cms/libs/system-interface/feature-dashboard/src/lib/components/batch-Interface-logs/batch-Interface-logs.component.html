@@ -10,6 +10,22 @@
             >
           </kendo-dropdownlist>
         </div>
+        
+      </div>
+      <div>
+        <span class="app-checkboxwidtext-wrapper">
+          <input
+            type="checkbox"
+            kendoCheckBox
+            aria-labelledby="StatusshowHistorical"
+            id="StatusshowHistorical"
+            [(ngModel)]="showHistoricalFlag"
+            (change)="handleShowHistoricalClick()"
+          />
+          <label class="k-checkbox-label" for="StatusshowHistorical"
+            >Show historical</label
+          >
+        </span>
       </div>
       <section class="table-filter-section mat-form-no-b-space bg-white">
         </section>
@@ -29,7 +45,8 @@
       [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort" [filter]="state.filter"
       (dataStateChange)="dataStateChange($event)"
       (filterChange)="filterChange($event)" 
-      (columnReorder)="onColumnReorder($event)">
+      (columnReorder)="onColumnReorder($event)"
+      (detailExpand)="onDetailExpand($event)">
       
         <kendo-grid-column field="interfaceTypeDesc" title="Interface" [width]="180">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -127,9 +144,9 @@
           
             <kendo-grid-column field="errorCode" title="Error Code" [width]="100">
             </kendo-grid-column>
-            <kendo-grid-column field="errorDesc" title="Error Description" [width]="180">
+            <kendo-grid-column field="description" title="Error Description" [width]="180">
             </kendo-grid-column>
-            <kendo-grid-column field="rowNumber" title="File Row Number" [width]="120">
+            <kendo-grid-column field="rowNo" title="File Row Number" [width]="120">
             </kendo-grid-column>
             </kendo-grid>
   

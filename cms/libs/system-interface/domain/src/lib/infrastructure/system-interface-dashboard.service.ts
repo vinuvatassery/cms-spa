@@ -230,11 +230,11 @@ export class SystemInterfaceDashboardService {
   loadBatchLogsList(interfaceTypeCode: string, paginationParameters: any) {
     
 
-    return this.http.post(`${this.configurationProvider.appSettings.interfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`,paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`,paginationParameters);
   }
-  GetBatchlogsExceptions(EntityId: string, params:any ){
+  GetBatchlogsExceptions(fileId: any,processTypeCode:string, params:any ){
     debugger
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/system-interface/interface-exceptions/${EntityId}`, params);
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-exceptions/${fileId}/${processTypeCode}`, params);
   }
 }
