@@ -227,10 +227,10 @@ export class SystemInterfaceDashboardService {
     );
   }
 
-  loadBatchLogsList(interfaceTypeCode: string, paginationParameters: any) {
+  loadBatchLogsList(interfaceTypeCode: string,displayAll:boolean, paginationParameters: any) {
     
 
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`,paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`+'?displayAll='+`${displayAll}`,paginationParameters);
   }
   GetBatchlogsExceptions(fileId: any,processTypeCode:string, params:any ){
     debugger

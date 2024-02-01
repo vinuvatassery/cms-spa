@@ -56,6 +56,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   isActivityLogLoaderShow = false;
   InterfaceType:string="RAMSELL";
   columnsReordered = false;
+  displayAll:boolean=true;
   activityEventLogSubList =[
     {
       id:1,
@@ -158,7 +159,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.loadClaimsListGrid();
   }
   handleShowHistoricalClick(){
-    this.showHistoricalFlag=!this.showHistoricalFlag;
+    this.displayAll=!this.displayAll;
   }
   loadClaimsListGrid() {
     const param = new GridFilterParam(
@@ -167,7 +168,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-      this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, param);
+      this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType,this.displayAll, param);
   }
 
   

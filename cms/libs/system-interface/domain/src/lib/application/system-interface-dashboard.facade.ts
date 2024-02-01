@@ -98,9 +98,9 @@ export class SystemInterfaceDashboardFacade {
     });
   }
  
-  loadBatchLogsList(interfaceTypeCode: string, paginationParameters: any){
+  loadBatchLogsList(interfaceTypeCode: string,displayAll:boolean, paginationParameters: any){
     this.batchLogsDataLoaderSubject.next(true);
-    this.service.loadBatchLogsList(interfaceTypeCode, paginationParameters).subscribe({
+    this.service.loadBatchLogsList(interfaceTypeCode,displayAll, paginationParameters).subscribe({
       next: (dataResponse:any) => {
         const gridView: any = {
           data: dataResponse['items'],
