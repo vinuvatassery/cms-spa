@@ -9,9 +9,11 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 
 
@@ -32,15 +34,17 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   @Input() sort: any;
   @Input() activityEventLogList$: any;
   @Input() lovsList$: any;
+  @Input() skipCount$: any;
 
   webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
 
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   @Output() loadWebLogList = new EventEmitter<string>();
 
-  constructor(private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade) {
-
-  }
+  constructor(
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
+    private readonly configProvider: ConfigurationProvider, private readonly lovFacade: LovFacade,
+  ) { }
 
   public dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
@@ -64,7 +68,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
       this.sortType,
       JSON.stringify(this.filter));
     //this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, param);
-    this.systemInterfaceDashboardFacade.loadWebLogsList('RAMSELL');
+    this.systemInterfaceDashboardFacade.loadWebLogsList('RAMSELL', param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
   gridDataResult!: GridDataResult;
@@ -111,11 +115,26 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
     this.loadActivityLogLists();
 
   }
+
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   ngOnChanges(): void {
+    this.initializePaging();
+  }
+
+  public filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+
+  private initializePaging() {
+    const sort: SortDescriptor[] = [{
+      field: 'creationTime',
+      dir: 'desc'
+    }];
     this.state = {
-      skip: 0,
+      skip: this.skipCount$ ?? 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: sort,
+      filter: this.filterData,
     };
   }
 

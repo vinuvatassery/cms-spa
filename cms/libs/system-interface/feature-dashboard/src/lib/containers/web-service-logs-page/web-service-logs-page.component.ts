@@ -52,7 +52,7 @@ export class WebServiceLogsPageComponent implements OnInit {
 
   loadWebLogList(data: any) {
     this.interfaceTypeCode = data;
-    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceTypeCode);
+    // this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceTypeCode);
     // this.webLogsList$.subscribe();
     
   }
