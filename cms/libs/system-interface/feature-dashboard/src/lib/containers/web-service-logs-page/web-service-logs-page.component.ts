@@ -25,12 +25,14 @@ export class WebServiceLogsPageComponent implements OnInit {
   sortType = this.systemInterfaceDashboardFacade.sortType;
 
   webLogLovs$ = this.lovFacade.WebInterfaceLogLovs$;
-  webLogsDataList$ = this.systemInterfaceDashboardFacade.webLogLists$;
+  webLogsList$ = this.systemInterfaceDashboardFacade.webLogLists$;
+  webLogsDataList$ :any ;
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
     private lovFacade: LovFacade
   ) { }
 
+  interfaceTypeCode = '';
   ngOnInit(): void {
 
     this.state = {
@@ -40,12 +42,18 @@ export class WebServiceLogsPageComponent implements OnInit {
     };
     this.loadActivityEventLog();
     this.lovFacade.getInterfaceWebLogLovs();
-    this.systemInterfaceDashboardFacade.loadWebLogsList();
-    this.webLogsDataList$.subscribe();
+    //this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceTypeCode);
+    //this.webLogsDataList$.subscribe();
   }
 
   loadActivityEventLog() {
     this.systemInterfaceDashboardFacade.getEventLogLists();
   }
 
+  loadWebLogList(data: any) {
+    this.interfaceTypeCode = data;
+    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceTypeCode);
+    // this.webLogsList$.subscribe();
+    
+  }
 }

@@ -115,12 +115,12 @@ export class SystemInterfaceDashboardFacade {
   }
 
   private webLogListSubject = new BehaviorSubject<any>([]);
-  webLogLists$ = this.activityEventLogListSubject.asObservable();
+  webLogLists$ = this.webLogListSubject.asObservable();
   private webLogsDataLoaderSubject = new BehaviorSubject<boolean>(false);
   webLogsDataLoader$ = this.webLogsDataLoaderSubject.asObservable();
-  loadWebLogsList() {
+  loadWebLogsList(interfaceTypeCode:string) {
     this.webLogsDataLoaderSubject.next(true);
-    this.service.GetRamsellInterfaceActivity("RAMSELL").subscribe({
+    this.service.GetRamsellInterfaceActivity(interfaceTypeCode).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
           data: dataResponse['items'],

@@ -9,7 +9,10 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
+import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State } from '@progress/kendo-data-query';
+import { Subject } from 'rxjs';
 
 
 @Component({
@@ -19,11 +22,10 @@ import { State } from '@progress/kendo-data-query';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WebServiceLogsComponent  implements OnChanges, OnInit
-{
+export class WebServiceLogsComponent implements OnChanges, OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  
+
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -31,26 +33,68 @@ export class WebServiceLogsComponent  implements OnChanges, OnInit
   @Input() activityEventLogList$: any;
   @Input() lovsList$: any;
 
+  webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
+
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
+  @Output() loadWebLogList = new EventEmitter<string>();
+
+  constructor(private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade) {
+
+  }
+
+  public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.sortType = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.filter = stateData?.filter?.filters;
+    this.filter = stateData?.filter?.filters;
+    this.loadListGrid();
+  }
+
+  gridDataSubject = new Subject<any>();
+  gridData$ = this.gridDataSubject.asObservable();
+  filter!: any;
+  loadListGrid() {
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      JSON.stringify(this.filter));
+    //this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, param);
+    this.systemInterfaceDashboardFacade.loadWebLogsList('RAMSELL');
+    this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
+  }
+  gridDataResult!: GridDataResult;
+  gridDataHandle() {
+    // this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
+    //   this.gridDataResult = data;
+    //   this.gridDataSubject.next(this.gridDataResult);
+    //   // this.isVendorRefundAllPaymentsGridLoaderShow = false;
+    // });
+
+  }
 
   public state!: State;
   /** Public properties **/
   isActivityLogLoaderShow = false;
-  activityEventLogSubList =[
+  activityEventLogSubList = [
     {
-      id:1,
+      id: 1,
       errorCode: 12,
       errorDesc: 'errorDesc errorDesc',
       rowNumber: 14
     },
     {
-      id:2,
+      id: 2,
       errorCode: 12,
       errorDesc: 'errorDesc errorDesc',
       rowNumber: 14
     },
     {
-      id:3,
+      id: 3,
       errorCode: 12,
       errorDesc: 'errorDesc errorDesc',
       rowNumber: 14
@@ -65,6 +109,7 @@ export class WebServiceLogsComponent  implements OnChanges, OnInit
       sort: this.sort,
     };
     this.loadActivityLogLists();
+
   }
   ngOnChanges(): void {
     this.state = {
@@ -77,7 +122,11 @@ export class WebServiceLogsComponent  implements OnChanges, OnInit
   private loadActivityLogLists() {
     this.loadActivityLogListEvent.emit();
   }
+
   pageSelectionchange(data: any) {
     this.loadActivityLogLists();
+  }
+  onInterfaceSelectionChanged(event: any) {
+    this.loadListGrid();
   }
 }

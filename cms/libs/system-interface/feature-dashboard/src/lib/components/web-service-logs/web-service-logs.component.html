@@ -3,7 +3,7 @@
     <span class="text-bold" for="eemploymentep flex-col">Filter By:&nbsp;</span>
     <div class="fmly-epdorpdown flex-col flex-col-3">
       <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode" [data]="lovsList$ | async"
-        textField="lovDesc" valueField="lovCode">
+        textField="lovDesc" valueField="lovCode" (selectionChange)="onInterfaceSelectionChanged($event)">
       </kendo-dropdownlist>
     </div>
   </div>
@@ -20,23 +20,24 @@
   </div>
 
   <div class="app-c-table">
-    <kendo-grid [data]="activityEventLogList$ | async" [loading]="isActivityLogLoaderShow" [pageSize]="state.take"
+    <kendo-grid [data]="webLogLists$ | async" [pageSize]="state.take"
       [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
       [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort">
 
-      <kendo-grid-column field="interface" title="Interface" [width]="180">
+      <kendo-grid-column field="processDescription" title="Process" [width]="180">
       </kendo-grid-column>
-      <kendo-grid-column field="process" title="Process" [width]="180">
+      <kendo-grid-column field="processDate" title="ProcessDate" [width]="180">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{dataItem.startDate | date:'MM/dd/yyyy'}}
+        </ng-template>
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <common-grid-cell-date-range-filter [field]="'startDate'" [filter]="filter" [filterService]="filterService">
+          </common-grid-cell-date-range-filter>
+        </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="processStartDate" title="Process Start Date" [width]="150">
+      <kendo-grid-column field="statusTypeCode" title="Status" [width]="180">
       </kendo-grid-column>
-      <kendo-grid-column field="processEndDate" title="Process End Date" [width]="150">
-      </kendo-grid-column>
-      <kendo-grid-column field="status" title="Status" [width]="150">
-      </kendo-grid-column>
-      <kendo-grid-column field="totalRecords" title="Total Records" [width]="130">
-      </kendo-grid-column>
-      <kendo-grid-column field="failedRecords" title="Failed Records" [width]="130">
+      <kendo-grid-column field="TriggeredBy" title="Triggered By" [width]="150">
       </kendo-grid-column>
       <!-- below only in Ramsell -->
       <!-- <kendo-grid-column field="status" title="Status" [width]="100">
@@ -55,23 +56,7 @@
             </kendo-popover>
           </ng-template>
         </kendo-grid-column> -->
-      <ng-template kendoGridDetailTemplate let-dataItem>
-        <kendo-grid [data]="activityEventLogSubList" *ngIf="dataItem.status ==='Failed'">
-
-          <kendo-grid-column field="errorCode" title="Error Code" [width]="100">
-          </kendo-grid-column>
-          <kendo-grid-column field="errorDesc" title="Error Description" [width]="180">
-          </kendo-grid-column>
-          <kendo-grid-column field="rowNumber" title="File Row Number" [width]="120">
-          </kendo-grid-column>
-        </kendo-grid>
-
-        <div *ngIf="dataItem.status ==='Success'" class="text-center">
-          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-          </div>
-          <p>There is no error log.</p>
-        </div>
-      </ng-template>
+ 
       <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
         let-currentPage="currentPage">
         <div class="grid-custom-paginationtemplates d-flex">
