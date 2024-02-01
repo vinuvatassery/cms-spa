@@ -29,6 +29,7 @@ export class HealthInsurancePolicyFacade {
   triggeredPremiumPaymentSaveSubject = new BehaviorSubject<boolean>(false);
   triggeredCoPaySaveSubject = new BehaviorSubject<boolean>(false);
   private clientmaxmumbalanceSubject = new Subject<any>();
+  private currentEligibilityPoliciesSubject = new Subject<any>();
   /** Public properties **/
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
@@ -50,7 +51,7 @@ export class HealthInsurancePolicyFacade {
   triggeredPremiumPaymentSave$ = this.triggeredPremiumPaymentSaveSubject.asObservable();
   triggeredCoPaySave$ = this.triggeredCoPaySaveSubject.asObservable();
   clientmaxmumbalance$ = this.clientmaxmumbalanceSubject.asObservable();
-
+  currentEligibilityPolicies$ = this.currentEligibilityPoliciesSubject.asObservable();
   public dateFields: Array<string> = [
     'startDate',
     'endDate',
@@ -63,12 +64,12 @@ export class HealthInsurancePolicyFacade {
     'creationTime'
   ];
 
-  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: any = null) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
       this.loggingService.logException(err)
     }
-    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+    this.notificationSnackbarService.manageSnackBar(type, subtitle, source)
     this.hideLoader();
 
   }
@@ -160,7 +161,14 @@ export class HealthInsurancePolicyFacade {
   }
 
   getHealthInsurancePolicyPriorities(clientId:any,clientCaseEligibilityId:any,insuranceStatus:string) {
-    return this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId,insuranceStatus);
+     this.healthInsurancePolicyService.getHealthInsurancePolicyPriorities(clientId,clientCaseEligibilityId,insuranceStatus).subscribe({
+      next: (healthInsurancePolicyResponse) => {
+        this.currentEligibilityPoliciesSubject.next(healthInsurancePolicyResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
   }
 
   deleteInsurancePolicyByEligibilityId(clientCaseEligibilityId:any){
@@ -212,9 +220,9 @@ export class HealthInsurancePolicyFacade {
     });
   }
   
-  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any,typeParam:any, skipCount: any, pageSize: any, sortBy:any, sortType:any): void {
+  loadMedicalHealthPlans(clientId: any, clientCaseEligibilityId: any,typeParam:any, gridFilterParam: any): void {
     this.showLoader();
-    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, typeParam, skipCount, pageSize,sortBy,sortType).subscribe({
+    this.healthInsurancePolicyService.loadMedicalHealthPlans(clientId, clientCaseEligibilityId, typeParam, gridFilterParam).subscribe({
       next: (medicalHealthPlansResponse: any) => {
         this.medicalHealthPolicySubject.next(medicalHealthPlansResponse);
         if (medicalHealthPlansResponse) {
