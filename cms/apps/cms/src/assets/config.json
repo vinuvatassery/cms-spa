@@ -2,7 +2,6 @@
   "environment": "Development",
   "version": "v0.1",
   "caseApiUrl": "https://localhost:44362/api",
-  "interfaceApiUrl": "https://localhost:44363/api",
   "productivityToolsApiUrl": "https://localhost:44364/api",
   "sysConfigApiUrl": "https://localhost:44361/api",
   "sysInterfaceApiUrl": "https://localhost:44363/api",

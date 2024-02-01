@@ -37,13 +37,9 @@ export class BatchInterfaceLogsPageComponent implements OnInit {
       take: this.pageSizes[0]?.value,
       sort: this.sort
     };
-    this.loadActivityEventLog();
-
     this.lovFacade.getBatchInterfaceActivityLogLovs();
   }
 
-  loadActivityEventLog() {
-    this.systemInterfaceDashboardFacade.getEventLogLists();
-  }
+ 
 
 }

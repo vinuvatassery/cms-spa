@@ -117,9 +117,9 @@ export class SystemInterfaceDashboardFacade {
    
   
   }
-  getBatchLogExceptionsLists(EntityId: string, params:any): void {
+  getBatchLogExceptionsLists(fileId: string,processTypeCode:string, params:any): void {
 
-    this.systemInterfaceDashboardService.GetBatchlogsExceptions(EntityId, params).subscribe({
+    this.systemInterfaceDashboardService.GetBatchlogsExceptions(fileId,processTypeCode, params).subscribe({
       next: (batchlogExceptionResponse:any) => {
         const gridView: any = {
           data: batchlogExceptionResponse['items'],
