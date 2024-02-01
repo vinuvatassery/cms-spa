@@ -56,6 +56,7 @@
             valueField="lovCode"
             [valuePrimitive]="true"
             [value]="interfaceExceptionFilter" 
+            (valueChange)="dropdownFilterChange('interfaceTypeDesc',$event, filterService)"
             >
             </kendo-dropdownlist>
        </ng-template>
@@ -68,6 +69,7 @@
             valueField="lovCode"
             [valuePrimitive]="true"
             [value]="interfaceProcessBatchFilter" 
+            (valueChange)="dropdownFilterChange('processTypeDesc',$event, filterService)"
          >
             </kendo-dropdownlist>
        </ng-template>
@@ -102,6 +104,8 @@
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-dropdownlist 
             [data]="statusArray" 
+            [value]="statusFilter"
+            (valueChange)="dropdownFilterChange('status',$event, filterService)"
             >
             </kendo-dropdownlist>
        </ng-template>

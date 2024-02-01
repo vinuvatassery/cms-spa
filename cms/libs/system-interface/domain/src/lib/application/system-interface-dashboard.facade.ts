@@ -99,6 +99,7 @@ export class SystemInterfaceDashboardFacade {
   }
  
   loadBatchLogsList(interfaceTypeCode: string,displayAll:boolean, paginationParameters: any){
+    this.showLoader();
     this.batchLogsDataLoaderSubject.next(true);
     this.service.loadBatchLogsList(interfaceTypeCode,displayAll, paginationParameters).subscribe({
       next: (dataResponse:any) => {
@@ -108,17 +109,19 @@ export class SystemInterfaceDashboardFacade {
         };
         this.activityEventLogListSubject.next(gridView);
         this.batchLogsDataLoaderSubject.next(false);
+        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.batchLogsDataLoaderSubject.next(false);
+        this.hideLoader();
       },
     });
    
   
   }
   getBatchLogExceptionsLists(fileId: string,processTypeCode:string, params:any): void {
-
+    this.showLoader();
     this.systemInterfaceDashboardService.GetBatchlogsExceptions(fileId,processTypeCode, params).subscribe({
       next: (batchlogExceptionResponse:any) => {
         const gridView: any = {
@@ -126,8 +129,10 @@ export class SystemInterfaceDashboardFacade {
           total: batchlogExceptionResponse?.totalCount,
         };
         this.batchLogExceptionListSubject.next(gridView);
+        this.hideLoader();
       },
       error: (err) => {
+        this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
 
       },

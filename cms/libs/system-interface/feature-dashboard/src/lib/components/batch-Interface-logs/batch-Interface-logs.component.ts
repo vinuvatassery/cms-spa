@@ -13,6 +13,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 
@@ -81,6 +82,9 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   gridColumns: any = {
     startDate: 'Start Date',
     endDate: 'End Date',
+    interfaceTypeDesc: 'Interface',
+    processTypeDesc: 'Process',
+    status: 'status'
  
   };
   searchColumnList: { columnName: string; columnDesc: string }[] = [
@@ -106,6 +110,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   sortDir = 'Ascending';
   interfaceExceptionFilter = '';
   interfaceProcessBatchFilter= '';
+  statusFilter= '';
 
   // lov 
   interfaceExcptionLov$ = this.lovFacade.interfaceExceptionLov$;
@@ -319,4 +324,29 @@ restGrid() {
   this.loadClaimsListGrid();
 
 }
+dropdownFilterChange(
+  field: string,
+  value: any,
+  filterService: FilterService
+): void {
+  if (field === 'interfaceTypeDesc') {
+    this.interfaceExceptionFilter = value;
+  } else if (field === 'processTypeDesc') {
+    this.interfaceProcessBatchFilter = value;
+  } else if (field === 'status') {
+    this.statusFilter = value;
+  }
+
+  filterService.filter({
+    filters: [
+      {
+        field: field,
+        operator: 'eq',
+        value: value,
+      },
+    ],
+    logic: 'or',
+  });
+}
+
 }
