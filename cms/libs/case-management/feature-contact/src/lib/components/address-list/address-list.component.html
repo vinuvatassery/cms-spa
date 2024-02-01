@@ -55,27 +55,13 @@
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="70" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <common-user-photo-icon  [userData]="dataItem" [linkType]="'profileIcon'"></common-user-photo-icon>
-            <!-- <button
-              kendoButton
-              [primary]="true"
-              class="avatar-sm-btn c-default"
-              kendoPopoverAnchor
-              [popover]="onUserProfileDetailsHovered"
-              showOn="hover"
-              [attr.aria-label]="dataItem.creatorId"
-            >
-            <common-user-photo-icon  [userData]="dataItem"></common-user-photo-icon>
-            </button>
-            <kendo-popover
-              #onUserProfileDetailsHovered
-              width="330"
-              position="left"
-            >
-              <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card [userData]="dataItem"></common-user-profile-card>
-              </ng-template>
-            </kendo-popover> -->
+            <common-user-photo-icon  
+            [userId]="dataItem.creatorId" 
+            [userFirstName]="dataItem.userFirstName"
+            [userLastName]="dataItem.userLastName"
+            [userFullName]="dataItem.userFullName"
+            [userProfilePhoto]="dataItem.userProfilePhoto"
+            [linkType]="'profileIcon'"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column

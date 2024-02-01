@@ -18,7 +18,6 @@ import { Subject } from 'rxjs';
 })
 export class UserProfileCardComponent implements OnInit {
   @Input() userId!: any;
-  @Input() userData!: any;
   @Input() reassign?: boolean = false;
   @Input() sendEmail?: boolean = false;
   @Input() clientName: any;
@@ -56,7 +55,6 @@ export class UserProfileCardComponent implements OnInit {
 
   loadProfileData() {
     if (this.userId) {
-      // this.userByIdSubject.next(this.userData);
       this.userManagementFacade.getUserById(this.userId);
     }
   }
