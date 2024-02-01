@@ -37,7 +37,23 @@
           </common-grid-cell-date-range-filter>
         </ng-template>
       </kendo-grid-column>
+
       <kendo-grid-column field="statusTypeCode" title="Status" [width]="180">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button *ngIf="dataItem.statusTypeCode ==='FAILED'" [attr.aria-label]="dataItem.statusTypeCode" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
+            View Log
+          </button>
+          <span *ngIf="dataItem.statusTypeCode ==='SUCCESS'"> Successful </span>
+          <span *ngIf="dataItem.statusTypeCode ==='IN_PROGRESS'"> In Progress </span>
+          <kendo-popover  #userCard width="330" position="left">
+            <ng-template kendoPopoverBodyTemplate>
+           <div class="p-2">
+            <h5> Failure Detail</h5>
+            <p>Missing Tax ID Number</p>
+           </div>
+            </ng-template>
+          </kendo-popover>
+        </ng-template>
       </kendo-grid-column>
       <kendo-grid-column field="triggeredBy" title="Triggered By" [width]="150">
       </kendo-grid-column>
