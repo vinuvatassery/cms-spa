@@ -244,7 +244,6 @@ export * from './lib/application/financial-management/financial-pca.facade';
 export * from './lib/application/financial-management/pca-assignments.facade';
 export * from './lib/application/approval/pending-approval-payment.facade';
 export * from './lib/application/approval/pending-approval-general.facade';
-export * from './lib/application/approval/approval.facade';
 export * from './lib/application/approval/imported-claim.facade';
 
 
