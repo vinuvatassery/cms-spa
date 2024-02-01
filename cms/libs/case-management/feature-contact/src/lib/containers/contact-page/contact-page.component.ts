@@ -1895,7 +1895,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         isValid = true
       }
     }
-    else{
+    else {
       isValid = true;
     }
     return isValid;
