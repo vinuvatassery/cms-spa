@@ -80,8 +80,8 @@ export class SetHealthInsurancePriorityComponent implements OnInit,OnDestroy {
       this.insuranceDateOverlapCheck(insurance, value, 'There cannot be two Secondary Insurance Policies with overlapping date ranges.');
     }
 
-  }  
-  
+  }
+
   getPolicySubscription() {
     this.policySubscription = this.insurancePolicyFacade.currentEligibilityPolicies$.subscribe((policies: any) => {
       if (policies.length === 0) {
@@ -99,7 +99,7 @@ export class SetHealthInsurancePriorityComponent implements OnInit,OnDestroy {
       this.cdr.detectChanges();
       this.insurancePolicyFacade.hideLoader();
     });
-  } 
+  }
 
   insuranceDateOverlapCheck(insurance: any, priorityCode: string, errorMessage: string) {
     this.gridList.forEach((row: any) => {

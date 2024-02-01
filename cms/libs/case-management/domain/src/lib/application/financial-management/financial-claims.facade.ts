@@ -47,6 +47,7 @@ export class FinancialClaimsFacade {
   public sortValueFinancialClaimsBatch = 'creationTime';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialClaimsBatch,
+    dir : 'desc'
   }];
 
   public sortValueFinancialClaimsPayments = 'batchNumber';

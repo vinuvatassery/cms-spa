@@ -80,8 +80,11 @@
             [isCerForm]="isCerForm"
             (loadInsurancePlanEvent)="loadHealthInsuranceHandle($event)"
             (getPoliciesEventEmitter)="getPolicies($event)"
-            (deleteInsurancePlan)="delteInsurancePolicy($event)"
-            (removeInsurancePlan)="removeInsurancePolicy($event)">
+            (deleteInsurancePlan)="deleteInsurancePolicy($event)"
+            (removeInsurancePlan)="removeInsurancePolicy($event)"
+            [insuranceTypeList$]="insuranceTypeList$"
+            [premiumFrequencyList$]="premiumFrequencyList$"
+            [priorityCodeType$]="priorityCodeType$">
           </case-management-medical-premium-list>
         </div>
 

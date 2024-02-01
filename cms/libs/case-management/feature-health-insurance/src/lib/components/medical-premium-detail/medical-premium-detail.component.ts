@@ -8,6 +8,7 @@ import {
   Output,
   EventEmitter,
   ChangeDetectorRef,
+  AfterViewInit,
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 
@@ -40,7 +41,7 @@ import { StatusFlag } from '@cms/shared/ui-common';
   styleUrls: ['./medical-premium-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
+export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterViewInit  {
   currentDate = new Date();
   buttonText: string = 'Add';
   clientCaseId: any;
@@ -67,6 +68,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   @Input() medicalHealthPlansCount: any;
   @Input() insuranceStatus: any;
   @Input() isPaymentDone: any;
+  @Input() insuranceTypeList$: any;
 
   /** Output properties **/
   @Output() isCloseInsuranceModal = new EventEmitter();
@@ -90,8 +92,6 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
   medicareInsuranceInfoCheck = true;
   isInsuranceTypeLoading = true;
   carrierContactInfo = new CarrierContactInfo();
-  insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
-  premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
   medicareCoverageTypeList$ = this.lovFacade.medicareCoverageType$;
   ddlMedicalHealthPalnPremiumFrequecy$ =
     this.insurancePolicyFacade.ddlMedicalHealthPalnPremiumFrequecy$;
@@ -163,11 +163,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
       this.insuranceTypeCode = InsuranceTypeCode.Dental;
       this.selectedClaimType = FinancialVendorTypeCode.DentalProviders;
-      this.subscribeDentalInsurance();
-      this.loadDentalInsuranceLovs();
     }
     else {
-      this.loadHealthInsuranceLovs();
+       this.loadHealthInsuranceLovs();
     }
     this.viewSelection();
 
@@ -182,7 +180,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
 
     this.hasInsurancePlanCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Insurance_Plan_Create_Update']);
   }
-
+ 
   ngOnDestroy(): void {
     if (this.editViewSubscription !== undefined) {
       this.editViewSubscription.unsubscribe();
@@ -192,23 +190,23 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy {
     }
     this.policySubscription.unsubscribe();
   }
-  /** Private methods **/
 
-  private subscribeDentalInsurance() {
-    this.dentalInsuranceSubscription = this.insuranceTypeList$.subscribe((data: any) => {
+  ngAfterViewInit() {
+    if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) {
       this.healthInsuranceForm.controls['insuranceType'].setValue(this.dentalInsuranceSelectedItem);
       this.onHealthInsuranceTypeChanged();
       this.healthInsuranceForm.controls["insuranceType"].disable();
-    });
+      this.changeDetector.detectChanges();
+    }
   }
+
+  /** Private methods **/
+
   private loadHealthInsuranceLovs() {
-    this.lovFacade.getHealthInsuranceTypeLovs();
     this.lovFacade.getHealthInsuranceTypeLovsForPlan();
     this.lovFacade.getMedicareCoverageTypeLovs();
   }
-  private loadDentalInsuranceLovs() {
-    this.lovFacade.getDentalInsuranceTypeLovs();
-  }
+ 
   private validateFormMode() {
 
     if (this.dialogTitle === 'Add' || this.dialogTitle === 'View') {

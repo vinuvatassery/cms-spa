@@ -7,6 +7,8 @@ import { HealthInsurancePolicyFacade, CaseFacade, InsuranceStatusType, ClientFac
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subscription } from 'rxjs';
+import { LovFacade } from '@cms/system-config/domain';
+import { FilterService } from '@progress/kendo-angular-grid';
 
 @Component({
   selector: 'case-management-medical-insurance-status-list',
@@ -40,6 +42,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   @Output() deleteInsurancePlan = new EventEmitter<any>();
   @Output() loadHistoricalPlan = new EventEmitter<boolean>();
   @Output() getPoliciesEventEmitter = new EventEmitter<any>();
+  insuranceTypeList$ = this.lovFacade.insuranceTypelov$;
+  premiumFrequencyList$ = this.lovFacade.premiumFrequencylov$;
+  priorityCodeType$ = this.lovFacade.priorityCodeType$;
   showHistoricalFlag:boolean = true;
   carrierContactInfo:any;
   insurancePlanName:any;
@@ -55,9 +60,15 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   selectedPolicyPriority:any=null;
   public state!: State;
   sort!:any;
+  filter!: any;
+  sortValue:any ='healthInsuranceTypeDesc';
+  sortType:any='asc';
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
   isOpenedDeleteConfirm:boolean = false;
   buttonText:string ="MEDICAL INSURANCE";
+  healthInsuranceTypeDesc:any;
+  priorityDesc:any;
+  premiumFrequencyDesc:any;
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
   public gridOptionData = [
@@ -93,7 +104,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   /** Constructor **/
   constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade,
      private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
-     private readonly clientFacade: ClientFacade) {
+     private readonly clientFacade: ClientFacade, private lovFacade: LovFacade,) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 
@@ -104,6 +115,12 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
       take: this.insurancePolicyFacade.gridPageSizes[0]?.value
     };
     this.sort ={ field : 'creationTime' ,  dir: 'asc' };
+    if (this.insuranceStatus == InsuranceStatusType.dentalInsurance) { 
+      this.loadDentalInsuranceLovs();
+    }
+    else {
+      this.loadHealthInsuranceLovs();
+    }
     this.loadInsurancePolicies();
     if (this.insuranceStatus != InsuranceStatusType.dentalInsurance) {
       this.buttonText ="MEDICAL INSURANCE";
@@ -135,6 +152,16 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     }
   }
 
+  private loadHealthInsuranceLovs() {
+    this.lovFacade.getHealthInsuranceTypeLovs();
+    this.lovFacade.getPremiumFrequencyLovs();
+    this.lovFacade.getCaseCodeLovs();
+  }
+
+  private loadDentalInsuranceLovs() {
+    this.lovFacade.getDentalInsuranceTypeLovs();
+  }
+
   deleteButtonClicked(deleteButtonClicked: any) {
     if (deleteButtonClicked) {
       this.onDeleteConfirmOpenClicked();
@@ -152,6 +179,26 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     this.loadInsurancePolicies();
   }
 
+  dropdownFilterChange(field: string, value: any, filterService: FilterService): void {
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value: value.lovDesc
+      }],
+      logic: "or"
+    });
+    if (field == "healthInsuranceTypeDesc") {
+      this.healthInsuranceTypeDesc = value;
+    }
+    if (field == "priorityDesc") {
+      this.priorityDesc = value;
+    }
+    if (field == "premiumFrequencyDesc") {
+      this.premiumFrequencyDesc = value;
+    }
+  }
+  
   handleHealthInsuranceOpenClicked(value: string) {
     this.isOpenedHealthInsuranceModal = true;
     switch (value) {
@@ -237,9 +284,13 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     this.isOpenedChangePriorityModal = true;
   }
   public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'desc';
     this.state = stateData;
-    this.sort ={ field : stateData?.sort[0]?.field ?? 'creationTime' ,  dir: stateData?.sort[0]?.dir  ?? 'asc'  };
+    this.filter = stateData?.filter?.filters;
     this.loadInsurancePolicies();
+
   }
   getCarrierContactInfo(carrierId:string,insurancePlanName:string){
     this.carrierContactInfo='';
@@ -280,14 +331,16 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     skipcountValue: number,
     maxResultCountValue: number,
     sortColumn: any,
-    sortType: any
+    sortType: any,
+    filter:any
   ) {
     const gridDataRefinerValue = {
       skipCount: skipcountValue,
-      pagesize: maxResultCountValue,
+      pageSize: maxResultCountValue,
       sortColumn: sortColumn,
       sortType: sortType,
-      loadHistoricalData:this.showHistoricalFlag
+      loadHistoricalData:this.showHistoricalFlag,
+      filter:filter
     };
     this.loadInsurancePlanEvent.next(gridDataRefinerValue);
   }
@@ -296,8 +349,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     this.loadInsurancePolicyList(
       this.state.skip ?? 0,
       this.state.take ?? 0,
-      this.sort?.field ?? 'creationTime',
-      this.sort?.dir ?? 'asc'
+      this.sortValue,
+      this.sortType,
+      this.filter === undefined?null:this.filter
     );
   }
 
