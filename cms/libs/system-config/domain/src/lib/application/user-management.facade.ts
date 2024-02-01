@@ -32,7 +32,7 @@ export class UserManagementFacade {
   private clientProfilePronounsSubject = new BehaviorSubject<any>([]);
   private clientProfileGenderSubject = new BehaviorSubject<any>([]);
 
- 
+
   private clientProfileHousingAcuityLevelSubject = new BehaviorSubject<any>([]);
   private clientProfileIncomeInclusionsExlusionsSubject = new BehaviorSubject<any>([]);
   private clientProfileRegionAssignmentSubject = new BehaviorSubject<any>([]);
@@ -40,8 +40,8 @@ export class UserManagementFacade {
   private clientProfileServiceProviderSubject = new BehaviorSubject<any>([]);
   private usersByRoleSubject = new BehaviorSubject<LoginUser[]>([]);
   private userImageSubject = new Subject<any>();
-  private userByIdSubject = new Subject<any>(); 
- 
+  private userByIdSubject = new Subject<any>();
+
   /** Public properties **/
   users$ = this.userSubject.asObservable();
   userList$ = this.userListSubject.asObservable();
@@ -61,7 +61,7 @@ export class UserManagementFacade {
   clientProfileRacialOrEthnicIdentity$ = this.clientProfileRacialOrEthnicIdentitySubject.asObservable();
   clientProfilePronouns$ = this.clientProfilePronounsSubject.asObservable();
   clientProfileGender$ = this.clientProfileGenderSubject.asObservable();
- 
+
   clientProfileHousingAcuityLevel$ = this.clientProfileHousingAcuityLevelSubject.asObservable();
   clientProfilIncomeInclusionsExlusions$ = this.clientProfileIncomeInclusionsExlusionsSubject.asObservable();
   clientProfilRegionAssignment$ = this.clientProfileRegionAssignmentSubject.asObservable();
@@ -70,32 +70,32 @@ export class UserManagementFacade {
   usersByRole$ = this.usersByRoleSubject.asObservable();
   userImage$ = this.userImageSubject.asObservable();
   usersById$ = this.userByIdSubject.asObservable();
- 
-  
+
+
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService 
+    private readonly loaderService: LoaderService
     ) {}
 
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any, title : string = '')
-    {        
+    {
         if(type == SnackBarNotificationType.ERROR)
         {
-          const err= subtitle;    
+          const err= subtitle;
           this.loggingService.logException(err)
-        }  
+        }
           this.notificationSnackbarService.manageSnackBar(type, subtitle, NotificationSource.API, title)
-          this.hideLoader();   
+          this.hideLoader();
     }
-      
+
     showLoader()
     {
       this.loaderService.show();
     }
-      
+
     hideLoader()
     {
       this.loaderService.hide();
@@ -107,8 +107,8 @@ export class UserManagementFacade {
     let roleCheck;
     this.userDataService.getProfile$
       .pipe(first(profile => profile?.length > 0))
-      .subscribe((profile:any)=>{ 
-        const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
+      .subscribe((profile:any)=>{
+        const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);
         roleCheck = roleProfile ? true : false;
       })
       return roleCheck;
@@ -120,36 +120,36 @@ export class UserManagementFacade {
     this.userDataService.getProfile$
       .pipe(first(profile => profile?.length > 0))
       .subscribe((profile:any)=>{
-        let permission : any;       
+        let permission : any;
         for(const profileItem of profile){
           if(permission == undefined || permission?.length == 0){
-            permission = profileItem?.permissions 
+            permission = profileItem?.permissions
           }
           else{
             profileItem?.permissions.forEach((newPerm : any) => {
               const permissionExists = permission.some((existPerm : any) => existPerm.permissionId === newPerm.permissionId);
               if(!permissionExists){
-                permission.push(newPerm);    
+                permission.push(newPerm);
               }
             });
           }
         }
         if (permission?.length == 0) {
           hasPerm = false;
-        }  
+        }
 
-        const searchPermission  = ifPermission;    
-        let hasPermissions = false;    
+        const searchPermission  = ifPermission;
+        let hasPermissions = false;
         for (const perm of searchPermission)
-        {            
-            hasPermissions = permission?.some((x : any)=> x.permissionsCode   === perm)   
+        {
+            hasPermissions = permission?.some((x : any)=> x.permissionsCode   === perm)
         }
 
         if (!hasPermissions) {
           hasPerm = false;
         } else {
           hasPerm = true;
-        }  
+        }
       })
       return  hasPerm;
   }
@@ -163,13 +163,13 @@ export class UserManagementFacade {
     }
     this.userDataService.getProfile$
     .pipe(first(profile => profile?.length > 0))
-    .subscribe((profile:any)=>{ 
-      const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);  
+    .subscribe((profile:any)=>{
+      const roleProfile = profile?.find((x : any)=> x.roleCode === roleCode);
       const permission = roleProfile?.permissions;
       if (permission?.length == 0) {
        return;
-      }  
-      const permissiondata = permission?.find((x : any)=> x.permissionsCode === permissionCode);  
+      }
+      const permissiondata = permission?.find((x : any)=> x.permissionsCode === permissionCode);
       if(permissiondata?.metadata)
       {
         permissionMetaData = JSON.parse(permissiondata.metadata);
@@ -178,26 +178,51 @@ export class UserManagementFacade {
     return permissionMetaData;
   }
 
-  ///for case manager hover popup //NOSONAR 
+  getUserMaxApprovalAmount(permissionCode : string)
+  {
+    let maxApprovalAmount = 0;
+    if(!permissionCode)
+    {
+      return maxApprovalAmount;
+    }
+    this.userDataService.getProfile$
+      .pipe(first(profile => profile?.length > 0))
+      .subscribe((profile:any)=>{
+        for(const profileItem of profile){
+          if(profileItem.permissions == undefined || profileItem.permissions?.length == 0){
+            maxApprovalAmount = 0;
+          }
+          else{
+              const permissiondata = profileItem?.permissions?.find((x : any)=> x.permissionsCode === permissionCode);
+              if(permissiondata && permissiondata.maxApprovalAmount > 0){
+                maxApprovalAmount = permissiondata.maxApprovalAmount
+              }
+          }
+        }
+      })
+      return maxApprovalAmount;
+  }
+
+  ///for case manager hover popup //NOSONAR
   getUserById(userId : string): void {
     this.userDataService.getUserById(userId).subscribe({
-      next: (userDataResponse) => {        
+      next: (userDataResponse) => {
         this.userByIdSubject.next(userDataResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
-  } 
+  }
 
 
-  getUserImage(userId : string): void {    
+  getUserImage(userId : string): void {
     this.userDataService.getUserImage(userId).subscribe({
-      next: (userImageResponse : any) => {        
+      next: (userImageResponse : any) => {
         this.userImageSubject.next(userImageResponse);
       },
-      error: (err) => {        
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -209,12 +234,12 @@ export class UserManagementFacade {
         this.usersByRoleSubject.next(usersByRoleResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
 
- 
+
 
   loadUsersData(): void {
     this.userDataService.loadUsersData().subscribe({
@@ -222,7 +247,7 @@ export class UserManagementFacade {
         this.usersDataSubject.next(usersDataResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -233,7 +258,7 @@ export class UserManagementFacade {
         this.usersFilterColumnSubject.next(usersFilterColumnResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -244,7 +269,7 @@ export class UserManagementFacade {
         this.ddlUserRoleSubject.next(ddlUserRoleResponse);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -257,7 +282,7 @@ export class UserManagementFacade {
         );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -270,7 +295,7 @@ export class UserManagementFacade {
         );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -281,7 +306,7 @@ export class UserManagementFacade {
         this.ddlColumnFiltersSubject.next(ddlColumnFilters);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -292,7 +317,7 @@ export class UserManagementFacade {
         this.clientProfileLanguagesSubject.next(clientProfileLanguages);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -303,7 +328,7 @@ export class UserManagementFacade {
         this.clientProfileSlotsSubject.next(clientProfileSlots);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -316,7 +341,7 @@ export class UserManagementFacade {
         );
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -327,7 +352,7 @@ export class UserManagementFacade {
         this.clientProfilePeriodsSubject.next(clientProfilePeriods);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -338,7 +363,7 @@ export class UserManagementFacade {
         this.clientProfileSexualOrientationSubject.next(clientProfileSexualOrientation);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -348,7 +373,7 @@ export class UserManagementFacade {
         this.clientProfileRacialOrEthnicIdentitySubject.next(clientProfileRacialOrEthnicIdentity);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -358,7 +383,7 @@ export class UserManagementFacade {
         this.clientProfilePronounsSubject.next(clientProfilePronouns);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
 
@@ -369,18 +394,18 @@ export class UserManagementFacade {
         this.clientProfileGenderSubject.next(clientProfileGender);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
- 
+
   loadHousingAcuityLevelList(){
     this.userDataService.loadHousingAcuityLevelList().subscribe({
       next: (clientProfileHousingAcuityLevel) => {
         this.clientProfileHousingAcuityLevelSubject.next(clientProfileHousingAcuityLevel);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -390,18 +415,18 @@ export class UserManagementFacade {
         this.clientProfileIncomeInclusionsExlusionsSubject.next(clientProfilIncomeInclusionsExlusions);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
- 
+
   loadRegionAssignmentList(){
     this.userDataService.loadRegionAssignmentList().subscribe({
       next: (clientProfilRegionAssignment) => {
         this.clientProfileRegionAssignmentSubject.next(clientProfilRegionAssignment);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -411,7 +436,7 @@ export class UserManagementFacade {
         this.clientProfilePSMFRZIPSubject.next(clientProfilPSMFRZIP);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -422,7 +447,7 @@ export class UserManagementFacade {
         this.clientProfileServiceProviderSubject.next(clientProfilServiceProvider);
       },
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)   
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
@@ -430,5 +455,5 @@ export class UserManagementFacade {
   reassignCase(caseReassignData : any){
     return this.userDataService.reassignCase(caseReassignData);
   }
- 
+
 }
