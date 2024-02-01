@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core'; 
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Output, EventEmitter } from '@angular/core'; 
 /** Facades **/
 import {  DashboardWrapperFacade } from '@cms/dashboard/domain';
 /** Services **/
@@ -8,6 +8,7 @@ import { AuthService } from '@cms/shared/util-oidc';
 import {  DisplayGrid, 
   GridsterConfig,
   GridsterItem, 
+  GridsterItemComponentInterface, 
   GridType } from 'angular-gridster2';
 import { Subscription } from 'rxjs';
 @Component({
@@ -39,6 +40,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     "ORHIVE Client Details Dashboard",
   ];
   public selectedValue = "ORHIVE Case Worker Dashboard";
+  @Output() itemChanged : EventEmitter<GridsterItem>= new EventEmitter();
+  @Output() itemResized : EventEmitter<GridsterItem>= new EventEmitter();
   options: GridsterConfig;
   dashboard: Array<GridsterItem>;
   /** Constructor **/
@@ -101,6 +104,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
   editDashboardClicked(config: any){
     this.configSubscriptionItems = {
+      itemChangeCallback: DashboardPageComponent.itemChange,
+      itemResizeCallback: this.itemResize,  
       draggable: { enabled: true },
       resizable: { enabled: true },
     }
@@ -142,6 +147,43 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.inputs = {
       isEditDashboard: this.isReorderEnable, 
     };
+  }
+
+  static itemChange(
+    item: GridsterItem,
+    itemComponent: GridsterItemComponentInterface
+  ) {
+    debugger
+    console.info('itemChanged', item, itemComponent);
+  }
+
+    itemResize(item: GridsterItem,
+      itemComponent: GridsterItemComponentInterface) {
+    
+    console.info('itemResized', item, itemComponent);
+  }
+
+  changedOptions() {
+    debugger
+  }
+
+  removeItem(item : any) {
+    this.dashboard.splice(this.dashboard.indexOf(item), 1);
+  }
+
+  addItem(item : any)
+  {
+ const  data = {
+      id: 1,
+      cols: 2,
+      rows: 3,
+      x: 0,
+      y: 0,
+      component: item,
+      isVisible: true,
+    }
+    debugger
+    this.dashboard.push(data)
   }
   
 }

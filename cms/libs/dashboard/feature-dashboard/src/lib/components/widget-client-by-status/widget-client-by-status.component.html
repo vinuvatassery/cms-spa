@@ -11,7 +11,8 @@
       <div class="dashboard-cards-container">
  
 
-            <kendo-chart  class="dash_chart" *ngIf="activeClientsByStatus" [chartArea]="activeClientsByStatus?.chartArea">
+            <kendo-chart  class="dash_chart" *ngIf="activeClientsByStatus" [chartArea]="activeClientsByStatus?.chartArea"
+            (seriesClick)="onClick($event)">
                   <ng-template kendoChartDonutCenterTemplate >
                         <h3>1000</h3>
                         Clients

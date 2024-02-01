@@ -1,8 +1,9 @@
 
 import { Component,ChangeDetectionStrategy, OnInit, OnDestroy, EventEmitter, Input, Output } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WidgetFacade, } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
+import { SeriesClickEvent,SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
 import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'dashboard-widget-client-by-status',
@@ -18,7 +19,7 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
 
   @Input() isEditDashboard!: any; 
   @Output() removeWidget = new EventEmitter<string>();
-  constructor(private widgetFacade: WidgetFacade) {}
+  constructor(private widgetFacade: WidgetFacade ,    private readonly router: Router ,private readonly activatedRoute : ActivatedRoute ) {}
 
 
   removeWidgetCard(){
@@ -45,5 +46,17 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
           }
         }
       });
+  }
+
+  public onClick(event: SeriesClickEvent): void {
+    debugger
+   // event.dataItem.exploded = !event.dataItem.exploded;
+    //this.pieData = this.pieData.slice();
+    const query = {
+      queryParams: {
+        category: event?.dataItem?.category       
+      },
+    };
+    this.router.navigate([`/case-management/cases/`],query);
   }
 }
