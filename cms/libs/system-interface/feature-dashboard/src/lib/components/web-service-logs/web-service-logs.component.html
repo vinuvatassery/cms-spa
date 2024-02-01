@@ -20,7 +20,7 @@
   </div>
 
   <div class="app-c-table">
-    <kendo-grid [data]="webLogLists$ | async" [pageSize]="state.take"
+    <kendo-grid [data]="webLogLists$ | async" [pageSize]="state.take" [loading]="(webLogListsLoader$ | async) === true"
       [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
       [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort"
       (dataStateChange)="dataStateChange($event)"

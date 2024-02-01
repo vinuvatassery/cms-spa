@@ -37,6 +37,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   @Input() skipCount$: any;
 
   webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
+  webLogListsLoader$ = this.systemInterfaceDashboardFacade.webLogsDataLoader$;
 
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   @Output() loadWebLogList = new EventEmitter<string>();
