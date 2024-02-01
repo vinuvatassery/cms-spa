@@ -95,6 +95,9 @@ export class LovFacade {
   private refundTypeSubject = new Subject<any>();
   private batchStatusSubject = new Subject<any>();
 
+  private interfaceExceptionSubject = new BehaviorSubject<Lov[]>([]);
+  private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
+
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
@@ -166,6 +169,9 @@ export class LovFacade {
   yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
   deliveryMethodLov$ = this.lovDeliveryMethodSubject.asObservable();
   VendorTypeCodeLov$ = this.lovVendorTypeCodeSubject.asObservable();
+
+  interfaceExceptionLov$ = this.interfaceExceptionSubject.asObservable();
+  interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
 
 
   /** Public methods **/
@@ -897,7 +903,27 @@ export class LovFacade {
       },
     });
   }
+  getInterfaceExceptionLov(): void {
+    this.lovDataService.getLovsbyType(LovType.InterfaceException).subscribe({
+      next: (lovResponse) => {
+        this.interfaceExceptionSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
 
+  getInterfaceProcessBatchLov(): void {
+    this.lovDataService.getLovsbyType(LovType.InterfaceProcessBatch).subscribe({
+      next: (lovResponse) => {
+        this.interfaceProcessBatchSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
 }
 
 

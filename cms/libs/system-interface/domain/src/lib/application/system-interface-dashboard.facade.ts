@@ -18,6 +18,9 @@ export class SystemInterfaceDashboardFacade {
     activityEventLogLists$ =
     this.activityEventLogListSubject.asObservable();
    
+    private batchLogExceptionListSubject = new BehaviorSubject<any>([]);
+    batchLogExcptionLists$ = this.batchLogExceptionListSubject.asObservable();
+
     private batchLogsDataLoaderSubject = new BehaviorSubject<boolean>(false);
     batchLogsDataLoader$ = this.batchLogsDataLoaderSubject.asObservable();
   
@@ -70,6 +73,7 @@ export class SystemInterfaceDashboardFacade {
     });
   }
 
+
   loadClientRecordSendChart() {
     this.systemInterfaceDashboardService.getClientRecordSendChart().subscribe({
       next: (ClientRecordSendChart) => {
@@ -112,6 +116,22 @@ export class SystemInterfaceDashboardFacade {
     });
    
   
+  }
+  getBatchLogExceptionsLists(EntityId: string, params:any): void {
+
+    this.systemInterfaceDashboardService.GetBatchlogsExceptions(EntityId, params).subscribe({
+      next: (batchlogExceptionResponse:any) => {
+        const gridView: any = {
+          data: batchlogExceptionResponse['items'],
+          total: batchlogExceptionResponse?.totalCount,
+        };
+        this.batchLogExceptionListSubject.next(gridView);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+
+      },
+    });
   }
 
   private webLogListSubject = new BehaviorSubject<any>([]);

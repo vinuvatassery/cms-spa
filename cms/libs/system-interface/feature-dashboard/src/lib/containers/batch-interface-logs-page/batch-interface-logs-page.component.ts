@@ -17,6 +17,8 @@ import { LovFacade } from '../../../../../../system-config/domain/src/lib/applic
 
 export class BatchInterfaceLogsPageComponent implements OnInit {
   activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
+
+  batchLogExcptionLists$ = this.systemInterfaceDashboardFacade.batchLogExcptionLists$;
   public state!: State;
   pageSizes = this.systemInterfaceDashboardFacade.gridPageSizes;
   sort = this.systemInterfaceDashboardFacade.sort;
