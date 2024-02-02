@@ -563,9 +563,9 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
   }
 
 
-  loadBatchLogListGrid(batchId: string, params:GridFilterParam, claimType:string){
+  loadBatchLogListGrid(batchId: string, isReconciled: boolean, params:GridFilterParam, claimType:string){
     this.paymentByBatchGridLoaderSubject.next(true);
-    this.financialClaimsDataService.loadPaymentsByBatch(batchId, params, claimType).subscribe({
+    this.financialClaimsDataService.loadPaymentsByBatch(batchId, isReconciled, params, claimType).subscribe({
       next: (dataResponse) => {
         const gridView: any = {
           data: dataResponse['items'],
@@ -722,12 +722,12 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       });
   }
 
-  loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any,claimsType:any) {
-    return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
+  loadPrintAdviceLetterData(isReconciled: boolean, batchId:any,printAdviceLetterData: any,claimsType:any) {
+    return this.financialClaimsDataService.getPrintAdviceLetterData(isReconciled, batchId,printAdviceLetterData,claimsType);
   }
 
-  reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any,claimsType:any) {
-    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData,claimsType);
+  reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any, claimsType:any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData, claimsType);
 }
 
 viewAdviceLetterData(printAdviceLetterData: any, claimsType:any) {
