@@ -6,4 +6,5 @@ export interface ActiveSessions {
     sessionId: string;
     entityId: string;
     caseStatusCode: string;
+    workflowTypeCode: string;
 }
