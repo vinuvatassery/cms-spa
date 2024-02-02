@@ -61,16 +61,16 @@ export class SystemInterfaceDashboardFacade {
 
   getEventLogLists(): void {
 
-    this.systemInterfaceDashboardService.loadActivityLogListsServices().subscribe({
-      next: (activityEventLogResponse) => {
-        this.activityEventLogListSubject.next(activityEventLogResponse);
+    // this.systemInterfaceDashboardService.loadActivityLogListsServices().subscribe({
+    //   next: (activityEventLogResponse) => {
+    //     this.activityEventLogListSubject.next(activityEventLogResponse);
 
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+    //   },
+    //   error: (err) => {
+    //     this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
 
-      },
-    });
+    //   },
+    // });
   }
 
 
@@ -99,19 +99,21 @@ export class SystemInterfaceDashboardFacade {
   }
  
   loadBatchLogsList(interfaceTypeCode: string,displayAll:boolean, paginationParameters: any){
-    this.showLoader();
+   
     this.batchLogsDataLoaderSubject.next(true);
     this.service.loadBatchLogsList(interfaceTypeCode,displayAll, paginationParameters).subscribe({
       next: (dataResponse:any) => {
+        debugger
         const gridView: any = {
           data: dataResponse['items'],
           total: dataResponse?.totalCount,
         };
         this.activityEventLogListSubject.next(gridView);
         this.batchLogsDataLoaderSubject.next(false);
-        this.hideLoader();
+        
       },
       error: (err) => {
+        debugger
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.batchLogsDataLoaderSubject.next(false);
         this.hideLoader();

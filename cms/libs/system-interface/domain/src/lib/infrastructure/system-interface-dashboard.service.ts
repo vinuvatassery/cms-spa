@@ -227,8 +227,7 @@ export class SystemInterfaceDashboardService {
     );
   }
 
-  loadBatchLogsList(interfaceTypeCode: string,displayAll:boolean, paginationParameters: any) {
-    
+  loadBatchLogsList(interfaceTypeCode: string,displayAll:boolean, paginationParameters: any) {   
 
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`+'?displayAll='+`${displayAll}`,paginationParameters);
   }

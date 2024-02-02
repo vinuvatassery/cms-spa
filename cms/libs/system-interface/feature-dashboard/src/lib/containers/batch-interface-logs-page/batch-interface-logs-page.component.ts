@@ -15,8 +15,7 @@ import { LovFacade } from '../../../../../../system-config/domain/src/lib/applic
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class BatchInterfaceLogsPageComponent implements OnInit {
-  activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
+export class BatchInterfaceLogsPageComponent implements OnInit {  
 
   batchLogExcptionLists$ = this.systemInterfaceDashboardFacade.batchLogExcptionLists$;
   public state!: State;

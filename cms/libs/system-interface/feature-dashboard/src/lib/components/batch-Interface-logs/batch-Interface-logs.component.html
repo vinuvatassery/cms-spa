@@ -3,10 +3,12 @@
         <span class="text-bold" for="eemploymentep flex-col">Interface:&nbsp;</span>
         <div class="fmly-epdorpdown flex-col flex-col-3">
           <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode" 
-            [data]="lovsList"
+            [data]="this.lovsList$ | async"
             textField="lovDesc" 
             valueField="lovCode"
-            (valueChange)="pageSelectionchange($event)"
+            [value]="InterfaceType"
+            [valuePrimitive]="true"
+            (valueChange)="onInterfaceChange($event)"
             >
           </kendo-dropdownlist>
         </div>
@@ -23,7 +25,7 @@
             (change)="handleShowHistoricalClick()"
           />
           <label class="k-checkbox-label" for="StatusshowHistorical"
-            >Show historical</label
+            >Show historical </label
           >
         </span>
       </div>
@@ -41,12 +43,13 @@
       </div>
     
     <div class="app-c-table">
-      <kendo-grid [data]="activityEventLogList$ | async" [loading]="isActivityLogLoaderShow"    [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
+      <kendo-grid  [loading]="(batchLogsDataLoader$  | async) === true"    [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
       [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort" [filter]="state.filter"
       (dataStateChange)="dataStateChange($event)"
       (filterChange)="filterChange($event)" 
       (columnReorder)="onColumnReorder($event)"
-      (detailExpand)="onDetailExpand($event)">
+      (detailExpand)="onDetailExpand($event)"
+      [data]="activityEventLogLists$ | async">
       
         <kendo-grid-column field="interfaceTypeDesc" title="Interface" [width]="180">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
