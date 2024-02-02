@@ -210,6 +210,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
             this.clientFacade.runImportedClaimRules(this.clientId);
             this.onCloseEditClientInformationClicked();
             this.onUpdateApplicantInfo.emit();
+            this.clientFacade.reloadClientHeader();
           },
           error: (error: any) => {
             this.loaderService.hide();

@@ -45,7 +45,6 @@ export class ProfileClientPageComponent implements OnInit {
     this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
     this.tabId = this.route.snapshot.queryParams['tid'];
     this.clientCaseId =this.route.snapshot.queryParams['cid'];
-    this.loadReadOnlyClientInfoEventHandler()
   }
 
   loadReadOnlyClientInfoEventHandler() {
