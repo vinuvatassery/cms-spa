@@ -876,12 +876,12 @@ export class LovFacade {
     });
   }
 
-  private WebLogInterfaceLovsSubject = new Subject<Lov[]>();
-  WebInterfaceLogLovs$ = this.WebLogInterfaceLovsSubject.asObservable();
+  private webLogInterfaceLovsSubject = new Subject<Lov[]>();
+  webInterfaceLogLovs$ = this.webLogInterfaceLovsSubject.asObservable();
   getInterfaceWebLogLovs(): void {
     this.lovDataService.getLovsbyType(LovType.WebServiceInterface).subscribe({
       next: (relationsResponse) => {
-        this.WebLogInterfaceLovsSubject.next(relationsResponse);
+        this.webLogInterfaceLovsSubject.next(relationsResponse);
       },
 
       error: (err) => {
@@ -890,12 +890,12 @@ export class LovFacade {
     });
   }
 
-  private BatchInterfaceActivityLogSubject = new Subject<Lov[]>();
-  BatchInterfaceActivityLogLovs$ = this.BatchInterfaceActivityLogSubject.asObservable();
+  private batchInterfaceActivityLogSubject = new Subject<Lov[]>();
+  batchInterfaceActivityLogLovs$ = this.batchInterfaceActivityLogSubject.asObservable();
   getBatchInterfaceActivityLogLovs(): void {
     this.lovDataService.getLovsbyType(LovType.BatchInterface).subscribe({
       next: (relationsResponse) => {
-        this.BatchInterfaceActivityLogSubject.next(relationsResponse);
+        this.batchInterfaceActivityLogSubject.next(relationsResponse);
       },
 
       error: (err) => {

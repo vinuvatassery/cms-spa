@@ -13,6 +13,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 
@@ -56,6 +57,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   isActivityLogLoaderShow = false;
   InterfaceType:string="RAMSELL";
   columnsReordered = false;
+  displayAll:boolean=true;
   activityEventLogSubList =[
     {
       id:1,
@@ -80,6 +82,9 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   gridColumns: any = {
     startDate: 'Start Date',
     endDate: 'End Date',
+    interfaceTypeDesc: 'Interface',
+    processTypeDesc: 'Process',
+    status: 'status'
  
   };
   searchColumnList: { columnName: string; columnDesc: string }[] = [
@@ -105,6 +110,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   sortDir = 'Ascending';
   interfaceExceptionFilter = '';
   interfaceProcessBatchFilter= '';
+  statusFilter= '';
 
   // lov 
   interfaceExcptionLov$ = this.lovFacade.interfaceExceptionLov$;
@@ -158,7 +164,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.loadClaimsListGrid();
   }
   handleShowHistoricalClick(){
-    this.showHistoricalFlag=!this.showHistoricalFlag;
+    this.displayAll=!this.displayAll;
   }
   loadClaimsListGrid() {
     const param = new GridFilterParam(
@@ -167,12 +173,11 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-      this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, param);
+      this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType,this.displayAll, param);
   }
 
   
   public dataStateChange(stateData: any): void {
-    debugger
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -296,7 +301,6 @@ defaultGridState() {
   };
 }
 public onDetailExpand(e: any): void {
-  debugger
   const param = new GridFilterParam(
     this.state?.skip ?? 0,
     this.state?.take ?? 0,
@@ -318,4 +322,29 @@ restGrid() {
   this.loadClaimsListGrid();
 
 }
+dropdownFilterChange(
+  field: string,
+  value: any,
+  filterService: FilterService
+): void {
+  if (field === 'interfaceTypeDesc') {
+    this.interfaceExceptionFilter = value;
+  } else if (field === 'processTypeDesc') {
+    this.interfaceProcessBatchFilter = value;
+  } else if (field === 'status') {
+    this.statusFilter = value;
+  }
+
+  filterService.filter({
+    filters: [
+      {
+        field: field,
+        operator: 'eq',
+        value: value,
+      },
+    ],
+    logic: 'or',
+  });
+}
+
 }
