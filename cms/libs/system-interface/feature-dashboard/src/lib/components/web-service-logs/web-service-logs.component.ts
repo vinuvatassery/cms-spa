@@ -58,6 +58,9 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
     this.loadListGrid();
   }
 
+  public state!: State;
+  isActivityLogLoaderShow = false;
+  gridDataResult!: GridDataResult;
   gridDataSubject = new Subject<any>();
   gridData$ = this.gridDataSubject.asObservable();
   filter!: any;
@@ -68,23 +71,11 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-    //this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType, param);
     this.systemInterfaceDashboardFacade.loadWebLogsList('RAMSELL', param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
-  gridDataResult!: GridDataResult;
-  gridDataHandle() {
-    // this.vendorRefundAllPaymentsGridLists$.subscribe((data: GridDataResult) => {
-    //   this.gridDataResult = data;
-    //   this.gridDataSubject.next(this.gridDataResult);
-    //   // this.isVendorRefundAllPaymentsGridLoaderShow = false;
-    // });
-
-  }
-
-  public state!: State;
+  
   /** Public properties **/
-  isActivityLogLoaderShow = false;
   activityEventLogSubList = [
     {
       id: 1,
