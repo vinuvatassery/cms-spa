@@ -58,6 +58,10 @@ export enum LovType {
     ClaimStatus = 'CLAIM_STATUS',
     ServiceType ="SERVICE_TYPE",
     RefundType ="REFUND_TYPE",
-    BatchStatusCode = "BATCH_STATUS_CODE"
+    BatchStatusCode = "BATCH_STATUS_CODE",
+    WebServiceInterface ='INTERFACE_WEB_SERVICE',
+    BatchInterface ='INTERFACE_BATCH',
+    InterfaceException = 'INTERFACE_BATCH',
+    InterfaceProcessBatch = 'INTERFACE_PROCESS_BATCH'
 
   }

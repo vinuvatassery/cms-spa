@@ -95,6 +95,9 @@ export class LovFacade {
   private refundTypeSubject = new Subject<any>();
   private batchStatusSubject = new Subject<any>();
 
+  private interfaceExceptionSubject = new BehaviorSubject<Lov[]>([]);
+  private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
+
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
@@ -166,6 +169,9 @@ export class LovFacade {
   yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
   deliveryMethodLov$ = this.lovDeliveryMethodSubject.asObservable();
   VendorTypeCodeLov$ = this.lovVendorTypeCodeSubject.asObservable();
+
+  interfaceExceptionLov$ = this.interfaceExceptionSubject.asObservable();
+  interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
 
 
   /** Public methods **/
@@ -870,6 +876,54 @@ export class LovFacade {
     });
   }
 
+  private webLogInterfaceLovsSubject = new Subject<Lov[]>();
+  webInterfaceLogLovs$ = this.webLogInterfaceLovsSubject.asObservable();
+  getInterfaceWebLogLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.WebServiceInterface).subscribe({
+      next: (relationsResponse) => {
+        this.webLogInterfaceLovsSubject.next(relationsResponse);
+      },
+
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+
+  private batchInterfaceActivityLogSubject = new Subject<Lov[]>();
+  batchInterfaceActivityLogLovs$ = this.batchInterfaceActivityLogSubject.asObservable();
+  getBatchInterfaceActivityLogLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.BatchInterface).subscribe({
+      next: (relationsResponse) => {
+        this.batchInterfaceActivityLogSubject.next(relationsResponse);
+      },
+
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+  getInterfaceExceptionLov(): void {
+    this.lovDataService.getLovsbyType(LovType.InterfaceException).subscribe({
+      next: (lovResponse) => {
+        this.interfaceExceptionSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getInterfaceProcessBatchLov(): void {
+    this.lovDataService.getLovsbyType(LovType.InterfaceProcessBatch).subscribe({
+      next: (lovResponse) => {
+        this.interfaceProcessBatchSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
 }
 
 
