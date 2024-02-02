@@ -5,7 +5,23 @@
       <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode" [data]="lovsList$ | async"
         textField="lovDesc" valueField="lovCode" (selectionChange)="onInterfaceSelectionChanged($event)">
       </kendo-dropdownlist>
+     
     </div>
+  </div>
+  <div>
+    <span class="app-checkboxwidtext-wrapper">
+      <input
+        type="checkbox"
+        kendoCheckBox
+        aria-labelledby="StatusshowHistorical"
+        id="StatusShowHistorical"
+        [(ngModel)]="displayAll"
+        (change)="handleShowHistoricalClick()"
+      />
+      <label class="k-checkbox-label" for="StatusShowHistorical"
+        >Show historical</label
+      >
+    </span>
   </div>
   <section class="table-filter-section mat-form-no-b-space bg-white">
   </section>

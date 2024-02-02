@@ -36,6 +36,8 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   @Input() lovsList$: any;
   @Input() skipCount$: any;
 
+  displayAll = true;
+
   webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
   webLogListsLoader$ = this.systemInterfaceDashboardFacade.webLogsDataLoader$;
 
@@ -58,6 +60,10 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
     this.loadListGrid();
   }
 
+  handleShowHistoricalClick() {
+    this.displayAll = !this.displayAll;
+  }
+
   public state!: State;
   isActivityLogLoaderShow = false;
   gridDataResult!: GridDataResult;
@@ -71,10 +77,10 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-    this.systemInterfaceDashboardFacade.loadWebLogsList('RAMSELL', param);
+    this.systemInterfaceDashboardFacade.loadWebLogsList('RAMSELL', this.displayAll, param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
-  
+
   /** Public properties **/
   activityEventLogSubList = [
     {
@@ -137,7 +143,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   pageSelectionchange(data: any) {
     this.loadActivityLogLists();
   }
-  
+
   onInterfaceSelectionChanged(event: any) {
     this.loadListGrid();
   }
