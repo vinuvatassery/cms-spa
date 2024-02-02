@@ -64,7 +64,6 @@ export class SystemInterfaceActivityLogListsComponent
       sort: this.sort,
     };
   }
-
   private loadActivityLogList() {
     this.loadActivityLogListEvent.emit();
   }
