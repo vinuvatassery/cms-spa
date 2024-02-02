@@ -139,4 +139,27 @@ export class SystemInterfaceDashboardFacade {
     });
   }
 
+  private webLogListSubject = new BehaviorSubject<any>([]);
+  webLogLists$ = this.webLogListSubject.asObservable();
+  private webLogsDataLoaderSubject = new BehaviorSubject<boolean>(false);
+  webLogsDataLoader$ = this.webLogsDataLoaderSubject.asObservable();
+
+  loadWebLogsList(interfaceTypeCode:string, params:any) {
+    this.webLogsDataLoaderSubject.next(true);
+    this.service.GetRamsellInterfaceActivity(interfaceTypeCode, params).subscribe({
+      next: (dataResponse: any) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.webLogListSubject.next(gridView);
+        this.webLogsDataLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.webLogsDataLoaderSubject.next(false);
+      },
+    });
+  }
+
 }
