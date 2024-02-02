@@ -41,6 +41,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   @Input() lovsList$: any;
   @Input() skipCount$: any;
   public state!: State;
+  public childSatat! :State
   filteredBy = '';
   isFiltered = false;
   filter!: any;
@@ -79,6 +80,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     },
   ]
   lovsList!: any[];
+
   gridColumns: any = {
     startDate: 'Start Date',
     endDate: 'End Date',
@@ -105,12 +107,13 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   public statusArray = ["Failed", "Success", "Partial"]
   selectedSearchColumn:  string = '';
   private searchSubject = new Subject<string>();
-  sortColumn = 'interface';
+  sortColumn = 'interfaceTypeDesc';
   sortColumnDesc = 'Interface';
   sortDir = 'Ascending';
   interfaceExceptionFilter = '';
   interfaceProcessBatchFilter= '';
   statusFilter= '';
+  selectedLovValue: any;
 
   // lov 
   interfaceExcptionLov$ = this.lovFacade.interfaceExceptionLov$;
@@ -127,6 +130,11 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
+    this.childSatat = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    }
     this.loadClaimsListGrid();
     this.loadLovList();
     this.lovFacade.getInterfaceProcessBatchLov();
@@ -135,12 +143,16 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   loadLovList(){
     this.lovsList$.subscribe((data: any[]) => {
       this.lovsList = data.sort((a, b) => a.sequenceNbr - b.sequenceNbr);
+      if (this.lovsList.length > 0) {
+        this.selectedLovValue = this.lovsList[0];
+      }
     });
   }
 
   ngOnChanges(): void {
    
     this.initializePaging();
+    this.ChildInitializePaging();
   }
   private initializePaging() {
     const sort: SortDescriptor[] = [{
@@ -153,6 +165,19 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
         sort: sort,
         filter : this.filterData,
     };
+    
+}
+private ChildInitializePaging() {
+  const sort: SortDescriptor[] = [{
+      field: 'creationTime',
+      dir: 'desc'
+  }];
+  this.childSatat = {
+      skip:this.skipCount$??0,
+      take: this.pageSizes[0]?.value,
+      sort: sort,
+      filter : this.filterData,
+  };
 }
 
   private loadActivityLogLists() {
@@ -163,6 +188,13 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.state.skip = 0;
     this.loadClaimsListGrid();
   }
+  childPageSelectionchange(data: any) {
+    this.childSatat.take = data.value;
+    this.childSatat.skip = 0;
+    this.loadClaimsListGrid();
+  }
+
+
   handleShowHistoricalClick(){
     this.displayAll=!this.displayAll;
   }
