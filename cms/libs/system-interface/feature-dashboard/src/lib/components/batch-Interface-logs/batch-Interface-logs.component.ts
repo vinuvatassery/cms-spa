@@ -178,7 +178,6 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
 
   
   public dataStateChange(stateData: any): void {
-    debugger
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -302,7 +301,6 @@ defaultGridState() {
   };
 }
 public onDetailExpand(e: any): void {
-  debugger
   const param = new GridFilterParam(
     this.state?.skip ?? 0,
     this.state?.take ?? 0,

@@ -24,7 +24,7 @@ export class WebServiceLogsPageComponent implements OnInit {
   sortValue = this.systemInterfaceDashboardFacade.sortValue;
   sortType = this.systemInterfaceDashboardFacade.sortType;
 
-  webLogLovs$ = this.lovFacade.WebInterfaceLogLovs$;
+  webLogLovs$ = this.lovFacade.webInterfaceLogLovs$;
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
     private lovFacade: LovFacade

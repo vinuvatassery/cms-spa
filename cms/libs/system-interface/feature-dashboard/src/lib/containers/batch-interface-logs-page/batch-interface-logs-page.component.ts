@@ -25,7 +25,7 @@ export class BatchInterfaceLogsPageComponent implements OnInit {
   sortValue = this.systemInterfaceDashboardFacade.sortValue;
   sortType = this.systemInterfaceDashboardFacade.sortType;
 
-  BatchInterfaceActivityLogLovs$ = this.lovFacade.BatchInterfaceActivityLogLovs$;
+  BatchInterfaceActivityLogLovs$ = this.lovFacade.batchInterfaceActivityLogLovs$;
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
     private lovFacade: LovFacade

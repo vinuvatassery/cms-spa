@@ -232,8 +232,7 @@ export class SystemInterfaceDashboardService {
 
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`+'?displayAll='+`${displayAll}`,paginationParameters);
   }
-  GetBatchlogsExceptions(fileId: any,processTypeCode:string, params:any ){
-    debugger
+  getBatchlogsExceptions(fileId: any,processTypeCode:string, params:any ){
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-exceptions/${fileId}/${processTypeCode}`, params);
   }
