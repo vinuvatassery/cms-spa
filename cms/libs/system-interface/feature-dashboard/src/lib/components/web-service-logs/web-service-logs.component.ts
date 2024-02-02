@@ -137,6 +137,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   pageSelectionchange(data: any) {
     this.loadActivityLogLists();
   }
+  
   onInterfaceSelectionChanged(event: any) {
     this.loadListGrid();
   }

@@ -238,6 +238,6 @@ export class SystemInterfaceDashboardService {
   }
 
   getRamsellInterfaceActivity(interfaceTypeCode: string, params:any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/web-logs/${interfaceTypeCode}`, params);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/web-logs/${interfaceTypeCode}`, params);
   }
 }
