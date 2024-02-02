@@ -146,7 +146,7 @@ export class SystemInterfaceDashboardFacade {
 
   loadWebLogsList(interfaceTypeCode:string, params:any) {
     this.webLogsDataLoaderSubject.next(true);
-    this.service.GetRamsellInterfaceActivity(interfaceTypeCode, params).subscribe({
+    this.service.getRamsellInterfaceActivity(interfaceTypeCode, params).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
           data: dataResponse['items'],

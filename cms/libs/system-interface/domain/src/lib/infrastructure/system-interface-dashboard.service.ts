@@ -234,10 +234,10 @@ export class SystemInterfaceDashboardService {
   }
   getBatchlogsExceptions(fileId: any,processTypeCode:string, params:any ){
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/system-interface/interface-exceptions/${EntityId}`, params);
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-exceptions/${fileId}/${processTypeCode}`, params);
   }
 
-  GetRamsellInterfaceActivity(interfaceTypeCode: string, params:any) {
+  getRamsellInterfaceActivity(interfaceTypeCode: string, params:any) {
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/web-logs/${interfaceTypeCode}`, params);
-}
+  }
 }
