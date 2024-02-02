@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { LovFacade } from '@cms/system-config/domain';
 import { SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { State } from '@progress/kendo-data-query';
 @Component({
@@ -20,7 +21,8 @@ export class SystemInterfaceDashboardPageComponent implements OnInit {
   cardsRequestChart: any;
   /** Constructor **/
   constructor(
-    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
+    private lovFacade: LovFacade
   ) {}
   /** Lifecycle Hooks **/
   ngOnInit(): void {
@@ -31,7 +33,8 @@ export class SystemInterfaceDashboardPageComponent implements OnInit {
       };
     this.loadClientRecordSendChart(); 
     this.loadCardsRequestChart();
-    this.loadActivityEventLog();  
+    this.loadActivityEventLog();
+    this.lovFacade.getBatchInterfaceActivityLogLovs();
   }
 
   loadClientRecordSendChart() {
