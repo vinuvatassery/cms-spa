@@ -323,7 +323,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     this.healthInsuranceForm.controls['insuranceIdNumber'].setValue(
       healthInsurancePolicy.insuranceIdNbr
     );
-    this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
+    this.healthInsuranceForm.controls['insuranceProviderName'].setValue(
       healthInsurancePolicy.insuranceVendorId
     );
 
@@ -347,6 +347,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     this.healthInsuranceForm.controls['groupPlanType'].setValue(
       healthInsurancePolicy.insuranceGroupPlanTypeCode
     );
+    this.healthInsuranceForm.controls['insuranceGroupId'].setValue(
+      healthInsurancePolicy.insuranceGroupId
+    );    
     this.healthInsuranceForm.controls['careassistPayingPremiumFlag'].setValue(
       healthInsurancePolicy.careassistPayingPremiumFlag
     );
@@ -584,7 +587,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     const oregonPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
-      'insuranceCarrierName',
+      'insuranceProviderName',
       'insurancePlanName',
     ];
 
@@ -731,7 +734,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     const medicareInsuranceRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
-      'insuranceCarrierName',
+      'insuranceProviderName',
       'insurancePlanName',
       'careassistPayingPremiumFlag',
     ];
@@ -754,7 +757,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     const dentalPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
-      'insuranceCarrierName',
+      'insuranceProviderName',
       'insurancePlanName',
       'careassistPayingPremiumFlag'
     ];
@@ -796,7 +799,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
       'insuranceStartDate',
       'insuranceEndDate',
       'insuranceIdNumber',
-      'insuranceCarrierName',
+      'insuranceProviderName',
       'insurancePlanName',
       'careassistPayingPremiumFlag'
     ];
@@ -837,9 +840,10 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     const groupPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
-      'insuranceCarrierName',
+      'insuranceProviderName',
       'insurancePlanName',
       'groupPlanType',
+      'insuranceGroupId',
       'careassistPayingPremiumFlag'
     ];
     if (this.ddlInsuranceType === HealthInsurancePlan.GroupInsurancePlan) {
@@ -863,7 +867,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     const offExchangePlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
-      'insuranceCarrierName',
+      'insuranceProviderName',
       'insurancePlanName',
       'metalLevel',
       'careassistPayingPremiumFlag'
@@ -888,7 +892,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     const qualifiedHealthPlanRequiredFields: Array<string> = [
       'insuranceStartDate',
       'insuranceIdNumber',
-      'insuranceCarrierName',
+      'insuranceProviderName',
       'insurancePlanName',
       'aptcFlag',
       'metalLevel',
@@ -979,12 +983,13 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
         this.healthInsurancePolicy.isCerReview = this.isReviewPopup;
         return;
       }
-      this.healthInsurancePolicy.insuranceVendorId = this.healthInsuranceForm.controls['insuranceCarrierName'].value;
+      this.healthInsurancePolicy.insuranceVendorId = this.healthInsuranceForm.controls['insuranceProviderName'].value;
       this.healthInsurancePolicy.insurancePlanId =
         this.healthInsuranceForm.controls['insurancePlanName'].value;
       this.healthInsurancePolicy.insuranceIdNbr =
         this.healthInsuranceForm.controls['insuranceIdNumber'].value;
       this.healthInsurancePolicy.insuranceGroupPlanTypeCode = this.healthInsuranceForm.controls['groupPlanType'].value;
+      this.healthInsurancePolicy.insuranceGroupId = this.healthInsuranceForm.controls['insuranceGroupId'].value; 
       this.healthInsurancePolicy.metalLevelCode =
         this.healthInsuranceForm.controls['metalLevel'].value === null ? null : this.healthInsuranceForm.controls['metalLevel'].value?.lovCode;
       if (this.healthInsuranceForm.controls['insuranceStartDate'].value !== null) {
@@ -1228,7 +1233,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
   }
   insuranceCarrierNameData(data: any) {
     if (this.isEdit) {
-      this.healthInsuranceForm.controls['insuranceCarrierName'].setValue(
+      this.healthInsuranceForm.controls['insuranceProviderName'].setValue(
         this.healthInsurancePolicyCopy.insuranceVendorId
       );
     }
@@ -1455,6 +1460,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     if (this.isViewContentEditable) {
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].disable();
       this.healthInsuranceForm.controls["groupPlanType"].disable();
+      this.healthInsuranceForm.controls["insuranceGroupId"].disable();
       this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].disable();
       this.healthInsuranceForm.controls["onQmbFlag"].disable();
       this.healthInsuranceForm.controls["onLisFlag"].disable();
@@ -1465,10 +1471,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
       this.healthInsuranceForm.controls["insuranceStartDate"].disable();
       this.healthInsuranceForm.controls["insuranceEndDate"].disable();
       this.healthInsuranceForm.controls["insuranceIdNumber"].disable();
-      this.healthInsuranceForm.controls["insuranceCarrierName"].disable()
+      this.healthInsuranceForm.controls["insuranceProviderName"].disable()
       this.healthInsuranceForm.controls["insurancePlanName"].disable();
       this.healthInsuranceForm.controls["metalLevel"].disable();
-      this.healthInsuranceForm.controls["groupPlanType"].disable();
       this.healthInsuranceForm.controls["medicareBeneficiaryIdNbr"].disable();
       this.healthInsuranceForm.controls["medicareCoverageTypeCode"].disable();
       this.healthInsuranceForm.controls["medicarePartAStartDate"].disable();
@@ -1487,6 +1492,7 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
     else {
       this.healthInsuranceForm.controls["careassistPayingPremiumFlag"].enable();
       this.healthInsuranceForm.controls["groupPlanType"].enable();
+      this.healthInsuranceForm.controls["insuranceGroupId"].enable();
       this.healthInsuranceForm.controls["paymentIdNbrSameAsInsuranceIdNbrFlag"].enable();
       this.healthInsuranceForm.controls["onQmbFlag"].enable();
       this.healthInsuranceForm.controls["onLisFlag"].enable();
@@ -1502,10 +1508,9 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
       this.healthInsuranceForm.controls["insuranceStartDate"].enable();
       this.healthInsuranceForm.controls["insuranceEndDate"].enable();
       this.healthInsuranceForm.controls["insuranceIdNumber"].enable();
-      this.healthInsuranceForm.controls["insuranceCarrierName"].enable();
+      this.healthInsuranceForm.controls["insuranceProviderName"].enable();
       this.healthInsuranceForm.controls["insurancePlanName"].enable();
       this.healthInsuranceForm.controls["metalLevel"].enable();
-      this.healthInsuranceForm.controls["groupPlanType"].enable();
       this.healthInsuranceForm.controls["medicareBeneficiaryIdNbr"].enable()
       this.healthInsuranceForm.controls["medicareCoverageTypeCode"].enable();
       this.healthInsuranceForm.controls["medicarePartAStartDate"].enable()
