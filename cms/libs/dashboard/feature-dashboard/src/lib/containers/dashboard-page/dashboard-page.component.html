@@ -24,11 +24,11 @@
 <gridster [options]="configSubscriptionItems" *ngIf="configSubscriptionItems">
   <gridster-item
     *ngFor="let item of dashboardContentList$ | async"
-    [item]="item" 
+    [item]="item?.widgetProperties?.componentData" 
   >     
         <ndc-dynamic
           class="no-drag"
-          [ndcDynamicComponent]="item.component" *ngIf="item.isVisible"    [ndcDynamicInputs]="inputs"
+          [ndcDynamicComponent]="item?.widgetProperties.componentData.component"    [ndcDynamicInputs]="inputs"
           [ndcDynamicOutputs]="outputs">
          
         </ndc-dynamic> 

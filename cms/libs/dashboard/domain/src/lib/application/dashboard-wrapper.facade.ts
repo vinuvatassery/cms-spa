@@ -1,15 +1,13 @@
 import { Injectable } from '@angular/core'; 
 import { GridsterConfig } from 'angular-gridster2';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { DashboardContent } from '../..';
 import { DashboardWrapperService } from '../infrastructure/dashboard-wrapper.service';
 import { WidgetRegistry } from 'libs/dashboard/feature-dashboard/src/lib/widget-registry';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardWrapperFacade {
-  private dashboardContentListSubject = new BehaviorSubject<DashboardContent[]>(
-    []
-  );
+  private dashboardContentListSubject = new Subject<any>();
   public dashboardContentList$ =
     this.dashboardContentListSubject.asObservable();
 
@@ -23,10 +21,14 @@ export class DashboardWrapperFacade {
   constructor(private dashboardWrapperService: DashboardWrapperService) {}
 
   loadDashboardContent(): void {
-    this.dashboardWrapperService.getDashboardContent().subscribe({
-      next: (dashboardList) => {
-        dashboardList.filter((element) => {
-          element.component = this.widgetCoponentCollection[element.component];
+    this.dashboardWrapperService.getDashboardContent("CAREASSIST").subscribe({
+      next: (dashboardList : any) => {
+        debugger
+    dashboardList.forEach((widg : any) => {
+           widg.widgetProperties = JSON.parse(widg.widgetProperties);
+            });
+        dashboardList.filter((element : any) => {
+          element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
         });
         this.dashboardContentListSubject.next(dashboardList);
       },

@@ -60,32 +60,27 @@ export class WidgetService {
         {
           name: 'Med Claims',
           data: [300, 200, 250, 400, 300, 350, 500],
-          type: 'line',
-          color: 'red',
+          type: 'line'
         },
         {
           name: 'Med Prem',
           data: [75, 130, 170, 220, 100, 180, 50],
-          type: 'line',
-          color: 'blue',
+          type: 'line'
         },
         {
           name: 'Dental Claims',
           data: [10, 30, 20, 10, 40, 70, 60],
-          type: 'line',
-          color: 'green',
+          type: 'line'
         },
         {
           name: 'Dental Prem',
           data: [20, 10, 30, 60, 40, 80, 60],
-          type: 'line',
-          color: 'yellow',
+          type: 'line'
         },
         {
           name: 'Pharm Claim',
           data: [100, 10, 60, 60, 40, 70, 60],
-          type: 'line',
-          color: 'purple',
+          type: 'line'
         },
       ],
     });
@@ -119,33 +114,27 @@ export class WidgetService {
             data: [
               {
                 category: 'UPP',
-                value: 45,
-                color: '#FFD064',
+                value: 45
               },
               {
                 category: 'GROUP I',
-                value: 15,
-                color: '#ED6363',
+                value: 15
               },
               {
                 category: 'GROUP II',
-                value: 10,
-                color: '#57BAC3',
+                value: 10
               },
               {
                 category: 'BRIDGE',
-                value: 10,
-                color: '#0063A6',
+                value: 10
               },
               {
                 category: 'GROUP I / INS GAP',
-                value: 10,
-                color: '#BF61A5',
+                value: 10
               },
               {
                 category: 'GROUP II / INS GAP',
-                value: 10,
-                color: '#D8D365',
+                value: 10
               },
             ],
             type: 'donut',
@@ -183,23 +172,19 @@ export class WidgetService {
             data: [
               {
                 category: 'ACCEPT',
-                value: 45,
-                color: '#FFD064',
+                value: 45
               },
               {
                 category: 'PENDING',
-                value: 15,
-                color: '#ED6363',
+                value: 15
               },
               {
                 category: 'WAITLIST',
-                value: 10,
-                color: '#57BAC3',
+                value: 10
               },
               {
                 category: 'RESTRICTED',
-                value: 10,
-                color: '#0063A6',
+                value: 10
               },
             ],
 
@@ -272,14 +257,12 @@ export class WidgetService {
           {
             name: 'Insurance Revenue',
             data: [120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220],
-            color: '#57C395',
             type: 'column',
             spacing: 0,
           },
           {
             name: 'Replenishment Costs',
             data: [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200],
-            color: '#F56F7B',
             type: 'column',
             spacing: 0,
           },
@@ -318,13 +301,11 @@ export class WidgetService {
             data: [
               {
                 category: 'FULL PAY',
-                value: 60,
-                color: '#FFA35A',
+                value: 60
               },
               {
                 category: 'REGULAR PAY',
-                value: 40,
-                color: '#0063A6',
+                value: 40
               },
              
             ],
@@ -396,8 +377,7 @@ export class WidgetService {
         series: [
           {
             name: 'Insurance Revenue',
-            data: [120, 130, 140, 150, 160, 170, 180],
-            color: '#F56F7B',
+            data: [120, 130, 140, 150, 160, 170, 180],           
             type: 'column',
             spacing: 0,
           },
@@ -445,32 +425,27 @@ export class WidgetService {
           {
             name: 'Med Claims',
             data: [300, 200, 250, 400, 300, 350, 500],
-            type: 'line',
-            color: 'red',
+            type: 'line'
           },
           {
             name: 'Med Prem',
             data: [75, 130, 170, 220, 100, 180, 50],
-            type: 'line',
-            color: 'blue',
+            type: 'line'
           },
           {
             name: 'Dental Claims',
             data: [10, 30, 20, 10, 40, 70, 60],
-            type: 'line',
-            color: 'green',
+            type: 'line'
           },
           {
             name: 'Dental Prem',
             data: [20, 10, 30, 60, 40, 80, 60],
-            type: 'line',
-            color: 'yellow',
+            type: 'line'
           },
           {
             name: 'Pharm Claim',
             data: [100, 10, 60, 60, 40, 70, 60],
-            type: 'line',
-            color: 'purple',
+            type: 'line'
           },
         ],
       },
@@ -515,14 +490,12 @@ export class WidgetService {
             name: 'Rebates',
             data: [300, 200, 350, 500],
             type: 'column',
-            color: '#57BAC3',
             stack: true,
           },
           {
             name: 'Replenishment',
             data: [75, 130, 180, 50],
             type: 'column',
-            color: '#FFD064',
             stack: true,
           },
         ],

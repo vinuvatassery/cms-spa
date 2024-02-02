@@ -18,6 +18,7 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
   data = ['Active','Inactive']
 
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade ,    private readonly router: Router ,private readonly activatedRoute : ActivatedRoute ) {}
 
@@ -26,6 +27,7 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
     this.removeWidget.emit();
   }
   ngOnInit(): void { 
+    debugger
     this.loadActiveClientsByStatusChart();
   }
   public labelContent(e: SeriesLabelsContentArgs): string {

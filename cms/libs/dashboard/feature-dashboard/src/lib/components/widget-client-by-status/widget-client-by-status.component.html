@@ -31,7 +31,7 @@
                     <kendo-chart-series-item *ngFor="let series of activeClientsByStatus?.chartData?.series; let outermost = last;"
                                              [type]="series.type" [startAngle]="150"
                                               [data]="series.data"
-                                             field="value" categoryField="category" colorField="color">
+                                             field="value" categoryField="category">
                       <kendo-chart-series-item-labels *ngIf="outermost"
                       position="above" background="none" [distance]="5"
                                                       [content]="labelContent">
