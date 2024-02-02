@@ -22,6 +22,7 @@ export class UserProfileCardComponent implements OnInit {
   @Input() sendEmail?: boolean = false;
   @Input() clientName: any;
   @Input() clientCaseId: any;
+  @Input() userProfilePhotoExists: any;
   userByIdSubject = new Subject<any>(); 
   userImage$ = this.userManagementFacade.userImage$;
   userById$ = this.userManagementFacade.usersById$;
@@ -39,7 +40,9 @@ export class UserProfileCardComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    if(this.userProfilePhotoExists){
     this.loadProfilePhoto();
+    }
     this.loadProfileData();
     this.loadUsersByRole();
     this.hasReassignPermission = this.userManagementFacade.hasPermission([

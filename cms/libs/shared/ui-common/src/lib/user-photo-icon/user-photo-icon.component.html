@@ -10,7 +10,7 @@
             >
             <div class="app-popover-header use-profile-card-wrapper">    
               <div  [hidden]="imageLoaderVisible" class="app-c-avatar avatar-img-sm avatar-sm">   
-                  <img [hidden]="imageLoaderVisible" [src]="userProfilePhoto" [alt]="userFullName" class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()"/> 
+                  <img [hidden]="imageLoaderVisible" [src]="userImageSubject | async" [alt]="userFullName" class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()"/> 
               </div>
               <div *ngIf="imageLoaderVisible">    
                 <div mat-card-avatar class="app-c-avatar avatar-sm" *ngIf="userByIdSubject;">
@@ -37,7 +37,7 @@
               position="left"
             >
               <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card [userId]="userId"></common-user-profile-card>
+                <common-user-profile-card [userId]="userId" [userProfilePhotoExists]="userProfilePhotoExists"></common-user-profile-card>
               </ng-template>
             </kendo-popover>
           </div>
