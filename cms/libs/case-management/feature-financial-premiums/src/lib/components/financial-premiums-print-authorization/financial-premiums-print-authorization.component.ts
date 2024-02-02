@@ -105,7 +105,7 @@ export class FinancialPremiumsPrintAuthorizationComponent {
    
    loadPrintLetterContent(request:any) {
     this.loaderService.show();
-    this.financialPremiumsFacade.loadPremiumPrintAdviceLetterData(request, this.premiumsType)
+    this.financialPremiumsFacade.loadPremiumPrintAdviceLetterData(request.isReconciled,request, this.premiumsType)
       .subscribe({
         next: (data: any[]) => {
           if (data.length > 0) {
@@ -196,6 +196,11 @@ export class FinancialPremiumsPrintAuthorizationComponent {
             const fileUrl = window.URL.createObjectURL(data);
             window.open(fileUrl, "_blank");
             this.ref.detectChanges();
+          }
+          if(this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter){
+            this.returnResultFinalPrintList[this.currentIndex].printFlag = StatusFlag.Yes;
+          }else{
+            this.returnResultFinalPrintList[this.currentIndex].printFlag = StatusFlag.No;
           }
           if(this.currentIndex == this.returnResultFinalPrintList.length - 1){
             this.onClosePrintAdviceLetterClicked();
