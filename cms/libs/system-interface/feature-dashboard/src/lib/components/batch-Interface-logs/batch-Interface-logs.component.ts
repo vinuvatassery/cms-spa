@@ -157,6 +157,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.loadActivityLogListEvent.emit();
   }
   pageSelectionchange(data: any) {
+    
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadClaimsListGrid();
@@ -165,6 +166,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.displayAll=!this.displayAll;
   }
   loadClaimsListGrid() {
+    
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -174,7 +176,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
       this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType,this.displayAll, param);
   }
   onInterfaceChange(event:any) {
-    debugger
+    
     this.InterfaceType=event;
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
@@ -187,6 +189,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
 
   
   public dataStateChange(stateData: any): void {
+    
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -194,12 +197,15 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
+    if(stateData?.filter!=undefined){
     this.InterfaceType=stateData?.filter?.filters[0].filters[0].value
+    }
    // this.setFilterBy(true, '', this.filter);
     this.loadClaimsListGrid();
   }
   
   public filterChange(filter: CompositeFilterDescriptor): void {
+    
     this.filterData = filter;
   }
   public columnChange(e: any) {
@@ -313,13 +319,15 @@ defaultGridState() {
   };
 }
 public onDetailExpand(e: any): void {
+  
   const param = new GridFilterParam(
     this.state?.skip ?? 0,
     this.state?.take ?? 0,
     this.sortValue,
     this.sortType,
     JSON.stringify({ logic: 'and', filters: [] }));
-    this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.processTypeCode, param);
+    //this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.interfaceTypeCode,e.dataItem.entityTypeCode, param);
+    this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists('67F2C0D8-85AA-49BB-A4A7-CDE131FB56D8',e.dataItem.interfaceTypeCode,'RECORD', param);
 
 }
 restGrid() {

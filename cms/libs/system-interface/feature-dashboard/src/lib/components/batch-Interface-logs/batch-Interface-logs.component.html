@@ -1,34 +1,43 @@
+
 <section>
-    <div class="align-items-center mat-form-no-b-space bg-white mar-0 flex-row">
-        <span class="text-bold" for="eemploymentep flex-col">Interface:&nbsp;</span>
-        <div class="fmly-epdorpdown flex-col flex-col-3">
-          <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode" 
-            [data]="this.lovsList$ | async"
-            textField="lovDesc" 
-            valueField="lovCode"
-            [value]="InterfaceType"
-            [valuePrimitive]="true"
-            (valueChange)="onInterfaceChange($event)"
+  <div class="flex-row">
+    <div class="flex-col flex-space-bw align-items-center">
+    
+          <div class="fmly-epdorpdown  ">
+            <kendo-floatinglabel text="Interface">
+            <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode" 
+              [data]="this.lovsList$ | async"
+              textField="lovDesc" 
+              valueField="lovCode"
+              [value]="InterfaceType"
+              [valuePrimitive]="true"
+              (valueChange)="onInterfaceChange($event)"
+              >
+            </kendo-dropdownlist>
+            </kendo-floatinglabel>
+          </div>
+        <div>
+          <span class="app-checkboxwidtext-wrapper">
+            <input
+              type="checkbox"
+              kendoCheckBox
+              aria-labelledby="StatusshowHistorical"
+              id="StatusshowHistorical"
+              [(ngModel)]="displayAll"
+              (change)="handleShowHistoricalClick()"
+            />
+            <label class="k-checkbox-label" for="StatusshowHistorical"
+              >Show activities within the last 7 days </label
             >
-          </kendo-dropdownlist>
+          </span>
         </div>
-        
-      </div>
-      <div>
-        <span class="app-checkboxwidtext-wrapper">
-          <input
-            type="checkbox"
-            kendoCheckBox
-            aria-labelledby="StatusshowHistorical"
-            id="StatusshowHistorical"
-            [(ngModel)]="displayAll"
-            (change)="handleShowHistoricalClick()"
-          />
-          <label class="k-checkbox-label" for="StatusshowHistorical"
-            >Show historical </label
-          >
-        </span>
-      </div>
+    </div>
+  </div>
+    <!-- <div class="align-items-center mat-form-no-b-space bg-white mar-0 flex-row">
+      
+       
+      </div> -->
+      
       <section class="table-filter-section mat-form-no-b-space bg-white">
         </section>
     <!-- Sorted Info show only in list -->

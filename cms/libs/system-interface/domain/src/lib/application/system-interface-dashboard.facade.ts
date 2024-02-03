@@ -103,7 +103,7 @@ export class SystemInterfaceDashboardFacade {
     this.batchLogsDataLoaderSubject.next(true);
     this.service.loadBatchLogsList(interfaceTypeCode,displayAll, paginationParameters).subscribe({
       next: (dataResponse:any) => {
-        debugger
+        
         const gridView: any = {
           data: dataResponse['items'],
           total: dataResponse?.totalCount,
@@ -113,7 +113,7 @@ export class SystemInterfaceDashboardFacade {
         
       },
       error: (err) => {
-        debugger
+        
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)  ;
         this.batchLogsDataLoaderSubject.next(false);
         this.hideLoader();
@@ -122,9 +122,9 @@ export class SystemInterfaceDashboardFacade {
    
   
   }
-  getBatchLogExceptionsLists(fileId: string,processTypeCode:string, params:any): void {
+  getBatchLogExceptionsLists(fileId: string,interfaceTypeCode:string,entityTypeCode:string, params:any): void {
     this.showLoader();
-    this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId,processTypeCode, params).subscribe({
+    this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId,interfaceTypeCode,entityTypeCode, params).subscribe({
       next: (batchlogExceptionResponse:any) => {
         const gridView: any = {
           data: batchlogExceptionResponse['items'],
