@@ -166,6 +166,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
  
   handleShowHistoricalClick(){
     this.displayAll=!this.displayAll;
+    this.loadClaimsListGrid();
   }
   loadClaimsListGrid() {
     
