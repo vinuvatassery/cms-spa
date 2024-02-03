@@ -162,6 +162,14 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.state.skip = 0;
     this.loadClaimsListGrid();
   }
+
+  childPageSelectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadClaimsListGrid();
+  }
+
+ 
   handleShowHistoricalClick(){
     this.displayAll=!this.displayAll;
   }
@@ -190,6 +198,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   
   public dataStateChange(stateData: any): void {
     
+    debugger
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
