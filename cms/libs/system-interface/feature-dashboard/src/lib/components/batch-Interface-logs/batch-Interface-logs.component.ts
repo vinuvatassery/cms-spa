@@ -126,15 +126,9 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
       sort: this.sort,
     };
     this.loadClaimsListGrid();
-    //this.loadLovList();
     this.lovFacade.getInterfaceProcessBatchLov();
     this.lovFacade.getInterfaceExceptionLov();
   }
-  // loadLovList(){
-  //   this.lovsList$.subscribe((data: any[]) => {
-  //     //this.InterfaceType = data.sort((a, b) => a.sequenceNbr - b.sequenceNbr)[0];
-  //   });
-  // }
 
   ngOnChanges(): void {
    
@@ -209,7 +203,6 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     if(stateData?.filter!=undefined){
     this.InterfaceType=stateData?.filter?.filters[0].filters[0].value
     }
-   // this.setFilterBy(true, '', this.filter);
     this.loadClaimsListGrid();
   }
   
@@ -218,41 +211,11 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.filterData = filter;
   }
   public columnChange(e: any) {
-   // this.cdr.detectChanges();
   }
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
-  // private setFilterBy(
-  //   isFromGrid: boolean,
-  //   searchValue: any = '',
-  //   filter: any = []
-  // ) {
-  //   this.filteredByColumnDesc = '';
-  //   if (isFromGrid) {
-  //     if (filter.length > 0) {
-  //       const filteredColumns = this.filter?.map((f: any) => {
-  //         const filteredColumns = f.filters
-  //           ?.filter((fld: any) => fld.value)
-  //           ?.map((fld: any) => this.gridColumns[fld.field]);
-  //         return [...new Set(filteredColumns)];
-  //       });
-
-  //       this.filteredByColumnDesc =
-  //         [...new Set(filteredColumns)]?.sort()?.join(', ') ?? '';
-  //     }
-  //     return;
-  //   }
-
-  //   if (searchValue !== '') {
-  //     this.filteredByColumnDesc =
-  //       this.searchColumnList?.find(
-  //         (i) => i.columnName === this.selectedSearchColumn
-  //       )?.columnDesc ?? '';
-  //   }
-  // }
-
-
+  
   private isValidDate = (searchValue: any) =>
   isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 
@@ -335,8 +298,7 @@ public onDetailExpand(e: any): void {
     this.sortValue,
     this.sortType,
     JSON.stringify({ logic: 'and', filters: [] }));
-    //this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.interfaceTypeCode,e.dataItem.entityTypeCode, param);
-    this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists('67F2C0D8-85AA-49BB-A4A7-CDE131FB56D8',e.dataItem.interfaceTypeCode,'RECORD', param);
+   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists('67F2C0D8-85AA-49BB-A4A7-CDE131FB56D8',e.dataItem.interfaceTypeCode,'RECORD', param);
 
 }
 restGrid() {
