@@ -4,10 +4,12 @@ import {
   ClientProfile, ClientFacade, Client,
   ClientCaseEligibility, ClientPronoun, ClientGender,
   ClientRace, ClientSexualIdentity, ClientCaseEligibilityFlag,
-  ClientCaseEligibilityAndFlag, YesNoFlag, ControlPrefix,
-  MaterialFormat, PronounCode, TransGenderCode, ApplicantInfo,
+  ClientCaseEligibilityAndFlag, ControlPrefix,
+  PronounCode, TransGenderCode, ApplicantInfo,
   CaseFacade
 } from '@cms/case-management/domain';
+import { MaterialFormat, YesNoFlag } from '@cms/shared/ui-common';
+
 import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { of } from 'rxjs';
@@ -208,6 +210,7 @@ export class ClientReadOnlyViewComponent implements OnInit{
             this.clientFacade.runImportedClaimRules(this.clientId);
             this.onCloseEditClientInformationClicked();
             this.onUpdateApplicantInfo.emit();
+            this.clientFacade.reloadClientHeader();
           },
           error: (error: any) => {
             this.loaderService.hide();

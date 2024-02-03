@@ -19,8 +19,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy
+  State
 } from '@progress/kendo-data-query';
 import { BehaviorSubject, Subject, first } from 'rxjs';
 
@@ -776,8 +775,8 @@ pageNumberAndCountChangedInSelectAll() {
   modalCloseAddEditClaimsFormModal(result: any) {
     if (result === true) {
       this.loadFinancialClaimsAllPaymentsListGrid();
-      this.addEditClaimsFormDialog.close();
     }
+    this.addEditClaimsFormDialog.close();
   }
 
   selectionChange(dataItem:any, selected:boolean){

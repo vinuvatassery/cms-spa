@@ -67,8 +67,8 @@ export class FinancialPremiumsDataService {
   }
 
 
-  loadBatchLogListService(premiumType : string ,batchId : string,paginationParameters : any) {
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-batches/${batchId}/payments`,paginationParameters);
+  loadBatchLogListService(isReconciled: boolean, premiumType : string ,batchId : string, paginationParameters : any) {
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/payment-batches/${batchId}/payments?isReconciled=${isReconciled}`,paginationParameters);
   }
 
   loadPremiumServicesByPayment(premiumType : string ,paymentId : string,paginationParameters : any) {
@@ -304,8 +304,8 @@ export class FinancialPremiumsDataService {
     );
   }
 
-  loadPremiumPrintAdviceLetterData(printAdviceLetterData: any, premiumType: any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/print-advice-letter-summary`, printAdviceLetterData);
+  loadPremiumPrintAdviceLetterData(isReconciled: boolean, printAdviceLetterData: any, premiumType: any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/print-advice-letter-summary?isReconciled=${isReconciled}`, printAdviceLetterData);
   }
 
   reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData: any, premiumType:any) {
@@ -437,7 +437,7 @@ batchClaims(batchPremiums: BatchPremium, claimsType: string) {
     return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumssType}/batches/print-advice-letter`,templateParams);
   }
 
-  checkWarrantNumber(batchId:any, warrantNumber:any, vendorId:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/medical/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
+  checkWarrantNumber(batchId:any, warrantNumber:any, vendorId:any,premiumType:any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/premiums/${premiumType}/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
   }
 }

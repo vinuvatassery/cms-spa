@@ -5,13 +5,13 @@ import { debounceTime, distinctUntilChanged, pairwise, startWith, first, forkJoi
 /** Facades **/
 import {
   DrugPharmacyFacade, WorkflowFacade, PrescriptionDrugFacade, PrescriptionDrug,
-  CompletionChecklist, NavigationType, YesNoFlag
+  CompletionChecklist, NavigationType
 } from '@cms/case-management/domain';
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
-import { StatusFlag } from '@cms/shared/ui-common';
+import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-drug-page',

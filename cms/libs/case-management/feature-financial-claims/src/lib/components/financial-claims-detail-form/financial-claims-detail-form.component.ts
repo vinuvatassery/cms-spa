@@ -563,7 +563,9 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
     if(this.addClaimServicesForm.length > 1 ){
     let form = this.addClaimServicesForm.value[i];
-    this.deletedServices.push(form.tpaInvoiceId);
+    if (form.tpaInvoiceId) {
+      this.deletedServices.push(form.tpaInvoiceId);
+    }
     this.addClaimServicesForm.removeAt(i);
     this.addExceptionForm.removeAt(i);
     }
@@ -675,7 +677,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       claimNbr: formValues.invoiceId,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       paymentRequestId: this.isEdit ? this.paymentRequestId : null,
-      paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : PaymentMethodCode.ACH,
+      paymentMethodCode: this.isSpotsPayment ? PaymentMethodCode.SPOTS : formValues.medicalProvider.paymentMethodCode,
       exceptionFlag: formValues.parentExceptionFlag,
       exceptionTypeCode: formValues.parentExceptionTypeCode,
       exceptionReasonCode: formValues.parentReasonForException,
@@ -1126,7 +1128,15 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 duplicatePaymentObject:any = {};
   getExceptionFormValue(controlName: string, index: any)
   {
-    return this.addExceptionForm.at(index).get(controlName)?.value
+    let formValue = this.addExceptionForm.at(index).get(controlName)?.value;
+    const ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
+    if(formValue){
+      ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': true});
+    }else{
+      ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': null});
+      ctpCodeIsvalid?.controls['cptCode'].updateValueAndValidity();
+    }
+    return formValue;
   }
   public onPrintDenialLetterOpen() {
     this.isPrintDenailLetterClicked = true;

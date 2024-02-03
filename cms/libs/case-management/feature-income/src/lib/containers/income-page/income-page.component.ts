@@ -20,7 +20,7 @@ import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
-
+  
   @ViewChildren("proofSchoolDropdown") public proofSchoolDropdown!: QueryList<DropDownListComponent>;
   /** Private properties **/
   private saveClickSubscription !: Subscription;  /** Public Methods **/
@@ -50,6 +50,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   sessionId: any = "";
   clientId: any;
   isProofOfSchoolDocumentUploaded: boolean = true;
+  isInValidDateRange:boolean = false;
   clientCaseEligibilityId: string = "";
   clientCaseId: any;
   incomeData: any = {};
@@ -332,7 +333,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.hasValidIncome=false;
       let todayDate = new Date();
       todayDate = new Date(`${todayDate.getFullYear()}-${todayDate.getMonth()+1}-${todayDate.getDate()}`)
-      if(this.isCerForm != true){ 
+      if(this.isCerForm != true){
         if(this.incomeData.clientIncomes?.filter((x:any) => (x.incomeEndDate != null && new Date(x.incomeEndDate.split('T')[0]) >= todayDate) || x.incomeEndDate === null).length>0){
           this.hasValidIncome=true;
         }
@@ -411,7 +412,14 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       const todayDate= new Date();
       if(signedDate>todayDate){
         this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setErrors({'incorrect':true})
+        this.isInValidDateRange = false;
       }
+      const minSignedDate = new Date(1753,0,1);
+      if(signedDate <= minSignedDate){
+        this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setErrors({'incorrect':true})
+        this.isInValidDateRange = true;
+      }
+
 
       if (this.noIncomeDetailsForm.valid) {
         this.noIncomeData.noIncomeFlag = this.hasNoIncome ? StatusFlag.Yes :StatusFlag.No;
@@ -647,8 +655,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.loadIncomeListHandle(gridDataRefinerValue);
   }
  UploadDocumentValidation(){
-    if(this.isCerForm != true){
-    let uploadedProofOfSchoolDependents = this.dependentsProofOfSchools.filter((item :any) => !!item.documentPath);
+    if(this.isCerForm != true && this.dependentsProofOfSchools?.length > 0){
+    const uploadedProofOfSchoolDependents = this.dependentsProofOfSchools.filter((item :any) => !!item.documentPath);
   if(uploadedProofOfSchoolDependents?.length == this.incomeData?.dependents?.length){
   this.isProofOfSchoolDocumentUploaded=true;
 }

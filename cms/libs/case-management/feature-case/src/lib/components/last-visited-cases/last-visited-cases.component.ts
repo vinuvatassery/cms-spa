@@ -82,7 +82,7 @@ export class LastVisitedCasesComponent implements OnInit, OnDestroy {
         queryParams: {
           sid: session?.sessionId,
           eid: session?.entityId,
-          wtc: WorkflowTypeCode.NewCase
+          wtc: session?.workflowTypeCode ? session?.workflowTypeCode : WorkflowTypeCode.NewCase
         }
       });
     }

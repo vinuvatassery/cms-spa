@@ -167,7 +167,7 @@ export class DocumentListComponent implements OnInit {
       columnName : columnName
     };
     this.pageSizes = this.documentFacade.gridPageSizes;
-    this.documentFacade.getDocumentsByClientCaseEligibilityId(this.caseEligibilityId,
+    this.documentFacade.getDocumentsByClientCaseEligibilityId(this.clientId,
       gridDataRefinerValue.skipcount,
       gridDataRefinerValue.maxResultCount,
       gridDataRefinerValue.sort,

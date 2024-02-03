@@ -75,6 +75,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   isPageCountChanged: boolean = false;
   isPageChanged: boolean = false;
   unCheckedProcessRequest:any=[];
+  isReconciled: boolean = false;
   deletemodelbody='This action cannot be undone, but you may add a claim at any time. This claim will not appear in a batch';
 
   @Input() addPharmacyClaim$: any;
@@ -325,10 +326,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.loadBatchLogListGrid();
     this.pharmacyBatchLogListSubscription();
     this.batchLogGridLists$.subscribe((res:any)=>{
-      if(!res.data || res.data.length==0)
-      {
-        this.route.navigate(['/financial-management/pharmacy-claims'] );       
-      }
       this.batchStatus = res && res.data[0].batchStatus
       this.initiateBulkMore()
     })
@@ -350,6 +347,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
         text: 'PRINT VISA AUTHORIZATIONS',
         icon: 'print',
         click: (data: any): void => {
+          this.isReconciled = true;
+          this.loadBatchLogListGrid();
           this.isRequestPaymentClicked = false;
           this.isPrintVisaAuthorizationClicked = true;
             
@@ -415,6 +414,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       sortColumn: this.sortColumn ?? 'vendorName',
       sortType: sortTypeValue ?? 'asc',
       filter: this.filter,
+      isReconciled: this.isReconciled
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -642,6 +642,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   }
 
   onBulkOptionCancelClicked(){
+    this.isReconciled = false;
     this.isRequestPaymentClicked = false;
     this.isPrintVisaAuthorizationClicked = false;
     this.selectAll = false;
@@ -650,8 +651,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.noOfRecordToPrint = 0;
     this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
     this.markAsUnChecked(this.selectedDataIfSelectAllUnchecked);
-    this.selectedDataRows.PrintAdviceLetterSelected = [];
-    this.selectedDataRows.PrintAdviceLetterUnSelected = [];
     this.unCheckedPaymentRequest=[];
     this.selectedDataIfSelectAllUnchecked=[];
     this.loadBatchLogListGrid();
@@ -722,6 +721,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       )
       .subscribe((unbatchEntireBatchResponse: any) => {
         if (unbatchEntireBatchResponse ?? false) {
+         this.backToBatch(null)
           this.loadBatchLogListGrid();
         }
       });
@@ -857,7 +857,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     }
     this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
-    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print', 'isReconciled': this.isReconciled}
     this.disablePreviewButton(this.selectedAllPaymentsList);
   }
 
@@ -908,7 +908,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     }
      this.selectedAllPaymentsList = {'selectAll':this.selectAll,'PrintAdviceLetterUnSelected':this.unCheckedPaymentRequest,
     'PrintAdviceLetterSelected':this.selectedDataIfSelectAllUnchecked,'print':true,
-    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print'}
+    'batchId':null,'currentPrintAdviceLetterGridFilter':null,'requestFlow':'print', 'isReconciled': this.isReconciled}
     this.disablePreviewButton(this.selectedAllPaymentsList);
   }
 
@@ -1026,7 +1026,7 @@ pageNumberAndCountChangedInSelectAll() {
     this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
     for (const item of this.batchLogGridLists) {
       // Check if the item is in the second list.
-      const isItemInSecondList = this.unCheckedProcessRequest.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
+      const isItemInSecondList = this.unCheckedPaymentRequest.find((item2 :any) => item2.paymentRequestId === item.paymentRequestId);
       // If the item is in the second list, mark it as selected true.
       if (isItemInSecondList) {
         item.selected = false;

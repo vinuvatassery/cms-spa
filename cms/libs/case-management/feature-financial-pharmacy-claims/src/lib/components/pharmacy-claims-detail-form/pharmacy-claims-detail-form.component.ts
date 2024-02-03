@@ -15,7 +15,8 @@ import { Lov, UserManagementFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, first } from 'rxjs';
-import { FinancialVendorTypeCode } from 'libs/shared/ui-common/src/lib/enums/financial-vendor-type-code';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+
 @Component({
   selector: 'cms-pharmacy-claims-detail-form',
   templateUrl: './pharmacy-claims-detail-form.component.html',

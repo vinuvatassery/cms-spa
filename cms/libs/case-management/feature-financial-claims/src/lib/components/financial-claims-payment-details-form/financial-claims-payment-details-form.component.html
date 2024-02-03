@@ -1,41 +1,41 @@
 <form [formGroup]="medicalClaimPaymentForm" *ngIf="medicalClaimPaymentForm">
   <kendo-dialog-titlebar (close)="closePaymentDetailClicked()"> Edit Payment</kendo-dialog-titlebar>
-  
+
   <section class="k-dialog-body">
       <p class="text-muted mb-1">  Edit payment info and click “Update”. All fields are required unless otherwise stated. </p>
       <div class="flex-row">
         <div class="flex-col ">
           <kendo-floatinglabel text="Date Payment Reconciled">
-            <kendo-datepicker aria-label="Date Payment Reconciled" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
+            <kendo-datepicker aria-label="Date Payment Reconciled" [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="datePaymentReconciled"  format="MM-dd-yyyy"
             formatPlaceholder="formatPattern" (select)="dateValidate('RECONCILED')" (keyup)="dateValidate('RECONCILED')"
             placeholder="" (valueChange)="startDateOnChange()"></kendo-datepicker>
             <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentReconciled'].valid  && dateReconciledValidator">Future dates not allowed.</kendo-formerror>
-            <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentReconciled'].valid && !dateReconciledValidator">Date payment reconciled is required.</kendo-formerror>
-          </kendo-floatinglabel> 
+            <kendo-formerror *ngIf="medicalClaimPaymentForm.controls['datePaymentReconciled'].hasError('required') && !dateReconciledValidator">Date payment reconciled is required.</kendo-formerror>
+          </kendo-floatinglabel>
         </div>
         <div class="flex-col ">
           <kendo-floatinglabel text="Date Payment Sent">
-            <kendo-datepicker aria-label="Date Payment Sent" [fillMode]="formUiStyle.dateInputFillMode" [max]="currentDate"
+            <kendo-datepicker aria-label="Date Payment Sent" [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="datePaymentSent"  format="MM-dd-yyyy"
             formatPlaceholder="formatPattern" (select)="dateValidate('PAYMENT_SENT')" (keyup)="dateValidate('PAYMENT_SENT')"
-            (blur)="endDateOnChange()" [min]="endDateMin" (focus)="changeMinDate()"
+            (blur)="endDateOnChange()" (focus)="changeMinDate()"
             placeholder=""></kendo-datepicker>
             <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && datePaymentSentValidator">Future dates not allowed.</kendo-formerror>
-            <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && !paymentDateIsGreaterThanReconciledDate ">Date payment sent is required.</kendo-formerror>
+            <kendo-formerror *ngIf="medicalClaimPaymentForm.controls['datePaymentSent'].hasError('required')">Date payment sent is required.</kendo-formerror>
             <kendo-formerror
-              *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && paymentDateIsGreaterThanReconciledDate ">Date cannot be prior to date payment is reconciled.</kendo-formerror>
-          </kendo-floatinglabel>   
-  
+              *ngIf="!medicalClaimPaymentForm.controls['datePaymentSent'].hasError('required') && !medicalClaimPaymentForm.controls['datePaymentSent'].valid && !datePaymentSentValidator && paymentDateIsGreaterThanReconciledDate ">Date cannot be prior to date payment is reconciled.</kendo-formerror>
+          </kendo-floatinglabel>
+
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Payment Amount" class="amount-with-symbol">
             <span class="k-input-prefix custom-currencysymbol"> $ </span>
             <kendo-numerictextbox placeholder="Payment Amount" aria-label="Payment Amount" [spinners]="false" class="input-icon-right" placeholder="00.00"
-              [fillMode]="formUiStyle.inputFillMode" formControlName="paymentAmount" > 
+              [fillMode]="formUiStyle.inputFillMode" formControlName="paymentAmount" >
             </kendo-numerictextbox>
             <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['paymentAmount'].valid ">Payment amount is required.</kendo-formerror>
-          </kendo-floatinglabel> 
+          </kendo-floatinglabel>
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Warrant Number">
@@ -44,27 +44,27 @@
             </kendo-textbox>
             <kendo-formerror *ngIf="!medicalClaimPaymentForm.controls['warrantNumber'].valid ">Warrant number is required.</kendo-formerror>
           </kendo-floatinglabel>
-     
-  
+
+
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Note">
-            <kendo-textarea [fillMode]="formUiStyle.inputFillMode"  aria-label="Note" [rows]="1" 
+            <kendo-textarea [fillMode]="formUiStyle.inputFillMode"  aria-label="Note" [rows]="1"
             [maxlength]="tAreaCessationMaxLength"  (valueChange)="onTAreaCessationValueChange($event)"
             resizable="auto" formControlName="note">
             <kendo-textarea-suffix class="justify-content-end">
               <span class="counter">{{ tAreaCessationCounter }}</span>
             </kendo-textarea-suffix>
-            </kendo-textarea>  
-     
+            </kendo-textarea>
+
           </kendo-floatinglabel>
         </div>
-   
-   
-    
+
+
+
       </div>
     </section>
-    
+
     <kendo-dialog-actions>
       <div class="justify-content-between">
         <div class="justify-content-end">
@@ -83,4 +83,3 @@
       </div>
     </kendo-dialog-actions>
   </form>
-    

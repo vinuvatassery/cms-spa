@@ -71,36 +71,9 @@ export class FinancialClaimsBatchesLogListsComponent
     PaymentStatusCode.PaymentRequested,
     PaymentStatusCode.ManagerApproved,
   ];
-  public bulkMore = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'RECONCILE PAYMENTS',
-      icon: 'edit',
-      click: (data: any): void => {
-        this.navToReconcilePayments(data);
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'PRINT ADVICE LETTER',
-      icon: 'print',
-      click: (data: any): void => {
-        this.isRequestPaymentClicked = false;
-        this.isPrintAdviceLetterClicked = true;
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'UNBATCH ENTIRE BATCH',
-      icon: 'undo',
-      click: (data: any): void => {
-        if (!this.isBulkUnBatchOpened) {
-          this.isBulkUnBatchOpened = true;
-          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
-        }
-      },
-    },
-  ];
+
+  public bulkMore !:any
+
 
   @Input() claimsType: any;
   @Input() batchId: any;
@@ -150,6 +123,7 @@ export class FinancialClaimsBatchesLogListsComponent
   isPageChanged: boolean = false;
   unCheckedProcessRequest: any = [];
   batchLogGridLists!: any;
+  isReconciled: boolean = false;
 
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
@@ -207,7 +181,6 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedStatus = '';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   columnChangeDesc = 'Default Columns';
-
   //export
   showExportLoader = false;
 
@@ -216,7 +189,7 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedPaymentStatus: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
-
+  batchStatus = PaymentStatusCode.PendingApproval
   getBatchLogGridActions(dataItem: any) {
     return [{
       buttonType: 'btn-h-primary',
@@ -301,16 +274,60 @@ export class FinancialClaimsBatchesLogListsComponent
     this.sortColumnName = 'Item #';
     this.loadBatchLogListGrid();
     this.batchLogListSubscription();
-    this.paymentBatchName$.subscribe(res =>{
-      if(!res){
-         this.backToBatch(null);
-      }
-    })
+  }
+
+  initializeBulkMore(){
+    this.bulkMore = [
+      {
+        buttonType: 'btn-h-primary',
+        text: 'RECONCILE PAYMENTS',
+        icon: 'edit',
+        click: (data: any): void => {
+          this.navToReconcilePayments(data);
+        },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'PRINT ADVICE LETTER',
+        icon: 'print',
+        click: (data: any): void => {
+          this.isReconciled = true;
+          this.loadBatchLogListGrid();
+          this.isRequestPaymentClicked = false;
+          this.isPrintAdviceLetterClicked = true;
+        },
+      },
+      {
+        buttonType: 'btn-h-primary',
+        text: 'UNBATCH ENTIRE BATCH',
+        icon: 'undo',
+        disabled: [
+          PaymentStatusCode.Paid,
+          PaymentStatusCode.PaymentRequested,
+          PaymentStatusCode.ManagerApproved,
+        ].includes(this.batchStatus),
+        click: (data: any): void => {
+          if (!this.isBulkUnBatchOpened) {
+            this.isBulkUnBatchOpened = true;
+            this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+          }
+        },
+      },
+    ];
   }
 
   batchLogListSubscription() {
     this.batchLogListItemsSubscription = this.batchLogGridLists$.subscribe((response: any) => {
       this.totalRecord = response.total;
+     
+      var payments =  response && response.data
+      
+      payments.forEach((item :any) =>{
+        if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(item.paymentStatusCode)){
+          this.batchStatus = item.paymentStatusCode
+         }
+        })
+      this.initializeBulkMore()
       if (this.selectAll) {
         this.markAsChecked(response.data);
       }
@@ -391,10 +408,6 @@ export class FinancialClaimsBatchesLogListsComponent
     this.showDateSearchWarning = false;
     this.showNumberSearchWarning = false;
     this.loadBatchLogListGrid();
-  }
-
-  setNoOfRecordToBePrint(NoOfRecordToBePrint: any) {
-    this.selectedCount = NoOfRecordToBePrint;
   }
 
   onChange(data: any) {
@@ -539,6 +552,7 @@ export class FinancialClaimsBatchesLogListsComponent
   }
 
   onBulkOptionCancelClicked() {
+    this.isReconciled = false;
     this.selectAll = false;
     this.isRequestPaymentClicked = false;
     this.isPrintAdviceLetterClicked = false;
@@ -664,7 +678,7 @@ export class FinancialClaimsBatchesLogListsComponent
   disablePreviewButton(result: any) {
     this.selectedDataRows = result;
     this.selectedDataRows.batchId = this.batchId;
-    if (result.selectAll) {
+    if (result.selectAll && this.batchLogPrintAdviceLetterPagedList.data?.length > 0) {
       this.disablePrwButton = false;
     } else if (result.PrintAdviceLetterSelected.length > 0) {
       this.disablePrwButton = false;
@@ -812,6 +826,7 @@ export class FinancialClaimsBatchesLogListsComponent
       sortColumn: this.sortColumn ?? 'itemNbr',
       sortType: sortTypeValue ?? 'desc',
       filter: this.state?.['filter']?.['filters'] ?? [],
+      isReconciled: this.isReconciled
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
     this.currentPrintAdviceLetterGridFilter = this.state?.['filter']?.['filters'] ?? [];
@@ -876,22 +891,23 @@ export class FinancialClaimsBatchesLogListsComponent
   selectionAllChange() {
     this.unCheckedPaymentRequest = [];
     this.selectedDataIfSelectAllUnchecked = [];
+    this.batchLogPrintAdviceLetterPagedList.data = this.batchLogPrintAdviceLetterPagedList?.data.filter((x:any)=>x.checkNbr !== null && x.checkNbr !== undefined && x.checkNbr !== '');
     if (this.selectAll) {
-      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList.data);
+      this.markAsChecked(this.batchLogPrintAdviceLetterPagedList?.data);
       this.noOfRecordToPrint = this.totalRecord;
       this.selectedCount = this.noOfRecordToPrint;
     }
     else {
       this.markAsUnChecked(this.batchLogPrintAdviceLetterPagedList.data);
       this.noOfRecordToPrint = 0;
-      this.selectedCount = this.noOfRecordToPrint
+      this.selectedCount = this.noOfRecordToPrint;
     }
     this.selectedAllPaymentsList = {
       'selectAll': this.selectAll, 'PrintAdviceLetterUnSelected': this.unCheckedPaymentRequest,
       'PrintAdviceLetterSelected': this.selectedDataIfSelectAllUnchecked, 'print': true,
-      'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print'
+      'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print', 'isReconciled': this.isReconciled
     }
-    this.disablePreviewButton(this.selectedAllPaymentsList);
+    this.disablePreviewButton(this.selectedAllPaymentsList); 
   }
 
   markAsUnChecked(data: any) {
@@ -933,6 +949,7 @@ export class FinancialClaimsBatchesLogListsComponent
     }
     else {
       this.noOfRecordToPrint = this.noOfRecordToPrint + 1;
+      this.selectedCount = this.noOfRecordToPrint
       this.unCheckedPaymentRequest = this.unCheckedPaymentRequest.filter((item: any) => item.paymentRequestId !== dataItem.paymentRequestId);
       if (!this.selectAll) {
         this.selectedDataIfSelectAllUnchecked.push({ 'paymentRequestId': dataItem.paymentRequestId, 'vendorAddressId': dataItem.vendorAddressId, 'selected': true, 'batchId': dataItem.batchId, 'checkNbr': dataItem.checkNbr });
@@ -941,10 +958,9 @@ export class FinancialClaimsBatchesLogListsComponent
     this.selectedAllPaymentsList = {
       'selectAll': this.selectAll, 'PrintAdviceLetterUnSelected': this.unCheckedPaymentRequest,
       'PrintAdviceLetterSelected': this.selectedDataIfSelectAllUnchecked, 'print': true,
-      'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print'
+      'batchId': null, 'currentPrintAdviceLetterGridFilter': null, 'requestFlow': 'print', 'isReconciled': this.isReconciled
     }
     this.disablePreviewButton(this.selectedAllPaymentsList);
-
   }
 
   handleBatchPaymentsGridData() {
@@ -1001,7 +1017,7 @@ export class FinancialClaimsBatchesLogListsComponent
       this.selectedAllPaymentsList.PrintAdviceLetterSelected = [];
       for (const item of this.batchLogGridLists) {
         // Check if the item is in the second list.
-        const isItemInSecondList = this.unCheckedProcessRequest.find((item2: any) => item2.paymentRequestId === item.paymentRequestId);
+        const isItemInSecondList = this.unCheckedPaymentRequest.find((item2: any) => item2.paymentRequestId === item.paymentRequestId);
         // If the item is in the second list, mark it as selected true.
         if (isItemInSecondList) {
           item.selected = false;

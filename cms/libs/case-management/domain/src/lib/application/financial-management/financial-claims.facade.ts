@@ -47,6 +47,7 @@ export class FinancialClaimsFacade {
   public sortValueFinancialClaimsBatch = 'creationTime';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialClaimsBatch,
+    dir : 'desc'
   }];
 
   public sortValueFinancialClaimsPayments = 'batchNumber';
@@ -562,9 +563,9 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
   }
 
 
-  loadBatchLogListGrid(batchId: string, params:GridFilterParam, claimType:string){
+  loadBatchLogListGrid(batchId: string, isReconciled: boolean, params:GridFilterParam, claimType:string){
     this.paymentByBatchGridLoaderSubject.next(true);
-    this.financialClaimsDataService.loadPaymentsByBatch(batchId, params, claimType).subscribe({
+    this.financialClaimsDataService.loadPaymentsByBatch(batchId, isReconciled, params, claimType).subscribe({
       next: (dataResponse) => {
         const gridView: any = {
           data: dataResponse['items'],
@@ -721,12 +722,12 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       });
   }
 
-  loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any,claimsType:any) {
-    return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
+  loadPrintAdviceLetterData(isReconciled: boolean, batchId:any,printAdviceLetterData: any,claimsType:any) {
+    return this.financialClaimsDataService.getPrintAdviceLetterData(isReconciled, batchId,printAdviceLetterData,claimsType);
   }
 
-  reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any,claimsType:any) {
-    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData,claimsType);
+  reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any, claimsType:any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData, claimsType);
 }
 
 viewAdviceLetterData(printAdviceLetterData: any, claimsType:any) {
@@ -823,9 +824,9 @@ loadFinancialClaimsInvoiceList(paymentRequestId : string, skipcount: number,  ma
   return this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType) 
 }
 
-  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any, claimsType:any){
     this.warrantNumberChangeLoaderSubject.next(true);
-    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId,claimsType).subscribe({
       next: (dataResponse:any) => {       
         this.warrantNumberChangeSubject.next(dataResponse);
         this.warrantNumberChangeLoaderSubject.next(false);

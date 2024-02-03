@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList, ViewChild } from '@angular/core';
-import { PaymentsFacade,BillingAddressFacade,VendorContactsFacade, ContactResponse ,FinancialVendorTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { PaymentsFacade, BillingAddressFacade, VendorContactsFacade, ContactResponse, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';

@@ -76,9 +76,9 @@ export class FinancialClaimsDataService {
     );
   }
 
-  loadPaymentsByBatch(batchId: string, params:GridFilterParam, claimType:string){
+  loadPaymentsByBatch(batchId: string, isReconciled: boolean, params:GridFilterParam, claimType:string){
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments`, params);
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments?isReconciled=${isReconciled}`, params);
   }
 
   loadBatchName(batchId: string){
@@ -429,8 +429,8 @@ export class FinancialClaimsDataService {
     );
   }
 
-  getPrintAdviceLetterData(batchId:any,selectedProviders: any, claimsType:any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/print-advice-letter-summary`,selectedProviders);
+  getPrintAdviceLetterData(isReconciled: boolean, batchId:any,selectedProviders: any, claimsType:any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/print-advice-letter-summary?isReconciled=${isReconciled}`,selectedProviders);
   }
 
   reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData: any, claimsType:any) {
@@ -510,7 +510,7 @@ export class FinancialClaimsDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/${path}/service/${tpaInvoiceId}`
     );
   }
-  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/medical/payments/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any, claimsType: any){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimsType}/payments/batches/${batchId}/vendors/${vendorId}/warrants/${warrantNumber}`);
   }
 }

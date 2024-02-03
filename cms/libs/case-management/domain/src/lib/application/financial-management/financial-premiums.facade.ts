@@ -239,6 +239,7 @@ export class FinancialPremiumsFacade {
           const gridView = {
             data: dataResponse["items"],
             total: dataResponse["totalCount"],
+            lovs: dataResponse["lovs"],
             acceptsReportsCount: dataResponse['acceptReportsFlagQueryCount'],
           };
           this.financialPremiumsAllPaymentsDataSubject.next(gridView);
@@ -262,9 +263,9 @@ export class FinancialPremiumsFacade {
     });
   }
 
-  loadBatchLogListGrid(premiumType : string ,batchId : string,paginationParameters : any){
+  loadBatchLogListGrid(isReconciled: boolean, premiumType : string ,batchId : string, paginationParameters : any){
     this.paymentByBatchGridLoaderSubject.next(true);
-    this.financialPremiumsDataService.loadBatchLogListService(premiumType ,batchId ,paginationParameters ).subscribe({
+    this.financialPremiumsDataService.loadBatchLogListService(isReconciled, premiumType ,batchId ,paginationParameters ).subscribe({
       next: (dataResponse : any) => {
         const gridView = {
           data: dataResponse['items'],
@@ -381,8 +382,8 @@ export class FinancialPremiumsFacade {
       });
     }
 
-  loadPremiumPrintAdviceLetterData(printAdviceLetterData: any, premiumType: any) {
-    return this.financialPremiumsDataService.loadPremiumPrintAdviceLetterData(printAdviceLetterData, premiumType);
+  loadPremiumPrintAdviceLetterData(isReconciled: boolean, printAdviceLetterData: any, premiumType: any) {
+    return this.financialPremiumsDataService.loadPremiumPrintAdviceLetterData(isReconciled, printAdviceLetterData, premiumType);
   }
 
   reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any, premiumType:any) {
@@ -655,9 +656,9 @@ batchPremium(batchPremiums: BatchPremium, claimsType: string) {
       return this.financialPremiumsDataService.removeSelectedPremiums(selectedPremiumPayments, premiumsType);
     }
 
-    checkWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+    checkWarrantNumber(batchId:any,warrantNumber:any,vendorId:any,premiumType:any){
       this.warrantNumberChangeLoaderSubject.next(true);
-      this.financialPremiumsDataService.checkWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+      this.financialPremiumsDataService.checkWarrantNumber(batchId,warrantNumber,vendorId,premiumType).subscribe({
         next: (dataResponse:any) => {
           this.warrantNumberChangeSubject.next(dataResponse);
           this.warrantNumberChangeLoaderSubject.next(false);
