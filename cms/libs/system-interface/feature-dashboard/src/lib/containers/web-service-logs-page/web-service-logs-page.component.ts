@@ -42,8 +42,6 @@ export class WebServiceLogsPageComponent implements OnInit {
     };
     this.loadActivityEventLog();
     this.lovFacade.getInterfaceWebLogLovs();
-    //this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceTypeCode);
-    //this.webLogsDataList$.subscribe();
   }
 
   loadActivityEventLog() {
@@ -52,8 +50,6 @@ export class WebServiceLogsPageComponent implements OnInit {
 
   loadWebLogList(data: any) {
     this.interfaceTypeCode = data;
-    // this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceTypeCode);
-    // this.webLogsList$.subscribe();
     
   }
 }
