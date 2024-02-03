@@ -6,11 +6,9 @@ import {
   OnInit,
   OnChanges,
   Output,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ConfigurationProvider } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
@@ -45,8 +43,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   @Output() loadWebLogList = new EventEmitter<string>();
 
   constructor(
-    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
-    private readonly configProvider: ConfigurationProvider, private readonly lovFacade: LovFacade,
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
   ) { }
 
   public dataStateChange(stateData: any): void {
