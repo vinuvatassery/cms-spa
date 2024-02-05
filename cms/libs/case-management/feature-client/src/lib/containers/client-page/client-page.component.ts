@@ -519,15 +519,30 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.appInfoForm.controls['prmInsNotApplicable'].value) {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName =
         null;
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceMiddleName =
+        null;
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName =
         null;
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag =
+        StatusFlag.Yes;
+      this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNoMiddleInitialFlag =
         StatusFlag.Yes;
     } else {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName =
         this.appInfoForm.controls['prmInsFirstName'].value.trim() === ''
           ? null
           : this.appInfoForm.controls['prmInsFirstName'].value;
+
+      if(this.appInfoForm.controls['chkPrmInsMiddleName'].value ?? false) {
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceMiddleName = null;
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNoMiddleInitialFlag = StatusFlag.Yes;
+          } else {
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceMiddleName =
+            this.appInfoForm.controls['prmInsMiddleName'].value.trim() === ''
+            ? null
+            : this.appInfoForm.controls['prmInsMiddleName'].value;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNoMiddleInitialFlag = StatusFlag.No;
+          }
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName =
         this.appInfoForm.controls['prmInsLastName'].value.trim() === ''
           ? null
@@ -541,15 +556,30 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (this.appInfoForm.controls['officialIdsNotApplicable'].value) {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName =
         null;
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdMiddleName =
+        null;
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName =
         null;
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag =
+        StatusFlag.Yes;
+      this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNoMiddleInitialFlag =
         StatusFlag.Yes;
     } else {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName =
         this.appInfoForm.controls['officialIdFirstName'].value.trim() === ''
           ? null
           : this.appInfoForm.controls['officialIdFirstName'].value;
+
+         if(this.appInfoForm.controls['chkOfficialIdMiddleName'].value ?? false) {
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdMiddleName = null;
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNoMiddleInitialFlag = StatusFlag.Yes;
+              } else {
+                this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdMiddleName =
+                this.appInfoForm.controls['officialIdMiddleName'].value.trim() === ''
+                ? null
+                : this.appInfoForm.controls['officialIdMiddleName'].value;
+              this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNoMiddleInitialFlag = StatusFlag.No;
+              }
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName =
         this.appInfoForm.controls['officialIdLastName'].value.trim() === ''
           ? null
