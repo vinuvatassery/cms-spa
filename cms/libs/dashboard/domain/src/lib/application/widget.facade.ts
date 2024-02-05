@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { WidgetService } from '../infrastructure/widget.service'; 
 
 @Injectable({ providedIn: 'root' })
@@ -11,7 +11,7 @@ export class WidgetFacade {
   public activeClientsByGroupChart$ = this.activeClientsByGroupSubject.asObservable(); 
 
    
-  private activeClientsByStatusSubject = new BehaviorSubject<any>([]);
+  private activeClientsByStatusSubject = new Subject<any>();
   public activeClientsByStatusChart$ = this.activeClientsByStatusSubject.asObservable(); 
 
   private netIncomeSubject = new BehaviorSubject<any>([]);
@@ -60,10 +60,15 @@ export class WidgetFacade {
     });
   }
 
-  loadActiveClientsByStatusChart() {
-    this.widgetService.getActiveClientsByStatus().subscribe({
-      next: (result) => { 
-        this.activeClientsByStatusSubject.next(result);
+  loadActiveClientsByStatusChart(dashboardId : string) {
+    this.widgetService.getActiveClientsByStatus(dashboardId).subscribe({
+      next: (result : any) => { 
+       
+        let widgetProperties = JSON.parse(result.widgetProperties);
+        
+        widgetProperties.chartData.series[0].data = result?.clientsbyStatus
+        
+        this.activeClientsByStatusSubject.next(widgetProperties);
       },
        
       error: (err) => { 

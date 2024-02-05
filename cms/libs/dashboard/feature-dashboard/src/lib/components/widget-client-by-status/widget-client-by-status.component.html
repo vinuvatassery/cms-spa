@@ -1,7 +1,5 @@
-<div class="dashboard-cards-wrapper">
-      <button *ngIf="isEditDashboard" (click)="removeWidgetCard()" kendoButton class="widget_remove_btn"><span class="material-icons">
-            remove
-            </span></button>
+<div *ngIf="activeClientsByStatus">
+   
       <div class="dash-header-with-filters">
             <h5>ACTIVE CLIENTS BY STATUS</h5>
             <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" value="All Clients" rounded="medium"
@@ -11,7 +9,7 @@
       <div class="dashboard-cards-container">
  
 
-            <kendo-chart  class="dash_chart" *ngIf="activeClientsByStatus" [chartArea]="activeClientsByStatus?.chartArea"
+            <kendo-chart  class="dash_chart" *ngIf="activeClientsByStatus" [chartArea]="activeClientsByStatus?.chartData?.chartArea"
             (seriesClick)="onClick($event)">
                   <ng-template kendoChartDonutCenterTemplate >
                         <h3>1000</h3>

@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs'; 
 
 @Injectable({
   providedIn: 'root',
 })
 export class WidgetService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient ,private configurationProvider: ConfigurationProvider) {}
 
   getRecentlyViewedClients(): Observable<any> {
     return of([
@@ -144,7 +145,11 @@ export class WidgetService {
       },
     });
   }
-  getActiveClientsByStatus(): Observable<any> {
+  getActiveClientsByStatus(dashboardId : string) {
+
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-status`
+    );
     return of({
       component: 'ClientByStatus',
       chartData: {

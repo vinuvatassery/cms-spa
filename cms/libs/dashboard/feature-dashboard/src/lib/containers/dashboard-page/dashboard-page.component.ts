@@ -10,7 +10,7 @@ import {  DisplayGrid,
   GridsterItem, 
   GridsterItemComponentInterface, 
   GridType } from 'angular-gridster2';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'dashboard-dashboard-page',
   templateUrl: './dashboard-page.component.html',
@@ -27,9 +27,28 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   };
     //#region Variables
  public dashboardContentList$ =  this.dashboardWrapperFacade.dashboardContentList$;
+ public dashboardAllWidgets$ =  this.dashboardWrapperFacade.dashboardAllWidgets$;
   public dashboardConfiguration$ =  this.dashboardWrapperFacade.dashboardConfiguration$;
+
+  private dashboardContentListDataSubject = new Subject<any>();
+  public dashboardContentListData$ =  this.dashboardContentListDataSubject.asObservable();
+
+  private dashboardAllWidgetsDataSubject = new Subject<any>();
+  public dashboardAllWidgetsListData$ =  this.dashboardAllWidgetsDataSubject.asObservable();
+
+  dashBoardContentData! :any
+  dashBoardAllWidgetsData! :any
   configSubscription!: Subscription;
+  dashBoardContentSubscription!: Subscription;
+  dashBoardAllWidgetsSubscription!: Subscription;
   configSubscriptionItems: GridsterConfig = [];
+  allWidgetsconfigSubscriptionItems: GridsterConfig   = {     
+    itemChangeCallback: DashboardPageComponent.itemChange,
+    itemResizeCallback: this.itemResize,  
+    draggable: { enabled: false },
+    resizable: { enabled: false },
+  }
+  dashBoardSubscriptionItems: any 
   //#endregion 
   public events: string[] = [];
   isReorderEnable = false;
@@ -93,10 +112,25 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit() { 
-    
+    this.dashboardWrapperFacade.getDashboardAllWidgets();
+    this.dashBoardAllWidgetsSubscribe()
     this.ConfigureDashboard();
     this.loadDashboadContent();
-   
+   this.dashBoardContentSubscribe()
+  }
+
+   dashBoardContentSubscribe() {
+    this.dashBoardContentSubscription = this.dashboardContentList$.subscribe((response) => {          
+       this.dashBoardContentData = response
+       this.dashboardContentListDataSubject.next(response)
+    });
+  }
+
+  dashBoardAllWidgetsSubscribe() {
+    this.dashBoardAllWidgetsSubscription = this.dashboardAllWidgets$.subscribe((response) => {          
+       this.dashBoardAllWidgetsData = response
+       this.dashboardAllWidgetsDataSubject.next(response)
+    });
   }
  
   removeDashboardWidget(data:any){
@@ -153,7 +187,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     item: GridsterItem,
     itemComponent: GridsterItemComponentInterface
   ) {
-    debugger
+    
     console.info('itemChanged', item, itemComponent);
   }
 
@@ -164,7 +198,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   changedOptions() {
-    debugger
+    
   }
 
   removeItem(item : any) {
@@ -172,18 +206,27 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   addItem(item : any)
+  {    
+
+    this.dashBoardContentData.push(item)   
+    
+    this.dashBoardAllWidgetsData = this.dashBoardAllWidgetsData.filter((x : any) => !(x.widgetId == item.widgetId));
+
+    this.dashboardContentListDataSubject.next(this.dashBoardContentData)
+
+    this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData)
+  }
+
+  removeWidget(item : any)
   {
- const  data = {
-      id: 1,
-      cols: 2,
-      rows: 3,
-      x: 0,
-      y: 0,
-      component: item,
-      isVisible: true,
-    }
-    debugger
-    this.dashboard.push(data)
+    this.dashBoardAllWidgetsData.push(item)
+    
+    this.dashBoardContentData = this.dashBoardContentData.filter((x : any) => !(x.widgetId == item.widgetId));
+
+    this.dashboardContentListDataSubject.next(this.dashBoardContentData)
+
+    this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData)
+
   }
   
 }

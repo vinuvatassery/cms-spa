@@ -1,5 +1,5 @@
 
-import { Component,ChangeDetectionStrategy, OnInit, OnDestroy, EventEmitter, Input, Output } from '@angular/core';
+import { Component,ChangeDetectionStrategy, OnInit, OnDestroy, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WidgetFacade, } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -20,14 +20,15 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
   @Input() isEditDashboard!: any; 
   @Input() dashboardId! : any
   @Output() removeWidget = new EventEmitter<string>();
-  constructor(private widgetFacade: WidgetFacade ,    private readonly router: Router ,private readonly activatedRoute : ActivatedRoute ) {}
+  constructor(private widgetFacade: WidgetFacade ,    private readonly router: Router ,private readonly activatedRoute : ActivatedRoute,
+    private readonly cd: ChangeDetectorRef ) {}
 
 
   removeWidgetCard(){
     this.removeWidget.emit();
   }
   ngOnInit(): void { 
-    debugger
+    
     this.loadActiveClientsByStatusChart();
   }
   public labelContent(e: SeriesLabelsContentArgs): string {
@@ -38,20 +39,23 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
     this.destroy$.complete();
   }
   loadActiveClientsByStatusChart() {
-    this.widgetFacade.loadActiveClientsByStatusChart();
+    this.widgetFacade.loadActiveClientsByStatusChart("e2301551-610c-43bf-b7c9-9b623ed425c3");
     this.widgetFacade.activeClientsByStatusChart$
-      .pipe(takeUntil(this.destroy$))
+      //.pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response) {
             this.activeClientsByStatus = response;
+            debugger
+            this.cd.detectChanges();
+            
           }
         }
       });
   }
 
   public onClick(event: SeriesClickEvent): void {
-    debugger
+    
    // event.dataItem.exploded = !event.dataItem.exploded;
     //this.pieData = this.pieData.slice();
     const query = {

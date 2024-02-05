@@ -16,6 +16,11 @@ export class DashboardWrapperService {
 
   options!: GridsterConfig;
 
+  getDashboardAllWidgets() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/all-widgets`
+    );
+    }
   getDashboardContent(subTypeCode : string) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/${subTypeCode}`

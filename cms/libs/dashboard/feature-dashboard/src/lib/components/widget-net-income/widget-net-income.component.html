@@ -1,7 +1,4 @@
-<div class="dashboard-cards-wrapper">
-      <button *ngIf="isEditDashboard" (click)="removeWidgetCard()" kendoButton class="widget_remove_btn"><span class="material-icons">
-            remove
-            </span></button>
+
       <div class="dash-header-with-filters">
             <h5>NET INCOME</h5>
             <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" value="Last Year" rounded="medium"
@@ -21,4 +18,3 @@
                   </kendo-chart-tooltip>
             </kendo-chart>
       </div>
-</div>
