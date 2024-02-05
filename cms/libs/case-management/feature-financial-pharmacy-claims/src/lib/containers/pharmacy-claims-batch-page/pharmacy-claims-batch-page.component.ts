@@ -84,7 +84,7 @@ export class PharmacyClaimsBatchPageComponent {
     this.dataExportParameters = event
     const batchId = this.route.snapshot.queryParams['bid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
-    this.financialPharmacyClaimsFacade.loadBatchLogListGrid(batchId, params, this.claimsType);
+    this.financialPharmacyClaimsFacade.loadBatchLogListGrid(batchId, event.isReconciled, params, this.claimsType);
   }
   
   getPharmacyClaim(paymentRequestId: string) {
@@ -107,7 +107,7 @@ export class PharmacyClaimsBatchPageComponent {
       const batchId = this.route.snapshot.queryParams['bid'];
       const fileName = (this.claimsType[0].toUpperCase() + this.claimsType.substr(1).toLowerCase())  +' Pharmacy Batch Payments'
 
-      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`payment-batches/${batchId}/payments` , fileName)
+      this.documentFacade.getExportFile(vendorPageAndSortedRequest,`payment-batches/${batchId}/payments?isReconciled=${data.isReconciled}` , fileName)
     }
   }
   unBatchEntireBatchClick() { 
