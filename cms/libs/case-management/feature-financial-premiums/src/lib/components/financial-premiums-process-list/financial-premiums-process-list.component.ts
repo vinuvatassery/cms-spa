@@ -905,6 +905,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   }
 
   selectedKeysChange(selection: any) {
+    this.selectedProcessClaims = selection;
     this.selectedSendReportList = selection;
     this.checkedAndUncheckedRecordsFromSelectAll = [];
     this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': selection.paymentRequestId, 'vendorAddressId': selection.vendorAddressId });
