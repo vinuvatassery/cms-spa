@@ -1015,17 +1015,18 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     });
   }
   checkApprovalLimit(payments: any) {
+    if(this.maxApprovalAmount > 0 && this.approvalTypeCode === ApprovalTypeCode.L1Approval)
+    {
       let approvedRequestedAmountCount = 0;
       payments
         .filter((x: any) => x.batchStatus == this.approveStatus)
         .forEach((currentPage: any, index: number) => {
           approvedRequestedAmountCount += currentPage.totalAmountDue;
         });
-
-      const limit = this.maxApprovalAmount;
-      if (limit && limit < approvedRequestedAmountCount) {
+      if (this.maxApprovalAmount > 0 && this.maxApprovalAmount < approvedRequestedAmountCount) {
         this.approvalTypeCode = ApprovalTypeCode.ExceedApprovalLimit;
       }
+    }
   }
   makeRequestData() {
     let bodyData = {
