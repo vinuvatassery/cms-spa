@@ -1,15 +1,47 @@
 
       <div class="dash-header-with-filters">
             <h5>PROGRAM EXPENSES</h5>
-            <div *ngIf="!isEditDashboard">
-                  <kendo-dropdownlist size="small" value="All Expenses" rounded="medium" class="mr-1"
-                        [fillMode]="formUiStyle.inputFillMode" [data]="dataExp">
-                  </kendo-dropdownlist>
-                  <kendo-dropdownlist size="small" value="Monthly" rounded="medium" class="mr-1"
-                        [fillMode]="formUiStyle.inputFillMode" [data]="dataMonth">
+            <div *ngIf="!isEditDashboard">               
+                  <kendo-multiselect size="small" rounded="medium" class="mr-1"
+                       (valueChange)="onValueChange()"
+                        [fillMode]="formUiStyle.inputFillMode"
+                         [data]="dataExp" 
+                         [(ngModel)]="selectedType"
+                          textField="Name" valueField="Value" [valuePrimitive]="true" >
+                          <!-- <ng-template kendoMultiSelectHeaderTemplate>
+                              <span style="margin-left:11px">
+                                <input
+                                  type="checkbox"
+                                  id="chk"
+                                  kendoCheckBox
+                                  [checked]="isChecked"
+                                  [indeterminate]="isIndet"
+                                  (click)="onClick()"
+                                />
+                                <kendo-label for="chk"> All Expenses</kendo-label>
+                              </span>
+                            </ng-template> -->
+                            <ng-template kendoMultiSelectItemTemplate let-dataItem >
+                              <span >
+                                <kendo-label for="chk-{{ dataItem.Value }}">
+                                  <input
+                                    type="checkbox"
+                                    id="chk-{{ dataItem.Value }}"
+                                    kendoCheckBox
+                                    [checked]="isItemSelected(dataItem)"
+                                  />
+                                </kendo-label>
+                              </span>
+                              <span>{{ dataItem.Name }}</span>
+                            </ng-template>
+                  </kendo-multiselect>
+                  <kendo-dropdownlist size="small" value="M" rounded="medium" class="mr-1"
+                  [(ngModel)]="selectFrequency"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="dataMonth"  textField="Name" valueField="Value" [valuePrimitive]="true"
+                        (valueChange)="frequecyValueChange($event)">
                   </kendo-dropdownlist>
                   <kendo-dropdownlist size="small" value="Last Year" rounded="medium" class="mr-1"
-                        [fillMode]="formUiStyle.inputFillMode" [data]="dataYear">
+                        [fillMode]="formUiStyle.inputFillMode" [data]="dataYear" >
                   </kendo-dropdownlist>
 
             </div>

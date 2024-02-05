@@ -391,7 +391,11 @@ export class WidgetService {
       },
     });
   }
-  getProgramExpenses() {
+  getProgramExpenses(dashboardId : string,payload:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/fiscal-widgets/${dashboardId}`,
+      payload
+    );
     return of({
       component: 'ProgramExpenses',
       chartData: {

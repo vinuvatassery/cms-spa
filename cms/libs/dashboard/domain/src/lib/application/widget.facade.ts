@@ -111,12 +111,17 @@ export class WidgetFacade {
       },
     });
   }
-  loadProgramExpensesChart() {
-    this.widgetService.getProgramExpenses().subscribe({
-      next: (result) => { 
-        this.programExpensesSubject.next(result);
-      },
+  loadProgramExpensesChart(dashboardId:string, payload:any) {
+    this.widgetService.getProgramExpenses(dashboardId,payload).subscribe({
+      next: (result : any) => { 
        
+        let widgetProperties = JSON.parse(result.widgetProperties);
+        
+        widgetProperties.chartData.series = result?.series
+        widgetProperties.chartData.categoryAxis.categories = result?.categories
+        this.programExpensesSubject.next(widgetProperties);
+      //  this.programExpensesSubject.next(result);
+      },       
       error: (err) => { 
         console.error('err', err);
       },
