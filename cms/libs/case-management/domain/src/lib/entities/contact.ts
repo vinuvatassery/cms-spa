@@ -109,4 +109,6 @@ export interface FriendsOrFamilyContactClientProfile {
   phoneNbr?: string;
   activeFlag?: string;
   concurrencyStamp?: string;
+  detailMsgConsentFlag:string|null;
+  smsTextConsentFlag:string | null;
 }
