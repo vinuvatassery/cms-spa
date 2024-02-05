@@ -60,7 +60,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
       this.selectedType = this.isChecked ? this.dataExp.map(x=> x.Value):[]
       this.changeDetectorRef.detectChanges()
     }
-    return this.selectedType?.some((x) => x === item.Value);
+    return this.selectedType?.some((x) => x === "ALL");
   }
 
   public onValueChange() {
@@ -89,7 +89,11 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
     this.loadProgramExpensesChart()
   }
 
+  onCheckChange(event:any){
+    debugger;
+  }
   loadProgramExpensesChart() {
+ 
     const payload= {
       expenseType : this.selectedType ? this.selectedType :this.dataExp.map(x=> x.Value) ,
       frequency : this.selectFrequency,
