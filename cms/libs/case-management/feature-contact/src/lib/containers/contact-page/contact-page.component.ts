@@ -1,5 +1,5 @@
 /** Angular **/
-import { AfterViewInit, ElementRef, OnDestroy, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ElementRef, OnDestroy, Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External Libraries **/
@@ -101,6 +101,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly router: Router,
     private readonly configurationProvider: ConfigurationProvider,
+    private readonly cd: ChangeDetectorRef
   ) { }
 
   /** Lifecycle hooks **/
@@ -1261,7 +1262,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     setTimeout(() => {
       this.adjustAttributeInit(!this.isEdit);
     }, 300);
-
+    this.cd.detectChanges();
   }
 
   private setMailAndHomeAddress() {
@@ -1872,9 +1873,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
-      if (val) {
-        this.checkValidations()
+      if (this.checkValidations() && this.contactInfoForm.valid) {
         this.workflowFacade.showSaveForLaterConfirmationPopup(true);
+      }
+      else {
+        this.workflowFacade.showCancelApplicationPopup(true);
       }
     });
   }
@@ -1882,14 +1885,20 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   checkValidations() {
     this.setValidation();
     this.contactInfoForm.markAllAsTouched();
-    const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && (this.homeAddressProofFile === undefined || this.homeAddressProofFile[0]?.name == undefined))
-    if (isAddressProofRequired) {
-      this.showAddressProofRequiredValidation = true;
+    let isValid = false;
+    if (this.homeAddress['homeAddressChangedFlag'].value === StatusFlag.Yes) {
+      const isAddressProofRequired = !(this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.value ?? false) && (this.uploadedHomeAddressProof == undefined && (this.homeAddressProofFile === undefined || this.homeAddressProofFile[0]?.name == undefined))
+      if (isAddressProofRequired) {
+        this.showAddressProofRequiredValidation = true;
+      }
+      if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation) {
+        isValid = true
+      }
     }
-    if (this.contactInfoForm.valid && !this.showAddressProofRequiredValidation) {
-      return true;
+    else {
+      isValid = true;
     }
-    return false;
+    return isValid;
   }
 
   private addDiscardChangesSubscription(): void {

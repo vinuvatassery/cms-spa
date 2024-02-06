@@ -444,9 +444,9 @@ export class FinancialPharmacyClaimsFacade {
   }
 
 
-    loadBatchLogListGrid(batchId: string, params: GridFilterParam, claimType: string) {
+    loadBatchLogListGrid(batchId: string, isReconciled: boolean, params: GridFilterParam, claimType: string) {
         this.paymentByBatchGridLoaderSubject.next(true);
-        this.financialPharmacyClaimsDataService.loadPaymentsByBatch(batchId, params, claimType).subscribe({
+        this.financialPharmacyClaimsDataService.loadPaymentsByBatch(batchId, isReconciled, params, claimType).subscribe({
             next: (dataResponse) => {
                 const gridView: any = {
                     data: dataResponse['items'],
