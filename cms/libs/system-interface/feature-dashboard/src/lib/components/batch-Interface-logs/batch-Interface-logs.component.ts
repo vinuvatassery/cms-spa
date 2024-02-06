@@ -35,7 +35,6 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   @Input() sortType: any;
   @Input() sort: any;
   @Input() activityEventLogList$: any;
-  showHistoricalFlag:boolean = true;
   //@Input() batchLogExcptionLists$:any;
   batchLogExcptionLists$ = this.systemInterfaceDashboardFacade.batchLogExcptionLists$;
   @Input() lovsList$: any;

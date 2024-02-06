@@ -26,22 +26,39 @@
   <section class="table-filter-section mat-form-no-b-space bg-white">
   </section>
   <!-- Sorted Info show only in list -->
-  <div class="table-sorted-info">
+  <!-- <div class="table-sorted-info">
     Sorted {{"sortDir"}} by <span class="sort-items"> {{"sortColumnDesc"}} </span>
     <span class="sort-items">{{"columnChangeDesc"}}</span>
     <span *ngIf="true" class="sort-items">Columns Re-ordered</span>
     <button aria-label="Set to Default" kendoButton look="flat" class="sort-items">
       <a>Set to Default</a>
     </button>
+  </div> -->
+
+  <div class="table-sorted-info">
+    Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
+    <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
+    <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
+    <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
+    <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="restGrid()">
+          <a>Set to Default</a>
+    </button>
   </div>
 
   <div class="app-c-table">
-    <kendo-grid [data]="webLogLists$ | async" [pageSize]="state.take" [loading]="(webLogListsLoader$ | async) === true"
+    <!-- <kendo-grid [data]="webLogLists$ | async" [pageSize]="state.take" [loading]="(webLogListsLoader$ | async) === true"
       [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
       [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
-      (filterChange)="filterChange($event)">
+      (filterChange)="filterChange($event)"> -->
+
+      <kendo-grid  [loading]="(webLogListsLoader$  | async) === true"    [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
+      [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort" [filter]="state.filter"
+      (dataStateChange)="dataStateChange($event)"
+      (filterChange)="filterChange($event)" 
+      (columnReorder)="onColumnReorder($event)"
+      [data]="webLogLists$ | async">
       
-      <kendo-grid-column field="processDescription" title="Process" [width]="180">
+      <kendo-grid-column field="process" title="Process" [width]="180">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -63,14 +80,23 @@
         </ng-template>
       </kendo-grid-column>
 
-      <kendo-grid-column field="statusTypeCode" title="Status" [width]="180">
+      <kendo-grid-column field="status" title="Status" [width]="180">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-dropdownlist 
+          [data]="statusArray" 
+          [value]="statusFilter"
+          (valueChange)="dropdownFilterChange('status',$event, filterService)"
+          >
+          </kendo-dropdownlist>
+     </ng-template>
+     
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button *ngIf="dataItem.statusTypeCode === 'FAILED'" [attr.aria-label]="dataItem.statusTypeCode" kendoButton
+          <button *ngIf="dataItem.status === 'FAILED'" [attr.aria-label]="dataItem.status" kendoButton
             look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
             Failure
           </button>
-          <span *ngIf="dataItem.statusTypeCode === 'SUCCESS'"> Successful </span>
-          <span *ngIf="dataItem.statusTypeCode === 'IN_PROGRESS'"> In Progress </span>
+          <span *ngIf="dataItem.status === 'SUCCESS'"> Successful </span>
+          <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span>
           <kendo-popover #userCard width="330" position="left">
             <ng-template kendoPopoverBodyTemplate>
               <div class="p-2">

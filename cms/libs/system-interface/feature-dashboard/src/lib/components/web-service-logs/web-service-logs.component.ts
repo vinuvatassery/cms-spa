@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 
@@ -41,25 +41,9 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
 
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   @Output() loadWebLogList = new EventEmitter<string>();
-
-  constructor(
-    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
-  ) { }
-
-  public dataStateChange(stateData: any): void {
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
-    this.sortType = stateData.sort[0]?.dir ?? 'asc';
-    this.state = stateData;
-    this.sortType = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.filter = stateData?.filter?.filters;
-    this.filter = stateData?.filter?.filters;
-    this.loadListGrid();
-  }
-
-  handleShowHistoricalClick() {
-    this.displayAll = !this.displayAll;
-  }
+  columnChangeDesc = 'Default Columns';
+  filteredByColumnDesc = '';
+  selectedStatus = '';
 
   public state!: State;
   isActivityLogLoaderShow = false;
@@ -67,6 +51,52 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   gridDataSubject = new Subject<any>();
   gridData$ = this.gridDataSubject.asObservable();
   filter!: any;
+
+  sortColumn = 'startDate';
+  sortColumnDesc = 'startDate';
+  sortDir = 'Ascending';
+
+  InterfaceType = "RAMSELL";
+  columnsReordered = false;
+
+  constructor(
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
+  ) { }
+
+
+  gridColumns: any = {
+    process: 'Process',
+    startDate: 'ProcessDate',
+    status: 'Status',
+    triggeredBy: 'Triggered By',
+  };
+
+  public dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.filter = stateData?.filter?.filters;
+    this.loadListGrid();
+  }
+  handleShowHistoricalClick() {
+    this.displayAll = !this.displayAll;
+  }
+
+  restGrid() {
+    this.sortType = 'asc';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
+    this.filter = [];
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.loadListGrid();
+
+  }
+
   loadListGrid() {
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
@@ -120,6 +150,12 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
     this.filterData = filter;
   }
 
+
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+
+  dateColumns = ['startDate', 'endDate'];
   private initializePaging() {
     const sort: SortDescriptor[] = [{
       field: 'creationTime',
@@ -138,10 +174,37 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   }
 
   pageSelectionchange(data: any) {
-    this.loadActivityLogLists();
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadListGrid();
   }
 
   onInterfaceSelectionChanged(event: any) {
     this.loadListGrid();
   }
+
+  statusFilter = '';
+  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
+  interfaceProcessBatchFilter = '';
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (field === 'status') {
+      this.statusFilter = value;
+    }
+
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+  }
+
 }
