@@ -11,7 +11,7 @@ import { Subject, takeUntil } from 'rxjs';
 })
 
 export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
-  selectedType:any[] =['ALL']
+  selectedType:any[]=['MEDICAL_CLAIM','DENTAL_CLAIM','MEDICAL_PREMIUM','DENTAL_PREMIUM','PHARMACY_CLAIM']
   programExpenses: any; 
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -19,9 +19,6 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
 
   public isChecked = false;
   dataExp  = [
-              {Name : 'All Expenses',
-              Value : "ALL"
-              }, 
               {Name : 'Medical Claims',
               Value : 'MEDICAL_CLAIM'
               }, 
@@ -32,8 +29,12 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
               Value : 'MEDICAL_PREMIUM'
               }, 
               {Name : 'Dental Premiums',
-              Value : 'DENTAL_PREMIUM'
-              }]
+              Value : 'DENTAL_PREMIUM',
+              },
+            {
+              Name : 'Pharmacy Claims',
+              Value : 'PHARMACY_CLAIM',
+            }]
   dataMonth  = [{Name : 'Monthly',
                 Value : 'M'
                 },
@@ -44,27 +45,35 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
                 Value : 'Y'
                 }]
 
-  dataYear  = ['Last Year','2023']
+  dataYear  = ['Current Year','Last Year']
   selectFrequency ="M"
+  selectedTimeFrame = 'Last Year'
   @Input() isEditDashboard!: any; 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade, private changeDetectorRef: ChangeDetectorRef) {}
 
   public onClick() {
-   
+    this.isChecked = !this.isChecked;
+    this.selectedType = this.isChecked ? this.dataExp.map(x=> x.Value):[]
+    this.changeDetectorRef.detectChanges()
+    this.loadProgramExpensesChart()
   }
 
    isItemSelected(item:any) {
-    if(item.value ==='ALL'){
-      this.isChecked = !this.isChecked;
-      this.selectedType = this.isChecked ? this.dataExp.map(x=> x.Value):[]
-      this.changeDetectorRef.detectChanges()
-    }
-    return this.selectedType?.some((x) => x === "ALL");
+    console.log(item)
+    console.log(this.selectedType)
+    const value =  this.selectedType?.some((x) => x === item.Value);
+    console.log(value)
+    return value
   }
 
   public onValueChange() {
     this.isChecked = this.selectedType &&  this.selectedType.length === this.dataExp.length;
+    this.loadProgramExpensesChart()
+  }
+
+  TimeFrameValueChange(event:string){
+    this.selectedTimeFrame = event
     this.loadProgramExpensesChart()
   }
   removeWidgetCard(){
@@ -97,7 +106,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
     const payload= {
       expenseType : this.selectedType ? this.selectedType :this.dataExp.map(x=> x.Value) ,
       frequency : this.selectFrequency,
-      TimeFrame : "LastYear"
+      TimeFrame : this.selectedTimeFrame
     }
     this.widgetFacade.loadProgramExpensesChart('E2301551-610C-43BF-B7C9-9B623ED425C3',payload);
     this.widgetFacade.programExpensesChart$

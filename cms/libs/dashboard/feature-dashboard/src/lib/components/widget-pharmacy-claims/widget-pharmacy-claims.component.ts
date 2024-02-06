@@ -1,6 +1,6 @@
  
  
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {  WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs'; 
@@ -16,12 +16,14 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   pharmacyClaims: any; 
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  dataMonth = ['Last Month','August']
-  dataCount = ['100','200']
+  selectedDataCount ='Claim Count'
+  selectedTimeFrame = 'This Month'
+  dataMonth = ['This Month','Last Month','YTD','Last Year']
+  dataCount = ['Claim Count','Claim Amount']
   @Input() isEditDashboard!: any; 
   @Output() removeWidget = new EventEmitter<string>();
-  constructor(private widgetFacade: WidgetFacade) {}
-
+  constructor(private widgetFacade: WidgetFacade, private changeDetectorRef : ChangeDetectorRef) {}
+  count =0;
 
   removeWidgetCard(){
     this.removeWidget.emit();
@@ -29,6 +31,15 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
 
   ngOnInit(): void { 
     this.loadPharmacyClaimsChart();
+  }
+
+  dataCountChange(event:string){
+    this.selectedDataCount = event
+    this.loadPharmacyClaimsChart()
+  }
+  dataMonthChange(event:string){
+    this.selectedTimeFrame = event
+    this.loadPharmacyClaimsChart()
   }
 
   ngOnDestroy(): void {
@@ -39,13 +50,19 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
     return `${e.category}: \n ${e.value}%`;
   }
   loadPharmacyClaimsChart() {
-    this.widgetFacade.loadPharmacyClaimsChart();
+    const payload ={
+      CountOrAmount : this.selectedDataCount,
+      TimeFrame : this.selectedTimeFrame
+    }
+    this.widgetFacade.loadPharmacyClaimsChart('E2301551-610C-43BF-B7C9-9B623ED425C3',payload);
     this.widgetFacade.pharmacyClaimsChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response) {
-            this.pharmacyClaims = response;
+            this.pharmacyClaims = response.widgetProperties;
+            this.count = response.result.count
+            this.changeDetectorRef.detectChanges()
           }
         }
       });

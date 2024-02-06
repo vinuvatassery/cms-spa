@@ -89,10 +89,16 @@ export class WidgetFacade {
     });
   }
 
-  loadPharmacyClaimsChart() {
-    this.widgetService.getPharmacyClaims().subscribe({
+  loadPharmacyClaimsChart(dashboardId:string, payload:any) {
+    this.widgetService.getPharmacyClaims(dashboardId,payload).subscribe({
       next: (result) => { 
-        this.pharmacyClaimsSubject.next(result);
+        debugger;
+        let widgetProperties = JSON.parse(result.widgetProperties);
+        
+        widgetProperties.chartData.series[0].data = result?.pharmacyClaims
+        
+
+        this.pharmacyClaimsSubject.next({widgetProperties, result});
       },
        
       error: (err) => { 
@@ -120,7 +126,6 @@ export class WidgetFacade {
         widgetProperties.chartData.series = result?.series
         widgetProperties.chartData.categoryAxis.categories = result?.categories
         this.programExpensesSubject.next(widgetProperties);
-      //  this.programExpensesSubject.next(result);
       },       
       error: (err) => { 
         console.error('err', err);
