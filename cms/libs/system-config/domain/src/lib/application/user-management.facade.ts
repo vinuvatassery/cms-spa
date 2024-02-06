@@ -478,7 +478,7 @@ export class UserManagementFacade {
   }
 
 
-  getUserIdAndProfilePhotosByIds(userIds : string) {    
+  getProfilePhotosByUserIds(userIds : string) {    
     return this.userDataService.getUserProfilePhotos(userIds);
   }
  

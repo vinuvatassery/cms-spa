@@ -23,7 +23,6 @@ export class UserProfileCardComponent implements OnInit {
   @Input() clientName: any;
   @Input() clientCaseId: any;
   @Input() userProfilePhotoExists: any;
-  userByIdSubject = new Subject<any>(); 
   userImage$ = this.userManagementFacade.userImage$;
   userById$ = this.userManagementFacade.usersById$;
   caseOwners$ = this.userManagementFacade.usersByRole$;

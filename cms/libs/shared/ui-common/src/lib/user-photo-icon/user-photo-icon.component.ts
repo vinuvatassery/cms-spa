@@ -1,5 +1,5 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -8,9 +8,8 @@ import { BehaviorSubject, Subject, Subscription } from 'rxjs';
   styleUrls: ['./user-photo-icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserPhotoIconComponent implements OnChanges {
+export class UserPhotoIconComponent implements OnChanges, OnDestroy {
   @Input() userId!: any;
-  // @Input() userProfilePhoto!: any;
   @Input() userFirstName!: any;
   @Input() userLastName!: any;
   @Input() userProfilePhotoExists!: any;
@@ -33,8 +32,12 @@ export class UserPhotoIconComponent implements OnChanges {
     this.addUserProfilePhotoSubscription();
   }
 
+  ngOnDestroy(): void {
+    this.profilePhotoSubscription.unsubscribe();
+  }  
+
   addUserProfilePhotoSubscription(){
-    this.profilePhotoSubscription = this.userPhotos$.subscribe((item: any) => {
+    this.profilePhotoSubscription = this.userPhotos$?.subscribe((item: any) => {
       let filteredUserPhoto = item.filter((userPhoto: any) => userPhoto.creatorId == this.userId)[0];
       if(filteredUserPhoto){
         this.userProfilePhoto = filteredUserPhoto.profilePhoto;
