@@ -867,14 +867,17 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       city: homeAddressGroup?.controls['city']?.value,
       state: homeAddressGroup?.controls['state']?.value,
       county: homeAddressGroup?.controls['county']?.value,
-      addressTypeCode: AddressTypeCode.Home,
       sameAsMailingAddressFlag: this.getFlag(homeAddressGroup?.controls['sameAsMailingAddressFlag']?.value),
     }
     const homelessFlag = this.getFlag(homeAddressGroup?.get('homelessFlag')?.value);
     if (homelessFlag !== StatusFlag.Yes) {
       homeAddress.address1 = homeAddressGroup?.controls['address1']?.value;
       homeAddress.address2 = homeAddressGroup?.controls['address2']?.value;
-      homeAddress.zip = homeAddressGroup?.controls['zip']?.value;
+      homeAddress.zip = homeAddressGroup?.controls['zip']?.value;      
+      homeAddress.addressTypeCode = AddressTypeCode.Home;
+    }
+    else{
+      homeAddress.addressTypeCode = AddressTypeCode.UnHoused;
     }
 
     return homeAddress;
@@ -1028,7 +1031,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     if (this.isEdit) {
-      const homeAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Home)[0];
+      const homeAddress1 = this.contactInfo?.address?.filter((address: ClientAddress) => address.addressTypeCode === AddressTypeCode.Home
+        || address.addressTypeCode === AddressTypeCode.UnHoused )[0];
       const mailingAddress1 = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Mail)[0];
       const homePhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.HomePhone)[0];
       const cellPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
@@ -1130,7 +1134,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loaderService.hide();
         if (data) {
           this.oldContactInfo = data;
-          this.oldHomeAddress = data?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Home)[0];
+          this.oldHomeAddress = data?.address?.filter((address: ClientAddress) => address.addressTypeCode === AddressTypeCode.Home
+            || address.addressTypeCode === AddressTypeCode.UnHoused)[0];
           this.oldMailingAddress = data?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Mail)[0];
           this.oldHomePhone = data?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.HomePhone)[0];
           this.oldCellPhone = data?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
@@ -1266,7 +1271,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private setMailAndHomeAddress() {
-    const homeAddress = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Home)[0];
+    const homeAddress = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Home
+      || adrs.addressTypeCode === AddressTypeCode.UnHoused)[0];
     const mailingAddress = this.contactInfo?.address?.filter((adrs: ClientAddress) => adrs.addressTypeCode === AddressTypeCode.Mail)[0];
     if (mailingAddress && (this.contactInfo?.clientCaseEligibility?.mailingAddressChangedFlag === StatusFlag.Yes || !this.isCerForm)) {
       this.contactInfoForm.get('mailingAddress')?.patchValue(mailingAddress);
@@ -1286,8 +1292,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm.get('homeAddress.state')?.patchValue(homeAddress?.state);
       this.contactInfoForm.get('homeAddress.zip')?.patchValue(homeAddress?.zip);
       this.contactInfoForm.get('homeAddress.county')?.patchValue(homeAddress?.county);
-      this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.patchValue(homeAddress?.sameAsMailingAddressFlag === StatusFlag.Yes);
-      this.contactInfoForm?.get('homeAddress.homelessFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homelessFlag === StatusFlag.Yes);
+      this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.patchValue(homeAddress?.sameAsMailingAddressFlag === StatusFlag.Yes);      
+      if(homeAddress.addressTypeCode === AddressTypeCode.UnHoused){
+        this.contactInfoForm?.get('homeAddress.homelessFlag')?.patchValue(StatusFlag.Yes);
+      }     
       this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homeAddressProofFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('homeAddress.housingStabilityCode')?.patchValue(this.contactInfo?.clientCaseEligibility?.housingStabilityCode);
       this.homeAddressEntered = {
@@ -1585,7 +1593,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.mailAddressEntered = address;
       this.contactInfoForm.get('mailingAddress')?.patchValue(selectedAddress);
     }
-    else if (type === AddressTypeCode.Home) {
+    else if (type === AddressTypeCode.Home || type === AddressTypeCode.UnHoused) {
       this.homeAddressEntered = address;
       const sameAsFlag = this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.value;
       const homelessFlag = this.contactInfoForm?.get('homeAddress.homelessFlag')?.value;
@@ -1714,7 +1722,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private closeValidationPopup(type: string) {
-    if (type === AddressTypeCode.Home) {
+    if (type === AddressTypeCode.Home || type === AddressTypeCode.UnHoused) {
       this.homeAddressValidationPopupVisibility$.next(false);
       this.homeAddressSuggested = undefined;
     }
