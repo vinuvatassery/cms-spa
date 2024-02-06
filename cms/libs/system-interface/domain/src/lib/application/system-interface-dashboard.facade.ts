@@ -24,10 +24,12 @@ export class SystemInterfaceDashboardFacade {
   private batchLogsDataLoaderSubject = new BehaviorSubject<boolean>(false);
   batchLogsDataLoader$ = this.batchLogsDataLoaderSubject.asObservable();
 
+  // weblogs --------------------------
   private webLogListSubject = new Subject<any>();
   webLogLists$ = this.webLogListSubject.asObservable();
   private webLogsDataLoaderSubject = new BehaviorSubject<boolean>(false);
   webLogsDataLoader$ = this.webLogsDataLoaderSubject.asObservable();
+  // ----------------------------------
 
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = 'startDate'
@@ -139,6 +141,7 @@ export class SystemInterfaceDashboardFacade {
     });
   }
 
+  // weblogs ----------------------------------
   loadWebLogsList(interfaceTypeCode: string, displayAll: boolean, params: any) {
     this.webLogsDataLoaderSubject.next(true);
     this.service.getRamsellInterfaceActivity(interfaceTypeCode, displayAll, params)
@@ -157,5 +160,6 @@ export class SystemInterfaceDashboardFacade {
         },
       });
   }
+  // ----------------------------------
 
 }
