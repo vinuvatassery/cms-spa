@@ -16,8 +16,10 @@ import {
   CaseFacade,
   ClientFacade
 } from '@cms/case-management/domain';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, first } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject } from '@microsoft/signalr';
 @Component({
   selector: 'case-management-case360-header',
   templateUrl: './case360-header.component.html',
@@ -40,6 +42,8 @@ export class Case360HeaderComponent implements OnInit {
   @Output() loadChangeGroupEvent = new EventEmitter<string>();
   @Output() updateChangeGroupEvent = new EventEmitter<any>();
   @Output() createCerSessionEvent = new EventEmitter<string>();
+  @Input() clientProfileHeader$!: Observable<any>;
+  @Input() userDetail$!: Observable<any>;  
 
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
@@ -48,12 +52,18 @@ export class Case360HeaderComponent implements OnInit {
   groupChangeTitle!: string;
   private statusPeriodDialog: any;
   private statusGroupDialog: any;
+  isUserProfilePhotoExist: boolean = true;
+  userprofileHeaderPhotoSubject = new Subject();
+  userFirstName!: string;
+  userLastName!: string;
+  assignedToVisibility$ = new BehaviorSubject<boolean>(false);
   constructor(
     private readonly clientEligibilityFacade: ClientEligibilityFacade,
     private readonly caseFacade: CaseFacade,
     private dialogService: DialogService,
     private cdr: ChangeDetectorRef,
-    private clientFacade: ClientFacade
+    private clientFacade: ClientFacade,
+    private readonly userManagementFacade: UserManagementFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -69,6 +79,7 @@ export class Case360HeaderComponent implements OnInit {
         this.loadClientProfileInfoEvent.emit();
       }
     })
+    this.loadDistinctUserIdsAndProfilePhoto();
   }
 
   /** Internal event methods **/
@@ -174,4 +185,23 @@ export class Case360HeaderComponent implements OnInit {
       this.createCerSessionEvent.emit();
     }
   }
+
+  loadDistinctUserIdsAndProfilePhoto() {
+    this.userDetail$.subscribe((user: any)=>{
+      this.userFirstName = user.firstName;
+      this.userLastName = user.lastName;
+      this.assignedToVisibility$.next(true);
+    });
+    if(this.caseWorkerId){
+      this.userManagementFacade.getProfilePhotosByUserIds(this.caseWorkerId)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userprofileHeaderPhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+}
 }

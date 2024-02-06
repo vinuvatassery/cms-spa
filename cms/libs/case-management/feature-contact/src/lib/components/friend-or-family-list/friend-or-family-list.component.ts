@@ -3,6 +3,8 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } 
 /** Facades **/
 import { ContactFacade, CaseFacade } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'case-management-friend-or-family-list',
@@ -28,6 +30,7 @@ export class FriendOrFamilyListComponent implements OnInit {
   allList:any[]=[];
   showHistoricalDataFlag = false
   selectedContact!:any;
+  userAlternateGridPhotosSubject = new Subject<any>();
 
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -69,7 +72,8 @@ export class FriendOrFamilyListComponent implements OnInit {
   ];
 
   /** Constructor **/
-  constructor(private readonly contactFacade: ContactFacade,  private readonly cdr:ChangeDetectorRef,private caseFacade: CaseFacade) {}
+  constructor(private readonly contactFacade: ContactFacade,  private readonly cdr:ChangeDetectorRef,private caseFacade: CaseFacade,
+    private readonly userManagementFacade: UserManagementFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -85,6 +89,7 @@ export class FriendOrFamilyListComponent implements OnInit {
       if(this.showHistoricalDataFlag){
         this.gridView=this.allList
       }
+      this.loadDistinctUserIdsAndProfilePhoto();
       this.cdr.detectChanges();
     })
     this.contactGridLoader$.subscribe((data : any) => {
@@ -92,6 +97,24 @@ export class FriendOrFamilyListComponent implements OnInit {
     });
   }
 
+
+  loadDistinctUserIdsAndProfilePhoto() {
+    if(this.gridView != null && this.gridView.length > 0)
+    {
+    const distinctUserIds = Array.from(new Set(this.gridView?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds != null){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userAlternateGridPhotosSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  }
+}
   /** Internal event methods **/
   onFriendOrFamilyDetailClosed() {
     this.contactFacade.showAddContactPopupSubject.next(false);
@@ -131,6 +154,7 @@ export class FriendOrFamilyListComponent implements OnInit {
     else{
       this.gridView= this.allList.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
     }
+    this.loadDistinctUserIdsAndProfilePhoto();
     this.cdr.detectChanges();
   }
   public rowClass = (args:any) => ({

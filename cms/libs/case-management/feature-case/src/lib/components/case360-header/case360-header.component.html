@@ -2,15 +2,15 @@
   <div class="assigned-to-right"
       kendoPopoverAnchor
       [popover]="userCard"
-      showOn="hover" *ngIf="caseWorkerId">
+      showOn="hover" *ngIf="assignedToVisibility$ | async">
    <span> Assigned To</span>
-    <button
-      kendoButton
-      [primary]="true"
-      class="avatar-sm-btn ml-1 c-default"
-    >
-    <common-user-photo-icon  [userId]="caseWorkerId"></common-user-photo-icon>
-    </button>
+   <common-user-photo-icon  
+   [userId]="caseWorkerId" 
+   [userFirstName]="userFirstName"
+   [userLastName]="userLastName"
+   [userProfilePhotoExists]="isUserProfilePhotoExist"
+   [linkType]="'profileIcon'"
+   [userPhotos$]="userprofileHeaderPhotoSubject"></common-user-photo-icon>
   </div>
   <kendo-popover #userCard width="330" position="bottom" [callout]="false">
     <ng-template kendoPopoverBodyTemplate>

@@ -6,12 +6,14 @@ import {
   EventEmitter,
   Output,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** facades **/
 import { State } from '@progress/kendo-data-query';
 import { first, Subject, Subscription } from 'rxjs';
 import { CaseFacade } from '@cms/case-management/domain';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-email-list',
   templateUrl: './email-list.component.html',
@@ -66,6 +68,7 @@ export class EmailListComponent implements OnChanges {
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  userEmailProfilrPhotoSubject = new Subject<any>();
   public gridOption = [
     {
       buttonType: 'btn-h-primary',
@@ -120,7 +123,9 @@ export class EmailListComponent implements OnChanges {
     },
   ];
 
-  constructor(private caseFacade: CaseFacade){
+  constructor(private caseFacade: CaseFacade,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr:ChangeDetectorRef){
     
   }
 
@@ -140,7 +145,6 @@ export class EmailListComponent implements OnChanges {
 
   /** Private methods **/
   private loadClientEmailsList(): void {
-    this.gridDataHandle();
     this.loadEmails(
       this.state.skip ?? 0,
       this.state.take ?? 0,
@@ -164,6 +168,7 @@ export class EmailListComponent implements OnChanges {
       showDeactivated: this.historychkBoxChecked,
     };
     this.loader = true;
+    this.gridDataHandle();
     this.loadClientEmailsListEvent.next(gridDataRefinerValue);
   }
 
@@ -182,9 +187,25 @@ export class EmailListComponent implements OnChanges {
       this.gridEmailDataSubject.next(data);
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
+        this.loadDistinctUserIdsAndProfilePhoto(data?.data);
       }
     });
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds != null){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userEmailProfilrPhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+}
 
   /** Internal event methods **/
   onEmailAddressDetailClosed() {

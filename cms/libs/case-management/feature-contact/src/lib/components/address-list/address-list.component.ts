@@ -108,7 +108,7 @@ export class AddressListComponent implements OnInit {
     {
     this.distinctUserIds = Array.from(new Set(this.addressGridView?.map(user => user.creatorId))).join(',');
     if(this.distinctUserIds != null){
-      this.userManagementFacade.getUserIdAndProfilePhotosByIds(this.distinctUserIds)
+      this.userManagementFacade.getProfilePhotosByUserIds(this.distinctUserIds)
       .subscribe({
         next: (data: any[]) => {
           if (data.length > 0) {

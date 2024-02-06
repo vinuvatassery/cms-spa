@@ -6,10 +6,11 @@ import {
   Output,
   EventEmitter,
   OnChanges,
+  ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
 import { State } from '@progress/kendo-data-query';
-import { first, Subject, Subscription } from 'rxjs';
+import { first, map, Subject, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { CaseFacade } from '@cms/case-management/domain';
@@ -66,6 +67,7 @@ export class PhoneListComponent implements OnChanges {
   loader = false;
   hasPhoneDeletePermission =false;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  userPhoneProfilrPhotoSubject = new Subject<any>();
   // gridOption: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public gridOption = [
@@ -124,7 +126,8 @@ export class PhoneListComponent implements OnChanges {
 /** Constructor**/
  constructor(
   private readonly userManage: UserManagementFacade,
-  private caseFacade: CaseFacade
+  private caseFacade: CaseFacade,
+  private readonly cdr:ChangeDetectorRef
 ) {}
   ngOnChanges(): void {
     this.state = {
@@ -193,9 +196,25 @@ this.reloadEmailsEvent.emit();
 
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
+      this.loadDistinctUserIdsAndProfilePhoto(data?.data);
       }
     });
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds != null){
+      this.userManage.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userPhoneProfilrPhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+}
 
   onPhoneNumberDetailClosed() {
     this.editbuttonEmitted = false;
