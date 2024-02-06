@@ -303,8 +303,8 @@ export class FinancialPcaFacade {
       },
     });
   }
-  getPcaUnAssignments(objectCodeId:any,pcaAssignmentId:any){
-  return   this.financialPcaDataService.getPcaUnAssignments(objectCodeId,pcaAssignmentId);  
+  getPcaUnAssignments(objectCodeId:any,pcaAssignmentId:any,groupCodeId:any){
+  return   this.financialPcaDataService.getPcaUnAssignments(objectCodeId,pcaAssignmentId,groupCodeId);  
   }
 
   pcaReassignment(data: any) {
