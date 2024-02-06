@@ -1,6 +1,6 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserDataService, UserDefaultRoles } from '@cms/system-config/domain';
 import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
@@ -8,7 +8,7 @@ import { CaseManagerDataService } from '../infrastructure/case-manager.data.serv
 import { WorkflowFacade } from './workflow.facade';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { StatusFlag } from '@cms/shared/ui-common';
+import { SnackBar, StatusFlag } from '@cms/shared/ui-common';
 
 @Injectable({ providedIn: 'root' })
 export class CaseManagerFacade {
@@ -48,16 +48,33 @@ public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
     field: this.sortValue,
     dir: 'asc' 
   }];
-showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
-    
+  showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
+
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+
+  public sortValueGeneralAPproval = 'batch';
+  public sortGeneralList: SortDescriptor[] = [{
+    field: this.sortValueGeneralAPproval,
+  }];
+
+  public sortValueApprovalPaymentsAPproval = 'batch';
+  public sortApprovalPaymentsList: SortDescriptor[] = [{
+    field: this.sortValueApprovalPaymentsAPproval,
+  }];
+  public sortValueImportedClaimsAPproval = 'batch';
+  public sortImportedClaimsList: SortDescriptor[] = [{
+    field: this.sortValueImportedClaimsAPproval,
+  }];
+  
     /** Constructor **/
- constructor(private readonly userDataService: UserDataService,
+constructor(private readonly userDataService: UserDataService,
   private readonly caseManagerDataService: CaseManagerDataService,
       private readonly loaderService: LoaderService,
       private readonly loggingService : LoggingService ,
       private readonly notificationSnackbarService : NotificationSnackbarService,
-      private readonly workflowFacade: WorkflowFacade 
-      ,private configurationProvider : ConfigurationProvider ) {}
+      private readonly workflowFacade: WorkflowFacade,
+      private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
+      private configurationProvider : ConfigurationProvider ) {}
 
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -70,7 +87,16 @@ showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
         this.notificationSnackbarService.manageSnackBar(type,subtitle)
         this.hideLoader();   
   }
-    
+  
+  NotifyShowHideSnackBar(type: ReminderSnackBarNotificationType, subtitle: any) {
+    if (type == ReminderSnackBarNotificationType.ERROR) {
+      const err = subtitle;
+      this.loggingService.logException(err)
+    }
+    this.reminderNotificationSnackbarService.manageSnackBar(type, subtitle)
+    this.hideLoader();
+  }
+
   showLoader()
   {
     this.loaderService.show();
@@ -82,8 +108,8 @@ showCaseListRequired$ = this.showCaseListRequiredSubject.asObservable();
   }
 
   searchUsersByRole(text : string): void {
-     this.userDataService.searchUsersByRole(UserDefaultRoles.CACaseManager ,text).subscribe({
-       next: (getManagerUsersResponse) => {
+    this.userDataService.searchUsersByRole(UserDefaultRoles.CACaseManager ,text).subscribe({
+      next: (getManagerUsersResponse) => {
         Object.values(getManagerUsersResponse).forEach((key) => {   
           key.fullCustomName = key.fullName +' '+ key.pOrNbr  + ' '+ key.phoneNbr
         });
