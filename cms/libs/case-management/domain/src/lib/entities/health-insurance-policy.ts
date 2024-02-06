@@ -10,6 +10,7 @@ export class HealthInsurancePolicy {
         healthInsuranceTypeCode: string | null = null;
         insuranceIdNbr: string | null = null;
         insuranceGroupPlanTypeCode: string | null = null;
+        insuranceGroupId:string | null = null;
         priorityCode: string | null = null;
         policyHolderFirstName: string | null = null;
         policyHolderLastName: string | null = null;

@@ -43,7 +43,7 @@ export class MedicalPremiumDetailInsuranceCarrierNameComponent
     private userManagementFacade: UserManagementFacade
   ) {
     this.healthInsuranceForm = this.formBuilder.group({
-      insuranceCarrierName: [''],
+      insuranceProviderName: [''],
     });
     this.InsuranceCarrierForm = this.formBuilder.group({});
   }
