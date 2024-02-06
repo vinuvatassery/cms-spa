@@ -68,6 +68,8 @@ export class FriendOrFamilyDetailComponent implements OnInit {
       lastName: [''],
       relationshipType: [''],
       phoneNbr: [''],
+      detailMsgConsentFlag: [''],
+      smsTextConsentFlag: ['']
     });
   }
   closePopup() {
@@ -100,7 +102,9 @@ export class FriendOrFamilyDetailComponent implements OnInit {
       firstName: this.contactForm?.controls['firstName']?.value,
       lastName: this.contactForm?.controls['lastName']?.value,
       phoneNbr: this.contactForm?.controls['phoneNbr']?.value,
-      activeFlag: StatusFlag.Yes
+      activeFlag: StatusFlag.Yes,
+      detailMsgConsentFlag: this.contactForm?.controls['detailMsgConsentFlag']?.value? StatusFlag.Yes:StatusFlag.No,
+      smsTextConsentFlag: this.contactForm?.controls['smsTextConsentFlag']?.value? StatusFlag.Yes:StatusFlag.No
     }
   }
   createContact() {
@@ -150,6 +154,10 @@ export class FriendOrFamilyDetailComponent implements OnInit {
     this.contactForm.controls["lastName"].setValue(contact.lastName);
     this.contactForm.controls["relationshipType"].setValue(contact.relationshipSubTypeCode);
     this.contactForm.controls["phoneNbr"].setValue(contact.phoneNbr);
+    contact.detailMsgConsentFlag === StatusFlag.Yes? this.contactForm.controls["detailMsgConsentFlag"].setValue(true)
+      :this.contactForm.controls["detailMsgConsentFlag"].setValue(false);
+    contact.smsTextConsentFlag === StatusFlag.Yes? this.contactForm.controls["smsTextConsentFlag"].setValue(true)
+      :this.contactForm.controls["smsTextConsentFlag"].setValue(false);
     this.contactForm.markAllAsTouched();
     this.cdr.detectChanges();
   }

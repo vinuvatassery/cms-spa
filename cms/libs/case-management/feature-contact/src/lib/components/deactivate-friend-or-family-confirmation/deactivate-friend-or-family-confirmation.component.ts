@@ -48,7 +48,9 @@ export class DeactivateFriendOrFamilyConfirmationComponent implements OnInit {
       lastName: this.clientContact.lastName,
       phoneNbr: this.clientContact.phoneNbr,
       activeFlag: StatusFlag.No,
-      concurrencyStamp: this.clientContact.concurrencyStamp
+      concurrencyStamp: this.clientContact.concurrencyStamp,
+      detailMsgConsentFlag :null,
+      smsTextConsentFlag : null
     }
   }
   deactivateContact()
