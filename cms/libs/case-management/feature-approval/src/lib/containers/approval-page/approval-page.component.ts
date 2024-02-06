@@ -11,7 +11,6 @@ import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import {
-  ApprovalFacade,
   PendingApprovalGeneralFacade,
   PendingApprovalGeneralTypeCode,
   PendingApprovalPaymentFacade,
@@ -21,6 +20,7 @@ import {
   DrugsFacade,
   InsurancePlanFacade,
   ImportedClaimFacade,
+  CaseManagerFacade,
 } from '@cms/case-management/domain';
 import {
   ReminderNotificationSnackbarService,
@@ -57,8 +57,8 @@ export class ApprovalPageComponent implements OnInit {
 
   sortValue = this.pendingApprovalGeneralFacade.sortValue;
   sort = this.pendingApprovalGeneralFacade.sort;
-  sortValueGeneralAPproval = this.approvalFacade.sortValueGeneralAPproval;
-  sortGeneralList = this.approvalFacade.sortGeneralList;
+  sortValueGeneralAPproval = this.caseManagerFacade.sortValueGeneralAPproval;
+  sortGeneralList = this.caseManagerFacade.sortGeneralList;
   sortApprovalPaymentsList = this.pendingApprovalPaymentFacade.sortApprovalPaymentsList;
   sortValueApprovalPaymentsApproval = this.pendingApprovalPaymentFacade.sortValueApprovalPaymentsApproval;
   sortImportedClaimsList = this.importedClaimFacade.sortImportedClaimsList;
@@ -113,7 +113,7 @@ export class ApprovalPageComponent implements OnInit {
   deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
   /** Constructor **/
   constructor(
-    private readonly approvalFacade: ApprovalFacade,
+    private readonly caseManagerFacade: CaseManagerFacade,
     private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
     private pendingApprovalPaymentFacade: PendingApprovalPaymentFacade,
     private userManagementFacade: UserManagementFacade,
@@ -251,7 +251,7 @@ export class ApprovalPageComponent implements OnInit {
     this.importedClaimFacade.loadImportedClaimsLists(gridDataValue);
   }
   notificationTriger() {
-    this.approvalFacade.NotifyShowHideSnackBar(
+    this.caseManagerFacade.NotifyShowHideSnackBar(
       ReminderSnackBarNotificationType.LIGHT,
       ' Generic reminder displays at 9AM on the day of the reminder Generic reminder displays at 9AM on the day of the reminder'
     );
@@ -308,8 +308,7 @@ export class ApprovalPageComponent implements OnInit {
       this.documentFacade.getExportFile(
         approvalPageAndSortedRequest,
         `payment-batches?serviceType=${data.selectedPaymentType}&level=${this.userLevel}`,
-        fileName,
-        ApiType.ProductivityToolsApi
+        fileName
       );
     }
   }
@@ -331,8 +330,7 @@ export class ApprovalPageComponent implements OnInit {
       this.documentFacade.getExportFile(
         approvalPageAndSortedRequest,
         `imported-claims`,
-        fileName,
-        ApiType.ProductivityToolsApi
+        fileName
       );
     }
   }

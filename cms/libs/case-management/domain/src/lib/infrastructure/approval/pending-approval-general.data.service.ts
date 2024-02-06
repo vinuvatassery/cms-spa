@@ -16,18 +16,18 @@ export class PendingApprovalGeneralService {
   /** Public methods **/
   loadApprovalsGeneral() {
     return this.http.get(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/general`
     );
   }
 
   loadCasereassignmentExpandedInfo(approvalId: any) {
     return this.http.get<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/case-reassignment?approvalId=${approvalId}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/general/case-reassignment?approvalId=${approvalId}`
     );
   }
 
   loadExceptionCard(exceptionId:string) {
-    return this.http.get(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/exceptions?exceptionId=${exceptionId}`);
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/general/exceptions?exceptionId=${exceptionId}`);
    }
 
   loadInvoiceListService(data: any) {
@@ -39,14 +39,14 @@ export class PendingApprovalGeneralService {
       Filter: JSON.stringify(data.filter),
     };
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/invoice-details?exceptionId=${data.exceptionId}`,
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/general/invoice-details?exceptionId=${data.exceptionId}`,
       invoiceRequestDto
     );
   }
   submitGeneralRequests(requests : any)
   {
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/approvals/general/`,requests
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/general/`,requests
     );
   }
   
