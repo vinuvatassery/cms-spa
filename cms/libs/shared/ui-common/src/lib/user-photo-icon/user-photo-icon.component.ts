@@ -1,9 +1,6 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDataService, UserManagementFacade } from '@cms/system-config/domain';
-
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'common-user-photo-icon',
@@ -13,45 +10,41 @@ import { Subject } from 'rxjs';
 })
 export class UserPhotoIconComponent implements OnChanges {
   @Input() userId!: any;
+  // @Input() userProfilePhoto!: any;
   @Input() userFirstName!: any;
   @Input() userLastName!: any;
   @Input() userProfilePhotoExists!: any;
   @Input() linkType!: any;
+  @Input() userPhotos$!: any;
   userFullName!: any;
-  imageLoaderVisible = true;
+  imageLoaderVisible$ = new BehaviorSubject(true);
   userImageSubject = new Subject<any>();
   userByIdSubject = new Subject<any>();
-  userImage$ = this.userManagementFacade.userImage$;
+  profilePhotoSubscription = new Subscription();
+  userProfilePhoto!: string;
 
   /** Constructor**/
   constructor(
-    private userManagementFacade: UserManagementFacade,
-    private readonly userDataService: UserDataService
   ) {}
 
   /** Lifecycle hooks **/
   ngOnChanges(): void {
     this.userFullName = this.userFirstName +' '+ this.userLastName;
-    if(this.userId && this.userProfilePhotoExists == true){
-    this.loadprofilePhoto();
-    }
+    this.addUserProfilePhotoSubscription();
   }
 
-  loadprofilePhoto() {
-      this.userDataService.getUserImage(this.userId).subscribe({
-        next: (userImageResponse: any) => {
-          this.userImageSubject.next(userImageResponse);
-        },
-        error: (err) => {
-          this.userManagementFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            err
-          );
-        },
-      });
+  addUserProfilePhotoSubscription(){
+    this.profilePhotoSubscription = this.userPhotos$.subscribe((item: any) => {
+      let filteredUserPhoto = item.filter((userPhoto: any) => userPhoto.creatorId == this.userId)[0];
+      if(filteredUserPhoto){
+        this.userProfilePhoto = filteredUserPhoto.profilePhoto;
+        this.userImageSubject.next(this.userProfilePhoto);
+        this.onLoad();
+      }
+    })
   }
 
   onLoad() {
-    this.imageLoaderVisible = false;
+    this.imageLoaderVisible$.next(false);
   }
 }

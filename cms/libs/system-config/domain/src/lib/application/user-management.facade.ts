@@ -41,6 +41,7 @@ export class UserManagementFacade {
   private usersByRoleSubject = new BehaviorSubject<LoginUser[]>([]);
   private userImageSubject = new Subject<any>();
   private userByIdSubject = new Subject<any>(); 
+  private profilePhotosSubject = new BehaviorSubject<any>([]);
  
   /** Public properties **/
   users$ = this.userSubject.asObservable();
@@ -70,7 +71,7 @@ export class UserManagementFacade {
   usersByRole$ = this.usersByRoleSubject.asObservable();
   userImage$ = this.userImageSubject.asObservable();
   usersById$ = this.userByIdSubject.asObservable();
- 
+  profilePhotos$ = this.profilePhotosSubject.asObservable(); 
   
   /** Constructor **/
   constructor(private readonly userDataService: UserDataService,
@@ -429,6 +430,31 @@ export class UserManagementFacade {
 
   reassignCase(caseReassignData : any){
     return this.userDataService.reassignCase(caseReassignData);
+  }
+
+  getUserProfilePhotosByIds(userIds : string, gridItems: any) {    
+    return this.userDataService.getUserProfilePhotos(userIds)
+    .subscribe({
+      next: (data: any[]) => {
+        if (data.length > 0) {
+          gridItems.forEach((item: any) => {
+            const matchingItem = data.find((profileItem: any) => profileItem.creatorId === item.creatorId);
+            if (matchingItem) {
+              item.userProfilePhoto = matchingItem.profilePhoto;
+            }
+          });
+          this.profilePhotosSubject.next(data);
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);   
+      },
+    });
+  }
+
+
+  getUserIdAndProfilePhotosByIds(userIds : string) {    
+    return this.userDataService.getUserProfilePhotos(userIds);
   }
  
 }

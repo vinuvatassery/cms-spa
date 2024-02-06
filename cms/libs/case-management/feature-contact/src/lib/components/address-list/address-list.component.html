@@ -60,7 +60,8 @@
             [userFirstName]="dataItem.userFirstName"
             [userLastName]="dataItem.userLastName"
             [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
-            [linkType]="'profileIcon'"></common-user-photo-icon>
+            [linkType]="'profileIcon'"
+            [userPhotos$]="userPhotosSubject"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column
