@@ -36,7 +36,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   private dashboardAllWidgetsDataSubject = new Subject<any>();
   public dashboardAllWidgetsListData$ =  this.dashboardAllWidgetsDataSubject.asObservable();
 
-  dashBoardContentData! :any
+  static dashBoardContentData :any
   dashBoardAllWidgetsData! :any
   configSubscription!: Subscription;
   dashBoardContentSubscription!: Subscription;
@@ -121,7 +121,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
    dashBoardContentSubscribe() {
     this.dashBoardContentSubscription = this.dashboardContentList$.subscribe((response) => {          
-       this.dashBoardContentData = response
+      DashboardPageComponent.dashBoardContentData = response
        this.dashboardContentListDataSubject.next(response)
     });
   }
@@ -188,13 +188,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     itemComponent: GridsterItemComponentInterface
   ) {
     
-    console.info('itemChanged', item, itemComponent);
+    let changedComponent = DashboardPageComponent.dashBoardContentData.filter((x : any) => (x.widgetProperties.componentData["component"].name == item["component"].name))
+    
+    DashboardPageComponent.dashBoardContentData[0].widgetProperties.componentData.component.name
+    console.info('itemChanged', item, itemComponent,DashboardPageComponent.dashBoardContentData);
   }
 
     itemResize(item: GridsterItem,
       itemComponent: GridsterItemComponentInterface) {
-    
-    console.info('itemResized', item, itemComponent);
+        
+    console.info('itemResized', item, itemComponent,DashboardPageComponent.dashBoardContentData);
   }
 
   changedOptions() {
@@ -208,11 +211,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   addItem(item : any)
   {    
 
-    this.dashBoardContentData.push(item)   
+    DashboardPageComponent.dashBoardContentData.push(item)   
     
     this.dashBoardAllWidgetsData = this.dashBoardAllWidgetsData.filter((x : any) => !(x.widgetId == item.widgetId));
 
-    this.dashboardContentListDataSubject.next(this.dashBoardContentData)
+    this.dashboardContentListDataSubject.next(DashboardPageComponent.dashBoardContentData)
 
     this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData)
   }
@@ -221,9 +224,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   {
     this.dashBoardAllWidgetsData.push(item)
     
-    this.dashBoardContentData = this.dashBoardContentData.filter((x : any) => !(x.widgetId == item.widgetId));
+    DashboardPageComponent.dashBoardContentData = DashboardPageComponent.dashBoardContentData.filter((x : any) => !(x.widgetId == item.widgetId));
 
-    this.dashboardContentListDataSubject.next(this.dashBoardContentData)
+    this.dashboardContentListDataSubject.next(DashboardPageComponent.dashBoardContentData)
 
     this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData)
 

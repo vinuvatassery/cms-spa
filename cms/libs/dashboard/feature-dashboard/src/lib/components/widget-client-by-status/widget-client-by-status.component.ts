@@ -46,7 +46,7 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
         next: (response) => {
           if (response) {
             this.activeClientsByStatus = response;
-            debugger
+            
             this.cd.detectChanges();
             
           }

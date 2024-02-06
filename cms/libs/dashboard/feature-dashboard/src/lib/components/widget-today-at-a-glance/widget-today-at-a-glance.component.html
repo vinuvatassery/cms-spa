@@ -3,14 +3,14 @@
   <div class="flex-row dashboard-page-wrapper">
     <section class="flex-col">
       <div class="dash-top-cards-wrapper">
-        <div class="dash-info-card yellow_card" *ngIf="todayGlance.todoItems.isVisible">
+        <div class="dash-info-card yellow_card" (click)="todoitemsNavigate()">
           <p>TO DO ITEMS</p>
           <div class="justify-content-between">
             <span class="material-icons">playlist_add_check</span>
             <h3>{{todayGlance.todoItems.count}}</h3>
           </div>
         </div>
-        <div class="dash-info-card red_card" *ngIf="todayGlance.pendingApprovals.isVisible">
+        <div class="dash-info-card red_card" (click)="pendingApprovalsNavigate()">
           <p>PENDING APPROVALS</p>
           <div class="justify-content-between">
             <span class="material-icons">
@@ -19,7 +19,7 @@
             <h3>{{todayGlance.pendingApprovals.count}}</h3>
           </div>
         </div>
-        <div class="dash-info-card green_card" *ngIf="todayGlance.directMessages.isVisible">
+        <div class="dash-info-card green_card" (click)="directMessagesNavigate()">
           <p>DIRECT MESSAGES</p>
           <div class="justify-content-between">
             <span class="material-icons">
@@ -28,7 +28,7 @@
             <h3>{{todayGlance.directMessages.count}}</h3>
           </div>
         </div>
-        <div class="dash-info-card blue_card" *ngIf="todayGlance.todayReminder.isVisible">
+        <div class="dash-info-card blue_card" (click)="remindersNavigate()">
           <p>REMINDERS TODAY</p>
           <div class="justify-content-between">
             <span class="material-icons">
@@ -38,7 +38,7 @@
             <h3>{{todayGlance.todayReminder.count}}</h3>
           </div>
         </div>
-        <div class="dash-info-card purple_card" *ngIf="todayGlance.newNotification.isVisible">
+        <div class="dash-info-card purple_card" (click)="notificationsNavigate()">
           <p>NEW NOTIFICATIONS</p>
           <div class="justify-content-between">
             <span class="material-icons">

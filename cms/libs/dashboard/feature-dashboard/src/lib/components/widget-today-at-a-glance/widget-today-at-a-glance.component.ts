@@ -7,6 +7,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { WidgetFacade } from '@cms/dashboard/domain';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -21,7 +22,7 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   @Input() isEditDashboard!: any;
   @Output() removeWidget = new EventEmitter<string>();
-  constructor(private widgetFacade: WidgetFacade) {}
+  constructor(private widgetFacade: WidgetFacade , private readonly router: Router) {}
 
   removeWidgetCard() {
     this.removeWidget.emit();
@@ -44,5 +45,30 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
         }
       },
     });
+  }
+
+  todoitemsNavigate()
+  {
+    this.router.navigate([`/productivity-tools/todo-items`]);
+  }
+
+  pendingApprovalsNavigate()
+  {
+    this.router.navigate([`/productivity-tools/approval`]);
+  }
+
+  directMessagesNavigate()
+  {
+    this.router.navigate([`/productivity-tools/direct-message`]);
+  }
+
+  remindersNavigate()
+  {
+    this.router.navigate([`/productivity-tools/todo-items`]);
+  }
+
+  notificationsNavigate()
+  {
+    this.router.navigate([`/productivity-tools/todo-items`]);
   }
 }

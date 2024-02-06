@@ -511,23 +511,23 @@ export class WidgetService {
   getTodayGlance(): Observable<any> {
     return of({
       todoItems: {
-        count: 10,
+        count: 0,
         isVisible: true,
       },
       pendingApprovals: {
-        count: 20,
+        count: 0,
         isVisible: true,
       },
       directMessages: {
-        count: 5,
+        count: 0,
         isVisible: true,
       },
       todayReminder: {
-        count: 8,
+        count: 0,
         isVisible: true,
       },
       newNotification: {
-        count: 12,
+        count: 0,
         isVisible: true,
       },
     });
