@@ -24,7 +24,7 @@ export class SystemInterfaceDashboardFacade {
   private batchLogsDataLoaderSubject = new BehaviorSubject<boolean>(false);
   batchLogsDataLoader$ = this.batchLogsDataLoaderSubject.asObservable();
 
-  private webLogListSubject = new BehaviorSubject<any>([]);
+  private webLogListSubject = new Subject<any>();
   webLogLists$ = this.webLogListSubject.asObservable();
   private webLogsDataLoaderSubject = new BehaviorSubject<boolean>(false);
   webLogsDataLoader$ = this.webLogsDataLoaderSubject.asObservable();
