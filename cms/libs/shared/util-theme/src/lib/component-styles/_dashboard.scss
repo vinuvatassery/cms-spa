@@ -557,3 +557,51 @@ gridster .gridster-row {
   font-size: 10px;
   padding: 0px;
 }
+
+.dash-header-with-filters {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  min-height: 31px;
+
+  .k-multiselect {
+    width: 110px;
+    min-height: 28px;
+
+    .k-searchbar {
+      position: absolute;
+      min-height: 28px;
+      height: 28px;
+      min-width: auto;
+    }
+
+    .k-i-x {
+      display: none;
+    }
+
+    .k-input-values {
+      padding-right: 0px;
+    }
+  }
+
+  .k-dropdownlist,
+  .k-multiselect {
+    min-width: 100px;
+    max-width: 100px;
+    font-size: $font-size-s;
+
+    .k-button.k-icon-button {
+      padding: 2px;
+    }
+
+    .k-input-inner {
+      padding-right: 0;
+      padding-left: 10px;
+    }
+  }
+
+  h5 {
+    margin: 0px;
+  }
+}

@@ -2,11 +2,12 @@
       <div class="dash-header-with-filters">
             <h5>PROGRAM EXPENSES</h5>
             <div *ngIf="!isEditDashboard">               
-                  <kendo-multiselect size="small" rounded="medium" class="mr-1"
-                       (valueChange)="onValueChange()"
+                  <kendo-multiselect  size="small" rounded="medium" class="mr-1" 
+                       (valueChange)="onValueChange()" 
                         [fillMode]="formUiStyle.inputFillMode"
                          [data]="dataExp" 
                          [(ngModel)]="selectedType"
+                         [kendoMultiSelectSummaryTag]="0"
                           textField="Name" 
                           valueField="Value"
                            [valuePrimitive]="true" >
