@@ -32,6 +32,9 @@ export class WidgetFacade {
   private todayGlanceSubject = new BehaviorSubject<any>([]);
   public  todayGlance$ = this.todayGlanceSubject.asObservable();
 
+  private applicationCERStatsSubject = new BehaviorSubject<any>([]);
+  public  applicationCERStats$ = this.applicationCERStatsSubject.asObservable();
+
   constructor(private widgetService: WidgetService) {}
 
   loadRecentlyViewedClients(): void {
@@ -141,6 +144,17 @@ export class WidgetFacade {
         this.todayGlanceSubject.next(result);
       },
        
+      error: (err) => { 
+        console.error('err', err);
+      },
+    });
+  }
+
+  loadApplicationCERStats(dashboardId : string) {
+    this.widgetService.loadApplicationCERStats(dashboardId).subscribe({
+      next: (result) => { 
+        this.applicationCERStatsSubject.next(result);
+      }, 
       error: (err) => { 
         console.error('err', err);
       },

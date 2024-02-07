@@ -16,11 +16,11 @@
                         <h4>New Applications</h4>
                   </div>
                   <div class="app-cars-col red-frame">
-                        <h4>6</h4>
-                        <a class="btm_texts" kendoRippleContainer>REVIEWS TO SEND <span class="material-icons"> chevron_right </span></a>
+                        <h4>{{applicationCERStats[0]?.value}}</h4>
+                        <a class="btm_texts" kendoRippleContainer (click)="todoitemsNavigate()">REVIEWS TO SEND <span class="material-icons"> chevron_right </span></a>
                   </div>
                   <div class="app-cars-col ">
-                        <h4>6</h4>
+                        <h4>{{applicationCERStats[1]?.value}}</h4>
                         <a class="btm_texts">INCOMPLETE <span class="material-icons"> chevron_right </span></a>
                   </div>
                    
@@ -33,11 +33,11 @@
                         <h4>CERs</h4>
                   </div>
                   <div class="app-cars-col red-frame">
-                        <h4>6</h4>
+                        <h4>{{applicationCERStats[2]?.value}}</h4>
                         <a class="btm_texts">RESTRICTED <span class="material-icons"> chevron_right </span></a>
                   </div>
                   <div class="app-cars-col">
-                        <h4>6</h4>
+                        <h4>{{applicationCERStats[3]?.value}}</h4>
                         <a class="btm_texts">DUE THIS MONTH <span class="material-icons"> chevron_right </span></a>
                   </div>
                    

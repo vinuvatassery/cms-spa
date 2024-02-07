@@ -532,5 +532,11 @@ export class WidgetService {
       },
     });
   }
+
+  loadApplicationCERStats(dashboardId : string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/applications-cers-count`
+    ); 
+  }
  
 }
