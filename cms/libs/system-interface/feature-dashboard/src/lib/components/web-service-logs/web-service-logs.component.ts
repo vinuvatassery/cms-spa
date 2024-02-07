@@ -24,51 +24,60 @@ import { Subject, Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
-  public formUiStyle: UIFormStyle = new UIFormStyle();
-  popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  // UI Variables
+public formUiStyle: UIFormStyle = new UIFormStyle();
+popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
-  @Input() pageSizes: any;
-  @Input() sortValue: any;
-  @Input() sortType: any;
-  @Input() sort: any;
-  @Input() activityEventLogList$: any;
-  @Input() lovsList$: any;
-  @Input() skipCount$: any;
+// Input Variables
+@Input() pageSizes: any;
+@Input() sortValue: any;
+@Input() sortType: any;
+@Input() sort: any;
+@Input() activityEventLogList$: any;
+@Input() lovsList$: any;
+@Input() skipCount$: any;
 
-  displayAll = true;
+// Flags
+displayAll = true;
+columnsReordered = false;
 
-  webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
-  webLogListsLoader$ = this.systemInterfaceDashboardFacade.webLogsDataLoader$;
+// State Variables
+public state!: State;
+isActivityLogLoaderShow = false;
+gridDataResult!: GridDataResult;
+gridDataSubject = new Subject<any>();
+filter!: any;
 
-  @Output() loadActivityLogListEvent = new EventEmitter<any>();
-  @Output() loadWebLogList = new EventEmitter<string>();
-  columnChangeDesc = 'Default Columns';
-  filteredByColumnDesc = '';
-  selectedStatus = '';
+// Observable Variables
+webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
+webLogListsLoader$ = this.systemInterfaceDashboardFacade.webLogsDataLoader$;
+gridData$ = this.gridDataSubject.asObservable();
 
-  public state!: State;
-  isActivityLogLoaderShow = false;
-  gridDataResult!: GridDataResult;
-  gridDataSubject = new Subject<any>();
-  gridData$ = this.gridDataSubject.asObservable();
-  filter!: any;
+// Output Events
+@Output() loadActivityLogListEvent = new EventEmitter<any>();
+@Output() loadWebLogList = new EventEmitter<string>();
 
-  sortColumn = 'startDate';
-  sortColumnDesc = 'startDate';
-  sortDir = 'Ascending';
+// Other Variables
+columnChangeDesc = 'Default Columns';
+filteredByColumnDesc = '';
+selectedStatus = '';
 
-  // InterfaceType = "RAMSELL";
-  columnsReordered = false;
+// Sorting Variables
+sortColumn = 'startDate';
+sortColumnDesc = 'startDate';
+sortDir = 'Ascending';
 
-  statusFilter = '';
-  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
-  interfaceProcessBatchFilter = '';
+// Filtering Variables
+statusFilter = '';
+public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
+interfaceProcessBatchFilter = '';
 
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+// Filter Data
+filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
-  interfaceFilterDropDown = null;
-
-  lovsSubscription: Subscription | undefined;
+// Additional Variables
+interfaceFilterDropDown: any = null;
+lovsSubscription: Subscription | undefined;
 
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
