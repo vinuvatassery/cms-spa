@@ -51,18 +51,6 @@ export class WidgetFacade {
     return this.widgetService.getChartData();
   }
 
-  loadActiveClientsByGroupChart() {
-    this.widgetService.getActiveClientsByGroup().subscribe({
-      next: (result) => { 
-        this.activeClientsByGroupSubject.next(result);
-      },
-       
-      error: (err) => { 
-        console.error('err', err);
-      },
-    });
-  }
-
   loadActiveClientsByStatusChart(dashboardId : string) {
     this.widgetService.getActiveClientsByStatus(dashboardId).subscribe({
       next: (result : any) => { 
@@ -80,6 +68,22 @@ export class WidgetFacade {
     });
   }
 
+  loadActiveClientsByGroupChart(dashboardId : string) {
+    this.widgetService.getActiveClientsByGroup(dashboardId).subscribe({
+      next: (result : any) => { 
+       
+        let widgetProperties = JSON.parse(result.widgetProperties);
+        
+        widgetProperties.chartData.series[0].data = result?.clientsbyGroup
+        
+        this.activeClientsByGroupSubject.next(widgetProperties);
+      },
+       
+      error: (err) => { 
+        console.error('err', err);
+      },
+    });
+  }
   loadNetIncomeChart() {
     this.widgetService.getNetIncome().subscribe({
       next: (result) => { 

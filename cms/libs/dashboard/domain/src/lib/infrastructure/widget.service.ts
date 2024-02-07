@@ -87,7 +87,11 @@ export class WidgetService {
     });
   }
 
-  getActiveClientsByGroup(): Observable<any> {
+  getActiveClientsByGroup(dashboardId : string): Observable<any> {
+   
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-group`
+    );
     return of({
       component: 'ActiveClientsByGroup',
       chartData: {

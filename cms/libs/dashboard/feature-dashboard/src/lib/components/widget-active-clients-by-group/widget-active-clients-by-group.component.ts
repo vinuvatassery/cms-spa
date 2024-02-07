@@ -44,7 +44,7 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
     this.removeWidget.emit();
   }
   loadActiveClientsByGroupChart() {
-    this.widgetFacade.loadActiveClientsByGroupChart();
+    this.widgetFacade.loadActiveClientsByGroupChart("e2301551-610c-43bf-b7c9-9b623ed425c3");
     this.widgetFacade.activeClientsByGroupChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
