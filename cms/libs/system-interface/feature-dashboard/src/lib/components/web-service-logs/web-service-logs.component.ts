@@ -6,13 +6,14 @@ import {
   OnInit,
   OnChanges,
   Output,
-  ViewEncapsulation
+  ViewEncapsulation,
+  OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 
 @Component({
@@ -22,7 +23,7 @@ import { Subject } from 'rxjs';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WebServiceLogsComponent implements OnChanges, OnInit {
+export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
@@ -56,7 +57,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   sortColumnDesc = 'startDate';
   sortDir = 'Ascending';
 
-  InterfaceType = "RAMSELL";
+  // InterfaceType = "RAMSELL";
   columnsReordered = false;
 
   statusFilter = '';
@@ -65,10 +66,13 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
+  interfaceFilterDropDown = null;
+
+  lovsSubscription: Subscription | undefined;
+
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
   ) { }
-
 
   gridColumns: any = {
     process: 'Process',
@@ -136,6 +140,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
     },
   ]
 
+  interfaceFilterDataList = null;
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.state = {
@@ -143,8 +148,25 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    this.loadActivityLogLists();
 
+    this.initializeDropdownWithFirstValue();
+
+  }
+
+  ngOnDestroy(): void {
+    if (this.lovsSubscription) {
+      this.lovsSubscription.unsubscribe();
+    }
+  }
+
+  private initializeDropdownWithFirstValue() {
+    this.lovsSubscription = this.lovsList$.subscribe((lovs: any) => {
+      this.interfaceFilterDataList = lovs;
+      if (lovs && lovs.length > 0) {
+        this.interfaceFilterDropDown = lovs[0];
+        this.loadListGrid();
+      }
+    });
   }
 
   ngOnChanges(): void {
