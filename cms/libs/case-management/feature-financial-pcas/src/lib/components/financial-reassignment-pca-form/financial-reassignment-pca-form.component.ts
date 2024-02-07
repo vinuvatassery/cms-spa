@@ -63,8 +63,8 @@ export class FinancialreassignmentpcaFormComponent implements OnInit,OnChanges{
   ngOnInit(): void {
     this.formSubmitted = false
     this.loadPcaEvent.emit()
-    this.loaderService.show();
-    this.financialPcaFacade.getPcaUnAssignments(this.pcaAssignmentFormDataModel$?.objectId,this.pcaAssignmentFormDataModel$?.pcaAssignmentId).subscribe((res:any)=>{
+this.loaderService.show();
+    this.financialPcaFacade.getPcaUnAssignments(this.pcaAssignmentFormDataModel$?.objectId,this.pcaAssignmentFormDataModel$?.pcaAssignmentId,this.pcaAssignmentFormDataModel$?.groupId).subscribe((res:any)=>{
       this.pcaCodesData$=res;
       this.loaderService.hide()
     });
