@@ -63,6 +63,8 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
   interfaceProcessBatchFilter = '';
 
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
   ) { }
@@ -145,7 +147,6 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
 
   }
 
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   ngOnChanges(): void {
     this.initializePaging();
   }

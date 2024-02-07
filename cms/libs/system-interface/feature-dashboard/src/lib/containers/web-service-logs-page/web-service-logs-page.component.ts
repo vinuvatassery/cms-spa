@@ -27,12 +27,13 @@ export class WebServiceLogsPageComponent implements OnInit {
   webLogLovs$ = this.lovFacade.webInterfaceLogLovs$;
   webLogsList$ = this.systemInterfaceDashboardFacade.webLogLists$;
   webLogsDataList$ :any ;
+  interfaceTypeCode = '';
+
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
     private lovFacade: LovFacade
   ) { }
 
-  interfaceTypeCode = '';
   ngOnInit(): void {
 
     this.state = {
@@ -50,6 +51,6 @@ export class WebServiceLogsPageComponent implements OnInit {
 
   loadWebLogList(data: any) {
     this.interfaceTypeCode = data;
-    
   }
+
 }
