@@ -162,7 +162,9 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   paymentMethodLovSubscription!: Subscription;
   paymentType: any;
   isWarningDialogShow: boolean=false;
-  providerCountFieldTitle:any="Provider Count"
+  providerCountFieldTitle:any="Provider Count";
+  constantMaxApprovalAmount:number=10000;
+  maxApprovalAmount:number=this.constantMaxApprovalAmount;
   /** Constructor **/
   constructor(
     private route: Router,
@@ -497,10 +499,32 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     }
     this.selectedColumn = 'ALL';
     this.searchValue = '';
+    this.setApprovalLevelAndMaxApprovalAmount();
     this.loadApprovalPaymentsListGrid();
     this.mainListDataHandle();
     this.gridDataHandle();
     this.enableSubmitButtonMain();
+  }
+  
+  setApprovalLevelAndMaxApprovalAmount()
+  {
+    if(this.userManagementFacade.hasPermission(this.approvalPermissionCode))
+    {
+      this.maxApprovalAmount = this.userManagementFacade.getUserMaxApprovalAmount(this.approvalPermissionCode);
+      if(this.maxApprovalAmount != null && this.maxApprovalAmount > 0)
+      {
+        this.approvalTypeCode === ApprovalTypeCode.L1Approval;
+      }
+      else
+      {
+        this.approvalTypeCode === ApprovalTypeCode.L2Approval;
+      }
+    }
+    else
+    {
+      this.approvalTypeCode = ApprovalTypeCode.L1Approval;
+      this.maxApprovalAmount = this.constantMaxApprovalAmount;
+    }
   }
 
   onRowLevelApproveClicked(
@@ -991,36 +1015,15 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
     });
   }
   checkApprovalLimit(payments: any) {
-    let role;
-    if (
-      this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL2)
-    ) {
-      this.approvalTypeCode = ApprovalTypeCode.L2Approval;
-      role = UserDefaultRoles.FinancialManagerL2;
-    } else if (
-      this.userManagementFacade.hasRole(UserDefaultRoles.FinancialManagerL1) &&
-      !role
-    ) {
-      this.approvalTypeCode = ApprovalTypeCode.L1Approval;
-      role = UserDefaultRoles.FinancialManagerL1;
-    }
-    const approvalLimit = this.userManagementFacade.getUserPermissionMetaData(
-      this.approvalPermissionCode,
-      role
-    );
-    if (
-      approvalLimit &&
-      this.approvalTypeCode === ApprovalTypeCode.L1Approval
-    ) {
+    if(this.maxApprovalAmount > 0 && this.approvalTypeCode === ApprovalTypeCode.L1Approval)
+    {
       let approvedRequestedAmountCount = 0;
       payments
         .filter((x: any) => x.batchStatus == this.approveStatus)
         .forEach((currentPage: any, index: number) => {
           approvedRequestedAmountCount += currentPage.totalAmountDue;
         });
-
-      const limit = approvalLimit['maxApprovalAmount'];
-      if (limit && Number.parseFloat(limit) < approvedRequestedAmountCount) {
+      if (this.maxApprovalAmount > 0 && this.maxApprovalAmount < approvedRequestedAmountCount) {
         this.approvalTypeCode = ApprovalTypeCode.ExceedApprovalLimit;
       }
     }

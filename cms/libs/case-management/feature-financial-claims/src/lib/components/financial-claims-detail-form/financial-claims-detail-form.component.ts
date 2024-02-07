@@ -620,6 +620,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
       serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
       return true;
     }
+    serviceFormData.get('serviceEndDate')?.setErrors(null);
     return false;
   }
 

@@ -98,9 +98,14 @@ export class FinancialPcaDataService {
     );
   }
 
-  getPcaUnAssignments(objectCodeId:any,pcaAssignmentId:any) {
-    return this.http.get<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/unassign-data/${objectCodeId}/${pcaAssignmentId}`
+  getPcaUnAssignments(objectCodeId:any,pcaAssignmentId:any,groupCodeId:any) {
+    const body={
+      objectCodeId:objectCodeId,
+      pcaAssignmentId:pcaAssignmentId,
+      groupCodeIds:groupCodeId
+    };
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/pca-reassignments/unassign-data`,body
     );
   }
   pcaReassignment(data: any) {
