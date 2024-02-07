@@ -1,12 +1,10 @@
 import {
-  ChangeDetectionStrategy,
   Component,
   EventEmitter,
   Input,
   OnInit,
   OnChanges,
   Output,
-  ViewEncapsulation,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -35,7 +33,6 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
   batchLogsDataLoader$ = this.systemInterfaceDashboardFacade.batchLogsDataLoader$;
   showHistoricalFlag:boolean = true;
-  //@Input() batchLogExcptionLists$:any;
   batchLogExcptionLists$ = this.systemInterfaceDashboardFacade.batchLogExcptionLists$;
   @Input() lovsList$: any;
   @Input() skipCount$: any;
@@ -165,7 +162,6 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
 
  
   handleShowHistoricalClick(){
-    this.displayAll=!this.displayAll;
     this.loadClaimsListGrid();
   }
   loadClaimsListGrid() {
@@ -176,7 +172,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-      this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType,this.displayAll, param);
+      this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType,!this.displayAll, param);
   }
   onInterfaceChange(event:any) {
     
