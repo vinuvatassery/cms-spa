@@ -57,10 +57,10 @@ gridData$ = this.gridDataSubject.asObservable();
 @Output() loadActivityLogListEvent = new EventEmitter<any>();
 @Output() loadWebLogList = new EventEmitter<string>();
 
-// Other Variables
 columnChangeDesc = 'Default Columns';
 filteredByColumnDesc = '';
 selectedStatus = '';
+interfaceFilterDataList = null;
 
 // Sorting Variables
 sortColumn = 'startDate';
@@ -71,11 +71,11 @@ sortDir = 'Ascending';
 statusFilter = '';
 public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
 interfaceProcessBatchFilter = '';
+dateColumns = ['startDate'];
 
 // Filter Data
 filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
-// Additional Variables
 interfaceFilterDropDown: any = null;
 lovsSubscription: Subscription | undefined;
 
@@ -149,7 +149,6 @@ lovsSubscription: Subscription | undefined;
     },
   ]
 
-  interfaceFilterDataList = null;
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.state = {
@@ -191,7 +190,6 @@ lovsSubscription: Subscription | undefined;
     this.columnsReordered = true;
   }
 
-  dateColumns = ['startDate', 'endDate'];
   private initializePaging() {
     const sort: SortDescriptor[] = [{
       field: 'creationTime',
