@@ -59,6 +59,10 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   InterfaceType = "RAMSELL";
   columnsReordered = false;
 
+  statusFilter = '';
+  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
+  interfaceProcessBatchFilter = '';
+
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
   ) { }
@@ -104,7 +108,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-    this.systemInterfaceDashboardFacade.loadWebLogsList('RAMSELL', this.displayAll, param);
+    this.systemInterfaceDashboardFacade.loadWebLogsList(this.InterfaceType, this.displayAll, param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
 
@@ -183,9 +187,6 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
     this.loadListGrid();
   }
 
-  statusFilter = '';
-  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
-  interfaceProcessBatchFilter = '';
   dropdownFilterChange(
     field: string,
     value: any,

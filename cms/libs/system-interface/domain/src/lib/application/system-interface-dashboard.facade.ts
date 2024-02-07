@@ -38,7 +38,7 @@ export class SystemInterfaceDashboardFacade {
     field: this.sortValue,
   }];
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: NotificationSource = NotificationSource.API) {
-    if (type == SnackBarNotificationType.ERROR) {
+    if (type === SnackBarNotificationType.ERROR) {
       const err = subtitle;
       this.loggingService.logException(err)
     }
