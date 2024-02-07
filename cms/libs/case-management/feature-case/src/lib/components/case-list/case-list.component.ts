@@ -143,7 +143,7 @@ public state!: any;
     this.getGroupLovs() ; 
     this.getLoggedInUserProfile();
     if (this.caseStatus != ''){ 
-      this.dasboardfilter(); 
+      this.dashboardfilter(); 
     }
   }
   ngOnDestroy(): void {
@@ -189,7 +189,7 @@ public state!: any;
       searchValue: ''
       };
   }
-  dasboardfilter(){
+  dashboardfilter(){
       this.state.filter.filters.push(
         {filters:[{
           field: "eligibilityStatusCode",
