@@ -235,4 +235,8 @@ export class SystemInterfaceDashboardService {
     return this.http.post<any>(
       `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/interface-exceptions/${fileId}/${interfaceTypeCode}/${entityTypeCode}`, params);
   }
+
+  getRamsellInterfaceActivity(interfaceTypeCode: string, displayAll: boolean, params:any) {
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/web-logs/${interfaceTypeCode}?displayAll=${displayAll}`, params);
+  }
 }

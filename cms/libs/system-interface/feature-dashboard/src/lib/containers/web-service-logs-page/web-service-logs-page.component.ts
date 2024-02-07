@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  ViewEncapsulation,
+  ViewEncapsulation
 } from '@angular/core';
 import { LovFacade } from '@cms/system-config/domain';
 import { SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
@@ -25,6 +25,10 @@ export class WebServiceLogsPageComponent implements OnInit {
   sortType = this.systemInterfaceDashboardFacade.sortType;
 
   webLogLovs$ = this.lovFacade.webInterfaceLogLovs$;
+  webLogsList$ = this.systemInterfaceDashboardFacade.webLogLists$;
+  webLogsDataList$ :any ;
+  interfaceTypeCode = '';
+
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade,
     private lovFacade: LovFacade
@@ -43,6 +47,10 @@ export class WebServiceLogsPageComponent implements OnInit {
 
   loadActivityEventLog() {
     this.systemInterfaceDashboardFacade.getEventLogLists();
+  }
+
+  loadWebLogList(data: any) {
+    this.interfaceTypeCode = data;
   }
 
 }
