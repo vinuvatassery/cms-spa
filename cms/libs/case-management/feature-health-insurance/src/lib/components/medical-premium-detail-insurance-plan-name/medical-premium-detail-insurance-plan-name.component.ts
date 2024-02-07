@@ -56,10 +56,10 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     private readonly insuranceFacade: InsurancePlanFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly snackbarService: NotificationSnackbarService, private insurancePolicyFacade: HealthInsurancePolicyFacade) {
-    this.healthInsuranceForm = this.formBuilder.group({ insuranceCarrierName: [''] });
+    this.healthInsuranceForm = this.formBuilder.group({ insuranceProviderName: [''] });
 
     this.newhealthInsuranceForm = this.formBuilder.group({
-      insuranceCarrierName: ['', Validators.required],
+      insuranceProviderName: ['', Validators.required],
       insurancePlanName: ['', Validators.required],
       insuranceType: ['', Validators.required],
       startDate: ['', Validators.required],
@@ -138,7 +138,7 @@ export class MedicalPremiumDetailInsurancePlanNameComponent {
     const hasCreateUpdatePermission = this.hasCreateUpdatePermission === true;
 
     const dto = {
-      insuranceProviderId: formValues.insuranceCarrierName,
+      insuranceProviderId: formValues.insuranceProviderName,
       insurancePlanName: formValues.insurancePlanName,
       healthInsuranceTypeCode: (!this.isDentalPlan) ? formValues.insuranceType : 'N/A',
       startDate: formValues.startDate,

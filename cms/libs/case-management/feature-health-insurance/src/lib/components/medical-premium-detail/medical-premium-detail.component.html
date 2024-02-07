@@ -23,7 +23,7 @@
             [fillMode]="formUiStyle.dropDownFillMode" [data]="insuranceTypeList$ | async"
             (valueChange)="onHealthInsuranceTypeChanged()" formControlName="insuranceType" textField="lovDesc"
             valueField="lovCode"  [valuePrimitive]="true"
-            [loading] = "(insuranceTypeList$ | async)?.length===0" >
+            [loading] = "(insuranceTypeList$ | async) === null" >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
@@ -200,9 +200,25 @@
             [isViewContentEditable]="isViewContentEditable" [isEdit]="isEdit"
             [defaultValue]="metalLevelDefaultValue"></case-management-medical-premium-detail-metal-level>
         </div>
+        <div
+          *ngIf="ddlInsuranceType !== InsurancePlanTypes.OregonHealthPlan && ddlInsuranceType !== InsurancePlanTypes.DentalInsurance  && healthInsuranceForm.controls['insuranceProviderName'].value">
+          <case-management-medical-carrier-contact-info [carrierContactInfo]="carrierContactInfo"></case-management-medical-carrier-contact-info>
+        </div>
         <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
           <case-management-medical-premium-detail-group-plan-type [healthInsuranceForm]="healthInsuranceForm"
             [isViewContentEditable]="isViewContentEditable"></case-management-medical-premium-detail-group-plan-type>
+        </div>
+        <div class="flex-col" *ngIf="ddlInsuranceType === InsurancePlanTypes.GroupInsurancePlan">
+          <kendo-floatinglabel text="Insurance Group ID">
+            <kendo-textbox  aria-label="insurance group id"
+              placeholder="Insurance Group ID" formControlName="insuranceGroupId" [maxlength]="20"
+              [fillMode]="formUiStyle.inputFillMode" (keypress)="restrictSpecialChar($event)">
+            </kendo-textbox>
+          </kendo-floatinglabel>
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceGroupId'].valid && !specialCharAdded && !healthInsuranceForm.controls['insuranceGroupId'].disabled">
+            Insurance Group ID is required.</kendo-formerror>
+          <kendo-formerror *ngIf="!healthInsuranceForm.controls['insuranceGroupId'].valid && specialCharAdded && !healthInsuranceForm.controls['insuranceGroupId'].disabled">
+            Special characters not allowed.</kendo-formerror>
         </div>
 
         <div class="flex-col mt-3" *ngIf="ddlInsuranceType === InsurancePlanTypes.QualifiedHealthPlan">

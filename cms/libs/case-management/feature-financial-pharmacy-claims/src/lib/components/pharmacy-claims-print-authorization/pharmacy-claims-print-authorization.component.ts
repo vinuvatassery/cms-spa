@@ -187,6 +187,11 @@ export class PharmacyClaimsPrintAuthorizationComponent {
             window.open(fileUrl, "_blank");
             this.ref.detectChanges();
           }
+          if(this.returnResultFinalPrintList[this.currentIndex].isPrintAdviceLetter){
+            this.returnResultFinalPrintList[this.currentIndex].printFlag = StatusFlag.Yes;
+          }else{
+            this.returnResultFinalPrintList[this.currentIndex].printFlag = StatusFlag.No;
+          }
           if(this.currentIndex == this.returnResultFinalPrintList.length - 1){
             this.onClosePrintAdviceLetterClicked();
             }else{

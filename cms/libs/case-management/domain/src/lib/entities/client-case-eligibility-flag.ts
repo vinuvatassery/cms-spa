@@ -11,6 +11,8 @@ export class ClientCaseEligibilityFlag{
         currentInsuranceFlag :string|null=null;
         insuranceNameNotApplicableFlag :string|null=null;
         officialIdNameNotApplicableFlag :string|null=null;
+        insuranceNoMiddleInitialFlag :string|null=null;
+        officialIdNoMiddleInitialFlag :string|null=null;
         groupPolicyEligibleFlag :string|null=null;
         smokingCessationReferralFlag :string|null=null;
         smokingCessationNoteApplicableFlag :string|null=null;
@@ -25,5 +27,5 @@ export class ClientCaseEligibilityFlag{
         homeAddressProofFlag :string|null=null;
         emailNotApplicableFlag :string|null=null;
         genderDescFlag :string|null=null;
-      
+
 }

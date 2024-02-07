@@ -1128,7 +1128,15 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 duplicatePaymentObject:any = {};
   getExceptionFormValue(controlName: string, index: any)
   {
-    return this.addExceptionForm.at(index).get(controlName)?.value
+    let formValue = this.addExceptionForm.at(index).get(controlName)?.value;
+    const ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
+    if(formValue){
+      ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': true});
+    }else{
+      ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': null});
+      ctpCodeIsvalid?.controls['cptCode'].updateValueAndValidity();
+    }
+    return formValue;
   }
   public onPrintDenialLetterOpen() {
     this.isPrintDenailLetterClicked = true;

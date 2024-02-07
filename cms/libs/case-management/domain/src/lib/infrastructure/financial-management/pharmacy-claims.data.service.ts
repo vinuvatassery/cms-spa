@@ -157,9 +157,9 @@ export class FinancialPharmacyClaimsDataService {
     return this.http.get<any>(
       `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacies/drugs/ndcCode=${searchText}`);
   }
-    loadPaymentsByBatch(batchId: string, params:GridFilterParam, claimType:string){
+    loadPaymentsByBatch(batchId: string, isReconciled: boolean, params:GridFilterParam, claimType:string){
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments`, params);
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/${claimType}/payment-batches/${batchId}/payments?isReconciled=${isReconciled}`, params);
   }
   loadPharmacyPrescriptionsServices(batchId: string, params:GridFilterParam, claimType:string){
     return this.http.post<any>(
@@ -188,7 +188,7 @@ export class FinancialPharmacyClaimsDataService {
   }
 
   getPrintAdviceLetterData(selectedProviders: any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/print-advice-letter-summary`,selectedProviders);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/financial-management/claims/pharmacy/payments/batches/print-advice-letter-summary?isReconciled=${selectedProviders.isReconciled}`,selectedProviders);
   }
 
   viewPrintAdviceLetterData(printAdviceLetterData: any) {
