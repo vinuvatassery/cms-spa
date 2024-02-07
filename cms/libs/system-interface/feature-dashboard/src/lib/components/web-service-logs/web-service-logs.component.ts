@@ -59,6 +59,12 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
   InterfaceType = "RAMSELL";
   columnsReordered = false;
 
+  statusFilter = '';
+  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
+  interfaceProcessBatchFilter = '';
+
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
   ) { }
@@ -141,7 +147,6 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
 
   }
 
-  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   ngOnChanges(): void {
     this.initializePaging();
   }
@@ -183,9 +188,6 @@ export class WebServiceLogsComponent implements OnChanges, OnInit {
     this.loadListGrid();
   }
 
-  statusFilter = '';
-  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
-  interfaceProcessBatchFilter = '';
   dropdownFilterChange(
     field: string,
     value: any,
