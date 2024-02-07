@@ -227,14 +227,13 @@ export class SystemInterfaceDashboardService {
     );
   }
 
-  loadBatchLogsList(interfaceTypeCode: string,displayAll:boolean, paginationParameters: any) {
-    
+  loadBatchLogsList(interfaceTypeCode: string,displayAll:boolean, paginationParameters: any) {   
 
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/batch-logs/${interfaceTypeCode}`+'?displayAll='+`${displayAll}`,paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/batch-logs/${interfaceTypeCode}`+'?displayAll='+`${displayAll}`,paginationParameters);
   }
-  getBatchlogsExceptions(fileId: any,processTypeCode:string, params:any ){
+  getBatchlogsExceptions(fileId: any,interfaceTypeCode:string,entityTypeCode:string, params:any ){
     return this.http.post<any>(
-      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-exceptions/${fileId}/${processTypeCode}`, params);
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/interface-exceptions/${fileId}/${interfaceTypeCode}/${entityTypeCode}`, params);
   }
 
   getRamsellInterfaceActivity(interfaceTypeCode: string, displayAll: boolean, params:any) {

@@ -64,17 +64,7 @@ export class SystemInterfaceDashboardFacade {
   }
 
   getEventLogLists(): void {
-
-    this.systemInterfaceDashboardService.loadActivityLogListsServices().subscribe({
-      next: (activityEventLogResponse) => {
-        this.activityEventLogListSubject.next(activityEventLogResponse);
-
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-
-      },
-    });
+    
   }
 
   loadClientRecordSendChart() {
@@ -112,7 +102,7 @@ export class SystemInterfaceDashboardFacade {
         };
         this.activityEventLogListSubject.next(gridView);
         this.batchLogsDataLoaderSubject.next(false);
-        this.hideLoader();
+        
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -121,11 +111,10 @@ export class SystemInterfaceDashboardFacade {
       },
     });
   }
-
-  getBatchLogExceptionsLists(fileId: string, processTypeCode: string, params: any): void {
+  getBatchLogExceptionsLists(fileId: string,interfaceTypeCode:string,entityTypeCode:string, params:any): void {
     this.showLoader();
-    this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, processTypeCode, params).subscribe({
-      next: (batchlogExceptionResponse: any) => {
+    this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId,interfaceTypeCode,entityTypeCode, params).subscribe({
+      next: (batchlogExceptionResponse:any) => {
         const gridView: any = {
           data: batchlogExceptionResponse['items'],
           total: batchlogExceptionResponse?.totalCount,

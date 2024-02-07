@@ -34,12 +34,12 @@
       </p>
       <kendo-floatinglabel text="Insurance Provider">
         <kendo-combobox aria-label="Insurance Provider" [fillMode]="formUiStyle.dropDownFillMode" [loading]="isLoading"
-          #caseOwnr formControlName="insuranceCarrierName" [data]="carrierNames" textField="vendorName"
+          #caseOwnr formControlName="insuranceProviderName" [data]="carrierNames" textField="vendorName"
           valueField="vendorId" [valuePrimitive]="true" [filterable]="true"
           [kendoDropDownFilter]="caseOwnerfilterSettings" (valueChange)="insuranceCarrierNameChangeValue($event)">
         </kendo-combobox>
         <kendo-formerror
-          *ngIf="!newhealthInsuranceForm.controls['insuranceCarrierName'].valid && isValidateForm">Insurance Provider
+          *ngIf="!newhealthInsuranceForm.controls['insuranceProviderName'].valid && isValidateForm">Insurance Provider
           is required.</kendo-formerror>
       </kendo-floatinglabel>
 

@@ -5,8 +5,10 @@ export class ClientCaseEligibility {
   eligibilityEndDate?: Date;
   aka: string | null = null;
   insuranceFirstName: string | null = null;
+  insuranceMiddleName: string | null = null;
   insuranceLastName: string | null = null;
   officialIdFirstName: string | null = null;
+  officialIdMiddleName: string | null = null;
   officialIdLastName: string | null = null;
   groupCode: string | null = null;
   genderDesc!: string;

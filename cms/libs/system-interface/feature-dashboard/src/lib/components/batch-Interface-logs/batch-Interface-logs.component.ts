@@ -23,8 +23,6 @@ import { Subject } from 'rxjs';
   selector: 'cms-system-interface-batch-interface-logs',
   templateUrl: './batch-Interface-logs.component.html',
   styleUrls: ['./batch-interface-logs.component.scss'],
-  encapsulation: ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
 {
@@ -34,7 +32,9 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-  @Input() activityEventLogList$: any;
+  activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
+  batchLogsDataLoader$ = this.systemInterfaceDashboardFacade.batchLogsDataLoader$;
+  showHistoricalFlag:boolean = true;
   //@Input() batchLogExcptionLists$:any;
   batchLogExcptionLists$ = this.systemInterfaceDashboardFacade.batchLogExcptionLists$;
   @Input() lovsList$: any;
@@ -53,7 +53,6 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
   dateColumns = ['startDate', 'endDate'];
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   /** Public properties **/
-  isActivityLogLoaderShow = false;
   InterfaceType:string="RAMSELL";
   columnsReordered = false;
   displayAll:boolean=true;
@@ -127,14 +126,8 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
       sort: this.sort,
     };
     this.loadClaimsListGrid();
-    this.loadLovList();
     this.lovFacade.getInterfaceProcessBatchLov();
     this.lovFacade.getInterfaceExceptionLov();
-  }
-  loadLovList(){
-    this.lovsList$.subscribe((data: any[]) => {
-      this.lovsList = data.sort((a, b) => a.sequenceNbr - b.sequenceNbr);
-    });
   }
 
   ngOnChanges(): void {
@@ -158,14 +151,36 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.loadActivityLogListEvent.emit();
   }
   pageSelectionchange(data: any) {
+    
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadClaimsListGrid();
   }
+
+  childPageSelectionchange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadClaimsListGrid();
+  }
+
+ 
   handleShowHistoricalClick(){
     this.displayAll=!this.displayAll;
+    this.loadClaimsListGrid();
   }
   loadClaimsListGrid() {
+    
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      JSON.stringify(this.filter));
+      this.systemInterfaceDashboardFacade.loadBatchLogsList(this.InterfaceType,this.displayAll, param);
+  }
+  onInterfaceChange(event:any) {
+    
+    this.InterfaceType=event;
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -177,6 +192,7 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
 
   
   public dataStateChange(stateData: any): void {
+    
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
@@ -184,47 +200,22 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
-    this.setFilterBy(true, '', this.filter);
+    if(stateData?.filter){
+    this.InterfaceType=stateData?.filter?.filters[0]?.filters[0]?.value
+    }
     this.loadClaimsListGrid();
   }
   
   public filterChange(filter: CompositeFilterDescriptor): void {
+    
     this.filterData = filter;
   }
   public columnChange(e: any) {
-   // this.cdr.detectChanges();
   }
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
-  private setFilterBy(
-    isFromGrid: boolean,
-    searchValue: any = '',
-    filter: any = []
-  ) {
-    this.filteredByColumnDesc = '';
-    if (isFromGrid) {
-      if (filter.length > 0) {
-        const filteredColumns = this.filter?.map((f: any) => {
-          const filteredColumns = f.filters
-            ?.filter((fld: any) => fld.value)
-            ?.map((fld: any) => this.gridColumns[fld.field]);
-          return [...new Set(filteredColumns)];
-        });
-
-        this.filteredByColumnDesc =
-          [...new Set(filteredColumns)]?.sort()?.join(', ') ?? '';
-      }
-      return;
-    }
-
-    if (searchValue !== '') {
-      this.filteredByColumnDesc =
-        this.searchColumnList?.find(
-          (i) => i.columnName === this.selectedSearchColumn
-        )?.columnDesc ?? '';
-    }
-  }
+  
   private isValidDate = (searchValue: any) =>
   isNaN(searchValue) && !isNaN(Date.parse(searchValue));
 
@@ -249,7 +240,6 @@ onSearch(searchValue: any) {
     isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
   searchValue = this.formatSearchValue(searchValue, isDateSearch);
   if (isDateSearch && !searchValue) return;
-  this.setFilterBy(false, searchValue, []);
   this.searchSubject.next(searchValue);
 }
 performSearch(data: any) {
@@ -300,13 +290,14 @@ defaultGridState() {
   };
 }
 public onDetailExpand(e: any): void {
+  
   const param = new GridFilterParam(
     this.state?.skip ?? 0,
     this.state?.take ?? 0,
     this.sortValue,
     this.sortType,
     JSON.stringify({ logic: 'and', filters: [] }));
-    this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.processTypeCode, param);
+   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.field,e.dataItem.interfaceTypeCode,'RECORD', param);
 
 }
 restGrid() {
