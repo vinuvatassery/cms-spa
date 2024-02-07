@@ -259,7 +259,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
   public onPanelExpand(item: any): void {
     if (
       item.approvalTypeCode ===
-      PendingApprovalGeneralTypeCode.GeneralAddToMasterList
+      PendingApprovalGeneralTypeCode.MasterList
     ) {
       const userObject = {
         approvalEntityId: item.approvalEntityId,
@@ -302,11 +302,11 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
 
   getTitle(approvalTypeCode: string, subTypeCode: string) {
     switch (approvalTypeCode) {
-      case PendingApprovalGeneralTypeCode.GeneralExceptions:
+      case PendingApprovalGeneralTypeCode.ClaimException:
         return 'Request to Exceed Max Benefits';
-      case PendingApprovalGeneralTypeCode.GeneralCaseReassignment:
+      case PendingApprovalGeneralTypeCode.CaseReassignment:
         return 'Request for Case Re-Assignment';
-      case PendingApprovalGeneralTypeCode.GeneralAddToMasterList:
+      case PendingApprovalGeneralTypeCode.MasterList:
         return this.getMasterlistTitle(subTypeCode);
     }
     return null;
@@ -424,20 +424,20 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
         this.approvalsPaymentsGridUpdatedResult.filter(
           (x: any) =>
             x.approvalTypeCode ===
-            this.pendingApprovalGeneralTypeCode.GeneralCaseReassignment
+            this.pendingApprovalGeneralTypeCode.CaseReassignment
         ).length;
 
       this.listManagementItemsCount =
         this.approvalsPaymentsGridUpdatedResult.filter(
           (x: any) =>
             x.approvalTypeCode ===
-            this.pendingApprovalGeneralTypeCode.GeneralAddToMasterList
+            this.pendingApprovalGeneralTypeCode.MasterList
         ).length;
 
       this.exceptionsCount = this.approvalsPaymentsGridUpdatedResult.filter(
         (x: any) =>
           x.approvalTypeCode ===
-          this.pendingApprovalGeneralTypeCode.GeneralExceptions
+          this.pendingApprovalGeneralTypeCode.ClaimException
       ).length;
       
       this.onSubmitClicked(this.submitRequestModalDialog);
@@ -520,7 +520,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     this.isPanelExpanded = dataItem.isExpanded;
     if (
       dataItem.approvalTypeCode ===
-      PendingApprovalGeneralTypeCode.GeneralAddToMasterList
+      PendingApprovalGeneralTypeCode.MasterList
     )
     {
       this.isPanelExpanded = dataItem.isExpanded = false;
@@ -551,7 +551,7 @@ export class ApprovalsGeneralListComponent implements OnInit, OnChanges {
     }
     if (
       dataItem.approvalTypeCode ===
-      PendingApprovalGeneralTypeCode.GeneralAddToMasterList
+      PendingApprovalGeneralTypeCode.MasterList
     )
     {
       this.isPanelExpanded = dataItem.isExpanded;
