@@ -34,6 +34,9 @@ export class WidgetFacade {
 
   constructor(private widgetService: WidgetService) {}
 
+
+
+
   loadRecentlyViewedClients(): void {
     this.widgetService.getRecentlyViewedClients().subscribe({
       next: (clients: any) => {

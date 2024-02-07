@@ -7,10 +7,13 @@ import { WidgetRegistry } from 'libs/dashboard/feature-dashboard/src/lib/widget-
 
 @Injectable({ providedIn: 'root' })
 export class DashboardWrapperFacade {
+
+  private dashboardContentUpdateSubject = new Subject<any>();
   private dashboardContentListSubject = new Subject<any>();
   private dashboardAllWidgetsSubject = new Subject<any>();
   public dashboardContentList$ =  this.dashboardContentListSubject.asObservable();
   public dashboardAllWidgets$ =  this.dashboardAllWidgetsSubject.asObservable();
+  public dashboardContentUpdate$ =  this.dashboardContentUpdateSubject.asObservable();
 
   private dashboardConfigurationSubject = new BehaviorSubject<GridsterConfig>(
     {}
@@ -20,6 +23,20 @@ export class DashboardWrapperFacade {
   private widgetCoponentCollection = WidgetRegistry;
 
   constructor(private dashboardWrapperService: DashboardWrapperService) {}
+  
+
+  updateDashboardAllWidgets(dashboardId : string , dashBoardWidgetsUpdatedDto :  any) {
+    this.dashboardWrapperService.updateDashboardAllWidgets(dashboardId  , dashBoardWidgetsUpdatedDto).subscribe({
+      next: (result) => { 
+        this.dashboardContentUpdateSubject.next(result);
+      },
+       
+      error: (err) => { 
+        console.error('err', err);
+      },
+    });
+  }
+
 
   loadDashboardContent(): void {
     this.dashboardWrapperService.getDashboardContent("CAREASSIST").subscribe({
@@ -44,9 +61,11 @@ export class DashboardWrapperFacade {
       next: (dashboardList : any) => {
         
     dashboardList.forEach((widg : any) => {
+      debugger
            widg.widgetProperties = JSON.parse(widg.widgetProperties);
             });
         dashboardList.filter((element : any) => {
+          
           element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
         });
         this.dashboardAllWidgetsSubject.next(dashboardList);
