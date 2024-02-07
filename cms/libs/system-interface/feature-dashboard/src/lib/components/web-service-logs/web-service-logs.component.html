@@ -1,31 +1,32 @@
 <section>
-  <div class="align-items-center mat-form-no-b-space bg-white mar-0 flex-row">
-    <span class="text-bold" for="eemploymentep flex-col">Filter By:&nbsp;</span>
-    <div class="fmly-epdorpdown flex-col flex-col-3">
-      <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
-       [data]="interfaceFilterDataList"
-      [ngModel]="interfaceFilterDropDown"  textField="lovDesc" valueField="lovCode" (selectionChange)="onInterfaceSelectionChanged($event)">
-      </kendo-dropdownlist>
-     
+  <div class="flex-row">
+    <div class="flex-col flex-space-bw align-items-center">
+    
+          <div class="fmly-epdorpdown  ">
+            <kendo-floatinglabel text="Interface">
+              <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
+              [data]="interfaceFilterDataList"
+             [ngModel]="interfaceFilterDropDown"  textField="lovDesc" valueField="lovCode" (selectionChange)="onInterfaceSelectionChanged($event)">
+             </kendo-dropdownlist>
+            </kendo-floatinglabel>
+          </div>
+        <div>
+          <span class="app-checkboxwidtext-wrapper">
+            <input
+              type="checkbox"
+              kendoCheckBox
+              aria-labelledby="StatusshowHistorical"
+              id="StatusshowHistorical"
+              [(ngModel)]="displayAll"
+              (change)="handleShowHistoricalClick()"
+            />
+            <label class="k-checkbox-label" for="StatusshowHistorical"
+              >Show activities within the last 7 days </label
+            >
+          </span>
+        </div>
     </div>
   </div>
-  <div>
-    <span class="app-checkboxwidtext-wrapper">
-      <input
-        type="checkbox"
-        kendoCheckBox
-        aria-labelledby="StatusshowHistorical"
-        id="StatusShowHistorical"
-        [(ngModel)]="displayAll"
-        (change)="handleShowHistoricalClick()"
-      />
-      <label class="k-checkbox-label" for="StatusShowHistorical"
-        >Show historical</label
-      >
-    </span>
-  </div>
-  <section class="table-filter-section mat-form-no-b-space bg-white">
-  </section>
 
   <div class="table-sorted-info">
     Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>

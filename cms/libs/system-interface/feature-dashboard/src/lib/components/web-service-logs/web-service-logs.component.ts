@@ -25,59 +25,59 @@ import { Subject, Subscription } from 'rxjs';
 })
 export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   // UI Variables
-public formUiStyle: UIFormStyle = new UIFormStyle();
-popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
 
-// Input Variables
-@Input() pageSizes: any;
-@Input() sortValue: any;
-@Input() sortType: any;
-@Input() sort: any;
-@Input() activityEventLogList$: any;
-@Input() lovsList$: any;
-@Input() skipCount$: any;
+  // Input Variables
+  @Input() pageSizes: any;
+  @Input() sortValue: any;
+  @Input() sortType: any;
+  @Input() sort: any;
+  @Input() activityEventLogList$: any;
+  @Input() lovsList$: any;
+  @Input() skipCount$: any;
 
-// Flags
-displayAll = true;
-columnsReordered = false;
+  // Flags
+  displayAll = true;
+  columnsReordered = false;
 
-// State Variables
-public state!: State;
-isActivityLogLoaderShow = false;
-gridDataResult!: GridDataResult;
-gridDataSubject = new Subject<any>();
-filter!: any;
+  // State Variables
+  public state!: State;
+  isActivityLogLoaderShow = false;
+  gridDataResult!: GridDataResult;
+  gridDataSubject = new Subject<any>();
+  filter!: any;
 
-// Observable Variables
-webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
-webLogListsLoader$ = this.systemInterfaceDashboardFacade.webLogsDataLoader$;
-gridData$ = this.gridDataSubject.asObservable();
+  // Observable Variables
+  webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$;
+  webLogListsLoader$ = this.systemInterfaceDashboardFacade.webLogsDataLoader$;
+  gridData$ = this.gridDataSubject.asObservable();
 
-// Output Events
-@Output() loadActivityLogListEvent = new EventEmitter<any>();
-@Output() loadWebLogList = new EventEmitter<string>();
+  // Output Events
+  @Output() loadActivityLogListEvent = new EventEmitter<any>();
+  @Output() loadWebLogList = new EventEmitter<string>();
 
-columnChangeDesc = 'Default Columns';
-filteredByColumnDesc = '';
-selectedStatus = '';
-interfaceFilterDataList = null;
+  columnChangeDesc = 'Default Columns';
+  filteredByColumnDesc = '';
+  selectedStatus = '';
+  interfaceFilterDataList = null;
 
-// Sorting Variables
-sortColumn = 'startDate';
-sortColumnDesc = 'startDate';
-sortDir = 'Ascending';
+  // Sorting Variables
+  sortColumn = 'startDate';
+  sortColumnDesc = 'startDate';
+  sortDir = 'Ascending';
 
-// Filtering Variables
-statusFilter = '';
-public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
-interfaceProcessBatchFilter = '';
-dateColumns = ['startDate'];
+  // Filtering Variables
+  statusFilter = '';
+  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
+  interfaceProcessBatchFilter = '';
+  dateColumns = ['startDate'];
 
-// Filter Data
-filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  // Filter Data
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
-interfaceFilterDropDown: any = null;
-lovsSubscription: Subscription | undefined;
+  interfaceFilterDropDown: any = null;
+  lovsSubscription: Subscription | undefined;
 
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
@@ -100,8 +100,10 @@ lovsSubscription: Subscription | undefined;
     this.filter = stateData?.filter?.filters;
     this.loadListGrid();
   }
+
   handleShowHistoricalClick() {
     this.displayAll = !this.displayAll;
+    this.loadListGrid();
   }
 
   restGrid() {
