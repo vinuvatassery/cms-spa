@@ -200,8 +200,8 @@ export class BatchInterfaceLogsComponent  implements OnChanges, OnInit
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
-    if(stateData?.filter!=undefined){
-    this.InterfaceType=stateData?.filter?.filters[0].filters[0].value
+    if(stateData?.filter){
+    this.InterfaceType=stateData?.filter?.filters[0]?.filters[0]?.value
     }
     this.loadClaimsListGrid();
   }
@@ -297,7 +297,7 @@ public onDetailExpand(e: any): void {
     this.sortValue,
     this.sortType,
     JSON.stringify({ logic: 'and', filters: [] }));
-   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists('67F2C0D8-85AA-49BB-A4A7-CDE131FB56D8',e.dataItem.interfaceTypeCode,'RECORD', param);
+   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.field,e.dataItem.interfaceTypeCode,'RECORD', param);
 
 }
 restGrid() {
