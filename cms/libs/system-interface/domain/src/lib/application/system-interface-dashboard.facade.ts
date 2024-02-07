@@ -60,17 +60,7 @@ export class SystemInterfaceDashboardFacade {
   }
 
   getEventLogLists(): void {
-
-    // this.systemInterfaceDashboardService.loadActivityLogListsServices().subscribe({
-    //   next: (activityEventLogResponse) => {
-    //     this.activityEventLogListSubject.next(activityEventLogResponse);
-
-    //   },
-    //   error: (err) => {
-    //     this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-
-    //   },
-    // });
+    
   }
 
 

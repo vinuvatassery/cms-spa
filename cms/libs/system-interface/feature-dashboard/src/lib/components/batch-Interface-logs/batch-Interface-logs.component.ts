@@ -241,7 +241,6 @@ onSearch(searchValue: any) {
     isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
   searchValue = this.formatSearchValue(searchValue, isDateSearch);
   if (isDateSearch && !searchValue) return;
- // this.setFilterBy(false, searchValue, []);
   this.searchSubject.next(searchValue);
 }
 performSearch(data: any) {
