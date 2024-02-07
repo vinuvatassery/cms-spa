@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WidgetFacade } from '@cms/dashboard/domain';
-
+import {CaseScreenTab, CaseStatusCode, ModuleCode} from '@cms/case-management/domain';
 @Component({
   selector: 'dashboard-widget-applications-cers',
   templateUrl: './widget-applications-cers.component.html',
@@ -40,5 +40,15 @@ export class WidgetApplicationsCersComponent {
   todoitemsNavigate()
   {
     this.router.navigate([`/productivity-tools/todo-items`]);
+  } 
+  myClientsNavigate()
+  {
+    const query = {
+      queryParams: {
+        tab: CaseScreenTab.MY_CASES,
+        casestatus: CaseStatusCode.incomplete
+      },
+    };
+    this.router.navigate(['/case-management/cases'], query) 
   }
 }

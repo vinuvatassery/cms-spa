@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 /** Internal Libraries **/
@@ -33,7 +33,7 @@ export class CasePageComponent implements OnInit {
   searchLoaderVisibility$ = this.caseFacade.searchLoaderVisibility$;
   totalClientsCount!:number | null;
   moduleCode:any = ModuleCode;
-
+  caseStatus: string = '';
   /** Public properties for case popup**/
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
@@ -56,7 +56,8 @@ export class CasePageComponent implements OnInit {
       private readonly loginUserFacade : UserManagementFacade,
       private readonly lovFacade : LovFacade,
       private readonly  cdr :ChangeDetectorRef,
-      private reminderFacade: ReminderFacade
+      private reminderFacade: ReminderFacade,
+      private route: ActivatedRoute,
     ) {}
 
   /** Lifecycle hooks **/
@@ -64,6 +65,7 @@ export class CasePageComponent implements OnInit {
     this.caseFacade.enableSearchHeader(SearchHeaderType.CaseSearch);
     this.loadColumnDroplist();
     this.loadCases();
+    this.loadQueryParams();
   }
 
   /** Private methods **/
@@ -77,6 +79,23 @@ export class CasePageComponent implements OnInit {
       this.lovFacade.getCaseOriginLovs();
   }
 
+  /** Private Query String values **/
+  loadQueryParams()
+  {  
+    debugger;
+      switch(this.route.snapshot.queryParams['tab']){
+        case CaseScreenTab.MY_CASES:
+          this.selectedTab = CaseScreenTab.MY_CASES;
+          break;
+        case CaseScreenTab.CER_TRACKING:
+          this.selectedTab = CaseScreenTab.CER_TRACKING;
+          break;
+        default:
+          this.selectedTab = CaseScreenTab.MY_CASES;
+          break;
+      } 
+    this.caseStatus = this.route.snapshot.queryParams['casestatus']
+  }
   /** Getters **/
   get caseScreenTab(): typeof CaseScreenTab {
     return CaseScreenTab;
