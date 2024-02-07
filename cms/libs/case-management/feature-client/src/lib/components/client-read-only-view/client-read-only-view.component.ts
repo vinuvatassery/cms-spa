@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import {
   ClientProfile, ClientFacade, Client,
   ClientCaseEligibility, ClientPronoun, ClientGender,
@@ -12,26 +12,27 @@ import { MaterialFormat, YesNoFlag } from '@cms/shared/ui-common';
 
 import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
-import { of } from 'rxjs';
+import { Subject, Subscription, of } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-client-read-only-view',
   templateUrl: './client-read-only-view.component.html',
   styleUrls: ['./client-read-only-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientReadOnlyViewComponent implements OnInit{
+export class ClientReadOnlyViewComponent implements OnInit, OnDestroy{
   /** Public properties **/
   @Input() clientProfile : any
   @Output() onUpdateApplicantInfo = new EventEmitter();
   @Output() loadReadOnlyClientInfoEvent =  new EventEmitter();
   @Output() loadprofilePhotoEvent =  new EventEmitter<string>();
-  @Input() userImage$: any
   @Input() clientId!:any;
   @Input() clientCaseEligibilityId!:any;
   @Input() clientCaseId!:any;
   @Input() ramsellInfo!: any;
+  @Input() clientProfile$!: any;
   applicantInfo = {} as ApplicantInfo;
   //public client! : ClientProfile
   isEditClientInformationPopup = false;
@@ -39,21 +40,43 @@ export class ClientReadOnlyViewComponent implements OnInit{
   appInfoForm!: FormGroup;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  userManagerprofilePhotoSubject = new Subject();
+  userLastModifierProfilePhotoSubject = new Subject();
+  userFirstName: string  |null=null;
+  userLastName: string  |null=null;
+  isUserProfilePhotoExist: boolean |null=null;
+  creatorId: string  |null=null;
+  lastModifierId: string  |null=null;
+  clientProfileSubscription = new Subscription();
+
   constructor(
       private loaderService: LoaderService,
       private loggingService: LoggingService,
       private clientFacade: ClientFacade,
       private caseFacade: CaseFacade,
       private intl: IntlService,
-      private configurationProvider: ConfigurationProvider){}
+      private configurationProvider: ConfigurationProvider,
+      private readonly userManagementFacade: UserManagementFacade,
+      private cdr: ChangeDetectorRef,){}
+
    /** Lifecycle hooks **/
  ngOnInit(): void {
-  this.loadReadOnlyClientInfoEvent.emit()
-
-  //this.onClientProfileLoad()
+  this.loadReadOnlyClientInfoEvent.emit();
+  this.addClientProfileInfoSubscription();
 }
 
+  addClientProfileInfoSubscription() {
+    this.clientProfileSubscription = this.clientProfile$.subscribe((user: any) => {
+      const caseManagerId = user?.caseManagerId;
+      const lastmodifierId = user?.lastModifierId ?? user?.creatorId;
+      this.loadCaseManagerProfilePhoto(caseManagerId);
+      this.loadLastModifierProfilePhoto(lastmodifierId);
+    });
+  }
 
+  ngOnDestroy(): void {
+    this.clientProfileSubscription?.unsubscribe();
+  }
   /** Internal event methods **/
   onCloseEditClientInformationClicked() {
     this.isEditClientInformationPopup = false;
@@ -933,6 +956,34 @@ export class ClientReadOnlyViewComponent implements OnInit{
         this.applicantInfo.clientPronounList[index].clientPronounCode = pronounCode;
         this.applicantInfo.clientPronounList[index].otherDesc = this.appInfoForm.controls["pronoun"].value;
       }
+    }
+  }
+
+  loadCaseManagerProfilePhoto(caseManagerId: string) {
+    if(caseManagerId){
+      this.userManagementFacade.getProfilePhotosByUserIds(caseManagerId)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userManagerprofilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  }
+
+  loadLastModifierProfilePhoto(lastmodifierId: string){
+    if(lastmodifierId){
+      this.userManagementFacade.getProfilePhotosByUserIds(lastmodifierId)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userLastModifierProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
     }
   }
 }

@@ -52,9 +52,8 @@ export class ProfileClientPageComponent implements OnInit {
     this.specialHandlings$.subscribe(question =>{
       this.questions = question;
     })
+    this.onClientProfileLoad();
     this.loadApplicantInfo();
-
-    this.onClientProfileLoad()
   }
 
   onClientProfileLoad() {
@@ -103,7 +102,14 @@ export class ProfileClientPageComponent implements OnInit {
             primaryRacialIdentity: clientData?.primaryRacialIdentity,
             lastModificationTime: clientData?.lastModificationTime,
             lastModifierName: clientData?.lastModifierName,
-            lastModifierId: clientData?.lastModifierId
+            lastModifierId: clientData?.lastModifierId,
+            userFirstName: clientData?.userFirstName,
+            userLastName: clientData?.userLastName,
+            isUserProfilePhotoExist: clientData?.isUserProfilePhotoExist,
+            creatorId: clientData?.creatorId,
+            caseManagerFirstName: clientData?.caseManagerFirstName,
+            caseManagerLastName: clientData?.caseManagerLastName,
+            isCaseManagerProfilePhotoExist: clientData?.isCaseManagerProfilePhotoExist,
           }
           this.loadRamSellInfo(client.clientId);
           this.clientSubject.next(client);

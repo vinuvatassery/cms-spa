@@ -33,7 +33,7 @@ export class UserPhotoIconComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.profilePhotoSubscription.unsubscribe();
+    this.profilePhotoSubscription?.unsubscribe();
   }  
 
   addUserProfilePhotoSubscription(){

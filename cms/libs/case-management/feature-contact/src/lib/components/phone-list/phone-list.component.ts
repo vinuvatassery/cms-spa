@@ -7,6 +7,7 @@ import {
   EventEmitter,
   OnChanges,
   ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 /** Facades **/
 import { State } from '@progress/kendo-data-query';
@@ -20,7 +21,7 @@ import { CaseFacade } from '@cms/case-management/domain';
   templateUrl: './phone-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PhoneListComponent implements OnChanges {
+export class PhoneListComponent implements OnChanges, OnDestroy {
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -68,6 +69,7 @@ export class PhoneListComponent implements OnChanges {
   hasPhoneDeletePermission =false;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   userPhoneProfilrPhotoSubject = new Subject<any>();
+  clientPhonesDataSubscription = new Subscription();
   // gridOption: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public gridOption = [
@@ -144,6 +146,10 @@ export class PhoneListComponent implements OnChanges {
     this.state.skip = 0;
     this.loadClientPhonesList();
   }
+
+  ngOnDestroy(): void {
+    this.clientPhonesDataSubscription?.unsubscribe();
+  }
   /** Private methods **/
 
   private loadClientPhonesList(): void {
@@ -191,7 +197,7 @@ this.reloadEmailsEvent.emit();
 }
 
   gridDataHandle() {
-    this.clientPhonesData$.subscribe((data: any) => {
+    this.clientPhonesDataSubscription = this.clientPhonesData$.subscribe((data: any) => {
       this.gridPhoneDataSubject.next(data);
 
       if (data?.total >= 0 || data?.total === -1) {
@@ -203,7 +209,7 @@ this.reloadEmailsEvent.emit();
 
   loadDistinctUserIdsAndProfilePhoto(data: any[]) {
     const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds != null){
+    if(distinctUserIds){
       this.userManage.getProfilePhotosByUserIds(distinctUserIds)
       .subscribe({
         next: (data: any[]) => {

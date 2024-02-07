@@ -11,6 +11,7 @@ import { DeleteRequest, SnackBar, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService,  LoggingService,  NotificationSource,  SnackBarNotificationType,} from '@cms/shared/util-core';
 import { DropDownListComponent } from '@progress/kendo-angular-dropdowns';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-income-list',
   templateUrl: './income-list.component.html',
@@ -55,6 +56,7 @@ export class IncomeListComponent implements OnInit {
   incomeValid$ = this.incomeFacade.incomeValid$;
   isIncomeAvailable:boolean = true;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  incomeProfilrPhotoSubject = new Subject();
   public uploadFileRestrictions: UploadFileRistrictionOptions =
     new UploadFileRistrictionOptions();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -117,7 +119,8 @@ export class IncomeListComponent implements OnInit {
       private readonly dependentFacade:FamilyAndDependentFacade,
       private readonly cdr: ChangeDetectorRef,
       private caseFacade: CaseFacade,
-      private readonly configurationProvider: ConfigurationProvider) {}
+      private readonly configurationProvider: ConfigurationProvider,
+      private readonly UserManagementFacade: UserManagementFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -151,12 +154,30 @@ export class IncomeListComponent implements OnInit {
     this.incomes$.subscribe({
       next:(income:any) => {
         this.updateWorkFlowStatus(income?.total > 0);
+        if(income?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(income?.data);
+        }
       },
       error:()=>{
         this.updateWorkFlowStatus(false);
       }
     })
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.UserManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.incomeProfilrPhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+}
   /** Private methods **/
   public onProofSchoolDropdownOneClose(event: any , index : any) {
     event.preventDefault();

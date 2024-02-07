@@ -1,7 +1,7 @@
 /** Angular **/
 import {
   Component,  OnInit,  ChangeDetectionStrategy,  Input,
-   OnChanges, EventEmitter,  Output,ChangeDetectorRef} from '@angular/core';
+   OnChanges, EventEmitter,  Output,ChangeDetectorRef, OnDestroy} from '@angular/core';
 import {  Router ,ActivatedRoute } from '@angular/router';
 /** External libraries **/
 import { Subject } from 'rxjs/internal/Subject';
@@ -11,7 +11,8 @@ import { DependentTypeCode, ScreenType, FamilyAndDependentFacade, CaseFacade } f
 /** Entities **/
 import { DeleteRequest } from '@cms/shared/ui-common';
 import {  State } from '@progress/kendo-data-query';
-import { first } from 'rxjs';
+import { Subscription, first } from 'rxjs';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-family-and-dependent-list',
@@ -19,7 +20,7 @@ import { first } from 'rxjs';
   styleUrls: ['./family-and-dependent-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
+export class FamilyAndDependentListComponent implements OnInit ,  OnChanges, OnDestroy {
 /******enumeration Alias *****/
 Dependent = DependentTypeCode.Dependent;
 CAClient = DependentTypeCode.CAClient;
@@ -51,9 +52,12 @@ CAClient = DependentTypeCode.CAClient;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   dependentValid$ = this.familyAndDependentFacade.dependentValid$;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  dependentProfilePhotoSubject= new Subject();
     /**Constructor */
     constructor( private router: Router , private activatedRoute : ActivatedRoute,
-      private familyAndDependentFacade: FamilyAndDependentFacade,private readonly cd: ChangeDetectorRef,private caseFacade: CaseFacade) { }
+      private familyAndDependentFacade: FamilyAndDependentFacade,private readonly cd: ChangeDetectorRef,private caseFacade: CaseFacade,
+      private readonly userManagementFacade: UserManagementFacade,
+      private readonly cdr:ChangeDetectorRef) { }
 
     isEditFamilyMember!: boolean;
     isAddOrEditFamilyDependentDisplay!: boolean;
@@ -72,6 +76,7 @@ CAClient = DependentTypeCode.CAClient;
     deleteRequest$ = this.deleteRequestSubject.asObservable();
     isDependentAvailable:boolean=true;
     public  state!: State
+    userDependentSubacription= new Subscription();
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -111,7 +116,33 @@ CAClient = DependentTypeCode.CAClient;
       sort: this.sort
   };
         this.loadFamilyDependents()
+        this.addFamilyDependentSubcription();
  }
+
+ ngOnDestroy(): void {
+  this.dependentProfilePhotoSubject?.unsubscribe();
+}
+
+  addFamilyDependentSubcription() {
+    this.userDependentSubacription = this.dependents$.subscribe((dependentData: any)=>{
+      this.loadDistintUserIdsAndProfilePhotos(dependentData?.data);
+    });
+  }
+
+  loadDistintUserIdsAndProfilePhotos(data: any[]){
+    const distinctUserIds = Array.from(new Set(data?.map(dependent => dependent.creatorId))).join(',');
+      if(distinctUserIds){
+        this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+        .subscribe({
+          next: (data: any[]) => {
+            if (data.length > 0) {
+              this.dependentProfilePhotoSubject.next(data);
+            }
+          },
+        });
+        this.cdr.detectChanges();
+      }
+  }
 
 
   ngOnInit(): void {

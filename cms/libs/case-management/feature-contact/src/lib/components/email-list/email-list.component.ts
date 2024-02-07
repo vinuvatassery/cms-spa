@@ -7,6 +7,7 @@ import {
   Output,
   OnChanges,
   ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** facades **/
@@ -19,7 +20,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
   templateUrl: './email-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmailListComponent implements OnChanges {
+export class EmailListComponent implements OnChanges, OnDestroy {
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -69,6 +70,7 @@ export class EmailListComponent implements OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   userEmailProfilrPhotoSubject = new Subject<any>();
+  clientEmailsDataSubscription = new Subscription();
   public gridOption = [
     {
       buttonType: 'btn-h-primary',
@@ -143,6 +145,9 @@ export class EmailListComponent implements OnChanges {
     this.loadClientEmailsList();
   }
 
+  ngOnDestroy(): void {
+    this.clientEmailsDataSubscription?.unsubscribe();
+  }
   /** Private methods **/
   private loadClientEmailsList(): void {
     this.loadEmails(
@@ -183,7 +188,7 @@ export class EmailListComponent implements OnChanges {
   }
 
   gridDataHandle() {
-    this.clientEmailsData$.subscribe((data: any) => {
+    this.clientEmailsDataSubscription = this.clientEmailsData$.subscribe((data: any) => {
       this.gridEmailDataSubject.next(data);
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
@@ -194,7 +199,7 @@ export class EmailListComponent implements OnChanges {
 
   loadDistinctUserIdsAndProfilePhoto(data: any[]) {
     const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds != null){
+    if(distinctUserIds){
       this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
       .subscribe({
         next: (data: any[]) => {

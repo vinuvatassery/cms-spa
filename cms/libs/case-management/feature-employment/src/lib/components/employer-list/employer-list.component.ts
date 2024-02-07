@@ -7,20 +7,23 @@ import {
   EventEmitter,
   Output,
   OnChanges,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 /** External Libraries **/
 import { State } from '@progress/kendo-data-query';
 /** Internal Libraries **/
 import { ClientEmployer, EmploymentFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-employer-list',
   templateUrl: './employer-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmployerListComponent implements OnInit, OnChanges {
+export class EmployerListComponent implements OnInit, OnChanges, OnDestroy {
   /** Input properties **/
   @Input() data!: any;
   @Input() employment$: any;
@@ -49,6 +52,8 @@ export class EmployerListComponent implements OnInit, OnChanges {
   public state!: State;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  employerProfilrPhotoSubject = new Subject();
+  employerSubscription = new Subscription();
   public actions = [
     {
       buttonType: 'btn-h-primary',
@@ -65,7 +70,8 @@ export class EmployerListComponent implements OnInit, OnChanges {
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade) {}
+  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade,
+    private readonly userManagementFacade: UserManagementFacade) {}
 
   /** Lifecycle hooks **/
 
@@ -74,8 +80,33 @@ export class EmployerListComponent implements OnInit, OnChanges {
       this.isEmployerAvailable = response;
       this.cdr.detectChanges();
     })
-
+    this.addEmployerSubscription();
   }
+
+  ngOnDestroy(): void {
+    this.employerSubscription?.unsubscribe();
+  }
+
+  addEmployerSubscription() {
+    this.employerSubscription = this.employment$.subscribe((employer:any) => {
+      this.loadDistinctUserIdsAndProfilePhoto(employer?.data);
+    });
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.employerProfilrPhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+}
 
   ngOnChanges(): void {
     this.state = {
