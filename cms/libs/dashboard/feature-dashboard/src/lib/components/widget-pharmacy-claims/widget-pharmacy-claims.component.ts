@@ -23,8 +23,8 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   @Input() isEditDashboard!: any; 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade, private changeDetectorRef : ChangeDetectorRef) {}
-  count =0;
-
+  claimCount =0;
+  claimAmount =0;
   removeWidgetCard(){
     this.removeWidget.emit();
   }
@@ -61,7 +61,8 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
         next: (response) => {
           if (response) {
             this.pharmacyClaims = response.widgetProperties;
-            this.count = response.result.count
+            this.claimCount = response.result.claimCount
+            this.claimAmount = response.result.claimAmount
             this.changeDetectorRef.detectChanges()
           }
         }
