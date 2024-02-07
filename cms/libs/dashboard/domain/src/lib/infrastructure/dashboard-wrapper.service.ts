@@ -16,6 +16,12 @@ export class DashboardWrapperService {
 
   options!: GridsterConfig;
 
+  updateDashboardAllWidgets(dashboardId : string , dashBoardWidgetsUpdatedDto :  any) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/${dashboardId}/widgets`,dashBoardWidgetsUpdatedDto
+    );
+    }
+
   getDashboardAllWidgets() {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/all-widgets`

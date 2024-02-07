@@ -37,6 +37,9 @@ export class WidgetFacade {
 
   constructor(private widgetService: WidgetService) {}
 
+
+
+
   loadRecentlyViewedClients(): void {
     this.widgetService.getRecentlyViewedClients().subscribe({
       next: (clients: any) => {
@@ -92,10 +95,16 @@ export class WidgetFacade {
     });
   }
 
-  loadPharmacyClaimsChart() {
-    this.widgetService.getPharmacyClaims().subscribe({
+  loadPharmacyClaimsChart(dashboardId:string, payload:any) {
+    this.widgetService.getPharmacyClaims(dashboardId,payload).subscribe({
       next: (result) => { 
-        this.pharmacyClaimsSubject.next(result);
+        debugger;
+        let widgetProperties = JSON.parse(result.widgetProperties);
+        
+        widgetProperties.chartData.series[0].data = result?.pharmacyClaims
+        
+
+        this.pharmacyClaimsSubject.next({widgetProperties, result});
       },
        
       error: (err) => { 
@@ -114,12 +123,16 @@ export class WidgetFacade {
       },
     });
   }
-  loadProgramExpensesChart() {
-    this.widgetService.getProgramExpenses().subscribe({
-      next: (result) => { 
-        this.programExpensesSubject.next(result);
-      },
+  loadProgramExpensesChart(dashboardId:string, payload:any) {
+    this.widgetService.getProgramExpenses(dashboardId,payload).subscribe({
+      next: (result : any) => { 
        
+        let widgetProperties = JSON.parse(result.widgetProperties);
+        
+        widgetProperties.chartData.series = result?.series
+        widgetProperties.chartData.categoryAxis.categories = result?.categories
+        this.programExpensesSubject.next(widgetProperties);
+      },       
       error: (err) => { 
         console.error('err', err);
       },

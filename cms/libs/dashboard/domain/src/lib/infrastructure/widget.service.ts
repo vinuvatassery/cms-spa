@@ -277,8 +277,12 @@ export class WidgetService {
   }
  
 
-  getPharmacyClaims(): Observable<any> {
+  getPharmacyClaims(dashboardId:String,payload:any): Observable<any> {
     
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/fiscal-widgets/pharmacy-claims/${dashboardId}`,
+      payload
+    );
     return of({
       component: 'pharmacyClaims',
       chartData: {
@@ -391,7 +395,11 @@ export class WidgetService {
       },
     });
   }
-  getProgramExpenses() {
+  getProgramExpenses(dashboardId : string,payload:any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/fiscal-widgets/program-expenses/${dashboardId}`,
+      payload
+    );
     return of({
       component: 'ProgramExpenses',
       chartData: {

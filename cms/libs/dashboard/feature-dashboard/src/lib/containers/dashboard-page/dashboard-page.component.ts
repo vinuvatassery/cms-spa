@@ -1,15 +1,24 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, Output, EventEmitter } from '@angular/core'; 
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  Output,
+  EventEmitter,
+} from '@angular/core';
 /** Facades **/
-import {  DashboardWrapperFacade } from '@cms/dashboard/domain';
+import { DashboardWrapperFacade } from '@cms/dashboard/domain';
 /** Services **/
 import { LocalStorageService } from '@cms/shared/util-core';
 import { AuthService } from '@cms/shared/util-oidc';
-import {  DisplayGrid, 
+import {
+  DisplayGrid,
   GridsterConfig,
-  GridsterItem, 
-  GridsterItemComponentInterface, 
-  GridType } from 'angular-gridster2';
+  GridsterItem,
+  GridsterItemComponentInterface,
+  GridType,
+} from 'angular-gridster2';
 import { Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'dashboard-dashboard-page',
@@ -20,53 +29,59 @@ import { Subject, Subscription } from 'rxjs';
 export class DashboardPageComponent implements OnInit, OnDestroy {
   /** Public properties **/
   inputs = {
-    isEditDashboard: false, 
+    isEditDashboard: false,
   };
   outputs = {
     removeWidget: (type: any) => this.removeDashboardWidget(type),
   };
-    //#region Variables
- public dashboardContentList$ =  this.dashboardWrapperFacade.dashboardContentList$;
- public dashboardAllWidgets$ =  this.dashboardWrapperFacade.dashboardAllWidgets$;
-  public dashboardConfiguration$ =  this.dashboardWrapperFacade.dashboardConfiguration$;
+  //#region Variables
+  public dashboardContentList$ =
+    this.dashboardWrapperFacade.dashboardContentList$;
+  public dashboardAllWidgets$ =
+    this.dashboardWrapperFacade.dashboardAllWidgets$;
+  public dashboardConfiguration$ =
+    this.dashboardWrapperFacade.dashboardConfiguration$;
 
   private dashboardContentListDataSubject = new Subject<any>();
-  public dashboardContentListData$ =  this.dashboardContentListDataSubject.asObservable();
+  public dashboardContentListData$ =
+    this.dashboardContentListDataSubject.asObservable();
 
   private dashboardAllWidgetsDataSubject = new Subject<any>();
-  public dashboardAllWidgetsListData$ =  this.dashboardAllWidgetsDataSubject.asObservable();
+  public dashboardAllWidgetsListData$ =
+    this.dashboardAllWidgetsDataSubject.asObservable();
 
-  static dashBoardContentData :any
-  dashBoardAllWidgetsData! :any
+  static dashBoardContentData: any;
+  dashBoardAllWidgetsData!: any;
   configSubscription!: Subscription;
   dashBoardContentSubscription!: Subscription;
   dashBoardAllWidgetsSubscription!: Subscription;
   configSubscriptionItems: GridsterConfig = [];
-  allWidgetsconfigSubscriptionItems: GridsterConfig   = {     
+  allWidgetsconfigSubscriptionItems: GridsterConfig = {
     itemChangeCallback: DashboardPageComponent.itemChange,
-    itemResizeCallback: this.itemResize,  
+    itemResizeCallback: this.itemResize,
     draggable: { enabled: false },
     resizable: { enabled: false },
-  }
-  dashBoardSubscriptionItems: any 
-  //#endregion 
+  };
+  dashBoardSubscriptionItems: any;
+  //#endregion
+  static updatedWidgets: any = [];
   public events: string[] = [];
   isReorderEnable = false;
   public areaList: Array<string> = [
-    "ORHIVE Case Worker Dashboard",
-    "ORHIVE Admin Dashboard",
-    "ORHIVE Manager Dashboard",
-    "ORHIVE Client Details Dashboard",
+    'ORHIVE Case Worker Dashboard',
+    'ORHIVE Admin Dashboard',
+    'ORHIVE Manager Dashboard',
+    'ORHIVE Client Details Dashboard',
   ];
-  public selectedValue = "ORHIVE Case Worker Dashboard";
-  @Output() itemChanged : EventEmitter<GridsterItem>= new EventEmitter();
-  @Output() itemResized : EventEmitter<GridsterItem>= new EventEmitter();
+  public selectedValue = 'ORHIVE Case Worker Dashboard';
+  @Output() itemChanged: EventEmitter<GridsterItem> = new EventEmitter();
+  @Output() itemResized: EventEmitter<GridsterItem> = new EventEmitter();
   options: GridsterConfig;
   dashboard: Array<GridsterItem>;
   /** Constructor **/
   constructor(
-    private authService: AuthService, 
-    private readonly localStorageService: LocalStorageService, 
+    private authService: AuthService,
+    private readonly localStorageService: LocalStorageService,
     private readonly dashboardWrapperFacade: DashboardWrapperFacade
   ) {
     this.loadConfigSubscription();
@@ -75,10 +90,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       displayGrid: DisplayGrid.Always,
       pushItems: true,
       draggable: {
-        enabled: true
+        enabled: true,
       },
       resizable: {
-        enabled: true
+        enabled: true,
       },
       minCols: 1,
       maxCols: 2,
@@ -91,7 +106,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       maxItemArea: 2500,
       minItemArea: 1,
       defaultItemCols: 1,
-      defaultItemRows: 1, 
+      defaultItemRows: 1,
     };
 
     this.dashboard = [
@@ -105,47 +120,51 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       { cols: 2, rows: 2, y: 3, x: 2 },
       { cols: 2, rows: 1, y: 2, x: 2 },
       { cols: 1, rows: 1, y: 3, x: 4 },
-      { cols: 1, rows: 1, y: 0, x: 6 }
+      { cols: 1, rows: 1, y: 0, x: 6 },
     ];
-    
   }
 
   /** Lifecycle hooks **/
-  ngOnInit() { 
+  ngOnInit() {
     this.dashboardWrapperFacade.getDashboardAllWidgets();
-    this.dashBoardAllWidgetsSubscribe()
+    this.dashBoardAllWidgetsSubscribe();
     this.ConfigureDashboard();
     this.loadDashboadContent();
-   this.dashBoardContentSubscribe()
+    this.dashBoardContentSubscribe();
   }
 
-   dashBoardContentSubscribe() {
-    this.dashBoardContentSubscription = this.dashboardContentList$.subscribe((response) => {          
-      DashboardPageComponent.dashBoardContentData = response
-       this.dashboardContentListDataSubject.next(response)
-    });
+  dashBoardContentSubscribe() {
+    this.dashBoardContentSubscription = this.dashboardContentList$.subscribe(
+      (response) => {
+        DashboardPageComponent.dashBoardContentData = response;
+        this.dashboardContentListDataSubject.next(response);
+      }
+    );
   }
 
   dashBoardAllWidgetsSubscribe() {
-    this.dashBoardAllWidgetsSubscription = this.dashboardAllWidgets$.subscribe((response) => {          
-       this.dashBoardAllWidgetsData = response
-       this.dashboardAllWidgetsDataSubject.next(response)
-    });
+    this.dashBoardAllWidgetsSubscription = this.dashboardAllWidgets$.subscribe(
+      (response) => {
+        this.dashBoardAllWidgetsData = response;
+        debugger;
+        this.dashboardAllWidgetsDataSubject.next(response);
+      }
+    );
   }
- 
-  removeDashboardWidget(data:any){
+
+  removeDashboardWidget(data: any) {
     alert(data);
   }
-  editDashboardClicked(config: any){
+  editDashboardClicked(config: any) {
     this.configSubscriptionItems = {
       itemChangeCallback: DashboardPageComponent.itemChange,
-      itemResizeCallback: this.itemResize,  
+      itemResizeCallback: this.itemResize,
       draggable: { enabled: true },
       resizable: { enabled: true },
-    }
+    };
     this.isReorderEnable = true;
     this.inputs = {
-      isEditDashboard: this.isReorderEnable, 
+      isEditDashboard: this.isReorderEnable,
     };
   }
   user() {
@@ -163,73 +182,134 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   loadDashboadContent() {
     this.dashboardWrapperFacade.loadDashboardContent();
   }
-  ngOnDestroy() { 
+  ngOnDestroy() {
     this.configSubscription.unsubscribe();
   }
   private loadConfigSubscription() {
-    this.configSubscription = this.dashboardConfiguration$.subscribe((response) => {
-      this.configSubscriptionItems = response;
-       
-    });
+    this.configSubscription = this.dashboardConfiguration$.subscribe(
+      (response) => {
+        this.configSubscriptionItems = response;
+      }
+    );
   }
-  editDashboardCancelClicked(){ 
+  editDashboardCancelClicked() {
     this.configSubscriptionItems = {
       draggable: { enabled: false },
       resizable: { enabled: false },
-    }
+    };
     this.isReorderEnable = false;
     this.inputs = {
-      isEditDashboard: this.isReorderEnable, 
+      isEditDashboard: this.isReorderEnable,
     };
+    let dashboardContentPostData = DashboardPageComponent.dashBoardContentData
+    let updatedWidgetsPostData = DashboardPageComponent.updatedWidgets
+    dashboardContentPostData.forEach((widg: any) =>
+     {
+      if(widg?.widgetProperties)
+      {      
+      widg.updated = false;    
+     
+      }
+    });
+
+    updatedWidgetsPostData.forEach((widg: any) =>
+     {
+      if(widg[0]?.widgetProperties)
+      {
+      widg[0].widgetProperties.componentData.component =    widg[0].widgetName;
+      widg[0].updated = true;
+      dashboardContentPostData.push(widg)
+      }
+    });
+    
+    dashboardContentPostData.forEach((widg: any) =>
+     {
+      if(widg[0]?.widgetProperties)
+      {     
+      widg[0].widgetProperties = JSON.stringify(widg[0]?.widgetProperties)     
+    
+      }
+    });
+   const dashBoardWidgetsUpdated ={
+    dashBoardWidgetsUpdated : dashboardContentPostData
+   }
+    
+    this.dashboardWrapperFacade.updateDashboardAllWidgets('E2301551-610C-43BF-B7C9-9B623ED425C3' , dashBoardWidgetsUpdated)
+    
   }
 
   static itemChange(
     item: GridsterItem,
     itemComponent: GridsterItemComponentInterface
   ) {
-    
-    let changedComponent = DashboardPageComponent.dashBoardContentData.filter((x : any) => (x.widgetProperties.componentData["component"].name == item["component"].name))
-    
-    DashboardPageComponent.dashBoardContentData[0].widgetProperties.componentData.component.name
-    console.info('itemChanged', item, itemComponent,DashboardPageComponent.dashBoardContentData);
+    const dashBoardData = DashboardPageComponent.dashBoardContentData;
+    let changedWidget = dashBoardData.filter(
+      (x: any) => x.widgetProperties.componentData['id'] == item['id']
+    );
+    DashboardPageComponent.updatedWidgets.forEach((widg: any) => {
+      if (widg[0]?.widgetProperties?.componentData.id == item['id']) {
+        DashboardPageComponent.updatedWidgets.splice(widg, 1);
+      }
+    });
+   if(changedWidget[0]?.widgetId)
+   {
+    DashboardPageComponent.updatedWidgets.push(changedWidget);
+   }
   }
 
-    itemResize(item: GridsterItem,
-      itemComponent: GridsterItemComponentInterface) {
-        
-    console.info('itemResized', item, itemComponent,DashboardPageComponent.dashBoardContentData);
+  itemResize(
+    item: GridsterItem,
+    itemComponent: GridsterItemComponentInterface
+  ) {
+    const dashBoardData = DashboardPageComponent.dashBoardContentData;
+    let changedWidget = dashBoardData.filter(
+      (x: any) => x.widgetProperties.componentData['id'] == item['id']
+    );
+    DashboardPageComponent.updatedWidgets.forEach((widg: any) => {
+      if (widg[0]?.widgetProperties?.componentData?.id == item['id']) {
+        DashboardPageComponent.updatedWidgets.splice(widg, 1);
+      }
+    });
+  
+    if(changedWidget[0]?.widgetId)
+    {
+     DashboardPageComponent.updatedWidgets.push(changedWidget);
+    }
   }
 
-  changedOptions() {
-    
-  }
+  changedOptions() {}
 
-  removeItem(item : any) {
+  removeItem(item: any) {
     this.dashboard.splice(this.dashboard.indexOf(item), 1);
   }
 
-  addItem(item : any)
-  {    
-
-    DashboardPageComponent.dashBoardContentData.push(item)   
+  addItem(item: any) {
     
-    this.dashBoardAllWidgetsData = this.dashBoardAllWidgetsData.filter((x : any) => !(x.widgetId == item.widgetId));
+    DashboardPageComponent.dashBoardContentData.push(item);
 
-    this.dashboardContentListDataSubject.next(DashboardPageComponent.dashBoardContentData)
+    this.dashBoardAllWidgetsData = this.dashBoardAllWidgetsData.filter(
+      (x: any) => !(x.widgetId == item.widgetId)
+    );
 
-    this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData)
+    this.dashboardContentListDataSubject.next(
+      DashboardPageComponent.dashBoardContentData
+    );
+
+    this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
   }
 
-  removeWidget(item : any)
-  {
-    this.dashBoardAllWidgetsData.push(item)
-    
-    DashboardPageComponent.dashBoardContentData = DashboardPageComponent.dashBoardContentData.filter((x : any) => !(x.widgetId == item.widgetId));
+  removeWidget(item: any) {
+    this.dashBoardAllWidgetsData.push(item);
 
-    this.dashboardContentListDataSubject.next(DashboardPageComponent.dashBoardContentData)
+    DashboardPageComponent.dashBoardContentData =
+      DashboardPageComponent.dashBoardContentData.filter(
+        (x: any) => !(x.widgetId == item.widgetId)
+      );
 
-    this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData)
+    this.dashboardContentListDataSubject.next(
+      DashboardPageComponent.dashBoardContentData
+    );
 
+    this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
   }
-  
 }
