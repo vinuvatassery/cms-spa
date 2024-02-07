@@ -50,9 +50,9 @@
         </ng-template>
       </kendo-grid-column>
 
-      <kendo-grid-column field="startDate" title="ProcessDate" [width]="180">
+      <kendo-grid-column field="startDate" title="Process Date" [width]="180">
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{dataItem.startDate | date:'MM/dd/yyyy'}}
+          {{dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss' | date: 'MM/dd/YYYY hh:mm:ss'}}
         </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <common-grid-cell-date-range-filter [field]="'startDate'" [filter]="filter" [filterService]="filterService">

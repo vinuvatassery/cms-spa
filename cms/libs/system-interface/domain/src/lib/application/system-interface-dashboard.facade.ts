@@ -14,11 +14,11 @@ export class SystemInterfaceDashboardFacade {
   private cardsRequestChartSubject = new Subject<any>();
   public cardsRequestChart$ =
     this.cardsRequestChartSubject.asObservable();
-  private activityEventLogListSubject = new BehaviorSubject<any>([]);
+  private activityEventLogListSubject = new Subject<any>();
   activityEventLogLists$ =
     this.activityEventLogListSubject.asObservable();
 
-  private batchLogExceptionListSubject = new BehaviorSubject<any>([]);
+  private batchLogExceptionListSubject = new Subject<any>();
   batchLogExcptionLists$ = this.batchLogExceptionListSubject.asObservable();
 
   private batchLogsDataLoaderSubject = new BehaviorSubject<boolean>(false);
@@ -64,7 +64,7 @@ export class SystemInterfaceDashboardFacade {
   }
 
   getEventLogLists(): void {
-    
+
   }
 
   loadClientRecordSendChart() {
@@ -92,7 +92,6 @@ export class SystemInterfaceDashboardFacade {
   }
 
   loadBatchLogsList(interfaceTypeCode: string, displayAll: boolean, paginationParameters: any) {
-    this.showLoader();
     this.batchLogsDataLoaderSubject.next(true);
     this.service.loadBatchLogsList(interfaceTypeCode, displayAll, paginationParameters).subscribe({
       next: (dataResponse: any) => {
@@ -102,7 +101,6 @@ export class SystemInterfaceDashboardFacade {
         };
         this.activityEventLogListSubject.next(gridView);
         this.batchLogsDataLoaderSubject.next(false);
-        
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -111,10 +109,11 @@ export class SystemInterfaceDashboardFacade {
       },
     });
   }
-  getBatchLogExceptionsLists(fileId: string,interfaceTypeCode:string,entityTypeCode:string, params:any): void {
+
+  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, entityTypeCode: string, params: any): void {
     this.showLoader();
-    this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId,interfaceTypeCode,entityTypeCode, params).subscribe({
-      next: (batchlogExceptionResponse:any) => {
+    this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, entityTypeCode, params).subscribe({
+      next: (batchlogExceptionResponse: any) => {
         const gridView: any = {
           data: batchlogExceptionResponse['items'],
           total: batchlogExceptionResponse?.totalCount,
@@ -125,7 +124,6 @@ export class SystemInterfaceDashboardFacade {
       error: (err) => {
         this.hideLoader();
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-
       },
     });
   }

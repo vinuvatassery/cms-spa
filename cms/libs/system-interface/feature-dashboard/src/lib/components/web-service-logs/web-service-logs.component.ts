@@ -102,7 +102,6 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   handleShowHistoricalClick() {
-    this.displayAll = !this.displayAll;
     this.loadListGrid();
   }
 
@@ -125,7 +124,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, this.displayAll, param);
+    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, !this.displayAll, param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
 
@@ -186,7 +185,6 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;

@@ -52,7 +52,7 @@
       </div>
     
     <div class="app-c-table">
-      <kendo-grid [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
+      <kendo-grid [loading]="(batchLogsDataLoader$  | async) === true" [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
       [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort" [filter]="state.filter"
       (dataStateChange)="dataStateChange($event)"
       (filterChange)="filterChange($event)" 
@@ -63,6 +63,7 @@
         <kendo-grid-column field="interfaceTypeDesc" title="Interface" [width]="180">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-dropdownlist 
+            
             [data]="interfaceExcptionLov$ | async" 
             textField="lovDesc"
             valueField="lovCode"
@@ -157,7 +158,6 @@
         </kendo-grid-column> -->
         <ng-template kendoGridDetailTemplate let-dataItem>
           <kendo-grid [data]="batchLogExcptionLists$ | async"  [pageSize]="state.take">
-          
             <kendo-grid-column field="errorCode" title="Error Code" [width]="100">
             </kendo-grid-column>
             <kendo-grid-column field="description" title="Error Description" [width]="180">
