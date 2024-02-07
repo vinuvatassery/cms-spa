@@ -125,7 +125,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-    this.systemInterfaceDashboardFacade.loadWebLogsList(this.InterfaceType, this.displayAll, param);
+    this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, this.displayAll, param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
 
