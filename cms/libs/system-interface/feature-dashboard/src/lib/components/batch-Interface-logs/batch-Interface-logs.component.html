@@ -52,7 +52,7 @@
       </div>
     
     <div class="app-c-table">
-      <kendo-grid  [loading]="(batchLogsDataLoader$  | async) === true"    [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
+      <kendo-grid [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
       [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort" [filter]="state.filter"
       (dataStateChange)="dataStateChange($event)"
       (filterChange)="filterChange($event)" 
