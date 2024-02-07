@@ -77,6 +77,19 @@
   <!-- Applicant Insurance Section  -->
   <section kendoRippleContainer>
     <div class="flex-row">
+      <div class="flex-col flex-col-2 officialSection">
+        <h5>Primary Insurance</h5>
+      </div>
+      <div class="flex-col flex-col-4 mt-checkbox">
+        <span class="app-checkboxwidtext-wrapper">
+          <input type="checkbox" class="adjust-attr" name="prmInsNotApplicable" id="primaryInsuranceNotApplicable"
+            aria-labelledby="primaryInsuranceNotApplicable" kendoCheckBox formControlName="prmInsNotApplicable"
+            (change)="onInsuranceCardChecked($event)" />
+          <label class="k-checkbox-label" for="primaryInsuranceNotApplicable">Not Applicable</label>
+        </span>
+      </div>
+    </div>
+    <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="First Name on Primary Insurance Card">
           <kendo-textbox aria-label="first name on primary insurance card"
@@ -120,19 +133,25 @@
             Name on Primary Insurance Card is required.</kendo-formerror>
         </kendo-floatinglabel>
       </div>
-      <div class="flex-col flex-col-4 mt-checkbox">
-        <span class="app-checkboxwidtext-wrapper">
-          <input type="checkbox" class="adjust-attr" name="prmInsNotApplicable" id="primaryInsuranceNotApplicable"
-            aria-labelledby="primaryInsuranceNotApplicable" kendoCheckBox formControlName="prmInsNotApplicable"
-            (change)="onInsuranceCardChecked($event)" />
-          <label class="k-checkbox-label" for="primaryInsuranceNotApplicable">Not Applicable</label>
-        </span>
-      </div>
+
     </div>
   </section>
 
   <!-- Applicant Official Section  -->
   <section kendoRippleContainer>
+    <div class="flex-row">
+      <div class="flex-col flex-col-2 officialSection">
+        <h5>Official ID</h5>
+      </div>
+      <div class="flex-col flex-col-4 mt-checkbox">
+        <span class="app-checkboxwidtext-wrapper">
+          <input type="checkbox" class="adjust-attr" id="officialIdsNotApplicable" name="officialIdsNotApplicable"
+            kendoCheckBox aria-labelledby="officialIdsNotApplicable" formControlName="officialIdsNotApplicable"
+            (change)="onOfficialIdChecked($event)" />
+          <label class="k-checkbox-label" for="officialIdsNotApplicable">Not Applicable</label>
+        </span>
+      </div>
+    </div>
     <div class="flex-row">
       <div class="flex-col flex-col-4">
         <kendo-floatinglabel text="First Name on Official ID">
@@ -176,14 +195,7 @@
           *ngIf="!appInfoForm.controls['officialIdLastName'].valid  && !this.appInfoForm.controls['officialIdLastName'].disabled">Last
           Name on Official Id is required.</kendo-formerror>
       </div>
-      <div class="flex-col flex-col-4 mt-checkbox">
-        <span class="app-checkboxwidtext-wrapper">
-          <input type="checkbox" class="adjust-attr" id="officialIdsNotApplicable" name="officialIdsNotApplicable"
-            kendoCheckBox aria-labelledby="officialIdsNotApplicable" formControlName="officialIdsNotApplicable"
-            (change)="onOfficialIdChecked($event)" />
-          <label class="k-checkbox-label" for="officialIdsNotApplicable">Not Applicable</label>
-        </span>
-      </div>
+
     </div>
   </section>
 
