@@ -19,7 +19,8 @@ import {
   GridsterItemComponentInterface,
   GridType,
 } from 'angular-gridster2';
-import { Subject, Subscription } from 'rxjs';
+import { first, Subject, Subscription } from 'rxjs';
+import { WidgetRegistry } from '../../widget-registry';
 @Component({
   selector: 'dashboard-dashboard-page',
   templateUrl: './dashboard-page.component.html',
@@ -56,6 +57,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   dashBoardContentSubscription!: Subscription;
   dashBoardAllWidgetsSubscription!: Subscription;
   configSubscriptionItems: GridsterConfig = [];
+  private widgetCoponentCollection = WidgetRegistry;
   allWidgetsconfigSubscriptionItems: GridsterConfig = {
     itemChangeCallback: DashboardPageComponent.itemChange,
     itemResizeCallback: this.itemResize,
@@ -139,19 +141,34 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   dashBoardContentSubscribe() {
-    this.dashBoardContentSubscription = this.dashboardContentList$.subscribe(
+    this.dashBoardContentSubscription = this.dashboardContentList$
+    .pipe(first(response => response != null)).subscribe(
       (response) => {
+        response.filter((element : any) => {
+          
+          element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
+        });
+        if(response[0].widgetProperties.componentData.component)
+        {
         DashboardPageComponent.dashBoardContentData = response;
+        debugger
         this.dashboardContentListDataSubject.next(response);
+        }
       }
     );
   }
 
   dashBoardAllWidgetsSubscribe() {
-    this.dashBoardAllWidgetsSubscription = this.dashboardAllWidgets$.subscribe(
+    this.dashBoardAllWidgetsSubscription = this.dashboardAllWidgets$
+    .pipe(first(response => response != null))
+    .subscribe(
       (response) => {
+        response.filter((element : any) => {
+          
+          element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
+        });
         this.dashBoardAllWidgetsData = response;
-        debugger;
+        ;
         this.dashboardAllWidgetsDataSubject.next(response);
       }
     );

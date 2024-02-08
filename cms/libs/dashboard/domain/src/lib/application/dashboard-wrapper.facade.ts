@@ -3,7 +3,7 @@ import { GridsterConfig } from 'angular-gridster2';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DashboardContent } from '../..';
 import { DashboardWrapperService } from '../infrastructure/dashboard-wrapper.service';
-import { WidgetRegistry } from 'libs/dashboard/feature-dashboard/src/lib/widget-registry';
+//import { WidgetRegistry } from 'libs/dashboard/feature-dashboard/src/lib/widget-registry';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
@@ -21,7 +21,7 @@ export class DashboardWrapperFacade {
   );
   public dashboardConfiguration$ =
     this.dashboardConfigurationSubject.asObservable();
-  private widgetCoponentCollection = WidgetRegistry;
+  //private widgetCoponentCollection = WidgetRegistry;
 
   constructor(private dashboardWrapperService: DashboardWrapperService,
     private readonly loaderService: LoaderService,
@@ -53,17 +53,18 @@ export class DashboardWrapperFacade {
 
 
   loadDashboardContent(): void {
-    this.dashboardWrapperService.getDashboardContent("CAREASSIST").subscribe({
+    this.dashboardWrapperService.getDashboardContent("CAREASSIST")
+    .subscribe({
       next: (dashboardList : any) => {
-        
+        debugger
     dashboardList.forEach((widg : any) => {
       
            widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
             });
-        dashboardList.filter((element : any) => {
+        // dashboardList.filter((element : any) => {
           
-          element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
-        });
+        //   element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
+        // });
         this.dashboardContentListSubject.next(dashboardList);
       },
       error: (error) => {
@@ -80,10 +81,10 @@ export class DashboardWrapperFacade {
       
            widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
             });
-        dashboardList.filter((element : any) => {
+        // dashboardList.filter((element : any) => {
           
-          element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
-        });
+        //   element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
+        // });
         this.dashboardAllWidgetsSubject.next(dashboardList);
       },
       error: (error) => {
