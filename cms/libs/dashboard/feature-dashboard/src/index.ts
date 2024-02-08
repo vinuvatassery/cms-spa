@@ -18,6 +18,10 @@ export * from '../../feature-dashboard/src/lib/components/widget-pharmacy-claims
 export * from '../../feature-dashboard/src/lib/components/widget-service-tracking/widget-service-tracking.component';
 export * from '../../feature-dashboard/src/lib/components/widget-liheap/widget-liheap.component';
 export * from '../../feature-dashboard/src/lib/components/widget-insurance-type-fpl/widget-insurance-type-fpl.component';
+export * from '../../feature-dashboard/src/lib/components/widget-premium-expenses-by-insurance-type/widget-premium-expenses-by-insurance-type.component';
+export * from '../../feature-dashboard/src/lib/components/widget-rent-overages/widget-rent-overages.component'
+export * from '../../feature-dashboard/src/lib/components/widget-slots-allocation/widget-slots-allocation.component'
+
 
 export * from './lib/containers/add-more-widgets-container/add-more-widgets-container.component';
 
