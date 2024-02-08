@@ -4,6 +4,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { DashboardContent } from '../..';
 import { DashboardWrapperService } from '../infrastructure/dashboard-wrapper.service';
 import { WidgetRegistry } from 'libs/dashboard/feature-dashboard/src/lib/widget-registry';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class DashboardWrapperFacade {
@@ -22,17 +23,30 @@ export class DashboardWrapperFacade {
     this.dashboardConfigurationSubject.asObservable();
   private widgetCoponentCollection = WidgetRegistry;
 
-  constructor(private dashboardWrapperService: DashboardWrapperService) {}
-  
+  constructor(private dashboardWrapperService: DashboardWrapperService,
+    private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService,
+    private readonly snackbarService: NotificationSnackbarService) {}
+  showSnackBar(type: SnackBarNotificationType, subtitle: any) {
+    if (type == SnackBarNotificationType.ERROR) {
+        const err = subtitle;
+        this.loggingService.logException(err)
+    }
+    this.snackbarService.manageSnackBar(type, subtitle);
+}
 
   updateDashboardAllWidgets(dashboardId : string , dashBoardWidgetsUpdatedDto :  any) {
+    this.loaderService.show();
     this.dashboardWrapperService.updateDashboardAllWidgets(dashboardId  , dashBoardWidgetsUpdatedDto).subscribe({
       next: (result) => { 
         this.dashboardContentUpdateSubject.next(result);
+        this.showSnackBar(SnackBarNotificationType.SUCCESS, 'Dashboard Updated')
+        this.loaderService.hide();
       },
        
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.loaderService.hide();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -43,15 +57,17 @@ export class DashboardWrapperFacade {
       next: (dashboardList : any) => {
         
     dashboardList.forEach((widg : any) => {
-           widg.widgetProperties = JSON.parse(widg.widgetProperties);
+      
+           widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
             });
         dashboardList.filter((element : any) => {
+          
           element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
         });
         this.dashboardContentListSubject.next(dashboardList);
       },
-      error: (err) => {
-        console.error('err', err);
+      error: (error) => {
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -61,8 +77,8 @@ export class DashboardWrapperFacade {
       next: (dashboardList : any) => {
         
     dashboardList.forEach((widg : any) => {
-      debugger
-           widg.widgetProperties = JSON.parse(widg.widgetProperties);
+      
+           widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
             });
         dashboardList.filter((element : any) => {
           
@@ -70,8 +86,8 @@ export class DashboardWrapperFacade {
         });
         this.dashboardAllWidgetsSubject.next(dashboardList);
       },
-      error: (err) => {
-        console.error('err', err);
+      error: (error) => {
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -81,8 +97,8 @@ export class DashboardWrapperFacade {
       next: (dashboardConfiguration) => {
         this.dashboardConfigurationSubject.next(dashboardConfiguration);
       },
-      error: (err) => {
-        console.error('err', err);
+      error: (error) => {
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }

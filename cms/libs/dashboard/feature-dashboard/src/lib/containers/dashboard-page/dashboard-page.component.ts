@@ -49,7 +49,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   private dashboardAllWidgetsDataSubject = new Subject<any>();
   public dashboardAllWidgetsListData$ =
     this.dashboardAllWidgetsDataSubject.asObservable();
-
+  public dashboardContentUpdate$ = this.dashboardWrapperFacade.dashboardContentUpdate$
   static dashBoardContentData: any;
   dashBoardAllWidgetsData!: any;
   configSubscription!: Subscription;
@@ -126,6 +126,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit() {
+   this.initializeDashboard()
+  }
+
+  initializeDashboard()
+  {
     this.dashboardWrapperFacade.getDashboardAllWidgets();
     this.dashBoardAllWidgetsSubscribe();
     this.ConfigureDashboard();
@@ -192,7 +197,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       }
     );
   }
-  editDashboardCancelClicked() {
+  editDashboardCancelClicked(save : any) {
     this.configSubscriptionItems = {
       draggable: { enabled: false },
       resizable: { enabled: false },
@@ -201,47 +206,65 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.inputs = {
       isEditDashboard: this.isReorderEnable,
     };
-    let dashboardContentPostData = DashboardPageComponent.dashBoardContentData
-    let updatedWidgetsPostData = DashboardPageComponent.updatedWidgets
-    dashboardContentPostData.forEach((widg: any) =>
-     {
-      if(widg?.widgetProperties)
-      {      
-      widg.updated = false;    
-     
-      }
-    });
+    if(save === 'true')
+    {
+          let dashboardContentPostData = DashboardPageComponent.dashBoardContentData
+          let updatedWidgetsPostData = DashboardPageComponent.updatedWidgets
+          dashboardContentPostData.forEach((widg: any) =>
+          {
+            if(widg?.widgetProperties)
+            {      
+            widg.updated = false;    
+          
+            }
+          });
 
-    updatedWidgetsPostData.forEach((widg: any) =>
-     {
-      if(widg[0]?.widgetProperties)
-      {
-      widg[0].widgetProperties.componentData.component =    widg[0].widgetName;
-      widg[0].updated = true;
-      dashboardContentPostData.push(widg)
-      }
-    });
-    
-    dashboardContentPostData.forEach((widg: any) =>
-     {
-      if(widg[0]?.widgetProperties)
-      {     
-      widg[0].widgetProperties = JSON.stringify(widg[0]?.widgetProperties)     
-    
-      }
-    });
-   const dashBoardWidgetsUpdated ={
-    dashBoardWidgetsUpdated : dashboardContentPostData
-   }
-    
-    this.dashboardWrapperFacade.updateDashboardAllWidgets('E2301551-610C-43BF-B7C9-9B623ED425C3' , dashBoardWidgetsUpdated)
+          updatedWidgetsPostData.forEach((widg: any) =>
+          {
+            
+            if(widg[0]?.widgetProperties && widg[0]?.newItem !== true)
+            {
+              
+            widg[0].widgetProperties.componentData.component =    widg[0].widgetName;
+            widg[0].updated = true;
+            dashboardContentPostData.push(widg[0])
+            }
+          });
+          
+          dashboardContentPostData.forEach((widg: any) =>
+          {
+            if(widg?.widgetProperties && widg?.stringified!== true)
+            {  
+              widg.widgetProperties.componentData.component =    widg?.widgetName;
+              widg.stringified = true  
+            widg.widgetProperties = JSON.stringify(widg?.widgetProperties).trim()     
+            
+            }
+          });
+        const dashBoardWidgetsUpdated ={
+          dashBoardWidgetsUpdated : dashboardContentPostData
+        }
+        this.dashboardWrapperFacade.updateDashboardAllWidgets('E2301551-610C-43BF-B7C9-9B623ED425C3' , dashBoardWidgetsUpdated)
+        DashboardPageComponent.dashBoardContentData =[]
+        DashboardPageComponent.updatedWidgets = []
+        this.dashBoardUpdateSubscribe()
+   }  
     
   }
 
-  static itemChange(
-    item: GridsterItem,
-    itemComponent: GridsterItemComponentInterface
-  ) {
+  dashBoardUpdateSubscribe() {
+   this.dashboardContentUpdate$.subscribe(
+      (response) => {     
+        if(response === true)
+        {  
+        this.initializeDashboard()
+        }
+      }
+    );
+  }
+
+  static itemChange(    item: GridsterItem,    itemComponent: GridsterItemComponentInterface  ) {
+    debugger
     const dashBoardData = DashboardPageComponent.dashBoardContentData;
     let changedWidget = dashBoardData.filter(
       (x: any) => x.widgetProperties.componentData['id'] == item['id']
@@ -257,10 +280,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
    }
   }
 
-  itemResize(
-    item: GridsterItem,
-    itemComponent: GridsterItemComponentInterface
-  ) {
+  itemResize(    item: GridsterItem,    itemComponent: GridsterItemComponentInterface  ) {
+    debugger
     const dashBoardData = DashboardPageComponent.dashBoardContentData;
     let changedWidget = dashBoardData.filter(
       (x: any) => x.widgetProperties.componentData['id'] == item['id']
@@ -284,7 +305,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   addItem(item: any) {
-    
+    debugger
+    item.newItem = true;
     DashboardPageComponent.dashBoardContentData.push(item);
 
     this.dashBoardAllWidgetsData = this.dashBoardAllWidgetsData.filter(

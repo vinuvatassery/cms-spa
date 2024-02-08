@@ -102,7 +102,7 @@ export class WidgetFacade {
   loadPharmacyClaimsChart(dashboardId:string, payload:any) {
     this.widgetService.getPharmacyClaims(dashboardId,payload).subscribe({
       next: (result) => { 
-        debugger;
+        ;
         let widgetProperties = JSON.parse(result.widgetProperties);
         
         widgetProperties.chartData.series[0].data = result?.pharmacyClaims
