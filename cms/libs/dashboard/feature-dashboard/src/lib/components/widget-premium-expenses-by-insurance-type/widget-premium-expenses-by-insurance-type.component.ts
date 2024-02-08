@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import {  WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs';
@@ -13,11 +13,11 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
   premiumExpensesByInsurance: any; 
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  data  = ['Last Month','August']
+  data  = ['Last Month','Current Month','Previous Quarter','Last Year']
   @Input() isEditDashboard!: any; 
   @Output() removeWidget = new EventEmitter<string>();
-  constructor(private widgetFacade: WidgetFacade) {}
-
+  constructor(private widgetFacade: WidgetFacade, private changeDetectorRef : ChangeDetectorRef) {}
+  selectFrequency ="YTD"
 
   removeWidgetCard(){
     this.removeWidget.emit();
@@ -31,14 +31,21 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
     this.destroy$.next();
     this.destroy$.complete();
   }
+  frequecyValueChange(){
+    this.loadPremiumExpensesByInsuranceChart();
+  }
   loadPremiumExpensesByInsuranceChart() {
-    this.widgetFacade.loadPremiumExpensesByInsuranceChart();
+    const payload ={
+      paymentStatusDate : this.selectFrequency
+    }
+    this.widgetFacade.loadPremiumExpensesByInsuranceChart('', payload);
     this.widgetFacade.premiumExpensesByInsuranceChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response) {
             this.premiumExpensesByInsurance = response;
+            this.changeDetectorRef.detectChanges()
           }
         }
       });

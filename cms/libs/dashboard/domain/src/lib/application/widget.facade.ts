@@ -116,10 +116,13 @@ export class WidgetFacade {
       },
     });
   }
-  loadPremiumExpensesByInsuranceChart() {
-    this.widgetService.getPremiumExpensesByInsurance().subscribe({
+  loadPremiumExpensesByInsuranceChart(dashboardId:any, payload:any) {
+    this.widgetService.getPremiumExpensesByInsurance(dashboardId, payload).subscribe({
       next: (result) => { 
-        this.premiumExpensesByInsuranceSubject.next(result);
+        let widgetProperties = JSON.parse(result.widgetProperties);
+        
+        widgetProperties.chartData.series[0].data = result?.barSeries
+        this.premiumExpensesByInsuranceSubject.next(widgetProperties);
       },
        
       error: (err) => { 
