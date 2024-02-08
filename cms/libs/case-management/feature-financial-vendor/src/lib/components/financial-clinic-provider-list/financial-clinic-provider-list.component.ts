@@ -1,11 +1,12 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';  
 import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject, Subscription, debounceTime } from 'rxjs';
  
 
 @Component({
@@ -13,7 +14,7 @@ import { Subject, debounceTime } from 'rxjs';
   templateUrl: './financial-clinic-provider-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
+export class FinancialClinicProviderListComponent implements OnInit, OnChanges, OnDestroy {
   isProvidersDetailShow = false;
   isProvidersRemoveShow = false;
   selectProviderId!: string;
@@ -64,7 +65,8 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     },
   }
   ];
-
+  pharmacyPurchaseProfileSubject = new Subject();
+  providerListProfilePhotoSubscription = new Subscription();
 
 
   private searchSubject = new Subject<string>();
@@ -81,11 +83,39 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     private readonly configProvider: ConfigurationProvider,
     private readonly changeDetector: ChangeDetectorRef,
     private documentFacade: DocumentFacade,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
-
   
   ngOnInit(): void {
     this.initializeProviderPage();
+    this.addProviderListSubscription();
+  }
+
+  addProviderListSubscription() {
+    this.providerListProfilePhotoSubscription = this.providerList$.subscribe((pharmacyPurchase: any) =>{
+      if(pharmacyPurchase?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(pharmacyPurchase?.data);
+      }
+    })
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyPurchaseProfileSubject.next(data);
+          }
+        },
+      });
+      this.changeDetector.detectChanges();
+    }
+  } 
+
+  ngOnDestroy(): void {
+    this.providerListProfilePhotoSubscription?.unsubscribe();
   }
   
   ngOnChanges(): void {

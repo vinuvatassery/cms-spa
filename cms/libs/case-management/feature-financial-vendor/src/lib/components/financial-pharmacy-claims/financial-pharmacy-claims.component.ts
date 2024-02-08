@@ -1,18 +1,19 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { ClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import {  DocumentFacade } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-grid';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { Subject, Subscriber, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-pharmacy-claims',
   templateUrl: './financial-pharmacy-claims.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialPharmacyClaimsComponent {
+export class FinancialPharmacyClaimsComponent implements OnDestroy {
   /* Input Properties */
   @Input() vendorId!: string;
   @Input() exportButtonShow$ =    this.documentFacade.exportButtonShow$
@@ -51,6 +52,9 @@ export class FinancialPharmacyClaimsComponent {
   sortColumnDesc = 'Batch #';
   columnChangeDesc = 'Default Columns';
   showExportLoader = false;
+  claimsProfilePhotoSubscription = new Subscription();
+  claimsProfilePhotoSubject = new Subject();
+  
 
    /** Constructor **/
    constructor(private readonly claimsFacade: ClaimsFacade,
@@ -58,6 +62,7 @@ export class FinancialPharmacyClaimsComponent {
    private route: Router,
    private readonly  cdr :ChangeDetectorRef,
     private readonly router: Router,  private readonly lovFacade: LovFacade,
+    private readonly userManagementFacade: UserManagementFacade,
     ) {}
    
   ngOnInit(): void {
@@ -65,7 +70,36 @@ export class FinancialPharmacyClaimsComponent {
     this.getPaymentStatusLov();
     this.getCoPaymentRequestTypeLov();  
     this.loadClaimsListGrid();
+    this.addClaimsListSubscription();
   }
+
+  addClaimsListSubscription() {
+    this.claimsProfilePhotoSubscription = this.claimsGridView$.subscribe((pharmacyPurchase: any) =>{
+      if(pharmacyPurchase?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(pharmacyPurchase?.data);
+      }
+    })
+  }
+
+loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.claimsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
+
+  ngOnDestroy(): void {
+    this.claimsProfilePhotoSubscription?.unsubscribe();
+  }
+
   ngOnChanges(): void {
     this.initializePaging();
   }

@@ -1,12 +1,12 @@
-import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList, ViewChild, OnDestroy } from '@angular/core';
 import { PaymentsFacade, BillingAddressFacade, VendorContactsFacade, ContactResponse, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
-import { take } from 'rxjs';
-import { LovFacade } from '@cms/system-config/domain';
+import { Subject, Subscription, take } from 'rxjs';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
@@ -18,7 +18,7 @@ import { StatusFlag } from '@cms/shared/ui-common';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaymentAddressesComponent {
+export class PaymentAddressesComponent implements OnDestroy{
   @ViewChild(GridComponent) gridConfig!: GridComponent;
   @Input() vendorId: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -62,6 +62,9 @@ export class PaymentAddressesComponent {
   searchValue = "";
   columnName: any = "";
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  paymentAddressSubscription  = new Subscription();
+  paymentAddressSubject  = new Subject();
+
   column:any =
   {
     mailCode: 'Mail Code',
@@ -154,9 +157,9 @@ filter: any = [];
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
     public readonly  intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider)
+    private readonly configurationProvider: ConfigurationProvider,
+    private readonly userManagementFacade: UserManagementFacade)
     { }
-
 
   ngOnInit(): void {
     this.lovFacade.getVendorPaymentRunDatesLovs();
@@ -174,7 +177,34 @@ filter: any = [];
     this.getTabCode();
     this.loadPaymentsAddressListGrid();
     this.checkMailCode();
-  
+    this.addPaymentAddressSubscripion();
+  }
+
+  addPaymentAddressSubscripion() {
+    this.paymentAddressSubscription = this.paymentsAddressGridView$.subscribe((payment: any)=>{
+      if(payment?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(payment?.data);
+      }
+    });
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.paymentAddressSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
+
+  ngOnDestroy(): void {
+    this.paymentAddressSubscription?.unsubscribe();
   }
 
   private checkMailCode() {

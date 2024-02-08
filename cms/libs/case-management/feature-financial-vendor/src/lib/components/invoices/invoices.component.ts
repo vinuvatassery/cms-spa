@@ -1,5 +1,5 @@
 /** Angular libraries **/
-import { ChangeDetectionStrategy, Component, Input, ViewChild, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component, Input, ViewChild, OnInit, OnDestroy, EventEmitter, Output, ChangeDetectorRef } from '@angular/core'; 
 import { Router } from '@angular/router';
 
 /** External libraries **/
@@ -10,7 +10,7 @@ import { Subject, Subscription, debounceTime } from 'rxjs';
 /** Facade **/
 import { FinancialVendorProviderTabCode, GridFilterParam, InvoiceFacade } from '@cms/case-management/domain';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
 
@@ -112,13 +112,17 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   selectedSearchColumn='';
   private searchSubject = new Subject<string>();
   @Input() exportButtonShow$ =    this.documentFacade.exportButtonShow$
+  invoiceListSubject = new Subject();
+  invoiceListSubscription = new Subscription();
 
    /** Constructor **/
    constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router,
     private readonly lovFacade: LovFacade,
     private documentFacade:DocumentFacade,
     private readonly configProvider: ConfigurationProvider,
-    private readonly intl: IntlService) {}
+    private readonly intl: IntlService,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.claimStatusSubscription();
@@ -137,7 +141,30 @@ export class InvoicesComponent implements OnInit, OnDestroy {
     this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe((data:boolean)=>{
       this.isInvoiceGridLoaderShow = data;
     })
+    this.addInvoiceListSubscription();
+  }
 
+  addInvoiceListSubscription() {
+    this.invoiceListSubscription = this.invoiceGridView$.subscribe((invoice: any)=>{
+      if(invoice?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(invoice?.data);
+      }
+    });
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.invoiceListSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
   }
 
   ngOnChanges(): void {
@@ -152,6 +179,7 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.isInvoiceLoadingSubscription.unsubscribe();
     this.paymentStatusLovSubscription.unsubscribe();
+    this.invoiceListSubscription?.unsubscribe();
   }
 
   claimStatusSubscription(){
