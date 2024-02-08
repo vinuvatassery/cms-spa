@@ -73,6 +73,9 @@ export class HealthCareProviderListComponent implements  OnChanges {
   clinicForm: FormGroup;
   hasClinicCreateUpdatePermission = false;
   selectedClinicType : string = this.vendorTypes.Clinic;
+  healthCareProviderSubject = new Subject();
+  healthCareProviderSubscription = new Subscription();
+
   public actions = [
     {
       buttonType:"btn-h-primary",
@@ -137,7 +140,32 @@ export class HealthCareProviderListComponent implements  OnChanges {
     this.contactFacade.loadDdlStates();
     this.hasHealthcareProviderCreateUpdatePermission=this.userManagementFacade.hasPermission(['Service_Provider_Medical_Dental_Provider_Create_Update']);
     this.hasClinicCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Clinic_Create_Update']);
+    this.addHealthCareProviderSubscription();
   }
+
+  addHealthCareProviderSubscription() {
+        this.healthCareProviderSubscription = this.healthCareProvidersData$.subscribe((pharmacyPurchase: any) =>{
+      if(pharmacyPurchase?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(pharmacyPurchase?.data);
+      }
+    });
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.healthCareProviderSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
+
   ngOnChanges(): void {
     this.state = {
     skip: 0,

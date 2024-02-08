@@ -7,6 +7,7 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
+  OnDestroy,
 } from '@angular/core';
 import {
   DrugPharmacyFacade,
@@ -18,16 +19,17 @@ import {
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, Subscription, subscribeOn } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-pharmacies-list',
   templateUrl: './pharmacies-list.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PharmaciesListComponent implements OnInit {
+export class PharmaciesListComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @Input() clientId: any;
   @Input() clientpharmacies$!: Observable<any>;
@@ -89,6 +91,9 @@ export class PharmaciesListComponent implements OnInit {
   public state!: State;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isReadOnly$ = this.caseFacade.isCaseReadOnly$;
+  pharmacyProfilePhotoSubject = new Subject();
+  pharmacyProfilePhotoSubscription = new Subscription();
+  triggerPriorityPopupSubscription = new Subscription();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public pharmacyOptions = [
@@ -226,7 +231,8 @@ export class PharmaciesListComponent implements OnInit {
     private readonly workflowFacade: WorkflowFacade,
     private readonly loggingService: LoggingService,
     private caseFacade: CaseFacade,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly userManagementFacade: UserManagementFacade
   ) {
     this.isOpenPharmacyClicked$.next(false);
     this.isRemoveClientPharmacyClicked$.next(false);
@@ -249,7 +255,7 @@ export class PharmaciesListComponent implements OnInit {
         this.isOpenDeactivatePharmaciesClicked = false;
       }
     });
-    this.triggerPriorityPopup$.subscribe((isTrigered) => {
+    this.triggerPriorityPopupSubscription = this.triggerPriorityPopup$.subscribe((isTrigered) => {
       if (
         isTrigered &&
         this.triggerPriorityPopupNumber == 0 &&
@@ -265,6 +271,36 @@ export class PharmaciesListComponent implements OnInit {
         this.handleCloseChangePriorityClick();
       }
     });
+
+    this.addPharmacyListSubscription();
+  }
+
+  addPharmacyListSubscription() {
+    this.pharmacyProfilePhotoSubscription = this.pharmaciesList$.subscribe((pharmacy: any) =>{
+      if(pharmacy){
+        this.loadDistinctUserIdsAndProfilePhoto(pharmacy);
+      }
+    })
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
+
+  ngOnDestroy(): void {
+    this.pharmacyProfilePhotoSubscription?.unsubscribe();
+    this.triggerPriorityPopupSubscription?.unsubscribe();
   }
 
   /** Private methods **/

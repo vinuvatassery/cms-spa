@@ -1,19 +1,20 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 /** Facades **/
 import { CaseFacade, DocumentFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { LoaderService, ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-document-list',
   templateUrl: './document-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DocumentListComponent implements OnInit {
+export class DocumentListComponent implements OnInit, OnDestroy {
   /** Public properties **/
   pageSizes = this.documentFacade.gridPageSizes;
   sortValue = this.documentFacade.sortValue;
@@ -74,12 +75,16 @@ export class DocumentListComponent implements OnInit {
   filter!: any
   columnName : any;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  documentsListSubject = new Subject();
+  documentListSubscription = new Subscription();
   /** Constructor **/
   constructor(private documentFacade: DocumentFacade,
     private readonly loaderService: LoaderService,
     private caseFacade: CaseFacade,    
     private route: ActivatedRoute, private readonly router: Router,public intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider) { }
+    private readonly configurationProvider: ConfigurationProvider,
+    private userManagementFacade:UserManagementFacade,
+    private cdr: ChangeDetectorRef,) { }
 
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -96,6 +101,34 @@ export class DocumentListComponent implements OnInit {
     this.filter = '';
     this.columnName = '';
     this.loadData();
+    this.addDocumentsListSubscription();
+  }
+
+  addDocumentsListSubscription() {
+    this.documentListSubscription = this.documentsList$.subscribe((document: any)=>{
+      if(document?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(document?.data);
+      }
+    });
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.documentsListSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
+
+  ngOnDestroy(): void {
+    this.documentListSubscription?.unsubscribe();
   }
 
   /** Public Methods */

@@ -1,19 +1,20 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy,Input,Output, EventEmitter, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { State } from '@progress/kendo-data-query';
 /** Facades **/
 import {  HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { Subject, Subscriber, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-co-pays-and-deductibles-list',
   templateUrl: './co-pays-and-deductibles-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CoPaysAndDeductiblesListComponent implements OnInit {
+export class CoPaysAndDeductiblesListComponent implements OnInit, OnDestroy {
 
   /** Public properties **/
 
@@ -38,19 +39,22 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
   groupValue = null;
   statusValue = null;
   serviceDescription="Medical";
+  coPaymentProfilePhotoSubject = new Subject();
+  coPaymentProfilePhotoSubscription = new Subscription();
+  triggeredCoPaySaveSubscription = new Subscription();
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly formBuilder: FormBuilder, private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
-    private lovFacade: LovFacade) {
+    private lovFacade: LovFacade,
+    private readonly userManagementFacade: UserManagementFacade) {
     this.copayPaymentForm = this.formBuilder.group({});
   }
-
   /** Lifecycle hooks **/
 
   ngOnInit(): void {
     this.insurancePolicyFacade.getMedicalClaimMaxbalance(this.clientId,this.caseEligibilityId);
    this.insurancePolicyFacade.clientmaxmumbalance$.subscribe((res:any)=>{    
-   this.clientmaxmumbalance=res.maximumAmount;
+   this.clientmaxmumbalance=res?.maximumAmount;
    if(this.tabStatus != ClientProfileTabs.HEALTH_INSURANCE_COPAY )
    {
     this.serviceDescription="Dental";
@@ -62,13 +66,44 @@ export class CoPaysAndDeductiblesListComponent implements OnInit {
       take: this.pageSizes[0]?.value
     };
     this.loadCoPayDeductiblesData();
-    this.triggeredCoPaySave$.subscribe(data=>{
+    this.triggeredCoPaySaveSubscription = this.triggeredCoPaySave$.subscribe(data=>{
       if(data){
         this.closeCoPaymentDetailsOpened();
         this.loadCoPayDeductiblesData();
       }
     })
+
+    this.addCoPaymentListSubscription();
   }
+
+  addCoPaymentListSubscription() {
+    this.coPaymentProfilePhotoSubscription = this.coPaysAndDeductibles$.subscribe((copayment: any) =>{
+      if(copayment?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(copayment?.data);
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.triggeredCoPaySaveSubscription?.unsubscribe();
+    this.coPaymentProfilePhotoSubscription?.unsubscribe();
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.coPaymentProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
+
   /** Private methods **/
   openCoPaymentDetailsOpened() {
     this.getPaymentRequestLov();

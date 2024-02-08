@@ -2,23 +2,25 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
+  OnDestroy,
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
 import { CaseFacade, DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-drugs-purchased-list',
   templateUrl: './drugs-purchased-list.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class DrugsPurchasedListComponent implements OnInit {
+export class DrugsPurchasedListComponent implements OnInit, OnDestroy {
   @Input() clientId: any;
   /** Public properties **/
   drugPurchases$ = this.drugPharmacyFacade.drugPurchases$;
@@ -85,6 +87,8 @@ export class DrugsPurchasedListComponent implements OnInit {
   paymentStauses: any = [];
   paymentTypes: any = [];
   paymentRequestTypes: any = [];
+  pharmacyPurchaseProfilePhotoSubscription = new Subscription();
+  pharmacyPurchaseProfileSubject = new Subject();
 
   public actions = [
     {
@@ -121,7 +125,8 @@ export class DrugsPurchasedListComponent implements OnInit {
     private readonly cdr: ChangeDetectorRef,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
+    private readonly userManagementFacade: UserManagementFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -129,7 +134,35 @@ export class DrugsPurchasedListComponent implements OnInit {
     this.getLovs();
     this.defaultGridState();
     this.loadDrugsPurchased();
+    this.addDrugsPurchasedSubscription();
   }
+
+  ngOnDestroy(): void {
+    this.pharmacyPurchaseProfilePhotoSubscription?.unsubscribe();
+  }
+
+  addDrugsPurchasedSubscription() {
+    this.pharmacyPurchaseProfilePhotoSubscription = this.drugPurchases$.subscribe((pharmacyPurchase: any) =>{
+      if(pharmacyPurchase?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(pharmacyPurchase?.data);
+      }
+    })
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyPurchaseProfileSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
 
   /** Private methods **/
 
