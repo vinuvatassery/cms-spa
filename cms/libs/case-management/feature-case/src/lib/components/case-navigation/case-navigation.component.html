@@ -24,15 +24,6 @@
     </li>
   <li class="sections-heading sh-top-border" *ngIf="review"> 
     <span>{{ review.title }}</span>
-    <button
-      aria-label="Start"
-      kendoButton
-      [disabled]="isNotReadyForReview"
-      [primary]="true"
-      (click)="onApplicationReviewClicked()"   
-    >
-      Start
-    </button>
   </li>
 </ul>
 
