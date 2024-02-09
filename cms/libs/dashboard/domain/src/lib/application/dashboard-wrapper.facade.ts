@@ -56,15 +56,12 @@ export class DashboardWrapperFacade {
     this.dashboardWrapperService.getDashboardContent("CAREASSIST")
     .subscribe({
       next: (dashboardList : any) => {
-        debugger
+        
     dashboardList.forEach((widg : any) => {
       
            widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
             });
-        // dashboardList.filter((element : any) => {
-          
-        //   element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
-        // });
+       
         this.dashboardContentListSubject.next(dashboardList);
       },
       error: (error) => {
@@ -81,10 +78,7 @@ export class DashboardWrapperFacade {
       
            widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
             });
-        // dashboardList.filter((element : any) => {
-          
-        //   element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
-        // });
+      
         this.dashboardAllWidgetsSubject.next(dashboardList);
       },
       error: (error) => {

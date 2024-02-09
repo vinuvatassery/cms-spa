@@ -151,7 +151,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         if(response[0].widgetProperties.componentData.component)
         {
         DashboardPageComponent.dashBoardContentData = response;
-        debugger
+        
         this.dashboardContentListDataSubject.next(response);
         }
       }
@@ -281,7 +281,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   static itemChange(    item: GridsterItem,    itemComponent: GridsterItemComponentInterface  ) {
-    debugger
+    
     const dashBoardData = DashboardPageComponent.dashBoardContentData;
     let changedWidget = dashBoardData.filter(
       (x: any) => x.widgetProperties.componentData['id'] == item['id']
@@ -298,7 +298,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   itemResize(    item: GridsterItem,    itemComponent: GridsterItemComponentInterface  ) {
-    debugger
+    
     const dashBoardData = DashboardPageComponent.dashBoardContentData;
     let changedWidget = dashBoardData.filter(
       (x: any) => x.widgetProperties.componentData['id'] == item['id']
@@ -322,7 +322,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   addItem(item: any) {
-    debugger
+    
     item.newItem = true;
     DashboardPageComponent.dashBoardContentData.push(item);
 

@@ -99,7 +99,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
   }
 
   onCheckChange(event:any){
-    debugger;
+ 
   }
   loadProgramExpensesChart() {
  

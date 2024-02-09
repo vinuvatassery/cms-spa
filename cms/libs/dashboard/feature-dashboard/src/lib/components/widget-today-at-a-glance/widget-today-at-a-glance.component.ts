@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -22,7 +23,8 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
   @Input() isEditDashboard!: any;
   @Output() removeWidget = new EventEmitter<string>();
-  constructor(private widgetFacade: WidgetFacade , private readonly router: Router) {}
+  constructor(private widgetFacade: WidgetFacade , private readonly router: Router,
+    private readonly cd: ChangeDetectorRef) {}
 
   removeWidgetCard() {
     this.removeWidget.emit();
@@ -42,6 +44,7 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
       next: (response) => {
         if (response) {
           this.todayGlance = response;
+          this.cd.detectChanges()
         }
       },
     });

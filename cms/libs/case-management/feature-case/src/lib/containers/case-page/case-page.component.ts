@@ -82,7 +82,7 @@ export class CasePageComponent implements OnInit {
   /** Private Query String values **/
   loadQueryParams()
   {  
-    debugger;
+ 
       switch(this.route.snapshot.queryParams['tab']){
         case CaseScreenTab.MY_CASES:
           this.selectedTab = CaseScreenTab.MY_CASES;
