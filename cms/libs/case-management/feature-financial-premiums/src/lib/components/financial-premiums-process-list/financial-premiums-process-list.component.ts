@@ -14,6 +14,7 @@ import {
 import { Router } from '@angular/router';
 import { ClientInsurancePlans, InsurancePremium, InsurancePremiumDetails, PolicyPremiumCoverage, FinancialPremiumsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {CompositeFilterDescriptor } from '@progress/kendo-data-query';
@@ -237,6 +238,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   paymentTypeFilter = '';
   paymentStatusFilter = '';
   healthInsuranceValue = '';
+  premiumProcessListProfilePhotoSubject = new Subject();
   /** Constructor **/
   constructor(
     private financialPremiumsFacade: FinancialPremiumsFacade,
@@ -244,6 +246,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     private dialogService: DialogService,
     private readonly route: Router,
     private readonly ref: ChangeDetectorRef,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {
 
     this.selectableSettings = {
@@ -272,6 +275,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
       this.gridFinancialPremiumsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
+        this.loadDistinctUserIdsAndProfilePhoto(data?.data);
       }
       this.financialPremiumsProcessGridLists = this.gridDataResult?.data;
       if(this.isSendReportOpened === false){
@@ -300,6 +304,21 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     });
     this.ref.detectChanges();
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.createdId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.premiumProcessListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
 
   pageNumberAndCountChangedInSelectAll() {
     //If selecte all header checked and either the page count or the page number changed

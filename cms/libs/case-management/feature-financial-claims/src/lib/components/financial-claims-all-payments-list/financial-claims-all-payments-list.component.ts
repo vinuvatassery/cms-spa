@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialClaimsFacade, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
@@ -232,6 +232,7 @@ export class FinancialClaimsAllPaymentsListComponent
   paymentMethodTypes: any = [];
   paymentStauses: any = [];
   selectedColumn = 'ALL';
+  allPaymentClaimsProfileSubject = new Subject();
   constructor(
     private route: Router,
     private dialogService: DialogService,
@@ -240,6 +241,7 @@ export class FinancialClaimsAllPaymentsListComponent
     private readonly cdr: ChangeDetectorRef,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -315,6 +317,7 @@ export class FinancialClaimsAllPaymentsListComponent
       this.gridFinancialClaimsAllPaymentsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
+        this.loadDistinctUserIdsAndProfilePhoto(this.gridDataResult?.data);
       }
       this.financialClaimsAllPaymentsGridLists = this.gridDataResult?.data;
       if(this.recordCountWhenSelectallClicked == 0){
@@ -372,6 +375,21 @@ pageNumberAndCountChangedInSelectAll() {
     }
   }
 }
+
+loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+  const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+  if(distinctUserIds){
+    this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+    .subscribe({
+      next: (data: any[]) => {
+        if (data.length > 0) {
+          this.allPaymentClaimsProfileSubject.next(data);
+        }
+      },
+    });
+    this.cdr.detectChanges();
+  }
+} 
 
   ngOnChanges(): void {
     this.defaultGridState();

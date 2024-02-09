@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { FinancialPremiumsFacade, GridFilterParam, InsurancePremiumDetails, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   ColumnVisibilityChangeEvent,
@@ -244,6 +244,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   selectedCount: number = 0;
   printAuthorizationDialog: any;
   previewText = false;
+  allPaymentsPremiumSubject = new Subject();
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -378,6 +379,7 @@ deletePremiumPayment(paymentId: string) {
     private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {}
 
   ngOnInit(): void {
@@ -391,10 +393,26 @@ deletePremiumPayment(paymentId: string) {
       this.markAsChecked(response.data);
       }
       this.financialPremiumsAllPaymentsGridLists = response;
+      if(this.totalGridRecordsCount){
+        this.loadDistinctUserIdsAndProfilePhoto(response?.data);
+      }
     })
-
-
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.allPaymentsPremiumSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
 
   ngOnChanges(): void {
     this.initializePremiumsPaymentsGrid();

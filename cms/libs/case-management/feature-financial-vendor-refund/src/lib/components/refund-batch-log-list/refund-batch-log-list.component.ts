@@ -11,6 +11,7 @@ import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-refund-batch-log-list',
   templateUrl: './refund-batch-log-list.component.html',
@@ -230,6 +231,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  refundBatchClaimsSubject = new Subject();
 
   /** Constructor **/
   constructor(
@@ -240,6 +242,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     private activatedRoute: ActivatedRoute,
     private readonly financialVendorFacade: FinancialVendorFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly userManagementFacade: UserManagementFacade,
 
   ) { }
 
@@ -263,6 +266,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       this.gridVendorsBatchLogDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
+        this.loadDistinctUserIdsAndProfilePhoto(this.gridDataResult?.data);
       }
       this.batchLogGridLists = this.gridDataResult?.data;
       if (this.recordCountWhenSelectallClicked == 0) {
@@ -286,6 +290,21 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       this.pageNumberAndCountChangedInSelectAll();
       this.gridLoaderSubject.next(false);
     });
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.refundBatchClaimsSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
   }
 
   handlePageCountSelectionChange() {

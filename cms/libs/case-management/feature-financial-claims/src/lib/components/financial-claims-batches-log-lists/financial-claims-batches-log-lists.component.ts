@@ -24,7 +24,7 @@ import {
   NotificationSource,
   SnackBarNotificationType,
 } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   ColumnVisibilityChangeEvent,
@@ -189,7 +189,8 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedPaymentStatus: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
-  batchStatus = PaymentStatusCode.PendingApproval
+  batchStatus = PaymentStatusCode.PendingApproval;
+  claimsBathcPaymentProfileSubject = new Subject();
   getBatchLogGridActions(dataItem: any) {
     return [{
       buttonType: 'btn-h-primary',
@@ -266,6 +267,7 @@ export class FinancialClaimsBatchesLogListsComponent
     private readonly intl: IntlService,
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   ngOnInit(): void {
@@ -332,7 +334,25 @@ export class FinancialClaimsBatchesLogListsComponent
         this.markAsChecked(response.data);
       }
       this.batchLogPrintAdviceLetterPagedList = response;
+      if(this.totalRecord){
+        this.loadDistinctUserIdsAndProfilePhoto(response?.data);
+      }
     })
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.claimsBathcPaymentProfileSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
   }
 
   ngOnChanges(): void {

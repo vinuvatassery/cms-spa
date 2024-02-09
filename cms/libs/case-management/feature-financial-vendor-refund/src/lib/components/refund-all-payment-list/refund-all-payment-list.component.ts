@@ -21,6 +21,7 @@ import {
 import { BehaviorSubject, Subject, first } from 'rxjs';
 import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-refund-all-payment-list',
   templateUrl: './refund-all-payment-list.component.html',
@@ -237,13 +238,15 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  allRefundProfilePhotoSubject = new Subject();
 
   /** Constructor **/
   constructor(
     private route: Router, private readonly cdr: ChangeDetectorRef,
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private readonly userManagementFacade: UserManagementFacade,) {
       this.selectableSettings = {
         checkboxOnly: this.checkboxOnly,
         mode: this.mode,
@@ -263,6 +266,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       this.gridVendorsAllPaymentsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
+        this.loadDistinctUserIdsAndProfilePhoto(this.gridDataResult?.data);
       }
       this.vendorRefundAllPaymentsGridLists = this.gridDataResult?.data;
       if (this.recordCountWhenSelectallClicked == 0) {
@@ -287,6 +291,21 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       this.gridLoaderSubject.next(false);
     });
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.allRefundProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
 
   handlePageCountSelectionChange() {
     if (!this.selectAll && (this.isPageChanged || this.isPageCountChanged)) {

@@ -27,7 +27,7 @@ import {
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, Subscription, first } from 'rxjs';
 import { Router } from '@angular/router';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-process-list',
   templateUrl: './financial-claims-process-list.component.html',
@@ -100,6 +100,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public drag = false;
   isDeleteClaimClicked =false;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  medicalClaimsProfilePhotoSubject = new Subject();
+  medicalClaimsProfilePhotoSubscription = new Subscription();
 
 
   public selectedProcessClaims: any[] = [];
@@ -192,7 +194,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     private dialogService: DialogService,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly cdr: ChangeDetectorRef,
-    private readonly lovFacade : LovFacade
+    private readonly lovFacade : LovFacade,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -203,7 +206,31 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   ngOnInit(): void {
     this.lovFacade.getPaymentStatusLov()
     this.paymentStatusSubscription();
+    this.addMedicalClaimsSubscription();
   }
+
+  addMedicalClaimsSubscription() {
+    this.medicalClaimsProfilePhotoSubscription = this.gridFinancialClaimsProcessData$.subscribe((medicalClaims: any) =>{
+      if(medicalClaims?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(medicalClaims?.data);
+      }
+    })
+  }
+
+loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.medicalClaimsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
 
   paymentStatusSubscription()
   {
