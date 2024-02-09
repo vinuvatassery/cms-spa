@@ -50,6 +50,7 @@ public state!: any;
   @Input() selectedTab: CaseScreenTab = 0;
   @Input() module: string = '';
   @Input() parentModule: string = '';
+  @Input() caseStatus: string = '';
   addRemoveColumns="Default Columns"
   defaultColumns = [
     "clientFullName",
@@ -139,8 +140,11 @@ public state!: any;
     this.lovFacade.getCaseStatusLovs();
     this.getCaseStatusLovs();
     this.selectedColumn = 'ALL';
-    this.getGroupLovs() ;
+    this.getGroupLovs() ; 
     this.getLoggedInUserProfile();
+    if (this.caseStatus != ''){ 
+      this.dashboardfilter(); 
+    }
   }
   ngOnDestroy(): void {
     this.userProfileSubsriction.unsubscribe();
@@ -179,11 +183,20 @@ public state!: any;
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-    filters:{logic:'and',filters:[]},
+    filter:{logic:'and',filters:[]},
       selectedColumn: 'ALL',
       columnName: '',
       searchValue: ''
       };
+  }
+  dashboardfilter(){
+      this.state.filter.filters.push(
+        {filters:[{
+          field: "eligibilityStatusCode",
+          operator: "eq",
+          value:this.caseStatus
+      }]});
+    this.dataStateChange(this.state,false);
   }
  filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
