@@ -158,12 +158,12 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.dashboardWrapperFacade.showLoader();
    this.initializeDashboard()
   }
 
   initializeDashboard()
-  {
-    //this.dashboardWrapperFacade.getDashboardAllWidgets();
+  {    
     this.dashBoardAllWidgetsSubscribe();
     this.ConfigureDashboard();   
     this.dashBoardContentSubscribe();
@@ -186,6 +186,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         DashboardPageComponent.dashBoardContentData = response;
         
         this.dashboardContentListDataSubject.next(response);
+        this.dashboardWrapperFacade.hideLoader();
         }
       }
     );
@@ -256,6 +257,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     );
   }
   editDashboardCancelClicked(save : any) {
+   
     this.configSubscriptionItems = {
       draggable: { enabled: false },
       resizable: { enabled: false },
@@ -266,6 +268,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     };
     if(save === 'true')
     {
+     
           let dashboardContentPostData = DashboardPageComponent.dashBoardContentData
           let updatedWidgetsPostData = DashboardPageComponent.updatedWidgets
           dashboardContentPostData.forEach((widg: any) =>
@@ -302,6 +305,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         const dashBoardWidgetsUpdated ={
           dashBoardWidgetsUpdated : dashboardContentPostData
         }
+       
         this.dashboardWrapperFacade.updateDashboardAllWidgets('E2301551-610C-43BF-B7C9-9B623ED425C3' , dashBoardWidgetsUpdated)
         DashboardPageComponent.dashBoardContentData =[]
         DashboardPageComponent.updatedWidgets = []
@@ -311,6 +315,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   dashBoardUpdateSubscribe() {
+    this.dashboardWrapperFacade.showLoader();
    this.dashboardContentUpdate$.subscribe(
       (response) => {     
         if(response === true)
