@@ -705,7 +705,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         contactRelationshipCode: new FormControl(''),
         otherDesc: new FormControl(''),
         contactPhoneNbr: new FormControl(''),
-        friendFamilyChangedFlag: new FormControl()
+        friendFamilyChangedFlag: new FormControl(),
+        detailMsgConsentFlag: new FormControl(),
+        smsTextConsentFlag: new FormControl(),
       }),
     });
   }
@@ -998,6 +1000,9 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       friendsOrFamilyContact.contactPhoneNbr = ffContactGroup.controls['contactPhoneNbr']?.value;
       friendsOrFamilyContact.contactRelationshipCode = ffContactGroup.controls['contactRelationshipCode']?.value;
       friendsOrFamilyContact.otherDesc = ffContactGroup.controls['otherDesc']?.value;
+      friendsOrFamilyContact.detailMsgConsentFlag = ffContactGroup.controls['detailMsgConsentFlag']?.value ? StatusFlag.Yes: StatusFlag.No;
+      friendsOrFamilyContact.smsTextConsentFlag = ffContactGroup.controls['smsTextConsentFlag']?.value ? StatusFlag.Yes: StatusFlag.No;
+
     }
 
     const clientCaseEligibility: ClientCaseElgblty = {
@@ -1246,7 +1251,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.contactInfoForm.get('homeAddress.homeAddressChangedFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homeAddressChangedFlag);
         this.contactInfoForm.get('homePhone.phoneNumberChangedFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.phoneNumberChangedFlag);
         this.contactInfoForm.get('email.emailAddressChangedFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.emailAddressChangedFlag);
-        this.contactInfoForm.get('familyAndFriendsContact.friendFamilyChangedFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.friendFamilyChangedFlag);
+        this.contactInfoForm.get('familyAndFriendsContact.friendFamilyChangedFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.friendFamilyChangedFlag);        
       }
 
       this.setMailAndHomeAddress();
@@ -1254,6 +1259,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if ((this.contactInfo?.clientCaseEligibility?.friendFamilyChangedFlag === StatusFlag.Yes || !this.isCerForm)) {
         this.contactInfoForm.get('familyAndFriendsContact')?.patchValue(this.contactInfo?.friendsOrFamilyContact);
+        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.patchValue(this.contactInfo?.friendsOrFamilyContact?.detailMsgConsentFlag === StatusFlag.Yes);
+        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.patchValue(this.contactInfo?.friendsOrFamilyContact?.smsTextConsentFlag === StatusFlag.Yes);
         this.contactInfoForm.get('familyAndFriendsContact.noFriendOrFamilyContactFlag')?.patchValue(this.contactInfo?.friendsOrFamilyContact?.noFriendOrFamilyContactFlag === StatusFlag.Yes);
       }
 
