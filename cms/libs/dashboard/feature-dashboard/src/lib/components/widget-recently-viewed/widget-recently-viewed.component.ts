@@ -36,6 +36,7 @@ export class WidgetRecentlyViewedComponent
   public gridData: any;
   private recentlyViewedClientsSubscription!: Subscription;
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
  
   constructor(

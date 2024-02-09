@@ -16,6 +16,12 @@ export class DashboardWrapperService {
 
   options!: GridsterConfig;
 
+  getLoggedinUserDashboards(typeCode :  string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/user-dashboards/${typeCode}`
+    );
+    }
+
   updateDashboardAllWidgets(dashboardId : string , dashBoardWidgetsUpdatedDto :  any) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/${dashboardId}/widgets`,dashBoardWidgetsUpdatedDto
@@ -27,9 +33,9 @@ export class DashboardWrapperService {
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/all-widgets`
     );
     }
-  getDashboardContent(subTypeCode : string) {
+  getDashboardContent(dashboardId : string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/${subTypeCode}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/${dashboardId}`
     );
     // return of([
     //   {

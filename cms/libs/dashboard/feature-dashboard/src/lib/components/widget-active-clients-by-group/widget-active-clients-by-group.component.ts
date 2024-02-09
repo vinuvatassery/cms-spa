@@ -21,7 +21,8 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
   activeClientsByGroup: any;
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  @Input() isEditDashboard!: any; 
+  @Input() isEditDashboard!: any;
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
   data = ['Group 1', 'Group 2'];
@@ -44,7 +45,7 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
     this.removeWidget.emit();
   }
   loadActiveClientsByGroupChart() {
-    this.widgetFacade.loadActiveClientsByGroupChart("e2301551-610c-43bf-b7c9-9b623ed425c3");
+    this.widgetFacade.loadActiveClientsByGroupChart(this.dashboardId);
     this.widgetFacade.activeClientsByGroupChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
