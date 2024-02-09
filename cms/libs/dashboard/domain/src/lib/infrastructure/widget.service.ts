@@ -521,6 +521,9 @@ export class WidgetService {
   }
  
   getTodayGlance(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/today-at-glance`
+    ); 
     return of({
       todoItems: {
         count: 0,
