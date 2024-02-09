@@ -16,6 +16,7 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
   selectFrequency='YTD'
   data  = ['YTD','Last Month','Current Month','Previous Quarter','Last Year']
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
 
@@ -38,7 +39,7 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
     const payload ={
       paymentStatusDate : this.selectFrequency
     }
-    this.widgetFacade.loadPremiumExpensesByInsuranceChart('E2301551-610C-43BF-B7C9-9B623ED425C3', payload);
+    this.widgetFacade.loadPremiumExpensesByInsuranceChart(this.dashboardId, payload);
     this.widgetFacade.premiumExpensesByInsuranceChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({

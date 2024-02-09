@@ -21,6 +21,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   dataMonth = ['This Month','Last Month','Previous quarter','YTD','Last Year']
   dataCount = ['Claim Count','Claim Amount']
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade, private changeDetectorRef : ChangeDetectorRef) {}
   claimCount =0;
@@ -60,9 +61,9 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response) {
-            this.pharmacyClaims = response.widgetProperties;          
-            this.claimCount = response.result.claimCount
-            this.claimAmount = response.result.claimAmount
+            this.pharmacyClaims = response?.widgetProperties;          
+            this.claimCount = response?.result?.claimCount
+            this.claimAmount = response?.result?.claimAmount
             this.changeDetectorRef.detectChanges()
           }
         }

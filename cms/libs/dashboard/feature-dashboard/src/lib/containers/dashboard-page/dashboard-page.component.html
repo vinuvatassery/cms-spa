@@ -8,6 +8,15 @@
       </h1>
 
     </div>
+    <div class="flex-col">
+      <kendo-floatinglabel text="DashBoard">   
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+        placeholder="DashBoard"  required [data]="userDashBoardsListData$ | async"
+            textField="dashboardDesc" valueField="dashboardId" [valuePrimitive]="true"
+            [(ngModel)]="selectedDashBoard" (selectionChange)="dashBoardChange($event)">
+        </kendo-dropdownlist>
+      </kendo-floatinglabel>     
+    </div>
 
     <div>
       <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
