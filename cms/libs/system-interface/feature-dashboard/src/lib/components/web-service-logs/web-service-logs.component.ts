@@ -105,7 +105,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.loadListGrid();
   }
 
-  restGrid() {
+  resetGrid() {
     this.sortType = 'asc';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
@@ -128,30 +128,10 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
 
-  /** Public properties **/
-  activityEventLogSubList = [
-    {
-      id: 1,
-      errorCode: 12,
-      errorDesc: 'errorDesc errorDesc',
-      rowNumber: 14
-    },
-    {
-      id: 2,
-      errorCode: 12,
-      errorDesc: 'errorDesc errorDesc',
-      rowNumber: 14
-    },
-    {
-      id: 3,
-      errorCode: 12,
-      errorDesc: 'errorDesc errorDesc',
-      rowNumber: 14
-    },
-  ]
-
+ 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.sortType = "desc"
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
