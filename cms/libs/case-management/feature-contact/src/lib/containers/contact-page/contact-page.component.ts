@@ -1181,6 +1181,16 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   useOldOnClick(formName: string, value: string) {
     this.contactInfoForm.get(formName)?.patchValue(value);
+    if (formName === 'familyAndFriendsContact.contactPhoneNbr') {
+      if (value === '' || value === null) {
+        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
+        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();
+      }
+      else {
+        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.enable();
+        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.enable();
+      }
+    }   
   }
 
   getPhoneUseOldText(phone: ClientPhone | undefined | null) {
@@ -1529,12 +1539,24 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.otherDesc')?.disable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.disable();
+      this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();
+      this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
     }
     else {
       this.contactInfoForm?.get('familyAndFriendsContact.firstName')?.enable();
       this.contactInfoForm?.get('familyAndFriendsContact.lastName')?.enable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.enable();
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.enable();
+      this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.enable();
+      if(this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.value === null
+        || this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.value === ''){
+        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
+        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();
+      }
+      else{
+        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.enable();
+        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.enable();
+      }
       otherDesc.status = this.contactInfoForm?.get('familyAndFriendsContact.contactRelationshipCode')?.value === 'O' ? StatusFlag.Yes : StatusFlag.No;
     }
     this.workflowFacade.updateBasedOnDtAttrChecklist([otherDesc]);
@@ -2031,6 +2053,15 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (phoneType === 'contactPhoneNbr') {
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.setValidators(null);
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.updateValueAndValidity();
+      if(this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.value === ''
+        ||this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.value === null){
+        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
+        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();
+      }
+      else{
+        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.enable();
+        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.enable();
+      }
     }
   }
 
