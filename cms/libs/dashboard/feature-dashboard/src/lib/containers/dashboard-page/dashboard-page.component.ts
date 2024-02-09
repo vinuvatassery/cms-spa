@@ -6,6 +6,7 @@ import {
   OnDestroy,
   Output,
   EventEmitter,
+  ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
 import { DashboardWrapperFacade } from '@cms/dashboard/domain';
@@ -85,7 +86,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private readonly localStorageService: LocalStorageService,
-    private readonly dashboardWrapperFacade: DashboardWrapperFacade
+    private readonly dashboardWrapperFacade: DashboardWrapperFacade,
+    private readonly cd: ChangeDetectorRef
   ) {
     this.loadConfigSubscription();
     this.options = {
@@ -216,6 +218,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.inputs = {
       isEditDashboard: this.isReorderEnable,
     };
+    this.dashboardWrapperFacade.getDashboardAllWidgets();
+    this.dashBoardAllWidgetsSubscribe();
+   this.cd.detectChanges()
   }
   user() {
     return this.authService.getUser();

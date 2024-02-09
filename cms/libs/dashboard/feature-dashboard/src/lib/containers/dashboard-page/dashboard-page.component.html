@@ -53,7 +53,7 @@
         <gridster-item *ngFor="let item of dashboardAllWidgetsListData$ | async"
           [item]="item?.widgetProperties?.componentData">
 
-          <div class="add-more-list" *ngIf="isReorderEnable">
+          <div class="add-more-list" >
 
             <div class="chart-view-point">
               <div class="dashboard-cards-wrapper">
@@ -75,7 +75,6 @@
   </div>
 
 </div>
-
 
 
 <!-- <dashboard-add-more-widgets-container *ngIf="isReorderEnable" (addItem)="addItem($event)"></dashboard-add-more-widgets-container> -->
