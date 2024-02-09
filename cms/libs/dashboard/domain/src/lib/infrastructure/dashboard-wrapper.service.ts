@@ -185,21 +185,21 @@ export class DashboardWrapperService {
 
   getDashboardConfiguration(): Observable<GridsterConfig> {
     return of({
-      gridType: GridType.VerticalFixed, 
+       gridType: GridType.VerticalFixed, 
       resizable: { enabled: false },
       swap: true,
-      pushItems: false,
+      pushItems: false,      
       outerMargin: true,
       enableEmptyCellDrop: false,
       maxItemCols: 2,
       maxCols: 2,  
-      margin:10,
+      margin:20,
       minItemRows: 1,
-      minItemArea: 1,
+      minItemArea: 1,    
       setGridSize: true,
       useBodyForBreakpoint: true,
       fixedRowHeight: 38,
-      disableWindowResize: true,
+      disableWindowResize: false,
       disableWarnings: true,
       scrollSpeed: 10, 
       keepFixedWidthInMobile: false,
@@ -207,7 +207,8 @@ export class DashboardWrapperService {
       draggable: {
         enabled: false,
         ignoreContent: false, // if true drag will start only from elements from `dragHandleClass`
-        dragHandleClass: 'drag-handle', // drag event only from this class. If `ignoreContent` is true.
+        dragHandleClass: 'drag-handle', // drag event only from this class. If `ignoreContent` is true.       
+				ignoreContentClass: "no-drag",
       },
     });
   }

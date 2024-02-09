@@ -6,6 +6,7 @@ import {
   OnDestroy,
   Output,
   EventEmitter,
+  ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
 import { DashboardWrapperFacade } from '@cms/dashboard/domain';
@@ -80,11 +81,13 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   @Output() itemResized: EventEmitter<GridsterItem> = new EventEmitter();
   options: GridsterConfig;
   dashboard: Array<GridsterItem>;
+  addWidgetConfiguration: GridsterConfig;
   /** Constructor **/
   constructor(
     private authService: AuthService,
     private readonly localStorageService: LocalStorageService,
-    private readonly dashboardWrapperFacade: DashboardWrapperFacade
+    private readonly dashboardWrapperFacade: DashboardWrapperFacade,
+    private readonly cd: ChangeDetectorRef
   ) {
     this.loadConfigSubscription();
     this.options = {
@@ -124,26 +127,56 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       { cols: 1, rows: 1, y: 3, x: 4 },
       { cols: 1, rows: 1, y: 0, x: 6 },
     ];
+
+    this.addWidgetConfiguration = {
+      gridType: GridType.VerticalFixed, 
+      resizable: { enabled: false },
+      swap: true,
+      pushItems: false,
+      outerMargin: true,
+      enableEmptyCellDrop: false,
+      maxItemCols: 2,
+      maxCols: 2,  
+      margin:10,
+      minItemRows: 1,
+      minItemArea: 1,
+      setGridSize: true,
+      useBodyForBreakpoint: true,
+      fixedRowHeight: 38,
+      disableWindowResize: true,
+      disableWarnings: true,
+      scrollSpeed: 10, 
+      keepFixedWidthInMobile: false,
+      keepFixedHeightInMobile: true,
+      draggable: {
+        enabled: false,
+        ignoreContent: false, // if true drag will start only from elements from `dragHandleClass`
+        dragHandleClass: 'drag-handle', // drag event only from this class. If `ignoreContent` is true.
+      },
+    }
   }
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.dashboardWrapperFacade.showLoader();
    this.initializeDashboard()
   }
 
   initializeDashboard()
-  {
-    this.dashboardWrapperFacade.getDashboardAllWidgets();
+  {    
     this.dashBoardAllWidgetsSubscribe();
-    this.ConfigureDashboard();
-    this.loadDashboadContent();
+    this.ConfigureDashboard();   
     this.dashBoardContentSubscribe();
   }
 
-  dashBoardContentSubscribe() {
-    this.dashBoardContentSubscription = this.dashboardContentList$
+  dashBoardContentSubscribe() {  
+    this.dashboardWrapperFacade.loadDashboardContent()
     .pipe(first(response => response != null)).subscribe(
-      (response) => {
+      (response : any) => {
+        response.forEach((widg : any) => {
+      
+          widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
+           });
         response.filter((element : any) => {
           
           element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
@@ -153,16 +186,22 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         DashboardPageComponent.dashBoardContentData = response;
         
         this.dashboardContentListDataSubject.next(response);
+        this.dashboardWrapperFacade.hideLoader();
         }
       }
     );
   }
 
   dashBoardAllWidgetsSubscribe() {
-    this.dashBoardAllWidgetsSubscription = this.dashboardAllWidgets$
+    this.dashboardWrapperFacade.getDashboardAllWidgets()
     .pipe(first(response => response != null))
     .subscribe(
-      (response) => {
+      (response : any) => {
+             
+        response.forEach((widg : any) => {
+      
+      widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
+       });
         response.filter((element : any) => {
           
           element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
@@ -188,6 +227,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     this.inputs = {
       isEditDashboard: this.isReorderEnable,
     };
+    this.dashboardWrapperFacade.getDashboardAllWidgets();
+    this.dashBoardAllWidgetsSubscribe();
+   this.cd.detectChanges()
   }
   user() {
     return this.authService.getUser();
@@ -215,6 +257,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     );
   }
   editDashboardCancelClicked(save : any) {
+   
     this.configSubscriptionItems = {
       draggable: { enabled: false },
       resizable: { enabled: false },
@@ -225,6 +268,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     };
     if(save === 'true')
     {
+     
           let dashboardContentPostData = DashboardPageComponent.dashBoardContentData
           let updatedWidgetsPostData = DashboardPageComponent.updatedWidgets
           dashboardContentPostData.forEach((widg: any) =>
@@ -261,6 +305,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         const dashBoardWidgetsUpdated ={
           dashBoardWidgetsUpdated : dashboardContentPostData
         }
+       
         this.dashboardWrapperFacade.updateDashboardAllWidgets('E2301551-610C-43BF-B7C9-9B623ED425C3' , dashBoardWidgetsUpdated)
         DashboardPageComponent.dashBoardContentData =[]
         DashboardPageComponent.updatedWidgets = []
@@ -270,6 +315,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   dashBoardUpdateSubscribe() {
+    this.dashboardWrapperFacade.showLoader();
    this.dashboardContentUpdate$.subscribe(
       (response) => {     
         if(response === true)
@@ -351,4 +397,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
   }
+
+  
 }

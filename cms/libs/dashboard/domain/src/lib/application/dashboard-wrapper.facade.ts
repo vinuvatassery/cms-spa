@@ -35,56 +35,32 @@ export class DashboardWrapperFacade {
     this.snackbarService.manageSnackBar(type, subtitle);
 }
 
+showLoader(){  this.loaderService.show();}
+hideLoader() { this.loaderService.hide();}
+
   updateDashboardAllWidgets(dashboardId : string , dashBoardWidgetsUpdatedDto :  any) {
-    this.loaderService.show();
+    this.showLoader();
     this.dashboardWrapperService.updateDashboardAllWidgets(dashboardId  , dashBoardWidgetsUpdatedDto).subscribe({
       next: (result) => { 
         this.dashboardContentUpdateSubject.next(result);
         this.showSnackBar(SnackBarNotificationType.SUCCESS, 'Dashboard Updated')
-        this.loaderService.hide();
+        this.hideLoader();
       },
        
       error: (error) => { 
-        this.loaderService.hide();
+        this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
 
 
-  loadDashboardContent(): void {
-    this.dashboardWrapperService.getDashboardContent("CAREASSIST")
-    .subscribe({
-      next: (dashboardList : any) => {
-        
-    dashboardList.forEach((widg : any) => {
-      
-           widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
-            });
-       
-        this.dashboardContentListSubject.next(dashboardList);
-      },
-      error: (error) => {
-        this.showSnackBar(SnackBarNotificationType.ERROR, error)
-      },
-    });
+  loadDashboardContent() {
+   return  this.dashboardWrapperService.getDashboardContent("CAREASSIST") 
   }
 
-  getDashboardAllWidgets(): void {
-    this.dashboardWrapperService.getDashboardAllWidgets().subscribe({
-      next: (dashboardList : any) => {
-        
-    dashboardList.forEach((widg : any) => {
-      
-           widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
-            });
-      
-        this.dashboardAllWidgetsSubject.next(dashboardList);
-      },
-      error: (error) => {
-        this.showSnackBar(SnackBarNotificationType.ERROR, error)
-      },
-    });
+  getDashboardAllWidgets() {
+    return this.dashboardWrapperService.getDashboardAllWidgets()
   }
 
   loadDashboardConfiguration(): void {
