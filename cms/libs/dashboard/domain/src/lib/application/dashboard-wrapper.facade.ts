@@ -55,39 +55,12 @@ hideLoader() { this.loaderService.hide();}
   }
 
 
-  loadDashboardContent(): void {
-    this.dashboardWrapperService.getDashboardContent("CAREASSIST")
-    .subscribe({
-      next: (dashboardList : any) => {
-        
-    dashboardList.forEach((widg : any) => {
-      
-           widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
-            });
-       
-        this.dashboardContentListSubject.next(dashboardList);
-      },
-      error: (error) => {
-        this.showSnackBar(SnackBarNotificationType.ERROR, error)
-      },
-    });
+  loadDashboardContent() {
+   return  this.dashboardWrapperService.getDashboardContent("CAREASSIST") 
   }
 
-  getDashboardAllWidgets(): void {
-    this.dashboardWrapperService.getDashboardAllWidgets().subscribe({
-      next: (dashboardList : any) => {
-        
-    dashboardList.forEach((widg : any) => {
-      
-           widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
-            });
-      
-        this.dashboardAllWidgetsSubject.next(dashboardList);
-      },
-      error: (error) => {
-        this.showSnackBar(SnackBarNotificationType.ERROR, error)
-      },
-    });
+  getDashboardAllWidgets() {
+    return this.dashboardWrapperService.getDashboardAllWidgets()
   }
 
   loadDashboardConfiguration(): void {

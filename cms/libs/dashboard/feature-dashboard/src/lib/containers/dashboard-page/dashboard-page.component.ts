@@ -163,17 +163,20 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
   initializeDashboard()
   {
-    this.dashboardWrapperFacade.getDashboardAllWidgets();
+    //this.dashboardWrapperFacade.getDashboardAllWidgets();
     this.dashBoardAllWidgetsSubscribe();
-    this.ConfigureDashboard();
-    this.loadDashboadContent();
+    this.ConfigureDashboard();   
     this.dashBoardContentSubscribe();
   }
 
-  dashBoardContentSubscribe() {
-    this.dashBoardContentSubscription = this.dashboardContentList$
+  dashBoardContentSubscribe() {  
+    this.dashboardWrapperFacade.loadDashboardContent()
     .pipe(first(response => response != null)).subscribe(
-      (response) => {
+      (response : any) => {
+        response.forEach((widg : any) => {
+      
+          widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
+           });
         response.filter((element : any) => {
           
           element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];
@@ -189,10 +192,15 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   dashBoardAllWidgetsSubscribe() {
-    this.dashBoardAllWidgetsSubscription = this.dashboardAllWidgets$
+    this.dashboardWrapperFacade.getDashboardAllWidgets()
     .pipe(first(response => response != null))
     .subscribe(
-      (response) => {
+      (response : any) => {
+             
+        response.forEach((widg : any) => {
+      
+      widg.widgetProperties = JSON.parse(widg.widgetProperties.replaceAll('\\',' '));
+       });
         response.filter((element : any) => {
           
           element.widgetProperties.componentData.component = this.widgetCoponentCollection[element?.widgetProperties.componentData.component];

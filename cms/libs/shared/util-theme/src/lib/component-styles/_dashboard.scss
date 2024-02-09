@@ -615,7 +615,7 @@ gridster .gridster-row {
   }
   .k-dropdownlist,
   .k-multiselect {
-    min-width: 100px;
+    min-width: 180px;
     max-width: 100px;
     font-size: $font-size-s;
     .k-button.k-icon-button {
@@ -629,4 +629,6 @@ gridster .gridster-row {
   h5 {
     margin: 0px;
   }
+
+  
 }
