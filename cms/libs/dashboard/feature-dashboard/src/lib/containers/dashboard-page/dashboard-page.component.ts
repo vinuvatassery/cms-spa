@@ -80,6 +80,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   @Output() itemResized: EventEmitter<GridsterItem> = new EventEmitter();
   options: GridsterConfig;
   dashboard: Array<GridsterItem>;
+  addWidgetConfiguration: GridsterConfig;
   /** Constructor **/
   constructor(
     private authService: AuthService,
@@ -124,6 +125,33 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       { cols: 1, rows: 1, y: 3, x: 4 },
       { cols: 1, rows: 1, y: 0, x: 6 },
     ];
+
+    this.addWidgetConfiguration = {
+      gridType: GridType.VerticalFixed, 
+      resizable: { enabled: false },
+      swap: true,
+      pushItems: false,
+      outerMargin: true,
+      enableEmptyCellDrop: false,
+      maxItemCols: 2,
+      maxCols: 2,  
+      margin:10,
+      minItemRows: 1,
+      minItemArea: 1,
+      setGridSize: true,
+      useBodyForBreakpoint: true,
+      fixedRowHeight: 38,
+      disableWindowResize: true,
+      disableWarnings: true,
+      scrollSpeed: 10, 
+      keepFixedWidthInMobile: false,
+      keepFixedHeightInMobile: true,
+      draggable: {
+        enabled: false,
+        ignoreContent: false, // if true drag will start only from elements from `dragHandleClass`
+        dragHandleClass: 'drag-handle', // drag event only from this class. If `ignoreContent` is true.
+      },
+    }
   }
 
   /** Lifecycle hooks **/
@@ -351,4 +379,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
   }
+
+  
 }

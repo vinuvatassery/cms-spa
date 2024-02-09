@@ -13,7 +13,8 @@
       <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
           (click)="editDashboardClicked(configSubscriptionItems)"> dashboard </span></button>
       <div *ngIf="isReorderEnable">
-        <button kendoButton (click)="editDashboardCancelClicked('true')" class="mr-1" [primary]="true" aria-label="Save">
+        <button kendoButton (click)="editDashboardCancelClicked('true')" class="mr-1" [primary]="true"
+          aria-label="Save">
           Save</button>
         <button kendoButton fillMode="outline" (click)="editDashboardCancelClicked('false')"> Cancel </button>
 
@@ -21,17 +22,20 @@
     </div>
   </section>
   <div class="mt-1" [ngClass]="{'reorder_wrapper_enabled': isReorderEnable}">
-    <gridster [options]="configSubscriptionItems" *ngIf="configSubscriptionItems">
+    <gridster [options]="configSubscriptionItems" *ngIf="configSubscriptionItems" class="main-gridster">
       <gridster-item *ngFor="let item of dashboardContentListData$ | async"
         [item]="item?.widgetProperties?.componentData">
         <div class="dashboard-cards-wrapper">
-          <button *ngIf="isReorderEnable"  kendoButton class="widget_remove_btn" (click)="removeWidget(item)"><span class="material-icons">
-            remove
+          <button *ngIf="isReorderEnable" kendoButton class="widget_remove_btn" (click)="removeWidget(item)"><span
+              class="material-icons">
+              remove
             </span></button>
-        <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
-          [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
+          <button class="drag-button drag-handler" *ngIf="isReorderEnable"> <span class="material-icons"> drag_indicator
+            </span> </button>
+          <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
+            [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
 
-        </ndc-dynamic>
+          </ndc-dynamic>
         </div>
 
       </gridster-item>
@@ -41,32 +45,35 @@
 </div>
 
 <div>
-  <gridster [options]="configSubscriptionItems" *ngIf="configSubscriptionItems">
-    <div class="add-more-wrapper">
-      <h2 class="mb-2">{{isReorderEnable ? "Add More Widgets" : ""}} </h2>
-      <div class="add-more-container">
+
+  <div class="add-more-wrapper" *ngIf="isReorderEnable">
+    <h2 class="mb-2">{{isReorderEnable ? "Add More Widgets" : ""}} </h2>
+    <div class="add-more-container">
+      <gridster [options]="addWidgetConfiguration" *ngIf="addWidgetConfiguration" class="add-gridster">
         <gridster-item *ngFor="let item of dashboardAllWidgetsListData$ | async"
           [item]="item?.widgetProperties?.componentData">
 
           <div class="add-more-list" *ngIf="isReorderEnable">
-          
+
             <div class="chart-view-point">
               <div class="dashboard-cards-wrapper">
-              
-              <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
-                [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
 
-              </ndc-dynamic>
+                <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
+                  [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
+
+                </ndc-dynamic>
+              </div>
             </div>
-            </div>
-            <button kendoRippleContainer class="bottom-title"> <span class="material-icons"  (click)="addItem(item)"> add_circle </span>
+            <button kendoRippleContainer class="bottom-title"> <span class="material-icons" (click)="addItem(item)">
+                add_circle </span>
               <h2>{{item?.widgetDesc}}</h2>
             </button>
           </div>
         </gridster-item>
-      </div>
+      </gridster>
     </div>
-  </gridster>
+  </div>
+
 </div>
 
 

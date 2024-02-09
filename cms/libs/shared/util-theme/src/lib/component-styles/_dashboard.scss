@@ -4,6 +4,12 @@
 
 }
 
+.dashboard-wrapper {
+  .app-c-drag-row-table.recently-view .k-grid .k-grid-content {
+    min-height: 10px;
+  }
+}
+
 .dash-info-card {
   background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 1px solid #0000000F;
@@ -127,9 +133,7 @@
       border-radius: 6px;
       position: relative;
 
-      &::before {
-        content: "\e945";
-        font-family: "Material Icons";
+      .drag-button {
         width: 12px;
         height: 100%;
         position: absolute;
@@ -142,13 +146,15 @@
         border-radius: 10px;
         transition: .2s;
 
+        &:hover {
+
+          background: #dcdcdc;
+
+        }
+
       }
 
-      &:hover {
-        &::before {
-          background: #dcdcdc;
-        }
-      }
+
     }
 
 
@@ -163,29 +169,29 @@
     padding-left: 2rem !important;
 
     // position: relative;
-    &::before {
-      content: "\e945";
-      font-family: "Material Icons";
-      font-size: 22px;
-      height: 100%;
-      position: absolute;
-      left: 0;
-      top: 0;
-      background: #EFEFEF;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      transition: .2s;
-      cursor: move;
-    }
 
-    &:hover {
-      &::before {
-        background: #dcdcdc;
-        cursor: move;
-      }
-    }
+
+  }
+}
+
+.drag-button {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #EFEFEF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  transition: 0.2s;
+  cursor: move;
+  border: 0px;
+  padding: 0;
+
+  &:hover {
+    background: #dcdcdc;
+    cursor: move;
   }
 }
 
@@ -378,7 +384,28 @@
   margin-bottom: 8px;
   min-height: 31px;
 
-  .k-dropdownlist {
+  .k-multiselect {
+    width: 100px;
+    min-height: 28px;
+
+    .k-searchbar {
+      position: absolute;
+      min-height: 28px;
+      height: 28px;
+      min-width: auto;
+    }
+
+    .k-i-x {
+      display: none;
+    }
+
+    .k-input-values {
+      padding-right: 0px;
+    }
+  }
+
+  .k-dropdownlist,
+  .k-multiselect {
     min-width: 100px;
     max-width: 100px;
     font-size: $font-size;
@@ -494,57 +521,63 @@ gridster .gridster-row {
   }
 }
 
-.lihead-container{
+.lihead-container {
   display: grid;
   grid-template-columns: 1fr auto;
-  .progress_container{
+
+  .progress_container {
     padding-right: 1rem;
     margin-right: 1rem;
     border-right: 1px solid $black-9;
-    .k-progressbar{
+
+    .k-progressbar {
       border-radius: 15px;
       height: 12px;
       overflow: hidden;
       background: $grey-f7;
       width: 100%;
-      .k-selected{
+
+      .k-selected {
         background: $dash-green-1;
       }
- 
+
     }
-    h4{
+
+    h4 {
       font-family: $font-family;
       margin: 0;
       margin-top: 8px;
       color: $black-59;
     }
-    p{
+
+    p {
       font-family: $font-family-medium;
       margin: 0;
       color: $black-6;
     }
-    
+
   }
-  h2{
+
+  h2 {
     font-family: $font-family-light;
     color: $black-59;
   }
 }
-.rendoverage-container{ 
-  h3{
+
+.rendoverage-container {
+  h3 {
     font-family: $font-family-light;
     font-size: $font-size-xx;
     color: $black-59;
   }
-  p{
+
+  p {
     font-family: $font-family-medium;
     color: $black-59;
   }
 }
-.dashboard-cards-wrapper{
-  position: relative;
-}
-.widget_remove_btn{
+ 
+.widget_remove_btn {
   width: 24px;
   height: 24px;
   border-radius: 50%;
