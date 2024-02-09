@@ -2,8 +2,9 @@
       <div class="dash-header-with-filters">
             <h5>PREMIUM EXPENSES BY INSURANCE TYPE</h5>
             <div *ngIf="!isEditDashboard">
-                  <kendo-dropdownlist size="small" value="YTD" rounded="medium" class="mr-1"
-                        [fillMode]="formUiStyle.inputFillMode" [data]="data">
+                  <kendo-dropdownlist size="small"  rounded="medium" class="mr-1"
+                  [(ngModel)]="selectFrequency"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="data"  (valueChange)="frequecyValueChange()">
                   </kendo-dropdownlist>
 
             </div>

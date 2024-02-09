@@ -18,7 +18,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   selectedDataCount ='Claim Count'
   selectedTimeFrame = 'This Month'
-  dataMonth = ['This Month','Last Month','YTD','Last Year']
+  dataMonth = ['This Month','Last Month','Previous quarter','YTD','Last Year']
   dataCount = ['Claim Count','Claim Amount']
   @Input() isEditDashboard!: any; 
   @Output() removeWidget = new EventEmitter<string>();
@@ -47,7 +47,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
     this.destroy$.complete();
   }
   public labelContent(e: SeriesLabelsContentArgs): string {
-    return `${e.category}: \n ${e.value}%`;
+    return `${e.category}: \n ${e.value}`
   }
   loadPharmacyClaimsChart() {
     const payload ={
@@ -60,14 +60,15 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response) {
-            this.pharmacyClaims = response?.widgetProperties;
-            this.claimCount = response?.result?.claimCount
-            this.claimAmount = response?.result?.claimAmount
+            this.pharmacyClaims = response.widgetProperties;          
+            this.claimCount = response.result.claimCount
+            this.claimAmount = response.result.claimAmount
             this.changeDetectorRef.detectChanges()
           }
         }
       });
   }
+
 }
 
 
