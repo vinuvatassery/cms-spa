@@ -525,7 +525,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         null;
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNameNotApplicableFlag =
         StatusFlag.Yes;
-      this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNoMiddleInitialFlag =
+      this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceMiddleNameNotApplicableFlag =
         StatusFlag.Yes;
     } else {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceFirstName =
@@ -535,13 +535,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
       if(this.appInfoForm.controls['chkPrmInsMiddleName'].value ?? false) {
         this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceMiddleName = null;
-        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNoMiddleInitialFlag = StatusFlag.Yes;
+        this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceMiddleNameNotApplicableFlag = StatusFlag.Yes;
           } else {
           this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceMiddleName =
             this.appInfoForm.controls['prmInsMiddleName'].value.trim() === ''
             ? null
             : this.appInfoForm.controls['prmInsMiddleName'].value;
-          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNoMiddleInitialFlag = StatusFlag.No;
+          this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceMiddleNameNotApplicableFlag = StatusFlag.No;
           }
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.insuranceLastName =
         this.appInfoForm.controls['prmInsLastName'].value.trim() === ''
@@ -562,7 +562,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         null;
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNameNotApplicableFlag =
         StatusFlag.Yes;
-      this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNoMiddleInitialFlag =
+      this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdMiddleNameNotApplicableFlag =
         StatusFlag.Yes;
     } else {
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdFirstName =
@@ -572,13 +572,13 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
          if(this.appInfoForm.controls['chkOfficialIdMiddleName'].value ?? false) {
             this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdMiddleName = null;
-            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNoMiddleInitialFlag = StatusFlag.Yes;
+            this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdMiddleNameNotApplicableFlag = StatusFlag.Yes;
               } else {
                 this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdMiddleName =
                 this.appInfoForm.controls['officialIdMiddleName'].value.trim() === ''
                 ? null
                 : this.appInfoForm.controls['officialIdMiddleName'].value;
-              this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNoMiddleInitialFlag = StatusFlag.No;
+              this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdMiddleNameNotApplicableFlag  = StatusFlag.No;
               }
       this.applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility.officialIdLastName =
         this.appInfoForm.controls['officialIdLastName'].value.trim() === ''
@@ -1022,6 +1022,10 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         Validators.required
       );
       this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['prmInsMiddleName'].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls['prmInsMiddleName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsLastName'].removeValidators(
         Validators.required
       );
@@ -1031,6 +1035,19 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         Validators.required
       );
       this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
+
+      if (this.appInfoForm.controls['chkPrmInsMiddleName'].value) {
+        this.appInfoForm.controls['prmInsMiddleName'].removeValidators(
+          Validators.required
+        );
+        this.appInfoForm.controls['prmInsMiddleName'].updateValueAndValidity();
+      } else {
+        this.appInfoForm.controls['prmInsMiddleName'].setValidators([
+          Validators.required,
+        ]);
+        this.appInfoForm.controls['prmInsMiddleName'].updateValueAndValidity();
+      }
+
       this.appInfoForm.controls['prmInsLastName'].setValidators(
         Validators.required
       );
@@ -1041,6 +1058,12 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         Validators.required
       );
       this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
+
+      this.appInfoForm.controls['officialIdMiddleName'].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls['officialIdMiddleName'].updateValueAndValidity();
+
       this.appInfoForm.controls['officialIdLastName'].removeValidators(
         Validators.required
       );
@@ -1050,6 +1073,19 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
         Validators.required
       );
       this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
+
+      if (this.appInfoForm.controls['chkOfficialIdMiddleName'].value) {
+        this.appInfoForm.controls['officialIdMiddleName'].removeValidators(
+          Validators.required
+        );
+        this.appInfoForm.controls['officialIdMiddleName'].updateValueAndValidity();
+      } else {
+        this.appInfoForm.controls['officialIdMiddleName'].setValidators([
+          Validators.required,
+        ]);
+        this.appInfoForm.controls['officialIdMiddleName'].updateValueAndValidity();
+      }
+
       this.appInfoForm.controls['officialIdLastName'].setValidators(
         Validators.required
       );

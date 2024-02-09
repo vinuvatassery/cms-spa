@@ -522,7 +522,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
           ?.officialIdFirstName
       );
 
-      if (applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdNoMiddleInitialFlag == 'Y') {
+      if (applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdMiddleNameNotApplicableFlag == 'Y') {
         this.appInfoForm.controls['chkOfficialIdMiddleName'].setValue(true);
         this.appInfoForm.controls['officialIdMiddleName'].setValue(null);
         this.appInfoForm.controls['officialIdMiddleName'].disable();
@@ -560,7 +560,7 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
           ?.insuranceFirstName
       );
 
-      if (applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceNoMiddleInitialFlag == 'Y') {
+      if (applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceMiddleNameNotApplicableFlag == 'Y') {
         this.appInfoForm.controls['chkPrmInsMiddleName'].setValue(true);
         this.appInfoForm.controls['prmInsMiddleName'].setValue(null);
         this.appInfoForm.controls['prmInsMiddleName'].disable();
