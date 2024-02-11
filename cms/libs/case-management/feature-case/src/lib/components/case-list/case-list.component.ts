@@ -42,6 +42,9 @@ isFiltered = false;
 public state!: any;
   /*** Input properties ***/
   @Input() cases: any;
+  @Input() healthInsuranceType: any;
+  @Input() fplPercentage: any;
+  @Input() filterOperator: any;
   @Input() pageSizes : any;
   @Input() sortValue : any;
   @Input() sortType : any;
@@ -145,6 +148,7 @@ public state!: any;
     if (this.caseStatus != ''){ 
       this.dashboardfilter(); 
     }
+    //alert(this.healthInsuranceType + this.fplPercentage + this.filterOperator);
   }
   ngOnDestroy(): void {
     this.userProfileSubsriction.unsubscribe();

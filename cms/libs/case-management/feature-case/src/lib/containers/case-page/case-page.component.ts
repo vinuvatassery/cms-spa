@@ -34,6 +34,9 @@ export class CasePageComponent implements OnInit {
   totalClientsCount!:number | null;
   moduleCode:any = ModuleCode;
   caseStatus: string = '';
+  healthInsuranceType ='';
+  fplPercentage = -1;
+  filterOperator = '';
   /** Public properties for case popup**/
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
@@ -84,17 +87,23 @@ export class CasePageComponent implements OnInit {
   {  
  
       switch(this.route.snapshot.queryParams['tab']){
-        case CaseScreenTab.MY_CASES:
+        case CaseScreenTab.MY_CASES.toString():
           this.selectedTab = CaseScreenTab.MY_CASES;
           break;
-        case CaseScreenTab.CER_TRACKING:
+        case CaseScreenTab.CER_TRACKING.toString():
           this.selectedTab = CaseScreenTab.CER_TRACKING;
+          break;
+        case CaseScreenTab.ALL.toString():
+          this.selectedTab = CaseScreenTab.ALL;
           break;
         default:
           this.selectedTab = CaseScreenTab.MY_CASES;
           break;
       } 
-    this.caseStatus = this.route.snapshot.queryParams['casestatus']
+    this.caseStatus = this.route.snapshot.queryParams['casestatus'];
+    this.healthInsuranceType = this.route.snapshot.queryParams['healthInsuranceType'];
+    this.fplPercentage = this.route.snapshot.queryParams['fplPercentage']; 
+    this.filterOperator = this.route.snapshot.queryParams['filterOperator'];
   }
   /** Getters **/
   get caseScreenTab(): typeof CaseScreenTab {

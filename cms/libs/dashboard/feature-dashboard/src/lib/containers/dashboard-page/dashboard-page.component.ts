@@ -162,7 +162,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     }
     else
     {
-    this.dashboardWrapperFacade.getLoggedinUserDashboards('CASE_MANAGEMENT');
+    this.dashboardWrapperFacade.getLoggedinUserDashboards('CAREASSIST'); //CASE_MANAGEMENT
     }
   }
 
