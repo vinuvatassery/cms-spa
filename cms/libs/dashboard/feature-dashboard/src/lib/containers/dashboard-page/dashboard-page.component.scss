@@ -30,7 +30,7 @@
   background-color: gray;
 }
 
- 
+
 
 .box {
   height: 100%;
@@ -64,21 +64,42 @@
   position: absolute;
 }
 
-gridster {
+.main-gridster {
   background: #ffffff;
   padding: 10px 0 0 0 !important;
-  height: 100vh;
+  height: 100%;
+  min-height: 100vh;
+  max-height: 100%;
+
+  gridster-item {
+    padding: 0;
+    border: 0px solid #ddd;
+    border-radius: 2px;
+    box-shadow: none;
+    margin-right: 0px !important;
+
+    overflow: visible;
+  }
 }
 
-gridster-item { 
-  padding: 0;
-  border: 0px solid #ddd;
-  border-radius: 2px;
-  box-shadow: none;
-  margin-right: 0px !important;
+.add-gridster {
+  background: transparent;
+  padding: 0 0 0 0 !important;
+  height: 100%;
+  min-height: 100vh;
+  max-height: 100%;
 
- 
+  gridster-item {
+    padding: 0;
+    border: 0px solid transparent;
+    border-radius: 2px;
+    box-shadow: none;
+    margin-right: 0px !important;
+
+    overflow: visible;
+  }
 }
+
 
 .app-l-dashboard {
   width: 100%;
