@@ -55,7 +55,7 @@
             <kendo-dropdownlist 
             [data]="interfaceProcessBatchLov$ | async" 
             textField="lovDesc"
-            valueField="lovCode"
+            valueField="lovDesc"
             [valuePrimitive]="true"
             [value]="interfaceProcessBatchFilter" 
             (valueChange)="dropdownFilterChange('processTypeDesc',$event, filterService)"
