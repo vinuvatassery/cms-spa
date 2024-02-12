@@ -9,7 +9,8 @@ import {
   Output,
   TemplateRef,
   ChangeDetectorRef,
-  ViewChild
+  ViewChild,
+  OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -17,18 +18,18 @@ import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Observable, Subject, debounceTime, first } from 'rxjs';
+import { Observable, Subject, Subscription, debounceTime, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FinancialClaimsFacade, GridFilterParam, PaymentDetail, PaymentPanel, PaymentStatusCode } from '@cms/case-management/domain';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-batch-list-detail-items',
   templateUrl: './financial-claims-batch-list-detail-items.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnChanges {
+export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnChanges, OnDestroy {
  
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -123,12 +124,15 @@ deletemodelbody =
   numberSearchColumnName =""
   paymentRequestId: any;
   selected: any;
+  claimsServiceProfileSubject = new Subject();
+  batchItemsGridListSubjecription = new Subscription();
   /** Constructor **/
   constructor(private route: Router, private dialogService: DialogService, 
     public activeRoute: ActivatedRoute,
     private readonly cd: ChangeDetectorRef,
     private lovFacade :  LovFacade,
-    private readonly financialClaimsFacade: FinancialClaimsFacade,) {
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly userManagementFacade: UserManagementFacade) {
       this.searchColumnList = []
     }
   
@@ -191,6 +195,34 @@ deletemodelbody =
         this.backToBatchLog(null);
       }
     })
+    this.addPaymentServiceListSubscription();
+  }
+
+  addPaymentServiceListSubscription() {
+    this.batchItemsGridListSubjecription = this.batchItemsGridLists$.subscribe((service: any)=>{
+      if(service?.data){
+        this.loadDistinctUserIdsAndProfilePhoto(service?.data);
+      }
+    });
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.claimsServiceProfileSubject.next(data);
+          }
+        },
+      });
+      this.cd.detectChanges();
+    }
+  } 
+
+  ngOnDestroy(): void {
+    this.batchItemsGridListSubjecription.unsubscribe();
   }
   
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
