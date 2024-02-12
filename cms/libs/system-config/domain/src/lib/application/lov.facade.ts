@@ -914,8 +914,8 @@ export class LovFacade {
     });
   }
 
-  getInterfaceProcessBatchLov(): void {
-    this.lovDataService.getLovsbyType(LovType.InterfaceProcessBatch).subscribe({
+  getInterfaceProcessBatchLov(parentCode:string): void {
+    this.lovDataService.getLovsbyParent(LovType.InterfaceProcessBatch,parentCode).subscribe({
       next: (lovResponse) => {
         this.interfaceProcessBatchSubject.next(lovResponse);
       },

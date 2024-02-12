@@ -4,18 +4,16 @@ import {
   Input,
   OnInit,
   OnChanges,
-  Output,
+  Output
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-
-
+import { FilterService} from '@progress/kendo-angular-grid';
 
 @Component({
   selector: 'cms-system-interface-batch-interface-logs',
@@ -115,6 +113,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade, private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider, private readonly lovFacade: LovFacade,
   ) { }
+  processTypeCode:string='';
   ngOnInit(): void {
     this.sortType = 'desc';
     this.state = {
@@ -123,7 +122,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
       sort: this.sort,
     };
     this.loadActivityListGrid();
-    this.lovFacade.getInterfaceProcessBatchLov();
+    this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.lovFacade.getInterfaceExceptionLov();
   }
 
@@ -166,6 +165,8 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
 
   onInterfaceChange(event: any) {
     this.InterfaceType = event;
+    this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
+    this.defaultGridState()
     this.loadActivityListGrid();
   }
 
@@ -188,9 +189,6 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
     this.filter = stateData?.filter?.filters;
-    if (stateData?.filter) {
-      this.InterfaceType = stateData?.filter?.filters[0]?.filters[0]?.value
-    }
     this.loadActivityListGrid();
   }
 
@@ -284,7 +282,7 @@ public onDetailExpand(e: any): void {
     this.sortValue,
     this.sortType,
     JSON.stringify({ logic: 'and', filters: [] }));
-   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.interfaceTypeCode,e.dataItem.processTypeCode, param);
+   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.interfaceTypeCode,e.dataItem.entityTypeCode, param);
 
   }
   restGrid() {

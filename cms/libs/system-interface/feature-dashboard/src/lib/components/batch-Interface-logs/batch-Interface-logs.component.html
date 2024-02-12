@@ -40,46 +40,22 @@
       
       <section class="table-filter-section mat-form-no-b-space bg-white">
         </section>
-    <!-- Sorted Info show only in list -->
-    <div class="table-sorted-info">
-        Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
-        <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
-        <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
-        <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
-        <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="restGrid()">
-              <a>Set to Default</a>
-        </button>
-      </div>
+
     
     <div class="app-c-table">
-      <kendo-grid [loading]="(batchLogsDataLoader$  | async) === true" [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
+      <kendo-grid #grid  [loading]="(batchLogsDataLoader$  | async) === true" [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
       [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort" [filter]="state.filter"
       (dataStateChange)="dataStateChange($event)"
       (filterChange)="filterChange($event)" 
       (columnReorder)="onColumnReorder($event)"
       (detailExpand)="onDetailExpand($event)"
       [data]="activityEventLogLists$ | async">
-      
-        <kendo-grid-column field="interfaceTypeDesc" title="Interface" [width]="180">
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-dropdownlist 
-            
-            [data]="interfaceExcptionLov$ | async" 
-            textField="lovDesc"
-            valueField="lovCode"
-            [valuePrimitive]="true"
-            [value]="interfaceExceptionFilter" 
-            (valueChange)="dropdownFilterChange('interfaceTypeDesc',$event, filterService)"
-            >
-            </kendo-dropdownlist>
-       </ng-template>
-        </kendo-grid-column>
         <kendo-grid-column field="processTypeDesc" title="Process" [width]="180">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-dropdownlist 
             [data]="interfaceProcessBatchLov$ | async" 
             textField="lovDesc"
-            valueField="lovCode"
+            valueField="lovDesc"
             [valuePrimitive]="true"
             [value]="interfaceProcessBatchFilter" 
             (valueChange)="dropdownFilterChange('processTypeDesc',$event, filterService)"
@@ -123,39 +99,12 @@
             </kendo-dropdownlist>
        </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="totalRecords" title="Total Records" [width]="130">
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-              [extra]="false" operator="eq">
-              <kendo-filter-eq-operator></kendo-filter-eq-operator>
-            </kendo-grid-numeric-filter-menu>
-          </ng-template>
+        <kendo-grid-column field="totalRecords" title="Total Records" [filterable]="false" [width]="130">
+          
         </kendo-grid-column>
-        <kendo-grid-column field="totalFailed" title="Failed Records" [width]="130">
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-grid-numeric-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
-              [extra]="false" operator="eq">
-              <kendo-filter-eq-operator></kendo-filter-eq-operator>
-            </kendo-grid-numeric-filter-menu>
-          </ng-template>
-        </kendo-grid-column>
-        <!-- below only in Ramsell -->
-        <!-- <kendo-grid-column field="status" title="Status" [width]="100">
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <button *ngIf="dataItem.status ==='Failed'" [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
-              View Log
-            </button>
-            <span *ngIf="dataItem.status ==='Success'">   {{ dataItem.status }} </span>
-            <kendo-popover  #userCard width="330" position="left">
-              <ng-template kendoPopoverBodyTemplate>
-             <div class="p-2">
-              <h5> Failure Details</h5>
-              <p>Missing Tax ID Number</p>
-             </div>
-              </ng-template>
-            </kendo-popover>
-          </ng-template>
-        </kendo-grid-column> -->
+        <kendo-grid-column field="totalFailed" [filterable]="false" title="Failed Records" [width]="130">
+          
+        </kendo-grid-column>       
         <ng-template kendoGridDetailTemplate let-dataItem>
           <kendo-grid [data]="batchLogExcptionLists$ | async"  [pageSize]="state.take">
             <kendo-grid-column field="errorCode" title="Error Code" [width]="100">
