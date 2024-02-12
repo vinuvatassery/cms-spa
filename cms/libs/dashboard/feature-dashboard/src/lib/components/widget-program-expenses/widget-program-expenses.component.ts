@@ -49,6 +49,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
   selectFrequency ="M"
   selectedTimeFrame = 'Last Year'
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade, private changeDetectorRef: ChangeDetectorRef) {}
 
@@ -115,6 +116,11 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
         next: (response) => {
           if (response) {
             this.programExpenses = response;
+            if(this.programExpenses && this.programExpenses?.chartData && this.programExpenses?.chartData?.categoryAxis)
+            this.programExpenses.chartData.categoryAxis.title ={
+                  'text':this.selectFrequency == 'M'? 'Month' : this.selectFrequency == 'Q'? 'Quarter' :
+                  'Year'
+            }
             this.changeDetectorRef.detectChanges()
           }
         }

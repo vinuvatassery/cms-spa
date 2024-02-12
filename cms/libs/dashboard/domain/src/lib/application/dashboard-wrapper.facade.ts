@@ -9,6 +9,8 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 @Injectable({ providedIn: 'root' })
 export class DashboardWrapperFacade {
 
+  private userDashBoardsSubject = new Subject<any>();
+  public userDashBoardsList$ =  this.userDashBoardsSubject.asObservable();
   private dashboardContentUpdateSubject = new Subject<any>();
   private dashboardContentListSubject = new Subject<any>();
   private dashboardAllWidgetsSubject = new Subject<any>();
@@ -38,6 +40,20 @@ export class DashboardWrapperFacade {
 showLoader(){  this.loaderService.show();}
 hideLoader() { this.loaderService.hide();}
 
+getLoggedinUserDashboards(typeCode :  string) {
+    this.showLoader();
+    this.dashboardWrapperService.getLoggedinUserDashboards(typeCode).subscribe({
+      next: (result) => { 
+        this.userDashBoardsSubject.next(result);      
+        this.hideLoader();
+      },       
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
+      },
+    });
+  }
+
   updateDashboardAllWidgets(dashboardId : string , dashBoardWidgetsUpdatedDto :  any) {
     this.showLoader();
     this.dashboardWrapperService.updateDashboardAllWidgets(dashboardId  , dashBoardWidgetsUpdatedDto).subscribe({
@@ -55,8 +71,8 @@ hideLoader() { this.loaderService.hide();}
   }
 
 
-  loadDashboardContent() {
-   return  this.dashboardWrapperService.getDashboardContent("CAREASSIST") 
+  loadDashboardContent(dashboardId : string) {
+   return  this.dashboardWrapperService.getDashboardContent(dashboardId) 
   }
 
   getDashboardAllWidgets() {

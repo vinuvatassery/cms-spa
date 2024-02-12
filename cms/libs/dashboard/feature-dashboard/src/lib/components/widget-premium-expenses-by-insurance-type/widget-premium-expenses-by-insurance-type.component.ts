@@ -13,12 +13,16 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
   premiumExpensesByInsurance: any; 
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  data  = ['Last Month','August']
+  selectFrequency='YTD'
+  data  = ['YTD','Last Month','Current Month','Previous Quarter','Last Year']
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
 
-
+  frequecyValueChange(){
+    this.loadPremiumExpensesByInsuranceChart()
+  }
   removeWidgetCard(){
     this.removeWidget.emit();
   }
@@ -32,7 +36,10 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
     this.destroy$.complete();
   }
   loadPremiumExpensesByInsuranceChart() {
-    this.widgetFacade.loadPremiumExpensesByInsuranceChart();
+    const payload ={
+      paymentStatusDate : this.selectFrequency
+    }
+    this.widgetFacade.loadPremiumExpensesByInsuranceChart(this.dashboardId, payload);
     this.widgetFacade.premiumExpensesByInsuranceChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
