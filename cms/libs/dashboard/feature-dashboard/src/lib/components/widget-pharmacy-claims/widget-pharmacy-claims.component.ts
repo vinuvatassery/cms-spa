@@ -70,7 +70,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   }
 
   public legendLabelClaimAmount(e: LegendLabelsContentArgs):string{
-    return `${e.text} : $ ${Math.round(e.value)}` 
+    return `${e.text} : $ ${e.value}` 
    
 }
 
