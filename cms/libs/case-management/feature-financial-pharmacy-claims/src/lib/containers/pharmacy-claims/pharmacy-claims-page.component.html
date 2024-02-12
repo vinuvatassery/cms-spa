@@ -41,6 +41,7 @@
                                 (onbatchClaimsClickedEvent)="onbatchClaimsClicked($event)"
                                 (ondeleteClaimsClickedEvent)="ondeleteClaimsClicked($event)"
                                 [batchingClaims$]="batchingClaims$" (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                [pharmacyClaimsProcessListProfilePhoto$]="pharmacyClaimsProcessListProfilePhoto$"
                                 ></cms-pharmacy-claims-process-list>
                             </div>
                         </ng-template>
@@ -73,7 +74,8 @@
                                 (loadTemplateEvent) = "loadEachLetterTemplate($event)"
                                 [letterContentList$]="letterContentList$"
                                 [letterContentLoader$]="letterContentLoader$"
-                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-pharmacy-claims-all-payments-list>
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                [pharmacyClaimnsAllPaymentsProfilePhoto$]="pharmacyClaimnsAllPaymentsProfilePhoto$"></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

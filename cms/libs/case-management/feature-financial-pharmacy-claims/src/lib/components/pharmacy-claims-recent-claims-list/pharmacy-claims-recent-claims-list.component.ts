@@ -46,6 +46,7 @@ export class PharmacyClaimsRecentClaimsListComponent implements OnDestroy {
   columns : any;
   dropDowncolumns : any;
   isFinancialClaimsRecentClaimGridLoaderShow = false;
+  pharmacyRecentClaimsProfilePhotoSubject$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhotoSubject;
 
   selectedPaymentStatus: string | null = null;
   selectedPaymentMethod: string | null = null;
@@ -56,7 +57,6 @@ export class PharmacyClaimsRecentClaimsListComponent implements OnDestroy {
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   paymentRequestTypes: any = [];
-  pharmacyRecentClaimsSubject = new Subject();
   recentClaimsGridListsSubscription = new Subscription();
   paymentTypeFilter = '';
   iseditView:string="";
@@ -239,25 +239,9 @@ loadFinancialRecentClaimListGrid() {
       this.recentClaimListDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isFinancialClaimsRecentClaimGridLoaderShow = false;
-        this.loadDistinctUserIdsAndProfilePhoto(this.gridDataResult?.data);
       }
     });
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.by))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.pharmacyRecentClaimsSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   loadRecentClaimsGrid(data: any) {
 

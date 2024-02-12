@@ -73,6 +73,8 @@ export class PharmacyClaimsPageComponent implements OnInit {
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   letterContentList$ = this.financialPharmacyClaimsFacade.letterContentList$;
   letterContentLoader$ = this.financialPharmacyClaimsFacade.letterContentLoader$;
+  pharmacyClaimsProcessListProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyClaimsProcessListProfilePhotoSubject;
+  pharmacyClaimnsAllPaymentsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyClaimnsAllPaymentsProfilePhotoSubject;
   constructor(
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade ,
     private lovFacade: LovFacade, private readonly router: Router,

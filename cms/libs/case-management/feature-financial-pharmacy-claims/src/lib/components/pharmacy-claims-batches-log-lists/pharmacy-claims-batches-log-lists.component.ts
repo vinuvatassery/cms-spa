@@ -192,6 +192,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   @Input() claimsType: any;
   @Input() letterContentList$: any;
   @Input() letterContentLoader$: any;
+  @Input() pharmacyBatchDetailProfilePhoto$!: any;
   @Output() loadTemplateEvent = new EventEmitter<any>();
   public state!: State;
   showExportLoader = false;
@@ -223,7 +224,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   selectedDataRows: any;
   disablePrwButton = true;
   currentPrintAdviceLetterGridFilter: any;
-  pharmacyBatchDetailProfilePhotoSubject = new Subject();
   gridColumns: { [key: string]: string } = {
     itemNbr: 'Item #',
     vendorName: 'Pharmacy Name',
@@ -331,26 +331,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.batchLogGridLists$.subscribe((res:any)=>{
       this.batchStatus = res && res.data[0].batchStatus
       this.initiateBulkMore()
-      if(res?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(res?.data);
-      }
     })
     this.handleBatchPaymentsGridData();
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.pharmacyBatchDetailProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
   }
 
   initiateBulkMore() {

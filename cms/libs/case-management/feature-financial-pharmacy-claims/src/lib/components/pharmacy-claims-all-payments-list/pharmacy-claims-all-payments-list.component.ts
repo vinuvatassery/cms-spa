@@ -55,6 +55,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   @Output() loadPharmacyClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Input() pharmacyClaimnsAllPaymentsProfilePhoto$!: any;
   public state!: State;
   columnsReordered = false;
   filteredBy = '';
@@ -217,9 +218,6 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       this.markAsChecked(response.data);
       }
       this.allPaymentsPrintAdviceLetterPagedList= response;
-      if(this.totalGridRecordsCount){
-        this.loadDistinctUserIdsAndProfilePhoto(response?.data);
-      }
     })
   }
 

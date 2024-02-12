@@ -14,7 +14,7 @@ import {
 import { Router } from '@angular/router';
 import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { ColumnVisibilityChangeEvent, FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
@@ -22,7 +22,7 @@ import {
   State,
 } from '@progress/kendo-data-query';
 import { BatchPharmacyClaims } from 'libs/case-management/domain/src/lib/entities/financial-management/batch-pharmacy-claims';
-import { Subject, Subscription, debounceTime, first } from 'rxjs';
+import { Subject, debounceTime, first } from 'rxjs';
 @Component({
   selector: 'cms-pharmacy-claims-process-list',
   templateUrl: './pharmacy-claims-process-list.component.html',
@@ -89,6 +89,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   @Input() searchDrugsLoader$: any;
   @Input() paymentRequestType$ : any
   @Input() deliveryMethodLov$ :any
+  @Input() pharmacyClaimsProcessListProfilePhoto$: any;
 
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
@@ -120,8 +121,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   private searchSubject = new Subject<string>();
-  pharmacyClaimsProcessListProfilePhotoSubscription = new Subscription();
-  pharmacyClaimsProcessListProfilePhotoSubject = new Subject();
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -213,7 +212,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     private readonly lovFacade: LovFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private route: Router,
-    private readonly userManagementFacade: UserManagementFacade,
   ) { 
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -228,31 +226,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     this.addSearchSubjectSubscription();
     this.lovFacade.getPaymentStatusLov();
     this.lovFacade.getPaymentMethodLov();
-    this.addPharmacyClaimsProcessListSubscription();
   }
-
-  addPharmacyClaimsProcessListSubscription() {
-    this.pharmacyClaimsProcessListProfilePhotoSubscription = this.pharmacyClaimsProcessGridLists$.subscribe((pharmacyPurchase: any) =>{
-      if(pharmacyPurchase?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(pharmacyPurchase?.data);
-      }
-    })
-  }
-
-loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.pharmacyClaimsProcessListProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   ngOnChanges(): void {
     this.state = {
