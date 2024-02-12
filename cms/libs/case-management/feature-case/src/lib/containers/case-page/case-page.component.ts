@@ -81,13 +81,12 @@ export class CasePageComponent implements OnInit {
 
   /** Private Query String values **/
   loadQueryParams()
-  {  
- 
+  {   
       switch(this.route.snapshot.queryParams['tab']){
-        case CaseScreenTab.MY_CASES:
+        case CaseScreenTab.MY_CASES.toString():
           this.selectedTab = CaseScreenTab.MY_CASES;
           break;
-        case CaseScreenTab.CER_TRACKING:
+        case CaseScreenTab.CER_TRACKING.toString():
           this.selectedTab = CaseScreenTab.CER_TRACKING;
           break;
         default:
