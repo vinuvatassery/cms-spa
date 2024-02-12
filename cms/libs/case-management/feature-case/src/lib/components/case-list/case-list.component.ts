@@ -63,7 +63,9 @@ public state!: any;
     "caseStatus",
     "group",
     "eilgibilityStartDate",
-    "eligibilityEndDate"
+    "eligibilityEndDate",
+    "healthInsuranceType",
+    "fplPercentage"
     ]
   columns : any = {
     clientFullName:"Client Name",
@@ -85,7 +87,9 @@ public state!: any;
     insurancePolicyId:"Insurance Policy Id",
     assignedCw:"Assigned to",
     dateOfBirth:"Date Of Birth",
-    caseManager:"Case Manager"
+    caseManager:"Case Manager",
+    healthInsuranceType : "Health Insurance Type",
+    fplPercentage : "FPL %"
   }
   columnDroplist : any = {
     ALL: "ALL",
@@ -145,10 +149,13 @@ public state!: any;
     this.selectedColumn = 'ALL';
     this.getGroupLovs() ; 
     this.getLoggedInUserProfile();
-    if (this.caseStatus != ''){ 
-      this.dashboardfilter(); 
+    if (this.caseStatus == CaseStatusCode.incomplete || this.caseStatus == CaseStatusCode.accept || this.caseStatus == CaseStatusCode.restricted){ 
+      this.dashboardCERfilter(); 
     }
-    //alert(this.healthInsuranceType + this.fplPercentage + this.filterOperator);
+
+    if(this.healthInsuranceType != ''){
+      this.dashboardFPLfilter();
+    }
   }
   ngOnDestroy(): void {
     this.userProfileSubsriction.unsubscribe();
@@ -193,7 +200,7 @@ public state!: any;
       searchValue: ''
       };
   }
-  dashboardfilter(){
+  dashboardCERfilter(){
       this.state.filter.filters.push(
         {filters:[{
           field: "eligibilityStatusCode",
@@ -202,6 +209,21 @@ public state!: any;
       }]});
     this.dataStateChange(this.state,false);
   }
+
+  dashboardFPLfilter(){
+    this.state.filter.filters.push(
+      {filters:[{
+        field: "healthInsuranceType",
+        operator: "eq",
+        value:this.healthInsuranceType
+        },{
+          field: "fplPercentage",
+          operator: this.filterOperator,
+          value:this.fplPercentage
+      }]});
+      debugger;
+  this.dataStateChange(this.state,false);
+}
  filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
   }
@@ -535,10 +557,12 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.columnName = "";
       this.isFiltered = false;
     }
-
+    if(this.sortValue === "eligibilityStatusCode"){
+      this.sortValue = "caseStatus";
+    }
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortValue = this.sortValue === "eligibilityStatusCode" ? "caseStatus" : this.sortValue;
+    this.sortValue = this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? "";
     this.columnName = filterList.length > 0 ? filterList[0]?.filters[0]?.field : "";
     this.state = stateData;
