@@ -218,7 +218,8 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     filterService: FilterService
   ): void {
     if (field === 'status') {
-      this.statusFilter = this.statusArray[this.statusArrayDesc.indexOf(value)];
+      this.statusFilter = value;
+      //this.statusFilter = this.statusArray[this.statusArrayDesc.indexOf(value)];
     }
     if (field === 'process') {
       this.processFilter = value;

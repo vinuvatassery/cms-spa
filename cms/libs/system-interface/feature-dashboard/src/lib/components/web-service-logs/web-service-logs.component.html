@@ -75,7 +75,7 @@
 
       <kendo-grid-column field="status" title="Status" [width]="180">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-          <kendo-dropdownlist [data]="statusArrayDesc" [value]="statusFilter" 
+          <kendo-dropdownlist [data]="statusArray" [value]="statusFilter" 
             (valueChange)="dropdownFilterChange('status',$event, filterService)">
           </kendo-dropdownlist>
         </ng-template>
