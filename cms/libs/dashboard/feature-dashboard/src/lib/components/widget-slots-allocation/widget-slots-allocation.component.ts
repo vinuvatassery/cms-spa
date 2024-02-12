@@ -15,6 +15,7 @@ export class WidgetSlotsAllocationComponent {
   public purchaseData: number[] = [12, 30, 30, 45,  ]; 
 
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
 

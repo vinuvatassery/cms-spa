@@ -11,6 +11,7 @@ import {CaseScreenTab, CaseStatusCode, ModuleCode} from '@cms/case-management/do
 export class WidgetApplicationsCersComponent {
   applicationCERStats:any; 
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade ,    private readonly router: Router ,private readonly activatedRoute : ActivatedRoute,
     private readonly cd: ChangeDetectorRef ) {
@@ -26,7 +27,7 @@ export class WidgetApplicationsCersComponent {
   }
 
   loadApplicationCERStats() {
-    this.widgetFacade.loadApplicationCERStats("e2301551-610c-43bf-b7c9-9b623ed425c3");
+    this.widgetFacade.loadApplicationCERStats(this.dashboardId);
     this.widgetFacade.applicationCERStats$ 
       .subscribe({
         next: (response) => { 
