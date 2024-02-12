@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import {  WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs'; 
-import { SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
+import { LegendLabels, LegendLabelsContentArgs, SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
 @Component({
   selector: 'dashboard-widget-pharmacy-claims',
   templateUrl: './widget-pharmacy-claims.component.html',
@@ -23,7 +23,12 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   @Input() isEditDashboard!: any; 
   @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
-  constructor(private widgetFacade: WidgetFacade, private changeDetectorRef : ChangeDetectorRef) {}
+  labels :LegendLabels ={
+    content : this.legendLabelCount
+  }
+
+  constructor(private widgetFacade: WidgetFacade,
+     private changeDetectorRef : ChangeDetectorRef) {}
   claimCount =0;
   claimAmount =0;
   removeWidgetCard(){
@@ -36,6 +41,10 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
 
   dataCountChange(event:string){
     this.selectedDataCount = event
+
+    this.labels ={
+      content :  this.selectedDataCount== 'Claim Count' ? this.legendLabelCount :this.legendLabelClaimAmount 
+    }
     this.loadPharmacyClaimsChart()
   }
   dataMonthChange(event:string){
@@ -50,6 +59,21 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   public labelContent(e: SeriesLabelsContentArgs): string {
     return `${e.category}: \n ${e.value}`
   }
+
+  public labelContentAmount(e: SeriesLabelsContentArgs): string {
+    return `${e.category}: \n $ ${e.value}`
+  }
+
+
+  public legendLabelCount(e: LegendLabelsContentArgs):string{
+      return `${e.text}: ${e.value}` 
+  }
+
+  public legendLabelClaimAmount(e: LegendLabelsContentArgs):string{
+    return `${e.text} : $ ${Math.round(e.value)}` 
+   
+}
+
   loadPharmacyClaimsChart() {
     const payload ={
       CountOrAmount : this.selectedDataCount,
