@@ -122,8 +122,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
       sort: this.sort,
     };
     this.loadActivityListGrid();
-
-    this.lovFacade.getInterfaceProcessBatchLov();
+    this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.lovFacade.getInterfaceExceptionLov();
   }
 
@@ -166,6 +165,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
 
   onInterfaceChange(event: any) {
     this.InterfaceType = event;
+    this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.loadActivityListGrid();
   }
 
@@ -281,7 +281,7 @@ public onDetailExpand(e: any): void {
     this.sortValue,
     this.sortType,
     JSON.stringify({ logic: 'and', filters: [] }));
-   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.interfaceTypeCode,e.dataItem.processTypeCode, param);
+   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.interfaceTypeCode,e.dataItem.entityTypeCode, param);
 
   }
   restGrid() {
