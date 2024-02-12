@@ -214,7 +214,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
       if(medicalClaims?.data){
         this.loadDistinctUserIdsAndProfilePhoto(medicalClaims?.data);
       }
-    })
+    });
   }
 
 loadDistinctUserIdsAndProfilePhoto(data: any[]) {

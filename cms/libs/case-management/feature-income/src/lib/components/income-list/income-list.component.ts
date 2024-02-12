@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChildren, QueryList
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChildren, QueryList, OnDestroy
 } from '@angular/core';
 /** External Libraries **/
 import { Subject } from 'rxjs/internal/Subject';
@@ -12,13 +12,14 @@ import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService,  LoggingService,  NotificationSource,  SnackBarNotificationType,} from '@cms/shared/util-core';
 import { DropDownListComponent } from '@progress/kendo-angular-dropdowns';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-income-list',
   templateUrl: './income-list.component.html',
   styleUrls: ['./income-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IncomeListComponent implements OnInit {
+export class IncomeListComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @ViewChildren("proofSchoolDropdownOne") public proofSchoolDropdownOne!: QueryList<DropDownListComponent>;  @Input() data!: any;
   @Input() hasNoIncome!: boolean;
@@ -59,6 +60,8 @@ export class IncomeListComponent implements OnInit {
   incomeProfilePhotoSubject = new Subject();
   public uploadFileRestrictions: UploadFileRistrictionOptions =
     new UploadFileRistrictionOptions();
+    incomeListSubscription = new Subscription();
+    incomeListProfilePhotoSubject = new Subject();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -177,6 +180,10 @@ export class IncomeListComponent implements OnInit {
       });
       this.cdr.detectChanges();
     }
+}
+
+ngOnDestroy(): void {
+  this.incomeListSubscription?.unsubscribe();
 }
   /** Private methods **/
   public onProofSchoolDropdownOneClose(event: any , index : any) {
@@ -358,9 +365,12 @@ onIncomeActionClicked(
   }
 
   loadDependents(){
-    this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
+    this.incomeListSubscription = this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
       if(response&&response.length>0){
         this.dependentsProofofSchools=response;
+        if(this.dependentsProofofSchools?.data){
+          this.loadDistinctIncomeUserIdsAndProfilePhoto(this.dependentsProofofSchools?.data);
+        }
         this.cdr.detectChanges();
       }
       else{
@@ -368,6 +378,21 @@ onIncomeActionClicked(
       }
     })
   }
+
+  loadDistinctIncomeUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.incomeListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  } 
 
  removeDependentsProofofSchoool(documentid: string){
     if (documentid) {
