@@ -94,7 +94,28 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     'totalRecords',
     'totalFailed'
   ];
-  public statusArray = ["Failed", "Success", "Partial"]
+  public statusArray= [
+    {
+        "lovCode": "SUCCESS",
+        "lovDesc": "Success",
+    },
+    {
+        "lovCode": "IN_PROGRESS",
+        "lovDesc": "In-Progress",
+    },
+    {
+        "lovCode": "FAILED",
+        "lovDesc": "Failed",
+    },
+    {
+        "lovCode": "Partial",
+        "lovDesc": "Partial",
+    },
+    {
+        "lovCode": "PENDING",
+        "lovDesc": "Pending",
+    },
+]
   selectedSearchColumn: string = '';
   private searchSubject = new Subject<string>();
   sortColumn = 'interface';
@@ -282,7 +303,7 @@ public onDetailExpand(e: any): void {
     this.sortValue,
     this.sortType,
     JSON.stringify({ logic: 'and', filters: [] }));
-   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.interfaceTypeCode,e.dataItem.entityTypeCode, param);
+   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.interfaceTypeCode,e.dataItem.processTypeCode, param);
 
   }
   restGrid() {

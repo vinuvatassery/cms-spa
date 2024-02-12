@@ -93,7 +93,9 @@
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-dropdownlist 
             [data]="statusArray" 
-            [value]="statusFilter"
+            textField="lovDesc"
+            valueField="lovCode"
+            [valuePrimitive]="true"
             (valueChange)="dropdownFilterChange('status',$event, filterService)"
             >
             </kendo-dropdownlist>
