@@ -2,21 +2,19 @@
 
   <section class="app-l-mainTittle justify-content-between">
     <div>
-      <h1 class="maintitle_withicon text-bold">
+      <h2 class="maintitle_withicon text-bold">
         <span aria-label="Clients" class="material-icons sidebar-menu_icon " aria-hidden="true"> home </span>
         Welcome back, {{ onGetUser()?.name }}
-      </h1>
+      </h2>
+
+      <kendo-dropdownlist class="mt-1" [fillMode]="formUiStyle.dropDownFillMode" style="width: auto;"
+        placeholder="DashBoard" required [data]="userDashBoardsListData$ | async" textField="dashboardDesc"
+        valueField="dashboardId" [valuePrimitive]="true" [(ngModel)]="selectedDashBoard"
+        (selectionChange)="dashBoardChange($event)">
+      </kendo-dropdownlist>
 
     </div>
-    <div class="flex-col">
-      <kendo-floatinglabel text="DashBoard">   
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
-        placeholder="DashBoard"  required [data]="userDashBoardsListData$ | async"
-            textField="dashboardDesc" valueField="dashboardId" [valuePrimitive]="true"
-            [(ngModel)]="selectedDashBoard" (selectionChange)="dashBoardChange($event)">
-        </kendo-dropdownlist>
-      </kendo-floatinglabel>     
-    </div>
+
 
     <div>
       <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
@@ -58,28 +56,27 @@
   <div class="add-more-wrapper" *ngIf="isReorderEnable">
     <h2 class="mb-2">{{isReorderEnable ? "Add More Widgets" : ""}} </h2>
     <div class="add-more-container">
-      <gridster [options]="addWidgetConfiguration" *ngIf="addWidgetConfiguration" class="add-gridster">
-        <gridster-item *ngFor="let item of dashboardAllWidgetsListData$ | async"
-          [item]="item?.widgetProperties?.componentData">
+      <div *ngIf="addWidgetConfiguration" class="add-gridster">
 
-          <div class="add-more-list" >
 
-            <div class="chart-view-point">
-              <div class="dashboard-cards-wrapper">
+        <div class="add-more-list" *ngFor="let item of dashboardAllWidgetsListData$ | async">
 
-                <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
-                  [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
+          <div class="chart-view-point">
+            <div class="dashboard-cards-wrapper">
 
-                </ndc-dynamic>
-              </div>
+              <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
+                [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
+
+              </ndc-dynamic>
             </div>
-            <button kendoRippleContainer class="bottom-title"> <span class="material-icons" (click)="addItem(item)">
-                add_circle </span>
-              <h2>{{item?.widgetDesc}}</h2>
-            </button>
           </div>
-        </gridster-item>
-      </gridster>
+          <button kendoRippleContainer class="bottom-title" (click)="addItem(item)"> <span class="material-icons">
+              add_circle </span>
+            <h2>{{item?.widgetDesc}}</h2>
+          </button>
+        </div>
+
+      </div>
     </div>
   </div>
 
