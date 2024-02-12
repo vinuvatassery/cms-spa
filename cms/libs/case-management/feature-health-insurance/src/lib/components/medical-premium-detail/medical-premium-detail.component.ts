@@ -1217,6 +1217,23 @@ export class MedicalPremiumDetailComponent implements OnInit, OnDestroy, AfterVi
       this.medicareInsuranceInfoCheck = true;
     }
     (this.healthInsuranceForm.controls['newOthersCoveredOnPlan'] as FormArray).clear();
+
+    if(this.healthInsuranceForm.controls['insuranceType'].value === HealthInsurancePlan.Cobra){
+      this.healthInsuranceForm.controls['insuranceEndDate'].setValue(this.getCurrentYearEndDate());
+    }
+  }
+
+  getCurrentYearEndDate(): Date {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const nextYear = currentYear + 1;
+
+    // Setting the date to December 31st of the current year
+    const endOfYearDate = new Date(nextYear, 0, 0);
+
+    // Subtracting one day to get the last day of the current year
+    endOfYearDate.setDate(endOfYearDate.getDate() - 1);
+    return endOfYearDate;
   }
 
   onModalCloseClicked() {
