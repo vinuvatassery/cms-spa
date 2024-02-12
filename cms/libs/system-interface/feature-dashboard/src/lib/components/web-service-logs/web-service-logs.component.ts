@@ -69,7 +69,22 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
   // Filtering Variables
   statusFilter = '';
-  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
+  processFilter = '';
+   public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
+   public statusArrayDesc = ["Failed", "Success", "In Progress"]
+  // public statusArray1 = [{
+  //   "lovCode": "FAILED",
+  //   "lovDesc": "Failed"
+  // }, {
+  //   "lovCode": "SUCCESS",
+  //   "lovDesc": "Success"
+  // },
+  // {
+  //   "lovCode": "IN_PROGRESS",
+  //   "lovDesc": "In Progress"
+  // }]
+  public processLovs = ["CLIENT_ENROLLMENT_REQUEST", "ELIGIBILITY_CHANGE_REQUEST", "CLIENT_INFO_CHANGED", "CARD_REQUEST"]
+  public processArray = ["New Enrollment", "Eligibility Change", "Maintanance", "Card Request"]
   interfaceProcessBatchFilter = '';
   dateColumns = ['startDate'];
 
@@ -128,7 +143,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
 
- 
+
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.sortType = "desc"
@@ -203,7 +218,10 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     filterService: FilterService
   ): void {
     if (field === 'status') {
-      this.statusFilter = value;
+      this.statusFilter = this.statusArray[this.statusArrayDesc.indexOf(value)];
+    }
+    if (field === 'process') {
+      this.processFilter = value;
     }
 
     filterService.filter({
