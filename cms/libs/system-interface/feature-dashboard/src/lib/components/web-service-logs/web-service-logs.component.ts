@@ -69,7 +69,10 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
   // Filtering Variables
   statusFilter = '';
+  processFilter = '';
   public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
+  public statusArrayDesc = ["Failure", "Successful", "In Progress"]
+  public processArray = ["New Enrollment", "Eligibility Change", "Maintanance", "Card Request"]
   interfaceProcessBatchFilter = '';
   dateColumns = ['startDate'];
 
@@ -118,17 +121,31 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   loadListGrid() {
+
+    if(this.filter)
+    {
+      this.filter.forEach((element: any) => {
+        const statusFilter = element.filters.find((x: any) => x.field === 'status')
+        if (statusFilter && !statusFilter?.value.includes('@')) {
+          const v = this.statusArrayDesc.indexOf(statusFilter.value);
+          statusFilter.value = this.statusArray[v]
+        }
+      });
+    }
+
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
+
+
     this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, !this.displayAll, param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
 
- 
+
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.sortType = "desc"
@@ -204,6 +221,9 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   ): void {
     if (field === 'status') {
       this.statusFilter = value;
+    }
+    if (field === 'process') {
+      this.processFilter = value;
     }
 
     filterService.filter({
