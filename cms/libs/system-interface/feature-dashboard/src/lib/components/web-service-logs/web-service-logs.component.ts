@@ -70,20 +70,8 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   // Filtering Variables
   statusFilter = '';
   processFilter = '';
-   public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
-   public statusArrayDesc = ["Failed", "Success", "In Progress"]
-  // public statusArray1 = [{
-  //   "lovCode": "FAILED",
-  //   "lovDesc": "Failed"
-  // }, {
-  //   "lovCode": "SUCCESS",
-  //   "lovDesc": "Success"
-  // },
-  // {
-  //   "lovCode": "IN_PROGRESS",
-  //   "lovDesc": "In Progress"
-  // }]
-  public processLovs = ["CLIENT_ENROLLMENT_REQUEST", "ELIGIBILITY_CHANGE_REQUEST", "CLIENT_INFO_CHANGED", "CARD_REQUEST"]
+  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
+  public statusArrayDesc = ["Failure", "Successful", "In Progress"]
   public processArray = ["New Enrollment", "Eligibility Change", "Maintanance", "Card Request"]
   interfaceProcessBatchFilter = '';
   dateColumns = ['startDate'];
@@ -133,12 +121,26 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   loadListGrid() {
+
+    if(this.filter)
+    {
+      this.filter.forEach((element: any) => {
+        const statusFilter = element.filters.find((x: any) => x.field === 'status')
+        if (statusFilter && !statusFilter?.value.includes('@')) {
+          const v = this.statusArrayDesc.indexOf(statusFilter.value);
+          statusFilter.value = this.statusArray[v]
+        }
+      });
+    }
+
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
+
+
     this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, !this.displayAll, param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
@@ -219,7 +221,6 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   ): void {
     if (field === 'status') {
       this.statusFilter = value;
-      //this.statusFilter = this.statusArray[this.statusArrayDesc.indexOf(value)];
     }
     if (field === 'process') {
       this.processFilter = value;
