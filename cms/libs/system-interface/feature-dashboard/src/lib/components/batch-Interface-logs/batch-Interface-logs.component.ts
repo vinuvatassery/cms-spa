@@ -115,6 +115,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   ) { }
   processTypeCode:string='';
   ngOnInit(): void {
+    this.sortType = 'desc';
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -219,68 +220,68 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   }
   onSearch(searchValue: any) {
 
-    const isDateSearch = searchValue.includes('/');
-    this.showDateSearchWarning =
-      isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
-    searchValue = this.formatSearchValue(searchValue, isDateSearch);
-    if (isDateSearch && !searchValue) return;
-    this.searchSubject.next(searchValue);
+  const isDateSearch = searchValue.includes('/');
+  this.showDateSearchWarning =
+    isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
+  searchValue = this.formatSearchValue(searchValue, isDateSearch);
+  if (isDateSearch && !searchValue) return;
+  this.searchSubject.next(searchValue);
+}
+performSearch(data: any) {
+  this.defaultGridState();
+  const operator = [...this.numericColumns, ...this.dateColumns].includes(
+    this.selectedSearchColumn?? 'interface'
+  )
+    ? 'eq'
+    : 'startswith';
+  if (
+    this.dateColumns.includes(this.selectedSearchColumn) &&
+    !this.isValidDate(data) &&
+    data !== ''
+  ) {
+    return;
   }
-  performSearch(data: any) {
-    this.defaultGridState();
-    const operator = [...this.numericColumns, ...this.dateColumns].includes(
-      this.selectedSearchColumn ?? 'interface'
-    )
-      ? 'eq'
-      : 'startswith';
-    if (
-      this.dateColumns.includes(this.selectedSearchColumn) &&
-      !this.isValidDate(data) &&
-      data !== ''
-    ) {
-      return;
-    }
-    if (
-      this.numericColumns.includes(this.selectedSearchColumn) &&
-      isNaN(Number(data))
-    ) {
-      return;
-    }
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedSearchColumn ?? 'interface',
-              operator: operator,
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
-    const stateData = this.state;
-    stateData.filter = this.filterData;
-    this.dataStateChange(stateData);
+  if (
+    this.numericColumns.includes(this.selectedSearchColumn) &&
+    isNaN(Number(data))
+  ) {
+    return;
   }
-  defaultGridState() {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-      filter: { logic: 'and', filters: [] },
-    };
-  }
-  public onDetailExpand(e: any): void {   
-    const param = new GridFilterParam(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType,
-      JSON.stringify({ logic: 'and', filters: [] }));
-    this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.field, e.dataItem.interfaceTypeCode, 'RECORD', param);
+  this.filterData = {
+    logic: 'and',
+    filters: [
+      {
+        filters: [
+          {
+            field: this.selectedSearchColumn ?? 'interface',
+            operator: operator,
+            value: data,
+          },
+        ],
+        logic: 'and',
+      },
+    ],
+  };
+  const stateData = this.state;
+  stateData.filter = this.filterData;
+  this.dataStateChange(stateData);
+}
+defaultGridState() {
+  this.state = {
+    skip: 0,
+    take: this.pageSizes[0]?.value,
+    sort: this.sort,
+    filter: { logic: 'and', filters: [] },
+  };
+}
+public onDetailExpand(e: any): void {
+  const param = new GridFilterParam(
+    this.state?.skip ?? 0,
+    this.state?.take ?? 0,
+    this.sortValue,
+    this.sortType,
+    JSON.stringify({ logic: 'and', filters: [] }));
+   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.interfaceTypeCode,e.dataItem.processTypeCode, param);
 
   }
   restGrid() {

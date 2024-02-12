@@ -110,9 +110,9 @@ export class SystemInterfaceDashboardFacade {
     });
   }
 
-  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, entityTypeCode: string, params: any): void {
+  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string, params: any): void {
     this.showLoader();
-    this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, entityTypeCode, params).subscribe({
+    this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode, params).subscribe({
       next: (batchlogExceptionResponse: any) => {
         const gridView: any = {
           data: batchlogExceptionResponse['items'],
