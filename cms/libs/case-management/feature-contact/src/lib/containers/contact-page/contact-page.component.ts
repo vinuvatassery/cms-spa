@@ -75,6 +75,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   oldCellPhone?: ClientPhone;
   oldWorkPhone?: ClientPhone;
   oldOtherPhone?: ClientPhone;
+  oldPhoneNumber?: ClientPhone;
   oldEmail?: ClientEmail;
   oldPreferredContact?: string;
   oldPreferredContactMethodName?: string = '';
@@ -1146,6 +1147,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.oldCellPhone = data?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
           this.oldWorkPhone = data?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
           this.oldOtherPhone = data?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
+          this.oldPhoneNumber = {
+            applicableFlag : StatusFlag.Yes,
+            smsTextConsentFlag : data?.friendsOrFamilyContact?.smsTextConsentFlag,
+            detailMsgConsentFlag : data?.friendsOrFamilyContact?.detailMsgConsentFlag,
+            phoneNbr : data ?.friendsOrFamilyContact?.contactPhoneNbr
+          };
           this.oldEmail = data?.email;
           if (this.oldHomePhone?.preferredFlag === StatusFlag.Yes) {
             this.oldPreferredContactMethodName = 'Home Phone';
@@ -1215,7 +1222,16 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (phone?.applicableFlag === StatusFlag.No) {
       this.contactInfoForm.get(`${formGroupName}.applicableFlag`)?.patchValue(phone?.applicableFlag === StatusFlag.No);
     }
+    if(formGroupName === 'familyAndFriendsContact'){
+      if(phone?.phoneNbr !== null && phone?.phoneNbr !== '' && phone?.phoneNbr !== undefined){
+        this.contactInfoForm?.get(`${formGroupName}.smsTextConsentFlag`)?.enable();
+        this.contactInfoForm?.get(`${formGroupName}.detailMsgConsentFlag`)?.enable();
+      }     
+      this.contactInfoForm.get(`${formGroupName}.contactPhoneNbr`)?.patchValue(phone?.phoneNbr);
+    }
+    else{
     this.contactInfoForm.get(`${formGroupName}.phoneNbr`)?.patchValue(phone?.phoneNbr);
+    }
     this.contactInfoForm.get(`${formGroupName}.detailMsgConsentFlag`)?.patchValue(phone?.detailMsgConsentFlag === StatusFlag.Yes);
     this.contactInfoForm.get(`${formGroupName}.smsTextConsentFlag`)?.patchValue(phone?.smsTextConsentFlag === StatusFlag.Yes);
     if (formGroupName === 'otherPhone') {
@@ -2055,8 +2071,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.updateValueAndValidity();
       if(this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.value === ''
         ||this.contactInfoForm?.get('familyAndFriendsContact.contactPhoneNbr')?.value === null){
-        this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
-        this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();
+          this.contactInfoForm.get('familyAndFriendsContact.smsTextConsentFlag')?.patchValue(false);
+          this.contactInfoForm.get('familyAndFriendsContact.detailMsgConsentFlag')?.patchValue(false);
+          this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
+          this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();       
       }
       else{
         this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.enable();
