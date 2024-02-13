@@ -40,6 +40,7 @@ export class VendorRefundPageComponent
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
   vendorRefundAllPaymentsGridLists$ = this.financialVendorRefundFacade.vendorRefundAllPaymentsData$;
+  vendorRefundListProfilePhoto$ = this.financialVendorRefundFacade.vendorRefundListProfilePhotoSubject;
 
   //provider panel
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })

@@ -9,6 +9,7 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { FinancialVendorRefundDataService } from '../../infrastructure/financial-management/vendor-refund.data.service';
 import { Pharmacy } from '../../entities/client-pharmacy';
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorRefundFacade {
@@ -144,6 +145,7 @@ export class FinancialVendorRefundFacade {
   insurancevendors$ = this.insurancevendorsSubject.asObservable();
   public vendorsSubject = new Subject<any>;
   vendors$ = this.vendorsSubject.asObservable();
+  vendorRefundListProfilePhotoSubject = new Subject();
 
   /** Private properties **/
 
@@ -175,7 +177,8 @@ export class FinancialVendorRefundFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   /** Public methods **/
@@ -465,6 +468,7 @@ this.loaderService.show();
           total: dataResponse["totalCount"]
         };
         this.vendorRefundProcessDataSubject.next(gridView);
+        this.loadVendorRefundDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
         this.hideLoader();
       },
       error: (err) => {
@@ -473,6 +477,20 @@ this.loaderService.show();
       },
     });
   }
+
+  loadVendorRefundDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   deleteRefunds(paymentRequestIds: string[]) {
     this.showLoader();

@@ -55,6 +55,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   @Input() ddlStates$ :any
   @Input() paymentMethodCode$ :any
   @Input() exportButtonShow$: any
+  @Input() vendorRefundListProfilePhoto$!: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   isColumnsReordered = false;
@@ -220,7 +221,6 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
-  vendorRefundProcessListProfilePhotoSubject = new Subject();
 
   /** Constructor **/
   constructor(
@@ -229,7 +229,6 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly route: Router,
-    private readonly userManagementFacade: UserManagementFacade,
   ) {
     
     this.selectableSettings = { 
@@ -242,24 +241,8 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   ngOnInit(){
     this.vendorRefundProcessGridListsSub = this.vendorRefundProcessGridLists$.subscribe((res: any) => {
       this.vendorRefundProcessGridLists = res;
-      this.loadDistinctUserIdsAndProfilePhoto(this.vendorRefundProcessGridLists);
     })
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.vendorRefundProcessListProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   ngOnDestroy(){
     this.vendorRefundProcessGridListsSub?.unsubscribe();
