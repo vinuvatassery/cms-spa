@@ -70,7 +70,7 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
        break;
     case ColumnNames.RefundedAmount:
        item.refundedAmountError = event && event <=0
-       item.refundAmountExeedError = item.totalAmount < event;
+       item.refundAmountExeedError = item.amountDue < event;
      break;
     }
   }
