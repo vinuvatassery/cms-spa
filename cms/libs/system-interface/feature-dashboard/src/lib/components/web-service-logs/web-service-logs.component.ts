@@ -120,18 +120,29 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
   }
 
-  loadListGrid() {
+  updateStatusFilterValue(filterGroups: any[], statusArray: any[], statusArrayDesc: any[]): void {
+    if (!filterGroups || !Array.isArray(filterGroups)) return;
 
-    if(this.filter)
-    {
-      this.filter.forEach((element: any) => {
-        const statusFilter = element.filters.find((x: any) => x.field === 'status')
-        if (statusFilter && !statusFilter?.value.includes('@')) {
-          const v = this.statusArrayDesc.indexOf(statusFilter.value);
-          statusFilter.value = this.statusArray[v]
-        }
-      });
-    }
+    filterGroups.forEach((filterGroup: any) => {
+      // If filterGroup is null, or it doesn't have a 'filters' property, or 'filters' is not an array, exit this iteration.
+      if (!filterGroup || !filterGroup.filters || !Array.isArray(filterGroup.filters)) return;
+
+      // Find the status filter within the current filter group.
+      const statusFilter = filterGroup.filters.find((filter: any) => filter && filter.field === 'status');
+
+      if (!statusFilter || !statusArray || !Array.isArray(statusArray)) return;
+
+      const statusIndex = statusArrayDesc.indexOf(statusFilter.value);
+
+      // If statusIndex is valid , update the status filter value.
+      if (statusIndex !== -1) {
+        statusFilter.value = statusArray[statusIndex];
+      }
+    });
+  }
+
+  loadListGrid() {
+    this.updateStatusFilterValue(this.filter, this.statusArray, this.statusArrayDesc);
 
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
