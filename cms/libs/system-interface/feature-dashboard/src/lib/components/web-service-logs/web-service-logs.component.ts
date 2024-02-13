@@ -72,7 +72,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   processFilter = '';
   public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
   public statusArrayDesc = ["Failure", "Successful", "In Progress"]
-  public processArray = ["New Enrollment", "Eligibility Change", "Maintanance", "Card Request"]
+  public processArray = ["New Enrollment", "Eligibility Change", "Maintenance", "Card Request"]
   interfaceProcessBatchFilter = '';
   dateColumns = ['startDate'];
 
