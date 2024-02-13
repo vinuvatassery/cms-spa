@@ -18,7 +18,7 @@ import { StatusFlag } from '@cms/shared/ui-common';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PaymentAddressesComponent implements OnDestroy{
+export class PaymentAddressesComponent{
   @ViewChild(GridComponent) gridConfig!: GridComponent;
   @Input() vendorId: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -62,8 +62,7 @@ export class PaymentAddressesComponent implements OnDestroy{
   searchValue = "";
   columnName: any = "";
   dateFormat = this.configurationProvider.appSettings.dateFormat;
-  paymentAddressSubscription  = new Subscription();
-  paymentAddressSubject  = new Subject();
+  paymentAddressProfilePhoto$ = this.paymentBillingFacade.paymentAddressProfilePhotoSubject;
 
   column:any =
   {
@@ -157,8 +156,7 @@ filter: any = [];
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
     public readonly  intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider,
-    private readonly userManagementFacade: UserManagementFacade)
+    private readonly configurationProvider: ConfigurationProvider,)
     { }
 
   ngOnInit(): void {
@@ -177,35 +175,8 @@ filter: any = [];
     this.getTabCode();
     this.loadPaymentsAddressListGrid();
     this.checkMailCode();
-    this.addPaymentAddressSubscripion();
   }
 
-  addPaymentAddressSubscripion() {
-    this.paymentAddressSubscription = this.paymentsAddressGridView$.subscribe((payment: any)=>{
-      if(payment?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(payment?.data);
-      }
-    });
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.paymentAddressSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
-
-  ngOnDestroy(): void {
-    this.paymentAddressSubscription?.unsubscribe();
-  }
 
   private checkMailCode() {
     this.vendorcontactFacade.mailCodes$.subscribe((mailCode: any) => {
@@ -254,9 +225,6 @@ filter: any = [];
     this.paymentBillingFacade.loadPaymentsAddressListGrid(paymentAddressListParams);
   }
 
-
-
-
   clickOpenAddEditPaymentAddressDetails() {
     this.addEditTitleText = 'Add Payment Address'
     this.manufacturerAddEditTitleText = 'Add Address'
@@ -300,8 +268,6 @@ filter: any = [];
   clickOpenDeactivatePaymentAddressDetails() {
     this.isPaymentAddressDeactivateShow = true;
   }
-
-
 
   clickCloseDeactivatePaymentAddress(isSuccess: boolean): void {
     this.isPaymentAddressDeactivateShow = false;

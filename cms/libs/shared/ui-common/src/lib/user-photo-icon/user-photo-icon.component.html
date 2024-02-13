@@ -1,4 +1,4 @@
-      <div *ngIf="userByIdSubject">
+      <div *ngIf="userByIdSubject" class="d-in_block">
         <button *ngIf="linkType === 'profileIcon'"
               kendoButton
               [primary]="true"
@@ -34,10 +34,15 @@
             <kendo-popover
               #onUserProfileDetailsHovered
               width="330"
-              position="left"
+              [position]="position"
+              [callout]="callout"
             >
               <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card [userId]="userId" [userProfilePhotoExists]="userProfilePhotoExists"></common-user-profile-card>
+                <common-user-profile-card [userId]="userId" 
+                [userProfilePhotoExists]="userProfilePhotoExists"
+                [reassign]="reassign"
+                [clientName]="clientName"
+                [clientCaseId]="clientCaseId"></common-user-profile-card>
               </ng-template>
             </kendo-popover>
           </div>

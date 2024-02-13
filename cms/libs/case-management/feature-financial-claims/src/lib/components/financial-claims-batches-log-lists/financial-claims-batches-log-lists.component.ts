@@ -87,6 +87,7 @@ export class FinancialClaimsBatchesLogListsComponent
   @Input() exportButtonShow$: any;
   @Input() letterContentList$: any;
   @Input() letterContentLoader$: any;
+  @Input() claimsBathcPaymentProfilePhoto$: any;
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
@@ -267,7 +268,6 @@ export class FinancialClaimsBatchesLogListsComponent
     private readonly intl: IntlService,
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   ngOnInit(): void {
@@ -334,25 +334,7 @@ export class FinancialClaimsBatchesLogListsComponent
         this.markAsChecked(response.data);
       }
       this.batchLogPrintAdviceLetterPagedList = response;
-      if(this.totalRecord){
-        this.loadDistinctUserIdsAndProfilePhoto(response?.data);
-      }
     })
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.claimsBathcPaymentProfileSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
   }
 
   ngOnChanges(): void {

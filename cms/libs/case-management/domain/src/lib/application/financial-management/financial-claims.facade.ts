@@ -21,6 +21,7 @@ import { GridFilterParam } from '../../entities/grid-filter-param';
 import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
 import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -201,6 +202,9 @@ export class FinancialClaimsFacade {
 
   private warrantNumberChangeLoaderSubject = new Subject<any>();
   warrantNumberChangeLoader$ = this.warrantNumberChangeLoaderSubject.asObservable();
+
+  claimsRecentClaimsProfilePhotoSubject = new Subject();
+  claimsBathcPaymentProfilePhotoSubject = new Subject();
   /** Private properties **/
 
   /** Public properties **/
@@ -241,6 +245,7 @@ export class FinancialClaimsFacade {
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
     public intl: IntlService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {}
 
   /** Public methods **/
@@ -551,6 +556,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
             total: dataResponse['totalCount'],
           };
           this.recentClaimListDataSubject.next(gridView);
+          this.loadRecentClaimsDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         }
       },
       error: (err) => {
@@ -558,6 +564,21 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       },
     });
   }
+
+  loadRecentClaimsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.by))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.claimsRecentClaimsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  }
+
   loadServicesByPayment(paymentId: string, params:GridFilterParam, claimType:string){
     return this.financialClaimsDataService.loadServicesByPayment(paymentId, params, claimType);
   }
@@ -571,8 +592,8 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
           data: dataResponse['items'],
           total: dataResponse?.totalCount,
         };
-
         this.paymentsByBatchDataSubject.next(gridView);
+        this.loadClaimsBatchDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.paymentByBatchGridLoaderSubject.next(false);
       },
       error: (err) => {
@@ -580,6 +601,20 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
         this.paymentByBatchGridLoaderSubject.next(false);
       },
     });
+  }
+
+  loadClaimsBatchDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.claimsBathcPaymentProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
     loadBatchName(batchId: string){

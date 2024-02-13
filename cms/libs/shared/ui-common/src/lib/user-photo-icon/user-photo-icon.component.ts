@@ -1,5 +1,6 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { Position } from '@progress/kendo-angular-tooltip';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -15,6 +16,11 @@ export class UserPhotoIconComponent implements OnChanges, OnDestroy {
   @Input() userProfilePhotoExists!: any;
   @Input() linkType!: any;
   @Input() userPhotos$!: any;
+  @Input() reassign: boolean = false;
+  @Input() clientName!: string;
+  @Input() clientCaseId!: string;
+  @Input() position: any = "left";
+  @Input() callout: boolean = true;
   userFullName!: any;
   imageLoaderVisible$ = new BehaviorSubject(true);
   userImageSubject = new Subject<any>();

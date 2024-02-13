@@ -1,18 +1,20 @@
 <div class="app-l-inner-rapper pt-0 pb-0" kendoRippleContainer>
-  <div class="assigned-to-right"
-      kendoPopoverAnchor
-      [popover]="userCard"
-      showOn="hover" *ngIf="assignedToVisibility$ | async">
+  <div class="assigned-to-right" *ngIf="assignedToVisibility$ | async">
    <span> Assigned To</span>
    <common-user-photo-icon  
    [userId]="caseWorkerId" 
    [userFirstName]="userFirstName"
    [userLastName]="userLastName"
+   [reassign]=true
+   [clientName]="loadedClientHeader?.clientFullName"
+   [clientCaseId]="clientCaseId"
    [userProfilePhotoExists]="isUserProfilePhotoExist"
    [linkType]="'profileIcon'"
-   [userPhotos$]="userprofileHeaderPhotoSubject"></common-user-photo-icon>
+   [userPhotos$]="userprofileHeaderPhotoSubject"
+   [position]="'bottom'"
+   [callout]="false"></common-user-photo-icon>
   </div>
-  <kendo-popover #userCard width="330" position="bottom" [callout]="false">
+  <!-- <kendo-popover #userCard width="330" position="bottom" [callout]="false">
     <ng-template kendoPopoverBodyTemplate>
       <common-user-profile-card
         [userId]="caseWorkerId"
@@ -21,7 +23,7 @@
         [clientCaseId]="clientCaseId">
       </common-user-profile-card>
     </ng-template>
-  </kendo-popover>
+  </kendo-popover> -->
 
   <!-- Main Title Section -->
   <section class="app-l-mainTittle" *ngIf="loadedClientHeader?.clientFullName">

@@ -234,11 +234,11 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   @Input() paymentMethodCode$: any
   @Input() paymentStatusCode$: any
   @Input() healthInsuranceTypeLov$: any
+  @Input() premiumProcessListProfilePhoto$!: any;
   paymentMethodFilter = '';
   paymentTypeFilter = '';
   paymentStatusFilter = '';
   healthInsuranceValue = '';
-  premiumProcessListProfilePhotoSubject = new Subject();
   /** Constructor **/
   constructor(
     private financialPremiumsFacade: FinancialPremiumsFacade,
@@ -246,7 +246,6 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     private dialogService: DialogService,
     private readonly route: Router,
     private readonly ref: ChangeDetectorRef,
-    private readonly userManagementFacade: UserManagementFacade,
   ) {
 
     this.selectableSettings = {
@@ -275,7 +274,6 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
       this.gridFinancialPremiumsProcessDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
-        this.loadDistinctUserIdsAndProfilePhoto(data?.data);
       }
       this.financialPremiumsProcessGridLists = this.gridDataResult?.data;
       if(this.isSendReportOpened === false){
@@ -305,20 +303,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     this.ref.detectChanges();
   }
 
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.createdId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.premiumProcessListProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
+
 
   pageNumberAndCountChangedInSelectAll() {
     //If selecte all header checked and either the page count or the page number changed

@@ -60,11 +60,12 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   recentClaimsGridListsSubscription = new Subscription();
   userMgmtProfilePhotoSubscription = new Subscription();
   paymentTypeFilter = '';
+  claimsRecentClaimsProfilePhoto$ = this.financialClaimsFacade.claimsRecentClaimsProfilePhotoSubject;
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private readonly userManagementFacade: UserManagementFacade,
+
   ) { }
 
   ngOnInit(): void {
@@ -220,25 +221,7 @@ loadFinancialRecentClaimListGrid() {
       if (data?.total >= 0 || data?.total === -1) {
         this.isFinancialClaimsRecentClaimGridLoaderShow = false;
       }
-      if(this.gridDataResult?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(this.gridDataResult?.data);
-      }
     });
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.by))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.claimsRecentClaimsProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
   }
 
   ngOnDestroy(): void {

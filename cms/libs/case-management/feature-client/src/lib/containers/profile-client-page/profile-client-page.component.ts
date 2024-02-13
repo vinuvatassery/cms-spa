@@ -110,6 +110,7 @@ export class ProfileClientPageComponent implements OnInit {
             caseManagerFirstName: clientData?.caseManagerFirstName,
             caseManagerLastName: clientData?.caseManagerLastName,
             isCaseManagerProfilePhotoExist: clientData?.isCaseManagerProfilePhotoExist,
+            creationTime: clientData?.creationTime,
           }
           this.loadRamSellInfo(client.clientId);
           this.clientSubject.next(client);

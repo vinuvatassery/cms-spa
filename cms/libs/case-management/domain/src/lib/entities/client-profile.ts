@@ -46,4 +46,5 @@ export class ClientProfile {
      caseManagerFirstName : string |null=null;
      caseManagerLastName : string |null=null;
      isCaseManagerProfilePhotoExist : boolean |null=null;
+     creationTime : string |null=null;
 }

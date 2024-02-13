@@ -67,6 +67,7 @@ export class FinancialPremiumsPageComponent implements OnInit {
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
   paymentStatusCode$ = this.lovFacade.paymentStatus$;
   exportButtonShow$ = this.documentFacade.exportButtonShow$;
+  premiumProcessListProfilePhoto$ = this.financialPremiumsFacade.premiumProcessListProfilePhotoSubject;
 
 
   healthInsuranceTypeLov$ = this.lovFacade.insuranceTypelov$;

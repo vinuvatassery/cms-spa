@@ -135,7 +135,7 @@
       </table>
       <!-- Last Updated by -->
       <p class="mt-1 mb1">
-        <span class="badge-dot-info bdi-left"></span> Last Updated on {{clientProfile?.lastModificationTime | date:'MM/dd/yyyy'}}
+        <span class="badge-dot-info bdi-left"></span> Last Updated on {{(clientProfile?.lastModificationTime ?? clientProfile?.creationTime) | date:'MM/dd/yyyy'}}
         by
         <common-user-photo-icon 
         [userId]="clientProfile?.creatorId" 
