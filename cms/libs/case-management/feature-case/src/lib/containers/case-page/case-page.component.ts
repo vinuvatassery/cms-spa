@@ -34,6 +34,7 @@ export class CasePageComponent implements OnInit {
   totalClientsCount!:number | null;
   moduleCode:any = ModuleCode;
   caseStatus: string = '';
+  group :string = ''
   /** Public properties for case popup**/
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
@@ -89,11 +90,15 @@ export class CasePageComponent implements OnInit {
         case CaseScreenTab.CER_TRACKING.toString():
           this.selectedTab = CaseScreenTab.CER_TRACKING;
           break;
+          case CaseScreenTab.ALL.toString():
+            this.selectedTab = CaseScreenTab.ALL;
+            break;
         default:
           this.selectedTab = CaseScreenTab.MY_CASES;
           break;
       } 
     this.caseStatus = this.route.snapshot.queryParams['casestatus']
+    this.group = this.route.snapshot.queryParams['group']
   }
   /** Getters **/
   get caseScreenTab(): typeof CaseScreenTab {
