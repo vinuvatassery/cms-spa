@@ -5,7 +5,7 @@ import { FilterService,GridDataResult,ColumnVisibilityChangeEvent, ColumnCompone
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, Subscription } from 'rxjs';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-recent-claims-list',
   templateUrl: './financial-claims-recent-claims-list.component.html',

@@ -1,15 +1,14 @@
-import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList, ViewChild, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component,ChangeDetectorRef,Input, ViewChildren, QueryList, ViewChild } from '@angular/core';
 import { PaymentsFacade, BillingAddressFacade, VendorContactsFacade, ContactResponse, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
-import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
-import { Subject, Subscription, take } from 'rxjs';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { Subscription, take } from 'rxjs';
+import { LovFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { StatusFlag } from '@cms/shared/ui-common';
 
 
 @Component({

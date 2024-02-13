@@ -9,7 +9,6 @@ import {
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserManagementFacade, UserDefaultRoles } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'common-user-profile-card',

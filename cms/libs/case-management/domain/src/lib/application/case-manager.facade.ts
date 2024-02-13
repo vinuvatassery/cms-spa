@@ -8,7 +8,7 @@ import { CaseManagerDataService } from '../infrastructure/case-manager.data.serv
 import { WorkflowFacade } from './workflow.facade';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { SnackBar, StatusFlag } from '@cms/shared/ui-common';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Injectable({ providedIn: 'root' })
 export class CaseManagerFacade {

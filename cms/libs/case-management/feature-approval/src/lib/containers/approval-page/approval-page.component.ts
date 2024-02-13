@@ -26,7 +26,6 @@ import {
   ReminderNotificationSnackbarService,
   ReminderSnackBarNotificationType,
   DocumentFacade,
-  ApiType,
 } from '@cms/shared/util-core';
 import {
   NavigationMenuFacade,

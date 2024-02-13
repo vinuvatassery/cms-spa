@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 /** External libraries **/
 import {  BehaviorSubject, Subject } from 'rxjs';
 /** internal libraries **/

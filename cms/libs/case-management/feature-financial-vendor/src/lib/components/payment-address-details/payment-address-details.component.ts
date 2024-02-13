@@ -2,11 +2,10 @@ import { ChangeDetectionStrategy, OnInit, Component, EventEmitter, Output, Input
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AddressTypeCode, BillingAddressFacade, ContactFacade, FinancialVendorProviderTabCode, VendorContactsFacade } from '@cms/case-management/domain';
-import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag } from '@cms/shared/ui-common';
 import { LovFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { ActivatedRoute } from '@angular/router';
-import { StatusFlag } from '@cms/shared/ui-common';
 type NewType = LovFacade;
 
 @Component({

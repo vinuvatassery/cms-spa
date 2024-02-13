@@ -17,7 +17,7 @@ import {
   CaseFacade,
   ClientFacade
 } from '@cms/case-management/domain';
-import { BehaviorSubject, Observable, Subscription, first } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { Subject } from '@microsoft/signalr';

@@ -1,6 +1,5 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy } from '@angular/core';
-import { Position } from '@progress/kendo-angular-tooltip';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 
 @Component({
@@ -39,7 +38,9 @@ export class UserPhotoIconComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.profilePhotoSubscription?.unsubscribe();
+    if(this.profilePhotoSubscription){
+      this.profilePhotoSubscription.unsubscribe();
+    }
   }  
 
   addUserProfilePhotoSubscription(){

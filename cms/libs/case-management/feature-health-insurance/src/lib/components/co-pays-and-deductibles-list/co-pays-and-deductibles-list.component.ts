@@ -7,7 +7,7 @@ import {  HealthInsurancePolicyFacade, CaseFacade, ClientProfileTabs} from '@cm
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { Subject, Subscriber, Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-co-pays-and-deductibles-list',

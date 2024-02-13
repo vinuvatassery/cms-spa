@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 /** Facades **/
 import { State } from '@progress/kendo-data-query';
-import { first, map, Subject, Subscription } from 'rxjs';
+import { first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { CaseFacade } from '@cms/case-management/domain';

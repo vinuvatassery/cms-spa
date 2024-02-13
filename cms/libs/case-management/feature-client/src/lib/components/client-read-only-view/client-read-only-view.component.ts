@@ -8,13 +8,12 @@ import {
   PronounCode, TransGenderCode, ApplicantInfo,
   CaseFacade
 } from '@cms/case-management/domain';
-import { MaterialFormat, YesNoFlag } from '@cms/shared/ui-common';
+import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
 
 import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { Subject, Subscription, of } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { StatusFlag } from '@cms/shared/ui-common';
 import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-client-read-only-view',

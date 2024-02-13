@@ -19,7 +19,7 @@ import {
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
-import { Observable, Subject, Subscription, subscribeOn } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UserManagementFacade } from '@cms/system-config/domain';
