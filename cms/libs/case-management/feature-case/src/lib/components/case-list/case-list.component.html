@@ -234,15 +234,7 @@
         <ng-template kendoGridFilterMenuTemplate
           let-column="column"
           let-filter="filter"
-          let-filterService="filterService">
-          <kendo-dropdownlist
-          [data]="caseStatusTypes"
-          textField="lovDesc"
-          valueField="lovCode"
-          [value]="statusValue"
-          [(ngModel)]="selectedStatus"
-          (valueChange)="dropdownFilterChange('eligibilityStatusCode',$event, filterService)">
-          </kendo-dropdownlist>
+          let-filterService="filterService"> 
         </ng-template>
    </kendo-grid-column>
    <kendo-grid-column field="fplPercentage" title="FPL %" [width]="110" [hidden]="(selectedTab == tabOptions.MY_CASES)">
