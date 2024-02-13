@@ -62,6 +62,7 @@ export enum LovType {
     WebServiceInterface ='INTERFACE_WEB_SERVICE',
     BatchInterface ='INTERFACE_BATCH',
     InterfaceException = 'INTERFACE_BATCH',
+    BatchInterfaceStatus = 'BATCH_INTERFACE_STATUS',
     InterfaceProcessBatch = 'INTERFACE_PROCESS_BATCH'
 
   }

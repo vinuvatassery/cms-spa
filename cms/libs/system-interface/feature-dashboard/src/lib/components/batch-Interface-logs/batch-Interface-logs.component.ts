@@ -95,32 +95,11 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     'totalRecords',
     'totalFailed'
   ];
-  public statusArray= [
-    {
-        "lovCode": "SUCCESS",
-        "lovDesc": "Success",
-    },
-    {
-        "lovCode": "IN_PROGRESS",
-        "lovDesc": "In-Progress",
-    },
-    {
-        "lovCode": "FAILED",
-        "lovDesc": "Failed",
-    },
-    {
-        "lovCode": "Partial",
-        "lovDesc": "Partial",
-    },
-    {
-        "lovCode": "PENDING",
-        "lovDesc": "Pending",
-    },
-]
+ 
   selectedSearchColumn: string = '';
   private searchSubject = new Subject<string>();
-  sortColumn = 'interface';
-  sortColumnDesc = 'Interface';
+  sortColumn = 'StartDate';
+  sortColumnDesc = 'StartDate';
   sortDir = 'Ascending';
   interfaceExceptionFilter = '';
   interfaceProcessBatchFilter = '';
@@ -129,6 +108,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   // lov 
   interfaceExcptionLov$ = this.lovFacade.interfaceExceptionLov$;
   interfaceProcessBatchLov$ = this.lovFacade.interfaceProcessBatchLov$;
+  BatchInterfaceStatusLov$ = this.lovFacade.BatchInterfaceStatusLov$;
   fileId: any;
   interfaceTypeCode: any;
   /** Lifecycle hooks **/
@@ -148,6 +128,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.loadActivityListGrid();
     this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.lovFacade.getInterfaceExceptionLov();
+    this.lovFacade.getInBatchInterfaceStatusLov();
   }
 
   ngOnChanges(): void {
@@ -212,7 +193,13 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
+    const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.gridColumns[filter.filters[0].field]);
+      }
+    this.filteredBy = filterList.toString();
     this.loadActivityListGrid();
   }
 
@@ -299,23 +286,23 @@ defaultGridState() {
     filter: { logic: 'and', filters: [] },
   };
 }
+resetGrid() {
+  this.sortType = 'asc';
+  this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
+  this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
+  this.filteredBy ='';
+  this.filteredByColumnDesc = '';
+  this.sortColumnDesc = this.gridColumns[this.sortValue];
+  this.columnChangeDesc = 'Default Columns';
+  this.loadActivityListGrid();
+
+}
 public onDetailExpand(e: any): void {
 this.fileId=e.dataItem.fileId;
 this.interfaceTypeCode=e.dataItem.interfaceTypeCode;
 this.processTypeCode=e.dataItem.processTypeCode;
 }
-  restGrid() {
-    this.sortType = 'asc';
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
-    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
-    this.filter = [];
-    this.filteredByColumnDesc = '';
-    this.sortColumnDesc = this.gridColumns[this.sortValue];
-    this.columnChangeDesc = 'Default Columns';
-    this.showDateSearchWarning = false;
-    this.loadActivityListGrid();
-
-  }
+  
   dropdownFilterChange(
     field: string,
     value: any,

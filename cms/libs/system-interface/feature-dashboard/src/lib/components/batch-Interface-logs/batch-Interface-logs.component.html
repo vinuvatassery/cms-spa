@@ -15,7 +15,18 @@
               >
             </kendo-dropdownlist>
             </kendo-floatinglabel>
+            <div class="table-sorted-info">
+              Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
+              <span class="sort-items" *ngIf="!filteredBy">No Filters</span>
+              <span class="sort-items" *ngIf="filteredBy">Filtered by {{filteredBy}}</span>
+              <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+              <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+              <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetGrid()">
+                <a>Set to Default</a>
+              </button>
+            </div>
           </div>
+        
         <div>
           <span class="app-checkboxwidtext-wrapper">
             <input
@@ -92,7 +103,7 @@
         <kendo-grid-column field="status" title="Status" [width]="150">
           <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
             <kendo-dropdownlist 
-            [data]="statusArray" 
+            [data]="BatchInterfaceStatusLov$ | async" 
             textField="lovDesc"
             valueField="lovCode"
             [valuePrimitive]="true"
