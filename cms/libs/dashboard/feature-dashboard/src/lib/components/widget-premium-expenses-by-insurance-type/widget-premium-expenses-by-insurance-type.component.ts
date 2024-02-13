@@ -28,6 +28,7 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
   }
 
   ngOnInit(): void { 
+    this.dashboardId='E2301551-610C-43BF-B7C9-9B623ED425C3'
     this.loadPremiumExpensesByInsuranceChart();
   }
 

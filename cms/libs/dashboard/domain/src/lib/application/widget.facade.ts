@@ -35,6 +35,12 @@ export class WidgetFacade {
   private applicationCERStatsSubject = new BehaviorSubject<any>([]);
   public  applicationCERStats$ = this.applicationCERStatsSubject.asObservable();
 
+  private activeClientsOnStatusSubject = new BehaviorSubject<any>([]);
+  public  activeClientsOnStatus$ = this.activeClientsOnStatusSubject.asObservable();
+
+  private activeClientsOnGroupSubject = new BehaviorSubject<any>([]);
+  public  activeClientsOnGroup$ = this.activeClientsOnGroupSubject.asObservable();
+
   constructor(private widgetService: WidgetService) {}
 
 
@@ -54,8 +60,8 @@ export class WidgetFacade {
     return this.widgetService.getChartData();
   }
 
-  loadActiveClientsByStatusChart(dashboardId : string  , myClients : boolean) {
-    this.widgetService.getActiveClientsByStatus(dashboardId,myClients).subscribe({
+  loadActiveClientsByStatusChart(dashboardId : string  , userId : string) {
+    this.widgetService.getActiveClientsByStatus(dashboardId,userId).subscribe({
       next: (result : any) => { 
        
         let widgetProperties = JSON.parse(result.widgetProperties);
@@ -71,8 +77,8 @@ export class WidgetFacade {
     });
   }
 
-  loadActiveClientsByGroupChart(dashboardId : string, myClients : boolean) {
-    this.widgetService.getActiveClientsByGroup(dashboardId,myClients).subscribe({
+  loadActiveClientsByGroupChart(dashboardId : string, userId : string) {
+    this.widgetService.getActiveClientsByGroup(dashboardId,userId).subscribe({
       next: (result : any) => { 
        
         let widgetProperties = JSON.parse(result.widgetProperties);
@@ -174,6 +180,27 @@ export class WidgetFacade {
     this.widgetService.loadApplicationCERStats(dashboardId).subscribe({
       next: (result) => { 
         this.applicationCERStatsSubject.next(result);
+      }, 
+      error: (err) => { 
+        console.error('err', err);
+      },
+    });
+  }
+  loadActivebyStatusClients() {
+    this.widgetService.loadActivClients().subscribe({
+      next: (result) => { 
+        this.activeClientsOnStatusSubject.next(result);
+       
+      }, 
+      error: (err) => { 
+        console.error('err', err);
+      },
+    });
+  }
+  loadActivebyGroupClients() {
+    this.widgetService.loadActivClients().subscribe({
+      next: (result) => { 
+        this.activeClientsOnGroupSubject.next(result);
       }, 
       error: (err) => { 
         console.error('err', err);

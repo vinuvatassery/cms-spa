@@ -87,10 +87,10 @@ export class WidgetService {
     });
   }
 
-  getActiveClientsByGroup(dashboardId : string, myClients : boolean): Observable<any> {
+  getActiveClientsByGroup(dashboardId : string, userId : string): Observable<any> {
    
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-group/${myClients}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-group/${userId}`
     );
     return of({
       component: 'ActiveClientsByGroup',
@@ -149,10 +149,10 @@ export class WidgetService {
       },
     });
   }
-  getActiveClientsByStatus(dashboardId : string , myClients : boolean) {
+  getActiveClientsByStatus(dashboardId : string , userId : string) {
 
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-status/${myClients}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-status/${userId}`
     );
     return of({
       component: 'ClientByStatus',
@@ -555,6 +555,11 @@ export class WidgetService {
   loadApplicationCERStats(dashboardId : string) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/applications-cers-count`
+    ); 
+  }
+  loadActivClients() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/users`
     ); 
   }
  
