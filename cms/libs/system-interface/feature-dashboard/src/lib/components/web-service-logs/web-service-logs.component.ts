@@ -56,7 +56,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   // Output Events
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   @Output() loadWebLogList = new EventEmitter<string>();
-
+  filteredBy = '';
   columnChangeDesc = 'Default Columns';
   filteredByColumnDesc = '';
   selectedStatus = '';
@@ -100,7 +100,13 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
+    const filterList = [];
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.gridColumns[filter.filters[0].field]);
+      }
+    this.filteredBy = filterList.toString();
     this.loadListGrid();
   }
 
