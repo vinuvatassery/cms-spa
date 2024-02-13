@@ -325,7 +325,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       if(profile?.length>0){
        this.loginUserId= profile[0]?.loginUserId;
        if(!this.casesLoaded){
-        this.getGridState();
+        if (this.caseStatus != ''){ 
+          this.getGridState();
+        }         
         this.casesLoaded = true;
        }
 

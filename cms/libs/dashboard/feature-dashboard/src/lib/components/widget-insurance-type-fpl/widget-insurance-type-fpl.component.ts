@@ -37,14 +37,26 @@ export class WidgetInsuranceTypeFplComponent {
     this.removeWidget.emit();
   }
 
-  allClientsNavigate()
+  allClientsNavigate(insuranceType:string)
   {
+    let healthInsuranceType = '';
+    let operator = '';
+    let fplPer = 0;
+    if(insuranceType =="OHP"){
+      healthInsuranceType = HealthInsurancePlan.OregonHealthPlan;
+      operator = 'gt';
+      fplPer = 138;
+    }else{
+      healthInsuranceType = HealthInsurancePlan.OffExchangePlan;
+      operator = 'lte';
+      fplPer = 138;
+    }
     const query = {
       queryParams: {
         tab: CaseScreenTab.ALL,
-        healthInsuranceType: HealthInsurancePlan.OregonHealthPlan,
-        fplPercentage: 138,
-        filterOperator:"gt"
+        healthInsuranceType: healthInsuranceType,
+        fplPercentage: fplPer,
+        filterOperator:operator
       },
     };
     this.router.navigate(['/case-management/cases'], query) 
