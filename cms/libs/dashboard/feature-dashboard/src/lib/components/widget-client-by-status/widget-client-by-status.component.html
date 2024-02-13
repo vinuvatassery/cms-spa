@@ -2,8 +2,9 @@
    
       <div class="dash-header-with-filters">
             <h5>ACTIVE CLIENTS BY STATUS</h5>
-            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" value="All Clients" (valueChange)="clientsNavigate($event)" rounded="medium"
-                        [fillMode]="formUiStyle.inputFillMode" [data]="data">
+            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small"  (valueChange)="clientsNavigate($event)" rounded="medium"
+                        [fillMode]="formUiStyle.inputFillMode" [data]="data"
+                        [(ngModel)]="selectedActiveClientByStatus">
                   </kendo-dropdownlist></div>
       </div>
       <div class="dashboard-cards-container">

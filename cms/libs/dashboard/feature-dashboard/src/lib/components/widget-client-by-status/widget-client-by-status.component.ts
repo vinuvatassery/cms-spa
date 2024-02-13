@@ -19,6 +19,7 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
   data = ['All Clients', 'My Clients'];
   myClients : boolean = false;
   totalStatusCount :number = 0;
+  selectedActiveClientByStatus:any = 'All Clients';
   @Input() isEditDashboard!: any; 
   @Input() dashboardId! : any
   @Output() removeWidget = new EventEmitter<string>();
@@ -73,9 +74,10 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
   }
 
   public onClick(event: SeriesClickEvent): void {
+   let selectedTab = this.selectedActiveClientByStatus == "My Clients" ? CaseScreenTab.MY_CASES :CaseScreenTab.ALL ;
     const query = {
       queryParams: {
-        tab: CaseScreenTab.ALL,
+        tab: selectedTab,
         casestatus: event?.dataItem?.category      
       },
     };

@@ -31,6 +31,7 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
   data = ['All Clients', 'My Clients'];
   myClients : boolean = false;
   totalGroupCount :number = 0;
+  selectedActiveClientByGroup:any = 'All Clients';
 
 
  
@@ -77,10 +78,10 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
         });
     }
     public onClick(event: SeriesClickEvent): void {
-   
+      let selectedTab = this.selectedActiveClientByGroup == "My Clients" ? CaseScreenTab.MY_CASES :CaseScreenTab.ALL ;
       const query = {
         queryParams: {
-          tab: CaseScreenTab.ALL,
+          tab: selectedTab,
           group: event?.dataItem?.category      
         },
       };
