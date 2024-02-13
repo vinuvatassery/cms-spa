@@ -4,7 +4,7 @@ import {
   Input,
   OnInit,
   OnChanges,
-  Output
+  Output,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -12,7 +12,7 @@ import { LovFacade } from '@cms/system-config/domain';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject} from 'rxjs';
 import { FilterService} from '@progress/kendo-angular-grid';
 
 @Component({
@@ -29,9 +29,10 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   @Input() sort: any;
   activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
   batchLogsDataLoader$ = this.systemInterfaceDashboardFacade.batchLogsDataLoader$;
-  showHistoricalFlag: boolean = true;
   batchLogExcptionLists$ = this.systemInterfaceDashboardFacade.batchLogExcptionLists$;
-  @Input() lovsList$: any;
+  
+  showHistoricalFlag: boolean = true;
+ @Input() lovsList$: any;
   @Input() skipCount$: any;
   public state!: State;
   filteredBy = '';
@@ -128,6 +129,8 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   // lov 
   interfaceExcptionLov$ = this.lovFacade.interfaceExceptionLov$;
   interfaceProcessBatchLov$ = this.lovFacade.interfaceProcessBatchLov$;
+  fileId: any;
+  interfaceTypeCode: any;
   /** Lifecycle hooks **/
 
   constructor(
@@ -297,15 +300,10 @@ defaultGridState() {
   };
 }
 public onDetailExpand(e: any): void {
-  const param = new GridFilterParam(
-    this.state?.skip ?? 0,
-    this.state?.take ?? 0,
-    this.sortValue,
-    this.sortType,
-    JSON.stringify({ logic: 'and', filters: [] }));
-   this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(e.dataItem.fileId,e.dataItem.interfaceTypeCode,e.dataItem.processTypeCode, param);
-
-  }
+this.fileId=e.dataItem.fileId;
+this.interfaceTypeCode=e.dataItem.interfaceTypeCode;
+this.processTypeCode=e.dataItem.processTypeCode;
+}
   restGrid() {
     this.sortType = 'asc';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';

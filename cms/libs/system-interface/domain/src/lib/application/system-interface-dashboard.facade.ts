@@ -110,22 +110,10 @@ export class SystemInterfaceDashboardFacade {
     });
   }
 
-  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string, params: any): void {
-    this.showLoader();
-    this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode, params).subscribe({
-      next: (batchlogExceptionResponse: any) => {
-        const gridView: any = {
-          data: batchlogExceptionResponse['items'],
-          total: batchlogExceptionResponse?.totalCount,
-        };
-        this.batchLogExceptionListSubject.next(gridView);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      },
-    });
+  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string, params: any) {
+ 
+    return this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode, params);
+    
   }
 
   // weblogs ----------------------------------
