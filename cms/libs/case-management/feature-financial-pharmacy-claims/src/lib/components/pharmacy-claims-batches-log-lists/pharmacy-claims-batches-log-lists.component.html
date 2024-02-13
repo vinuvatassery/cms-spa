@@ -87,7 +87,7 @@
     
         <kendo-grid-column field="vendorName" title="Pharmacy Name" [width]="160"> 
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button" (click)="onProviderNameClick(dataItem.paymentRequestId)">
+            <button [attr.aria-label]="dataItem.vendorName" *ngIf="dataItem.vendorName" kendoButton look="flat" class="card-link-button" (click)="onProviderNameClick(dataItem.paymentRequestId)">
               {{ dataItem.vendorName }}
             </button>
           </ng-template>
@@ -105,7 +105,7 @@
            </kendo-grid-column>
                 <kendo-grid-column field="clientFullName" title="Client Name" [width]="160"> 
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
+            <button [attr.aria-label]="dataItem.clientFullName" *ngIf="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
               {{ dataItem.clientFullName }}
             </button>
           </ng-template>

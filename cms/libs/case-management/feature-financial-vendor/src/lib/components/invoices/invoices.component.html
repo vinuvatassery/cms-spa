@@ -59,7 +59,7 @@
               <kendo-grid-column field="batchName" title="Batch #" [width]="140">
                   <ng-template kendoGridCellTemplate let-dataItem>
                       <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
-                      (click)="onBatchClicked(dataItem.batchId)">
+                      (click)="onBatchClicked(dataItem.batchId)" *ngIf="dataItem.batchName">
                         {{ dataItem.batchName }}
                       </button>
                     </ng-template>
@@ -87,7 +87,7 @@
               <kendo-grid-column field="clientName" title="Client Name" [width]="160">
                   <ng-template kendoGridCellTemplate let-dataItem>
                       <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button"
-                      (click)="onClientClicked(dataItem.clientId)">
+                      (click)="onClientClicked(dataItem.clientId)" *ngIf="dataItem.clientName">
                         {{ dataItem.clientName }}
                       </button>
                     </ng-template>

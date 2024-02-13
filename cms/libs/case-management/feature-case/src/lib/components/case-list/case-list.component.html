@@ -50,7 +50,7 @@
   [data]="cases | async">
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="160" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button  [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
+        <button  [attr.aria-label]="dataItem.clientFullName" *ngIf="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
           (click)="onCaseClicked(dataItem)">
           {{ dataItem.clientFullName }}
         </button>
@@ -232,7 +232,7 @@
         <button [attr.aria-label]="dataItem.assignedCw" kendoButton look="flat" class="card-link-button"
         kendoPopoverAnchor
         [popover]="userCard"
-        showOn="hover">
+        showOn="hover" *ngIf="dataItem.assignedCw">
           {{ dataItem.assignedCw }}
         </button>
 

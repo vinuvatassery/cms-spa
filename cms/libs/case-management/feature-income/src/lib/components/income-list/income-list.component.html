@@ -60,7 +60,7 @@
         >
           <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.noIncomeProofFlag != 'Y'">
-              <button [attr.aria-label]="dataItem.documentName" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+              <button [attr.aria-label]="dataItem.documentName" *ngIf="dataItem.documentName" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
               <a>{{dataItem.documentName}}</a>
             </button>
 

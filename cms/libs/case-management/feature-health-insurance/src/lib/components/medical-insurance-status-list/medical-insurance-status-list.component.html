@@ -47,6 +47,7 @@
         <kendo-grid-column field="insurancePlanName" title="Plan Name" [width]="150">
             <ng-template kendoGridCellTemplate let-dataItem><button kendoButton look="flat" class="card-link-button"
             [attr.aria-label]="dataItem.insurancePlanName"
+            *ngIf="dataItem.insurancePlanName"
             kendoPopoverAnchor
             [popover]="myPopover"
             (click)="getCarrierContactInfo(dataItem.insuranceVendorId,dataItem.insurancePlanName)"
