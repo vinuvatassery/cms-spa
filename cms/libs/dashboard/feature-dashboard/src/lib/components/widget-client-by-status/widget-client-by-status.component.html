@@ -2,7 +2,7 @@
    
       <div class="dash-header-with-filters">
             <h5>ACTIVE CLIENTS BY STATUS</h5>
-            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" value="All Clients" rounded="medium"
+            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" value="All Clients" (valueChange)="clientsNavigate($event)" rounded="medium"
                         [fillMode]="formUiStyle.inputFillMode" [data]="data">
                   </kendo-dropdownlist></div>
       </div>
@@ -12,17 +12,16 @@
             <kendo-chart  class="dash_chart" *ngIf="activeClientsByStatus" [chartArea]="activeClientsByStatus?.chartData?.chartArea"
             (seriesClick)="onClick($event)">
                   <ng-template kendoChartDonutCenterTemplate >
-                        <h3>1000</h3>
+                        <h3>{{totalStatusCount}}</h3>
                         Clients
                       </ng-template>
-                  <kendo-chart-legend  [item]="activeClientsByStatus?.chartData?.legend" [padding]="20">
-                        <kendo-chart-legend-item class="mt-1"></kendo-chart-legend-item>
+                      <kendo-chart-legend [labels]="{ content: legendContent }">
                   </kendo-chart-legend>
                   <kendo-chart-area background="none"></kendo-chart-area>
                   <kendo-chart-tooltip>
                     <ng-template kendoChartSeriesTooltipTemplate
                                  let-value="value" let-category="category" let-series="series">
-                        {{ category }}: {{ value }}%
+                        {{ category }}
                     </ng-template>
                   </kendo-chart-tooltip>
                   <kendo-chart-series>

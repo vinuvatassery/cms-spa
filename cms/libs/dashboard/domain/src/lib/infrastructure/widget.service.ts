@@ -87,10 +87,10 @@ export class WidgetService {
     });
   }
 
-  getActiveClientsByGroup(dashboardId : string): Observable<any> {
+  getActiveClientsByGroup(dashboardId : string, myClients : boolean): Observable<any> {
    
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-group`
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-group/${myClients}`
     );
     return of({
       component: 'ActiveClientsByGroup',
@@ -149,10 +149,10 @@ export class WidgetService {
       },
     });
   }
-  getActiveClientsByStatus(dashboardId : string) {
+  getActiveClientsByStatus(dashboardId : string , myClients : boolean) {
 
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-status`
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-status/${myClients}`
     );
     return of({
       component: 'ClientByStatus',
