@@ -242,6 +242,7 @@ loadDistinctUserIdsAndProfilePhoto(data: any[]) {
 
   ngOnDestroy(): void {
     this.paymentStatusLovSubscription.unsubscribe();
+    this.medicalClaimsProfilePhotoSubscription?.unsubscribe();
   }
   onSingleClaimDelete(selection: any) {
     this.selectedKeysChange(selection);
