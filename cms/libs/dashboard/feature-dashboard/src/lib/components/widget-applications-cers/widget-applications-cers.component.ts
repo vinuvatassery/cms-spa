@@ -52,4 +52,15 @@ export class WidgetApplicationsCersComponent {
     };
     this.router.navigate(['/case-management/cases'], query) 
   }
+
+  cerTrackingNavigate()
+  {
+    const query = {
+      queryParams: {
+        tab: CaseScreenTab.CER_TRACKING,
+        casestatus: CaseStatusCode.restricted
+      },
+    };
+    this.router.navigate(['/case-management/cases'], query) 
+  }
 }
