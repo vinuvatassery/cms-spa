@@ -93,9 +93,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       maxCols: 2,
       minRows: 1,
       maxRows: 100,
-      maxItemCols: 2,
+      maxItemCols: 1,
       minItemCols: 1,
-      maxItemRows: 100,
+      maxItemRows: 20,
       minItemRows: 1,
       maxItemArea: 2500,
       minItemArea: 1,
@@ -119,7 +119,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     this.addWidgetConfiguration = {
       gridType: GridType.VerticalFixed,
-      resizable: { enabled: false },
+      resizable: { enabled: true },
       swap: true,
       pushItems: false,
       outerMargin: true,
@@ -138,9 +138,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       keepFixedWidthInMobile: false,
       keepFixedHeightInMobile: true,
       draggable: {
-        enabled: false,
-        ignoreContent: false, // if true drag will start only from elements from `dragHandleClass`
-        dragHandleClass: 'drag-handle', // drag event only from this class. If `ignoreContent` is true.
+        enabled: true, 
       },
     };
   }
@@ -406,4 +404,6 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
 
     this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
   }
+
+  
 }

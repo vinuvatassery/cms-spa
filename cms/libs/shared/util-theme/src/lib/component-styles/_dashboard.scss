@@ -377,53 +377,6 @@
   }
 }
 
-.dash-header-with-filters {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  min-height: 31px;
-
-  .k-multiselect {
-    width: 100px;
-    min-height: 28px;
-
-    .k-searchbar {
-      position: absolute;
-      min-height: 28px;
-      height: 28px;
-      min-width: auto;
-    }
-
-    .k-i-x {
-      display: none;
-    }
-
-    .k-input-values {
-      padding-right: 0px;
-    }
-  }
-
-  .k-dropdownlist,
-  .k-multiselect {
-    min-width: 100px;
-    max-width: 100px;
-    font-size: $font-size;
-
-    .k-button.k-icon-button {
-      padding: 2px;
-    }
-
-    .k-input-inner {
-      padding-right: 0;
-      padding-left: 10px;
-    }
-  }
-
-  h5 {
-    margin: 0px;
-  }
-}
 
 .dash_chart {
   max-height: 340px;
@@ -466,10 +419,15 @@ gridster .gridster-row {
 
   .add-more-container {
 
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
-
+    // display: grid;
+    // grid-template-columns: 1fr 1fr;
+    // grid-gap: 10px;
+.add-gridster{
+  
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
     .chart-view-point {
       pointer-events: none;
       cursor: default;
@@ -479,7 +437,7 @@ gridster .gridster-row {
       margin-bottom: 4rem;
       position: relative;
       user-select: none;
-
+      min-height: 410px;
       &::before {
         position: absolute;
         left: 0;
@@ -495,7 +453,7 @@ gridster .gridster-row {
       box-shadow: 0px 0px 12px #0000000F;
       border-radius: 10px;
       padding-top: 2rem;
-
+      height: max-content;
       .bottom-title {
         background: $role-blue-3;
         border-radius: 0px 0px 10px 10px;
@@ -586,19 +544,29 @@ gridster .gridster-row {
   top: -8px;
   right: -10px;
   color: #fff;
-  z-index: 1;
+  z-index: 3;
   font-size: 10px;
   padding: 0px;
 }
 
 .dash-header-with-filters {
-  display: flex;
-  align-items: center;
+  display: flex; 
   justify-content: space-between;
   margin-bottom: 8px;
   min-height: 31px;
-  .k-multiselect {
-    width: 110px;
+  flex-direction: column;
+  gap: 8px;
+  > div {
+    display: flex;
+    
+    .kendo-multiselect,
+    .k-dropdownlist{
+      width: 100%;
+      max-width: 180px;
+    }
+    
+  }
+  .k-multiselect { 
     min-height: 28px;
     .k-searchbar {
       position: absolute;
@@ -615,8 +583,8 @@ gridster .gridster-row {
   }
   .k-dropdownlist,
   .k-multiselect {
-    min-width: 180px;
-    max-width: 100px;
+    // min-width: 180px;
+    // max-width: 100px;
     font-size: $font-size-s;
     .k-button.k-icon-button {
       padding: 2px;
@@ -632,3 +600,5 @@ gridster .gridster-row {
 
   
 }
+
+ 
