@@ -33,6 +33,8 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
   ngOnInit(): void { 
     
     this.loadActiveClientsByStatusChart();
+    this.loadActiveClients();
+    console.log(this.loadActiveClients)
   }
   public labelContent(e: SeriesLabelsContentArgs): string {
     return `${e.value > 0 ? e.category : ''}`;
@@ -83,5 +85,17 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
     };
     this.router.navigate([`/case-management/cases/`],query);
     this.cdr.detectChanges();
+  }
+  loadActiveClients(){
+    debugger;
+    this.widgetFacade.loadActiveClients();
+    this.widgetFacade.activeClients$.subscribe({
+      next :(response)=>{
+        debugger;
+        if(response){
+          console.log(response);
+        }
+      }
+    })
   }
 }
