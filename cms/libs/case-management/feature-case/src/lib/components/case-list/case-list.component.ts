@@ -112,6 +112,7 @@ public state!: any;
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
   groupLov$ = this.lovFacade.groupLov$;
   caseStatusType$ = this.lovFacade.caseStatusType$;
+  healthInsuranceType$ = this.lovFacade.healthinsuranceType$;
   selectedColumn!: any;
   filter : any = "";
   afterDate: any;
@@ -120,16 +121,19 @@ public state!: any;
   @Output() loadCasesListEvent = new EventEmitter<any>();
   groupData:any=[]
   caseStatusTypes:any=[];
+  healthinsuranceTypes:any=[];
   caseStatusCodes:any=["CANCELED","REVIEW","NEW"];
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   private userProfileSubsriction !: Subscription;
   loginUserId!:any;
   groupValue = null;
   statusValue = null;
+  healthInsuranceTypeValue = null;
   @ViewChild('clientsGrid') clientsGrid: any;
   defaultColumnState: ColumnBase[] = [];
   selectedGroup="";
   selectedStatus="";
+  selectedHealthInsuranceType="";
   casesLoaded=false;
   hiddenColumns: ColumnComponent[]=[];
   /** Constructor**/
@@ -147,14 +151,15 @@ public state!: any;
     this.lovFacade.getGroupLovs();
     this.lovFacade.getCaseStatusLovs();
     this.getCaseStatusLovs();
+    this.lovFacade.gethealthInsuranceTypeLovs();
+    this.gethealthInsuranceTypesLovs();
     this.selectedColumn = 'ALL';
     this.getGroupLovs() ; 
     this.getLoggedInUserProfile();
     if (this.caseStatus == CaseStatusCode.incomplete || this.caseStatus == CaseStatusCode.accept || this.caseStatus == CaseStatusCode.restricted){ 
       this.dashboardCERfilter(); 
-    }
-
-    if(this.healthInsuranceType != ''){
+    } 
+    if(this.healthInsuranceType){
       this.dashboardFPLfilter();
     }
      
@@ -196,6 +201,19 @@ public state!: any;
       }
     });
   }
+  private gethealthInsuranceTypesLovs() {
+    this.healthInsuranceType$
+    .subscribe({
+      next: (data: any) => {
+        data=data.filter((item:any) => !this.caseStatusCodes.includes(item.lovCode));
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.healthinsuranceTypes=data.sort((value1:any,value2:any) => value1.sequenceNbr - value2.sequenceNbr);
+      }
+    });
+  }
+  
   defaultGridState(){
     this.state = {
       skip: 0,
@@ -228,7 +246,7 @@ public state!: any;
 dashboardFPLfilter(){
   this.state.filter.filters.push(
     {filters:[{
-      field: "healthInsuranceType",
+      field: "insuranceType",
       operator: "eq",
       value:this.healthInsuranceType
       },{
@@ -236,7 +254,6 @@ dashboardFPLfilter(){
         operator: this.filterOperator,
         value:this.fplPercentage
     }]});
-    debugger;
 this.dataStateChange(this.state,false);
 }
  filterChange(filter: CompositeFilterDescriptor): void {
@@ -267,6 +284,17 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
   if(field == "eligibilityStatusCode"){
     this.statusValue = value;
+  }
+  if(field == "insuranceType"){
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value:value.lovCode
+    }],
+      logic: "or"
+  });
+    this.healthInsuranceTypeValue = value;
   }
 }
 
@@ -339,8 +367,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
        this.loginUserId= profile[0]?.loginUserId;
-       if(!this.casesLoaded){
-        if (this.caseStatus != ''){ 
+       if(!this.casesLoaded){ 
+        if (!this.caseStatus && !this.healthInsuranceType){ 
           this.getGridState();
         }         
         this.casesLoaded = true;
@@ -576,6 +604,9 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     }
     if(this.sortValue === "eligibilityStatusCode"){
       this.sortValue = "caseStatus";
+    }
+    if(this.sortValue === "InsuranceType"){
+      this.sortValue = "healthInsuranceType";
     }
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? "";
