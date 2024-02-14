@@ -122,7 +122,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     indexCode: 'Index Code',
     pcaCode: 'PCA',
     grantNumber: 'Grant #',
-    voucherPayable: 'VP',
+    voucherPayable: 'VP - Suffix',
     refundNote: 'Refund Note',
     entryDate: 'Entry Date'
   };
@@ -189,7 +189,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     },
     {
       columnCode: 'voucherPayable',
-      columnDesc: 'VP',
+      columnDesc: 'VP - Suffix',
     },
     {
       columnCode: 'refundNote',

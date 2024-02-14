@@ -40,6 +40,8 @@ export class WidgetFacade {
 
   private activeClientsOnGroupSubject = new BehaviorSubject<any>([]);
   public  activeClientsOnGroup$ = this.activeClientsOnGroupSubject.asObservable();
+  private insuranceTypeFPLStatsSubject = new BehaviorSubject<any>([]);
+  public  insuranceTypeFPLStats$ = this.insuranceTypeFPLStatsSubject.asObservable();
 
   constructor(private widgetService: WidgetService) {}
 
@@ -180,6 +182,17 @@ export class WidgetFacade {
     this.widgetService.loadApplicationCERStats(dashboardId).subscribe({
       next: (result) => { 
         this.applicationCERStatsSubject.next(result);
+      }, 
+      error: (err) => { 
+        console.error('err', err);
+      },
+    });
+  }
+
+  loadInsuranceTypeFPLStats(dashboardId : string) {
+    this.widgetService.loadinsuranceTypeFPLtats(dashboardId).subscribe({
+      next: (result) => { 
+        this.insuranceTypeFPLStatsSubject.next(result);
       }, 
       error: (err) => { 
         console.error('err', err);

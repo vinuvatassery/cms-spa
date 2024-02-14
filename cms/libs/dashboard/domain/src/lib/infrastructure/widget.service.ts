@@ -563,4 +563,9 @@ export class WidgetService {
     ); 
   }
  
+ loadinsuranceTypeFPLtats(dashboardId : string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/fpl-count`
+    ); 
+  }
 }

@@ -16,7 +16,7 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
   selectFrequency='YTD'
   data  = ['YTD','Last Month','Current Month','Previous Quarter','Last Year']
   @Input() isEditDashboard!: any; 
-  @Input() dashboardId! : any 
+  @Input() dashboardId! : any ;
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
 
