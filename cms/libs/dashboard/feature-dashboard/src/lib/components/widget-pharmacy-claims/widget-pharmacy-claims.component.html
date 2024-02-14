@@ -17,9 +17,9 @@
             <kendo-chart  class="dash_chart" *ngIf="pharmacyClaims">
                   <ng-template kendoChartDonutCenterTemplate>
                     <h3 *ngIf="selectedDataCount == 'Claim Count'">{{claimCount}}</h3>
-                    <h3 *ngIf="selectedDataCount !== 'Claim Count'"><strong>$</strong> {{claimAmount | kendoNumber: 'n2'}}</h3>
+                    <h3 *ngIf="selectedDataCount !== 'Claim Count'"><strong>$</strong> {{claimAmount}}</h3>
                   </ng-template>
-                  <kendo-chart-legend [item]="pharmacyClaims?.chartData?.legend" [padding]="20">
+                  <kendo-chart-legend [item]="pharmacyClaims?.chartData?.legend"  [padding]="20" [labels]="labels">                   
                     <kendo-chart-legend-item class="mt-1"></kendo-chart-legend-item>
                   </kendo-chart-legend>
              
@@ -40,7 +40,7 @@
                       [distance]="0" 
                       position="bottom"
                        background="none"
-                        [content]="labelContent">
+                        [content]="selectedDataCount == 'Claim Count'?labelContent: labelContentAmount">
                       </kendo-chart-series-item-labels>
                     </kendo-chart-series-item>
                   </kendo-chart-series>

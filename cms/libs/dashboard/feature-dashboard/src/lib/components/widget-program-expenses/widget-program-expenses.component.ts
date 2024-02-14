@@ -47,7 +47,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
 
   dataYear  = ['Current Year','Last Year']
   selectFrequency ="M"
-  selectedTimeFrame = 'Last Year'
+  selectedTimeFrame = 'Current Year'
   @Input() isEditDashboard!: any; 
   @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
@@ -88,6 +88,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
   }
 
   ngOnInit(): void { 
+    this.isChecked = this.selectedType &&  this.selectedType.length === this.dataExp.length;
     this.loadProgramExpensesChart();
   }
 
