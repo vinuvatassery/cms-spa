@@ -138,7 +138,6 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
   { columnName: 'clientFullName', columnDesc: 'Client Name' },
   { columnName: 'clientId', columnDesc: 'Client ID' },
-  { columnName: 'creationTime', columnDesc: 'Entry Date' },
   { columnName: 'warrantNumber', columnDesc: 'Warrant Number' },
 ];
 

@@ -225,4 +225,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     }
   }
 
+  updateRecentlyViewedEvent(vendorId:any){
+    this.financialVendorFacade.addVendorRecentlyViewed(vendorId);
+  }
 }

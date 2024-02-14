@@ -10,10 +10,13 @@ export class WidgetService {
   constructor(private http: HttpClient ,private configurationProvider: ConfigurationProvider) {}
 
   getRecentlyViewedClients(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/recently-viewed-clients`
+    );
     return of([
       {
-        ProfileName: 'Donna Summer',
-        ProfileId: 'ID 1212312',
+        ClientName: 'Donna Summer',
+        ClientId: 'ID 1212312',
         DOB: '20-12-1996',
         Status: 'ACCEPT',
       },
@@ -42,6 +45,12 @@ export class WidgetService {
         Status: 'RESTRICTED',
       },
     ]);
+  }
+
+  getRecentlyViewedVendors(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/recently-viewed-vendors`
+    );
   }
 
   getChartData(): Observable<any> {
@@ -87,10 +96,10 @@ export class WidgetService {
     });
   }
 
-  getActiveClientsByGroup(dashboardId : string, myClients : boolean): Observable<any> {
+  getActiveClientsByGroup(dashboardId : string, userId : string): Observable<any> {
    
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-group/${myClients}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-group/${userId}`
     );
     return of({
       component: 'ActiveClientsByGroup',
@@ -149,10 +158,10 @@ export class WidgetService {
       },
     });
   }
-  getActiveClientsByStatus(dashboardId : string , myClients : boolean) {
+  getActiveClientsByStatus(dashboardId : string , userId : string) {
 
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-status/${myClients}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-status/${userId}`
     );
     return of({
       component: 'ClientByStatus',
@@ -557,5 +566,15 @@ export class WidgetService {
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/applications-cers-count`
     ); 
   }
+  loadActiveClients() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/users`
+    ); 
+  }
  
+ loadinsuranceTypeFPLtats(dashboardId : string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/fpl-count`
+    ); 
+  }
 }

@@ -14,6 +14,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LegendLabelsContentArgs, SeriesClickEvent, SeriesLabelsContentArgs } from '@progress/kendo-angular-charts';
 import { CaseScreenTab } from '@cms/case-management/domain';
 import { Router } from '@angular/router';
+import { UserDataService } from '@cms/system-config/domain';
 @Component({
   selector: 'dashboard-widget-active-clients-by-group',
   templateUrl: './widget-active-clients-by-group.component.html',
@@ -27,16 +28,19 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
   @Input() isEditDashboard!: any;
   @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
-  constructor(private widgetFacade: WidgetFacade,private readonly cdr: ChangeDetectorRef, private readonly router: Router) {}
-  data = ['All Clients', 'My Clients'];
+  constructor(private widgetFacade: WidgetFacade, private readonly userDataService: UserDataService,private readonly cdr: ChangeDetectorRef, private readonly router: Router) {}
+  data = [{clientFullName:'All Clients',userId:null}, {clientFullName:'My Clients',userId:''}];
   myClients : boolean = false;
   totalGroupCount :number = 0;
   selectedActiveClientByGroup:any = 'All Clients';
+  userId: any;
 
 
  
   ngOnInit(): void {
-    this.loadActiveClientsByGroupChart();
+    this.getLoginUserId();
+    this.loadActiveClients();
+    this.loadActiveClientsByGroupChart(null);
   }
 
  
@@ -55,11 +59,10 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
   }
   clientsNavigate(event:any)
   {
-    this.myClients = event == "My Clients" ? true : false;
-    this.loadActiveClientsByGroupChart();
+    this.loadActiveClientsByGroupChart(event);
   }
-  loadActiveClientsByGroupChart() {
-      this.widgetFacade.loadActiveClientsByGroupChart(this.dashboardId,this.myClients);
+  loadActiveClientsByGroupChart(userId :any) {
+      this.widgetFacade.loadActiveClientsByGroupChart(this.dashboardId,userId);
       this.widgetFacade.activeClientsByGroupChart$
         .pipe(takeUntil(this.destroy$))
         .subscribe({
@@ -78,7 +81,7 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
         });
     }
     public onClick(event: SeriesClickEvent): void {
-      let selectedTab = this.selectedActiveClientByGroup == "My Clients" ? CaseScreenTab.MY_CASES :CaseScreenTab.ALL ;
+      let selectedTab = this.selectedActiveClientByGroup == this.userId ? CaseScreenTab.MY_CASES :CaseScreenTab.ALL ;
       const query = {
         queryParams: {
           tab: selectedTab,
@@ -87,5 +90,25 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
       };
       this.router.navigate([`/case-management/cases/`],query);
       this.cdr.detectChanges();
+    }
+    loadActiveClients(){
+      this.widgetFacade.loadActivebyGroupClients();
+      this.widgetFacade.activeClientsOnGroup$.subscribe({
+        next :(res:Array<any>)=>{
+          if(res){
+          res.forEach(user =>{
+            this.data.push(user)
+          })
+          this.data[1].userId = this.userId;
+          }
+        }
+      })
+    }
+    getLoginUserId() {
+      this.userDataService.getProfile$.subscribe((users: any[]) => {
+        if (users.length > 0) {
+          this.userId = users[0]?.loginUserId ;
+        }
+      })
     }
 }
