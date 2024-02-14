@@ -4,35 +4,35 @@ import { WidgetService } from '../infrastructure/widget.service';
 
 @Injectable({ providedIn: 'root' })
 export class WidgetFacade {
-  private recentlyViewedClientsSubject = new BehaviorSubject<any>([]);  
+  private recentlyViewedClientsSubject = new Subject<any>();
   public recentlyViewedClientsList$ = this.recentlyViewedClientsSubject.asObservable(); 
  
-  private activeClientsByGroupSubject = new BehaviorSubject<any>([]);
+  private activeClientsByGroupSubject =new Subject<any>();
   public activeClientsByGroupChart$ = this.activeClientsByGroupSubject.asObservable(); 
 
    
   private activeClientsByStatusSubject = new Subject<any>();
   public activeClientsByStatusChart$ = this.activeClientsByStatusSubject.asObservable(); 
 
-  private netIncomeSubject = new BehaviorSubject<any>([]);
+  private netIncomeSubject =new Subject<any>();
   public netIncomeChart$ = this.netIncomeSubject.asObservable();
 
-  private pharmacyClaimsSubject = new BehaviorSubject<any>([]);
+  private pharmacyClaimsSubject = new Subject<any>();
   public pharmacyClaimsChart$ = this.pharmacyClaimsSubject.asObservable();
 
-  private premiumExpensesByInsuranceSubject = new BehaviorSubject<any>([]);
+  private premiumExpensesByInsuranceSubject = new Subject<any>();
   public  premiumExpensesByInsuranceChart$ = this.premiumExpensesByInsuranceSubject.asObservable();
 
-  private programExpensesSubject = new BehaviorSubject<any>([]);
+  private programExpensesSubject = new Subject<any>();
   public  programExpensesChart$ = this.programExpensesSubject.asObservable();
 
-  private programIncomeSubject = new BehaviorSubject<any>([]);
+  private programIncomeSubject = new Subject<any>();
   public  programIncomeChart$ = this.programIncomeSubject.asObservable();
 
-  private todayGlanceSubject = new BehaviorSubject<any>([]);
+  private todayGlanceSubject =new Subject<any>();
   public  todayGlance$ = this.todayGlanceSubject.asObservable();
 
-  private applicationCERStatsSubject = new BehaviorSubject<any>([]);
+  private applicationCERStatsSubject =new Subject<any>();
   public  applicationCERStats$ = this.applicationCERStatsSubject.asObservable();
 
   constructor(private widgetService: WidgetService) {}

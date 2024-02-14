@@ -23,6 +23,6 @@ export * from '../../feature-dashboard/src/lib/components/widget-rent-overages/w
 export * from '../../feature-dashboard/src/lib/components/widget-slots-allocation/widget-slots-allocation.component'
 
 
-export * from './lib/containers/add-more-widgets-container/add-more-widgets-container.component';
+export * from './lib/containers/dashboard-layout-container/dashboard-layout-container.component';
 
-export * from './lib/containers/add-more-widgets-container/add-more-widgets-container.component';
+

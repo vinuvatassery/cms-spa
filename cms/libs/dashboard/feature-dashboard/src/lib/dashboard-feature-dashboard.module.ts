@@ -27,7 +27,7 @@ import { WidgetRentOveragesComponent } from './components/widget-rent-overages/w
 import { WidgetServiceTrackingComponent } from './components/widget-service-tracking/widget-service-tracking.component';
 import { WidgetSlotsAllocationComponent } from './components/widget-slots-allocation/widget-slots-allocation.component';
 import { WidgetTodayAtAGlanceComponent } from './components/widget-today-at-a-glance/widget-today-at-a-glance.component';
-import { AddMoreWidgetsContainerComponent } from './containers/add-more-widgets-container/add-more-widgets-container.component';
+import { DashBoardLayoutContainerComponent } from './containers/dashboard-layout-container/dashboard-layout-container.component';
 
 const WidgetComponents = [
   WidgetDirectMessagesComponent,
@@ -62,14 +62,12 @@ const WidgetComponents = [
   declarations: [
     DashboardPageComponent,
     WidgetComponents,
-    AddMoreWidgetsContainerComponent,
-    AddMoreWidgetsContainerComponent,
+    DashBoardLayoutContainerComponent
   ],
   exports: [
     DashboardPageComponent,
     WidgetComponents,
-    AddMoreWidgetsContainerComponent,
-    AddMoreWidgetsContainerComponent,
+    DashBoardLayoutContainerComponent
   ],
 })
 export class DashboardFeatureDashboardModule {}
