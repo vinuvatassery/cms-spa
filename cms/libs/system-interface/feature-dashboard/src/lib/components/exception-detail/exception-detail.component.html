@@ -1,10 +1,12 @@
 <kendo-grid [resizable]="true" [navigable]="true" [loading]="gridLoaderShow" [data]="batchLogExcptionLists$ | async" >
-    <kendo-grid-column field="errorCode" title="Error Code" [width]="100">
-    </kendo-grid-column>
-    <kendo-grid-column field="description" title="Error Description" [width]="180">
-    </kendo-grid-column>
-    <kendo-grid-column field="rowNo" title="File Row Number" [width]="120">
-    </kendo-grid-column>
+  <kendo-grid-column field="errorCode" title="Error Code" [width]="100">
+  </kendo-grid-column>
+  <kendo-grid-column field="rowNo" title="File Row Number" [width]="120">
+  </kendo-grid-column>
+  <kendo-grid-column field="keyRecordId" title="Key Record ID" [width]="120">
+  </kendo-grid-column>
+  <kendo-grid-column field="description" title="Error Description" [width]="180">
+  </kendo-grid-column>
     <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"  let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
         <div class="d-flex align-items-center">
