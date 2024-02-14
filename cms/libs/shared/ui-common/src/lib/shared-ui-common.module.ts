@@ -83,7 +83,7 @@ import { NdcCodePipe } from './pipes/ndc-code.pipe';
     PlaceholderDirective, 
     FinancialDrugsDetailsComponent,
     FinancialPcaChosenAlertComponent,
-    NdcCodePipe
+    NdcCodePipe    
   ],
   exports: [
     LoginStatusComponent,

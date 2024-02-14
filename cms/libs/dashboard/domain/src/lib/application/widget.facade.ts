@@ -1,54 +1,66 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { WidgetService } from '../infrastructure/widget.service'; 
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class WidgetFacade {
-  private recentlyViewedClientsSubject = new BehaviorSubject<any>([]);  
+  private recentlyViewedClientsSubject = new Subject<any>();
   public recentlyViewedClientsList$ = this.recentlyViewedClientsSubject.asObservable(); 
  
-  private recentlyViewedVendorsSubject = new BehaviorSubject<any>([]);  
+  private recentlyViewedVendorsSubject = new Subject<any>();
   public recentlyViewedVendorsList$ = this.recentlyViewedVendorsSubject.asObservable(); 
  
 
-  private activeClientsByGroupSubject = new BehaviorSubject<any>([]);
+  private activeClientsByGroupSubject = new Subject<any>();
   public activeClientsByGroupChart$ = this.activeClientsByGroupSubject.asObservable(); 
 
    
   private activeClientsByStatusSubject = new Subject<any>();
   public activeClientsByStatusChart$ = this.activeClientsByStatusSubject.asObservable(); 
 
-  private netIncomeSubject = new BehaviorSubject<any>([]);
+  private netIncomeSubject =new Subject<any>();
   public netIncomeChart$ = this.netIncomeSubject.asObservable();
 
-  private pharmacyClaimsSubject = new BehaviorSubject<any>([]);
+  private pharmacyClaimsSubject = new Subject<any>();
   public pharmacyClaimsChart$ = this.pharmacyClaimsSubject.asObservable();
 
-  private premiumExpensesByInsuranceSubject = new BehaviorSubject<any>([]);
+  private premiumExpensesByInsuranceSubject = new Subject<any>();
   public  premiumExpensesByInsuranceChart$ = this.premiumExpensesByInsuranceSubject.asObservable();
 
-  private programExpensesSubject = new BehaviorSubject<any>([]);
+  private programExpensesSubject = new Subject<any>();
   public  programExpensesChart$ = this.programExpensesSubject.asObservable();
 
-  private programIncomeSubject = new BehaviorSubject<any>([]);
+  private programIncomeSubject = new Subject<any>();
   public  programIncomeChart$ = this.programIncomeSubject.asObservable();
 
-  private todayGlanceSubject = new BehaviorSubject<any>([]);
+  private todayGlanceSubject =new Subject<any>();
   public  todayGlance$ = this.todayGlanceSubject.asObservable();
 
-  private applicationCERStatsSubject = new BehaviorSubject<any>([]);
+  private applicationCERStatsSubject =new Subject<any>();
   public  applicationCERStats$ = this.applicationCERStatsSubject.asObservable();
 
-  private activeClientsOnStatusSubject = new BehaviorSubject<any>([]);
+  private activeClientsOnStatusSubject =new Subject<any>();
   public  activeClientsOnStatus$ = this.activeClientsOnStatusSubject.asObservable();
 
-  private activeClientsOnGroupSubject = new BehaviorSubject<any>([]);
+  private activeClientsOnGroupSubject =new Subject<any>();
   public  activeClientsOnGroup$ = this.activeClientsOnGroupSubject.asObservable();
-  private insuranceTypeFPLStatsSubject = new BehaviorSubject<any>([]);
+  private insuranceTypeFPLStatsSubject =new Subject<any>();
   public  insuranceTypeFPLStats$ = this.insuranceTypeFPLStatsSubject.asObservable();
 
-  constructor(private widgetService: WidgetService) {}
-
+  constructor(private widgetService: WidgetService,
+    private readonly loaderService: LoaderService,
+    private readonly loggingService: LoggingService,
+    private readonly snackbarService: NotificationSnackbarService) {}
+    showSnackBar(type: SnackBarNotificationType, subtitle: any) {
+      if (type == SnackBarNotificationType.ERROR) {
+          const err = subtitle;
+          this.loggingService.logException(err)
+      }
+      this.snackbarService.manageSnackBar(type, subtitle);
+  }
+  showLoader(){  this.loaderService.show();}
+  hideLoader() { this.loaderService.hide();}
 
 
 
@@ -57,8 +69,9 @@ export class WidgetFacade {
       next: (clients: any) => {
         this.recentlyViewedClientsSubject.next(clients);
       },
-      error: (err: any) => {
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -68,8 +81,9 @@ export class WidgetFacade {
       next: (clients: any) => {
         this.recentlyViewedVendorsSubject.next(clients);
       },
-      error: (err: any) => {
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -89,8 +103,9 @@ export class WidgetFacade {
         this.activeClientsByStatusSubject.next(widgetProperties);
       },
        
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -106,8 +121,9 @@ export class WidgetFacade {
         this.activeClientsByGroupSubject.next(widgetProperties);
       },
        
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -117,8 +133,9 @@ export class WidgetFacade {
         this.netIncomeSubject.next(result);
       },
        
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -135,8 +152,9 @@ export class WidgetFacade {
         this.pharmacyClaimsSubject.next({widgetProperties, result});
       },
        
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -149,8 +167,9 @@ export class WidgetFacade {
         this.premiumExpensesByInsuranceSubject.next(widgetProperties);
       },
        
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -164,8 +183,9 @@ export class WidgetFacade {
         widgetProperties.chartData.categoryAxis.categories = result?.categories
         this.programExpensesSubject.next(widgetProperties);
       },       
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -176,8 +196,9 @@ export class WidgetFacade {
         this.programIncomeSubject.next(result);
       },
        
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -188,8 +209,9 @@ export class WidgetFacade {
         this.todayGlanceSubject.next(result);
       },
        
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -199,8 +221,9 @@ export class WidgetFacade {
       next: (result) => { 
         this.applicationCERStatsSubject.next(result);
       }, 
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -210,8 +233,9 @@ export class WidgetFacade {
       next: (result) => { 
         this.insuranceTypeFPLStatsSubject.next(result);
       }, 
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -221,8 +245,9 @@ export class WidgetFacade {
         this.activeClientsOnStatusSubject.next(result);
        
       }, 
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
@@ -231,8 +256,9 @@ export class WidgetFacade {
       next: (result) => { 
         this.activeClientsOnGroupSubject.next(result);
       }, 
-      error: (err) => { 
-        console.error('err', err);
+      error: (error) => { 
+        this.hideLoader();
+        this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });
   }
