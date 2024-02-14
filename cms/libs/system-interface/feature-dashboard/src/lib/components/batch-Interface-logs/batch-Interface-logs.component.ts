@@ -152,7 +152,6 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.loadActivityLogListEvent.emit();
   }
   pageSelectionchange(data: any) {
-
     this.state.take = data.value;
     this.state.skip = 0;
     this.loadActivityListGrid();
@@ -196,9 +195,11 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
     const filterList = [];
+    if(stateData.filter?.filters.length > 0){
       for (const filter of stateData.filter.filters) {
         filterList.push(this.gridColumns[filter.filters[0].field]);
       }
+    }
     this.filteredBy = filterList.toString();
     this.loadActivityListGrid();
   }

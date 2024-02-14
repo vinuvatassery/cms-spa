@@ -70,9 +70,9 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   // Filtering Variables
   statusFilter = '';
   processFilter = '';
-  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
-  public statusArrayDesc = ["Failure", "Successful", "In Progress"]
-  public processArray = ["New Enrollment", "Eligibility Change", "Maintenance", "Card Request"]
+  public statusArray : string[];
+  public statusArrayDesc : string[];
+  public processArray : string[];
   interfaceProcessBatchFilter = '';
   dateColumns = ['startDate'];
 
@@ -83,8 +83,13 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   lovsSubscription: Subscription | undefined;
 
   constructor(
-    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
-  ) { }
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade) { 
+
+    this.statusArray = systemInterfaceDashboardFacade.getStatusArray()
+    this.statusArrayDesc = systemInterfaceDashboardFacade.getStatusDescriptionArray()
+    this.processArray = systemInterfaceDashboardFacade.getEecProcessTypeCodeArray()
+  }
+
 
   gridColumns: any = {
     process: 'Process',
