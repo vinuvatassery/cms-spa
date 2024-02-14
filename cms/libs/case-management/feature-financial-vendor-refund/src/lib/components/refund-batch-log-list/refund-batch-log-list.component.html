@@ -271,7 +271,7 @@
                 [userPhotos$]="refundBatchClaimsSubject"></common-user-photo-icon>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column *ngIf="!receiptLogMode" field="Option" title="Options" [sticky]="true"
+            <kendo-grid-column *ngIf="!receiptLogMode" field="Option" [sortable]="false" title="Options" [sticky]="true"
               [columnMenu]="false" [width]="75" class="text-center">
               <ng-template kendoGridCellTemplate let-dataItem>
                 <kendo-dropdownbutton [data]="batchLogGridActions" 

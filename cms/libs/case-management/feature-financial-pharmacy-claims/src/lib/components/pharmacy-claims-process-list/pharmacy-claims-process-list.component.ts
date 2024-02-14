@@ -180,16 +180,16 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   gridColumns: { [key: string]: string } = {
     ALL: 'All Columns',
     pharmacyName: 'Pharmacy Name',
-    paymentMethodCode: 'Payment Method',
+    paymentMethodDesc: 'Payment Method',
     clientFullName: 'Client Name',
     insuranceName: 'Name on Primary Insurance Card',
     clientId: 'Client ID',
     paymentType: 'Payment Type',
-    amountPaid: 'Amount Paid',
+    amountDue: 'Amount Paid',
     indexCode: 'Index Code',
     pcaCode: 'PCA Code',
     objectCode: 'Object Code',
-    paymentStatus: 'Payment Status',
+    paymentStatusDesc: 'Payment Status',
     creationTime: 'Entry Date'
   };
 
@@ -286,7 +286,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     const isDateSearch = searchValue.includes('/');
     if (isDateSearch && !searchValue) return;
     this.setFilterBy(false, searchValue, []);
-    this.searchSubject.next(searchValue);
+    this.searchSubject.next(searchValue);  
   }
 
   private setFilterBy(isFromGrid: boolean, searchValue: any = '', filter: any = []) {
@@ -331,7 +331,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
 
   performSearch(data: any) {
     this.defaultGridState();
-    const operator = (['clientId']).includes(this.selectedSearchColumn) ? 'eq' : 'contains';
+    const operator = 'contains';
     this.filterData = {
       logic: 'and',
       filters: [
@@ -557,11 +557,11 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     value: any,
     filterService: FilterService
   ): void {
-    if (field === 'paymentMethodCode') {
+    if (field === 'paymentMethodDesc') {
       this.paymentMethodFilter = value;
     } else if (field === 'paymentTypeCode') {
       this.paymentTypeFilter = value;
-    } else if (field === 'paymentStatus') {
+    } else if (field === 'paymentStatusDesc') {
       this.paymentStatusFilter = value;
     }
     filterService.filter({

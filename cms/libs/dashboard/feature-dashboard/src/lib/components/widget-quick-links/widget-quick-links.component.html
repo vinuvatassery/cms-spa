@@ -1,13 +1,12 @@
 
 <h5>FINANCIAL LINKS</h5>
 <div class="dash_quick_links_wrapper">
-      <button kendoButton class="quick-link-item light-blue-btn">Medical Premiums</button>
-      <button kendoButton class="quick-link-item light-blue-btn">Medical Claims</button>
-      <button kendoButton class="quick-link-item light-blue-btn">Dental Premiums</button>
-      <button kendoButton class="quick-link-item light-blue-btn">Dental Claims</button>
-      <button kendoButton class="quick-link-item light-blue-btn">Pharmacy Claims</button>
-      <button kendoButton class="quick-link-item light-blue-btn">Replenishment Model</button>
-      <button kendoButton class="quick-link-item light-blue-btn">Vendor Refunds</button>
-      <button kendoButton class="quick-link-item light-blue-btn">Manufacturer Rebates</button>
+      <button kendoButton class="quick-link-item light-blue-btn" (click)="navigateToPremiums('medical')">Medical Premiums</button>
+      <button kendoButton class="quick-link-item light-blue-btn" (click)="navigateToClaims('medical')">Medical Claims</button>
+      <button kendoButton class="quick-link-item light-blue-btn" (click)="navigateToPremiums('dental')">Dental Premiums</button>
+      <button kendoButton class="quick-link-item light-blue-btn" (click)="navigateToClaims('dental')">Dental Claims</button>
+      <button kendoButton class="quick-link-item light-blue-btn" (click)="navigateToPharmacyClaims()">Pharmacy Claims</button>
+      <button kendoButton class="quick-link-item light-blue-btn" (click)="navigateToVendorProfile()">Vendor Profiles</button>
+      <button kendoButton class="quick-link-item light-blue-btn" (click)="navigateToVendorRefunds()">Vendor Refunds</button>
 </div>
 

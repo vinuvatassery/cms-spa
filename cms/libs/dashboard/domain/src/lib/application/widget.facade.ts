@@ -7,6 +7,10 @@ export class WidgetFacade {
   private recentlyViewedClientsSubject = new BehaviorSubject<any>([]);  
   public recentlyViewedClientsList$ = this.recentlyViewedClientsSubject.asObservable(); 
  
+  private recentlyViewedVendorsSubject = new BehaviorSubject<any>([]);  
+  public recentlyViewedVendorsList$ = this.recentlyViewedVendorsSubject.asObservable(); 
+ 
+
   private activeClientsByGroupSubject = new BehaviorSubject<any>([]);
   public activeClientsByGroupChart$ = this.activeClientsByGroupSubject.asObservable(); 
 
@@ -35,6 +39,14 @@ export class WidgetFacade {
   private applicationCERStatsSubject = new BehaviorSubject<any>([]);
   public  applicationCERStats$ = this.applicationCERStatsSubject.asObservable();
 
+  private activeClientsOnStatusSubject = new BehaviorSubject<any>([]);
+  public  activeClientsOnStatus$ = this.activeClientsOnStatusSubject.asObservable();
+
+  private activeClientsOnGroupSubject = new BehaviorSubject<any>([]);
+  public  activeClientsOnGroup$ = this.activeClientsOnGroupSubject.asObservable();
+  private insuranceTypeFPLStatsSubject = new BehaviorSubject<any>([]);
+  public  insuranceTypeFPLStats$ = this.insuranceTypeFPLStatsSubject.asObservable();
+
   constructor(private widgetService: WidgetService) {}
 
 
@@ -50,12 +62,24 @@ export class WidgetFacade {
       },
     });
   }
+
+  loadRecentlyViewedVendors(): void {
+    this.widgetService.getRecentlyViewedVendors().subscribe({
+      next: (clients: any) => {
+        this.recentlyViewedVendorsSubject.next(clients);
+      },
+      error: (err: any) => {
+        console.error('err', err);
+      },
+    });
+  }
+
   loadChartData(){
     return this.widgetService.getChartData();
   }
 
-  loadActiveClientsByStatusChart(dashboardId : string  , myClients : boolean) {
-    this.widgetService.getActiveClientsByStatus(dashboardId,myClients).subscribe({
+  loadActiveClientsByStatusChart(dashboardId : string  , userId : string) {
+    this.widgetService.getActiveClientsByStatus(dashboardId,userId).subscribe({
       next: (result : any) => { 
        
         let widgetProperties = JSON.parse(result.widgetProperties);
@@ -71,8 +95,8 @@ export class WidgetFacade {
     });
   }
 
-  loadActiveClientsByGroupChart(dashboardId : string, myClients : boolean) {
-    this.widgetService.getActiveClientsByGroup(dashboardId,myClients).subscribe({
+  loadActiveClientsByGroupChart(dashboardId : string, userId : string) {
+    this.widgetService.getActiveClientsByGroup(dashboardId,userId).subscribe({
       next: (result : any) => { 
        
         let widgetProperties = JSON.parse(result.widgetProperties);
@@ -174,6 +198,38 @@ export class WidgetFacade {
     this.widgetService.loadApplicationCERStats(dashboardId).subscribe({
       next: (result) => { 
         this.applicationCERStatsSubject.next(result);
+      }, 
+      error: (err) => { 
+        console.error('err', err);
+      },
+    });
+  }
+
+  loadInsuranceTypeFPLStats(dashboardId : string) {
+    this.widgetService.loadinsuranceTypeFPLtats(dashboardId).subscribe({
+      next: (result) => { 
+        this.insuranceTypeFPLStatsSubject.next(result);
+      }, 
+      error: (err) => { 
+        console.error('err', err);
+      },
+    });
+  }
+  loadActivebyStatusClients() {
+    this.widgetService.loadActiveClients().subscribe({
+      next: (result) => { 
+        this.activeClientsOnStatusSubject.next(result);
+       
+      }, 
+      error: (err) => { 
+        console.error('err', err);
+      },
+    });
+  }
+  loadActivebyGroupClients() {
+    this.widgetService.loadActiveClients().subscribe({
+      next: (result) => { 
+        this.activeClientsOnGroupSubject.next(result);
       }, 
       error: (err) => { 
         console.error('err', err);

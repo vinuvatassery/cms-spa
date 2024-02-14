@@ -330,9 +330,11 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
       filter: this.state?.['filter']?.['filters'] ?? [],
     };
     let selectedPaymentType = this.selectedPaymentType;
+    let level = this.userLevel;
     this.loadApprovalsPaymentsGridEvent.emit({
       gridDataRefinerValue,
       selectedPaymentType,
+      level
     });
   }
 
@@ -507,16 +509,18 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   
   setApprovalLevelAndMaxApprovalAmount()
   {
-    if(this.userManagementFacade.hasPermission(this.approvalPermissionCode))
+    if(this.userManagementFacade.hasPermission([this.approvalPermissionCode]))
     {
       this.maxApprovalAmount = this.userManagementFacade.getUserMaxApprovalAmount(this.approvalPermissionCode);
       if(this.maxApprovalAmount != null && this.maxApprovalAmount > 0)
       {
-        this.approvalTypeCode === ApprovalTypeCode.L1Approval;
+        this.approvalTypeCode = ApprovalTypeCode.L1Approval;
+        this.userLevel = 1;
       }
       else
       {
-        this.approvalTypeCode === ApprovalTypeCode.L2Approval;
+        this.approvalTypeCode = ApprovalTypeCode.L2Approval;
+        this.userLevel = 2;
       }
     }
     else
@@ -1022,7 +1026,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
         .forEach((currentPage: any, index: number) => {
           approvedRequestedAmountCount += currentPage.totalAmountDue;
         });
-      if (this.maxApprovalAmount > 0 && this.maxApprovalAmount < approvedRequestedAmountCount) {
+      if (this.maxApprovalAmount != null && this.maxApprovalAmount < approvedRequestedAmountCount) {
         this.approvalTypeCode = ApprovalTypeCode.ExceedApprovalLimit;
       }
     }

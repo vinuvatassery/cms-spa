@@ -11,6 +11,10 @@ import {
   UserLevel,
 } from '@cms/system-config/domain';
 import { MenuBadge } from '../enums/menu-badge.enum';
+import {
+  ApprovalLimitPermissionCode,
+  PendingApprovalPaymentTypeCode,
+} from '@cms/case-management/domain';
 
 @Component({
   selector: 'cms-side-navigation',
@@ -46,6 +50,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   selected: any = {};
   menuSubscription!: Subscription;
   menuItems: NavigationMenu[] = [];
+  permissionLevels:any[]=[];
   /** Constructor **/
   constructor(
     private readonly router: Router,
@@ -237,7 +242,7 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
   }
 
   private getPendingApprovalMenuCount() {
-    this.navigationMenuFacade.getPendingApprovalPaymentCount(this.userLevel);
+    this.loadPendingApprovalPaymentLevel();
     this.navigationMenuFacade.getPendingApprovalGeneralCount();
     this.navigationMenuFacade.getPendingApprovalImportedClaimCount();
     this.subscribeToPendingApprovalCount();
@@ -280,5 +285,47 @@ export class SideNavigationComponent implements OnInit, OnDestroy {
       MenuBadge.productivityTools,
       this.productivityToolsCount
     );
+  }
+
+  
+  loadPendingApprovalPaymentLevel() {
+    this.permissionLevels=[];
+        let level = this.setPermissionLevel(ApprovalLimitPermissionCode.InsurancePremiumPermissionCode);
+        this.addItemToArray(PendingApprovalPaymentTypeCode.InsurancePremium,level);       
+
+        level = this.setPermissionLevel(ApprovalLimitPermissionCode.MedicalClaimPermissionCode);
+        this.addItemToArray(PendingApprovalPaymentTypeCode.TpaClaim,level);
+
+        level = this.setPermissionLevel(ApprovalLimitPermissionCode.PharmacyPermissionCode);
+        this.addItemToArray(PendingApprovalPaymentTypeCode.PharmacyClaim,level);
+
+        this.navigationMenuFacade.getPendingApprovalPaymentCount(
+          this.permissionLevels
+        );
+  }
+  
+  addItemToArray(serviceTypeCode:string,level:number)
+  {
+    let object = {
+      serviceTypeCode : serviceTypeCode,
+      level : level
+    };
+    this.permissionLevels.push(object);
+  }
+  setPermissionLevel(ifPermission : any)
+  {
+    if(this.userManagementFacade.hasPermission([ifPermission]))
+    {
+      return UserLevel.Level1Value;
+    }
+    let maxApprovalAmount = this.userManagementFacade.getUserMaxApprovalAmount(ifPermission);
+    if(maxApprovalAmount != undefined && maxApprovalAmount > 0)
+    {
+      return UserLevel.Level1Value;
+    }
+    else
+    {
+      return UserLevel.Level2Value;
+    }
   }
 }

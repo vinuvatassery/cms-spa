@@ -11,7 +11,7 @@ import {
   TemplateRef,
   ViewChild
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import {  ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
@@ -28,7 +28,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Component({
   selector: 'cms-pharmacy-claims-all-payments-list',
-  templateUrl: './pharmacy-claims-all-payments-list.component.html', 
+  templateUrl: './pharmacy-claims-all-payments-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges{
@@ -41,7 +41,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isPharmacyClaimsAllPaymentsGridLoaderShow = false;
-  
+
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -120,11 +120,15 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   batchName: 'Batch #',
   pharmacyName: 'Pharmacy Name',
   paymentMethodCode: 'Payment Method',
+  paymentMethodDesc: 'Payment Method',
   clientFullName: 'Client Name',
   insuranceName: 'Name on Primary Insurance Card',
   clientId: 'Client ID',
   amountPaid: 'Amount Paid',
+  amountDue: 'Total Amount Paid',
   indexCode: 'Index Code',
+  pcaCode: 'PCA Code',
+  objectCode:'Object Code',
   paymentStatus: 'Payment Status',
   warrantNumber: 'Warrant Number',
   creationTime: 'Entry Date'
@@ -136,7 +140,6 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   { columnName: 'pharmacyName', columnDesc: 'Pharmacy Name' },
   { columnName: 'clientFullName', columnDesc: 'Client Name' },
   { columnName: 'clientId', columnDesc: 'Client ID' },
-  { columnName: 'creationTime', columnDesc: 'Entry Date' },
   { columnName: 'warrantNumber', columnDesc: 'Warrant Number' },
 ];
 
@@ -144,7 +147,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Claim',
-      icon: 'edit', 
+      icon: 'edit',
       click: (data: any): void => {
         if (!this.isAddEditClaimMoreClose) {
           this.isAddEditClaimMoreClose = true;
@@ -156,15 +159,15 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     {
       buttonType: 'btn-h-primary',
       text: 'Unbatch Claim',
-      icon: 'undo', 
-      click: (data: any): void => {        
+      icon: 'undo',
+      click: (data: any): void => {
       },
     },
- 
+
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Claim',
-      icon: 'delete', 
+      icon: 'delete',
       click: (data: any): void => {
         if (!this.isDeleteBatchMoreOptionClosed) {
           this.isDeleteBatchMoreOptionClosed = true;
@@ -182,7 +185,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       icon: 'edit',
       click: (data: any): void => {
         this.navToReconcilePayments(data);
-      },  
+      },
     },
 
     {
@@ -192,12 +195,12 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       click: (data: any): void => {
         this.isRequestPaymentClicked = false;
         this.isPrintAuthorizationClicked = true;
-          
+
         },
     },
   ];
-  
-  constructor(private route: Router, 
+
+  constructor(private route: Router,
     private dialogService: DialogService,
     private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
@@ -433,12 +436,12 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.filterData = filter;
   }
 
-  navToReconcilePayments(event : any){  
+  navToReconcilePayments(event : any){
     this.route.navigate(['/financial-management/pharmacy-claims/payments/reconcile-payments'],
      { queryParams :{loadType: LoadTypes.allPayments}});
   }
-  
- 
+
+
   public onPreviewSubmitPaymentOpenClicked(template: TemplateRef<unknown>): void {
     this.PreviewSubmitPaymentDialog = this.dialogService.open({
       content: template,
@@ -447,7 +450,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   }
 
   onPreviewSubmitPaymentCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.PreviewSubmitPaymentDialog.close();
     }
   }
@@ -474,9 +477,9 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     });
   }
 
- 
+
   onPrintAuthorizationCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.printAuthorizationDialog.close();
     }
   }
@@ -485,11 +488,11 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.addClientRecentClaimsDialog.close();
   }
 
-  
+
   clientRecentClaimsModalClicked(
     template: TemplateRef<unknown> ,data:any
   ): void {
-    
+
     this.addClientRecentClaimsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal  app-c-modal-bottom-up-modal',
@@ -510,7 +513,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     }
   }
 
-  
+
   onViewProviderDetailClicked(template: TemplateRef<unknown>): void {
     this.providerDetailsDialog = this.dialogService.open({
       content: template,
@@ -528,7 +531,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     }
   }
 
-  
+
   public onDeleteClaimsOpenClicked(template: TemplateRef<unknown>): void {
     this.deleteClaimsDialog = this.dialogService.open({
       content: template,
@@ -763,7 +766,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
         this.getSelectedReportCount(this.selectedAllPaymentsList?.PrintAdviceLetterSelected?.filter((item:any) => item.selected));
       }
   }
-  
+
   pageNumberAndCountChangedInSelectAll() {
     //If selecte all header checked and either the page count or the page number changed
     if(this.selectAll && (this.isPageChanged || this.isPageCountChanged)){

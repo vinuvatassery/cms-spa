@@ -11,7 +11,7 @@ import {
   ViewChild,
   ChangeDetectorRef,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  GridDataResult } from '@progress/kendo-angular-grid';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
@@ -31,7 +31,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
-  templateUrl: './pharmacy-claims-batches-log-lists.component.html', 
+  templateUrl: './pharmacy-claims-batches-log-lists.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges {
@@ -98,7 +98,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
   @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
 
-  @Output() unBatchEntireBatchEvent = new EventEmitter<any>(); 
+  @Output() unBatchEntireBatchEvent = new EventEmitter<any>();
   @Output() unBatchClaimsEvent = new EventEmitter<any>();
   @Output() ondeletebatchesClickedEvent = new EventEmitter<any>();
 
@@ -115,7 +115,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   selected: any;
   batchStatus!:any;
 
-  public batchLogGridActions(dataItem:any){ 
+  public batchLogGridActions(dataItem:any){
    return  [
     {
       buttonType: 'btn-h-primary',
@@ -131,15 +131,15 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
         }
       }
-       
-      }      
+
+      }
     },
     {
       buttonType: 'btn-h-danger',
       text: 'Delete Claim',
       icon: 'delete',
       click: (data: any): void => {
-            
+
         if (
           [
             PaymentStatusCode.Paid,
@@ -160,10 +160,10 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
             this.deleteClaimsConfirmationDialogTemplate
           );
         }
-       
+
       }
 
-      
+
     },
     {
       buttonType: 'btn-h-primary',
@@ -174,9 +174,9 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           this.isAddEditClaimMoreClose = true;
           this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog,paymentRequestId);
         }
-       
-      } 
-      
+
+      }
+
     }
   ]
 }
@@ -188,7 +188,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   @Input() loader$!: Observable<boolean>;
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
   @Output() loadVendorRefundBatchListEvent = new EventEmitter<any>();
-  @Output() exportGridDataEvent = new EventEmitter<any>(); 
+  @Output() exportGridDataEvent = new EventEmitter<any>();
   @Input() claimsType: any;
   @Input() letterContentList$: any;
   @Input() letterContentLoader$: any;
@@ -231,9 +231,12 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     nameOnInsuranceCard: 'Name on Primary Insurance Card',
     clientId: 'Client ID',
     paymentMethodCode: 'Payment Method',
+    paymentMethodDesc: 'Payment Method',
     paymentTypeCode: 'Payment Type',
+    paymentTypeDesc: 'Payment Type',
     creationTime : 'Entry Date',
     paymentStatusCode: 'Payment Status',
+    paymentStatusDesc: 'Payment Status',
     serviceCount: 'Service Count',
     serviceCost: 'Total Cost',
     amountPaid: 'Amount Paid',
@@ -261,7 +264,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   paymentMethodFilter = '';
   paymentTypeFilter = '';
   paymentStatusFilter = '';
-    
+
   dropDowncolumns: any = [
     { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
@@ -321,8 +324,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   constructor(private route: Router,private dialogService: DialogService,  private readonly cdr: ChangeDetectorRef,
     private readonly configProvider: ConfigurationProvider,
     private readonly intl: IntlService,
-    private readonly notificationSnackbarService: NotificationSnackbarService,
-    private readonly userManagementFacade: UserManagementFacade, ) {}
+    private readonly notificationSnackbarService: NotificationSnackbarService) {}
   
   ngOnInit(): void {
     this.sortColumnName = 'Pharmacy Name';
@@ -336,15 +338,15 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   }
 
   initiateBulkMore() {
-   this.bulkMore = [ 
-    
+   this.bulkMore = [
+
       {
         buttonType: 'btn-h-primary',
         text: 'RECONCILE PAYMENTS',
         icon: 'edit',
         click: (data: any): void => {
           this.navToReconcilePayments(data);
-        },  
+        },
       },
       {
         buttonType: 'btn-h-primary',
@@ -355,9 +357,9 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           this.loadBatchLogListGrid();
           this.isRequestPaymentClicked = false;
           this.isPrintVisaAuthorizationClicked = true;
-            
+
           },
-  
+
       },
       {
         buttonType: 'btn-h-primary',
@@ -421,29 +423,29 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       isReconciled: this.isReconciled
     };
     this.loadBatchLogListEvent.emit(gridDataRefinerValue);
+    this.filterData = this.filter;
     this.gridDataHandle();
   }
- 
+
   onChange(data: any) {
     this.defaultGridState();
 
     const isDateSearch = data.includes('/');
-    
+
     data = this.formatSearchValue(data, isDateSearch);
     if (isDateSearch && !data) return;
 
-    let operator = 'startswith';
+    let operator = 'contains';
     if (
       this.selectedColumn === 'itemNbr' ||
       this.selectedColumn === 'serviceCount' ||
       this.selectedColumn === 'serviceCost' ||
-      this.selectedColumn === 'clientId' ||
       this.selectedColumn === 'amountPaid' ||
       this.selectedColumn === 'indexCode' ||
       this.selectedColumn === 'pcaCode' ||
       this.selectedColumn === 'objectCode' ||
       this.selectedColumn === 'checkNbr' ||
-      this.selectedColumn === 'balanceAmount'     
+      this.selectedColumn === 'balanceAmount'
     ) {
       operator = 'eq';
     }
@@ -466,7 +468,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
 
     if( this.selectedColumn === 'creationTime')
     {
-      
+
       this.filterData = {
         logic: 'and',
         filters: [
@@ -492,9 +494,9 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           }
         ],
       };
-    } 
+    }
 
-   
+
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
@@ -521,7 +523,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
         return '';
       }
     }
-  
+
     return searchValue;
   }
 
@@ -582,7 +584,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       this.showDateSearchWarning = false
     }
     this.filter = [];
-   
+
     if (this.searchValue) {
       this.onChange(this.searchValue);
     }
@@ -604,6 +606,19 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     this.filterData = filter;
   }
 
+  resetGrid(){
+    this.defaultGridState();
+    this.sortValue = 'itemNbr';
+    this.sortType = 'asc';
+    this.sortDir = this.sortType === 'desc' ? 'Descending' : "Ascending";
+    this.filter = [];
+    this.searchValue='';
+    this.selectedColumn = 'ALL';
+    this.filteredBy = '';
+    this.sortColumnName = this.gridColumns[this.sortValue];
+    this.loadBatchLogListGrid();
+  }
+
   gridDataHandle() {
     this.batchLogGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
@@ -613,22 +628,22 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
         this.filterData
       );
       this.gridClaimsBatchLogDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) { 
+      if (data?.total >= 0 || data?.total === -1) {
         this.isBatchLogGridLoaderShow = false;
       }
     });
     this.isBatchLogGridLoaderShow = false;
   }
 
-   backToBatch(event : any){  
+   backToBatch(event : any){
     this.route.navigate(['/financial-management/pharmacy-claims'] );
   }
 
-  goToBatchItems(event : any){  
+  goToBatchItems(event : any){
     this.route.navigate(['/financial-management/pharmacy-claims/batch/items'] );
   }
 
-  navToReconcilePayments(event : any){  
+  navToReconcilePayments(event : any){
     this.route.navigate(['/financial-management/pharmacy-claims/batch/reconcile-payments'],
     { queryParams: { bid: this.batchId } });
   }
@@ -640,7 +655,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   }
 
   onPreviewSubmitPaymentCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.PreviewSubmitPaymentDialog.close();
     }
   }
@@ -670,9 +685,9 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     });
   }
 
- 
+
   onPrintAuthorizationCloseClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.printAuthorizationDialog.close();
     }
   }
@@ -731,16 +746,16 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       });
   }
   onModalBatchDeletingClaimsButtonClicked(action: any) {
-  
+
     this.ondeletebatchesClickedEvent.emit(this.selected)
     this.deleteClaims$.subscribe((_:any) =>{
-      
+
       this.isDeleteClaimClosed = false;
       this.deleteClaimsDialog.close();
       this.loadBatchLogListGrid();
     })
-  
-    
+
+
   }
 
   onClientClicked(clientId: any) {
@@ -754,12 +769,12 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     });
   }
   onModalDeleteClaimsModalClose(result: any) {
-    if (result) { 
+    if (result) {
       this.deleteClaimsDialog.close();
     }
   }
 
-  
+
   clientRecentClaimsModalClicked(
     template: TemplateRef<unknown> ,
     data:any): void {
@@ -772,7 +787,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
         duration: 200,
       },
     });
-    
+
     this.vendorId = data.vendorId;
     this.clientId = data.clientId;
     this.clientName = data.clientFullName;
@@ -809,14 +824,14 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     });
   }
   onCloseReverseClaimsClickedEventClicked(result: any) {
-    if (result) { 
+    if (result) {
       this.reverseClaimsDialogClosed = false;
       this.reverseClaimsDialog.close();
     }
   }
 
   onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>, paymentRequestId:any): void {
-    if(paymentRequestId !== '00000000-0000-0000-0000-000000000000')  
+    if(paymentRequestId !== '00000000-0000-0000-0000-000000000000')
     {
     this.getPharmacyClaimEvent.emit(paymentRequestId);
     }
@@ -835,14 +850,14 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     onClickedExport() {
       this.showExportLoader = true
       this.exportGridDataEvent.emit()
-  
+
       this.exportButtonShow$
         .subscribe((response: any) => {
           if (response) {
             this.showExportLoader = false
             this.cdr.detectChanges()
           }
-  
+
         })
     }
 
@@ -970,7 +985,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
 
    loadEachLetterTemplate(event:any){
     this.loadTemplateEvent.emit(event);
-  } 
+  }
   onProviderNameClick(event: any) {
     this.onProviderNameClickEvent.emit(event);
   }
@@ -1047,7 +1062,7 @@ updatePharmacyClaim(data: any) {
   .subscribe((editResponse: any) =>
   {
     if(editResponse)
-    {      
+    {
       this.loadBatchLogListGrid();
       this.modalCloseAddEditClaimsFormModal(true)
     }
