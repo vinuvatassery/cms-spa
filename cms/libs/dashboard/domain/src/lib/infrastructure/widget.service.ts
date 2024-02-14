@@ -10,10 +10,13 @@ export class WidgetService {
   constructor(private http: HttpClient ,private configurationProvider: ConfigurationProvider) {}
 
   getRecentlyViewedClients(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/recently-viewed-clients`
+    );
     return of([
       {
-        ProfileName: 'Donna Summer',
-        ProfileId: 'ID 1212312',
+        ClientName: 'Donna Summer',
+        ClientId: 'ID 1212312',
         DOB: '20-12-1996',
         Status: 'ACCEPT',
       },
@@ -42,6 +45,12 @@ export class WidgetService {
         Status: 'RESTRICTED',
       },
     ]);
+  }
+
+  getRecentlyViewedVendors(): Observable<any> {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/recently-viewed-vendors`
+    );
   }
 
   getChartData(): Observable<any> {

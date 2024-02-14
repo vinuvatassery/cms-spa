@@ -1,20 +1,35 @@
 
   <div class="dash-header-with-filters">
-    <h5>PROGRAM EXPENSES</h5>
+    <h5>RECENTLY VIEWED</h5>
   </div>
   <div class="dashboard-cards-container">
+  <h5> CLIENTS </h5>
     <div class="app-c-drag-row-table recently-view">
     <kendo-grid [data]="gridData" >
-      <kendo-grid-column field="ProfileName" [width]="100"> </kendo-grid-column>
-      <kendo-grid-column field="ProfileId" [width]="100"> </kendo-grid-column>
-      <kendo-grid-column field="DOB" [width]="100"> </kendo-grid-column>
-      <kendo-grid-column field="Status"  [width]="100"> </kendo-grid-column>
+      <kendo-grid-column field="clientName" [width]="100"> </kendo-grid-column>
+      <kendo-grid-column field="clientId" [width]="100"> </kendo-grid-column>
+      <kendo-grid-column field="lastModificationTime" [width]="100"> </kendo-grid-column>
+      <kendo-grid-column field="caseStatusCode"  [width]="100"> </kendo-grid-column>
       <kendo-grid-column [width]="40">
-        <ng-template kendoGridCellTemplate>
-          <a href="https://dev.azure.com/OregonADAP/" target="_blank">
-            <span class="k-icon k-i-arrow-chevron-right"></span></a>
+        <ng-template kendoGridCellTemplate  let-dataItem>
+          <span (click)="onCaseClicked(dataItem)">
+            <span class="k-icon k-i-arrow-chevron-right"></span></span>
         </ng-template>
       </kendo-grid-column>
     </kendo-grid>
   </div>
+
+  <h5> VENDORS </h5>
+  <div class="app-c-drag-row-table recently-view">
+  <kendo-grid [data]="vendorGridData" >
+    <kendo-grid-column field="vendorName" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="tin" [width]="100"> </kendo-grid-column>
+       <kendo-grid-column [width]="40">
+      <ng-template kendoGridCellTemplate  let-dataItem>
+        <span (click)="onVendorClicked(dataItem)">
+          <span class="k-icon k-i-arrow-chevron-right"></span></span>
+      </ng-template>
+    </kendo-grid-column>
+  </kendo-grid>
+</div>
   </div>
