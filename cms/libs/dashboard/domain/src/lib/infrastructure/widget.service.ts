@@ -557,7 +557,7 @@ export class WidgetService {
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/applications-cers-count`
     ); 
   }
-  loadActivClients() {
+  loadActiveClients() {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/users`
     ); 

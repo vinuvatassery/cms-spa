@@ -200,7 +200,7 @@ export class WidgetFacade {
     });
   }
   loadActivebyStatusClients() {
-    this.widgetService.loadActivClients().subscribe({
+    this.widgetService.loadActiveClients().subscribe({
       next: (result) => { 
         this.activeClientsOnStatusSubject.next(result);
        
@@ -211,7 +211,7 @@ export class WidgetFacade {
     });
   }
   loadActivebyGroupClients() {
-    this.widgetService.loadActivClients().subscribe({
+    this.widgetService.loadActiveClients().subscribe({
       next: (result) => { 
         this.activeClientsOnGroupSubject.next(result);
       }, 
