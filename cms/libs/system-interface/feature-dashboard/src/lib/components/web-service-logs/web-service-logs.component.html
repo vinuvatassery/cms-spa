@@ -21,11 +21,12 @@
   </div>
 
   <div class="table-sorted-info">
-    Sorted {{sortDir}} by <span class="sort-items"> {{sortColumnDesc}} </span>
-    <span class="sort-items" *ngIf="!filteredByColumnDesc">No Filters</span>
-    <span class="sort-items" *ngIf="filteredByColumnDesc">Filtered by {{filteredByColumnDesc}}</span>
-    <span *ngIf="columnsReordered" class="sort-items">Columns Re-ordered</span>
-    <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="restGrid()">
+    Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
+    <span class="sort-items" *ngIf="!filteredBy">No Filters</span>
+    <span class="sort-items" *ngIf="filteredBy">Filtered by {{filteredBy}}</span>
+    <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+    <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+    <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="resetGrid()">
       <a>Set to Default</a>
     </button>
   </div>
@@ -39,6 +40,11 @@
       (columnReorder)="onColumnReorder($event)" [data]="webLogLists$ | async">
 
       <kendo-grid-column field="process" title="Process" [width]="180">
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-dropdownlist [data]="processArray" [value]="processFilter"
+            (valueChange)="dropdownFilterChange('process',$event, filterService)">
+          </kendo-dropdownlist>
+        </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -62,7 +68,7 @@
 
       <kendo-grid-column field="status" title="Status" [width]="180">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-          <kendo-dropdownlist [data]="statusArray" [value]="statusFilter"
+          <kendo-dropdownlist [data]="statusArrayDesc" [value]="statusFilter" 
             (valueChange)="dropdownFilterChange('status',$event, filterService)">
           </kendo-dropdownlist>
         </ng-template>

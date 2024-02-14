@@ -4,6 +4,9 @@ import { SystemInterfaceDashboardService } from '../infrastructure/system-interf
 import { SnackBarNotificationType, NotificationSource, LoaderService, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { SystemInterfaceActivityStatusCode } from '../enums/system-interface-status-type-code';
+import { SystemInterfaceActivityStatusCodeDescription } from '../enums/system-interface-status-type-code.description';
+import { SystemInterfaceEecProcessTypeCode } from '../enums/system-interface-eec-process-type-code';
 
 @Injectable({ providedIn: 'root' })
 export class SystemInterfaceDashboardFacade {
@@ -110,22 +113,22 @@ export class SystemInterfaceDashboardFacade {
     });
   }
 
-  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, entityTypeCode: string, params: any): void {
-    this.showLoader();
-    this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, entityTypeCode, params).subscribe({
-      next: (batchlogExceptionResponse: any) => {
-        const gridView: any = {
-          data: batchlogExceptionResponse['items'],
-          total: batchlogExceptionResponse?.totalCount,
-        };
-        this.batchLogExceptionListSubject.next(gridView);
-        this.hideLoader();
-      },
-      error: (err) => {
-        this.hideLoader();
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      },
-    });
+  getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string, params: any) {
+ 
+    return this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode, params);
+    
+  }
+
+  getStatusArray():string[]{
+    return Object.values(SystemInterfaceActivityStatusCode)
+  }
+
+  getStatusDescriptionArray():string[]{
+    return Object.values(SystemInterfaceActivityStatusCodeDescription)
+  }
+
+  getEecProcessTypeCodeArray():string[]{
+    return Object.values(SystemInterfaceEecProcessTypeCode)
   }
 
   // weblogs ----------------------------------

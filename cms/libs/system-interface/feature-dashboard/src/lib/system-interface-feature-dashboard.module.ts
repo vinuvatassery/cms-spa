@@ -9,6 +9,7 @@ import { WebServiceLogsComponent } from './components/web-service-logs/web-servi
 import { WebServiceLogsPageComponent } from './containers/web-service-logs-page/web-service-logs-page.component';
 import { BatchInterfaceLogsPageComponent } from './containers/batch-interface-logs-page/batch-interface-logs-page.component';
 import { BatchInterfaceLogsComponent } from './components/batch-Interface-logs/batch-Interface-logs.component';
+import { ExceptionDetailComponent } from './components/exception-detail/exception-detail.component';
 
 @NgModule({
   imports: [
@@ -24,6 +25,7 @@ import { BatchInterfaceLogsComponent } from './components/batch-Interface-logs/b
     WebServiceLogsPageComponent,
     BatchInterfaceLogsPageComponent,
     BatchInterfaceLogsComponent,
+    ExceptionDetailComponent,
   ],
   exports: [
     SystemInterfaceDashboardPageComponent,
@@ -32,6 +34,7 @@ import { BatchInterfaceLogsComponent } from './components/batch-Interface-logs/b
     WebServiceLogsPageComponent,
     BatchInterfaceLogsPageComponent,
     BatchInterfaceLogsComponent,
+    ExceptionDetailComponent,
   ],
 })
 export class SystemInterfaceFeatureDashboardModule {}
