@@ -152,7 +152,20 @@ export class FinancialVendorFacade {
     });
   }
 
-
+  addVendorRecentlyViewed(vendorId :any){
+    this.showLoader();
+    this.financialVendorDataService.addVendorRecentlyViewed(vendorId).subscribe({
+      next: (vendorResponse: any) => {
+        if (vendorResponse) {
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
   getVendorProfileSpecialHandling(vendorId: string): void {
     this.financialVendorDataService.getVendorProfileSpecialHandling(vendorId).subscribe({
       next: (vendorHandlingResponse: any) => {

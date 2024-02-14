@@ -7,6 +7,10 @@ export class WidgetFacade {
   private recentlyViewedClientsSubject = new BehaviorSubject<any>([]);  
   public recentlyViewedClientsList$ = this.recentlyViewedClientsSubject.asObservable(); 
  
+  private recentlyViewedVendorsSubject = new BehaviorSubject<any>([]);  
+  public recentlyViewedVendorsList$ = this.recentlyViewedVendorsSubject.asObservable(); 
+ 
+
   private activeClientsByGroupSubject = new BehaviorSubject<any>([]);
   public activeClientsByGroupChart$ = this.activeClientsByGroupSubject.asObservable(); 
 
@@ -58,6 +62,18 @@ export class WidgetFacade {
       },
     });
   }
+
+  loadRecentlyViewedVendors(): void {
+    this.widgetService.getRecentlyViewedVendors().subscribe({
+      next: (clients: any) => {
+        this.recentlyViewedVendorsSubject.next(clients);
+      },
+      error: (err: any) => {
+        console.error('err', err);
+      },
+    });
+  }
+
   loadChartData(){
     return this.widgetService.getChartData();
   }
