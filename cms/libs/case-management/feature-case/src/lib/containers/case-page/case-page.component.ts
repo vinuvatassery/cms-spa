@@ -37,6 +37,7 @@ export class CasePageComponent implements OnInit {
   healthInsuranceType ='';
   fplPercentage = -1;
   filterOperator = '';
+  group :string = ''
   /** Public properties for case popup**/
   caseSearchResults$ = this.caseFacade.caseSearched$;
   caseOwners$ = this.loginUserFacade.usersByRole$;
@@ -103,6 +104,7 @@ export class CasePageComponent implements OnInit {
     this.healthInsuranceType = this.route.snapshot.queryParams['healthInsuranceType'];
     this.fplPercentage = this.route.snapshot.queryParams['fplPercentage']; 
     this.filterOperator = this.route.snapshot.queryParams['filterOperator'];
+    this.group = this.route.snapshot.queryParams['group']
   }
   /** Getters **/
   get caseScreenTab(): typeof CaseScreenTab {

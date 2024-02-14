@@ -42,7 +42,7 @@
                         [fillMode]="formUiStyle.inputFillMode" [data]="dataMonth"  textField="Name" valueField="Value" [valuePrimitive]="true"
                         (valueChange)="frequecyValueChange($event)">
                   </kendo-dropdownlist>
-                  <kendo-dropdownlist size="small" value="Last Year" rounded="medium" class="mr-1"
+                  <kendo-dropdownlist size="small" [(ngModel)]="selectedTimeFrame" rounded="medium" class="mr-1"
                         [fillMode]="formUiStyle.inputFillMode" [data]="dataYear"  (valueChange)="TimeFrameValueChange($event)">
                   </kendo-dropdownlist>
 

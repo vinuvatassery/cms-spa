@@ -12,7 +12,7 @@ import {
   OnDestroy
 } from '@angular/core';
 /** Facades **/
-import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey } from '@cms/case-management/domain';
+import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey, GroupCode } from '@cms/case-management/domain';
 import { Observable, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade, UserDataService } from '@cms/system-config/domain';
@@ -54,6 +54,7 @@ public state!: any;
   @Input() module: string = '';
   @Input() parentModule: string = '';
   @Input() caseStatus: string = '';
+  @Input() group: string = '';
   addRemoveColumns="Default Columns"
   defaultColumns = [
     "clientFullName",
@@ -156,6 +157,16 @@ public state!: any;
     if(this.healthInsuranceType != ''){
       this.dashboardFPLfilter();
     }
+    
+    if (this.caseStatus == "ACCEPT" || this.caseStatus == "INCOMPLETE"|| this.caseStatus == "RESTRICTED")
+      {
+        this.dashboardfilter();
+      }
+      if(this.group == GroupCode.UPP ||  this.group == GroupCode.Bridge || this.group == GroupCode.GroupI
+        || this.group == GroupCode.GroupII ||  this.group == GroupCode.GroupINSGAP || this.group == GroupCode.GroupIINSGAP)
+        {
+          this.dashboardGroupfilter();
+        }
   }
   ngOnDestroy(): void {
     this.userProfileSubsriction.unsubscribe();
@@ -209,20 +220,28 @@ public state!: any;
       }]});
     this.dataStateChange(this.state,false);
   }
-
-  dashboardFPLfilter(){
+  dashboardGroupfilter(){
     this.state.filter.filters.push(
       {filters:[{
-        field: "healthInsuranceType",
+        field: "group",
         operator: "eq",
-        value:this.healthInsuranceType
-        },{
-          field: "fplPercentage",
-          operator: this.filterOperator,
-          value:this.fplPercentage
-      }]});
-      debugger;
+        value:this.group
+    }]});
   this.dataStateChange(this.state,false);
+}
+dashboardFPLfilter(){
+  this.state.filter.filters.push(
+    {filters:[{
+      field: "healthInsuranceType",
+      operator: "eq",
+      value:this.healthInsuranceType
+      },{
+        field: "fplPercentage",
+        operator: this.filterOperator,
+        value:this.fplPercentage
+    }]});
+    debugger;
+this.dataStateChange(this.state,false);
 }
  filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;

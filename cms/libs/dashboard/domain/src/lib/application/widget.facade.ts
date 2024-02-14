@@ -57,13 +57,13 @@ export class WidgetFacade {
     return this.widgetService.getChartData();
   }
 
-  loadActiveClientsByStatusChart(dashboardId : string) {
-    this.widgetService.getActiveClientsByStatus(dashboardId).subscribe({
+  loadActiveClientsByStatusChart(dashboardId : string  , myClients : boolean) {
+    this.widgetService.getActiveClientsByStatus(dashboardId,myClients).subscribe({
       next: (result : any) => { 
        
         let widgetProperties = JSON.parse(result.widgetProperties);
         
-        widgetProperties.chartData.series[0].data = result?.clientsbyStatus
+        widgetProperties.chartData.series[0].data = result?.clientsByStatus
         
         this.activeClientsByStatusSubject.next(widgetProperties);
       },
@@ -74,8 +74,8 @@ export class WidgetFacade {
     });
   }
 
-  loadActiveClientsByGroupChart(dashboardId : string) {
-    this.widgetService.getActiveClientsByGroup(dashboardId).subscribe({
+  loadActiveClientsByGroupChart(dashboardId : string, myClients : boolean) {
+    this.widgetService.getActiveClientsByGroup(dashboardId,myClients).subscribe({
       next: (result : any) => { 
        
         let widgetProperties = JSON.parse(result.widgetProperties);

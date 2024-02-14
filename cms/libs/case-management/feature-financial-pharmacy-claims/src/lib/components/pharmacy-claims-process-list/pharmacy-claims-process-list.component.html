@@ -92,7 +92,7 @@
          </kendo-grid-string-filter-menu>
      </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="paymentMethodCode" title="Payment Method" [width]="175"> 
+    <kendo-grid-column field="paymentMethodDesc" title="Payment Method" [width]="175"> 
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-dropdownlist 
         textField="lovDesc" 
@@ -100,17 +100,9 @@
         [data]="paymentMethodType$ | async" 
         [value]="paymentMethodFilter" 
         [valuePrimitive]="true"
-        (valueChange)="dropdownFilterChange('paymentMethodCode',$event, filterService)">
+        (valueChange)="dropdownFilterChange('paymentMethodDesc',$event, filterService)">
         </kendo-dropdownlist>
-      </ng-template>
-      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <kendo-grid-string-filter-menu  [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
-             <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
-             <kendo-filter-eq-operator></kendo-filter-eq-operator>
-             <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
-             <kendo-filter-contains-operator></kendo-filter-contains-operator>
-         </kendo-grid-string-filter-menu>
-     </ng-template>
+      </ng-template>     
     </kendo-grid-column>
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="200">
       <ng-template kendoGridCellTemplate let-dataItem>
@@ -188,7 +180,7 @@
          </kendo-grid-string-filter-menu>
      </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="paymentStatus" title="Payment Status" [width]="170"> 
+    <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="170"> 
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-dropdownlist
           textField="lovDesc" 
@@ -196,7 +188,7 @@
           [data]="paymentStatus$ | async" 
           [value]="paymentStatusFilter" 
           [valuePrimitive]="true"
-          (valueChange)="dropdownFilterChange('paymentStatus',$event, filterService)">
+          (valueChange)="dropdownFilterChange('paymentStatusDesc',$event, filterService)">
         </kendo-dropdownlist>
       </ng-template>
     </kendo-grid-column>
