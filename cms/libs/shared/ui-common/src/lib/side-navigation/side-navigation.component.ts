@@ -11,10 +11,9 @@ import {
   UserLevel,
 } from '@cms/system-config/domain';
 import { MenuBadge } from '../enums/menu-badge.enum';
-import {
-  ApprovalLimitPermissionCode,
-  PendingApprovalPaymentTypeCode,
-} from '@cms/case-management/domain';
+import { ApprovalLimitPermissionCode } from '../enums/approval-limit-permission-code.enum';
+import { PendingApprovalPaymentTypeCode } from '../enums/pending-approval-payment-type-code.enum';
+
 
 @Component({
   selector: 'cms-side-navigation',
