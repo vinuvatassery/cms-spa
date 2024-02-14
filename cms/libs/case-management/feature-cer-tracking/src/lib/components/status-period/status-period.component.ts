@@ -49,7 +49,6 @@ export class StatusPeriodComponent implements OnInit {
   isFiltered = false;
   filter!: any;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  statusPeriodProfileSubject = new Subject();
   columns: any = {
     eligibilityStartDate: 'Status Start',
     eligibilityEndDate: 'Status End',
@@ -91,6 +90,7 @@ export class StatusPeriodComponent implements OnInit {
       },
     }
   ];
+  statusPeriodProfilePhoto$ =this.statusPeriodFacade.statusPeriodProfilePhotoSubject;
   /** Constructor **/
   constructor(
     private readonly statusPeriodFacade: StatusPeriodFacade,
@@ -98,8 +98,7 @@ export class StatusPeriodComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private clientEligibilityFacade: ClientEligibilityFacade,
     private dialogService: DialogService,
-    private readonly clientFacade: ClientFacade,
-    private userManagementFacade:UserManagementFacade) { }
+    private readonly clientFacade: ClientFacade,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -218,25 +217,10 @@ export class StatusPeriodComponent implements OnInit {
         res['data'].forEach((x:any, index: number) => {
           this.statusGrid?.collapseRow(index);
         });
-        this.loadDistinctUserIdsAndProfilePhoto(res['data']);
+        
       }
     })
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.statusPeriodProfileSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   onStatusPeriodDetailClosed(result: any) {
     this.isStatusPeriodDetailOpened = false;

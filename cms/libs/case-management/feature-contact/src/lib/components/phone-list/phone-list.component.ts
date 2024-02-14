@@ -34,7 +34,7 @@ export class PhoneListComponent implements OnChanges, OnDestroy {
   @Input() deactivateClientPhone$: any;
   @Input() removeClientPhone$: any;
   @Input() deactivateAndAddClientPhone$: any;
-
+  @Input() phoneListProfilePhoto$!: any;
   @Output() loadClientPhonesListEvent = new EventEmitter<any>();
   @Output() addClientPhoneEvent = new EventEmitter<any>();
   @Output() loadDeviceTypeLovEvent = new EventEmitter<any>();
@@ -202,25 +202,9 @@ this.reloadEmailsEvent.emit();
 
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
-      this.loadDistinctUserIdsAndProfilePhoto(data?.data);
       }
     });
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManage.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.userPhoneProfilrPhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-}
 
   onPhoneNumberDetailClosed() {
     this.editbuttonEmitted = false;

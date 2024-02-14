@@ -18,7 +18,7 @@
   (updateChangeGroupEvent)="updateChangeGroup($event)"
   (createCerSessionEvent)="createCerSession()"
   [clientProfileHeader$]="clientProfileHeader$"
-  [userDetail$]="userDetail$"
+  [userDetail$]="userDetail$ | async"
 ></case-management-case360-header>
 <case-management-common-actions></case-management-common-actions>
 <!-- Case 360 details section -->

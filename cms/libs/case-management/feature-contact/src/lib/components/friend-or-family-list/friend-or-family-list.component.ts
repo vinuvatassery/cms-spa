@@ -31,6 +31,7 @@ export class FriendOrFamilyListComponent implements OnInit {
   showHistoricalDataFlag = false
   selectedContact!:any;
   userAlternateGridPhotosSubject = new Subject<any>();
+  familyFriendsProfilePhoto$ = this.contactFacade.familyFriendsProfilePhotoSubject;
 
   // gridOptionData: Array<any> = [{ text: 'Options' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -89,7 +90,6 @@ export class FriendOrFamilyListComponent implements OnInit {
       if(this.showHistoricalDataFlag){
         this.gridView=this.allList
       }
-      this.loadDistinctUserIdsAndProfilePhoto();
       this.cdr.detectChanges();
     })
     this.contactGridLoader$.subscribe((data : any) => {
@@ -97,24 +97,6 @@ export class FriendOrFamilyListComponent implements OnInit {
     });
   }
 
-
-  loadDistinctUserIdsAndProfilePhoto() {
-    if(this.gridView != null && this.gridView.length > 0)
-    {
-    const distinctUserIds = Array.from(new Set(this.gridView?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds != null){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.userAlternateGridPhotosSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  }
-}
   /** Internal event methods **/
   onFriendOrFamilyDetailClosed() {
     this.contactFacade.showAddContactPopupSubject.next(false);
@@ -154,7 +136,7 @@ export class FriendOrFamilyListComponent implements OnInit {
     else{
       this.gridView= this.allList.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
     }
-    this.loadDistinctUserIdsAndProfilePhoto();
+    this.contactFacade.loadFamilyAndFriendsDistinctUserIdsAndProfilePhoto(this.gridView);
     this.cdr.detectChanges();
   }
   public rowClass = (args:any) => ({

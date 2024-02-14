@@ -6,7 +6,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Contact, ContactInfo,ClientAddress,FriendsOrFamilyContactClientProfile } from '../entities/contact';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
-import { ZipCodeFacade } from '@cms/system-config/domain';
+import { UserManagementFacade, ZipCodeFacade } from '@cms/system-config/domain';
 import { catchError, of, Subject } from 'rxjs';
 import {
   LoggingService,
@@ -95,6 +95,9 @@ export class ContactFacade {
     this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' ';
   public sortType = 'asc';
+  addressListProfilePhotoSubject = new Subject();
+  phoneListProfilePhotoSubject = new Subject();
+  familyFriendsProfilePhotoSubject = new Subject();
 
   public sort: SortDescriptor[] = [
     {
@@ -110,7 +113,8 @@ export class ContactFacade {
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
     private readonly zipCodeFacade: ZipCodeFacade,
-    private configurationProvider: ConfigurationProvider
+    private configurationProvider: ConfigurationProvider,
+    private readonly userManagementFacade: UserManagementFacade
   ) { }
 
   /** Public methods **/
@@ -209,9 +213,10 @@ export class ContactFacade {
   loadFriendsorFamily(clientId:any, eligibilityId:any): void {
     this.contactGridLoaderSubject.next(true);
     this.contactDataService.loadFriendsorFamily(clientId, eligibilityId).subscribe({
-      next: (friendsOrFamilyResponse) => {
+      next: (friendsOrFamilyResponse: any) => {
         this.contactGridLoaderSubject.next(false);
         this.friendsOrFamilySubject.next(friendsOrFamilyResponse);
+        this.loadFamilyAndFriendsDistinctUserIdsAndProfilePhoto(friendsOrFamilyResponse);
       },
       error: (err) => {
         this.contactGridLoaderSubject.next(false);
@@ -220,6 +225,23 @@ export class ContactFacade {
       },
     });
   }
+
+  loadFamilyAndFriendsDistinctUserIdsAndProfilePhoto(friendsOrFamilyResponse: any[]) {
+    if(friendsOrFamilyResponse != null && friendsOrFamilyResponse.length > 0)
+    {
+    const distinctUserIds = Array.from(new Set(friendsOrFamilyResponse?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds != null){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.familyFriendsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  }
+}
 
   loadContactInfo(clientId: number, clientCaseEligibilityId: string, prevClientCaseEligibilityId:string='') {
     return this.contactDataService.loadContactInfo(
@@ -298,15 +320,33 @@ export class ContactFacade {
   getClientAddress(clientId: any) {
     this.showLoader();
     return this.contactDataService.getClientAddress(clientId).subscribe({
-      next: (addressesResponse) => {
+      next: (addressesResponse: any) => {
         this.hideLoader();
         this.addressesSubject.next(addressesResponse);
+        this.loadAddressDistinctUserIdsAndProfilePhoto(addressesResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
+
+  loadAddressDistinctUserIdsAndProfilePhoto(addresses: any[]) {
+    if(addresses != null && addresses.length > 0)
+    {
+    const distinctUserIds = Array.from(new Set(addresses?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.addressListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  }
+}
 
   deleteClientAddress(clientId: any, clientAddressId: any) {
     return this.contactDataService.deleteClientAddress(
@@ -564,6 +604,7 @@ export class ContactFacade {
 
             this.clientPhonesSubject.next(gridView);
             this.phoneNumbersSubject.next(clientPhonesResponse['items']);
+            this.loadPhoneDistinctUserIdsAndProfilePhoto(clientPhonesResponse['items']);
           }
         },
         error: (err) => {
@@ -576,6 +617,20 @@ export class ContactFacade {
         },
       });
   }
+
+  loadPhoneDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.phoneListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+}
 
   loadClientPhone(clientId: number, clientPhoneId: string): void {
     this.showLoader();

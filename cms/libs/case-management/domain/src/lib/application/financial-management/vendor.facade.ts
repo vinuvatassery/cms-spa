@@ -301,6 +301,7 @@ export class FinancialVendorFacade {
   }
 
   getProviderList(providerPageAndSortedRequest: any) {
+
     this.showLoader();
     this.financialVendorDataService.getProvidersList(providerPageAndSortedRequest).subscribe({
       next: (response: any) => {

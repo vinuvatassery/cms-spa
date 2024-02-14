@@ -44,7 +44,7 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
   @Output() updateChangeGroupEvent = new EventEmitter<any>();
   @Output() createCerSessionEvent = new EventEmitter<string>();
   @Input() clientProfileHeader$!: Observable<any>;
-  @Input() userDetail$!: Observable<any>;  
+  @Input() userDetail$!: any;  
 
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
@@ -53,13 +53,13 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
   groupChangeTitle!: string;
   private statusPeriodDialog: any;
   private statusGroupDialog: any;
-  isUserProfilePhotoExist: boolean = true;
+  isUserProfilePhotoExist: boolean = false;
   userprofileHeaderPhotoSubject = new Subject();
   userFirstName!: string;
   userLastName!: string;
   assignedToVisibility$ = new BehaviorSubject<boolean>(false);
   groupUpdatedSubscription = new Subscription();
-  userDetailSubscription = new Subscription();
+  // userDetailSubscription = new Subscription();
   constructor(
     private readonly clientEligibilityFacade: ClientEligibilityFacade,
     private readonly caseFacade: CaseFacade,
@@ -87,7 +87,7 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.groupUpdatedSubscription?.unsubscribe();
-    this.userDetailSubscription?.unsubscribe();
+    // this.userDetailSubscription?.unsubscribe();
   }
   /** Internal event methods **/
   onStatusPeriodDetailClosed(): void {
@@ -194,11 +194,13 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
   }
 
   loadDistinctUserIdsAndProfilePhoto() {
-    this.userDetailSubscription = this.userDetail$.subscribe((user: any)=>{
-      this.userFirstName = user.firstName;
-      this.userLastName = user.lastName;
-      this.assignedToVisibility$.next(true);
-    });
+    this.userManagementFacade.usersById$.subscribe(
+      (response) => {
+        this.userFirstName = response.firstName;
+        this.userLastName = response.lastName;
+        this.isUserProfilePhotoExist = response.isUserProfilePhotoExist;
+        this.assignedToVisibility$.next(true);
+      });
     if(this.caseWorkerId){
       this.userManagementFacade.getProfilePhotosByUserIds(this.caseWorkerId)
       .subscribe({

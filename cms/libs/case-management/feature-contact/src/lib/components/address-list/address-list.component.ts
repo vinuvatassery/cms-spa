@@ -38,6 +38,7 @@ export class AddressListComponent implements OnInit {
   distinctUserIds!: string;
   allProfilePhotosList:any[]=[];
   userPhotosSubject = new Subject<any>();
+  addressListProfilePhoto$ = this.contactFacade.addressListProfilePhotoSubject;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -80,8 +81,7 @@ export class AddressListComponent implements OnInit {
  
   ];
   /** Constructor **/
-  constructor(private readonly contactFacade: ContactFacade, private readonly cdr:ChangeDetectorRef,private caseFacade: CaseFacade,
-    private readonly userManagementFacade: UserManagementFacade) {}
+  constructor(private readonly contactFacade: ContactFacade, private readonly cdr:ChangeDetectorRef,private caseFacade: CaseFacade,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -91,35 +91,16 @@ export class AddressListComponent implements OnInit {
   /** Private methods **/
   private loadAddress() {
     this.contactFacade.getClientAddress(this.clientId);
-    this.contactFacade.address$.subscribe((address:any)=>{
+    this.contactFacade.address$.subscribe((address:any[])=>{
       this.addressGridView= address.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
       this.allAddressList=address;
       if(this.showHistoricalFlag){
         this.addressGridView=this.allAddressList;
       }
-      this.loadDistinctUserIdsAndProfilePhoto();
       this.cdr.detectChanges();
     })
     this.addressListLoader = false;
   }
-
-  loadDistinctUserIdsAndProfilePhoto() {
-    if(this.addressGridView != null && this.addressGridView.length > 0)
-    {
-    this.distinctUserIds = Array.from(new Set(this.addressGridView?.map(user => user.creatorId))).join(',');
-    if(this.distinctUserIds != null){
-      this.userManagementFacade.getProfilePhotosByUserIds(this.distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.userPhotosSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  }
-}
 
   /** Internal event methods **/
   onAddressDetailClosed() {
@@ -184,9 +165,8 @@ export class AddressListComponent implements OnInit {
       this.addressGridView= this.allAddressList.filter((x:any)=>x.activeFlag == StatusFlag.Yes);
     }
     this.addressListLoader = false;
-    this.loadDistinctUserIdsAndProfilePhoto();
-    this.cdr.detectChanges();   
-    
+    this.contactFacade.loadAddressDistinctUserIdsAndProfilePhoto(this.addressGridView);
+    this.cdr.detectChanges();
   }
 
   public rowClass = (args:any) => ({
