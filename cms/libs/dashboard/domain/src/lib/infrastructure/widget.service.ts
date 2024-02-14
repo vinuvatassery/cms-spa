@@ -557,5 +557,9 @@ export class WidgetService {
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/applications-cers-count`
     ); 
   }
- 
+ loadinsuranceTypeFPLtats(dashboardId : string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/fpl-count`
+    ); 
+  }
 }
