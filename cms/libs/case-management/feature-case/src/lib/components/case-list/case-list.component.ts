@@ -157,16 +157,12 @@ public state!: any;
     if(this.healthInsuranceType != ''){
       this.dashboardFPLfilter();
     }
-    
-    if (this.caseStatus == "ACCEPT" || this.caseStatus == "INCOMPLETE"|| this.caseStatus == "RESTRICTED")
+     
+    if(this.group == GroupCode.UPP ||  this.group == GroupCode.Bridge || this.group == GroupCode.GroupI
+      || this.group == GroupCode.GroupII ||  this.group == GroupCode.GroupINSGAP || this.group == GroupCode.GroupIINSGAP)
       {
-        this.dashboardfilter();
+        this.dashboardGroupfilter();
       }
-      if(this.group == GroupCode.UPP ||  this.group == GroupCode.Bridge || this.group == GroupCode.GroupI
-        || this.group == GroupCode.GroupII ||  this.group == GroupCode.GroupINSGAP || this.group == GroupCode.GroupIINSGAP)
-        {
-          this.dashboardGroupfilter();
-        }
   }
   ngOnDestroy(): void {
     this.userProfileSubsriction.unsubscribe();
