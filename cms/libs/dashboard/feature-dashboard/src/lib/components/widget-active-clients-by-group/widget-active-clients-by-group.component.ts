@@ -81,7 +81,7 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
         });
     }
     public onClick(event: SeriesClickEvent): void {
-      let selectedTab = this.selectedActiveClientByGroup == "My Clients" ? CaseScreenTab.MY_CASES :CaseScreenTab.ALL ;
+      let selectedTab = this.selectedActiveClientByGroup == this.userId ? CaseScreenTab.MY_CASES :CaseScreenTab.ALL ;
       const query = {
         queryParams: {
           tab: selectedTab,

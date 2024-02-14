@@ -74,8 +74,9 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
       });
   }
 
-  public onClick(event: SeriesClickEvent): void {
-   let selectedTab = this.selectedActiveClientByStatus == "My Clients" ? CaseScreenTab.MY_CASES :CaseScreenTab.ALL ;
+  public onClick(event: SeriesClickEvent): void 
+  {
+   let selectedTab = this.selectedActiveClientByStatus == this.userId ? CaseScreenTab.MY_CASES :CaseScreenTab.ALL ;
     const query = {
       queryParams: {
         tab: selectedTab,
