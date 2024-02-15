@@ -92,7 +92,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
 
   columns: any = {
     ALL: 'All Columns',
-    VendorName: 'Vendor',
+    VendorName: 'Vendor Name',
     type: 'Type',
     clientFullName: 'Client Name',
     refundWarrentnbr: 'Refund Warrant #',
@@ -110,7 +110,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'VendorName',
-      columnDesc: 'Vendor',
+      columnDesc: 'Vendor Name',
     },
     {
       columnCode: 'type',

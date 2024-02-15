@@ -358,22 +358,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           },
 
       },
-      {
-        buttonType: 'btn-h-primary',
-        text: 'UNBATCH ENTIRE BATCH',
-        icon: 'undo',
-        disabled: [
-          PaymentStatusCode.Paid,
-          PaymentStatusCode.PaymentRequested,
-          PaymentStatusCode.ManagerApproved,
-        ].includes(this.batchStatus),
-        click: (data: any): void => {
-          if (!this.isBulkUnBatchOpened) {
-            this.isBulkUnBatchOpened = true;
-            this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
-          }
-        },
-      }
     ];
   }
   ngOnChanges(): void {
