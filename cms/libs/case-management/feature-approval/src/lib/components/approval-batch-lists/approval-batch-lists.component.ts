@@ -35,6 +35,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges, OnDestroy
   @Input() paymentMethodLovList: any;
   @Input() isSendBackMode: any;
   @Input() userLevel: any;
+  @Input() approvalPaymentProfilePhoto$!: any;
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
   @Output() batchModalSaveClickedEvent = new EventEmitter<any>();
@@ -85,8 +86,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges, OnDestroy
   approvalBatchListSubscription = new Subscription();
   approvalBatchListProfilePhotoSubject = new Subject();
 
-  constructor(private readonly cd: ChangeDetectorRef,
-    private readonly userManagementFacade: UserManagementFacade,) {}
+  constructor(private readonly cd: ChangeDetectorRef,) {}
 
   ngOnInit(): void {
     this.loadColumnsData();
@@ -399,27 +399,9 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges, OnDestroy
       }
       this.calculateSendBackPaymentCount();       
       this.gridBatchDetailPaymentsDataSubject.next(this.batchDetailPaymentsList);
-      if(this.batchDetailPaymentsList?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(this.batchDetailPaymentsList?.data);
-      }
       }
     });
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.approvalBatchListProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cd.detectChanges();
-    }
-  } 
 
   ngOnDestroy(): void {
     this.approvalBatchListSubscription?.unsubscribe();

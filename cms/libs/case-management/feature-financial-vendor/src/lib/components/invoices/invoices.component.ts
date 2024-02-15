@@ -114,15 +114,14 @@ export class InvoicesComponent implements OnInit, OnDestroy {
   @Input() exportButtonShow$ =    this.documentFacade.exportButtonShow$
   invoiceListSubject = new Subject();
   invoiceListSubscription = new Subscription();
+  invoiceListProfilePhoto$ = this.invoiceFacade.invoiceListProfilePhotoSubject;
 
    /** Constructor **/
    constructor(private readonly invoiceFacade: InvoiceFacade,private readonly router: Router,
     private readonly lovFacade: LovFacade,
     private documentFacade:DocumentFacade,
     private readonly configProvider: ConfigurationProvider,
-    private readonly intl: IntlService,
-    private readonly userManagementFacade: UserManagementFacade,
-    private readonly cdr: ChangeDetectorRef) {}
+    private readonly intl: IntlService,) {}
 
   ngOnInit(): void {
     this.claimStatusSubscription();
@@ -141,30 +140,6 @@ export class InvoicesComponent implements OnInit, OnDestroy {
     this.isInvoiceLoadingSubscription = this.isInvoiceLoading$.subscribe((data:boolean)=>{
       this.isInvoiceGridLoaderShow = data;
     })
-    this.addInvoiceListSubscription();
-  }
-
-  addInvoiceListSubscription() {
-    this.invoiceListSubscription = this.invoiceGridView$.subscribe((invoice: any)=>{
-      if(invoice?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(invoice?.data);
-      }
-    });
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.invoiceListSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
   }
 
   ngOnChanges(): void {

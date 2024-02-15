@@ -45,7 +45,7 @@
               [userLastName]="dataItem.userLastName"
               [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
               [linkType]="'profileIcon'"
-              [userPhotos$]="documentsListSubject"></common-user-photo-icon>
+              [userPhotos$]="documentListUserProfilePhoto$"></common-user-photo-icon>
             </ng-template>
           </kendo-grid-column>
           <kendo-grid-column field="Option" title="Options" [width]="70" class="text-center" [sticky]="true" [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled">

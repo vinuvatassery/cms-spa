@@ -33,6 +33,7 @@ export class EmailListComponent implements OnChanges, OnDestroy {
   @Input() deactivateClientEmail$: any;
   @Input() removeClientEmail$: any;
   @Input() paperless$: any;
+  @Input() clientEmailProfilePhoto$!: any;
  
   @Output() loadClientEmailsListEvent = new EventEmitter<any>();
   @Output() addClientEmailEvent = new EventEmitter<any>();
@@ -125,10 +126,7 @@ export class EmailListComponent implements OnChanges, OnDestroy {
     },
   ];
 
-  constructor(private caseFacade: CaseFacade,
-    private readonly userManagementFacade: UserManagementFacade,
-    private readonly cdr:ChangeDetectorRef){
-    
+  constructor(private caseFacade: CaseFacade,){  
   }
 
   ngOnChanges(): void {
@@ -192,25 +190,9 @@ export class EmailListComponent implements OnChanges, OnDestroy {
       this.gridEmailDataSubject.next(data);
       if (data?.total >= 0 || data?.total === -1) {
         this.loader = false;
-        this.loadDistinctUserIdsAndProfilePhoto(data?.data);
       }
     });
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.userEmailProfilrPhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-}
 
   /** Internal event methods **/
   onEmailAddressDetailClosed() {

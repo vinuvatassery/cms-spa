@@ -73,6 +73,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
   insuranceStatusProfilePhotoSubject = new Subject();
+  medicalHealthProfilePhoto$ = this.insurancePolicyFacade.medicalHealthProfilePhotoSubject;
   public gridOptionData = [
     {
       buttonType:"btn-h-primary",
@@ -142,7 +143,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     this.dentalInsuranceListSubscription =  this.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
       this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
       if(this.medicalHealthPlansCount > 0){
-        this.loadDistinctUserIdsAndProfilePhoto(medicalHealthPolicy?.data);
+        
       }
     })
   }
@@ -379,23 +380,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
           this.insurancePriorityModalButtonText = 'Update';
         }
       }
-
-
     })
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.insuranceStatusProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
   } 
 }

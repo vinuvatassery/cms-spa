@@ -45,7 +45,7 @@
             [userLastName]="clientProfile?.caseManagerLastName"
             [userProfilePhotoExists]="clientProfile?.isCaseManagerProfilePhotoExist"
             [linkType]="'profileIcon'"
-            [userPhotos$]="userManagerprofilePhotoSubject"></common-user-photo-icon>
+            [userPhotos$]="userManagerprofilePhoto$"></common-user-photo-icon>
           </td>
         </tr>
         <tr>
@@ -143,7 +143,7 @@
         [userLastName]="clientProfile?.userLastName"
         [userProfilePhotoExists]="clientProfile?.isUserProfilePhotoExist"
         [linkType]="'profileIcon'"
-        [userPhotos$]="userLastModifierProfilePhotoSubject"></common-user-photo-icon>
+        [userPhotos$]="userLastModifierProfilePhoto$"></common-user-photo-icon>
       </p>
     </div>
   </div>

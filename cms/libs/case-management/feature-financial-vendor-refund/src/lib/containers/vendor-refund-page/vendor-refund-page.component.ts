@@ -41,6 +41,7 @@ export class VendorRefundPageComponent
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
   vendorRefundAllPaymentsGridLists$ = this.financialVendorRefundFacade.vendorRefundAllPaymentsData$;
   vendorRefundListProfilePhoto$ = this.financialVendorRefundFacade.vendorRefundListProfilePhotoSubject;
+  allRefundProfilePhoto$ = this.financialVendorRefundFacade.allRefundProfilePhotoSubject;
 
   //provider panel
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })

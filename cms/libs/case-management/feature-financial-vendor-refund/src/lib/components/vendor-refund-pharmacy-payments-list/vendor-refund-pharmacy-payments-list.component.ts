@@ -63,8 +63,9 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   gridVendorsRefundDataSubject = new Subject<any>();
   gridVendorsRefundData$ = this.gridVendorsRefundDataSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  vendorRefundPaymentListSubject = new Subject();
+  vendorRefundPaymentListSubject = new Subject();;
   pharmacyPurchaseProfileSubscription = new Subscription();
+  vendorRefundPaymentListProfilePhoto$ = this.financialVendorRefundFacade.vendorRefundPaymentListProfilePhotoSubject
   @Output() selectedClaimsChangeEvent = new EventEmitter<any>();
   constructor(
     public financialVendorRefundFacade:FinancialVendorRefundFacade,
@@ -116,25 +117,10 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
       this.gridDataResult = data;
       this.clientClaimsListDataSubject.next(this.gridDataResult);
       if(this.gridDataResult?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(this.gridDataResult?.data);
+        
       }
     });
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.vendorRefundPaymentListSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   ngOnDestroy(): void {
     this.pharmacyPurchaseProfileSubscription?.unsubscribe();

@@ -21,7 +21,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
   styleUrls: ['./client-read-only-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ClientReadOnlyViewComponent implements OnInit, OnDestroy{
+export class ClientReadOnlyViewComponent implements OnInit{
   /** Public properties **/
   @Input() clientProfile : any
   @Output() onUpdateApplicantInfo = new EventEmitter();
@@ -32,6 +32,9 @@ export class ClientReadOnlyViewComponent implements OnInit, OnDestroy{
   @Input() clientCaseId!:any;
   @Input() ramsellInfo!: any;
   @Input() clientProfile$!: any;
+  @Input() userManagerprofilePhoto$!: any;
+  @Input() userLastModifierProfilePhoto$!: any;
+
   applicantInfo = {} as ApplicantInfo;
   //public client! : ClientProfile
   isEditClientInformationPopup = false;
@@ -54,28 +57,13 @@ export class ClientReadOnlyViewComponent implements OnInit, OnDestroy{
       private clientFacade: ClientFacade,
       private caseFacade: CaseFacade,
       private intl: IntlService,
-      private configurationProvider: ConfigurationProvider,
-      private readonly userManagementFacade: UserManagementFacade,
-      private cdr: ChangeDetectorRef,){}
+      private configurationProvider: ConfigurationProvider,){}
 
    /** Lifecycle hooks **/
  ngOnInit(): void {
   this.loadReadOnlyClientInfoEvent.emit();
-  this.addClientProfileInfoSubscription();
 }
 
-  addClientProfileInfoSubscription() {
-    this.clientProfileSubscription = this.clientProfile$.subscribe((user: any) => {
-      const caseManagerId = user?.caseManagerId;
-      const lastmodifierId = user?.lastModifierId ?? user?.creatorId;
-      this.loadCaseManagerProfilePhoto(caseManagerId);
-      this.loadLastModifierProfilePhoto(lastmodifierId);
-    });
-  }
-
-  ngOnDestroy(): void {
-    this.clientProfileSubscription?.unsubscribe();
-  }
   /** Internal event methods **/
   onCloseEditClientInformationClicked() {
     this.isEditClientInformationPopup = false;
@@ -955,34 +943,6 @@ export class ClientReadOnlyViewComponent implements OnInit, OnDestroy{
         this.applicantInfo.clientPronounList[index].clientPronounCode = pronounCode;
         this.applicantInfo.clientPronounList[index].otherDesc = this.appInfoForm.controls["pronoun"].value;
       }
-    }
-  }
-
-  loadCaseManagerProfilePhoto(caseManagerId: string) {
-    if(caseManagerId){
-      this.userManagementFacade.getProfilePhotosByUserIds(caseManagerId)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.userManagerprofilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  }
-
-  loadLastModifierProfilePhoto(lastmodifierId: string){
-    if(lastmodifierId){
-      this.userManagementFacade.getProfilePhotosByUserIds(lastmodifierId)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.userLastModifierProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
     }
   }
 }

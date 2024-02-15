@@ -22,6 +22,7 @@ export class FinancialInsuranceProviderComponent {
   insuranceProviderGridView$ = this.insuranceProviderFacade.insuranceProviderData$;
   insursnceProviderSubscription = new Subscription();
   insursnceProviderProfileSubject = new Subject();
+  insursnceProviderProfilePhoto$ = this.insuranceProviderFacade.insursnceProviderProfilePhotoSubject;
   
 
   public emailBillingAddressActions = [
@@ -50,39 +51,11 @@ export class FinancialInsuranceProviderComponent {
   
   
    /** Constructor **/
-   constructor(private readonly insuranceProviderFacade: InsuranceProviderFacade,
-    private readonly userManagementFacade: UserManagementFacade,
-    private readonly cdr: ChangeDetectorRef) {}
-
-
+   constructor(private readonly insuranceProviderFacade: InsuranceProviderFacade,) {}
    
   ngOnInit(): void {
     this.loadInsuranceProviderListGrid();
-    this.addInsuranceProviderSubscription();
   }
-
-  addInsuranceProviderSubscription() {
-    this.insursnceProviderSubscription = this.insuranceProviderGridView$.subscribe((insurance: any)=>{
-      if(insurance?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(insurance?.data);
-      }
-    });
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.insursnceProviderProfileSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   ngOnChanges(): void {
     this.state = {

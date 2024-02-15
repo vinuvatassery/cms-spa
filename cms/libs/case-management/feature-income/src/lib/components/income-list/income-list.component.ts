@@ -11,7 +11,6 @@ import { DeleteRequest, SnackBar, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService,  LoggingService,  NotificationSource,  SnackBarNotificationType,} from '@cms/shared/util-core';
 import { DropDownListComponent } from '@progress/kendo-angular-dropdowns';
-import { UserManagementFacade } from '@cms/system-config/domain';
 import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-income-list',
@@ -57,11 +56,11 @@ export class IncomeListComponent implements OnInit, OnDestroy {
   incomeValid$ = this.incomeFacade.incomeValid$;
   isIncomeAvailable:boolean = true;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
-  incomeProfilePhotoSubject = new Subject();
   public uploadFileRestrictions: UploadFileRistrictionOptions =
-    new UploadFileRistrictionOptions();
-    incomeListSubscription = new Subscription();
-    incomeListProfilePhotoSubject = new Subject();
+  new UploadFileRistrictionOptions();
+  incomeListSubscription = new Subscription();
+  dependantProofProfilePhoto$ = this.incomeFacade.dependantProofProfilePhotoSubject;
+  incomeListProfilePhoto$ = this.incomeFacade.incomeListProfilePhotoSubject;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -122,8 +121,7 @@ export class IncomeListComponent implements OnInit, OnDestroy {
       private readonly dependentFacade:FamilyAndDependentFacade,
       private readonly cdr: ChangeDetectorRef,
       private caseFacade: CaseFacade,
-      private readonly configurationProvider: ConfigurationProvider,
-      private readonly userManagementFacade: UserManagementFacade) {}
+      private readonly configurationProvider: ConfigurationProvider,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -157,30 +155,12 @@ export class IncomeListComponent implements OnInit, OnDestroy {
     this.incomes$.subscribe({
       next:(income:any) => {
         this.updateWorkFlowStatus(income?.total > 0);
-        if(income?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(income?.data);
-        }
       },
       error:()=>{
         this.updateWorkFlowStatus(false);
       }
     })
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.incomeProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-}
 
 ngOnDestroy(): void {
   this.incomeListSubscription?.unsubscribe();
@@ -368,9 +348,6 @@ onIncomeActionClicked(
     this.incomeListSubscription = this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
       if(response&&response.length>0){
         this.dependentsProofofSchools=response;
-        if(this.dependentsProofofSchools?.data){
-          this.loadDistinctIncomeUserIdsAndProfilePhoto(this.dependentsProofofSchools?.data);
-        }
         this.cdr.detectChanges();
       }
       else{
@@ -378,21 +355,6 @@ onIncomeActionClicked(
       }
     })
   }
-
-  loadDistinctIncomeUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.incomeListProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
  removeDependentsProofofSchoool(documentid: string){
     if (documentid) {

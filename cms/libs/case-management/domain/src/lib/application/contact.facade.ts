@@ -98,6 +98,7 @@ export class ContactFacade {
   addressListProfilePhotoSubject = new Subject();
   phoneListProfilePhotoSubject = new Subject();
   familyFriendsProfilePhotoSubject = new Subject();
+  clientEmailProfilePhotoSubject = new Subject();
 
   public sort: SortDescriptor[] = [
     {
@@ -439,6 +440,7 @@ export class ContactFacade {
 
             this.clientEmailsSubject.next(gridView);
             this.emailAddressesSubject.next(clientEmailsResponse['items'])
+            this.loadClientEmailsDistinctUserIdsAndProfilePhoto(clientEmailsResponse['items']);
           }
         },
         error: (err) => {
@@ -451,6 +453,20 @@ export class ContactFacade {
         },
       });
   }
+
+  loadClientEmailsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.clientEmailProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+}
 
   loadClientPaperLessStatus(
     clientId: number,

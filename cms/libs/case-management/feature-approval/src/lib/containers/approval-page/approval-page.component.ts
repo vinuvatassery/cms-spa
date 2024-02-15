@@ -90,6 +90,7 @@ export class ApprovalPageComponent implements OnInit {
   possibleMatchData$ = this.importedClaimFacade.possibleMatchData$;
   submitImportedClaims$ = this.importedClaimFacade.submitImportedClaims$;
   savePossibleMatchData$ = this.importedClaimFacade.savePossibleMatchData$;
+  approvalPaymentProfilePhoto$ = this.pendingApprovalPaymentFacade.approvalPaymentProfilePhotoSubject
 
   providerDetailsDialog: any;
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })

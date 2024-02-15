@@ -140,6 +140,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   tpaRefundGridLists: any[]=[]
   vendorRefundProfileSubject = new Subject();
   pharmacySearchResultSubscription = new Subscription();
+  vendorRefundFormProfile$ = this.financialVendorRefundFacade.vendorRefundFormProfileSubject;
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
@@ -255,28 +256,10 @@ if(this.isEdit){
       this.selectedVendor = vendors && vendors[0]
       this.vendorId = vendors[0].vendorId
       this.initForm()
-      if(this.pharmaciesList){
-        this.loadDistinctUserIdsAndProfilePhoto(this.pharmaciesList?.data);
-      }
     });
     this.existingRxRefundClaim$.subscribe((res:any)=>{
       this.getSelectedVendorRefundsList(res,"EDIT");
     })
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.vendorRefundProfileSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
   }
   
   loadPaymentRequestData(){

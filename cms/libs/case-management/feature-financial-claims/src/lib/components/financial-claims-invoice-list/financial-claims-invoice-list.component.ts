@@ -49,16 +49,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
         };
        this.serviceTitle = this.claimsType+' Service'
         this.loadFinancialInvoiceListGrid();
-        this.addFinancialInvoiceGridSubscription();
       }
-
-    addFinancialInvoiceGridSubscription() {
-      this.financialInvoiceGridSubscription = this.gridFinancialClaimsInvoice$.subscribe((invoice: any)=>{
-        if(invoice?.data){
-          this.loadDistinctUserIdsAndProfilePhoto(invoice?.data);
-        }
-      });
-    }
 
     loadDistinctUserIdsAndProfilePhoto(data: any[]) {
       const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
@@ -103,6 +94,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
               };
               this.isFinancialClaimsInvoiceGridLoaderShow = false;
               this.gridFinancialClaimsInvoiceSubject.next(gridView);
+              this.loadDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
             },
             error: (err) => {
               this.isFinancialClaimsInvoiceGridLoaderShow = false;

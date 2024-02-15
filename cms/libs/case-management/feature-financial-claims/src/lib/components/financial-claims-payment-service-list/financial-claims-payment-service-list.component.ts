@@ -71,8 +71,8 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
                 this.servicesList$.next(gridView);
                 this.loader$.next(false);
                 this.serviceTitle = this.claimType == FinancialClaimTypeCode.Medical ? 'Medical Service' : 'Dental Service';
-                if(gridView?.data){
-                    this.loadDistinctUserIdsAndProfilePhoto(gridView?.data);
+                if(dataResponse['items']){
+                    this.loadDistinctUserIdsAndProfilePhoto(dataResponse['items']);
                   }
             },
             error: (err: any) => {

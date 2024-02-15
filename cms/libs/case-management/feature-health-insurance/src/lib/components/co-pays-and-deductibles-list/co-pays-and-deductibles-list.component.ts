@@ -42,11 +42,11 @@ export class CoPaysAndDeductiblesListComponent implements OnInit, OnDestroy {
   coPaymentProfilePhotoSubject = new Subject();
   coPaymentProfilePhotoSubscription = new Subscription();
   triggeredCoPaySaveSubscription = new Subscription();
+  coPaymentProfilePhoto$ = this.insurancePolicyFacade.coPaymentProfilePhotoSubject;
   /** Constructor **/
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly formBuilder: FormBuilder, private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
-    private lovFacade: LovFacade,
-    private readonly userManagementFacade: UserManagementFacade) {
+    private lovFacade: LovFacade,) {
     this.copayPaymentForm = this.formBuilder.group({});
   }
   /** Lifecycle hooks **/
@@ -72,37 +72,11 @@ export class CoPaysAndDeductiblesListComponent implements OnInit, OnDestroy {
         this.loadCoPayDeductiblesData();
       }
     })
-
-    this.addCoPaymentListSubscription();
-  }
-
-  addCoPaymentListSubscription() {
-    this.coPaymentProfilePhotoSubscription = this.coPaysAndDeductibles$.subscribe((copayment: any) =>{
-      if(copayment?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(copayment?.data);
-      }
-    });
   }
 
   ngOnDestroy(): void {
     this.triggeredCoPaySaveSubscription?.unsubscribe();
-    this.coPaymentProfilePhotoSubscription?.unsubscribe();
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.coPaymentProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   /** Private methods **/
   openCoPaymentDetailsOpened() {

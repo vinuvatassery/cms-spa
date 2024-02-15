@@ -48,7 +48,7 @@
             [userLastName]="dataItem.userLastName"
             [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
             [linkType]="'profileIcon'"
-            [userPhotos$]="caseManagerProfileSubject"></common-user-photo-icon>
+            [userPhotos$]="caseManagersProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column *ngIf="!managementTab" field="phone" title="Phone" [width]="100"></kendo-grid-column>

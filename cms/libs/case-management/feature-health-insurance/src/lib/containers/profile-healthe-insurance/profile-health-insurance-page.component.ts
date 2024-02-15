@@ -37,6 +37,7 @@ export class ProfileHealthInsurancePageComponent implements OnInit,OnDestroy {
   triggerPriorityPopup$ = this.insurancePolicyFacade.triggerPriorityPopup$;
   closeDeleteModal: boolean = false;
   isHistoricalDataLoad:boolean = false;
+  healthInsuranceProfilePhoto$ = this.insurancePolicyFacade.healthInsuranceProfilePhotoSubject;
 
   ngOnInit(): void {
     this.routeChangeSubscription();

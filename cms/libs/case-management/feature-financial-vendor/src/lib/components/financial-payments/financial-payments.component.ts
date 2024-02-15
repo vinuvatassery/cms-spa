@@ -75,6 +75,7 @@ export class FinancialPaymentComponent implements OnDestroy {
   private searchSubject = new Subject<string>();
   paymentBatchesProfilePhotoSubscription = new Subscription();
   paymentBatchesProfilePhotoSubject = new Subject();
+  paymentBatchesProfilePhoto$ = this.paymentsFacade.paymentBatchesProfilePhotoSubject;
 
   /** Constructor **/
   constructor(private readonly paymentsFacade: PaymentsFacade,
@@ -83,38 +84,13 @@ export class FinancialPaymentComponent implements OnDestroy {
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
     private route: Router,
-    private readonly userManagementFacade: UserManagementFacade,
-    private readonly cdr: ChangeDetectorRef) { }
+) { }
     
   ngOnInit(): void {
     this.loadPaymentsListGrid();
     this.addSearchSubjectSubscription();
     this.loadBatchStatusLov();
-    this.addpaymentBatchesSubscription();
   }
-
-  addpaymentBatchesSubscription() {
-    this.paymentBatchesProfilePhotoSubscription = this.paymentBatchesGridView$.subscribe((pharmacyPurchase: any) =>{
-      if(pharmacyPurchase?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(pharmacyPurchase?.data);
-      }
-    })
-  }
-
-loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.paymentBatchesProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   ngOnChanges(): void {
     this.state = {

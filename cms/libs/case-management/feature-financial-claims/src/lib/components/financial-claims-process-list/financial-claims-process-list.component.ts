@@ -60,7 +60,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   @Input() financialClaimsProcessGridLists$: any;
   @Input() financialClaimsInvoice$: any;
   @Input() exportButtonShow$: any;
-
+  @Input() medicalClaimsProfilePhoto$!: any;
   @Output() loadFinancialClaimsProcessListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
 
@@ -100,9 +100,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public drag = false;
   isDeleteClaimClicked =false;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
-  medicalClaimsProfilePhotoSubject = new Subject();
-  medicalClaimsProfilePhotoSubscription = new Subscription();
-
 
   public selectedProcessClaims: any[] = [];
   columns: any = {
@@ -195,7 +192,6 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade : LovFacade,
-    private readonly userManagementFacade: UserManagementFacade,
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -206,31 +202,8 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   ngOnInit(): void {
     this.lovFacade.getPaymentStatusLov()
     this.paymentStatusSubscription();
-    this.addMedicalClaimsSubscription();
   }
 
-  addMedicalClaimsSubscription() {
-    this.medicalClaimsProfilePhotoSubscription = this.gridFinancialClaimsProcessData$.subscribe((medicalClaims: any) =>{
-      if(medicalClaims?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(medicalClaims?.data);
-      }
-    });
-  }
-
-loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.medicalClaimsProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   paymentStatusSubscription()
   {
@@ -242,7 +215,6 @@ loadDistinctUserIdsAndProfilePhoto(data: any[]) {
 
   ngOnDestroy(): void {
     this.paymentStatusLovSubscription.unsubscribe();
-    this.medicalClaimsProfilePhotoSubscription?.unsubscribe();
   }
   onSingleClaimDelete(selection: any) {
     this.selectedKeysChange(selection);

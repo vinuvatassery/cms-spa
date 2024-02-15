@@ -58,6 +58,7 @@ export class ApprovalsPaymentsListComponent implements OnInit, OnChanges {
   @Input() batchDetailPaymentsList$: any;
   @Input() exportButtonShow$: any;
   @Input() userLevel: any;
+  @Input() approvalPaymentProfilePhoto$!: any;
   @Output() loadApprovalsPaymentsGridEvent = new EventEmitter<any>();
   @Output() loadApprovalsPaymentsMainListEvent = new EventEmitter<any>();
   @Output() loadSubmittedSummaryEvent = new EventEmitter<any>();

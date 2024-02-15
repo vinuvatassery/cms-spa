@@ -45,6 +45,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   @Input() updateProviderPanelSubject$: any
   @Input() ddlStates$: any
   @Input() paymentMethodCode$: any
+  @Input() vendorRefundBatchClaims$!: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   private addEditRefundFormDialog: any;
   isUnBatchRefundsClosed = false;
@@ -266,7 +267,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       this.gridVendorsBatchLogDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
-        this.loadDistinctUserIdsAndProfilePhoto(this.gridDataResult?.data);
       }
       this.batchLogGridLists = this.gridDataResult?.data;
       if (this.recordCountWhenSelectallClicked == 0) {
@@ -290,21 +290,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       this.pageNumberAndCountChangedInSelectAll();
       this.gridLoaderSubject.next(false);
     });
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.refundBatchClaimsSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
   }
 
   handlePageCountSelectionChange() {

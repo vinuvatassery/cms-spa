@@ -11,7 +11,7 @@ import { Subject, Subscription } from 'rxjs';
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialInsuranceProviderListComponent implements OnInit, OnDestroy  {
+export class FinancialInsuranceProviderListComponent implements OnInit {
   /* Input Properties */
   @Input() vendorId!: string;
 
@@ -36,8 +36,7 @@ export class FinancialInsuranceProviderListComponent implements OnInit, OnDestro
   filteredByColumnDesc = '';
   columnChangeDesc = 'Default Columns';
   columnsReordered = false;
-  insuranceVendorProfilePhotoSubject = new Subject();
-  insuranceVendorProfilePhotoSubscription = new Subscription();
+  insuranceVendorProfilePhoto$ = this.vendorInsurancePlanFacade.insuranceVendorProfilePhotoSubject;
 
   public emailBillingAddressActions = [
     {
@@ -87,9 +86,7 @@ export class FinancialInsuranceProviderListComponent implements OnInit, OnDestro
 
   };
   /** Constructor **/
-  constructor(private readonly vendorInsurancePlanFacade: VendorInsurancePlanFacade , private documentFacade :  DocumentFacade,
-    private readonly userManagementFacade: UserManagementFacade,
-    private readonly cdr: ChangeDetectorRef) { }
+  constructor(private readonly vendorInsurancePlanFacade: VendorInsurancePlanFacade , private documentFacade :  DocumentFacade,) { }
 
   ngOnInit(): void {
     this.state = {
@@ -98,34 +95,6 @@ export class FinancialInsuranceProviderListComponent implements OnInit, OnDestro
       sort: this.sort,
     };
     this.loadVendorInsuranceProviderListGrid();
-    this.addInsuranceVendorProviderListSubscription();
-  }
-
-  addInsuranceVendorProviderListSubscription() {
-    this.vendorInsurancePlanGridView$.subscribe((insuranceProvider: any)=>{
-      if(insuranceProvider?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(insuranceProvider?.data);
-      }
-    });
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.lastUpdatedBy))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.insuranceVendorProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  }
-
-  ngOnDestroy(): void {
-    this.insuranceVendorProfilePhotoSubscription?.unsubscribe();
   }
 
   ngOnChanges(): void {

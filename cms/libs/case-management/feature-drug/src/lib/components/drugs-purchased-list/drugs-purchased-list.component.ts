@@ -9,7 +9,7 @@ import {
 import { CaseFacade, DrugPharmacyFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
@@ -20,7 +20,7 @@ import { Subject, Subscription } from 'rxjs';
   templateUrl: './drugs-purchased-list.component.html',
   encapsulation: ViewEncapsulation.None,
 })
-export class DrugsPurchasedListComponent implements OnInit, OnDestroy {
+export class DrugsPurchasedListComponent implements OnInit {
   @Input() clientId: any;
   /** Public properties **/
   drugPurchases$ = this.drugPharmacyFacade.drugPurchases$;
@@ -88,7 +88,7 @@ export class DrugsPurchasedListComponent implements OnInit, OnDestroy {
   paymentTypes: any = [];
   paymentRequestTypes: any = [];
   pharmacyPurchaseProfilePhotoSubscription = new Subscription();
-  pharmacyPurchaseProfileSubject = new Subject();
+  pharmacyPurchaseProfile$ = this.drugPharmacyFacade.pharmacyPurchaseProfileSubject;
 
   public actions = [
     {
@@ -126,7 +126,6 @@ export class DrugsPurchasedListComponent implements OnInit, OnDestroy {
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly lovFacade: LovFacade,
-    private readonly userManagementFacade: UserManagementFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -134,35 +133,7 @@ export class DrugsPurchasedListComponent implements OnInit, OnDestroy {
     this.getLovs();
     this.defaultGridState();
     this.loadDrugsPurchased();
-    this.addDrugsPurchasedSubscription();
   }
-
-  ngOnDestroy(): void {
-    this.pharmacyPurchaseProfilePhotoSubscription?.unsubscribe();
-  }
-
-  addDrugsPurchasedSubscription() {
-    this.pharmacyPurchaseProfilePhotoSubscription = this.drugPurchases$.subscribe((pharmacyPurchase: any) =>{
-      if(pharmacyPurchase?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(pharmacyPurchase?.data);
-      }
-    })
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.pharmacyPurchaseProfileSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   /** Private methods **/
 

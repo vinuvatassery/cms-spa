@@ -1,7 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType, SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDataService, UserDefaultRoles } from '@cms/system-config/domain';
+import { UserDataService, UserDefaultRoles, UserManagementFacade } from '@cms/system-config/domain';
 import { Subject } from 'rxjs';
 import { CompletionChecklist } from '../entities/workflow-stage-completion-status';
 import { CaseManagerDataService } from '../infrastructure/case-manager.data.service';
@@ -43,7 +43,7 @@ updateDatesCaseManager$ = this.updateDatesCaseManagerSubject.asObservable();
 public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
   public sortType = 'asc'
-
+caseManagersProfilePhotoSubject = new Subject();
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
     dir: 'asc' 
@@ -74,7 +74,8 @@ constructor(private readonly userDataService: UserDataService,
       private readonly notificationSnackbarService : NotificationSnackbarService,
       private readonly workflowFacade: WorkflowFacade,
       private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
-      private configurationProvider : ConfigurationProvider ) {}
+      private configurationProvider : ConfigurationProvider,
+      private readonly userManagementFacade: UserManagementFacade, ) {}
 
 
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -147,7 +148,8 @@ constructor(private readonly userDataService: UserDataService,
           this.showAddNewManagerButtonSubject.next(true);
         }
         this.workflowFacade.updateChecklist(workFlowdata);
-        this.getCaseManagersSubject.next(gridView);      
+        this.getCaseManagersSubject.next(gridView);  
+        this.loadCaseManagersDistinctUserIdsAndProfilePhoto(getCaseManagersResponse["items"]);    
         this.hideLoader();  
         }      
      },
@@ -156,6 +158,20 @@ constructor(private readonly userDataService: UserDataService,
        },
      });
  }
+
+ loadCaseManagersDistinctUserIdsAndProfilePhoto(data: any[]) {
+  const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+  if(distinctUserIds){
+    this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+    .subscribe({
+      next: (data: any[]) => {
+        if (data.length > 0) {
+          this.caseManagersProfilePhotoSubject.next(data);
+        }
+      },
+    });
+  }
+}
 
     getCaseManagerStatus(clientCaseId : string): void {
       this.showLoader()

@@ -57,7 +57,7 @@
             [userLastName]="dataItem.userLastName"
             [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
             [linkType]="'profileIcon'"
-            [userPhotos$]="healthCareProviderSubject"></common-user-photo-icon>
+            [userPhotos$]="healthCareProviderProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="clientProviderId" title="Options" [width]="75" class="text-center" [sticky]="true"

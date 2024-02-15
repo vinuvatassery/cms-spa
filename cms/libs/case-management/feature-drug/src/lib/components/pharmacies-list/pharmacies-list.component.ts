@@ -224,6 +224,7 @@ export class PharmaciesListComponent implements OnInit, OnDestroy {
       },
     },
   ];
+  pharmacyProfilePhoto$ = this.drugPharmacyFacade.pharmacyProfilePhotoSubject;
 
   /** Constructor **/
   constructor(
@@ -232,7 +233,6 @@ export class PharmaciesListComponent implements OnInit, OnDestroy {
     private readonly loggingService: LoggingService,
     private caseFacade: CaseFacade,
     private readonly cdr: ChangeDetectorRef,
-    private readonly userManagementFacade: UserManagementFacade
   ) {
     this.isOpenPharmacyClicked$.next(false);
     this.isRemoveClientPharmacyClicked$.next(false);
@@ -271,32 +271,7 @@ export class PharmaciesListComponent implements OnInit, OnDestroy {
         this.handleCloseChangePriorityClick();
       }
     });
-
-    this.addPharmacyListSubscription();
   }
-
-  addPharmacyListSubscription() {
-    this.pharmacyProfilePhotoSubscription = this.pharmaciesList$.subscribe((pharmacy: any) =>{
-      if(pharmacy){
-        this.loadDistinctUserIdsAndProfilePhoto(pharmacy);
-      }
-    })
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.pharmacyProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   ngOnDestroy(): void {
     this.pharmacyProfilePhotoSubscription?.unsubscribe();

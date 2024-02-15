@@ -73,7 +73,8 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges, OnDes
   @Output() claimsCount = new EventEmitter<any>();
   cliams:any[]=[];
   tpaVendorRefundProfilePhotoSubject = new Subject();
-  tpaDataListSubscription = new Subscription();
+  tpaDataListSubscription = new Subscription();;
+  tpaVendorRefundProfilePhoto$ = this.financialVendorRefundFacade.tpaVendorRefundProfilePhotoSubject
   constructor( private readonly financialClaimsFacade: FinancialClaimsFacade, private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,private dialogService: DialogService,   private readonly lovFacade : LovFacade,
     private readonly userManagementFacade: UserManagementFacade,
     private readonly cdr: ChangeDetectorRef){
@@ -93,24 +94,9 @@ export class VendorRefundClaimsListComponent implements OnInit, OnChanges, OnDes
       this.claimsCount.emit(this.selectedTpaClaims.length)
       this.cliams=res.data;
       if(this.cliams){
-        this.loadDistinctUserIdsAndProfilePhoto(this.cliams);
+        
       }
   })
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.tpaVendorRefundProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
   }
 
   ngOnChanges(): void {

@@ -56,6 +56,7 @@ export class FinancialClaimsBatchListDetailItemsComponent implements OnInit, OnC
   @Input() updateProviderPanelSubject$:any
   @Input() ddlStates$ :any
   @Input() paymentMethodCode$ :any
+  @Input() claimsServiceProfile$!: any;
   paymentPanelDetails:any;
   public state!: State;
   sortColumn: string='creationTime';
@@ -201,25 +202,10 @@ deletemodelbody =
   addPaymentServiceListSubscription() {
     this.batchItemsGridListSubjecription = this.batchItemsGridLists$.subscribe((service: any)=>{
       if(service?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(service?.data);
+        
       }
     });
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.claimsServiceProfileSubject.next(data);
-          }
-        },
-      });
-      this.cd.detectChanges();
-    }
-  } 
 
   ngOnDestroy(): void {
     this.batchItemsGridListSubjecription.unsubscribe();

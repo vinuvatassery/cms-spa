@@ -22,6 +22,8 @@ export class ProfileClientPageComponent implements OnInit {
   questions:any[] =[];
   private clientSubject = new Subject<any>();
   clientProfile$ = this.caseFacade.clientProfile$;
+  userManagerprofilePhoto$ = this.caseFacade.userManagerprofilePhotoSubject;
+  userLastModifierProfilePhoto$ = this.caseFacade.userLastModifierProfilePhotoSubject;
   loadedClient$ = this.clientSubject.asObservable();
   ramSellInfo!: any;
   constructor(

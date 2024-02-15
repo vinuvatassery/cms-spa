@@ -48,6 +48,7 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() exportButtonShow$: any;
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
+  @Input() dentalClaimAllPaymentClaimsProfilePhoto$!: any;
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
@@ -317,7 +318,6 @@ export class FinancialClaimsAllPaymentsListComponent
       this.gridFinancialClaimsAllPaymentsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
-        this.loadDistinctUserIdsAndProfilePhoto(this.gridDataResult?.data);
       }
       this.financialClaimsAllPaymentsGridLists = this.gridDataResult?.data;
       if(this.recordCountWhenSelectallClicked == 0){
@@ -373,21 +373,6 @@ pageNumberAndCountChangedInSelectAll() {
         item.selected = true;
       }
     }
-  }
-}
-
-loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-  const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-  if(distinctUserIds){
-    this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-    .subscribe({
-      next: (data: any[]) => {
-        if (data.length > 0) {
-          this.allPaymentClaimsProfileSubject.next(data);
-        }
-      },
-    });
-    this.cdr.detectChanges();
   }
 } 
 

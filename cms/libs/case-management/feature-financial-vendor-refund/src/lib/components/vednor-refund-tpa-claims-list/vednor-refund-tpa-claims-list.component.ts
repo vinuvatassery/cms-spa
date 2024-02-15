@@ -74,6 +74,7 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges, On
   cliams:any[]=[];
   vendorRefundTPAProfileSubject = new Subject();
   vendorTPAClaimsListSubscription = new Subscription();
+  vendorRefundTPAProfile$ = this.financialVendorRefundFacade.vendorRefundTPAProfileSubject;
 
   tpaGridData!: any;
   constructor( private readonly financialClaimsFacade: FinancialClaimsFacade, 
@@ -98,25 +99,10 @@ export class VednorRefundTpaClaimsListComponent implements OnInit, OnChanges, On
       this.claimsCount.emit(this.selectedTpaClaims.length)
       this.cliams=res.data;
       if(this.cliams){
-        this.loadDistinctUserIdsAndProfilePhoto(this.cliams);
+        
       }
   })
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.vendorRefundTPAProfileSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   ngOnChanges(): void {
     this.state = {

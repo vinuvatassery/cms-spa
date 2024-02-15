@@ -45,6 +45,7 @@ export class ProfileContactPageComponent implements OnInit{
   phonegridDataRefiner! :any
   emailgridDataRefiner! :any
   phoneListProfilePhoto$ = this.contactFacade.phoneListProfilePhotoSubject;
+  clientEmailProfilePhoto$ = this.contactFacade.clientEmailProfilePhotoSubject;
 
   ngOnInit(): void {
     this. loadQueryParams()   

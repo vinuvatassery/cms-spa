@@ -189,8 +189,6 @@ export class FinancialClaimsFacade {
   private recentClaimListDataSubject =  new Subject<any>();
   recentClaimsGridLists$ = this.recentClaimListDataSubject.asObservable();
 
-
-
   private unbatchEntireBatchSubject =  new Subject<any>();
   unbatchEntireBatch$ = this.unbatchEntireBatchSubject.asObservable();
 
@@ -205,6 +203,9 @@ export class FinancialClaimsFacade {
 
   claimsRecentClaimsProfilePhotoSubject = new Subject();
   claimsBathcPaymentProfilePhotoSubject = new Subject();
+  dentalClaimAllPaymentClaimsProfilePhotoSubject = new Subject();
+  claimsServiceProfileSubject = new Subject();
+  medicalClaimsProfilePhotoSubject = new Subject();
   /** Private properties **/
 
   /** Public properties **/
@@ -271,6 +272,7 @@ export class FinancialClaimsFacade {
           total: dataResponse["totalCount"]
         };
         this.financialClaimsProcessDataSubject.next(gridView);
+        this.loadMedicalClaimsProcessDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
         this.hideLoader();
       },
       error: (err) => {
@@ -279,6 +281,20 @@ export class FinancialClaimsFacade {
       },
     });
   }
+
+  loadMedicalClaimsProcessDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.medicalClaimsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string,claimsType : string){
 
@@ -330,6 +346,7 @@ export class FinancialClaimsFacade {
           total: dataResponse["totalCount"]
         };
         this.financialClaimsAllPaymentsDataSubject.next(gridView);
+        this.loadDentalClaimsAllPaymentDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
         this.financialClaimsAllPaymentsDataLoaderSubject.next(false);
       },
       error: (err) => {
@@ -337,6 +354,20 @@ export class FinancialClaimsFacade {
         this.financialClaimsAllPaymentsDataLoaderSubject.next(false);
       },
     });
+  }
+
+  loadDentalClaimsAllPaymentDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.dentalClaimAllPaymentClaimsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
   loadBatchItemsListGrid(paymentId: string, param: GridFilterParam, claimType:string){
@@ -350,6 +381,7 @@ export class FinancialClaimsFacade {
         };
 
         this.batchItemsDataSubject.next(gridView);
+        this.loadPaymentsDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.batchItemsLoaderSubject.next(false);
       },
       error: (err) => {
@@ -358,6 +390,21 @@ export class FinancialClaimsFacade {
       },
     });
   }
+
+  loadPaymentsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.claimsServiceProfileSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
   loadReconcileListGrid(batchId:any,claimsType:any,event:any){
     this.financialClaimsDataService.loadReconcileListService(batchId,claimsType,event).subscribe({
       next: (dataResponse:any) => {

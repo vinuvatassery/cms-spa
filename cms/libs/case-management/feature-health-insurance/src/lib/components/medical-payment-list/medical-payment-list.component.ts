@@ -35,6 +35,7 @@ export class MedicalPaymentListComponent implements OnInit {
   @Input() caseEligibilityId: any;
   @Input() clientId: any;
   @Input() tabStatus: any;
+  @Input() healthInsuranceProfilePhoto$!: any;
   isReadOnly$ = this.caseFacade.isCaseReadOnly$;
   showTwelveMonthRecordFlag:boolean = true;
   carrierContactInfo!: any;
@@ -43,14 +44,13 @@ export class MedicalPaymentListComponent implements OnInit {
   private triggeredPremiumPaymentSubscription!: Subscription;
   insurancePremiumProfilePhotoSubject = new Subject();
   insurancePremiumProfilePhotoSubscription = new Subscription();
+  //insurancePremiumProfilePhoto$ = this.insurancePolicyFacade.insurancePremiumProfilePhotoSubject;
 
   /** Constructor **/
 
   constructor(private insurancePolicyFacade: HealthInsurancePolicyFacade, private readonly formBuilder: FormBuilder,
     private caseFacade: CaseFacade,
-    private lovFacade: LovFacade,
-    private readonly userManagementFacade: UserManagementFacade,
-    private readonly cdr: ChangeDetectorRef,) {
+    private lovFacade: LovFacade,) {
   }
   /** Lifecycle hooks **/
 
@@ -61,31 +61,7 @@ export class MedicalPaymentListComponent implements OnInit {
     };
     this.loadPremiumPaymentData();
     this.registerTriggeredPremiumPaymentSubscription();
-    this.addInsurancePaymentSubscription();
   }
-
-  addInsurancePaymentSubscription() {
-    this.insurancePremiumProfilePhotoSubscription = this.medicalPremiumPayments$.subscribe((premium: any) =>{
-      if(premium?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(premium?.data);
-        }
-    });
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.insurancePremiumProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-}
 
   ngOnDestroy(): void {
     this.triggeredPremiumPaymentSubscription.unsubscribe();

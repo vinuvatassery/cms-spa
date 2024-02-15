@@ -223,6 +223,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   showExportLoader = false;
   @Input() unbatchPremiums$ :any
   @Input() exportButtonShow$: any;
+  @Input() premiumAllPaymentsPremium$!: any;
   @Output() deletePaymentEvent = new EventEmitter();
   @Output() exportGridDataEvent = new EventEmitter<any>();
 
@@ -393,26 +394,8 @@ deletePremiumPayment(paymentId: string) {
       this.markAsChecked(response.data);
       }
       this.financialPremiumsAllPaymentsGridLists = response;
-      if(this.totalGridRecordsCount){
-        this.loadDistinctUserIdsAndProfilePhoto(response?.data);
-      }
     })
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.allPaymentsPremiumSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   ngOnChanges(): void {
     this.initializePremiumsPaymentsGrid();

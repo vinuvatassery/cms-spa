@@ -54,6 +54,7 @@ export class FinancialPharmacyClaimsComponent implements OnDestroy {
   showExportLoader = false;
   claimsProfilePhotoSubscription = new Subscription();
   claimsProfilePhotoSubject = new Subject();
+  pharmacyClaimsProfilePhoto$ = this.claimsFacade.pharmacyClaimsProfilePhotoSubject;
   
 
    /** Constructor **/
@@ -62,7 +63,6 @@ export class FinancialPharmacyClaimsComponent implements OnDestroy {
    private route: Router,
    private readonly  cdr :ChangeDetectorRef,
     private readonly router: Router,  private readonly lovFacade: LovFacade,
-    private readonly userManagementFacade: UserManagementFacade,
     ) {}
    
   ngOnInit(): void {
@@ -70,31 +70,7 @@ export class FinancialPharmacyClaimsComponent implements OnDestroy {
     this.getPaymentStatusLov();
     this.getCoPaymentRequestTypeLov();  
     this.loadClaimsListGrid();
-    this.addClaimsListSubscription();
   }
-
-  addClaimsListSubscription() {
-    this.claimsProfilePhotoSubscription = this.claimsGridView$.subscribe((pharmacyPurchase: any) =>{
-      if(pharmacyPurchase?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(pharmacyPurchase?.data);
-      }
-    })
-  }
-
-loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.claimsProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   ngOnDestroy(): void {
     this.claimsProfilePhotoSubscription?.unsubscribe();

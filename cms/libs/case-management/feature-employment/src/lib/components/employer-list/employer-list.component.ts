@@ -23,7 +23,7 @@ import { Subject, Subscription } from 'rxjs';
   templateUrl: './employer-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EmployerListComponent implements OnInit, OnChanges, OnDestroy {
+export class EmployerListComponent implements OnInit, OnChanges {
   /** Input properties **/
   @Input() data!: any;
   @Input() employment$: any;
@@ -52,8 +52,7 @@ export class EmployerListComponent implements OnInit, OnChanges, OnDestroy {
   public state!: State;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
-  employerProfilrPhotoSubject = new Subject();
-  employerSubscription = new Subscription();
+  employerProfilePhoto$ = this.employmentFacade.employerProfilePhotoSubject;
   public actions = [
     {
       buttonType: 'btn-h-primary',
@@ -70,8 +69,7 @@ export class EmployerListComponent implements OnInit, OnChanges, OnDestroy {
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade,
-    private readonly userManagementFacade: UserManagementFacade) {}
+  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade,) {}
 
   /** Lifecycle hooks **/
 
@@ -80,33 +78,7 @@ export class EmployerListComponent implements OnInit, OnChanges, OnDestroy {
       this.isEmployerAvailable = response;
       this.cdr.detectChanges();
     })
-    this.addEmployerSubscription();
   }
-
-  ngOnDestroy(): void {
-    this.employerSubscription?.unsubscribe();
-  }
-
-  addEmployerSubscription() {
-    this.employerSubscription = this.employment$.subscribe((employer:any) => {
-      this.loadDistinctUserIdsAndProfilePhoto(employer?.data);
-    });
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.employerProfilrPhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-}
 
   ngOnChanges(): void {
     this.state = {

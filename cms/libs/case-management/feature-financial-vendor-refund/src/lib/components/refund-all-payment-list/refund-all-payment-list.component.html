@@ -325,7 +325,7 @@
         [userLastName]="dataItem.userLastName"
         [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
         [linkType]="'profileIcon'"
-        [userPhotos$]="allRefundProfilePhotoSubject"></common-user-photo-icon>
+        [userPhotos$]="allRefundProfilePhoto$"></common-user-photo-icon>
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column *ngIf="!receiptLogMode" field="Option" title="Options" [sticky]="true" [columnMenu]="false"

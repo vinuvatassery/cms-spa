@@ -20,7 +20,7 @@ import { UserManagementFacade } from '@cms/system-config/domain';
   styleUrls: ['./family-and-dependent-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FamilyAndDependentListComponent implements OnInit ,  OnChanges, OnDestroy {
+export class FamilyAndDependentListComponent implements OnInit ,  OnChanges {
 /******enumeration Alias *****/
 Dependent = DependentTypeCode.Dependent;
 CAClient = DependentTypeCode.CAClient;
@@ -42,6 +42,7 @@ CAClient = DependentTypeCode.CAClient;
   @Input() timeFormat : any;
   @Input()  existdependentStatus$ : any;
   @Input() isCerForm: boolean = false;
+  @Input() dependentProfilePhoto$!: any;
   @Output() addUpdateDependentEvent = new EventEmitter<any>();
   @Output() GetNewDependentHandleEvent = new EventEmitter<any>();
   @Output() GetExistclientDependentEvent = new EventEmitter<any>();
@@ -52,12 +53,9 @@ CAClient = DependentTypeCode.CAClient;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   dependentValid$ = this.familyAndDependentFacade.dependentValid$;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
-  dependentProfilePhotoSubject= new Subject();
     /**Constructor */
     constructor( private router: Router , private activatedRoute : ActivatedRoute,
-      private familyAndDependentFacade: FamilyAndDependentFacade,private readonly cd: ChangeDetectorRef,private caseFacade: CaseFacade,
-      private readonly userManagementFacade: UserManagementFacade,
-      private readonly cdr:ChangeDetectorRef) { }
+      private familyAndDependentFacade: FamilyAndDependentFacade,private readonly cd: ChangeDetectorRef,private caseFacade: CaseFacade,) { }
 
     isEditFamilyMember!: boolean;
     isAddOrEditFamilyDependentDisplay!: boolean;
@@ -116,33 +114,7 @@ CAClient = DependentTypeCode.CAClient;
       sort: this.sort
   };
         this.loadFamilyDependents()
-        this.addFamilyDependentSubcription();
  }
-
- ngOnDestroy(): void {
-  this.dependentProfilePhotoSubject?.unsubscribe();
-}
-
-  addFamilyDependentSubcription() {
-    this.userDependentSubacription = this.dependents$.subscribe((dependentData: any)=>{
-      this.loadDistintUserIdsAndProfilePhotos(dependentData?.data);
-    });
-  }
-
-  loadDistintUserIdsAndProfilePhotos(data: any[]){
-    const distinctUserIds = Array.from(new Set(data?.map(dependent => dependent.creatorId))).join(',');
-      if(distinctUserIds){
-        this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-        .subscribe({
-          next: (data: any[]) => {
-            if (data.length > 0) {
-              this.dependentProfilePhotoSubject.next(data);
-            }
-          },
-        });
-        this.cdr.detectChanges();
-      }
-  }
 
 
   ngOnInit(): void {

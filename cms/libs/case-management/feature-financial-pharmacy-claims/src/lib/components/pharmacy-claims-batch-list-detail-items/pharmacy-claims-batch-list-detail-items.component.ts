@@ -38,6 +38,7 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchItemsGridLists$: any;
+  @Input() pharmacyBatchListDetailProfilePhoto$!: any;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
@@ -173,27 +174,11 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
       );
       this.gridClaimsBatchLogItemsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
-        this.isBatchLogItemsGridLoaderShow = false;
-        this.loadDistinctUserIdsAndProfilePhoto(this.gridDataResult?.data);
+        this.isBatchLogItemsGridLoaderShow = false;     
       }
     });
     this.isBatchLogItemsGridLoaderShow = false;
   }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.pharmacyBatchListDetailProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
-  } 
 
   backToBatchLog(event : any){  
     this.route.navigate(['/financial-management/pharmacy-claims/batch'] );

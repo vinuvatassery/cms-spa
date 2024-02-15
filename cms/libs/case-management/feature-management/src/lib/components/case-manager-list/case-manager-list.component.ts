@@ -46,13 +46,13 @@ export class CaseManagerListComponent implements OnChanges, OnDestroy {
   @Input() updateDatesCaseManager$: any;
   @Input() isCerForm: any;
   @Input() showCaseListRequired$: any;
+  @Input() caseManagersProfilePhoto$!: any;
 
   /** Public properties **/
   public formUiStyle: UIFormStyle = new UIFormStyle();
   selectedCustomCaseManagerName!: string;
   editformVisibleSubject = new Subject<boolean>();
   editformVisible$ = this.editformVisibleSubject.asObservable();
-
   existingCaseManagerData!: any;
   isOpenedCaseManagerSearch = false;
   editButtonEmitted = false;
@@ -193,37 +193,11 @@ export class CaseManagerListComponent implements OnChanges, OnDestroy {
       },
     },
   ];
-constructor(private caseFacade: CaseFacade,
-  private readonly userManagementFacade: UserManagementFacade,
-  private readonly cdr: ChangeDetectorRef,){}
+constructor(private caseFacade: CaseFacade,){}
   /** Lifecycle hooks **/
   ngOnInit(): void {
     if (!this.isCerForm) {
       this.newAppActions = this.newAppActions.filter(x=>x.buttonName != 'unAssignMngr');
-    }
-    this.addCaseManagerListSubscription();
-  }
-
-  addCaseManagerListSubscription() {
-    this.caseManagerProfileSubscription = this.getCaseManagers$.subscribe((caseManager: any) =>{
-      if(caseManager?.data){
-        this.loadDistinctUserIdsAndProfilePhoto(caseManager?.data);
-      }
-    });
-  }
-
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.caseManagerProfileSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
     }
   } 
 

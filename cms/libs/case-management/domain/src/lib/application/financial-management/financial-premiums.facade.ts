@@ -171,6 +171,7 @@ export class FinancialPremiumsFacade {
   letterContentLoader$ = this.letterContentLoaderSubject.asObservable();
 
   premiumProcessListProfilePhotoSubject = new Subject();
+  premiumAllPaymentsPremiumSubject = new Subject();
   /** Private properties **/
 
   /** Public properties **/
@@ -247,6 +248,7 @@ export class FinancialPremiumsFacade {
             acceptsReportsCount: dataResponse['acceptReportsFlagQueryCount'],
           };
           this.financialPremiumsAllPaymentsDataSubject.next(gridView);
+          this.loadPremiumAllPaymentDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
           this.financialPremiumPaymentLoaderSubject.next(false);
         },
         error: (err) => {
@@ -255,6 +257,20 @@ export class FinancialPremiumsFacade {
         },
       });
   }
+
+  loadPremiumAllPaymentDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.premiumAllPaymentsPremiumSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadBatchName(batchId: string){
     this.financialPremiumsDataService.loadBatchName(batchId).subscribe({

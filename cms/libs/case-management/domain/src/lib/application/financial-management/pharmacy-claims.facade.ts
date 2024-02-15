@@ -196,6 +196,7 @@ export class FinancialPharmacyClaimsFacade {
   pharmacyBreakoutProfilePhotoSubject = new Subject();
   pharmacyRecentClaimsProfilePhotoSubject = new Subject();
   pharmacyBatchDetailProfilePhotoSubject = new Subject();
+  pharmacyBatchListDetailProfilePhotoSubject = new Subject();
   /** Private properties **/
 
   /** Public properties **/
@@ -522,8 +523,9 @@ export class FinancialPharmacyClaimsFacade {
     this.financialPharmacyClaimsDataService
       .loadBatchItemsListService()
       .subscribe({
-        next: (dataResponse) => {
+        next: (dataResponse: any) => {
           this.batchItemsDataSubject.next(dataResponse);
+          this.loadPharmacyBatchItemsDistinctUserIdsAndProfilePhoto(dataResponse?.data);
           this.hideLoader();
         },
         error: (err) => {
@@ -532,6 +534,21 @@ export class FinancialPharmacyClaimsFacade {
         },
       });
   }
+
+  loadPharmacyBatchItemsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyBatchListDetailProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
   loadReconcileListGrid(batchId:any,paginationParameters:any){
     this.financialPharmacyClaimsDataService.loadReconcileListService(batchId,paginationParameters).subscribe({
       next: (dataResponse:any) => {

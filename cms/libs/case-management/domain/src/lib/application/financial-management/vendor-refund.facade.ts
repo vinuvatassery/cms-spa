@@ -146,6 +146,12 @@ export class FinancialVendorRefundFacade {
   public vendorsSubject = new Subject<any>;
   vendors$ = this.vendorsSubject.asObservable();
   vendorRefundListProfilePhotoSubject = new Subject();
+  allRefundProfilePhotoSubject = new Subject();
+  vendorRefundBatchClaimsSubject = new Subject();
+  vendorRefundFormProfileSubject = new Subject();
+  vendorRefundTPAProfileSubject = new Subject();
+  tpaVendorRefundProfilePhotoSubject = new Subject();
+  vendorRefundPaymentListProfilePhotoSubject = new Subject();
 
   /** Private properties **/
 
@@ -255,12 +261,27 @@ export class FinancialVendorRefundFacade {
           total: dataResponse['totalCount']
         };
         this.vendorRefundAllPaymentsDataSubject.next(gridView);
+        this.loadRefundDistinctUserIdsAndProfilePhoto(dataResponse['items']);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
   }
+
+  loadRefundDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.allRefundProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadBatchLogListGrid(loadBatchLogListRequestDto : any, batchId : string){
     this.financialVendorRefundDataService.loadBatchLogListService(loadBatchLogListRequestDto,batchId).subscribe({
@@ -270,6 +291,7 @@ export class FinancialVendorRefundFacade {
           total: dataResponse['totalCount']
         };
         this.batchLogDataSubject.next(gridView);
+        this.loadVendorBatchDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.hideLoader();
       },
       error: (err) => {
@@ -277,6 +299,20 @@ export class FinancialVendorRefundFacade {
         this.hideLoader();
       },
     });
+  }
+
+  loadVendorBatchDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundBatchClaimsSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
   loadVendorRefundBatchListGrid(loadBatchListRequestDto : any){
@@ -339,11 +375,26 @@ this.loaderService.show();
             acceptsCombinedPaymentsCount: dataResponse['acceptsCombinedPaymentsQueryCount'],
           };
         this.financialTpaDataSubject.next(gridView);
+        this.loadTPADistinctUserIdsAndProfilePhoto(dataResponse['items']);
       }},
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
+  }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.tpaVendorRefundProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
   loadTPARefundLists(ClaimsPageAndSortedRequestDto:any){
@@ -360,12 +411,27 @@ this.loaderService.show();
             acceptsCombinedPaymentsCount: dataResponse['acceptsCombinedPaymentsQueryCount'],
           };
         this.financialTpasDataSubject.next(gridView);
+        this.loadTPADistinctUserIdsAndProfilePhoto(dataResponse['items']);
       }},
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
   }
+
+  loadTPADistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundTPAProfileSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadInsurancevendorBySearchText(searchText: string,clientId:number) {
 
@@ -429,8 +495,9 @@ this.loaderService.show();
 
   loadClientClaimsListGrid(){
     this.financialVendorRefundDataService.loadClientClaimsListService().subscribe({
-      next: (dataResponse) => {
+      next: (dataResponse: any) => {
         this.clientClaimsListDataSubject.next(dataResponse);
+        this.loadClientClaimsDistinctUserIdsAndProfilePhoto(dataResponse?.data);
         this.hideLoader();
       },
       error: (err) => {
@@ -439,6 +506,20 @@ this.loaderService.show();
       },
     });
   }
+
+  loadClientClaimsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundPaymentListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadPharmacyPaymentsListGrid(){
     this.financialVendorRefundDataService.loadPharmacyPaymentsListService().subscribe({
@@ -675,6 +756,7 @@ this.loaderService.show();
           vendor.providerFullName = `${vendor.vendorName ?? ''} ${vendor.tin ?? ''}`;
         });
         this.pharmaciesSubject.next(response);
+        this.loadVendorFormDistinctUserIdsAndProfilePhoto(response);
         this.medicalProviderSearchLoaderVisibilitySubject.next(false);
       },
       error: (err) => {
@@ -683,6 +765,21 @@ this.loaderService.show();
       }
     });
   }
+
+  loadVendorFormDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundFormProfileSubject.next(data);
+          }
+        },
+      });
+    }
+  }
+
   loadRefundClaimsListGrid(ClaimsPageAndSortedRequestDto:any) {
     ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
     this.financialVendorRefundDataService. loadRefundClaimsService(ClaimsPageAndSortedRequestDto).subscribe({
