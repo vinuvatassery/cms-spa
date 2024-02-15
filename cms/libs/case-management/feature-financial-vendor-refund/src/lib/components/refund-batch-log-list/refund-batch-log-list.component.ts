@@ -71,12 +71,13 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       click: (dataItem: any): void => {
         if (!this.isRefundEditDialogOpen) {
           this.isRefundEditDialogOpen = true;
-          this.refunEditServiceType = dataItem.paymentTypeCode
+          this.refunEditServiceType = dataItem.serviceTypeCode
           this.refundEditClientId = dataItem.clientId
           this.refundEditClientFullName = dataItem.clientFullName
           this.refundEditVendorAddressId = dataItem.vendorAddressId
-          this.refundEditVendorName = dataItem.providerName
-          this.inspaymentRequestId = dataItem.paymentRequestId
+          this.refundEditVendorName = dataItem.vendorName
+          this.inspaymentRequestId = dataItem.paymentRequestId;
+          this.vendorId = dataItem.vendorId;
           this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
         }
       }
