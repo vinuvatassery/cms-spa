@@ -303,8 +303,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     const isClientId = (['clientId']).includes(this.selectedSearchColumn);
     const isEntryDate = (['creationTime']).includes(this.selectedSearchColumn);
     if(isClientId){
-      operator = 'eq';
-      data = !isNaN(data) && !isNaN(parseFloat(data)) ? data: '0';
+      operator = 'contains';
     }else if(isEntryDate){
       operator = 'eq';
       data = this.isValidDate(data) ? this.intl.formatDate(
