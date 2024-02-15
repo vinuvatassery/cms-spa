@@ -108,9 +108,11 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
     const filterList = [];
+    if(stateData.filter?.filters.length > 0){
       for (const filter of stateData.filter.filters) {
         filterList.push(this.gridColumns[filter.filters[0].field]);
       }
+    }
     this.filteredBy = filterList.toString();
     this.loadListGrid();
   }
