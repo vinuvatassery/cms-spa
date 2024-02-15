@@ -61,6 +61,7 @@
         [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
         [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
         (columnReorder)="onColumnReorder($event)"
+        (filterChange)="filterChange($event)"
         [data]="batchLogGridLists$| async">
         <kendo-grid-column  *ngIf="isPrintVisaAuthorizationClicked" [sortable]="false" field="add" [width]="40"  class="text-center"
           [sticky]="true" [sortable]="false"  [columnMenu]="false"  >
