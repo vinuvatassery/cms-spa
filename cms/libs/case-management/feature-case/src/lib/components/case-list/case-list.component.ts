@@ -368,7 +368,7 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       if(profile?.length>0){
        this.loginUserId= profile[0]?.loginUserId;
        if(!this.casesLoaded){ 
-        if (!this.caseStatus && !this.healthInsuranceType){ 
+        if (!this.caseStatus && !this.healthInsuranceType && !this.group){ 
           this.getGridState();
         }         
         this.casesLoaded = true;
