@@ -109,7 +109,7 @@
             [userLastName]="dataItem?.userLastName"
             [userProfilePhotoExists]="dataItem?.isUserProfilePhotoExist"
             [linkType]="'profileIcon'"
-            [userPhotos$]="dependantProofProfilePhoto$"></common-user-photo-icon>
+            [userPhotos$]="incomeListProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column *ngIf="!isClientProfileTab"
@@ -261,7 +261,7 @@
             [userLastName]="dataItem?.userLastName"
             [userProfilePhotoExists]="dataItem?.isUserProfilePhotoExist"
             [linkType]="'profileIcon'"
-            [userPhotos$]="incomeListProfilePhoto$"></common-user-photo-icon>
+            [userPhotos$]="dependantProofProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
          <!-- grid Loader Template -->
