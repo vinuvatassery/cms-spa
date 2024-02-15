@@ -351,9 +351,9 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div class="justify-content-end">
+      <div class="justify-content-end" (click)="onClientClicked(clientId)">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-          Client Profile <span class="material-icons ml-1" aria-hidden="true" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true" >
             chevron_right
           </span>
         </button>
@@ -371,8 +371,8 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+      <div class="justify-content-end" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
           Client Profile <span class="material-icons ml-1" aria-hidden="true">
             chevron_right
           </span>
