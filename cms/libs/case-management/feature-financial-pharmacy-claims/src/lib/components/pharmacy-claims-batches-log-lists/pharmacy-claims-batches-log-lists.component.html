@@ -57,11 +57,15 @@
 
 
     <div class="app-c-table">
-      <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow" [pageSize]="state.take" [loading]="(loader$ | async) ?? false"
-        [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
+      <kendo-grid [resizable]="true" [loading]="isBatchLogGridLoaderShow"
+       [pageSize]="state.take" [loading]="(loader$ | async) ?? false"
+        [pageable]="true" [sortable]="true" [skip]="state.skip"
+         [groupable]="false" [reorderable]="true" [resizable]="true"
+        [columnMenu]="{ filter: true }" [sort]="state.sort" 
+        (dataStateChange)="dataStateChange($event)"
         (columnReorder)="onColumnReorder($event)"
         (filterChange)="filterChange($event)"
+        [filter]="state.filter"
         [data]="batchLogGridLists$| async">
         <kendo-grid-column  *ngIf="isPrintVisaAuthorizationClicked" [sortable]="false" field="add" [width]="40"  class="text-center"
           [sticky]="true" [sortable]="false"  [columnMenu]="false"  >
