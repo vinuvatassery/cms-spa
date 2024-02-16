@@ -41,7 +41,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   public userDashBoardsListData$ =    this.userDashBoardsListDataSubject.asObservable();
   public dashboardContentUpdate$ =    this.dashboardWrapperFacade.dashboardContentUpdate$;
   public userDashBoardsList$ = this.dashboardWrapperFacade.userDashBoardsList$;
-  static dashBoardContentData: any;
+  static dashBoardContentData: any = [];
   dashBoardAllWidgetsData!: any;
   configSubscription!: Subscription;
   dashBoardContentSubscription!: Subscription;
@@ -204,12 +204,12 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
               element?.widgetProperties.componentData.component
             ];
         });
-        if (response[0].widgetProperties.componentData.component) {
+        if (response[0]?.widgetProperties?.componentData?.component) {
           
           DashboardPageComponent.dashBoardContentData = []   
-          debugger
+          
            response.forEach((widg: any) => {           
-             if(this.userManagementFacade.hasPermission([widg.widgetProperties.componentData.Permission_Code]))
+             if(this.userManagementFacade.hasPermission([widg.widgetProperties?.componentData?.Permission_Code]))
              {
            DashboardPageComponent.dashBoardContentData.push(widg)
             }
@@ -236,8 +236,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
               element?.widgetProperties.componentData.component
             ];
         });
-        this.dashBoardAllWidgetsData = response;
-        this.dashboardAllWidgetsDataSubject.next(response);
+        this.dashBoardAllWidgetsData = []
+        response.forEach((widg: any) => {     
+          debugger      
+          if(this.userManagementFacade.hasPermission([widg?.widgetProperties?.componentData?.Permission_Code]))
+          {
+            debugger
+            this.dashBoardAllWidgetsData.push(widg)
+         }
+       });        
+        this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
       });
   }
 
@@ -292,10 +300,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       isEditDashboard: this.isReorderEnable,
       dashboardId : this.selectedDashBoard
     };
-    if (save === 'true') {
+    if (save === 'true' && DashboardPageComponent.dashBoardContentData) {
       
-      let dashboardContentPostData =
-        DashboardPageComponent.dashBoardContentData;
+      let dashboardContentPostData =  DashboardPageComponent.dashBoardContentData;
       let updatedWidgetsPostData = DashboardPageComponent.updatedWidgets;
       dashboardContentPostData.forEach((widg: any) => {
         if (widg?.widgetProperties) {
@@ -303,6 +310,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         }
       });
 
+      if(updatedWidgetsPostData[0])
+      {
       updatedWidgetsPostData[0].forEach((widg: any) => {
         if (widg?.widgetProperties && widg?.newItem !== true) {
           widg.widgetProperties.componentData.component = widg.widgetName;
@@ -310,6 +319,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
           dashboardContentPostData.push(widg);
         }
       });
+    }
 
       dashboardContentPostData.forEach((widg: any) => {
         if (widg?.widgetProperties && widg?.stringified !== true) {
