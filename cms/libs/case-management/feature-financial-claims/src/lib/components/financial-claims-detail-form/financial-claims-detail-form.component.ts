@@ -1131,9 +1131,7 @@ duplicatePaymentObject:any = {};
   {
     let formValue = this.addExceptionForm.at(index).get(controlName)?.value;
     const ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
-    if(formValue){
-      ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': true});
-    }else{
+    if(!formValue){
       ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': null});
       ctpCodeIsvalid?.controls['cptCode'].updateValueAndValidity();
     }
