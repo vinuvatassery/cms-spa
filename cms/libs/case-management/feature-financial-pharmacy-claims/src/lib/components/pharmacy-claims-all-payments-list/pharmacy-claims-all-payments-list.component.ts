@@ -19,10 +19,10 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { BehaviorSubject, Observable, Subject, Subscription, debounceTime } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, first } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
-import { LoadTypes, GridFilterParam } from '@cms/case-management/domain';
+import { LoadTypes, GridFilterParam, PaymentStatusCode } from '@cms/case-management/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 
@@ -56,7 +56,11 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Input() pharmacyClaimnsAllPaymentsProfilePhoto$!: any;
+  @Output() unBatchClaimsEvent = new EventEmitter<any>();
+  @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
+  unBatchClaimsDialogTemplate!: TemplateRef<any>;
   public state!: State;
+  @Input() unbatchClaim$ :any
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
@@ -99,6 +103,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  pharmacyClaimsAllPaymentsGridLists: any = [];
  currentPageRecords: any = [];
  selectedAllPaymentsList!: any;
+ isBulkUnBatchOpened =false;
  isPageCountChanged: boolean = false;
  isPageChanged: boolean = false;
  unCheckedProcessRequest:any=[];
@@ -111,6 +116,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  clientId: any;
  claimsType: any;
  clientName: any;
+ UnBatchDialog: any;
  gridLoaderSubject = new BehaviorSubject(false);
  allPaymentsPrintAdviceLetterPagedList: any;
  pharmacyClaimnsAllPaymentsProfilePhotoSubject = new Subject();
@@ -133,7 +139,8 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   warrantNumber: 'Warrant Number',
   creationTime: 'Entry Date'
 };
-
+selected: any;
+isUnBatchClaimsClosed = false;
 searchColumnList: { columnName: string, columnDesc: string }[] = [
   { columnName: 'ALL', columnDesc: 'All Columns' },
   { columnName: 'batchName', columnDesc: 'Batch #' },
@@ -143,7 +150,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   { columnName: 'warrantNumber', columnDesc: 'Warrant Number' },
 ];
 
-  public allPaymentsGridActions = [
+  public allPaymentsGridActions(dataItem:any) {
+   return [
     {
       buttonType: 'btn-h-primary',
       text: 'Edit Claim',
@@ -160,8 +168,17 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       buttonType: 'btn-h-primary',
       text: 'Unbatch Claim',
       icon: 'undo',
+      disabled: [PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(dataItem.paymentStatusCode),
       click: (data: any): void => {
-      },
+        if(![PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(data.paymentStatusCode))
+        {
+        if (!this.isUnBatchClaimsClosed) {
+          this.isUnBatchClaimsClosed = true;
+          this.selected = data;
+          this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
+        }
+      }
+    }
     },
 
     {
@@ -176,7 +193,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       },
     },
   ];
-
+  }
 
   public bulkMore = [
     {
@@ -250,6 +267,14 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     this.loadPharmacyClaimsAllPaymentsListGrid();
   }
 
+  onUnBatchOpenClicked(template: TemplateRef<unknown>): void {
+    this.UnBatchDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+
   resetGrid(){
     this.defaultGridState();
     this.sortValue = 'batchName';
@@ -320,8 +345,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     const isClientId = (['clientId']).includes(this.selectedSearchColumn);
     const isEntryDate = (['creationTime']).includes(this.selectedSearchColumn);
     if(isClientId){
-      operator = 'eq';
-      data = !isNaN(data) && !isNaN(parseFloat(data)) ? data: '0';
+      operator = 'contains';
     }else if(isEntryDate){
       operator = 'eq';
       data = this.isValidDate(data) ? this.intl.formatDate(
@@ -786,5 +810,27 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
   }
     onProviderNameClick(event: any) {
       this.onProviderNameClickEvent.emit(event);
+    }
+
+    onUnBatchPaymentCloseClicked(result: any) {
+      if (result) {
+          this.handleUnbatchClaims();
+          this.unBatchClaimsEvent.emit({
+            paymentId : this.selected.paymentRequestId,
+          })
+      }
+      this.isBulkUnBatchOpened = false;
+      this.isUnBatchClaimsClosed = false;
+      this.UnBatchDialog.close();
+    }
+
+    handleUnbatchClaims() {
+      this.unbatchClaim$
+        .pipe(first((unbatchResponse: any) => unbatchResponse != null))
+        .subscribe((unbatchResponse: any) => {
+          if (unbatchResponse ?? false) {
+            this.loadPharmacyClaimsAllPaymentsListGrid();
+          }
+        });
     }
 }

@@ -233,9 +233,6 @@
                 </kendo-grid-string-filter-menu>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="voucherPayable" title="VP - Suffix" [width]="130"> </kendo-grid-column>
-            <kendo-grid-column *ngIf="receiptLogMode" field="creditNumber" title="Credit - Suffix"
-              [width]="140"></kendo-grid-column>
             <kendo-grid-column field="grantNumber" title="Grant #" [width]="100">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -248,6 +245,10 @@
               </ng-template>
             </kendo-grid-column>
 
+            <kendo-grid-column field="voucherPayable" title="VP - Suffix" [width]="130"> </kendo-grid-column>
+            <kendo-grid-column *ngIf="receiptLogMode" field="creditNumber" title="Credit - Suffix"
+              [width]="140"></kendo-grid-column>
+    
             <kendo-grid-column field="refundNote" title="Refund Note" [width]="150"> </kendo-grid-column>
             <kendo-grid-column field="entryDate" title="Entry Date" [width]="160">
               <ng-template kendoGridCellTemplate let-dataItem>

@@ -75,7 +75,10 @@
                                 [letterContentList$]="letterContentList$"
                                 [letterContentLoader$]="letterContentLoader$"
                                 (onProviderNameClickEvent)="onProviderNameClick($event)"
-                                [pharmacyClaimnsAllPaymentsProfilePhoto$]="pharmacyClaimnsAllPaymentsProfilePhoto$"></cms-pharmacy-claims-all-payments-list>
+                                [pharmacyClaimnsAllPaymentsProfilePhoto$]="pharmacyClaimnsAllPaymentsProfilePhoto$"
+                                (unBatchClaimsEvent)="unBatchClaimClick($event)"
+                                [unbatchClaim$]="unbatchClaim$"
+                                ></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
