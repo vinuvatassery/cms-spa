@@ -89,6 +89,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   @Input() searchDrugsLoader$: any;
   @Input() paymentRequestType$ : any
   @Input() deliveryMethodLov$ :any
+  @Input() pharmacyClaimsProcessListProfilePhoto$: any;
 
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
@@ -211,7 +212,6 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     private readonly lovFacade: LovFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private route: Router,
-
   ) { 
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,

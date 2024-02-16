@@ -21,7 +21,7 @@ import {
 } from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, first } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { LoadTypes, GridFilterParam, PaymentStatusCode } from '@cms/case-management/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -55,6 +55,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   @Output() loadPharmacyClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Input() pharmacyClaimnsAllPaymentsProfilePhoto$!: any;
   @Output() unBatchClaimsEvent = new EventEmitter<any>();
   @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
   unBatchClaimsDialogTemplate!: TemplateRef<any>;
@@ -118,6 +119,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  UnBatchDialog: any;
  gridLoaderSubject = new BehaviorSubject(false);
  allPaymentsPrintAdviceLetterPagedList: any;
+ pharmacyClaimnsAllPaymentsProfilePhotoSubject = new Subject();
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
   itemNbr:'Item #',
@@ -220,7 +222,8 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly intl: IntlService,
-    private readonly configProvider: ConfigurationProvider) {}
+    private readonly configProvider: ConfigurationProvider,
+    private readonly userManagementFacade: UserManagementFacade,) {}
 
   ngOnInit(): void {
     this.sortType = 'asc';
@@ -238,6 +241,20 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     })
   }
 
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyClaimnsAllPaymentsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cdr.detectChanges();
+    }
+  }
 
   ngOnChanges(): void {
     this.sortType = 'asc';

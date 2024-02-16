@@ -4,6 +4,7 @@ import { Subject } from 'rxjs';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { ApprovalUserStatusCode } from '../../enums/approval-user-status-code.enum';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class PendingApprovalPaymentFacade {
@@ -34,12 +35,14 @@ export class PendingApprovalPaymentFacade {
   pendingApprovalBatchDetailPaymentsGrid$ = this.pendingApprovalBatchDetailPaymentsGridSubject.asObservable();
   pendingApprovalSubmit$ = this.pendingApprovalSubmitSubject.asObservable();
   pendingApprovalPaymentsCount$ = this.pendingApprovalPaymentsCountSubject.asObservable();
+  approvalPaymentProfilePhotoSubject = new Subject();
 
   constructor(
     private readonly PendingApprovalPaymentService: PendingApprovalPaymentService,
     private readonly loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {
 
   }
@@ -133,12 +136,27 @@ export class PendingApprovalPaymentFacade {
           total: dataResponse["totalCount"]
         };
           this.pendingApprovalBatchDetailPaymentsGridSubject.next(gridView);
+          this.loadApprovalPaymentsDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
       },
     });
   }
+
+  loadApprovalPaymentsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.approvalPaymentProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   submitForApproval(data: any) {
     this.showLoader();

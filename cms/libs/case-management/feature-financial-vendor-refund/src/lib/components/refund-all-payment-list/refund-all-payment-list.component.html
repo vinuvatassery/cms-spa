@@ -319,15 +319,13 @@
     <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center"
       [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-          <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
-        </button>
-        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-          <ng-template kendoPopoverBodyTemplate>
-            <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-          </ng-template>
-        </kendo-popover>
+        <common-user-photo-icon  
+        [userId]="dataItem.creatorId" 
+        [userFirstName]="dataItem.userFirstName"
+        [userLastName]="dataItem.userLastName"
+        [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+        [linkType]="'profileIcon'"
+        [userPhotos$]="allRefundProfilePhoto$"></common-user-photo-icon>
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column *ngIf="!receiptLogMode" field="Option" title="Options" [sticky]="true" [columnMenu]="false"

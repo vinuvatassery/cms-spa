@@ -27,6 +27,7 @@ import { IntlService } from '@progress/kendo-angular-intl';
 import {
   PaymentStatusCode,PaymentType, PaymentMethodCode, PaymentBatchName
 } from '@cms/case-management/domain';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
@@ -191,6 +192,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   @Input() claimsType: any;
   @Input() letterContentList$: any;
   @Input() letterContentLoader$: any;
+  @Input() pharmacyBatchDetailProfilePhoto$!: any;
   @Output() loadTemplateEvent = new EventEmitter<any>();
   public state!: State;
   showExportLoader = false;
@@ -322,8 +324,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   constructor(private route: Router,private dialogService: DialogService,  private readonly cdr: ChangeDetectorRef,
     private readonly configProvider: ConfigurationProvider,
     private readonly intl: IntlService,
-    private readonly notificationSnackbarService: NotificationSnackbarService ) {}
-
+    private readonly notificationSnackbarService: NotificationSnackbarService) {}
+  
   ngOnInit(): void {
     this.sortColumnName = 'Pharmacy Name';
     this.loadBatchLogListGrid();
@@ -334,6 +336,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     })
     this.handleBatchPaymentsGridData();
   }
+
   initiateBulkMore() {
    this.bulkMore = [
 

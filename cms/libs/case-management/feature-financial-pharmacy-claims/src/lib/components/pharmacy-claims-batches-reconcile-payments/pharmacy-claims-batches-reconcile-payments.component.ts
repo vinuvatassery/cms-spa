@@ -55,6 +55,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Input() letterContentLoader$ :any;
   @Input() reconcilePaymentBreakoutLoaderList$:any;
   @Input() deliveryMethodLov$:any;
+  @Input() pharmacyBreakoutProfilePhoto$!: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
   @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
@@ -63,6 +64,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+
   reconcileGridListsSubscription !: Subscription;
   paymentRequestId!: string;
   entityId: any;

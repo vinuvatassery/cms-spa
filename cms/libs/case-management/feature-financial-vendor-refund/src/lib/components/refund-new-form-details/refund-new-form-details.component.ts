@@ -1,10 +1,10 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, ServiceTypeCode } from '@cms/case-management/domain';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { Subject, Subscription, debounceTime, takeUntil } from 'rxjs';
 import {  VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -138,12 +138,17 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   selectedTpaRequests: any[]=[];
   selectedRxVendorRefundList: any;
   tpaRefundGridLists: any[]=[]
+  vendorRefundProfileSubject = new Subject();
+  pharmacySearchResultSubscription = new Subscription();
+  vendorRefundFormProfile$ = this.financialVendorRefundFacade.vendorRefundFormProfileSubject;
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
     public financialVendorFacade :FinancialVendorFacade,
     private dialogService: DialogService,
-    private formBuilder: FormBuilder) {}
+    private formBuilder: FormBuilder,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef) {}
   ngOnDestroy(): void {
 
     this.ngUnsubscribe.next();
@@ -239,13 +244,11 @@ if(this.isEdit){
   this.refundForm.controls['tpaVendor'].disable();
   this.searchTpaVendors(this.vendorName)
   }
-
-
-
 }
   }
+
   subscribeLoadRefundClaimDataForRx(){
-    this.pharmacySearchResult$.subscribe((res:any)=>{
+    this.pharmacySearchResultSubscription = this.pharmacySearchResult$.subscribe((res:any)=>{
       this.pharmaciesList = res;
             const vendors = res.filter((x:any) =>{
         return x.vendorAddressId ==  this.vendorAddressId
@@ -254,11 +257,11 @@ if(this.isEdit){
       this.vendorId = vendors[0].vendorId
       this.initForm()
     });
-
     this.existingRxRefundClaim$.subscribe((res:any)=>{
       this.getSelectedVendorRefundsList(res,"EDIT");
     })
   }
+  
   loadPaymentRequestData(){
     this.financialVendorRefundFacade.loadPharmacyRefundEditList(this.inspaymentRequestId);
   }

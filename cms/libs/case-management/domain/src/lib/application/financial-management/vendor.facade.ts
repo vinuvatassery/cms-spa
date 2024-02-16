@@ -10,6 +10,7 @@ import { ConfigurationProvider, LoggingService, NotificationSnackbarService, Sna
 import { FinancialVendorDataService } from '../../infrastructure/financial-management/vendor.data.service';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { Pharmacy } from '../../entities/client-pharmacy';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialVendorFacade {
@@ -58,6 +59,7 @@ export class FinancialVendorFacade {
   public sort: SortDescriptor[] = [{
     field: this.sortValue,
   }];
+  financialClinicProviderProfileSubject = new Subject();
 
   /** Constructor**/
   constructor(private readonly financialVendorDataService: FinancialVendorDataService,
@@ -65,6 +67,7 @@ export class FinancialVendorFacade {
     private configurationProvider: ConfigurationProvider,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   /** Public methods **/
@@ -311,6 +314,7 @@ export class FinancialVendorFacade {
   }
 
   getProviderList(providerPageAndSortedRequest: any) {
+
     this.showLoader();
     this.financialVendorDataService.getProvidersList(providerPageAndSortedRequest).subscribe({
       next: (response: any) => {
@@ -321,6 +325,7 @@ export class FinancialVendorFacade {
           };
           this.hideLoader();
           this.providerListSubject.next(gridView);
+          this.loadProviderDistinctUserIdsAndProfilePhoto(response["items"]);
         }
       },
       error: (err) => {
@@ -328,6 +333,21 @@ export class FinancialVendorFacade {
       },
     });
   }
+
+  loadProviderDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.financialClinicProviderProfileSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
   searchProvider(payload: any) {
     this.showLoader();
     return this.financialVendorDataService.searchProvider(payload).subscribe({

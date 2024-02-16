@@ -2,6 +2,7 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
+  OnDestroy,
   OnInit,
   ViewEncapsulation
 } from '@angular/core';
@@ -12,6 +13,7 @@ import { LovFacade } from '@cms/system-config/domain';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-drugs-purchased-list',
@@ -85,6 +87,8 @@ export class DrugsPurchasedListComponent implements OnInit {
   paymentStauses: any = [];
   paymentTypes: any = [];
   paymentRequestTypes: any = [];
+  pharmacyPurchaseProfilePhotoSubscription = new Subscription();
+  pharmacyPurchaseProfile$ = this.drugPharmacyFacade.pharmacyPurchaseProfileSubject;
 
   public actions = [
     {
@@ -121,7 +125,7 @@ export class DrugsPurchasedListComponent implements OnInit {
     private readonly cdr: ChangeDetectorRef,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
   ) {}
 
   /** Lifecycle hooks **/

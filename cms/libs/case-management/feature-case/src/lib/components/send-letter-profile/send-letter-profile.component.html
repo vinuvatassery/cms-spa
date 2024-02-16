@@ -69,26 +69,13 @@
   <div class="flex-row mb-2">
     <div class="flex-col">
       <p class="text-bold">Assigned Case Worker</p>
-      <button
-            kendoButton
-            [primary]="true"
-            class="avatar-sm-btn c-default"
-            kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered"
-            showOn="hover"
-            [attr.aria-label]="clientEligibilityInfo.caseManagerId"
-          >
-          <common-user-photo-icon  [userId]="clientEligibilityInfo.caseManagerId"></common-user-photo-icon>
-          </button>
-          <kendo-popover
-            #onUserProfileDetailsHovered
-            width="330"
-            position="right"
-          >
-            <ng-template kendoPopoverBodyTemplate>
-              <common-user-profile-card [userId]="clientEligibilityInfo.caseManagerId"></common-user-profile-card>
-            </ng-template>
-          </kendo-popover>
+      <common-user-photo-icon  
+      [userId]="clientEligibilityInfo.caseManagerId" 
+      [userFirstName]="clientEligibilityInfo.userFirstName"
+      [userLastName]="clientEligibilityInfo.userLastName"
+      [userProfilePhotoExists]="clientEligibilityInfo.isUserProfilePhotoExist"
+      [linkType]="'profileIcon'"
+      [userPhotos$]="sendLetterProfilePhotoSubject"></common-user-photo-icon>
     </div>
   </div>
 </div>
