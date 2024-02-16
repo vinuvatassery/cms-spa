@@ -236,12 +236,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     this.loadPharmacyClaimsProcessListGrid();
     this.addSearchSubjectSubscription();
     this.lovFacade.getPaymentStatusLov();
-    this.lovFacade.getPaymentMethodLov();
-    this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
-      next: (data: any) => {
-        this.financialVendorFacade.manufacturerListSubject.next(data);
-      }      
-    });
+    this.lovFacade.getPaymentMethodLov();   
   }
 
   ngOnChanges(): void {
@@ -252,6 +247,13 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     };
   }
 
+  loadManufacturerEvent(event:any){
+    this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
+      next: (data: any) => {
+        this.financialVendorFacade.manufacturerListSubject.next(data);
+      }      
+    });
+  }
   ngOnDestroy(): void {
     this.searchSubject.complete();
   }

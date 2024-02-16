@@ -72,8 +72,8 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
   @Output()  searchClientsDataEvent = new EventEmitter<any>();
   @Output()  searchPharmacyDataEvent = new EventEmitter<any>();
   @Output()  loadRecentClaimListEvent = new EventEmitter<any>();
-
-  //manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
+  @Output() loadManufacturer = new EventEmitter<any>();
+ 
   deliveryMethodLovs! :any
   vendorDetails$!: Observable<any>;
   isFinancialDrugsDetailShow = false
@@ -96,7 +96,6 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
   manufacturers: any = [];
 
   constructor(
-    //private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private formBuilder: FormBuilder,private cd: ChangeDetectorRef,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
@@ -112,7 +111,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
     this.mapPaymentRequestTypes()
     this.cd.markForCheck();
     this.loadDeliveryMethodLovs()
-    this.loadManufacturer()
+    this.loadManufacturers()
   }
 
   get addClaimServicesForm(): FormArray {
@@ -433,8 +432,8 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
     this.isFinancialDrugsDetailShow = false;
   }
 
-  private loadManufacturer() {
-   //this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers)
+  private loadManufacturers() {
+   this.loadManufacturer.next(true);
   }
 
   private loadDeliveryMethodLovs() {

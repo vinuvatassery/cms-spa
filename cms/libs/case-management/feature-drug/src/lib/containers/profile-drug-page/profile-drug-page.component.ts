@@ -203,7 +203,6 @@ export class ProfileDrugPageComponent  implements OnInit , OnDestroy {
     this.financialPharmacyClaimsFacade.searchClients(searchText);
   }
   searchDrug(ndcCodeSearch: any) {
-    debugger;
     this.financialPharmacyClaimsFacade.searchDrug(ndcCodeSearch?.searchText , ndcCodeSearch?.isClientRestricted);
   }
 
