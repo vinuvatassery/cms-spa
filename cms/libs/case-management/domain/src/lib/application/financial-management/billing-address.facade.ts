@@ -105,7 +105,7 @@ export class BillingAddressFacade {
               total: dataResponse['totalCount'],
             };
             this.billingAddressDataSubject.next(gridView);
-            this.loadAddressDistinctUserIdsAndProfilePhoto(dataResponse['items']);
+            this.loadVendorAddressDistinctUserIdsAndProfilePhoto(dataResponse['items']);
           }
           this.searchLoaderVisibilitySubject.next(false);
           this.hideLoader();
@@ -118,7 +118,7 @@ export class BillingAddressFacade {
       });
   }
 
-  loadAddressDistinctUserIdsAndProfilePhoto(data: any[]) {
+  loadVendorAddressDistinctUserIdsAndProfilePhoto(data: any[]) {
     const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
     if(distinctUserIds){
       this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
