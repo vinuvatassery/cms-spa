@@ -1,3 +1,4 @@
+<form [formGroup]="eventForm">
 <section class="k-dialog-body">
   <p class="text-muted">
     Choose the type of event, enter a description, and upload a file if needed.
@@ -6,30 +7,38 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Choose Event Type">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEvents$"> </kendo-dropdownlist>
+        <kendo-dropdownlist formControlName="eventId" [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEvents$"> </kendo-dropdownlist>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!eventForm.controls['eventId'].valid"> Proof of Income Type is
+        required </kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Event Description" class="pb-0">
         <kendo-textarea
- 
+        formControlName="eventDesc"
         [fillMode]="formUiStyle.inputFillMode"
-  
+        [maxlength]="eventDescriptionMaxLength"
+        [value]="eventDescription"
+        (valueChange)="onEventDescriptionValueChange($event)"
           aria-label="event description"
           [rows]="2"
           [cols]="40"
         >
-        <kendo-textarea-suffix class="justify-content-end">
-          <span class="counter"> 0/750</span> 
-  
-            </kendo-textarea-suffix>
+          <kendo-textarea-suffix class="justify-content-end">
+            <span class="tareajustificationcounter">{{
+              eventDescriptionCounter
+              }}</span>
+          </kendo-textarea-suffix>
         </kendo-textarea>
       </kendo-floatinglabel>
+      <kendo-formerror *ngIf="!eventForm.controls['eventDesc'].valid"> Proof of Income Type is
+        required </kendo-formerror>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="Attachment Type (attachment upload optional)"> 
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEvents$"> </kendo-dropdownlist>
- 
+      <kendo-floatinglabel text="Attachment Type (attachment upload optional)">
+        <kendo-dropdownlist formControlName="attachmentType" [fillMode]="formUiStyle.dropDownFillMode" [data]="eventAttachmentTypeLov$ | async"
+        textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"> </kendo-dropdownlist>
+
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-12 mt-2 c-pt-12">
@@ -39,18 +48,22 @@
     <div class="flex-col flex-col-12">
       <kendo-floatinglabel text="Attachment Note">
         <kendo-textarea
- 
+        formControlName="attachmentNote"
         [fillMode]="formUiStyle.inputFillMode"
-  
+        #tareaJustifications resizable="auto"
+        [maxlength]="attachmentNoteMaxLength"
+        [value]="attachmentNote"
+        (valueChange)="onAttachmentNoteValueChange($event)"
           aria-label="attachment note"
           [rows]="1"
           [cols]="40"
           class="ta-height-50"
         >
-        <kendo-textarea-suffix class="justify-content-end">
-          <span class="counter"> 0/750</span> 
-  
-            </kendo-textarea-suffix>
+          <kendo-textarea-suffix class="justify-content-end">
+            <span class="tareajustificationcounter">{{
+              attachmentNoteCounter
+              }}</span>
+          </kendo-textarea-suffix>
         </kendo-textarea>
       </kendo-floatinglabel>
     </div>
@@ -69,9 +82,11 @@
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Add">
+      <button kendoButton [primary]="true" aria-label="Add" (click)="addEventData()">
+
         Add
       </button>
     </div>
   </div>
 </kendo-dialog-actions>
+</form>

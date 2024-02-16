@@ -76,6 +76,7 @@
   <!-- Event Log Side Panel -->
   <productivity-tools-event-log
     *ngIf="isShownEventLog"
+    [eventAttachmentTypeLov$]="eventAttachmentTypeLov$"
     (closeAction)="handleShowEventLogClicked()"
   ></productivity-tools-event-log>
   <!-- Direct Message Side Panel -->

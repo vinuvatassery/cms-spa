@@ -1,7 +1,9 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
+import { LovFacade } from '@cms/system-config/domain'
+
 
 @Component({
   selector: 'case-management-common-actions',
@@ -9,13 +11,25 @@ import { DialItem } from '@progress/kendo-angular-buttons';
   styleUrls: ['./common-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommonActionsComponent {
+export class CommonActionsComponent implements OnInit {
   /** Public properties **/
+  eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$;
+
   isShownEventLog = false;
   isShownDirectMessage = false;
   isShownTodoReminders = false;
   clickedContact!: any;
   item: Array<DialItem> = [{}];
+
+   /** Constructor **/
+
+   constructor( private readonly lovFacade : LovFacade
+    ) {}
+
+  ngOnInit() {
+   this.lovFacade.getEventAttachmentTypeLov();
+  }
+
 
   /** Internal event methods **/
   onDialItemClicked(event: any): void {
