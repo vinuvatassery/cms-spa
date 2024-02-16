@@ -326,27 +326,41 @@
   <cms-pharmacy-claims-delete-claims
   (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)" (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked()" [selectedProcessClaimsCount] = "selectedProcessClaims.length" [deletemodelbody]="deletemodelbody"></cms-pharmacy-claims-delete-claims>
 </ng-template>
-<ng-template #addEditClaimsDialog>
-  <cms-pharmacy-claims-detail-form
-  [deliveryMethodLov$]="deliveryMethodLov$"
-  [paymentRequestType$]="paymentRequestType$"
-  [addPharmacyClaim$] = "addPharmacyClaim$"
-  [editPharmacyClaim$] = "editPharmacyClaim$"
-  [getPharmacyClaim$] = "getPharmacyClaim$"
-  [searchPharmacies$] = "searchPharmacies$"
-  [searchClients$] = "searchClients$"
-  [searchDrugs$] = "searchDrugs$"
-  [searchPharmaciesLoader$]="searchPharmaciesLoader$"
-  [searchClientLoader$]="searchClientLoader$"
-  [searchDrugsLoader$]="searchDrugsLoader$"
-  (addPharmacyClaimEvent)="addPharmacyClaim($event)"
-  (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
-  (searchPharmaciesEvent)="searchPharmacies($event)"
-  (searchClientsEvent)="searchClients($event)"
-  (searchDrugEvent)="searchDrug($event)"
-  (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
-  (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
-    (modalCloseAddEditClaimsFormModal)="modalCloseAddEditClaimsFormModal($event)"></cms-pharmacy-claims-detail-form>
+<ng-template #addEditClaimsDialog> 
+    <common-cms-pharmacy-claims-detail
+      [deliveryMethodLov$]="deliveryMethodLov$"
+      [paymentRequestType$]="paymentRequestType$"
+      [addPharmacyClaim$] = "addPharmacyClaim$"
+      [editPharmacyClaim$] = "editPharmacyClaim$"
+      [getPharmacyClaim$] = "getPharmacyClaim$"
+      [searchPharmacies$] = "searchPharmacies$"
+      [searchClients$] = "searchClients$"
+      [searchDrugs$] = "searchDrugs$"
+      [searchPharmaciesLoader$]="searchPharmaciesLoader$"
+      [searchClientLoader$]="searchClientLoader$"
+      [searchDrugsLoader$]="searchDrugsLoader$"
+      (addPharmacyClaimEvent)="addPharmacyClaim($event)"
+      (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
+      (searchPharmaciesEvent)="searchPharmacies($event)"
+      (searchClientsEvent)="searchClients($event)"
+      (searchDrugEvent)="searchDrug($event)"
+      (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
+      (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
+      (modalCloseAddEditClaimsFormModal)="modalCloseAddEditClaimsFormModal($event)"
+      (addDrugEvent) = "addDrugEventHandler($event)"
+      [addDrug$] ="addDrug$"
+      [manufacturersLov$] ="manufacturersLov$"
+      (searchClientsDataEvent) = "searchClientsDataEventHandler($event)"
+      (searchPharmacyDataEvent) = "searchPharmacyDataEventHandler($event)"
+      [pageSizes] = "pageSizes"
+      [sortType] = "sortType"
+      [sortValueRecentClaimList] = "sortValueRecentClaimList"
+      [sortRecentClaimList] = "sortRecentClaimList"
+      [gridSkipCount] = "gridSkipCount"
+      (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)"
+      [recentClaimsGridLists$]="recentClaimsGridLists$"
+    > 
+    </common-cms-pharmacy-claims-detail>
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>

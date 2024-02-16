@@ -12,7 +12,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { DrugsFacade, FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade, GridFilterParam, VendorFacade } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -120,6 +121,13 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   private searchSubject = new Subject<string>();
+  addDrug$ = this.drugsFacade.addDrug$
+  manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
+  recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
+
   public claimsProcessMore = [
     {
       buttonType: 'btn-h-primary',
@@ -211,7 +219,10 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     private readonly lovFacade: LovFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private route: Router,
-
+    private readonly drugsFacade: DrugsFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade,
+    private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
+    private readonly vendorFacade:VendorFacade
   ) { 
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -226,6 +237,11 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     this.addSearchSubjectSubscription();
     this.lovFacade.getPaymentStatusLov();
     this.lovFacade.getPaymentMethodLov();
+    this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
+      next: (data: any) => {
+        this.financialVendorFacade.manufacturerListSubject.next(data);
+      }      
+    });
   }
 
   ngOnChanges(): void {
@@ -409,6 +425,18 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
     }
   }
 
+  addDrugEventHandler(event:any){
+    this.drugsFacade.addDrugData(event);
+  }
+
+  searchClientsDataEventHandler(client:any){
+    this.financialPharmacyClaimsFacade.searchClientsDataSubject.next(client);
+  }
+
+  searchPharmacyDataEventHandler(vendor:any){
+    this.financialPharmacyClaimsFacade.searchPharmaciesDataSubject.next(vendor)
+  }
+
   onBatchClaimsGridSelectedClicked() {
     this.isProcessGridExpand = false;
   }
@@ -582,5 +610,8 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   }
   onProviderNameClick(event: any) {
     this.onProviderNameClickEvent.emit(event);
+  }
+  loadRecentClaimListEventHandler(data : any){
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
   }
 }

@@ -41,7 +41,7 @@ export class FinancialVendorFacade {
   private vendorsListSubject = new BehaviorSubject<any>([]);
   vendorDetails$ = this.vendorsListSubject.asObservable();
 
-  private manufacturerListSubject = new BehaviorSubject<any>([]);
+  public manufacturerListSubject = new BehaviorSubject<any>([]);
   manufacturerList$ = this.manufacturerListSubject.asObservable();
 
   private medicalProviderSearchLoaderVisibilitySubject = new Subject<boolean>;

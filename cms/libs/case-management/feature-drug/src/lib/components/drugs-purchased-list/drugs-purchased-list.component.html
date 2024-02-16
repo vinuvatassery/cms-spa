@@ -289,7 +289,23 @@
         </ng-template>
       </kendo-grid>
     </div>
+    <div class="flex-row" >
+      <div class="flex-col mt-1">
+        <button
+          kendoButton
+         
+          [primary]="true"
+          icon="add"
+          (click)="onClickOpenAddEditClaimsFromModal(addEditClaimsDialog,'00000000-0000-0000-0000-000000000000')"
+          aria-label="Pharmacy"
+          [disabled]="(isReadOnly$ | async) ? true : false"
+        >
+          Pharmacy Claim
+        </button>
+      </div>
+    </div>
   </div>
+  
 </div>
 
 <!-- Add Pharmacy  Modal -->
@@ -309,3 +325,40 @@
   <case-management-set-pharmacy-priority (closeChangePriority)="handleCloseChangePriorityClikced()">
   </case-management-set-pharmacy-priority>
 </kendo-dialog>
+
+<ng-template #addEditClaimsDialog> 
+  <common-cms-pharmacy-claims-detail
+      [deliveryMethodLov$]="deliveryMethodLov$"
+      [paymentRequestType$]="paymentRequestType$"
+      [addPharmacyClaim$] = "addPharmacyClaim$"
+      [editPharmacyClaim$] = "editPharmacyClaim$"
+      [getPharmacyClaim$] = "getPharmacyClaim$"
+      [searchPharmacies$] = "searchPharmacies$"
+      [searchClients$] = "searchClients$"
+      [searchDrugs$] = "searchDrugs$"
+      [searchPharmaciesLoader$]="searchPharmaciesLoader$"
+      [searchClientLoader$]="searchClientLoader$"
+      [searchDrugsLoader$]="searchDrugsLoader$"
+      (addPharmacyClaimEvent)="addPharmacyClaim($event)"
+      (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
+      (searchPharmaciesEvent)="searchPharmacies($event)"
+      (searchClientsEvent)="searchClients($event)"
+      (searchDrugEvent)="searchDrug($event)"
+      (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
+      (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
+      (modalCloseAddEditClaimsFormModal)="modalCloseAddEditClaimsFormModal($event)"
+      (addDrugEvent) = "addDrugEventHandler($event)"
+      [addDrug$] ="addDrug$"
+      [manufacturersLov$] ="manufacturersLov$"
+      (searchClientsDataEvent) = "searchClientsDataEventHandler($event)"
+      (searchPharmacyDataEvent) = "searchPharmacyDataEventHandler($event)"
+      [pageSizes] = "pageSizes"
+      [sortType] = "sortType"
+      [sortValueRecentClaimList] = "sortValueRecentClaimList"
+      [sortRecentClaimList] = "sortRecentClaimList"
+      [gridSkipCount] = "gridSkipCount"
+      (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)"
+      [recentClaimsGridLists$]="recentClaimsGridLists$"
+    > 
+    </common-cms-pharmacy-claims-detail>
+</ng-template>
