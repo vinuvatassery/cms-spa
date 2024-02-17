@@ -4,7 +4,21 @@
             <div class="dash-header-with-filters">
             <h5>INSURANCE TYPE & FPL</h5>
             </div>
-      <div class="dashboard-cards-container">
+
+            <div class="k-loading-panel" *ngIf="!insuranceTypeFPLStats[1]?.value && !insuranceTypeFPLStats[1]?.value">
+                  <div class="k-loading-panel-wrapper">
+                    <kendo-loader
+                      type="converging-spinner"
+                      themeColor="primary"
+                      size="large"
+                    >
+                    </kendo-loader>
+                    <div class="k-loading-panel-text">Loading...</div>
+                  </div>
+                </div>
+
+                
+      <div class="dashboard-cards-container" *ngIf="insuranceTypeFPLStats[1]?.value || insuranceTypeFPLStats[1]?.value">
             <div class="ins_type_fpl_row">
                   <div class="app-cars-col ">
                         <div> <h4>OHP</h4>

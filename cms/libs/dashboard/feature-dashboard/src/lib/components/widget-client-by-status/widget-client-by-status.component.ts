@@ -52,6 +52,7 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy{
     this.loadActiveClientsByStatusChart(event);
   }
   loadActiveClientsByStatusChart(userId:any) {
+    this.activeClientsByStatus = null
     this.widgetFacade.loadActiveClientsByStatusChart(this.dashboardId,userId);
     this.widgetFacade.activeClientsByStatusChart$
       .pipe(takeUntil(this.destroy$))

@@ -4,7 +4,18 @@
                   <h5>APPLICATIONS & CERS</h5>
             </div>
            
-      <div class="dashboard-cards-container">
+            <div class="k-loading-panel" *ngIf="!applicationCERStats[1]?.value && !applicationCERStats[1]?.value" >
+                  <div class="k-loading-panel-wrapper">
+                    <kendo-loader
+                      type="converging-spinner"
+                      themeColor="primary"
+                      size="large"
+                    >
+                    </kendo-loader>
+                    <div class="k-loading-panel-text">Loading...</div>
+                  </div>
+                </div>
+      <div class="dashboard-cards-container" *ngIf="applicationCERStats[1]?.value || applicationCERStats[1]?.value">
             <div class="app-cars-row application_cer-row">
                   <div class="app-cars-first-col orange-frame-icon">
                         <label class="icon-frame orange-frame"><span class="material-icons">

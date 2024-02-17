@@ -10,6 +10,18 @@
             </div>
       </div>
 
+      <div class="k-loading-panel" *ngIf="!premiumExpensesByInsurance">
+            <div class="k-loading-panel-wrapper">
+              <kendo-loader
+                type="converging-spinner"
+                themeColor="primary"
+                size="large"
+              >
+              </kendo-loader>
+              <div class="k-loading-panel-text">Loading...</div>
+            </div>
+          </div>
+
       <div class="dashboard-cards-container">
          
 
