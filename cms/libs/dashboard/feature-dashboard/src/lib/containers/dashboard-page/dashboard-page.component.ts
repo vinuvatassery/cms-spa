@@ -192,7 +192,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       .loadDashboardContent(dashboardId)
       .pipe(first((response) => response != null))
       .subscribe((response: any) => {
-        
+        debugger
         response.forEach((widg: any) => {
           widg.widgetProperties = JSON.parse(
             widg.widgetProperties.replaceAll('\\', ' ')

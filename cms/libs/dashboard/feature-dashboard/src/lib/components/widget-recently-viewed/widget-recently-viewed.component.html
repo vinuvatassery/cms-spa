@@ -2,7 +2,18 @@
   <div class="dash-header-with-filters">
     <h5>RECENTLY VIEWED</h5>
   </div>
- 
+  <div class="k-loading-panel" *ngIf="!gridData && !vendorGridData">
+    <div class="k-loading-panel-wrapper">
+      <kendo-loader
+        type="converging-spinner"
+        themeColor="primary"
+        size="large"
+      >
+      </kendo-loader>
+      <div class="k-loading-panel-text">Loading...</div>
+    </div>
+  </div>
+<div  *ngIf="gridData || vendorGridData">
   <h5> CLIENTS </h5>
     <div class="app-c-drag-row-table recently-view">
     <kendo-grid [data]="gridData" >
@@ -39,5 +50,6 @@
       </ng-template>
     </kendo-grid-column>
   </kendo-grid>
+</div>
 </div>
 

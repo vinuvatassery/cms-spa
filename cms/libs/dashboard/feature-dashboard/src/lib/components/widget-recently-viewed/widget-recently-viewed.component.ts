@@ -63,6 +63,8 @@ export class WidgetRecentlyViewedComponent
     this.removeWidget.emit();
   }
   ngOnInit(): void {
+    this.vendorGridData= null
+    this.gridData = null
     this.loadRecentlyViewedClients();
     this.loadRecentlyViewedVendors();
    this.recentlyViewedClientsSubscription = this.recentlyViewedClientsList$.subscribe({

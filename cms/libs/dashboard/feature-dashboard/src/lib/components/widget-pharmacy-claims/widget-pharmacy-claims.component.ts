@@ -93,6 +93,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   }
 
   loadPharmacyClaimsChart() {
+    this.pharmacyClaims = null
     const payload = {
       CountOrAmount: this.selectedDataCount,
       TimeFrame: this.selectedTimeFrame,
@@ -106,8 +107,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response) {
-            this.pharmacyClaims = response?.widgetProperties;
-            debugger;
+            this.pharmacyClaims = response?.widgetProperties;            
             this.claimCount = response?.result?.claimCount;
             this.claimAmount = response?.result?.claimAmount;
             this.changeDetectorRef.detectChanges();
