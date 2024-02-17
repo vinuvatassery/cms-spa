@@ -7,10 +7,10 @@
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Choose Event Type">
-        <kendo-dropdownlist formControlName="eventId" [fillMode]="formUiStyle.dropDownFillMode" [data]="ddlEvents$"> </kendo-dropdownlist>
+        <kendo-dropdownlist formControlName="eventId" [fillMode]="formUiStyle.dropDownFillMode" [data]="eventsdata$ | async"
+        textField="eventDesc" valueField="eventId" [valuePrimitive]="true"> </kendo-dropdownlist>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!eventForm.controls['eventId'].valid"> Proof of Income Type is
-        required </kendo-formerror>
+      <kendo-formerror *ngIf="!eventForm.controls['eventId'].valid"> Event Type is required </kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Event Description" class="pb-0">
@@ -31,19 +31,25 @@
           </kendo-textarea-suffix>
         </kendo-textarea>
       </kendo-floatinglabel>
-      <kendo-formerror *ngIf="!eventForm.controls['eventDesc'].valid"> Proof of Income Type is
-        required </kendo-formerror>
+      <kendo-formerror *ngIf="!eventForm.controls['eventDesc'].valid"> Event Description is required </kendo-formerror>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Attachment Type (attachment upload optional)">
-        <kendo-dropdownlist formControlName="attachmentType" [fillMode]="formUiStyle.dropDownFillMode" [data]="eventAttachmentTypeLov$ | async"
-        textField="lovDesc" valueField="lovCode" [valuePrimitive]="true"> </kendo-dropdownlist>
-
+        <kendo-combobox formControlName="attachmentType" [fillMode]="formUiStyle.dropDownFillMode" [data]="eventAttachmentTypeLov$ | async"
+        textField="lovDesc" valueField="lovCode" [valuePrimitive]="true">
+        </kendo-combobox>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col flex-col-12 mt-2 c-pt-12">
-      <kendo-upload></kendo-upload>
-      <kendo-formhint>Max file size 25MB</kendo-formhint>
+    <div class="flex-col flex-col-12 mt-2 c-pt-12" *ngIf="eventForm.controls['attachmentType'].value"  >
+      <common-document-upload
+      [typeCode]="'EVENT_ATTACHMENT'"
+      [isFileViewable]="true"
+      (handleFileSelectEvent)="handleFileSelected($event)"
+      (handleFileRemoveEvent)="handleFileRemoved($event)"
+      [isDownloadShow]="true">
+      </common-document-upload>
+      <kendo-formerror *ngIf="atatchmentValidator"> File Attachment is required </kendo-formerror>
+      <kendo-formerror *ngIf="attachmentValidatorSize">File size is limited to 25 MB. Please select a smaller file. </kendo-formerror>
     </div>
     <div class="flex-col flex-col-12">
       <kendo-floatinglabel text="Attachment Note">

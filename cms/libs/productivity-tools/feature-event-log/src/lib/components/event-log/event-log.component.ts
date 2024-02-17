@@ -23,6 +23,10 @@ export class EventLogComponent implements OnInit {
   /** Output properties **/
   @Output() closeAction = new EventEmitter();
   @Input() eventAttachmentTypeLov$: any;
+  @Input() entityType: any;
+  @Input() entityId: any;
+  @Input() clientCaseEligibilityId: any;
+
   /** Public properties **/
   events$ = this.eventLogFacade.events$;
   eventsdata$ = this.eventLogFacade.eventsdata$;

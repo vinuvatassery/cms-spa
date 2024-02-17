@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
 import { LovFacade } from '@cms/system-config/domain'
@@ -20,6 +20,9 @@ export class CommonActionsComponent implements OnInit {
   isShownTodoReminders = false;
   clickedContact!: any;
   item: Array<DialItem> = [{}];
+  @Input() entityType: any;
+  @Input() entityId: any;
+  @Input() clientCaseEligibilityId: any;
 
    /** Constructor **/
 

@@ -7,6 +7,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
+import { ConfigurationProvider } from '@cms/shared/util-core';
+
 
 @Component({
   selector: 'productivity-tools-event-detail',
@@ -17,6 +19,11 @@ export class EventDetailComponent implements OnInit {
 
   @Output() public closeEventDetailsClickedEmitter = new EventEmitter<any>();
   @Input() eventAttachmentTypeLov$: any;
+  @Input() eventsdata$: any;
+  @Input() entityType: any;
+  @Input() entityId: any;
+  @Input() clientCaseEligibilityId: any;
+  @Input() parentEventLogId: any;
   eventForm!: FormGroup;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   attachmentNoteMaxLength = 100;
@@ -27,12 +34,17 @@ export class EventDetailComponent implements OnInit {
   eventDescriptionCounter!: string;
   eventDescription = '';
   eventDescriptionCharachtersCount!: number;
-
+  attachmentFile: any;
+  atatchmentValidator: boolean = false;
+  attachmentValidatorSize: boolean = false;
   /** Public properties **/
   ddlEvents$ = this.eventLogFacade.ddlEvents$;
+  addEventdata$ = this.eventLogFacade.addEventdata$;
 
   /** Constructor **/
-  constructor(private readonly eventLogFacade: EventLogFacade, private readonly formBuilder: FormBuilder
+  constructor(private readonly eventLogFacade: EventLogFacade, private readonly formBuilder: FormBuilder,
+    private readonly configurationProvider: ConfigurationProvider,
+
     ) {}
 
   /** Lifecycle hooks **/
@@ -41,7 +53,11 @@ export class EventDetailComponent implements OnInit {
     this.eventDescriptionWordCount();
     this.attachmentNoteWordCount()
     this.buildForm();
-
+    this.addEventdata$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+       this.closeEventDetails();
+      }
+    });
   }
 
   /** Private methods **/
@@ -91,18 +107,54 @@ export class EventDetailComponent implements OnInit {
   addEventData()
   {
     this.setValidators();
-    if(this.eventForm.valid)
+    if(this.eventForm.valid && !this.attachmentValidatorSize && !this.atatchmentValidator)
     {
-
+      let eventRequestData = {
+        clientId: this.entityType === 'CLIENT' ? this.entityId : null,
+        clientCaseEligibilityId: this.entityType === 'CLIENT' ? this.clientCaseEligibilityId : null,
+        eventId: this.eventForm.controls['eventId'].value,
+        eventLogDesc : this.eventForm.controls['eventDesc'].value,
+        attachmentTypeCode : this.eventForm.controls['attachmentType'].value,
+        attachment : this.attachmentFile,
+        attachmentNote :  this.eventForm.controls['attachmentNote'].value,
+        entityId : this.entityId ? this.entityId.toString() : null,
+        entityTypeCode: this.entityType,
+        parentEventLogId : this.parentEventLogId ? this.parentEventLogId : null
+      };
+      this.eventLogFacade.addEventData(eventRequestData);
     }
   }
 
   setValidators()
   {
     this.eventForm.markAllAsTouched();
-    this.eventForm.controls['eventId'].setValidators([Validators.required,]);
+    // this.eventForm.controls['eventId'].setValidators([Validators.required,]);
     this.eventForm.controls['eventDesc'].setValidators([Validators.required,]);
     this.eventForm.controls['eventId'].updateValueAndValidity();
     this.eventForm.controls['eventDesc'].updateValueAndValidity();
+    if(this.eventForm.controls['attachmentType'].value && !this.attachmentFile)
+    {
+      this.atatchmentValidator = true;
+    }
+    else
+    {
+      this.atatchmentValidator = false;
+    }
+  }
+
+  handleFileSelected(event: any) {
+    this.attachmentFile = null;
+    this.attachmentValidatorSize=false;
+    this.attachmentFile = event.files[0].rawFile;
+    this.atatchmentValidator = false;
+   if(this.attachmentFile.size>this.configurationProvider.appSettings.uploadFileSizeLimit)
+   {
+    this.attachmentValidatorSize=true;
+   }
+  }
+
+  handleFileRemoved(event: any) {
+    this.attachmentValidatorSize=false;
+    this.attachmentFile = null;
   }
 }

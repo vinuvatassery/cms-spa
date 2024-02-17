@@ -14,6 +14,7 @@ import { State } from '@progress/kendo-data-query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FinancialVendorProfileComponent implements OnInit {
+  eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$;
   drugDataLoader$ = this.drugsFacade.drugDataLoader$;
   drugsData$ = this.drugsFacade.drugsData$;
   pageSizes = this.drugsFacade.gridPageSizes;
@@ -47,17 +48,17 @@ export class FinancialVendorProfileComponent implements OnInit {
   isClinicalVendor = false;
   vendorName: any;
 
-    
+
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
-  
+
   providerDetailsDialog: any
 
  ddlStates$ = this.contactFacade.ddlStates$;
  isEditForm = false
  vendorProfilePanel$ = this.financialVendorFacade.providePanelSubject$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$;
-  
+
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
   hasDrugCreateUpdatePermission = false;
   vendorProfileId: any;
@@ -201,11 +202,11 @@ export class FinancialVendorProfileComponent implements OnInit {
       content: this.providerDetailsTemplate,
       animation:{
         direction: 'left',
-        type: 'slide',  
-      }, 
+        type: 'slide',
+      },
       cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
     });
-  
+
   }
 
   onEditProviderProfileClick() {

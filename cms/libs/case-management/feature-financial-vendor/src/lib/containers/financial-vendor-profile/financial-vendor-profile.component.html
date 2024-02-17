@@ -148,7 +148,7 @@
 
 
    <!-- Event Log Side Panel -->
-   <productivity-tools-event-log   *ngIf="isShownEventLog"  (closeAction)="handleShowEventLogClicked()"
+   <productivity-tools-event-log [entityId] = "vendorId" [entityType] = "'VENDOR'"  [eventAttachmentTypeLov$]="eventAttachmentTypeLov$"   *ngIf="isShownEventLog"  (closeAction)="handleShowEventLogClicked()"
  ></productivity-tools-event-log>
 
  <ng-template #providerDetailsTemplate>

@@ -15,11 +15,13 @@ export class EventLogFacade {
   private eventsSubject = new Subject<Event[]>();
   private ddlEventsSubject = new Subject<any[]>();
   private eventsDataSubject = new Subject<any>();
+  private addEventDataSubject = new Subject<any>();
 
   /** Public properties **/
   events$ = this.eventsSubject.asObservable();
   ddlEvents$ = this.ddlEventsSubject.asObservable();
   eventsdata$ = this.eventsDataSubject.asObservable();
+  addEventdata$ = this.addEventDataSubject.asObservable();
 
   /** Constructor **/
   constructor(private readonly eventDataService: EventDataService,
@@ -78,6 +80,18 @@ export class EventLogFacade {
       },
       error: (err) => {
         console.error('err', err);
+      },
+    });
+  }
+
+  addEventData(eventData : any): void {
+    this.eventDataService.addEventData(eventData).subscribe({
+      next: (response : any) => {
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response[1].message, response[0].message);
+        this.addEventDataSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }
