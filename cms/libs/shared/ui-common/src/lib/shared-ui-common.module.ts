@@ -45,6 +45,7 @@ import { PlaceholderDirective } from './directives/placeholder.directive';
 import { FinancialDrugsDetailsComponent } from './financial-drugs-details/financial-drugs-details.component';
 import { FinancialPcaChosenAlertComponent } from './financial-pca-chosen-alert/financial-pca-chosen-alert.component';
 import { NdcCodePipe } from './pipes/ndc-code.pipe';
+import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboard-loader-panel.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -83,7 +84,8 @@ import { NdcCodePipe } from './pipes/ndc-code.pipe';
     PlaceholderDirective, 
     FinancialDrugsDetailsComponent,
     FinancialPcaChosenAlertComponent,
-    NdcCodePipe    
+    NdcCodePipe,
+    DashboardLoaderPanelComponent    
   ],
   exports: [
     LoginStatusComponent,
@@ -121,7 +123,8 @@ import { NdcCodePipe } from './pipes/ndc-code.pipe';
     PlaceholderDirective, 
     FinancialDrugsDetailsComponent,
     FinancialPcaChosenAlertComponent,
-    NdcCodePipe
+    NdcCodePipe,
+    DashboardLoaderPanelComponent
   ],
 })
 export class SharedUiCommonModule {}

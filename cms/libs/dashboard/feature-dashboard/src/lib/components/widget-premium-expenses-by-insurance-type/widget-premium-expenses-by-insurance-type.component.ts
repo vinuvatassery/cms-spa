@@ -50,6 +50,7 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
     this.destroy$.complete();
   }
   loadPremiumExpensesByInsuranceChart() {
+    this.premiumExpensesByInsurance = null
     const payload = {
       paymentStatusDate: this.selectFrequency,
     };
