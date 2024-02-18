@@ -11,18 +11,7 @@
   </div>
 </div>
 
-<div class="k-loading-panel" *ngIf="!this.pharmacyClaims?.chartData?.series[0]?.data[0]?.value && !this.pharmacyClaims?.chartData?.series[0]?.data[1]?.value">
-  <div class="k-loading-panel-wrapper">
-    <kendo-loader
-      type="converging-spinner"
-      themeColor="primary"
-      size="large"
-    >
-    </kendo-loader>
-    <div class="k-loading-panel-text">Loading...</div>
-  </div>
-</div>
-
+<common-dashboard-loader-panel *ngIf="!this.pharmacyClaims?.chartData?.series[0]?.data[0]?.value && !this.pharmacyClaims?.chartData?.series[0]?.data[1]?.value" ></common-dashboard-loader-panel>
 <div class="dashboard-cards-container">
 
   <kendo-chart class="dash_chart" *ngIf="this.pharmacyClaims?.chartData?.series[0]?.data[0]?.value > 0 || this.pharmacyClaims?.chartData?.series[0]?.data[1]?.value > 0">
