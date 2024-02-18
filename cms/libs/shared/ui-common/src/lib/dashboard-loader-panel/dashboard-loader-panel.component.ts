@@ -4,7 +4,6 @@ import {    Component,    ViewEncapsulation,    ChangeDetectionStrategy  } from 
   @Component({
     selector: 'common-dashboard-loader-panel',
     templateUrl: './dashboard-loader-panel.component.html',
-    styleUrls: ['./dashboard-loader-panel.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
   })
