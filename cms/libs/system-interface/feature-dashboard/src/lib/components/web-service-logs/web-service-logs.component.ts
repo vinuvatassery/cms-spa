@@ -56,7 +56,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   // Output Events
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
   @Output() loadWebLogList = new EventEmitter<string>();
-
+  filteredBy = '';
   columnChangeDesc = 'Default Columns';
   filteredByColumnDesc = '';
   selectedStatus = '';
@@ -69,7 +69,10 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
   // Filtering Variables
   statusFilter = '';
-  public statusArray = ["FAILED", "SUCCESS", "IN_PROGRESS"]
+  processFilter = '';
+  public statusArray : string[];
+  public statusArrayDesc : string[];
+  public processArray : string[];
   interfaceProcessBatchFilter = '';
   dateColumns = ['startDate'];
 
@@ -80,8 +83,13 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   lovsSubscription: Subscription | undefined;
 
   constructor(
-    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
-  ) { }
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade) { 
+
+    this.statusArray = systemInterfaceDashboardFacade.getStatusArray()
+    this.statusArrayDesc = systemInterfaceDashboardFacade.getStatusDescriptionArray()
+    this.processArray = systemInterfaceDashboardFacade.getEecProcessTypeCodeArray()
+  }
+
 
   gridColumns: any = {
     process: 'Process',
@@ -97,7 +105,15 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.state = stateData;
     this.sortDir = this.sortType === 'asc' ? 'Ascending' : 'Descending';
     this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
+    const filterList = [];
+    if(stateData.filter?.filters.length > 0){
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.gridColumns[filter.filters[0].field]);
+      }
+    }
+    this.filteredBy = filterList.toString();
     this.loadListGrid();
   }
 
@@ -105,7 +121,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.loadListGrid();
   }
 
-  restGrid() {
+  resetGrid() {
     this.sortType = 'asc';
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
     this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
@@ -117,41 +133,46 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
   }
 
+  updateStatusFilterValue(filterGroups: any[], statusArray: any[], statusArrayDesc: any[]): void {
+    if (!filterGroups || !Array.isArray(filterGroups)) return;
+
+    filterGroups.forEach((filterGroup: any) => {
+      // If filterGroup is null, or it doesn't have a 'filters' property, or 'filters' is not an array, exit this iteration.
+      if (!filterGroup || !filterGroup.filters || !Array.isArray(filterGroup.filters)) return;
+
+      // Find the status filter within the current filter group.
+      const statusFilter = filterGroup.filters.find((filter: any) => filter && filter.field === 'status');
+
+      if (!statusFilter || !statusArray || !Array.isArray(statusArray)) return;
+
+      const statusIndex = statusArrayDesc.indexOf(statusFilter.value);
+
+      // If statusIndex is valid , update the status filter value.
+      if (statusIndex !== -1) {
+        statusFilter.value = statusArray[statusIndex];
+      }
+    });
+  }
+
   loadListGrid() {
+    this.updateStatusFilterValue(this.filter, this.statusArray, this.statusArrayDesc);
+
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
+
+
     this.systemInterfaceDashboardFacade.loadWebLogsList(this.interfaceFilterDropDown.lovCode, !this.displayAll, param);
     this.webLogLists$ = this.systemInterfaceDashboardFacade.webLogLists$
   }
 
-  /** Public properties **/
-  activityEventLogSubList = [
-    {
-      id: 1,
-      errorCode: 12,
-      errorDesc: 'errorDesc errorDesc',
-      rowNumber: 14
-    },
-    {
-      id: 2,
-      errorCode: 12,
-      errorDesc: 'errorDesc errorDesc',
-      rowNumber: 14
-    },
-    {
-      id: 3,
-      errorCode: 12,
-      errorDesc: 'errorDesc errorDesc',
-      rowNumber: 14
-    },
-  ]
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.sortType = "desc"
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -224,6 +245,9 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   ): void {
     if (field === 'status') {
       this.statusFilter = value;
+    }
+    if (field === 'process') {
+      this.processFilter = value;
     }
 
     filterService.filter({

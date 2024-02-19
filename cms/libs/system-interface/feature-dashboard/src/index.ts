@@ -6,3 +6,5 @@ export * from './lib/containers/system-interface-dashboard-page/system-interface
 export * from './lib/components/system-interface-activity-log-lists/system-interface-activity-log-lists.component';
 
 export * from './lib/components/web-service-logs/web-service-logs.component';
+
+export * from './lib/components/exception-detail/exception-detail.component';
