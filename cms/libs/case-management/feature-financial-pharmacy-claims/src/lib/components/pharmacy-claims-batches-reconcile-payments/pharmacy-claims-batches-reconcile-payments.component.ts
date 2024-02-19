@@ -329,7 +329,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
     }
    
-    if(searchValue !== ''){
     this.filterData = {
       logic: 'and',
       filters: [
@@ -348,7 +347,6 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
-  }
   }
   private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     if (isDateSearch) {
