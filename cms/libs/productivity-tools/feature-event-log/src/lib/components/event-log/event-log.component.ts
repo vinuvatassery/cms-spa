@@ -28,6 +28,10 @@ export class EventLogComponent implements OnInit {
   @Input() clientCaseEligibilityId: any;
 
   /** Public properties **/
+  parentEventLogId : any;
+  eventList : any = [];
+  SubEventList : any = [];
+  eventResponseList : any = [];
   events$ = this.eventLogFacade.events$;
   eventsdata$ = this.eventLogFacade.eventsdata$;
   isShowEventLog = false;
@@ -71,6 +75,7 @@ export class EventLogComponent implements OnInit {
   ngOnInit() {
     this.loadEventsData();
     this.loadEvents();
+    this.getEventList();
   }
 
   /** Private methods **/
@@ -83,8 +88,14 @@ export class EventLogComponent implements OnInit {
     this.eventLogFacade.loadEventsData();
   }
 
-
-
+  getEventList()
+  {
+    this.eventsdata$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.eventResponseList = response;
+      }
+    });
+  }
 
   onShowSearchClicked() {
     this.isShownSearch = !this.isShownSearch;
@@ -95,8 +106,17 @@ export class EventLogComponent implements OnInit {
     this.isShowEventLog = !this.isShowEventLog;
   }
 
-  onOpenEventDetailsClicked(template: TemplateRef<unknown>, isSubEvent: boolean): void {
+  onOpenEventDetailsClicked(template: TemplateRef<unknown>, isSubEvent: boolean, eventId : string|null = null, parentEventLogId : string|null = null): void {
     this.isSubEvent = isSubEvent;
+    this.parentEventLogId = parentEventLogId;
+    if(eventId)
+    {
+      this.SubEventList = this.eventResponseList.filter((item : any) => item.parentEventId ? item.parentEventId.toString().toLowerCase() == eventId.toLowerCase() : false);
+    }
+    else
+    {
+      this.eventList = this.eventResponseList.filter((item : any) => !item.parentEventId );
+    }
     this.isAddEventDialogOpen = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',

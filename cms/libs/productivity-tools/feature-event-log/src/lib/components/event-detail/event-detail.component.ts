@@ -24,6 +24,8 @@ export class EventDetailComponent implements OnInit {
   @Input() entityId: any;
   @Input() clientCaseEligibilityId: any;
   @Input() parentEventLogId: any;
+  @Input() eventList : any
+
   eventForm!: FormGroup;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   attachmentNoteMaxLength = 100;

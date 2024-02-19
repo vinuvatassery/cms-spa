@@ -85,12 +85,15 @@ export class EventLogFacade {
   }
 
   addEventData(eventData : any): void {
+    this.showLoader()
     this.eventDataService.addEventData(eventData).subscribe({
       next: (response : any) => {
+        this.hideLoader()
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response[1].message, response[0].message);
         this.addEventDataSubject.next(response);
       },
       error: (err) => {
+        this.hideLoader()
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
