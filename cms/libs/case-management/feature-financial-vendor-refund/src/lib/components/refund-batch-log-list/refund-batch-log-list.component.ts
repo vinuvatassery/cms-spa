@@ -9,7 +9,7 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-refund-batch-log-list',
@@ -230,7 +230,9 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
-
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
   /** Constructor **/
   constructor(
     private route: Router,
@@ -240,7 +242,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     private activatedRoute: ActivatedRoute,
     private readonly financialVendorFacade: FinancialVendorFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-
+    private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade
   ) { }
 
   ngOnInit() {
@@ -286,6 +288,10 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       this.pageNumberAndCountChangedInSelectAll();
       this.gridLoaderSubject.next(false);
     });
+  }
+
+  loadRecentClaimListEventHandler(data : any){
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
   }
 
   handlePageCountSelectionChange() {

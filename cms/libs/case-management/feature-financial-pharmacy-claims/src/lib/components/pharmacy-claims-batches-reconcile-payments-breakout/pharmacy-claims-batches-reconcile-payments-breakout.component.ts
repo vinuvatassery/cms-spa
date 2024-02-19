@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialClaimsFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -81,7 +81,12 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   claimsType:any;
-  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,private readonly lovFacade: LovFacade, private readonly financialClaimsFacade: FinancialClaimsFacade) { }
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  
+  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,
+    private readonly lovFacade: LovFacade, private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade) { }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
@@ -321,4 +326,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
     });
   }
 
+  loadRecentClaimListEventHandler(data : any){
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
+  }
+  
 }

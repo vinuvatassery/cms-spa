@@ -13,7 +13,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {  ColumnVisibilityChangeEvent, GridDataResult, SelectAllCheckboxState, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
@@ -219,14 +219,17 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
-
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private readonly route: Router
+    private readonly route: Router,
+    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade
   ) {
     
     this.selectableSettings = { 
@@ -262,6 +265,11 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     );
   }
  
+  loadRecentClaimListEventHandler(data : any){
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
+  }
+
+
   loadRefundProcess(
     skipCountValue: number,
     maxResultCountValue: number,

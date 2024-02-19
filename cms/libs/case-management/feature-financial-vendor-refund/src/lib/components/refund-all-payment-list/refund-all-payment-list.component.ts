@@ -19,7 +19,7 @@ import {
   filterBy
 } from '@progress/kendo-data-query';
 import { BehaviorSubject, Subject, first } from 'rxjs';
-import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'cms-refund-all-payment-list',
@@ -237,13 +237,17 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
 
   /** Constructor **/
   constructor(
     private route: Router, private readonly cdr: ChangeDetectorRef,
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,
+    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade) {
       this.selectableSettings = {
         checkboxOnly: this.checkboxOnly,
         mode: this.mode,
@@ -749,6 +753,10 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
         this.checkedAndUncheckedRecordsFromSelectAll.splice(recordIndex, 1); // Remove the record at the found index
       }
     }
+  }
+
+  loadRecentClaimListEventHandler(data : any){
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
   }
 
   onRecordSelectionUnChecked(dataItem: any) {
