@@ -15,7 +15,7 @@ export class VendorRefundPageComponent
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-  tab = 1
+  tab = this.financialVendorRefundFacade.selectedRefundsTab;
   dataExportParameters :any;
   batchesGridExportParameters = null
   sortType = this.financialVendorRefundFacade.sortType;
@@ -85,8 +85,8 @@ export class VendorRefundPageComponent
   }
 
   loadFinancialRefundProcessListGrid(data: any) {
-    this.financialVendorRefundFacade.selectedClaimsTab = 1;
-    this.tab = this.financialVendorRefundFacade.selectedClaimsTab;
+    this.financialVendorRefundFacade.selectedRefundsTab = 1;
+    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;
     this.dataExportParameters = data;
     this.financialVendorRefundFacade.loadFinancialRefundProcessListGrid(
       data?.skipCount,

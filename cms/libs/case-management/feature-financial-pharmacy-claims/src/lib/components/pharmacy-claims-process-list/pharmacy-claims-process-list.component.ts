@@ -159,7 +159,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   public processGridActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Claim',
+      text: 'Edit Claims',
       icon: 'edit',
       click: (data: any,paymentRequestId : any): void => {
         if (!this.isAddEditClaimMoreClose) {
