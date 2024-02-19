@@ -6,6 +6,8 @@
         [data]="data"  [(ngModel)]="selectedActiveClientByGroup">
       </kendo-dropdownlist></div>
   </div>
+  <common-dashboard-loader-panel *ngIf="!activeClientsByGroup"></common-dashboard-loader-panel>
+
   <div class="dashboard-cards-container">
     
     <kendo-chart *ngIf="activeClientsByGroup"  class="dash_chart"  (seriesClick)="onClick($event)" >

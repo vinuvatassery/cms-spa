@@ -6,7 +6,6 @@ import {
 } from 'angular-gridster2';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
-import { DashboardContent } from '../..';
 
 @Injectable({
   providedIn: 'root',

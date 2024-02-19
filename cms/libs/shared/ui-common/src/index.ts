@@ -29,6 +29,7 @@ export * from './lib/financial-drugs-details/financial-drugs-details.component';
 export * from './lib/financial-pca-chosen-alert/financial-pca-chosen-alert.component'
 export * from './lib/cms-pharmacy-claims-detail/cms-pharmacy-claims-detail.component'
 export * from './lib/cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
+export * from './lib/dashboard-loader-panel/dashboard-loader-panel.component'
 /** Pipes **/
 export * from './lib/pipes/ssn.pipe';
 export * from './lib/pipes/fileSize.pipe';

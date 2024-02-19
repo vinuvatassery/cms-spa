@@ -27,6 +27,7 @@
                                 (exportGridDataEvent)="exportRefundsGridProcessData()"
                                 (loadVendorRefundProcessListEvent)="loadFinancialRefundProcessListGrid($event)"
                                 (providerNameClickEvent)="onProviderNameClick($event)"
+                                [vendorRefundListProfilePhoto$]="vendorRefundListProfilePhoto$"
                                 > </cms-refund-process-list>
                             </div>
                         </ng-template>
@@ -67,6 +68,7 @@
                               (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
                               [paymentMethodCode$]=" paymentMethodCode$"
                               (providerNameClickEvent)="onProviderNameClick($event)"
+                              [allRefundProfilePhoto$]="allRefundProfilePhoto$"
                               ></cms-refund-all-payment-list>
                                </div>
                         </ng-template>

@@ -233,9 +233,6 @@
                 </kendo-grid-string-filter-menu>
               </ng-template>
             </kendo-grid-column>
-            <kendo-grid-column field="voucherPayable" title="VP - Suffix" [width]="130"> </kendo-grid-column>
-            <kendo-grid-column *ngIf="receiptLogMode" field="creditNumber" title="Credit - Suffix"
-              [width]="140"></kendo-grid-column>
             <kendo-grid-column field="grantNumber" title="Grant #" [width]="100">
               <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
                 <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -248,6 +245,10 @@
               </ng-template>
             </kendo-grid-column>
 
+            <kendo-grid-column field="voucherPayable" title="VP" [width]="130"> </kendo-grid-column>
+            <kendo-grid-column *ngIf="receiptLogMode" field="creditNumber" title="Credit - Suffix"
+              [width]="140"></kendo-grid-column>
+    
             <kendo-grid-column field="refundNote" title="Refund Note" [width]="150"> </kendo-grid-column>
             <kendo-grid-column field="entryDate" title="Entry Date" [width]="160">
               <ng-template kendoGridCellTemplate let-dataItem>
@@ -262,15 +263,13 @@
             <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center"
               [columnMenu]="false">
               <ng-template kendoGridCellTemplate let-dataItem>
-                <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                  [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-                  <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
-                </button>
-                <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-                  <ng-template kendoPopoverBodyTemplate>
-                    <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-                  </ng-template>
-                </kendo-popover>
+                <common-user-photo-icon  
+                [userId]="dataItem.creatorId" 
+                [userFirstName]="dataItem.userFirstName"
+                [userLastName]="dataItem.userLastName"
+                [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+                [linkType]="'profileIcon'"
+                [userPhotos$]="vendorRefundBatchClaims$"></common-user-photo-icon>
               </ng-template>
             </kendo-grid-column>
             <kendo-grid-column *ngIf="!receiptLogMode" field="Option" [sortable]="false" title="Options" [sticky]="true"
@@ -361,7 +360,8 @@
   <cms-refund-new-form-details [isEdit]="true" [serviceType]="refunEditServiceType" [clientId]="refundEditClientId"
     [clientName]="refundEditClientFullName" [vendorAddressId]="refundEditVendorAddressId"
     [vendorName]="refundEditVendorName" (modalCloseAddEditRefundFormModal)="modalCloseAddEditRefundFormModal($event)"
-    [inspaymentRequestId]="inspaymentRequestId"></cms-refund-new-form-details>
+    [inspaymentRequestId]="inspaymentRequestId"
+    [vendorId]="vendorId"></cms-refund-new-form-details>
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>

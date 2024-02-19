@@ -35,7 +35,7 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
   selectedActiveClientByGroup:any = 'All Clients';
   userId: any;
 
-
+  loadingPanelVisible = true
  
   ngOnInit(): void {
     this.getLoginUserId();
@@ -62,6 +62,7 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
     this.loadActiveClientsByGroupChart(event);
   }
   loadActiveClientsByGroupChart(userId :any) {
+    this.activeClientsByGroup = null
       this.widgetFacade.loadActiveClientsByGroupChart(this.dashboardId,userId);
       this.widgetFacade.activeClientsByGroupChart$
         .pipe(takeUntil(this.destroy$))

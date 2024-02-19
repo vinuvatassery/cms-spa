@@ -22,6 +22,7 @@ import { PharmacyClaims } from '../../entities/financial-management/pharmacy-cla
 import { Drug } from '../../entities/drug';
 import { DrugCategoryCode } from '../../enums/drug-category-code.enum';
 import { PaymentBatchName } from '../../entities/financial-management/Payment-details';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialPharmacyClaimsFacade {
@@ -189,6 +190,13 @@ export class FinancialPharmacyClaimsFacade {
 
   paymentBatchNameSubject  =  new Subject<PaymentBatchName>();
   paymentBatchName$ = this.paymentBatchNameSubject.asObservable();
+
+  pharmacyClaimsProcessListProfilePhotoSubject = new Subject();
+  pharmacyClaimnsAllPaymentsProfilePhotoSubject = new Subject();
+  pharmacyBreakoutProfilePhotoSubject = new Subject();
+  pharmacyRecentClaimsProfilePhotoSubject = new Subject();
+  pharmacyBatchDetailProfilePhotoSubject = new Subject();
+  pharmacyBatchListDetailProfilePhotoSubject = new Subject();
   /** Private properties **/
 
   /** Public properties **/
@@ -227,7 +235,8 @@ export class FinancialPharmacyClaimsFacade {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
-    private readonly documentFacade: DocumentFacade
+    private readonly documentFacade: DocumentFacade,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   /** Public methods **/
@@ -240,6 +249,7 @@ export class FinancialPharmacyClaimsFacade {
           total: dataResponse['totalCount'],
         };
         this.pharmacyClaimsProcessDataSubject.next(gridView);
+        this.loadDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.pharmacyClaimsProcessLoaderSubject.next(false);
       },
       error: (err) => {
@@ -248,6 +258,22 @@ export class FinancialPharmacyClaimsFacade {
       },
     });
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyClaimsProcessListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
+
   addPharmacyClaim(data: any) {
     this.showLoader();
     this.financialPharmacyClaimsDataService.addPharmacyClaim(data).subscribe({
@@ -433,6 +459,7 @@ export class FinancialPharmacyClaimsFacade {
           };
           this.pharmacyClaimsAllPaymentsLoaderSubject.next(false);
           this.pharmacyClaimsAllPaymentsDataSubject.next(gridView);
+          this.loadDistinctUsersAndProfilePhoto(dataResponse['items']);
           this.hideLoader();
         },
         error: (err) => {
@@ -443,6 +470,19 @@ export class FinancialPharmacyClaimsFacade {
       });
   }
 
+  loadDistinctUsersAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyClaimnsAllPaymentsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  }
 
     loadBatchLogListGrid(batchId: string, isReconciled: boolean, params: GridFilterParam, claimType: string) {
         this.paymentByBatchGridLoaderSubject.next(true);
@@ -455,6 +495,7 @@ export class FinancialPharmacyClaimsFacade {
                 };
 
                 this.paymentsByBatchDataSubject.next(gridView);
+                this.pharmacyBatchLogListUserIdsAndProfilePhotos(dataResponse['items']);
                 this.paymentByBatchGridLoaderSubject.next(false);
             },
             error: (err) => {
@@ -463,12 +504,28 @@ export class FinancialPharmacyClaimsFacade {
             },
         });
     }
+
+    pharmacyBatchLogListUserIdsAndProfilePhotos(data: any[]) {
+      const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+      if(distinctUserIds){
+        this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+        .subscribe({
+          next: (data: any[]) => {
+            if (data.length > 0) {
+              this.pharmacyBatchDetailProfilePhotoSubject.next(data);
+            }
+          },
+        });
+      }
+    }
+
   loadBatchItemsListGrid() {
     this.financialPharmacyClaimsDataService
       .loadBatchItemsListService()
       .subscribe({
-        next: (dataResponse) => {
+        next: (dataResponse: any) => {
           this.batchItemsDataSubject.next(dataResponse);
+          this.loadPharmacyBatchItemsDistinctUserIdsAndProfilePhoto(dataResponse?.data);
           this.hideLoader();
         },
         error: (err) => {
@@ -477,6 +534,21 @@ export class FinancialPharmacyClaimsFacade {
         },
       });
   }
+
+  loadPharmacyBatchItemsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyBatchListDetailProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
   loadReconcileListGrid(batchId:any,paginationParameters:any){
     this.financialPharmacyClaimsDataService.loadReconcileListService(batchId,paginationParameters).subscribe({
       next: (dataResponse:any) => {
@@ -625,6 +697,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
           total: dataResponse['totalCount'],
         };
         this.recentClaimListDataSubject.next(gridView);
+        this.pharmacyRecentGridDistinctUserIdsAndProfilePhoto(dataResponse['items']);
       }
     },
     error: (err) => {
@@ -632,6 +705,20 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
     },
   });
 }
+
+pharmacyRecentGridDistinctUserIdsAndProfilePhoto(data: any[]) {
+  const distinctUserIds = Array.from(new Set(data?.map(user => user.by))).join(',');
+  if(distinctUserIds){
+    this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+    .subscribe({
+      next: (data: any[]) => {
+        if (data.length > 0) {
+          this.pharmacyRecentClaimsProfilePhotoSubject.next(data);
+        }
+      },
+    });
+  }
+} 
 
 loadEachLetterTemplate(templateParams:any){
   this.letterContentLoaderSubject.next(true);
@@ -684,6 +771,7 @@ loadReconcilePaymentBreakoutListGrid(data:any) {
             total: dataResponse['totalCount'],
           };
           this.reconcilePaymentBreakoutListDataSubject.next(gridView);
+          this.loadBreakoutPanelDistinctUserIdsAndProfilePhoto(dataResponse['items']);
           this.reconcilePaymentBreakoutListLoaderDataSubject.next(false);
         }
       },
@@ -693,6 +781,20 @@ loadReconcilePaymentBreakoutListGrid(data:any) {
       },
     });
 }
+
+loadBreakoutPanelDistinctUserIdsAndProfilePhoto(data: any[]) {
+  const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+  if(distinctUserIds){
+    this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+    .subscribe({
+      next: (data: any[]) => {
+        if (data.length > 0) {
+          this.pharmacyBreakoutProfilePhotoSubject.next(data);
+        }
+      },
+    });
+  }
+} 
 
 loadBatchName(batchId: string){
   this.financialPharmacyClaimsDataService.loadBatchName(batchId).subscribe({

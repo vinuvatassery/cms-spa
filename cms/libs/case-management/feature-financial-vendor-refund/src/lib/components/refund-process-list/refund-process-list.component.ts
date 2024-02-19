@@ -15,6 +15,7 @@ import {
 import { Router } from '@angular/router';
 import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {  ColumnVisibilityChangeEvent, GridDataResult, SelectAllCheckboxState, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
@@ -54,6 +55,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   @Input() ddlStates$ :any
   @Input() paymentMethodCode$ :any
   @Input() exportButtonShow$: any
+  @Input() vendorRefundListProfilePhoto$!: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   isColumnsReordered = false;
@@ -92,7 +94,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
 
   columns: any = {
     ALL: 'All Columns',
-    VendorName: 'Vendor',
+    VendorName: 'Vendor Name',
     type: 'Type',
     clientFullName: 'Client Name',
     refundWarrentnbr: 'Refund Warrant #',
@@ -110,7 +112,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     { columnCode: 'ALL', columnDesc: 'All Columns' },
     {
       columnCode: 'VendorName',
-      columnDesc: 'Vendor',
+      columnDesc: 'Vendor Name',
     },
     {
       columnCode: 'type',
@@ -229,7 +231,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly route: Router,
-    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade
+    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade,
   ) {
     
     this.selectableSettings = { 
@@ -240,7 +242,9 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   }
 
   ngOnInit(){
-    this.vendorRefundProcessGridListsSub = this.vendorRefundProcessGridLists$.subscribe((res: any) => this.vendorRefundProcessGridLists = res)
+    this.vendorRefundProcessGridListsSub = this.vendorRefundProcessGridLists$.subscribe((res: any) => {
+      this.vendorRefundProcessGridLists = res;
+    })
   }
 
   ngOnDestroy(){

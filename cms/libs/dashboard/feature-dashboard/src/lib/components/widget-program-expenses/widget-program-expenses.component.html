@@ -49,6 +49,9 @@
             </div>
       </div>
 
+
+          <common-dashboard-loader-panel *ngIf="!programExpenses" >
+      </common-dashboard-loader-panel>
       <div class="dashboard-cards-container">
             <kendo-chart class="dash_chart" *ngIf="programExpenses" [series]="programExpenses?.chartData?.series"
                   [legend]="programExpenses?.chartData?.legend"    [valueAxis]="programExpenses?.chartData?.valueAxis"

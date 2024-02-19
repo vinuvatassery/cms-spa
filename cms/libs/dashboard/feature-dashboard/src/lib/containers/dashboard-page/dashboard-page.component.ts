@@ -9,6 +9,7 @@ import {  DisplayGrid,  GridsterConfig,  GridsterItem,  GridsterItemComponentInt
 import { first, Subject, Subscription } from 'rxjs';
 import { WidgetRegistry } from '../../widget-registry';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'dashboard-dashboard-page',
   templateUrl: './dashboard-page.component.html',
@@ -40,7 +41,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   public userDashBoardsListData$ =    this.userDashBoardsListDataSubject.asObservable();
   public dashboardContentUpdate$ =    this.dashboardWrapperFacade.dashboardContentUpdate$;
   public userDashBoardsList$ = this.dashboardWrapperFacade.userDashBoardsList$;
-  static dashBoardContentData: any;
+  static dashBoardContentData: any = [];
   dashBoardAllWidgetsData!: any;
   configSubscription!: Subscription;
   dashBoardContentSubscription!: Subscription;
@@ -76,7 +77,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private readonly localStorageService: LocalStorageService,
     private readonly dashboardWrapperFacade: DashboardWrapperFacade,
-    private readonly cd: ChangeDetectorRef
+    private readonly cd: ChangeDetectorRef,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {
     this.loadConfigSubscription();
     this.options = {
@@ -190,7 +192,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       .loadDashboardContent(dashboardId)
       .pipe(first((response) => response != null))
       .subscribe((response: any) => {
-        
+        debugger
         response.forEach((widg: any) => {
           widg.widgetProperties = JSON.parse(
             widg.widgetProperties.replaceAll('\\', ' ')
@@ -202,10 +204,17 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
               element?.widgetProperties.componentData.component
             ];
         });
-        if (response[0].widgetProperties.componentData.component) {
-          DashboardPageComponent.dashBoardContentData = response;
-
-          this.dashboardContentListDataSubject.next(response);
+        if (response[0]?.widgetProperties?.componentData?.component) {
+          
+          DashboardPageComponent.dashBoardContentData = []   
+          
+           response.forEach((widg: any) => {           
+             if(this.userManagementFacade.hasPermission([widg.widgetProperties?.componentData?.Permission_Code]))
+             {
+           DashboardPageComponent.dashBoardContentData.push(widg)
+            }
+          });
+          this.dashboardContentListDataSubject.next(DashboardPageComponent.dashBoardContentData);
           this.dashboardWrapperFacade.hideLoader();
         }
       });
@@ -227,8 +236,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
               element?.widgetProperties.componentData.component
             ];
         });
-        this.dashBoardAllWidgetsData = response;
-        this.dashboardAllWidgetsDataSubject.next(response);
+        this.dashBoardAllWidgetsData = []
+        response.forEach((widg: any) => {     
+          debugger      
+          if(this.userManagementFacade.hasPermission([widg?.widgetProperties?.componentData?.Permission_Code]))
+          {
+            debugger
+            this.dashBoardAllWidgetsData.push(widg)
+         }
+       });        
+        this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
       });
   }
 
@@ -283,9 +300,9 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       isEditDashboard: this.isReorderEnable,
       dashboardId : this.selectedDashBoard
     };
-    if (save === 'true') {
-      let dashboardContentPostData =
-        DashboardPageComponent.dashBoardContentData;
+    if (save === 'true' && DashboardPageComponent.dashBoardContentData) {
+      
+      let dashboardContentPostData =  DashboardPageComponent.dashBoardContentData;
       let updatedWidgetsPostData = DashboardPageComponent.updatedWidgets;
       dashboardContentPostData.forEach((widg: any) => {
         if (widg?.widgetProperties) {
@@ -293,13 +310,16 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         }
       });
 
-      updatedWidgetsPostData.forEach((widg: any) => {
-        if (widg[0]?.widgetProperties && widg[0]?.newItem !== true) {
-          widg[0].widgetProperties.componentData.component = widg[0].widgetName;
-          widg[0].updated = true;
-          dashboardContentPostData.push(widg[0]);
+      if(updatedWidgetsPostData[0])
+      {
+      updatedWidgetsPostData[0].forEach((widg: any) => {
+        if (widg?.widgetProperties && widg?.newItem !== true) {
+          widg.widgetProperties.componentData.component = widg.widgetName;
+          widg.updated = true;
+          dashboardContentPostData.push(widg);
         }
       });
+    }
 
       dashboardContentPostData.forEach((widg: any) => {
         if (widg?.widgetProperties && widg?.stringified !== true) {
@@ -311,7 +331,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       const dashBoardWidgetsUpdated = {
         dashBoardWidgetsUpdated: dashboardContentPostData,
       };
-
+      
       this.dashboardWrapperFacade.updateDashboardAllWidgets(
         this.selectedDashBoard,
         dashBoardWidgetsUpdated
@@ -336,6 +356,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     item: GridsterItem,
     itemComponent: GridsterItemComponentInterface
   ) {
+    
     const dashBoardData = DashboardPageComponent.dashBoardContentData;
     let changedWidget = dashBoardData.filter(
       (x: any) => x.widgetProperties.componentData['id'] == item['id']

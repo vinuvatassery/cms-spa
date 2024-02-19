@@ -212,15 +212,13 @@
     </kendo-grid-column>
   <kendo-grid-column field="creatorId" title="By" [width]="70" class="text-center" [sortable]="false" [filterable]="false">
     <ng-template kendoGridCellTemplate let-dataItem>
-      <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-        [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-        <common-user-photo-icon [userId]="dataItem?.creatorId"></common-user-photo-icon>
-      </button>
-      <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-        <ng-template kendoPopoverBodyTemplate>
-          <common-user-profile-card [userId]="dataItem?.creatorId"></common-user-profile-card>
-        </ng-template>
-      </kendo-popover>
+      <common-user-photo-icon  
+      [userId]="dataItem.creatorId" 
+      [userFirstName]="dataItem.userFirstName"
+      [userLastName]="dataItem.userLastName"
+      [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+      [linkType]="'profileIcon'"
+      [userPhotos$]="vendorRefundListProfilePhoto$"></common-user-photo-icon>
     </ng-template>
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
 
@@ -351,9 +349,9 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div class="justify-content-end">
+      <div class="justify-content-end" (click)="onClientClicked(clientId)">
         <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
-          Client Profile <span class="material-icons ml-1" aria-hidden="true" (click)="onClientClicked(clientId)">
+          Client Profile <span class="material-icons ml-1" aria-hidden="true" >
             chevron_right
           </span>
         </button>
@@ -371,8 +369,8 @@
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat" (click)="onClientClicked(clientId)">
+      <div class="justify-content-end" (click)="onClientClicked(clientId)">
+        <button kendoButton aria-label="Client Profile" [primary]="true" look="flat">
           Client Profile <span class="material-icons ml-1" aria-hidden="true">
             chevron_right
           </span>

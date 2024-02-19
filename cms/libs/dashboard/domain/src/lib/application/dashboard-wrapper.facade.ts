@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core'; 
 import { GridsterConfig } from 'angular-gridster2';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { DashboardContent } from '../..';
 import { DashboardWrapperService } from '../infrastructure/dashboard-wrapper.service';
-//import { WidgetRegistry } from 'libs/dashboard/feature-dashboard/src/lib/widget-registry';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })

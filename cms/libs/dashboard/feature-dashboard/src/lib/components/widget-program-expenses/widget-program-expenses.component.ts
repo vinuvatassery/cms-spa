@@ -104,7 +104,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
  
   }
   loadProgramExpensesChart() {
- 
+    this.programExpenses = null
     const payload= {
       expenseType : this.selectedType ? this.selectedType :this.dataExp.map(x=> x.Value) ,
       frequency : this.selectFrequency,

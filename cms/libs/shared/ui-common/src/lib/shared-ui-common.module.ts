@@ -47,6 +47,7 @@ import { FinancialPcaChosenAlertComponent } from './financial-pca-chosen-alert/f
 import { NdcCodePipe } from './pipes/ndc-code.pipe';
 import { CmsPharmacyClaimsDetailComponent } from './cms-pharmacy-claims-detail/cms-pharmacy-claims-detail.component';
 import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
+import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboard-loader-panel.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -86,6 +87,7 @@ import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-re
     FinancialDrugsDetailsComponent,
     FinancialPcaChosenAlertComponent,
     NdcCodePipe,
+    DashboardLoaderPanelComponent,
     CmsPharmacyClaimsDetailComponent,
     CmsPharmacyClaimsRecentClaimsComponent,
   ],
@@ -126,6 +128,7 @@ import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-re
     FinancialDrugsDetailsComponent,
     FinancialPcaChosenAlertComponent,
     NdcCodePipe,
+    DashboardLoaderPanelComponent,
     CmsPharmacyClaimsDetailComponent,
     CmsPharmacyClaimsRecentClaimsComponent
   ],

@@ -102,15 +102,13 @@
   </kendo-grid-column>
   <kendo-grid-column field="creatorId" title="By" class="text-center" [filterable]="false" [width]="50" [sortable]="false">
     <ng-template kendoGridCellTemplate let-dataItem>
-      <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-        [popover]="onUserProfileDetailsHovered" showOn="hover" aria-label="profile avatar">
-        <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
-      </button>
-      <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-        <ng-template kendoPopoverBodyTemplate>
-          <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-        </ng-template>
-      </kendo-popover>
+      <common-user-photo-icon  
+      [userId]="dataItem.creatorId" 
+      [userFirstName]="dataItem.userFirstName"
+      [userLastName]="dataItem.userLastName"
+      [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+      [linkType]="'profileIcon'"
+      [userPhotos$]="contactUserProfilePhotoSubject"></common-user-photo-icon>
     </ng-template>
   </kendo-grid-column>
   <kendo-grid-column [sticky]="true" field="" title="Options" [columnMenu]="false" [width]="70" class="text-center">

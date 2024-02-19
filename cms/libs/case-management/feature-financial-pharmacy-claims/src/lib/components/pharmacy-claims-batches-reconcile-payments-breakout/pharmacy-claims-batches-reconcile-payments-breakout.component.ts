@@ -2,11 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { Router } from '@angular/router';
 import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { ColumnComponent, ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-reconcile-payments-breakout',
@@ -28,6 +28,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   @Input() paymentStatus$:any
   @Input() reconcilePaymentBreakoutLoaderList$:any;
   @Input() deliveryMethodLov$:any;
+  @Input() pharmacyBreakoutProfilePhoto$!: any;
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
   vendorId:any;
   clientId:any;
@@ -81,12 +82,12 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   claimsType:any;
+  pharmacyBreakoutSubscription = new Subscription();
+  pharmacyBreakoutProfilePhotoSubject = new Subject();
   sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
-  
-  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,
-    private readonly lovFacade: LovFacade, private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade) { }
+  constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,private readonly lovFacade: LovFacade, private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly userManagementFacade: UserManagementFacade,private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade) { }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;

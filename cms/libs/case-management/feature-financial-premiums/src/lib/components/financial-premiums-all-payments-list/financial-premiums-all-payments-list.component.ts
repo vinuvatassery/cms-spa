@@ -14,7 +14,7 @@ import { Router } from '@angular/router';
 import { FinancialPremiumsFacade, GridFilterParam, InsurancePremiumDetails, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
   ColumnVisibilityChangeEvent,
@@ -223,6 +223,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   showExportLoader = false;
   @Input() unbatchPremiums$ :any
   @Input() exportButtonShow$: any;
+  @Input() premiumAllPaymentsPremium$!: any;
   @Output() deletePaymentEvent = new EventEmitter();
   @Output() exportGridDataEvent = new EventEmitter<any>();
 
@@ -244,6 +245,7 @@ export class FinancialPremiumsAllPaymentsListComponent
   selectedCount: number = 0;
   printAuthorizationDialog: any;
   previewText = false;
+  allPaymentsPremiumSubject = new Subject();
   public allPaymentsGridActions = [
     {
       buttonType: 'btn-h-primary',
@@ -378,6 +380,7 @@ deletePremiumPayment(paymentId: string) {
     private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
     private readonly financialPremiumsFacade: FinancialPremiumsFacade,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {}
 
   ngOnInit(): void {
@@ -392,8 +395,6 @@ deletePremiumPayment(paymentId: string) {
       }
       this.financialPremiumsAllPaymentsGridLists = response;
     })
-
-
   }
 
   ngOnChanges(): void {

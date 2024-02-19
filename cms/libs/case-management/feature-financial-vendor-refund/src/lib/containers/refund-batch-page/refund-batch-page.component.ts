@@ -28,6 +28,7 @@ export class RefundBatchPageComponent implements OnInit {
   batchLogGridLists$ = this.financialVendorRefundFacade.batchLogData$;
   batchesLogGridExportParameters = null
   batchId = null
+  vendorRefundBatchClaims$ = this.financialVendorRefundFacade.vendorRefundBatchClaimsSubject;
   constructor(
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private documentFacade: DocumentFacade,

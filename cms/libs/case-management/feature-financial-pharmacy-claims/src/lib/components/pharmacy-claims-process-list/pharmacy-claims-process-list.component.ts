@@ -90,6 +90,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   @Input() searchDrugsLoader$: any;
   @Input() paymentRequestType$ : any
   @Input() deliveryMethodLov$ :any
+  @Input() pharmacyClaimsProcessListProfilePhoto$: any;
 
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();

@@ -28,6 +28,7 @@ import {
   PaymentStatusCode,PaymentType, PaymentMethodCode, PaymentBatchName, DrugsFacade, FinancialVendorFacade, FinancialPharmacyClaimsFacade, VendorFacade
 } from '@cms/case-management/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'cms-pharmacy-claims-batches-log-lists',
@@ -198,6 +199,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   @Input() claimsType: any;
   @Input() letterContentList$: any;
   @Input() letterContentLoader$: any;
+  @Input() pharmacyBatchDetailProfilePhoto$!: any;
   @Output() loadTemplateEvent = new EventEmitter<any>();
   public state!: State;
   showExportLoader = false;
@@ -333,8 +335,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     private readonly drugsFacade: DrugsFacade,
     private readonly financialVendorFacade: FinancialVendorFacade,
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
-    private readonly vendorFacade: VendorFacade ) {}
-
+    private readonly vendorFacade: VendorFacade) {}
+  
   ngOnInit(): void {
     this.sortColumnName = 'Pharmacy Name';
     this.loadBatchLogListGrid();
@@ -350,6 +352,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       }      
     });
   }
+
   initiateBulkMore() {
    this.bulkMore = [
 
@@ -374,22 +377,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
           },
 
       },
-      {
-        buttonType: 'btn-h-primary',
-        text: 'UNBATCH ENTIRE BATCH',
-        icon: 'undo',
-        disabled: [
-          PaymentStatusCode.Paid,
-          PaymentStatusCode.PaymentRequested,
-          PaymentStatusCode.ManagerApproved,
-        ].includes(this.batchStatus),
-        click: (data: any): void => {
-          if (!this.isBulkUnBatchOpened) {
-            this.isBulkUnBatchOpened = true;
-            this.onUnBatchOpenClicked(this.unBatchClaimsDialogTemplate);
-          }
-        },
-      }
     ];
   }
   ngOnChanges(): void {

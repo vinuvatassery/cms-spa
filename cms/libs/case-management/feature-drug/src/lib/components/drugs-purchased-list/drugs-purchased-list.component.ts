@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
@@ -16,6 +17,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { Subject, Subscription } from 'rxjs';
 import { first } from 'rxjs';
 
 @Component({
@@ -121,6 +123,8 @@ export class DrugsPurchasedListComponent implements OnInit {
   isAddEditClaimMoreClose = false;
 
   private addEditClaimsFormDialog: any;
+  pharmacyPurchaseProfilePhotoSubscription = new Subscription();
+  pharmacyPurchaseProfile$ = this.drugPharmacyFacade.pharmacyPurchaseProfileSubject;
 
   public actions = [
     {
@@ -157,7 +161,7 @@ export class DrugsPurchasedListComponent implements OnInit {
     private readonly cdr: ChangeDetectorRef,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-    private readonly lovFacade: LovFacade,
+    private readonly lovFacade: LovFacade,,
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private readonly drugsFacade: DrugsFacade,
     private readonly financialVendorFacade: FinancialVendorFacade,

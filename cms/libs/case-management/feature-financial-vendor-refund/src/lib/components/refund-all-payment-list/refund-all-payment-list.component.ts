@@ -15,12 +15,12 @@ import { Router } from '@angular/router';
 import { GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy
+  State
 } from '@progress/kendo-data-query';
 import { BehaviorSubject, Subject, first } from 'rxjs';
 import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-refund-all-payment-list',
   templateUrl: './refund-all-payment-list.component.html',
@@ -42,6 +42,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Input() updateProviderPanelSubject$: any
   @Input() ddlStates$: any
   @Input() paymentMethodCode$: any
+  @Input() allRefundProfilePhoto$!: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
@@ -240,6 +241,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
   gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
+  allRefundProfilePhotoSubject = new Subject();
 
   /** Constructor **/
   constructor(
@@ -247,7 +249,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private dialogService: DialogService,
-    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade) {
+    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade,) {
       this.selectableSettings = {
         checkboxOnly: this.checkboxOnly,
         mode: this.mode,

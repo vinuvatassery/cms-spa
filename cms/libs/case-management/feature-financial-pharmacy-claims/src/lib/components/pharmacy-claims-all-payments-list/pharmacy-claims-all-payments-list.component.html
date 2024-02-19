@@ -244,32 +244,19 @@
       </kendo-grid-column>
       <kendo-grid-column field="creatorId" title="By" [width]="100" class="text-center" [sortable]="false" [filterable]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button
-            kendoButton
-            [primary]="true"
-            class="avatar-sm-btn c-default"
-            kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered"
-            showOn="hover"
-            [attr.aria-label]="dataItem.creatorId"
-          >
-          <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
-          </button>
-          <kendo-popover
-            #onUserProfileDetailsHovered
-            width="330"
-            position="left"
-          >
-            <ng-template kendoPopoverBodyTemplate>
-              <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-            </ng-template>
-          </kendo-popover>
+          <common-user-photo-icon  
+          [userId]="dataItem.creatorId" 
+          [userFirstName]="dataItem.userFirstName"
+          [userLastName]="dataItem.userLastName"
+          [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+          [linkType]="'profileIcon'"
+          [userPhotos$]="pharmacyClaimnsAllPaymentsProfilePhoto$"></common-user-photo-icon>
         </ng-template>
       </kendo-grid-column>
 
       <kendo-grid-column field="Option" title="Options"  [columnMenu]="false" [width]="100" class="text-center" [sortable]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <kendo-dropdownbutton [data]="allPaymentsGridActions"
+          <kendo-dropdownbutton [data]="allPaymentsGridActions(dataItem)"
             class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
             aria-label="more actions" title="More option"
             [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -440,4 +427,9 @@
         (loadManufacturer)="loadManufacturerEvent($event)"
       > 
       </common-cms-pharmacy-claims-detail>
+    </ng-template>
+
+    <ng-template #unBatchClaimsDialogTemplate>
+      <cms-pharmacy-claims-unbatch-claims (unBatchCloseClickedEvent)="onUnBatchPaymentCloseClicked($event)"
+      [isBulkUnBatchOpened]="isBulkUnBatchOpened" ></cms-pharmacy-claims-unbatch-claims>
     </ng-template>

@@ -9,6 +9,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { ClaimsDataService } from '../../infrastructure/financial-management/claims.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 
 @Injectable({ providedIn: 'root' })
@@ -35,6 +36,7 @@ export class ClaimsFacade {
   // handling the snackbar & loader
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>(); 
+  pharmacyClaimsProfilePhotoSubject = new Subject();
 
   showLoader() { this.loaderService.show(); }
   hideLoader() { this.loaderService.hide(); }
@@ -58,7 +60,8 @@ export class ClaimsFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   /** Public methods **/
@@ -71,6 +74,7 @@ export class ClaimsFacade {
           total: dataResponse?.totalCount,
         };
         this.claimsDataSubject.next(gridView);
+        this.loadPharmacyClaimsDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.claimsDataLoaderSubject.next(false);
       },
       error: (err) => {
@@ -78,8 +82,20 @@ export class ClaimsFacade {
         this.claimsDataLoaderSubject.next(false);
       },
     });
-   
-  
   }
+
+  loadPharmacyClaimsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyClaimsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
  
 }

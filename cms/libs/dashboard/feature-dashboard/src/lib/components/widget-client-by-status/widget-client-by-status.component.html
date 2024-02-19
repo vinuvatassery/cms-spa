@@ -1,4 +1,4 @@
-<div *ngIf="activeClientsByStatus">
+<div>
    
       <div class="dash-header-with-filters">
             <h5>ACTIVE CLIENTS BY STATUS</h5>
@@ -7,6 +7,9 @@
                         [(ngModel)]="selectedActiveClientByStatus">
                   </kendo-dropdownlist></div>
       </div>
+     
+      <common-dashboard-loader-panel *ngIf="!activeClientsByStatus" ></common-dashboard-loader-panel>
+
       <div class="dashboard-cards-container">
  
 

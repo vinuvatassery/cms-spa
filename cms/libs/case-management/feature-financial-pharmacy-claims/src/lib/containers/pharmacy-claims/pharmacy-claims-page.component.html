@@ -41,6 +41,7 @@
                                 (onbatchClaimsClickedEvent)="onbatchClaimsClicked($event)"
                                 (ondeleteClaimsClickedEvent)="ondeleteClaimsClicked($event)"
                                 [batchingClaims$]="batchingClaims$" (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                [pharmacyClaimsProcessListProfilePhoto$]="pharmacyClaimsProcessListProfilePhoto$"
                                 ></cms-pharmacy-claims-process-list>
                             </div>
                         </ng-template>
@@ -92,6 +93,10 @@
                                 (searchDrugEvent)="searchDrug($event)"
                                 (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
                                 (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
+                                
+                                [pharmacyClaimnsAllPaymentsProfilePhoto$]="pharmacyClaimnsAllPaymentsProfilePhoto$"
+                                (unBatchClaimsEvent)="unBatchClaimClick($event)"
+                                [unbatchClaim$]="unbatchClaim$"
                                 ></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>

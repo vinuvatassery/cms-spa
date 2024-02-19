@@ -11,6 +11,7 @@ import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-refund-batch-log-list',
   templateUrl: './refund-batch-log-list.component.html',
@@ -44,6 +45,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   @Input() updateProviderPanelSubject$: any
   @Input() ddlStates$: any
   @Input() paymentMethodCode$: any
+  @Input() vendorRefundBatchClaims$!: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   private addEditRefundFormDialog: any;
   isUnBatchRefundsClosed = false;
@@ -71,12 +73,13 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       click: (dataItem: any): void => {
         if (!this.isRefundEditDialogOpen) {
           this.isRefundEditDialogOpen = true;
-          this.refunEditServiceType = dataItem.paymentTypeCode
+          this.refunEditServiceType = dataItem.serviceTypeCode
           this.refundEditClientId = dataItem.clientId
           this.refundEditClientFullName = dataItem.clientFullName
           this.refundEditVendorAddressId = dataItem.vendorAddressId
-          this.refundEditVendorName = dataItem.providerName
-          this.inspaymentRequestId = dataItem.paymentRequestId
+          this.refundEditVendorName = dataItem.vendorName
+          this.inspaymentRequestId = dataItem.paymentRequestId;
+          this.vendorId = dataItem.vendorId;
           this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
         }
       }
@@ -232,7 +235,9 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
   sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
-  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
+  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;  
+  refundBatchClaimsSubject = new Subject();
+
   /** Constructor **/
   constructor(
     private route: Router,
@@ -242,7 +247,8 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     private activatedRoute: ActivatedRoute,
     private readonly financialVendorFacade: FinancialVendorFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade
+    private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,    private readonly userManagementFacade: UserManagementFacade,
+
   ) { }
 
   ngOnInit() {

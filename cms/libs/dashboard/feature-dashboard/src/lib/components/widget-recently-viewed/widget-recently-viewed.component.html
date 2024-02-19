@@ -2,7 +2,10 @@
   <div class="dash-header-with-filters">
     <h5>RECENTLY VIEWED</h5>
   </div>
-  <div class="dashboard-cards-container">
+
+  <common-dashboard-loader-panel *ngIf="!gridData && !vendorGridData">
+  </common-dashboard-loader-panel>
+<div  *ngIf="gridData || vendorGridData">
   <h5> CLIENTS </h5>
     <div class="app-c-drag-row-table recently-view">
     <kendo-grid [data]="gridData" >
@@ -40,4 +43,5 @@
     </kendo-grid-column>
   </kendo-grid>
 </div>
-  </div>
+</div>
+
