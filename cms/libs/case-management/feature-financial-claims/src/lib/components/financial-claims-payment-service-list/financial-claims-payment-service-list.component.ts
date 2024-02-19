@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FinancialClaimTypeCode, FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -11,7 +11,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
     styleUrls: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsPaymentServiceListComponent implements OnInit {
+export class FinancialClaimsPaymentServiceListComponent implements OnInit,OnChanges {
 
     /** Input Properties **/
     @Input() paymentId!: string;
@@ -38,11 +38,12 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
     /* Life cycle events */
     ngOnInit(): void {        
         this.initializeGrid();
-        this.loadServices();
+       
     }
 
     ngOnChanges(): void {
         this.initializeGrid();
+        this.loadServices();
     }
 
     /* public methods */
