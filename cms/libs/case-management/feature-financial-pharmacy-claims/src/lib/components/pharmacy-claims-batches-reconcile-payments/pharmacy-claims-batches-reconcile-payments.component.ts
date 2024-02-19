@@ -58,7 +58,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @Input() pharmacyBreakoutProfilePhoto$!: any;
   @Output() loadReconcileListEvent = new EventEmitter<any>();
   @Output() loadReconcileBreakoutSummaryEvent = new EventEmitter<any>();
-  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();;
+  @Output() loadReconcilePaymentBreakoutListEvent = new EventEmitter<any>();
+  showTinSearchWarning=false;
   @Output() onVendorClickedEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() warrantNumberChangeEvent = new EventEmitter<any>();
@@ -328,7 +329,23 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       searchValue = this.formatSearchValue(data,true);
 
     }
-   
+
+    if(this.selectedColumn ==="checkNbr" || this.selectedColumn === "ALL"){ 
+      searchValue = searchValue.replace("-","")
+      }
+
+      if(this.selectedColumn ==="tin" || this.selectedColumn === "ALL"){
+        let noOfhypen =   searchValue.split("-").length - 1
+        let index = searchValue.lastIndexOf("-")
+        if(noOfhypen>=1 && (index!==2 && index !==3)){
+          this.showTinSearchWarning = true;
+          return;
+        }else{
+          this.showTinSearchWarning = false;
+          searchValue = searchValue.replace("-","")
+        }
+      }
+
     this.filterData = {
       logic: 'and',
       filters: [
@@ -385,6 +402,23 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     this.sortColumn = this.columns[stateData.sort[0]?.field];
 
     if (stateData.filter?.filters.length > 0) {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      if(stateFilter.field ==="checkNbr"){
+          stateFilter.value = stateFilter.value.replace("-","")
+        }
+        if(stateFilter.field ==="tin"){
+          let noOfhypen =   stateFilter.value.split("-").length - 1
+          let index = stateFilter.value.lastIndexOf("-")
+          if(noOfhypen>=1 && (index!==2 && index !==3)){
+            this.showTinSearchWarning = true;
+            return;
+          }else{
+            this.showTinSearchWarning = false;
+            stateFilter.value = stateFilter.value.replace("-","")
+          }
+  
+        }
+
       this.isFiltered = true;
       const filterList = [];
       for (const filter of stateData.filter.filters) {
