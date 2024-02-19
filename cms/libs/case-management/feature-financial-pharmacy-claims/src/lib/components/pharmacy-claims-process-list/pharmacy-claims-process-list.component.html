@@ -313,34 +313,52 @@
   <cms-pharmacy-claims-delete-claims
   (isModalDeleteClaimsCloseClicked)="onModalDeleteClaimsModalClose($event)" (isModalDeletedClaimsButtonClicked)="onModalBatchDeletingClaimsButtonClicked()" [selectedProcessClaimsCount] = "selectedProcessClaims.length" [deletemodelbody]="deletemodelbody"></cms-pharmacy-claims-delete-claims>
 </ng-template>
-<ng-template #addEditClaimsDialog>
-  <cms-pharmacy-claims-detail-form
-  [deliveryMethodLov$]="deliveryMethodLov$"
-  [paymentRequestType$]="paymentRequestType$"
-  [addPharmacyClaim$] = "addPharmacyClaim$"
-  [editPharmacyClaim$] = "editPharmacyClaim$"
-  [getPharmacyClaim$] = "getPharmacyClaim$"
-  [searchPharmacies$] = "searchPharmacies$"
-  [searchClients$] = "searchClients$"
-  [searchDrugs$] = "searchDrugs$"
-  [searchPharmaciesLoader$]="searchPharmaciesLoader$"
-  [searchClientLoader$]="searchClientLoader$"
-  [searchDrugsLoader$]="searchDrugsLoader$"
-  (addPharmacyClaimEvent)="addPharmacyClaim($event)"
-  (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
-  (searchPharmaciesEvent)="searchPharmacies($event)"
-  (searchClientsEvent)="searchClients($event)"
-  (searchDrugEvent)="searchDrug($event)"
-  (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
-  (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
-    (modalCloseAddEditClaimsFormModal)="modalCloseAddEditClaimsFormModal($event)"></cms-pharmacy-claims-detail-form>
+<ng-template #addEditClaimsDialog> 
+    <common-cms-pharmacy-claims-detail
+      [deliveryMethodLov$]="deliveryMethodLov$"
+      [paymentRequestType$]="paymentRequestType$"
+      [addPharmacyClaim$] = "addPharmacyClaim$"
+      [editPharmacyClaim$] = "editPharmacyClaim$"
+      [getPharmacyClaim$] = "getPharmacyClaim$"
+      [searchPharmacies$] = "searchPharmacies$"
+      [searchClients$] = "searchClients$"
+      [searchDrugs$] = "searchDrugs$"
+      [searchPharmaciesLoader$]="searchPharmaciesLoader$"
+      [searchClientLoader$]="searchClientLoader$"
+      [searchDrugsLoader$]="searchDrugsLoader$"
+      (addPharmacyClaimEvent)="addPharmacyClaim($event)"
+      (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
+      (searchPharmaciesEvent)="searchPharmacies($event)"
+      (searchClientsEvent)="searchClients($event)"
+      (searchDrugEvent)="searchDrug($event)"
+      (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
+      (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"
+      (modalCloseAddEditClaimsFormModal)="modalCloseAddEditClaimsFormModal($event)"
+      (addDrugEvent) = "addDrugEventHandler($event)"
+      [addDrug$] ="addDrug$"
+      [manufacturersLov$] ="manufacturersLov$"
+      (searchClientsDataEvent) = "searchClientsDataEventHandler($event)"
+      (searchPharmacyDataEvent) = "searchPharmacyDataEventHandler($event)"
+      [pageSizes] = "pageSizes"
+      [sortType] = "sortType"
+      [sortValueRecentClaimList] = "sortValueRecentClaimList"
+      [sortRecentClaimList] = "sortRecentClaimList"
+      [gridSkipCount] = "gridSkipCount"
+      (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)"
+      [recentClaimsGridLists$]="recentClaimsGridLists$"
+      (loadManufacturer)="loadManufacturerEvent($event)"
+    > 
+    </common-cms-pharmacy-claims-detail>
 </ng-template>
 
 <ng-template #clientRecentClaimsDialog>
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}} </h4></kendo-dialog-titlebar>
   <section class="k-dialog-body">
-    <cms-pharmacy-claims-recent-claims-list
-      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
+      <common-cms-pharmacy-claims-recent-claims [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
+      (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)" [recentClaimsGridLists$]="recentClaimsGridLists$"
+      [pageSizes]="pageSizes" [sortType]="sortType" [sortValueRecentClaimList]="sortValueRecentClaimList"
+      [sortRecentClaimList]="sortRecentClaimList" [gridSkipCount]="gridSkipCount">    
+    </common-cms-pharmacy-claims-recent-claims>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between" >

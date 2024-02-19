@@ -22,9 +22,10 @@ import {
 import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, first } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
-import { LoadTypes, GridFilterParam, PaymentStatusCode } from '@cms/case-management/domain';
+import { LoadTypes, GridFilterParam, VendorFacade, FinancialVendorFacade, FinancialPharmacyClaimsFacade, DrugsFacade, PaymentStatusCode } from '@cms/case-management/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'cms-pharmacy-claims-all-payments-list',
@@ -51,10 +52,29 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
   @Input() exportLoader$!: Observable<boolean>;
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
+  @Input() addPharmacyClaim$: any;
+  @Input() editPharmacyClaim$: any;
+  @Input() getPharmacyClaim$: any;
+  @Input() searchPharmacies$: any;
+  @Input() searchClients$: any;
+  @Input() searchDrugs$: any;
+  @Input() searchPharmaciesLoader$: any;
+  @Input() searchClientLoader$: any;
+  @Input() searchDrugsLoader$: any;
+  @Input() paymentRequestType$ : any
+  @Input() deliveryMethodLov$ :any
+
   @Output() exportGridEvent$ = new EventEmitter<any>();
   @Output() loadPharmacyClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
+  @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
+  @Output() searchPharmaciesEvent = new EventEmitter<any>();
+  @Output() searchClientsEvent = new EventEmitter<any>();
+  @Output() searchDrugEvent = new EventEmitter<any>();
+  @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
+  @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
+  @Output() getPharmacyClaimEvent = new EventEmitter<any>();
   @Input() pharmacyClaimnsAllPaymentsProfilePhoto$!: any;
   @Output() unBatchClaimsEvent = new EventEmitter<any>();
   @ViewChild('unBatchClaimsDialogTemplate', { read: TemplateRef })
@@ -119,6 +139,12 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  UnBatchDialog: any;
  gridLoaderSubject = new BehaviorSubject(false);
  allPaymentsPrintAdviceLetterPagedList: any;
+ manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
+ sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+ sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+ gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
+ recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
+ addDrug$ = this.drugsFacade.addDrug$
  pharmacyClaimnsAllPaymentsProfilePhotoSubject = new Subject();
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
@@ -159,7 +185,7 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       click: (data: any): void => {
         if (!this.isAddEditClaimMoreClose) {
           this.isAddEditClaimMoreClose = true;
-          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog);
+          this.onClickOpenAddEditClaimsFromModal(this.addEditClaimsDialog, data.paymentRequestId);
         }
       },
     },
@@ -223,12 +249,21 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     private readonly cdr: ChangeDetectorRef,
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
+    private readonly vendorFacade : VendorFacade,
+    private readonly financialVendorFacade : FinancialVendorFacade,
+    private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade,
+    private readonly drugsFacade: DrugsFacade,
     private readonly userManagementFacade: UserManagementFacade,) {}
 
   ngOnInit(): void {
     this.sortType = 'asc';
     this.addSearchSubjectSubscription();
     this.pharmacyClaimsAllPaymentsSubscription();
+    this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
+      next: (data: any) => {
+        this.financialVendorFacade.manufacturerListSubject.next(data);
+      }      
+    });
   }
 
   pharmacyClaimsAllPaymentsSubscription() {
@@ -241,6 +276,52 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     })
   }
 
+  updatePharmacyClaim(data: any) {
+    this.updatePharmacyClaimEvent.emit(data);
+    this.editPharmacyClaim$.pipe(first((editResponse: any ) => editResponse != null))
+    .subscribe((editResponse: any) =>
+    {
+      if(editResponse)
+      {
+        this.loadPharmacyClaimsAllPaymentsListGrid();
+        this.modalCloseAddEditClaimsFormModal(true)
+      }
+  
+    })
+  }
+
+  searchPharmacies(searchText: any) {
+    this.searchPharmaciesEvent.emit(searchText);
+  }
+  searchClients(searchText: any) {
+    this.searchClientsEvent.emit(searchText);
+  }
+  searchDrug(searchText: string) {
+    this.searchDrugEvent.emit(searchText);
+  }
+
+  getCoPaymentRequestTypeLov() {
+    this.getCoPaymentRequestTypeLovEvent.emit();
+  }
+  getDrugUnitTypeLov() {
+    this.getDrugUnitTypeLovEvent.emit();
+  }
+  addDrugEventHandler(event: any) {
+    this.drugsFacade.addDrugData(event);
+  }
+  searchClientsDataEventHandler(client: any) {
+    this.financialPharmacyClaimsFacade.searchClientsDataSubject.next(client);
+  }
+  searchPharmacyDataEventHandler(vendor: any) {
+    this.financialPharmacyClaimsFacade.searchPharmaciesDataSubject.next(vendor)
+  }
+  loadManufacturerEvent(event: any) {
+    this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
+      next: (data: any) => {
+        this.financialVendorFacade.manufacturerListSubject.next(data);
+      }
+    });
+  }
   loadDistinctUserIdsAndProfilePhoto(data: any[]) {
     const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
     if(distinctUserIds){
@@ -569,7 +650,11 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     }
   }
 
-  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>): void {
+  onClickOpenAddEditClaimsFromModal(template: TemplateRef<unknown>, paymentRequestId: any): void {
+    if(paymentRequestId !== '00000000-0000-0000-0000-000000000000')
+    {
+    this.getPharmacyClaimEvent.emit(paymentRequestId);
+    }
     this.addEditClaimsFormDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-96full add_claims_modal',
@@ -808,9 +893,13 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
       }
     }
   }
-    onProviderNameClick(event: any) {
-      this.onProviderNameClickEvent.emit(event);
-    }
+  onProviderNameClick(event: any) {
+    this.onProviderNameClickEvent.emit(event);
+  }
+
+  loadRecentClaimListEventHandler(data: any) {
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
+  }
 
     onUnBatchPaymentCloseClicked(result: any) {
       if (result) {
