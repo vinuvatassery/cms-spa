@@ -19,7 +19,7 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, first, first } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription, debounceTime, first } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { LoadTypes, GridFilterParam, VendorFacade, FinancialVendorFacade, FinancialPharmacyClaimsFacade, DrugsFacade, PaymentStatusCode } from '@cms/case-management/domain';

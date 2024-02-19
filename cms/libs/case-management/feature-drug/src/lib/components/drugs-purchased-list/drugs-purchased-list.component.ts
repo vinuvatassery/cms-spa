@@ -161,7 +161,7 @@ export class DrugsPurchasedListComponent implements OnInit {
     private readonly cdr: ChangeDetectorRef,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-    private readonly lovFacade: LovFacade,,
+    private readonly lovFacade: LovFacade,
     private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private readonly drugsFacade: DrugsFacade,
     private readonly financialVendorFacade: FinancialVendorFacade,
