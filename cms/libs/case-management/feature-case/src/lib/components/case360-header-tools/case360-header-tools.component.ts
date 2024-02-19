@@ -1,7 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
+import { CommunicationEventTypeCode, CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
 import { Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { StatusFlag } from '@cms/shared/ui-common';
@@ -34,6 +34,10 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   reloadSubscription$ = new Subscription();
   buttonList!: any[];
   isFirstLoad = false;
+  emailCommunicationEmailTypeCode = CommunicationEventTypeCode.ClientEmail;
+  letterCommunicationEmailTypeCode = CommunicationEventTypeCode.ClientLetter;
+  smsCommunicationEmailTypeCode = CommunicationEventTypeCode.CliewntSMS;
+  toEmail: Array<string> = [];
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
   private isSendNewLetterDialog : any;
@@ -110,6 +114,14 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       const isEmailOk = email.filter((email:any) => email.detailMsgFlag === StatusFlag.Yes && email.paperlessFlag === StatusFlag.Yes)?.length > 0;
       this.sendActions[1].isVisible = isEmailOk;
       this.refreshButtonList();
+      // Iterate over the list and push emails based on a condition
+      if(isEmailOk){
+      email.forEach((item: any) => {
+        if (item.detailMsgFlag === StatusFlag.Yes && item.paperlessFlag === StatusFlag.Yes) {
+          this.toEmail.push(item.email.trim());
+        }
+      });
+    }
     });
   }
 

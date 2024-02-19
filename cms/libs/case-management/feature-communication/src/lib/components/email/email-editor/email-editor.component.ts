@@ -55,6 +55,7 @@ export class EmailEditorComponent implements OnInit {
   showPreviewEmail: boolean = false;
   showAttachmentUpload: boolean = false;
   showClientAttachmentUpload: boolean = false;
+  showFormsAndDocumentsUpload: boolean = false;
   attachedFiles: any;
   attachedFileValidatorSize: boolean = false;
   cerAuthorizationForm!:FormGroup;
@@ -65,7 +66,18 @@ export class EmailEditorComponent implements OnInit {
   clientAllDocumentList$: any;
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public uploadRemoveUrl = 'removeUrl';
+  stringValues: string[] = ['MyFullName', 'MyJobTitle', 'MyPhone', 'MyEmail'];
   public editorUploadOptions = [
+    {
+      buttonType:"btn-h-primary",
+      text: "Attach from Forms & Documents",
+      id: "uploadsystemfile",
+      click: (): void => {
+        this.showFormsAndDocumentsUpload = true;
+        this.showAttachmentUpload = false;
+        this.showClientAttachmentUpload = false;
+      },
+    },
     {
       buttonType:"btn-h-primary",
       text: "Attach from Computer",
@@ -73,6 +85,7 @@ export class EmailEditorComponent implements OnInit {
       click: (): void => {
         this.showClientAttachmentUpload = false;
         this.showAttachmentUpload = true;
+        this.showFormsAndDocumentsUpload = false;
       },
     },
     {
@@ -82,6 +95,7 @@ export class EmailEditorComponent implements OnInit {
       click: (): void => {
         this.showAttachmentUpload = false;
         this.showClientAttachmentUpload = true;
+        this.showFormsAndDocumentsUpload = false;
       },
     },
   ];
@@ -208,8 +222,14 @@ export class EmailEditorComponent implements OnInit {
   }
 
   public BindVariableToEditor(editor: EditorComponent, item: any) {
+    if(item === 'MySignature'){
+      this.stringValues.forEach(value => {
+        editor.exec('insertText', { text: '{{' +value + '}}' });
+      });
+    }else{
     editor.exec('insertText', { text: '{{' +item + '}}' });
     editor.value = editor.value.replace(/#CURSOR#/, item);
+    }
     this.onSearchClosed();
   }
 

@@ -6,18 +6,20 @@ import {
   Output,
   EventEmitter,
   Input,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 
 
 /** Internal Libraries **/
-import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade, ScreenType, AddressTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'case-management-send-letter',
@@ -34,6 +36,7 @@ export class SendLetterComponent implements OnInit {
   @Input() clientId!: any;
   @Input() isCerForm!: any;
   @Input() vendorId!: any;
+  @Input() screenName!: any;
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
@@ -68,6 +71,7 @@ export class SendLetterComponent implements OnInit {
   selectedTemplate!: any;
   cerEmailAttachedFiles: any[] = [];
   mailingAddress: any;
+  mailingAddressSubscription= new Subscription();
   dataValue: Array<any> = [
     {
       text: '',
@@ -83,14 +87,13 @@ export class SendLetterComponent implements OnInit {
       this.loadMailCodes();
     }
     else {
-      this.loadVendorMailingAddress();
+      this.vendorContactFacade.loadMailCodes(this.vendorId);
     }
     this.isNewLetterClicked =  this.data ? true : false;
     this.loadDropdownLetterTemplates();
   }
 
   private loadMailCodes() {
-    this.isButtonVisible = false;
     this.vendorContactFacade.mailCodes$.subscribe((resp) => {
       if (resp && resp.length > 0) {
         let selectedAddress = resp.find((address: any) => address?.activeFlag === "Y" && address.preferredFlag === "Y");
@@ -103,14 +106,13 @@ export class SendLetterComponent implements OnInit {
     });
   }
 
-  private loadVendorMailingAddress() {
-    this.contactFacade.mailingAddress$.subscribe((resp) => {
-      if (resp) {
-        this.mailingAddress = resp;
-      }
-      this.ref.detectChanges();
+  private loadClientMailingAddress() {
+    this.contactFacade.getClientAddress(this.clientId);
+    this.contactFacade.address$.subscribe((address:any)=>{
+      let selectedAddress = address.filter((x:any)=>x.activeFlag == StatusFlag.Yes && x.addressTypeCode === AddressTypeCode.Mail)[0];
+      this.mailingAddress = selectedAddress;
     });
-    this.loadCurrentSession();
+    this.ref.detectChanges();
   }
 
   private loadCurrentSession() {
@@ -170,10 +172,21 @@ export class SendLetterComponent implements OnInit {
 
   private generateText(letterData: any, requestType: CommunicationEvents){
     this.loaderService.show();
-    const clientId = this.workflowFacade.clientId ?? 0;
-    const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+    if(this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
+      if(this.screenName == ScreenType.Case360PageLetter){
+        this.generateClientTextTemplate(letterData, requestType);
+      }else{
+        this.generateVendorTextTemplate(letterData, requestType);
+      }
+    }else{
+    this.clientId = this.workflowFacade.clientId ?? 0;
+    this.clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+    }
+  }
+
+  private generateClientTextTemplate(letterData: any, requestType: CommunicationEvents){
     let formData = this.communicationFacade.preparePreviewModelData(letterData);
-    this.communicationFacade.generateTextTemplate(clientId ?? 0, caseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
+    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -194,18 +207,30 @@ export class SendLetterComponent implements OnInit {
       });
   }
 
+  private generateVendorTextTemplate(letterData: any, requestType: CommunicationEvents){
+    let formData = this.communicationFacade.preparePreviewModelData(letterData);
+    //TO-DO Implement the vendor profile template preview
+  }
+
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     this.loaderService.show();
-    const clientId = this.workflowFacade.clientId ?? 0;
-    const caseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+    if(this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
+      this.sendClientAndVendorLetterToPrint(draftTemplate, requestType);
+    }else{
+      this.clientId = this.workflowFacade.clientId ?? 0;
+      this.clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+    }
+  }
+
+  private sendClientAndVendorLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.cerEmailAttachedFiles);
-    this.communicationFacade.sendLetterToPrint(clientId ?? 0, caseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
+    this.communicationFacade.sendLetterToPrint(this.clientId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
           if (data) {
             this.currentLetterPreviewData = data;
             const fileUrl = window.URL.createObjectURL(data);
-            const documentName ='CER Authorization Letter.zip';
+            const documentName = this.getFileNameFromTypeCode(draftTemplate.typeCode);
             this.ref.detectChanges();
             const downloadLink = document.createElement('a');
             downloadLink.href = fileUrl;
@@ -252,7 +277,7 @@ export class SendLetterComponent implements OnInit {
   }
 
   onConfirmSendLetterToPrintDialogClicked(){
-this.isShowSendLetterToPrintPopupClicked = false;
+    this.isShowSendLetterToPrintPopupClicked = false;
   }
 
   private loadDropdownLetterTemplates() {
@@ -333,9 +358,24 @@ this.isShowSendLetterToPrintPopupClicked = false;
 loadMailingAddress() {
   if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
   {
+    if(this.screenName == ScreenType.Case360PageLetter){
+      this.loadClientMailingAddress();
+    }else{
     this.vendorContactFacade.loadMailCodes(this.vendorId);
+    }
   }
   else
      this.contactFacade.loadMailingAddress(this.clientId);
+}
+
+getFileNameFromTypeCode(typeCode: string): string {
+  switch (typeCode) {
+    case CommunicationEventTypeCode.ClientLetter:
+      return "Client Letter.zip"; 
+    case CommunicationEventTypeCode.CerAuthorizationLetter:
+      return "CER Authorization Letter.zip";
+    default:
+      throw new Error('Invalid type code');
+  }
 }
 }

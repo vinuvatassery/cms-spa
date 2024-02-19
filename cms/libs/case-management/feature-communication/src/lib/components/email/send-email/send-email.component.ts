@@ -36,6 +36,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() clientId!: any;
   @Input() isCerForm!: any;
   @Input() communicationEmailTypeCode!: any;
+  @Input() screenName!: any;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -101,8 +102,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.updateOpenSendEmailFlag();
-    if (CommunicationEventTypeCode.CerAuthorizationEmail!==this.communicationEmailTypeCode){
-      this.isButtonsVisible = this.isCCDropdownVisible = false;
+    if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.communicationEmailTypeCode){
+      // this.isButtonsVisible = this.isCCDropdownVisible = false;
       this.loadEmailTemplates();
     }
     else
