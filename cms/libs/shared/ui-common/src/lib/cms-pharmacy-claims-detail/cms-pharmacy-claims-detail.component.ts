@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, groupBy } from '@progress/kendo-data-query';
-//import { CaseStatusCode, DrugsFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade, PaymentMethodCode, VendorFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Lov, UserManagementFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -17,7 +16,6 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, first } from 'rxjs';
 import { CaseStatusCode } from '../enums/case-status-code.enum';
 import { PaymentMethodCode } from '../enums/payment-method-code.enum';
-//import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 
 @Component({
   selector: 'common-cms-pharmacy-claims-detail',

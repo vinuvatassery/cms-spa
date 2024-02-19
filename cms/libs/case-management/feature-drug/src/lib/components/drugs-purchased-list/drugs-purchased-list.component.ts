@@ -3,7 +3,6 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnDestroy,
   OnInit,
   Output,
   TemplateRef,
@@ -17,8 +16,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { Subject, Subscription } from 'rxjs';
-import { first } from 'rxjs';
+import { Subscription, first } from 'rxjs';
 
 @Component({
   selector: 'case-management-drugs-purchased-list',

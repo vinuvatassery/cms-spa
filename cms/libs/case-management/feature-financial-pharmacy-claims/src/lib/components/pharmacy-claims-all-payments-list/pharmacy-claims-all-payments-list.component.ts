@@ -283,7 +283,6 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
     {
       if(editResponse)
       {
-        //this.loadBatchLogListGrid();
         this.loadPharmacyClaimsAllPaymentsListGrid();
         this.modalCloseAddEditClaimsFormModal(true)
       }
