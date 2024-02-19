@@ -15,12 +15,12 @@ import { Router } from '@angular/router';
 import { GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
-  State,
-  filterBy
+  State
 } from '@progress/kendo-data-query';
 import { BehaviorSubject, Subject, first } from 'rxjs';
 import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-refund-all-payment-list',
   templateUrl: './refund-all-payment-list.component.html',
@@ -42,6 +42,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @Input() updateProviderPanelSubject$: any
   @Input() ddlStates$: any
   @Input() paymentMethodCode$: any
+  @Input() allRefundProfilePhoto$!: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   @Output() loadVendorRefundAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
@@ -237,13 +238,14 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  allRefundProfilePhotoSubject = new Subject();
 
   /** Constructor **/
   constructor(
     private route: Router, private readonly cdr: ChangeDetectorRef,
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
-    private dialogService: DialogService) {
+    private dialogService: DialogService,) {
       this.selectableSettings = {
         checkboxOnly: this.checkboxOnly,
         mode: this.mode,

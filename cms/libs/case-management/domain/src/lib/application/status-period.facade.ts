@@ -7,6 +7,8 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusPeriodDataService } from '../infrastructure/status-period.data.service';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class StatusPeriodFacade {
@@ -24,6 +26,7 @@ export class StatusPeriodFacade {
     field: this.sortValue,
     dir: 'asc' 
   }];
+  statusPeriodProfilePhotoSubject = new Subject();
 
   /** Constructor**/
   constructor(private readonly statusPeriodDataService: StatusPeriodDataService,
@@ -31,6 +34,7 @@ export class StatusPeriodFacade {
     private readonly loaderService: LoaderService ,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private configurationProvider : ConfigurationProvider,
+    private userManagementFacade:UserManagementFacade
     ) {}
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
@@ -66,6 +70,7 @@ export class StatusPeriodFacade {
           };
 
           this.statusPeriodSubject.next(gridView);
+          this.loadStatusPeriodDistinctUserIdsAndProfilePhoto(statusPeriodResponse['items']);
           this.hideLoader();
         }
       },
@@ -74,6 +79,20 @@ export class StatusPeriodFacade {
       },
     });
   }
+
+  loadStatusPeriodDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.statusPeriodProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadStatusGroupHistory(eligibilityId: string) {
     return this.statusPeriodDataService.loadStatusGroupHistory(eligibilityId);

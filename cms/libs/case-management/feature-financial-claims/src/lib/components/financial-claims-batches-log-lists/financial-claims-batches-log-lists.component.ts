@@ -87,6 +87,7 @@ export class FinancialClaimsBatchesLogListsComponent
   @Input() exportButtonShow$: any;
   @Input() letterContentList$: any;
   @Input() letterContentLoader$: any;
+  @Input() claimsBathcPaymentProfilePhoto$: any;
   @Output() loadTemplateEvent = new EventEmitter<any>();
   @Output() loadBatchLogListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
@@ -189,7 +190,8 @@ export class FinancialClaimsBatchesLogListsComponent
   selectedPaymentStatus: string | null = null;
   paymentMethodType$ = this.lovFacade.paymentMethodType$;
   paymentStatus$ = this.lovFacade.paymentStatus$;
-  batchStatus = PaymentStatusCode.PendingApproval
+  batchStatus = PaymentStatusCode.PendingApproval;
+  claimsBathcPaymentProfileSubject = new Subject();
   getBatchLogGridActions(dataItem: any) {
     return [{
       buttonType: 'btn-h-primary',
@@ -320,7 +322,7 @@ export class FinancialClaimsBatchesLogListsComponent
     this.batchLogListItemsSubscription = this.batchLogGridLists$.subscribe((response: any) => {
       this.totalRecord = response.total;
      
-      var payments =  response && response.data
+      let payments =  response && response.data
       
       payments.forEach((item :any) =>{
         if([PaymentStatusCode.Paid, PaymentStatusCode.PaymentRequested, PaymentStatusCode.ManagerApproved].includes(item.paymentStatusCode)){

@@ -1,28 +1,31 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
 import { FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UserManagementFacade } from '@cms/system-config/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-vendor-refund-pharmacy-payments-list',
   templateUrl: './vendor-refund-pharmacy-payments-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChanges {
+export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChanges, OnDestroy {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isClaimsLoaderShow = false;
   /** Constructor **/
@@ -60,10 +63,14 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   gridVendorsRefundDataSubject = new Subject<any>();
   gridVendorsRefundData$ = this.gridVendorsRefundDataSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  vendorRefundPaymentListSubject = new Subject();;
+  pharmacyPurchaseProfileSubscription = new Subscription();
+  vendorRefundPaymentListProfilePhoto$ = this.financialVendorRefundFacade.vendorRefundPaymentListProfilePhotoSubject
   @Output() selectedClaimsChangeEvent = new EventEmitter<any>();
   constructor(
-    public financialVendorRefundFacade:FinancialVendorRefundFacade
+    public financialVendorRefundFacade:FinancialVendorRefundFacade,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -106,11 +113,19 @@ export class VendorRefundPharmacyPaymentsListComponent implements OnInit, OnChan
   }
 
   gridDataHandle() {
-    this.clientclaimsData$.subscribe((data: GridDataResult) => {
+    this.pharmacyPurchaseProfileSubscription = this.clientclaimsData$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.clientClaimsListDataSubject.next(this.gridDataResult);
+      if(this.gridDataResult?.data){
+        
+      }
     });
   }
+
+  ngOnDestroy(): void {
+    this.pharmacyPurchaseProfileSubscription?.unsubscribe();
+  }
+  
   private loadFinancialRecentRefundListGrid(): void {
     this.loadRefundProcess(
       this.vendorId,

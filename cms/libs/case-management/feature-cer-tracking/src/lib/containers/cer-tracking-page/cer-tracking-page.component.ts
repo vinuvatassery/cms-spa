@@ -59,14 +59,14 @@ export class CerTrackingPageComponent implements OnInit {
 
   getGridState()
   {
-  if (this.caseStatus != '') {
-    this.state?.filter?.filters?.push(
-      {filters:[{ 
-        field: "eligibilityStatus",
-        operator: "eq",
-        value:this.caseStatus
-      }]});
-  } 
+    if (this.caseStatus == "RESTRICTED") {
+      this.state?.filter?.filters?.push(
+        {filters:[{ 
+          field: "eligibilityStatus",
+          operator: "eq",
+          value:this.caseStatus
+        }]});
+    } 
     this.gridFacade.loadGridState(this.loginUserId,GridStateKey.GRID_STATE,ModuleCode.CER_TRACKER)
     .subscribe({
       next: (x:any) =>{

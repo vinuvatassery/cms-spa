@@ -2,15 +2,17 @@
   <div class="dash-header-with-filters">
     <h5>ACTIVE CLIENTS BY GROUP </h5>
    
-    <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" value="All Clients" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
-        [data]="data">
+    <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" textField="clientFullName" [valuePrimitive]="true" valueField="userId"   (valueChange)="clientsNavigate($event)" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
+        [data]="data"  [(ngModel)]="selectedActiveClientByGroup">
       </kendo-dropdownlist></div>
   </div>
+  <common-dashboard-loader-panel *ngIf="!activeClientsByGroup"></common-dashboard-loader-panel>
+
   <div class="dashboard-cards-container">
     
-    <kendo-chart *ngIf="activeClientsByGroup"  class="dash_chart">
+    <kendo-chart *ngIf="activeClientsByGroup"  class="dash_chart"  (seriesClick)="onClick($event)" >
       <ng-template kendoChartDonutCenterTemplate>
-        <h3>1000</h3>
+        <h3>{{totalGroupCount}}</h3>
         Clients
       </ng-template>
       <kendo-chart-legend [item]="activeClientsByGroup?.chartData?.legend" [padding]="20">
@@ -19,8 +21,10 @@
       <kendo-chart-area background="none"></kendo-chart-area>
       <kendo-chart-tooltip>
         <ng-template kendoChartSeriesTooltipTemplate let-value="value" let-category="category" let-series="series">
-          {{ category }}: {{ value }}%
+          {{ category }}
         </ng-template>
+        <kendo-chart-legend [labels]="{ content: legendContent }">
+        </kendo-chart-legend>
       </kendo-chart-tooltip>
       <kendo-chart-series>
         <kendo-chart-series-item *ngFor="let series of activeClientsByGroup?.chartData?.series; let outermost = last;"

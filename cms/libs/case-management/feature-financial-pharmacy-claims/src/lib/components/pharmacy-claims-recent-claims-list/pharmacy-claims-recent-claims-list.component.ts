@@ -1,18 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
 import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { ColumnComponent, ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'cms-pharmacy-claims-recent-claims-list',
   templateUrl: './pharmacy-claims-recent-claims-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PharmacyClaimsRecentClaimsListComponent {
+export class PharmacyClaimsRecentClaimsListComponent implements OnDestroy {
   public sortValue = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   public sortType = this.financialPharmacyClaimsFacade.sortType;
   public pageSizes = this.financialPharmacyClaimsFacade.gridPageSizes;
@@ -46,6 +46,7 @@ export class PharmacyClaimsRecentClaimsListComponent {
   columns : any;
   dropDowncolumns : any;
   isFinancialClaimsRecentClaimGridLoaderShow = false;
+  pharmacyRecentClaimsProfilePhotoSubject$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhotoSubject;
 
   selectedPaymentStatus: string | null = null;
   selectedPaymentMethod: string | null = null;
@@ -56,16 +57,17 @@ export class PharmacyClaimsRecentClaimsListComponent {
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   paymentRequestTypes: any = [];
-
+  recentClaimsGridListsSubscription = new Subscription();
   paymentTypeFilter = '';
   iseditView:string="";
   defaultPageSize=20;
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private readonly financialPharmacyClaimsFacade:FinancialPharmacyClaimsFacade
-
+    private readonly financialPharmacyClaimsFacade:FinancialPharmacyClaimsFacade,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
+
   ngOnInit(): void {
     this.loadColumnsData();
     this.getClaimStatusLov();
@@ -171,6 +173,10 @@ loadFinancialRecentClaimListGrid() {
     this.dataStateChange(stateData);
   }
 
+  ngOnDestroy(): void {
+    this.recentClaimsGridListsSubscription?.unsubscribe();
+  }
+
   defaultGridState() {
     this.state = {
       skip: 0,
@@ -228,7 +234,7 @@ loadFinancialRecentClaimListGrid() {
   }
 
   gridDataHandle() {
-    this.recentClaimsGridLists$.subscribe((data: GridDataResult) => {
+    this.recentClaimsGridListsSubscription = this.recentClaimsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.recentClaimListDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
