@@ -21,8 +21,8 @@ export class EventLogFacade {
   constructor(private readonly eventDataService: EventDataService) {}
 
   /** Public methods **/
-  loadEvents(): void {
-    this.eventDataService.loadEvents().subscribe({
+  loadEvents(entityId: any, params: any): void {
+    this.eventDataService.loadEvents(entityId, params).subscribe({
       next: (eventResponse) => {
         this.eventsSubject.next(eventResponse);
       },

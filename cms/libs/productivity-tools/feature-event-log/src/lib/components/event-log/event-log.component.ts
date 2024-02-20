@@ -1,6 +1,7 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   OnInit,
@@ -24,6 +25,7 @@ export class EventLogComponent implements OnInit {
 
   /** Public properties **/
   events$ = this.eventLogFacade.events$;
+  events: any = [];
   isShowEventLog = false;
   isOpenEventLogDetails = false;
   isShownSearch = false;
@@ -57,16 +59,25 @@ export class EventLogComponent implements OnInit {
 
   /** Constructor **/
   
-  constructor(private readonly eventLogFacade: EventLogFacade, private dialogService: DialogService) {}
+  constructor(private readonly eventLogFacade: EventLogFacade, private dialogService: DialogService,
+    private cd: ChangeDetectorRef) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
     this.loadEvents();
+    this.subscribeEvents();
   }
 
   /** Private methods **/
   private loadEvents(): void {
-    this.eventLogFacade.loadEvents();
+    this.eventLogFacade.loadEvents(1, null);
+  }
+
+  private subscribeEvents() {
+    this.events$.subscribe((data) => {
+      this.events = data;
+      this.cd.detectChanges();
+    });
   }
 
  

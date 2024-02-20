@@ -6,27 +6,17 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
 import { Event } from '../entities/event';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class EventDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private readonly configurationProvider: ConfigurationProvider) {}
 
   /** Public methods **/
-  loadEvents(): Observable<Event[]> {
-    return of([
-      { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
-      {
-        id: 2,
-        name: 'At vero eos',
-        description: 'At vero eos et accusam et justo duo dolores',
-      },
-      {
-        id: 3,
-        name: 'Duis autem',
-        description: 'Duis autem vel eum iriure dolor in hendrerit',
-      },
-    ]);
+  loadEvents(entityId: any, params: any): Observable<Event[]> {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/${entityId}/by-entity-id`, params);
   }
 
   loadDdlEvents() {
