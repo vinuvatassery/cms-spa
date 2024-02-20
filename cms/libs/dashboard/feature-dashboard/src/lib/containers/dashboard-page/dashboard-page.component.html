@@ -2,10 +2,10 @@
 
   <section class="app-l-mainTittle justify-content-between">
     <div>
-      <h2 class="maintitle_withicon text-bold">
+      <h1 class="maintitle_withicon text-bold">
         <span aria-label="Clients" class="material-icons sidebar-menu_icon " aria-hidden="true"> home </span>
         Welcome back, {{ onGetUser()?.name }}
-      </h2>
+      </h1>
 
       <kendo-dropdownlist class="mt-1" [fillMode]="formUiStyle.dropDownFillMode" style="width: auto;"
         placeholder="DashBoard" required [data]="userDashBoardsListData$ | async" textField="dashboardDesc"
