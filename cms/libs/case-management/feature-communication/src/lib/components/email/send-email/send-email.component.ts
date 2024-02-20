@@ -37,6 +37,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() isCerForm!: any;
   @Input() communicationEmailTypeCode!: any;
   @Input() screenName!: any;
+  @Input() vendorId!: string;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -76,12 +77,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   caseEligibilityId!:any;
   cerEmailAttachedFiles: any[] = [];
   userSelectedAttachment: any[] = [];
+  clientAndVendorAttachedFiles: any[] = [];
   @Input() emailSubject!: string;
   existingFile: any = [];
   loginUserId!: any;
   isSaveFoLater: boolean = false;
   isButtonsVisible: boolean = true;
   isCCDropdownVisible: boolean = true;
+  attachmentCount: number = 0;
 
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
@@ -103,7 +106,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.getLoggedInUserProfile();
     this.updateOpenSendEmailFlag();
     if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.communicationEmailTypeCode){
-      // this.isButtonsVisible = this.isCCDropdownVisible = false;
       this.loadEmailTemplates();
     }
     else
@@ -227,8 +229,35 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (CommunicationEvents.Print === event) {
       this.emailEditorValueEvent.emit(this.currentEmailData);
       this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
+      if (this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
+      {
       this.initiateAdobeEsignProcess(this.selectedTemplate, CommunicationEvents.SendEmail);
+      }else{
+        this.initiateSendEmailProcess(this.selectedTemplate);
+      }
     }
+  }
+
+  initiateSendEmailProcess(selectedTemplate: any) {
+    this.loaderService.show();
+    let esignRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
+    let formData = this.communicationFacade.prepareClientAndVendorEmailEmailData(esignRequestFormdata, selectedTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
+    this.communicationFacade.initiateSendemailRequest(formData, selectedTemplate)
+        .subscribe({
+          next: (data: any) =>{
+          if (data) {
+          this.onCloseSendEmailClicked();
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Sent! Event Logged.')
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.isSendEmailSuccess.emit(false);
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+        },
+      });
   }
 
   onSendEmailConfirmationClicked() {
@@ -298,7 +327,7 @@ onClosePreviewEmail(){
   private generateText(emailData: any, requestType: string){
     this.loaderService.show();
     let formData = this.communicationFacade.preparePreviewModelData(emailData);
-    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType ?? '')
+    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType ?? '', this.vendorId ?? '')
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -359,7 +388,14 @@ onClosePreviewEmail(){
   }
 
   cerEmailAttachments(event:any){
-    this.cerEmailAttachedFiles = event;
+    if (this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
+    {
+      this.cerEmailAttachedFiles = event;
+      this.attachmentCount = this.cerEmailAttachedFiles?.length;
+    }else{
+      this.clientAndVendorAttachedFiles = event;
+      this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
+    }
   }
 
   getLoggedInUserProfile(){

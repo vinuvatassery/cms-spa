@@ -97,9 +97,9 @@ export class EmailDataService {
     );
   }
 
-  replaceAndGenerateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
+  replaceAndGenerateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
       return this.http.post<string>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate/${clientId}/${clientCaseEligibilityId}?requestType=${requestType}`,selectedTemplate
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&vendorId=${vendorId}`,selectedTemplate
       );
     }
 
@@ -111,9 +111,9 @@ export class EmailDataService {
         });
     }
 
-    sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
+    sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
       return this.http.post(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate/${clientId}/${clientCaseEligibilityId}?requestType=${requestType}`, selectedTemplate,
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&vendorId=${vendorId}`, selectedTemplate,
         {responseType: 'blob'}
       )
     }
@@ -154,6 +154,12 @@ export class EmailDataService {
       return this.http.get(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates?templateId=${templateId}`
       );
+    }
+
+    sendClientAndVendorEmail(formData: FormData) {
+        return this.http.post<any>(
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification`,formData
+        );
     }
 }
  

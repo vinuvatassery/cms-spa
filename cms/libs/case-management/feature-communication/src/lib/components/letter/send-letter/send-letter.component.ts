@@ -35,7 +35,7 @@ export class SendLetterComponent implements OnInit {
   @Input() clientCaseEligibilityId!: any;
   @Input() clientId!: any;
   @Input() isCerForm!: any;
-  @Input() vendorId!: any;
+  @Input() vendorId!: string;
   @Input() screenName!: any;
 
   /** Output properties  **/
@@ -70,8 +70,10 @@ export class SendLetterComponent implements OnInit {
   prevClientCaseEligibilityId!: string;
   selectedTemplate!: any;
   cerEmailAttachedFiles: any[] = [];
+  clientAndVendorAttachedFiles: any[] = [];
   mailingAddress: any;
   mailingAddressSubscription= new Subscription();
+  attachmentCount: number = 0;
   dataValue: Array<any> = [
     {
       text: '',
@@ -173,11 +175,7 @@ export class SendLetterComponent implements OnInit {
   private generateText(letterData: any, requestType: CommunicationEvents){
     this.loaderService.show();
     if(this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
-      if(this.screenName == ScreenType.Case360PageLetter){
-        this.generateClientTextTemplate(letterData, requestType);
-      }else{
-        this.generateVendorTextTemplate(letterData, requestType);
-      }
+      this.generateClientTextTemplate(letterData, requestType);
     }else{
     this.clientId = this.workflowFacade.clientId ?? 0;
     this.clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
@@ -186,7 +184,7 @@ export class SendLetterComponent implements OnInit {
 
   private generateClientTextTemplate(letterData: any, requestType: CommunicationEvents){
     let formData = this.communicationFacade.preparePreviewModelData(letterData);
-    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
+    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType.toString() ??'', this.vendorId ?? '')
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -207,11 +205,6 @@ export class SendLetterComponent implements OnInit {
       });
   }
 
-  private generateVendorTextTemplate(letterData: any, requestType: CommunicationEvents){
-    let formData = this.communicationFacade.preparePreviewModelData(letterData);
-    //TO-DO Implement the vendor profile template preview
-  }
-
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     this.loaderService.show();
     if(this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
@@ -223,8 +216,8 @@ export class SendLetterComponent implements OnInit {
   }
 
   private sendClientAndVendorLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
-    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.cerEmailAttachedFiles);
-    this.communicationFacade.sendLetterToPrint(this.clientId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
+    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.clientAndVendorAttachedFiles);
+    this.communicationFacade.sendLetterToPrint(this.clientId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'', this.vendorId?? '')
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -352,6 +345,10 @@ export class SendLetterComponent implements OnInit {
   if (this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
   {
     this.cerEmailAttachedFiles = event;
+    this.attachmentCount = this.cerEmailAttachedFiles?.length;
+  }else{
+    this.clientAndVendorAttachedFiles = event;
+    this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
   }
 }
 
@@ -371,7 +368,9 @@ loadMailingAddress() {
 getFileNameFromTypeCode(typeCode: string): string {
   switch (typeCode) {
     case CommunicationEventTypeCode.ClientLetter:
-      return "Client Letter.zip"; 
+      return "Client Letter.zip";
+    case CommunicationEventTypeCode.VendorLetter:
+      return "Vendor Letter.zip"; 
     case CommunicationEventTypeCode.CerAuthorizationLetter:
       return "CER Authorization Letter.zip";
     default:

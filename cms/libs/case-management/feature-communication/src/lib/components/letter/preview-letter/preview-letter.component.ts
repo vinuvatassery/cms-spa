@@ -10,4 +10,5 @@ export class PreviewLetterComponent {
   /** Input properties **/
   @Input() letterContent!: any;
   @Input() paperlessFlag! : any
+  @Input() attachmentCount!: number;
 }

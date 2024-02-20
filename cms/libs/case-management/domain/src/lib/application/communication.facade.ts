@@ -94,16 +94,16 @@ export class CommunicationFacade {
     return this.emailDataService.loadCERAuthorizationEmailVariables(lovType);
   }
 
-  generateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
-    return this.emailDataService.replaceAndGenerateTextTemplate(clientId, clientCaseEligibilityId, selectedTemplate, requestType);
+  generateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
+    return this.emailDataService.replaceAndGenerateTextTemplate(clientId, clientCaseEligibilityId, selectedTemplate, requestType, vendorId);
   }
 
   loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
     return this.emailDataService.loadAttachmentPreview(clientId, clientCaseEligibilityId, templateId);
   }
 
-  sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
-    return this.emailDataService.sendLetterToPrint(clientId, clientCaseEligibilityId, selectedTemplate, requestType);
+  sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
+    return this.emailDataService.sendLetterToPrint(clientId, clientCaseEligibilityId, selectedTemplate, requestType, vendorId);
   }
 
   saveForLaterEmailTemplate(draftTemplate: any){
@@ -141,7 +141,7 @@ preparePreviewModelData(emailData: any) {
       return formData;
 }
 
-prepareSendLetterData(draftTemplate: any, cerEmailAttachedFiles: any[]) {
+prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[]) {
   const isSaveForLater = "true";
   const formData = new FormData();
   formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
@@ -154,7 +154,7 @@ prepareSendLetterData(draftTemplate: any, cerEmailAttachedFiles: any[]) {
   formData.append('templateContent', draftTemplate?.templateContent ?? '');
   formData.append('isSaveForLater', isSaveForLater??'');
   let i = 0;
-  cerEmailAttachedFiles.forEach((file) => { 
+  clientAndVendorAttachedFiles.forEach((file) => { 
     if(file.rawFile == undefined || file.rawFile == null){
       formData.append('savedAttachmentId', file.document.documentTemplateId);
       i++;
@@ -163,5 +163,39 @@ prepareSendLetterData(draftTemplate: any, cerEmailAttachedFiles: any[]) {
     }
 });  
 return formData;
+}
+
+prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, isSaveFoLater: boolean) {
+  const formData = new FormData();
+    formData.append('toEmailAddress', selectedToEmail ?? '');
+    formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
+    formData.append('clientId', clientId ?? '');
+    formData.append('requestSubject', emailSubject ?? ''); 
+    formData.append('loginUserId', loginUserId ?? '');
+    formData.append('cCEmail', selectedCCEmail ?? ''); 
+    formData.append('isSaveForLater', Boolean(isSaveFoLater).toString()); 
+    return formData;
+}
+
+prepareClientAndVendorEmailEmailData(formData: FormData, emailData: any, cerEmailAttachedFiles: any[], vendorId: string) {
+  formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
+    formData.append('vendorId', vendorId ?? '');
+    formData.append('requestBody', emailData?.templateContent ?? '');
+    let i = 0;
+    cerEmailAttachedFiles.forEach((file) => { 
+      if(file.rawFile == undefined || file.rawFile == null){
+        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
+        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
+        formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
+      i++;
+      }else{
+        formData.append('attachments', file.rawFile); 
+      }
+    });
+    return formData;
+}
+
+initiateSendemailRequest(formData: FormData, selectedTemplate: any) {
+    return this.emailDataService.sendClientAndVendorEmail(formData);
 }
 }

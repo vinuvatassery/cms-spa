@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component ,Input, TemplateRef,} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommunicationEventTypeCode, CommunicationEvents, FinancialVendorProviderTabCode, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
+import { CommunicationEventTypeCode, CommunicationEvents, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription } from 'rxjs';
@@ -22,8 +22,9 @@ export class VendorHeaderToolsComponent {
   isNewSMSTextOpened = false;
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
-  emailScreenName = ScreenType.FinancialManagementVendorPageEmail;
-  letterScreenName = ScreenType.FinancialManagementVendorPageLetter;
+  screenName = ScreenType.VendorProfile;
+  emailScreenName = ScreenType.VendorEmail;
+  letterScreenName = ScreenType.VendorLetter;
   contacts$ = this.vendorContactFacade.allContacts$;
   mailCodes$ = this.vendorContactFacade.mailCodes$;
   emailSubscription$ = new Subscription();
@@ -36,8 +37,8 @@ export class VendorHeaderToolsComponent {
   vendorId: any;
   vendorTypeCode: any;
   emailSubject: any;
-  communicationLetterTypeCode: any;
-  communicationEmailTypeCode: any;
+  communicationLetterTypeCode: any = CommunicationEventTypeCode.VendorLetter;
+  communicationEmailTypeCode: string = CommunicationEventTypeCode.VendorEmail;
   toEmail: Array<any> = [];
   vendorAddressId:any;
 
@@ -94,7 +95,6 @@ export class VendorHeaderToolsComponent {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.vendorTypeCode = this.activeRoute.snapshot.queryParams['tab_code'];
     this.initialize();
-    this.getVendorTypeCode();
     this.addEmailSubscription();
   }
 
@@ -216,35 +216,6 @@ export class VendorHeaderToolsComponent {
       this.vendorContactFacade.loadMailCodes(this.vendorId);
     }
 
-    getVendorTypeCode() {
-      switch (this.vendorTypeCode) {
-        case FinancialVendorProviderTabCode.Manufacturers:
-          this.emailSubject = CommunicationEventTypeCode.ManufacturerSubject;
-          this.communicationEmailTypeCode = CommunicationEventTypeCode.ManufacturerEmail;
-          this.communicationLetterTypeCode = CommunicationEventTypeCode.ManufacuterLetter;
-          break;
-        case FinancialVendorProviderTabCode.InsuranceVendors:
-          this.emailSubject = CommunicationEventTypeCode.InsuranceVendorSubject;
-          this.communicationEmailTypeCode = CommunicationEventTypeCode.InsuranceVendorEmail;
-          this.communicationLetterTypeCode = CommunicationEventTypeCode.InsuranceVendorLetter;
-          break;
-        case FinancialVendorProviderTabCode.MedicalProvider:
-          this.emailSubject = CommunicationEventTypeCode.MedicalProviderSubject;
-          this.communicationEmailTypeCode = CommunicationEventTypeCode.MedicalProviderEmail;
-          this.communicationLetterTypeCode = CommunicationEventTypeCode.MedicalProviderLetter;
-          break;
-        case FinancialVendorProviderTabCode.DentalProvider:
-          this.emailSubject = CommunicationEventTypeCode.DentalProviderSubject;
-          this.communicationEmailTypeCode = CommunicationEventTypeCode.DentalProviderEmail;
-          this.communicationLetterTypeCode = CommunicationEventTypeCode.DentalProviderLetter;
-          break;
-        case FinancialVendorProviderTabCode.Pharmacy:
-          this.emailSubject = CommunicationEventTypeCode.PharmacySubject;
-          this.communicationEmailTypeCode = CommunicationEventTypeCode.PharmacyEmail;
-          this.communicationLetterTypeCode = CommunicationEventTypeCode.PharmacyLetter;
-          break;
-      }
-    }
     onSendMenuClick(){
     }
 }
