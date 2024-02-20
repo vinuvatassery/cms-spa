@@ -60,11 +60,8 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
     this.loadProgramExpensesChart()
   }
 
-   isItemSelected(item:any) {
-    console.log(item)
-    console.log(this.selectedType)
-    const value =  this.selectedType?.some((x) => x === item.Value);
-    console.log(value)
+   isItemSelected(item:any) {   
+    const value =  this.selectedType?.some((x) => x === item.Value);  
     return value
   }
 
@@ -110,12 +107,13 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
       frequency : this.selectFrequency,
       TimeFrame : this.selectedTimeFrame
     }
-    this.widgetFacade.loadProgramExpensesChart('E2301551-610C-43BF-B7C9-9B623ED425C3',payload);
+    this.widgetFacade.loadProgramExpensesChart(this.dashboardId,payload);
     this.widgetFacade.programExpensesChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          if (response) {
+          if (response) {          
+              
             this.programExpenses = response;
             if(this.programExpenses && this.programExpenses?.chartData && this.programExpenses?.chartData?.categoryAxis)
             this.programExpenses.chartData.categoryAxis.title ={

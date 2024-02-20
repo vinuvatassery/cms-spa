@@ -16,6 +16,7 @@ export class DashboardWrapperFacade {
   public dashboardAllWidgets$ =  this.dashboardAllWidgetsSubject.asObservable();
   public dashboardContentUpdate$ =  this.dashboardContentUpdateSubject.asObservable();
 
+
   private dashboardConfigurationSubject = new BehaviorSubject<GridsterConfig>(
     {}
   );

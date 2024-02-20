@@ -63,6 +63,7 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
       .subscribe({
         next: (response) => {
           if (response) {
+            debugger
             this.premiumExpensesByInsurance = response;
             this.changeDetectorRef.detectChanges()
           }

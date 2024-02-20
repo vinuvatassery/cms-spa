@@ -1,7 +1,7 @@
 /** Angular **/
 import {  Component,  OnInit,  ChangeDetectionStrategy,  OnDestroy,  Output,  EventEmitter,  ChangeDetectorRef,} from '@angular/core';
 /** Facades **/
-import { DashboardWrapperFacade } from '@cms/dashboard/domain';
+import { DashboardWrapperFacade, WidgetFacade } from '@cms/dashboard/domain';
 /** Services **/
 import { LocalStorageService } from '@cms/shared/util-core';
 import { AuthService } from '@cms/shared/util-oidc';
@@ -79,6 +79,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
     private readonly dashboardWrapperFacade: DashboardWrapperFacade,
     private readonly cd: ChangeDetectorRef,
     private readonly userManagementFacade: UserManagementFacade,
+    private readonly widgetFacade : WidgetFacade
   ) {
     this.loadConfigSubscription();
     this.options = {
@@ -169,6 +170,8 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   dashBoardChange(dashboard: any) {
     this.dashBoardContentSubscribe(dashboard?.dashboardId);
     this.selectedDashBoard = dashboard?.dashboardId;
+    this.inputs.dashboardId =  dashboard?.dashboardId
+    this.cd.detectChanges();
     this.dashboardContentListDataSubject.next(null);
   }
 
@@ -179,6 +182,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         this.userDashBoardsListDataSubject.next(response);
         response.forEach((board: any) => {
           if (board?.defaultFlag === 'Y') {
+            this.widgetFacade.selectedDashboardId = board?.dashboardId
             this.selectedDashBoard = board?.dashboardId;
             this.cd.detectChanges();
             this.dashBoardContentSubscribe(board?.dashboardId);
@@ -192,7 +196,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       .loadDashboardContent(dashboardId)
       .pipe(first((response) => response != null))
       .subscribe((response: any) => {
-        debugger
+        
         response.forEach((widg: any) => {
           widg.widgetProperties = JSON.parse(
             widg.widgetProperties.replaceAll('\\', ' ')
@@ -208,11 +212,12 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
           
           DashboardPageComponent.dashBoardContentData = []   
           
-           response.forEach((widg: any) => {           
-             if(this.userManagementFacade.hasPermission([widg.widgetProperties?.componentData?.Permission_Code]))
-             {
+           response.forEach((widg: any) => {    
+                   
+            // if(this.userManagementFacade.hasPermission([widg.widgetProperties?.componentData?.Permission_Code]))
+             //{
            DashboardPageComponent.dashBoardContentData.push(widg)
-            }
+           // }
           });
           this.dashboardContentListDataSubject.next(DashboardPageComponent.dashBoardContentData);
           this.dashboardWrapperFacade.hideLoader();
@@ -238,12 +243,12 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         });
         this.dashBoardAllWidgetsData = []
         response.forEach((widg: any) => {     
-          debugger      
-          if(this.userManagementFacade.hasPermission([widg?.widgetProperties?.componentData?.Permission_Code]))
-          {
-            debugger
+                
+          //if(this.userManagementFacade.hasPermission([widg?.widgetProperties?.componentData?.Permission_Code]))
+          //{
+            
             this.dashBoardAllWidgetsData.push(widg)
-         }
+        // }
        });        
         this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
       });
