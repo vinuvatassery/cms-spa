@@ -13,7 +13,7 @@
       </common-dashboard-loader-panel>
    
 
-      <div class="dashboard-cards-container">
+      <div class="dashboard-cards-container" *ngIf="premiumExpensesByInsurance">
          
 
             <kendo-chart  class="dash_chart" *ngIf="premiumExpensesByInsurance" [series]="premiumExpensesByInsurance?.chartData?.series"
