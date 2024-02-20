@@ -10,7 +10,7 @@
      
       <common-dashboard-loader-panel *ngIf="!activeClientsByStatus" ></common-dashboard-loader-panel>
 
-      <div class="dashboard-cards-container">
+      <div class="dashboard-cards-container" *ngIf="activeClientsByStatus">
  
 
             <kendo-chart  class="dash_chart" *ngIf="activeClientsByStatus" [chartArea]="activeClientsByStatus?.chartData?.chartArea"
