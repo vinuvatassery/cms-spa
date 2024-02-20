@@ -464,8 +464,11 @@
 <ng-template #clientRecentPharmacyClaimsDialog>
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}} </h4></kendo-dialog-titlebar>
   <section class="k-dialog-body">
-    <cms-pharmacy-claims-recent-claims-list
-      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
+      <common-cms-pharmacy-claims-recent-claims [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
+      (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)" [recentClaimsGridLists$]="recentClaimsGridLists$"
+      [pageSizes]="pageSizes" [sortType]="sortType" [sortValueRecentClaimList]="sortValueRecentClaimList"
+      [sortRecentClaimList]="sortRecentClaimList" [gridSkipCount]="gridSkipCount">    
+    </common-cms-pharmacy-claims-recent-claims>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between" >

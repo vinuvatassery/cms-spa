@@ -48,6 +48,7 @@ export class WidgetFacade {
   private insuranceTypeFPLStatsSubject =new Subject<any>();
   public  insuranceTypeFPLStats$ = this.insuranceTypeFPLStatsSubject.asObservable();
 
+  public selectedDashboardId! : any
   constructor(private widgetService: WidgetService,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
@@ -93,7 +94,7 @@ export class WidgetFacade {
   }
 
   loadActiveClientsByStatusChart(dashboardId : string  , userId : string) {
-    this.widgetService.getActiveClientsByStatus(dashboardId,userId).subscribe({
+    this.widgetService.getActiveClientsByStatus(this.selectedDashboardId,userId).subscribe({
       next: (result : any) => { 
        
         let widgetProperties = JSON.parse(result.widgetProperties);
@@ -111,7 +112,7 @@ export class WidgetFacade {
   }
 
   loadActiveClientsByGroupChart(dashboardId : string, userId : string) {
-    this.widgetService.getActiveClientsByGroup(dashboardId,userId).subscribe({
+    this.widgetService.getActiveClientsByGroup(this.selectedDashboardId,userId).subscribe({
       next: (result : any) => { 
        
         let widgetProperties = JSON.parse(result.widgetProperties);
@@ -141,7 +142,7 @@ export class WidgetFacade {
   }
 
   loadPharmacyClaimsChart(dashboardId:string, payload:any) {
-    this.widgetService.getPharmacyClaims(dashboardId,payload).subscribe({
+    this.widgetService.getPharmacyClaims(this.selectedDashboardId,payload).subscribe({
       next: (result) => { 
         ;
         let widgetProperties = JSON.parse(result?.widgetProperties);
@@ -159,7 +160,7 @@ export class WidgetFacade {
     });
   }
   loadPremiumExpensesByInsuranceChart(dashboardId:any, payload:any) {
-    this.widgetService.getPremiumExpensesByInsurance(dashboardId,payload).subscribe({
+    this.widgetService.getPremiumExpensesByInsurance(this.selectedDashboardId,payload).subscribe({
       next: (result) => { 
         let widgetProperties = JSON.parse(result.widgetProperties);
         
@@ -174,7 +175,7 @@ export class WidgetFacade {
     });
   }
   loadProgramExpensesChart(dashboardId:string, payload:any) {
-    this.widgetService.getProgramExpenses(dashboardId,payload).subscribe({
+    this.widgetService.getProgramExpenses(this.selectedDashboardId,payload).subscribe({
       next: (result : any) => { 
        
         let widgetProperties = JSON.parse(result.widgetProperties);
@@ -217,7 +218,7 @@ export class WidgetFacade {
   }
 
   loadApplicationCERStats(dashboardId : string) {
-    this.widgetService.loadApplicationCERStats(dashboardId).subscribe({
+    this.widgetService.loadApplicationCERStats(this.selectedDashboardId).subscribe({
       next: (result) => { 
         this.applicationCERStatsSubject.next(result);
       }, 
@@ -229,11 +230,12 @@ export class WidgetFacade {
   }
 
   loadInsuranceTypeFPLStats(dashboardId : string) {
-    this.widgetService.loadinsuranceTypeFPLtats(dashboardId).subscribe({
+    this.widgetService.loadinsuranceTypeFPLtats(this.selectedDashboardId).subscribe({
       next: (result) => { 
+        
         this.insuranceTypeFPLStatsSubject.next(result);
       }, 
-      error: (error) => { 
+      error: (error) => {              
         this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },

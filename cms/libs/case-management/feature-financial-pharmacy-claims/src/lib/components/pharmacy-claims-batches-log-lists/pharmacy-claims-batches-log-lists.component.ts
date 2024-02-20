@@ -25,8 +25,9 @@ import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter
 import { ConfigurationProvider, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import {
-  PaymentStatusCode,PaymentType, PaymentMethodCode, PaymentBatchName
+  PaymentStatusCode,PaymentType, PaymentMethodCode, PaymentBatchName, DrugsFacade, FinancialVendorFacade, FinancialPharmacyClaimsFacade, VendorFacade
 } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
@@ -114,6 +115,12 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   public bulkMore !:any
   selected: any;
   batchStatus!:any;
+  addDrug$ = this.drugsFacade.addDrug$
+  manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
+  recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
 
   public batchLogGridActions(dataItem:any){
    return  [
@@ -324,7 +331,11 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   constructor(private route: Router,private dialogService: DialogService,  private readonly cdr: ChangeDetectorRef,
     private readonly configProvider: ConfigurationProvider,
     private readonly intl: IntlService,
-    private readonly notificationSnackbarService: NotificationSnackbarService) {}
+    private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly drugsFacade: DrugsFacade,
+    private readonly financialVendorFacade: FinancialVendorFacade,
+    private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
+    private readonly vendorFacade: VendorFacade) {}
   
   ngOnInit(): void {
     this.sortColumnName = 'Pharmacy Name';
@@ -335,6 +346,11 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       this.initiateBulkMore()
     })
     this.handleBatchPaymentsGridData();
+    this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
+      next: (data: any) => {
+        this.financialVendorFacade.manufacturerListSubject.next(data);
+      }      
+    });
   }
 
   initiateBulkMore() {
@@ -380,6 +396,14 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
       this.markAsChecked(response.data);
       }
       this.batchLogPrintAdviceLetterPagedList = response;
+    });
+  }
+
+  loadManufacturerEvent(event:any){
+    this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers).subscribe({
+      next: (data: any) => {
+        this.financialVendorFacade.manufacturerListSubject.next(data);
+      }      
     });
   }
 
@@ -1075,6 +1099,22 @@ getCoPaymentRequestTypeLov()
 getDrugUnitTypeLov()
 {
   this.getDrugUnitTypeLovEvent.emit();
+}
+
+addDrugEventHandler(event:any){
+  this.drugsFacade.addDrugData(event);
+}
+
+searchClientsDataEventHandler(client:any){
+  this.financialPharmacyClaimsFacade.searchClientsDataSubject.next(client);
+}
+
+searchPharmacyDataEventHandler(vendor:any){
+  this.financialPharmacyClaimsFacade.searchPharmaciesDataSubject.next(vendor)
+}
+
+loadRecentClaimListEventHandler(data : any){
+  this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
 }
 
 }

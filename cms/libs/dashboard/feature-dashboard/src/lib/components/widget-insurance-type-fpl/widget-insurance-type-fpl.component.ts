@@ -14,6 +14,7 @@ export class WidgetInsuranceTypeFplComponent {
   @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   insuranceTypeFPLStats:any; 
+  showGraph = false
   constructor(private readonly router: Router,private widgetFacade: WidgetFacade, private readonly cd: ChangeDetectorRef ) {
     this.insuranceTypeFPLStats = new Array();
   }
@@ -22,15 +23,15 @@ export class WidgetInsuranceTypeFplComponent {
     this.loadApplicationCERStats();
   }
   loadApplicationCERStats() {
+    this.insuranceTypeFPLStats = null
     this.widgetFacade.loadInsuranceTypeFPLStats(this.dashboardId);
     this.widgetFacade.insuranceTypeFPLStats$ 
       .subscribe({
-        next: (response) => { 
-          if (response.length == undefined) { 
+        next: (response) => {
+          this.showGraph = true
             this.insuranceTypeFPLStats = response.insuranceTypeFPLStats; 
-            this.cd.detectChanges(); 
-          }
-        }
+            this.cd.detectChanges();           
+        }      
       });
   }
   removeWidgetCard(){
@@ -53,7 +54,7 @@ export class WidgetInsuranceTypeFplComponent {
     }
     const query = {
       queryParams: {
-        tab: CaseScreenTab.ALL,
+        tab: CaseScreenTab.MY_CASES,
         healthInsuranceType: healthInsuranceType,
         fplPercentage: fplPer,
         filterOperator:operator
