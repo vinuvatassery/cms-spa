@@ -214,10 +214,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
           
            response.forEach((widg: any) => {    
                    
-            // if(this.userManagementFacade.hasPermission([widg.widgetProperties?.componentData?.Permission_Code]))
-             //{
+            if(this.userManagementFacade.hasPermission([widg.widgetProperties?.componentData?.Permission_Code]))
+             {
            DashboardPageComponent.dashBoardContentData.push(widg)
-           // }
+            }
           });
           this.dashboardContentListDataSubject.next(DashboardPageComponent.dashBoardContentData);
           this.dashboardWrapperFacade.hideLoader();
@@ -244,11 +244,11 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         this.dashBoardAllWidgetsData = []
         response.forEach((widg: any) => {     
                 
-          //if(this.userManagementFacade.hasPermission([widg?.widgetProperties?.componentData?.Permission_Code]))
-          //{
+          if(this.userManagementFacade.hasPermission([widg?.widgetProperties?.componentData?.Permission_Code]))
+          {
             
             this.dashBoardAllWidgetsData.push(widg)
-        // }
+         }
        });        
         this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
       });
