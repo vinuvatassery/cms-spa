@@ -59,6 +59,17 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   this.insuraceAddRefundClick$.subscribe((res:any) =>{
     this.changeDetectorRef.markForCheck()
     this.isSubmitted = true;
+    this.financialPremiumsRefundGridLists.forEach(x=>{      
+      if(!x.refundAmount)
+      {
+        x.refundAmountError = "Refund amount is required"
+        return
+      }
+      else
+      {
+        x.refundAmountError = ""
+      }
+    })
     let refundError =   this.financialPremiumsRefundGridLists.filter((x) =>{
       return   !!x.refundAmountError 
     })

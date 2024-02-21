@@ -782,9 +782,45 @@ addNewRefundRx() {
     this.refundRXForm.markAsTouched();
     this.refundRXForm.markAsDirty();
     this.markGridFormTouched();
+debugger
+    this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []).forEach((x: any)=>{
+      
+      if(!x.qtyRefunded)
+      {   
+        x.qtyRefundedValid = false
+        return
+      }
+      else
+      {
+        x.qtyRefundedValid = true
+      }
+
+      if(!x.daySupplyRefunded)
+      {        
+        x.daySupplyRefundedValid = false
+        return
+      }
+      else
+      {
+        x.daySupplyRefundedValid = true
+      }
+      if(!x.refundedAmount)
+      {        
+        x.refundedAmountValid = false
+        return
+      }
+      else
+      {
+        x.refundedAmountValid = true
+      }
+    })
+    this.cdr.detectChanges()
 
     let selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []);
-    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
+    
+
+    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> !(x.qtyRefunded) || (!x.daySupplyRefunded)
+     || (!x.refundedAmount))
     if ((this.refundRXForm.invalid && !this.isEdit) || InValidSelectedRefundPharmacyClaimInput.length >0) {
       return;
     } else {
