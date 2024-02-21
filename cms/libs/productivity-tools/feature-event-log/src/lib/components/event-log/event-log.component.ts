@@ -106,12 +106,12 @@ export class EventLogComponent implements OnInit {
     this.isShowEventLog = !this.isShowEventLog;
   }
 
-  onOpenEventDetailsClicked(template: TemplateRef<unknown>, isSubEvent: boolean, eventId : string|null = null, parentEventLogId : string|null = null): void {
+  onOpenEventDetailsClicked(template: TemplateRef<unknown>, isSubEvent: boolean, parentEventLogId : string|null = null): void {
     this.isSubEvent = isSubEvent;
     this.parentEventLogId = parentEventLogId;
-    if(eventId)
+    if(isSubEvent)
     {
-      this.SubEventList = this.eventResponseList.filter((item : any) => item.parentEventId ? item.parentEventId.toString().toLowerCase() == eventId.toLowerCase() : false);
+      this.SubEventList = this.eventResponseList.filter((item : any) => !!item.parentEventId);
     }
     else
     {

@@ -25,6 +25,7 @@ export class EventDetailComponent implements OnInit {
   @Input() clientCaseEligibilityId: any;
   @Input() parentEventLogId: any;
   @Input() eventList : any
+  @Input() isSubEvent : any;
 
   eventForm!: FormGroup;
   public formUiStyle : UIFormStyle = new UIFormStyle();
@@ -121,7 +122,8 @@ export class EventDetailComponent implements OnInit {
         attachmentNote :  this.eventForm.controls['attachmentNote'].value,
         entityId : this.entityId ? this.entityId.toString() : null,
         entityTypeCode: this.entityType,
-        parentEventLogId : this.parentEventLogId ? this.parentEventLogId : null
+        parentEventLogId : this.parentEventLogId ? this.parentEventLogId : null,
+        isSubEvent : this.isSubEvent
       };
       this.eventLogFacade.addEventData(eventRequestData);
     }
