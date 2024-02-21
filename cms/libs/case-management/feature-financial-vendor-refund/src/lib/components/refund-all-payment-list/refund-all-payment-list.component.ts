@@ -196,16 +196,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       columnDesc: 'Refund Warrant #',
     },
     {
-      columnCode: 'refundAmount',
-      columnDesc: 'Refund Amount',
-    }
-    ,
-    {
-      columnCode: 'originalAmount',
-      columnDesc: 'Original Amount',
-    }
-    ,
-    {
       columnCode: 'indexCode',
       columnDesc: 'Index Code',
     }
