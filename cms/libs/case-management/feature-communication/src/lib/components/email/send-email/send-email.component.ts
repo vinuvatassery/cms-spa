@@ -85,6 +85,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   isButtonsVisible: boolean = true;
   isCCDropdownVisible: boolean = true;
   attachmentCount: number = 0;
+  entityId!: string;
 
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
@@ -105,11 +106,40 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.updateOpenSendEmailFlag();
+    this.loadEmailTemplates();
     if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.communicationEmailTypeCode){
-      this.loadEmailTemplates();
+      this.loadClientAndVendorDraftEmailTemplates();
     }
     else
       this.loadDraftEsignRequest();
+  }
+
+  loadClientAndVendorDraftEmailTemplates() {
+    if(this.clientId){
+      this.entityId = this.clientId;
+    }
+    if(this.vendorId){
+      this.entityId = this.vendorId;
+    }
+    this.loaderService.show();
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId)
+    .subscribe({
+      next: (data: any) =>{
+        if (data) {
+          this.ddlTemplates = this.ddlTemplates.filter((item: any) => item.templateDesc === 'Draft Custom Email');
+          this.ddlTemplates.push(data);
+          this.ref.detectChanges();
+        }else{
+          this.loadEmailTemplates();
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    },
+  });
   }
 
   ngOnDestroy(): void {
@@ -194,7 +224,53 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.emailEditorValueEvent.emit(this.currentEmailData);
     this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
     this.selectedTemplate.toEmailAddress = this.selectedToEmail;
-    this.saveDraftEsignRequest(this.selectedTemplate);
+    if (this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
+    {
+      this.saveDraftEsignRequest(this.selectedTemplate);
+    }else{
+      this.saveEmailNotificationDraft(this.selectedTemplate);
+    }
+  }
+
+  saveEmailNotificationDraft(draftTemplate: any) {
+    this.loaderService.show();
+    let emailRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
+    let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(emailRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
+      if(draftTemplate?.notificationDraftId == undefined || draftTemplate?.notificationDraftId == null){
+        this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
+        .subscribe({
+          next: (data: any) =>{
+          if (data) {
+            this.onCloseSendEmailClicked();
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft');
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.isOpenSendEmailClicked = true;
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+        },
+      });
+    }else{
+        this.communicationFacade.updateSavedClientandVendorEmailTemplate(draftEsignRequest)
+        .subscribe({
+          next: (data: any) =>{
+          if (data) {
+            this.onCloseSendEmailClicked();
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft');
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.isOpenSendEmailClicked = true;
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+        },
+      });
+      }
   }
 
   onCloseSaveForLaterClicked(){
@@ -240,8 +316,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   initiateSendEmailProcess(selectedTemplate: any) {
     this.loaderService.show();
-    let esignRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
-    let formData = this.communicationFacade.prepareClientAndVendorEmailEmailData(esignRequestFormdata, selectedTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
+    let esignRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
+    let formData = this.communicationFacade.prepareClientAndVendorEmailData(esignRequestFormdata, selectedTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
     this.communicationFacade.initiateSendemailRequest(formData, selectedTemplate)
         .subscribe({
           next: (data: any) =>{

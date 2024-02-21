@@ -165,24 +165,25 @@ prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[]) {
 return formData;
 }
 
-prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, isSaveFoLater: boolean) {
+prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any) {
   const formData = new FormData();
     formData.append('toEmailAddress', selectedToEmail ?? '');
     formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
     formData.append('clientId', clientId ?? '');
     formData.append('requestSubject', emailSubject ?? ''); 
     formData.append('loginUserId', loginUserId ?? '');
-    formData.append('cCEmail', selectedCCEmail ?? ''); 
-    formData.append('isSaveForLater', Boolean(isSaveFoLater).toString()); 
+    formData.append('cCEmail', selectedCCEmail ?? '');  
     return formData;
 }
 
-prepareClientAndVendorEmailEmailData(formData: FormData, emailData: any, cerEmailAttachedFiles: any[], vendorId: string) {
-  formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
+prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[], vendorId: string) {
+    formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('vendorId', vendorId ?? '');
+    formData.append('description', emailData?.description ?? '');
+    formData.append('typeCode', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     let i = 0;
-    cerEmailAttachedFiles.forEach((file) => { 
+    clientAndVendorEmailAttachedFiles.forEach((file) => { 
       if(file.rawFile == undefined || file.rawFile == null){
         formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
         formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
@@ -197,5 +198,17 @@ prepareClientAndVendorEmailEmailData(formData: FormData, emailData: any, cerEmai
 
 initiateSendemailRequest(formData: FormData, selectedTemplate: any) {
     return this.emailDataService.sendClientAndVendorEmail(formData);
+}
+
+saveClientAndVendorNotificationForLater(formData: FormData) {
+  return this.emailDataService.saveEmailNotificationForLater(formData);
+}
+
+updateSavedClientandVendorEmailTemplate(formData: FormData) {
+  return this.emailDataService.updateEmailNotificationForLater(formData);
+}
+
+loadDraftNotificationRequest(entityId: string) {
+  return this.emailDataService.getDraftNotification(entityId);
 }
 }

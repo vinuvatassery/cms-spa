@@ -158,8 +158,26 @@ export class EmailDataService {
 
     sendClientAndVendorEmail(formData: FormData) {
         return this.http.post<any>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification`,formData
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications`,formData
         );
+    }
+
+    saveEmailNotificationForLater(formData: FormData) {
+      return this.http.post<any>(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/save-for-later`,formData
+      );
+    }
+
+    updateEmailNotificationForLater(formData: FormData){
+      return this.http.put(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications`,formData
+      );
+    }
+
+    getDraftNotification(entityId: string) {
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${entityId}`
+      );
     }
 }
  
