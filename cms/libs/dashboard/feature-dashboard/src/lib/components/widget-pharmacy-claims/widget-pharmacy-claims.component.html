@@ -33,7 +33,8 @@
       <kendo-chart-series-item *ngFor="let series of pharmacyClaims?.chartData?.series; let outermost = last;"
         [type]="series.type" [startAngle]="-10" [data]="series.data" field="value" categoryField="category"
         colorField="color">
-        <kendo-chart-series-item-labels *ngIf="outermost" [distance]="0" position="bottom" background="none"
+        <kendo-chart-series-item-labels *ngIf="outermost"  background="none" [distance]="0" position="outsideEnd" [margin]="10"
+        [align]="labelAlign"
           [content]="selectedDataCount == 'Claim Count'?labelContent: labelContentAmount">
         </kendo-chart-series-item-labels>
       </kendo-chart-series-item>
