@@ -779,7 +779,7 @@ markGridFormTouched(){
 }
 addNewRefundRx() {
     this.isRefundRxSubmitted = true;
-    this.refundRXForm.markAsTouched();
+    this.refundRXForm.markAllAsTouched();
     this.refundRXForm.markAsDirty();
     this.markGridFormTouched();
 
