@@ -13,6 +13,7 @@ import { Subject, takeUntil } from 'rxjs';
 import {
   LegendLabels,
   LegendLabelsContentArgs,
+  SeriesLabelsAlignment,
   SeriesLabelsContentArgs,
 } from '@progress/kendo-angular-charts';
 @Component({
@@ -34,6 +35,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
     'YTD',
     'Last Year',
   ];
+  public labelAlign: SeriesLabelsAlignment = 'column';
   dataCount = ['Claim Count', 'Claim Amount'];
   @Input() isEditDashboard!: any;
   @Input() dashboardId!: any;
@@ -99,7 +101,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
       TimeFrame: this.selectedTimeFrame,
     };
     this.widgetFacade.loadPharmacyClaimsChart(
-      'E2301551-610C-43BF-B7C9-9B623ED425C3',
+      this.dashboardId,
       payload
     );
     this.widgetFacade.pharmacyClaimsChart$

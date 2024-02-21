@@ -33,8 +33,8 @@
                                              [type]="series.type" [startAngle]="150"
                                               [data]="series.data"
                                              field="value" categoryField="category">
-                      <kendo-chart-series-item-labels *ngIf="outermost"
-                      position="above" background="none" [distance]="5"
+                      <kendo-chart-series-item-labels *ngIf="outermost"   [align]="labelAlign"
+                      background="none" [distance]="0" position="outsideEnd" [margin]="10" 
                                                       [content]="labelContent">
                       </kendo-chart-series-item-labels>
                     </kendo-chart-series-item>
