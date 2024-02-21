@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /** External libraries **/ 
 import { Observable } from 'rxjs/internal/Observable';
 /** Enums **/
-import { HubMethodTypes } from '@cms/shared/util-core';
+import { HubEventTypes } from '@cms/shared/util-core';
 /** Entities **/
 import {  Subject } from 'rxjs';
 import { Todo } from '../entities/todo';
@@ -36,8 +36,8 @@ export class TodoFacade {
   /** Private methods **/
   private loadSignalrReminders() {
     this.signalrReminders$ =
-      this.signalrEventHandlerService.signalrNotifications(
-        HubMethodTypes.Reminder
+      this.signalrEventHandlerService.signalrNotificationsObservable(
+        HubEventTypes.Reminder
       );
   }
 
