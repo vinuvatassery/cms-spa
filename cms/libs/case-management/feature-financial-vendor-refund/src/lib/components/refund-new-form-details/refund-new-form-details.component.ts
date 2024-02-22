@@ -734,15 +734,15 @@ addTpa(event:any){
    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
    let inValid = false;
    if (control === 'qtyRefunded') {
-     inValid == isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
+    inValid = isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0) ? true : false;
      dataItem.qtyRefundedValid = !inValid;
    }
    if (control === 'daySupplyRefunded') {
-     inValid == isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+    inValid = isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0) ? true : false;
      dataItem.daySupplyRefundedValid = !inValid;
    }
    if (control === 'refundedAmount') {
-     inValid == isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
+    inValid = isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0) ? true : false;
      dataItem.refundedAmountValid = !inValid;
    }
    if (inValid) {
@@ -782,7 +782,6 @@ addNewRefundRx() {
     this.refundRXForm.markAsTouched();
     this.refundRXForm.markAsDirty();
     this.markGridFormTouched();
-debugger
     this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []).forEach((x: any)=>{
       
       if(!x.qtyRefunded)
@@ -897,5 +896,46 @@ selectedRxClaimsChangeEvent(event:any){
   this.pharmacyClaimsPaymentReqIds = event
   this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
 }
+validatecardnumber(cardnumber: any): string {
+  const sanitizedValue = cardnumber.replace(/[^\d]/g, '');
+  const regex = /^(\d{0,6})(\d{0,3})/;
+  const matches = sanitizedValue.match(regex);
 
+  if (matches) {
+    return `${matches[1]}${matches[1] && matches[2] ? '-' : ''}${matches[2]}`;
+  }
+
+  return sanitizedValue;
 }
+validateCreditNumber(event: any): void {
+  const inputValue = event.target.value;
+  const formattedValue = this.validatecardnumber(inputValue);
+  event.target.value = formattedValue;
+}
+
+validatePayable(validatePayable: any): string {
+  const sanitizedValue = validatePayable.replace(/[^a-zA-Z\d]/g, '');
+
+  if (/^[a-zA-Z]{2,3}\d{6}-\d{3}$/.test(sanitizedValue)) {
+    return sanitizedValue;
+  }
+
+  const regex = /^([a-zA-Z]{2,3}\d{6})(\d{3})/;
+  const matches = sanitizedValue.match(regex);
+
+  if (matches) {
+    return `${matches[1]}-${matches[2]}`;
+  }
+
+  return sanitizedValue;
+}
+
+validateVoucherPayable(event: any): void {
+  const inputValue = event.target.value;
+  const formattedValue = this.validatePayable(inputValue); // Fix the function name
+  event.target.value = formattedValue;
+}
+}
+
+
+

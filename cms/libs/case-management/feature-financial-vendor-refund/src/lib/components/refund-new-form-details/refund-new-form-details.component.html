@@ -452,8 +452,10 @@
                                   <kendo-formerror *ngIf="!dataItem.daySupplyRefundedValid">Days Supply Refunded is required</kendo-formerror>
                                 </ng-template>
                                 </kendo-grid-column>
-                            <kendo-grid-column field="pmtStatus" title="Refund Amount" [width]="150" [sticky]="true">
-                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                            <kendo-grid-column field="pmtStatus" title="Refund Amount " [width]="150" [sticky]="true">
+                                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" >
+                                    
+                                    
                                     <kendo-numerictextbox
                                     id ="refundedAmount{{tblIndex}}-{{rowIndex}}"
                                     name ="refundedAmount{{tblIndex}}-{{rowIndex}}"
@@ -463,8 +465,10 @@
                                     [min] = "0"
                                     [(ngModel)]="dataItem.refundedAmount"
                                     [ngClass]="ngDirtyInValid(dataItem,'refundedAmount',tblIndex,rowIndex)"
+                                    [format]="'$0.00'"
                                     >
                                   </kendo-numerictextbox>
+                              
                                   <kendo-formerror *ngIf="!dataItem.refundedAmountValid">Refund Amount is required</kendo-formerror>
                                 </ng-template>
                                 <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
@@ -493,7 +497,9 @@
                             <kendo-floatinglabel text="Voucher Payable" >
                                 <kendo-textbox aria-label="Voucher Payable"  [fillMode]="formUiStyle.inputFillMode"
                                 formControlName = "voucherPayable"
-                                [maxlength]="7">
+                                (keyup)="validateVoucherPayable($event)"
+                                [maxlength]="13"
+                                  >
                                 </kendo-textbox >
                             </kendo-floatinglabel>
                         </div>
@@ -503,7 +509,9 @@
                                     formControlName= "creditNumber"
                                     [fillMode]="formUiStyle.inputFillMode"  name="creditNumber"
                                     placeholder="Credit #"
-                                    [maxlength]="6">
+                                    [maxlength]="10"
+                                    (keyup)="validateVoucherPayable($event)"
+                                >
                                 </kendo-textbox >
                             </kendo-floatinglabel>
                         </div>
