@@ -36,7 +36,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   financialPremiumsRefundGridLists!: any[];
  @Input() gridDataResult! : GridDataResult
- @Input() clientId :any 
+ @Input() clientId :any
 @Input() vendorAddressId :any 
  public formUiStyle: UIFormStyle = new UIFormStyle();
   refundNoteValueLength = 0
@@ -177,13 +177,16 @@ initForm(){
        this.totalAmountPaid = this.financialPremiumsRefundGridLists.map(x=> x.amountDue).reduce((a, b) => a + b, 0)  
        const formData =  this.financialPremiumsRefundGridLists &&  this.financialPremiumsRefundGridLists[0]
        this.isSpotPayment = formData.isSpotPayment
-      this.refundForm.patchValue({
+       this.refundForm.patchValue({
         vp: formData.voucherPayabeNbr,
         creditNumber:formData.creditNumber,
         warantNumber:formData.refundWarantNumber ,
         refundNote:formData.refundNote      
        })
-      this.refundForm.controls['depositDate'].setValue(new Date(formData.depositDate));
+       if(formData.depositDate != null && formData.depositDate !="" && formData.depositDate !=undefined)
+       {
+        this.refundForm.controls['depositDate'].setValue(new Date(formData.depositDate));
+       }
     })
     this.insuranceRefundInformationConfirmClicked.emit(
       {...param, 
