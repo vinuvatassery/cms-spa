@@ -22,7 +22,7 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column field="paymentMethodCode" title="Payment Method" [width]="160">
+      <kendo-grid-column field="paymentMethodDesc" title="Payment Method" [width]="160">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -63,7 +63,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template> </kendo-grid-column>
-      <kendo-grid-column field="paymentTypeCode" title="Payment Type" [width]="140">
+      <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="140">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -158,7 +158,7 @@
             <kendo-filter-contains-operator></kendo-filter-contains-operator>
           </kendo-grid-string-filter-menu>
         </ng-template>  </kendo-grid-column>
-      <kendo-grid-column field="paymentStatusCode" title="Payment Status" [width]="160">
+      <kendo-grid-column field="paymentStatusDesc" title="Payment Status" [width]="160">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
             [extra]="false" operator="eq">
@@ -189,10 +189,10 @@
         </ng-template>
       </kendo-grid-column>
 
-      <kendo-grid-column field="creatorId" title="By" [width]="70" [sticky]="true" class="text-center">
+      <kendo-grid-column field="by" title="By" [width]="70" [sticky]="true" class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
           <common-user-photo-icon  
-          [userId]="dataItem.creatorId" 
+          [userId]="dataItem.by" 
           [userFirstName]="dataItem.userFirstName"
           [userLastName]="dataItem.userLastName"
           [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
