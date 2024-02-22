@@ -211,12 +211,12 @@
         <div class="flex-col"  [formGroup]="refundForm" >
             <div class="flex-row">
                 <div class="flex-col flex-col-3">
-                    <kendo-floatinglabel text=" VP">
+                    <kendo-floatinglabel text="Voucher Payable">
                         <kendo-textbox aria-label="VP"  [fillMode]="formUiStyle.inputFillMode"
                         formControlName="vp" >
                         </kendo-textbox>
                     </kendo-floatinglabel>
-                    <kendo-formerror *ngIf="refundForm?.hasError('required','vp') && isSubmitted">VP is required.
+                    <kendo-formerror *ngIf="refundForm?.hasError('required','vp') && isSubmitted">Voucher Payable is required.
                     </kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-3">
