@@ -641,8 +641,12 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
     }
   }
 
-  onProviderNameClick(event:any){
-    this.providerNameClickEvent.emit(event);
+  onProviderNameClick(paymentRequestId:any, type:any){
+    const data ={
+      paymentRequestId,
+      type
+    }
+    this.providerNameClickEvent.emit(data);
   }
 
   onClientClicked(clientId: any) {
