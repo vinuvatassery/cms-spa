@@ -734,15 +734,15 @@ addTpa(event:any){
    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
    let inValid = false;
    if (control === 'qtyRefunded') {
-     inValid == isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
+    inValid = isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0)? true : false;
      dataItem.qtyRefundedValid = !inValid;
    }
    if (control === 'daySupplyRefunded') {
-     inValid == isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+    inValid = isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0) ? true : false;
      dataItem.daySupplyRefundedValid = !inValid;
    }
    if (control === 'refundedAmount') {
-     inValid == isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
+    inValid = isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0) ? true : false;
      dataItem.refundedAmountValid = !inValid;
    }
    if (inValid) {
