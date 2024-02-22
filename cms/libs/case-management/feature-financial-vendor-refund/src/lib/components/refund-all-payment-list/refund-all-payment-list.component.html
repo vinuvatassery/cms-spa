@@ -5,14 +5,15 @@
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
       <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-        textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
+        textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"
+        (valueChange)="searchColumnChangeHandler($event)">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" aria-label="Search case"
+      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="refundAllPaymentSearch($event)" aria-label="Search case"
         rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
@@ -27,7 +28,17 @@
     </button>
   </span>
 </section>
-
+<div class="table-sorted-info">
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning">
+    <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+      warning
+    </span>
+    <span *ngIf="showDateSearchWarning">
+      The '/' symbol can only be used with a date. The date format should be
+      [MM/DD/YYYY].
+    </span>
+  </span>
+</div>
 <!-- Sorted Info -->
 <div class="table-sorted-info">
   Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>

@@ -113,8 +113,9 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
       .subscribe({
         next: (response) => {
           if (response) {          
-              
+            
             this.programExpenses = response;
+          
             if(this.programExpenses && this.programExpenses?.chartData && this.programExpenses?.chartData?.categoryAxis)
             this.programExpenses.chartData.categoryAxis.title ={
                   'text':this.selectFrequency == 'M'? 'Month' : this.selectFrequency == 'Q'? 'Quarter' :

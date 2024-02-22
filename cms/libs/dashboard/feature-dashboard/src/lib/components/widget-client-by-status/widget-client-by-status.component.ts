@@ -16,6 +16,7 @@ import { UserDataService } from '@cms/system-config/domain';
 import {
   LegendLabelsContentArgs,
   SeriesClickEvent,
+  SeriesLabelsAlignment,
   SeriesLabelsContentArgs,
 } from '@progress/kendo-angular-charts';
 import { Subject, takeUntil } from 'rxjs';
@@ -33,6 +34,7 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy {
     { clientFullName: 'All Clients', userId: null },
     { clientFullName: 'My Clients', userId: '' },
   ];
+  public labelAlign: SeriesLabelsAlignment = 'column';
   myClients: boolean = false;
   totalStatusCount: number = 0;
   selectedActiveClientByStatus: any = 'All Clients';

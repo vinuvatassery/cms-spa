@@ -150,6 +150,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
           this.clientCaseEligibilityId = '';
           this.initialize();
+          this.loadClientProfileInfoEventHandler();
         }
       });
   }

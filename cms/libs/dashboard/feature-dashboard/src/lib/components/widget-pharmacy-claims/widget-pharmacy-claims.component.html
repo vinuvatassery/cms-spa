@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<common-dashboard-loader-panel *ngIf="!this.pharmacyClaims?.chartData?.series[0]?.data[0]?.value && !this.pharmacyClaims?.chartData?.series[0]?.data[1]?.value" ></common-dashboard-loader-panel>
+<common-dashboard-loader-panel *ngIf="!this.pharmacyClaims?.chartData?.series[0]?.data[0]?.value && !this.pharmacyClaims?.chartData?.series[0]?.data[1]?.value && !isEditDashboard" ></common-dashboard-loader-panel>
 <div class="dashboard-cards-container" *ngIf="this.pharmacyClaims?.chartData?.series[0]?.data[0]?.value > 0 || this.pharmacyClaims?.chartData?.series[0]?.data[1]?.value > 0">
 
   <kendo-chart class="dash_chart" >
@@ -33,7 +33,8 @@
       <kendo-chart-series-item *ngFor="let series of pharmacyClaims?.chartData?.series; let outermost = last;"
         [type]="series.type" [startAngle]="-10" [data]="series.data" field="value" categoryField="category"
         colorField="color">
-        <kendo-chart-series-item-labels *ngIf="outermost" [distance]="0" position="bottom" background="none"
+        <kendo-chart-series-item-labels *ngIf="outermost"  background="none" [distance]="0" position="outsideEnd" [margin]="10"
+        [align]="labelAlign"
           [content]="selectedDataCount == 'Claim Count'?labelContent: labelContentAmount">
         </kendo-chart-series-item-labels>
       </kendo-chart-series-item>

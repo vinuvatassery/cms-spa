@@ -14,6 +14,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
   LegendLabelsContentArgs,
   SeriesClickEvent,
+  SeriesLabels,
+  SeriesLabelsAlignment,
   SeriesLabelsContentArgs,
 } from '@progress/kendo-angular-charts';
 import { CaseScreenTab } from '@cms/case-management/domain';
@@ -38,10 +40,18 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef,
     private readonly router: Router
   ) {}
+
+  public seriesLabels: SeriesLabels = {
+    visible: true, // Note that visible defaults to false
+    padding: 30,
+    font: "bold 16px Arial, sans-serif",
+  };
   data = [
     { clientFullName: 'All Clients', userId: null },
     { clientFullName: 'My Clients', userId: '' },
   ];
+
+  public labelAlign: SeriesLabelsAlignment = 'column';
   myClients: boolean = false;
   totalGroupCount: number = 0;
   selectedActiveClientByGroup: any = 'All Clients';
@@ -153,4 +163,6 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+ 
 }

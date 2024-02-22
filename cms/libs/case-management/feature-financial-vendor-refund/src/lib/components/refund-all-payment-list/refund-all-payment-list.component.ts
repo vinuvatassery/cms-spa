@@ -21,6 +21,8 @@ import { BehaviorSubject, Subject, first } from 'rxjs';
 import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'cms-refund-all-payment-list',
   templateUrl: './refund-all-payment-list.component.html',
@@ -52,8 +54,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   @ViewChild('unBatchRefundsDialogTemplate', { read: TemplateRef })
   unBatchRefundsDialogTemplate!: TemplateRef<any>;
   @ViewChild('deleteRefundsConfirmationDialogTemplate', { read: TemplateRef })
-  deleteRefundsConfirmationDialogTemplate!: TemplateRef<any>;
-
+  deleteRefundsConfirmationDialogTemplate!: TemplateRef<any>; 
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   private addEditRefundFormDialog: any;
 
   public state!: State;
@@ -194,16 +196,6 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       columnDesc: 'Refund Warrant #',
     },
     {
-      columnCode: 'refundAmount',
-      columnDesc: 'Refund Amount',
-    }
-    ,
-    {
-      columnCode: 'originalAmount',
-      columnDesc: 'Original Amount',
-    }
-    ,
-    {
       columnCode: 'indexCode',
       columnDesc: 'Index Code',
     }
@@ -222,6 +214,12 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       columnCode: 'refundNote',
       columnDesc: 'Refund Note',
     }
+    ,
+    {
+      columnCode: 'depositDate',
+      columnDesc: 'Deposit Date',
+    }
+
   ];
   showExportLoader = false;
 
@@ -242,6 +240,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
   gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
   allRefundProfilePhotoSubject = new Subject();
+  showDateSearchWarning = false;
+
 
   /** Constructor **/
   constructor(
@@ -249,6 +249,8 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     private financialVendorRefundFacade: FinancialVendorRefundFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private dialogService: DialogService,
+    private readonly configurationProvider: ConfigurationProvider,
+    public readonly intl: IntlService,
     private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade,) {
       this.selectableSettings = {
         checkboxOnly: this.checkboxOnly,
@@ -370,17 +372,34 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   }
 
   searchColumnChangeHandler(data: any) {
-    this.onChange('')
+    this.searchValue = '';
+    this.filter = [];
+    this.refundAllPaymentSearch(this.searchValue)
+  }
+
+  refundAllPaymentSearch(searchValue: any) { 
+    const isDateSearch = searchValue.includes('/');
+    this.showDateSearchWarning = (!isDateSearch && this.selectedColumn === 'depositDate') && searchValue !== '';
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    if (isDateSearch && !searchValue) return;
+    this.onChange(searchValue);
   }
 
   onChange(data: any) {
     this.defaultGridState();
+    if (this.selectedColumn === 'depositDate' && (!this.isValidDate(data) && data !== '')) {
+      return;
+    }
     let operator = 'contains';
 
     if (
       this.selectedColumn === 'refundAmount' ||
       this.selectedColumn === 'originalAmount'
     ) {
+      operator = 'eq';
+    }
+    if(this.selectedColumn === 'depositDate'){
+      data = this.intl.formatDate(data.replace(/\s/g, ""),this.dateFormat);
       operator = 'eq';
     }
 
@@ -831,6 +850,23 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   onClientClicked(clientId: any) {
     this.route.navigate([`/case-management/cases/case360/${clientId}`]);
     this.closeRecentClaimsModal(true);
+  }
+
+  private isValidDate = (searchValue: any) =>
+    isNaN(searchValue) && !isNaN(Date.parse(searchValue));
+
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configurationProvider?.appSettings?.dateFormat
+        );
+      } else {
+        return '';
+      }
+    }
+    return searchValue;
   }
 
   selectAll: boolean = false;
