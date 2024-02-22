@@ -734,15 +734,15 @@ addTpa(event:any){
    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
    let inValid = false;
    if (control === 'qtyRefunded') {
-     inValid == isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
+    inValid = isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0)? true : false;
      dataItem.qtyRefundedValid = !inValid;
    }
    if (control === 'daySupplyRefunded') {
-     inValid == isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+    inValid = isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0) ? true : false;
      dataItem.daySupplyRefundedValid = !inValid;
    }
    if (control === 'refundedAmount') {
-     inValid == isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
+    inValid = isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0) ? true : false;
      dataItem.refundedAmountValid = !inValid;
    }
    if (inValid) {
@@ -885,6 +885,22 @@ debugger
       }
     }
 
+}
+validateFormat(cardnumber: any): string {
+  const sanitizedValue = cardnumber.replace(/[^\d]/g, '');
+  const regex = /^(\d{0,6})(\d{0,3})/;
+  const matches = sanitizedValue.match(regex);
+ 
+  if (matches) {
+    return `${matches[1]}${matches[1] && matches[2] ? '-' : ''}${matches[2]}`;
+  }
+ 
+  return sanitizedValue;
+}
+validateCreditNumber(event: any): void {
+  const inputValue = event.target.value;
+  const formattedValue = this.validateFormat(inputValue);
+  event.target.value = formattedValue;
 }
 onRefundNoteValueChange(event: any) {
   this.refundNoteValueLength = event.length

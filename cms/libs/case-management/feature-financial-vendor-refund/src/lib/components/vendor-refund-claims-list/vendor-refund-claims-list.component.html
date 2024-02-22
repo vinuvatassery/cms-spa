@@ -34,7 +34,7 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
       </kendo-grid-column>
-      <kendo-grid-column title="Service Start Date" field="serviceStartDate" [width]="180"> 
+      <kendo-grid-column title="Service Date Range" field="serviceStartDate" [width]="180"> 
           <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.serviceStartDate| date: 'MM/dd/yyyy' }} - {{ dataItem.serviceEndDate| date: 'MM/dd/yyyy' }}
     </ng-template>
