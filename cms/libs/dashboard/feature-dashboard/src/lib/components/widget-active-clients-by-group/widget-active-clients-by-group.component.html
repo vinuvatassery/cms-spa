@@ -30,9 +30,7 @@
       <kendo-chart-series-item [autoFit]="true" *ngFor="let series of activeClientsByGroup?.chartData?.series; let outermost = last;"
         [type]="series.type" [startAngle]="150" [data]="series.data" field="value" categoryField="category"
         colorField="color">
-        <kendo-chart-series-item-labels font="14px Neue Helvetica Roman" *ngIf="outermost"  position="outsideEnd" [margin]="10"  [align]="labelAlign"
-          background="none" [content]="labelContent">
-        </kendo-chart-series-item-labels>
+       
       </kendo-chart-series-item>
     </kendo-chart-series>
   </kendo-chart>

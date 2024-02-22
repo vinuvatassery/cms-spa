@@ -80,7 +80,7 @@ const routes: Routes = [
    
     path: 'forbidden' , component : ForbiddenComponent 
   },
-  { path: '', redirectTo: 'case-management', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 ];
 
 @NgModule({
