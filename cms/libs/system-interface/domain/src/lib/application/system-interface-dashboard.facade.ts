@@ -114,20 +114,20 @@ export class SystemInterfaceDashboardFacade {
   }
 
   getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string, params: any) {
- 
+
     return this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode, params);
-    
+
   }
 
-  getStatusArray():string[]{
+  getStatusArray(): string[] {
     return Object.values(SystemInterfaceActivityStatusCode)
   }
 
-  getStatusDescriptionArray():string[]{
+  getStatusDescriptionArray(): string[] {
     return Object.values(SystemInterfaceActivityStatusCodeDescription)
   }
 
-  getEecProcessTypeCodeArray():string[]{
+  getEecProcessTypeCodeArray(): string[] {
     return Object.values(SystemInterfaceEecProcessTypeCode)
   }
 
@@ -149,6 +149,17 @@ export class SystemInterfaceDashboardFacade {
           this.webLogsDataLoaderSubject.next(false);
         },
       });
+  }
+
+  getDocumentDownload(fileId: string) {
+    return this.systemInterfaceDashboardService.getDocumentDownload(fileId).subscribe({
+      next: (dataResponse: any) => {
+
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });;
   }
   // ----------------------------------
 

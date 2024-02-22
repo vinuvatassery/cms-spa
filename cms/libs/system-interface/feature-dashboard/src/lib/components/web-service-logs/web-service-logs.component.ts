@@ -24,6 +24,11 @@ import { Subject, Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
+
+  downloadFile(filePath: any) {
+    this.systemInterfaceDashboardFacade.getDocumentDownload(filePath)
+  }
+
   // UI Variables
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -70,9 +75,9 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   // Filtering Variables
   statusFilter = '';
   processFilter = '';
-  public statusArray : string[];
-  public statusArrayDesc : string[];
-  public processArray : string[];
+  public statusArray: string[];
+  public statusArrayDesc: string[];
+  public processArray: string[];
   interfaceProcessBatchFilter = '';
   dateColumns = ['startDate'];
 
@@ -83,7 +88,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
   lovsSubscription: Subscription | undefined;
 
   constructor(
-    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade) { 
+    private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade) {
 
     this.statusArray = systemInterfaceDashboardFacade.getStatusArray()
     this.statusArrayDesc = systemInterfaceDashboardFacade.getStatusDescriptionArray()
@@ -108,7 +113,7 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
     const filterList = [];
-    if(stateData.filter?.filters.length > 0){
+    if (stateData.filter?.filters.length > 0) {
       for (const filter of stateData.filter.filters) {
         filterList.push(this.gridColumns[filter.filters[0].field]);
       }
