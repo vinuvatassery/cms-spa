@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { Legend, LegendLabels, LegendMarkers } from '@progress/kendo-angular-charts';
 import { Subject, takeUntil } from 'rxjs'; 
 
 
@@ -15,7 +16,22 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
   programExpenses: any; 
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
-
+  labels: Legend  = { 
+    position:'top',
+    align:'center',
+    orientation:'horizontal',
+    labels:{
+      font: "14px Neue Helvetica Roman ",
+      margin: 5
+      
+    },
+    markers:{
+      type: 'circle',
+      width: 10,
+      height: 10
+    }
+  };
+ 
 
   public isChecked = false;
   dataExp  = [

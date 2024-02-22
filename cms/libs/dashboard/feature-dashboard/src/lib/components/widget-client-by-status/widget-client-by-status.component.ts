@@ -14,7 +14,9 @@ import { WidgetFacade } from '@cms/dashboard/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { UserDataService } from '@cms/system-config/domain';
 import {
+  LegendLabels,
   LegendLabelsContentArgs,
+  LegendMarkers,
   SeriesClickEvent,
   SeriesLabelsAlignment,
   SeriesLabelsContentArgs,
@@ -42,6 +44,17 @@ export class WidgetClientByStatusComponent implements OnInit, OnDestroy {
   @Input() dashboardId!: any;
   @Output() removeWidget = new EventEmitter<string>();
   userId: any;
+  labels: LegendLabels = {
+    content: this.legendContent,
+    font: "14px Neue Helvetica Roman ",
+    margin: 5
+  };
+  markers: LegendMarkers = {
+    type: 'circle',
+    width: 10,
+    height: 10
+  }
+  
   constructor(
     private widgetFacade: WidgetFacade,
     private readonly userDataService: UserDataService,
