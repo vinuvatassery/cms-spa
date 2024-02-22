@@ -581,13 +581,14 @@
 
 </kendo-dialog-actions>
 <ng-template #providerDetailsTemplate>
-    <cms-refund-claims-provider-info
+    <cms-financial-premiums-provider-info
     [paymentRequestId]="paymentRequestId"
     (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
     (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
     (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
     [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-    [paymentMethodCode$]="paymentMethodCode$"></cms-refund-claims-provider-info>
+    [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+
 </ng-template>
 
 

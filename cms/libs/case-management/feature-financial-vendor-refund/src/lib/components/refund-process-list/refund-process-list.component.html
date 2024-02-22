@@ -68,7 +68,7 @@
 
     <kendo-grid-column field="VendorName" title="Vendor" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button  [attr.aria-label]="dataItem.vendorName" (click)="onProviderNameClick(dataItem.paymentRequestId)"kendoButton look="flat" class="card-link-button">
+        <button  [attr.aria-label]="dataItem.vendorName" (click)="onProviderNameClick(dataItem.paymentRequestId, dataItem.type)"kendoButton look="flat" class="card-link-button">
           {{ dataItem.vendorName  }}
         </button>
       </ng-template>
@@ -365,7 +365,7 @@
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="claimsType" [includeServiceSubTypeFilter]="false"
-      (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-recent-premiums-list>
+      (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick($event,'INSURANCE_PREMIUM')"></cms-financial-premiums-recent-premiums-list>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
