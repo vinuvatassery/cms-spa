@@ -904,7 +904,6 @@ validatecardnumber(cardnumber: any): string {
   if (matches) {
     return `${matches[1]}${matches[1] && matches[2] ? '-' : ''}${matches[2]}`;
   }
-
   return sanitizedValue;
 }
 validateCreditNumber(event: any): void {
@@ -912,7 +911,6 @@ validateCreditNumber(event: any): void {
   const formattedValue = this.validatecardnumber(inputValue);
   event.target.value = formattedValue;
 }
-
 validatePayable(validatePayable: any): string {
   const sanitizedValue = validatePayable.replace(/[^a-zA-Z\d]/g, '');
 
@@ -929,13 +927,9 @@ validatePayable(validatePayable: any): string {
 
   return sanitizedValue;
 }
-
 validateVoucherPayable(event: any): void {
   const inputValue = event.target.value;
   const formattedValue = this.validatePayable(inputValue); // Fix the function name
   event.target.value = formattedValue;
 }
 }
-
-
-

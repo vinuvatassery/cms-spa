@@ -454,8 +454,6 @@
                                 </kendo-grid-column>
                             <kendo-grid-column field="pmtStatus" title="Refund Amount " [width]="150" [sticky]="true">
                                 <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex" >
-                                    
-                                    
                                     <kendo-numerictextbox
                                     id ="refundedAmount{{tblIndex}}-{{rowIndex}}"
                                     name ="refundedAmount{{tblIndex}}-{{rowIndex}}"
@@ -468,7 +466,6 @@
                                     [format]="'$0.00'"
                                     >
                                   </kendo-numerictextbox>
-                              
                                   <kendo-formerror *ngIf="!dataItem.refundedAmountValid">Refund Amount is required</kendo-formerror>
                                 </ng-template>
                                 <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
