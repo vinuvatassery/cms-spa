@@ -44,8 +44,12 @@ export class VendorRefundPageComponent
   allRefundProfilePhoto$ = this.financialVendorRefundFacade.allRefundProfilePhotoSubject;
 
   //provider panel
-  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
-  providerDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('premiumProviderDetailsTemplate', { read: TemplateRef })
+  premiumProviderDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('tpaProviderDetailsTemplate', { read: TemplateRef })
+  tpaProviderDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('pharmacyProviderDetailsTemplate', { read: TemplateRef })
+  pharmacyProviderDetailsTemplate!: TemplateRef<any>;
   providerDetailsDialog: any
   paymentRequestId: any;
 
@@ -132,10 +136,50 @@ export class VendorRefundPageComponent
   }
 
 //provider panel
+
   onProviderNameClick(event:any){
-    this.paymentRequestId = event
+    if(event.type == 'TPA'){
+      this.onTpaProviderNameClick(event)
+    }
+    if(event.type == 'INSURANCE_PREMIUM'){
+      this.onPremiumProviderNameClick(event)
+
+    }
+    if(event.type == 'PHARMACY'){
+      this.onPharmacyProviderNameClick(event)
+
+    }
+  }
+  onTpaProviderNameClick(event:any){
+    this.paymentRequestId = event.paymentRequestId
     this.providerDetailsDialog = this.dialogService.open({
-      content: this.providerDetailsTemplate,
+      content: this.tpaProviderDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+
+  }
+
+  onPremiumProviderNameClick(event:any){
+    this.paymentRequestId = event.paymentRequestId
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.premiumProviderDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+
+  }
+
+  onPharmacyProviderNameClick(event:any){
+    this.paymentRequestId = event.paymentRequestId
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.pharmacyProviderDetailsTemplate,
       animation:{
         direction: 'left',
         type: 'slide',
