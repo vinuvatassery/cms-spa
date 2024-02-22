@@ -19,7 +19,7 @@
                         <h3>{{totalStatusCount}}</h3>
                         Clients
                       </ng-template>
-                      <kendo-chart-legend [labels]="{ content: legendContent }">
+                      <kendo-chart-legend [labels]="labels"  [markers]="markers"  >
                   </kendo-chart-legend>
                   <kendo-chart-area background="none"></kendo-chart-area>
                   <kendo-chart-tooltip>
@@ -29,12 +29,12 @@
                     </ng-template>
                   </kendo-chart-tooltip>
                   <kendo-chart-series>
-                    <kendo-chart-series-item *ngFor="let series of activeClientsByStatus?.chartData?.series; let outermost = last;"
+                    <kendo-chart-series-item   [autoFit]="true" *ngFor="let series of activeClientsByStatus?.chartData?.series; let outermost = last;"
                                              [type]="series.type" [startAngle]="150"
                                               [data]="series.data"
                                              field="value" categoryField="category">
-                      <kendo-chart-series-item-labels *ngIf="outermost"   [align]="labelAlign"
-                      background="none" [distance]="0" position="outsideEnd" [margin]="10" 
+                      <kendo-chart-series-item-labels font="14px Neue Helvetica Roman" *ngIf="outermost"   [align]="labelAlign"
+                      background="none"   position="outsideEnd" [margin]="10" 
                                                       [content]="labelContent">
                       </kendo-chart-series-item-labels>
                     </kendo-chart-series-item>

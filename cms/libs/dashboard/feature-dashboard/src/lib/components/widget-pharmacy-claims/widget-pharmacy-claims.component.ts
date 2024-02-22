@@ -11,8 +11,10 @@ import { WidgetFacade } from '@cms/dashboard/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs';
 import {
+  Legend,
   LegendLabels,
   LegendLabelsContentArgs,
+  LegendMarkers,
   SeriesLabelsAlignment,
   SeriesLabelsContentArgs,
 } from '@progress/kendo-angular-charts';
@@ -42,8 +44,14 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
   @Output() removeWidget = new EventEmitter<string>();
   labels: LegendLabels = {
     content: this.legendLabelCount,
+    font: "14px Neue Helvetica Roman",
+    margin: 5
   };
-
+  markers: LegendMarkers = {
+    type: 'circle',
+    width: 10,
+    height: 10
+  }
   constructor(
     private widgetFacade: WidgetFacade,
     private changeDetectorRef: ChangeDetectorRef
