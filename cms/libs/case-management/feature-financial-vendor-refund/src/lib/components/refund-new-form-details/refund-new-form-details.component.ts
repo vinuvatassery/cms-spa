@@ -404,9 +404,9 @@ onSelectedRxClaimsChangeEvent(event:any){
       }
       this.tpaRefundGridLists = [...this.tpaRefundGridLists]
       this.tpaRefundGridLists.forEach(x=>{
-        x.serviceStartDate =new Date(x.serviceStartDate);
-        x.serviceEndDate =new Date(x.serviceEndDate);
-        x.reconciledDate =  x.reconciledDate ? new Date(x.reconciledDate) : new Date()
+        x.serviceStartDate = x.serviceStartDate ? new Date(x.serviceStartDate) : null;
+        x.serviceEndDate = x.serviceEndDate ? new Date(x.serviceEndDate) : null;
+        x.reconciledDate =  x.reconciledDate ? new Date(x.reconciledDate): null;
         x.totalAmount = x.tpaInvoice.reduce((accumulator : number, obj : any) => accumulator + obj.serviceCost, 0);
       })
       this.claimsCount = this.tpaRefundGridLists.length
