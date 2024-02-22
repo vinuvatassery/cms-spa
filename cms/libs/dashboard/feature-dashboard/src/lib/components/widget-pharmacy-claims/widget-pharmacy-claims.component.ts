@@ -37,7 +37,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
     'YTD',
     'Last Year',
   ];
-  public labelAlign: SeriesLabelsAlignment = 'column';
+  public labelAlign: SeriesLabelsAlignment = 'circle';
   dataCount = ['Claim Count', 'Claim Amount'];
   @Input() isEditDashboard!: any;
   @Input() dashboardId!: any;
