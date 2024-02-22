@@ -15,8 +15,8 @@ export class EventDataService {
     private readonly configurationProvider: ConfigurationProvider) {}
 
   /** Public methods **/
-  loadEvents(entityId: any, params: any): Observable<Event[]> {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/${entityId}/by-entity-id`, params);
+  loadEvents(entityId: any, params: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/by-entity-id`, params);
   }
 
   loadDdlEvents() {

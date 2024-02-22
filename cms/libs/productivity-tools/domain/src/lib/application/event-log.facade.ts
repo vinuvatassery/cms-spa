@@ -10,7 +10,7 @@ import { EventDataService } from '../infrastructure/event.data.service';
 @Injectable({ providedIn: 'root' })
 export class EventLogFacade {
   /** Private properties **/
-  private eventsSubject = new Subject<Event[]>();
+  private eventsSubject = new Subject<any>();
   private ddlEventsSubject = new Subject<any[]>();
 
   /** Public properties **/

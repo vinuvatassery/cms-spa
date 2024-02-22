@@ -46,7 +46,7 @@
       <li *ngFor="let eventLog of events; let i = index" aria-label="event log menu item" class="event-log-list_items">
         <section>
           <div class="items-head">
-            <p class="items-head_label">{{eventLog.eventTypeCode}}</p>
+            <p class="items-head_label">{{eventLog.eventDesc}}</p>
             <p class="items-head_info">
               {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by <span class="items-head_info-user">Sara Lisa</span>
             </p>
@@ -67,9 +67,9 @@
           <li aria-label="event log menu item" class="event-log-list_items">
             <section>
               <div class="items-head">
-                <p class="items-head_label">{{subEventLog.eventTypeCode}}</p>
+                <p class="items-head_label">{{subEventLog.eventDesc}}</p>
                 <p class="items-head_info">
-                  {{subEventLog.createionTime | date: 'MM-dd.-yyyy'}} by
+                  {{subEventLog.createionTime | date: 'MM-dd-yyyy'}} by
                   <span class="items-head_info-user">Lorem jocks</span>
                 </p>
               </div>
@@ -87,80 +87,6 @@
         <!-- Event sub list items -->
       </li>
 
-
-
-
-
-
-
-
-      <!-- Event list items -->
-      <li aria-label="event log menu item" class="event-log-list_items">
-        <section>
-          <div class="items-head">
-            <p class="items-head_label">Event Type Two</p>
-            <p class="items-head_info">
-              09-01-2022 by
-              <span class="items-head_info-user">Philip Lisa</span>
-            </p>
-          </div>
-          <div class="items-body">
-            <button kendoButton class="k-icon-button small-i-btn add-sub-button" title="New sub-event"
-              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)" aria-label="New sub-event">
-              <span class="material-icons" aria-label="New sub-event" aria-hidden="true">add</span>
-            </button>
-            <span class="items-body_details">Sollicitudin elit. Integer nibh tellus, sollicitudin vitae ante
-              vel, fermentum consequat leo. Nunc scelerisque purus ex, eget
-              eleifend ligula convallis vitae. Pellentesque habitant morbi
-              tristique</span>
-            <span class="text-primary text-underline c-pointer">Read More</span>
-          </div>
-        </section>
-      </li>
-      <!-- Event list items -->
-      <li aria-label="event log menu item" class="event-log-list_items">
-        <section>
-          <div class="items-head">
-            <p class="items-head_label">Event Type Three</p>
-            <p class="items-head_info">
-              09-01-2022 by <span class="items-head_info-user">Dora Lisa</span>
-            </p>
-          </div>
-          <div class="items-body">
-            <button kendoButton class="k-icon-button small-i-btn add-sub-button" title="New sub-event"
-              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)" aria-label="New sub-event">
-              <span class="material-icons" aria-label="New sub-event" aria-hidden="true">add</span>
-            </button>
-            <span class="items-body_details">Llicitudin elit. Integer nibh tellus, sollicitudin vitae ante
-              vel, fermentum consequat leo. Nunc scelerisque purus ex, eget
-              eleifend ligula convallis vitae. Pellentesque habitant morbi
-              tristique</span>
-            <span class="text-primary text-underline c-pointer">Read More</span>
-          </div>
-        </section>
-      </li>
-      <!-- Event list items -->
-      <li aria-label="event log menu item" class="event-log-list_items">
-        <section>
-          <div class="items-head">
-            <p class="items-head_label">Event Type Four</p>
-            <p class="items-head_info">
-              09-01-2022 by <span class="items-head_info-user">Kill Lisa</span>
-            </p>
-          </div>
-          <div class="items-body">
-            <button kendoButton class="k-icon-button small-i-btn add-sub-button" title="New sub-event"
-              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)" aria-label="New sub-event">
-              <span class="material-icons" aria-label="New sub-event" aria-hidden="true">add</span>
-            </button>
-            <span class="items-body_details">Integer elit. Integer nibh tellus, sollicitudin vitae ante vel,
-              fermentum consequat leo. Nunc scelerisque purus ex, eget eleifend
-              ligula convallis vitae. Pellentesque habitant morbi
-              tristique</span>
-            <span class="text-primary text-underline c-pointer">Read More</span>
-          </div>
-        </section>
-      </li>
     </ul>
   </div>
 </div>

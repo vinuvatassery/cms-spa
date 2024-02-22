@@ -7,11 +7,12 @@ import {
   OnInit,
   Output,
   TemplateRef,
-} from '@angular/core'; 
+} from '@angular/core';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 
 @Component({
   selector: 'productivity-tools-event-log',
@@ -29,38 +30,39 @@ export class EventLogComponent implements OnInit {
   isShowEventLog = false;
   isOpenEventLogDetails = false;
   isShownSearch = false;
-  isAddEventDialogOpen : any;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  isAddEventDialogOpen: any;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
-      buttonType:"btn-h-primary",
-      text: "Sort Ascending",
-      icon: "arrow_upward",
-      click: (): void => {
-      },
+      buttonType: 'btn-h-primary',
+      text: 'Sort Ascending',
+      icon: 'arrow_upward',
+      click: (): void => {},
     },
     {
-      buttonType:"btn-h-primary",
-      text: "Sort Descending",
-      icon: "arrow_downward",
-      click: (): void => {
-      },
+      buttonType: 'btn-h-primary',
+      text: 'Sort Descending',
+      icon: 'arrow_downward',
+      click: (): void => {},
     },
     {
-      buttonType:"btn-h-primary",
-      text: "Filter",
-      icon: "filter_list",
-      click: (): void => {
-      },
+      buttonType: 'btn-h-primary',
+      text: 'Filter',
+      icon: 'filter_list',
+      click: (): void => {},
     },
   ];
+  filterData: any = { logic: 'and', filters: [] };
 
   /** Constructor **/
-  
-  constructor(private readonly eventLogFacade: EventLogFacade, private dialogService: DialogService,
-    private cd: ChangeDetectorRef) {}
+
+  constructor(
+    private readonly eventLogFacade: EventLogFacade,
+    private dialogService: DialogService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -70,7 +72,33 @@ export class EventLogComponent implements OnInit {
 
   /** Private methods **/
   private loadEvents(): void {
-    this.eventLogFacade.loadEvents(1, null);
+    this.createFilterData('');
+    const paginationData = {
+      skipCount: 0,
+      pagesize: 10,
+      sortColumn: 'creationTime',
+      sortType: "desc",
+      filter: JSON.stringify(this.filterData),
+    };
+    this.eventLogFacade.loadEvents("1", paginationData);
+  }
+
+  createFilterData(searchText: string){
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: 'entityId',
+              operator: 'contains',
+              value: "1",
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
   }
 
   private subscribeEvents() {
@@ -79,9 +107,6 @@ export class EventLogComponent implements OnInit {
       this.cd.detectChanges();
     });
   }
-
- 
- 
 
   onShowSearchClicked() {
     this.isShownSearch = !this.isShownSearch;
@@ -94,13 +119,15 @@ export class EventLogComponent implements OnInit {
 
   onOpenEventDetailsClicked(template: TemplateRef<unknown>): void {
     this.isAddEventDialogOpen = this.dialogService.open({
-      content: template, 
+      content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
-    }); 
+    });
   }
   onCloseEventDetailsClicked(data: any) {
-    if (data) { 
+    if (data) {
       this.isAddEventDialogOpen.close();
     }
   }
+
+  
 }
