@@ -430,13 +430,13 @@
                                     [ngClass]="ngDirtyInValid(dataItem,'qtyRefunded',tblIndex,rowIndex)"
                                     >
                                   </kendo-numerictextbox>
-                                  <kendo-formerror *ngIf="!dataItem.qtyRefundedValid">Qty Refunded is required</kendo-formerror>
+                                  <kendo-formerror *ngIf="isAddClicked && !dataItem.qtyRefundedValid">Qty Refunded is required</kendo-formerror>
                               </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="daySupplyRefunded" title="Days Supply Refunded" [width]="160"
                                 [sticky]="true">
                                 <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-numerictextbox
+                                    <kendo-numerictextbox                                    
                                     id ="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
                                     name ="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
                                     [fillMode]= "formUiStyle.inputFillMode"
@@ -449,7 +449,10 @@
                                     [ngClass]="ngDirtyInValid(dataItem,'daySupplyRefunded',tblIndex,rowIndex)"
                                     >
                                   </kendo-numerictextbox>
-                                  <kendo-formerror *ngIf="!dataItem.daySupplyRefundedValid">Days Supply Refunded is required</kendo-formerror>
+                                  
+                                  <kendo-formerror *ngIf="isAddClicked && !dataItem.daySupplyRefundedValid">Days Supply Refunded is required</kendo-formerror>
+                                  <kendo-formerror *ngIf="isAddClicked && !dataItem.daySupplyRefundedRatioValid">Days Supply Refunded can not be more than the RX supply per Rx qty</kendo-formerror>
+                                  
                                 </ng-template>
                                 </kendo-grid-column>
                             <kendo-grid-column field="pmtStatus" title="Refund Amount" [width]="150" [sticky]="true">
