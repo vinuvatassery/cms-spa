@@ -4,7 +4,7 @@
             <div class="dash-header-with-filters">
             <h5>INSURANCE TYPE & FPL</h5>
             </div>           
-       <common-dashboard-loader-panel *ngIf="!this.insuranceTypeFPLStats" ></common-dashboard-loader-panel>
+       <common-dashboard-loader-panel *ngIf="!this.insuranceTypeFPLStats && !isEditDashboard" ></common-dashboard-loader-panel>
                 
       <div class="dashboard-cards-container" *ngIf="this.insuranceTypeFPLStats?.length > 0">
             <div class="ins_type_fpl_row">

@@ -8,7 +8,7 @@
                   </kendo-dropdownlist></div>
       </div>
      
-      <common-dashboard-loader-panel *ngIf="!activeClientsByStatus" ></common-dashboard-loader-panel>
+      <common-dashboard-loader-panel *ngIf="!activeClientsByStatus && !isEditDashboard" ></common-dashboard-loader-panel>
 
       <div class="dashboard-cards-container" *ngIf="activeClientsByStatus">
  
