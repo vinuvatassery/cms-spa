@@ -16,6 +16,7 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
 export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
+  isAddClicked = false;
   selectedRefundType : any;
   public refundType  :any[]=[]
   @Input() isEdit = false
@@ -476,7 +477,8 @@ OnEditProviderProfileClick(){
   this.lovFacade.getPaymentMethodLov()
 }
 
-onAddRefundClick(){
+  onAddRefundClick() {
+    this.isAddClicked = true;
   if (this.selectedRefundType === 'PHARMACY') {
     this.addNewRefundRx();
   }
@@ -734,12 +736,15 @@ addTpa(event:any){
    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
    let inValid = false;
    if (control === 'qtyRefunded') {
-    inValid = isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0)? true : false;
-     dataItem.qtyRefundedValid = !inValid;
+       dataItem.qtyRefundedValid = isTouched && (dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
    }
    if (control === 'daySupplyRefunded') {
-    inValid = isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0) ? true : false;
-     dataItem.daySupplyRefundedValid = !inValid;
+     dataItem.daySupplyRefundedValid = isTouched && (dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+     let rxRatio = dataItem.rxqty / dataItem.daySupply;
+     let refundRatio = dataItem.qtyRefunded / dataItem.daySupplyRefunded;
+     if (isNaN(refundRatio))
+       refundRatio = 0;
+     dataItem.daySupplyRefundedRatioValid = rxRatio >= refundRatio;
    }
    if (control === 'refundedAmount') {
     inValid = isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0) ? true : false;
@@ -782,7 +787,7 @@ addNewRefundRx() {
     this.refundRXForm.markAllAsTouched();
     this.refundRXForm.markAsDirty();
     this.markGridFormTouched();
-debugger
+
     this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []).forEach((x: any)=>{
       
       if(!x.qtyRefunded)
