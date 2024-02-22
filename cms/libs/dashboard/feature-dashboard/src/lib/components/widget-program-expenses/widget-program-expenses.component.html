@@ -50,7 +50,7 @@
       </div>
 
 
-          <common-dashboard-loader-panel *ngIf="!programExpenses" >
+          <common-dashboard-loader-panel *ngIf="!programExpenses && !isEditDashboard" >
       </common-dashboard-loader-panel>
       <div class="dashboard-cards-container" *ngIf="programExpenses">
             <kendo-chart class="dash_chart" *ngIf="programExpenses" [series]="programExpenses?.chartData?.series"

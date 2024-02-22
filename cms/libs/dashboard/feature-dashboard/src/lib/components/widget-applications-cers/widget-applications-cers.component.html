@@ -4,7 +4,7 @@
                   <h5>APPLICATIONS & CERS</h5>
             </div>         
 
-    <common-dashboard-loader-panel *ngIf="!applicationCERStats[1]?.value && !applicationCERStats[1]?.value" ></common-dashboard-loader-panel>
+    <common-dashboard-loader-panel *ngIf="!applicationCERStats[1]?.value && !applicationCERStats[1]?.value && !isEditDashboard" ></common-dashboard-loader-panel>
       <div class="dashboard-cards-container" *ngIf="applicationCERStats[1]?.value || applicationCERStats[1]?.value">
             <div class="app-cars-row application_cer-row">
                   <div class="app-cars-first-col orange-frame-icon">

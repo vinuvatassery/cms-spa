@@ -3,7 +3,7 @@
     <h5>RECENTLY VIEWED</h5>
   </div>
 
-  <common-dashboard-loader-panel *ngIf="!gridData && !vendorGridData">
+  <common-dashboard-loader-panel *ngIf="!gridData && !vendorGridData && !isEditDashboard">
   </common-dashboard-loader-panel>
 <div  *ngIf="gridData || vendorGridData">
   <p> <strong>CLIENTS</strong>  </p>

@@ -223,6 +223,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
           this.dashboardWrapperFacade.hideLoader();
         }
       });
+      this.dashboardWrapperFacade.hideLoader();
   }
 
   dashBoardAllWidgetsSubscribe() {
@@ -346,12 +347,17 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
       this.dashboardContentListDataSubject.next(null);
       this.dashBoardUpdateSubscribe();
     }
+    else
+    {
+    this.initializeDashboard();
+    }
   }
 
   dashBoardUpdateSubscribe() {
     this.dashboardWrapperFacade.showLoader();
     this.dashboardContentUpdate$.subscribe((response) => {
       if (response === true) {
+        
         this.initializeDashboard();
       }
     });
