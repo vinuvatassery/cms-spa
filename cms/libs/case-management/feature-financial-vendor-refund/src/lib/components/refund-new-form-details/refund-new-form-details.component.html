@@ -199,6 +199,9 @@
                                 <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
                             </ng-template>
                         </kendo-combobox-column>
+                        <ng-template kendoMultiColumnComboBoxNoDataTemplate>
+                            <div class="no-data-text">No Vendors found'</div>
+                        </ng-template>
                       </kendo-multicolumncombobox>
                    </div>
                 </kendo-floatinglabel>
@@ -309,16 +312,6 @@
             <div class="flex-row">
                 <div class="flex-col flex-col-2 align-items-center justify-content-start">
                     <h5>Refund Information </h5>
-                </div>
-                <div class="flex-col flex-col-4 align-items-center justify-content-start">
-                    <span class="app-checkboxwidtext-wrapper">
-                        <input kendoCheckBox type="checkbox" id="spots-payment" name="spots-payment"
-                            aria-labelledby="spots-payment"
-                            id="isSpotsPaymentInputRX" [checked]="isSpotsPayment"
-                            (change)="onSpotsPaymentChange($event)"
-                            for="isSpotsPaymentInputRX"/>
-                        <label class="k-checkbox-label" for="spots-payment">This is a SPOTS payment</label>
-                    </span>
                 </div>
             </div>
             <div *ngFor="let item of selectedVendorRefundsList; index as tblIndex">
@@ -503,7 +496,8 @@
                                     formControlName= "creditNumber"
                                     [fillMode]="formUiStyle.inputFillMode"  name="creditNumber"
                                     placeholder="Credit #"
-                                    [maxlength]="6">
+                                    [maxlength]="10"
+                                    (keyup)="validateCreditNumber($event)">
                                 </kendo-textbox >
                             </kendo-floatinglabel>
                         </div>
