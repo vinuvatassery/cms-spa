@@ -263,7 +263,7 @@ if(this.isEdit){
       this.getSelectedVendorRefundsList(res,"EDIT");
     })
   }
-  
+
   loadPaymentRequestData(){
     this.financialVendorRefundFacade.loadPharmacyRefundEditList(this.inspaymentRequestId);
   }
@@ -354,13 +354,17 @@ if(this.isEdit){
      }
 
   }
-
+  this.onEditInitiallydontShowPremiumselection = true
   this.isConfirmationClicked = true
 }
 
 onSelectedClaimsChangeEvent(event:any[]){
   this.selectedInsRequests = event
   this.insurancePremiumPaymentReqIds = event
+  if(this.isEdit && this.selectedRefundType=== ServiceTypeCode.insurancePremium && this.onEditInitiallydontShowPremiumselection)
+  {
+    this.confirmationClicked();
+  }
 }
 
 onSelectedTpaClaimsChangeEvent(event:any[]){
@@ -795,9 +799,9 @@ addNewRefundRx() {
     this.markGridFormTouched();
 
     this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []).forEach((x: any)=>{
-      
+
       if(!x.qtyRefunded)
-      {   
+      {
         x.qtyRefundedValid = false
         return
       }
@@ -807,7 +811,7 @@ addNewRefundRx() {
       }
 
       if(!x.daySupplyRefunded)
-      {        
+      {
         x.daySupplyRefundedValid = false
         return
       }
@@ -816,7 +820,7 @@ addNewRefundRx() {
         x.daySupplyRefundedValid = true
       }
       if(!x.refundedAmount)
-      {        
+      {
         x.refundedAmountValid = false
         return
       }
@@ -828,7 +832,7 @@ addNewRefundRx() {
     this.cdr.detectChanges()
 
     let selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []);
-    
+
 
     let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> !(x.qtyRefunded) || (!x.daySupplyRefunded)
      || (!x.refundedAmount))
@@ -901,11 +905,11 @@ validateFormat(cardnumber: any): string {
   const sanitizedValue = cardnumber.replace(/[^\d]/g, '');
   const regex = /^(\d{0,6})(\d{0,3})/;
   const matches = sanitizedValue.match(regex);
- 
+
   if (matches) {
     return `${matches[1]}${matches[1] && matches[2] ? '-' : ''}${matches[2]}`;
   }
- 
+
   return sanitizedValue;
 }
 validateCreditNumber(event: any): void {
