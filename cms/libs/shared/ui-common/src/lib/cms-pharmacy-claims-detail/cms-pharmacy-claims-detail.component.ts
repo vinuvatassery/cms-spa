@@ -57,6 +57,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
   @Input() sortValueRecentClaimList : any;
   @Input() sortRecentClaimList : any;
   @Input() recentClaimsGridLists$ :any;
+  @Input() pharmacyRecentClaimsProfilePhoto$!: any;
 
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();

@@ -144,8 +144,9 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
  recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
+ pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
  addDrug$ = this.drugsFacade.addDrug$
- pharmacyClaimnsAllPaymentsProfilePhotoSubject = new Subject();
+
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
   itemNbr:'Item #',
@@ -321,20 +322,6 @@ searchColumnList: { columnName: string, columnDesc: string }[] = [
         this.financialVendorFacade.manufacturerListSubject.next(data);
       }
     });
-  }
-  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
-    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
-    if(distinctUserIds){
-      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
-      .subscribe({
-        next: (data: any[]) => {
-          if (data.length > 0) {
-            this.pharmacyClaimnsAllPaymentsProfilePhotoSubject.next(data);
-          }
-        },
-      });
-      this.cdr.detectChanges();
-    }
   }
 
   ngOnChanges(): void {

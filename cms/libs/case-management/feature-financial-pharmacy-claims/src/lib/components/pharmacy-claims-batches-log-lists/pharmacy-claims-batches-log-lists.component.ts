@@ -254,6 +254,7 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     objectCode: 'Object Code',
     checkNbr :'Warrant Number'
   };
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
 
   paymentMethods = [PaymentMethodCode.CHECK, PaymentMethodCode.ACH, PaymentMethodCode.SPOTS];
   paymentTypes = [PaymentType.Coinsurance, PaymentType.Copayment, PaymentType.Deductible, PaymentType.FullPay];

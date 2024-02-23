@@ -24,6 +24,7 @@ export class CmsPharmacyClaimsRecentClaimsComponent {
   @Input() sortValueRecentClaimList : any;
   @Input() sortRecentClaimList : any;
   @Input() recentClaimsGridLists$ : any;
+  @Input() pharmacyRecentClaimsProfilePhoto$!: any;
 
   @Output()  loadRecentClaimListEvent = new EventEmitter<any>();
   public state!: any;
@@ -62,7 +63,7 @@ export class CmsPharmacyClaimsRecentClaimsComponent {
   defaultPageSize=20;
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
 
   ) { }
   ngOnInit(): void {

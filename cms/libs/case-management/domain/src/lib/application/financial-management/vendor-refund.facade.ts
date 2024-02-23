@@ -152,6 +152,7 @@ export class FinancialVendorRefundFacade {
   vendorRefundTPAProfileSubject = new Subject();
   tpaVendorRefundProfilePhotoSubject = new Subject();
   vendorRefundPaymentListProfilePhotoSubject = new Subject();
+  pharmacyClaimsListProfileSubject = new Subject();
 
   /** Private properties **/
 
@@ -791,6 +792,7 @@ this.loaderService.show();
             total: dataResponse['totalCount'],
           };
           this.clientClaimsListDataSubject.next(gridView);
+          this.loadclientClaimsListDistinceUserProfilePhoto(dataResponse['items']);
           this.hideLoader();
         }
       },
@@ -800,6 +802,21 @@ this.loaderService.show();
       },
     });
   }
+
+  loadclientClaimsListDistinceUserProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.pharmacyClaimsListProfileSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
   loadFinancialRecentRefundListGrid(RefundPageAndSortedRequestDto:any) {
     this.showLoader();
     RefundPageAndSortedRequestDto.filter = JSON.stringify(RefundPageAndSortedRequestDto.filter);
