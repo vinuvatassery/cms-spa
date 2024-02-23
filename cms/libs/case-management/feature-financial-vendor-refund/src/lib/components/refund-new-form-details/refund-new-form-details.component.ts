@@ -675,6 +675,7 @@ addTpa(event:any){
           grantNo : item.grantNo,
           warrantNbr : item.warrantNbr,
           paymentStatusCode : item.paymentStatusCode,
+          paymentMethodCode : item.paymentMethodCode,
           prescriptionFillItems : []
         })))).map((str:any) => JSON.parse(str));
         listData = listData.map((obj : any) =>
