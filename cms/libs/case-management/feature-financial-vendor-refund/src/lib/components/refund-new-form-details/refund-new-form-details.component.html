@@ -399,7 +399,7 @@
                             <kendo-grid-column field="by" title="By" [width]="75" class="text-center">
                                 <ng-template kendoGridCellTemplate let-dataItem>
                                     <common-user-photo-icon  
-                                    [userId]="dataItem.creatorId" 
+                                    [userId]="dataItem.by" 
                                     [userFirstName]="dataItem.userFirstName"
                                     [userLastName]="dataItem.userLastName"
                                     [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
