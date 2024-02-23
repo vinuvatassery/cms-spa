@@ -4,6 +4,7 @@ import { LovFacade } from '@cms/system-config/domain';
 import { ColumnComponent, ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
+import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'common-cms-pharmacy-claims-recent-claims',
@@ -56,13 +57,15 @@ export class CmsPharmacyClaimsRecentClaimsComponent {
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   paymentRequestTypes: any = [];
+  pharmacyRecentClaimsProfilePhoto$ = this.pharmacyClaimsFacade.pharmacyRecentClaimsProfilePhotoSubject;
 
   paymentTypeFilter = '';
   iseditView:string="";
   defaultPageSize=20;
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
+    private readonly pharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
 
   ) { }
   ngOnInit(): void {

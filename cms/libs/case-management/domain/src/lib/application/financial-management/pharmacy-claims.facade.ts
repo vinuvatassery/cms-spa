@@ -197,6 +197,7 @@ export class FinancialPharmacyClaimsFacade {
   pharmacyRecentClaimsProfilePhotoSubject = new Subject();
   pharmacyBatchDetailProfilePhotoSubject = new Subject();
   pharmacyBatchListDetailProfilePhotoSubject = new Subject();
+  pharmacyClaimsRecentProfilePhotoSubject = new Subject();
   /** Private properties **/
 
   /** Public properties **/
