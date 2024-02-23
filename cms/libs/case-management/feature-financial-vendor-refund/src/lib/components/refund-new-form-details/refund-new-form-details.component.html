@@ -353,7 +353,7 @@
                     <h5>Enter quantity, days supply, and amount refunded</h5>
                     <div class="app-c-table">
                         <kendo-grid [resizable]="true" [groupable]="false" [reorderable]="true" [resizable]="true"
-                            [columnMenu]="{ filter: true }"
+                            [columnMenu]="{ filter: true, sort: true }"
                             [data] = item.prescriptionFillItems>
                             <kendo-grid-column field="rxNbr" title="RX #" [width]="160">
                                 <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
