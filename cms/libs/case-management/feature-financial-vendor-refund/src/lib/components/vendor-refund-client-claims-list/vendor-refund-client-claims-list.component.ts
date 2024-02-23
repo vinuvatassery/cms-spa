@@ -71,7 +71,8 @@ public selectedVendorRefunds: any = [];
   isRefundGridClaimShow=false;
 private clientClaimsListDataSubject =  new Subject<any>();
   clientClaimListData$ = this.clientClaimsListDataSubject.asObservable();
-  clientclaimsData$=this.financialVendorRefundFacade.clientClaimsListData$
+  clientclaimsData$=this.financialVendorRefundFacade.clientClaimsListData$;
+  pharmacyClaimsListProfile$ = this.financialVendorRefundFacade.pharmacyClaimsListProfileSubject;
 
   gridClientClaimsDataSubject = new Subject<any>();
   gridClientClaimsData$ = this.gridClientClaimsDataSubject.asObservable();

@@ -10,6 +10,7 @@ import { VendorInsurancePlanDataService } from '../../infrastructure/financial-m
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { GridFilterParam } from '../../entities/grid-filter-param';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class VendorInsurancePlanFacade {
@@ -27,6 +28,7 @@ export class VendorInsurancePlanFacade {
   vendorInsurancePlanData$ = this.vendorInsurancePlanDataSubject.asObservable();
   vendorInsuranceGridLoader$ = this.vendorInsuranceGridLoaderSubject.asObservable();
 
+  insuranceVendorProfilePhotoSubject = new Subject();
 
   /** Private properties **/
 
@@ -57,7 +59,8 @@ export class VendorInsurancePlanFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   /** Public methods **/
@@ -70,6 +73,7 @@ export class VendorInsurancePlanFacade {
           total: dataResponse?.totalCount,
         };
         this.vendorInsurancePlanDataSubject.next(gridView);
+        this.loadInsuranceProviderListDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.vendorInsuranceGridLoaderSubject.next(false);
       },
       error: (err) => {
@@ -77,6 +81,20 @@ export class VendorInsurancePlanFacade {
         this.vendorInsuranceGridLoaderSubject.next(false);
       },
     });
+  }
+
+  loadInsuranceProviderListDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.lastUpdatedBy))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.insuranceVendorProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
   loadVendorInsurancePlan(vendorId:string, providerId:string, pageParameters: State) {

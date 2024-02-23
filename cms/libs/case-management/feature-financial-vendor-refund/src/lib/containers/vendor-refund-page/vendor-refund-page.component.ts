@@ -15,7 +15,7 @@ export class VendorRefundPageComponent
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uiTabStripScroll: UITabStripScroll = new UITabStripScroll();
 
-  tab = 1
+  tab = this.financialVendorRefundFacade.selectedRefundsTab;
   dataExportParameters :any;
   batchesGridExportParameters = null
   sortType = this.financialVendorRefundFacade.sortType;
@@ -40,10 +40,16 @@ export class VendorRefundPageComponent
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
   vendorRefundAllPaymentsGridLists$ = this.financialVendorRefundFacade.vendorRefundAllPaymentsData$;
+  vendorRefundListProfilePhoto$ = this.financialVendorRefundFacade.vendorRefundListProfilePhotoSubject;
+  allRefundProfilePhoto$ = this.financialVendorRefundFacade.allRefundProfilePhotoSubject;
 
   //provider panel
-  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
-  providerDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('premiumProviderDetailsTemplate', { read: TemplateRef })
+  premiumProviderDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('tpaProviderDetailsTemplate', { read: TemplateRef })
+  tpaProviderDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('pharmacyProviderDetailsTemplate', { read: TemplateRef })
+  pharmacyProviderDetailsTemplate!: TemplateRef<any>;
   providerDetailsDialog: any
   paymentRequestId: any;
 
@@ -83,8 +89,8 @@ export class VendorRefundPageComponent
   }
 
   loadFinancialRefundProcessListGrid(data: any) {
-    this.financialVendorRefundFacade.selectedClaimsTab = 1;
-    this.tab = this.financialVendorRefundFacade.selectedClaimsTab;
+    this.financialVendorRefundFacade.selectedRefundsTab = 1;
+    this.tab = this.financialVendorRefundFacade.selectedRefundsTab;
     this.dataExportParameters = data;
     this.financialVendorRefundFacade.loadFinancialRefundProcessListGrid(
       data?.skipCount,
@@ -130,10 +136,50 @@ export class VendorRefundPageComponent
   }
 
 //provider panel
+
   onProviderNameClick(event:any){
-    this.paymentRequestId = event
+    if(event.type == 'TPA'){
+      this.onTpaProviderNameClick(event)
+    }
+    if(event.type == 'INSURANCE_PREMIUM'){
+      this.onPremiumProviderNameClick(event)
+
+    }
+    if(event.type == 'PHARMACY'){
+      this.onPharmacyProviderNameClick(event)
+
+    }
+  }
+  onTpaProviderNameClick(event:any){
+    this.paymentRequestId = event.paymentRequestId
     this.providerDetailsDialog = this.dialogService.open({
-      content: this.providerDetailsTemplate,
+      content: this.tpaProviderDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+
+  }
+
+  onPremiumProviderNameClick(event:any){
+    this.paymentRequestId = event.paymentRequestId
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.premiumProviderDetailsTemplate,
+      animation:{
+        direction: 'left',
+        type: 'slide',
+      },
+      cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+    });
+
+  }
+
+  onPharmacyProviderNameClick(event:any){
+    this.paymentRequestId = event.paymentRequestId
+    this.providerDetailsDialog = this.dialogService.open({
+      content: this.pharmacyProviderDetailsTemplate,
       animation:{
         direction: 'left',
         type: 'slide',

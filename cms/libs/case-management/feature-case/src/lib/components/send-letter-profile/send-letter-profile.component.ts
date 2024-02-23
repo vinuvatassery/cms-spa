@@ -1,6 +1,6 @@
 /** Angular **/
 import { ChangeDetectionStrategy, Component, OnInit,ChangeDetectorRef } from '@angular/core';
-import { first } from 'rxjs';
+import { Subject, first } from 'rxjs';
 /** Facades **/
 import { CaseFacade,WorkflowFacade,ClientEligibilityFacade, ClientEligibilityInfo,EligibilityRequestType } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
@@ -29,6 +29,7 @@ export class SendLetterProfileComponent implements OnInit {
   isEdit = true;
   clientEligibilityInfo! : ClientEligibilityInfo;
   prevClientCaseEligibilityId: string =""
+  sendLetterProfilePhotoSubject = new Subject();
 
   /** Constructor **/
   constructor(private readonly caseFacade: CaseFacade,
@@ -90,6 +91,9 @@ export class SendLetterProfileComponent implements OnInit {
     this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId,EligibilityRequestType.clientEligibilityInfoProfile).subscribe({
       next: (data:any) => {
         this.clientEligibilityInfo = data;
+        if(this.clientEligibilityInfo){
+          this.loadDistinctUserIdsAndProfilePhoto(this.clientEligibilityInfo);
+        }
         this.changeDetector.detectChanges();
         this.loaderService.hide();
       },
@@ -104,6 +108,19 @@ export class SendLetterProfileComponent implements OnInit {
       },
     });
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any) {
+      this.userManagementFacade.getProfilePhotosByUserIds(data?.caseManagerId)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.sendLetterProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.changeDetector.detectChanges();
+  } 
+
   getCaseWorkerPhoto(assignedCaseWorkerId : any)
    {
       if(assignedCaseWorkerId)

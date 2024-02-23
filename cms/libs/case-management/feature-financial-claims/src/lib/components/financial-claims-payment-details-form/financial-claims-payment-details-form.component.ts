@@ -109,7 +109,6 @@ import { Subscription } from 'rxjs';
       this.medicalClaimPaymentForm.controls['datePaymentReconciled'].markAllAsTouched();
       this.medicalClaimPaymentForm.controls['datePaymentReconciled'].setValidators([Validators.required]);
       this.medicalClaimPaymentForm.controls['datePaymentReconciled'].updateValueAndValidity();
-      //this.medicalClaimPaymentForm.controls['datePaymentSent'].setErrors({ 'incorrect': true });
       this.paymentDateIsGreaterThanReconciledDate = false;
     }
     else if (this.medicalClaimPaymentForm.controls['datePaymentSent'].value !== null) {
