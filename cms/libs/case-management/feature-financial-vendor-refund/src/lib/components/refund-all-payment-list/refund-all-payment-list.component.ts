@@ -662,8 +662,12 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.hideActionButton = !this.hideActionButton;
   }
 
-  onProviderNameClick(event: any) {
-    this.providerNameClickEvent.emit(event);
+  onProviderNameClick(paymentRequestId:any, type:any){
+    const data ={
+      paymentRequestId,
+      type
+    }
+    this.providerNameClickEvent.emit(data);
   }
 
   selectionAllChange() {

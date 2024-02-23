@@ -28,6 +28,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  @Input() vendorAddressId :any
    selectedProvider:any;
   isRefundGridClaimShow = false;
+  isClientSelected = false
   isShowReasonForException = false;
   showServicesListForm: boolean =false;
   selectedMedicalProvider: any;
@@ -552,7 +553,10 @@ addTpa(event:any){
     this.financialVendorRefundFacade.loadClientBySearchText(clientSearchText)
   }
   onClientValueChange(client: any) {
+    this.isClientSelected = false;
+    this.selectedRefundType = null;
     if (client != undefined) {
+      this.isClientSelected = true
       this.clientCaseEligibilityId = client.clientCaseEligibilityId;
       this.clientId = client.clientId;
       this.financialVendorRefundFacade.loadInsurancevendorBySearchText("",this.clientId);
@@ -574,6 +578,7 @@ addTpa(event:any){
         this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
+    this.isClientSelected = false;
     this.vendorAddressId=null;
     if($event==undefined){
       this.vendorAddressId=null;
@@ -670,6 +675,7 @@ addTpa(event:any){
           grantNo : item.grantNo,
           warrantNbr : item.warrantNbr,
           paymentStatusCode : item.paymentStatusCode,
+          paymentMethodCode : item.paymentMethodCode,
           prescriptionFillItems : []
         })))).map((str:any) => JSON.parse(str));
         listData = listData.map((obj : any) =>

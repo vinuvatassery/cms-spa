@@ -92,7 +92,7 @@
             </kendo-grid-column>
             <kendo-grid-column field="vendorName" title="Vendor" [width]="160">
               <ng-template kendoGridCellTemplate let-dataItem>
-                <button [attr.aria-label]="dataItem.vendorName" (click)="onProviderNameClick(dataItem.paymentRequestId)"
+                <button [attr.aria-label]="dataItem.vendorName" (click)="onProviderNameClick(dataItem.paymentRequestId, dataItem.serviceTypeCode)"
                   kendoButton look="flat" class="card-link-button">
                   {{ dataItem.vendorName }}
                 </button>
@@ -248,7 +248,7 @@
             <kendo-grid-column field="voucherPayable" title="VP" [width]="130"> </kendo-grid-column>
             <kendo-grid-column *ngIf="receiptLogMode" field="creditNumber" title="Credit - Suffix"
               [width]="140"></kendo-grid-column>
-    
+
             <kendo-grid-column field="refundNote" title="Refund Note" [width]="150"> </kendo-grid-column>
             <kendo-grid-column field="entryDate" title="Entry Date" [width]="160">
               <ng-template kendoGridCellTemplate let-dataItem>
@@ -263,8 +263,8 @@
             <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center"
               [columnMenu]="false">
               <ng-template kendoGridCellTemplate let-dataItem>
-                <common-user-photo-icon  
-                [userId]="dataItem.creatorId" 
+                <common-user-photo-icon
+                [userId]="dataItem.creatorId"
                 [userFirstName]="dataItem.userFirstName"
                 [userLastName]="dataItem.userLastName"
                 [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
@@ -275,7 +275,7 @@
             <kendo-grid-column *ngIf="!receiptLogMode" field="Option" [sortable]="false" title="Options" [sticky]="true"
               [columnMenu]="false" [width]="75" class="text-center">
               <ng-template kendoGridCellTemplate let-dataItem>
-                <kendo-dropdownbutton [data]="batchLogGridActions" 
+                <kendo-dropdownbutton [data]="batchLogGridActions"
                   class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
                   aria-label="more actions" title="More option"
                   [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -283,7 +283,7 @@
                   <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
                     <ng-container>
                       <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                        [class]="buttondataItem.buttonType" 
+                        [class]="buttondataItem.buttonType"
                         (click)="buttondataItem.click(dataItem)">
                         <span class="material-icons" aria-hidden="true"
                           [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
@@ -396,7 +396,7 @@
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="claimsType" [includeServiceSubTypeFilter]="false"
-      (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-recent-premiums-list>
+      (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick(paymentRequestId, claimsType)"></cms-financial-premiums-recent-premiums-list>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">

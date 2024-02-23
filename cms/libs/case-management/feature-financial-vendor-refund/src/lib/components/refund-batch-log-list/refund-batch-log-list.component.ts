@@ -236,7 +236,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
   sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
-  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;  
+  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
   refundBatchClaimsSubject = new Subject();
 
   /** Constructor **/
@@ -710,8 +710,12 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     }
   }
 
-  onProviderNameClick(event: any) {
-    this.providerNameClickEvent.emit(event);
+  onProviderNameClick(paymentRequestId:any, type:any) {
+    const data ={
+      paymentRequestId,
+      type
+    }
+    this.providerNameClickEvent.emit(data);
   }
 
   onClientClicked(clientId: any) {
@@ -752,7 +756,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   }
 
   getSelectedReportCount(selectedSendReportList: []) {
-    this.selectionCount = selectedSendReportList.length;
+    this.selectionCount = selectedSendReportList?.length;
   }
 
   selectionChange(dataItem: any, selected: boolean) {
