@@ -16,6 +16,7 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
 export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
+  isAddClicked = false;
   selectedRefundType : any;
   public refundType  :any[]=[]
   @Input() isEdit = false
@@ -404,9 +405,9 @@ onSelectedRxClaimsChangeEvent(event:any){
       }
       this.tpaRefundGridLists = [...this.tpaRefundGridLists]
       this.tpaRefundGridLists.forEach(x=>{
-        x.serviceStartDate =new Date(x.serviceStartDate);
-        x.serviceEndDate =new Date(x.serviceEndDate);
-        x.reconciledDate =  x.reconciledDate ? new Date(x.reconciledDate) : new Date()
+        x.serviceStartDate = x.serviceStartDate ? new Date(x.serviceStartDate) : null;
+        x.serviceEndDate = x.serviceEndDate ? new Date(x.serviceEndDate) : null;
+        x.reconciledDate =  x.reconciledDate ? new Date(x.reconciledDate): null;
         x.totalAmount = x.tpaInvoice.reduce((accumulator : number, obj : any) => accumulator + obj.serviceCost, 0);
       })
       this.claimsCount = this.tpaRefundGridLists.length
@@ -476,7 +477,8 @@ OnEditProviderProfileClick(){
   this.lovFacade.getPaymentMethodLov()
 }
 
-onAddRefundClick(){
+  onAddRefundClick() {
+    this.isAddClicked = true;
   if (this.selectedRefundType === 'PHARMACY') {
     this.addNewRefundRx();
   }
@@ -734,15 +736,18 @@ addTpa(event:any){
    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
    let inValid = false;
    if (control === 'qtyRefunded') {
-     inValid == isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
-     dataItem.qtyRefundedValid = !inValid;
+       dataItem.qtyRefundedValid = isTouched && (dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
    }
    if (control === 'daySupplyRefunded') {
-     inValid == isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
-     dataItem.daySupplyRefundedValid = !inValid;
+     dataItem.daySupplyRefundedValid = isTouched && (dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+     let rxRatio = dataItem.rxqty / dataItem.daySupply;
+     let refundRatio = dataItem.qtyRefunded / dataItem.daySupplyRefunded;
+     if (isNaN(refundRatio))
+       refundRatio = 0;
+     dataItem.daySupplyRefundedRatioValid = rxRatio >= refundRatio;
    }
    if (control === 'refundedAmount') {
-     inValid == isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
+    inValid = isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0) ? true : false;
      dataItem.refundedAmountValid = !inValid;
    }
    if (inValid) {
@@ -779,10 +784,10 @@ markGridFormTouched(){
 }
 addNewRefundRx() {
     this.isRefundRxSubmitted = true;
-    this.refundRXForm.markAsTouched();
+    this.refundRXForm.markAllAsTouched();
     this.refundRXForm.markAsDirty();
     this.markGridFormTouched();
-debugger
+
     this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []).forEach((x: any)=>{
       
       if(!x.qtyRefunded)
@@ -885,6 +890,22 @@ debugger
       }
     }
 
+}
+validateFormat(cardnumber: any): string {
+  const sanitizedValue = cardnumber.replace(/[^\d]/g, '');
+  const regex = /^(\d{0,6})(\d{0,3})/;
+  const matches = sanitizedValue.match(regex);
+ 
+  if (matches) {
+    return `${matches[1]}${matches[1] && matches[2] ? '-' : ''}${matches[2]}`;
+  }
+ 
+  return sanitizedValue;
+}
+validateCreditNumber(event: any): void {
+  const inputValue = event.target.value;
+  const formattedValue = this.validateFormat(inputValue);
+  event.target.value = formattedValue;
 }
 onRefundNoteValueChange(event: any) {
   this.refundNoteValueLength = event.length

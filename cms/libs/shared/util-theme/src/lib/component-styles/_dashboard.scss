@@ -85,8 +85,9 @@
 }
 
 .dashboard-page-wrapper {
-  // display: grid;
-  // gap: 20px;
+  text {
+    font-family: $font-family ;
+}
 }
 
 .dashboard_config_wrapper {
@@ -562,8 +563,7 @@ gridster .gridster-row {
 .dash-header-with-filters {
   display: flex; 
   justify-content: space-between;
-  margin-bottom: 8px;
-  min-height: 31px;
+  margin-bottom: 8px; 
   flex-direction: column;
   gap: 8px;
   > div {
@@ -655,6 +655,3 @@ gridster .gridster-row {
         width: 146px;
     }
 
-    text {
-       font-family: "Neue Helvetica Bold" !important; ;
-  }

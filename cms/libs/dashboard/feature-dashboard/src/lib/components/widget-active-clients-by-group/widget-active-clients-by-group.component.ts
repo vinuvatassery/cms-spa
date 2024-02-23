@@ -12,7 +12,9 @@ import { WidgetFacade } from '@cms/dashboard/domain';
 import { Subject, takeUntil } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
+  LegendLabels,
   LegendLabelsContentArgs,
+  LegendMarkers,
   SeriesClickEvent,
   SeriesLabels,
   SeriesLabelsAlignment,
@@ -58,7 +60,16 @@ export class WidgetActiveClientsByGroupComponent implements OnInit, OnDestroy {
   userId: any;
 
   loadingPanelVisible = true;
-
+  labels: LegendLabels = {
+    content: this.legendContent,
+    font: "14px Neue Helvetica Roman",
+    margin: 5
+  };
+  markers: LegendMarkers = {
+    type: 'circle',
+    width: 10,
+    height: 10
+  }
   ngOnInit(): void {
     this.getLoginUserId();
     this.loadActiveClients();
