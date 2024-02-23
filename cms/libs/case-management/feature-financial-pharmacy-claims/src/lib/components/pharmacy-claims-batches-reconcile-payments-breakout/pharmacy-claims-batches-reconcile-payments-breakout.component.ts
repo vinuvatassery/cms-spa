@@ -86,6 +86,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent implements 
   pharmacyBreakoutProfilePhotoSubject = new Subject();
   sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
   constructor(private readonly cdr: ChangeDetectorRef, private route: Router, private dialogService: DialogService,private readonly lovFacade: LovFacade, private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly userManagementFacade: UserManagementFacade,private readonly financialPharmacyClaimsFacade : FinancialPharmacyClaimsFacade) { }
 

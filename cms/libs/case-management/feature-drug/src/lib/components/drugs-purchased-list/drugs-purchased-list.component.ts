@@ -123,6 +123,7 @@ export class DrugsPurchasedListComponent implements OnInit {
   private addEditClaimsFormDialog: any;
   pharmacyPurchaseProfilePhotoSubscription = new Subscription();
   pharmacyPurchaseProfile$ = this.drugPharmacyFacade.pharmacyPurchaseProfileSubject;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
 
   public actions = [
     {

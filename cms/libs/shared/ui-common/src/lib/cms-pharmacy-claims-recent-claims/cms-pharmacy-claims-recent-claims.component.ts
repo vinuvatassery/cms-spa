@@ -4,7 +4,6 @@ import { LovFacade } from '@cms/system-config/domain';
 import { ColumnComponent, ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
-import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
 
 @Component({
   selector: 'common-cms-pharmacy-claims-recent-claims',
@@ -25,6 +24,7 @@ export class CmsPharmacyClaimsRecentClaimsComponent {
   @Input() sortValueRecentClaimList : any;
   @Input() sortRecentClaimList : any;
   @Input() recentClaimsGridLists$ : any;
+  @Input() pharmacyRecentClaimsProfilePhoto$!: any;
 
   @Output()  loadRecentClaimListEvent = new EventEmitter<any>();
   public state!: any;
@@ -57,7 +57,6 @@ export class CmsPharmacyClaimsRecentClaimsComponent {
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   paymentRequestTypes: any = [];
-  pharmacyRecentClaimsProfilePhoto$ = this.pharmacyClaimsFacade.pharmacyRecentClaimsProfilePhotoSubject;
 
   paymentTypeFilter = '';
   iseditView:string="";
@@ -65,7 +64,6 @@ export class CmsPharmacyClaimsRecentClaimsComponent {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private readonly pharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
 
   ) { }
   ngOnInit(): void {

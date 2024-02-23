@@ -94,6 +94,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
   public checkboxOnly = true;
   public mode: SelectableMode = 'multiple';
   public drag = false;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
   @ViewChild('addEditRefundDialog', { read: TemplateRef })
   addEditRefundFormDialogDialogTemplate!: TemplateRef<any>;
 

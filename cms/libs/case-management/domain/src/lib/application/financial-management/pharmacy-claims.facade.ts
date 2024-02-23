@@ -195,6 +195,7 @@ export class FinancialPharmacyClaimsFacade {
   pharmacyClaimnsAllPaymentsProfilePhotoSubject = new Subject();
   pharmacyBreakoutProfilePhotoSubject = new Subject();
   pharmacyRecentClaimsProfilePhotoSubject = new Subject();
+  pharmacyRecentClaimsProfilePhoto$ = this.pharmacyRecentClaimsProfilePhotoSubject.asObservable();
   pharmacyBatchDetailProfilePhotoSubject = new Subject();
   pharmacyBatchListDetailProfilePhotoSubject = new Subject();
   pharmacyClaimsRecentProfilePhotoSubject = new Subject();

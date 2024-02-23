@@ -128,6 +128,7 @@ export class PharmacyClaimsProcessListComponent implements OnInit, OnDestroy {
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
   gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
   recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
 
   public claimsProcessMore = [
     {

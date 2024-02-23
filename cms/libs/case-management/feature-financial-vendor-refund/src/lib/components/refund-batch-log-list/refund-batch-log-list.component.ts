@@ -220,6 +220,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   isBulkUnBatchOpened: any;
   batchId: any;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
 
   //recent claims modal
   @ViewChild('clientRecentClaimsDialog') clientRecentClaimsDialogRef!: TemplateRef<unknown>

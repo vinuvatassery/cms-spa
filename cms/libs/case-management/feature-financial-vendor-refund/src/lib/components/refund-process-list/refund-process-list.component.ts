@@ -207,6 +207,7 @@ export class RefundProcessListComponent implements  OnInit, OnChanges, OnDestroy
   public selectAllState: SelectAllCheckboxState = "unchecked";
   vendorRefundProcessGridLists: any;
   vendorRefundProcessGridListsSub!: Subscription;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
 
 
   //recent claims modal
