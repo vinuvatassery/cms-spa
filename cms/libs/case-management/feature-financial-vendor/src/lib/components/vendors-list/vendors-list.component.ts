@@ -102,19 +102,7 @@ dropDowncolumns : any = [
     "columnCode": "tin",
     "columnDesc": "TIN"   ,
     "vendorTypeCode": "ALL",
-  }
-  ,
-  {
-    "columnCode": "totalClaims",
-    "columnDesc": "Total Claims"   ,
-    "vendorTypeCode": ["MEDICAL_PROVIDER"],
-  }
-  ,
-  {
-    "columnCode": "unreconciledClaims",
-    "columnDesc": "Unreconciled Claims"   ,
-    "vendorTypeCode": ["MEDICAL_PROVIDER"],
-  }
+  }    
   ,
   {
     "columnCode": "totalPayments",
@@ -144,7 +132,7 @@ dropDowncolumns : any = [
   {
     "columnCode": "address",
     "columnDesc": "Address"   ,
-    "vendorTypeCode":  ["MANUFACTURERS","MEDICAL_PROVIDER"],
+    "vendorTypeCode":  ["MANUFACTURERS"],
   },
   {
     "columnCode": "NpiNbr",

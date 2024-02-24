@@ -117,6 +117,7 @@ if(uniqueOriginalWarrants.length>1)
       take:this.defaultpageSize,
       sort: this.sort,
     };
+    debugger
     this.selectedInsuranceClaims =  (this.selectedInsurancePremiumIds && this.selectedInsurancePremiumIds.length >0)?
                                     this.selectedInsurancePremiumIds : this.selectedInsuranceClaims
                                     this.lovFacade.getPaymentStatusLov()

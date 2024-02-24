@@ -153,7 +153,7 @@ export class FinancialClaimsBatchesListComponent implements OnChanges {
     this.defaultGridState();
     let operator = 'startswith';
 
-    if (this.selectedColumn !== 'creationTime'  && this.selectedColumn !==  'batchName') {
+    if (this.selectedColumn !== 'creationTime') {
       operator = 'eq';
     }
 
