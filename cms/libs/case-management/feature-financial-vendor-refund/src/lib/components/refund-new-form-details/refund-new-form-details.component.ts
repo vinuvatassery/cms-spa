@@ -315,6 +315,7 @@ if(this.isEdit){
     this.selectedProvider=null;
   }
   confirmationClicked (){
+    debugger
       this.inputConfirmationClicked = true;
     this.disableFeildsOnConfirmSelection = true
 
@@ -341,6 +342,7 @@ if(this.isEdit){
         const data = (this.selectedVendorRefundsList[0].prescriptionFillItems).find((obj:any) =>{
           return obj.refundedPrescriptionFillId ==  element.perscriptionFillId
         });
+        
         if(data){
           element.daySupplyRefunded=data.daySupplyRefunded;
           element.qtyRefunded =data.qtyRefunded;
@@ -671,7 +673,7 @@ addTpa(event:any){
 
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
     if(operation === "ADD"){
-      this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>
+      this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>      
       JSON.stringify(
         {
           indexCode : item.indexCode,
@@ -690,7 +692,8 @@ addTpa(event:any){
             daySupplyRefunded : obj.daySupplyRefunded ?? null,
             daySupplyRefundedValid : false,
             refundedAmount : obj.refundedAmount ?? null,
-            refundedAmountValid : false
+            refundedAmountValid : false,
+            paymentType : obj?.paymentType
           }));
         this.selectedVendorRefundsList.forEach((element : any) => {
           element.prescriptionFillItems = listData.filter(

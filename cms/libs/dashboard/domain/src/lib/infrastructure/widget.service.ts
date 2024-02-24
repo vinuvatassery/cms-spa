@@ -13,38 +13,7 @@ export class WidgetService {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/recently-viewed-clients`
     );
-    return of([
-      {
-        ClientName: 'Donna Summer',
-        ClientId: 'ID 1212312',
-        DOB: '20-12-1996',
-        Status: 'ACCEPT',
-      },
-      {
-        ProfileName: 'Abbot Labs',
-        ProfileId: 'TIN 965998',
-        DOB: '',
-        Status: '',
-      },
-      {
-        ProfileName: 'Moda Healthcare',
-        ProfileId: 'TIN 88896',
-        DOB: '',
-        Status: '',
-      },
-      {
-        ProfileName: 'Rite Aide Pharmacy #57007',
-        ProfileId: 'TIN 6866579',
-        DOB: '06-11-1963',
-        Status: 'RESTRICTED',
-      },
-      {
-        ProfileName: 'Julia Child',
-        ProfileId: 'ID 56983',
-        DOB: '06-08-1983',
-        Status: 'RESTRICTED',
-      },
-    ]);
+    
   }
 
   getRecentlyViewedVendors(): Observable<any> {
@@ -101,116 +70,14 @@ export class WidgetService {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-group/${userId}`
     );
-    return of({
-      component: 'ActiveClientsByGroup',
-      chartData: {
-        title: {
-          text: 'ACTIVE CLIENTS BY GROUP',
-        },
-        legend: {
-          position: 'right',
-          orientation: 'vertical',
-          labels: {
-            useSeriesColor: true,
-          },
-          markers: {
-            type: 'circle',
-            width: 10,
-            height: 10,
-          },
-        },
-        chartArea: {
-          padding: 0,
-          margin: 0,
-        },
-        series: [
-          {
-            data: [
-              {
-                category: 'UPP',
-                value: 45
-              },
-              {
-                category: 'GROUP I',
-                value: 15
-              },
-              {
-                category: 'GROUP II',
-                value: 10
-              },
-              {
-                category: 'BRIDGE',
-                value: 10
-              },
-              {
-                category: 'GROUP I / INS GAP',
-                value: 10
-              },
-              {
-                category: 'GROUP II / INS GAP',
-                value: 10
-              },
-            ],
-            type: 'donut',
-            color: 'red',
-          },
-        ],
-      },
-    });
+    
   }
   getActiveClientsByStatus(dashboardId : string , userId : string) {
 
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/client-widgets/${dashboardId}/clients-by-status/${userId}`
     );
-    return of({
-      component: 'ClientByStatus',
-      chartData: {
-        title: {
-          text: 'Active Client By Status',
-        },
-        legend: {
-          position: 'right',
-          orientation: 'vertical',
-          labels: {
-            useSeriesColor: true,
-          },
-          markers: {
-            type: 'circle',
-            width: 10,
-            height: 10,
-          },
-        },
-        chartArea: {
-          padding: 0,
-          margin: 0,
-        },
-        series: [
-          {
-            data: [
-              {
-                category: 'ACCEPT',
-                value: 45
-              },
-              {
-                category: 'PENDING',
-                value: 15
-              },
-              {
-                category: 'WAITLIST',
-                value: 10
-              },
-              {
-                category: 'RESTRICTED',
-                value: 10
-              },
-            ],
-
-            type: 'donut',
-          },
-        ],
-      },
-    });
+    
   }
   getNetIncome(): Observable<any> {
     return of({
@@ -296,190 +163,21 @@ export class WidgetService {
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/fiscal-widgets/pharmacy-claims/${dashboardId}`,
       payload
     );
-    return of({
-      component: 'pharmacyClaims',
-      chartData: {
-        title: {
-          text: 'Pharmacy Claims',
-        },
-        legend: {
-          position: 'right',
-          orientation: 'vertical',
-          labels: {
-            useSeriesColor: true,
-          },
-          markers: {
-            type: 'circle',
-            width: 10,
-            height: 10,
-          },
-        },
-        chartArea: {
-          padding: 0,
-          margin: 0,
-        },
-        series: [
-          {
-            data: [
-              {
-                category: 'FULL PAY',
-                value: 60
-              },
-              {
-                category: 'REGULAR PAY',
-                value: 40
-              },
-             
-            ],
-
-            type: 'donut',
-          },
-        ],
-      },
-    });
+   
   }
   getPremiumExpensesByInsurance(dashboardId:any, payload:any): Observable<any> {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/fiscal-widgets/insurance-premium/${dashboardId}`,
       payload
     );
-    return of({
-      component: 'premiumInsurance',
-      chartData: {
-        title: {
-          text: 'Premium Expenses By Insurance',
-        },
-        legend: {
-          visible:false,
-          position: 'top',
-          orientation: 'horizontal',
-          align: 'end',
-          markers: {
-            type: 'circle',
-            width: 10,
-            height: 10,
-          },
-        },
-        tooltip: {
-          visible: true,
-          format: '{0}%',
-          template: '#= series.name #: #= value #',
-        },
-        categoryAxis: {
-          title: {
-            text: 'Insurance Type',
-          },
-          rotation: 'auto',
-          spacing: 0,
-          categories: [
-            'OHP',
-            'QHP',
-            'Off Exchange',
-            'Group',
-            'COBRA',
-            'VA',
-            'Medicare', 
-          ],
-          line: {
-            visible: false,
-          },
-          labels: {
-            rotation: 'auto',
-          },
-        },
-
-        valueAxis: {
-          visible: true,
-          title: {
-            text: 'Dollar Amount in Thousands',
-          },
-         
-          majorGridLines: { 
-            visible: false,
-          },
-        
-        
-        },
-        series: [
-          {
-            name: 'Insurance Revenue',
-            data: [120, 130, 140, 150, 160, 170, 180],           
-            type: 'column',
-            spacing: 0,
-          },
-       
-        ],
-      },
-    });
+   
   }
   getProgramExpenses(dashboardId : string,payload:any) {
     return this.http.post(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/fiscal-widgets/program-expenses/${dashboardId}`,
       payload
     );
-    return of({
-      component: 'ProgramExpenses',
-      chartData: {
-        title: {
-          text: 'Program Expenses',
-        },
-        legend: {
-          position: 'top',
-          orientation: 'horizontal',
-          align: 'end',
-          markers: {
-            type: 'circle',
-            width: 10,
-            height: 10,
-          },
-        },
-        categoryAxis: {
-          title: {
-            text: 'Month',
-          },
-          rotation: 'auto',
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-        },
-
-        valueAxis: {
-          visible: true,
-          title: {
-            text: 'Dollar Amount in Thousands',
-          },
-          majorGridLines: { 
-            visible: false,
-          },
-        },
-
-        series: [
-          {
-            name: 'Med Claims',
-            data: [300, 200, 250, 400, 300, 350, 500],
-            type: 'line'
-          },
-          {
-            name: 'Med Prem',
-            data: [75, 130, 170, 220, 100, 180, 50],
-            type: 'line'
-          },
-          {
-            name: 'Dental Claims',
-            data: [10, 30, 20, 10, 40, 70, 60],
-            type: 'line'
-          },
-          {
-            name: 'Dental Prem',
-            data: [20, 10, 30, 60, 40, 80, 60],
-            type: 'line'
-          },
-          {
-            name: 'Pharm Claim',
-            data: [100, 10, 60, 60, 40, 70, 60],
-            type: 'line'
-          },
-        ],
-      },
-    });
+    
   }
   getProgramIncome() {
     return of({
@@ -537,28 +235,7 @@ export class WidgetService {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/app-dashboard/general-widgets/today-at-glance`
     ); 
-    return of({
-      todoItems: {
-        count: 0,
-        isVisible: true,
-      },
-      pendingApprovals: {
-        count: 0,
-        isVisible: true,
-      },
-      directMessages: {
-        count: 0,
-        isVisible: true,
-      },
-      todayReminder: {
-        count: 0,
-        isVisible: true,
-      },
-      newNotification: {
-        count: 0,
-        isVisible: true,
-      },
-    });
+    
   }
 
   loadApplicationCERStats(dashboardId : string) {
