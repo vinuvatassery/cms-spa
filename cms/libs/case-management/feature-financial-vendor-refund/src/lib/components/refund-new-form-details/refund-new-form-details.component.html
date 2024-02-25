@@ -299,15 +299,6 @@
                 </div>
             </div>
             <div class="confirm-container" *ngIf="isConfirmationClicked">
-            <div class="flex-row">
-                <div class="flex-col flex-col-6 mt-2 mb-2 ">
-                    <div class="text-center">
-                        <a kendoButton look="flat" aria-label="View Pharmacy Payments" class="card-link-button" href="#PharmacyPaymentsList">
-                            View Pharmacy Payments
-                        </a>
-                    </div>
-                </div>
-            </div>
 
             <div class="flex-row">
                 <div class="flex-col flex-col-2 align-items-center justify-content-start">
@@ -315,10 +306,22 @@
                 </div>
             </div>
             <div *ngFor="let item of selectedVendorRefundsList; index as tblIndex">
+                <div class="flex-row align-items-center justify-content-between " >
+                    <div class="flex-col flex-col-8">
+                        <h5>Refund {{tblIndex + 1}}</h5>
+                    </div>
+              
+                    <div class="flex-col flex-col-4 justify-content-end">
+                        <button class="" kendoButton fillMode="flat" aria-label="Delete" (click)="onDeleteSelectedPharmacyClick(tblIndex)"
+                            themeColor="error">DELETE</button>
+                    </div>
+
+                </div>
+                
                 <div class="flex-row mb-3">
                 <div class="flex-col flex-col-6">
                     <table class=" info-table-custom left_right_align ">
-                        <caption hidden> Refund Information</caption>
+                        <caption hidden> Refund Information</caption>                      
                         <tr hidden>
                             <th scope="col">Fields</th>
                             <th scope="col">Details</th>
