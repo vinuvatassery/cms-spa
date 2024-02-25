@@ -276,9 +276,26 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
     if (!searchText || searchText.length == 0) {
       return;
     }
+    const isDateSearch = searchText.includes('/');
+    searchText = this.formatSearchValue(searchText, isDateSearch);
     this.searchClientsEvent.emit(searchText)
   }
 
+  private formatSearchValue(searchValue: any, isDateSearch: boolean) {
+    if (isDateSearch) {
+      if (this.isValidDate(searchValue)) {
+        return this.intl.formatDate(
+          new Date(searchValue),
+          this.configurationProvider?.appSettings?.dateFormatUS
+        );
+      } else {
+        return '';
+      }
+    }
+    return searchValue;
+  }
+  private isValidDate = (searchValue: any) =>
+  isNaN(searchValue) && !isNaN(Date.parse(searchValue));
   searchcptcode(searchText : any)
   {
     if (!searchText || searchText.length == 0) {
