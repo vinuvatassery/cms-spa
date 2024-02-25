@@ -610,7 +610,7 @@ addTpa(event:any){
       voucherPayable: [''],
       creditNumber: [''],
       warantNumber: ['', Validators.required],
-      depositDate: ['', Validators.required],
+      depositDate: [''],
       refundNote:['']
     });
   }
@@ -787,7 +787,7 @@ addTpa(event:any){
   voucherPayable: [''],
   creditNumber: [''],
   warantNumber: ['', Validators.required],
-  depositDate:['', Validators.required],
+  depositDate:[''],
   refundNote:[''],
 })
 markGridFormTouched(){
