@@ -610,7 +610,7 @@ addTpa(event:any){
       voucherPayable: [''],
       creditNumber: [''],
       warantNumber: ['', Validators.required],
-      depositDate: ['', Validators.required],
+      depositDate: [''],
       refundNote:['']
     });
   }
@@ -669,6 +669,14 @@ addTpa(event:any){
       this.isConfirmationClicked = false;
     }
 
+  }
+
+  onDeleteSelectedPharmacyClick(index:any){
+    this.selectedVendorRefundsList.splice(index,1)
+    if(this.selectedVendorRefundsList.length <=0){
+      this.selectDiffPayments()
+      this.pharmacyClaimsPaymentReqIds = []
+    }
   }
 
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
@@ -787,7 +795,7 @@ addTpa(event:any){
   voucherPayable: [''],
   creditNumber: [''],
   warantNumber: ['', Validators.required],
-  depositDate:['', Validators.required],
+  depositDate:[''],
   refundNote:[''],
 })
 markGridFormTouched(){
@@ -931,5 +939,26 @@ selectedRxClaimsChangeEvent(event:any){
   this.pharmacyClaimsPaymentReqIds = event
   this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
 }
+validatePayable(validatePayable: any): string {
+  const sanitizedValue = validatePayable.replace(/[^a-zA-Z\d]/g, '');
 
+  if (/^[a-zA-Z]{2,3}\d{6}-\d{3}$/.test(sanitizedValue)) {
+    return sanitizedValue;
+  }
+
+  const regex = /^([a-zA-Z]{2,3}\d{6})(\d{3})/;
+  const matches = sanitizedValue.match(regex);
+
+  if (matches) {
+    return `${matches[1]}-${matches[2]}`;
+  }
+
+  return sanitizedValue;
+}
+
+validateVoucherPayable(event: any): void {
+  const inputValue = event.target.value;
+  const formattedValue = this.validatePayable(inputValue); // Fix the function name
+  event.target.value = formattedValue;
+}
 }
