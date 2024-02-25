@@ -671,6 +671,14 @@ addTpa(event:any){
 
   }
 
+  onDeleteSelectedPharmacyClick(index:any){
+    this.selectedVendorRefundsList.splice(index,1)
+    if(this.selectedVendorRefundsList.length <=0){
+      this.selectDiffPayments()
+      this.pharmacyClaimsPaymentReqIds = []
+    }
+  }
+
   getSelectedVendorRefundsList(listData : any, operation :string = "ADD"){
     if(operation === "ADD"){
       this.selectedVendorRefundsList = Array.from(new Set(listData.map((item:any)=>      
