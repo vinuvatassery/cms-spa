@@ -5,14 +5,15 @@
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
       <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" [data]="dropDowncolumns"
-        textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn">
+        textField="columnDesc" valueField="columnCode" [valuePrimitive]="true" [(ngModel)]="selectedColumn"
+        (valueChange)="searchColumnChangeHandler($event)">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
   <span class="filter-section_items filter--search">
     <span class="material-icons" aria-label="search cases" aria-hidden="true">search</span>
     <kendo-floatinglabel text="Search">
-      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="onChange($event)" aria-label="Search case"
+      <kendo-textbox [(ngModel)]="searchValue" (afterValueChanged)="refundAllPaymentSearch($event)" aria-label="Search case"
         rounded="medium" [fillMode]="formUiStyle.inputFillMode"> </kendo-textbox>
 
     </kendo-floatinglabel>
@@ -27,7 +28,17 @@
     </button>
   </span>
 </section>
-
+<div class="table-sorted-info">
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showDateSearchWarning">
+    <span class="material-icons" aria-label="search-warning" aria-hidden="true">
+      warning
+    </span>
+    <span *ngIf="showDateSearchWarning">
+      The '/' symbol can only be used with a date. The date format should be
+      [MM/DD/YYYY].
+    </span>
+  </span>
+</div>
 <!-- Sorted Info -->
 <div class="table-sorted-info">
   Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
@@ -88,7 +99,7 @@
     </kendo-grid-column>
     <kendo-grid-column field="providerName" title="Vendor" [width]="180">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button [attr.aria-label]="dataItem.vendor" (click)="onProviderNameClick(dataItem.paymentRequestId)" kendoButton look="flat" class="card-link-button">
+        <button [attr.aria-label]="dataItem.vendor" (click)="onProviderNameClick(dataItem.paymentRequestId, dataItem.paymentTypeCode)" kendoButton look="flat" class="card-link-button">
           {{ dataItem.providerName }}
         </button>
       </ng-template>
@@ -319,15 +330,13 @@
     <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center"
       [columnMenu]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-          <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
-        </button>
-        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-          <ng-template kendoPopoverBodyTemplate>
-            <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-          </ng-template>
-        </kendo-popover>
+        <common-user-photo-icon  
+        [userId]="dataItem.creatorId" 
+        [userFirstName]="dataItem.userFirstName"
+        [userLastName]="dataItem.userLastName"
+        [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+        [linkType]="'profileIcon'"
+        [userPhotos$]="allRefundProfilePhoto$"></common-user-photo-icon>
       </ng-template>
     </kendo-grid-column>
     <kendo-grid-column *ngIf="!receiptLogMode" field="Option" title="Options" [sticky]="true" [columnMenu]="false"
@@ -447,7 +456,7 @@
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h5 class="text-upper">Recent Premiums for {{clientName}}</h5></kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <cms-financial-premiums-recent-premiums-list [vendorId]="vendorId" [clientId]="clientId" [premiumsType]="claimsType" [includeServiceSubTypeFilter]="false"
-      (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-financial-premiums-recent-premiums-list>
+      (CloseRecentPremiumsModal)="closeRecentClaimsModal($event)" [paymentRequestId]="paymentRequestId" (onProviderNameClickEvent)="onProviderNameClick($event,'INSURANCE_PREMIUM')"></cms-financial-premiums-recent-premiums-list>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between">
@@ -466,8 +475,11 @@
 <ng-template #clientRecentPharmacyClaimsDialog>
   <kendo-dialog-titlebar (close)="closeRecentClaimsModal($event)"><h4 class="text-upper">  RECENT CLAIMS FOR {{clientName}} </h4></kendo-dialog-titlebar>
   <section class="k-dialog-body">
-    <cms-pharmacy-claims-recent-claims-list
-      (CloseRecentClaimsModal)="closeRecentClaimsModal($event)" [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"></cms-pharmacy-claims-recent-claims-list>
+      <common-cms-pharmacy-claims-recent-claims [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
+      (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)" [recentClaimsGridLists$]="recentClaimsGridLists$"
+      [pageSizes]="pageSizes" [sortType]="sortType" [sortValueRecentClaimList]="sortValueRecentClaimList"
+      [sortRecentClaimList]="sortRecentClaimList" [gridSkipCount]="gridSkipCount" [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$">    
+    </common-cms-pharmacy-claims-recent-claims>
   </section>
   <kendo-dialog-actions>
     <div class="justify-content-between" >

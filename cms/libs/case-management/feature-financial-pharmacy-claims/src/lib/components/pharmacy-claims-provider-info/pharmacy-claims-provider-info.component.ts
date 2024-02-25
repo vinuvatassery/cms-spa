@@ -114,7 +114,6 @@ createEmailsFormArray(contact: any): FormArray {
  
   if(contact.emails && contact.emails.length===0){
      emails.push(this.formBuilder.group({
-      emailAddress: ['',Validators.required],
       vendorContactEmailId: null,
       vendorContactId: contact.vendorContactId
     }));
@@ -122,7 +121,6 @@ createEmailsFormArray(contact: any): FormArray {
   else{
   contact.emails.forEach((email: any) => {
     return emails.push(this.formBuilder.group({
-      emailAddress: [email.emailAddress,Validators.required],
       vendorContactEmailId: email.vendorContactEmailId
     }));
   })

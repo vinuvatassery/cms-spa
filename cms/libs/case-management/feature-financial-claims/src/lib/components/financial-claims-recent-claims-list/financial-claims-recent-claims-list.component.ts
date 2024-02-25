@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, OnChanges, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy,ChangeDetectorRef,Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FilterService,GridDataResult,ColumnVisibilityChangeEvent, ColumnComponent } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
 @Component({
@@ -11,7 +11,7 @@ import { LovFacade } from '@cms/system-config/domain';
   templateUrl: './financial-claims-recent-claims-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChanges {
+export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChanges, OnDestroy {
   public sortValue = this.financialClaimsFacade.sortValueRecentClaimList;
   public sortType = this.financialClaimsFacade.sortType;
   public pageSizes = this.financialClaimsFacade.gridPageSizes;
@@ -56,13 +56,18 @@ export class FinancialClaimsRecentClaimsListComponent implements OnInit, OnChang
   paymentMethodTypes: any = [];
   paymentStatus: any = [];
   paymentRequestTypes: any = [];
-
+  claimsRecentClaimsProfilePhotoSubject = new Subject();
+  recentClaimsGridListsSubscription = new Subscription();
+  userMgmtProfilePhotoSubscription = new Subscription();
   paymentTypeFilter = '';
+  claimsRecentClaimsProfilePhoto$ = this.financialClaimsFacade.claimsRecentClaimsProfilePhotoSubject;
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private readonly financialClaimsFacade: FinancialClaimsFacade
+    private readonly financialClaimsFacade: FinancialClaimsFacade,
+
   ) { }
+
   ngOnInit(): void {
     this.loadColumnsData();
     this.getClaimStatusLov();
@@ -210,7 +215,7 @@ loadFinancialRecentClaimListGrid() {
   }
 
   gridDataHandle() {
-    this.recentClaimsGridLists$.subscribe((data: GridDataResult) => {
+    this.recentClaimsGridListsSubscription = this.recentClaimsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.recentClaimListDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
@@ -218,6 +223,10 @@ loadFinancialRecentClaimListGrid() {
       }
     });
   }
+
+  ngOnDestroy(): void {
+    this.recentClaimsGridListsSubscription?.unsubscribe();
+    }
 
   loadRecentClaimsGrid(data: any) {
     this.financialClaimsFacade.loadRecentClaimListGrid(data);

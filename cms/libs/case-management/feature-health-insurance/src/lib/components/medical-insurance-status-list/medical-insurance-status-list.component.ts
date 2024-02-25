@@ -7,8 +7,9 @@ import { HealthInsurancePolicyFacade, CaseFacade, InsuranceStatusType, ClientFac
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { Subscription } from 'rxjs';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { FilterService } from '@progress/kendo-angular-grid';
+import { Subject } from 'rxjs/internal/Subject';
 
 @Component({
   selector: 'case-management-medical-insurance-status-list',
@@ -71,6 +72,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   premiumFrequencyDesc:any;
   public pageSizes = this.insurancePolicyFacade.gridPageSizes;
   public gridSkipCount = this.insurancePolicyFacade.skipCount;
+  insuranceStatusProfilePhotoSubject = new Subject();
+  medicalHealthProfilePhoto$ = this.insurancePolicyFacade.medicalHealthProfilePhotoSubject;
   public gridOptionData = [
     {
       buttonType:"btn-h-primary",
@@ -104,7 +107,8 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   /** Constructor **/
   constructor( private insurancePolicyFacade: HealthInsurancePolicyFacade,
      private readonly formBuilder: FormBuilder,private readonly cdr: ChangeDetectorRef, private caseFacade: CaseFacade,
-     private readonly clientFacade: ClientFacade, private lovFacade: LovFacade,) {
+     private readonly clientFacade: ClientFacade, private lovFacade: LovFacade,
+     private readonly userManagementFacade: UserManagementFacade) {
     this.healthInsuranceForm = this.formBuilder.group({});
   }
 
@@ -138,7 +142,9 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
     this.priorityPopupShowSubscription();
     this.dentalInsuranceListSubscription =  this.medicalHealthPlans$.subscribe((medicalHealthPolicy:any)=>{
       this.medicalHealthPlansCount = medicalHealthPolicy?.data?.length;
-
+      if(this.medicalHealthPlansCount > 0){
+        
+      }
     })
   }
   ngOnChanges(): void {
@@ -169,7 +175,7 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.dentalInsuranceListSubscription.unsubscribe();
+    this.dentalInsuranceListSubscription?.unsubscribe();
   }
 
   pageSelectionChange(data: any) {
@@ -374,9 +380,6 @@ export class MedicalInsuranceStatusListComponent implements OnInit,OnDestroy {
           this.insurancePriorityModalButtonText = 'Update';
         }
       }
-
-
     })
-  }
-
+  } 
 }

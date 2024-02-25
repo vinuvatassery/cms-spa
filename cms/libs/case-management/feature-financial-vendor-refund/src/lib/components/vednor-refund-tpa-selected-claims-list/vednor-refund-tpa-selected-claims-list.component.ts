@@ -1,9 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { formatDate } from '@progress/kendo-angular-intl';
-import { FormatSettings } from "@progress/kendo-angular-dateinputs";
-import {ColumnNames } from '@cms/case-management/domain'
+import { ColumnNames } from '@cms/case-management/domain'
 
 
 @Component({
@@ -24,19 +21,11 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
   @Input() tpaPremiumPaymentReqIds: any[] = [];
   @Output() tpaPayload = new EventEmitter<any>()
   isError =false;
-  public format: FormatSettings = {
-    displayFormat: "dd/MM/yyyy",
-    inputFormat: "yyyy-MM-dd'T'HH:mm:ss",
-  };
-
-   Datevalue: Date = new Date(2000, 2, 10);
-  public constructor(private formBuilder: FormBuilder,
-    private readonly changeDetectorRef: ChangeDetectorRef) {
-
+  
+  public constructor(private readonly changeDetectorRef: ChangeDetectorRef) {
   }
+
   ngOnInit(): void {
-
-
     if (!this.isEdit) {
       this.tpaRefundInformationConfirmClicked.emit(
         {
@@ -83,10 +72,4 @@ export class VednorRefundTpaSelectedClaimsListComponent implements OnInit{
       this.onTpaClaimsDeleteEvent.emit([])
     }
   }
-
-  getDate(value:any){
-    return new Date(formatDate(new Date(value), 'MM-dd-yyyy'));
-  }
-
-
 }

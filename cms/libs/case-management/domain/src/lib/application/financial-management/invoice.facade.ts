@@ -9,6 +9,7 @@ import { SortDescriptor } from '@progress/kendo-data-query';
 import { InvoiceDataService } from '../../infrastructure/financial-management/invoice.data.service';
 /** Providers **/
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class InvoiceFacade {
@@ -29,6 +30,7 @@ export class InvoiceFacade {
   snackbarSubject = new Subject<SnackBar>(); 
   invoiceData$ = this.invoiceDataSubject.asObservable();
   isInvoiceLoading$ = this.isInvoiceLoadingSubject.asObservable();
+  invoiceListProfilePhotoSubject = new Subject();
  
 
   showLoader() { this.loaderService.show(); }
@@ -53,7 +55,8 @@ export class InvoiceFacade {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private configurationProvider: ConfigurationProvider,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   /** Public methods **/
@@ -66,6 +69,7 @@ export class InvoiceFacade {
           total: dataResponse['totalCount'],
         };
         this.invoiceDataSubject.next(gridView);
+        this.loadInvoicesDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.isInvoiceLoadingSubject.next(false);
       },
       error: (err) => {
@@ -73,6 +77,20 @@ export class InvoiceFacade {
         this.isInvoiceLoadingSubject.next(false);
       },
     });   
+  }
+
+  loadInvoicesDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.invoiceListProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
   loadPaymentRequestServices(dataItem:any,vendorId:any,vendorType:any){  

@@ -26,10 +26,13 @@ export class NavigationMenuService {
     )
   }
 
-  getPendingApprovalPaymentCount(userLevel:any) {
-    return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/payments/count?level=${userLevel}`
-    );
+  getPendingApprovalPaymentCount(data:any) {
+    const request =
+    {
+      PaymentRequests : data
+    }
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/financial-management/approvals/payments/count`,request);
   }
 
   getPendingApprovalGeneralCount() {
