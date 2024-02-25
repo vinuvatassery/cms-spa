@@ -489,7 +489,8 @@
                             <kendo-floatinglabel text="Voucher Payable" >
                                 <kendo-textbox aria-label="Voucher Payable"  [fillMode]="formUiStyle.inputFillMode"
                                 formControlName = "voucherPayable"
-                                [maxlength]="7">
+                                (keyup)="validateVoucherPayable($event)"
+                                [maxlength]="12">
                                 </kendo-textbox >
                             </kendo-floatinglabel>
                         </div>
