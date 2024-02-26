@@ -72,7 +72,7 @@ export class EventLogComponent implements OnInit {
 
   /** Private methods **/
   private loadEvents(): void {
-    this.createFilterData('');
+    this.createFilterData('1');
     const paginationData = {
       skipCount: 0,
       pagesize: 10,
@@ -83,22 +83,13 @@ export class EventLogComponent implements OnInit {
     this.eventLogFacade.loadEvents("1", paginationData);
   }
 
-  createFilterData(searchText: string){
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: 'entityId',
-              operator: 'contains',
-              value: "1",
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
+  createFilterData(data: string){
+    this.filterData = [
+      {
+        filters: [{ field: 'entityId', operator: 'eq', value: data }],
+        logic: 'and',
+      },
+    ];
   }
 
   private subscribeEvents() {
