@@ -63,6 +63,8 @@ export class FinancialPremiumsProviderInfoComponent {
   isDuplicateTin!: boolean;
   duplicateTinMessage: any;
   isValidateForm: boolean = false;
+  phoneNbr: any;
+  emailAddress: any;
   constructor(public formBuilder: FormBuilder,
     public activeRoute: ActivatedRoute,
     private route: Router,
@@ -314,6 +316,27 @@ export class FinancialPremiumsProviderInfoComponent {
         }
     });
   }
+
+  public get vendorTypes(): typeof FinancialVendorTypeCode {
+    return FinancialVendorTypeCode;
+  }
+
+  contactItems(){
+    this.vendorProfile.address!.contacts.forEach((contact: {
+      emails: any;
+      phones: any; preferredFlag: string; 
+}) => {
+      if (contact.preferredFlag=='Y') {
+        contact.phones.forEach((phone: any) => {
+          this.phoneNbr = phone.phoneNbr;
+        }); 
+        contact.emails.forEach((email: any) => {
+          this.emailAddress = email.emailAddress;
+        }); 
+      }
+      
+    });
+  } 
 
 }
 
