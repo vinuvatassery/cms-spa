@@ -41,6 +41,7 @@
                                 (onbatchClaimsClickedEvent)="onbatchClaimsClicked($event)"
                                 (ondeleteClaimsClickedEvent)="ondeleteClaimsClicked($event)"
                                 [batchingClaims$]="batchingClaims$" (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                [pharmacyClaimsProcessListProfilePhoto$]="pharmacyClaimsProcessListProfilePhoto$"
                                 ></cms-pharmacy-claims-process-list>
                             </div>
                         </ng-template>
@@ -73,7 +74,29 @@
                                 (loadTemplateEvent) = "loadEachLetterTemplate($event)"
                                 [letterContentList$]="letterContentList$"
                                 [letterContentLoader$]="letterContentLoader$"
-                                (onProviderNameClickEvent)="onProviderNameClick($event)"></cms-pharmacy-claims-all-payments-list>
+                                (onProviderNameClickEvent)="onProviderNameClick($event)"
+                                [deliveryMethodLov$]="deliveryMethodLov$"
+                                [paymentRequestType$]="paymentRequestType$"
+                                [addPharmacyClaim$] = "addPharmacyClaim$"
+                                [editPharmacyClaim$] = "editPharmacyClaim$"
+                                [getPharmacyClaim$] = "getPharmacyClaim$"
+                                [searchPharmacies$] = "searchPharmacies$"
+                                [searchClients$] = "searchClients$"
+                                [searchDrugs$] = "searchDrugs$"
+                                [searchPharmaciesLoader$]="searchPharmaciesLoader$"
+                                [searchClientLoader$]="searchClientLoader$"
+                                [searchDrugsLoader$]="searchDrugsLoader$"
+                                (updatePharmacyClaimEvent)="updatePharmacyClaim($event)"
+                                (getPharmacyClaimEvent)="getPharmacyClaim($event)"
+                                (searchPharmaciesEvent)="searchPharmacies($event)"
+                                (searchClientsEvent)="searchClients($event)"
+                                (searchDrugEvent)="searchDrug($event)"
+                                (getCoPaymentRequestTypeLovEvent)="getCoPaymentRequestTypeLov()"
+                                (getDrugUnitTypeLovEvent)="getDrugUnitTypeLov()"                                
+                                [pharmacyClaimnsAllPaymentsProfilePhoto$]="pharmacyClaimnsAllPaymentsProfilePhoto$"
+                                (unBatchClaimsEvent)="unBatchClaimClick($event)"
+                                [unbatchClaim$]="unbatchClaim$"
+                                ></cms-pharmacy-claims-all-payments-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>

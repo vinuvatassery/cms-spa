@@ -9,20 +9,21 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, groupBy } from '@progress/kendo-data-query';
-import { CaseStatusCode, DrugsFacade, FinancialPharmacyClaimsFacade, FinancialVendorFacade, PaymentMethodCode, VendorFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Lov, UserManagementFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, first } from 'rxjs';
-import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { CaseStatusCode } from '../enums/case-status-code.enum';
+import { PaymentMethodCode } from '../enums/payment-method-code.enum';
 
 @Component({
-  selector: 'cms-pharmacy-claims-detail-form',
-  templateUrl: './pharmacy-claims-detail-form.component.html',
+  selector: 'common-cms-pharmacy-claims-detail',
+  templateUrl: './cms-pharmacy-claims-detail.component.html',
+  styleUrls: ['./cms-pharmacy-claims-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PharmacyClaimsDetailFormComponent implements OnInit{
+export class CmsPharmacyClaimsDetailComponent implements OnInit{
 
   pharmacyClaimForm!: FormGroup;
   clientTotalPayments = 0
@@ -30,13 +31,6 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   isClientInEligible = false
   public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
-  claimsListData$ = this.financialPharmacyClaimsFacade.claimsListData$;
-  sortValue = this.financialPharmacyClaimsFacade.sortValueClaims;
-  sortType = this.financialPharmacyClaimsFacade.sortType;
-  pageSizes = this.financialPharmacyClaimsFacade.gridPageSizes;
-  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
-  sort = this.financialPharmacyClaimsFacade.sortClaimsList;
-  addDrug$ = this.drugsFacade.addDrug$
   state!: State;
   brandName =""
   drugName = ""
@@ -53,6 +47,17 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   @Input() searchDrugsLoader$: any;
   @Input() paymentRequestType$ : any
   @Input() deliveryMethodLov$ :any
+  @Input() addDrug$ : any;
+  @Input() manufacturersLov$: any;
+  @Input() sortValue : any;
+  @Input() sortType : any;
+  @Input() pageSizes : any;
+  @Input() gridSkipCount : any;
+  @Input() sort : any;
+  @Input() sortValueRecentClaimList : any;
+  @Input() sortRecentClaimList : any;
+  @Input() recentClaimsGridLists$ :any;
+  @Input() pharmacyRecentClaimsProfilePhoto$!: any;
 
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
@@ -62,8 +67,12 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   @Output() getCoPaymentRequestTypeLovEvent = new EventEmitter<any>();
   @Output() modalCloseAddEditClaimsFormModal = new EventEmitter();
   @Output() getDrugUnitTypeLovEvent = new EventEmitter<any>();
-
-  manufacturersLov$ = this.financialVendorFacade.manufacturerList$;
+  @Output() addDrugEvent = new EventEmitter<any>();
+  @Output()  searchClientsDataEvent = new EventEmitter<any>();
+  @Output()  searchPharmacyDataEvent = new EventEmitter<any>();
+  @Output()  loadRecentClaimListEvent = new EventEmitter<any>();
+  @Output() loadManufacturer = new EventEmitter<any>();
+ 
   deliveryMethodLovs! :any
   vendorDetails$!: Observable<any>;
   isFinancialDrugsDetailShow = false
@@ -86,28 +95,24 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   manufacturers: any = [];
 
   constructor(
-    private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private formBuilder: FormBuilder,private cd: ChangeDetectorRef,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-    private userManagementFacade: UserManagementFacade,
-    private readonly vendorFacade: VendorFacade,
-    private readonly drugsFacade: DrugsFacade,
-    private readonly financialVendorFacade: FinancialVendorFacade,
-
+    private userManagementFacade: UserManagementFacade
   ) {}
+
   ngOnInit(): void {
     this.cd.markForCheck();
     this.loadManufacturersLovs()
-   this.initClaimForm()
-   this.getCoPaymentRequestTypeLovEvent.emit()
-   this.getDrugUnitTypeLovEvent.emit()
-   this. mapPaymentRequestTypes()
+    this.initClaimForm()
+    this.getCoPaymentRequestTypeLovEvent.emit()
+    this.getDrugUnitTypeLovEvent.emit()
+    this.mapPaymentRequestTypes()
     this.cd.markForCheck();
     this.loadDeliveryMethodLovs()
-    this.loadManufacturer()
-
+    this.loadManufacturers()
   }
+
   get addClaimServicesForm(): FormArray {
     return this.pharmacyClaimForm.get('prescriptionFillDto') as FormArray;
   }
@@ -313,8 +318,8 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
   {
     this.pharmacyClaimForm.controls['prescriptionFillDto'].reset()
     this.pharmacyClaimForm.controls['clientCaseEligibilityId'].setValue(data?.clientCaseEligibilityId);
-    this.isClientRestricted = data?.caseStatus === CaseStatusCode.restricted
-    this.isClientInEligible = (data?.clientCaseEligibilityId && data?.caseStatus !== CaseStatusCode.accept && data?.caseStatus !== CaseStatusCode.restricted)
+     this.isClientRestricted = data?.caseStatus === CaseStatusCode.restricted
+     this.isClientInEligible = (data?.clientCaseEligibilityId && data?.caseStatus !== CaseStatusCode.accept && data?.caseStatus !== CaseStatusCode.restricted)
     this.objectCode = data?.objectCode;
     this.clientId=data.clientId;
     this.cd.detectChanges();
@@ -332,53 +337,49 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
     }
   }
 
-
-  onExistClaimFormLoad()
-  {
-   this.getPharmacyClaim$?.pipe(first((existClaimData: any ) => existClaimData?.paymentRequestId != null))
-   .subscribe((existClaimData: any) =>
-   {
-    this.clientId=existClaimData.clientId;
-    this.vendorId=existClaimData.vendorId;
-       if(existClaimData?.paymentRequestId)
-       {
-        this.isEdit = true
-      const fullVendorCustomName = existClaimData?.vendorName + ' '+ existClaimData?.tin + ' '+ existClaimData?.mailCode + ' '+ existClaimData?.address
-      const fullClientCustomName = existClaimData?.clientFullName + ' '+ existClaimData?.clientId + ' '+ existClaimData?.ssn + ' '+ existClaimData?.dob
-      this.objectCode = existClaimData?.objectCode
-      this.pcaCode = existClaimData?.pcaCode
-        const client =[
-          {
-            fullCustomName: fullClientCustomName,
-            clientId: existClaimData.clientId
-          },
-        ];
-
-        const vendor =[
+  onExistClaimFormLoad() {
+    this.getPharmacyClaim$?.pipe(first((existClaimData: any) => existClaimData?.paymentRequestId != null))
+      .subscribe((existClaimData: any) => {
+        this.clientId = existClaimData.clientId;
+        this.vendorId = existClaimData.vendorId;
+        if (existClaimData?.paymentRequestId) {
+          this.isEdit = true
+          const fullVendorCustomName = existClaimData?.vendorName + ' ' + existClaimData?.tin + ' ' + existClaimData?.mailCode + ' ' + existClaimData?.address
+          const fullClientCustomName = existClaimData?.clientFullName + ' ' + existClaimData?.clientId + ' ' + existClaimData?.ssn + ' ' + existClaimData?.dob
+          this.objectCode = existClaimData?.objectCode
+          this.pcaCode = existClaimData?.pcaCode
+          const client = [
             {
-              fullCustomName : fullVendorCustomName,
+              fullCustomName: fullClientCustomName,
+              clientId: existClaimData.clientId
+            },
+          ];
+
+          const vendor = [
+            {
+              fullCustomName: fullVendorCustomName,
               vendorAddressId: existClaimData.vendorAddressId
             },
-        ];
+          ];
 
-        this.financialPharmacyClaimsFacade.searchClientsDataSubject.next(client)
-         this.financialPharmacyClaimsFacade.searchPharmaciesDataSubject.next(vendor)
-         this.selectedClient=client[0]
-         this.selectedVendor=vendor[0]
-         this.pharmacyClaimForm.controls['pharmacy'].setValue(vendor[0]);
-         this.pharmacyClaimForm.controls['client'].setValue(client[0]);
-           this.pharmacyClaimForm.patchValue(
-             {
-              paymentRequestId : existClaimData?.paymentRequestId ,
+          this.searchClientsDataEvent.next(client);
+          this.searchPharmacyDataEvent.next(vendor);
+          this.selectedClient = client[0]
+          this.selectedVendor = vendor[0]
+          this.pharmacyClaimForm.controls['pharmacy'].setValue(vendor[0]);
+          this.pharmacyClaimForm.controls['client'].setValue(client[0]);
+          this.pharmacyClaimForm.patchValue(
+            {
+              paymentRequestId: existClaimData?.paymentRequestId,
               clientCaseEligibilityId: existClaimData?.clientCaseEligibilityId,
-              vendorId : existClaimData?.vendorId,
-              paymentMethodCode : existClaimData?.paymentMethodCode === PaymentMethodCode.SPOTS
-             }
-           )
-           this.vendorId =  existClaimData?.vendorId
-           this.setFormValues(existClaimData?.prescriptionFillDto)
-       }
-   })
+              vendorId: existClaimData?.vendorId,
+              paymentMethodCode: existClaimData?.paymentMethodCode === PaymentMethodCode.SPOTS
+            }
+          )
+          this.vendorId = existClaimData?.vendorId
+          this.setFormValues(existClaimData?.prescriptionFillDto)
+        }
+      })
   }
 
   setFormValues(services: any) {
@@ -418,11 +419,9 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
 
   }
 
-  clickOpenAddEditFinancialDrugsDetails() {
-    this.vendorFacade.showLoader()
+  clickOpenAddEditFinancialDrugsDetails() {  
     this.hasDrugCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Drug_Create_Update']);
-      this.dialogTitle = this.hasDrugCreateUpdatePermission ? "Add" : "Request New";
-
+    this.dialogTitle = this.hasDrugCreateUpdatePermission ? "Add" : "Request New";
     this.isFinancialDrugsDetailShow = true;
     this.cd.detectChanges()
   }
@@ -432,8 +431,8 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
     this.isFinancialDrugsDetailShow = false;
   }
 
-  private loadManufacturer() {
-   this.vendorFacade.loadAllVendors(FinancialVendorTypeCode.Manufacturers)
+  private loadManufacturers() {
+   this.loadManufacturer.next(true);
   }
 
   private loadDeliveryMethodLovs() {
@@ -447,7 +446,10 @@ export class PharmacyClaimsDetailFormComponent implements OnInit{
 
   addDrug(data : any)
   {
-    this.drugsFacade.addDrugData(data)
+    this.addDrugEvent.next(data);
   }
 
+  loadRecentClaimListEventHandler(data : any){
+    this.loadRecentClaimListEvent.next(data);
+  }
 }

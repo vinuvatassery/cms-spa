@@ -55,7 +55,7 @@ export class ManagementPageComponent implements OnInit, OnDestroy, AfterViewInit
   sortValue = this.caseManagerFacade.sortValue;
   sortType = this.caseManagerFacade.sortType;
   sort = this.caseManagerFacade.sort;
-
+  caseManagersProfilePhoto$ = this.caseManagerFacade.caseManagersProfilePhotoSubject;
   /** Private properties **/
   private saveClickSubscription !: Subscription;
   private saveForLaterClickSubscription !: Subscription;

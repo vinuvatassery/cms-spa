@@ -7,7 +7,9 @@ import {
   OnInit,
   OnChanges,
   Output,
-  TemplateRef
+  TemplateRef,
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
 import {  GridDataResult } from '@progress/kendo-angular-grid';
@@ -16,15 +18,16 @@ import {
   State,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-pharmacy-claims-batch-list-detail-items',
   templateUrl: './pharmacy-claims-batch-list-detail-items.component.html', 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnChanges {
+export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnChanges, OnDestroy {
  
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -35,6 +38,7 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
   @Input() sortType: any;
   @Input() sort: any;
   @Input() batchItemsGridLists$: any;
+  @Input() pharmacyBatchListDetailProfilePhoto$!: any;
   @Output() loadBatchItemsListEvent = new EventEmitter<any>();
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   public state!: State;
@@ -54,10 +58,13 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+  pharmacyBatchListDetailProfilePhotoSubject = new Subject();
+  pharmacyBatchListDetailListSubscription = new Subscription();
   
   /** Constructor **/
-  constructor(private route: Router, private dialogService: DialogService) {}
+  constructor(private route: Router, private dialogService: DialogService,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef) {}
   
   ngOnInit(): void {
     this.loadBatchLogItemsListGrid();
@@ -98,6 +105,9 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
     this.gridDataHandle();
   }
  
+  ngOnDestroy(): void {
+    this.pharmacyBatchListDetailListSubscription?.unsubscribe();
+  }
   
   onChange(data: any) {
     this.defaultGridState();
@@ -156,7 +166,7 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
   }
 
   gridDataHandle() {
-    this.batchItemsGridLists$.subscribe((data: GridDataResult) => {
+    this.pharmacyBatchListDetailListSubscription = this.batchItemsGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
@@ -164,7 +174,7 @@ export class PharmacyClaimsBatchListDetailItemsComponent implements OnInit, OnCh
       );
       this.gridClaimsBatchLogItemsDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
-        this.isBatchLogItemsGridLoaderShow = false;
+        this.isBatchLogItemsGridLoaderShow = false;     
       }
     });
     this.isBatchLogItemsGridLoaderShow = false;

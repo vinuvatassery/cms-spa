@@ -43,6 +43,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   providerLissortValue = this.financialVendorFacade.sortValue;
   providerLissortType = this.financialVendorFacade.sortType;
   providerLissort = this.financialVendorFacade.sort;
+  financialClinicProviderProfile$ = this.financialVendorFacade.financialClinicProviderProfileSubject;
   filter: any = [];
   isClinicalVendor = false;
   vendorName: any;
@@ -225,4 +226,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     }
   }
 
+  updateRecentlyViewedEvent(vendorId:any){
+    this.financialVendorFacade.addVendorRecentlyViewed(vendorId);
+  }
 }

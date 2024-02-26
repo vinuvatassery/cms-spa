@@ -6,6 +6,7 @@ import { Observable,Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class IncomeFacade {
@@ -24,6 +25,8 @@ export class IncomeFacade {
   private incomesResponseSubject = new BehaviorSubject<any>([]);
   private dependentsProofofSchoolsSubject = new BehaviorSubject<any>([]);
   incomeValidSubject = new Subject<boolean>();
+  dependantProofProfilePhotoSubject = new Subject();
+  incomeListProfilePhotoSubject = new Subject();
 
   /** Public properties **/
   ddlIncomeTypes$ = this.ddlIncomeTypesSubject.asObservable();
@@ -41,7 +44,8 @@ export class IncomeFacade {
     private readonly loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly loaderService: LoaderService,
-    private readonly configurationProvider: ConfigurationProvider) { }
+    private readonly configurationProvider: ConfigurationProvider,
+    private readonly userManagementFacade: UserManagementFacade) { }
 
     showHideSnackBar(type : SnackBarNotificationType , subtitle : any)
     {
@@ -134,7 +138,13 @@ export class IncomeFacade {
         }
         this.dependentsProofofSchoolsSubject.next(incomesResponse.dependents);
         this.incomesResponseSubject.next(incomesResponse);
-         this.hideLoader();
+        if(incomesResponse.dependents){
+          this.loadDependantProofDistinctUserIdsAndProfilePhoto(incomesResponse.dependents);
+        }
+        if(incomesResponse.clientIncomes){
+          this.loadIncomeDistinctUserIdsAndProfilePhoto(incomesResponse.clientIncomes);
+        }
+        this.hideLoader();
       },
       error: (err) => {
         this.hideLoader();
@@ -142,6 +152,34 @@ export class IncomeFacade {
       },
     });
   }
+
+  loadDependantProofDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.dependantProofProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+}
+
+loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
+  const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+  if(distinctUserIds){
+    this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+    .subscribe({
+      next: (data: any[]) => {
+        if (data.length > 0) {
+          this.incomeListProfilePhotoSubject.next(data);
+        }
+      },
+    });
+  }
+}
 
   loadDependentsProofofSchools(): void {
     this.contactDataService.loadDependentsProofofSchools().subscribe({
