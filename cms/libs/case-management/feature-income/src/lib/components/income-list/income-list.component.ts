@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChildren, QueryList
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChildren, QueryList, OnDestroy
 } from '@angular/core';
 /** External Libraries **/
 import { Subject } from 'rxjs/internal/Subject';
@@ -11,13 +11,14 @@ import { DeleteRequest, SnackBar, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle ,UploadFileRistrictionOptions} from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService,  LoggingService,  NotificationSource,  SnackBarNotificationType,} from '@cms/shared/util-core';
 import { DropDownListComponent } from '@progress/kendo-angular-dropdowns';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'case-management-income-list',
   templateUrl: './income-list.component.html',
   styleUrls: ['./income-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IncomeListComponent implements OnInit {
+export class IncomeListComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @ViewChildren("proofSchoolDropdownOne") public proofSchoolDropdownOne!: QueryList<DropDownListComponent>;  @Input() data!: any;
   @Input() hasNoIncome!: boolean;
@@ -26,6 +27,7 @@ export class IncomeListComponent implements OnInit {
   @Input() clientCaseId: any;
   @Input() isClientProfileTab: boolean = false;
   @Input() isCerForm: boolean = false;
+  @Input() isProofOfSchoolDocumentUploaded! : boolean;
   @Output() public sendDetailToIncomeList = new EventEmitter<any>();
   @Output() loadIncomeListEvent = new EventEmitter<any>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -55,7 +57,10 @@ export class IncomeListComponent implements OnInit {
   isIncomeAvailable:boolean = true;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   public uploadFileRestrictions: UploadFileRistrictionOptions =
-    new UploadFileRistrictionOptions();
+  new UploadFileRistrictionOptions();
+  incomeListSubscription = new Subscription();
+  dependantProofProfilePhoto$ = this.incomeFacade.dependantProofProfilePhotoSubject;
+  incomeListProfilePhoto$ = this.incomeFacade.incomeListProfilePhotoSubject;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -116,7 +121,7 @@ export class IncomeListComponent implements OnInit {
       private readonly dependentFacade:FamilyAndDependentFacade,
       private readonly cdr: ChangeDetectorRef,
       private caseFacade: CaseFacade,
-      private readonly configurationProvider: ConfigurationProvider) {}
+      private readonly configurationProvider: ConfigurationProvider,) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -156,6 +161,10 @@ export class IncomeListComponent implements OnInit {
       }
     })
   }
+
+ngOnDestroy(): void {
+  this.incomeListSubscription?.unsubscribe();
+}
   /** Private methods **/
   public onProofSchoolDropdownOneClose(event: any , index : any) {
     event.preventDefault();
@@ -336,7 +345,7 @@ onIncomeActionClicked(
   }
 
   loadDependents(){
-    this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
+    this.incomeListSubscription = this.incomeFacade.dependentsProofofSchools$.subscribe((response:any)=>{
       if(response&&response.length>0){
         this.dependentsProofofSchools=response;
         this.cdr.detectChanges();

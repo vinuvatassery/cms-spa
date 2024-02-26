@@ -29,11 +29,6 @@
           [width]="180"
           [sticky]="true"
         >
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <button kendoButton look="flat" class="card-link-button" [attr.aria-label]="dataItem.vendorName" kendoPopoverAnchor
-              [popover]="myPopover" (click)="getCarrierContactInfo(dataItem.vendorId)">
-              {{ dataItem.vendorName }}
-            </button></ng-template>
         </kendo-grid-column>
         <kendo-grid-column
           field="serviceTypeDesc"
@@ -95,26 +90,13 @@
         </kendo-grid-column>
         <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [sortable]="false" [columnMenu]="false" [sticky]="true">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button
-              kendoButton
-              [primary]="true"
-              class="avatar-sm-btn c-default"
-              kendoPopoverAnchor
-              [popover]="onUserProfileDetailsHovered"
-              showOn="hover"
-              [attr.aria-label]="dataItem.creatorId"
-            >
-            <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>
-            </button>
-            <kendo-popover
-              #onUserProfileDetailsHovered
-              width="330"
-              position="left"
-            >
-              <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-              </ng-template>
-            </kendo-popover>
+            <common-user-photo-icon  
+            [userId]="dataItem.creatorId" 
+            [userFirstName]="dataItem.userFirstName"
+            [userLastName]="dataItem.userLastName"
+            [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+            [linkType]="'profileIcon'"
+            [userPhotos$]="healthInsuranceProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
 
@@ -170,7 +152,7 @@
 <kendo-dialog *ngIf="isPremiumPaymentDetailsOpened" (close)="closePremiumPaymentDetailsOpened()"
   class="app-c-modal app-c-modal-md app-c-modal-np">
   <kendo-dialog-titlebar *ngIf="tabStatus === 'hlt-ins-prm-pym'"> Add Insurance Premium Payment</kendo-dialog-titlebar>
-  <kendo-dialog-titlebar *ngIf="tabStatus === 'dnt-ins-prm-pym'"> Add Insurance Premium Payment</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar *ngIf="tabStatus === 'dnt-ins-prm-pym'"> Add Insurance Premium</kendo-dialog-titlebar>
   <case-management-medical-premium-payment-detail
   [caseEligibilityId]="caseEligibilityId"
   [clientId] ="clientId"
@@ -179,8 +161,3 @@
   ></case-management-medical-premium-payment-detail>
 </kendo-dialog>
 
-<kendo-popover #myPopover body="Popover Body" >
-  <ng-template kendoPopoverBodyTemplate>
-    <case-management-medical-carrier-contact-info [contactInfoType]="'SERVICE_PROVIDER'" [carrierContactInfo]="carrierContactInfo" ></case-management-medical-carrier-contact-info>
-  </ng-template>
-</kendo-popover>

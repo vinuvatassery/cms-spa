@@ -6,6 +6,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'case-management-status-period',
@@ -88,6 +90,7 @@ export class StatusPeriodComponent implements OnInit {
       },
     }
   ];
+  statusPeriodProfilePhoto$ =this.statusPeriodFacade.statusPeriodProfilePhotoSubject;
   /** Constructor **/
   constructor(
     private readonly statusPeriodFacade: StatusPeriodFacade,
@@ -95,7 +98,7 @@ export class StatusPeriodComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private clientEligibilityFacade: ClientEligibilityFacade,
     private dialogService: DialogService,
-    private readonly clientFacade: ClientFacade) { }
+    private readonly clientFacade: ClientFacade,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -200,7 +203,7 @@ export class StatusPeriodComponent implements OnInit {
   ) {
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
+      pageSize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
       filter : this.filter === undefined?null:this.filter
@@ -214,6 +217,7 @@ export class StatusPeriodComponent implements OnInit {
         res['data'].forEach((x:any, index: number) => {
           this.statusGrid?.collapseRow(index);
         });
+        
       }
     })
   }

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialVendorTypeCode } from '@cms/case-management/domain';
+import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade } from '@cms/system-config/domain';
 import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
@@ -81,7 +81,7 @@ dropDowncolumns : any = [
   {
     "columnCode": "vendorName",
     "columnDesc": "Vendor Name"   ,
-    "vendorTypeCode":["INSURANCE_VENDOR","PHARMACY"],
+    "vendorTypeCode":["INSURANCE_VENDOR"],
   },
   {
     "columnCode": "vendorName",
@@ -92,6 +92,11 @@ dropDowncolumns : any = [
     "columnCode": "vendorName",
     "columnDesc": "Manufacturer Name"   ,
     "vendorTypeCode": ["MANUFACTURERS"],
+  },
+  {
+    "columnCode": "vendorName",
+    "columnDesc": "Pharmacy Name"   ,
+    "vendorTypeCode": ["PHARMACY"],
   },
   {
     "columnCode": "tin",
@@ -108,7 +113,7 @@ dropDowncolumns : any = [
   {
     "columnCode": "unreconciledClaims",
     "columnDesc": "Unreconciled Claims"   ,
-    "vendorTypeCode": ["PHARMACY","MEDICAL_PROVIDER"],
+    "vendorTypeCode": ["MEDICAL_PROVIDER"],
   }
   ,
   {
@@ -129,7 +134,7 @@ dropDowncolumns : any = [
   {
     "columnCode": "clients",
     "columnDesc": "Clients"   ,
-    "vendorTypeCode":["INSURANCE_VENDOR","PHARMACY"],
+    "vendorTypeCode":["INSURANCE_VENDOR"],
   },
   {
     "columnCode": "totalDrugs",
@@ -144,15 +149,18 @@ dropDowncolumns : any = [
   {
     "columnCode": "NpiNbr",
     "columnDesc": "Npi Number"   ,
-    "vendorTypeCode": ["PHARMACY"],
+    "vendorTypeCode": [""],
   },
   {
     "columnCode": "physicalAddress",
     "columnDesc": "Physical Address"   ,
-    "vendorTypeCode": ["PHARMACY"],
+    "vendorTypeCode": [""],
   }
- 
+
 ]
+
+financialVendorTypeCode = FinancialVendorTypeCode;
+
 constructor(private route: Router,
   private readonly  cdr :ChangeDetectorRef,
   private readonly lovFacade: LovFacade) {
@@ -194,7 +202,7 @@ ngOnInit(): void {
 
 private bindDropdownClumns()
 {
-  
+
   this.dropDowncolumns = this.dropDowncolumns.filter((x : any)=>x.vendorTypeCode.includes(this.vendorTypeCode) || x.vendorTypeCode === 'ALL')
 }
 
@@ -214,8 +222,8 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
      pagesize : maxResultCountValue,
      sortColumn : sortValue,
      sortType : sortTypeValue,
-     vendorTypeCode : (this.vendorTypeCode == this.financeVendorTypeCodes.MedicalProviders 
-      || this.vendorTypeCode == this.financeVendorTypeCodes.DentalProviders) 
+     vendorTypeCode : (this.vendorTypeCode == this.financeVendorTypeCodes.MedicalProviders
+      || this.vendorTypeCode == this.financeVendorTypeCodes.DentalProviders)
       ? this.vendorTypeCode + ',' + this.vendorTypeCode.split('_')[0] + '_CLINIC' +',' + this.financeVendorTypeCodes.Clinic : this.vendorTypeCode ,
      filter : this.state?.["filter"]?.["filters"] ?? []
    }
@@ -255,7 +263,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
         this.showTinSearchWarning = false
        data = data.replace("-","")
       }
- 
+
     }
     this.filterData = {logic:'and',filters:[{
       "filters": [
@@ -309,7 +317,7 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
           this.showTinSearchWarning = false;
           stateFilter.value = stateFilter.value.replace("-","")
         }
-   
+
       }
       this.filter = stateFilter.value;
       this.isFiltered = true;
@@ -358,7 +366,7 @@ public filterChange(filter: CompositeFilterDescriptor): void {
   setToDefault()
   {
 
- 
+
     this.showTinSearchWarning = false;
     this.sortColumn = 'Vendor Name';
     this.sortDir = 'Ascending';
@@ -368,8 +376,8 @@ public filterChange(filter: CompositeFilterDescriptor): void {
     this.columnsReordered = false;
 
     this.sortValue  = 'vendorName';
-    this.sortType  = 'asc' 
-   
+    this.sortType  = 'asc'
+
     this.sort = [{
       field: this.sortValue,
     }];
@@ -413,15 +421,15 @@ public filterChange(filter: CompositeFilterDescriptor): void {
         );
       },
     });
-    
+
   }
   dropdownFilterChange(
-    
+
     field: string,
     value: any,
     filterService: FilterService
   ): void {
-    
+
     filterService.filter({
       filters: [
         {

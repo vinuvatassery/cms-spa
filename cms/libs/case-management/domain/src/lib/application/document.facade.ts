@@ -10,6 +10,7 @@ import { Document } from '../entities/document';
 /** Data services **/
 import { DocumentDataService } from '../infrastructure/document.data.service';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class DocumentFacade {
@@ -36,13 +37,15 @@ export class DocumentFacade {
   documentGridLoader$ = this.documentGridLoaderSubject.asObservable();
   saveDocumentResponse$ = this.saveDocumentSubject.asObservable();
   updateDocumentResponse$ = this.updateDocumentSubject.asObservable();
+  documentListUserProfilePhotoSubject = new Subject();
   
   /** Constructor**/
   constructor(private readonly documentDataService: DocumentDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private configurationProvider : ConfigurationProvider,
-    private readonly loaderService: LoaderService) {}
+    private readonly loaderService: LoaderService,
+    private userManagementFacade:UserManagementFacade,) {}
 
   /** Public methods **/
   loadDocuments(): void {
@@ -100,7 +103,7 @@ export class DocumentFacade {
   }
 
   getDocumentsByClientCaseEligibilityId(
-    clientCaseEligibilityId: string, 
+    clientId: number, 
     skipcount: number, 
     maxResultCount: number, 
     sort: string, 
@@ -111,7 +114,7 @@ export class DocumentFacade {
     this.documentGridLoaderSubject.next(true);
     this.documentDataService
       .getDocumentsByClientCaseEligibilityId(
-        clientCaseEligibilityId,
+        clientId,
         skipcount,
         maxResultCount,
         sort,
@@ -128,6 +131,7 @@ export class DocumentFacade {
             };
             this.documentGridLoaderSubject.next(false);
             this.documentsListSubject.next(gridView);
+            this.loadDocumentsDistinctUserIdsAndProfilePhoto(documentsResponse['items']);
           }
         },
         error: (err) => {
@@ -141,6 +145,20 @@ export class DocumentFacade {
         },
       });
   }
+
+  loadDocumentsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.documentListUserProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
   
   getClientDocumentsViewDownload(clientDocumentId: string) {
     return this.documentDataService.getClientDocumentsViewDownload(clientDocumentId);

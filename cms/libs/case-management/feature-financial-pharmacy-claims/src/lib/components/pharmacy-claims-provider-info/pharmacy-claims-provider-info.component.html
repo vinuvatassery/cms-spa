@@ -229,8 +229,6 @@
                      <div [formGroupName]="k">
                  <kendo-textbox aria-label="Email" [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress" id="{{'emailAddress'+i}}">
                  </kendo-textbox>
-                 <kendo-formerror *ngIf="email.hasError('required','emailAddress') &&  isSubmitted">EmailAddress is Required
-                 </kendo-formerror>
              </div>
 
              </div>

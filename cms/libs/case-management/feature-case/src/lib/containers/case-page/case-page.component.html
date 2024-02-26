@@ -32,7 +32,7 @@
         <kendo-tabstrip-tab title="My Clients" [selected]="selectedTab === caseScreenTab.MY_CASES">
           <ng-template kendoTabContent>
             <case-management-case-list
-              [cases]="allCases$"
+              [cases]="myClients$"
               [pageSizes]="pageSizes"
               [sortValue]="sortValue"
               [sortType]="sortType"
@@ -42,6 +42,8 @@
               [searchLoaderVisibility$]="searchLoaderVisibility$"
               [parentModule]="moduleCode.CLIENTS"
               [module]="moduleCode.MY_CLIENTS"
+              [caseStatus]="caseStatus"
+              [group]="group"
               (loadCasesListEvent)="loadCasesListEventHandler($event)"
             ></case-management-case-list>
           </ng-template>
@@ -49,7 +51,7 @@
         <kendo-tabstrip-tab title="Recent" [selected]="selectedTab === caseScreenTab.RECENT">
           <ng-template kendoTabContent>
             <case-management-case-list
-              [cases]="allCases$"
+              [cases]="recentClients$"
               [pageSizes]="pageSizes"
               [sortValue]="sortValue"
               [sortType]="sortType"
@@ -66,7 +68,7 @@
         <kendo-tabstrip-tab title="All" [selected]="selectedTab === caseScreenTab.ALL">
           <ng-template kendoTabContent>
             <case-management-case-list
-              [cases]="allCases$"
+              [cases]="allClients$"
               [pageSizes]="pageSizes"
               [sortValue]="sortValue"
               [sortType]="sortType"
@@ -76,13 +78,21 @@
               [searchLoaderVisibility$]="searchLoaderVisibility$"
               [module]="moduleCode.ALL_CLIENTS"
               [parentModule]="moduleCode.CLIENTS"
+              [caseStatus]="caseStatus"
+              [group]="group"
+              [healthInsuranceType]="healthInsuranceType"
+              [fplPercentage]="fplPercentage"
+              [filterOperator]="filterOperator"
               (loadCasesListEvent)="loadCasesListEventHandler($event)"
             ></case-management-case-list>
           </ng-template>
         </kendo-tabstrip-tab>
+        {{selectedTab}}
         <kendo-tabstrip-tab title="CER Tracking" [selected]="selectedTab === caseScreenTab.CER_TRACKING">
           <ng-template kendoTabContent>
-            <case-management-cer-tracking-page></case-management-cer-tracking-page>
+            <case-management-cer-tracking-page
+            [caseStatus]="caseStatus"
+            ></case-management-cer-tracking-page>
           </ng-template>
         </kendo-tabstrip-tab>
       </kendo-tabstrip>

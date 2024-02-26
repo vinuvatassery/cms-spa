@@ -1123,7 +1123,7 @@
             </div>
             </fieldset>
             <kendo-formerror *ngIf="fAfContact?.friendFamilyChangedFlag?.errors?.required">
-              Has their friend or family contact is required
+              Has their alternate contact changed is required
             </kendo-formerror>
           </kendo-formfield>
             <div class="new-fmly-ct">
@@ -1257,8 +1257,7 @@
               (valueChange)="removePhoneNumberValidation('contactPhoneNbr')"
               > </kendo-maskedtextbox>
             </kendo-floatinglabel>
-            <p class="user-old-section" *ngIf="isCerForm"><b>Old Phone Number:</b> {{oldFriendsOrFamilyContact?.contactPhoneNbr | phone}} <button *ngIf="!(fAfContact?.noFriendOrFamilyContactFlag?.value ?? false)" aria-label="Use Old" kendoButton look="flat" class="card-link-button" (click)="useOldOnClick('familyAndFriendsContact.contactPhoneNbr',oldFriendsOrFamilyContact?.contactPhoneNbr??'')">Use Old  </button></p> 
-
+            <p class="user-old-section" *ngIf="isCerForm"><b>Old Phone Number:</b> {{ getPhoneUseOldText(oldPhoneNumber) }} <button *ngIf="!(fAfContact?.noFriendOrFamilyContactFlag?.value ?? false)" aria-label="Use Old" kendoButton look="flat" class="card-link-button"(click)="useOldPhone('familyAndFriendsContact',oldPhoneNumber)">Use Old  </button></p> 
              <kendo-formerror *ngIf="fAfContact?.contactPhoneNbr?.errors?.required">
               Contact's Phone Number is required
             </kendo-formerror>
@@ -1266,6 +1265,20 @@
               Contact's Phone Number must have 10 digits
             </kendo-formerror>
           </kendo-formfield>
+          </div>
+        </div>
+        <div class="flex-col">
+          <div class="component-list-h ml-3 mt-1">
+            <span class="app-checkboxwidtext-wrapper">
+              <input formControlName="detailMsgConsentFlag" type="checkbox" kendoCheckBox
+                aria-labelledby="detailedMessagesOk" id="detailedMessagesOk" />
+              <label class="k-checkbox-label" for="detailedMessagesOk">Detailed Messages OK</label>
+            </span>
+            <span class="app-checkboxwidtext-wrapper">
+              <input formControlName="smsTextConsentFlag" type="checkbox" kendoCheckBox aria-labelledby="smsTextOk"
+                id="smsTextOk" />
+              <label class="k-checkbox-label" for="smsTextOk">SMS Texts OK</label>
+            </span>
           </div>
         </div>
       </div>

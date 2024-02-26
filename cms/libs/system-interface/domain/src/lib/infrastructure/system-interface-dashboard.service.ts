@@ -1,11 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ConfigurationProvider } from '@cms/shared/util-core';
+import { Lov } from '@cms/system-config/domain';
 import { Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class SystemInterfaceDashboardService {
-  constructor(private http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private configurationProvider : ConfigurationProvider) {}
 
   getClientRecordSendChart(): Observable<any> {
     return of({
@@ -152,6 +155,88 @@ export class SystemInterfaceDashboardService {
         stampDate: 'MM/DD/YYYY',
         standTime: '00:00:00 AM',
       },
+      {
+        id: 4,
+        interface: 'Surveillance',
+        process: 'Order',
+        processStartDate: 'MM/DD/YYYY',
+        processEndDate: 'MM/DD/YYYY',
+        status: 'Success',
+        totalRecords: 100,
+        failedRecords: 0,
+        stampDate: 'MM/DD/YYYY',
+        standTime: '00:00:00 AM',
+      },
+      {
+        id: 4,
+        interface: 'Surveillance',
+        process: 'Order',
+        processStartDate: 'MM/DD/YYYY',
+        processEndDate: 'MM/DD/YYYY',
+        status: 'Success',
+        totalRecords: 100,
+        failedRecords: 0,
+        stampDate: 'MM/DD/YYYY',
+        standTime: '00:00:00 AM',
+      },
+      {
+        id: 4,
+        interface: 'Surveillance',
+        process: 'Order',
+        processStartDate: 'MM/DD/YYYY',
+        processEndDate: 'MM/DD/YYYY',
+        status: 'Success',
+        totalRecords: 100,
+        failedRecords: 0,
+        stampDate: 'MM/DD/YYYY',
+        standTime: '00:00:00 AM',
+      },
+      {
+        id: 4,
+        interface: 'Surveillance',
+        process: 'Order',
+        processStartDate: 'MM/DD/YYYY',
+        processEndDate: 'MM/DD/YYYY',
+        status: 'Success',
+        totalRecords: 100,
+        failedRecords: 0,
+        stampDate: 'MM/DD/YYYY',
+        standTime: '00:00:00 AM',
+      },
+      {
+        id: 4,
+        interface: 'Surveillance',
+        process: 'Order',
+        processStartDate: 'MM/DD/YYYY',
+        processEndDate: 'MM/DD/YYYY',
+        status: 'Success',
+        totalRecords: 100,
+        failedRecords: 0,
+        stampDate: 'MM/DD/YYYY',
+        standTime: '00:00:00 AM',
+      },
     ]);
+  }
+
+  /** Public methods **/
+  getLovsbyType(lovType : string) {
+
+    return this.http.get<Lov[]>(
+        `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
+        `/system-config/lovs/${lovType}`
+    );
+  }
+
+  loadBatchLogsList(interfaceTypeCode: string,displayAll:boolean, paginationParameters: any) {   
+
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/batch-logs/${interfaceTypeCode}`+'?displayAll='+`${displayAll}`,paginationParameters);
+  }
+  getBatchlogsExceptions(fileId: any,interfaceTypeCode:string,processTypeCode:string, params:any ){
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/interface-exceptions/${fileId}/${interfaceTypeCode}/${processTypeCode}`, params);
+  }
+
+  getRamsellInterfaceActivity(interfaceTypeCode: string, displayAll: boolean, params:any) {
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/web-logs/${interfaceTypeCode}?displayAll=${displayAll}`, params);
   }
 }

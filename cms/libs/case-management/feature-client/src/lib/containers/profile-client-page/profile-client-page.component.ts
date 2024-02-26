@@ -22,6 +22,8 @@ export class ProfileClientPageComponent implements OnInit {
   questions:any[] =[];
   private clientSubject = new Subject<any>();
   clientProfile$ = this.caseFacade.clientProfile$;
+  userManagerprofilePhoto$ = this.caseFacade.userManagerprofilePhotoSubject;
+  userLastModifierProfilePhoto$ = this.caseFacade.userLastModifierProfilePhotoSubject;
   loadedClient$ = this.clientSubject.asObservable();
   ramSellInfo!: any;
   constructor(
@@ -45,7 +47,6 @@ export class ProfileClientPageComponent implements OnInit {
     this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
     this.tabId = this.route.snapshot.queryParams['tid'];
     this.clientCaseId =this.route.snapshot.queryParams['cid'];
-    this.loadReadOnlyClientInfoEventHandler()
   }
 
   loadReadOnlyClientInfoEventHandler() {
@@ -53,9 +54,8 @@ export class ProfileClientPageComponent implements OnInit {
     this.specialHandlings$.subscribe(question =>{
       this.questions = question;
     })
+    this.onClientProfileLoad();
     this.loadApplicantInfo();
-
-    this.onClientProfileLoad()
   }
 
   onClientProfileLoad() {
@@ -104,7 +104,15 @@ export class ProfileClientPageComponent implements OnInit {
             primaryRacialIdentity: clientData?.primaryRacialIdentity,
             lastModificationTime: clientData?.lastModificationTime,
             lastModifierName: clientData?.lastModifierName,
-            lastModifierId: clientData?.lastModifierId
+            lastModifierId: clientData?.lastModifierId,
+            userFirstName: clientData?.userFirstName,
+            userLastName: clientData?.userLastName,
+            isUserProfilePhotoExist: clientData?.isUserProfilePhotoExist,
+            creatorId: clientData?.creatorId,
+            caseManagerFirstName: clientData?.caseManagerFirstName,
+            caseManagerLastName: clientData?.caseManagerLastName,
+            isCaseManagerProfilePhotoExist: clientData?.isCaseManagerProfilePhotoExist,
+            creationTime: clientData?.creationTime,
           }
           this.loadRamSellInfo(client.clientId);
           this.clientSubject.next(client);

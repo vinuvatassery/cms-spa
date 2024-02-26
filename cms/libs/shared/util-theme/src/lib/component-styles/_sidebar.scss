@@ -12,7 +12,7 @@ cms-sidenav {
   border-color: $theme-border;
   width: $app-left_menu-width;
   transition: ease-in all 0.3s;
-  z-index: 5;
+ 
 
   .drawer-inner-container {
     transition: ease-in all 0.3s;
@@ -22,7 +22,7 @@ cms-sidenav {
     overflow-x: hidden;
     width: $app-left_menu-width;
     height: 100%;
-    
+
   }
 
   .sidebar-hamburger {
@@ -113,13 +113,13 @@ cms-sidenav {
         font-size: $font-size;
         white-space: nowrap;
         cursor: pointer;
-        letter-spacing: .5px; 
-
+        letter-spacing: .5px;
+        z-index: 5;
         .sidebar-menu_label-badge {
           background: $badge-alerts;
           color: $white !important;
           border-radius: $border-radius-sm;
-          padding: $size-s $size-m; 
+          padding: $size-s $size-m;
           font-family: $font-family-bold;
           margin-left: $size-l;
         }
@@ -245,7 +245,7 @@ cms-sidenav {
 
   .menu-active-session-list {
     padding: $size-xlg1 $size-xlg1 0 $size-xlg1;
-    max-height: calc(100vh - 420px);
+ //   max-height: calc(100vh - 420px);
     overflow-y: auto;
   }
   // new menu css
@@ -303,17 +303,17 @@ cms-sidenav {
                     transition: ease-in all 0.3s;
 
                   }
-                     
-    
+
+
           }
-    
+
           .sidebar-menu_label-badge {
             background: $badge-alerts;
             color: $white !important;
             border-radius: $border-radius-sm;
-            padding: $size-m $size-m;  
+            padding: $size-m $size-m;
             margin-left: $size-l;
-          }  
+          }
           .submenu_list_click_items {
             justify-content: space-between;
             display: flex;
@@ -364,10 +364,10 @@ cms-sidenav {
   }
   &.menuToggled {
     overflow: visible;
-    position: relative; 
+    position: relative;
     width: $sidebar-width;
-    .new_sub_sidebar_menu { 
-      >.secondary_submenu { 
+    .new_sub_sidebar_menu {
+      >.secondary_submenu {
         left: $sidebar-width;
       }
     }
@@ -403,6 +403,7 @@ cms-sidenav {
               display: block !important;
               position: absolute;
               left: 60px;
+              z-index: 99;
               padding: $size-l $size-xx;
               background: $black-3;
               border-radius: $border-radius-sm;
@@ -506,7 +507,7 @@ cms-sidenav {
             max-height: calc(100% - $header-height);
             overflow: auto;
             border-left: 1px solid var(--hive-primary-palette-600);
-
+            z-index: 5;
             .menu-active-session-list {
               &:hover {
                 visibility: visible;

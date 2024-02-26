@@ -1,17 +1,17 @@
 <div [formGroup]="healthInsuranceForm">
 
-  <kendo-floatinglabel text="Insurance Carrier Name">
-    <kendo-combobox aria-label="Insurance Carrier Name" [fillMode]="formUiStyle.dropDownFillMode" [loading]="isLoading"
-      #caseOwnr formControlName="insuranceCarrierName" [data]="carrierNames" textField="vendorName"
+  <kendo-floatinglabel text="Insurance Provider Name">
+    <kendo-combobox aria-label="Insurance Provider Name" [fillMode]="formUiStyle.dropDownFillMode" [loading]="isLoading"
+      #caseOwnr formControlName="insuranceProviderName" [data]="carrierNames" textField="vendorName"
       valueField="vendorId" [valuePrimitive]="true" [filterable]="true" [kendoDropDownFilter]="caseOwnerfilterSettings"
       (valueChange)="insuranceCarrierNameChangeValue($event)">
     </kendo-combobox>
   </kendo-floatinglabel>
   <kendo-formerror
-    *ngIf="!healthInsuranceForm.controls['insuranceCarrierName'].valid && !healthInsuranceForm.controls['insuranceCarrierName'].disabled">Insurance
-    Carrier Name is required.</kendo-formerror>
+    *ngIf="!healthInsuranceForm.controls['insuranceProviderName'].valid && !healthInsuranceForm.controls['insuranceProviderName'].disabled">Insurance
+    Provider Name is required.</kendo-formerror>
   <div class="d-flex align-items-center mt-2" *ngIf="!isViewContentEditable">
-    <span class="fontsize_twel">Don’t see the Carrier you’re looking for?</span>
+    <span class="fontsize_twel">Don’t see the Provider you’re looking for?</span>
     <button kendoButton class="card-link-button ml-1 no-ul fontsize_twel" [disabled]="isViewContentEditable"
       attr.aria-label="{{hasInsuranceCarrierCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} " (click)="addNewInsuranceProviderOpen()">
       {{hasInsuranceCarrierCreateUpdatePermission == true ? 'ADD NEW' : 'REQUEST NEW'}} 

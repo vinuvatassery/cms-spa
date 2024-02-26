@@ -72,7 +72,8 @@
     (searchTextEvent)="searchTextEventHandler($event)"
     (getExistingCaseManagerEvent)="getExistingCaseManagerEventHandler($event)"
     (addExistingCaseManagerEvent)="assignCaseManagerEventHandler($event)"
-    (loadprofilePhotoEvent)="getCaseManagerImage($event)">
+    (loadprofilePhotoEvent)="getCaseManagerImage($event)"
+    [caseManagersProfilePhoto$]="caseManagersProfilePhoto$">
     </case-management-case-manager-list>
   </section>
 

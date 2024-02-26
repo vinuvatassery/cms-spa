@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { GridFilterParam } from '@cms/case-management/domain';
-import { UIFormStyle } from '@cms/shared/ui-tpa';  
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
 import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { Subject, debounceTime } from 'rxjs';
- 
+
 
 @Component({
   selector: 'cms-financial-clinic-provider-list',
@@ -18,10 +18,10 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   isProvidersRemoveShow = false;
   selectProviderId!: string;
   gridColumns: { [key: string]: string } = {
-    vendorName:"Vendor Name",
-    tin:"Tin",
-    address:"Address",
-    effectiveDate:"Effective Date"
+    vendorName: "Vendor Name",
+    tin: "Tin",
+    address: "Address",
+    effectiveDate: "Effective Date"
   };
 
   sortColumn = 'vendorName';
@@ -29,7 +29,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   sortColumnDesc = 'Vendor Name';
   columnsReordered = false;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  
+  showExportLoader = false;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     { columnName: 'vendorName', columnDesc: 'Vendor Name' },
@@ -46,24 +46,24 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   columnChangeDesc = 'Default Columns'
   public state!: State;
   searchText = '';
-  @Input() providerList$:any
+  @Input() providerList$: any
   @Output() loadProviderListEvent = new EventEmitter<any>();
   @Output() removeProviderClick = new EventEmitter<any>();
-  @Input() ParentVendorId :any
-  @Input() vendorTypeCode :any
-  @Input() removeprovider$ : any
-  @Input() addProviderNew$ : any
+  @Input() ParentVendorId: any
+  @Input() vendorTypeCode: any
+  @Input() removeprovider$: any
+  @Input() addProviderNew$: any
+  @Input() vendorName: any
+  @Input() exportButtonShow$ = this.documentFacade.exportButtonShow$
   public processGridActions = [
     {
       buttonType: 'btn-h-danger',
       text: 'Remove',
       icon: 'delete',
       click: (data: any): void => {
-    },
-  }
+      },
+    }
   ];
-
-
 
   private searchSubject = new Subject<string>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -71,20 +71,21 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-  
+  @Input() financialClinicProviderProfile$!: any;
+
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
 
   constructor(
     private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider,
-    private readonly changeDetector: ChangeDetectorRef
+    private readonly changeDetector: ChangeDetectorRef,
+    private documentFacade: DocumentFacade,
   ) { }
 
-  
   ngOnInit(): void {
     this.initializeProviderPage();
   }
-  
+
   ngOnChanges(): void {
     this.initializeProviderGrid();
     this.loadProviderListGrid();
@@ -135,7 +136,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
-  
+
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
     this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
@@ -164,7 +165,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     if (isFromGrid) {
       if (filter.length > 0) {
         const filteredColumns = this.filter?.map((f: any) => {
-          const filteredColumns = f.filters?.filter((fld:any)=> fld.value)?.map((fld: any) =>
+          const filteredColumns = f.filters?.filter((fld: any) => fld.value)?.map((fld: any) =>
             this.gridColumns[fld.field])
           return ([...new Set(filteredColumns)]);
         });
@@ -199,18 +200,18 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.addSearchSubjectSubscription();
   }
 
-   loadProviderListGrid(): void {
+  loadProviderListGrid(): void {
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType,
       JSON.stringify(this.filter));
-      const providerQuery={
-        vendorId:this.ParentVendorId,
-        vendorTypeCode :this.vendorTypeCode,
-        ...param
-      }
+    const providerQuery = {
+      vendorId: this.ParentVendorId,
+      vendorTypeCode: this.vendorTypeCode,
+      ...param
+    }
     this.loadProviderListEvent.emit(providerQuery);
   }
 
@@ -225,7 +226,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
       });
   }
 
-  
+
   performVendorListSearch(data: any) {
     this.defaultGridState();
     const operator = (['effectiveDate']).includes(this.selectedSearchColumn) ? 'eq' : 'startswith';
@@ -256,7 +257,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.loadProviderListGrid();
   }
 
-  
+
   dataStateChange(stateData: any): void {
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
@@ -269,7 +270,7 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.loadProviderListGrid();
   }
 
-  
+
   clickOpenAddEditProvidersDetails() {
     this.isProvidersDetailShow = true;
   }
@@ -286,24 +287,55 @@ export class FinancialClinicProviderListComponent implements OnInit, OnChanges {
     this.isProvidersRemoveShow = false;
   }
   removeProvider() {
-      this.removePoviderEvent(this.selectProviderId);
-      this.removeprovider$.subscribe((_:any)=>{
-        this.loadProviderListGrid()
-      })
-      this.clickCloseRemoveProviders();
-   }
+    this.removePoviderEvent(this.selectProviderId);
+    this.removeprovider$.subscribe((_: any) => {
+      this.loadProviderListGrid()
+    })
+    this.clickCloseRemoveProviders();
+  }
 
-   removedClick(vendorId:any)
-   {
-     this.selectProviderId = vendorId
-     this.clickOpenRemoveProviders();
-   }
-   removePoviderEvent(providerId: any) {
+  removedClick(vendorId: any) {
+    this.selectProviderId = vendorId
+    this.clickOpenRemoveProviders();
+  }
+  removePoviderEvent(providerId: any) {
     this.removeProviderClick.emit(providerId);
     this.clickCloseRemoveProviders();
     this.changeDetector.detectChanges();
   }
-  onProviderNameClick(event:any){
+  onProviderNameClick(event: any) {
     this.onProviderNameClickEvent.emit(event.vendorId);
+  }
+
+  onClickedExport() {
+
+    this.showExportLoader = true
+    const param = new GridFilterParam(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType,
+      JSON.stringify(this.filter));
+    const vendorCleintPageAndSortedRequest =
+    {
+      SortType: param?.sortType,
+      Sorting: param?.sorting,
+      SkipCount: param?.skipCount,
+      MaxResultCount: param?.maxResultCount,
+      Filter: param?.filter,
+      vendorId: this.ParentVendorId,
+      vendorTypeCode: this.vendorTypeCode
+
+    }
+    let fileName = (this.vendorName[0].toUpperCase() + this.vendorName.substr(1).toLowerCase()) + ' Providers'
+
+    this.documentFacade.getExportFile(vendorCleintPageAndSortedRequest, `vendors/${this.ParentVendorId}/children/${this.vendorTypeCode}`, fileName)
+    this.exportButtonShow$
+      .subscribe((response: any) => {
+        if (response) {
+          this.showExportLoader = false
+          this.changeDetector.detectChanges()
+        }
+      })
   }
 }

@@ -40,8 +40,8 @@
           </kendo-floatinglabel>
           <kendo-formerror *ngIf="!effectiveDatesForm.controls['endDate'].valid && endDateValidator">Future dates not allowed.</kendo-formerror>
           <kendo-formerror
-          *ngIf="!effectiveDatesForm.controls['endDate'].valid && !endDateValidator && startDateIsGreaterThanEndDate">Date
-          cannot be prior to start date.</kendo-formerror>
+          *ngIf="!effectiveDatesForm.controls['endDate'].valid && !endDateValidator && startDateIsGreaterThanEndDate">End date must be after Start date
+        </kendo-formerror>
         </div>
       </div>
   </section>

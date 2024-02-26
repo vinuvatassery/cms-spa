@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 /** Enums **/
-import { HubMethodTypes } from '@cms/shared/util-core';
+import { HubEventTypes } from '@cms/shared/util-core';
 /** Services **/
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
 
@@ -22,8 +22,8 @@ export class NotificationFacade {
   /** Private methods **/
   private loadSignalrGeneralNotifications() {
     this.signalrGeneralNotifications$ =
-      this.signalrEventHandlerService.signalrNotifications(
-        HubMethodTypes.GeneralNotification
+      this.signalrEventHandlerService.signalrNotificationsObservable(
+        HubEventTypes.GeneralNotification
       );
   }
 }

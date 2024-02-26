@@ -55,6 +55,8 @@ export interface FriendsOrFamilyContact {
   contactPhoneNbr?: string;
   noFriendOrFamilyContactFlag?: string;
   concurrencyStamp?: string;
+  detailMsgConsentFlag?:string;
+  smsTextConsentFlag?:string;
 }
 
 export interface ContactInfo {
@@ -109,4 +111,6 @@ export interface FriendsOrFamilyContactClientProfile {
   phoneNbr?: string;
   activeFlag?: string;
   concurrencyStamp?: string;
+  detailMsgConsentFlag:string|null;
+  smsTextConsentFlag:string | null;
 }

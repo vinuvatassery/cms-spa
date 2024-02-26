@@ -1,12 +1,12 @@
 /** Angular **/
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject } from 'rxjs';
 /** Facades **/
 import { CaseFacade, DocumentFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
-import { LoaderService, ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-document-list',
@@ -74,12 +74,12 @@ export class DocumentListComponent implements OnInit {
   filter!: any
   columnName : any;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  documentListUserProfilePhoto$ = this.documentFacade.documentListUserProfilePhotoSubject
   /** Constructor **/
   constructor(private documentFacade: DocumentFacade,
-    private readonly loaderService: LoaderService,
     private caseFacade: CaseFacade,    
     private route: ActivatedRoute, private readonly router: Router,public intl: IntlService,
-    private readonly configurationProvider: ConfigurationProvider) { }
+    private readonly configurationProvider: ConfigurationProvider,) { }
 
   /** Lifecycle hooks **/
   ngOnInit() {
@@ -167,7 +167,7 @@ export class DocumentListComponent implements OnInit {
       columnName : columnName
     };
     this.pageSizes = this.documentFacade.gridPageSizes;
-    this.documentFacade.getDocumentsByClientCaseEligibilityId(this.caseEligibilityId,
+    this.documentFacade.getDocumentsByClientCaseEligibilityId(this.clientId,
       gridDataRefinerValue.skipcount,
       gridDataRefinerValue.maxResultCount,
       gridDataRefinerValue.sort,

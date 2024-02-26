@@ -1,10 +1,10 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, ServiceTypeCode } from '@cms/case-management/domain';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subject, debounceTime, takeUntil } from 'rxjs';
+import { Subject, Subscription, debounceTime, takeUntil } from 'rxjs';
 import {  VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -16,6 +16,7 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
 export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  public formUiStyle: UIFormStyle = new UIFormStyle();
   isShownSearchLoader = false;
+  isAddClicked = false;
   selectedRefundType : any;
   public refundType  :any[]=[]
   @Input() isEdit = false
@@ -27,6 +28,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  @Input() vendorAddressId :any
    selectedProvider:any;
   isRefundGridClaimShow = false;
+  isClientSelected = false
   isShowReasonForException = false;
   showServicesListForm: boolean =false;
   selectedMedicalProvider: any;
@@ -138,12 +140,17 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   selectedTpaRequests: any[]=[];
   selectedRxVendorRefundList: any;
   tpaRefundGridLists: any[]=[]
+  vendorRefundProfileSubject = new Subject();
+  pharmacySearchResultSubscription = new Subscription();
+  vendorRefundFormProfile$ = this.financialVendorRefundFacade.vendorRefundFormProfileSubject;
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
     public financialVendorFacade :FinancialVendorFacade,
     private dialogService: DialogService,
-    private formBuilder: FormBuilder) {}
+    private formBuilder: FormBuilder,
+    private readonly userManagementFacade: UserManagementFacade,
+    private readonly cdr: ChangeDetectorRef) {}
   ngOnDestroy(): void {
 
     this.ngUnsubscribe.next();
@@ -239,13 +246,11 @@ if(this.isEdit){
   this.refundForm.controls['tpaVendor'].disable();
   this.searchTpaVendors(this.vendorName)
   }
-
-
-
 }
   }
+
   subscribeLoadRefundClaimDataForRx(){
-    this.pharmacySearchResult$.subscribe((res:any)=>{
+    this.pharmacySearchResultSubscription = this.pharmacySearchResult$.subscribe((res:any)=>{
       this.pharmaciesList = res;
             const vendors = res.filter((x:any) =>{
         return x.vendorAddressId ==  this.vendorAddressId
@@ -254,11 +259,11 @@ if(this.isEdit){
       this.vendorId = vendors[0].vendorId
       this.initForm()
     });
-
     this.existingRxRefundClaim$.subscribe((res:any)=>{
       this.getSelectedVendorRefundsList(res,"EDIT");
     })
   }
+  
   loadPaymentRequestData(){
     this.financialVendorRefundFacade.loadPharmacyRefundEditList(this.inspaymentRequestId);
   }
@@ -302,7 +307,9 @@ if(this.isEdit){
 }
 
   selectionChange(event: any){
-    this.isConfirmationClicked = false
+    this.isConfirmationClicked = false;
+    this.claimsCount = 0;
+    this.pharmacyClaimsPaymentReqIds = [];
     this.vendorId=null;
     this.vendorAddressId=null;
     this.selectedProvider=null;
@@ -399,9 +406,9 @@ onSelectedRxClaimsChangeEvent(event:any){
       }
       this.tpaRefundGridLists = [...this.tpaRefundGridLists]
       this.tpaRefundGridLists.forEach(x=>{
-        x.serviceStartDate =new Date(x.serviceStartDate);
-        x.serviceEndDate =new Date(x.serviceEndDate);
-        x.reconciledDate =  x.reconciledDate ? new Date(x.reconciledDate) : new Date()
+        x.serviceStartDate = x.serviceStartDate ? new Date(x.serviceStartDate) : null;
+        x.serviceEndDate = x.serviceEndDate ? new Date(x.serviceEndDate) : null;
+        x.reconciledDate =  x.reconciledDate ? new Date(x.reconciledDate): null;
         x.totalAmount = x.tpaInvoice.reduce((accumulator : number, obj : any) => accumulator + obj.serviceCost, 0);
       })
       this.claimsCount = this.tpaRefundGridLists.length
@@ -471,7 +478,8 @@ OnEditProviderProfileClick(){
   this.lovFacade.getPaymentMethodLov()
 }
 
-onAddRefundClick(){
+  onAddRefundClick() {
+    this.isAddClicked = true;
   if (this.selectedRefundType === 'PHARMACY') {
     this.addNewRefundRx();
   }
@@ -545,7 +553,10 @@ addTpa(event:any){
     this.financialVendorRefundFacade.loadClientBySearchText(clientSearchText)
   }
   onClientValueChange(client: any) {
+    this.isClientSelected = false;
+    this.selectedRefundType = null;
     if (client != undefined) {
+      this.isClientSelected = true
       this.clientCaseEligibilityId = client.clientCaseEligibilityId;
       this.clientId = client.clientId;
       this.financialVendorRefundFacade.loadInsurancevendorBySearchText("",this.clientId);
@@ -556,6 +567,8 @@ addTpa(event:any){
     }
     else{
       this.clientId=null;
+      this.claimsCount = 0;
+      this.pharmacyClaimsPaymentReqIds = [];
     }
   }
   searchPharmacy(searchText: any , ) {;
@@ -565,10 +578,14 @@ addTpa(event:any){
         this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
+    this.isClientSelected = false;
     this.vendorAddressId=null;
     if($event==undefined){
       this.vendorAddressId=null;
+      this.claimsCount = 0;
+      this.pharmacyClaimsPaymentReqIds = [];
     }
+    this.isConfirmationClicked = false;
     this.vendorId=$event?.vendorId;
     this.vendorAddressId = $event?.vendorAddressId;
     this.vendorName = $event?.vendorName;
@@ -658,6 +675,7 @@ addTpa(event:any){
           grantNo : item.grantNo,
           warrantNbr : item.warrantNbr,
           paymentStatusCode : item.paymentStatusCode,
+          paymentMethodCode : item.paymentMethodCode,
           prescriptionFillItems : []
         })))).map((str:any) => JSON.parse(str));
         listData = listData.map((obj : any) =>
@@ -724,15 +742,18 @@ addTpa(event:any){
    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
    let inValid = false;
    if (control === 'qtyRefunded') {
-     inValid == isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
-     dataItem.qtyRefundedValid = !inValid;
+       dataItem.qtyRefundedValid = isTouched && (dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
    }
    if (control === 'daySupplyRefunded') {
-     inValid == isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
-     dataItem.daySupplyRefundedValid = !inValid;
+     dataItem.daySupplyRefundedValid = isTouched && (dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+     let rxRatio = dataItem.rxqty / dataItem.daySupply;
+     let refundRatio = dataItem.qtyRefunded / dataItem.daySupplyRefunded;
+     if (isNaN(refundRatio))
+       refundRatio = 0;
+     dataItem.daySupplyRefundedRatioValid = rxRatio >= refundRatio;
    }
    if (control === 'refundedAmount') {
-     inValid == isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0);
+    inValid = isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0) ? true : false;
      dataItem.refundedAmountValid = !inValid;
    }
    if (inValid) {
@@ -769,12 +790,48 @@ markGridFormTouched(){
 }
 addNewRefundRx() {
     this.isRefundRxSubmitted = true;
-    this.refundRXForm.markAsTouched();
+    this.refundRXForm.markAllAsTouched();
     this.refundRXForm.markAsDirty();
     this.markGridFormTouched();
 
+    this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []).forEach((x: any)=>{
+      
+      if(!x.qtyRefunded)
+      {   
+        x.qtyRefundedValid = false
+        return
+      }
+      else
+      {
+        x.qtyRefundedValid = true
+      }
+
+      if(!x.daySupplyRefunded)
+      {        
+        x.daySupplyRefundedValid = false
+        return
+      }
+      else
+      {
+        x.daySupplyRefundedValid = true
+      }
+      if(!x.refundedAmount)
+      {        
+        x.refundedAmountValid = false
+        return
+      }
+      else
+      {
+        x.refundedAmountValid = true
+      }
+    })
+    this.cdr.detectChanges()
+
     let selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []);
-    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
+    
+
+    let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> !(x.qtyRefunded) || (!x.daySupplyRefunded)
+     || (!x.refundedAmount))
     if ((this.refundRXForm.invalid && !this.isEdit) || InValidSelectedRefundPharmacyClaimInput.length >0) {
       return;
     } else {
@@ -839,6 +896,22 @@ addNewRefundRx() {
       }
     }
 
+}
+validateFormat(cardnumber: any): string {
+  const sanitizedValue = cardnumber.replace(/[^\d]/g, '');
+  const regex = /^(\d{0,6})(\d{0,3})/;
+  const matches = sanitizedValue.match(regex);
+ 
+  if (matches) {
+    return `${matches[1]}${matches[1] && matches[2] ? '-' : ''}${matches[2]}`;
+  }
+ 
+  return sanitizedValue;
+}
+validateCreditNumber(event: any): void {
+  const inputValue = event.target.value;
+  const formattedValue = this.validateFormat(inputValue);
+  event.target.value = formattedValue;
 }
 onRefundNoteValueChange(event: any) {
   this.refundNoteValueLength = event.length

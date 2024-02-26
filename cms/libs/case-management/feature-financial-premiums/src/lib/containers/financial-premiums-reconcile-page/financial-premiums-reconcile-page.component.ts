@@ -151,7 +151,7 @@ export class FinancialPremiumsReconcilePageComponent implements OnInit {
   }
 
   warrantNumberChange(data:any){
-    this.financialPremiumsFacade.checkWarrantNumber(data.batchId, data.checkNbr, data.vendorId);   
+    this.financialPremiumsFacade.checkWarrantNumber(data.batchId, data.checkNbr, data.vendorId,this.premiumType);   
   }
 
   loadEachLetterTemplate(event:any){

@@ -19,13 +19,17 @@ export class SystemInterfaceActivityLogListsComponent
 {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
   @Input() activityEventLogList$: any;
-  public state!: State;
+
   @Output() loadActivityLogListEvent = new EventEmitter<any>();
+  
+  public state!: State;
+
   /** Public properties **/
   isActivityLogLoaderShow = false;
   activityEventLogSubList =[
@@ -64,7 +68,6 @@ export class SystemInterfaceActivityLogListsComponent
       sort: this.sort,
     };
   }
-
   private loadActivityLogList() {
     this.loadActivityLogListEvent.emit();
   }

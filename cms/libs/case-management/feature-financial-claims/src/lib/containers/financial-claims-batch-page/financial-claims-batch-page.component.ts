@@ -41,6 +41,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
+  claimsBathcPaymentProfilePhoto$ = this.financialClaimsFacade.claimsBathcPaymentProfilePhotoSubject;
 
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
@@ -81,7 +82,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
     this.dataExportParameters = event;
     const batchId = this.route.snapshot.queryParams['bid'];
     const params = new GridFilterParam(event.skipCount, event.pagesize, event.sortColumn, event.sortType, JSON.stringify(event.filter));
-    this.financialClaimsFacade.loadBatchLogListGrid(batchId, params, this.claimsType);
+    this.financialClaimsFacade.loadBatchLogListGrid(batchId, event.isReconciled, params, this.claimsType);
   }
 
   loadBatchName(){
@@ -142,7 +143,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
 
       this.documentFacade.getExportFile(
         vendorPageAndSortedRequest,
-        `claims/${this.claimsType}/batches/${batchId}/payments`,
+        `claims/${this.claimsType}/batches/${batchId}/payments?isReconciled=${data.isReconciled}`,
         fileName
       );
     }

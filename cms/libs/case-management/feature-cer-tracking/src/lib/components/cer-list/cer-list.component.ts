@@ -32,6 +32,7 @@ export class CerListComponent implements OnInit, OnChanges {
   @Input() cerTrackingCount$: any;
   @Input() sendResponse$!: Observable<any>;
   @Input() gridState$! : any
+  @Input() caseStatus: string = '';
   @Output() loadCerTrackingListEvent = new EventEmitter<any>();
   @Output() loadCerTrackingDateListEvent = new EventEmitter<any>();
   @Output() sendCersEvent = new EventEmitter<any>();
@@ -53,7 +54,7 @@ export class CerListComponent implements OnInit, OnChanges {
   title$ = this.titleSubject.asObservable();
   gridCERDataSubject = new Subject<any>();
   gridCERData$ = this.gridCERDataSubject.asObservable();
-  public state!: State;
+  public state!: any;
   dateDropdownDisabled = false;
   gridOptionButtonVisible$ = new BehaviorSubject<boolean>(false);
   selectedEligibilityCerId!:string;
@@ -81,7 +82,7 @@ export class CerListComponent implements OnInit, OnChanges {
     cerSentDate :"Date CER Sent",
     cerReceivedDate : "Date CER Received",
     cerCompletedDate : "Date CER Completed",
-    reminderSentDate : "Reminder SentDate",
+    reminderSentDate : "Reminder Sent Date",
     cerResentDate : "CER Re-Sent Date",
     restrictedSentDate : "Restricted Sent Date",
     assignedCmId : "Case Manager" ,
@@ -135,7 +136,7 @@ export class CerListComponent implements OnInit, OnChanges {
     
   
    if(this.gridState$)
-   {    
+   { 
     this.state = this.gridState$
     this.dataStateChange(this.state);
    }
@@ -145,6 +146,7 @@ export class CerListComponent implements OnInit, OnChanges {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
+      filter:{logic:'and',filters:[]},
     };
     this.loadcerTrackingDates();
    }
@@ -177,7 +179,14 @@ export class CerListComponent implements OnInit, OnChanges {
     this.titleSubject.next(this.statusTitle)
   }
   public dataStateChange(stateData: any): void {      
-     
+    // if (this.caseStatus != '') {
+    //   this.state?.filter?.filters?.push(
+    //     { 
+    //       field: "eligibilityStatus",
+    //       operator: "eq",
+    //       value:this.caseStatus
+    //     });
+    // } 
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
@@ -228,7 +237,7 @@ export class CerListComponent implements OnInit, OnChanges {
 
   private loadCerTrackingList(): void {
     this.dateDropdownDisabled = false
-    this.loaCerData(
+    this.loadCerData(
       this.state.skip ?? 0,
       this.state.take ?? 0,
       this.sortValue,
@@ -237,12 +246,13 @@ export class CerListComponent implements OnInit, OnChanges {
    
   }
 
-  loaCerData(
+  loadCerData(
     skipcountValue: number,
     maxResultCountValue: number,
     sortValue: string,
     sortTypeValue: string
   ) {   
+    
     const gridDataRefinerValue = {
       trackingDate: this.selectedDate,
       skipCount: skipcountValue,

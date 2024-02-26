@@ -233,6 +233,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   @Input() paymentMethodCode$: any
   @Input() paymentStatusCode$: any
   @Input() healthInsuranceTypeLov$: any
+  @Input() premiumProcessListProfilePhoto$!: any;
   paymentMethodFilter = '';
   paymentTypeFilter = '';
   paymentStatusFilter = '';
@@ -300,6 +301,8 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
     });
     this.ref.detectChanges();
   }
+
+
 
   pageNumberAndCountChangedInSelectAll() {
     //If selecte all header checked and either the page count or the page number changed
@@ -905,6 +908,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   }
 
   selectedKeysChange(selection: any) {
+    this.selectedProcessClaims = selection;
     this.selectedSendReportList = selection;
     this.checkedAndUncheckedRecordsFromSelectAll = [];
     this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': selection.paymentRequestId, 'vendorAddressId': selection.vendorAddressId });

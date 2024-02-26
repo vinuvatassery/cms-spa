@@ -17,22 +17,22 @@
   </span>
   <span class="right-overlay-export">
     <button kendoButton [primary]="true" look="flat" aria-label="Export"  class="button-lg" (click)="onClickedExport()"  [disabled]="showExportLoader">
-      <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>         
-      
+      <span *ngIf="!showExportLoader" class="material-icons" aria-hidden="true">exit_to_app</span>
+
       <span *ngIf="showExportLoader" class=" k-icon k-i-loading k-input-loading-icon mr-1"></span><i class="exp_button-text">Export</i>
     </button>
   </span>
 </section>
 
 <div class="table-sorted-info">
-  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showTinSearchWarning">       
+  <span class="app-c-badge badge-warn-light" aria-label="search-warning" *ngIf="showTinSearchWarning">
         <span class="material-icons" aria-label="search-warning" aria-hidden="true">
               warning
         </span>
         <span>
               In correct TIN format .
         </span>
-  </span>   
+  </span>
 </div>
 
 <!-- Sorted Info -->
@@ -49,10 +49,10 @@
 
 <!-- Case List table -->
 <div class="app-c-table">
-  <kendo-grid (columnReorder)="onColumnReorder($event)" 
+  <kendo-grid (columnReorder)="onColumnReorder($event)"
     [filter]="state.filter" [pageSize]="state.take" [pageable]="true" [sortable]="true" [skip]="state.skip"
     [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{filter: true }" [sort]="state.sort"
-    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [loading]="loader" 
+    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [loading]="loader"
     [rowClass]="rowClass"
     [data]="gridVendorsData$ | async">
     <kendo-grid-column field="vendorName" title="{{vendornameTitleData$ | async}}" [width]="160" [sticky]="true">
@@ -88,7 +88,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="paymentMethod" title="Payment Method" [width]="160" [filterable]="false" [sortable]="false">
+    <kendo-grid-column *ngIf="vendorTypeCode !== financialVendorTypeCode.Pharmacy" field="paymentMethod" title="Payment Method" [width]="160" [filterable]="false" [sortable]="false">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-dropdownlist [data]="paymentMethodTypes" textField="lovDesc" valueField="lovDesc"
           [(ngModel)]="selectedPaymentMethod" [valuePrimitive]="true"
@@ -159,7 +159,7 @@
         </kendo-grid-numeric-filter-menu>
       </ng-template>
     </kendo-grid-column>
-   
+
     <kendo-grid-column field="unreconciledClaims" title="Unreconciled Claims" [width]="160"  format="0"
     *ngIf="vendorTypeCode===financeVendorTypeCodes.Pharmacy">
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -178,7 +178,7 @@
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-numeric-filter-menu>
       </ng-template>
-    </kendo-grid-column>  
+    </kendo-grid-column>
 
     <kendo-grid-column field="mailCode" title="Mail Code" [width]="100"  [sortable]="false"   [filterable]="false"
       *ngIf="vendorTypeCode===financeVendorTypeCodes.Manufacturers || vendorTypeCode===financeVendorTypeCodes.DentalProviders  || vendorTypeCode===financeVendorTypeCodes.MedicalProviders">

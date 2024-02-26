@@ -11,14 +11,12 @@ import { PharmacyClaimsBatchesLogListsComponent } from './components/pharmacy-cl
 import { PharmacyClaimsBatchesReconcilePaymentsBreakoutComponent } from './components/pharmacy-claims-batches-reconcile-payments-breakout/pharmacy-claims-batches-reconcile-payments-breakout.component';
 import { PharmacyClaimsBatchesReconcilePaymentsComponent } from './components/pharmacy-claims-batches-reconcile-payments/pharmacy-claims-batches-reconcile-payments.component';
 import { PharmacyClaimsDeleteClaimsComponent } from './components/pharmacy-claims-delete-claims/pharmacy-claims-delete-claims.component';
-import { PharmacyClaimsDetailFormComponent } from './components/pharmacy-claims-detail-form/pharmacy-claims-detail-form.component';
 import { PharmacyClaimsPaymentDetailsFormComponent } from './components/pharmacy-claims-payment-details-form/pharmacy-claims-payment-details-form.component';
 import { PharmacyClaimsPreviewPaymentRequestComponent } from './components/pharmacy-claims-preview-payment-request/pharmacy-claims-preview-payment-request.component';
 import { PharmacyClaimsPrintAuthorizationComponent } from './components/pharmacy-claims-print-authorization/pharmacy-claims-print-authorization.component';
 import { PharmacyClaimsPrintDenialLetterComponent } from './components/pharmacy-claims-print-denial-letter/pharmacy-claims-print-denial-letter.component';
 import { PharmacyClaimsProcessListComponent } from './components/pharmacy-claims-process-list/pharmacy-claims-process-list.component';
 import { PharmacyClaimsProviderInfoComponent } from './components/pharmacy-claims-provider-info/pharmacy-claims-provider-info.component';
-import { PharmacyClaimsRecentClaimsListComponent } from './components/pharmacy-claims-recent-claims-list/pharmacy-claims-recent-claims-list.component';
 import { PharmacyClaimsUnbatchClaimsComponent } from './components/pharmacy-claims-unbatch-claims/pharmacy-claims-unbatch-claims.component';
 import { PharmacyClaimsBatchPageComponent } from './containers/pharmacy-claims-batch-page/pharmacy-claims-batch-page.component';
 import { PharmacyClaimsBatchRouterPageComponent } from './containers/pharmacy-claims-batch-router-page/pharmacy-claims-router-batch-page.component';
@@ -46,12 +44,10 @@ import { PharmacyClaimsPrescriptionsServicesComponent } from './components/pharm
     PharmacyClaimsBatchClaimsComponent,
     PharmacyClaimsBatchListDetailItemsComponent,
     PharmacyClaimsDeleteClaimsComponent,
-    PharmacyClaimsDetailFormComponent,
     PharmacyClaimsPaymentDetailsFormComponent,
     PharmacyClaimsPreviewPaymentRequestComponent,
     PharmacyClaimsPrintAuthorizationComponent,
     PharmacyClaimsProviderInfoComponent,
-    PharmacyClaimsRecentClaimsListComponent,
     PharmacyClaimsUnbatchClaimsComponent,
     PharmacyClaimsBatchesLogListsComponent,
     PharmacyClaimsBatchPageComponent,
@@ -74,12 +70,10 @@ import { PharmacyClaimsPrescriptionsServicesComponent } from './components/pharm
     PharmacyClaimsBatchClaimsComponent,
     PharmacyClaimsBatchListDetailItemsComponent,
     PharmacyClaimsDeleteClaimsComponent,
-    PharmacyClaimsDetailFormComponent,
     PharmacyClaimsPaymentDetailsFormComponent,
     PharmacyClaimsPreviewPaymentRequestComponent,
     PharmacyClaimsPrintAuthorizationComponent,
     PharmacyClaimsProviderInfoComponent,
-    PharmacyClaimsRecentClaimsListComponent,
     PharmacyClaimsUnbatchClaimsComponent,
     PharmacyClaimsBatchesLogListsComponent,
     PharmacyClaimsBatchPageComponent,

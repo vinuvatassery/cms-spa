@@ -287,9 +287,13 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       chkmiddleName: [''],
       lastName: [''],
       prmInsFirstName: [''],
+      prmInsMiddleName:[''],
+      chkPrmInsMiddleName: [''],
       prmInsLastName: ['', { disabled: false }],
       prmInsNotApplicable: [''],
       officialIdFirstName: ['', { disabled: false }],
+      officialIdMiddleName:[''],
+      chkOfficialIdMiddleName:[''],
       officialIdLastName: ['', { disabled: false }],
       officialIdsNotApplicable: [''],
       dateOfBirth: [''],
@@ -506,8 +510,10 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
     ) {
       this.appInfoForm.controls['officialIdsNotApplicable'].setValue(true);
       this.appInfoForm.controls['officialIdFirstName'].setValue(null);
+      this.appInfoForm.controls['officialIdMiddleName'].setValue(null);
       this.appInfoForm.controls['officialIdLastName'].setValue(null);
       this.appInfoForm.controls['officialIdLastName'].disable();
+      this.appInfoForm.controls['officialIdMiddleName'].disable();
       this.appInfoForm.controls['officialIdFirstName'].disable();
     } else {
       this.appInfoForm.controls['officialIdsNotApplicable'].setValue(false);
@@ -515,6 +521,20 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
         applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility
           ?.officialIdFirstName
       );
+
+      if (applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.officialIdMiddleNameNotApplicableFlag == 'Y') {
+        this.appInfoForm.controls['chkOfficialIdMiddleName'].setValue(true);
+        this.appInfoForm.controls['officialIdMiddleName'].setValue(null);
+        this.appInfoForm.controls['officialIdMiddleName'].disable();
+      } else {
+        this.appInfoForm.controls['chkOfficialIdMiddleName'].setValue(false);
+        this.appInfoForm.controls['officialIdMiddleName'].setValue(
+          applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility
+            ?.officialIdMiddleName ?? ''
+        );
+        this.appInfoForm.controls['officialIdMiddleName'].enable();
+      }
+
       this.appInfoForm.controls['officialIdLastName'].setValue(
         applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility
           ?.officialIdLastName
@@ -528,8 +548,10 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
     ) {
       this.appInfoForm.controls['prmInsNotApplicable'].setValue(true);
       this.appInfoForm.controls['prmInsFirstName'].setValue(null);
+      this.appInfoForm.controls['prmInsMiddleName'].setValue(null);
       this.appInfoForm.controls['prmInsLastName'].setValue(null);
       this.appInfoForm.controls['prmInsFirstName'].disable();
+      this.appInfoForm.controls['prmInsMiddleName'].disable();
       this.appInfoForm.controls['prmInsLastName'].disable();
     } else {
       this.appInfoForm.controls['prmInsNotApplicable'].setValue(false);
@@ -537,6 +559,19 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
         applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility
           ?.insuranceFirstName
       );
+
+      if (applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag.insuranceMiddleNameNotApplicableFlag == 'Y') {
+        this.appInfoForm.controls['chkPrmInsMiddleName'].setValue(true);
+        this.appInfoForm.controls['prmInsMiddleName'].setValue(null);
+        this.appInfoForm.controls['prmInsMiddleName'].disable();
+      } else {
+        this.appInfoForm.controls['chkPrmInsMiddleName'].setValue(false);
+        this.appInfoForm.controls['prmInsMiddleName'].setValue(
+        applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility
+          ?.insuranceMiddleName ?? ''
+         );
+        this.appInfoForm.controls['prmInsMiddleName'].enable();
+      }
       this.appInfoForm.controls['prmInsLastName'].setValue(
         applicantInfo.clientCaseEligibilityAndFlag.clientCaseEligibility
           ?.insuranceLastName
@@ -999,6 +1034,32 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
       this.appInfoForm.controls['middleName'].updateValueAndValidity();
     }
   }
+  onPrmInsMiddleNameChecked(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['prmInsMiddleName'].disable();
+      this.appInfoForm.controls['prmInsMiddleName'].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls['prmInsMiddleName'].updateValueAndValidity();
+    } else {
+      this.appInfoForm.controls['prmInsMiddleName'].enable();
+      this.appInfoForm.controls['prmInsMiddleName'].updateValueAndValidity();
+    }
+  }
+  onOfficialIdMiddleNameChecked(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.appInfoForm.controls['officialIdMiddleName'].disable();
+      this.appInfoForm.controls['officialIdMiddleName'].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls['officialIdMiddleName'].updateValueAndValidity();
+    } else {
+      this.appInfoForm.controls['officialIdMiddleName'].enable();
+      this.appInfoForm.controls['officialIdMiddleName'].updateValueAndValidity();
+    }
+  }
   onInsuranceCardChecked(event: Event) {
     const isChecked = (event.target as HTMLInputElement).checked;
     if (isChecked) {
@@ -1006,15 +1067,25 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
         Validators.required
       );
       this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['prmInsMiddleName'].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls['prmInsMiddleName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsLastName'].removeValidators(
         Validators.required
       );
       this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
+
       this.appInfoForm.controls['prmInsFirstName'].disable();
+      this.appInfoForm.controls['prmInsMiddleName'].disable();
       this.appInfoForm.controls['prmInsLastName'].disable();
     } else {
       this.appInfoForm.controls['prmInsFirstName'].updateValueAndValidity();
       this.appInfoForm.controls['prmInsLastName'].updateValueAndValidity();
+      if(!this.appInfoForm.controls['chkPrmInsMiddleName'].value){
+        this.appInfoForm.controls['prmInsMiddleName'].updateValueAndValidity();
+        this.appInfoForm.controls['prmInsMiddleName'].enable();
+      }
       this.appInfoForm.controls['prmInsFirstName'].enable();
       this.appInfoForm.controls['prmInsLastName'].enable();
     }
@@ -1027,16 +1098,25 @@ export class ClientEditViewComponent implements OnInit, OnDestroy {
         Validators.required
       );
       this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
+      this.appInfoForm.controls['officialIdMiddleName'].removeValidators(
+        Validators.required
+      );
+      this.appInfoForm.controls['officialIdMiddleName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdLastName'].removeValidators(
         Validators.required
       );
       this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdFirstName'].disable();
+      this.appInfoForm.controls['officialIdMiddleName'].disable();
       this.appInfoForm.controls['officialIdLastName'].disable();
     } else {
       this.appInfoForm.controls['officialIdFirstName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdLastName'].updateValueAndValidity();
       this.appInfoForm.controls['officialIdFirstName'].enable();
+      if(!this.appInfoForm.controls['chkOfficialIdMiddleName'].value){
+        this.appInfoForm.controls['officialIdMiddleName'].updateValueAndValidity();
+        this.appInfoForm.controls['officialIdMiddleName'].enable();
+      }
       this.appInfoForm.controls['officialIdLastName'].enable();
     }
   }

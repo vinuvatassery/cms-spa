@@ -2,7 +2,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { first, forkJoin, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { YesNoFlag,WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode,EligibilityRequestType, ClientNoteTypeCode, SmokingCessationFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, ClientDocumentFacade, ClientEligibilityFacade, ClientDocumnetEntityType, ReviewQuestionResponseFacade, ReviewQuestionAnswerFacade, ReviewQuestionCode, QuestionTypeCode, EligibilityRequestType, ClientNoteTypeCode, SmokingCessationFacade } from '@cms/case-management/domain';
+import { YesNoFlag } from '@cms/shared/ui-common';
 import { ActivatedRoute } from '@angular/router';
 import {
   LoaderService,

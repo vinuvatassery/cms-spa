@@ -37,6 +37,15 @@ const routes: Routes = [
   {
     path: 'productivity-tools',
     loadChildren: () =>
+      import('@cms/feature-productivity-tools').then(
+        (m) => m.CaseManagementFeatureProductivityToolsModule
+      ),
+ 
+    canLoad: [AutoLoginAllRoutesGuard],
+  },
+  {
+    path: 'productivity-tools',
+    loadChildren: () =>
       import('@cms/productivity-tools/feature-home').then(
         (m) => m.ProductivityToolsFeatureHomeModule
       ),
@@ -71,7 +80,7 @@ const routes: Routes = [
    
     path: 'forbidden' , component : ForbiddenComponent 
   },
-  { path: '', redirectTo: 'case-management', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 ];
 
 @NgModule({

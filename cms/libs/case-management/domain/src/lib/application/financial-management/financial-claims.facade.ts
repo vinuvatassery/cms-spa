@@ -21,6 +21,7 @@ import { GridFilterParam } from '../../entities/grid-filter-param';
 import { FinancialClaimTypeCode } from '../../enums/financial-claim-types';
 import { FinancialClaimsDataService } from '../../infrastructure/financial-management/financial-claims.data.service';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class FinancialClaimsFacade {
@@ -47,6 +48,7 @@ export class FinancialClaimsFacade {
   public sortValueFinancialClaimsBatch = 'creationTime';
   public sortBatchList: SortDescriptor[] = [{
     field: this.sortValueFinancialClaimsBatch,
+    dir : 'desc'
   }];
 
   public sortValueFinancialClaimsPayments = 'batchNumber';
@@ -187,8 +189,6 @@ export class FinancialClaimsFacade {
   private recentClaimListDataSubject =  new Subject<any>();
   recentClaimsGridLists$ = this.recentClaimListDataSubject.asObservable();
 
-
-
   private unbatchEntireBatchSubject =  new Subject<any>();
   unbatchEntireBatch$ = this.unbatchEntireBatchSubject.asObservable();
 
@@ -200,6 +200,12 @@ export class FinancialClaimsFacade {
 
   private warrantNumberChangeLoaderSubject = new Subject<any>();
   warrantNumberChangeLoader$ = this.warrantNumberChangeLoaderSubject.asObservable();
+
+  claimsRecentClaimsProfilePhotoSubject = new Subject();
+  claimsBathcPaymentProfilePhotoSubject = new Subject();
+  dentalClaimAllPaymentClaimsProfilePhotoSubject = new Subject();
+  claimsServiceProfileSubject = new Subject();
+  medicalClaimsProfilePhotoSubject = new Subject();
   /** Private properties **/
 
   /** Public properties **/
@@ -240,6 +246,7 @@ export class FinancialClaimsFacade {
     private readonly loaderService: LoaderService,
     private readonly snackbarService: NotificationSnackbarService,
     public intl: IntlService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {}
 
   /** Public methods **/
@@ -265,6 +272,7 @@ export class FinancialClaimsFacade {
           total: dataResponse["totalCount"]
         };
         this.financialClaimsProcessDataSubject.next(gridView);
+        this.loadMedicalClaimsProcessDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
         this.hideLoader();
       },
       error: (err) => {
@@ -273,6 +281,20 @@ export class FinancialClaimsFacade {
       },
     });
   }
+
+  loadMedicalClaimsProcessDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.medicalClaimsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
   loadFinancialClaimsInvoiceListService(paymentRequestId : string, skipcount: number,  maxResultCount: number,  sort: string,  sortType: string,claimsType : string){
 
@@ -324,6 +346,7 @@ export class FinancialClaimsFacade {
           total: dataResponse["totalCount"]
         };
         this.financialClaimsAllPaymentsDataSubject.next(gridView);
+        this.loadDentalClaimsAllPaymentDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
         this.financialClaimsAllPaymentsDataLoaderSubject.next(false);
       },
       error: (err) => {
@@ -331,6 +354,20 @@ export class FinancialClaimsFacade {
         this.financialClaimsAllPaymentsDataLoaderSubject.next(false);
       },
     });
+  }
+
+  loadDentalClaimsAllPaymentDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.dentalClaimAllPaymentClaimsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
   loadBatchItemsListGrid(paymentId: string, param: GridFilterParam, claimType:string){
@@ -344,6 +381,7 @@ export class FinancialClaimsFacade {
         };
 
         this.batchItemsDataSubject.next(gridView);
+        this.loadPaymentsDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.batchItemsLoaderSubject.next(false);
       },
       error: (err) => {
@@ -352,6 +390,21 @@ export class FinancialClaimsFacade {
       },
     });
   }
+
+  loadPaymentsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.claimsServiceProfileSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
+
   loadReconcileListGrid(batchId:any,claimsType:any,event:any){
     this.financialClaimsDataService.loadReconcileListService(batchId,claimsType,event).subscribe({
       next: (dataResponse:any) => {
@@ -550,6 +603,7 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
             total: dataResponse['totalCount'],
           };
           this.recentClaimListDataSubject.next(gridView);
+          this.loadRecentClaimsDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         }
       },
       error: (err) => {
@@ -557,21 +611,36 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       },
     });
   }
+
+  loadRecentClaimsDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.by))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.claimsRecentClaimsProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  }
+
   loadServicesByPayment(paymentId: string, params:GridFilterParam, claimType:string){
     return this.financialClaimsDataService.loadServicesByPayment(paymentId, params, claimType);
   }
 
 
-  loadBatchLogListGrid(batchId: string, params:GridFilterParam, claimType:string){
+  loadBatchLogListGrid(batchId: string, isReconciled: boolean, params:GridFilterParam, claimType:string){
     this.paymentByBatchGridLoaderSubject.next(true);
-    this.financialClaimsDataService.loadPaymentsByBatch(batchId, params, claimType).subscribe({
+    this.financialClaimsDataService.loadPaymentsByBatch(batchId, isReconciled, params, claimType).subscribe({
       next: (dataResponse) => {
         const gridView: any = {
           data: dataResponse['items'],
           total: dataResponse?.totalCount,
         };
-
         this.paymentsByBatchDataSubject.next(gridView);
+        this.loadClaimsBatchDistinctUserIdsAndProfilePhoto(dataResponse['items']);
         this.paymentByBatchGridLoaderSubject.next(false);
       },
       error: (err) => {
@@ -579,6 +648,20 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
         this.paymentByBatchGridLoaderSubject.next(false);
       },
     });
+  }
+
+  loadClaimsBatchDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.claimsBathcPaymentProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
     loadBatchName(batchId: string){
@@ -721,12 +804,12 @@ loadRecentClaimListGrid(recentClaimsPageAndSortedRequestDto:any){
       });
   }
 
-  loadPrintAdviceLetterData(batchId:any,printAdviceLetterData: any,claimsType:any) {
-    return this.financialClaimsDataService.getPrintAdviceLetterData(batchId,printAdviceLetterData,claimsType);
+  loadPrintAdviceLetterData(isReconciled: boolean, batchId:any,printAdviceLetterData: any,claimsType:any) {
+    return this.financialClaimsDataService.getPrintAdviceLetterData(isReconciled, batchId,printAdviceLetterData,claimsType);
   }
 
-  reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any,claimsType:any) {
-    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData,claimsType);
+  reconcilePaymentsAndLoadPrintLetterContent(reconcileData: any, claimsType:any) {
+    return this.financialClaimsDataService.reconcilePaymentsAndLoadPrintAdviceLetterContent(reconcileData, claimsType);
 }
 
 viewAdviceLetterData(printAdviceLetterData: any, claimsType:any) {
@@ -823,9 +906,9 @@ loadFinancialClaimsInvoiceList(paymentRequestId : string, skipcount: number,  ma
   return this.financialClaimsDataService.loadFinancialClaimsInvoiceListService(paymentRequestId,skipcount,  maxResultCount,  sort,  sortType,claimsType) 
 }
 
-  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any){
+  CheckWarrantNumber(batchId:any,warrantNumber:any,vendorId:any, claimsType:any){
     this.warrantNumberChangeLoaderSubject.next(true);
-    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId).subscribe({
+    this.financialClaimsDataService.CheckWarrantNumber(batchId,warrantNumber,vendorId,claimsType).subscribe({
       next: (dataResponse:any) => {       
         this.warrantNumberChangeSubject.next(dataResponse);
         this.warrantNumberChangeLoaderSubject.next(false);

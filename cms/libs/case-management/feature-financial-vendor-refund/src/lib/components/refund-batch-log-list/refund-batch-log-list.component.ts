@@ -9,8 +9,9 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FinancialClaimsFacade, FinancialServiceTypeCode, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
+import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorFacade, FinancialVendorRefundFacade, PaymentBatchName } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-refund-batch-log-list',
   templateUrl: './refund-batch-log-list.component.html',
@@ -44,6 +45,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   @Input() updateProviderPanelSubject$: any
   @Input() ddlStates$: any
   @Input() paymentMethodCode$: any
+  @Input() vendorRefundBatchClaims$!: any;
   @Output() onProviderNameClickEvent = new EventEmitter<any>();
   private addEditRefundFormDialog: any;
   isUnBatchRefundsClosed = false;
@@ -71,12 +73,13 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       click: (dataItem: any): void => {
         if (!this.isRefundEditDialogOpen) {
           this.isRefundEditDialogOpen = true;
-          this.refunEditServiceType = dataItem.paymentTypeCode
+          this.refunEditServiceType = dataItem.serviceTypeCode
           this.refundEditClientId = dataItem.clientId
           this.refundEditClientFullName = dataItem.clientFullName
           this.refundEditVendorAddressId = dataItem.vendorAddressId
-          this.refundEditVendorName = dataItem.providerName
-          this.inspaymentRequestId = dataItem.paymentRequestId
+          this.refundEditVendorName = dataItem.vendorName
+          this.inspaymentRequestId = dataItem.paymentRequestId;
+          this.vendorId = dataItem.vendorId;
           this.onEditRefundClaimClicked(this.addEditRefundFormDialogDialogTemplate)
         }
       }
@@ -122,7 +125,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     indexCode: 'Index Code',
     pcaCode: 'PCA',
     grantNumber: 'Grant #',
-    voucherPayable: 'VP',
+    voucherPayable: 'VP - Suffix',
     refundNote: 'Refund Note',
     entryDate: 'Entry Date'
   };
@@ -189,7 +192,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     },
     {
       columnCode: 'voucherPayable',
-      columnDesc: 'VP',
+      columnDesc: 'VP - Suffix',
     },
     {
       columnCode: 'refundNote',
@@ -217,6 +220,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   isBulkUnBatchOpened: any;
   batchId: any;
+  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
 
   //recent claims modal
   @ViewChild('clientRecentClaimsDialog') clientRecentClaimsDialogRef!: TemplateRef<unknown>
@@ -230,6 +234,10 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   paymentRequestId: any;
   private addClientRecentClaimsDialog: any;
   recentClaimsGridLists$ = this.financialClaimsFacade.recentClaimsGridLists$;
+  sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
+  sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+  gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
+  refundBatchClaimsSubject = new Subject();
 
   /** Constructor **/
   constructor(
@@ -240,6 +248,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     private activatedRoute: ActivatedRoute,
     private readonly financialVendorFacade: FinancialVendorFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,    private readonly userManagementFacade: UserManagementFacade,
 
   ) { }
 
@@ -286,6 +295,10 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
       this.pageNumberAndCountChangedInSelectAll();
       this.gridLoaderSubject.next(false);
     });
+  }
+
+  loadRecentClaimListEventHandler(data : any){
+    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
   }
 
   handlePageCountSelectionChange() {
@@ -697,8 +710,12 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
     }
   }
 
-  onProviderNameClick(event: any) {
-    this.providerNameClickEvent.emit(event);
+  onProviderNameClick(paymentRequestId:any, type:any) {
+    const data ={
+      paymentRequestId,
+      type
+    }
+    this.providerNameClickEvent.emit(data);
   }
 
   onClientClicked(clientId: any) {
@@ -739,7 +756,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   }
 
   getSelectedReportCount(selectedSendReportList: []) {
-    this.selectionCount = selectedSendReportList.length;
+    this.selectionCount = selectedSendReportList?.length;
   }
 
   selectionChange(dataItem: any, selected: boolean) {

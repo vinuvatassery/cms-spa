@@ -242,6 +242,17 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     let mailCode = this.medicalProviderForm.controls['mailCode'].value;
     this.validateMailCode()
 
+    let addressLine1 = this.medicalProviderForm.controls['addressLine1'].value;
+    if(addressLine1) {
+      this.medicalProviderForm.controls['mailCode']
+          .setValidators([
+              Validators.required,
+          ]);
+      this.medicalProviderForm.controls['mailCode'].updateValueAndValidity();    
+      this.mailCodeLengthError = false;
+      this.cdr.detectChanges();
+    }
+
     if (mailCode) {
       this.medicalProviderForm.controls['addressLine1']
         .setValidators([

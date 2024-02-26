@@ -1,0 +1,44 @@
+
+
+               <div class="dash-header-with-filters">
+                  <h5>APPLICATIONS & CERS</h5>
+            </div>         
+
+    <common-dashboard-loader-panel *ngIf="!applicationCERStats[1]?.value && !applicationCERStats[1]?.value && !isEditDashboard" ></common-dashboard-loader-panel>
+      <div class="dashboard-cards-container" *ngIf="applicationCERStats[1]?.value || applicationCERStats[1]?.value">
+            <div class="app-cars-row application_cer-row">
+                  <div class="app-cars-first-col orange-frame-icon">
+                        <label class="icon-frame orange-frame"><span class="material-icons">
+                                    description
+                              </span></label>
+                        <h4>New Applications</h4>
+                  </div>
+                  <div class="app-cars-col red-frame">
+                        <h4>{{applicationCERStats[1]?.value}}</h4>
+                        <a class="btm_texts" kendoRippleContainer (click)="todoitemsNavigate()">REVIEWS TO SEND <span class="material-icons"> chevron_right </span></a>
+                  </div>
+                  <div class="app-cars-col ">
+                        <h4>{{applicationCERStats[0]?.value}}</h4>
+                        <a class="btm_texts" (click)="myClientsNavigate()">INCOMPLETE <span class="material-icons"> chevron_right </span></a>
+                  </div>
+                   
+            </div>
+            <div class="app-cars-row application_cer-row">
+                  <div class="app-cars-first-col orange-frame-icon">
+                        <label class="icon-frame orange-frame"> <span class="material-icons">
+                              book
+                        </span></label>
+                        <h4>CERs</h4>
+                  </div>
+                  <div class="app-cars-col red-frame">
+                        <h4>{{applicationCERStats[2]?.value}}</h4>
+                        <a class="btm_texts" (click)="cerTrackingNavigate()">RESTRICTED <span class="material-icons"> chevron_right </span></a>
+                  </div>
+                  <div class="app-cars-col">
+                        <h4>{{applicationCERStats[3]?.value}}</h4>
+                        <a class="btm_texts" (click)="todoitemsNavigate()">DUE THIS MONTH <span class="material-icons"> chevron_right </span></a>
+                  </div>
+                   
+            </div>
+           
+      </div>

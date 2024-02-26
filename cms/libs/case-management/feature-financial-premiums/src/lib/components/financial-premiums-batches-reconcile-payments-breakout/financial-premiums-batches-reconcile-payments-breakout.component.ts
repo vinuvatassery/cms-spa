@@ -23,7 +23,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
   @Input() premiumsType: any;
   @Input() batchId:any;
   @Input() entityId:any;
-  @Input() paymentRequestId :any
+  @Input() paymentRequestId :any;  
+  @Input() warrantInfoArray:any[]=[];
   @Output() loadReconcilePaymentBreakOutGridEvent = new EventEmitter<any>();
   vendorId:any;
   clientId:any;
@@ -131,7 +132,8 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
-      filter : this.state?.["filter"]?.["filters"] ?? []
+      filter : this.state?.["filter"]?.["filters"] ?? [],
+      warrantCalculation : this.warrantInfoArray ?? []
     };
    this.loadPaymentBreakout(gridDataRefinerValue);
   }
@@ -269,7 +271,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsBreakoutComponent  impleme
   }
 
   onProviderNameClick(event:any){
-    this.onProviderNameClickEvent.emit(this.paymentRequestId)
+    this.onProviderNameClickEvent.emit(event.paymentRequestId)
   }
 
   dropdownFilterChange(

@@ -1,31 +1,83 @@
-<div class="app-l-inner-rapper">
-  <div class="flex-row">
-    <div class="flex-col mb-3">
-      <!-- //NOSONAR <common-signature-pad></common-signature-pad> -->
- 
-      <h2> 
-        <span      
-            class="material-icons"     
-            aria-label="home"
-            aria-hidden="true"
-        >home</span>
-         &nbsp; Dashboard
-      </h2>
+<div class="app-l-inner-rapper ">
+
+  <section class="app-l-mainTittle justify-content-between">
+    <div>
+      <h1 class="maintitle_withicon text-bold">
+        <span aria-label="Clients" class="material-icons sidebar-menu_icon " aria-hidden="true"> home </span>
+        Welcome back, {{ onGetUser()?.name }}
+      </h1>
+
+      <kendo-dropdownlist class="mt-1" [fillMode]="formUiStyle.dropDownFillMode" style="width: auto;"
+        placeholder="DashBoard" required [data]="userDashBoardsListData$ | async" textField="dashboardDesc"
+        valueField="dashboardId" [valuePrimitive]="true" [(ngModel)]="selectedDashBoard"
+        (selectionChange)="dashBoardChange($event)">
+      </kendo-dropdownlist>
+
     </div>
-    <div class="flex-col mb-3">
-      <table class="table" >
-        <caption hidden> dashboard</caption>
-        <tr hidden>
-          <th scope="col">id</th>
-          <th scope="col">name</th>
-          <th scope="col">description</th>
-        </tr>
-        <tr *ngFor="let dashboard of dashboard$ | async">
-          <td>{{ dashboard.id }}</td>
-          <td>{{ dashboard.name }}</td>
-          <td>{{ dashboard.description }}</td>
-        </tr>
-      </table>
+
+
+    <div>
+      <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
+          (click)="editDashboardClicked(configSubscriptionItems)"> dashboard </span></button>
+      <div *ngIf="isReorderEnable">
+        <button kendoButton (click)="editDashboardCancelClicked('true')" class="mr-1" [primary]="true"
+          aria-label="Save">
+          Save</button>
+        <button kendoButton fillMode="outline" (click)="editDashboardCancelClicked('false')"> Cancel </button>
+
+      </div>
+    </div>
+  </section>
+  <div class="mt-1" [ngClass]="{'reorder_wrapper_enabled': isReorderEnable}">
+    <gridster [options]="configSubscriptionItems" *ngIf="configSubscriptionItems" class="main-gridster">
+      <gridster-item *ngFor="let item of dashboardContentListData$ | async"
+        [item]="item?.widgetProperties?.componentData">
+        <div class="dashboard-cards-wrapper">
+          <button *ngIf="isReorderEnable" kendoButton class="widget_remove_btn" (click)="removeWidget(item)"><span
+              class="material-icons">
+              remove
+            </span></button>
+          <button class="drag-button drag-handler" *ngIf="isReorderEnable"> <span class="material-icons"> drag_indicator
+            </span> </button>
+          <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
+            [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
+
+          </ndc-dynamic>
+        </div>
+
+      </gridster-item>
+    </gridster>
+
+  </div>
+</div>
+
+<div>
+
+  <div class="add-more-wrapper" *ngIf="isReorderEnable">
+    <h2 class="mb-2">{{isReorderEnable ? "Add More Widgets" : ""}} </h2>
+    <div class="add-more-container">
+      <div *ngIf="addWidgetConfiguration" class="add-gridster">
+
+
+        <div class="add-more-list" *ngFor="let item of dashboardAllWidgetsListData$ | async">
+
+          <div class="chart-view-point">
+            <div class="dashboard-cards-wrapper">
+
+              <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
+                [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
+
+              </ndc-dynamic>
+            </div>
+          </div>
+          <button kendoRippleContainer class="bottom-title" (click)="addItem(item)"> <span class="material-icons">
+              add_circle </span>
+            <h2>{{item?.widgetDesc}}</h2>
+          </button>
+        </div>
+
+      </div>
     </div>
   </div>
+
 </div>
