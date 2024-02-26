@@ -7,12 +7,14 @@ import { DistributionListsComponent } from './components/distribution-lists/dist
 import { ErrorCategoryComponent } from './components/error-category/error-category.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
+import { SystemInterfaceFeatureInterfaceSupportRoutingModule } from './system-interface-feature-interface-support.routing.module';
 
 @NgModule({
   imports: [
     CommonModule, 
     SharedUiTpaModule,
     SharedUiCommonModule,
+    SystemInterfaceFeatureInterfaceSupportRoutingModule
   ],
   declarations: [
     InterfaceSupportPageComponent,
@@ -27,4 +29,4 @@ import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
     ErrorCategoryComponent,
   ],
 })
-export class FeatureInterfaceSupportModule {}
+export class SystemInterfaceFeatureInterfaceSupportModule {}

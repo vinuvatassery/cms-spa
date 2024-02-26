@@ -1,5 +1,5 @@
-export * from './lib/feature-interface-support.module';
-export * from './lib/feature-interface-support.routing.module';
+export * from './lib/system-interface-feature-interface-support.module';
+export * from './lib/system-interface-feature-interface-support.routing.module';
 
  
 

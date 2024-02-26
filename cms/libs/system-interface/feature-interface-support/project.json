@@ -1,5 +1,5 @@
 {
-  "name": "feature-interface-support",
+  "name": "system-interface-feature-interface-support",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/system-interface/feature-interface-support/src",
   "prefix": "cms",

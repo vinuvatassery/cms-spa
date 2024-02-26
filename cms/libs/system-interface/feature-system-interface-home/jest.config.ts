@@ -1,10 +1,10 @@
 /* eslint-disable */
 export default {
-  displayName: 'system-interface-feature-interface-support',
+  displayName: 'feature-system-interface-home',
   preset: '../../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
   coverageDirectory:
-    '../../../coverage/libs/system-interface/feature-interface-support',
+    '../../../coverage/libs/system-interface/feature-system-interface-home',
   transform: {
     '^.+\\.(ts|mjs|js|html)$': [
       'jest-preset-angular',

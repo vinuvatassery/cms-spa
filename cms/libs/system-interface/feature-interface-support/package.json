@@ -1,5 +1,5 @@
 {
-  "name": "@cms/feature-interface-support",
+  "name": "@cms/system-interface/feature-interface-support",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^16.2.0",
