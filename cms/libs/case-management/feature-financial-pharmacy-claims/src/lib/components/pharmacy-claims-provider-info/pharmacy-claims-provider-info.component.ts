@@ -51,7 +51,8 @@ export class PharmacyClaimsProviderInfoComponent {
   })
   @Input() paymentRequestId:any
   isSubmitted: boolean = false
- 
+  prefferedVendorEmails! : any[]
+  prefferedVendorPhones! : any[]
   constructor(  
     private readonly changeDetectorRef: ChangeDetectorRef,
      public formBuilder: FormBuilder,
@@ -153,6 +154,18 @@ createPhonesFormArray(contact: any): FormArray {
       this.changeDetectorRef.markForCheck()
       this.vendorProfile = res;
       this.isEditProvider = false
+      this.prefferedVendorEmails = []
+      this.prefferedVendorPhones = []
+      this.vendorProfile.address.contacts?.forEach((contact :any)=>{
+         if(contact){
+          if(contact.email &&  contact.email.length >0){
+            this.prefferedVendorEmails.push(contact.emails.filter((e :any) => e.preferredFlag =='Y'))
+          }
+          if(contact.phones &&  contact.phones.length >0){
+             this.prefferedVendorPhones.push(contact.phones.filter((e :any) => e.preferredFlag =='Y'))
+          }
+         }
+     })   
     })
 
     this.getProviderPanelEvent.emit(this.paymentRequestId)
