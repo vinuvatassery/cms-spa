@@ -81,7 +81,8 @@ private clientClaimsListDataSubject =  new Subject<any>();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
   constructor(
-    public financialVendorRefundFacade:FinancialVendorRefundFacade,private dialogService: DialogService,private readonly cdr: ChangeDetectorRef
+    public financialVendorRefundFacade:FinancialVendorRefundFacade,
+    private dialogService: DialogService,private readonly cdr: ChangeDetectorRef
   ) { }
   ngOnInit(): void {
     this.state = {
@@ -206,8 +207,23 @@ private clientClaimsListDataSubject =  new Subject<any>();
   }
   selectedRXKeysChange(selection: any[]) {
     this.selectedPharmacyClaims = this.gridData.data.filter((i: any) => selection.includes( i.perscriptionFillId));
-    this.claimsCount.emit(this.selectedPharmacyClaims.length)
-    this.selectedClaimsChangeEvent.emit(selection)
+  
+   const uniqueOriginalWarrants = [...new Set(this.selectedPharmacyClaims.map(obj => obj.warrantNbr))];
+   if(uniqueOriginalWarrants.length>1)
+   {
+     this.financialVendorRefundFacade.errorShowHideSnackBar("Select a claim with Same warrant number")
+     this.claimsCount.emit(0)
+     this.selectedClaimsChangeEvent.emit([])
+     this.selectedPharmacyClaims =[]
+     this.selectedPharmacyClaimsPayments=[]
+     this.cdr.detectChanges();
+   }
+     if(uniqueOriginalWarrants.length<=1)
+       {
+         this.claimsCount.emit(this.selectedPharmacyClaims.length)
+         this.selectedClaimsChangeEvent.emit(selection)
+       }   
+
   }
   setGridDataState(){
     this.sort = this.gridState.sort;

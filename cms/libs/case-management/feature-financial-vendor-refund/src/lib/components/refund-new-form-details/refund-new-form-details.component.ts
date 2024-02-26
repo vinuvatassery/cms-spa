@@ -864,7 +864,8 @@ addNewRefundRx() {
           creditNumber : obj.creditNumber,
           rxqtype : obj.rxqtype,
           pharmacyNpi : obj.PharmacyNpi,
-          ndc : obj.ndc
+          ndc : obj.ndc,
+          paymentTypeCode : obj.paymentTypeCode
         }));
       let refundRxData = {
         ...this.refundRXForm.value,
