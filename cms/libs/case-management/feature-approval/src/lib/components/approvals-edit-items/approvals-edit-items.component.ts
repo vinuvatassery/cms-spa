@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { DrugType, DrugsFacade, EmailAddressTypeCode, FinancialVendorFacade, InsurancePlanFacade, PendingApprovalGeneralTypeCode, PhoneTypeCode } from '@cms/case-management/domain';
-import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
+import { FinancialVendorTypeCode, StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 
 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { LoaderService } from '@cms/shared/util-core';
-import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 @Component({
   selector: 'productivity-tools-approvals-edit-items',
   templateUrl: './approvals-edit-items.component.html',

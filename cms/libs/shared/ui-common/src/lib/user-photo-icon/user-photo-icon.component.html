@@ -1,12 +1,49 @@
-
-<div class="app-popover-header use-profile-card-wrapper">    
-      <div  [hidden]="imageLoaderVisible" class="app-c-avatar avatar-img-sm avatar-sm">   
-          <img [hidden]="imageLoaderVisible" [src]="userImageSubject | async" alt="User Profile photo" class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()"/> 
-      </div>
-      <div *ngIf="imageLoaderVisible">    
-        <div mat-card-avatar class="app-c-avatar avatar-sm" *ngIf="userByIdSubject | async as userById;">
-          <span class="profile-text-avatar">{{userById?.firstName?.charAt(0)}}{{userById?.lastName?.charAt(0)}}</span>          
-        </div>
-      </div>      
-</div>
+      <div *ngIf="userByIdSubject" class="d-in_block">
+        <button *ngIf="linkType === 'profileIcon'"
+              kendoButton
+              [primary]="true"
+              class="avatar-sm-btn c-default"
+              kendoPopoverAnchor
+              [popover]="onUserProfileDetailsHovered"
+              showOn="hover"
+              attr.aria-label="{{userFirstName?.charAt(0)}}{{userLastName?.charAt(0)}}"
+            >
+            <div class="app-popover-header use-profile-card-wrapper">    
+              <div  [hidden]="imageLoaderVisible$ | async" class="app-c-avatar avatar-img-sm avatar-sm">   
+                  <img [hidden]="imageLoaderVisible$ | async" [src]="userImageSubject | async" [alt]="userFullName" class="app-c-avatar profile-img-avatar-sm" (load)="onLoad()"/> 
+              </div>
+              <div *ngIf="imageLoaderVisible$ | async">    
+                <div mat-card-avatar class="app-c-avatar avatar-sm" *ngIf="userByIdSubject;">
+                  <span class="profile-text-avatar">{{userFirstName?.charAt(0)}}{{userLastName?.charAt(0)}}</span>          
+                </div>
+              </div> 
+              </div>
+            </button>
+            <button
+            *ngIf="linkType === 'profileLink'"
+                  kendoPopoverAnchor
+                  [popover]="onUserProfileDetailsHovered"
+                  showOn="hover"
+                  [attr.aria-label]="userFullName"
+                  kendoButton
+                  look="flat"
+                  class="card-link-button"
+                >
+                  {{ userFullName }}
+                </button>
+            <kendo-popover
+              #onUserProfileDetailsHovered
+              width="330"
+              [position]="position"
+              [callout]="callout"
+            >
+              <ng-template kendoPopoverBodyTemplate>
+                <common-user-profile-card [userId]="userId" 
+                [userProfilePhotoExists]="userProfilePhotoExists"
+                [reassign]="reassign"
+                [clientName]="clientName"
+                [clientCaseId]="clientCaseId"></common-user-profile-card>
+              </ng-template>
+            </kendo-popover>
+          </div>
 

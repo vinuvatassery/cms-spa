@@ -1,13 +1,14 @@
 /** Angular **/
-import {    ChangeDetectionStrategy,     Component,    EventEmitter,    Input,
-    OnChanges,       Output,     } from '@angular/core';
+import {    ChangeDetectionStrategy,     ChangeDetectorRef,     Component,    EventEmitter,    Input,
+    OnChanges,       OnDestroy,       Output,     } from '@angular/core';
 import { FinancialClaimsFacade } from '@cms/case-management/domain';
 
   import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
   import { GridDataResult } from '@progress/kendo-angular-grid';
   import {State} from '@progress/kendo-data-query';
-  import {Subject } from 'rxjs';
+  import {Subject, Subscription } from 'rxjs';
 
 
   @Component({
@@ -15,7 +16,7 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
     templateUrl: './financial-claims-invoice-list.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
   })
-  export class FinancialClaimsInvoiceListComponent implements OnChanges {
+  export class FinancialClaimsInvoiceListComponent implements OnChanges, OnDestroy {
    @Input() paymentRequestId : any
    @Input() financialInvoiceList$ : any
    @Input() sort : any
@@ -29,10 +30,14 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
    sortType ="asc"
    gridDataResult!: GridDataResult;
    public formUiStyle: UIFormStyle = new UIFormStyle();
+   financialInvoiceGridSubscription = new Subscription();
+   financialInvoiceGridProfileSubject = new Subject();
 
    constructor(private financialClaimsFacade : FinancialClaimsFacade,
      private readonly notificationSnackbarService: NotificationSnackbarService,
-     private loggingService: LoggingService){
+     private loggingService: LoggingService,
+     private readonly userManagementFacade: UserManagementFacade,
+     private readonly cdr: ChangeDetectorRef){
 
    }
 
@@ -46,6 +51,24 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
         this.loadFinancialInvoiceListGrid();
       }
 
+    loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+      const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+      if(distinctUserIds){
+        this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+        .subscribe({
+          next: (data: any[]) => {
+            if (data.length > 0) {
+              this.financialInvoiceGridProfileSubject.next(data);
+            }
+          },
+        });
+        this.cdr.detectChanges();
+      }
+    } 
+
+    ngOnDestroy(): void {
+      this.financialInvoiceGridSubscription?.unsubscribe();
+    }
 
       loadClaimsInvoices(
         paymentRequestId : string,
@@ -71,6 +94,7 @@ import { LoggingService, NotificationSnackbarService, SnackBarNotificationType }
               };
               this.isFinancialClaimsInvoiceGridLoaderShow = false;
               this.gridFinancialClaimsInvoiceSubject.next(gridView);
+              this.loadDistinctUserIdsAndProfilePhoto(dataResponse["items"]);
             },
             error: (err) => {
               this.isFinancialClaimsInvoiceGridLoaderShow = false;

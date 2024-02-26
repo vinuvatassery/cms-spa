@@ -34,7 +34,8 @@
                                 [exportButtonShow$]="exportButtonShow$"
                                 [paymentMethodCode$]="paymentMethodCode$"
                                 [paymentStatusCode$]="paymentStatusCode$"
-                                [healthInsuranceTypeLov$]="healthInsuranceTypeLov$"></cms-financial-premiums-process-list>
+                                [healthInsuranceTypeLov$]="healthInsuranceTypeLov$"
+                                [premiumProcessListProfilePhoto$]="premiumProcessListProfilePhoto$"></cms-financial-premiums-process-list>
                             </div>
                         </ng-template>
                     </kendo-tabstrip-tab>
@@ -76,6 +77,7 @@
                                 [insuranceCoverageDates$]="insuranceCoverageDates$"
                                 (updatePremiumEvent)="updatePremium($event)"
                                 (loadPremiumEvent)="loadPremium($event)"
+                                [premiumAllPaymentsPremium$]="premiumAllPaymentsPremium$"
                                ></cms-financial-premiums-all-payments-list>
                             </div>
                         </ng-template>

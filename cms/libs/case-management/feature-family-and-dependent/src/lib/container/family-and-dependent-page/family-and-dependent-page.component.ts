@@ -56,6 +56,7 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
   isCerFormValid: Subject<boolean> = new Subject();
   updatedDependentsStatus: any = [];
   showPrevRelations$ = new BehaviorSubject<boolean>(false);
+  dependentProfilePhoto$ = this.familyAndDependentFacade.dependentProfilePhotoSubject;
 
   /** Constructor **/
   constructor(
