@@ -115,6 +115,9 @@
       "@cms/dashboard/feature-home": [
         "libs/dashboard/feature-home/src/index.ts"
       ],
+      "@cms/feature-interface-support": [
+        "libs/system-interface/feature-interface-support/src/index.ts"
+      ],
       "@cms/feature-productivity-tools": [
         "libs/case-management/feature-productivity-tools/src/index.ts"
       ],
