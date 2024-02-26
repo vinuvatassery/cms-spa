@@ -15,16 +15,20 @@
                     <td><strong>TIN</strong></td>
                     <td>  {{vendorProfile.tin| tin}}</td>
                 </tr>
+                <tr *ngIf="vendorProfile.vendorTypeCode==vendorTypes.Pharmacy">
+                    <td><strong>NPI</strong></td>
+                    <td>  {{vendorProfile.npiNbr}}</td>
+                </tr>
                 <tr>
                     <td><strong>Mail Code</strong></td>
                     <td>{{vendorProfile.address.mailCode}}</td>
                 </tr>
-                <tr>
+                <tr *ngIf="vendorProfile.vendorTypeCode!=vendorTypes.Pharmacy">
                     <td><strong>Accepts reports?</strong></td>
                     <td>{{vendorProfile.address.acceptsReportsFlag==='Y'? "Yes":"No"}}</td>
                 </tr>
 
-                <tr>
+                <tr *ngIf="vendorProfile.vendorTypeCode!=vendorTypes.Pharmacy">
                     <td><strong>Accepts combined payments?</strong></td>
                     <td>{{vendorProfile.address.acceptsCombinedPaymentsFlag ==='Y'? "Yes":"No"}}</td>
                 </tr>
@@ -33,7 +37,22 @@
                     <td><strong>Payment Method</strong></td>
                     <td> {{vendorProfile.address.paymentMethodCode}}</td>
                 </tr>
-
+                  
+                <tr *ngIf="vendorProfile.vendorTypeCode==vendorTypes.Pharmacy"> 
+                    <td><strong>Phone</strong></td>
+                    <td>
+                        {{contactItems()}}
+                        {{phoneNbr  | phone }}
+                    </td> 
+                </tr>
+                <tr *ngIf="vendorProfile.vendorTypeCode==vendorTypes.Pharmacy"> 
+                    <td><strong>Email</strong></td>
+                    <td> 
+                        {{emailAddress}}
+                    </td>
+                </tr> 
+                    
+                 
                 <tr>
                     <td><strong>Address</strong></td>
                     <td> <p>{{vendorProfile.address.address1}} </p>
