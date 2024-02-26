@@ -4,6 +4,16 @@
 
 }
 
+.dashboard-wrapper {
+  .app-c-drag-row-table.recently-view .k-grid .k-grid-content {
+    min-height: 10px;
+  }
+}
+.today_glanse_title{
+  .h3{
+    font-size: $font-size-xl;
+  }
+}
 .dash-info-card {
   background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 1px solid #0000000F;
@@ -11,16 +21,24 @@
   padding: 1rem;
   border-left: 5px solid;
   width: 100%;
-
+  cursor: pointer;
+  transition: .2s;
+  box-shadow: 0px 0px 0px 0px #00000014;
+&:hover{
+  box-shadow: 0px 4px 8px -1px #00000014;
+}
   p {
     letter-spacing: 0px;
     color: #00000099;
     text-transform: uppercase;
+    font-family: $font-family-medium;
   }
 
   h3 {
     letter-spacing: 0px;
     color: #000000DE;
+    font-family: $font-family-light;
+    font-size: $font-size-xxx !important;
   }
 
 
@@ -67,8 +85,9 @@
 }
 
 .dashboard-page-wrapper {
-  // display: grid;
-  // gap: 20px;
+  text {
+    font-family: $font-family ;
+}
 }
 
 .dashboard_config_wrapper {
@@ -127,9 +146,7 @@
       border-radius: 6px;
       position: relative;
 
-      &::before {
-        content: "\e945";
-        font-family: "Material Icons";
+      .drag-button {
         width: 12px;
         height: 100%;
         position: absolute;
@@ -142,13 +159,15 @@
         border-radius: 10px;
         transition: .2s;
 
+        &:hover {
+
+          background: #dcdcdc;
+
+        }
+
       }
 
-      &:hover {
-        &::before {
-          background: #dcdcdc;
-        }
-      }
+
     }
 
 
@@ -163,29 +182,29 @@
     padding-left: 2rem !important;
 
     // position: relative;
-    &::before {
-      content: "\e945";
-      font-family: "Material Icons";
-      font-size: 22px;
-      height: 100%;
-      position: absolute;
-      left: 0;
-      top: 0;
-      background: #EFEFEF;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 10px;
-      transition: .2s;
-      cursor: move;
-    }
 
-    &:hover {
-      &::before {
-        background: #dcdcdc;
-        cursor: move;
-      }
-    }
+
+  }
+}
+
+.drag-button {
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #EFEFEF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 30px;
+  transition: 0.2s;
+  cursor: move;
+  border: 0px;
+  padding: 0;
+
+  &:hover {
+    background: #dcdcdc;
+    cursor: move;
   }
 }
 
@@ -219,7 +238,7 @@
 
 .dashboard-cards-container {
   background: #FFFFFF 0% 0% no-repeat padding-box;
-  border: 1px solid $black-e;
+  border: 2px solid $black-e;
   border-radius: 4px;
   opacity: 1;
   padding: 1rem;
@@ -232,7 +251,7 @@
   border-bottom: 1px solid $black-e;
   display: grid;
   grid-template-columns: 1.2fr .9fr 1.1fr;
-  grid-gap: 4px;
+  grid-gap: 8px;
   align-items: flex-end;
   justify-content: flex-start;
 
@@ -371,32 +390,6 @@
   }
 }
 
-.dash-header-with-filters {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  min-height: 31px;
-
-  .k-dropdownlist {
-    min-width: 100px;
-    max-width: 100px;
-    font-size: $font-size;
-
-    .k-button.k-icon-button {
-      padding: 2px;
-    }
-
-    .k-input-inner {
-      padding-right: 0;
-      padding-left: 10px;
-    }
-  }
-
-  h5 {
-    margin: 0px;
-  }
-}
 
 .dash_chart {
   max-height: 340px;
@@ -423,9 +416,7 @@
 
 
 .gridster-preview {
-  background: #0063A614 0% 0% no-repeat padding-box !important;
-  border: 2px dashed #0063A6 !important;
-  border-radius: 6px;
+  background: white;
 }
 
 gridster .gridster-column,
@@ -439,10 +430,15 @@ gridster .gridster-row {
 
   .add-more-container {
 
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-gap: 10px;
-
+    // display: grid;
+    // grid-template-columns: 1fr 1fr;
+    // grid-gap: 10px;
+.add-gridster{
+  
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
     .chart-view-point {
       pointer-events: none;
       cursor: default;
@@ -452,7 +448,7 @@ gridster .gridster-row {
       margin-bottom: 4rem;
       position: relative;
       user-select: none;
-
+      min-height: 410px;
       &::before {
         position: absolute;
         left: 0;
@@ -468,7 +464,7 @@ gridster .gridster-row {
       box-shadow: 0px 0px 12px #0000000F;
       border-radius: 10px;
       padding-top: 2rem;
-
+      height: max-content;
       .bottom-title {
         background: $role-blue-3;
         border-radius: 0px 0px 10px 10px;
@@ -494,57 +490,63 @@ gridster .gridster-row {
   }
 }
 
-.lihead-container{
+.lihead-container {
   display: grid;
   grid-template-columns: 1fr auto;
-  .progress_container{
+
+  .progress_container {
     padding-right: 1rem;
     margin-right: 1rem;
     border-right: 1px solid $black-9;
-    .k-progressbar{
+
+    .k-progressbar {
       border-radius: 15px;
       height: 12px;
       overflow: hidden;
       background: $grey-f7;
       width: 100%;
-      .k-selected{
+
+      .k-selected {
         background: $dash-green-1;
       }
- 
+
     }
-    h4{
+
+    h4 {
       font-family: $font-family;
       margin: 0;
       margin-top: 8px;
       color: $black-59;
     }
-    p{
+
+    p {
       font-family: $font-family-medium;
       margin: 0;
       color: $black-6;
     }
-    
+
   }
-  h2{
+
+  h2 {
     font-family: $font-family-light;
     color: $black-59;
   }
 }
-.rendoverage-container{ 
-  h3{
+
+.rendoverage-container {
+  h3 {
     font-family: $font-family-light;
     font-size: $font-size-xx;
     color: $black-59;
   }
-  p{
+
+  p {
     font-family: $font-family-medium;
     color: $black-59;
   }
 }
-.dashboard-cards-wrapper{
-  position: relative;
-}
-.widget_remove_btn{
+ 
+.widget_remove_btn {
   width: 24px;
   height: 24px;
   border-radius: 50%;
@@ -553,19 +555,28 @@ gridster .gridster-row {
   top: -8px;
   right: -10px;
   color: #fff;
-  z-index: 1;
+  z-index: 3;
   font-size: 10px;
   padding: 0px;
 }
 
 .dash-header-with-filters {
-  display: flex;
-  align-items: center;
+  display: flex; 
   justify-content: space-between;
-  margin-bottom: 8px;
-  min-height: 31px;
-  .k-multiselect {
-    width: 110px;
+  margin-bottom: 8px; 
+  flex-direction: column;
+  gap: 8px;
+  > div {
+    display: flex;
+    
+    .kendo-multiselect,
+    .k-dropdownlist{
+      width: 100%;
+      max-width: 180px;
+    }
+    
+  }
+  .k-multiselect { 
     min-height: 28px;
     .k-searchbar {
       position: absolute;
@@ -582,8 +593,8 @@ gridster .gridster-row {
   }
   .k-dropdownlist,
   .k-multiselect {
-    min-width: 100px;
-    max-width: 100px;
+    // min-width: 180px;
+    // max-width: 100px;
     font-size: $font-size-s;
     .k-button.k-icon-button {
       padding: 2px;
@@ -596,4 +607,51 @@ gridster .gridster-row {
   h5 {
     margin: 0px;
   }
+
+  
 }
+
+.app-c-drag-row-table.recently-view .k-grid .k-grid-content {
+  min-height: auto;
+}
+
+ 
+      /* Loader Panel Styles */
+      .k-loading-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 68%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+      }
+
+      .k-loading-panel-wrapper {
+        position: relative;
+        z-index: 2;
+      }
+
+      .k-loading-panel-text {
+        margin-top: 15px;
+        margin-left: 10px;
+        text-align: center;
+        color: red;
+      }
+
+      .common-dashboard-loader-panel{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      .k-picker-md .k-input-inner {
+        padding: 10px 16px;
+        width: 146px;
+    }
+

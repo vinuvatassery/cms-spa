@@ -49,6 +49,7 @@ export class PharmacyClaimsBatchPageComponent {
  chosenPcaForReAssignment: any;
  paymentRequestType$ = this.lovFacade.paymentRequestType$;
  deliveryMethodLov$ = this.lovFacade.deliveryMethodLov$;
+ pharmacyBatchDetailProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyBatchDetailProfilePhotoSubject;
  @ViewChild('pcaExceptionDialogTemplate', { read: TemplateRef })
  pcaExceptionDialogTemplate!: TemplateRef<any>;
 

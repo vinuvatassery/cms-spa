@@ -127,6 +127,15 @@ export class FinancialVendorDataService {
       vendorProfile
     );
   }
+
+  addVendorRecentlyViewed(vendorId : any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+      `/financial-management/vendors/recent-view/${vendorId}`,
+      null
+    );
+  }
+
   updateManufacturerProfile(vendorProfile:any) {
     return this.http.put(
       `${this.configurationProvider.appSettings.caseApiUrl}` +

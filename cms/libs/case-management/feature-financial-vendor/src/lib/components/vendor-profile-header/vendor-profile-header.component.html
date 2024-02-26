@@ -9,7 +9,7 @@
             class="material-icons" aria-hidden="true">
             arrow_back </span> </button>
         <h1 class="title_with_bld">
-          <span class="bold-text pl-1" [ngClass]="getHeaderPreferredFlag(vendorProfile$)"> {{vendorProfile$?.vendorName}}</span>
+          <span class="bold-text pl-1" [ngClass]="getHeaderPreferredFlag(vendorProfile)"> {{vendorProfile?.vendorName}}</span>
           <span class="title-star-icon icon-filled" aria-label="special Handling Details" aria-hidden="true">
             <span kendoPopoverAnchor showOn="hover"  [popover]="specialHandlingDetails" class="material-icons" aria-label="user information star"
               aria-hidden="true">star</span>
@@ -19,8 +19,8 @@
         </div>
 
         <div class="title-client-info-block ml-2">
-          <span *ngIf="vendorProfile$?.tin" class="title-client-info">TIN {{vendorProfile$?.tin}} </span>          
-          <span class="title-client-info">{{vendorProfile$?.unReconciledPayments}} Unreconciled Claim(s) </span>
+          <span *ngIf="vendorProfile?.tin" class="title-client-info">TIN {{vendorProfile?.tin}} </span>          
+          <span class="title-client-info">{{vendorProfile?.unReconciledPayments}} Unreconciled Claim(s) </span>
         </div>
       </div>
     </section>

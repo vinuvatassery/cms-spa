@@ -39,4 +39,12 @@ export class ClientProfile {
      lastModificationTime : string |null=null;
      lastModifierName : string |null=null;
      lastModifierId : string |null=null;
+     userFirstName : string |null=null;
+     userLastName : string |null=null;
+     isUserProfilePhotoExist : boolean |null=null;
+     creatorId : string |null=null;
+     caseManagerFirstName : string |null=null;
+     caseManagerLastName : string |null=null;
+     isCaseManagerProfilePhotoExist : boolean |null=null;
+     creationTime : string |null=null;
 }

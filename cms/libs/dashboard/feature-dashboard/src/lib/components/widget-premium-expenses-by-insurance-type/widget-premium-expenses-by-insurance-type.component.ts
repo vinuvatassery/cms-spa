@@ -1,5 +1,13 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {  WidgetFacade } from '@cms/dashboard/domain';  
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { WidgetFacade } from '@cms/dashboard/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Subject, takeUntil } from 'rxjs';
 @Component({
@@ -8,22 +16,32 @@ import { Subject, takeUntil } from 'rxjs';
   styleUrls: ['./widget-premium-expenses-by-insurance-type.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit { 
-
-  premiumExpensesByInsurance: any; 
+export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
+  premiumExpensesByInsurance: any;
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  data  = ['Last Month','August']
-  @Input() isEditDashboard!: any; 
+  selectFrequency = 'YTD';
+  data = [
+    'YTD',
+    'Last Month',
+    'Current Month',
+    'Previous Quarter',
+    'Last Year',
+  ];
+  @Input() isEditDashboard!: any;
+  @Input() dashboardId!: any;
   @Output() removeWidget = new EventEmitter<string>();
-  constructor(private widgetFacade: WidgetFacade) {}
+  constructor(private widgetFacade: WidgetFacade ,
+    private changeDetectorRef: ChangeDetectorRef) {}
 
-
-  removeWidgetCard(){
+  frequecyValueChange() {
+    this.loadPremiumExpensesByInsuranceChart();
+  }
+  removeWidgetCard() {
     this.removeWidget.emit();
   }
 
-  ngOnInit(): void { 
+  ngOnInit(): void {
     this.loadPremiumExpensesByInsuranceChart();
   }
 
@@ -32,18 +50,24 @@ export class WidgetPremiumExpensesByInsuranceTypeComponent implements OnInit {
     this.destroy$.complete();
   }
   loadPremiumExpensesByInsuranceChart() {
-    this.widgetFacade.loadPremiumExpensesByInsuranceChart();
+    this.premiumExpensesByInsurance = null
+    const payload = {
+      paymentStatusDate: this.selectFrequency,
+    };
+    this.widgetFacade.loadPremiumExpensesByInsuranceChart(
+      this.dashboardId,
+      payload
+    );
     this.widgetFacade.premiumExpensesByInsuranceChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
           if (response) {
+            
             this.premiumExpensesByInsurance = response;
+            this.changeDetectorRef.detectChanges()
           }
-        }
+        },
       });
   }
 }
-
-
-
