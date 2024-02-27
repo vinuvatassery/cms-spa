@@ -277,7 +277,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
             {
               field: this.selectedSearchColumn ?? 'invoiceNbr',
               operator: operator,
-              value: data,
+              value: this.searchValue,
             },
           ],
           logic: 'and',
@@ -337,7 +337,7 @@ export class FinancialClaimsProcessListComponent implements OnChanges , OnInit ,
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-  searchColumnChangeHandler(data:any){
+  searchColumnChangeHandler(data:any){    
     this.searchValue = '';
     this.onChange(data)
   }
