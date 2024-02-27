@@ -84,9 +84,15 @@ export class CommunicationFacade {
     });
   }
 
-  loadEmailTemplates(typeCode: string, channelTypeCode: string) {
+  loadEmailTemplates(groupCode: string, categoryCode: string) {
     return this.emailDataService.loadEmailTemplates(
-      typeCode, channelTypeCode
+      groupCode, categoryCode
+    );
+  }
+
+  loadLetterTemplates(groupCode: string, categoryCode: string) {
+    return this.emailDataService.loadEmailTemplates(
+      groupCode, categoryCode
     );
   }
 
@@ -210,5 +216,9 @@ updateSavedClientandVendorEmailTemplate(formData: FormData) {
 
 loadDraftNotificationRequest(entityId: string) {
   return this.emailDataService.getDraftNotification(entityId);
+}
+
+loadTemplateById(notificationTemplateId: string) {
+  return this.emailDataService.loadEmailTemplateById(notificationTemplateId);
 }
 }

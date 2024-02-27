@@ -85,9 +85,9 @@ export class EmailDataService {
     ]);
   }
 
-  loadEmailTemplates(typeCode: string, channelTypeCode: string) {
+  loadEmailTemplates(groupCode: string, categoryCode: string) {
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates?channelTypeCode=${channelTypeCode}`
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${groupCode}/${categoryCode}/templates`
     );
   }
 
@@ -177,6 +177,12 @@ export class EmailDataService {
     getDraftNotification(entityId: string) {
       return this.http.get(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${entityId}`
+      );
+    }
+
+    loadEmailTemplateById(templateId: string) {
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${templateId}`
       );
     }
 }

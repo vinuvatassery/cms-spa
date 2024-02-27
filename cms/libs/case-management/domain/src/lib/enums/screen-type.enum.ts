@@ -10,5 +10,6 @@ export enum ScreenType {
   Case360PageSMS = 'Case360PageSMS',
   VendorLetter = 'VendorLetter',
   VendorEmail = 'VendorEmail',
-  VendorProfile = 'VendorProfile',
+  VendorProfile = 'VENDOR_PROFILE',
+  ClientProfile = 'CLIENT_PROFILE',
 }

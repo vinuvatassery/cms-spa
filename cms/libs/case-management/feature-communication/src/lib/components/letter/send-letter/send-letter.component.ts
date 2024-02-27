@@ -74,6 +74,7 @@ export class SendLetterComponent implements OnInit {
   mailingAddress: any;
   mailingAddressSubscription= new Subscription();
   attachmentCount: number = 0;
+  entityId!: string;
   dataValue: Array<any> = [
     {
       text: '',
@@ -87,12 +88,40 @@ export class SendLetterComponent implements OnInit {
   ngOnInit(): void {
     if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.loadMailCodes();
+      this.loadClientAndVendorDraftLetterTemplates();
     }
     else {
       this.vendorContactFacade.loadMailCodes(this.vendorId);
     }
     this.isNewLetterClicked =  this.data ? true : false;
-    this.loadDropdownLetterTemplates();
+  }
+
+  loadClientAndVendorDraftLetterTemplates() {
+    if(this.clientId){
+      this.entityId = this.clientId;
+    }
+    if(this.vendorId){
+      this.entityId = this.vendorId;
+    }
+    this.loaderService.show();
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId)
+    .subscribe({
+      next: (data: any) =>{
+        if (data) {
+          data.documentTemplateId = data.notificationDraftId;
+          this.ddlTemplates.push(data);
+          this.ref.detectChanges();
+        }else{
+          this.loadDropdownLetterTemplates();
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    },
+  });
   }
 
   private loadMailCodes() {
@@ -276,7 +305,7 @@ export class SendLetterComponent implements OnInit {
   private loadDropdownLetterTemplates() {
     this.loaderService.show();
     const channelTypeCode = CommunicationEvents.Letter;
-    this.communicationFacade.loadEmailTemplates(this.communicationLetterTypeCode, channelTypeCode)
+    this.communicationFacade.loadLetterTemplates(this.screenName, channelTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data) {
@@ -293,12 +322,24 @@ export class SendLetterComponent implements OnInit {
   }
 
   handleDdlLetterValueChange(event: any) {
-    this.isOpenLetterTemplate=true;
-    this.selectedTemplate = event;
-    this.handleLetterEditor(event);
-    this.ref.detectChanges();
-    this.openDdlLetterEvent.emit();
-    this.loadMailingAddress();
+    this.communicationFacade.loadTemplateById(event.documentTemplateId)
+    .subscribe({
+      next: (data: any) =>{
+      if (data) {
+        this.selectedTemplate = data;
+        this.handleLetterEditor(data);
+        this.isOpenLetterTemplate=true;
+        this.ref.detectChanges();
+        this.openDdlLetterEvent.emit();
+        this.loadMailingAddress();
+      }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    },
+  });
   }
 
   private saveDraftLetterTemplate(draftTemplate: any) {
