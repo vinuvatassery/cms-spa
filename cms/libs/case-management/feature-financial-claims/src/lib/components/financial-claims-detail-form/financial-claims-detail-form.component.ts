@@ -1130,7 +1130,9 @@ duplicatePaymentObject:any = {};
   {
     let formValue = this.addExceptionForm.at(index).get(controlName)?.value;
     const ctpCodeIsvalid = this.addClaimServicesForm.at(index) as FormGroup;
-    if(!formValue){
+    if(formValue && (controlName == 'bridgeUppExceptionFlag' || controlName == 'bridgeUppExceptionFlagText')){
+      ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': true});
+    }else{
       ctpCodeIsvalid?.controls['cptCode'].setErrors({'incorrect': null});
       ctpCodeIsvalid?.controls['cptCode'].updateValueAndValidity();
     }
