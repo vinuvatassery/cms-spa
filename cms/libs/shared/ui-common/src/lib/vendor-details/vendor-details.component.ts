@@ -226,11 +226,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
       }
     }
     else if (this.providerType == this.vendorTypes.Manufacturers) {
-      this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);
-      this.medicalProviderForm.controls['providerName']
-        .setValidators([
-          Validators.required, Validators.required, Validators.pattern('^[A-Za-z ]+$')
-        ]);
+      this.medicalProviderForm.controls['mailCode'].setValidators([Validators.required, Validators.maxLength(3), Validators.minLength(3)]);      
       this.medicalProviderForm.controls['providerName'].updateValueAndValidity();
     }
     else {
