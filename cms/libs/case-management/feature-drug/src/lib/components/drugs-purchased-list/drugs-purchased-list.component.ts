@@ -109,6 +109,11 @@ export class DrugsPurchasedListComponent implements OnInit {
   sortValueRecentClaimList = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
   recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
+
+  /** Input Properties**/
+  @Input() clientCaseEligibilityId:any
+
+    /** Output Properties**/
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
   @Output() getPharmacyClaimEvent = new EventEmitter<any>();

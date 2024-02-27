@@ -62,6 +62,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
   @Input() clientCustomName:any;
   @Input() fromDrugPurchased : any;
   @Input() clientId: any;
+  @Input() clientCaseEligibilityId:any;
 
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
@@ -113,6 +114,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
         this.pharmacyClaimForm.controls["client"].setValue(data[0])     
         this.pharmacyClaimForm.controls["client"].disable();   
         this.pharmacyClaimForm.controls["client"].updateValueAndValidity();
+        this.pharmacyClaimForm.controls["clientCaseEligibilityId"].setValue(this.clientCaseEligibilityId);
         this.cd.detectChanges();
         }
      }); 
@@ -222,6 +224,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
   }
   savePharmacyClaim()
   {
+    debugger;
     this.isSubmitted = true
     if (!this.pharmacyClaimForm.valid) {
       this.pharmacyClaimForm.markAllAsTouched()
