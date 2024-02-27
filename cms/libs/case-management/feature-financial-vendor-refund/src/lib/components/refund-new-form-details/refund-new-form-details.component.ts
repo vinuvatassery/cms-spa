@@ -55,8 +55,10 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
   serviceTypes$ = this.lovFacade.serviceType$
   onEditInitiallydontShowPremiumselection = false;
-  @ViewChild('providerDetailsTemplate', { read: TemplateRef })
-  providerDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('premiumProviderDetailsTemplate', { read: TemplateRef })
+  premiumProviderDetailsTemplate!: TemplateRef<any>;
+  @ViewChild('pharmacyProviderDetailsTemplate', { read: TemplateRef })
+  pharmacyProviderDetailsTemplate!: TemplateRef<any>;
 
   @ViewChild('tpaProviderDetailsTemplate', { read: TemplateRef })
   tpaProviderDetailsTemplate!: TemplateRef<any>;
@@ -440,7 +442,6 @@ onSelectedRxClaimsChangeEvent(event:any){
 
 onCloseViewProviderDetailClicked(result: any){
   if(result){
-    this.modalCloseAddEditRefundFormModal.emit(false);
     this.providerDetailsDialog.close();
   }
 }
@@ -450,17 +451,29 @@ getProviderPanel(event:any){
   this.financialVendorFacade.getProviderPanel(event)
 }
 
+
 onInsurancePremiumProviderCick(event:any){
   this.paymentRequestId = event
   this.providerDetailsDialog = this.dialogService.open({
-    content: this.providerDetailsTemplate,
+    content: this.premiumProviderDetailsTemplate,
     animation:{
       direction: 'left',
       type: 'slide',
     },
     cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
   });
+}
 
+onPharmacyPremiumProviderCick(event:any){
+  this.paymentRequestId = event
+  this.providerDetailsDialog = this.dialogService.open({
+    content: this.pharmacyProviderDetailsTemplate,
+    animation:{
+      direction: 'left',
+      type: 'slide',
+    },
+    cssClass: 'app-c-modal app-c-modal-np app-c-modal-right-side',
+  });
 }
 
 onTpaProviderClick(event:any){
