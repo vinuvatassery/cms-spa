@@ -56,7 +56,7 @@
       <kendo-grid
       [pageSize]="5" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
       [resizable]="true" [columnMenu]="{ filter: true }"
-      [data]="clientProfilIncomeInclusionsExlusions$ | async">
+      [data]="clientProfileIncomeInclusionsExclusions$ | async">
         <kendo-grid-column 
         field="inclusions" title="Inclusions" [width]="130"
        format="item.format" 

@@ -12,8 +12,8 @@ export class RegionAssignmentListComponent implements OnInit {
 
   isRegionAssignmentDetailPopup = false;
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
-  clientProfilRegionAssignment$ =
-    this.userManagementFacade.clientProfilRegionAssignment$;
+  clientProfileRegionAssignment$ =
+    this.userManagementFacade.clientProfileRegionAssignment$;
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
 

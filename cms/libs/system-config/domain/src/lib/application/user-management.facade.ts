@@ -31,10 +31,10 @@ export class UserManagementFacade {
   private clientProfileRacialOrEthnicIdentitySubject = new BehaviorSubject<any>([]);
   private clientProfilePronounsSubject = new BehaviorSubject<any>([]);
   private clientProfileGenderSubject = new BehaviorSubject<any>([]);
-
+  private directMessageLogEventSubject = new BehaviorSubject<any>([]);
 
   private clientProfileHousingAcuityLevelSubject = new BehaviorSubject<any>([]);
-  private clientProfileIncomeInclusionsExlusionsSubject = new BehaviorSubject<any>([]);
+  private clientProfileIncomeInclusionsExclusionsSubject = new BehaviorSubject<any>([]);
   private clientProfileRegionAssignmentSubject = new BehaviorSubject<any>([]);
   private clientProfilePSMFRZIPSubject = new BehaviorSubject<any>([]);
   private clientProfileServiceProviderSubject = new BehaviorSubject<any>([]);
@@ -62,12 +62,12 @@ export class UserManagementFacade {
   clientProfileRacialOrEthnicIdentity$ = this.clientProfileRacialOrEthnicIdentitySubject.asObservable();
   clientProfilePronouns$ = this.clientProfilePronounsSubject.asObservable();
   clientProfileGender$ = this.clientProfileGenderSubject.asObservable();
-
+  directMessageLogEvent$ = this.directMessageLogEventSubject.asObservable();
   clientProfileHousingAcuityLevel$ = this.clientProfileHousingAcuityLevelSubject.asObservable();
-  clientProfilIncomeInclusionsExlusions$ = this.clientProfileIncomeInclusionsExlusionsSubject.asObservable();
-  clientProfilRegionAssignment$ = this.clientProfileRegionAssignmentSubject.asObservable();
-  clientProfilPSMFRZIP$ = this.clientProfilePSMFRZIPSubject.asObservable();
-  clientProfilServiceProvider$ = this.clientProfileServiceProviderSubject.asObservable();
+  clientProfileIncomeInclusionsExclusions$ = this.clientProfileIncomeInclusionsExclusionsSubject.asObservable();
+  clientProfileRegionAssignment$ = this.clientProfileRegionAssignmentSubject.asObservable();
+  clientProfilePSMFRZIP$ = this.clientProfilePSMFRZIPSubject.asObservable();
+  clientProfileServiceProvider$ = this.clientProfileServiceProviderSubject.asObservable();
   usersByRole$ = this.usersByRoleSubject.asObservable();
   userImage$ = this.userImageSubject.asObservable();
   usersById$ = this.userByIdSubject.asObservable();
@@ -412,8 +412,8 @@ export class UserManagementFacade {
   }
   loadIncomeInclusionsExlusionsList(){
     this.userDataService.loadIncomeInclusionsExlusionsList().subscribe({
-      next: (clientProfilIncomeInclusionsExlusions) => {
-        this.clientProfileIncomeInclusionsExlusionsSubject.next(clientProfilIncomeInclusionsExlusions);
+      next: (clientProfileIncomeInclusionsExclusions) => {
+        this.clientProfileIncomeInclusionsExclusionsSubject.next(clientProfileIncomeInclusionsExclusions);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -423,8 +423,8 @@ export class UserManagementFacade {
 
   loadRegionAssignmentList(){
     this.userDataService.loadRegionAssignmentList().subscribe({
-      next: (clientProfilRegionAssignment) => {
-        this.clientProfileRegionAssignmentSubject.next(clientProfilRegionAssignment);
+      next: (clientProfileRegionAssignment) => {
+        this.clientProfileRegionAssignmentSubject.next(clientProfileRegionAssignment);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -433,8 +433,8 @@ export class UserManagementFacade {
   }
   loadPSMFRZIPList(){
     this.userDataService.loadPSMFRZIPList().subscribe({
-      next: (clientProfilPSMFRZIP) => {
-        this.clientProfilePSMFRZIPSubject.next(clientProfilPSMFRZIP);
+      next: (clientProfilePSMFRZIP) => {
+        this.clientProfilePSMFRZIPSubject.next(clientProfilePSMFRZIP);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -444,8 +444,8 @@ export class UserManagementFacade {
 
   loadServiceProviderList(){
     this.userDataService.loadServiceProviderList().subscribe({
-      next: (clientProfilServiceProvider) => {
-        this.clientProfileServiceProviderSubject.next(clientProfilServiceProvider);
+      next: (clientProfileServiceProvider) => {
+        this.clientProfileServiceProviderSubject.next(clientProfileServiceProvider);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -481,5 +481,14 @@ export class UserManagementFacade {
   getProfilePhotosByUserIds(userIds : string) {    
     return this.userDataService.getUserProfilePhotos(userIds);
   }
- 
+  loadDirectMessageLogEvent() {
+    this.userDataService.loadDirectMessageLogEventService().subscribe({
+      next: (directMessageLogEvent) => {
+        this.directMessageLogEventSubject.next(directMessageLogEvent);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });
+  }
 }

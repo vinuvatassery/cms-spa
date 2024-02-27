@@ -20,8 +20,8 @@ export class IncomeInclusionsExclusionsListComponent implements OnInit {
   isIncomeInclusionsExclusionsDetailPopup = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
-  clientProfilIncomeInclusionsExlusions$ =
-    this.userManagementFacade.clientProfilIncomeInclusionsExlusions$;
+  clientProfileIncomeInclusionsExclusions$ =
+    this.userManagementFacade.clientProfileIncomeInclusionsExclusions$;
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
     public girdMoreActionsList = [
       {

@@ -20,8 +20,8 @@ export class ServiceProviderListComponent implements OnInit {
   ];
   isServiceProviderDetailPopup = false;
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
-  clientProfilServiceProvider$ =
-    this.userManagementFacade.clientProfilServiceProvider$;
+  clientProfileServiceProvider$ =
+    this.userManagementFacade.clientProfileServiceProvider$;
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
     public formUiStyle : UIFormStyle = new UIFormStyle();
  

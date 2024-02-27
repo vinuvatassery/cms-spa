@@ -21,8 +21,8 @@ export class PsMfrZipListComponent implements OnInit {
   ];
   isPSMFRZIPDetailPopup = false;
   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
-  clientProfilPSMFRZIP$ =
-    this.userManagementFacade.clientProfilPSMFRZIP$;
+  clientProfilePSMFRZIP$ =
+    this.userManagementFacade.clientProfilePSMFRZIP$;
     popupClassAction = 'TableActionPopup app-dropdown-action-list';
     public formUiStyle : UIFormStyle = new UIFormStyle();
 
