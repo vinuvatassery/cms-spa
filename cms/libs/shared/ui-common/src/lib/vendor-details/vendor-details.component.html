@@ -45,9 +45,6 @@
           <kendo-formerror *ngIf="!medicalProviderForm.controls['providerName'].valid && isValidateForm">
             Manufacturer Name is required
           </kendo-formerror>
-          <kendo-formerror *ngIf="medicalProviderFormControls?.providerName.errors?.pattern">
-            Special characters and numeric values are not allowed
-          </kendo-formerror>
         </kendo-floatinglabel>
       </div>
 

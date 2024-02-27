@@ -616,11 +616,10 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
-    if (startDate != "" && endDate != "" && startDate > endDate) {
+    if (startDate && endDate && startDate > endDate) {
       serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
       return true;
     }
-    serviceFormData.get('serviceEndDate')?.setErrors(null);
     return false;
   }
 
