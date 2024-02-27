@@ -63,7 +63,6 @@
     [reorderable]="true" 
     [columnMenu]="{ filter: true }" 
     [sort]="state.sort" 
-    [navigable]="!isProcessGridExpand" 
     [filter]="state.filter"
     [data]="pharmacyClaimsProcessGridLists$ | async"
     (dataStateChange)="dataStateChange($event)" 
