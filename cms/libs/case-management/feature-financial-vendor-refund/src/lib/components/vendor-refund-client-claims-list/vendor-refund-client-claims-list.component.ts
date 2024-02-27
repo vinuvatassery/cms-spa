@@ -100,7 +100,7 @@ private clientClaimsListDataSubject =  new Subject<any>();
   resetFilterClicked(action: any,) {
     if (action) {
       this.setGridDataState();
-      this.selectedClaims=[]
+      this.selectedClaims=[];
       this.clearSelection();
       this.loadRefundClaimsListGrid();
      this.filterResetDialog.close();
@@ -114,9 +114,8 @@ private clientClaimsListDataSubject =  new Subject<any>();
     }
   }
   private clearSelection(): void {  
-    if (this.grid) {
         this.selectedPharmacyClaims = [];
-    }
+        this.selectedPharmacyClaimsPayments=[]
   }
   openResetDialog( template: TemplateRef<unknown>)
   {
@@ -156,7 +155,9 @@ private clientClaimsListDataSubject =  new Subject<any>();
   gridDataHandle() { 
     this. clientclaimsData$.subscribe((data: GridDataResult) => {
       this.gridData = data;
+      if(this.gridData.data != null){
       this.selectedPharmacyClaims = this.gridData.data.filter((i: any) =>  this.selectedPharmacyClaimsPayments.includes( i.perscriptionFillId));
+      }
       this.gridDataResult = data;
       this.clientClaimsListDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) { 
