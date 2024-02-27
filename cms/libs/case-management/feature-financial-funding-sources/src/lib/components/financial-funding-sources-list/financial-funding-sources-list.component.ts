@@ -256,7 +256,8 @@ export class FinancialFundingSourcesListComponent implements OnChanges, OnInit {
 
   columnChange(event: ColumnVisibilityChangeEvent) {
     const columnsRemoved = event?.columns.filter(x => x.hidden).length
-    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Default Columns';
+    this.columnChangeDesc = columnsRemoved > 0 ? 'Columns Removed' : 'Columns Added';
+
   }
   groupFilterChange(value: any, filterService: FilterService): void {
     filterService.filter({
