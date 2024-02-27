@@ -552,6 +552,8 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       }
 
     });
+   
+    this.defaultGridState();
   }
 
   private clearSelectedColumn() {
