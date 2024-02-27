@@ -38,7 +38,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
     'Last Year',
   ];
   public labelAlign: SeriesLabelsAlignment = 'circle';
-  dataCount = ['Claim Count', 'Claim Amount'];
+  dataCount = ['Claim Count', 'Dollar Amount'];
   @Input() isEditDashboard!: any;
   @Input() dashboardId!: any;
   @Output() removeWidget = new EventEmitter<string>();

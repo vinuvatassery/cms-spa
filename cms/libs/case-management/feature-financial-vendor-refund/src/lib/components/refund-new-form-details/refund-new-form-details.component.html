@@ -259,7 +259,7 @@
                         [isEdit]="isEdit" [editPaymentRequestId]="inspaymentRequestId"
                         (claimsCount)="claimsCountEvent($event)"
                         (selectedClaimsChangeEvent)="onSelectedClaimsChangeEvent($event)"
-                        (onProviderNameClickEvent)="onTpaProviderClick($event)"
+                        (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"
                         ></cms-vendor-refund-insurance-premium-list>
                 </div>
             </div>
@@ -550,7 +550,7 @@
                     <cms-vendor-refund-pharmacy-payments-list [vendorId]="vendorId" [clientId]="clientId" [refundType]="selectedRefundType"
                         [pageSizes]="pageSizes" [sortValue]="sortValuePharmacyPayment" [sortType]="sortType"
                         [sort]="sortPharmacyPayment"
-                        (onProviderNameClickEvent)="onInsurancePremiumProviderCick($event)"></cms-vendor-refund-pharmacy-payments-list>
+                        (onProviderNameClickEvent)="onPharmacyPremiumProviderCick($event)"></cms-vendor-refund-pharmacy-payments-list>
             </div>
             </div>
         </div>
@@ -581,24 +581,34 @@
     </div>
 
 </kendo-dialog-actions>
-<ng-template #providerDetailsTemplate>
+
+
+<ng-template #premiumProviderDetailsTemplate>
     <cms-financial-premiums-provider-info
-    [paymentRequestId]="paymentRequestId"
-    (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
-    (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
-    (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
-    [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-    [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
-
-</ng-template>
-
-
-<ng-template #tpaProviderDetailsTemplate>
-    <cms-refund-claims-provider-info
           [paymentRequestId]="paymentRequestId"
           (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
           (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
           (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
           [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-          [paymentMethodCode$]="paymentMethodCode$"></cms-refund-claims-provider-info>
+          [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+  </ng-template>
+
+  <ng-template #tpaProviderDetailsTemplate>
+      <cms-financial-claims-provider-info
+            [paymentRequestId]="paymentRequestId"
+            (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+            (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+            (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+            [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+            [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+  </ng-template>
+
+  <ng-template #pharmacyProviderDetailsTemplate>
+      <cms-pharmacy-claims-provider-info
+            [paymentRequestId]="paymentRequestId"
+            (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+            (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+            (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+            [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+            [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
 </ng-template>
