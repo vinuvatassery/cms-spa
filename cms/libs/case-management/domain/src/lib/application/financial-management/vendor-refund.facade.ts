@@ -847,16 +847,31 @@ this.loaderService.show();
   public loadPharmacyRefundEditList(paymentRequestId: string){
     return this.financialVendorRefundDataService.loadPharmacyRefundEditList(paymentRequestId)
     .subscribe({
-      next: (dataResponse) => {
+      next: (dataResponse: any) => {
         this.existingRxRefundClaimSubject.next(dataResponse);
         if (dataResponse) {
           this.existingRxRefundClaimSubject.next(dataResponse);
         }
+        this.loadRefundFormDistinctUserIdsAndProfilePhoto(dataResponse?.prescriptionFillItems);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         this.hideLoader();
       },
     });
+  }
+
+  loadRefundFormDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.by))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.vendorRefundFormProfileSubject.next(data);
+          }
+        },
+      });
+    }
   }
 }
