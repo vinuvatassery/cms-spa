@@ -17,7 +17,7 @@
                             aria-hidden="true">search</span>
                         <span *ngIf="searchClientLoader$ | async"
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
-                        <kendo-multicolumncombobox [data]="searchClients$ | async" textField="fullCustomName"
+                        <kendo-multicolumncombobox [data]="searchClients" textField="fullCustomName"
                         valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
                         [(ngModel)]="selectedClient" 
                         (filterChange)="searchClient($event)" placeholder="Search Client Name, ID, or SSN"
@@ -25,7 +25,6 @@
                             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
                             [filterable]="true" (blur)="showHideServiceList()">
                             <button kendoButton fillMode="clear" icon="image"></button>
-
                             <kendo-combobox-column>
                                 <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                     <span>{{ dataItem.clientFullName }}</span>
@@ -47,7 +46,7 @@
                                 </ng-template>
                             </kendo-combobox-column>                           
                         </kendo-multicolumncombobox>
-                          <kendo-formerror *ngIf="(!pharmacyClaimForm.controls['client'].valid) && isSubmitted"
+                          <kendo-formerror *ngIf="(!pharmacyClaimForm.controls['client'].valid && !pharmacyClaimForm.controls['client'].disabled) && isSubmitted"
                         class="d-flex align-items-center"> <span class="material-icons mr-1"
                             aria-hidden="false">info</span>Client selection is required
                     </kendo-formerror>

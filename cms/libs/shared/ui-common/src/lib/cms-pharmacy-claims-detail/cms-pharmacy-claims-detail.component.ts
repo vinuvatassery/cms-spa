@@ -6,6 +6,7 @@ import {
   Input,
   OnInit,
   ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, groupBy } from '@progress/kendo-data-query';
@@ -13,7 +14,7 @@ import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@ang
 import { Lov, UserManagementFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
-import { Observable, first } from 'rxjs';
+import { Observable, Subscription, first } from 'rxjs';
 import { CaseStatusCode } from '../enums/case-status-code.enum';
 import { PaymentMethodCode } from '../enums/payment-method-code.enum';
 
@@ -23,7 +24,7 @@ import { PaymentMethodCode } from '../enums/payment-method-code.enum';
   styleUrls: ['./cms-pharmacy-claims-detail.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CmsPharmacyClaimsDetailComponent implements OnInit{
+export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
 
   pharmacyClaimForm!: FormGroup;
   clientTotalPayments = 0
@@ -34,8 +35,8 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
   state!: State;
   brandName =""
   drugName = ""
-  @Input() isEdit = false
   serviceCount = 0
+  @Input() isEdit = false
   @Input() addPharmacyClaim$: any;
   @Input() editPharmacyClaim$: any;
   @Input() getPharmacyClaim$: any;
@@ -58,6 +59,10 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
   @Input() sortRecentClaimList : any;
   @Input() recentClaimsGridLists$ :any;
   @Input() pharmacyRecentClaimsProfilePhoto$!: any;
+  @Input() clientCustomName:any;
+  @Input() fromDrugPurchased : any;
+  @Input() clientId: any;
+  @Input() clientCaseEligibilityId:any;
 
   @Output() addPharmacyClaimEvent = new EventEmitter<any>();
   @Output() updatePharmacyClaimEvent = new EventEmitter<any>();
@@ -88,12 +93,12 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   dialogTitle = "Add"
   hasDrugCreateUpdatePermission = false
-  vendorId! : any
-  clientId: any;
+  vendorId! : any  
   claimsType:any;
   IsEdit:boolean=false;
   manufacturers: any = [];
-
+  searchClients: any;
+  searchClientSubscription!: Subscription
   constructor(
     private formBuilder: FormBuilder,private cd: ChangeDetectorRef,
     public readonly intl: IntlService,
@@ -102,6 +107,17 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
   ) {}
 
   ngOnInit(): void {
+    this.searchClientSubscription  = this.searchClients$.subscribe((data:any)=>{
+      this.searchClients = data;
+        if(this.fromDrugPurchased){
+          this.selectedClient = data[0];
+        this.pharmacyClaimForm.controls["client"].setValue(data[0])     
+        this.pharmacyClaimForm.controls["client"].disable();   
+        this.pharmacyClaimForm.controls["client"].updateValueAndValidity();
+        this.pharmacyClaimForm.controls["clientCaseEligibilityId"].setValue(this.clientCaseEligibilityId);
+        this.cd.detectChanges();
+        }
+     }); 
     this.cd.markForCheck();
     this.loadManufacturersLovs()
     this.initClaimForm()
@@ -111,8 +127,20 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
     this.cd.markForCheck();
     this.loadDeliveryMethodLovs()
     this.loadManufacturers()
+     if(this.fromDrugPurchased){
+      const client = [
+         {
+           fullCustomName: this.clientCustomName,
+           clientId: this.clientId
+         },
+       ];   
+        this.searchClientsDataEvent.next(client);
+      }    
   }
 
+  ngOnDestroy(){
+    this.searchClientSubscription.unsubscribe();
+  }
   get addClaimServicesForm(): FormArray {
     return this.pharmacyClaimForm.get('prescriptionFillDto') as FormArray;
   }
@@ -196,6 +224,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
   }
   savePharmacyClaim()
   {
+    debugger;
     this.isSubmitted = true
     if (!this.pharmacyClaimForm.valid) {
       this.pharmacyClaimForm.markAllAsTouched()

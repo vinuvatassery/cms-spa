@@ -146,7 +146,7 @@ export class PharmacyClaimsAllPaymentsListComponent implements OnInit, OnChanges
  recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
  pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
  addDrug$ = this.drugsFacade.addDrug$
-
+ fromDrugPurchased:any = false;
  gridColumns: { [key: string]: string } = {
   ALL: 'All Columns',
   itemNbr:'Item #',

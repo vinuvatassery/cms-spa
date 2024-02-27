@@ -1,4 +1,6 @@
 export interface ClientProfileCase {
+     dob: string;
+     ssn: string;
      clientCaseEligibilityId : string ,
      clientCaseId :  string ,
      eilgibilityStartDate :  Date ,

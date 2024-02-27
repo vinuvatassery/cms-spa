@@ -121,7 +121,8 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
   sortRecentClaimList = this.financialPharmacyClaimsFacade.sortRecentClaimList;
   gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
   recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
-
+  fromDrugPurchased:any = false;
+  
   public batchLogGridActions(dataItem:any){
    return  [
     {
