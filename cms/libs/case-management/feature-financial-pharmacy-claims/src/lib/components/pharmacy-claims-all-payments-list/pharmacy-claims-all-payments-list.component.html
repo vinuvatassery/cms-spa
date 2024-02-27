@@ -430,7 +430,8 @@
         (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)"
         [recentClaimsGridLists$]="recentClaimsGridLists$"
         (loadManufacturer)="loadManufacturerEvent($event)"
-        [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$"
+        [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$",
+        [fromDrugPurchased] ='fromDrugPurchased'
       > 
       </common-cms-pharmacy-claims-detail>
     </ng-template>

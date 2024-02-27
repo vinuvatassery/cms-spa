@@ -315,7 +315,6 @@ if(this.isEdit){
     this.selectedProvider=null;
   }
   confirmationClicked (){
-    debugger
       this.inputConfirmationClicked = true;
     this.disableFeildsOnConfirmSelection = true
 

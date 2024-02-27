@@ -124,6 +124,8 @@ export class DrugsPurchasedListComponent implements OnInit {
   pharmacyPurchaseProfilePhotoSubscription = new Subscription();
   pharmacyPurchaseProfile$ = this.drugPharmacyFacade.pharmacyPurchaseProfileSubject;
   pharmacyRecentClaimsProfilePhoto$ = this.financialPharmacyClaimsFacade.pharmacyRecentClaimsProfilePhoto$;
+  clientCustomName : any
+  fromDrugPurchased:any ;
 
   public actions = [
     {
@@ -169,6 +171,8 @@ export class DrugsPurchasedListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.clientCustomName = this.caseFacade.clientCustomName;
+    this.fromDrugPurchased = true;
     this.getLovs();
     this.defaultGridState();
     this.loadDrugsPurchased();
