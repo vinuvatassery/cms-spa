@@ -937,8 +937,9 @@ onSpotsPaymentChange(check: any) {
 }
 
 selectedRxClaimsChangeEvent(event:any){
-  this.pharmacyClaimsPaymentReqIds = event
-  this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
+  if( event != null){
+  this.claimsCount = event.length;
+  }
 }
 validatePayable(validatePayable: any): string {
   const sanitizedValue = validatePayable.replace(/[^a-zA-Z\d]/g, '');
