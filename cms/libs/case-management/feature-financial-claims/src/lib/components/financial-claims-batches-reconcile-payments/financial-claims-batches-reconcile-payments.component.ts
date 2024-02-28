@@ -801,7 +801,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     if (this.totalCount === 0) {
       if( this.isSubmitted){
       this.pageValidationMessageFlag = false;
-      this.pageValidationMessage = "validation errors are cleared.";
+      this.pageValidationMessage = null;
       }
     }
     else {
@@ -918,12 +918,12 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
       this.pageValidationMessage = this.totalCount +" validation errors found, please review each page for errors. " ;
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
-      this.pageValidationMessage = "No data for reconcile and print";
+      this.pageValidationMessage = null;
       this.pageValidationMessageFlag = true;
     }
     else {
       this.pageValidationMessageFlag = false;
-      this.pageValidationMessage = "validation errors are cleared.";
+      this.pageValidationMessage = null;
        this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
       this.selectedReconcileDataRows.forEach((data:any) =>{
         data. paymentReconciledDate =  this.intl.formatDate(data.paymentReconciledDate, this.dateFormat);
