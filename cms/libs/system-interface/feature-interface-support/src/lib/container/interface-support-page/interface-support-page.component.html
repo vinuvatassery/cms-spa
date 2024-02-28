@@ -14,15 +14,22 @@
             <div class="flex-row">
                   <div class="flex-col flex-col-12 mb-3">
                         <h3>Support Group</h3> 
-                        <system-interface-support-group></system-interface-support-group>
+                        <system-interface-support-group [SupportGroupGridLists$]="supportGroup$"
+                        [pageSizes]="pageSizes" [sortValue]="sortValueSupportGroup"
+                        [sortType]="sortType" [sort]="sortSupportGroupList" ></system-interface-support-group>
                   </div>
                   <div class="flex-col flex-col-6 mb-3">
                         <h3>Distribution List</h3>
-                        <system-interface-distribution-lists></system-interface-distribution-lists>
+                        <system-interface-distribution-lists  [distributionGridLists$]="distributionLists$"
+                        [pageSizes]="pageSizes" [sortValue]="sortValueDistribution"
+                        [sortType]="sortType" [sort]="sortDistributionList"></system-interface-distribution-lists>
                   </div>
                   <div class="flex-col flex-col-6">
                         <h3>Error Category</h3>
-                        <system-interface-notification-category></system-interface-notification-category>
+                        <system-interface-notification-category [notificationCategoryGridLists$]="notificationCategoryLists$"
+                        [pageSizes]="pageSizes" [sortValue]="sortValueNotificationCategory"
+                        [sortType]="sortType" [sort]="sortNotificationCategoryList"
+                        ></system-interface-notification-category>
                   </div>
 
             </div>
