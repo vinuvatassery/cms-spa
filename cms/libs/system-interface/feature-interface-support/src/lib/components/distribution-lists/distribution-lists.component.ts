@@ -40,8 +40,40 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   public gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
+      text: 'Add',
+      icon: 'add',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
       text: 'Edit',
       icon: 'edit',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Deactivate',
+      icon: 'block',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Re-activate',
+      icon: 'done',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Delete',
+      icon: 'delete',
       click: (data: any): void => {
      console.log('test');
       },

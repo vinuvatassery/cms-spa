@@ -1,8 +1,21 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa' 
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
+import {
+  State,
+  CompositeFilterDescriptor,
+  filterBy,
+} from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'system-interface-notification-category',
@@ -12,9 +25,8 @@ import { Subject } from 'rxjs';
 export class NotificationCategoryComponent implements OnInit, OnChanges {
   isNotificationCategoryDetailPopup = false;
 
-
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isNotificationCategoryGridLoaderShow = false;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -36,9 +48,17 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   gridNotificationCategoryDataSubject = new Subject<any>();
   gridNotificationCategoryData$ =
     this.gridNotificationCategoryDataSubject.asObservable();
- 
+
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  public gridMoreActions = [
+  public gridMoreActionsNotification = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Add',
+      icon: 'add',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
     {
       buttonType: 'btn-h-primary',
       text: 'Edit',
@@ -47,11 +67,32 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
      console.log('test');
       },
     },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Deactivate',
+      icon: 'block',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Re-activate',
+      icon: 'done',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Delete',
+      icon: 'delete',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
   ];
 
-  
-
- 
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -166,11 +207,11 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
     });
     this.isNotificationCategoryGridLoaderShow = false;
   }
- 
-  onNotificationCategoryDetailsClicked(){
+
+  onNotificationCategoryDetailsClicked() {
     this.isNotificationCategoryDetailPopup = true;
   }
-  onCloseNotificationCategoryDetailPopupClicked(){
+  onCloseNotificationCategoryDetailPopupClicked() {
     this.isNotificationCategoryDetailPopup = false;
   }
 }

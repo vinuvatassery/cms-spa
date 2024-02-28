@@ -1,8 +1,21 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa' 
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
+import {
+  State,
+  CompositeFilterDescriptor,
+  filterBy,
+} from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'system-interface-support-group',
@@ -12,8 +25,8 @@ import { Subject } from 'rxjs';
 export class SupportGroupComponent implements OnInit, OnChanges {
   isGroupDetailPopup = false;
 
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isSupportGroupGridLoaderShow = false;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -33,11 +46,18 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   gridDataResult!: GridDataResult;
 
   gridSupportGroupDataSubject = new Subject<any>();
-  gridSupportGroupData$ =
-    this.gridSupportGroupDataSubject.asObservable();
- 
+  gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
+
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  public gridMoreActions = [
+  public gridMoreActionsSupport = [
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Add',
+      icon: 'add',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
     {
       buttonType: 'btn-h-primary',
       text: 'Edit',
@@ -46,11 +66,32 @@ export class SupportGroupComponent implements OnInit, OnChanges {
      console.log('test');
       },
     },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Deactivate',
+      icon: 'block',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
+    {
+      buttonType: 'btn-h-primary',
+      text: 'Re-activate',
+      icon: 'done',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
+    {
+      buttonType: 'btn-h-danger',
+      text: 'Delete',
+      icon: 'delete',
+      click: (data: any): void => {
+     console.log('test');
+      },
+    },
   ];
 
-  
-
- 
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -165,11 +206,11 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     });
     this.isSupportGroupGridLoaderShow = false;
   }
- 
-  onGroupDetailsClicked(){
+
+  onGroupDetailsClicked() {
     this.isGroupDetailPopup = true;
   }
-  onCloseGroupDetailPopupClicked(){
+  onCloseGroupDetailPopupClicked() {
     this.isGroupDetailPopup = false;
   }
 }
