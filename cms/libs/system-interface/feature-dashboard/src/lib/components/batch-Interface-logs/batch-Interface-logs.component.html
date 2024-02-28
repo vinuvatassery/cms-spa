@@ -10,7 +10,7 @@
               textField="lovDesc" 
               valueField="lovCode"
               [value]="InterfaceType"
-              [valuePrimitive]="true"
+              [valuePrimitive]="true" [disabled]="(batchLogsDataLoader$  | async) === true"
               (valueChange)="onInterfaceChange($event)"
               >
             </kendo-dropdownlist>
@@ -35,7 +35,7 @@
               aria-labelledby="StatusshowHistorical"
               id="StatusshowHistorical"
               [(ngModel)]="displayAll"
-              (change)="handleShowHistoricalClick()"
+              (change)="handleShowHistoricalClick()" [disabled]="(batchLogsDataLoader$  | async) === true"
             />
             <label class="k-checkbox-label" for="StatusshowHistorical"
               >Show activities within the last {{textToDisplay}} </label

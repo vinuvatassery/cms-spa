@@ -6,14 +6,16 @@
         <kendo-floatinglabel text="Interface">
           <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
             [data]="interfaceFilterDataList" [ngModel]="interfaceFilterDropDown" textField="lovDesc"
-            valueField="lovCode" (selectionChange)="onInterfaceSelectionChanged($event)">
+            valueField="lovCode" (selectionChange)="onInterfaceSelectionChanged($event)"
+            [disabled]="(webLogListsLoader$  | async) === true">
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div>
         <span class="app-checkboxwidtext-wrapper">
-          <input type="checkbox" kendoCheckBox aria-labelledby="StatusshowHistorical" id="StatusshowHistorical"
-            [(ngModel)]="displayAll" (change)="handleShowHistoricalClick()" />
+          <input [disabled]="(webLogListsLoader$  | async) === true" type="checkbox" kendoCheckBox
+            aria-labelledby="StatusshowHistorical" id="StatusshowHistorical" [(ngModel)]="displayAll"
+            (change)="handleShowHistoricalClick()" />
           <label class="k-checkbox-label" for="StatusshowHistorical">Show activities within the last 2 Weeks </label>
         </span>
       </div>
@@ -94,7 +96,7 @@
           </kendo-popover>
         </ng-template>
       </kendo-grid-column>
-      
+
       <kendo-grid-column title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button"
