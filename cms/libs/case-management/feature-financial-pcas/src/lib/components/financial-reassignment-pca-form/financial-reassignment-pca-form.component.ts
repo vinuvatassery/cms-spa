@@ -71,8 +71,6 @@ this.loaderService.show();
 
     this.getPcaInfoData()
 
-
-
   }
 
   ngOnChanges(changes: SimpleChanges): void {
