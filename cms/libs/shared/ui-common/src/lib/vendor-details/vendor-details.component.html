@@ -244,7 +244,7 @@
           </kendo-textbox>
           <kendo-formerror
             *ngIf="!medicalProviderForm.controls['mailCode'].valid && isValidateForm && !mailCodeLengthError">
-            Mail code is required
+            A mail code must be selected
           </kendo-formerror>
           <kendo-formerror *ngIf="mailCodeLengthError">Mail code must contain 3 characters.</kendo-formerror>
         </kendo-floatinglabel>
@@ -540,9 +540,7 @@
               If adding a contact, Name is required
             </p>
             <kendo-formerror
-              *ngIf="!getContactControl(i, 'contactName')?.valid && isValidateForm && getContactNameValidation(i)">Contact
-              Name is
-              required</kendo-formerror>
+              *ngIf="!getContactControl(i, 'contactName')?.valid && isValidateForm && getContactNameValidation(i)">A Contact Name is required</kendo-formerror>
           </div>
           <div class="flex-col mb-1">
             <kendo-floatinglabel text="Description (Optional)">
