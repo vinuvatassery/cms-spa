@@ -55,18 +55,10 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   public gridMoreActionsSupport = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Add',
-      icon: 'add',
-      click: (data: any): void => {
-     console.log('test');
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
       text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
-     console.log('test');
+        console.log("edit")
       },
     },
     {
@@ -74,7 +66,8 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       text: 'Deactivate',
       icon: 'block',
       click: (data: any): void => {
-        this.isSupportGroupDeactivatePopupShow = true;
+        this.onOpenSupportGroupDeactivateClicked();
+     
 
       },
     },
@@ -83,7 +76,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       text: 'Re-activate',
       icon: 'done',
       click: (data: any): void => {
-     this.isSupportGroupReactivatePopupShow = true;
+     this.onOpenSupportGroupReactivateClicked();
       },
     },
     {
@@ -91,7 +84,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
-        this.isSupportGroupDeletePopupShow = true;
+        this.onOpenSupportGroupDeleteClicked();
 
       },
     },
@@ -218,14 +211,21 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   onCloseGroupDetailPopupClicked() {
     this.isGroupDetailPopup = false;
   }
-
+  onOpenSupportGroupDeleteClicked(){
+    this.isSupportGroupDeletePopupShow = true;
+  }
   onCloseSupportGroupDeleteClicked(){
     this.isSupportGroupDeletePopupShow = false;
+  }
+  onOpenSupportGroupDeactivateClicked(){
+    this.isSupportGroupDeactivatePopupShow = true;
   }
   onCloseSupportGroupDeactivateClicked(){
     this.isSupportGroupDeactivatePopupShow = false;
   }
-
+  onOpenSupportGroupReactivateClicked(){
+    this.isSupportGroupReactivatePopupShow = true;
+  }
   onCloseSupportGroupReactivateClicked(){
     this.isSupportGroupReactivatePopupShow = false;
   }

@@ -24,7 +24,10 @@ import { Subject } from 'rxjs';
 })
 export class NotificationCategoryComponent implements OnInit, OnChanges {
   isNotificationCategoryDetailPopup = false;
-
+  isNotificationCategoryReactivatePopupShow = false;
+  isNotificationCategoryDeactivatePopupShow = false;
+  isNotificationCategoryDeletePopupShow = false;
+  isNotificationCategoryDeleteConfirmationPopupShow = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isNotificationCategoryGridLoaderShow = false;
@@ -53,18 +56,10 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   public gridMoreActionsNotification = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Add',
-      icon: 'add',
-      click: (data: any): void => {
-     console.log('test');
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
       text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
-     console.log('test');
+        console.log("edit")
       },
     },
     {
@@ -72,7 +67,9 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
       text: 'Deactivate',
       icon: 'block',
       click: (data: any): void => {
-     console.log('test');
+        this.onOpenNotificationCategoryDeactivateClicked();
+     
+
       },
     },
     {
@@ -80,7 +77,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
       text: 'Re-activate',
       icon: 'done',
       click: (data: any): void => {
-     console.log('test');
+     this.onOpenNotificationCategoryReactivateClicked();
       },
     },
     {
@@ -88,7 +85,8 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
       text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
-     console.log('test');
+        this.onOpenNotificationCategoryDeleteClicked();
+
       },
     },
   ];
@@ -213,5 +211,32 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   }
   onCloseNotificationCategoryDetailPopupClicked() {
     this.isNotificationCategoryDetailPopup = false;
+  }
+
+  onOpenNotificationCategoryDeleteClicked(){
+    this.isNotificationCategoryDeletePopupShow = true;
+  }
+  onCloseNotificationCategoryDeleteClicked(){
+    this.isNotificationCategoryDeletePopupShow = false;
+  }
+  onOpenNotificationCategoryDeactivateClicked(){
+    this.isNotificationCategoryDeactivatePopupShow = true;
+  }
+  onCloseNotificationCategoryDeactivateClicked(){
+    this.isNotificationCategoryDeactivatePopupShow = false;
+  }
+  onOpenNotificationCategoryReactivateClicked(){
+    this.isNotificationCategoryReactivatePopupShow = true;
+  }
+  onCloseNotificationCategoryReactivateClicked(){
+    this.isNotificationCategoryReactivatePopupShow = false;
+  }
+  onOpenNotificationCategoryDeleteConfirmationClicked(){
+    this.isNotificationCategoryDeleteConfirmationPopupShow = true;
+
+  }
+  onCloseNotificationCategoryDeleteConfirmationClicked(){
+    this.isNotificationCategoryDeleteConfirmationPopupShow = false;
+
   }
 }

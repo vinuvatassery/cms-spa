@@ -16,11 +16,8 @@
   </span>
 </section>
 
-<h3>Support Group</h3>
+<h3 >Support Group</h3>
 <p >Select a Group in the table below to view assigned Users and Error Categories</p>
-
-
-
 
 <div class="app-c-table">
   <kendo-grid [resizable]="true" [loading]="isSupportGroupGridLoaderShow" [pageSize]="state.take" [pageable]="true"
@@ -167,7 +164,7 @@
 
 
 <kendo-dialog *ngIf="isSupportGroupDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeactivateClicked()"> Deactivate email template?
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeactivateClicked()"> Deactivate?
   </kendo-dialog-titlebar>
 
   <section class="k-dialog-body">
@@ -192,7 +189,7 @@
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isSupportGroupReactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseSupportGroupReactivateClicked()"> Re-activate email template?
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupReactivateClicked()"> Re-activate?
   </kendo-dialog-titlebar>
 
   <section class="k-dialog-body">
@@ -217,7 +214,7 @@
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isSupportGroupDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()"> Delete email template?</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()"> Delete?</kendo-dialog-titlebar>
 
   <section class="k-dialog-body mb-2">
         <p>
@@ -241,7 +238,7 @@
 
 
 <kendo-dialog *ngIf="isSupportGroupDeleteConfirmationPopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteConfirmationClicked()"> Delete email template?</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteConfirmationClicked()"> Error Confirmation?</kendo-dialog-titlebar>
 
   <section class="k-dialog-body mb-2">
         <p>

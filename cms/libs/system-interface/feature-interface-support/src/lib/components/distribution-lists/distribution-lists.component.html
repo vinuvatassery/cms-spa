@@ -127,3 +127,101 @@
     </div>
   </kendo-dialog-actions>
 </kendo-dialog>
+
+
+<kendo-dialog *ngIf="isMemberDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseMemberDeactivateClicked()"> Deactivate?
+  </kendo-dialog-titlebar>
+
+  <section class="k-dialog-body">
+        <p class="text-muted mb-2">
+              Users will no longer be able to send email using this template. You may re-activate it at any time.
+        </p>
+  </section>
+
+  <kendo-dialog-actions>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                          (click)="onCloseMemberDeactivateClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton [primary]="true" aria-label="Deactivate">
+                          Deactivate
+                    </button>
+              </div>
+        </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isMemberReactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseMemberReactivateClicked()"> Re-activate?
+  </kendo-dialog-titlebar>
+
+  <section class="k-dialog-body">
+        <p class="text-muted mb-2">
+              Are you sure you want to reactivate again?
+        </p>
+  </section>
+
+  <kendo-dialog-actions>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                          (click)="onCloseMemberReactivateClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton [primary]="true" aria-label="Deactivate">
+                          Re-activate
+                    </button>
+              </div>
+        </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isMemberDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseMemberDeleteClicked()"> Delete?</kendo-dialog-titlebar>
+
+  <section class="k-dialog-body mb-2">
+        <p>
+              This action cannot be undone. It will be permanently deleted from the system. 
+        </p>
+  </section>
+  <kendo-dialog-actions>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
+                          (click)="onCloseMemberDeleteClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton class="k-error-button" aria-label="Delete" (click)="onOpenMemberDeleteConfirmationClicked()">
+                          Delete
+                    </button>
+              </div>
+        </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+
+<kendo-dialog *ngIf="isMemberDeleteConfirmationPopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseMemberDeleteConfirmationClicked()"> Error Confirmation?</kendo-dialog-titlebar>
+
+  <section class="k-dialog-body mb-2">
+        <p>
+              This action cannot be undone. It will be permanently deleted from the system. 
+        </p>
+  </section>
+  <kendo-dialog-actions>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
+                          (click)="onCloseMemberDeleteConfirmationClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton class="k-error-button" aria-label="Delete">
+                          Delete
+                    </button>
+              </div>
+        </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

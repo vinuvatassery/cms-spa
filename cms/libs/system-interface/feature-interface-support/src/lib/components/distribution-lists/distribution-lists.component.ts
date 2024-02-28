@@ -11,7 +11,10 @@ import { Subject } from 'rxjs';
 })
 export class DistributionListsComponent implements OnInit, OnChanges {
   isMemberDetailPopup = false;
-
+  isMemberReactivatePopupShow = false;
+  isMemberDeactivatePopupShow = false;
+  isMemberDeletePopupShow = false;
+  isMemberDeleteConfirmationPopupShow = false;
   public formUiStyle : UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
   isDistributionGridLoaderShow = false;
@@ -40,18 +43,10 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   public gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Add',
-      icon: 'add',
-      click: (data: any): void => {
-     console.log('test');
-      },
-    },
-    {
-      buttonType: 'btn-h-primary',
       text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
-     console.log('test');
+        console.log("edit")
       },
     },
     {
@@ -59,7 +54,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       text: 'Deactivate',
       icon: 'block',
       click: (data: any): void => {
-     console.log('test');
+        this.onOpenMemberDeactivateClicked();
+     
+
       },
     },
     {
@@ -67,7 +64,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       text: 'Re-activate',
       icon: 'done',
       click: (data: any): void => {
-     console.log('test');
+     this.onOpenMemberReactivateClicked();
       },
     },
     {
@@ -75,7 +72,8 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
-     console.log('test');
+        this.onOpenMemberDeleteClicked();
+
       },
     },
   ];
@@ -203,5 +201,32 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   }
   onCloseMemberDetailPopupClicked(){
     this.isMemberDetailPopup = false;
+  }
+
+  onOpenMemberDeleteClicked(){
+    this.isMemberDeletePopupShow = true;
+  }
+  onCloseMemberDeleteClicked(){
+    this.isMemberDeletePopupShow = false;
+  }
+  onOpenMemberDeactivateClicked(){
+    this.isMemberDeactivatePopupShow = true;
+  }
+  onCloseMemberDeactivateClicked(){
+    this.isMemberDeactivatePopupShow = false;
+  }
+  onOpenMemberReactivateClicked(){
+    this.isMemberReactivatePopupShow = true;
+  }
+  onCloseMemberReactivateClicked(){
+    this.isMemberReactivatePopupShow = false;
+  }
+  onOpenMemberDeleteConfirmationClicked(){
+    this.isMemberDeleteConfirmationPopupShow = true;
+
+  }
+  onCloseMemberDeleteConfirmationClicked(){
+    this.isMemberDeleteConfirmationPopupShow = false;
+
   }
 }
