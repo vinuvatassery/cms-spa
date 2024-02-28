@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { FinancialPharmacyClaimsFacade, PaymentsFacade } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
 import { UserDataService } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { Subscription } from 'rxjs';
@@ -135,12 +135,12 @@ export class PharmacyClaimsPrintAuthorizationComponent {
     }
   }
 
-  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
+  showHideSnackBar(type: SnackBarNotificationType, subtitle: any, secondaryText:any = null) {
     if (type == SnackBarNotificationType.ERROR) {
       const err = subtitle;
       this.loggingService.logException(err)
     }
-    this.notificationSnackbarService.manageSnackBar(type, subtitle)
+    this.notificationSnackbarService.manageSnackBar(type,secondaryText,NotificationSource.UI, subtitle)
     this.hideLoader();
   }
 
@@ -253,7 +253,7 @@ export class PharmacyClaimsPrintAuthorizationComponent {
             this.onItemChange(event);
           }
           this.ref.detectChanges();
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled! Events have been logged");
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled!","Events have been logged");
         },
         error: (err: Error) => {
           this.loaderService.hide();

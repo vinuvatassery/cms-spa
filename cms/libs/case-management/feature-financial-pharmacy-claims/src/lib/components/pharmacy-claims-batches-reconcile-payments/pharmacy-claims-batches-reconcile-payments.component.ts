@@ -11,7 +11,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -33,6 +33,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>; 
+  @ViewChild('grid') grid!: GridComponent;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   providerDetailsDialog: any;
@@ -125,6 +126,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   showExportLoader = false;
   loadType:any = null;
   loadTypeAllPayments:any = LoadTypes.allPayments
+  columnChangeDesc:any='Default Columns';
   columns : any = {
     ALL: 'ALL',
     vendorName:this.providerTitle,
@@ -279,7 +281,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     if (this.totalCount === 0) {
       if( this.isSubmitted){
       this.pageValidationMessageFlag = false;
-      this.pageValidationMessage = "validation errors are cleared.";
+      this.pageValidationMessage = null;
       }
     }
     else {
@@ -307,45 +309,60 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
+  
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    let columnsRemoved = false;
+    for (const column of this.grid.columns.toArray()){
+      if (column.hidden) {
+        columnsRemoved = true;
+      }
+    }
+    this.columnChangeDesc = columnsRemoved ? 'Columns Removed' : 'Default Columns';
+  }
+
   allColumnChange(){
     this.searchItem = null;
     this.defaultGridState();
   }
   onSearchChange(data: any) {
-    let searchValue = data;
-    this.defaultGridState();
     let operator = 'contains';
+    let searchValue = data;
+    this.selectedColumn ?? 'vendorName'
+    if (data !== '') {
+      searchValue = data;
+      this.defaultGridState();
+      operator = 'contains';
 
-    if (
-      this.selectedColumn === 'amountDue' 
-    ) {
-      operator = 'eq';
-    }
-    else if (
-      this.selectedColumn === 'paymentReconciledDate' ||
-      this.selectedColumn === 'paymentSentDate'
-    ) {
-      operator = 'eq';
-      searchValue = this.formatSearchValue(data,true);
+      if (
+        this.selectedColumn === 'amountDue'
+      ) {
+        operator = 'eq';
+      }
+      else if (
+        this.selectedColumn === 'paymentReconciledDate' ||
+        this.selectedColumn === 'paymentSentDate'
+      ) {
+        operator = 'eq';
+        searchValue = this.formatSearchValue(data, true);
 
-    }
-
-    if(this.selectedColumn ==="checkNbr" || this.selectedColumn === "ALL"){ 
-      searchValue = searchValue.replace("-","")
       }
 
-      if(this.selectedColumn ==="tin" || this.selectedColumn === "ALL"){
-        let noOfhypen =   searchValue.split("-").length - 1
+      if (this.selectedColumn === "checkNbr" || this.selectedColumn === "ALL") {
+        searchValue = searchValue.replace("-", "")
+      }
+
+      if (this.selectedColumn === "tin" || this.selectedColumn === "ALL") {
+        let noOfhypen = searchValue.split("-").length - 1
         let index = searchValue.lastIndexOf("-")
-        if(noOfhypen>=1 && (index!==2 && index !==3)){
+        if (noOfhypen >= 1 && (index !== 2 && index !== 3)) {
           this.showTinSearchWarning = true;
           return;
-        }else{
+        } else {
           this.showTinSearchWarning = false;
-          searchValue = searchValue.replace("-","")
+          searchValue = searchValue.replace("-", "")
         }
       }
-
+    }
     this.filterData = {
       logic: 'and',
       filters: [
@@ -902,12 +919,12 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       this.pageValidationMessage = this.totalCount +" validation errors found, please review each page for errors. " ;
     }
     else if(this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '').length <= 0){
-      this.pageValidationMessage = "No data for reconcile and print";
+      this.pageValidationMessage = null;
       this.pageValidationMessageFlag = true;
     }
     else {
       this.pageValidationMessageFlag = false;
-      this.pageValidationMessage = "validation errors are cleared.";
+      this.pageValidationMessage = null;
        this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined && x.checkNbr !== '');
       this.selectedReconcileDataRows.forEach((data:any) =>{
         data. paymentReconciledDate =  this.intl.formatDate(data.paymentReconciledDate, this.dateFormat);
