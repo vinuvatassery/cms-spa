@@ -74,9 +74,9 @@
             </kendo-dropdownlist>
        </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="startDate" title="Process Start Date" [width]="150">
+        <kendo-grid-column field="startDate" title="Process Start Date" [width]="180">
           <ng-template kendoGridCellTemplate let-dataItem>
-            {{dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss' | date: 'MM/dd/YYYY hh:mm:ss'}}
+            {{dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss a'}}
         </ng-template>
        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <common-grid-cell-date-range-filter
@@ -87,6 +87,17 @@
         </common-grid-cell-date-range-filter>
   </ng-template>
         </kendo-grid-column>
+
+<kendo-grid-column field="endDate" title="File Receive Date" [width]="180">
+  <ng-template kendoGridCellTemplate let-dataItem>
+    {{dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss a'}}
+  </ng-template>
+  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+    <common-grid-cell-date-range-filter [field]="'startDate'" [filter]="filter" [filterService]="filterService">
+    </common-grid-cell-date-range-filter>
+  </ng-template>
+</kendo-grid-column>
+
         <kendo-grid-column field="endDate" title="Process End Date" [width]="150">
           <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.endDate | date: 'MM/dd/YYYY hh:mm:ss' | date: 'MM/dd/YYYY hh:mm:ss'}}
@@ -118,6 +129,17 @@
         <kendo-grid-column field="totalFailed" [filterable]="false" title="Failed Records" [width]="130">
           
         </kendo-grid-column>       
+
+        <kendo-grid-column title="File Download" [width]="130" [sortable]="false" [columnMenu]="false">
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <button [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button"
+              kendoPopoverAnchor (click)="downloadFile(dataItem.fileId)">
+              Download
+            </button>
+          </ng-template>
+        </kendo-grid-column>
+
+        
         <div *kendoGridDetailTemplate="let dataItem">
           <cms-exception-detail [fileId]="fileId" [interfaceTypeCode]="interfaceTypeCode" [processTypeCode]="processTypeCode" ></cms-exception-detail>
          

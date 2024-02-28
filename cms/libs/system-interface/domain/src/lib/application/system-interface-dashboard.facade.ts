@@ -70,6 +70,8 @@ export class SystemInterfaceDashboardFacade {
 
   }
 
+
+
   loadClientRecordSendChart() {
     this.systemInterfaceDashboardService.getClientRecordSendChart().subscribe({
       next: (ClientRecordSendChart) => {
@@ -162,5 +164,33 @@ export class SystemInterfaceDashboardFacade {
     });;
   }
   // ----------------------------------
+
+  getClientDocumentsViewDownload(clientDocumentId: string) {
+    return this.service.getDocumentDownload(clientDocumentId);
+  }
+
+  viewOrDownloadFile(documentId: string, documentName: string) {
+    debugger;
+    if (documentId === undefined || documentId === '') {
+      return;
+    }
+    this.loaderService.show()
+    this.getClientDocumentsViewDownload(documentId).subscribe({
+      next: (data: any) => {
+
+        const fileUrl = window.URL.createObjectURL(data);
+        window.open(fileUrl, "_blank");
+        const downloadLink = document.createElement('a');
+        downloadLink.href = fileUrl;
+        downloadLink.download = documentName;
+        downloadLink.click();
+        this.loaderService.hide();
+      },
+      error: (error: any) => {
+        this.loaderService.hide();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+      }
+    })
+  }
 
 }

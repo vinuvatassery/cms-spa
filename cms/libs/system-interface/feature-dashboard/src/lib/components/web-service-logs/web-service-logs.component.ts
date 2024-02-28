@@ -25,10 +25,6 @@ import { Subject, Subscription } from 'rxjs';
 })
 export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
 
-  downloadFile(filePath: any) {
-    this.systemInterfaceDashboardFacade.getDocumentDownload(filePath)
-  }
-
   // UI Variables
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -94,7 +90,6 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
     this.statusArrayDesc = systemInterfaceDashboardFacade.getStatusDescriptionArray()
     this.processArray = systemInterfaceDashboardFacade.getEecProcessTypeCodeArray()
   }
-
 
   gridColumns: any = {
     process: 'Process',
@@ -265,6 +260,10 @@ export class WebServiceLogsComponent implements OnChanges, OnInit, OnDestroy {
       ],
       logic: 'or',
     });
+  }
+
+  downloadFile(filePath: any) {
+    this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
   }
 
 }

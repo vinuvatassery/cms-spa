@@ -298,6 +298,7 @@ resetGrid() {
   this.loadActivityListGrid();
 
 }
+
 public onDetailExpand(e: any): void {
 this.fileId=e.dataItem.fileId;
 this.interfaceTypeCode=e.dataItem.interfaceTypeCode;
@@ -327,6 +328,10 @@ this.processTypeCode=e.dataItem.processTypeCode;
       ],
       logic: 'or',
     });
+  }
+
+  downloadFile(filePath: any) {
+    this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
   }
 
 }
