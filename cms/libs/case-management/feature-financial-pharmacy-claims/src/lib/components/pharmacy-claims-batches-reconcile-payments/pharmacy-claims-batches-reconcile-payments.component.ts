@@ -325,40 +325,44 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     this.defaultGridState();
   }
   onSearchChange(data: any) {
-    let searchValue = data;
-    this.defaultGridState();
     let operator = 'contains';
+    let searchValue = data;
+    this.selectedColumn ?? 'vendorName'
+    if (data !== '') {
+      searchValue = data;
+      this.defaultGridState();
+      operator = 'contains';
 
-    if (
-      this.selectedColumn === 'amountDue' 
-    ) {
-      operator = 'eq';
-    }
-    else if (
-      this.selectedColumn === 'paymentReconciledDate' ||
-      this.selectedColumn === 'paymentSentDate'
-    ) {
-      operator = 'eq';
-      searchValue = this.formatSearchValue(data,true);
+      if (
+        this.selectedColumn === 'amountDue'
+      ) {
+        operator = 'eq';
+      }
+      else if (
+        this.selectedColumn === 'paymentReconciledDate' ||
+        this.selectedColumn === 'paymentSentDate'
+      ) {
+        operator = 'eq';
+        searchValue = this.formatSearchValue(data, true);
 
-    }
-
-    if(this.selectedColumn ==="checkNbr" || this.selectedColumn === "ALL"){ 
-      searchValue = searchValue.replace("-","")
       }
 
-      if(this.selectedColumn ==="tin" || this.selectedColumn === "ALL"){
-        let noOfhypen =   searchValue.split("-").length - 1
+      if (this.selectedColumn === "checkNbr" || this.selectedColumn === "ALL") {
+        searchValue = searchValue.replace("-", "")
+      }
+
+      if (this.selectedColumn === "tin" || this.selectedColumn === "ALL") {
+        let noOfhypen = searchValue.split("-").length - 1
         let index = searchValue.lastIndexOf("-")
-        if(noOfhypen>=1 && (index!==2 && index !==3)){
+        if (noOfhypen >= 1 && (index !== 2 && index !== 3)) {
           this.showTinSearchWarning = true;
           return;
-        }else{
+        } else {
           this.showTinSearchWarning = false;
-          searchValue = searchValue.replace("-","")
+          searchValue = searchValue.replace("-", "")
         }
       }
-
+    }
     this.filterData = {
       logic: 'and',
       filters: [

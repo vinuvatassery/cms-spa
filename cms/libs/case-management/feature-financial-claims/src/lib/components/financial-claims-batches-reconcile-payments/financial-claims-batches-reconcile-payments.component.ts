@@ -318,22 +318,23 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     let searchValue = data;
     this.defaultGridState();
     let operator = 'contains';
+    this.selectedColumn ?? 'vendorName'
+    if (data !== '') {
 
-    if (
-      this.selectedColumn === 'amountDue' 
-    ) {
-      operator = 'eq';
-    }
-    else if (
-      this.selectedColumn === 'paymentReconciledDate' ||
-      this.selectedColumn === 'paymentSentDate'
-    ) {
-      operator = 'eq';
-      searchValue = this.formatSearchValue(data,true);
+      if (
+        this.selectedColumn === 'amountDue'
+      ) {
+        operator = 'eq';
+      }
+      else if (
+        this.selectedColumn === 'paymentReconciledDate' ||
+        this.selectedColumn === 'paymentSentDate'
+      ) {
+        operator = 'eq';
+        searchValue = this.formatSearchValue(data, true);
 
+      }
     }
-   
-    if(searchValue !== ''){
     this.filterData = {
       logic: 'and',
       filters: [
@@ -352,7 +353,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
-  }
+
   }
   private formatSearchValue(searchValue: any, isDateSearch: boolean) {
     if (isDateSearch) {

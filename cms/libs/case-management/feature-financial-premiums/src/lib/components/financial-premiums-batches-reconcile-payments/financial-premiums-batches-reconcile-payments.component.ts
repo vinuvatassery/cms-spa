@@ -331,24 +331,27 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
       this.loadReconcileListGrid();
   }
   onSearchChange(data: any) {
+    debugger;
     let searchValue = data;
     this.defaultGridState();
     let operator = 'contains';
+    this.selectedColumn ?? 'vendorName'
+    if (data !== '') {
 
-    if (
-      this.selectedColumn === 'amountDue' 
-    ) {
-      operator = 'eq';
-    }
-    else if (
-      this.selectedColumn === 'paymentReconciledDate' ||
-      this.selectedColumn === 'paymentSentDate'
-    ) {
-      operator = 'eq';
-      searchValue = this.formatSearchValue(data,true);
+      if (
+        this.selectedColumn === 'amountDue'
+      ) {
+        operator = 'eq';
+      }
+      else if (
+        this.selectedColumn === 'paymentReconciledDate' ||
+        this.selectedColumn === 'paymentSentDate'
+      ) {
+        operator = 'eq';
+        searchValue = this.formatSearchValue(data, true);
 
+      }
     }
-   
     this.filterData = {
       logic: 'and',
       filters: [
