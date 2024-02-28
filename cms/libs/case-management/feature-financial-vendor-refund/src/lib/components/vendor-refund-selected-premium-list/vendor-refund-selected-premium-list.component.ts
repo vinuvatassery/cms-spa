@@ -46,7 +46,7 @@ export class VendorRefundSelectedPremiumListComponent implements  OnInit  {
   @Input() insuraceAddRefundClick$:any
   @Output() Reqpayload = new EventEmitter<any>()
   refundForm! :FormGroup
-  
+
   @Input() insurancePremiumPaymentReqIds:any[] =[]
   public constructor(private formBuilder : FormBuilder,
     private readonly changeDetectorRef: ChangeDetectorRef){
