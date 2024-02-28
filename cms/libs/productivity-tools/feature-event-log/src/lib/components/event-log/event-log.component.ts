@@ -115,7 +115,7 @@ export class EventLogComponent implements OnInit {
     }
     else
     {
-      this.eventList = this.eventResponseList.filter((item : any) => item.parentEventId.toStrig );
+      this.eventList = this.eventResponseList.filter((item : any) => !item.parentEventId );
     }
     this.isAddEventDialogOpen = this.dialogService.open({
       content: template,
