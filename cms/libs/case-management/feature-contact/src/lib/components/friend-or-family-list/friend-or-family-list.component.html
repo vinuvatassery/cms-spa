@@ -19,7 +19,7 @@
   </div>
   <div class="flex-col mt-1">
     <div class="app-c-table">
-      <kendo-grid  [sortable]="true" 
+      <kendo-grid  [sortable]="true"
       [groupable]="false"
       [reorderable]="true"
       [columnMenu]="{ filter: true }"
@@ -55,10 +55,10 @@
           </ng-template>
         </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column field="by" title="By" [width]="70" class="text-center">
+        <kendo-grid-column field="by" title="By" [width]="70" class="text-center" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <common-user-photo-icon  
-            [userId]="dataItem.creatorId" 
+            <common-user-photo-icon
+            [userId]="dataItem.creatorId"
             [userFirstName]="dataItem.userFirstName"
             [userLastName]="dataItem.userLastName"
             [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
@@ -75,7 +75,7 @@
         >
           <ng-template kendoGridCellTemplate let-dataItem>
             <kendo-dropdownbutton
-              [data]="gridOptionData" 
+              [data]="gridOptionData"
               title="More option"
               class="TableActionPopup app-dropdown-action more_action_wid"
               buttonClass="k-icon-button"
