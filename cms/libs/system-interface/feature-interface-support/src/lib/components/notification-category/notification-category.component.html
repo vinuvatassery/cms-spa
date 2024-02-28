@@ -1,18 +1,18 @@
-<p>distribution-lists works!</p>
+<p>error-category works!</p>
  
 
-      <button kendoButton  class="mr-1" [primary]="true" aria-label="Member" icon="add" (click)="onMemberDetailsClicked()">  Member</button>
+      <button kendoButton  class="mr-1" [primary]="true" aria-label="Notification Category" icon="add" (click)="onNotificationCategoryDetailsClicked()">  Notification Category</button>
 
       <kendo-dialog
-      *ngIf="isMemberDetailPopup"
-      (close)="onCloseMemberDetailPopupClicked()"
+      *ngIf="isDistributionDetailPopup"
+      (close)="onCloseNotificationCategoryDetailPopupClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np"
     >
-      <kendo-dialog-titlebar>Add Member</kendo-dialog-titlebar> 
+      <kendo-dialog-titlebar>Add NotificationCategory</kendo-dialog-titlebar> 
 
       <section class="k-dialog-body">
         <p class="text-muted">
-         Adds a user to the distribution list for the selected role
+         Adds a notification category to the selected group
         </p>
         <div class="flex-row">
      
@@ -22,24 +22,19 @@
               </kendo-textbox>
             </kendo-floatinglabel>
           </div>
-          <div class="flex-col flex-col-6">
-            <kendo-floatinglabel text="First Name">
+          <div class="flex-col ">
+            <kendo-floatinglabel text="Notification Category"> 
+                  <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  > </kendo-dropdownlist>
+           
+                </kendo-floatinglabel>
+          </div>
+          <div class="flex-col ">
+            <kendo-floatinglabel text="Description">
               <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
               </kendo-textbox>
             </kendo-floatinglabel>
           </div>
-          <div class="flex-col flex-col-6">
-            <kendo-floatinglabel text="Last Name">
-              <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-              </kendo-textbox>
-            </kendo-floatinglabel>
-          </div>
-          <div class="flex-col">
-            <kendo-floatinglabel text="Email Address">
-              <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-              </kendo-textbox>
-            </kendo-floatinglabel>
-          </div>
+          
            
         </div>
       </section>
@@ -52,7 +47,7 @@
               [primary]="true"
               look="outline"
               aria-label="Cancel"
-              (click)="onCloseMemberDetailPopupClicked()"
+              (click)="onCloseNotificationCategoryDetailPopupClicked()"
             >
               Cancel
             </button>
