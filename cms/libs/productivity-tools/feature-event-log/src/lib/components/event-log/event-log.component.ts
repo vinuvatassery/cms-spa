@@ -72,7 +72,7 @@ export class EventLogComponent implements OnInit {
 
   /** Private methods **/
   private loadEvents(): void {
-    this.createFilterData('1');
+    this.createFilterData('6ec8e8d7-309e-48d7-9734-eef6a6f8c90f');
     const paginationData = {
       skipCount: 0,
       pagesize: 10,
@@ -80,7 +80,7 @@ export class EventLogComponent implements OnInit {
       sortType: "desc",
       filter: JSON.stringify(this.filterData),
     };
-    this.eventLogFacade.loadEvents("1", paginationData);
+    this.eventLogFacade.loadEvents(paginationData);
   }
 
   createFilterData(data: string){
