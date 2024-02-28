@@ -24,7 +24,10 @@ import { Subject } from 'rxjs';
 })
 export class SupportGroupComponent implements OnInit, OnChanges {
   isGroupDetailPopup = false;
-
+  isSupportGroupReactivatePopupShow = false;
+  isSupportGroupDeactivatePopupShow = false;
+  isSupportGroupDeletePopupShow = false;
+  isSupportGroupDeleteConfirmationPopupShow = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isSupportGroupGridLoaderShow = false;
@@ -71,7 +74,8 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       text: 'Deactivate',
       icon: 'block',
       click: (data: any): void => {
-     console.log('test');
+        this.isSupportGroupDeactivatePopupShow = true;
+
       },
     },
     {
@@ -79,7 +83,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       text: 'Re-activate',
       icon: 'done',
       click: (data: any): void => {
-     console.log('test');
+     this.isSupportGroupReactivatePopupShow = true;
       },
     },
     {
@@ -87,7 +91,8 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       text: 'Delete',
       icon: 'delete',
       click: (data: any): void => {
-     console.log('test');
+        this.isSupportGroupDeletePopupShow = true;
+
       },
     },
   ];
@@ -212,5 +217,24 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   }
   onCloseGroupDetailPopupClicked() {
     this.isGroupDetailPopup = false;
+  }
+
+  onCloseSupportGroupDeleteClicked(){
+    this.isSupportGroupDeletePopupShow = false;
+  }
+  onCloseSupportGroupDeactivateClicked(){
+    this.isSupportGroupDeactivatePopupShow = false;
+  }
+
+  onCloseSupportGroupReactivateClicked(){
+    this.isSupportGroupReactivatePopupShow = false;
+  }
+  onOpenSupportGroupDeleteConfirmationClicked(){
+    this.isSupportGroupDeleteConfirmationPopupShow = true;
+
+  }
+  onCloseSupportGroupDeleteConfirmationClicked(){
+    this.isSupportGroupDeleteConfirmationPopupShow = false;
+
   }
 }

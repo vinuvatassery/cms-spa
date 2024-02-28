@@ -17,7 +17,7 @@
 </section>
 
 <h3>Support Group</h3>
-<p class="mt-2">Select a Group in the table below to view assigned Users and Error Categories</p>
+<p >Select a Group in the table below to view assigned Users and Error Categories</p>
 
 
 
@@ -160,5 +160,105 @@
         </button>
       </div>
     </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+
+
+
+<kendo-dialog *ngIf="isSupportGroupDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeactivateClicked()"> Deactivate email template?
+  </kendo-dialog-titlebar>
+
+  <section class="k-dialog-body">
+        <p class="text-muted mb-2">
+              Users will no longer be able to send email using this template. You may re-activate it at any time.
+        </p>
+  </section>
+
+  <kendo-dialog-actions>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                          (click)="onCloseSupportGroupDeactivateClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton [primary]="true" aria-label="Deactivate">
+                          Deactivate
+                    </button>
+              </div>
+        </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isSupportGroupReactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupReactivateClicked()"> Re-activate email template?
+  </kendo-dialog-titlebar>
+
+  <section class="k-dialog-body">
+        <p class="text-muted mb-2">
+              Are you sure you want to reactivate again?
+        </p>
+  </section>
+
+  <kendo-dialog-actions>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                          (click)="onCloseSupportGroupReactivateClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton [primary]="true" aria-label="Deactivate">
+                          Re-activate
+                    </button>
+              </div>
+        </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isSupportGroupDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()"> Delete email template?</kendo-dialog-titlebar>
+
+  <section class="k-dialog-body mb-2">
+        <p>
+              This action cannot be undone. It will be permanently deleted from the system. 
+        </p>
+  </section>
+  <kendo-dialog-actions>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
+                          (click)="onCloseSupportGroupDeleteClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton class="k-error-button" aria-label="Delete" (click)="onOpenSupportGroupDeleteConfirmationClicked()">
+                          Delete
+                    </button>
+              </div>
+        </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
+
+
+<kendo-dialog *ngIf="isSupportGroupDeleteConfirmationPopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteConfirmationClicked()"> Delete email template?</kendo-dialog-titlebar>
+
+  <section class="k-dialog-body mb-2">
+        <p>
+              This action cannot be undone. It will be permanently deleted from the system. 
+        </p>
+  </section>
+  <kendo-dialog-actions>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
+                          (click)="onCloseSupportGroupDeleteConfirmationClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton class="k-error-button" aria-label="Delete">
+                          Delete
+                    </button>
+              </div>
+        </div>
   </kendo-dialog-actions>
 </kendo-dialog>
