@@ -253,7 +253,7 @@ export class PharmacyClaimsPrintAuthorizationComponent {
             this.onItemChange(event);
           }
           this.ref.detectChanges();
-          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled! Events have been logged");
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS, "Payment(s) reconciled! Events have been logged",);
         },
         error: (err: Error) => {
           this.loaderService.hide();

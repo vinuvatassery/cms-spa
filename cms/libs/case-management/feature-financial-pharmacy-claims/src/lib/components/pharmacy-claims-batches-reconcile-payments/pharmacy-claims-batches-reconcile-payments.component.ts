@@ -11,7 +11,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -33,6 +33,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>; 
+  @ViewChild('grid') grid!: GridComponent;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   providerDetailsDialog: any;
@@ -125,6 +126,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   showExportLoader = false;
   loadType:any = null;
   loadTypeAllPayments:any = LoadTypes.allPayments
+  columnChangeDesc:any='Default Columns';
   columns : any = {
     ALL: 'ALL',
     vendorName:this.providerTitle,
@@ -307,6 +309,17 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
+  
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    let columnsRemoved = false;
+    for (const column of this.grid.columns.toArray()){
+      if (column.hidden) {
+        columnsRemoved = true;
+      }
+    }
+    this.columnChangeDesc = columnsRemoved ? 'Columns Removed' : 'Default Columns';
+  }
+
   allColumnChange(){
     this.searchItem = null;
     this.defaultGridState();

@@ -12,7 +12,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
-import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State,
@@ -34,6 +34,7 @@ import { LovFacade } from '@cms/system-config/domain';
 export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnInit, OnDestroy{
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>;
+  @ViewChild('grid') grid!: GridComponent;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReconcileGridLoaderShow = false;
@@ -107,6 +108,7 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
   paymentToReconcileCount:any=0;
   totalCount:any;
   isSubmitted:any = false;
+  columnChangeDesc:any='Default Columns';
   columns : any = {
     ALL: 'ALL',
     vendorName:'Insurance Vendor',
@@ -310,7 +312,19 @@ export class FinancialPremiumsBatchesReconcilePaymentsComponent implements OnIni
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;
+    this.cd.detectChanges();
   }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    let columnsRemoved = false;
+    for (const column of this.grid.columns.toArray()){
+      if (column.hidden) {
+        columnsRemoved = true;
+      }
+    }
+    this.columnChangeDesc = columnsRemoved ? 'Columns Removed' : 'Default Columns';
+  }
+  
   allColumnChange(){
     this.searchItem =null;
       this.defaultGridState();

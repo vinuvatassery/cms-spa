@@ -12,7 +12,7 @@ import {
   OnDestroy,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {  FilterService, GridDataResult } from '@progress/kendo-angular-grid';
+import {  ColumnVisibilityChangeEvent, FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
   State
@@ -35,6 +35,7 @@ import { LoadTypes, PremiumType } from '@cms/case-management/domain';
 export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,OnDestroy {
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
   PrintAuthorizationDialog!: TemplateRef<any>;
+  @ViewChild('grid') grid!: GridComponent;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReconcileGridLoaderShow = false;
@@ -107,6 +108,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   checkingPaymentRequest!:any;
   totalCount:any;
   isSubmitted:any = false;
+  columnChangeDesc:any='Default Columns';
   public reconcileAssignValueBatchForm: FormGroup = new FormGroup({
     datePaymentReconciled: new FormControl('', []),
     datePaymentSend: new FormControl('', []),
@@ -297,6 +299,17 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
+
+  columnChange(event: ColumnVisibilityChangeEvent) {
+    let columnsRemoved = false;
+    for (const column of this.grid.columns.toArray()){
+      if (column.hidden) {
+        columnsRemoved = true;
+      }
+    }
+    this.columnChangeDesc = columnsRemoved ? 'Columns Removed' : 'Default Columns';
+  }
+
   allColumnChange(){
     this.searchItem = null;
     this.defaultGridState();
@@ -391,7 +404,7 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
 
     this.loadReconcileListGrid();
   }
-
+  
   setToDefault() {
     this.searchItem = null;
     this.state = {
@@ -401,14 +414,14 @@ export class FinancialClaimsBatchesReconcilePaymentsComponent implements OnInit,
     };
 
     this.sortColumn = this.providerTitle;
-    this.sortDir = 'Ascending';
+    this.sortDir = 'Descending';
     this.filter = null;
     this.searchValue = '';
     this.isFiltered = false;
     this.columnsReordered = false;
 
     this.sortValue = 'vendorName';
-    this.sortType = 'asc';
+    this.sortType = 'desc';
     this.sort = this.sortColumn;
 
     this.loadReconcileListGrid();

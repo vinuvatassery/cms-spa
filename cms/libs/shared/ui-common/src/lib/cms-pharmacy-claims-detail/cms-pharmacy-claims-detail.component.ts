@@ -224,7 +224,6 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
   }
   savePharmacyClaim()
   {
-    debugger;
     this.isSubmitted = true
     if (!this.pharmacyClaimForm.valid) {
       this.pharmacyClaimForm.markAllAsTouched()
