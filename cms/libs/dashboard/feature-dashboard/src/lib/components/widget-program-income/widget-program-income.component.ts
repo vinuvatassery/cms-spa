@@ -17,6 +17,7 @@ export class WidgetProgramIncomeComponent implements OnInit, OnDestroy {
  
   dataYear  = ['Last Year','2023']
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
 

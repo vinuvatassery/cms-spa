@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
 import { WidgetFacade } from '@cms/dashboard/domain';  
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { Legend, LegendLabels, LegendMarkers } from '@progress/kendo-angular-charts';
 import { Subject, takeUntil } from 'rxjs'; 
 
 
@@ -15,7 +16,22 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
   programExpenses: any; 
   private destroy$ = new Subject<void>();
   public formUiStyle: UIFormStyle = new UIFormStyle();
-
+  labels: Legend  = { 
+    position:'top',
+    align:'center',
+    orientation:'horizontal',
+    labels:{
+      font: "14px Neue Helvetica Roman ",
+      margin: 5
+      
+    },
+    markers:{
+      type: 'circle',
+      width: 10,
+      height: 10
+    }
+  };
+ 
 
   public isChecked = false;
   dataExp  = [
@@ -47,8 +63,9 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
 
   dataYear  = ['Current Year','Last Year']
   selectFrequency ="M"
-  selectedTimeFrame = 'Last Year'
+  selectedTimeFrame = 'Current Year'
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade, private changeDetectorRef: ChangeDetectorRef) {}
 
@@ -59,11 +76,8 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
     this.loadProgramExpensesChart()
   }
 
-   isItemSelected(item:any) {
-    console.log(item)
-    console.log(this.selectedType)
-    const value =  this.selectedType?.some((x) => x === item.Value);
-    console.log(value)
+   isItemSelected(item:any) {   
+    const value =  this.selectedType?.some((x) => x === item.Value);  
     return value
   }
 
@@ -87,6 +101,7 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
   }
 
   ngOnInit(): void { 
+    this.isChecked = this.selectedType &&  this.selectedType.length === this.dataExp.length;
     this.loadProgramExpensesChart();
   }
 
@@ -102,19 +117,26 @@ export class WidgetProgramExpensesComponent implements OnInit, OnDestroy  {
  
   }
   loadProgramExpensesChart() {
- 
+    this.programExpenses = null
     const payload= {
       expenseType : this.selectedType ? this.selectedType :this.dataExp.map(x=> x.Value) ,
       frequency : this.selectFrequency,
       TimeFrame : this.selectedTimeFrame
     }
-    this.widgetFacade.loadProgramExpensesChart('E2301551-610C-43BF-B7C9-9B623ED425C3',payload);
+    this.widgetFacade.loadProgramExpensesChart(this.dashboardId,payload);
     this.widgetFacade.programExpensesChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (response) => {
-          if (response) {
+          if (response) {          
+            
             this.programExpenses = response;
+          
+            if(this.programExpenses && this.programExpenses?.chartData && this.programExpenses?.chartData?.categoryAxis)
+            this.programExpenses.chartData.categoryAxis.title ={
+                  'text':this.selectFrequency == 'M'? 'Month' : this.selectFrequency == 'Q'? 'Quarter' :
+                  'Year'
+            }
             this.changeDetectorRef.detectChanges()
           }
         }

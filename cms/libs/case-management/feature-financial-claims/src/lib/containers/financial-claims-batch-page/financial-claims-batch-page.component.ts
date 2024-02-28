@@ -41,6 +41,7 @@ export class FinancialClaimsBatchPageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
+  claimsBathcPaymentProfilePhoto$ = this.financialClaimsFacade.claimsBathcPaymentProfilePhotoSubject;
 
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,

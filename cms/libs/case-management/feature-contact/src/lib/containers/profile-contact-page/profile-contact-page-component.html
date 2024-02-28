@@ -21,7 +21,8 @@
           (preferredClientPhoneEvent)="preferredClientPhoneHandle($event)"
           (deactivateClientPhoneEvent)="deactivateClientPhoneHandle($event)"
           (removeClientPhoneEvent)="removeClientPhoneHandle($event)"
-          (reloadEmailsEvent)="reloadEmailsEventHandle()"></case-management-phone-list>
+          (reloadEmailsEvent)="reloadEmailsEventHandle()"
+          [phoneListProfilePhoto$]="phoneListProfilePhoto$"></case-management-phone-list>
       </div>
 
       <div class="flex-col">
@@ -36,7 +37,8 @@
           (deactivateClientEmailEvent)="deactivateClientEmailHandle($event)"
           (removeClientEmailEvent)="removeClientEmailHandle($event)"
           (loadClientPaperLessStatusEvent)="loadClientPaperLessStatusHandle()"
-          (reloadPhonesEvent)="reloadPhonesEventHandle()"></case-management-email-list>
+          (reloadPhonesEvent)="reloadPhonesEventHandle()"
+          [clientEmailProfilePhoto$]="clientEmailProfilePhoto$"></case-management-email-list>
       </div>
 
       <div class="flex-col">

@@ -16,7 +16,8 @@ import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnack
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ColumnVisibilityChangeEvent } from '@progress/kendo-angular-grid';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-contact-address-list',
   templateUrl: './contact-address-list.component.html',
@@ -54,6 +55,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
   columnChangeDesc = 'Default Columns';
   contacts$ = new BehaviorSubject<any>([]);
   loader$ = new BehaviorSubject<boolean>(false);
+  contactUserProfilePhotoSubject = new Subject();
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   gridColumns: any = {
     contactName: "Name",
@@ -110,6 +112,7 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
     private readonly configurationProvider: ConfigurationProvider,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) { }
 
   showLoader() {
@@ -141,6 +144,9 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
         };
         this.contacts$.next(gridView);
         this.loader$.next(false);
+        if(gridView){
+          this.loadDistinctUserIdsAndProfilePhoto(gridView?.data);
+        }
       },
       error: (err: any) => {
         this.loader$.next(false);
@@ -150,6 +156,22 @@ export class ContactAddressListComponent implements OnInit, OnChanges {
     })
 
   }
+
+  loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.contactUserProfilePhotoSubject.next(data);
+          }
+        },
+      });
+      this.cd.detectChanges();
+    }
+  } 
+
   ngOnChanges(changes: SimpleChanges) {
     this.defaultGridState();
     this.initializeGrid();

@@ -1,6 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { FinancialPharmacyClaimsFacade } from '@cms/case-management/domain';
-
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { ColumnComponent, ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
@@ -8,22 +6,27 @@ import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 
 @Component({
-  selector: 'cms-pharmacy-claims-recent-claims-list',
-  templateUrl: './pharmacy-claims-recent-claims-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'common-cms-pharmacy-claims-recent-claims',
+  templateUrl: './cms-pharmacy-claims-recent-claims.component.html',
+  styleUrls: ['./cms-pharmacy-claims-recent-claims.component.scss'],
 })
-export class PharmacyClaimsRecentClaimsListComponent {
-  public sortValue = this.financialPharmacyClaimsFacade.sortValueRecentClaimList;
-  public sortType = this.financialPharmacyClaimsFacade.sortType;
-  public pageSizes = this.financialPharmacyClaimsFacade.gridPageSizes;
-  public gridSkipCount = this.financialPharmacyClaimsFacade.skipCount;
-  public sort = this.financialPharmacyClaimsFacade.sortRecentClaimList;
+export class CmsPharmacyClaimsRecentClaimsComponent {
+  
   public formUiStyle : UIFormStyle = new UIFormStyle();
   @Input() vendorId: any;
   @Input() clientId: any;
   @Input() claimsType: any;
   dentalOrMedicalServiceField:any;
   @Input() duplicatePaymentInputObject:any;
+  @Input() sortType : any;
+  @Input() pageSizes : any;
+  @Input() gridSkipCount : any;
+  @Input() sortValueRecentClaimList : any;
+  @Input() sortRecentClaimList : any;
+  @Input() recentClaimsGridLists$ : any;
+  @Input() pharmacyRecentClaimsProfilePhoto$!: any;
+
+  @Output()  loadRecentClaimListEvent = new EventEmitter<any>();
   public state!: any;
   sortColumn = 'Fill Date';
   sortDir = 'desc';
@@ -35,10 +38,8 @@ export class PharmacyClaimsRecentClaimsListComponent {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
-  recentClaimsGridLists$ = this.financialPharmacyClaimsFacade.recentClaimsGridLists$;
   recentClaimListDataSubject = new Subject<any>();
   recentClaimListData$ =  this.recentClaimListDataSubject.asObservable();
-  showDuplicatePaymentExceptionHighlight$ = this.financialPharmacyClaimsFacade.showDuplicatePaymentExceptionHighlight$;
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -63,7 +64,6 @@ export class PharmacyClaimsRecentClaimsListComponent {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly lovFacade: LovFacade,
-    private readonly financialPharmacyClaimsFacade:FinancialPharmacyClaimsFacade
 
   ) { }
   ngOnInit(): void {
@@ -75,11 +75,9 @@ export class PharmacyClaimsRecentClaimsListComponent {
       skip: this.gridSkipCount,
       take: this.defaultPageSize
     };
-    this.showDuplicatePaymentExceptionHighlight$.subscribe(() => {
-      this.cdr.detectChanges();
-    });
     this.loadFinancialRecentClaimListGrid();
   }
+
   private getPaymentMethodLov() {
     this.lovFacade.getPaymentMethodLov();
     this.paymentMethodType$.subscribe({
@@ -112,7 +110,7 @@ loadFinancialRecentClaimListGrid() {
       this.claimsType,
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
-      this.sortValue,
+      this.sortValueRecentClaimList,
       this.sortType
     );
   }
@@ -175,7 +173,7 @@ loadFinancialRecentClaimListGrid() {
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
-      sort: this.sort,
+      sort: this.sortValueRecentClaimList,
       filter: { logic: 'and', filters: [] },
     };
   }
@@ -185,11 +183,11 @@ loadFinancialRecentClaimListGrid() {
   }
 
   dataStateChange(stateData: any): void {
-    this.sort = stateData.sort;
-    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortRecentClaimList = stateData.sort;
+    this.sortValueRecentClaimList = stateData.sort[0]?.field ?? this.sortValueRecentClaimList;
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
-    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.sortDir = this.sortRecentClaimList[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
 
     this.sortColumn = this.columns[stateData.sort[0]?.field];
 
@@ -238,8 +236,7 @@ loadFinancialRecentClaimListGrid() {
   }
 
   loadRecentClaimsGrid(data: any) {
-
-    this.financialPharmacyClaimsFacade.loadRecentClaimListGrid(data);
+    this.loadRecentClaimListEvent.next(data);
   }
 
   public columnChange(e: any) {
@@ -443,3 +440,4 @@ loadFinancialRecentClaimListGrid() {
 
   };
 }
+

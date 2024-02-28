@@ -8,6 +8,7 @@ import { WidgetFacade } from '@cms/dashboard/domain';
 })
 export class WidgetDirectMessagesComponent   {
   @Input() isEditDashboard!: any; 
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade) {}
 
