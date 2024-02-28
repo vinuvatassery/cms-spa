@@ -972,6 +972,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private saveContactInfo() {
     const contactInfoData: ContactInfo = {};
+    contactInfoData.address =[]
     const homeAddressGroup = this.contactInfoForm?.get('homeAddress') as FormGroup;
     const homelessFlag = this.getFlag(homeAddressGroup?.get('homelessFlag')?.value);
     const homeAddress = this.getHomeAddress();
