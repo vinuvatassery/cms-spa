@@ -241,6 +241,11 @@ loadVendors(skipcountValue : number,maxResultCountValue : number ,sortValue : st
     {
       operator = "eq"
     }
+
+    if(this.selectedColumn ==="vendorName")
+    {
+      operator = "contains"
+    }
     if(this.selectedColumn ==="tin" || this.selectedColumn === "ALL"){
       let noOfhypen =   data.split("-").length - 1
       let index = data.lastIndexOf("-")
