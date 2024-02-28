@@ -84,6 +84,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.loadDrugsListGrid();
     this.loadVendorDetailList();
     this.setVendorTypeCode('');
+    this.lovFacade.getEventAttachmentTypeLov();
     this.hasDrugCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Drug_Create_Update']);
 
   }
