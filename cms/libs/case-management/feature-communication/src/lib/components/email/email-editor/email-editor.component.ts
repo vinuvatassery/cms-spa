@@ -124,18 +124,63 @@ export class EmailEditorComponent implements OnInit {
 
   ngOnChanges(){
     if(this.currentValue){
-      this.emailEditorValueEvent(this.currentValue);
       this.selectedAttachedFile = [];
       if(this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
         this.loadUserDraftTemplateAttachment();
         this.loadLetterAttachment(this.currentValue.documentTemplateId, CommunicationEventTypeCode.CERAttachmentTypeCode);
+      }else{
+        if(this.currentValue?.notifcationDraftId && this.currentValue?.notificationRequestAttachments){
+            for (let file of this.currentValue?.notificationRequestAttachments){
+              this.selectedAttachedFile.push({
+                document: file,
+                size: file.fileSize,
+                name: file.fileName,
+                path: file.filePath,
+                documentTemplateId: file.documentTemplateId,
+                typeCode: file.typeCode
+              })
+            }
+          this.ref.detectChanges();
+          this.cerEmailAttachments.emit(this.selectedAttachedFile);
+        }else{
+        this.loadClientVendorDefaultAttachment(this.currentValue.documentTemplateId);
+        }
       }
     }
   }
 
+  loadClientVendorDefaultAttachment(documentTemplateId: any) {
+    this.loaderService.show();
+    this.communicationFacade.loadClientAndVendorDefaultAttachments(documentTemplateId)
+    .subscribe({
+      next: (attachments: any) =>{
+        if (attachments.length > 0) {
+          for (let file of attachments){
+            this.selectedAttachedFile.push({
+              document: file,
+              size: file.templateSize,
+              name: file.description,
+              documentTemplateId: file.documentTemplateId,
+              typeCode: file.typeCode
+            })
+          }
+        this.ref.detectChanges();
+        this.cerEmailAttachments.emit(this.selectedAttachedFile);
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      this.loggingService.logException(err);
+    },
+  });
+  }
+
   /** Private methods **/
 
-  ceremailAttachmentEvent(event:any){
+  cerEmailAttachmentEvent(event:any){
     this.cerEmailAttachments.emit(event);
   }
 

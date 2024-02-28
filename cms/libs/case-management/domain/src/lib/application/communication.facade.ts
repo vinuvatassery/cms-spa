@@ -136,6 +136,13 @@ export class CommunicationFacade {
     return this.emailDataService.getLetterAttachment(documentTemplateId, typeCode);
 }
 
+prepareClientAndVendorLetterFormData(clientId: any, loginUserId: any) {
+  const formData = new FormData();
+  formData.append('clientId', clientId ?? '');
+  formData.append('loginUserId', loginUserId ?? '');
+  return formData;
+}
+
 preparePreviewModelData(emailData: any) {
   const formData = new FormData();
       formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
@@ -148,26 +155,23 @@ preparePreviewModelData(emailData: any) {
 }
 
 prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[]) {
-  const isSaveForLater = "true";
   const formData = new FormData();
   formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
-  formData.append('systemCode', draftTemplate?.systemCode ?? '');
   formData.append('typeCode', draftTemplate?.typeCode ?? '');
-  formData.append('subtypeCode', draftTemplate?.subtypeCode ?? '');
-  formData.append('channelTypeCode', draftTemplate?.channelTypeCode ?? '');
   formData.append('languageCode', draftTemplate?.languageCode ?? '');
   formData.append('description', draftTemplate?.description ?? '');
-  formData.append('templateContent', draftTemplate?.templateContent ?? '');
-  formData.append('isSaveForLater', isSaveForLater??'');
-  let i = 0;
-  clientAndVendorAttachedFiles.forEach((file) => { 
-    if(file.rawFile == undefined || file.rawFile == null){
-      formData.append('savedAttachmentId', file.document.documentTemplateId);
+  formData.append('templateContent', draftTemplate?.templateContent ?? ''); 
+    let i = 0;
+    clientAndVendorAttachedFiles.forEach((file) => { 
+      if(file.rawFile == undefined || file.rawFile == null){
+        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.fileName : file.document.description);
+        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.filePath : file.document.templatePath);
+        formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.typeCode : file.document.typeCode);
       i++;
-    }else{
-      formData.append('fileData', file.rawFile); 
-    }
-});  
+      }else{
+        formData.append('attachments', file.rawFile); 
+      }
+    });
 return formData;
 }
 
@@ -214,11 +218,15 @@ updateSavedClientandVendorEmailTemplate(formData: FormData) {
   return this.emailDataService.updateEmailNotificationForLater(formData);
 }
 
-loadDraftNotificationRequest(entityId: string) {
-  return this.emailDataService.getDraftNotification(entityId);
+loadDraftNotificationRequest(entityId: string, typeCode: string) {
+  return this.emailDataService.getDraftNotification(entityId, typeCode);
 }
 
 loadTemplateById(notificationTemplateId: string) {
   return this.emailDataService.loadEmailTemplateById(notificationTemplateId);
+}
+
+loadClientAndVendorDefaultAttachments(templateId: string) {
+  return this.emailDataService.loadClientVendorDefaultAttachmentById(templateId);
 }
 }

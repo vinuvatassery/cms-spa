@@ -174,15 +174,21 @@ export class EmailDataService {
       );
     }
 
-    getDraftNotification(entityId: string) {
+    getDraftNotification(entityId: string, typeCode: string) {
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${entityId}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${entityId}/${typeCode}`
       );
     }
 
     loadEmailTemplateById(templateId: string) {
       return this.http.get(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${templateId}`
+      );
+    }
+
+    loadClientVendorDefaultAttachmentById(templateId: any) {
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${templateId}/attachments`
       );
     }
 }

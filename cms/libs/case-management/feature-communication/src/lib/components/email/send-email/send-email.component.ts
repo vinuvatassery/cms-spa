@@ -106,11 +106,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.updateOpenSendEmailFlag();
+    if(this.communicationEmailTypeCode){
     if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.communicationEmailTypeCode){
       this.loadClientAndVendorDraftEmailTemplates();
     }
-    else
+    else{
       this.loadDraftEsignRequest();
+    }
+  }
   }
 
   loadClientAndVendorDraftEmailTemplates() {
@@ -121,12 +124,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.entityId = this.vendorId;
     }
     this.loaderService.show();
-    this.communicationFacade.loadDraftNotificationRequest(this.entityId)
+    this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationEmailTypeCode)
     .subscribe({
       next: (data: any) =>{
-        if (data) {
-          data.documentTemplateId = data.notificationDraftId;
+        if (data?.length > 0) {
           this.ddlTemplates = data;
+          for (let template of this.ddlTemplates){
+            template.documentTemplateId = template.notificationDraftId;
+           }
           this.ref.detectChanges();
         }else{
           this.loadEmailTemplates();
@@ -227,11 +232,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     {
       this.saveDraftEsignRequest(this.selectedTemplate);
     }else{
-      this.saveEmailNotificationDraft(this.selectedTemplate);
+      this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
     }
   }
 
-  saveEmailNotificationDraft(draftTemplate: any) {
+  saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
     let emailRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(emailRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
@@ -304,7 +309,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (CommunicationEvents.Print === event) {
       this.emailEditorValueEvent.emit(this.currentEmailData);
       this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
-      if (this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
+      if (this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail)
       {
       this.initiateAdobeEsignProcess(this.selectedTemplate, CommunicationEvents.SendEmail);
       }else{
@@ -350,13 +355,23 @@ onClosePreviewEmail(){
 }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    if(event.documentTemplateId){
+    this.loaderService.show();
     this.communicationFacade.loadTemplateById(event.documentTemplateId)
     .subscribe({
       next: (data: any) =>{
       if (data) {
         this.selectedTemplate = data;
-        this.emailSubject = event.templateName;
         this.handleEmailEditor(data);
+        this.emailEditorValueEvent.emit(data);
+        this.isClearEmails =true;
+        this.isShowToEmailLoader$.next(true);
+        this.isOpenDdlEmailDetails = true;
+        this.selectedEmail = [];
+        this.selectedEmail.push(this.toEmail[0]?.trim());
+        this.selectedToEmail = this.selectedEmail;
+        this.emailSubject = data.description;
+        this.showToEmailLoader = false;
       }
       this.loaderService.hide();
     },
@@ -365,19 +380,21 @@ onClosePreviewEmail(){
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
     },
   });
+}else{
     this.isClearEmails =true;
-
     this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
-    //this.emailContentValue = event.templateContent == undefined? event.requestBody : event.templateContent;
     this.selectedEmail = [];
     this.selectedEmail.push(this.toEmail[0]?.trim());
     this.selectedToEmail = this.selectedEmail;
+    this.emailSubject = event.description;
+    this.emailEditorValueEvent.emit(event);
     this.showToEmailLoader = false;
     if (CommunicationEventTypeCode.CerAuthorizationEmail===this.communicationEmailTypeCode) {
       this.getCCEmailList(this.clientId, this.loginUserId);
     }
     this.ref.detectChanges();
+  }
   }
 
   handleEmailEditor(emailData: any) {
