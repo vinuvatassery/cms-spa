@@ -202,26 +202,4 @@
   </kendo-dialog-actions>
 </kendo-dialog>
 
-
-<kendo-dialog *ngIf="isMemberDeleteConfirmationPopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseMemberDeleteConfirmationClicked()"> Error Confirmation</kendo-dialog-titlebar>
-
-  <section class="k-dialog-body mb-2">
-        <p>
-          Are you sure you want to delete this member? This action cannot be undone
-        </p>
-  </section>
-  <kendo-dialog-actions>
-        <div class="justify-content-between">
-              <div class="justify-content-end">
-                    <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
-                          (click)="onCloseMemberDeleteConfirmationClicked()">
-                          Cancel
-                    </button>
-                    <button kendoButton class="k-error-button" aria-label="Delete">
-                          Delete
-                    </button>
-              </div>
-        </div>
-  </kendo-dialog-actions>
-</kendo-dialog>
+ 
