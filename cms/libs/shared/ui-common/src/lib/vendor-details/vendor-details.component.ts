@@ -286,7 +286,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
       }
       else {
-        this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.required, Validators.pattern('^[A-Za-z ]+$')]);
+        this.medicalProviderForm.controls['nameOnCheck'].setValidators([Validators.required]);
         this.medicalProviderForm.controls['nameOnCheck'].updateValueAndValidity();
       }
 
