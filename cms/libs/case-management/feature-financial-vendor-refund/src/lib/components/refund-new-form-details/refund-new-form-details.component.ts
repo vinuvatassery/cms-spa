@@ -596,10 +596,10 @@ addTpa(event:any){
         this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
-    this.isClientSelected = false;
+    this.isClientSelected = true;
     this.vendorAddressId=null;
     if($event==undefined){
-      this.vendorAddressId=null;
+      this.vendorAddressId=null; 
       this.claimsCount = 0;
       this.pharmacyClaimsPaymentReqIds = [];
     }
@@ -608,6 +608,7 @@ addTpa(event:any){
     this.vendorAddressId = $event?.vendorAddressId;
     this.vendorName = $event?.vendorName;
     this.providerTin = $event;
+    this.disableFeildsOnConfirmSelection = false;
     if (this.clientId != null && this.vendorAddressId != null){
       this.isRefundGridClaimShow = true;
     }
