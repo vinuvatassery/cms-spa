@@ -7,13 +7,13 @@
           <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
             [data]="interfaceFilterDataList" [ngModel]="interfaceFilterDropDown" textField="lovDesc"
             valueField="lovCode" (selectionChange)="onInterfaceSelectionChanged($event)"
-            [disabled]="(webLogListsLoader$  | async) === true">
+           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div>
         <span class="app-checkboxwidtext-wrapper">
-          <input [disabled]="(webLogListsLoader$  | async) === true" type="checkbox" kendoCheckBox
+          <input type="checkbox" kendoCheckBox
             aria-labelledby="StatusshowHistorical" id="StatusshowHistorical" [(ngModel)]="displayAll"
             (change)="handleShowHistoricalClick()" />
           <label class="k-checkbox-label" for="StatusshowHistorical">Show activities within the last 2 Weeks </label>

@@ -5,6 +5,8 @@ import {
   OnInit,
   OnChanges,
   Output,
+  ViewChildren,
+  QueryList,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -12,8 +14,8 @@ import { LovFacade } from '@cms/system-config/domain';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
-import { FilterService } from '@progress/kendo-angular-grid';
+import { Subject, take } from 'rxjs';
+import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
 
 @Component({
   selector: 'cms-system-interface-batch-interface-logs',
@@ -30,6 +32,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
   batchLogsDataLoader$ = this.systemInterfaceDashboardFacade.batchLogsDataLoader$;
   batchLogExcptionLists$ = this.systemInterfaceDashboardFacade.batchLogExcptionLists$;
+  @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
 
   showHistoricalFlag: boolean = true;
   @Input() lovsList$: any;
@@ -166,13 +169,21 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   handleShowHistoricalClick() {
     this.loadActivityListGrid();
   }
-
   onInterfaceChange(event: any) {
     this.InterfaceType = event;
     this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.defaultGridState()
     this.loadActivityListGrid();
     this.getHistoryByInterfaceType(this.InterfaceType);
+    this.collapseRowsInGrid();
+  }
+
+  private collapseRowsInGrid() {
+    this.activityEventLogLists$.pipe(take(1)).subscribe(({ data }) => {
+      data.forEach((item: any, idx: number) => {
+        this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
+      });
+    });
   }
 
   loadActivityListGrid() {

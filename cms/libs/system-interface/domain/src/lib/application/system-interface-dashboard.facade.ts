@@ -70,8 +70,6 @@ export class SystemInterfaceDashboardFacade {
 
   }
 
-
-
   loadClientRecordSendChart() {
     this.systemInterfaceDashboardService.getClientRecordSendChart().subscribe({
       next: (ClientRecordSendChart) => {
@@ -121,15 +119,15 @@ export class SystemInterfaceDashboardFacade {
 
   }
 
-  getStatusArray(): string[] {
+  getStatusArray(): string[]{
     return Object.values(SystemInterfaceActivityStatusCode)
   }
 
-  getStatusDescriptionArray(): string[] {
+  getStatusDescriptionArray(): string[]{
     return Object.values(SystemInterfaceActivityStatusCodeDescription)
   }
 
-  getEecProcessTypeCodeArray(): string[] {
+  getEecProcessTypeCodeArray(): string[]{
     return Object.values(SystemInterfaceEecProcessTypeCode)
   }
 
@@ -170,7 +168,6 @@ export class SystemInterfaceDashboardFacade {
   }
 
   viewOrDownloadFile(documentId: string, documentName: string) {
-    debugger;
     if (documentId === undefined || documentId === '') {
       return;
     }
