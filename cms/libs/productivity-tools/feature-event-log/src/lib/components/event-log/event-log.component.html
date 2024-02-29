@@ -48,7 +48,7 @@
           <div class="items-head">
             <p class="items-head_label">{{eventLog.eventDesc}}</p>
             <p class="items-head_info">
-              {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by <span class="items-head_info-user">Sara Lisa</span>
+              {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by <span class="items-head_info-user">{{eventLog.createdBy}}</span>
             </p>
           </div>
           <div class="items-body">
@@ -69,8 +69,8 @@
               <div class="items-head">
                 <p class="items-head_label">{{subEventLog.eventDesc}}</p>
                 <p class="items-head_info">
-                  {{subEventLog.createionTime | date: 'MM-dd-yyyy'}} by
-                  <span class="items-head_info-user">Lorem jocks</span>
+                  {{subEventLog.creationTime | date: 'MM-dd-yyyy'}} by
+                  <span class="items-head_info-user">{{subEventLog.createdBy}}</span>
                 </p>
               </div>
               <div class="items-body">
@@ -78,8 +78,8 @@
                   (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)" aria-label="New sub-event">
                   <span class="material-icons" aria-label="New sub-event" aria-hidden="true">add</span>
                 </button>
-                <span class="items-body_details text-ellipsis">{{subEventLog.eventLogDesc}}</span>
-                <span class="text-primary text-underline c-pointer">Read More</span>
+                <span [id]="subEventLog.eventLogId" class="items-body_details text-ellipsis">{{subEventLog.eventLogDesc}}</span>
+                <span class="text-primary text-underline c-pointer" *ngIf="isShowReadMore(subEventLog.eventLogId)">Read More</span>
               </div>
             </section>
           </li>
