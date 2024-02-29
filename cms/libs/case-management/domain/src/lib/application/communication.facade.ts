@@ -160,7 +160,8 @@ prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[]) {
   formData.append('typeCode', draftTemplate?.typeCode ?? '');
   formData.append('languageCode', draftTemplate?.languageCode ?? '');
   formData.append('description', draftTemplate?.description ?? '');
-  formData.append('templateContent', draftTemplate?.templateContent ?? ''); 
+  formData.append('templateContent', draftTemplate?.templateContent ?? '');
+  formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');  
     let i = 0;
     clientAndVendorAttachedFiles.forEach((file) => { 
       if(file.rawFile == undefined || file.rawFile == null){
@@ -192,12 +193,13 @@ prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVen
     formData.append('description', emailData?.description ?? '');
     formData.append('typeCode', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
+    formData.append('notifcationDraftId', emailData?.notifcationDraftId ?? '');
     let i = 0;
     clientAndVendorEmailAttachedFiles.forEach((file) => { 
       if(file.rawFile == undefined || file.rawFile == null){
-        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
-        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
-        formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
+        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.fileName : file.document.description);
+        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.filePath : file.document.templatePath);
+        formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode === undefined || file.document.typeCode === null ? file.document.typeCode : file.document.typeCode);
       i++;
       }else{
         formData.append('attachments', file.rawFile); 

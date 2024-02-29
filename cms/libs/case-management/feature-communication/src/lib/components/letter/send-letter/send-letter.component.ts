@@ -195,7 +195,7 @@ export class SendLetterComponent implements OnInit {
     this.loaderService.show();
     let letterRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.clientId, this.loginUserId);
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
-      if(draftTemplate?.notificationDraftId == undefined || draftTemplate?.notificationDraftId == null){
+      if(draftTemplate?.notifcationDraftId == undefined || draftTemplate?.notifcationDraftId == null){
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
         .subscribe({
           next: (data: any) =>{
@@ -398,10 +398,10 @@ export class SendLetterComponent implements OnInit {
         this.selectedTemplate = data;
         this.handleLetterEditor(data);
         this.isOpenLetterTemplate=true;
-        this.ref.detectChanges();
         this.openDdlLetterEvent.emit();
         this.loadMailingAddress();
         this.emailEditorValueEvent.emit(data);
+        this.ref.detectChanges();
       }
       this.loaderService.hide();
     },
@@ -417,6 +417,7 @@ export class SendLetterComponent implements OnInit {
       this.ref.detectChanges();
       this.openDdlLetterEvent.emit();
       this.loadMailingAddress();
+      this.ref.detectChanges();
  }
 }
 
@@ -488,9 +489,9 @@ loadMailingAddress() {
 getFileNameFromTypeCode(typeCode: string): string {
   switch (typeCode) {
     case CommunicationEventTypeCode.ClientLetter:
-      return "Client Letter.zip";
+      return "Client Letter_"+ this.clientId +".zip";
     case CommunicationEventTypeCode.VendorLetter:
-      return "Vendor Letter.zip"; 
+      return "Vendor Letter+"+ this.vendorId +".zip"; 
     case CommunicationEventTypeCode.CerAuthorizationLetter:
       return "CER Authorization Letter.zip";
     default:

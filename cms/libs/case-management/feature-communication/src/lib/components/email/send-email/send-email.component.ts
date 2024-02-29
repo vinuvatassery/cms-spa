@@ -240,7 +240,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     let emailRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(emailRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
-      if(draftTemplate?.notificationDraftId == undefined || draftTemplate?.notificationDraftId == null){
+      if(draftTemplate?.notifcationDraftId == undefined || draftTemplate?.notifcationDraftId == null){
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
         .subscribe({
           next: (data: any) =>{
@@ -329,6 +329,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           this.onCloseSendEmailClicked();
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Sent! Event Logged.')
           }
+          this.ref.detectChanges();
           this.loaderService.hide();
         },
         error: (err: any) => {
@@ -372,6 +373,7 @@ onClosePreviewEmail(){
         this.selectedToEmail = this.selectedEmail;
         this.emailSubject = data.description;
         this.showToEmailLoader = false;
+        this.ref.detectChanges();
       }
       this.loaderService.hide();
     },
@@ -381,6 +383,8 @@ onClosePreviewEmail(){
     },
   });
 }else{
+    this.selectedTemplate = event;
+    this.handleEmailEditor(event);
     this.isClearEmails =true;
     this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
