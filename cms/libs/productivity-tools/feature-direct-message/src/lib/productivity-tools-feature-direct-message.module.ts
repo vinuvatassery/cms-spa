@@ -10,6 +10,7 @@ import { DirectMessagePageComponent } from './containers/direct-message-page/dir
 import { DirectMessageComponent } from './components/direct-message/direct-message.component';
 import { DirectMessageListComponent } from './components/direct-message-list/direct-message-list.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { CommonActionsComponent } from './components/common-actions/common-actions.component';
 
 @NgModule({
   imports: [
@@ -23,11 +24,13 @@ import { SharedUiCommonModule } from '@cms/shared/ui-common';
     DirectMessagePageComponent,
     DirectMessageComponent,
     DirectMessageListComponent,
+    CommonActionsComponent
   ],
   exports: [
     DirectMessagePageComponent,
     DirectMessageComponent,
     DirectMessageListComponent,
+    CommonActionsComponent
   ],
 })
 export class ProductivityToolsFeatureDirectMessageModule {}

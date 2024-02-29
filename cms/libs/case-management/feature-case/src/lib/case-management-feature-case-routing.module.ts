@@ -140,6 +140,14 @@ const routes: Routes = [
           title: '',
         },
       },
+      {
+        outlet: 'commonActions',
+        path: '',
+        loadChildren: () =>
+          import('@cms/productivity-tools/feature-direct-message').then(
+            (m) => m.ProductivityToolsFeatureDirectMessageModule
+          )   
+      },
     ]
   },
   {
@@ -149,6 +157,7 @@ const routes: Routes = [
       title: null,
     }, 
   },
+  
   
 ];
 

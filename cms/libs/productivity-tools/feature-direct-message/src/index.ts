@@ -5,3 +5,4 @@ export * from './lib/productivity-tools-feature-direct-message.module';
 export * from './lib/containers/direct-message-page/direct-message-page.component';
 export * from './lib/components/direct-message/direct-message.component';
 export * from './lib/components/direct-message-list/direct-message-list.component';
+export * from './lib/components/common-actions/common-actions.component';
