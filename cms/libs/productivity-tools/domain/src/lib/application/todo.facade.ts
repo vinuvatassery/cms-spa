@@ -101,8 +101,8 @@ export class TodoFacade {
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)    
       },
       error: (err) => {
-
-        console.error('err', err);
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     })
   }
