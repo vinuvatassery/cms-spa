@@ -372,7 +372,8 @@
     [userLevel]="userLevel"
     (closeViewPaymentsBatchClickedEvent)="onCloseViewPaymentsBatchClicked()"
     (loadBatchDetailPaymentsListEvent)="onLoadBatchDetailPaymentsList($event)"
-    (batchModalSaveClickedEvent)="onBatchModalSaveClicked($event)"></productivity-tools-approval-batch-lists>
+    (batchModalSaveClickedEvent)="onBatchModalSaveClicked($event)"
+    [approvalPaymentProfilePhoto$]="approvalPaymentProfilePhoto$"></productivity-tools-approval-batch-lists>
 </kendo-dialog>
 
 <ng-template #depositDetailsDialogModal>

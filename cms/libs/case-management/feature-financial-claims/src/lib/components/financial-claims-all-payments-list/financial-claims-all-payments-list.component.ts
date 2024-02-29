@@ -14,7 +14,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { FinancialClaimsFacade, LoadTypes, PaymentStatusCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { NotificationSnackbarService, NotificationSource, SnackBarNotificationType } from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
@@ -48,6 +48,7 @@ export class FinancialClaimsAllPaymentsListComponent
   @Input() exportButtonShow$: any;
   @Input() letterContentList$ :any;
   @Input() letterContentLoader$ :any;
+  @Input() dentalClaimAllPaymentClaimsProfilePhoto$!: any;
   @Output() loadFinancialClaimsAllPaymentsListEvent = new EventEmitter<any>();
   @Output() exportGridDataEvent = new EventEmitter<any>();
   @Output() loadTemplateEvent = new EventEmitter<any>();
@@ -232,6 +233,7 @@ export class FinancialClaimsAllPaymentsListComponent
   paymentMethodTypes: any = [];
   paymentStauses: any = [];
   selectedColumn = 'ALL';
+  allPaymentClaimsProfileSubject = new Subject();
   constructor(
     private route: Router,
     private dialogService: DialogService,
@@ -240,6 +242,7 @@ export class FinancialClaimsAllPaymentsListComponent
     private readonly cdr: ChangeDetectorRef,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {
     this.selectableSettings = {
       checkboxOnly: this.checkboxOnly,
@@ -371,7 +374,7 @@ pageNumberAndCountChangedInSelectAll() {
       }
     }
   }
-}
+} 
 
   ngOnChanges(): void {
     this.defaultGridState();

@@ -26,6 +26,7 @@ import { ClientProfileTabs } from '../enums/client-profile-tabs.enum';
 import { SearchHeaderType } from '../enums/search-header-type.enum';
 import { GridColumnFilter} from '../enums/grid-column-filter.enum';
 import { CaseScreenTab } from '../enums/case-screen-tab.enum';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class CaseFacade {
@@ -111,6 +112,9 @@ export class CaseFacade {
     },
   ];
   activeSession!: ActiveSessions[];
+  userManagerprofilePhotoSubject = new Subject();
+  userLastModifierProfilePhotoSubject = new Subject();
+
   constructor(
     private readonly caseDataService: CaseDataService,
     private readonly loggingService: LoggingService,
@@ -118,7 +122,8 @@ export class CaseFacade {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly userManagementFacade: UserManagementFacade,
   ) {}
 
   showLoader() {
@@ -314,14 +319,44 @@ export class CaseFacade {
   loadClientProfile(clientCaseEligibilityId: string): void {
     this.showLoader();
     this.caseDataService.loadClientProfile(clientCaseEligibilityId).subscribe({
-      next: (clientProfileResponse) => {
+      next: (clientProfileResponse: any) => {
         this.clientProfileSubject.next(clientProfileResponse);
+        const caseManagerId = clientProfileResponse?.caseManagerId;
+        const lastmodifierId = clientProfileResponse?.lastModifierId ?? clientProfileResponse?.creatorId;
+        this.loadCaseManagerProfilePhoto(caseManagerId);
+        this.loadLastModifierProfilePhoto(lastmodifierId);
         this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
       },
     });
+  }
+
+  loadCaseManagerProfilePhoto(caseManagerId: string) {
+    if(caseManagerId){
+      this.userManagementFacade.getProfilePhotosByUserIds(caseManagerId)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userManagerprofilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  }
+
+  loadLastModifierProfilePhoto(lastmodifierId: string){
+    if(lastmodifierId){
+      this.userManagementFacade.getProfilePhotosByUserIds(lastmodifierId)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.userLastModifierProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
   }
 
   loadClientProfileHeader(clientId: number): void {

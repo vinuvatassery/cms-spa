@@ -20,6 +20,7 @@ import {
 import { filter, first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-case360-page',
@@ -64,6 +65,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   clientId: any;
   clientChangeSubscription$ = new Subscription();
   clientProfileReloadSubscription$ = new Subscription();
+  userDetail$ = this.userManagementFacade.usersById$;
 
   client_button_grp = true;
   health_button_grp = false;
@@ -79,7 +81,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     private readonly workFlowFacade : WorkflowFacade,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
-    private readonly clientFacade: ClientFacade
+    private readonly clientFacade: ClientFacade,
+    private readonly userManagementFacade: UserManagementFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -147,6 +150,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         if (this.profileClientId !== 0 && this.profileClientId !== clientId) {
           this.clientCaseEligibilityId = '';
           this.initialize();
+          this.loadClientProfileInfoEventHandler();
         }
       });
   }
@@ -214,6 +218,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
           this.getCaseStatusDetails();
           this.onTabClick(ClientProfileTabs.CLIENT_INFO);
         }
+      this.userManagementFacade.getUserById(this.caseWorkerId);
       });
   }
 

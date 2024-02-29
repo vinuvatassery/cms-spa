@@ -44,6 +44,8 @@ export class ProfileContactPageComponent implements OnInit{
   paperless$ = this.contactFacade.paperless$;
   phonegridDataRefiner! :any
   emailgridDataRefiner! :any
+  phoneListProfilePhoto$ = this.contactFacade.phoneListProfilePhotoSubject;
+  clientEmailProfilePhoto$ = this.contactFacade.clientEmailProfilePhotoSubject;
 
   ngOnInit(): void {
     this. loadQueryParams()   

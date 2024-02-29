@@ -51,16 +51,13 @@
         <kendo-grid-column field="creatorId" title="By" [width]="70" class="text-center" [sortable]="false"
           *ngIf="managementTab">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <button *ngIf="dataItem?.creatorId" kendoButton [primary]="true" class="avatar-sm-btn c-default"
-              kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
-              [attr.aria-label]="dataItem.creatorId">
-              <common-user-photo-icon [userId]="dataItem?.creatorId"></common-user-photo-icon>
-            </button>
-            <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-              <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card [userId]="dataItem?.creatorId" [reassign]=false></common-user-profile-card>
-              </ng-template>
-            </kendo-popover>
+            <common-user-photo-icon  
+            [userId]="dataItem.creatorId" 
+            [userFirstName]="dataItem.userFirstName"
+            [userLastName]="dataItem.userLastName"
+            [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+            [linkType]="'profileIcon'"
+            [userPhotos$]="healthCareProviderProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="clientProviderId" title="Options" [width]="75" class="text-center" [sticky]="true"

@@ -11,6 +11,7 @@ import { CompletionChecklist } from '../entities/workflow-stage-completion-statu
 import { HealthcareProviderDataService } from '../infrastructure/healthcare-provider.data.service';
 import { WorkflowFacade } from './workflow.facade';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class HealthcareProviderFacade {
@@ -45,7 +46,7 @@ export class HealthcareProviderFacade {
   healthCareProvideGetCerFlag$ = this.healthCareProvideGetCerFlagSubject.asObservable();
   healthCareProvideSetCerFlag$ = this.healthCareProvideSetCerFlagSubject.asObservable();
   showAddNewProvider$ = this.showAddNewProviderButtonSubject.asObservable();
-
+  healthCareProviderProfilePhotoSubject = new Subject();
   public gridPageSizes =this.configurationProvider.appSettings.gridPageSizeValues;
   public sortValue = ' '
   public sortType = 'asc'
@@ -61,7 +62,8 @@ export class HealthcareProviderFacade {
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService ,
     private readonly loaderService: LoaderService,
-    private workflowFacade: WorkflowFacade ,private configurationProvider : ConfigurationProvider 
+    private workflowFacade: WorkflowFacade ,private configurationProvider : ConfigurationProvider,
+    private userManagementFacade:UserManagementFacade
   ) {}
 
   showLoader()
@@ -168,6 +170,7 @@ export class HealthcareProviderFacade {
           this.updateWorkflowCount(parseInt(healthCareProvidersResponse["totalCount"]) > 0);
           this.showProvidervalidationSubject.next(parseInt(healthCareProvidersResponse["totalCount"]) === 0);
           this.healthCareProvidersSubject.next(gridView);
+          this.loadHealthcareProviderDistinctUserIdsAndProfilePhoto(healthCareProvidersResponse["items"]);
           this.hideLoader();    
          }
          else{
@@ -180,6 +183,20 @@ export class HealthcareProviderFacade {
       },
     });
   }
+
+  loadHealthcareProviderDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+    if(distinctUserIds){
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+      .subscribe({
+        next: (data: any[]) => {
+          if (data.length > 0) {
+            this.healthCareProviderProfilePhotoSubject.next(data);
+          }
+        },
+      });
+    }
+  } 
 
 
  searchHealthCareProviders(text : string , clientId : number): void {  
