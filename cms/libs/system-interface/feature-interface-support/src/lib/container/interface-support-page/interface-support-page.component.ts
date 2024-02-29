@@ -39,6 +39,8 @@ export class InterfaceSupportPageComponent {
     private loggingService: LoggingService,
   ) {}
 
+
+  
   loadSupportGroup(event: any) {
     this.systemInterfaceSupportFacade.loadSupportGroup();
   }

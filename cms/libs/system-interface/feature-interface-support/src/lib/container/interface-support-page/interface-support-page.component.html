@@ -16,19 +16,19 @@
                        
                         <system-interface-support-group [SupportGroupGridLists$]="supportGroup$"
                         [pageSizes]="pageSizes" [sortValue]="sortValueSupportGroup"
-                        [sortType]="sortType" [sort]="sortSupportGroupList" ></system-interface-support-group>
+                        [sortType]="sortType" [sort]="sortSupportGroupList"  (loadSupportGroupListEvent)="loadSupportGroup($event)"></system-interface-support-group>
                   </div>
                   <div class="flex-col flex-col-6 mb-3">
                         <h3>Distribution List</h3>
                         <system-interface-distribution-lists  [distributionGridLists$]="distributionLists$"
                         [pageSizes]="pageSizes" [sortValue]="sortValueDistribution"
-                        [sortType]="sortType" [sort]="sortDistributionList"></system-interface-distribution-lists>
+                        [sortType]="sortType" [sort]="sortDistributionList" (loadDistributionListEvent)="loadDistributionLists($event)"></system-interface-distribution-lists>
                   </div>
                   <div class="flex-col flex-col-6">
                         <h3>Error Category</h3>
                         <system-interface-notification-category [notificationCategoryGridLists$]="notificationCategoryLists$"
                         [pageSizes]="pageSizes" [sortValue]="sortValueNotificationCategory"
-                        [sortType]="sortType" [sort]="sortNotificationCategoryList"
+                        [sortType]="sortType" [sort]="sortNotificationCategoryList" (loadNotificationCategoryListEvent)="loadNotificationCategory($event)"
                         ></system-interface-notification-category>
                   </div>
 

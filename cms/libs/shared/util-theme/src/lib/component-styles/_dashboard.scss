@@ -8,6 +8,12 @@
   .app-c-drag-row-table.recently-view .k-grid .k-grid-content {
     min-height: 10px;
   }
+  .k-picker-md .k-input-inner {
+    padding: 10px 16px;
+    width: 146px;
+}
+
+
 }
 .today_glanse_title{
   .h3{
@@ -650,8 +656,4 @@ gridster .gridster-row {
         z-index: 1;
       }
 
-      .k-picker-md .k-input-inner {
-        padding: 10px 16px;
-        width: 146px;
-    }
-
+ 
