@@ -10,12 +10,14 @@ import { Subject } from 'rxjs';
 })
 export class ExceptionDetailComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
+
   @Input() fileId: any;
   @Input() interfaceTypeCode: any;
   @Input() processTypeCode: any;
+
   batchLogExceptionListsSubject = new Subject<any>();
   batchLogExceptionLists$ = this.batchLogExceptionListsSubject.asObservable();
-
+  keyIdColumnHeader = 'Key Id'
   constructor(
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade
   ) { }
@@ -24,17 +26,41 @@ export class ExceptionDetailComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeGrid();
-    alert(this.interfaceTypeCode)
+    this.setKeyIdColumnHeader();
   }
 
   gridLoaderShow = false
 
+  private setKeyIdColumnHeader(): void {
+    switch (this.interfaceTypeCode) {
+      case 'RAMSELL':
+        this.keyIdColumnHeader = 'Claim No.';
+        break;
+      case 'KAISER':
+        this.keyIdColumnHeader = 'Hrn';
+        break;
+      case 'OHP':
+        this.keyIdColumnHeader = 'Key Id';
+        break;
+      case 'MODA':
+        this.keyIdColumnHeader = (this.processTypeCode === 'DENTAL_PREMIUM') ? 'Subscriber Id' : 'Claim No.';
+        break;
+      case 'SRVLNCE':
+        this.keyIdColumnHeader = 'Client Id';
+        break;
+      default:
+        break;
+    }
+  }
+
   initializeGrid() {
     this.gridLoaderShow = true;
+
     const param = new GridFilterParam(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       JSON.stringify({ logic: 'and', filters: [] }));
+
     this.systemInterfaceDashboardFacade.getBatchLogExceptionsLists(this.fileId, this.interfaceTypeCode, this.processTypeCode, param).subscribe({
       next: (dataResponse) => {
         const gridView = {
@@ -44,9 +70,8 @@ export class ExceptionDetailComponent implements OnInit {
         this.gridLoaderShow = false;
         this.batchLogExceptionListsSubject.next(gridView);
       },
-      error: (err) => {
+      error: () => {
         this.gridLoaderShow = false;
-
       },
     });
   }
