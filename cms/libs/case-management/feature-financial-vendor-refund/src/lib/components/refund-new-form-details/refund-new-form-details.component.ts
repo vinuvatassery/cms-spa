@@ -1,6 +1,6 @@
 import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, ServiceTypeCode } from '@cms/case-management/domain';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -22,13 +22,16 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   @Input() isEdit = false
   clientCaseEligibilityId: any = null;
   @Input() clientId: any;
-
+  sortDir = 'Ascending';
+  @Input() sort: any;
+   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   @Input() clientName: any;
  @Input() vendorId: any;
  @Input() vendorAddressId :any
    selectedProvider:any;
   isRefundGridClaimShow = false;
   isClientSelected = false
+  isFilteredData=false;
   isShowReasonForException = false;
   showServicesListForm: boolean =false;
   selectedMedicalProvider: any;
@@ -126,7 +129,6 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   sortValue: string | undefined;
   financialPremiumsRefundGridLists: any;
   tpaRefundInformation :any
-  filterData: any;
   paymentRequestId: any;
   insurancePremiumsRequestIds: any;
   disableFeildsOnConfirmSelection = false
@@ -249,6 +251,9 @@ if(this.isEdit){
   this.searchTpaVendors(this.vendorName)
   }
 }
+  this.state = { sort: this.sort};
+  this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
+
   }
 
   subscribeLoadRefundClaimDataForRx(){
@@ -974,5 +979,61 @@ validateVoucherPayable(event: any): void {
   const inputValue = event.target.value;
   const formattedValue = this.validatePayable(inputValue); // Fix the function name
   event.target.value = formattedValue;
+}
+dataStateChange(stateData: any): void {  
+  this.isFilteredData=false;
+  this.sort = stateData.sort;
+  this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+  this.sortType = stateData.sort[0]?.dir ?? 'asc';
+  this.state = stateData;
+  this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+  this.loadRefundClaimsListGrid();
+ 
+}
+public filterChange(filter: CompositeFilterDescriptor): void {
+  this.filterData = filter;
+}
+loadRefundClaimsGrid(data: any) {
+  this.financialVendorRefundFacade.loadRefundClientClaimsListGrid(data);
+ 
+  this.financialVendorRefundFacade.clientRefundClaimsListData$.subscribe((res:any)=>{
+    this.diffclaims=res.item;
+  })
+}
+loadClaimsProcess(
+  vendorId: string,
+  clientId: number,
+  refundType: string,
+  skipCountValue: number,
+  maxResultCountValue: number,
+  sortValue: string,
+  sortTypeValue: string
+) {
+
+  const gridDataRefinerValue = {
+    vendorId: vendorId,
+    clientId: clientId,
+    refundType : refundType,
+    skipCount: skipCountValue,
+    pageSize: maxResultCountValue,
+    sort: sortValue,
+    sortType: sortTypeValue,
+    filter : this.state?.["filter"]?.["filters"] ?? []
+  };
+  this.cdr.detectChanges();
+  this. loadRefundClaimsGrid(gridDataRefinerValue);
+  this. confirmationClicked();
+ 
+}
+private loadRefundClaimsListGrid(): void {
+  this.loadClaimsProcess(
+    this.vendorId,
+    this.clientId,
+    this.selectedRefundType,
+    this.state?.skip ?? 0,
+    this.state?.take ?? 0,
+    this.sortValueClientClaims?? '',
+    this.sortType
+  );
 }
 }

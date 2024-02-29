@@ -355,28 +355,83 @@
                 <div class="flex-col">
                     <h5>Enter quantity, days supply, and amount refunded</h5>
                     <div class="app-c-table">
-                        <kendo-grid [resizable]="true" [groupable]="false" [reorderable]="true" [resizable]="true"
-                            [columnMenu]="{ filter: true, sort: true }"
-                            [data] = item.prescriptionFillItems>
+                        <kendo-grid [resizable]="true" [pageable]="false" [sortable]="true" [groupable]="false" [reorderable]="true" [resizable]="true"
+                        [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
+                        [data]="isFilteredData ? item.prescriptionFillItems : diffclaims">
                             <kendo-grid-column field="rxNbr" title="RX #" [width]="160">
                                 <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
                                     Total
                                 </ng-template>
+                                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                      [extra]="false" operator="eq">
+                                      <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                      <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                      <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                      <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                    </kendo-grid-string-filter-menu>
+                                  </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="ndc" title="NDC Code" [width]="160">
                               <ng-template kendoGridCellTemplate let-dataItem>
                                 {{dataItem.ndc | ndcCode}}
                             </ng-template>
+                            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                  [extra]="false" operator="eq">
+                                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                </kendo-grid-string-filter-menu>
+                              </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="brandName" title="Brand Name" [width]="180">
+                                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                      [extra]="false" operator="eq">
+                                      <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                      <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                      <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                      <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                    </kendo-grid-string-filter-menu>
+                                  </ng-template>
                             </kendo-grid-column>
-                            <kendo-grid-column field="drugName" title="Drug Name" [width]="140"> </kendo-grid-column>
+                            <kendo-grid-column field="drugName" title="Drug Name" [width]="140">
+                                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                      [extra]="false" operator="eq">
+                                      <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                      <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                      <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                      <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                    </kendo-grid-string-filter-menu>
+                                  </ng-template>
+                            </kendo-grid-column>
                             <kendo-grid-column field="prescriptionFillDate" title="Fill Date" [width]="130">
                                 <ng-template kendoGridCellTemplate let-dataItem>
                                     {{dataItem.prescriptionFillDate | date: 'MM/dd/yyyy'}}
                                 </ng-template>
+                                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                      [extra]="false" operator="eq">
+                                      <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                      <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                      <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                      <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                    </kendo-grid-string-filter-menu>
+                                  </ng-template>
                              </kendo-grid-column>
-                            <kendo-grid-column field="amountPaid" title="Original Amount Paid" [width]="180">  <ng-template kendoGridCellTemplate
+                            <kendo-grid-column field="amountPaid" title="Original Amount Paid" [width]="180">  
+                                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                      [extra]="false" operator="eq">
+                                      <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                      <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                      <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                      <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                    </kendo-grid-string-filter-menu>
+                                  </ng-template><ng-template kendoGridCellTemplate
                               let-dataItem>
                               <span class="tableamountview"> <strong>$</strong> {{dataItem?.amountPaid  | kendoNumber:'n2'}}</span>
                             </ng-template>
@@ -393,11 +448,38 @@
                               <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionFillItems,'amountPaid')}} </span>
                           </ng-template>
                           </kendo-grid-column>
-
-                            <kendo-grid-column field="rxqty" title="RX Qty." [width]="120" > </kendo-grid-column>
+ 
+                            <kendo-grid-column field="rxqty" title="RX Qty." [width]="120" >
+                                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                      [extra]="false" operator="eq">
+                                      <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                      <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                      <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                      <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                    </kendo-grid-string-filter-menu>
+                                  </ng-template> </kendo-grid-column>
                             <kendo-grid-column field="daySupply" title="RX Days Supply" [width]="150">
+                                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                      [extra]="false" operator="eq">
+                                      <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                      <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                      <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                      <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                    </kendo-grid-string-filter-menu>
+                                  </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="130">
+                                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                                      [extra]="false" operator="eq">
+                                      <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                                      <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                                      <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                                      <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                                    </kendo-grid-string-filter-menu>
+                                  </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="by" title="By" [width]="75" class="text-center">
                                 <ng-template kendoGridCellTemplate let-dataItem>

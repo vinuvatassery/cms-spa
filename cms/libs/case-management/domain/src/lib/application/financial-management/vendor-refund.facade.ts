@@ -128,6 +128,9 @@ export class FinancialVendorRefundFacade {
   private insuranceRefundInformationLoaderSubject = new BehaviorSubject<any>(false);
   insuranceRefundInformationLoader$ = this.insuranceRefundInformationLoaderSubject.asObservable();
 
+  private clientrefundClaimsListDataSubject =  new Subject<any>();
+  clientRefundClaimsListData$ = this.clientrefundClaimsListDataSubject.asObservable();
+
 
   private deleteRefundsSubject =  new Subject<any>();
   deleteRefunds$ = this.deleteRefundsSubject.asObservable();
@@ -873,5 +876,26 @@ this.loaderService.show();
         },
       });
     }
+  }
+  loadRefundClientClaimsListGrid(ClaimsPageAndSortedRequestDto:any) {
+    ClaimsPageAndSortedRequestDto.filter = JSON.stringify(ClaimsPageAndSortedRequestDto.filter);
+    this.financialVendorRefundDataService. loadRefundClaimsService(ClaimsPageAndSortedRequestDto).subscribe({
+      next: (dataResponse) => {
+        this.clientrefundClaimsListDataSubject.next(dataResponse);
+        if (dataResponse) {
+          const gridView = {
+            data: dataResponse['items'],
+            total: dataResponse['totalCount'],
+          };
+          this.clientrefundClaimsListDataSubject.next(gridView);
+          this.loadclientClaimsListDistinceUserProfilePhoto(dataResponse['items']);
+          this.hideLoader();
+        }
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
+        this.hideLoader();
+      },
+    });
   }
 }
