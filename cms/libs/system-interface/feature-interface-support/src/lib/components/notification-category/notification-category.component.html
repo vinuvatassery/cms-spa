@@ -16,7 +16,7 @@
 
     <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="gridMoreActionsNotification" icon="more-vertical"
+        <kendo-dropdownbutton [data]="gridMoreActionsNotification"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
