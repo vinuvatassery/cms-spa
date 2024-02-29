@@ -596,7 +596,7 @@ addTpa(event:any){
         this.financialVendorRefundFacade.loadPharmacyBySearchText(searchText,this.clientId);
   }
   onProviderValueChange($event: any) {
-    this.isClientSelected = false;
+    this.isClientSelected = true;
     this.vendorAddressId=null;
     if($event==undefined){
       this.vendorAddressId=null;

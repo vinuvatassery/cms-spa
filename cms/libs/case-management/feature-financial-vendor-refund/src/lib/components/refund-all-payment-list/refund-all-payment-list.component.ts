@@ -177,49 +177,13 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
       columnDesc: 'Vendor',
     },
     {
-      columnCode: 'paymentType',
-      columnDesc: 'Type',
-    },
-    {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
-    },
-    {
-      columnCode: 'insuranceName',
-      columnDesc: 'Name on Primary Insurance Card',
     },
     {
       columnCode: 'clientId',
       columnDesc: 'Client ID',
     },
-    {
-      columnCode: 'warrantNumber',
-      columnDesc: 'Refund Warrant #',
-    },
-    {
-      columnCode: 'indexCode',
-      columnDesc: 'Index Code',
-    }
-    ,
-    {
-      columnCode: 'pcaCode',
-      columnDesc: 'PCA',
-    }
-    ,
-    {
-      columnCode: 'voucherPayable',
-      columnDesc: 'VP',
-    }
-    ,
-    {
-      columnCode: 'refundNote',
-      columnDesc: 'Refund Note',
-    }
-    ,
-    {
-      columnCode: 'depositDate',
-      columnDesc: 'Deposit Date',
-    }
 
   ];
   showExportLoader = false;
