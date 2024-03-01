@@ -1,14 +1,24 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
-const routes: Routes = [
-  {
-    path: '',
-    loadChildren:() => import('@cms/system-config/feature-user-management')
-    .then((m=>m.SystemConfigFeatureUserManagementModule)),
-  },
-];
+import { CommonModule } from '@angular/common'; 
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
+import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
+import { SystemConfigDomainModule } from '@cms/system-config/domain';
+import { SystemConfigFeatureHomeRoutingModule } from './system-config-feature-home.routing.module';
+import { SystemConfigRouterPageComponent } from './containers/system-config-router-page/system-config-router-page.component';
+ 
 @NgModule({
-  imports: [CommonModule,RouterModule.forChild(routes),],
+  imports: [
+    CommonModule,
+    SystemConfigDomainModule,
+    SystemConfigFeatureHomeRoutingModule,
+    SharedUiCommonModule,
+    SharedUiTpaModule, 
+  ],
+  declarations: [ 
+    SystemConfigRouterPageComponent
+  ],
+  exports: [ 
+    SystemConfigRouterPageComponent
+  ],
 })
 export class SystemConfigFeatureHomeModule {}
