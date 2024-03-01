@@ -23,6 +23,8 @@ import { ClientNotificationDefaultsPageComponent } from './containers/client-not
 import { EmailTemplatePageComponent } from './containers/email-template-page/email-template-page.component';
 import { SmsTextTemplatePageComponent } from './containers/sms-text-template-page/sms-text-template-page.component';
 import { FormDocumentsPageComponent } from './containers/form-documents-page/form-documents-page.component';
+import { LetterTemplatePageComponent } from './containers/letter-template-page/letter-template-page.component';
+import { TemplatePageComponent } from './containers/template-page/template-page.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
@@ -48,6 +50,8 @@ import { FormDocumentsPageComponent } from './containers/form-documents-page/for
     EmailTemplatePageComponent,
     SmsTextTemplatePageComponent,
     FormDocumentsPageComponent,
+    LetterTemplatePageComponent,
+    TemplatePageComponent
   ],
   exports: [
     ClientNotificationDefaultsListComponent,
@@ -56,7 +60,7 @@ import { FormDocumentsPageComponent } from './containers/form-documents-page/for
     EmailTemplateNewFormComponent,
     EmailTemplateSendTestComponent,
     EmailTemplateLeavePageComponent,
-
+    LetterTemplatePageComponent,
     TemplateAddLanguageComponent,
     TemplateDeleteLanguageComponent,
     LetterTemplateHeaderFooterComponent,
@@ -69,6 +73,7 @@ import { FormDocumentsPageComponent } from './containers/form-documents-page/for
     EmailTemplatePageComponent,
     SmsTextTemplatePageComponent,
     FormDocumentsPageComponent,
+    TemplatePageComponent,
   ],
 })
 export class SystemConfigFeatureCommunicationModule {}

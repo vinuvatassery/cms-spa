@@ -49,6 +49,7 @@ import { InsuranceProvidePageComponent } from './container/insurance-provide-pag
 import { InsuranceVendorsPageComponent } from './container/insurance-vendors-page/insurance-vendors-page.component';
 import { MedicalProvidersPageComponent } from './container/medical-providers-page/medical-providers-page.component';
 import { PharmaciesPageComponent } from './container/pharmacies-page/pharmacies-page.component';
+import { ManufacturersPageComponent } from './container/manufacturers-page/manufacturers-page.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
@@ -98,6 +99,7 @@ import { PharmaciesPageComponent } from './container/pharmacies-page/pharmacies-
     InsurancePlanPageComponent,
     InsuranceProvidePageComponent,
     InsuranceVendorsPageComponent,
+    ManufacturersPageComponent,
     MedicalProvidersPageComponent,
     PharmaciesPageComponent,
   ],
@@ -147,6 +149,7 @@ import { PharmaciesPageComponent } from './container/pharmacies-page/pharmacies-
     InsurancePlanPageComponent,
     InsuranceProvidePageComponent,
     InsuranceVendorsPageComponent,
+    ManufacturersPageComponent,
     MedicalProvidersPageComponent,
     PharmaciesPageComponent,
   ],

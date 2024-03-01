@@ -25,6 +25,8 @@ import { HousingAcuityLevelPageComponent } from './containers/housing-acuity-lev
 import { PsMfrZipPageComponent } from './containers/ps-mfr-zip-page/ps-mfr-zip-page.component';
 import { ServiceProviderPageComponent } from './containers/service-provider-page/service-provider-page.component';
 import { SlotPageComponent } from './containers/slot-page/slot-page.component';
+import { IncomeInclusionsExclusionsPageComponent } from '..';
+import { RegionAssignmentPageComponent } from './containers/region-assignment-page/region-assignment-page.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
@@ -46,18 +48,24 @@ import { SlotPageComponent } from './containers/slot-page/slot-page.component';
     SlotDetailComponent,
     SlotListComponent,
     HousingCoordinationPageComponent,
-    CaseAvailabilityPageComponent,
     EidLifetimePeriodPageComponent,
     HousingAcuityLevelPageComponent,
+    HousingCoordinationPageComponent,
+    IncomeInclusionsExclusionsPageComponent,
     PsMfrZipPageComponent,
+    RegionAssignmentPageComponent,
     ServiceProviderPageComponent,
     SlotPageComponent,
+    CaseAvailabilityPageComponent
   ],
   exports: [
     CaseAvailabilityPageComponent,
     EidLifetimePeriodPageComponent,
     HousingAcuityLevelPageComponent,
+    HousingCoordinationPageComponent,
+    IncomeInclusionsExclusionsPageComponent,
     PsMfrZipPageComponent,
+    RegionAssignmentPageComponent,
     ServiceProviderPageComponent,
     SlotPageComponent,
   ],

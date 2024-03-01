@@ -11,6 +11,7 @@ import { ExpenseTypePageComponent } from './containers/expense-type-page/expense
 import { FundsPageComponent } from './containers/funds-page/funds-page.component';
 import { IncomeTypesPageComponent } from './containers/income-types-page/income-types-page.component';
 import { PcaCodesPageComponent } from './containers/pca-codes-page/pca-codes-page.component';
+import { IndexPageComponent } from './containers/index-page/index-page.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
@@ -24,12 +25,14 @@ import { PcaCodesPageComponent } from './containers/pca-codes-page/pca-codes-pag
     FundsPageComponent,
     IncomeTypesPageComponent,
     PcaCodesPageComponent,
+    IndexPageComponent
   ],
   exports: [
     ExpenseTypePageComponent,
     FundsPageComponent,
     IncomeTypesPageComponent,
     PcaCodesPageComponent,
+    IndexPageComponent
   ],
 })
 export class SystemConfigFeatureFinancialsModule {}

@@ -18,6 +18,9 @@ import { DirectMessagesFrequenciesFormComponent } from './components/direct-mess
 import { DirectMessagePageComponent } from './containers/direct-message-page/direct-message-page.component';
 import { LanguagePageComponent } from './containers/language-page/language-page.component';
 import { RacialOrEthnicIdentityPageComponent } from './containers/racial-or-ethnic-identity-page/racial-or-ethnic-identity-page.component';
+import { GenderPageComponent } from './containers/gender-page/gender-page.component';
+import { PronounsPageComponent } from './containers/pronouns-page/pronouns-page.component';
+import { SexualOrientationPageComponent } from './containers/sexual-orientation-page/sexual-orientation-page.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
   declarations: [
@@ -37,6 +40,9 @@ import { RacialOrEthnicIdentityPageComponent } from './containers/racial-or-ethn
     DirectMessagePageComponent,
     LanguagePageComponent,
     RacialOrEthnicIdentityPageComponent,
+    GenderPageComponent,
+    PronounsPageComponent,
+    SexualOrientationPageComponent
   ],
   exports: [
     GenderDetailComponent,
@@ -55,6 +61,9 @@ import { RacialOrEthnicIdentityPageComponent } from './containers/racial-or-ethn
     DirectMessagePageComponent,
     LanguagePageComponent,
     RacialOrEthnicIdentityPageComponent,
+    GenderPageComponent,
+    PronounsPageComponent,
+    SexualOrientationPageComponent
   ],
 })
 export class SystemConfigFeatureClientProfileManagementModule {}
