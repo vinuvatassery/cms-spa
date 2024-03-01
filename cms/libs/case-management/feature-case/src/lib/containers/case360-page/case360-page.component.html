@@ -27,6 +27,7 @@
   <case-management-case360-header-tools 
   [clientId] = "profileClientId" 
   [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [clientCaseId]="clientCaseId"
   [loadedClientHeader]="loadedClientHeader$ | async" 
   (loadClientProfileInfoEvent)="loadClientProfileInfoEventHandler()"
   *ngIf="clientId && clientCaseEligibilityId" 

@@ -191,5 +191,11 @@ export class EmailDataService {
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${templateId}/attachments`
       );
     }
+
+    deleteNotificationDraft(notificationDraftId: any) {
+      return this.http.delete(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${notificationDraftId}`
+      );
+    }
 }
  

@@ -7,7 +7,9 @@ import {
   EventEmitter,
   Input,
   OnDestroy,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  TemplateRef,
+  ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
@@ -19,6 +21,7 @@ import { UserDataService } from '@cms/system-config/domain';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   selector: 'case-management-send-email',
@@ -38,6 +41,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() communicationEmailTypeCode!: any;
   @Input() screenName!: any;
   @Input() vendorId!: string;
+  @Input() clientCaseId!: string;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -48,6 +52,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Output() isSendEmailSuccess = new EventEmitter<boolean>();
 
   /** Public properties **/
+  @ViewChild('notificationDraftDialogTemplate', { read: TemplateRef })
+  notificationDraftDialogTemplate!: TemplateRef<any>;
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any = [];
   selectEmail: any = [];
@@ -86,6 +92,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   isCCDropdownVisible: boolean = true;
   attachmentCount: number = 0;
   entityId!: string;
+  draftNotificationRemoveDialogService: any;
+  isDraftExists: boolean = false;
 
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
@@ -100,7 +108,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     private readonly workflowFacade: WorkflowFacade,
     private formBuilder: FormBuilder,
     private readonly userDataService: UserDataService,
-    private readonly esignFacade: EsignFacade,) { }
+    private readonly esignFacade: EsignFacade,
+    private dialogService: DialogService,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -132,6 +141,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           for (let template of this.ddlTemplates){
             template.documentTemplateId = template.notificationDraftId;
            }
+           this.selectedTemplate = data[0];
+           this.isDraftExists = true;
           this.ref.detectChanges();
         }else{
           this.loadEmailTemplates();
@@ -184,6 +195,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       next: (data: any) =>{
         if (data) {
           this.ddlTemplates = data;
+          this.isDraftExists = false;
           this.ref.detectChanges();
         }
       this.loaderService.hide();
@@ -238,7 +250,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
-    let emailRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
+    let emailRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.clientCaseId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(emailRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
       if(draftTemplate?.notifcationDraftId == undefined || draftTemplate?.notifcationDraftId == null){
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
@@ -320,14 +332,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   initiateSendEmailProcess(selectedTemplate: any) {
     this.loaderService.show();
-    let esignRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
+    let esignRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.clientCaseId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
     let formData = this.communicationFacade.prepareClientAndVendorEmailData(esignRequestFormdata, selectedTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
     this.communicationFacade.initiateSendemailRequest(formData, selectedTemplate)
         .subscribe({
           next: (data: any) =>{
-          if (data) {
-          this.onCloseSendEmailClicked();
+          if (data === true) {
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Sent! Event Logged.')
+          this.onCloseSendEmailClicked();
           }
           this.ref.detectChanges();
           this.loaderService.hide();
@@ -356,6 +368,7 @@ onClosePreviewEmail(){
 }
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
+    this.selectedTemplate = event;
     if(event.documentTemplateId){
     this.loaderService.show();
     this.communicationFacade.loadTemplateById(event.documentTemplateId)
@@ -383,22 +396,67 @@ onClosePreviewEmail(){
     },
   });
 }else{
-    this.selectedTemplate = event;
-    this.handleEmailEditor(event);
+  if(event.notifcationDraftId){
+      this.draftNotificationRemoveDialogService = this.dialogService.open({
+        content: this.notificationDraftDialogTemplate,
+        cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      });
+    }
+    // this.selectedTemplate = event;
+    // this.handleEmailEditor(event);
+    // this.isClearEmails =true;
+    // this.isShowToEmailLoader$.next(true);
+    // this.isOpenDdlEmailDetails = true;
+    // this.selectedEmail = [];
+    // this.selectedEmail.push(this.toEmail[0]?.trim());
+    // this.selectedToEmail = this.selectedEmail;
+    // this.emailSubject = event.description;
+    // this.emailEditorValueEvent.emit(event);
+    // this.showToEmailLoader = false;
+    // if (CommunicationEventTypeCode.CerAuthorizationEmail===this.communicationEmailTypeCode) {
+    //   this.getCCEmailList(this.clientId, this.loginUserId);
+    // }
+    // this.ref.detectChanges();
+  }
+  }
+
+  continueWithDraftClicked(){
+    this.handleEmailEditor(this.selectedTemplate);
     this.isClearEmails =true;
     this.isShowToEmailLoader$.next(true);
     this.isOpenDdlEmailDetails = true;
     this.selectedEmail = [];
     this.selectedEmail.push(this.toEmail[0]?.trim());
     this.selectedToEmail = this.selectedEmail;
-    this.emailSubject = event.description;
-    this.emailEditorValueEvent.emit(event);
+    this.emailSubject = this.selectedTemplate.description;
+    this.emailEditorValueEvent.emit(this.selectedTemplate);
     this.showToEmailLoader = false;
     if (CommunicationEventTypeCode.CerAuthorizationEmail===this.communicationEmailTypeCode) {
       this.getCCEmailList(this.clientId, this.loginUserId);
     }
     this.ref.detectChanges();
   }
+
+  openNewEmailClicked(){
+    this.loaderService.show();
+    this.communicationFacade.deleteNotificationDraft(this.selectedTemplate.notifcationDraftId)
+        .subscribe({
+          next: (data: any) =>{
+          if (data === true) {
+            this.loadEmailTemplates();
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+        },
+      });
+  }
+
+  closeDraftDailogCloseClicked() {
+    this.draftNotificationRemoveDialogService.close();
   }
 
   handleEmailEditor(emailData: any) {

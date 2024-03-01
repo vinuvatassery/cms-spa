@@ -176,7 +176,7 @@ prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[]) {
 return formData;
 }
 
-prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any) {
+prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, clientCaseId: string, emailSubject: string, loginUserId: any, selectedCCEmail: any) {
   const formData = new FormData();
     formData.append('toEmailAddress', selectedToEmail ?? '');
     formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
@@ -184,6 +184,7 @@ prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: an
     formData.append('requestSubject', emailSubject ?? ''); 
     formData.append('loginUserId', loginUserId ?? '');
     formData.append('cCEmail', selectedCCEmail ?? '');  
+    formData.append('clientCaseId', clientCaseId ?? ''); 
     return formData;
 }
 
@@ -230,5 +231,9 @@ loadTemplateById(notificationTemplateId: string) {
 
 loadClientAndVendorDefaultAttachments(templateId: string) {
   return this.emailDataService.loadClientVendorDefaultAttachmentById(templateId);
+}
+
+deleteNotificationDraft(notificationDraftId: any) {
+  return this.emailDataService.deleteNotificationDraft(notificationDraftId);
 }
 }

@@ -16,6 +16,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   @Input() clientCaseEligibilityId: any
   @Input() clientId: any
   @Input() loadedClientHeader: any;
+  @Input() clientCaseId: any;
   /* Public properties */ 
   screenName = ScreenType.ClientProfile;
   emailScreenName = ScreenType.Case360PageEmail; 

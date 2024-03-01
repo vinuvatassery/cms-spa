@@ -63,7 +63,7 @@
 <!-- Send New Email Modal -->
 <ng-template #sendNewEmailDialog>
   <case-management-send-email [data]="screenName" [ddlEmails$]="emailAddress$" [communicationEmailTypeCode]="emailCommunicationEmailTypeCode"
-  [clientId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [screenName]="screenName"
+  [clientId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [screenName]="screenName" [clientCaseId]="clientCaseId"
   [toEmail]="toEmail" (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
 </ng-template>
 
