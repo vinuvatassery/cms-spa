@@ -30,6 +30,7 @@ export * from './lib/financial-pca-chosen-alert/financial-pca-chosen-alert.compo
 export * from './lib/cms-pharmacy-claims-detail/cms-pharmacy-claims-detail.component'
 export * from './lib/cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
 export * from './lib/dashboard-loader-panel/dashboard-loader-panel.component'
+export * from './lib/todo-detail/todo-detail.component';
 /** Pipes **/
 export * from './lib/pipes/ssn.pipe';
 export * from './lib/pipes/fileSize.pipe';
