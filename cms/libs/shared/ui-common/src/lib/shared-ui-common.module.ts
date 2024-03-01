@@ -48,6 +48,7 @@ import { NdcCodePipe } from './pipes/ndc-code.pipe';
 import { CmsPharmacyClaimsDetailComponent } from './cms-pharmacy-claims-detail/cms-pharmacy-claims-detail.component';
 import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
 import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboard-loader-panel.component';
+import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -90,6 +91,7 @@ import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboar
     DashboardLoaderPanelComponent,
     CmsPharmacyClaimsDetailComponent,
     CmsPharmacyClaimsRecentClaimsComponent,
+    TodoDetailComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -130,7 +132,8 @@ import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboar
     NdcCodePipe,
     DashboardLoaderPanelComponent,
     CmsPharmacyClaimsDetailComponent,
-    CmsPharmacyClaimsRecentClaimsComponent
+    CmsPharmacyClaimsRecentClaimsComponent,
+    TodoDetailComponent
   ],
 })
 export class SharedUiCommonModule {}

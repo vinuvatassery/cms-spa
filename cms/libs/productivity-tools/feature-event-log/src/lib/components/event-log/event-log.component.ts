@@ -7,6 +7,7 @@ import {
   OnInit,
   Output,
   TemplateRef,
+  Input
 } from '@angular/core';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
@@ -23,8 +24,16 @@ import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 export class EventLogComponent implements OnInit {
   /** Output properties **/
   @Output() closeAction = new EventEmitter();
+  @Input() eventAttachmentTypeLov$: any;
+  @Input() entityType: any;
+  @Input() entityId: any;
+  @Input() clientCaseEligibilityId: any;
 
   /** Public properties **/
+  parentEventLogId : any;
+  eventList : any = [];
+  SubEventList : any = [];
+  eventResponseList : any = [];
   events$ = this.eventLogFacade.events$;
   events: any = [];
   isShowEventLog = false;
@@ -32,6 +41,8 @@ export class EventLogComponent implements OnInit {
   isShownSearch = false;
   isAddEventDialogOpen: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  eventsdata$ = this.eventLogFacade.eventsdata$;
+  isSubEvent = false;
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
@@ -66,8 +77,10 @@ export class EventLogComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.loadEventsData();
     this.loadEvents();
     this.subscribeEvents();
+    this.getEventList();
   }
 
   /** Private methods **/
@@ -98,6 +111,20 @@ export class EventLogComponent implements OnInit {
       this.cd.detectChanges();
     });
   }
+  
+  private loadEventsData()
+  {
+    this.eventLogFacade.loadEventsData();
+  }
+
+  getEventList()
+  {
+    this.eventsdata$.subscribe((response: any) => {
+      if (response !== undefined && response !== null) {
+        this.eventResponseList = response;
+      }
+    });
+  }
 
   onShowSearchClicked() {
     this.isShownSearch = !this.isShownSearch;
@@ -108,7 +135,17 @@ export class EventLogComponent implements OnInit {
     this.isShowEventLog = !this.isShowEventLog;
   }
 
-  onOpenEventDetailsClicked(template: TemplateRef<unknown>): void {
+  onOpenEventDetailsClicked(template: TemplateRef<unknown>, isSubEvent: boolean, parentEventLogId : string|null = null, parentEventId : string|null = null): void {
+    this.isSubEvent = isSubEvent;
+    this.parentEventLogId = parentEventLogId;
+    if(isSubEvent && parentEventId)
+    {
+      this.SubEventList = this.eventResponseList.filter((item : any) => item.parentEventId ? item.parentEventId.toString().toLowerCase() == parentEventId.toLowerCase() : false);
+    }
+    else
+    {
+      this.eventList = this.eventResponseList.filter((item : any) => !item.parentEventId );
+    }
     this.isAddEventDialogOpen = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',

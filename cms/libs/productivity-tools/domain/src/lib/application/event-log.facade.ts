@@ -1,26 +1,57 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 /** External libraries **/
-import {  Subject } from 'rxjs'; 
+import {  Subject } from 'rxjs';
 /** Entities **/
 import { Event } from '../entities/event';
 /** Data services **/
 import { EventDataService } from '../infrastructure/event.data.service';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
+
 
 @Injectable({ providedIn: 'root' })
 export class EventLogFacade {
   /** Private properties **/
   private eventsSubject = new Subject<any>();
   private ddlEventsSubject = new Subject<any[]>();
+  private eventsDataSubject = new Subject<any>();
+  private addEventDataSubject = new Subject<any>();
 
   /** Public properties **/
   events$ = this.eventsSubject.asObservable();
   ddlEvents$ = this.ddlEventsSubject.asObservable();
+  eventsdata$ = this.eventsDataSubject.asObservable();
+  addEventdata$ = this.addEventDataSubject.asObservable();
 
   /** Constructor **/
-  constructor(private readonly eventDataService: EventDataService) {}
+  constructor(private readonly eventDataService: EventDataService,
+    private loggingService : LoggingService,
+    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly loaderService: LoaderService) {}
 
   /** Public methods **/
+
+  showHideSnackBar(type : SnackBarNotificationType , subtitle : any, title : string = '')
+  {
+      if(type == SnackBarNotificationType.ERROR)
+      {
+        const err= subtitle;
+        this.loggingService.logException(err)
+      }
+        this.notificationSnackbarService.manageSnackBar(type, subtitle, NotificationSource.API, title)
+        this.hideLoader();
+  }
+
+  showLoader()
+  {
+    this.loaderService.show();
+  }
+
+  hideLoader()
+  {
+    this.loaderService.hide();
+  }
+
   loadEvents(params: any): void {
     this.eventDataService.loadEvents(params).subscribe({
       next: (eventResponse) => {
@@ -32,6 +63,20 @@ export class EventLogFacade {
     });
   }
 
+  loadEventsData(): void {
+    this.showLoader();
+    this.eventDataService.loadEventsData().subscribe({
+      next: (eventResponse) => {
+        this.eventsDataSubject.next(eventResponse);
+        this.hideLoader();
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        this.hideLoader();
+      },
+    });
+  }
+
   loadDdlEvents() {
     this.eventDataService.loadDdlEvents().subscribe({
       next: (eventDdl) => {
@@ -39,6 +84,21 @@ export class EventLogFacade {
       },
       error: (err) => {
         console.error('err', err);
+      },
+    });
+  }
+
+  addEventData(eventData : any): void {
+    this.showLoader()
+    this.eventDataService.addEventData(eventData).subscribe({
+      next: (response : any) => {
+        this.hideLoader()
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response[1].message, response[0].message);
+        this.addEventDataSubject.next(response);
+      },
+      error: (err) => {
+        this.hideLoader()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
   }

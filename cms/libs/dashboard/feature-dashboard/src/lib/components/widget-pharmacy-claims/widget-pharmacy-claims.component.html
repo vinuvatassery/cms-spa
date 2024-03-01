@@ -1,11 +1,11 @@
 <div class="dash-header-with-filters">
   <h5>PHARMACY CLAIMS</h5>
   <div *ngIf="!isEditDashboard">
-    <kendo-dropdownlist size="small" value="Claims Count" rounded="medium" class="mr-1"
+    <kendo-dropdownlist size="small" value="Claims Count" rounded="medium" class="mr-1"  aria-label="Claims Count"
       [fillMode]="formUiStyle.inputFillMode" [data]="dataCount" (valueChange)="dataCountChange($event)">
     </kendo-dropdownlist>
 
-    <kendo-dropdownlist size="small" value="This Month" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
+    <kendo-dropdownlist size="small" value="This Month" rounded="medium" aria-label="This Month" [fillMode]="formUiStyle.inputFillMode"
       [data]="dataMonth" (valueChange)="dataMonthChange($event)">
     </kendo-dropdownlist>
   </div>

@@ -3,20 +3,59 @@
   <div class="sidePanel_header">
     <div class="sidePanel_header-left">
       <h3>Event Log</h3>
-      <button kendoButton class="k-icon-button small-i-btn" title="New event" aria-label="New event"
-        (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)">
-        <span class="material-icons" aria-label="add event log" aria-hidden="true">add</span>
+      <button
+        kendoButton
+        class="k-icon-button small-i-btn"
+        title="New event"
+        aria-label="New event"
+        (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, false)"
+      >
+        <span
+          class="material-icons"
+          aria-label="add event log"
+          aria-hidden="true"
+          >add</span
+        >
       </button>
     </div>
     <div class="sidePanel_header-right">
       <div class="input-search mat-form-no-b-space" *ngIf="isShownSearch">
-        <kendo-textbox aria-label="search event" placeholder="Search Events" [fillMode]="formUiStyle.inputFillMode">
-        </kendo-textbox>
+          <kendo-textbox aria-label="search event"  placeholder="Search Events"  [fillMode]="formUiStyle.inputFillMode">
+           </kendo-textbox>
       </div>
-      <button kendoButton class="k-icon-button small-i-btn" aria-label="Search" title="Search"
-        (click)="onShowSearchClicked()" *ngIf="!isShownSearch">
-        <span class="material-icons" aria-label="Search" aria-hidden="true">search</span>
+      <button
+        kendoButton
+        class="k-icon-button small-i-btn"
+        aria-label="Search"
+        title="Search"
+        (click)="onShowSearchClicked()"
+        *ngIf="!isShownSearch"
+      >
+        <span
+          class="material-icons"
+          aria-label="Search"
+          aria-hidden="true"
+          >search</span
+        >
       </button>
+      <kendo-dropdownbutton
+        [data]="actions"
+
+        title="More option"
+        class="TableActionPopup app-dropdown-action more_action_wid"
+        buttonClass="k-icon-button"
+        aria-label="more actions"
+        [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+      >
+      
+      <span class="material-icons" aria-label="More option"> more_vert    </span>
+      <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+        <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
+          <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
+          <label>   {{ dataItem.text }} </label>
+      </button>
+    </ng-template>
+  </kendo-dropdownbutton>
       <kendo-dropdownbutton [data]="actions" title="More option"
         class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
         aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
@@ -52,9 +91,19 @@
             </p>
           </div>
           <div class="items-body">
-            <button kendoButton class="k-icon-button small-i-btn add-sub-button" title="New sub-event"
-              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)" aria-label="New sub-event">
-              <span class="material-icons" aria-label="New sub-event" aria-hidden="true">add</span>
+            <button
+              kendoButton
+              class="k-icon-button small-i-btn add-sub-button"
+              title="New sub-event"
+              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, true)"
+              aria-label="New sub-event"
+            >
+              <span
+                class="material-icons"
+                aria-label="New sub-event"
+                aria-hidden="true"
+                >add</span
+              >
             </button>
             <span class="items-body_details">{{eventLog.eventLogDesc}}</span>
             <span class="text-primary text-underline c-pointer">View Letter</span>
@@ -82,14 +131,12 @@
         </ul>
         <!-- Event sub list items -->
       </li>
-
     </ul>
   </div>
 </div>
 <!-- Add Event Modal Html-->
 <ng-template #eventDetailsDialogTemplate>
 
-  <kendo-dialog-titlebar (close)="onCloseEventDetailsClicked($event)"> Add Event </kendo-dialog-titlebar>
-  <productivity-tools-event-detail
-    (closeEventDetailsClickedEmitter)="onCloseEventDetailsClicked($event)"></productivity-tools-event-detail>
+  <kendo-dialog-titlebar  (close)="onCloseEventDetailsClicked($event)"> {{isSubEvent?  'Add Sub-Event' : 'Add Event'  }}</kendo-dialog-titlebar>
+  <productivity-tools-event-detail  [isSubEvent]="isSubEvent" [parentEventLogId]="parentEventLogId"  [eventList]="isSubEvent ? SubEventList : eventList"  [entityId] = "entityId" [clientCaseEligibilityId]="clientCaseEligibilityId" [entityType] = "entityType"  [eventAttachmentTypeLov$]="eventAttachmentTypeLov$" [eventsdata$]="eventsdata$"  (closeEventDetailsClickedEmitter)="onCloseEventDetailsClicked($event)"></productivity-tools-event-detail>
 </ng-template>

@@ -63,7 +63,7 @@
     <kendo-grid-column field="itemNumber" title="Item #" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.itemNumber" (click)="paymentClickHandler(dataItem)" kendoButton
-                        look="flat" class="card-link-button">
+                        look="flat" class="card-link-button" *ngIf="dataItem.itemNumber">
                         {{ dataItem.itemNumber }}
         </button>
         </ng-template>
@@ -78,7 +78,7 @@
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.itemNumber" kendoButton look="flat" class="card-link-button"
-        (click)="onitemNumberClick(dataItem)">
+        (click)="onitemNumberClick(dataItem)" *ngIf="dataItem.itemNumber">
           {{ dataItem.itemNumber }}
         </button>
       </ng-template>
@@ -86,7 +86,7 @@
 
     <kendo-grid-column field="batchNumber" title="Batch #" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button (click)="navToBatchDetails(dataItem)" [attr.aria-label]="dataItem.batchNumber" kendoButton look="flat" class="card-link-button">
+        <button (click)="navToBatchDetails(dataItem)" [attr.aria-label]="dataItem.batchNumber" *ngIf="dataItem.batchNumber" kendoButton look="flat" class="card-link-button">
           {{ dataItem.batchNumber }}
         </button>
       </ng-template>
@@ -100,7 +100,7 @@
     <kendo-grid-column field="providerName" title="Insurance Vendor" [width]="180">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.providerName" kendoButton look="flat" class="card-link-button"
-        (click)="onProviderNameClick(dataItem.paymentRequestId)">
+        (click)="onProviderNameClick(dataItem.paymentRequestId)" *ngIf="dataItem.providerName">
           {{ dataItem.providerName }}
         </button>
       </ng-template>
