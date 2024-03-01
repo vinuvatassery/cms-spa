@@ -150,7 +150,7 @@
                         <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
                               <ng-template kendoGridCellTemplate let-dataItem>
                                     <button [attr.aria-label]="dataItem?.batchName" kendoButton look="flat" 
-                                                class="card-link-button"  (click)="onBatchNumberClick(dataItem)">
+                                                class="card-link-button"  (click)="onBatchNumberClick(dataItem)" *ngIf="dataItem?.batchName">
                                                 {{dataItem?.batchName}} 
                                     </button>
                                     </ng-template>
@@ -167,7 +167,7 @@
                         <kendo-grid-column field="vendorName" title="Pharmacy Provider" [width]="160">
                         <ng-template kendoGridCellTemplate let-dataItem>
                               <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"
-                                          class="card-link-button"   (click)="onProviderNameClick(dataItem.paymentRequestId)" >
+                                          class="card-link-button"  *ngIf="dataItem?.vendorName"  (click)="onProviderNameClick(dataItem.paymentRequestId)" >
                                           {{dataItem?.vendorName}} 
                               </button>
                               </ng-template>

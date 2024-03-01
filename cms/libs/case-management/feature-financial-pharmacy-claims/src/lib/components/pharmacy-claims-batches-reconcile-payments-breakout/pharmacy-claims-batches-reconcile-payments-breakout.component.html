@@ -21,7 +21,7 @@
                   >
                   <kendo-grid-column field="clientName" title="Client Name" [width]="120">
                         <ng-template kendoGridCellTemplate let-dataItem>
-                              <button [attr.aria-label]="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
+                              <button [attr.aria-label]="dataItem.clientName" *ngIf="dataItem.clientName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
                                 {{ dataItem.clientName }}
                               </button>
                             </ng-template>
