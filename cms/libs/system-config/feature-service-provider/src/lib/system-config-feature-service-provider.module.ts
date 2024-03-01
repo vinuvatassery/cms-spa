@@ -152,6 +152,7 @@ import { ManufacturersPageComponent } from './container/manufacturers-page/manuf
     ManufacturersPageComponent,
     MedicalProvidersPageComponent,
     PharmaciesPageComponent,
+    
   ],
 })
 export class SystemConfigFeatureServiceProviderModule {}
