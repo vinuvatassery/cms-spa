@@ -13,6 +13,11 @@ export * from './lib/components/racial-or-ethnic-identity-detail/racial-or-ethni
 export * from './lib/components/language-list/language-list.component';
 export * from './lib/components/language-detail/language-detail.component';
 export * from './lib/components/direct-messages-list/direct-messages-list.component';
- 
 
 export * from './lib/components/direct-messages-frequencies-form/direct-messages-frequencies-form.component';
+
+export * from './lib/containers/direct-message-page/direct-message-page.component';
+
+export * from './lib/containers/language-page/language-page.component';
+
+export * from './lib/containers/racial-or-ethnic-identity-page/racial-or-ethnic-identity-page.component';

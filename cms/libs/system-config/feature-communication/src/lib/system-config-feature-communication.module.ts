@@ -5,8 +5,8 @@ import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { EmailTemplateListComponent } from './components/email-template-list/email-template-list.component';
 import { LetterTemplateListComponent } from './components/letter-template-list/letter-template-list.component';
 import { SmsTextTemplateListComponent } from './components/sms-text-template-list/sms-text-template-list.component';
-import { ClientNotificationDefaultsListComponent } from './components/client_notification_defaults_list/client-notification-defaults-list.component';
-import { FormDocumentsListComponent } from './components/form_documents_list/form-documents-list.component';
+import { ClientNotificationDefaultsListComponent } from './components/client-notification-defaults-list/client-notification-defaults-list.component';
+import { FormDocumentsListComponent } from './components/form-documents-list/form-documents-list.component';
 import { EmailTemplateHeaderFooterComponent } from './components/email-template-header-footer/email-template-header-footer.component';
 import { EmailTemplateNewFormComponent } from './components/email-template-new-form/email-template-new-form.component';
 import { EmailTemplateSendTestComponent } from './components/email-template-send-test/email-template-send-test.component';
@@ -19,6 +19,10 @@ import { LetterTemplateLeavePageComponent } from './components/letter-template-l
 import { LetterTemplateNewFormComponent } from './components/letter-template-new-form/letter-template-new-form.component';
 import { SmsTextTemplateNewFormComponent } from './components/sms-text-template-new-form/sms-text-template-new-form.component';
 import { SmsTextTemplateSendTestComponent } from './components/sms-text-template-send-test/sms-text-template-send-test.component';
+import { ClientNotificationDefaultsPageComponent } from './containers/client-notification-defaults-page/client-notification-defaults-page.component';
+import { EmailTemplatePageComponent } from './containers/email-template-page/email-template-page.component';
+import { SmsTextTemplatePageComponent } from './containers/sms-text-template-page/sms-text-template-page.component';
+import { FormDocumentsPageComponent } from './containers/form-documents-page/form-documents-page.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
@@ -40,6 +44,10 @@ import { SmsTextTemplateSendTestComponent } from './components/sms-text-template
     LetterTemplateNewFormComponent,
     SmsTextTemplateNewFormComponent,
     SmsTextTemplateSendTestComponent,
+    ClientNotificationDefaultsPageComponent,
+    EmailTemplatePageComponent,
+    SmsTextTemplatePageComponent,
+    FormDocumentsPageComponent,
   ],
   exports: [
     ClientNotificationDefaultsListComponent,
@@ -57,6 +65,10 @@ import { SmsTextTemplateSendTestComponent } from './components/sms-text-template
     LetterTemplateNewFormComponent,
     SmsTextTemplateNewFormComponent,
     SmsTextTemplateSendTestComponent,
+    ClientNotificationDefaultsPageComponent,
+    EmailTemplatePageComponent,
+    SmsTextTemplatePageComponent,
+    FormDocumentsPageComponent,
   ],
 })
 export class SystemConfigFeatureCommunicationModule {}

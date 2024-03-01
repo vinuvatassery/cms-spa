@@ -15,3 +15,17 @@ export * from './lib/components/income-inclusions-exclusions-detail/income-inclu
 export * from './lib/components/region-assignment-detail/region-assignment-detail.component';
 export * from './lib/components/service-provider-detail/service-provider-detail.component';
 export * from './lib/components/housing-acuity-level-detail/housing-acuity-level-detail.component';
+
+export * from './lib/containers/case-availability-page/case-availability-page.component';
+
+export * from './lib/containers/eid-lifetime-period-page/eid-lifetime-period-page.component';
+
+export * from './lib/containers/housing-acuity-level-page/housing-acuity-level-page.component';
+
+export * from './lib/containers/income-inclusions-exclusions-page/income-inclusions-exclusions-page.component';
+
+export * from './lib/containers/ps-mfr-zip-page/ps-mfr-zip-page.component';
+
+export * from './lib/containers/service-provider-page/service-provider-page.component';
+
+export * from './lib/containers/slot-page/slot-page.component';

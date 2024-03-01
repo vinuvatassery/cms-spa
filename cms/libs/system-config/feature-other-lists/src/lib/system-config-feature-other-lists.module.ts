@@ -4,11 +4,16 @@ import { DomainsListComponent } from './components/domains-list/domains-list.com
 import { AssisterGroupsListComponent } from './components/assister-groups-list/assister-groups-list.component';
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
+import { AssisterGroupsPageComponent } from './containers/assister-groups-page/assister-groups-page.component';
+import { DomainPageComponent } from './containers/domain-page/domain-page.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
   declarations: [
     DomainsListComponent,
     AssisterGroupsListComponent,
+    AssisterGroupsPageComponent,
+    DomainPageComponent,
   ],
+  exports: [AssisterGroupsPageComponent, DomainPageComponent],
 })
 export class SystemConfigFeatureOtherListsModule {}
