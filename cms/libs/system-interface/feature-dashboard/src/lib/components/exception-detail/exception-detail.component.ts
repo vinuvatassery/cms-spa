@@ -34,7 +34,7 @@ export class ExceptionDetailComponent implements OnInit {
   private setKeyIdColumnHeader(): void {
     switch (this.interfaceTypeCode) {
       case 'RAMSELL':
-        this.keyIdColumnHeader = 'Claim No.';
+        this.keyIdColumnHeader = 'Claim Number';
         break;
       case 'KAISER':
         this.keyIdColumnHeader = 'Hrn';
@@ -43,7 +43,7 @@ export class ExceptionDetailComponent implements OnInit {
         this.keyIdColumnHeader = 'Key Id';
         break;
       case 'MODA':
-        this.keyIdColumnHeader = (this.processTypeCode === 'DENTAL_PREMIUM') ? 'Subscriber Id' : 'Claim No.';
+        this.keyIdColumnHeader = (this.processTypeCode === 'DENTAL_PREMIUM') ? 'Subscriber Id' : 'Claim Number';
         break;
       case 'SRVLNCE':
         this.keyIdColumnHeader = 'Client Id';
