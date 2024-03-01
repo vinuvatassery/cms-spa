@@ -41,6 +41,14 @@ import { InsuranceProvideDeleteComponent } from './components/insurance-provide-
 import { InsuranceProvideDeactivateComponent } from './components/insurance-provide-deactivate/insurance-provide-deactivate.component';
 import { HealthcareProviderDeleteComponent } from './components/healthcare-provider-delete/healthcare-provider-delete.component';
 import { PharmaciesDeleteComponent } from './components/pharmacies-delete/pharmacies-delete.component';
+import { CptCodePageComponent } from './container/cpt-code-page/cpt-code-page.component';
+import { DrugsPageComponent } from './container/drugs-page/drugs-page.component';
+import { HealthcareProviderPageComponent } from './container/healthcare-provider-page/healthcare-provider-page.component';
+import { InsurancePlanPageComponent } from './container/insurance-plan-page/insurance-plan-page.component';
+import { InsuranceProvidePageComponent } from './container/insurance-provide-page/insurance-provide-page.component';
+import { InsuranceVendorsPageComponent } from './container/insurance-vendors-page/insurance-vendors-page.component';
+import { MedicalProvidersPageComponent } from './container/medical-providers-page/medical-providers-page.component';
+import { PharmaciesPageComponent } from './container/pharmacies-page/pharmacies-page.component';
 
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
@@ -84,6 +92,14 @@ import { PharmaciesDeleteComponent } from './components/pharmacies-delete/pharma
     InsuranceProvideDeactivateComponent,
     HealthcareProviderDeleteComponent,
     PharmaciesDeleteComponent,
+    CptCodePageComponent,
+    DrugsPageComponent,
+    HealthcareProviderPageComponent,
+    InsurancePlanPageComponent,
+    InsuranceProvidePageComponent,
+    InsuranceVendorsPageComponent,
+    MedicalProvidersPageComponent,
+    PharmaciesPageComponent,
   ],
   exports: [
     ManufacturersListComponent,
@@ -125,6 +141,14 @@ import { PharmaciesDeleteComponent } from './components/pharmacies-delete/pharma
     InsuranceProvideDeactivateComponent,
     HealthcareProviderDeleteComponent,
     PharmaciesDeleteComponent,
+    CptCodePageComponent,
+    DrugsPageComponent,
+    HealthcareProviderPageComponent,
+    InsurancePlanPageComponent,
+    InsuranceProvidePageComponent,
+    InsuranceVendorsPageComponent,
+    MedicalProvidersPageComponent,
+    PharmaciesPageComponent,
   ],
 })
 export class SystemConfigFeatureServiceProviderModule {}

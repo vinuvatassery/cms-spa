@@ -77,3 +77,21 @@ export * from './lib/components/insurance-provide-deactivate/insurance-provide-d
 export * from './lib/components/healthcare-provider-delete/healthcare-provider-delete.component';
 
 export * from './lib/components/pharmacies-delete/pharmacies-delete.component';
+
+export * from './lib/container/cpt-code-page/cpt-code-page.component';
+
+export * from './lib/container/drugs-page/drugs-page.component';
+
+export * from './lib/container/healthcare-provider-page/healthcare-provider-page.component';
+
+export * from './lib/container/insurance-plan-page/insurance-plan-page.component';
+
+export * from './lib/container/insurance-provide-page/insurance-provide-page.component';
+
+export * from './lib/container/insurance-vendors-page/insurance-vendors-page.component';
+
+export * from './lib/container/manufacturers-page/manufacturers-page.component';
+
+export * from './lib/container/medical-providers-page/medical-providers-page.component';
+
+export * from './lib/container/pharmacies-page/pharmacies-page.component';
