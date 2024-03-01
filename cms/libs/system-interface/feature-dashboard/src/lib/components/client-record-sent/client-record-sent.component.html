@@ -1,0 +1,18 @@
+<div class="interface-chart-wrapper">
+    <div class="interface-chart-cards">
+      <h3 class="mb-1">Client Records Sent</h3>
+      <kendo-chart  *ngIf="clientRecordSendChart" [series]="clientRecordSendChart?.chartData?.series"
+        [legend]="clientRecordSendChart?.chartData?.legend" [title]="clientRecordSendChart?.chartData?.title"
+        [categoryAxis]="clientRecordSendChart?.chartData?.categoryAxis"
+        [tooltip]="clientRecordSendChart?.chartData?.tooltip">
+      </kendo-chart>
+      <div class="text-center pt-3" *ngIf="!clientRecordSendChart">
+        <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        </div>
+        <p>There is no data to display.</p>
+      </div>
+    </div>
+ 
+ 
+
+  </div>
