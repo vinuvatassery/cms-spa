@@ -8,7 +8,7 @@
         class="k-icon-button small-i-btn"
         title="New event"
         aria-label="New event"
-        (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+        (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, false)"
       >
         <span
           class="material-icons"
@@ -20,7 +20,7 @@
     </div>
     <div class="sidePanel_header-right">
       <div class="input-search mat-form-no-b-space" *ngIf="isShownSearch">
-          <kendo-textbox aria-label="search event"  placeholder="Search Events"  [fillMode]="formUiStyle.inputFillMode"> 
+          <kendo-textbox aria-label="search event"  placeholder="Search Events"  [fillMode]="formUiStyle.inputFillMode">
            </kendo-textbox>
       </div>
       <button
@@ -40,7 +40,7 @@
       </button>
       <kendo-dropdownbutton
         [data]="actions"
-        
+
         title="More option"
         class="TableActionPopup app-dropdown-action more_action_wid"
         buttonClass="k-icon-button"
@@ -87,7 +87,7 @@
               kendoButton
               class="k-icon-button small-i-btn add-sub-button"
               title="New sub-event"
-              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, true)"
               aria-label="New sub-event"
             >
               <span
@@ -124,7 +124,7 @@
                   kendoButton
                   class="k-icon-button small-i-btn add-sub-button"
                   title="New sub-event"
-                  (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+                  (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, true)"
                   aria-label="New sub-event"
                 >
                   <span
@@ -162,7 +162,7 @@
                   kendoButton
                   class="k-icon-button small-i-btn add-sub-button"
                   title="New sub-event"
-                  (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+                  (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, true)"
                   aria-label="New sub-event"
                 >
                   <span
@@ -201,7 +201,7 @@
               kendoButton
               class="k-icon-button small-i-btn add-sub-button"
               title="New sub-event"
-              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, true)"
               aria-label="New sub-event"
             >
               <span
@@ -235,7 +235,7 @@
               kendoButton
               class="k-icon-button small-i-btn add-sub-button"
               title="New sub-event"
-              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, true)"
               aria-label="New sub-event"
             >
               <span
@@ -269,7 +269,7 @@
               kendoButton
               class="k-icon-button small-i-btn add-sub-button"
               title="New sub-event"
-              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)"
+              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, true)"
               aria-label="New sub-event"
             >
               <span
@@ -293,8 +293,8 @@
   </div>
 </div>
 <!-- Add Event Modal Html-->
-<ng-template #eventDetailsDialogTemplate> 
- 
-  <kendo-dialog-titlebar  (close)="onCloseEventDetailsClicked($event)"> Add Event </kendo-dialog-titlebar>
-  <productivity-tools-event-detail  (closeEventDetailsClickedEmitter)="onCloseEventDetailsClicked($event)"></productivity-tools-event-detail>
+<ng-template #eventDetailsDialogTemplate>
+
+  <kendo-dialog-titlebar  (close)="onCloseEventDetailsClicked($event)"> {{isSubEvent?  'Add Sub-Event' : 'Add Event'  }}</kendo-dialog-titlebar>
+  <productivity-tools-event-detail  [isSubEvent]="isSubEvent" [parentEventLogId]="parentEventLogId"  [eventList]="isSubEvent ? SubEventList : eventList"  [entityId] = "entityId" [clientCaseEligibilityId]="clientCaseEligibilityId" [entityType] = "entityType"  [eventAttachmentTypeLov$]="eventAttachmentTypeLov$" [eventsdata$]="eventsdata$"  (closeEventDetailsClickedEmitter)="onCloseEventDetailsClicked($event)"></productivity-tools-event-detail>
 </ng-template>
