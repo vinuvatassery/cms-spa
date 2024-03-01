@@ -39,7 +39,14 @@
   <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">Create a Custom To Do Item </kendo-dialog-titlebar>
   <productivity-tools-todo-detail 
   (isLoadTodoGridEvent)="onloadTodoGrid($event)" 
+  [frequencyTypeCodeSubject$]="frequencyTypeCodeSubject$"
   (isModalTodoDetailsCloseClicked)="onCloseTodoClicked($event)"
+  [clientSearchResult$]="clientSearchResult$"
+  (searchClientName)="searchClientName($event)"
+  (searchProvider)="searchProvider($event)"
+  [providerSearchResult$]="providerSearchResult$"
+  (onTodoItemCreateClick)="onTodoItemCreateClick($event)"
+  [createTodo$]="createTodo$"
   ></productivity-tools-todo-detail>
 </ng-template>
 
