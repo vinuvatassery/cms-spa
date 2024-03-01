@@ -73,11 +73,7 @@
                   <span class="items-head_info-user">{{subEventLog.createdBy}}</span>
                 </p>
               </div>
-              <div class="items-body">
-                <button kendoButton class="k-icon-button small-i-btn add-sub-button" title="New sub-event"
-                  (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate)" aria-label="New sub-event">
-                  <span class="material-icons" aria-label="New sub-event" aria-hidden="true">add</span>
-                </button>
+              <div class="items-body">                
                 <span [id]="subEventLog.eventLogId" class="items-body_details text-ellipsis">{{subEventLog.eventLogDesc}}</span>
                 <span class="text-primary text-underline c-pointer" *ngIf="isShowReadMore(subEventLog.eventLogId)">Read More</span>
               </div>
