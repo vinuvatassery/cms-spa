@@ -6,6 +6,7 @@ import { Observable,Subject } from 'rxjs';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
+import { GridFilterParam } from '../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class IncomeFacade {
@@ -14,6 +15,10 @@ export class IncomeFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = 'incomeSourceCodeDesc';
   public sortType = 'asc';
+  public dateFields: Array<string> = [
+    'incomeStartDate',
+    'incomeEndDate',    
+  ];
 
   /** Private properties **/
   private ddlIncomeTypesSubject = new BehaviorSubject<any>([]);
@@ -24,6 +29,8 @@ export class IncomeFacade {
   private incomesResponseSubject = new BehaviorSubject<any>([]);
   private dependentsProofofSchoolsSubject = new BehaviorSubject<any>([]);
   incomeValidSubject = new Subject<boolean>();
+  employerSubject = new Subject<any>();
+  private incomesLoaderSubject = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   ddlIncomeTypes$ = this.ddlIncomeTypesSubject.asObservable();
@@ -34,7 +41,8 @@ export class IncomeFacade {
   incomesResponse$ = this.incomesResponseSubject.asObservable();
   dependentsProofofSchools$ = this.dependentsProofofSchoolsSubject.asObservable();
   incomeValid$ = this.incomeValidSubject.asObservable();
-
+  employers$ = this.employerSubject.asObservable();
+  incomesLoader$ = this.incomesLoaderSubject.asObservable();
   /** Constructor**/
   constructor(
     private readonly contactDataService: ContactDataService,
@@ -114,9 +122,10 @@ export class IncomeFacade {
     });
   }
 
-  loadIncomes(clientId:string,clientCaseEligibilityId:string,skip:any,pageSize:any, sortBy:any, sortType:any): void {
-    this.showLoader();
-    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,skip,pageSize, sortBy, sortType).subscribe({
+  loadIncomes(clientId:string,clientCaseEligibilityId:string,gridFilterParam:GridFilterParam): void {
+    //this.showLoader();
+    this.incomesLoaderSubject.next(true);
+    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,gridFilterParam).subscribe({
       next: (incomesResponse: any) => {
         if(incomesResponse.clientIncomes!=null){
           const gridView: any = {
@@ -134,10 +143,12 @@ export class IncomeFacade {
         }
         this.dependentsProofofSchoolsSubject.next(incomesResponse.dependents);
         this.incomesResponseSubject.next(incomesResponse);
-         this.hideLoader();
+         //this.hideLoader();
+         this.incomesLoaderSubject.next(false);
       },
       error: (err) => {
-        this.hideLoader();
+        //this.hideLoader();
+        this.incomesLoaderSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
@@ -163,36 +174,16 @@ export class IncomeFacade {
   saveClientIncome(clientId : any,clientIncome: any, proofOfIncomeFile: any, documentTypeCode: any) {
 
     const formData: any = new FormData();
-    for (let key in clientIncome) {
-      if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
-      }
-      if (key == "incomeStartDate") {
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
-      }
-      else {
-        formData.append(key, clientIncome[key]);
-      }
-    }
     formData.append('ProofOfIncomeFile', proofOfIncomeFile);
     formData.append('documentTypeCode', documentTypeCode);
+    this.formDataAppendObject(formData, clientIncome);
     return this.contactDataService.saveIncome(clientId,formData);
   }
   editClientIncome(clientId : any, clientIncomeId : any, clientIncome:any, proofOfIncomeFile:any, documentTypeCode: any){
-    const formData: any = new FormData();
-    for (let key in clientIncome) {
-      if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
-      }
-      if (key == "incomeStartDate") {
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
-      }
-      else {
-        formData.append(key, clientIncome[key]);
-      }
-    }
+    const formData: any = new FormData();    
     formData.append('proofOfIncomeFile',proofOfIncomeFile)
     formData.append('documentTypeCode', documentTypeCode);
+    this.formDataAppendObject(formData, clientIncome);
     return this.contactDataService.editIncome(clientId, clientIncomeId, formData);
   }
 
@@ -202,4 +193,37 @@ export class IncomeFacade {
   loadIncomeDetails(clientId : any, clientIncomeId : string){
     return this.contactDataService.loadIncomeDetailsService(clientId, clientIncomeId)
   }
+
+  loadEmployers(searchText :any): void {
+    this.contactDataService.loadEmployers(searchText).subscribe({
+      next: (employers) => {
+        this.employerSubject.next(employers);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+
+  private formDataAppendObject(fd: FormData, obj: any, key?: any) {
+    let i, k;
+    for (i in obj) {
+      k = key ? key + '[' + i + ']' : i;
+      if (obj[i] instanceof File) {
+        continue;
+      }
+      else if (typeof obj[i] == 'object') {
+        if (this.dateFields.indexOf(i) >= 0) {         
+            fd.append(i, obj[i]);
+        }
+        else {
+          this.formDataAppendObject(fd, obj[i], k);
+        }
+      }
+      else {
+        fd.append(k, obj[i]);
+      }
+    }
+  }
+  
 }

@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, ElementRe
 /** External libraries **/
 import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam } from '@cms/case-management/domain';
 import { IntlDateService,UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
@@ -29,6 +29,11 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private discardChangesSubscription !: Subscription;
   incomes$ = this.incomeFacade.incomes$;
   completeStaus$ = this.completionStatusFacade.completionStatus$;
+  lovProofOfIncomeByType$  = this.lov.lovProofOfIncomeByType$;
+  incomeSourcelov$ = this.lov.incomeSourcelov$;
+  incomeTypelov$ = this.lov.incomeTypelov$;
+  incomeFrequencylov$  = this.lov.incomeFrequencylov$;
+  incomesLoader$ = this.incomeFacade.incomesLoader$;
   hasNoIncome = false;
   isNodateSignatureNoted = false;
   public formUiStyle: UIFormStyle = new UIFormStyle();
@@ -56,11 +61,14 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   incomeData: any = {};
   noIncomeFlag: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  setOption:boolean = true;
   private loadSessionSubscription!: Subscription;
   public noIncomeDetailsForm: FormGroup = new FormGroup({
     noIncomeClientSignedDate: new FormControl('', []),
     noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
     noIncomeNote: new FormControl('', []),
+    clientDependentsMinorAdditionalIncomeFlag : new FormControl('', []),
+    clientDependentsMinorEmployedFlag  : new FormControl('', [])
   });
   isCerForm = false;
   hasValidIncome = false;
@@ -119,6 +127,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.lov.getProofOfIncomeTypesByTypeLov();
     this.loadSessionData();
     this.loadDependents();
     this.loadIncomeTypes();
@@ -130,6 +139,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.addSaveForLaterSubscription();
     this.addSaveForLaterValidationsSubscription();
     this.addDiscardChangesSubscription();
+  
   }
 
   ngOnDestroy(): void {
@@ -197,50 +207,67 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private save() {
-    this.UploadDocumentValidation();
-    if(this.hasNoIncome){
-      let isValid = true;
-      this.submitIncomeDetailsForm();
-      if (this.noIncomeDetailsForm.valid && isValid && this.isProofOfSchoolDocumentUploaded) {
-        this.noIncomeData.isCERRequest = this.isCerForm;
-        this.loaderService.show();
-        return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
-          catchError((err: any) => {
-            this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-            this.loaderService.hide();
-            return  of(false);
-          })
+    debugger;
+    this.removeValidations();
+    // this.UploadDocumentValidation();
+    // this.noIncomeDetailsForm.markAllAsTouched();
+    // this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setValidators([
+    //   Validators.required,
+    // ]);
+    // this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].updateValueAndValidity();
+    // this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setValidators([
+    //   Validators.required,
+    // ]);
+    // this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].updateValueAndValidity();
+    this.checkValidations();
+    this.cdr.detectChanges();
+    if (this.noIncomeDetailsForm.valid) {
+      if (this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.No
+        && this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.No) {
+        let isValid = true;
+        this.submitIncomeDetailsForm();
+        if (this.noIncomeDetailsForm.valid && isValid && this.isProofOfSchoolDocumentUploaded) {
+          this.noIncomeData.isCERRequest = this.isCerForm;
+          this.loaderService.show();
+          return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
+            catchError((err: any) => {
+              this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+              this.loaderService.hide();
+              return of(false);
+            })
           )
+        }
       }
-    }
-    else{
-      if (!this.hasNoIncome && this.incomeData.clientIncomes != null && this.isProofOfSchoolDocumentUploaded)
-      {
-        this.loaderService.show();
-        this.incomeFacade.incomeValidSubject.next(true);
-        this.noIncomeData.noIncomeFlag = StatusFlag.No;
-        this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
-        this.noIncomeData.clientId = this.clientId
-        this.noIncomeData.noIncomeClientSignedDate = null;
-        this.noIncomeData.noIncomeSignatureNotedDate = null;
-        this.noIncomeData.noIncomeNote = null;
-        this.noIncomeData.isCERRequest = this.isCerForm;
-        this.loaderService.show();
-        return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
-        catchError((err: any) => {
-          this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-          this.loaderService.hide();
-          return  of(false);
-        })
-        )
-      }
-      else if(!this.incomeData.clientIncomes)
-      {
-        this.incomeFacade.incomeValidSubject.next(false);
-        return  of(false);
+      else {
+        if (this.incomeData.clientIncomes != null && this.isProofOfSchoolDocumentUploaded) {
+          this.loaderService.show();
+          this.incomeFacade.incomeValidSubject.next(true);
+          //this.noIncomeData.noIncomeFlag = StatusFlag.No;
+          this.noIncomeData.clientDependentsMinorEmployedFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value;
+          this.noIncomeData.clientDependentsMinorAdditionalIncomeFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value;
+          this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
+          this.noIncomeData.clientId = this.clientId
+          this.noIncomeData.noIncomeClientSignedDate = null;
+          this.noIncomeData.noIncomeSignatureNotedDate = null;
+          this.noIncomeData.noIncomeNote = null;
+          this.noIncomeData.isCERRequest = this.isCerForm;
+          this.loaderService.show();
+          return this.incomeFacade.save(this.clientCaseEligibilityId, this.noIncomeData).pipe(
+            catchError((err: any) => {
+              this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+              this.loaderService.hide();
+              return of(false);
+            })
+          )
+        }
+        else if (!this.incomeData.clientIncomes) {
+          this.incomeFacade.incomeValidSubject.next(false);
+          return of(false);
+        }
       }
     }
     return of(false)
+
   }
 
   private noIncomeDetailsFormChangeSubscription() {
@@ -320,9 +347,10 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   /** Private Methods **/
-  private loadIncomes(clientId: string, clientCaseEligibilityId: string,skip:any,pageSize:any, sortBy:any, sortType:any): void {
+  private loadIncomes(clientId: string, clientCaseEligibilityId: string,  gridFilterParam: GridFilterParam, setOption:boolean = true): void {
     this.loaderService.show();
-    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId,skip,pageSize, sortBy, sortType);
+    this.setOption = setOption;
+    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId,gridFilterParam);
     this.incomeFacade.incomesResponse$.subscribe((incomeresponse: any) => {
       this.incomeData = incomeresponse;
       let uploadedProofOfSchoolDependents = this.dependentsProofOfSchools.filter((item :any) => !!item.documentPath);
@@ -339,12 +367,12 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         }
       }
       if (incomeresponse.noIncomeData!=null) {
-        this.noIncomeFlag = true;
-        this.noIncomeDetailsForm = new FormGroup({
-          noIncomeClientSignedDate: new FormControl('', []),
-          noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
-          noIncomeNote: new FormControl('', []),
-        });
+        //this.noIncomeFlag = true;
+        // this.noIncomeDetailsForm = new FormGroup({
+        //   noIncomeClientSignedDate: new FormControl('', []),
+        //   noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
+        //   noIncomeNote: new FormControl('', []),
+        // });
         this.noIncomeDetailsFormChangeSubscription();
         this.isNodateSignatureNoted = true;
         this.hasNoIncome = true;
@@ -352,7 +380,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
       else
       {
-        this.noIncomeFlag = false;
+        //this.noIncomeFlag = false;
         this.isNodateSignatureNoted = false;
         this.hasNoIncome = false;
         this.setIncomeDetailFormValue(null);
@@ -364,23 +392,34 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     })
   }
 
+  additionalIncomeFlagSelected(event:any){
+    debugger
+    // this.noIncomeDetailsFormChangeSubscription();
+    // this.adjustAttributeChanged();
+    this.cdr.detectChanges();
+  }
+  dependentsMinorEmployedFlagSelected(event:any){
+
+    debugger
+  }
   updateCompletionStatus(status: any) {
     this.completionStatusFacade.updateCompletionStatus(status);
   }
 
   /** Internal Event Methods **/
   onIncomeValueChanged(event: any) {
-    this.hasNoIncome = !this.hasNoIncome;
-    if (this.hasNoIncome) {
-      this.noIncomeDetailsForm = new FormGroup({
-        noIncomeClientSignedDate: new FormControl('', []),
-        noIncomeSignatureNotedDate: new FormControl({value: null, disabled: true}, []),
-        noIncomeNote: new FormControl('', []),
-      });
-      this.isNodateSignatureNoted = true;
+    debugger;
+    //this.hasNoIncome = !this.hasNoIncome;
+    //if (this.hasNoIncome) {
+      // this.noIncomeDetailsForm = new FormGroup({
+      //   noIncomeClientSignedDate: new FormControl('', []),
+      //   noIncomeSignatureNotedDate: new FormControl({value: null, disabled: true}, []),
+      //   noIncomeNote: new FormControl('', []),
+      // });
+      // this.isNodateSignatureNoted = true;
       this.noIncomeDetailsFormChangeSubscription();
-      this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
-    }
+      //this.setIncomeDetailFormValue(this.incomeData?.noIncomeData);
+    //}
 
     this.adjustAttributeChanged();
   }
@@ -388,8 +427,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   public submitIncomeDetailsForm(): void {
 
-    this.noIncomeDetailsForm.markAllAsTouched();
-    if (this.hasNoIncome) {
+    if (this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.No &&
+     this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.No) {
+     
       this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValidators([
         Validators.required,
       ]);
@@ -422,7 +462,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
 
       if (this.noIncomeDetailsForm.valid) {
-        this.noIncomeData.noIncomeFlag = this.hasNoIncome ? StatusFlag.Yes :StatusFlag.No;
+        //this.noIncomeData.noIncomeFlag = this.hasNoIncome ? StatusFlag.Yes :StatusFlag.No;
+        this.noIncomeData.clientDependentsMinorEmployedFlag =  this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value;
+        this.noIncomeData.clientDependentsMinorAdditionalIncomeFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value;
         this.noIncomeData.clientCaseEligibilityId = this.clientCaseEligibilityId;
         this.noIncomeData.clientId = this.clientId
         this.noIncomeData.noIncomeClientSignedDate = new Date(this.intl.formatDate(this.noIncomeDetailsForm.get("noIncomeClientSignedDate")?.value, this.dateFormat));
@@ -433,10 +475,15 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   setIncomeDetailFormValue(incomeDetail: any) {
+ debugger
     if (incomeDetail) {
-      this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValue(new Date(incomeDetail.noIncomeClientSignedDate));
-      this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(new Date(incomeDetail.noIncomeSignatureNotedDate));
+      if(incomeDetail.noIncomeClientSignedDate !== null){this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValue(new Date(incomeDetail.noIncomeClientSignedDate));}
+      if(incomeDetail.noIncomeSignatureNotedDate!== null){this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValue(new Date(incomeDetail.noIncomeSignatureNotedDate));}
       this.noIncomeDetailsForm.controls['noIncomeNote'].setValue(incomeDetail.noIncomeNote);
+      if(this.setOption){
+        this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setValue(incomeDetail.clientDependentsMinorEmployedFlag);
+        this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setValue(incomeDetail.clientDependentsMinorAdditionalIncomeFlag);
+      }
     }else{
       this.noIncomeDetailsForm.controls['noIncomeNote'].setValue('');
     }
@@ -465,26 +512,41 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       });
   }
 
-  loadIncomeListHandle(gridDataRefinerValue: any): void {
-    const gridDataRefiner = {
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sortColumn : gridDataRefinerValue.sortColumn,
-      sortType : gridDataRefinerValue.sortType,
-    };
+  loadIncomeListGrid(gridDataRefinerValue:any):void{
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
+    // const gridDataRefiner = {
+    //   skipcount: gridDataRefinerValue.skipCount,
+    //   maxResultCount: gridDataRefinerValue.pagesize,
+    //   sortColumn : gridDataRefinerValue.sortColumn,
+    //   sortType : gridDataRefinerValue.sortType,
+    // };
     this.loadIncomes(
       this.clientId,
       this.clientCaseEligibilityId,
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sortColumn,
-      gridDataRefiner.sortType
+      gridFilterParam,
+      false
+    );
+  }
+
+  loadIncomeListHandle(gridDataRefinerValue: any): void {
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
+    // const gridDataRefiner = {
+    //   skipcount: gridDataRefinerValue.skipCount,
+    //   maxResultCount: gridDataRefinerValue.pagesize,
+    //   sortColumn : gridDataRefinerValue.sortColumn,
+    //   sortType : gridDataRefinerValue.sortType,
+    // };
+    this.loadIncomes(
+      this.clientId,
+      this.clientCaseEligibilityId,
+      gridFilterParam
     );
   }
 
   private addSaveForLaterSubscription(): void {
     this.saveForLaterClickSubscription = this.workflowFacade.saveForLaterClicked$.subscribe((statusResponse: any) => {
-      if (this.checkValidations()) {
+      debugger
+      if (this.checkValidations() && this.noIncomeDetailsForm.valid) {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
@@ -495,24 +557,45 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       else {
         this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
       }
+      //this.noIncomeDetailsForm.updateValueAndValidity();
+      this.cdr.detectChanges();
     });
   }
 
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {
-      if (val) {
-        this.checkValidations()
+      debugger;
+      this.removeValidations();
+      if (this.checkValidations() && this.noIncomeDetailsForm.valid) {
+        //this.checkValidations()
         this.workflowFacade.showSaveForLaterConfirmationPopup(true);
       }
+      //this.noIncomeDetailsForm.updateValueAndValidity();
+      this.cdr.detectChanges();
     });
   }
 
   checkValidations(){
-    if (this.hasNoIncome) {
+    this.noIncomeDetailsForm.markAllAsTouched();
+    this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setValidators([
+      Validators.required,
+    ]);
+    this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].updateValueAndValidity()
+    this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setValidators([
+      Validators.required,
+    ]);
+    this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].updateValueAndValidity();
+    //if (this.hasNoIncome) {
+      
+    if(this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.No &&
+    this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.No)
+    {
       this.submitIncomeDetailsForm();
       return this.noIncomeDetailsForm.valid;
     }
-    if (!this.hasNoIncome && this.incomeData.clientIncomes == null) {
+    else if((this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === StatusFlag.Yes ||
+    this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === StatusFlag.Yes) && 
+    this.incomeData.clientIncomes == null) {
       this.incomeFacade.incomeValidSubject.next(false);
       return false;
     }
@@ -533,15 +616,17 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-  removeValidations(){
-    if (this.hasNoIncome) {
-      this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValidators(null);
-      this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValidators(null);
-      this.noIncomeDetailsForm.controls['noIncomeNote'].setValidators(null);
-      this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].updateValueAndValidity();
-      this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].updateValueAndValidity();
-      this.noIncomeDetailsForm.controls['noIncomeNote'].updateValueAndValidity();
-    }
+  removeValidations() {
+
+    this.noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].setValidators(null);
+    this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].setValidators(null);
+    this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].setValidators(null);
+    this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].setValidators(null);
+    this.noIncomeDetailsForm.controls['noIncomeNote'].setValidators(null);
+    this.noIncomeDetailsForm.controls['noIncomeClientSignedDate'].updateValueAndValidity();
+    this.noIncomeDetailsForm.controls['noIncomeSignatureNotedDate'].updateValueAndValidity();
+    this.noIncomeDetailsForm.controls['noIncomeNote'].updateValueAndValidity();
+
   }
   dateChange(date:any)
   {

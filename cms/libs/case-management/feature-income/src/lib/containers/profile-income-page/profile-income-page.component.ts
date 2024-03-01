@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CaseFacade, IncomeFacade, ScreenType } from '@cms/case-management/domain';
+import { CaseFacade, GridFilterParam, IncomeFacade, ScreenType } from '@cms/case-management/domain';
+import { LovFacade } from '@cms/system-config/domain';
 
 
 @Component({
@@ -16,7 +17,8 @@ export class ProfileIncomePageComponent implements OnInit {
   constructor(
     private readonly caseFacade: CaseFacade,
     private readonly incomeFacade: IncomeFacade,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private readonly lovFacade : LovFacade
   ) {
   }
 
@@ -25,8 +27,17 @@ export class ProfileIncomePageComponent implements OnInit {
   clientCaseId!: string;
   clientId!: number;
   clientCaseEligibilityId!: any; 
+  lovProofOfIncomeByType$  = this.lovFacade.lovProofOfIncomeByType$;
+  incomeSourcelov$ = this.lovFacade.incomeSourcelov$;
+  incomeTypelov$ = this.lovFacade.incomeTypelov$;
+  incomeFrequencylov$  = this.lovFacade.incomeFrequencylov$;
+  incomesLoader$ = this.incomeFacade.incomesLoader$;
   tabId! : any
   historyStatus: boolean = false;
+  public pageSize = 5;
+  public gridSkipCount = this.incomeFacade.skipCount;
+  sortValue:any ='incomeSourceCodeDesc';
+  sortType:any='asc'
   /** Lifecycle hooks **/
   ngOnInit() {   
     this.loadQueryParams()
@@ -41,41 +52,44 @@ export class ProfileIncomePageComponent implements OnInit {
     this.currentClientCaseEligibilityId = this.clientCaseEligibilityId     
     this.caseFacade.loadEligibilityPeriods(this.clientCaseId);
     this.loadIncomes();
+    this.lovFacade.getProofOfIncomeTypesByTypeLov();
+    this.lovFacade.getIncomeSourceLovs();
+    this.lovFacade.getIncomeFrequencyLovs();
+    this.lovFacade.getIncomeTypeLovs();
   }
-  private loadIncomeData(clientId: any, eligibilityId: any, skipCount: number,
-    pageSize: number, sortBy: string, sortType: string) {
-    this.incomeFacade.loadIncomes(clientId, eligibilityId, skipCount, pageSize, sortBy, sortType);
+  private loadIncomeData(clientId: any, eligibilityId: any, gridFilterParam:any) {
+     
+    this.incomeFacade.loadIncomes(clientId, eligibilityId, gridFilterParam);
   }
 
   /** Load Incomes **/
   public loadIncomes() {
+    debugger;
+    const gridFilterParam = new GridFilterParam(this.gridSkipCount, this.pageSize, this.sortValue, this.sortType, JSON.stringify(null));   
     this.loadIncomeData(
       this.clientId?.toString(),
       this.clientCaseEligibilityId,
-      this.incomeFacade.skipCount,
-      this.incomeFacade.gridPageSizes[0].value,
-      this.incomeFacade.sortValue,
-      this.incomeFacade.sortType);
+      gridFilterParam);
   }
 
   loadIncomeListHandle(gridDataRefinerValue: any): void {
-    const gridDataRefiner = {
-      skipcount: gridDataRefinerValue.skipCount,
-      maxResultCount: gridDataRefinerValue.pagesize,
-      sortColumn: gridDataRefinerValue.sortColumn,
-      sortType: gridDataRefinerValue.sortType,
-    };
+    debugger;
+    const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
+    // const gridDataRefiner = {
+    //   skipcount: gridDataRefinerValue.skipCount,
+    //   maxResultCount: gridDataRefinerValue.pagesize,
+    //   sortColumn: gridDataRefinerValue.sortColumn,
+    //   sortType: gridDataRefinerValue.sortType,
+    // };
     this.loadIncomeData(
       this.clientId.toString(),
       this.clientCaseEligibilityId,
-      gridDataRefiner.skipcount,
-      gridDataRefiner.maxResultCount,
-      gridDataRefiner.sortColumn,
-      gridDataRefiner.sortType
+      gridFilterParam
     );
   }
 
   onPeriodSelectionChange(value: any) {
+    debugger;
     this.clientCaseEligibilityId = value.id;
     this.loadIncomes();
   }

@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 import { Lov, LovFacade } from '@cms/system-config/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'case-management-income-detail',
   templateUrl: './income-detail.component.html',
@@ -33,6 +34,7 @@ export class IncomeDetailComponent implements OnInit {
   snackbarSubject = new Subject<SnackBar>();
   snackbar$ = this.snackbarSubject.asObservable();
   @Output() public sendDetailToIncomeList = new EventEmitter<any>();
+  @Output() public loadIncomeList = new EventEmitter<any>();
   @Output() public closePopup = new EventEmitter<any>();
   @Output() public closeModal: EventEmitter<boolean> = new EventEmitter();
   isIncomeDetailsPopupOpen = false;
@@ -54,9 +56,14 @@ export class IncomeDetailComponent implements OnInit {
   startDate!:any;
   incomeTypesOther = '';
   documentTypeCode!: string;
+  insuranceStartDateIslessthanEndDate: boolean = true;
+  insuranceEndDateIsgreaterthanStartDate: boolean = false;
+  employers$ = this.incomeFacade.employers$;
+  dateFormat = this.configurationProvider.appSettings.dateFormat;
   public IncomeDetailsFormData: { incomeAmount: number } = {
     incomeAmount: 0,
   };
+  incomeTypeDateLabel:any = 'Income Start Date';
   public IncomeDetailsForm: FormGroup = new FormGroup({
     incomeSourceCode: new FormControl('', []),
     incomeTypeCode: new FormControl('', []),
@@ -69,6 +76,7 @@ export class IncomeDetailComponent implements OnInit {
     incomeNote: new FormControl('', []),
     proofIncomeTypeCode: new FormControl('', []),
     otherDesc: new FormControl('', []),
+    employerId : new FormControl('', []),
   });
 
   /** Constructor **/
@@ -80,7 +88,8 @@ export class IncomeDetailComponent implements OnInit {
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly configurationProvider: ConfigurationProvider,
-    public readonly clientDocumentFacade: ClientDocumentFacade
+    public readonly clientDocumentFacade: ClientDocumentFacade,
+    public intl: IntlService,
   ) { }
 
   /** Lifecycle hooks **/
@@ -124,7 +133,35 @@ export class IncomeDetailComponent implements OnInit {
     });
   }
 
+  loadEmployers(searchText: any){
+
+    if (!searchText || searchText.length == 0) {
+      return;
+    }
+    this.incomeFacade.loadEmployers(searchText);
+  }
   loadProofOfIncomeTypes(proofIncomeTypeStatus: boolean = false) {
+    switch (this.IncomeDetailsForm.controls['incomeTypeCode'].value.toUpperCase()) {
+      case IncomeTypeCode.Work:
+        this.incomeTypeDateLabel = 'Date of Hire (Default)';
+        break;
+      case IncomeTypeCode.UnemploymentInsurance:
+      case IncomeTypeCode.ShortLongtermDisability:
+      case IncomeTypeCode.AlimonyChildSupport:
+      case IncomeTypeCode.OtherIncome:
+        this.incomeTypeDateLabel = 'Initial Payment Received';
+        break;
+      case IncomeTypeCode.SupplementalSecurityIncome:
+      case IncomeTypeCode.SocialSecurityDisabilityInsurance:
+        this.incomeTypeDateLabel = 'Effective Start Date';
+        break;
+      case IncomeTypeCode.SelfEmployment:
+      case IncomeTypeCode.RentalIncome:
+        this.incomeTypeDateLabel = 'Tax Year';
+        break;
+      default: this.incomeTypeDateLabel = 'Income Start Date';
+        break;
+    }
     if(proofIncomeTypeStatus)
     {
       this.IncomeDetailsForm.controls[
@@ -158,8 +195,9 @@ export class IncomeDetailComponent implements OnInit {
     this.incomeFacade
       .loadIncomeDetails(this.clientId, this.selectedIncome.clientIncomeId)
       .subscribe({
-        next: (response) => {
-          if (response) {
+        next: (response: any) => {
+          if (response) {         
+            this.incomeFacade.employerSubject.next(response);
             this.loadingIncomeDetailsIntoForm(response);
             this.loaderService.hide();
           }
@@ -208,6 +246,8 @@ export class IncomeDetailComponent implements OnInit {
       incomeData['clientCaseEligibilityId'] = this.clientCaseEligibilityId;
       incomeData['clientId'] = this.clientId;
       incomeData['clientCaseId'] = this.clientCaseId;
+      incomeData['incomeStartDate'] = this.intl.formatDate(this.IncomeDetailsForm.controls['incomeStartDate'].value, this.dateFormat);
+      incomeData['incomeEndDate'] = this.intl.formatDate(this.IncomeDetailsForm.controls['incomeEndDate'].value, this.dateFormat);
 
       if (this.incomeTypesOther == 'O') {
         incomeData.otherDesc = this.IncomeDetailsForm.controls['otherDesc'].value;
@@ -233,7 +273,7 @@ export class IncomeDetailComponent implements OnInit {
                 SnackBarNotificationType.SUCCESS,
                 'Income created successfully.'
               );
-              this.sendDetailToIncomeList.next(true);
+              this.loadIncomeList.next(true);
               this.closeIncomeDetailPoup();
             },
             error: (err) => {
@@ -273,7 +313,7 @@ export class IncomeDetailComponent implements OnInit {
                 SnackBarNotificationType.SUCCESS,
                 'Income updated successfully.'
               );
-              this.sendDetailToIncomeList.next(true);
+              this.loadIncomeList.next(true);
               this.closeIncomeDetailPoup();
             },
             error: (err) => {
@@ -319,6 +359,7 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeNote'].setValidators([Validators.required,]);
+    this.IncomeDetailsForm.controls['employerId'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeSourceCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeTypeCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeAmt'].updateValueAndValidity();
@@ -326,6 +367,7 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
+    this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
     const endDate=this.IncomeDetailsForm.controls['incomeEndDate'].value;
     const startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
     if(endDate<=startDate && this.IncomeDetailsForm.controls['incomeEndDate'].value ){
@@ -353,6 +395,53 @@ export class IncomeDetailComponent implements OnInit {
     }
   }
 
+  changeMinDate() {
+    this.startDate = this.IncomeDetailsForm.controls['incomeStartDate'].value;
+  }
+  endDateOnChange() {
+    this.insuranceEndDateIsgreaterthanStartDate = true;
+    if (this.IncomeDetailsForm.controls['incomeStartDate'].value === null) {
+      this.IncomeDetailsForm.controls['incomeStartDate'].markAllAsTouched();
+      this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required]);
+      this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
+      this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({ 'incorrect': true });
+      this.insuranceEndDateIsgreaterthanStartDate = false;
+    }
+    else if (this.IncomeDetailsForm.controls['incomeEndDate'].value !== null &&
+    this.IncomeDetailsForm.controls['incomeEndDate'].value !== '') {
+      const startDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.IncomeDetailsForm.controls['incomeStartDate'].value
+        )
+      );
+      const endDate = this.intl.parseDate(
+        Intl.DateTimeFormat('en-US').format(
+          this.IncomeDetailsForm.controls['incomeEndDate'].value
+        )
+      );
+
+      if (startDate > endDate) {
+        this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({ 'incorrect': true });
+        this.IncomeDetailsForm.controls['incomeStartDate'].setErrors({ 'incorrect': true });
+        this.insuranceEndDateIsgreaterthanStartDate = false;
+      }
+      else {
+        this.insuranceEndDateIsgreaterthanStartDate = true;
+        this.IncomeDetailsForm.controls['incomeEndDate'].setErrors(null);
+        this.startDate = this.IncomeDetailsForm.controls['incomeStartDate'].value;
+      }
+    }
+  }
+  endDateValueChange(date: Date) {
+    this.insuranceEndDateIsgreaterthanStartDate = false;
+
+  }
+  startDateOnChange() {
+    if (this.IncomeDetailsForm.controls['incomeEndDate'].value !== null) {
+      this.endDateOnChange();
+    }
+  }
+
   // Binding income details to the form
   loadingIncomeDetailsIntoForm(response: any) {
     this.selectedIncome = response[0];
@@ -371,6 +460,8 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['noIncomeProofFlag'].setValue('Y');
+    this.IncomeDetailsForm.controls['employerId'].setValue(this.selectedIncome.employerId);
+    this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
     if (this.selectedIncome?.noIncomeProofFlag === 'Y') {
       this.IncomeDetailsForm.controls['noProofOfIncome'].setValue(true);
       this.hasNoProofOfIncome =

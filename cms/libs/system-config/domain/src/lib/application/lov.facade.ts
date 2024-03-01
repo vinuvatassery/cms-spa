@@ -94,6 +94,7 @@ export class LovFacade {
   private serviceTypeSubject = new Subject<any>();
   private refundTypeSubject = new Subject<any>();
   private batchStatusSubject = new Subject<any>();
+  private lovProofOfIncomeByTypeSubject = new BehaviorSubject<Lov[]>([]);
 
   private interfaceExceptionSubject = new BehaviorSubject<Lov[]>([]);
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
@@ -170,6 +171,7 @@ export class LovFacade {
   yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
   deliveryMethodLov$ = this.lovDeliveryMethodSubject.asObservable();
   VendorTypeCodeLov$ = this.lovVendorTypeCodeSubject.asObservable();
+  lovProofOfIncomeByType$ = this.lovProofOfIncomeByTypeSubject.asObservable();
 
   interfaceExceptionLov$ = this.interfaceExceptionSubject.asObservable();
   BatchInterfaceStatusLov$ = this.BatchInterfaceStatusSubject.asObservable();
@@ -929,6 +931,18 @@ export class LovFacade {
     this.lovDataService.getLovsbyParent(LovType.InterfaceProcessBatch,parentCode).subscribe({
       next: (lovResponse) => {
         this.interfaceProcessBatchSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getProofOfIncomeTypesByTypeLov() {
+    debugger;
+    return this.lovDataService.getLovsbyType(LovType.ProofOfIncomeType).subscribe({
+      next: (lovResponse) => {
+        this.lovProofOfIncomeByTypeSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
