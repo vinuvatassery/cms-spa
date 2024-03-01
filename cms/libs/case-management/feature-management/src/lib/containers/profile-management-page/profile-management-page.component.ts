@@ -50,6 +50,7 @@ userImage$ = this.userManagementFacade.userImage$;
 showAddNewManagerButton$ = this.caseManagerFacade.showAddNewManagerButton$;
 updateDatesCaseManager$ = this.caseManagerFacade.updateDatesCaseManager$;
 historychkBoxChecked = false
+caseManagersProfilePhoto$ = this.caseManagerFacade.caseManagersProfilePhotoSubject;
 
 /** Private properties **/
   tabChangeSubscription$ = new Subscription();

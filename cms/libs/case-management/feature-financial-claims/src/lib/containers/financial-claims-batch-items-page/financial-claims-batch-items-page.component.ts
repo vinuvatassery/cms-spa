@@ -38,7 +38,8 @@ export class FinancialClaimsBatchItemsPageComponent implements OnInit {
   @ViewChild('providerDetailsTemplate', { read: TemplateRef })
   providerDetailsTemplate!: TemplateRef<any>;
   paymentRequestId: any;
- exportButtonShow$ = this.documentFacade.exportButtonShow$
+ exportButtonShow$ = this.documentFacade.exportButtonShow$;
+ claimsServiceProfile$ = this.financialClaimsFacade.claimsServiceProfileSubject;
   providerDetailsDialog:any;
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,

@@ -6,7 +6,6 @@ export * from './lib/components/delete-reminder-confirmation/delete-reminder-con
 export * from './lib/components/delete-todo-confirmation/delete-todo-confirmation.component';
 export * from './lib/components/reminder-detail/reminder-detail.component';
 export * from './lib/components/reminder-list/reminder-list.component';
-export * from './lib/components/todo-detail/todo-detail.component';
 export * from './lib/components/todo-list/todo-list.component';
 export * from './lib/containers/todo-page/todo-page.component';
 export * from './lib/containers/todo-and-reminders-page/todo-and-reminders-page.component';

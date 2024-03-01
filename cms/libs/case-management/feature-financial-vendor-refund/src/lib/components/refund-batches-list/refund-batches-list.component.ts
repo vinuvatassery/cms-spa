@@ -70,28 +70,7 @@ export class RefundBatchesListComponent implements  OnChanges{
     {
       columnCode: 'batchName',
       columnDesc: 'Batch #',
-    },
-    {
-      columnCode: 'tpaRefunds',
-      columnDesc: '# TPA Refunds',
-    },
-    {
-      columnCode: 'insRefunds',
-      columnDesc: '# INS Refunds',
-    },
-    {
-      columnCode: 'rxRefunds',
-      columnDesc: '# RX Refunds',
-    },
-    {
-      columnCode: 'bulkPayment',
-      columnDesc: 'Bulk Payment',
-    },
-    {
-      columnCode: 'totalRefund',
-      columnDesc: 'Total Refund Amount',
-    } 
-    
+    }
   ];
   showExportLoader = false;
   

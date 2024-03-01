@@ -17,17 +17,19 @@
   (loadChangeGroupEvent)="loadChangeGroupData($event)"
   (updateChangeGroupEvent)="updateChangeGroup($event)"
   (createCerSessionEvent)="createCerSession()"
+  [clientProfileHeader$]="clientProfileHeader$"
+  [userDetail$]="userDetail$ | async"
 ></case-management-case360-header>
-<case-management-common-actions></case-management-common-actions>
+<case-management-common-actions [entityId] = "clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [entityType] = "'CLIENT'"></case-management-common-actions>
 <!-- Case 360 details section -->
 <section class="client-tab-section">
   <!-- Case Details right Menus -->
-  <case-management-case360-header-tools 
-  [clientId] = "profileClientId" 
+  <case-management-case360-header-tools
+  [clientId] = "profileClientId"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
-  [loadedClientHeader]="loadedClientHeader$ | async" 
+  [loadedClientHeader]="loadedClientHeader$ | async"
   (loadClientProfileInfoEvent)="loadClientProfileInfoEventHandler()"
-  *ngIf="clientId && clientCaseEligibilityId" 
+  *ngIf="clientId && clientCaseEligibilityId"
   ></case-management-case360-header-tools>
 
   <div class="client-tab-bar-wrappers">
@@ -35,26 +37,26 @@
     <div class="custom-client-tab-main-wrapper">
 
 
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.CLIENT_INFO || client_button_grp }" aria-label="Client" 
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.CLIENT_INFO || client_button_grp }" aria-label="Client"
         (click)="onTabClick(clientProfileTabs.CLIENT_INFO)" *ifPermission='["Client_Profile_Client_Tab_View_Only"]'>Client</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_STATUS || health_button_grp }" aria-label="Health Insur." 
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.HEALTH_INSURANCE_STATUS || health_button_grp }" aria-label="Health Insur."
         (click)="onTabClick(clientProfileTabs.HEALTH_INSURANCE_STATUS)" *ifPermission='["Client_Profile_Health_Ins_Tab_View_Only"]'>
         Health Insur.</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_STATUS || dental_button_grp }" aria-label="Dental Insur." 
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.DENTAL_INSURANCE_STATUS || dental_button_grp }" aria-label="Dental Insur."
         (click)="onTabClick(clientProfileTabs.DENTAL_INSURANCE_STATUS)" *ifPermission='["Client_Profile_Dental_Tab_View_Only"]'>
         Dental Insur.</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.DRUGS_PHARMACIES || drugs_button_grp}" aria-label="Drugs" 
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.DRUGS_PHARMACIES || drugs_button_grp}" aria-label="Drugs"
         (click)="onTabClick(clientProfileTabs.DRUGS_PHARMACIES)" *ifPermission='["Client_Profile_Drugs_Tab_View_Only"]'>
         Drugs</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.MANAGEMENT_MANAGER || mng_button_grp}" aria-label="Management" 
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.MANAGEMENT_MANAGER || mng_button_grp}" aria-label="Management"
         (click)="onTabClick(clientProfileTabs.MANAGEMENT_MANAGER)" *ifPermission='["Client_Profile_Management_Tab_View_Only"]'>
         Management</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.STATUS_PERIOD }" aria-label="Statuses" 
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.STATUS_PERIOD }" aria-label="Statuses"
         (click)="onTabClick(clientProfileTabs.STATUS_PERIOD)" *ifPermission='["Client_Profile_Statuses_Tab_View_Only"]'> Statuses</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.ATTACHMENTS }" aria-label="Attachments" 
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName === clientProfileTabs.ATTACHMENTS }" aria-label="Attachments"
         (click)="onTabClick(clientProfileTabs.ATTACHMENTS)" *ifPermission='["Client_Profile_Attachments_Tab_View_Only"]'>
         Attachments</button>
-      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName ===clientProfileTabs.APP_HISTORY}" aria-label="App History" 
+      <button kendoButton [ngClass]="{'custom-tab-main-active': selectedTabName ===clientProfileTabs.APP_HISTORY}" aria-label="App History"
         (click)="onTabClick(clientProfileTabs.APP_HISTORY)" *ifPermission='["Client_Profile_AppHistory_Tab_View_Only_hidden"]'> App
         History</button>
 
@@ -62,7 +64,7 @@
     </div>
     <div class="custom-client-tab-inner-wrapper">
       <kendo-buttongroup *ngIf="client_button_grp">
-        <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_INFO)" 
+        <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_INFO)"
           [ngClass]="{'custom-inner-tab-active': selectedTabName === clientProfileTabs.CLIENT_INFO }"
           *ifPermission='["Client_Profile_Client_ClientInfo_Tab_View_Only"]' aria-label="Client Info" >Client Info</button>
         <button kendoButton (click)="onTabSelect(clientProfileTabs.CLIENT_CONTACT_INFO)"

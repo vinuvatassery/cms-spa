@@ -6,11 +6,13 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 /** Entities **/
 import { Todo } from '../entities/todo';
+import { ConfigurationProvider } from '@cms/shared/util-core';
 
 @Injectable({ providedIn: 'root' })
 export class TodoDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient) {}
+  constructor(private readonly http: HttpClient,
+    private readonly configurationProvider: ConfigurationProvider) {}
 
   /** Public methods **/
   loadTodo(): Observable<Todo[]> {
@@ -114,4 +116,9 @@ export class TodoDataService {
       },
     ]);
   }
-}
+
+  createTodoItem(payload:any){  
+      return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/todo`,payload);
+    }
+  }
+

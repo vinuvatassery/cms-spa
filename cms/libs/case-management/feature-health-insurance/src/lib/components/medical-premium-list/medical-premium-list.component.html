@@ -82,6 +82,7 @@
               [attr.aria-label]="dataItem.insurancePlanName"
               kendoPopoverAnchor
               [popover]="myPopover"
+              *ngIf="dataItem.insurancePlanName"
               (click)="getCarrierContactInfo(dataItem.insuranceVendorId,dataItem.insurancePlanName)" >
               {{ dataItem.insurancePlanName }}
             </button>
@@ -158,8 +159,7 @@
         </kendo-grid-column>
         <kendo-grid-column *ngIf="isCerForm" title="Elig. Period" [width]="130" field ="eligibilityPeriods"  [columnMenu]="false"  [sortable]="false">        
         </kendo-grid-column>
-        <kendo-grid-column *ngIf="isCerForm" title="Elig. Period" [width]="130" field ="eligibilityPeriods"  [columnMenu]="false"  [sortable]="false">        
-        </kendo-grid-column>
+       
         <kendo-grid-column field="careassistPayingPremiumFlag" title="CAREAssist paying premium?" [width]="200"
           class="text-center">
         </kendo-grid-column>

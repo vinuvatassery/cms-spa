@@ -17,7 +17,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { GridLoaderComponent } from './loader/grid-loader.component';
 import { OptionbuttonListComponent } from './optionbutton-list/optionbutton-list.component';
 import { ReminderNotificationSnackBarComponent } from './reminder-notification-snack-bar/reminder-notification-snack-bar.component';
-import { ReAssignCaseComponent } from './re-assign-case/re-assign-case.component'; 
+import { ReAssignCaseComponent } from './re-assign-case/re-assign-case.component';
 import { SsnPipe } from './pipes/ssn.pipe';
 import { PhonePipe } from './pipes/phone.pipe';
 
@@ -45,6 +45,10 @@ import { PlaceholderDirective } from './directives/placeholder.directive';
 import { FinancialDrugsDetailsComponent } from './financial-drugs-details/financial-drugs-details.component';
 import { FinancialPcaChosenAlertComponent } from './financial-pca-chosen-alert/financial-pca-chosen-alert.component';
 import { NdcCodePipe } from './pipes/ndc-code.pipe';
+import { CmsPharmacyClaimsDetailComponent } from './cms-pharmacy-claims-detail/cms-pharmacy-claims-detail.component';
+import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
+import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboard-loader-panel.component';
+import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -79,11 +83,15 @@ import { NdcCodePipe } from './pipes/ndc-code.pipe';
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
     TinPipe,
-    ReAssignCaseComponent, 
-    PlaceholderDirective, 
+    ReAssignCaseComponent,
+    PlaceholderDirective,
     FinancialDrugsDetailsComponent,
     FinancialPcaChosenAlertComponent,
-    NdcCodePipe
+    NdcCodePipe,
+    DashboardLoaderPanelComponent,
+    CmsPharmacyClaimsDetailComponent,
+    CmsPharmacyClaimsRecentClaimsComponent,
+    TodoDetailComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -117,11 +125,15 @@ import { NdcCodePipe } from './pipes/ndc-code.pipe';
     ReminderNotificationSnackBarComponent,
     VendorDetailsComponent,
     TinPipe,
-    ReAssignCaseComponent, 
-    PlaceholderDirective, 
+    ReAssignCaseComponent,
+    PlaceholderDirective,
     FinancialDrugsDetailsComponent,
     FinancialPcaChosenAlertComponent,
-    NdcCodePipe
+    NdcCodePipe,
+    DashboardLoaderPanelComponent,
+    CmsPharmacyClaimsDetailComponent,
+    CmsPharmacyClaimsRecentClaimsComponent,
+    TodoDetailComponent
   ],
 })
 export class SharedUiCommonModule {}

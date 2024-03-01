@@ -22,6 +22,7 @@ export class WidgetTodayAtAGlanceComponent implements OnInit, OnDestroy {
   todayGlance: any;
   private destroy$ = new Subject<void>();
   @Input() isEditDashboard!: any;
+  @Input() dashboardId! : any 
   @Output() removeWidget = new EventEmitter<string>();
   constructor(private widgetFacade: WidgetFacade , private readonly router: Router,
     private readonly cd: ChangeDetectorRef) {}

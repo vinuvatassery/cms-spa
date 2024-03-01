@@ -54,6 +54,7 @@ export class LovFacade {
   private lovCaseStatusSubject = new BehaviorSubject<Lov[]>([]);
   private lovGroupSubject = new BehaviorSubject<Lov[]>([]);
   private lovCaseStatusTypeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovHealthInsuranceTypeSubject = new BehaviorSubject<Lov[]>([]);
   private lovPriorityCodeSubject = new BehaviorSubject<Lov[]>([]);
   private lovPrioritySubject = new BehaviorSubject<Lov[]>([]);
   private lovOtherEthnicitySubject = new BehaviorSubject<Lov[]>([]);
@@ -90,6 +91,7 @@ export class LovFacade {
   private lovYesOrNoSubject = new BehaviorSubject<Lov[]>([]);
   private pendingApprovalPaymentTypeSubject = new Subject<any>();
   private lovVendorTypeCodeSubject = new Subject<any>();
+  private lovFrequencyTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
 
   private serviceTypeSubject = new Subject<any>();
   private refundTypeSubject = new Subject<any>();
@@ -99,6 +101,7 @@ export class LovFacade {
   private interfaceExceptionSubject = new BehaviorSubject<Lov[]>([]);
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
+  private eventAttachmentTypeLovSubject = new BehaviorSubject<Lov[]>([]);
 
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
@@ -131,6 +134,7 @@ export class LovFacade {
   caseStatusLov$ = this.lovCaseStatusSubject.asObservable();
   groupLov$ = this.lovGroupSubject.asObservable();
   caseStatusType$ = this.lovCaseStatusTypeSubject.asObservable();
+  healthinsuranceType$ = this.lovHealthInsuranceTypeSubject.asObservable();
   priorityCodeType$ = this.lovPriorityCodeSubject.asObservable();
   pharmacyPrioritylov$ = this.lovPrioritySubject.asObservable();
   otherEthnicitylov$ = this.lovOtherEthnicitySubject.asObservable();
@@ -171,12 +175,13 @@ export class LovFacade {
   yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
   deliveryMethodLov$ = this.lovDeliveryMethodSubject.asObservable();
   VendorTypeCodeLov$ = this.lovVendorTypeCodeSubject.asObservable();
+  frequencyTypeCodeSubject$ = this.lovFrequencyTypeCodeSubject.asObservable()  
   lovProofOfIncomeByType$ = this.lovProofOfIncomeByTypeSubject.asObservable();
 
   interfaceExceptionLov$ = this.interfaceExceptionSubject.asObservable();
   BatchInterfaceStatusLov$ = this.BatchInterfaceStatusSubject.asObservable();
   interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
-
+  eventAttachmentTypeLov$ = this.eventAttachmentTypeLovSubject.asObservable();
 
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -476,6 +481,22 @@ export class LovFacade {
           item.lovDesc = item.lovDesc.toUpperCase();
         });
         this.lovCaseStatusSubject.next(filteredLov);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+  gethealthInsuranceTypeLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.HealthInsuranceType).subscribe({
+      next: (lovResponse) => {
+        this.lovHealthInsuranceTypeSubject.next(lovResponse);
+        //const acceptedCaseStatusCodes = Object.values(AcceptedCaseStatusCode)
+        const filteredLov = lovResponse.filter((item: any) => item.lovCode)
+        // filteredLov.forEach((item: any) => {
+        //   item.lovDesc = item.lovDesc.toUpperCase();
+        // });
+        this.lovHealthInsuranceTypeSubject.next(filteredLov);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
@@ -931,6 +952,27 @@ export class LovFacade {
     this.lovDataService.getLovsbyParent(LovType.InterfaceProcessBatch,parentCode).subscribe({
       next: (lovResponse) => {
         this.interfaceProcessBatchSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getFrequencyTypeLov(){
+    this.lovDataService.getLovsbyType(LovType.AlertFrequencyCode).subscribe({
+      next: (lovResponse) => {
+        this.lovFrequencyTypeCodeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+  getEventAttachmentTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.EventAttachemntType).subscribe({
+      next: (lovResponse) => {
+        this.eventAttachmentTypeLovSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)

@@ -21,3 +21,6 @@ export * from './lib/application/direct-message.facade';
 export * from './lib/application/reminder.facade';
 
 /** Enums **/
+export * from './lib/enums/alert-type-code.enum'
+export * from './lib/enums/alert-entity-type-code.enum'
+export * from './lib/enums/alert-frequency-type-code.enum'

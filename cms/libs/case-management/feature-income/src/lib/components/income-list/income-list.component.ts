@@ -1,6 +1,6 @@
 /** Angular **/
 import {
-  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChildren, QueryList
+  Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, ChangeDetectorRef, ViewChildren, QueryList, OnDestroy
 } from '@angular/core';
 /** External Libraries **/
 import { Subject } from 'rxjs/internal/Subject';
@@ -11,6 +11,7 @@ import { DeleteRequest, SnackBar, StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSource, SnackBarNotificationType, } from '@cms/shared/util-core';
 import { DropDownListComponent } from '@progress/kendo-angular-dropdowns';
+import { Subscription } from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'case-management-income-list',
@@ -18,7 +19,7 @@ import { FilterService } from '@progress/kendo-angular-grid';
   styleUrls: ['./income-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class IncomeListComponent implements OnInit {
+export class IncomeListComponent implements OnInit, OnDestroy {
 
   @ViewChildren("proofSchoolDropdownOne") public proofSchoolDropdownOne!: QueryList<DropDownListComponent>; @Input() data!: any;
 
@@ -75,7 +76,10 @@ export class IncomeListComponent implements OnInit {
   sortType: any = 'asc';
   filter!: any;
   public uploadFileRestrictions: UploadFileRistrictionOptions =
-    new UploadFileRistrictionOptions();
+  new UploadFileRistrictionOptions();
+  incomeListSubscription = new Subscription();
+  dependantProofProfilePhoto$ = this.incomeFacade.dependantProofProfilePhotoSubject;
+  incomeListProfilePhoto$ = this.incomeFacade.incomeListProfilePhotoSubject;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
@@ -128,7 +132,7 @@ export class IncomeListComponent implements OnInit {
     private readonly dependentFacade: FamilyAndDependentFacade,
     private readonly cdr: ChangeDetectorRef,
     private caseFacade: CaseFacade,
-    private readonly configurationProvider: ConfigurationProvider) { }
+    private readonly configurationProvider: ConfigurationProvider,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -170,6 +174,10 @@ export class IncomeListComponent implements OnInit {
       }
     })
   }
+
+ngOnDestroy(): void {
+  this.incomeListSubscription?.unsubscribe();
+}
 
   /** Public methods **/
   public onProofSchoolDropdownOneClose(event: any, index: any) {
@@ -368,7 +376,7 @@ export class IncomeListComponent implements OnInit {
   }
 
   loadDependents() {
-    this.incomeFacade.dependentsProofofSchools$.subscribe((response: any) => {
+    this.incomeListSubscription = this.incomeFacade.dependentsProofofSchools$.subscribe((response: any) => {
       if (response && response.length > 0) {
         this.dependentsProofofSchools = response;
         this.cdr.detectChanges();

@@ -92,7 +92,7 @@
     <kendo-grid-column field="batchName" title="Batch #" [width]="180">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
-          (click)="navToBatchDetails(dataItem)">
+          (click)="navToBatchDetails(dataItem)" *ngIf="dataItem.batchName">
           {{ dataItem.batchName }}
         </button>
       </ng-template>
@@ -147,7 +147,7 @@
     <kendo-grid-column *ngIf="userLevel == UserLevel.Level2Value" field="firstApprovalBy" title="First Approval By" [width]="120">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.firstApprovalBy" kendoButton look="flat" class="card-link-button"
-          kendoPopoverAnchor [popover]="userCard" showOn="hover">
+          kendoPopoverAnchor [popover]="userCard" showOn="hover" *ngIf="dataItem.firstApprovalBy">
           {{ dataItem.firstApprovalBy }}
         </button>
         <kendo-popover #userCard width="330" position="left">
@@ -372,7 +372,8 @@
     [userLevel]="userLevel"
     (closeViewPaymentsBatchClickedEvent)="onCloseViewPaymentsBatchClicked()"
     (loadBatchDetailPaymentsListEvent)="onLoadBatchDetailPaymentsList($event)"
-    (batchModalSaveClickedEvent)="onBatchModalSaveClicked($event)"></productivity-tools-approval-batch-lists>
+    (batchModalSaveClickedEvent)="onBatchModalSaveClicked($event)"
+    [approvalPaymentProfilePhoto$]="approvalPaymentProfilePhoto$"></productivity-tools-approval-batch-lists>
 </kendo-dialog>
 
 <ng-template #depositDetailsDialogModal>

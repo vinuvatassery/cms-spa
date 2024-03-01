@@ -7,13 +7,16 @@ import {
   EventEmitter,
   Output,
   OnChanges,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 /** External Libraries **/
 import { State } from '@progress/kendo-data-query';
 /** Internal Libraries **/
 import { ClientEmployer, EmploymentFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-employer-list',
@@ -49,6 +52,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
   public state!: State;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  employerProfilePhoto$ = this.employmentFacade.employerProfilePhotoSubject;
   public actions = [
     {
       buttonType: 'btn-h-primary',
@@ -65,7 +69,7 @@ export class EmployerListComponent implements OnInit, OnChanges {
   ];
 
   /** Constructor **/
-  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade) {}
+  constructor(private readonly employmentFacade: EmploymentFacade,private readonly cdr: ChangeDetectorRef,private caseFacade: CaseFacade,) {}
 
   /** Lifecycle hooks **/
 
@@ -74,7 +78,6 @@ export class EmployerListComponent implements OnInit, OnChanges {
       this.isEmployerAvailable = response;
       this.cdr.detectChanges();
     })
-
   }
 
   ngOnChanges(): void {

@@ -11,7 +11,7 @@ import { SignalrService } from '@cms/shared/util-signalr';
 })
 export class SignalrStatusComponent {
   /** Public properties **/
-  status$ = this.signalrService.signalrNotifications$;
+  status$ = this.signalrService.signalrEvents$;
 
   /** Constructor **/
   constructor(private readonly signalrService: SignalrService) {}

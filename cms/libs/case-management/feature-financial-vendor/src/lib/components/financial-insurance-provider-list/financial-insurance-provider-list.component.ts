@@ -1,15 +1,17 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridFilterParam, VendorInsurancePlanFacade } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { DocumentFacade } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
+import { Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-insurance-provider-list',
   templateUrl: './financial-insurance-provider-list.component.html',
   styleUrls: [],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialInsuranceProviderListComponent implements OnInit  {
+export class FinancialInsuranceProviderListComponent implements OnInit {
   /* Input Properties */
   @Input() vendorId!: string;
 
@@ -34,6 +36,7 @@ export class FinancialInsuranceProviderListComponent implements OnInit  {
   filteredByColumnDesc = '';
   columnChangeDesc = 'Default Columns';
   columnsReordered = false;
+  insuranceVendorProfilePhoto$ = this.vendorInsurancePlanFacade.insuranceVendorProfilePhotoSubject;
 
   public emailBillingAddressActions = [
     {

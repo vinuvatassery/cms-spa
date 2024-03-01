@@ -7,6 +7,7 @@ import {
   Output,
   ChangeDetectorRef,
   ChangeDetectionStrategy,
+  OnDestroy,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {
@@ -14,16 +15,16 @@ import {
   State,
   SortDescriptor
 } from '@progress/kendo-data-query';
-import { Subject, BehaviorSubject, first} from 'rxjs';
+import { Subject, BehaviorSubject, first, Subscription} from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { PendingApprovalPaymentTypeCode } from '@cms/case-management/domain';
-import { UserLevel } from '@cms/system-config/domain';
+import { UserLevel, UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approval-batch-lists',
   templateUrl: './approval-batch-lists.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApprovalBatchListsComponent implements OnInit, OnChanges {
+export class ApprovalBatchListsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() approvalId?: string | null;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -34,6 +35,7 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   @Input() paymentMethodLovList: any;
   @Input() isSendBackMode: any;
   @Input() userLevel: any;
+  @Input() approvalPaymentProfilePhoto$!: any;
   @Output() closeViewPaymentsBatchClickedEvent = new EventEmitter();
   @Output() loadBatchDetailPaymentsListEvent = new EventEmitter<any>();
   @Output() batchModalSaveClickedEvent = new EventEmitter<any>();
@@ -81,8 +83,10 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
   public width = '100%';
   public height = '100%';
   public formUiStyle: UIFormStyle = new UIFormStyle();
+  approvalBatchListSubscription = new Subscription();
+  approvalBatchListProfilePhotoSubject = new Subject();
 
-  constructor(private readonly cd: ChangeDetectorRef) {}
+  constructor(private readonly cd: ChangeDetectorRef,) {}
 
   ngOnInit(): void {
     this.loadColumnsData();
@@ -397,6 +401,10 @@ export class ApprovalBatchListsComponent implements OnInit, OnChanges {
       this.gridBatchDetailPaymentsDataSubject.next(this.batchDetailPaymentsList);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.approvalBatchListSubscription?.unsubscribe();
   }
 
   paymentSelectionDataHandle(){

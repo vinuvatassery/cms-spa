@@ -1,7 +1,8 @@
 <cms-vendor-profile-header
-[vendorProfile$]="vendorProfile$ | async"
+[vendorProfile$]="vendorProfile$"
 [vendorProfileSpecialHandling$]="vendorProfileSpecialHandling$"
-(loadSpecialHandlingEvent)="loadSpecialHandling()"></cms-vendor-profile-header>
+(loadSpecialHandlingEvent)="loadSpecialHandling()"
+(updateRecentlyViewedEvent)="updateRecentlyViewedEvent($event)"></cms-vendor-profile-header>
 
 <section class="vendor-profile-tabs">
   <kendo-tabstrip [scrollable]="{ scrollButtons: uiTabStripScroll.tabStripScroll }" class="app-c-tab case-360-tab" [keepTabContent]="true">
@@ -129,6 +130,7 @@
           [addProviderNew$]="addProviderNew$"
           [vendorName]="vendorName"
           (onProviderNameClickEvent)="onProviderNameClick($event)"
+          [financialClinicProviderProfile$]="financialClinicProviderProfile$"
           ></cms-financial-clinic-provider-list>
           </div>
         </div>
@@ -148,7 +150,7 @@
 
 
    <!-- Event Log Side Panel -->
-   <productivity-tools-event-log   *ngIf="isShownEventLog"  (closeAction)="handleShowEventLogClicked()"
+   <productivity-tools-event-log [entityId] = "vendorId" [entityType] = "'VENDOR'"  [eventAttachmentTypeLov$]="eventAttachmentTypeLov$"   *ngIf="isShownEventLog"  (closeAction)="handleShowEventLogClicked()"
  ></productivity-tools-event-log>
 
  <ng-template #providerDetailsTemplate>

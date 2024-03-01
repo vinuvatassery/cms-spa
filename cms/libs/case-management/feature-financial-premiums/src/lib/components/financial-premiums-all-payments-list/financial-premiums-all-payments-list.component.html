@@ -1,6 +1,6 @@
 <!-- Table Top Filter, Search and Export -->
 
-<p class="mt-2"> Add, edit, or remove premiums as needed. Click “Batch Premiums” when you’re done.</p>
+<p class="mt-2"> Add, edit, or remove premiums as needed. Click "Batch Premiums" when you are done</p>
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
@@ -63,7 +63,7 @@
     <kendo-grid-column field="itemNumber" title="Item #" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.itemNumber" (click)="paymentClickHandler(dataItem)" kendoButton
-                        look="flat" class="card-link-button">
+                        look="flat" class="card-link-button" *ngIf="dataItem.itemNumber">
                         {{ dataItem.itemNumber }}
         </button>
         </ng-template>
@@ -78,7 +78,7 @@
       </ng-template>
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.itemNumber" kendoButton look="flat" class="card-link-button"
-        (click)="onitemNumberClick(dataItem)">
+        (click)="onitemNumberClick(dataItem)" *ngIf="dataItem.itemNumber">
           {{ dataItem.itemNumber }}
         </button>
       </ng-template>
@@ -86,7 +86,7 @@
 
     <kendo-grid-column field="batchNumber" title="Batch #" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button (click)="navToBatchDetails(dataItem)" [attr.aria-label]="dataItem.batchNumber" kendoButton look="flat" class="card-link-button">
+        <button (click)="navToBatchDetails(dataItem)" [attr.aria-label]="dataItem.batchNumber" *ngIf="dataItem.batchNumber" kendoButton look="flat" class="card-link-button">
           {{ dataItem.batchNumber }}
         </button>
       </ng-template>
@@ -100,7 +100,7 @@
     <kendo-grid-column field="providerName" title="Insurance Vendor" [width]="180">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.providerName" kendoButton look="flat" class="card-link-button"
-        (click)="onProviderNameClick(dataItem.paymentRequestId)">
+        (click)="onProviderNameClick(dataItem.paymentRequestId)" *ngIf="dataItem.providerName">
           {{ dataItem.providerName }}
         </button>
       </ng-template>
@@ -137,7 +137,7 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="acceptsReportsFlag" title="Accepts reports" [width]="180">
+    <kendo-grid-column field="acceptsReportsFlag" title="Accepts reports?" [width]="180">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{ dataItem.acceptsReportsFlag === 'Y' ? 'Yes' : 'No' }}
       </ng-template>
@@ -214,15 +214,13 @@
 
     <kendo-grid-column field="creatorId" title="By" [width]="70" [sortable]="false" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-          [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-          <common-user-photo-icon [userId]="dataItem?.creatorId"></common-user-photo-icon>
-        </button>
-        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-          <ng-template kendoPopoverBodyTemplate>
-            <common-user-profile-card [userId]="dataItem?.creatorId"></common-user-profile-card>
-          </ng-template>
-        </kendo-popover>
+        <common-user-photo-icon  
+        [userId]="dataItem.creatorId" 
+        [userFirstName]="dataItem.userFirstName"
+        [userLastName]="dataItem.userLastName"
+        [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+        [linkType]="'profileIcon'"
+        [userPhotos$]="premiumAllPaymentsPremium$"></common-user-photo-icon>
       </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
 
