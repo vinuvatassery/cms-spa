@@ -15,20 +15,8 @@ export class EventDataService {
     private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
-  loadEvents(): Observable<Event[]> {
-    return of([
-      { id: 1, name: 'Lorem ipsum', description: 'Lorem ipsum dolor sit amet' },
-      {
-        id: 2,
-        name: 'At vero eos',
-        description: 'At vero eos et accusam et justo duo dolores',
-      },
-      {
-        id: 3,
-        name: 'Duis autem',
-        description: 'Duis autem vel eum iriure dolor in hendrerit',
-      },
-    ]);
+  loadEvents(params: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/by-entity-id`, params);
   }
 
   loadEventsData() {
