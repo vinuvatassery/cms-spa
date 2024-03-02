@@ -1,16 +1,18 @@
 <div class="interface-chart-cards">
     <h3 class="mb-1">Prescription Fill Loading</h3>
-    <div class="flex-row">
+    <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel>
+
+    <div class="flex-row"   *ngIf="!isloader">
       <div class="flex-col flex-col-8">
 
         <h5> Latest File Received: </h5>
-        <h3> 05/07/2021</h3>
+        <h3>{{prescriptionsFills.lastFileReceived |date : 'shortDate'}}</h3>
 
         <h5> Total Record Received: </h5>
-        <h3> 456</h3>
+        <h3>{{prescriptionsFills.totalFiles}}</h3>
 
         <h5> File Record Failures: </h5>
-        <h3>0</h3>
+        <h3>{{prescriptionsFills.totalRecordExceptions}}</h3>
 
         <div class="mt-2"> <button kendoButton aria-label="View Details" [primary]="true" look="flat"> View Details
           </button></div>

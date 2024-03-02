@@ -60,7 +60,8 @@ export class SystemInterfaceDashboardService {
     });
   }
   getCardsRequestChart(): Observable<any> {
-    return of({
+    return of(
+      {
       component: 'CardsRequest',
       chartData: {
         title: {
@@ -238,5 +239,14 @@ export class SystemInterfaceDashboardService {
 
   getRamsellInterfaceActivity(interfaceTypeCode: string, displayAll: boolean, params:any) {
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/web-logs/${interfaceTypeCode}?displayAll=${displayAll}`, params);
+  }
+  getPrescriptionsFills() {
+    return this.http.get(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/Dashboard/prescrption-fill-records`);
+  }
+  getCardsRequestinfo(days: number, isCardRequest: boolean) {
+    return this.http.get(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/Dashboard/ramsell-clientrecords-sent?days=${days}'&isCardRequest=${isCardRequest}`);
+  }
+  getClientSendCardsinfo(days: number, isCardRequest: boolean) {
+    return this.http.get(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/Dashboard/ramsell-clientrecords-sent?days=${days}'&isCardRequest=${isCardRequest}`);
   }
 }

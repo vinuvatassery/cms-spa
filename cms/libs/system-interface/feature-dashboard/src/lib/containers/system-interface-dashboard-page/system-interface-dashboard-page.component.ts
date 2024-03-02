@@ -14,16 +14,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   selector: 'cms-system-interface-dashboard-page',
   templateUrl: './system-interface-dashboard-page.component.html',
   styleUrls: ['./system-interface-dashboard-page.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
-  // ClientRecordSendChart$ = this.systemInterfaceDashboardFacade.ClientRecordSendChart$;
-  // cardsRequestChart$ = this.systemInterfaceDashboardFacade.cardsRequestChart$;
-  // activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
-  // pageSizes = this.systemInterfaceDashboardFacade.gridPageSizes;
-  // sortValue = this.systemInterfaceDashboardFacade.sortValue;
-  // sortType = this.systemInterfaceDashboardFacade.sortType;
-  // sort = this.systemInterfaceDashboardFacade.sort;
   public state!: State;
   clientRecordSendChart: any;
   cardsRequestChart: any;
@@ -53,7 +45,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     public dashboardContentUpdate$ =    this.dashboardWrapperFacade.dashboardContentUpdate$;
     public userDashBoardsList$ = this.dashboardWrapperFacade.userDashBoardsList$;
     static dashBoardContentData: any = [];
-    dashBoardAllWidgetsData!: any;
+    dashBoardAllWidgetsData: any=[];
     configSubscription!: Subscription;
     dashBoardContentSubscription!: Subscription;
     dashBoardAllWidgetsSubscription!: Subscription;
@@ -175,7 +167,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     }
     else
     {
-    this.dashboardWrapperFacade.getLoggedinUserDashboards('CASE_MANAGEMENT');
+    this.dashboardWrapperFacade.getLoggedinUserDashboards('SYSTEM_INTERFACE');
     }
   }
 
@@ -431,6 +423,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
   }
 
   removeWidget(item: any) {
+    debugger
     this.dashBoardAllWidgetsData.push(item);
 
     SystemInterfaceDashboardPageComponent.dashBoardContentData =
