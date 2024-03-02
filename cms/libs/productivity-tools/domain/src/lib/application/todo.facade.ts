@@ -81,8 +81,8 @@ export class TodoFacade {
     });
   }
 
-  loadTodoGrid(): void {
-    this.todoDataService.loadTodoGrid().subscribe({
+  loadTodoGrid(payload:any): void {
+    this.todoDataService.loadTodoGrid(payload).subscribe({
       next: (todoGridResponse: any) => {
         this.todoGridSubject.next(todoGridResponse);
       },

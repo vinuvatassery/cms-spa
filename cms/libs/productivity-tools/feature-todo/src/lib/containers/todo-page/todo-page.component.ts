@@ -6,7 +6,7 @@ import {
   TemplateRef,
   OnInit,
 } from '@angular/core';
-import { FinancialVendorFacade, SearchFacade, VendorFacade } from '@cms/case-management/domain';
+import { FinancialVendorFacade, SearchFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -61,7 +61,7 @@ export class TodoPageComponent implements OnInit {
     this.isToDODetailsActionOpen = true;
   }
   onloadTodoGrid(event: any){
-    this.todoFacade.loadTodoGrid();
+    this.todoFacade.loadTodoGrid(event);
   }
 
   onTodoItemCreateClick(payload:any){

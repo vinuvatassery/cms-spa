@@ -40,81 +40,8 @@ export class TodoDataService {
     ]);
   }
 
-  loadTodoGrid() {
-    return of([
-      {
-        Title: 'House Inspection',
-        TodoItemFor: 'John Sakariya',
-        Type: 'Client',
-        Description:
-          'Lorem With Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Certification',
-        TodoItemFor: 'David Miller',
-        Type: 'Client',
-        Description: 'Lorem With Custom Template. .',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'House Inspection',
-        TodoItemFor: 'Drill Kole',
-        Type: 'Client',
-        Description: 'Lorem With Custom Template.Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Documentation',
-        TodoItemFor: 'Rock Pedels',
-        Type: 'Client',
-        Description:
-          'Lorem With Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-    ]);
+  loadTodoGrid(payload:any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/GetToDoItemList`,payload);
   }
 
   createTodoItem(payload:any){  
