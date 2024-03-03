@@ -7,6 +7,7 @@ import {
   Output,
   TemplateRef,
 } from '@angular/core'; 
+import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'; 
@@ -23,6 +24,7 @@ export class EventLogComponent implements OnInit {
   @Output() closeAction = new EventEmitter();
 
   /** Public properties **/
+  clientId = 0
   events$ = this.eventLogFacade.events$;
   isShowEventLog = false;
   isOpenEventLogDetails = false;
@@ -57,11 +59,14 @@ export class EventLogComponent implements OnInit {
 
   /** Constructor **/
   
-  constructor(private readonly eventLogFacade: EventLogFacade, private dialogService: DialogService) {}
+  constructor(private readonly eventLogFacade: EventLogFacade, private dialogService: DialogService,
+    private route: ActivatedRoute) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
     this.loadEvents();
+    debugger
+    this.clientId = this.route.snapshot.queryParams['id'];
   }
 
   /** Private methods **/

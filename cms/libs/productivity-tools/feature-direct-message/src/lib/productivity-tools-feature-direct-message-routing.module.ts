@@ -2,13 +2,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DirectMessagePageComponent } from './containers/direct-message-page/direct-message-page.component';
-import { CommonActionsComponent } from './components/common-actions/common-actions.component';
+import { DirectMessageFabComponent } from './containers/direct-message-fab/direct-message-fab.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: CommonActionsComponent,
+    component: DirectMessageFabComponent,
   },
+  {
+    path: 'list',
+    component: DirectMessagePageComponent,
+  },
+ 
 ];
 
 @NgModule({

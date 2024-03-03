@@ -28,7 +28,7 @@
                 "onlyDependOnLibsWithTags": [
                   "domain:case-management",
                   "domain:shared",
-                  "domain:system-config"
+                  "domain:system-config"                 
                 ]
               },
               {

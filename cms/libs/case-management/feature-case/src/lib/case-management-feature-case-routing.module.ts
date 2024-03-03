@@ -12,6 +12,16 @@ const routes: Routes = [
     data: {
       title: null
     }, 
+    children:[
+      {
+        outlet: 'todoReminderList',
+        path: '',
+        loadChildren: () =>
+          import('@cms/productivity-tools/feature-todo').then(
+            (m) => m.ProductivityToolsFeatureTodoModule
+          )   
+      }
+    ]
   },  
   {
     path: 'case360/:id',
@@ -144,8 +154,8 @@ const routes: Routes = [
         outlet: 'commonActions',
         path: '',
         loadChildren: () =>
-          import('@cms/productivity-tools/feature-direct-message').then(
-            (m) => m.ProductivityToolsFeatureDirectMessageModule
+          import('@cms/productivity-tools/feature-fabs-menu').then(
+            (m) => m.ProductivityToolsFeatureFabsMenuModule
           )   
       },
     ]
@@ -156,8 +166,8 @@ const routes: Routes = [
     data: {
       title: null,
     }, 
-  },
-  
+  }
+ 
   
 ];
 

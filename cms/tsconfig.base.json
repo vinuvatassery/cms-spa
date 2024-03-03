@@ -127,6 +127,9 @@
       "@cms/productivity-tools/feature-event-log": [
         "libs/productivity-tools/feature-event-log/src/index.ts"
       ],
+      "@cms/productivity-tools/feature-fabs-menu": [
+        "libs/productivity-tools/feature-fabs-menu/src/index.ts"
+      ],
       "@cms/productivity-tools/feature-home": [
         "libs/productivity-tools/feature-home/src/index.ts"
       ],

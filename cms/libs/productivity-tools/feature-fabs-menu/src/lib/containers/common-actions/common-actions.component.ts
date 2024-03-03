@@ -1,15 +1,16 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
 
 @Component({
-  selector: 'productivity-tools-case-management-common-actions',
+  selector: 'productivity-tools-common-actions',
   templateUrl: './common-actions.component.html',
   styleUrls: ['./common-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommonActionsComponent implements OnInit{
+export class CommonActionsComponent implements OnInit {
   /** Public properties **/
   isShownEventLog = false;
   isShownDirectMessage = false;
@@ -17,9 +18,15 @@ export class CommonActionsComponent implements OnInit{
   clickedContact!: any;
   item: Array<DialItem> = [{}];
 
+  
+  constructor(
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
+
+  ) {}
 
   ngOnInit(): void {
-    debugger
+    debugger;
   }
   /** Internal event methods **/
   onDialItemClicked(event: any): void {
@@ -28,12 +35,15 @@ export class CommonActionsComponent implements OnInit{
 
   /** External event methods **/
   handleShowEventLogClicked() {
+    
     this.isShownEventLog = !this.isShownEventLog;
     this.isShownDirectMessage = false;
     this.isShownTodoReminders = false;
   }
 
   handleShowDirectMessageClicked() {
+ 
+   this.router.navigate([{ outlets: { directMessage: [ 'fabs'] }}]);
     this.isShownDirectMessage = !this.isShownDirectMessage;
     this.isShownEventLog = false;
     this.isShownTodoReminders = false;

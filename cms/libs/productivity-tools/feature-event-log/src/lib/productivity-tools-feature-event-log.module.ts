@@ -9,6 +9,7 @@ import { ProductivityToolsFeatureEventLogRoutingModule } from './productivity-to
 import { EventDetailComponent } from './components/event-detail/event-detail.component';
 import { EventAttachmentComponent } from './components/event-attachment/event-attachment.component';
 import { EventLogComponent } from './components/event-log/event-log.component';
+import { EventLogComponentFabPageComponent } from './containers/event-log-fab-page/event-log-fab-page.component';
 
 @NgModule({
   imports: [
@@ -21,7 +22,9 @@ import { EventLogComponent } from './components/event-log/event-log.component';
     EventLogComponent,
     EventDetailComponent,
     EventAttachmentComponent,
+    EventLogComponentFabPageComponent
   ],
-  exports: [EventLogComponent, EventDetailComponent, EventAttachmentComponent],
+  exports: [EventLogComponent, EventDetailComponent, EventAttachmentComponent,
+    EventLogComponentFabPageComponent],
 })
 export class ProductivityToolsFeatureEventLogModule {}

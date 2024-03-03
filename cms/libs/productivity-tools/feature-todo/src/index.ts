@@ -11,4 +11,5 @@ export * from './lib/components/todo-list/todo-list.component';
 export * from './lib/containers/todo-page/todo-page.component';
 export * from './lib/containers/todo-and-reminders-page/todo-and-reminders-page.component';
 export * from './lib/components/reminder-item/reminder-item.component';
+export * from './lib/containers/todo-and-reminders-fab-page/todo-and-reminders-fab-page.component';
 export * from './lib/components/todo-item/todo-item.component';
