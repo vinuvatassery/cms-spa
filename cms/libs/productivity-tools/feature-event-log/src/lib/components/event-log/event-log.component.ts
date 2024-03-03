@@ -1,6 +1,7 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   OnInit,
@@ -12,6 +13,7 @@ import {
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 
 @Component({
   selector: 'productivity-tools-event-log',
@@ -33,56 +35,83 @@ export class EventLogComponent implements OnInit {
   SubEventList : any = [];
   eventResponseList : any = [];
   events$ = this.eventLogFacade.events$;
-  eventsdata$ = this.eventLogFacade.eventsdata$;
+  events: any = [];
   isShowEventLog = false;
   isOpenEventLogDetails = false;
   isShownSearch = false;
-  isAddEventDialogOpen : any;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  isAddEventDialogOpen: any;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  eventsdata$ = this.eventLogFacade.eventsdata$;
   isSubEvent = false;
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public actions = [
     {
-      buttonType:"btn-h-primary",
-      text: "Sort Ascending",
-      icon: "arrow_upward",
-      click: (): void => {
-      },
+      buttonType: 'btn-h-primary',
+      text: 'Sort Ascending',
+      icon: 'arrow_upward',
+      click: (): void => {},
     },
     {
-      buttonType:"btn-h-primary",
-      text: "Sort Descending",
-      icon: "arrow_downward",
-      click: (): void => {
-      },
+      buttonType: 'btn-h-primary',
+      text: 'Sort Descending',
+      icon: 'arrow_downward',
+      click: (): void => {},
     },
     {
-      buttonType:"btn-h-primary",
-      text: "Filter",
-      icon: "filter_list",
-      click: (): void => {
-      },
+      buttonType: 'btn-h-primary',
+      text: 'Filter',
+      icon: 'filter_list',
+      click: (): void => {},
     },
   ];
+  filterData: any = { logic: 'and', filters: [] };
 
   /** Constructor **/
 
-  constructor(private readonly eventLogFacade: EventLogFacade, private dialogService: DialogService,
-    ) {}
+  constructor(
+    private readonly eventLogFacade: EventLogFacade,
+    private dialogService: DialogService,
+    private cd: ChangeDetectorRef
+  ) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
     this.loadEventsData();
     this.loadEvents();
+    this.subscribeEvents();
     this.getEventList();
   }
 
   /** Private methods **/
   private loadEvents(): void {
-    this.eventLogFacade.loadEvents();
+    this.createFilterData("");
+    const paginationData = {
+      skipCount: 0,
+      pagesize: 10,
+      sortColumn: 'creationTime',
+      sortType: "desc",
+      filter: JSON.stringify(this.filterData),
+    };
+    this.eventLogFacade.loadEvents(paginationData);
   }
 
+  createFilterData(data: string){
+    this.filterData = [
+      {
+        filters: [{ field: 'entityId', operator: 'eq', value: data }],
+        logic: 'and',
+      },
+    ];
+  }
+
+  private subscribeEvents() {
+    this.events$.subscribe((data) => {
+      this.events = data;
+      this.cd.detectChanges();
+    });
+  }
+  
   private loadEventsData()
   {
     this.eventLogFacade.loadEventsData();
@@ -127,4 +156,17 @@ export class EventLogComponent implements OnInit {
       this.isAddEventDialogOpen.close();
     }
   }
+
+  isShowReadMore(elementId: any) {
+    return true;
+      var el = document.getElementById(elementId);
+      var divHeight = el?.offsetHeight
+      //var lineHeight = parseInt(el?.style?.lineHeight?.toString());
+      //var lines = divHeight?? 0 / lineHeight;
+      console.log("Lines: " + el?.style?.lineHeight?.toString());
+  }
+
+  
 }
+
+
