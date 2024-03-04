@@ -76,6 +76,10 @@
   <!-- Event Log Side Panel -->
   <productivity-tools-event-log
     *ngIf="isShownEventLog"
+    [entityId] = "entityId"
+    [clientCaseEligibilityId]="clientCaseEligibilityId"
+    [entityType] = "entityType"
+    [eventAttachmentTypeLov$]="eventAttachmentTypeLov$"
     (closeAction)="handleShowEventLogClicked()"
   ></productivity-tools-event-log>
   <!-- Direct Message Side Panel -->

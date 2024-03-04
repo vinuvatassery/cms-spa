@@ -1,0 +1,54 @@
+{
+  "name": "productivity-tools-feature-notification-snackbar",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/productivity-tools/feature-notification-snackbar/src",
+  "prefix": "cms",
+  "tags": ["domain:productivity-tools", "type:feature"],
+  "projectType": "library",
+  
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": [
+        "{workspaceRoot}/dist/libs/productivity-tools/feature-notification-snackbar"
+      ],
+      "options": {
+        "project": "libs/productivity-tools/feature-notification-snackbar/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": true
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/productivity-tools/feature-notification-snackbar/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/productivity-tools/feature-notification-snackbar/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/productivity-tools/feature-notification-snackbar/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/productivity-tools/feature-notification-snackbar/**/*.ts",
+          "libs/productivity-tools/feature-notification-snackbar/**/*.html"
+        ]
+      }
+    }
+  }
+}
