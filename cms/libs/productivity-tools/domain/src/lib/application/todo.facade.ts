@@ -96,6 +96,20 @@ export class TodoFacade {
     this.loaderService.show()
     this.todoDataService.createTodoItem(payload).subscribe({
       next: (todoGridResponse: any) => {
+        this.loaderService.hide() 
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)    
+      },
+      error: (err) => {
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
+
+  doneTodoItem(alertId:any){
+    this.loaderService.show()
+    this.todoDataService.doneTodoItem(alertId).subscribe({
+      next: (todoGridResponse: any) => {
         this.loaderService.hide()
         this.todoCreateSubject.next(true);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)    
@@ -106,4 +120,6 @@ export class TodoFacade {
       },
     })
   }
+
+  
 }

@@ -47,5 +47,8 @@ export class TodoDataService {
   createTodoItem(payload:any){  
       return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/todo`,payload);
     }
+  doneTodoItem(payload:string){  
+    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/markdone?alertId`,payload);
+  }
   }
 

@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
-import { AlertFrequencyTypeCode } from '@cms/productivity-tools/domain';
+import { AlertFrequencyTypeCode, TodoFacade } from '@cms/productivity-tools/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 /** Facades **/
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -56,33 +56,21 @@ export class TodoListComponent implements OnInit {
   public moreactions = [
     {
       buttonType: 'btn-h-primary',
+      id:'done',
       text: 'Done',
       icon: 'done',
-      click: (): void => {
-        console.log('test');
-        alert('sdfds');
-      },
     },
     {
       buttonType: 'btn-h-primary',
+      id:'edit',
       text: 'Edit',
       icon: 'edit',
-      click: (): void => {
-        if (!this.isToDODetailsActionOpen) {
-          this.onOpenTodoDetailsClicked();
-        }
-      },
     },
     {
       buttonType: 'btn-h-danger',
+      id:'del',
       text: 'Delete',
       icon: 'delete',
-      click: (): void => {
-        if (!this.isToDODeleteActionOpen) {
-          this.isToDODeleteActionOpen = true;
-          this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
-        }
-      },
     },
   ]; 
   
@@ -91,6 +79,7 @@ export class TodoListComponent implements OnInit {
     private dialogService: DialogService,
     private configurationProvider: ConfigurationProvider,
     private readonly router: Router,
+    public todoFacade: TodoFacade,
   ) {}
 
   /** Lifecycle hooks **/
@@ -169,8 +158,6 @@ export class TodoListComponent implements OnInit {
     return FinancialVendorProviderTabCode;
   }
     onToDoClicked(gridItem: any) {
-      debugger;
-      alert(JSON.stringify(gridItem))
       if (gridItem && gridItem.entityTypeCode == "CLIENT") {
         this.router.navigate([`/case-management/cases/case360/${gridItem?.entityId}`]);
       }
@@ -205,19 +192,24 @@ export class TodoListComponent implements OnInit {
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
     this.loadTodoGrid();
-    // if(stateData.filter?.filters.length > 0)
-    // {
-    //   let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
-    //   this.filter = stateFilter.value;
-    //   this.isFiltered = true;
-    //   const filterList = []
-    //   for(const filter of stateData.filter.filters)
-    //   {
-    //     filterList.push(this.columns[filter.filters[0].field]);
-    //   }
-    //   this.filteredBy =  filterList.toString();
-    // }
-    
   }
-
+  onToDoActionClicked(item: any,gridItem: any){
+    alert(JSON.stringify(gridItem));
+    if(item.id == 'done'){
+      this.onDoneTodoItem(gridItem.alertId);
+    }else if(item.id == 'edit'){ 
+      if (!this.isToDODetailsActionOpen) {
+          this.onOpenTodoDetailsClicked();
+        }
+    }
+    else if(item.id == 'del'){ 
+      if (!this.isToDODeleteActionOpen) {
+          this.isToDODeleteActionOpen = true;
+          this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
+        }
+    }
+  }
+  onDoneTodoItem(payload:any){
+    this.todoFacade.doneTodoItem(payload);
+  }
 }
