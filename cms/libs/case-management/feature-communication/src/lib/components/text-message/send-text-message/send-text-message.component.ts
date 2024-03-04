@@ -21,6 +21,9 @@ export class SendTextMessageComponent implements OnInit {
   /** Input properties **/
   @Input() data!: any;
   @Input() ddlMessageRecipients$!: Observable<any>;
+  @Input() isContinueDraftClicked!: boolean;
+  @Input() isNewNotificationClicked!: boolean;
+  @Input() notificationDratId!: string;
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();

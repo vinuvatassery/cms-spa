@@ -38,6 +38,9 @@ export class SendLetterComponent implements OnInit {
   @Input() isCerForm!: any;
   @Input() vendorId!: string;
   @Input() screenName!: any;
+  @Input() isContinueDraftClicked!: boolean;
+  @Input() isNewNotificationClicked!: boolean;
+  @Input() notificationDratId!: string;
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
@@ -92,7 +95,12 @@ export class SendLetterComponent implements OnInit {
     this.getLoggedInUserProfile();
     if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.loadMailCodes();
+      if(this.isContinueDraftClicked){
       this.loadClientAndVendorDraftLetterTemplates();
+      }
+      if(this.isNewNotificationClicked){
+        this.openNewLetterClicked();
+      }
     }
     else {
       this.vendorContactFacade.loadMailCodes(this.vendorId);
@@ -338,6 +346,24 @@ export class SendLetterComponent implements OnInit {
       });
   }
 
+  openNewLetterClicked(){
+    this.loaderService.show();
+    this.communicationFacade.deleteNotificationDraft(this.notificationDratId)
+        .subscribe({
+          next: (data: any) =>{
+          if (data === true) {
+            this.loadDropdownLetterTemplates();
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+        },
+      });
+  }
+
   onSendLetterToPrintClicked() {
     this.isNewLetterClicked=true;
     this.isShowSendLetterToPrintPopupClicked=true;
@@ -410,15 +436,16 @@ export class SendLetterComponent implements OnInit {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
     },
   });
-}else{
-      this.selectedTemplate = event;
-      this.handleLetterEditor(event);
-      this.isOpenLetterTemplate=true;
-      this.ref.detectChanges();
-      this.openDdlLetterEvent.emit();
-      this.loadMailingAddress();
-      this.ref.detectChanges();
- }
+}
+// else{
+//       this.selectedTemplate = event;
+//       this.handleLetterEditor(event);
+//       this.isOpenLetterTemplate=true;
+//       this.ref.detectChanges();
+//       this.openDdlLetterEvent.emit();
+//       this.loadMailingAddress();
+//       this.ref.detectChanges();
+//  }
 }
 
   private saveDraftLetterTemplate(draftTemplate: any) {

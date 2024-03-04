@@ -23,8 +23,11 @@ export enum CommunicationEventTypeCode {
     DentalProviderEmail="DENTAL_PROVIDER_EMAIL",
     ClientEmail="CLIENT_EMAIL",
     ClientLetter="CLIENT_LETTER",
-    CliewntSMS="CLIENT_SMS",
+    ClientSMS="CLIENT_SMS",
     VendorEmail="VENDOR_EMAIL",
     VendorLetter="VENDOR_LETTER",
-    VendorSMS="VENDOR_SMS"
+    VendorSMS="VENDOR_SMS",
+    EMAIL="EMAIL",
+    LETTER="Letter",
+    SMS="Sms"
   }

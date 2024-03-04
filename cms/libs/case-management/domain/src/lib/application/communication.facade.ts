@@ -218,7 +218,7 @@ saveClientAndVendorNotificationForLater(formData: FormData) {
 }
 
 updateSavedClientandVendorEmailTemplate(formData: FormData) {
-  return this.emailDataService.updateEmailNotificationForLater(formData);
+  return this.emailDataService.saveEmailNotificationForLater(formData);
 }
 
 loadDraftNotificationRequest(entityId: string, typeCode: string) {

@@ -158,25 +158,19 @@ export class EmailDataService {
 
     sendClientAndVendorEmail(formData: FormData) {
         return this.http.post<any>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications`,formData
+          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/email`,formData
         );
     }
 
     saveEmailNotificationForLater(formData: FormData) {
       return this.http.post<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/save-for-later`,formData
-      );
-    }
-
-    updateEmailNotificationForLater(formData: FormData){
-      return this.http.put(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications`,formData
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/draft`,formData
       );
     }
 
     getDraftNotification(entityId: string, typeCode: string) {
       return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${entityId}/${typeCode}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/draft?entityId=${entityId}&typeCode=${typeCode}`
       );
     }
 
@@ -192,9 +186,9 @@ export class EmailDataService {
       );
     }
 
-    deleteNotificationDraft(notificationDraftId: any) {
+    deleteNotificationDraft(id: any) {
       return this.http.delete(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${notificationDraftId}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${id}`
       );
     }
 }

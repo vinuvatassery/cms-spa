@@ -1,9 +1,8 @@
-<kendo-dialog-titlebar (close)="onCloseSendEmailClicked()">Send New Email </kendo-dialog-titlebar>
 <kendo-dialog
   *ngIf="isOpenSendEmailClicked"
   (close)="onCloseSendEmailClicked()"
   class="app-c-modal app-c-modal-lg app-c-modal-np"
-  title="Send New Email "
+  title="Send New Email"
 >
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
@@ -22,22 +21,6 @@
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
-      <div #notificationDraftDialogTemplate *ngIf="isDraftExists">
-      <kendo-dialog-titlebar (close)="closeDraftDailogCloseClicked()"> Draft Already Exist </kendo-dialog-titlebar>
-      <section class="k-dialog-body break-word">
-        <p class="text-muted mb-1"> A draft version of a letter is already exist. Do you want to edit the existing draft? </p>
-      </section>
-      <kendo-dialog-actions>
-        <div class="justify-content-between">
-          <div class="justify-content-end">
-            <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="closeDraftDailogCloseClicked()">
-              Cancel </button>
-              <button kendoButton class="k-primary-button" [primary]="true" aria-label="Remove" (click)="openNewEmailClicked()">New Letter </button>
-              <button kendoButton class="k-primary-button" [primary]="true" aria-label="Remove" (click)="continueWithDraftClicked()">Continue Editing </button>
-          </div>
-        </div>
-      </kendo-dialog-actions>
-    </div>
       <div *ngIf="isOpenDdlEmailDetails">
         <div class="flex-col">
           <kendo-floatinglabel text="To" class="inline-search-loader">
@@ -136,7 +119,7 @@
     </div>
   </kendo-dialog-actions>
 
-<!-- Save for Latter (Email Draft) Modal -->
+<!-- Save for Later (Email Draft) Modal -->
 <kendo-dialog (close)="onCloseSaveForLaterClicked()"
   *ngIf="isShowSaveForLaterPopupClicked"
   class="app-c-modal app-c-modal-sm app-c-modal-np"
@@ -165,7 +148,7 @@
 </kendo-dialog>
 
 <!-- Email Preview Modal -->
-<kendo-dialog (close)="onClosePreviewEmail()"
+<kendo-dialog
   *ngIf="isShowPreviewEmailPopupClicked"
   (close)="onClosePreviewEmail()"
   class="app-c-modal app-c-modal-lg app-c-modal-np no-title-actions"
@@ -202,7 +185,7 @@
   </kendo-dialog-actions>
 </kendo-dialog>
 
-<!-- Sene Email ConfirmationModal -->
+<!-- Send Email Confirmation Modal -->
 <kendo-dialog
   *ngIf="isShowSendEmailConfirmationPopupClicked"
   (close)="onSendEmailDailougeConfirmationClicked()"

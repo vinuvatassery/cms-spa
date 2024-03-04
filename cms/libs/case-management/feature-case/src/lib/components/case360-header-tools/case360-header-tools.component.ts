@@ -1,10 +1,11 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef,} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef, ChangeDetectorRef, ViewChild,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { CommunicationEventTypeCode, CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
+import { CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, ContactFacade, ScreenType } from '@cms/case-management/domain';
 import { Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'case-management-case360-header-tools',
   templateUrl: './case360-header-tools.component.html',
@@ -18,6 +19,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   @Input() loadedClientHeader: any;
   @Input() clientCaseId: any;
   /* Public properties */ 
+  @ViewChild('notificationDraftEmailDialog', { read: TemplateRef })
+  notificationDraftEmailDialog!: TemplateRef<any>;
   screenName = ScreenType.ClientProfile;
   emailScreenName = ScreenType.Case360PageEmail; 
   letterScreenName = ScreenType.Case360PageLetter; 
@@ -35,16 +38,23 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   reloadSubscription$ = new Subscription();
   buttonList!: any[];
   isFirstLoad = false;
+  isNewNotificationClicked: boolean = false;
+  isContinueDraftClicked: boolean = false;
   emailCommunicationEmailTypeCode = CommunicationEventTypeCode.ClientEmail;
   letterCommunicationEmailTypeCode = CommunicationEventTypeCode.ClientLetter;
-  smsCommunicationEmailTypeCode = CommunicationEventTypeCode.CliewntSMS;
+  smsCommunicationEmailTypeCode = CommunicationEventTypeCode.ClientSMS;
+  notificationGroup!: string;
   toEmail: Array<string> = [];
+  currentCommunicationTypeCode!: string;
+  selectedTemplateName!: TemplateRef<unknown>;
+  notificationDratId!: string;
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
   private isSendNewLetterDialog : any;
   private isSendNewEmailOpenedDialog : any;
   private isNewSMSTextOpenedDialog : any;
   private isIdCardOpenedDialog : any;  
+  private isDraftNotificationOpenedDialog: any;
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -53,7 +63,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       isVisible: true,
       id: 'new_letter',
       click: (templatename: any): void => {
-        this.onSendNewLetterClicked(templatename);
+        this.selectedTemplateName = templatename;
+        this.currentCommunicationTypeCode = this.letterCommunicationEmailTypeCode;
+        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
       },
     },
     {
@@ -63,7 +75,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       id: 'new_email',
       isVisible: false,
       click: (templatename: any): void => {
-        this.onSendNewEmailClicked(templatename);
+        this.selectedTemplateName = templatename;
+        this.currentCommunicationTypeCode = this.emailCommunicationEmailTypeCode;
+        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
       },
     },
     {
@@ -73,7 +87,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       id: 'new_sms_text',
       isVisible: false,
       click: (templatename: any): void => {
-        this.onNewSMSTextClicked(templatename);
+        this.selectedTemplateName = templatename;
+        this.currentCommunicationTypeCode = this.emailCommunicationEmailTypeCode;
+        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
       },
     },
     {
@@ -90,7 +106,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   /* constructor */
   constructor(private readonly contactFacade: ContactFacade, private readonly route: ActivatedRoute, 
-    private dialogService: DialogService) {
+    private dialogService: DialogService, private readonly communicationFacade: CommunicationFacade,
+    private readonly loaderService: LoaderService, private readonly loggingService: LoggingService,
+    private readonly ref: ChangeDetectorRef,) {
   }
   ngOnDestroy(): void {
     this.emailSubscription$.unsubscribe();
@@ -140,7 +158,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   /* Internal Methods */
- 
 
   onSendNewLetterClicked(template: TemplateRef<unknown>): void {
     this.isSendNewLetterDialog = this.dialogService.open({ 
@@ -160,6 +177,14 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     }); 
   }
+
+  onDraftNotificationExistsConfirmation(notificationDraftEmailDialog: TemplateRef<unknown>): void {
+    this.isDraftNotificationOpenedDialog = this.dialogService.open({
+      content: notificationDraftEmailDialog, 
+      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+    }); 
+  }
+
   handleSendNewEmailClosed(value: CommunicationEvents) {
     if (value === CommunicationEvents.Close) {
       this.isSendNewEmailOpened = false;
@@ -173,12 +198,14 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
     }); 
   }
+
   handleNewSMSTextClosed(value: CommunicationEvents) {
     if (value === CommunicationEvents.Close) {
       this.isNewSMSTextOpenedDialog.close();
       this.isNewSMSTextOpened = false;
     }
   }
+
   onIdCardClicked(template: TemplateRef<unknown>): void {
     this.isIdCardOpenedDialog = this.dialogService.open({
       title: 'Send New ID Card',
@@ -186,6 +213,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
     }); 
   }
+
   handleIdCardClosed(result: any) {
     if(result){
       this.isIdCardOpened = false;
@@ -217,6 +245,51 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
     }); 
   }
 
+  notificationDraftCheck(clientId: any, typeCode: string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
+    this.loaderService.show();
+    this.communicationFacade.loadDraftNotificationRequest(clientId, typeCode)
+    .subscribe({
+      next: (data: any) =>{
+        if (data?.length > 0) {
+          for (let template of data){
+            this.notificationDratId = template.notificationDraftId;
+           }
+          if(typeCode == CommunicationEventTypeCode.ClientEmail){
+            this.notificationGroup = CommunicationEventTypeCode.EMAIL;
+          }
+          if(typeCode == CommunicationEventTypeCode.ClientLetter){
+            this.notificationGroup = CommunicationEventTypeCode.LETTER;
+          }
+          if(typeCode === CommunicationEventTypeCode.ClientSMS){
+            this.notificationGroup = CommunicationEventTypeCode.SMS;
+          }
+          this.onDraftNotificationExistsConfirmation(notificationDraftEmailDialog);
+          this.ref.detectChanges();
+        }else{
+          this.loadNotificationTemplates(this.currentCommunicationTypeCode, templateName);
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.contactFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    },
+  });
+  }
+
+  loadNotificationTemplates(typeCode: string, templateName: TemplateRef<unknown>) {
+    if(typeCode == CommunicationEventTypeCode.ClientEmail){
+      this.onSendNewEmailClicked(templateName);
+    }
+    if(typeCode == CommunicationEventTypeCode.ClientLetter){
+      this.onSendNewLetterClicked(templateName);
+    }
+    if(typeCode === CommunicationEventTypeCode.ClientSMS){
+      this.onNewSMSTextClicked(templateName);
+    }
+  }
+
   loadMailingAddress() {
     this.contactFacade.loadMailingAddress(this.clientId);
   }
@@ -227,5 +300,23 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   loadEmailAddress() {
     this.contactFacade.loadEmailAddress(this.clientId, this.clientCaseEligibilityId);
+  }
+
+  onDraftNotificationCloseClicked(result: any) {
+    if (result === CommunicationEvents.Close) {
+      this.isDraftNotificationOpenedDialog.close();
+    }
+  }
+
+  onNewNotificationClicked(){
+    this.isNewNotificationClicked = true;
+    this.isContinueDraftClicked = false;
+    this.loadNotificationTemplates(this.currentCommunicationTypeCode, this.selectedTemplateName);
+  }
+
+  onContinueDraftClicked(){
+    this.isContinueDraftClicked = true;
+    this.isNewNotificationClicked = false;
+    this.loadNotificationTemplates(this.currentCommunicationTypeCode, this.selectedTemplateName);
   }
 }
