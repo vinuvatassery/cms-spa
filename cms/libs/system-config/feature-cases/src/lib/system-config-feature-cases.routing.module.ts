@@ -7,6 +7,10 @@ import { EligibilityCheckPageComponent } from './containers/eligibility-check-pa
 
 const routes: Routes = [
   {
+    path: ' ',
+    component: CaseAssignmentPageComponent,
+  },
+  {
     path: 'case-assignment',
     component: CaseAssignmentPageComponent,
   },
@@ -14,14 +18,10 @@ const routes: Routes = [
     path: 'eligibility-checklist',
     component: EligibilityCheckPageComponent,
   },
-  {
-    path: '',
-    redirectTo: 'case-assignment',
-    pathMatch: 'full',
-  },
+ 
 ];
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule, RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
 export class SystemConfigFeatureCasesRoutingModule {}

@@ -27,8 +27,8 @@ const routes: Routes = [
     ],
   },
   {
-    path: 'roles-and-permissions-detail',
-    component: RolesAndPermissionsDetailComponent,
+    path: 'users',
+    component: UserManagementPageComponent,
   },
 ];
 
