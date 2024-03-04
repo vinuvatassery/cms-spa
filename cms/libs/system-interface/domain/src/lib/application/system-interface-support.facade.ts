@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
 import { SystemInterfaceSupportService } from '../infrastructure/system-interface-support.service';
 import { SnackBarNotificationType, NotificationSource, LoaderService, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -14,7 +14,7 @@ export class SystemInterfaceSupportFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortType = 'asc';
 
-  public sortValueSupportGroup = 'invoiceID';
+  public sortValueSupportGroup = 'groupName';
   public sortSupportGroupList: SortDescriptor[] = [{
     field: this.sortValueSupportGroup,
   }];
@@ -30,17 +30,17 @@ export class SystemInterfaceSupportFacade {
   }];
 
   private supportGroupSubject = new Subject<any>();
+  public supportGroup$ = this.supportGroupSubject.asObservable();
 
-  public supportGroup$ =
-    this.supportGroupSubject.asObservable();
+
   private distributionListsSubject = new Subject<any>();
-  public distributionLists$ =
-    this.distributionListsSubject.asObservable();
-  private notificationCategoryListSubject = new Subject<any>();
-  notificationCategoryLists$ =
-    this.notificationCategoryListSubject.asObservable();
+  public distributionLists$ = this.distributionListsSubject.asObservable();
 
- 
+  private notificationCategoryListSubject = new Subject<any>();
+  notificationCategoryLists$ = this.notificationCategoryListSubject.asObservable();
+
+  private addSupportGroupSubject = new Subject<any>();
+  addSupportGroup$ = this.addSupportGroupSubject.asObservable();
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: NotificationSource = NotificationSource.API) {
     if (type === SnackBarNotificationType.ERROR) {
@@ -52,7 +52,7 @@ export class SystemInterfaceSupportFacade {
   }
 
   /** Constructor**/
-  constructor(private SystemInterfaceSupportService: SystemInterfaceSupportService,
+  constructor(private systemInterfaceSupportService: SystemInterfaceSupportService,
     private readonly loaderService: LoaderService,
     private configurationProvider: ConfigurationProvider,
     private loggingService: LoggingService,
@@ -68,14 +68,13 @@ export class SystemInterfaceSupportFacade {
     this.loaderService.hide();
   }
 
- 
 
-  loadSupportGroup() {
-    this.SystemInterfaceSupportService.getSupportGroup().subscribe({
+
+  loadSupportGroup(paginationParameters: any) {
+    this.systemInterfaceSupportService.getSupportGroupList(paginationParameters).subscribe({
       next: (response) => {
         this.supportGroupSubject.next(response);
       },
-
       error: (err) => {
         console.error('err', err);
       },
@@ -83,7 +82,7 @@ export class SystemInterfaceSupportFacade {
   }
 
   loadDistributionLists() {
-    this.SystemInterfaceSupportService.getDistributionLists().subscribe({
+    this.systemInterfaceSupportService.getDistributionLists().subscribe({
       next: (response) => {
         this.distributionListsSubject.next(response);
       },
@@ -93,8 +92,8 @@ export class SystemInterfaceSupportFacade {
       },
     });
   }
-  loadNotificationCategory () {
-    this.SystemInterfaceSupportService.loadNotificationCategoryServices().subscribe({
+  loadNotificationCategory() {
+    this.systemInterfaceSupportService.loadNotificationCategoryServices().subscribe({
       next: (response) => {
         this.notificationCategoryListSubject.next(response);
       },
@@ -105,9 +104,20 @@ export class SystemInterfaceSupportFacade {
     });
   }
 
-   
+  addSupportGroup(notificationGroup: any) {
+    return this.systemInterfaceSupportService.addSupportGroup(notificationGroup);
+  }
 
- 
-   
+  supportGroupAdded(): Observable<any>  {
+    return this.addSupportGroupSubject.asObservable();
+  }
+
+  addSupportGroupData(dto: any): Observable<any> {
+    return this.systemInterfaceSupportService.addSupportGroup(dto).pipe(
+      tap((response: any) => {
+        this.addSupportGroupSubject.next(response);
+      }),
+    );
+  }
 
 }

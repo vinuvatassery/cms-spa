@@ -9,6 +9,7 @@ import {
   Output,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
@@ -16,6 +17,7 @@ import {
   CompositeFilterDescriptor,
   filterBy,
 } from '@progress/kendo-data-query';
+import { LovFacade } from 'libs/system-config/domain/src/lib/application/lov.facade';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'system-interface-support-group',
@@ -28,6 +30,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   isSupportGroupDeactivatePopupShow = false;
   isSupportGroupDeletePopupShow = false;
   isSupportGroupDeleteConfirmationPopupShow = false;
+  addSupportGroup$ = this.systemInterfaceSupportFacade.addSupportGroup$;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isSupportGroupGridLoaderShow = false;
@@ -38,7 +41,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() SupportGroupGridLists$: any;
   @Output() loadSupportGroupListEvent = new EventEmitter<any>();
   public state!: State;
-  sortColumn = 'vendorName';
+  sortColumn = 'groupName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
@@ -89,15 +92,18 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       },
     },
   ];
-
+  interfaceSupportGroupLov = this.lovFacade.interfaceSupportGroupLov$;
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
+    private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
+    private dialogService: DialogService,
+    private readonly lovFacade: LovFacade
   ) {}
 
   ngOnInit(): void {
     this.loadSupportGroupListGrid();
+    this.lovFacade.getInterfaceSupportGroupLovs();
   }
   ngOnChanges(): void {
     this.state = {
@@ -131,6 +137,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       sortType: sortTypeValue,
     };
     this.loadSupportGroupListEvent.emit(gridDataRefinerValue);
+    debugger;
     this.gridDataHandle();
   }
 
@@ -143,7 +150,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'vendorName',
+              field: this.selectedColumn ?? 'groupName',
               operator: 'startswith',
               value: data,
             },
@@ -236,5 +243,17 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   onCloseSupportGroupDeleteConfirmationClicked(){
     this.isSupportGroupDeleteConfirmationPopupShow = false;
 
+  }
+
+  addSupportGroup(data: any): void {
+    this.systemInterfaceSupportFacade.addSupportGroup(data).subscribe(() => {
+      // After adding the drug, refresh the grid data or perform any other action
+      //this.loadSupportGroupListGrid();
+      
+      // Emit an event to notify other parts of the application that a drug has been added
+      // this.systemInterfaceSupportFacade.supportGroupAdded().subscribe(() => {
+      //   // Handle the drug added event here
+      // });
+    });
   }
 }

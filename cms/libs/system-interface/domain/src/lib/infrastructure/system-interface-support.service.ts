@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ConfigurationProvider } from '@cms/shared/util-core'; 
+import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class SystemInterfaceSupportService {
   constructor(private readonly http: HttpClient,
-    private configurationProvider : ConfigurationProvider) {}
+    private configurationProvider: ConfigurationProvider) { }
 
   getSupportGroup(): Observable<any> {
     return of([
@@ -18,7 +18,7 @@ export class SystemInterfaceSupportService {
         perGroup: 'MM/DD/YYYY',
         lastModified: 'MM/DD/YYYY',
         status: 'Failed',
-        
+
       },
       {
         id: 2,
@@ -44,7 +44,7 @@ export class SystemInterfaceSupportService {
         lastModified: 'MM/DD/YYYY',
         status: 'Failed',
       },
-      
+
     ]);
   }
   getDistributionLists(): Observable<any> {
@@ -53,31 +53,31 @@ export class SystemInterfaceSupportService {
         id: 1,
         email: 'McKesson@email.com',
         firstName: 'Fname',
-        lastName: 'Lname', 
-        status: 'Failed', 
+        lastName: 'Lname',
+        status: 'Failed',
       },
       {
         id: 2,
         email: 'McKesson@email.com',
         firstName: 'Fname',
-        lastName: 'Lname', 
-        status: 'Failed', 
+        lastName: 'Lname',
+        status: 'Failed',
       },
       {
         id: 3,
         email: 'McKesson@email.com',
         firstName: 'Fname',
-        lastName: 'Lname', 
-        status: 'Failed', 
+        lastName: 'Lname',
+        status: 'Failed',
       },
       {
         id: 4,
         email: 'McKesson@email.com',
         firstName: 'Fname',
-        lastName: 'Lname', 
-        status: 'Failed', 
+        lastName: 'Lname',
+        status: 'Failed',
       },
-      
+
     ]);
   }
 
@@ -88,7 +88,7 @@ export class SystemInterfaceSupportService {
         notificationCategory: 'McKesson',
         description: 'Order',
         status: 'MM/DD/YYYY',
-        
+
       },
       {
         id: 2,
@@ -108,9 +108,17 @@ export class SystemInterfaceSupportService {
         description: 'Order',
         status: 'MM/DD/YYYY',
       },
-      
+
     ]);
   }
 
-  
+
+  addSupportGroup(notificationGroup: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/support-group`, notificationGroup);
+  }
+
+  getSupportGroupList(paginationParameters: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/support-group/support-group-list`, paginationParameters);
+  }
+
 }

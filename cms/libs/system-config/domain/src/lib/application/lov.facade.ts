@@ -99,6 +99,7 @@ export class LovFacade {
   private interfaceExceptionSubject = new BehaviorSubject<Lov[]>([]);
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
+  private interfaceSupportGroupSubject = new BehaviorSubject<Lov[]>([]);
 
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
@@ -176,6 +177,7 @@ export class LovFacade {
   interfaceExceptionLov$ = this.interfaceExceptionSubject.asObservable();
   BatchInterfaceStatusLov$ = this.BatchInterfaceStatusSubject.asObservable();
   interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
+  interfaceSupportGroupLov$ = this.interfaceSupportGroupSubject.asObservable();
 
 
   /** Public methods **/
@@ -916,6 +918,17 @@ export class LovFacade {
     this.lovDataService.getLovsbyType(LovType.BatchInterface).subscribe({
       next: (relationsResponse) => {
         this.batchInterfaceActivityLogSubject.next(relationsResponse);
+      },
+
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+  getInterfaceSupportGroupLovs(): void {
+    this.lovDataService.getLovsbyType(LovType.BatchInterface).subscribe({
+      next: (relationsResponse) => {
+        this.interfaceSupportGroupSubject.next(relationsResponse);
       },
 
       error: (err) => {

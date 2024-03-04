@@ -8,6 +8,7 @@ import { SupportGroupComponent } from './components/support-group/support-group.
 import { DistributionListsComponent } from './components/distribution-lists/distribution-lists.component';
 import { NotificationCategoryComponent } from './components/notification-category/notification-category.component'
 import { SystemInterfaceFeatureInterfaceSupportRoutingModule } from './system-interface-feature-interface-support.routing.module';
+import { SupportGroupDetailComponent } from './components/support-group-detail/support-group-detail.component';
 
 @NgModule({
   imports: [
@@ -21,12 +22,14 @@ import { SystemInterfaceFeatureInterfaceSupportRoutingModule } from './system-in
     SupportGroupComponent,
     DistributionListsComponent,
     NotificationCategoryComponent,
+    SupportGroupDetailComponent
   ],
   exports: [
     InterfaceSupportPageComponent,
     SupportGroupComponent,
     DistributionListsComponent,
     NotificationCategoryComponent,
+    SupportGroupDetailComponent
   ],
 })
 export class SystemInterfaceFeatureInterfaceSupportModule {}
