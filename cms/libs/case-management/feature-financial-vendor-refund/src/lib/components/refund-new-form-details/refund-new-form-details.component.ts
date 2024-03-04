@@ -1,8 +1,8 @@
-import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy, ElementRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State } from '@progress/kendo-data-query';
 import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, ServiceTypeCode } from '@cms/case-management/domain';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject, debounceTime, takeUntil } from 'rxjs';
 import {  VendorRefundInsurancePremiumListComponent } from '@cms/case-management/feature-financial-vendor-refund';
@@ -143,7 +143,9 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
     public contactFacade: ContactFacade,
     public financialVendorFacade :FinancialVendorFacade,
     private dialogService: DialogService,
-    private formBuilder: FormBuilder) {}
+    private formBuilder: FormBuilder,
+    private readonly elementRef: ElementRef,
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade) {}
   ngOnDestroy(): void {
 
     this.ngUnsubscribe.next();
@@ -477,12 +479,21 @@ onAddRefundClick(){
   if (this.selectedRefundType === 'PHARMACY') {
     this.addNewRefundRx();
   }
-  if(this.selectedRefundType === ServiceTypeCode.insurancePremium){
-      this.insuraceAddRefundClickSubject.next(true);
+  if (this.selectedRefundType === ServiceTypeCode.insurancePremium) {
+    if (this.refundRXForm.invalid) {
+      this.scrollToValidationError();
+      return;
+    }
+    this.insuraceAddRefundClickSubject.next(true);
   }
-  if(this.selectedRefundType === ServiceTypeCode.tpa){
-     this.tpaAddRefundClickSubject.next(true)
+  if (this.selectedRefundType === ServiceTypeCode.tpa) {
+    if (this.refundRXForm.invalid) {
+      this.scrollToValidationError();
+      return;
+    }
+    this.tpaAddRefundClickSubject.next(true)
   }
+
 }
 
 addTpa(event:any){
@@ -782,7 +793,8 @@ addNewRefundRx() {
 
     let selectedpharmacyClaims = this.selectedVendorRefundsList.reduce((result:any, obj:any) => result.concat(obj.prescriptionFillItems), []);
     let InValidSelectedRefundPharmacyClaimInput = selectedpharmacyClaims.filter((x:any)=> x.qtyRefundedValid == false || x.daySupplyRefundedValid == false || x.refundedAmountValid == false)
-    if ((this.refundRXForm.invalid && !this.isEdit) || InValidSelectedRefundPharmacyClaimInput.length >0) {
+    if ((this.refundRXForm.invalid) || InValidSelectedRefundPharmacyClaimInput.length >0) {
+      this.scrollToValidationError();
       return;
     } else {
       let selectedpharmacyClaimsDto = selectedpharmacyClaims.map((obj : any)=>
@@ -846,6 +858,13 @@ addNewRefundRx() {
       }
     }
 
+}
+scrollToValidationError(){
+  const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.refundRXForm, this.elementRef.nativeElement,null);
+  if (invalidControl) {
+    invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    invalidControl.focus();
+  }
 }
 onRefundNoteValueChange(event: any) {
   this.refundNoteValueLength = event.length

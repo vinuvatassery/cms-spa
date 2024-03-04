@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input, ElementRef } from '@angular/core';
 import {
   ClientProfile, ClientFacade, Client,
   ClientCaseEligibility, ClientPronoun, ClientGender,
@@ -8,6 +8,7 @@ import {
   PronounCode, TransGenderCode, ApplicantInfo,
   CaseFacade
 } from '@cms/case-management/domain';
+import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
 import { MaterialFormat, YesNoFlag } from '@cms/shared/ui-common';
 
 import { FormGroup, Validators } from '@angular/forms';
@@ -40,12 +41,14 @@ export class ClientReadOnlyViewComponent implements OnInit{
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
   constructor(
+      private readonly elementRef: ElementRef,
       private loaderService: LoaderService,
       private loggingService: LoggingService,
       private clientFacade: ClientFacade,
       private caseFacade: CaseFacade,
       private intl: IntlService,
-      private configurationProvider: ConfigurationProvider){}
+      private configurationProvider: ConfigurationProvider,
+      private scrollFocusValidationfacade: ScrollFocusValidationfacade){}
    /** Lifecycle hooks **/
  ngOnInit(): void {
   this.loadReadOnlyClientInfoEvent.emit()
@@ -223,6 +226,11 @@ export class ClientReadOnlyViewComponent implements OnInit{
     }
     else {
       this.loaderService.hide();
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.appInfoForm, this.elementRef.nativeElement,null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
+      }
       return of(false);
     }
   }
