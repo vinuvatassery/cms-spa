@@ -41,7 +41,7 @@ export class TodoListComponent implements OnInit {
   gridToDoItemData$ = this.gridTodoDataSubject.asObservable();
   dateFormat= this.configurationProvider.appSettings.dateFormat
   isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
-
+  selectedAlertId:string="";
   sortValue ="alertDueDate"; 
   sortColumn = 'alertDueDate';
   sortDir = 'Ascending';
@@ -86,7 +86,7 @@ export class TodoListComponent implements OnInit {
   ngOnInit(): void {
     this.toDoGridState = {
       skip: 0,
-      take: 5,
+      take: 10,
       sort: this.sort,
     };
     this.loadColumnsData();
@@ -108,7 +108,7 @@ export class TodoListComponent implements OnInit {
   private loadTodoGrid() { 
     this.loadTodoGridData(
       this.toDoGridState.skip?? 0,
-      this.toDoGridState.take?? 5,
+      this.toDoGridState.take?? 10,
       this.toDoGridState?.sort![0]?.field ?? this.sortValue,
       this.toDoGridState?.sort![0]?.dir ?? 'asc',
     )
@@ -149,6 +149,16 @@ export class TodoListComponent implements OnInit {
     if (result) {
       this.isToDODeleteActionOpen = false;
       this.deleteToDoDialog.close();
+    }
+  }
+  async onDeleteToDOClicked(result: any) 
+  {
+    if (result) {
+      this.isToDODeleteActionOpen = false;
+      this.deleteToDoDialog.close();
+      let res = await this.todoFacade.deleteTodoItem(this.selectedAlertId);
+      if(res==1)
+        this.loadTodoGrid();
     }
   }
   public get alertFrequencyTypes(): typeof AlertFrequencyTypeCode {
@@ -193,10 +203,11 @@ export class TodoListComponent implements OnInit {
     this.filter = stateData?.filter?.filters;
     this.loadTodoGrid();
   }
-  onToDoActionClicked(item: any,gridItem: any){
-    alert(JSON.stringify(gridItem));
+  async onToDoActionClicked(item: any,gridItem: any){ 
     if(item.id == 'done'){
-      this.onDoneTodoItem(gridItem.alertId);
+      let res = await this.onDoneTodoItem(gridItem.alertId);
+      if(res==1)
+        this.loadTodoGrid();
     }else if(item.id == 'edit'){ 
       if (!this.isToDODetailsActionOpen) {
           this.onOpenTodoDetailsClicked();
@@ -205,11 +216,12 @@ export class TodoListComponent implements OnInit {
     else if(item.id == 'del'){ 
       if (!this.isToDODeleteActionOpen) {
           this.isToDODeleteActionOpen = true;
+          this.selectedAlertId = gridItem.alertId;
           this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
         }
     }
   }
   onDoneTodoItem(payload:any){
-    this.todoFacade.doneTodoItem(payload);
+    return this.todoFacade.doneTodoItem(payload);
   }
 }

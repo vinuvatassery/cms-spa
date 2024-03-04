@@ -9,10 +9,15 @@ import { Component, Input, Output,ChangeDetectionStrategy, EventEmitter } from '
 })
 export class DeleteTodoConfirmationComponent {
   @Output() isModalDeleteTodoCloseClicked = new EventEmitter();
+  @Output() isModalDeleteTodoClicked = new EventEmitter();
   @Input() userinfo: any;
 
   onCloseDeleteToDOClicked() 
   {
     this.isModalDeleteTodoCloseClicked.emit(true);
+  }
+  onDeleteToDOClicked() 
+  {
+    this.isModalDeleteTodoClicked.emit(true);
   }
 }

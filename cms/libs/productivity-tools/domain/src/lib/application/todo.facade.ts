@@ -106,20 +106,45 @@ export class TodoFacade {
     })
   }
 
-  doneTodoItem(alertId:any){
-    this.loaderService.show()
-    this.todoDataService.doneTodoItem(alertId).subscribe({
-      next: (todoGridResponse: any) => {
-        this.loaderService.hide()
-        this.todoCreateSubject.next(true);
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)    
-      },
-      error: (err) => {
-        this.loaderService.hide()
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      },
-    })
+    doneTodoItem(alertId:any):any {
+      return new Promise((resolve,reject) =>{
+        this.loaderService.show()
+        this.todoDataService.doneTodoItem(alertId).subscribe({
+          next: (todoGridResponse: any) => {
+            this.loaderService.hide()
+            this.todoCreateSubject.next(true);
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
+            resolve(true)
+            return  todoGridResponse.status;
+          },
+          error: (err) => {
+            this.loaderService.hide()
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+            resolve(false)
+          },
+        })
+      })
   }
+
+  deleteTodoItem(alertId:any):any {
+    return new Promise((resolve,reject) =>{
+      this.loaderService.show()
+      this.todoDataService.deleteTodoItem(alertId).subscribe({
+        next: (todoGridResponse: any) => {
+          this.loaderService.hide()
+          this.todoCreateSubject.next(true);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
+          resolve(true)
+          return  todoGridResponse.status;
+        },
+        error: (err) => {
+          this.loaderService.hide()
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          resolve(false)
+        },
+      })
+    })
+}
 
   
 }
