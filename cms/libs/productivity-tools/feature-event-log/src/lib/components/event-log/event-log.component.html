@@ -47,7 +47,7 @@
         aria-label="more actions"
         [popupSettings]="{ popupClass: popupClassAction, animate: true }"
       >
-      
+
       <span class="material-icons" aria-label="More option"> more_vert    </span>
       <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
         <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
@@ -95,7 +95,7 @@
               kendoButton
               class="k-icon-button small-i-btn add-sub-button"
               title="New sub-event"
-              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, true)"
+              (click)="onOpenEventDetailsClicked(eventDetailsDialogTemplate, true, eventLog.eventLogId, eventLog.eventId)"
               aria-label="New sub-event"
             >
               <span
@@ -122,7 +122,7 @@
                   <span class="items-head_info-user">{{subEventLog.createdBy}}</span>
                 </p>
               </div>
-              <div class="items-body">                
+              <div class="items-body">
                 <span [id]="subEventLog.eventLogId" class="items-body_details text-ellipsis">{{subEventLog.eventLogDesc}}</span>
                 <span class="text-primary text-underline c-pointer" *ngIf="isShowReadMore(subEventLog.eventLogId)">Read More</span>
               </div>
@@ -137,6 +137,6 @@
 <!-- Add Event Modal Html-->
 <ng-template #eventDetailsDialogTemplate>
 
-  <kendo-dialog-titlebar  (close)="onCloseEventDetailsClicked($event)"> {{isSubEvent?  'Add Sub-Event' : 'Add Event'  }}</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar  (close)="onCloseEventDetailsClicked(false)"> {{isSubEvent?  'Add Sub-Event' : 'Add Event'  }}</kendo-dialog-titlebar>
   <productivity-tools-event-detail  [isSubEvent]="isSubEvent" [parentEventLogId]="parentEventLogId"  [eventList]="isSubEvent ? SubEventList : eventList"  [entityId] = "entityId" [clientCaseEligibilityId]="clientCaseEligibilityId" [entityType] = "entityType"  [eventAttachmentTypeLov$]="eventAttachmentTypeLov$" [eventsdata$]="eventsdata$"  (closeEventDetailsClickedEmitter)="onCloseEventDetailsClicked($event)"></productivity-tools-event-detail>
 </ng-template>

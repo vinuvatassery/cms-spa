@@ -33,7 +33,7 @@ export class EventLogComponent implements OnInit {
   @Input() clientCaseEligibilityId: any;
 
   /** Public properties **/
- 
+
   clientId = 0;
   parentEventLogId: any;
   eventList: any = [];
@@ -47,8 +47,8 @@ export class EventLogComponent implements OnInit {
   isAddEventDialogOpen: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   eventsdata$ = this.eventLogFacade.eventsdata$;
- 
- 
+
+
   isSubEvent = false;
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -86,13 +86,15 @@ export class EventLogComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.entityType = 'CLIENT';
-    this.eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$;
     this.loadEventsData();
+    if(this.entityType =='CLIENT')
+    {
+      this.clientId =   this.route.snapshot.queryParams['id'];
+      this.clientCaseEligibilityId = this.route.snapshot.queryParams['cid'];
+      this.entityId = this.clientId.toString();
+    };
+    this.eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$
     this.loadEvents();
-    this.clientCaseEligibilityId = this.route.snapshot.queryParams['cid'];
-   this.clientId =   this.route.snapshot.queryParams['id'];
-    this.entityId = this.clientId.toString();
     this.subscribeEvents();
     this.getEventList();
     this.lovFacade.getEventAttachmentTypeLov();
@@ -100,7 +102,7 @@ export class EventLogComponent implements OnInit {
 
   /** Private methods **/
   private loadEvents(): void {
-    this.createFilterData('');
+    this.createFilterData(this.entityId);
     const paginationData = {
       skipCount: 0,
       pagesize: 10,
@@ -175,8 +177,9 @@ export class EventLogComponent implements OnInit {
   }
   onCloseEventDetailsClicked(data: any) {
     if (data) {
-      this.isAddEventDialogOpen.close();
+      this.loadEvents();
     }
+    this.isAddEventDialogOpen.close();
   }
 
   isShowReadMore(elementId: any) {
