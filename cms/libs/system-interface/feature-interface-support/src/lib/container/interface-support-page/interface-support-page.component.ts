@@ -33,10 +33,6 @@ export class InterfaceSupportPageComponent {
 
   constructor(
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute,
-    private readonly cdr: ChangeDetectorRef,
-    private loggingService: LoggingService,
   ) {}
 
 

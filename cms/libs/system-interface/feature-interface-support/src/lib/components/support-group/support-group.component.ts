@@ -54,6 +54,17 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  searchColumnList: { columnName: string, columnDesc: string }[] = [
+    {
+      columnName: 'ALL',
+      columnDesc: 'All Columns'
+    },
+    {
+      columnName: "groupName",
+      columnDesc: "Group Name"
+    },
+  ]
+
   public gridMoreActionsSupport = [
     {
       buttonType: 'btn-h-primary',
@@ -131,7 +142,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.isSupportGroupGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
+      maxResultCount: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
     };
@@ -141,7 +152,6 @@ export class SupportGroupComponent implements OnInit, OnChanges {
 
   onChange(data: any) {
     this.defaultGridState();
-
     this.filterData = {
       logic: 'and',
       filters: [
@@ -149,7 +159,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
           filters: [
             {
               field: this.selectedColumn ?? 'groupName',
-              operator: 'startswith',
+              operator: 'contains',
               value: data,
             },
           ],
@@ -167,7 +177,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
-      filter: { logic: 'and', filters: [] },
+      filter: { logic: 'and', filters: [] }
     };
   }
 
@@ -249,12 +259,12 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   addSupportGroup(data: any): void {
     this.systemInterfaceSupportFacade.addSupportGroup(data).subscribe(() => {
       // After adding the drug, refresh the grid data or perform any other action
-      //this.loadSupportGroupListGrid();
+      this.loadSupportGroupListGrid();
       
       // Emit an event to notify other parts of the application that a drug has been added
-      // this.systemInterfaceSupportFacade.supportGroupAdded().subscribe(() => {
-      //   // Handle the drug added event here
-      // });
+      this.systemInterfaceSupportFacade.supportGroupAdded().subscribe(() => {
+        // Handle the drug added event here
+      });
     });
   }
 }

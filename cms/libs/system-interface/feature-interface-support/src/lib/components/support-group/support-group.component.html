@@ -1,8 +1,10 @@
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
-      <kendo-dropdownlist aria-label="All Columns" [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc"
-        valueField="columnCode">
+      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc" aria-label="All Columns" 
+      [fillMode]="formUiStyle.dropDownFillMode"
+      textField="columnDesc"
+      valueField="columnName"  [data]="searchColumnList">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
   </span>
@@ -17,19 +19,26 @@
 </section>
 
 <h3 >Support Group</h3>
-<p >Select a Group in the table below to view assigned Users and Error Categories</p>
+<p >Select a Group in the table below to view assigned Users and Notification Categories</p>
 
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="isSupportGroupGridLoaderShow" [pageSize]="state.take" [pageable]="true"
-    [sortable]="false" [skip]="state.skip" [groupable]="false" [sort]="state.sort" [columnMenu]="false"
-    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
+  <kendo-grid [resizable]="true" [loading]="isSupportGroupGridLoaderShow" [pageSize]="state.take"
+  [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [filter]="state.filter" [resizable]="true"
+  [columnMenu]="{ filter: true }" [sort]="state.sort" 
+  (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"  (columnReorder)="onColumnReorder($event)"
     [data]="gridSupportGroupData$ | async">
-    <kendo-grid-column field="interface" title="Interface" [width]="120" [sortable]="false">
+    <kendo-grid-column field="groupCode" title="Interface" [width]="100" [sortable]="true">
     </kendo-grid-column>
-    <kendo-grid-column field="groupName" title="Group Name" [width]="140"> </kendo-grid-column>
+    <kendo-grid-column field="groupName" title="Group Name" [width]="120"> </kendo-grid-column>
+    <kendo-grid-column field="groupDesc" title="Group Name" [width]="140"> </kendo-grid-column>
     <kendo-grid-column field="perGroup" title="User Per Group" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="status" title="Status" [width]="80"> </kendo-grid-column>
-    <kendo-grid-column field="lastModified" title="Last Modified" [width]="80" class="text-center">
+    <kendo-grid-column field="activeFlag" title="Status" [width]="80"> </kendo-grid-column>
+    <kendo-grid-column field="lastModificationTime" title="Last Modified" [width]="80">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.lastModificationTime | date: 'MM/dd/yyyy'}}
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="modifiedBy" title="Modified By" [width]="80" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
           [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.modifiedBy">
@@ -44,7 +53,7 @@
         </kendo-popover>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
+    <kendo-grid-column field="Option" title="Option" [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="gridMoreActionsSupport" 
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
@@ -105,50 +114,10 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>Add Group</kendo-dialog-titlebar>
 
-  <section class="k-dialog-body">
-    <p class="text-muted">
-      Adds a user to the Group list for the selected role
-    </p>
-    <div class="flex-row">
+  <support-group-detail [interfaceSupportGroupLov]="interfaceSupportGroupLov" [addSupportGroup$]="addSupportGroup$"
+  (addSupportGroupEvent)="addSupportGroup($event)" (close)="onCloseGroupDetailPopupClicked()"> </support-group-detail>
 
-      <div class="flex-col">
-        <kendo-floatinglabel text="Interface"> 
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"> </kendo-dropdownlist> 
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col ">
-        <kendo-floatinglabel text="Group Name">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-          </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col ">
-        <kendo-floatinglabel text="Description">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-          </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-
-
-    </div>
-  </section>
-
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-          (click)="onCloseGroupDetailPopupClicked()">
-          Cancel
-        </button>
-        <button kendoButton [primary]="true" aria-label="Add">
-          Add
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
 </kendo-dialog>
-
-
 
 
 <kendo-dialog *ngIf="isSupportGroupDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
