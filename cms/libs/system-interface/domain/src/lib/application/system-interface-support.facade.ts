@@ -128,7 +128,24 @@ export class SystemInterfaceSupportFacade {
   }
 
   addSupportGroup(notificationGroup: any) {
-    return this.systemInterfaceSupportService.addSupportGroup(notificationGroup);
+
+    this.systemInterfaceSupportService.addSupportGroup(notificationGroup).subscribe(
+      {
+        next: (response: any) => {
+          this.hideLoader();
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+          this.addSupportGroupSubject.next(response);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      }
+    );
+    //return this.systemInterfaceSupportService.addSupportGroup(notificationGroup).subscribe();
   }
 
   supportGroupAdded(): Observable<any>  {

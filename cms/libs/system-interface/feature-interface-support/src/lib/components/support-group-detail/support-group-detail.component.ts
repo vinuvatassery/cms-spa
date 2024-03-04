@@ -93,17 +93,12 @@ export class SupportGroupDetailComponent implements OnInit {
 
     if (this.notiificationGroupForm.valid) {
       let finalData = this.mapFormValues();
-      this.showLoader();
+      //this.showLoader();
       this.addSupportGroupEvent.emit(finalData)
-      debugger;
       this.addSupportGroup$
         .subscribe((addResponse: any) => {
-          debugger;
           if (addResponse) {
             this.onCancelClick();
-            let notificationMessage = addResponse.message;
-            this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
-            this.hideLoader();
             this.notiificationGroupForm.reset();
             this.isValidateForm = false;
             this.cd.detectChanges();

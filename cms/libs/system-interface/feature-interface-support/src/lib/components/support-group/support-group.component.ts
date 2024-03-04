@@ -259,14 +259,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   }
 
   addSupportGroup(data: any): void {
-    this.systemInterfaceSupportFacade.addSupportGroup(data).subscribe(() => {
-      // After adding the drug, refresh the grid data or perform any other action
-      this.loadSupportGroupListGrid();
-      
-      // Emit an event to notify other parts of the application that a drug has been added
-      this.systemInterfaceSupportFacade.supportGroupAdded().subscribe(() => {
-        // Handle the drug added event here
-      });
-    });
+    this.systemInterfaceSupportFacade.addSupportGroup(data);
+    this.loadSupportGroupListGrid();
   }
 }
