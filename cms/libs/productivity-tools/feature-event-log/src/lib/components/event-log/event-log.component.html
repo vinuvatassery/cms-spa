@@ -88,6 +88,18 @@
             <p class="items-head_label">{{eventLog.eventDesc}}</p>
             <p class="items-head_info">
               {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by <span class="items-head_info-user">{{eventLog.createdBy}}</span>
+              <common-user-photo-icon  
+              [userId]="eventLog.creatorId" 
+              [userFirstName]="'Fn'"
+              [userLastName]="'LN'"
+              [reassign]=true
+              [clientName]="'CN'"
+              [clientCaseId]="'CID'"
+              [userProfilePhotoExists]="'false'"
+              [linkType]="'profileIcon'"
+              [userPhotos$]=""
+              [position]="'bottom'"
+              [callout]="false"></common-user-photo-icon>
             </p>
           </div>
           <div class="items-body">
