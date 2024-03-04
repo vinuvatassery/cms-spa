@@ -16,7 +16,7 @@ import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Lov, LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
+import { State } from '@progress/kendo-data-query';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -52,27 +52,6 @@ export class EventLogComponent implements OnInit {
 
   isSubEvent = false;
   // actions: Array<any> = [{ text: 'Action' }];
-  popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  public actions = [
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Sort Ascending',
-      icon: 'arrow_upward',
-      click: (): void => {},
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Sort Descending',
-      icon: 'arrow_downward',
-      click: (): void => {},
-    },
-    {
-      buttonType: 'btn-h-primary',
-      text: 'Filter',
-      icon: 'filter_list',
-      click: (): void => {},
-    },
-  ];
   filterData: any = { logic: 'and', filters: [] };
 
   isShowFilter = false;
@@ -336,7 +315,7 @@ export class EventLogComponent implements OnInit {
 
   loadEventLogs()
   {
-    this. setFiltersForDataQuery();
+    this.setFiltersForDataQuery();
     const gridDataRefinerValue = {
       skipCount: 0,
       pagesize: 10,
