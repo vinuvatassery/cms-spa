@@ -69,13 +69,14 @@
 
 <!-- New ID Card Modal Html-->
 <ng-template #sendNewIDcardDialog>
-  <case-management-send-id-card [mailingAddress$]="mailingAddress$" (closeSendIdEvent)="handleIdCardClosed($event)"
+  <case-management-send-id-card [mailingAddress$]="mailingAddress$"
+  (closeSendIdEvent)="handleIdCardClosed($event)"
   (loadInitialData)="loadMailingAddress()" kendoTooltip></case-management-send-id-card>
 </ng-template>
 
 
 <!-- New SMS Text Modal Html-->
 <ng-template #sendTextMessageDialog>
-<case-management-send-text-message [data]="smsScreenName" [ddlMessageRecipients$] ="phoneNumbers$"
+<case-management-send-text-message [ddlMessageRecipients$] ="phoneNumbers$" [notificationGroup]="screenName" [entityId]="clientId"
   (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" kendoTooltip></case-management-send-text-message>
 </ng-template>

@@ -7,12 +7,13 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 /** Entities **/
 import { Email } from '../entities/email';
+import { SmsNotification } from '../entities/sms-notification';
 
 @Injectable({ providedIn: 'root' })
 export class EmailDataService {
   /** Constructor**/
   constructor(private readonly http: HttpClient,
-    private configurationProvider: ConfigurationProvider) {}
+    private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadEmails(): Observable<Email[]> {
@@ -85,111 +86,120 @@ export class EmailDataService {
     ]);
   }
 
+  loadNotificationTemplates(groupCode: string, categoryCode: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${groupCode}/${categoryCode}/templates`
+    );
+  }
+
   loadEmailTemplates(groupCode: string, categoryCode: string) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${groupCode}/${categoryCode}/templates`
     );
   }
 
-  loadCERAuthorizationEmailVariables(lovType:string) {
+  sendSms(smsNotification: SmsNotification) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/sms`, smsNotification);
+  }
+
+  loadCERAuthorizationEmailVariables(lovType: string) {
     return this.http.get(
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${lovType}/variables`
     );
   }
 
   replaceAndGenerateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
-      return this.http.post<string>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&vendorId=${vendorId}`,selectedTemplate
-      );
-    }
+    return this.http.post<string>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&vendorId=${vendorId}`, selectedTemplate
+    );
+  }
 
-    loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${clientId}/${clientCaseEligibilityId}/${templateId}`
-        , {
-          responseType: 'blob'
-        });
-    }
+  loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${clientId}/${clientCaseEligibilityId}/${templateId}`
+      , {
+        responseType: 'blob'
+      });
+  }
 
-    sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
-      return this.http.post(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&vendorId=${vendorId}`, selectedTemplate,
-        {responseType: 'blob'}
-      )
-    }
+  sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&vendorId=${vendorId}`, selectedTemplate,
+      { responseType: 'blob' }
+    )
+  }
 
-    saveEmailForLater(draftTemplate: any){
-      return this.http.post<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates`,draftTemplate
-      );
-    }
+  saveEmailForLater(draftTemplate: any) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates`, draftTemplate
+    );
+  }
 
-    getClientDocumentsViewDownload(clientDocumentId: string) {
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${clientDocumentId}/content`
-        , {
-          responseType: 'blob'
-        });
-    }
+  getClientDocumentsViewDownload(clientDocumentId: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/documents/${clientDocumentId}/content`
+      , {
+        responseType: 'blob'
+      });
+  }
 
-    getTemplateAttachment(typeCode: string){
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates`
-      );
-    }
+  getTemplateAttachment(typeCode: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates`
+    );
+  }
 
-    getDraftTemplateAttachment(esignRequestId: string){
-      return this.http.get(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?esignRequestId=${esignRequestId}`,
-      );
-    }
+  getDraftTemplateAttachment(esignRequestId: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign?esignRequestId=${esignRequestId}`,
+    );
+  }
 
-    getCCEmailListForCER(clientId: number, loginUserId: string){
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/${loginUserId}`,
-      );
-    }
+  getCCEmailListForCER(clientId: number, loginUserId: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/${loginUserId}`,
+    );
+  }
 
-    getLetterAttachment(templateId: string, typeCode: string){
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates?templateId=${templateId}`
-      );
-    }
+  getLetterAttachment(templateId: string, typeCode: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/${typeCode}/templates?templateId=${templateId}`
+    );
+  }
 
-    sendClientAndVendorEmail(formData: FormData) {
-        return this.http.post<any>(
-          `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications`,formData
-        );
-    }
+  sendClientAndVendorEmail(formData: FormData) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications`, formData
+    );
+  }
 
-    saveEmailNotificationForLater(formData: FormData) {
-      return this.http.post<any>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/save-for-later`,formData
-      );
-    }
+  saveEmailNotificationForLater(formData: FormData) {
+    return this.http.post<any>(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/save-for-later`, formData
+    );
+  }
 
-    updateEmailNotificationForLater(formData: FormData){
-      return this.http.put(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications`,formData
-      );
-    }
+  updateEmailNotificationForLater(formData: FormData) {
+    return this.http.put(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications`, formData
+    );
+  }
 
-    getDraftNotification(entityId: string, typeCode: string) {
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${entityId}/${typeCode}`
-      );
-    }
+  getDraftNotification(entityId: string, typeCode: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${entityId}/${typeCode}`
+    );
+  }
 
-    loadEmailTemplateById(templateId: string) {
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${templateId}`
-      );
-    }
+  loadEmailTemplateById(templateId: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${templateId}`
+    );
+  }
 
-    loadClientVendorDefaultAttachmentById(templateId: any) {
-      return this.http.get(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${templateId}/attachments`
-      );
-    }
+  loadClientVendorDefaultAttachmentById(templateId: any) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${templateId}/attachments`
+    );
+  }
 }
- 

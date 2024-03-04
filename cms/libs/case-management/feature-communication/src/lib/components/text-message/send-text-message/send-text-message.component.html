@@ -10,9 +10,10 @@
           <kendo-dropdownlist
           [fillMode]="formUiStyle.dropDownFillMode"
             [data]="ddlTemplates"
-            textField="value"
-            valueField="key"
-            (valueChange)="handleDdlTextMessageValueChange()"
+            textField="description"
+            valueField="documentTemplateId"
+            [(ngModel)]="documentTemplate"
+            (valueChange)="handleDdlTextMessageValueChange($event)"
           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
@@ -28,12 +29,13 @@
             [data]="phoneNumbers"
             textField="formattedPhoneNbr"
             valueField="phoneNbr"
+            [(ngModel)]="messageRecipient"
           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div class="flex-col mb-2" *ngIf="isOpenMessageTemplate">
-        <case-management-text-message-editor></case-management-text-message-editor>
+        <case-management-text-message-editor [templateContent] ="templateContent" ></case-management-text-message-editor>
       </div>
     </div>
   </section>
@@ -128,7 +130,7 @@
         <button
           kendoButton
           [primary]="true"
-          (click)="onCloseSendMessageConfirmClicked()"
+          (click)="onSendMessagesClick()"
           aria-label="Send"
         >
           Send

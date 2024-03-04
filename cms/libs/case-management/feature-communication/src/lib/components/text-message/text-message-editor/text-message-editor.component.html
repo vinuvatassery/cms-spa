@@ -86,12 +86,13 @@
       <kendo-textarea
       [fillMode]="formUiStyle.inputFillMode"
         name="Message Description"
-        [rows]="2"
+        [rows]="6"
         [cols]="40"
         [maxlength]="tareaMessageMaxLength"
-        [value]="item.description"
+        [value]="templateContent"
         [id]="item.id"
         (valueChange)="onMessageValueChange($event, item.id)"
+        [(ngModel)]="item.description"
         aria-label="message description"
       >
       <kendo-textarea-suffix class="justify-content-end"> <span  class="counter">  {{ item.wordCount }}/{{ tareaMessageMaxLength }} </span> </kendo-textarea-suffix>

@@ -8,6 +8,7 @@ import { Email } from '../entities/email';
 import { EmailDataService } from '../infrastructure/email.data.service';
 import { CommunicationEvents } from '../enums/communication-event.enum';
 import { LoggingService} from '@cms/shared/util-core';
+import { SmsNotification } from '../entities/sms-notification';
 
 @Injectable({ providedIn: 'root' })
 export class CommunicationFacade {
@@ -82,6 +83,16 @@ export class CommunicationFacade {
         this.loggingService.logException(err);
       },
     });
+  }
+
+  loadNotificationTemplates(groupCode: string, categoryCode: string) {
+    return this.emailDataService.loadEmailTemplates(
+      groupCode, categoryCode
+    );
+  }
+
+  sendSms(smsNotification: SmsNotification){
+    return this.emailDataService.sendSms(smsNotification);
   }
 
   loadEmailTemplates(groupCode: string, categoryCode: string) {

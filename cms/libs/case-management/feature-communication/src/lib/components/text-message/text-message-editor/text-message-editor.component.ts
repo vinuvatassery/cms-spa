@@ -5,6 +5,9 @@ import {
   HostListener,
   ViewChild,
   ElementRef,
+  Input,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 @Component({
@@ -14,6 +17,12 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TextMessageEditorComponent {
+  /** Input properties **/
+  @Input() templateContent!: string;
+
+    /** Output properties **/
+  @Output() messageContentChangedEvent = new EventEmitter<any>();
+
   /** Public properties **/
   @ViewChild('anchor') public anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef }) public popup!: ElementRef;
@@ -28,6 +37,7 @@ export class TextMessageEditorComponent {
       wordCount: 0,
     },
   ];
+  messages!: string[];
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Private methods **/
@@ -81,6 +91,9 @@ export class TextMessageEditorComponent {
         message.wordCount = event.length;
       }
     });
+
+    this.messages = this.tareaMessages.map(user => user.description);
+    this.messageContentChangedEvent.emit(this.messages);
   }
 
   onSearchClosed() {
