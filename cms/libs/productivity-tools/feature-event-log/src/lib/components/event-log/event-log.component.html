@@ -38,42 +38,76 @@
           >search</span
         >
       </button>
-      <kendo-dropdownbutton
-        [data]="actions"
-
-        title="More option"
-        class="TableActionPopup app-dropdown-action more_action_wid"
-        buttonClass="k-icon-button"
-        aria-label="more actions"
-        [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-      >
-
-      <span class="material-icons" aria-label="More option"> more_vert    </span>
-      <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-        <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-          <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-          <label>   {{ dataItem.text }} </label>
-      </button>
-    </ng-template>
-  </kendo-dropdownbutton>
-      <kendo-dropdownbutton [data]="actions" title="More option"
-        class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
-        aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+      <button kendoButton [primary]="true" class="c-default" kendoPopoverAnchor [popover]="eventFilterCard"
+        showOn="click" aria-label="More">
         <span class="material-icons" aria-label="More option"> more_vert </span>
-        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-          <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-            aria-hidden="false" (click)="dataItem.click">
-            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
-            <label> {{ dataItem.text }} </label>
-          </button>
+      </button>
+      <kendo-popover #eventFilterCard [width]="300" position="bottom">
+        <ng-template kendoPopoverBodyTemplate>
+          <div class="event-filters">
+            <button kendoButton look="flat" aria-label="Sort Ascending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('Asc')">
+              <span class="material-icons" aria-hidden="true" aria-label="Sort Ascending">arrow_upward</span>
+              <label> Sort Ascending </label>
+            </button>
+            <button kendoButton look="flat" aria-label="Sort Descending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('desc')">
+              <span class="material-icons" aria-hidden="true" aria-label="Sort Descending">arrow_downward</span>
+              <label> Sort Descending </label>
+            </button>
+            <button kendoButton look="flat" aria-label="Filter" class="btn-h-primary" aria-hidden="false"
+              (click)="isShowFilter = !isShowFilter">
+              <span class="material-icons" aria-hidden="true" aria-label="Filter">filter_list</span>
+              <label> Filter </label>
+            </button>
+          </div>
+          <div class="p-2 event-filters-field" *ngIf="isShowFilter" [formGroup]="eventLogFilterForm">
+            <kendo-floatinglabel class="mb-1" text="Case Worker">
+              <kendo-dropdownlist aria-label="Case Worker" [fillMode]="formUiStyle.dropDownFillMode" formControlName="caseworkerfilterbyoperator"
+             [data]="operators" textField="text" valueField="value" [valuePrimitive]="true" placeholder="Case Worker">
+              </kendo-dropdownlist>
+              <kendo-textbox aria-label="Case Worker" [clearButton]="true" *ngIf="eventLogFilterForm.controls['caseworkerfilterbyoperator'].value.length > 0"  
+                formControlName="caseworkerfilterbyvalue" rounded="medium" [fillMode]="formUiStyle.inputFillMode"
+                (valueChange)="onChange('CASEWORKER')">
+              </kendo-textbox>
+            </kendo-floatinglabel>
+            <kendo-floatinglabel class="mb-1" text="Event Type">
+              <kendo-dropdownlist aria-label="Event Type" [fillMode]="formUiStyle.dropDownFillMode" formControlName="eventtypefilterbyoperator"
+              [data]="operators" textField="text" valueField="value" [valuePrimitive]="true" placeholder="Event Type">
+              </kendo-dropdownlist>
+              <kendo-textbox aria-label="Event Type" [clearButton]="true" *ngIf="eventLogFilterForm.controls['eventtypefilterbyoperator'].value.length > 0" 
+                formControlName="eventtypefilterbyvalue" rounded="medium" [fillMode]="formUiStyle.inputFillMode" 
+                (valueChange)="onChange('EVENTTYPE')">
+              </kendo-textbox>
+            </kendo-floatinglabel>
+            <kendo-floatinglabel class="mb-1" text="After Date">
+              <kendo-datepicker class="mb-1" [fillMode]="formUiStyle.dateInputFillMode" aria-label="After Date"
+                format="MM/dd/yyyy" formatPlaceholder="formatPattern" formControlName="afterdatefilter" placeholder="After Date" 
+                (valueChange)="onChange('AFTERDATE')" [max]="eventLogFilterForm.controls['beforedatefilter'].value" [incompleteDateValidation]="true">
+              </kendo-datepicker>
+            </kendo-floatinglabel>
+            <kendo-floatinglabel class="mb-1" text="Before Date">
+              <kendo-datepicker class="mb-1" [fillMode]="formUiStyle.dateInputFillMode" aria-label="Before Date"
+                format="MM/dd/yyyy" formatPlaceholder="formatPattern" formControlName="beforedatefilter" placeholder="Before Date"
+                (valueChange)="onChange('BEFOREDATE')" [min]="eventLogFilterForm.controls['afterdatefilter'].value" [incompleteDateValidation]="true">
+              </kendo-datepicker>
+            </kendo-floatinglabel>
+            <div class="d-flex">
+              <button kendoButton [primary]="true" aria-label="Filter" (click)="onEventLogFilterFilterClicked()" [disabled]="!isEnableFilterBtn">
+                FILTER
+              </button>&nbsp;&nbsp;
+              <button kendoButton [primary]="true" look="outline" aria-label="Clear" (click)="onEventLogFilterClearClicked()">
+                CLEAR
+              </button>
+            </div>            
+          </div>
         </ng-template>
-      </kendo-dropdownbutton>
+      </kendo-popover>
       <button kendoButton class="k-icon-button small-i-btn" aria-label="close" (click)="onCloseEventLogClicked()"
         title="close">
         <span class="material-icons" aria-label="close" aria-hidden="true">close</span>
       </button>
     </div>
   </div>
+
   <div class="sidePanel_body">
     <ul aria-label="event log menu" class="event-log-list">
       <!-- Event list items -->
@@ -132,6 +166,9 @@
         <!-- Event sub list items -->
       </li>
     </ul>
+    <div class="filter-footer-event">
+      <small>Filtered By: {{filterBy}} <a (click)="onEventLogFilterClearClicked()">Clear</a></small>
+    </div>
   </div>
 </div>
 <!-- Add Event Modal Html-->

@@ -1353,3 +1353,14 @@ padding: 8px;
   padding: 5px 0px;
   font-family: $font-family-medium;
 }
+
+.event-filters{
+  padding : 1rem;
+  button{width: 100%; margin-bottom: 4px; text-align: left; justify-content: flex-start};
+  .k-button-text{justify-content: flex-start;}
+}
+
+.event-filters-field{
+max-height: 250px;
+overflow-y: auto;
+}
