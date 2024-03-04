@@ -47,7 +47,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn!: any;
+  selectedColumn ='ALL'
   gridDataResult!: GridDataResult;
 
   gridSupportGroupDataSubject = new Subject<any>();
@@ -145,6 +145,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       maxResultCount: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
+      filter: this.filter
     };
     this.loadSupportGroupListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();

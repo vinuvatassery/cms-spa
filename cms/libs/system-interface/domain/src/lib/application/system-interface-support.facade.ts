@@ -68,16 +68,8 @@ export class SystemInterfaceSupportFacade {
 
 
   loadSupportGroup(paginationParameters: any) {
-    // this.systemInterfaceSupportService.getSupportGroupList(paginationParameters).subscribe({
-    //   next: (response) => {
-    //     this.supportGroupSubject.next(response);
-    //   },
-    //   error: (err) => {
-    //     console.error('err', err);
-    //   },
-    // });
-
-    //this.batchLogsDataLoaderSubject.next(true);
+    debugger;
+    this.showLoader();
     this.service.getSupportGroupList( paginationParameters).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
@@ -85,11 +77,10 @@ export class SystemInterfaceSupportFacade {
           total: dataResponse?.totalCount,
         };
         this.supportGroupSubject.next(gridView);
-        //this.batchLogsDataLoaderSubject.next(false);
+        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        //this.batchLogsDataLoaderSubject.next(false);
         this.hideLoader();
       },
     });
