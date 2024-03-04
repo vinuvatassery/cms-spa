@@ -105,7 +105,7 @@
                                     <kendo-grid-column field="clientFullName" title="Client Name" [width]="250" [sticky]="true">
                                           <ng-template kendoGridCellTemplate let-dataItem>
                                                 <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
-                                                  (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)">
+                                                  (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)" *ngIf="dataItem.clientFullName">
                                                   {{ dataItem.clientFullName }}
                                                 </button>
                                               </ng-template>
@@ -233,15 +233,13 @@
                                     </kendo-grid-column>
                                     <kendo-grid-column field="creatorId" title="By" [sortable]="false" [width]="70" class="text-center"  [filterable]="false">
                                           <ng-template kendoGridCellTemplate let-dataItem>
-                                            <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-                                              [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-                                              <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
-                                            </button>
-                                            <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-                                              <ng-template kendoPopoverBodyTemplate>
-                                                <common-user-profile-card [userId]="dataItem?.creatorId" [reassign]=false></common-user-profile-card>
-                                              </ng-template>
-                                            </kendo-popover>
+                                          <common-user-photo-icon  
+                                          [userId]="dataItem.creatorId" 
+                                          [userFirstName]="dataItem.userFirstName"
+                                          [userLastName]="dataItem.userLastName"
+                                          [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+                                          [linkType]="'profileIcon'"
+                                          [userPhotos$]="claimsServiceProfile$"></common-user-photo-icon>
                                           </ng-template>
                                         </kendo-grid-column>
                               <ng-template kendoPagerTemplate let-totalPages="totalPages"

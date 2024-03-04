@@ -8,7 +8,11 @@ import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { lastValueFrom } from 'rxjs';
 /** Internal libraries **/
-import { HubMethodTypes, ConfigurationProvider } from '@cms/shared/util-core';
+import {
+  HubNames,
+  HubMethods,
+  ConfigurationProvider,
+} from '@cms/shared/util-core';
 import { OidcSecurityService } from '@cms/shared/util-oidc';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
@@ -18,28 +22,32 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 export class SignalrService {
   /** Private properties **/
   private authenticated!: boolean;
-  private hubConnection!: signalR.HubConnection;
-  private signalrNotificationsSubject = new BehaviorSubject<any>(null);
+  //private hubConnection!: signalR.HubConnection;
+  private signalrEventSubject = new BehaviorSubject<any>(null);
+  private hubConnections: Map<string, signalR.HubConnection> = new Map();
 
   /** Public properties **/
-  signalrNotifications$ = this.signalrNotificationsSubject.asObservable();
+  signalrEvents$ = this.signalrEventSubject.asObservable();
 
   /** Constructor **/
   constructor(
     private readonly oidcSecurityService: OidcSecurityService,
     private readonly configurationProvider: ConfigurationProvider
   ) {
-    //NOSONAR this.initialize();
+    this.initialize();
   }
 
   /** Private methods **/
-  private notify(type: any, data: any) {
-    this.signalrNotificationsSubject.next({ type: type, payload: data });
+  private notify(methodName: string, payload: any) {
+    this.signalrEventSubject.next({
+      methodName: methodName,
+      payload: payload,
+    });
     console.log({
       source: 'SignalR',
       date: new Date().toLocaleString(),
-      type: type,
-      payload: data,
+      methodName: methodName,
+      payload: payload,
     });
   }
 
@@ -53,27 +61,33 @@ export class SignalrService {
       },
     });
     if (this.authenticated) {
-      this.startConnection();
+      // Connect to notification hub.
+      this.startConnection(HubNames.NotificationHub);
+      // Connect to other hub...
     }
     this.notify('authenticated', this.authenticated);
   }
 
-  private startConnection() {
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl(this.configurationProvider.appSettings.signalrHubUrl, {
-        accessTokenFactory: () => lastValueFrom(this.oidcSecurityService.getAccessToken())
-      })
-      //.withUrl(this.configurationProvider.appSettings.signalrHubUrl) NOSONAR
-      .withAutomaticReconnect({
-        nextRetryDelayInMilliseconds: (retryContext) => {
-          this.notify('AutoReconnect', retryContext.elapsedMilliseconds);
-          const crypto = window.crypto;
-          const array = new Uint32Array(1);
-          crypto.getRandomValues(array); 
-          const randomNum = array[0];
-          return randomNum * 10000;
-         
-          /*
+  private startConnection(hubName: HubNames) {
+    if (this.authenticated && !this.hubConnections.has(hubName)) {
+      const signalrHubUrl =
+        this.configurationProvider.appSettings.signalrHubUrl + '/' + hubName;
+      const hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl(signalrHubUrl, {
+          accessTokenFactory: () =>
+            lastValueFrom(this.oidcSecurityService.getAccessToken()),
+        })
+        .withUrl(signalrHubUrl)
+        .withAutomaticReconnect({
+          nextRetryDelayInMilliseconds: (retryContext) => {
+            this.notify('AutoReconnect', retryContext.elapsedMilliseconds);
+            const crypto = window.crypto;
+            const array = new Uint32Array(1);
+            crypto.getRandomValues(array);
+            const randomNum = array[0];
+            return randomNum * 10000;
+
+            /*
           NOSONAR
           if (retryContext.elapsedMilliseconds < 60000) {                                       
             // If we've been reconnecting for less than 60 seconds so far,
@@ -85,56 +99,85 @@ export class SignalrService {
             return Math.random() * 10000; //TODO: reconnecting indefinitely?
           }
           */
-        },
-      })
-      .configureLogging(signalR.LogLevel.Information)
-      .build();
+          },
+        })
+        .configureLogging(signalR.LogLevel.Information)
+        .build();
 
-    this.hubConnection.onreconnecting((error) => {
-      this.notify(
-        signalR.HubConnectionState.Reconnecting,
-        'signalr connection lost due to error, ' + error
-      );
-    });
+      hubConnection.onreconnecting((error) => {
+        this.notify(
+          signalR.HubConnectionState.Reconnecting,
+          'signalr connection lost due to error, ' + error
+        );
+      });
 
-    this.hubConnection.onreconnected((connectionId) => {
-      this.notify(
-        signalR.HubConnectionState.Connected,
-        'signalr reconnected with connectionId, ' + connectionId
-      );
-    });
-
-    this.hubConnection.onclose((error) => {
-      this.notify(
-        signalR.HubConnectionState.Disconnected,
-        'signalr connection closed due to error, ' + error
-      );
-    });
-
-    this.hubConnection
-      .start()
-      .then(() => {
+      hubConnection.onreconnected((connectionId) => {
         this.notify(
           signalR.HubConnectionState.Connected,
-          'signalr connection with connectionId'
+          'signalr reconnected with connectionId, ' + connectionId
         );
-      })
-      .catch((error) => {
+      });
+
+      hubConnection.onclose((error) => {
         this.notify(
           signalR.HubConnectionState.Disconnected,
           'signalr connection closed due to error, ' + error
         );
-
-        setTimeout(() => this.startConnection(), 10000); // withAutomaticReconnect won't configure the HubConnection to retry initial start failures, so start failures handled manually and it triggers fro 10s of failure
       });
+
+      // Register ping message handler.
+      hubConnection.on(HubMethods.Ping, (payload) => {
+        // Echo ping message.
+        hubConnection.send(HubMethods.Ping, payload);
+        this.notify(
+          HubMethods.Ping,
+          'signalr ping with payload, ' + payload
+        );
+      });
+
+      hubConnection
+        .start()
+        .then(() => {
+          this.notify(
+            signalR.HubConnectionState.Connected,
+            'signalr connected with hub, ' + hubName
+          );
+        })
+        .catch((error) => {
+          this.notify(
+            signalR.HubConnectionState.Disconnected,
+            'signalr connection closed due to error, ' + error
+          );
+
+          setTimeout(() => this.startConnection(hubName), 10000); // withAutomaticReconnect won't configure the HubConnection to retry initial start failures, so start failures handled manually and it triggers fro 10s of failure
+        });
+
+      // Add hub connection to the collection.
+      this.hubConnections.set(hubName, hubConnection);
+    }
   }
 
   /** Public methods **/
-  registerCustomEvents(eventName: HubMethodTypes) {
+  registerHubMethodHandlers(hubName: HubNames, hubMethods: HubMethods[]) {
     if (this.authenticated) {
-      this.hubConnection.on(eventName, (data: any) => {
-        this.notify(eventName, data);
-      });
+      // Get hub connection from the collection.
+      const hubConnection = this.hubConnections.get(hubName);
+
+      // Register handler(s) to be called when a hub method
+      // with the specified method name is invoked.
+      if (hubConnection != null) {
+        hubMethods.forEach((methodName) => {
+          hubConnection.on(methodName, (payload: any) => {
+            this.notify(methodName, payload);
+          });
+        });
+      }
     }
+  }
+
+  public getHubConnection(hubName: HubNames) {
+    // Returns the connection associated
+    // with the specified hub name.
+    return this.hubConnections.get(hubName);
   }
 }

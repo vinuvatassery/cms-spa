@@ -1,8 +1,6 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from '@angular/core';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { UserDataService, UserManagementFacade } from '@cms/system-config/domain';
-import { Subject } from 'rxjs';
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnDestroy } from '@angular/core';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'common-user-photo-icon',
@@ -10,60 +8,53 @@ import { Subject } from 'rxjs';
   styleUrls: ['./user-photo-icon.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserPhotoIconComponent implements OnChanges {
+export class UserPhotoIconComponent implements OnChanges, OnDestroy {
   @Input() userId!: any;
-
-  imageLoaderVisible = true;
-  userData!: any;
+  @Input() userFirstName!: any;
+  @Input() userLastName!: any;
+  @Input() userProfilePhotoExists!: any;
+  @Input() linkType!: any;
+  @Input() userPhotos$!: any;
+  @Input() reassign: boolean = false;
+  @Input() clientName!: string;
+  @Input() clientCaseId!: string;
+  @Input() position: any = "left";
+  @Input() callout: boolean = true;
+  userFullName!: any;
+  imageLoaderVisible$ = new BehaviorSubject(true);
   userImageSubject = new Subject<any>();
   userByIdSubject = new Subject<any>();
+  profilePhotoSubscription = new Subscription();
+  userProfilePhoto!: string;
 
   /** Constructor**/
   constructor(
-    private userManagementFacade: UserManagementFacade,
-    private readonly userDataService: UserDataService
   ) {}
 
   /** Lifecycle hooks **/
-
   ngOnChanges(): void {
-    this.loadprofilePhoto();
-    this.loadprofileData();
+    this.userFullName = this.userFirstName +' '+ this.userLastName;
+    this.addUserProfilePhotoSubscription();
   }
 
-  loadprofilePhoto() {
-    if (this.userId) {
-      this.userDataService.getUserImage(this.userId).subscribe({
-        next: (userImageResponse: any) => {
-          this.userImageSubject.next(userImageResponse);
-        },
-        error: (err) => {
-          this.userManagementFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            err
-          );
-        },
-      });
+  ngOnDestroy(): void {
+    if(this.profilePhotoSubscription &&  this.profilePhotoSubscription.closed !== undefined){
+      this.profilePhotoSubscription.unsubscribe();
     }
-  }
+  }  
 
-  loadprofileData() {
-    if (this.userId) {
-      this.userDataService.getUserById(this.userId).subscribe({
-        next: (userDataResponse: any) => {
-          this.userByIdSubject.next(userDataResponse);
-        },
-        error: (err) => {
-          this.userManagementFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            err
-          );
-        },
-      });
-    }
+  addUserProfilePhotoSubscription(){
+    this.profilePhotoSubscription = this.userPhotos$?.subscribe((item: any) => {
+      let filteredUserPhoto = item.filter((userPhoto: any) => userPhoto.creatorId == this.userId)[0];
+      if(filteredUserPhoto){
+        this.userProfilePhoto = filteredUserPhoto.profilePhoto;
+        this.userImageSubject.next(this.userProfilePhoto);
+        this.onLoad();
+      }
+    })
   }
 
   onLoad() {
-    this.imageLoaderVisible = false;
+    this.imageLoaderVisible$.next(false);
   }
 }

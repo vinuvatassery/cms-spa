@@ -41,7 +41,7 @@ import {
   PronounCode,
   TransGenderCode
 } from '@cms/case-management/domain';
-import { MaterialFormat,YesNoFlag } from '@cms/shared/ui-common';
+import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
 
 import {
   LoaderService,
@@ -49,7 +49,6 @@ import {
   SnackBarNotificationType,
   ConfigurationProvider,
 } from '@cms/shared/util-core';
-import { StatusFlag } from '@cms/shared/ui-common';
 import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
 
 @Component({

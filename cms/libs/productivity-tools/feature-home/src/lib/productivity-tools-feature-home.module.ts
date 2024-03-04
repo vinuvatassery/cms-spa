@@ -10,7 +10,7 @@ const routes: Routes = [
         (m) => m.ProductivityToolsFeatureTodoModule
       ),
       data: {
-        title: 'To Do Items',
+        title: 'To-Do Items',
       },
   },
   {

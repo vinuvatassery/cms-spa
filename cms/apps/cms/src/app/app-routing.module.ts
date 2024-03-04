@@ -76,11 +76,20 @@ const routes: Routes = [
       ),
     canLoad: [AutoLoginAllRoutesGuard],
   },
+  {
+    outlet: 'notifications',
+    path: '',
+    loadChildren: () =>
+      import('@cms/productivity-tools/feature-notification-snackbar').then(
+        (m) => m.ProductivityToolsFeatureNotificationSnackbarModule
+      ),
+    canLoad: [AutoLoginAllRoutesGuard],
+  },
   {   
    
     path: 'forbidden' , component : ForbiddenComponent 
   },
-  { path: '', redirectTo: 'case-management', pathMatch: 'full' },
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 ];
 
 @NgModule({

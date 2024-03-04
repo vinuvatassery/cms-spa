@@ -112,6 +112,9 @@ export class FinancialPcasAssignmentReportListComponent
 
   dateColumns = ['openDate', 'closeDate'];
 
+   //subscriptions
+  objectCodesSubscription : any;
+
   /** Constructor **/
   constructor(
     private dialogService: DialogService,
@@ -134,18 +137,19 @@ export class FinancialPcasAssignmentReportListComponent
 
   ngOnDestroy(): void {
     this.searchSubject.complete();
+    this.objectCodesSubscription.unsubscribe();
   }
 
   private loadObjectCodes() {
     this.pcaAssignmentsFacade.loadObjectCodes();
-    this.pcaAssignmentsFacade.objectCodesData$.subscribe({
+    this.objectCodesSubscription = this.pcaAssignmentsFacade.objectCodesData$.subscribe({
       next: (data: any) => {
 
         this.objectCodesData = data.map(
           (el: any) =>
-            (el.ledgerName = el.ledgerName
-              .substring(0, el.ledgerName.lastIndexOf(' - '))
-              .trim())
+          (el.ledgerName = el.ledgerName
+            .substring(0, el.ledgerName.lastIndexOf(' - '))
+            .trim())
         );
       },
     });

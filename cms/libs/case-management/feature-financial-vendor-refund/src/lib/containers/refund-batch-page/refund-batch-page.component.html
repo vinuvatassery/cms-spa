@@ -15,8 +15,10 @@
 (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
 [paymentMethodCode$]=" paymentMethodCode$"
 (providerNameClickEvent)="onProviderNameClick($event)"
+[vendorRefundBatchClaims$]="vendorRefundBatchClaims$"
 > </cms-refund-batch-log-list>
-<ng-template #providerDetailsTemplate>
+
+<ng-template #premiumProviderDetailsTemplate>
   <cms-financial-premiums-provider-info
         [paymentRequestId]="paymentRequestId"
         (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
@@ -24,4 +26,24 @@
         (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
         [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
         [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+</ng-template>
+
+<ng-template #tpaProviderDetailsTemplate>
+  <cms-financial-claims-provider-info
+        [paymentRequestId]="paymentRequestId"
+        (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+        (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+        (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+        [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+        [paymentMethodCode$]="paymentMethodCode$"></cms-financial-claims-provider-info>
+</ng-template>
+
+<ng-template #pharmacyProviderDetailsTemplate>
+  <cms-pharmacy-claims-provider-info
+        [paymentRequestId]="paymentRequestId"
+        (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
+        (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
+        (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
+        [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
+        [paymentMethodCode$]="paymentMethodCode$"></cms-pharmacy-claims-provider-info>
 </ng-template>

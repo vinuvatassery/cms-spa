@@ -1,8 +1,9 @@
 /** Angular **/
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 /** Facades **/
 import { CerTrackingFacade, GridFacade, GridStateKey, ModuleCode, WorkflowFacade } from '@cms/case-management/domain';
 import { UserDataService } from '@cms/system-config/domain';
+import { State } from '@progress/kendo-data-query/dist/npm/state';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -12,6 +13,7 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CerTrackingPageComponent implements OnInit {
+  @Input() caseStatus: string = '';
   /** Public properties **/
   cer$ = this.cerTrackingFacade.cer$;
   pageSizes = this.cerTrackingFacade.gridPageSizes;
@@ -22,12 +24,9 @@ export class CerTrackingPageComponent implements OnInit {
   cerTrackingDates$ = this.cerTrackingFacade.cerTrackingDates$;
   cerTrackingCount$ = this.cerTrackingFacade.cerTrackingCount$;
   sendResponse$ = this.cerTrackingFacade.sendResponse$;
+  public state!: any;
   loginUserId!:any;
-  state = {
-    skip: 0,
-    take: this.pageSizes[0]?.value,
-    sort: this.sort,
-  };
+  
 
   private gridStateSubject = new Subject<any>();
   gridState$ = this.gridStateSubject.asObservable();
@@ -38,7 +37,13 @@ export class CerTrackingPageComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.getLoggedInUserProfile()    
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter:{logic:'and',filters:[]},
+    };
+    this.getLoggedInUserProfile();
   }
 
   /** Private methods **/
@@ -53,8 +58,15 @@ export class CerTrackingPageComponent implements OnInit {
   }
 
   getGridState()
-  {    
-  
+  {
+    if (this.caseStatus == "RESTRICTED") {
+      this.state?.filter?.filters?.push(
+        {filters:[{ 
+          field: "eligibilityStatus",
+          operator: "eq",
+          value:this.caseStatus
+        }]});
+    } 
     this.gridFacade.loadGridState(this.loginUserId,GridStateKey.GRID_STATE,ModuleCode.CER_TRACKER)
     .subscribe({
       next: (x:any) =>{

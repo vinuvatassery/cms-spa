@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { filter } from 'rxjs/internal/operators/filter';
 import { map } from 'rxjs/internal/operators/map';
 /** Enums **/
-import { HubMethodTypes } from '@cms/shared/util-core';
+import { HubEventTypes, HubMethods, HubNames } from '@cms/shared/util-core';
 /** Services **/
 import { SignalrService } from '@cms/shared/util-signalr';
 
@@ -13,57 +13,45 @@ import { SignalrService } from '@cms/shared/util-signalr';
 })
 export class SignalrEventHandlerService {
   /** Private  properties **/
-  private isGeneralNotificationEventNotInvoked = true;
-  private isReminderEventNotInvoked = true;
 
   /** Constructor **/
-  constructor(private readonly signalrService: SignalrService) {}
-
-  /** Private methods **/
-  private handleGeneralNotificationEvents() {
-    if (this.isGeneralNotificationEventNotInvoked) {
-      this.signalrService.registerCustomEvents(
-        HubMethodTypes.GeneralNotification
-      );
-      this.isGeneralNotificationEventNotInvoked = false;
-    }
-    return this.signalrService.signalrNotifications$?.pipe(
-      filter(
-        (notification) =>
-          notification.type === HubMethodTypes.GeneralNotification
-      ),
-      map((result) => {
-        // custom logic goes here
-        return result;
-      })
-    );
+  constructor(private readonly signalrService: SignalrService) {
+    this.registerHubMethodHandlers();
   }
 
-  private handleReminderEvents() {
-    if (this.isReminderEventNotInvoked) {
-      this.signalrService.registerCustomEvents(HubMethodTypes.Reminder);
-      this.isReminderEventNotInvoked = false;
-    }
-    return this.signalrService.signalrNotifications$?.pipe(
-      filter((notification) => notification.type === HubMethodTypes.Reminder),
-      map((result) => {
-        //custom logic goes here
-        return result;
-      })
+  /** Private methods **/
+  private registerHubMethodHandlers() {
+    // Register handlers for hub message methods.
+    this.signalrService.registerHubMethodHandlers(HubNames.NotificationHub, [
+      HubMethods.ReceiveNotification,
+      // Register more handlers...
+    ]);
+  }
+
+  private sendAckMessage(messageId: string, isAcknowledged: boolean) {
+    // Retrieve the hub connection from the collection.
+    const hubConnection = this.signalrService.getHubConnection(
+      HubNames.NotificationHub
     );
+
+    // Send an acknowledgment to update the status of the message in
+    // the ALERT_LOG to 'SUCCEEDED'.
+    if (hubConnection != null) {
+      hubConnection.send(HubMethods.SendAckMessage, messageId, isAcknowledged);
+    }
   }
 
   /** Public methods **/
-  signalrNotifications(type: HubMethodTypes) {
-    let response: any;
-    switch (type) {
-      case HubMethodTypes.GeneralNotification:
-        response = this.handleGeneralNotificationEvents();
-        break;
-      case HubMethodTypes.Reminder:
-        response = this.handleReminderEvents();
-        break;
-    }
-    return response;
+  signalrNotificationsObservable(eventType: HubEventTypes) {
+    return this.signalrService.signalrEvents$?.pipe(
+      filter((event) => event.payload.eventType === eventType),
+      map((event) => {
+        // Send an acknowledgment to update the status of the message (if Ack enabled).
+        if (event.payload.isAckEnabled) {
+          this.sendAckMessage(event.payload.messageId, true);
+        }
+        return event;
+      })
+    );
   }
 }

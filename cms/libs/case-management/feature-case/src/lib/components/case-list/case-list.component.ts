@@ -12,7 +12,7 @@ import {
   OnDestroy
 } from '@angular/core';
 /** Facades **/
-import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey } from '@cms/case-management/domain';
+import { CaseFacade,CaseScreenTab, CaseStatusCode, WorkflowTypeCode, GridFacade, GridStateKey, GroupCode } from '@cms/case-management/domain';
 import { Observable, Subscription } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LovFacade, UserDataService } from '@cms/system-config/domain';
@@ -42,6 +42,9 @@ isFiltered = false;
 public state!: any;
   /*** Input properties ***/
   @Input() cases: any;
+  @Input() healthInsuranceType: any;
+  @Input() fplPercentage: any;
+  @Input() filterOperator: any;
   @Input() pageSizes : any;
   @Input() sortValue : any;
   @Input() sortType : any;
@@ -51,6 +54,7 @@ public state!: any;
   @Input() module: string = '';
   @Input() parentModule: string = '';
   @Input() caseStatus: string = '';
+  @Input() group: string = '';
   addRemoveColumns="Default Columns"
   defaultColumns = [
     "clientFullName",
@@ -60,7 +64,9 @@ public state!: any;
     "caseStatus",
     "group",
     "eilgibilityStartDate",
-    "eligibilityEndDate"
+    "eligibilityEndDate",
+    "healthInsuranceType",
+    "fplPercentage"
     ]
   columns : any = {
     clientFullName:"Client Name",
@@ -82,7 +88,9 @@ public state!: any;
     insurancePolicyId:"Insurance Policy Id",
     assignedCw:"Assigned to",
     dateOfBirth:"Date Of Birth",
-    caseManager:"Case Manager"
+    caseManager:"Case Manager",
+    healthInsuranceType : "Health Insurance Type",
+    fplPercentage : "FPL %"
   }
   columnDroplist : any = {
     ALL: "ALL",
@@ -104,6 +112,7 @@ public state!: any;
   ddlGridColumns$ = this.caseFacade.ddlGridColumns$;
   groupLov$ = this.lovFacade.groupLov$;
   caseStatusType$ = this.lovFacade.caseStatusType$;
+  healthInsuranceType$ = this.lovFacade.healthinsuranceType$;
   selectedColumn!: any;
   filter : any = "";
   afterDate: any;
@@ -112,16 +121,19 @@ public state!: any;
   @Output() loadCasesListEvent = new EventEmitter<any>();
   groupData:any=[]
   caseStatusTypes:any=[];
+  healthinsuranceTypes:any=[];
   caseStatusCodes:any=["CANCELED","REVIEW","NEW"];
   public gridFilter: CompositeFilterDescriptor={logic:'and',filters:[]};
   private userProfileSubsriction !: Subscription;
   loginUserId!:any;
   groupValue = null;
   statusValue = null;
+  healthInsuranceTypeValue = null;
   @ViewChild('clientsGrid') clientsGrid: any;
   defaultColumnState: ColumnBase[] = [];
   selectedGroup="";
   selectedStatus="";
+  selectedHealthInsuranceType="";
   casesLoaded=false;
   hiddenColumns: ColumnComponent[]=[];
   /** Constructor**/
@@ -139,12 +151,23 @@ public state!: any;
     this.lovFacade.getGroupLovs();
     this.lovFacade.getCaseStatusLovs();
     this.getCaseStatusLovs();
+    this.lovFacade.gethealthInsuranceTypeLovs();
+    this.gethealthInsuranceTypesLovs();
     this.selectedColumn = 'ALL';
     this.getGroupLovs() ; 
     this.getLoggedInUserProfile();
-    if (this.caseStatus != ''){ 
-      this.dashboardfilter(); 
+    if (this.caseStatus == CaseStatusCode.incomplete || this.caseStatus == CaseStatusCode.accept || this.caseStatus == CaseStatusCode.restricted){ 
+      this.dashboardCERfilter(); 
+    } 
+    if(this.healthInsuranceType){
+      this.dashboardFPLfilter();
     }
+     
+    if(this.group == GroupCode.UPP ||  this.group == GroupCode.Bridge || this.group == GroupCode.GroupI
+      || this.group == GroupCode.GroupII ||  this.group == GroupCode.GroupINSGAP || this.group == GroupCode.GroupIINSGAP)
+      {
+        this.dashboardGroupfilter();
+      }
   }
   ngOnDestroy(): void {
     this.userProfileSubsriction.unsubscribe();
@@ -178,6 +201,19 @@ public state!: any;
       }
     });
   }
+  private gethealthInsuranceTypesLovs() {
+    this.healthInsuranceType$
+    .subscribe({
+      next: (data: any) => {
+        data=data.filter((item:any) => !this.caseStatusCodes.includes(item.lovCode));
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.healthinsuranceTypes=data.sort((value1:any,value2:any) => value1.sequenceNbr - value2.sequenceNbr);
+      }
+    });
+  }
+  
   defaultGridState(){
     this.state = {
       skip: 0,
@@ -189,7 +225,7 @@ public state!: any;
       searchValue: ''
       };
   }
-  dashboardfilter(){
+  dashboardCERfilter(){
       this.state.filter.filters.push(
         {filters:[{
           field: "eligibilityStatusCode",
@@ -198,6 +234,28 @@ public state!: any;
       }]});
     this.dataStateChange(this.state,false);
   }
+  dashboardGroupfilter(){
+    this.state.filter.filters.push(
+      {filters:[{
+        field: "group",
+        operator: "eq",
+        value:this.group
+    }]});
+  this.dataStateChange(this.state,false);
+}
+dashboardFPLfilter(){
+  this.state.filter.filters.push(
+    {filters:[{
+      field: "insuranceType",
+      operator: "eq",
+      value:this.healthInsuranceType
+      },{
+        field: "fplPercentage",
+        operator: this.filterOperator,
+        value:this.fplPercentage
+    }]});
+this.dataStateChange(this.state,false);
+}
  filterChange(filter: CompositeFilterDescriptor): void {
     this.gridFilter = filter;
   }
@@ -226,6 +284,17 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
   }
   if(field == "eligibilityStatusCode"){
     this.statusValue = value;
+  }
+  if(field == "insuranceType"){
+    filterService.filter({
+      filters: [{
+        field: field,
+        operator: "eq",
+        value:value.lovCode
+    }],
+      logic: "or"
+  });
+    this.healthInsuranceTypeValue = value;
   }
 }
 
@@ -298,8 +367,10 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     this.userProfileSubsriction=this.userDataService.getProfile$.subscribe((profile:any)=>{
       if(profile?.length>0){
        this.loginUserId= profile[0]?.loginUserId;
-       if(!this.casesLoaded){
-        this.getGridState();
+       if(!this.casesLoaded){ 
+        if (!this.caseStatus && !this.healthInsuranceType && !this.group){ 
+          this.getGridState();
+        }         
         this.casesLoaded = true;
        }
 
@@ -531,10 +602,15 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
       this.columnName = "";
       this.isFiltered = false;
     }
-
+    if(this.sortValue === "eligibilityStatusCode"){
+      this.sortValue = "caseStatus";
+    }
+    if(this.sortValue === "InsuranceType"){
+      this.sortValue = "healthInsuranceType";
+    }
     this.sort = stateData.sort;
     this.sortValue = stateData.sort[0]?.field ?? "";
-    this.sortValue = this.sortValue === "eligibilityStatusCode" ? "caseStatus" : this.sortValue;
+    this.sortValue = this.sortValue;
     this.sortType = stateData.sort[0]?.dir ?? "";
     this.columnName = filterList.length > 0 ? filterList[0]?.filters[0]?.field : "";
     this.state = stateData;

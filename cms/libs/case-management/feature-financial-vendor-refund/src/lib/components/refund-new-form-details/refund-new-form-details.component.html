@@ -49,7 +49,7 @@
 
                 </div>
             </div>
-            <div class="flex-row">
+            <div class="flex-row" *ngIf="isClientSelected">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel text="Refund Type">
                         <kendo-dropdownlist [disabled]="disableFeildsOnConfirmSelection" aria-label="Refund Type" [(ngModel)]="selectedRefundType"
@@ -199,6 +199,9 @@
                                 <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
                             </ng-template>
                         </kendo-combobox-column>
+                        <ng-template kendoMultiColumnComboBoxNoDataTemplate>
+                            <div class="no-data-text">No Vendors found'</div>
+                        </ng-template>
                       </kendo-multicolumncombobox>
                    </div>
                 </kendo-floatinglabel>
@@ -310,16 +313,6 @@
                 <div class="flex-col flex-col-2 align-items-center justify-content-start">
                     <h5>Refund Information </h5>
                 </div>
-                <div class="flex-col flex-col-4 align-items-center justify-content-start">
-                    <span class="app-checkboxwidtext-wrapper">
-                        <input kendoCheckBox type="checkbox" id="spots-payment" name="spots-payment"
-                            aria-labelledby="spots-payment"
-                            id="isSpotsPaymentInputRX" [checked]="isSpotsPayment"
-                            (change)="onSpotsPaymentChange($event)"
-                            for="isSpotsPaymentInputRX"/>
-                        <label class="k-checkbox-label" for="spots-payment">This is a SPOTS payment</label>
-                    </span>
-                </div>
             </div>
             <div *ngFor="let item of selectedVendorRefundsList; index as tblIndex">
                 <div class="flex-row mb-3">
@@ -349,7 +342,7 @@
                             </tr>
                             <tr>
                                 <td>Original Payment Method</td>
-                                <td>{{item.paymentStatusCode}}</td>
+                                <td>{{item.paymentMethodCode}}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -360,7 +353,7 @@
                     <h5>Enter quantity, days supply, and amount refunded</h5>
                     <div class="app-c-table">
                         <kendo-grid [resizable]="true" [groupable]="false" [reorderable]="true" [resizable]="true"
-                            [columnMenu]="{ filter: true }"
+                            [columnMenu]="{ filter: true, sort: true }"
                             [data] = item.prescriptionFillItems>
                             <kendo-grid-column field="rxNbr" title="RX #" [width]="160">
                                 <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
@@ -405,17 +398,14 @@
                             </kendo-grid-column>
                             <kendo-grid-column field="by" title="By" [width]="75" class="text-center">
                                 <ng-template kendoGridCellTemplate let-dataItem>
-                                    <button kendoButton [primary]="true" class="avatar-sm-btn c-default"
-                                        kendoPopoverAnchor [popover]="onUserProfileDetailsHovered" showOn="hover"
-                                        [attr.aria-label]="dataItem.creatorId">
-                                        <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
-                                    </button>
-                                    <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-                                        <ng-template kendoPopoverBodyTemplate>
-                                            <common-user-profile-card
-                                                [userId]="dataItem.by"></common-user-profile-card>
-                                        </ng-template>
-                                    </kendo-popover>
+                                    <common-user-photo-icon  
+                                    [userId]="dataItem.by" 
+                                    [userFirstName]="dataItem.userFirstName"
+                                    [userLastName]="dataItem.userLastName"
+                                    [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+                                    [linkType]="'profileIcon'"
+                                    [userPhotos$]="vendorRefundFormProfile$"></common-user-photo-icon>
+                                    
                                 </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column editor="numeric" [width]="100" field="qtyRefunded" title="Qty Refunded" [editable]="true" [sticky]="true" [width]="130">
@@ -433,13 +423,13 @@
                                     [ngClass]="ngDirtyInValid(dataItem,'qtyRefunded',tblIndex,rowIndex)"
                                     >
                                   </kendo-numerictextbox>
-                                  <kendo-formerror *ngIf="!dataItem.qtyRefundedValid">Qty Refunded is required</kendo-formerror>
+                                  <kendo-formerror *ngIf="isAddClicked && !dataItem.qtyRefundedValid">Qty Refunded is required</kendo-formerror>
                               </ng-template>
                             </kendo-grid-column>
                             <kendo-grid-column field="daySupplyRefunded" title="Days Supply Refunded" [width]="160"
                                 [sticky]="true">
                                 <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-                                    <kendo-numerictextbox
+                                    <kendo-numerictextbox                                    
                                     id ="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
                                     name ="daySupplyRefunded{{tblIndex}}-{{rowIndex}}"
                                     [fillMode]= "formUiStyle.inputFillMode"
@@ -452,7 +442,10 @@
                                     [ngClass]="ngDirtyInValid(dataItem,'daySupplyRefunded',tblIndex,rowIndex)"
                                     >
                                   </kendo-numerictextbox>
-                                  <kendo-formerror *ngIf="!dataItem.daySupplyRefundedValid">Days Supply Refunded is required</kendo-formerror>
+                                  
+                                  <kendo-formerror *ngIf="isAddClicked && !dataItem.daySupplyRefundedValid">Days Supply Refunded is required</kendo-formerror>
+                                  <kendo-formerror *ngIf="isAddClicked && !dataItem.daySupplyRefundedRatioValid">Days Supply Refunded can not be more than the RX supply per Rx qty</kendo-formerror>
+                                  
                                 </ng-template>
                                 </kendo-grid-column>
                             <kendo-grid-column field="pmtStatus" title="Refund Amount" [width]="150" [sticky]="true">
@@ -506,7 +499,8 @@
                                     formControlName= "creditNumber"
                                     [fillMode]="formUiStyle.inputFillMode"  name="creditNumber"
                                     placeholder="Credit #"
-                                    [maxlength]="6">
+                                    [maxlength]="10"
+                                    (keyup)="validateCreditNumber($event)">
                                 </kendo-textbox >
                             </kendo-floatinglabel>
                         </div>
@@ -584,13 +578,14 @@
 
 </kendo-dialog-actions>
 <ng-template #providerDetailsTemplate>
-    <cms-refund-claims-provider-info
+    <cms-financial-premiums-provider-info
     [paymentRequestId]="paymentRequestId"
     (closeViewProviderDetailClickedEvent)="onCloseViewProviderDetailClicked($event)"
     (getProviderPanelEvent)="getProviderPanel($event)" [vendorProfile$]="vendorProfile$"
     (updateProviderProfileEvent)="updateProviderProfile($event)" [updateProviderPanelSubject$]="updateProviderPanelSubject$"
     [ddlStates$]="ddlStates$" (onEditProviderProfileEvent)="OnEditProviderProfileClick()"
-    [paymentMethodCode$]="paymentMethodCode$"></cms-refund-claims-provider-info>
+    [paymentMethodCode$]="paymentMethodCode$"></cms-financial-premiums-provider-info>
+
 </ng-template>
 
 

@@ -1051,12 +1051,15 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       const cellPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.CellPhone)[0];
       const workPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.WorkPhone)[0];
       const otherPhone1 = this.contactInfo?.phone?.filter((ph: ClientPhone) => ph.deviceTypeCode === deviceTypeCode.OtherPhone)[0];
-      mailingAddress.clientAddressId = mailingAddress1?.clientAddressId;
+     
+      if(mailingAddress1){
+      mailingAddress.clientAddressId = mailingAddress1?.clientAddressId ? mailingAddress1?.clientAddressId : "00000000-0000-0000-0000-000000000000" ;
       mailingAddress.concurrencyStamp = mailingAddress1?.concurrencyStamp;
+       }
       homeAddress.clientAddressId = homeAddress1?.clientAddressId;
       homeAddress.concurrencyStamp = homeAddress1?.concurrencyStamp;
 
-      homeAddress.clientAddressId = homeAddress1?.clientAddressId;
+      homeAddress.clientAddressId = homeAddress1?.clientAddressId ? homeAddress1.clientAddressId : "00000000-0000-0000-0000-000000000000";
       homeAddress.concurrencyStamp = homeAddress1?.concurrencyStamp;
 
       phoneAndEmail.homePhone.clientPhoneId = homePhone1?.clientPhoneId;
@@ -1083,7 +1086,12 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     }
 
-    contactInfoData.address = [mailingAddress, homeAddress];
+    if(mailingAddress){
+      contactInfoData.address?.push(mailingAddress)
+    }
+    if(homeAddress){
+      contactInfoData.address?.push(homeAddress)
+    }
     contactInfoData.phone = [phoneAndEmail.homePhone, phoneAndEmail.cellPhone, phoneAndEmail.workPhone, phoneAndEmail.otherPhone];
     contactInfoData.email = phoneAndEmail.email;
     contactInfoData.friendsOrFamilyContact = friendsOrFamilyContact;

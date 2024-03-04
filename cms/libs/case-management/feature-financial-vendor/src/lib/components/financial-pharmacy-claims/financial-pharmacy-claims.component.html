@@ -36,7 +36,7 @@
 
                 <kendo-grid-column field="batchName" title="Batch #" [width]="150">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                    <button [attr.aria-label]="dataItem.batchName" (click)="rowClickNavigation('batchName', dataItem)" kendoButton look="flat" class="card-link-button">
+                    <button [attr.aria-label]="dataItem.batchName" *ngIf="dataItem.batchName" (click)="rowClickNavigation('batchName', dataItem)" kendoButton look="flat" class="card-link-button">
                       {{ dataItem.batchName }}
                     </button>
                   </ng-template>
@@ -62,7 +62,7 @@
 
                 <kendo-grid-column field="clientFullName" title="Client Name" [width]="170">
                   <ng-template kendoGridCellTemplate let-dataItem>
-                    <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="onClientNameClicked(dataItem)">
+                    <button [attr.aria-label]="dataItem.clientFullName" *ngIf="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="onClientNameClicked(dataItem)">
                       {{ dataItem.clientFullName }}
                     </button>
                   </ng-template>
@@ -321,27 +321,13 @@
                 </kendo-grid-column>
                  <kendo-grid-column field="creatorId" title="By" [width]="70" class="text-center" [sortable]="false" [columnMenu]="false" class="text-center">
                 <ng-template kendoGridCellTemplate let-dataItem>
-                      <button
-                        kendoButton
-                        [primary]="true"
-                        class="avatar-sm-btn c-default"
-                        kendoPopoverAnchor
-                        [popover]="onUserProfileDetailsHovered"
-                        showOn="hover"
-                        [attr.aria-label]="dataItem.creatorId"
-                        
-                      >
-                      <common-user-photo-icon  [userId]="dataItem.creatorId"></common-user-photo-icon>  
-                      </button>
-                      <kendo-popover
-                        #onUserProfileDetailsHovered
-                        width="330"
-                        position="left"
-                      >
-                        <ng-template kendoPopoverBodyTemplate>
-                          <common-user-profile-card [userId]="dataItem.creatorId"></common-user-profile-card>
-                        </ng-template>
-                      </kendo-popover>
+                  <common-user-photo-icon  
+                  [userId]="dataItem.creatorId" 
+                  [userFirstName]="dataItem.userFirstName"
+                  [userLastName]="dataItem.userLastName"
+                  [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+                  [linkType]="'profileIcon'"
+                  [userPhotos$]="pharmacyClaimsProfilePhoto$"></common-user-photo-icon>
                     </ng-template>
                   </kendo-grid-column>
                    <!-- grid Pagination template -->

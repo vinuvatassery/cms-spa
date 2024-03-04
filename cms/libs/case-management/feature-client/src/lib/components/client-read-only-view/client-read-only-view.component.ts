@@ -1,5 +1,6 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input, ElementRef } from '@angular/core';
+
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input, ChangeDetectorRef, OnDestroy, ElementRef } from '@angular/core';
 import {
   ClientProfile, ClientFacade, Client,
   ClientCaseEligibility, ClientPronoun, ClientGender,
@@ -8,14 +9,13 @@ import {
   PronounCode, TransGenderCode, ApplicantInfo,
   CaseFacade
 } from '@cms/case-management/domain';
-import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
-import { MaterialFormat, YesNoFlag } from '@cms/shared/ui-common';
+import { MaterialFormat, YesNoFlag, StatusFlag } from '@cms/shared/ui-common';
 
 import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
-import { of } from 'rxjs';
+import { Subject, Subscription, of } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { StatusFlag } from '@cms/shared/ui-common';
+import { UserManagementFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-client-read-only-view',
   templateUrl: './client-read-only-view.component.html',
@@ -28,11 +28,14 @@ export class ClientReadOnlyViewComponent implements OnInit{
   @Output() onUpdateApplicantInfo = new EventEmitter();
   @Output() loadReadOnlyClientInfoEvent =  new EventEmitter();
   @Output() loadprofilePhotoEvent =  new EventEmitter<string>();
-  @Input() userImage$: any
   @Input() clientId!:any;
   @Input() clientCaseEligibilityId!:any;
   @Input() clientCaseId!:any;
   @Input() ramsellInfo!: any;
+  @Input() clientProfile$!: any;
+  @Input() userManagerprofilePhoto$!: any;
+  @Input() userLastModifierProfilePhoto$!: any;
+
   applicantInfo = {} as ApplicantInfo;
   //public client! : ClientProfile
   isEditClientInformationPopup = false;
@@ -40,6 +43,15 @@ export class ClientReadOnlyViewComponent implements OnInit{
   appInfoForm!: FormGroup;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   isReadOnly$=this.caseFacade.isCaseReadOnly$;
+  userManagerprofilePhotoSubject = new Subject();
+  userLastModifierProfilePhotoSubject = new Subject();
+  userFirstName: string  |null=null;
+  userLastName: string  |null=null;
+  isUserProfilePhotoExist: boolean |null=null;
+  creatorId: string  |null=null;
+  lastModifierId: string  |null=null;
+  clientProfileSubscription = new Subscription();
+
   constructor(
       private readonly elementRef: ElementRef,
       private loaderService: LoaderService,
@@ -51,11 +63,8 @@ export class ClientReadOnlyViewComponent implements OnInit{
       private scrollFocusValidationfacade: ScrollFocusValidationfacade){}
    /** Lifecycle hooks **/
  ngOnInit(): void {
-  this.loadReadOnlyClientInfoEvent.emit()
-
-  //this.onClientProfileLoad()
+  this.loadReadOnlyClientInfoEvent.emit();
 }
-
 
   /** Internal event methods **/
   onCloseEditClientInformationClicked() {

@@ -17,7 +17,7 @@
   </ng-template>
   <section class="app-l-client-wrapper ">
     <section class="app-l-wrapper">
-      <p> Click “Bulk” to execute actions for one or more claims. Click on a row to view that claim.</p>
+      <p> Click "BULK" to execute bulk actions for this batch. Click on a row to view that claim.</p>
       <section class="table-filter-section mat-form-no-b-space">
         <span class="filter-section_items filter--select">
           <kendo-floatinglabel>
@@ -93,7 +93,7 @@
           <kendo-grid-column field="itemNbr" title="Item #" [width]="150">
             <ng-template kendoGridCellTemplate let-dataItem>
             <button [attr.aria-label]="dataItem.itemNbr" (click)="paymentClickHandler(dataItem)" kendoButton
-                            look="flat" class="card-link-button">
+                            look="flat" class="card-link-button" *ngIf="dataItem.itemNbr">
                             {{ dataItem.itemNbr }}
             </button>
             </ng-template>
@@ -123,7 +123,7 @@
           <kendo-grid-column field="vendorName" title="Provider Name" [width]="250">
             <ng-template kendoGridCellTemplate let-dataItem>
               <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button"
-                (click)="onProviderNameClick(dataItem.paymentRequestId)">
+                (click)="onProviderNameClick(dataItem.paymentRequestId)" *ngIf="dataItem.vendorName">
                 {{ dataItem.vendorName }}
               </button>
             </ng-template>
@@ -154,7 +154,7 @@
           <kendo-grid-column field="clientFullName" title="Client Name" [width]="250">
             <ng-template kendoGridCellTemplate let-dataItem>
               <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
-                (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)">
+                (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)" *ngIf="dataItem.clientFullName">
                 {{ dataItem.clientFullName }}
               </button>
             </ng-template>
@@ -275,15 +275,13 @@
 
       <kendo-grid-column field="creatorId" title="By" [filterable]="false" [sortable]="false" [width]="70" class="text-center" >
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
-            [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.creatorId">
-            <common-user-photo-icon [userId]="dataItem.creatorId"></common-user-photo-icon>
-          </button>
-          <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
-            <ng-template kendoPopoverBodyTemplate>
-              <common-user-profile-card [userId]="dataItem?.creatorId" [reassign]=false></common-user-profile-card>
-            </ng-template>
-          </kendo-popover>
+          <common-user-photo-icon  
+          [userId]="dataItem.creatorId" 
+          [userFirstName]="dataItem.userFirstName"
+          [userLastName]="dataItem.userLastName"
+          [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
+          [linkType]="'profileIcon'"
+          [userPhotos$]="claimsBathcPaymentProfilePhoto$"></common-user-photo-icon>
         </ng-template>
       </kendo-grid-column>
 

@@ -1,16 +1,17 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FinancialClaimTypeCode, FinancialClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { UserManagementFacade } from '@cms/system-config/domain';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 @Component({
     selector: 'cms-financial-payment-service-list',
     templateUrl: './financial-claims-payment-service-list.component.html',
     styleUrls: [],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FinancialClaimsPaymentServiceListComponent implements OnInit {
+export class FinancialClaimsPaymentServiceListComponent implements OnInit,OnChanges {
 
     /** Input Properties **/
     @Input() paymentId!: string;
@@ -25,20 +26,24 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
     servicesList$ = new BehaviorSubject<any>([]);
     loader$ = new BehaviorSubject<boolean>(false);
     serviceTitle = '';
+    serviceListProfileSubject = new Subject();
 
     /** Constructor **/
     constructor(private readonly claimsFacade: FinancialClaimsFacade,
         private loggingService: LoggingService,
-        private readonly notificationSnackbarService: NotificationSnackbarService,) { }
+        private readonly notificationSnackbarService: NotificationSnackbarService,
+        private readonly userManagementFacade: UserManagementFacade,
+        private readonly cdr: ChangeDetectorRef) { }
 
     /* Life cycle events */
     ngOnInit(): void {        
         this.initializeGrid();
-        this.loadServices();
+       
     }
 
     ngOnChanges(): void {
         this.initializeGrid();
+        this.loadServices();
     }
 
     /* public methods */
@@ -67,6 +72,9 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
                 this.servicesList$.next(gridView);
                 this.loader$.next(false);
                 this.serviceTitle = this.claimType == FinancialClaimTypeCode.Medical ? 'Medical Service' : 'Dental Service';
+                if(dataResponse['items']){
+                    this.loadDistinctUserIdsAndProfilePhoto(dataResponse['items']);
+                  }
             },
             error: (err: any) => {
                 this.loader$.next(false);
@@ -75,6 +83,21 @@ export class FinancialClaimsPaymentServiceListComponent implements OnInit {
             },
         });
     }
+
+    loadDistinctUserIdsAndProfilePhoto(data: any[]) {
+        const distinctUserIds = Array.from(new Set(data?.map(user => user.creatorId))).join(',');
+        if(distinctUserIds){
+          this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+          .subscribe({
+            next: (data: any[]) => {
+              if (data.length > 0) {
+                this.serviceListProfileSubject.next(data);
+              }
+            },
+          });
+          this.cdr.detectChanges();
+        }
+      } 
 
     private initializeGrid(){
         this.serviceTitle = this.claimType == FinancialClaimTypeCode.Medical ? 'Medical Service' : 'Dental Service';
