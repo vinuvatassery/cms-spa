@@ -68,7 +68,6 @@ export class SystemInterfaceSupportFacade {
 
 
   loadSupportGroup(paginationParameters: any) {
-    debugger;
     this.showLoader();
     this.service.getSupportGroupList( paginationParameters).subscribe({
       next: (dataResponse: any) => {

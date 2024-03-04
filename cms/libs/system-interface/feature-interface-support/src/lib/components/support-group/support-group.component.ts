@@ -47,7 +47,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn ='ALL'
+  selectedColumn: any ='ALL'
   gridDataResult!: GridDataResult;
 
   gridSupportGroupDataSubject = new Subject<any>();
@@ -160,7 +160,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
           filters: [
             {
               field: this.selectedColumn ?? 'groupName',
-              operator: 'contains',
+              operator: 'startswith',
               value: data,
             },
           ],
@@ -192,6 +192,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    
     this.loadSupportGroupListGrid();
   }
 
