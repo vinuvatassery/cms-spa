@@ -309,8 +309,8 @@ export class EventLogComponent implements OnInit {
     
     this.setFilterOfCaseWorkerAndEventType("createdBy","caseworkerfilterbyoperator","caseworkerfilterbyvalue");
     this.setFilterOfCaseWorkerAndEventType("eventLogDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
-    this.setFilterOfAfterAndBeforeDate("creationTime","eq","afterdatefilter");
-    this.setFilterOfAfterAndBeforeDate("creationTime","eq","beforedatefilter");
+    this.setFilterOfAfterAndBeforeDate("creationTime","gte","afterdatefilter");
+    this.setFilterOfAfterAndBeforeDate("creationTime","lte","beforedatefilter");
     
     this.filterData = {logic:"and", filters: this.filterDataQueryArray};    
   }
