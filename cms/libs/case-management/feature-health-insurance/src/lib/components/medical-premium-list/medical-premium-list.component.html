@@ -82,6 +82,7 @@
               [attr.aria-label]="dataItem.insurancePlanName"
               kendoPopoverAnchor
               [popover]="myPopover"
+              *ngIf="dataItem.insurancePlanName"
               (click)="getCarrierContactInfo(dataItem.insuranceVendorId,dataItem.insurancePlanName)" >
               {{ dataItem.insurancePlanName }}
             </button>

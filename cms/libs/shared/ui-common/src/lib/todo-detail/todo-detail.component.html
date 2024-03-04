@@ -1,23 +1,46 @@
-<section class="k-dialog-body" kendoTooltip>
+<section class="k-dialog-body" kendoTooltip  [formGroup]="todoDetailsForm">
   <p class="text-muted mb-2">
     All fields are required unless otherwise stated.
   </p>
   <div class="flex-row">
     <div class="flex-col">
       <kendo-floatinglabel text="Title">
-        <kendo-textbox aria-label="todo title"    [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+        <kendo-textbox aria-label="todo title"    
+        [fillMode]="formUiStyle.inputFillMode"
+        formControlName="title" >   </kendo-textbox>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
       <kendo-floatinglabel text="Due Date (Optional)">
-        <kendo-datepicker  format="MM-dd-yyyy" [fillMode]="formUiStyle.dateInputFillMode" formatPlaceholder="formatPattern">
+        <kendo-datepicker  format="MM-dd-yyyy"
+         [fillMode]="formUiStyle.dateInputFillMode" 
+         formatPlaceholder="formatPattern"
+         formControlName="dueDate"
+         (valueChange)="onDueChange($event)"
+         >
         </kendo-datepicker>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
       <kendo-floatinglabel text="Repeat">
-        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  >
+        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"
+          formControlName="repeat"
+          textField="lovDesc"
+                valueField="lovCode"
+                [valuePrimitive]="true"
+          [data]="frequencyTypeCodeSubject$ | async"
+          (valueChange)="onRepeatChange($event)"
+          >
         </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+    <div class="flex-col flex-col-6" *ngIf="showTimePicker">
+      <kendo-floatinglabel text="Time (Optional)">
+        <kendo-timepicker
+          [fillMode]="formUiStyle.dateInputFillMode"
+          formControlName="repeatTime"
+          formatPlaceholder="formatPattern"
+        ></kendo-timepicker>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
@@ -26,7 +49,7 @@
           format="MM-dd-yyyy"
           formatPlaceholder="formatPattern"
           [fillMode]="formUiStyle.dateInputFillMode"
-        
+          formControlName="endDate"
         >
         </kendo-datepicker>
       </kendo-floatinglabel>
@@ -41,6 +64,7 @@
           [maxlength]="tareaCustomTodoMaxLength"
           [value]="tareaCustomTodoDescription"
           (valueChange)="onTareaCustomTodoValueChange($event)"
+          formControlName="alertDesc"
         >
           <kendo-textarea-suffix class="justify-content-end">
             <span class="tareacustomtodocounter">{{
@@ -52,12 +76,16 @@
     </div>
     <div class="flex-col mt-2 field_with_info">
       <kendo-floatinglabel text="Link Reminder To">
-        <kendo-dropdownlist aria-label="Link Reminder To" [fillMode]="formUiStyle.dropDownFillMode" > </kendo-dropdownlist>
+        <kendo-dropdownlist aria-label="Link Reminder To"
+         [fillMode]="formUiStyle.dropDownFillMode" 
+        formControlName="linkTo"
+        (valueChange)="onLinkToChange($event)"
+        [data]="EntityTypeCodeData"> </kendo-dropdownlist>
     </kendo-floatinglabel>
     <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
     
       </div>
-    <div class="flex-col mt-2 field_with_info">
+    <div class="flex-col mt-2 field_with_info" *ngIf="showVendorSearch">
       <div class="autoSelect-search mat-form-no-b-space ">
         <div class="global-search">
           <span
@@ -67,27 +95,32 @@
             >search</span
           >
           <kendo-multicolumncombobox 
-            textField="name"
-            valueField="id"
+            textField="providerName"
+            valueField="providerId"
+            [data]="providerSearchResult$ | async"
             [fillMode]="formUiStyle.dropDownFillMode"
             placeholder="Link to Client or Service Provider (Optional)"
+           
+            (filterChange)="loadVendorsBySearchText($event)"
+            [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+            [filterable]="true"
+            formControlName="vendorId"
           >
             <kendo-combobox-column [width]="250">
               <ng-template
                 kendoMultiColumnComboBoxColumnCellTemplate
                 let-dataItem
               >
-                <span class="pr-1">{{ dataItem.name }}</span>
-                <span class="pr-1 text-muted">ID {{ dataItem.id }}</span>
-                <span class="text-muted">URN {{ dataItem.urn }}</span>
+                <span class="pr-1">{{ dataItem.providerName }}</span>
+                <span class="text-muted">Tin {{ dataItem.tin }}</span>
               </ng-template>
             </kendo-combobox-column>
           </kendo-multicolumncombobox>
         </div>
       </div>
       <span class="material-icons" aria-hidden="true" title="Select a client or service provider if you want this reminder to be displayed in their profile.">info</span>
-    </div>
-    <div class="flex-col mt-2">
+    </div> 
+    <div class="flex-col mt-2" *ngIf="showClientSearch">
       <div class="global-search mat-form-no-b-space">
         <span
           class="material-icons global-search-icon"
@@ -95,19 +128,29 @@
           aria-hidden="true"
           >search</span
         >
+        <span *ngIf="showClientSearchInputLoader"
+        class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+    </span>
         <kendo-multicolumncombobox 
-          textField="name"
-          valueField="id"
+       
+          [data]="clientSearchResult$  | async"
+          textField="clientFullName"
+          valueField="clientId"
           placeholder="Search Case Name, Member ID or SSN"
           [fillMode]="formUiStyle.dropDownFillMode"
-        >
+          (filterChange)="loadClientBySearchText($event)"
+          [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+          [filterable]="true"
+          formControlName="clientId"
+          [loading]="showClientSearchInputLoader"
+          >
           <kendo-combobox-column>
             <ng-template
               kendoMultiColumnComboBoxColumnCellTemplate
               let-dataItem
             >
-              <span class="pr-1">{{ dataItem.name }}</span>
-              <span class="pr-1 text-muted">ID {{ dataItem.id }}</span>
+              <span class="pr-1">{{ dataItem.clientFullName}}</span>
+              <span class="pr-1 text-muted">ID {{ dataItem.clientId }}</span>
               <span class="pr-1 text-muted">DOB {{ dataItem.dob }}</span>
               <span class="text-muted">SSN {{ dataItem.ssn }}</span>
             </ng-template>
@@ -123,9 +166,7 @@
 
 <kendo-dialog-actions kendoTooltip>
   <div class="justify-content-between">
-    <div>
-      <button kendoButton aria-label="Delete" class="k-danger-link">  Delete     </button>
-    </div>
+
     <div class="justify-content-end">
       <button
         kendoButton
@@ -136,7 +177,7 @@
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Create">Create</button>
+      <button kendoButton [primary]="true" aria-label="Create" (click)="CreateToDoItem()">Create</button>
     </div>
   </div>
 </kendo-dialog-actions>

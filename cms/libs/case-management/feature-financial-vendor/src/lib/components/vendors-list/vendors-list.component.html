@@ -58,7 +58,7 @@
     <kendo-grid-column field="vendorName" title="{{vendornameTitleData$ | async}}" [width]="160" [sticky]="true">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.vendorName" kendoButton look="flat" class="card-link-button"
-          (click)="onVendorClicked(dataItem.vendorId)">
+          (click)="onVendorClicked(dataItem.vendorId)" *ngIf="dataItem.vendorName">
           {{ dataItem.vendorName }}
         </button>
       </ng-template>
