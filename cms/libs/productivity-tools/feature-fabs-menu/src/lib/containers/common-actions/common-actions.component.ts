@@ -41,9 +41,8 @@ export class CommonActionsComponent implements OnInit {
     this.isShownTodoReminders = false;
   }
 
-  handleShowDirectMessageClicked() {
- 
-   this.router.navigate([{ outlets: { directMessage: [ 'fabs'] }}]);
+  handleShowDirectMessageClicked() { 
+
     this.isShownDirectMessage = !this.isShownDirectMessage;
     this.isShownEventLog = false;
     this.isShownTodoReminders = false;

@@ -1,6 +1,8 @@
 /** Angular **/
 /** Facades **/
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, AfterContentChecked, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+import { Router } from '@angular/router';
+
 
 
 @Component({
@@ -8,17 +10,23 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
   templateUrl: './direct-message-fab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DirectMessageFabComponent implements OnInit{
+export class DirectMessageFabComponent implements OnInit {
   showDirectMessages = false
+  closeButtonClicked = false
+
+
+  
   /** Public properties **/
   closeAction()
   {
+    
     this.showDirectMessages = false
+    this.closeButtonClicked = true
   }
 
     /** Lifecycle hooks **/
     ngOnInit(): void {
-      debugger
+      
       this.showDirectMessages = true
     }
 }
