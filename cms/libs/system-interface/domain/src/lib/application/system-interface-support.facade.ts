@@ -84,24 +84,42 @@ export class SystemInterfaceSupportFacade {
   private distributionDataLoaderSubject = new BehaviorSubject<boolean>(false);
   distributionDataLoader$ = this.distributionDataLoaderSubject.asObservable();
 
-  loadDistributionGroup(paginationParameters: any) {
-    this.distributionDataLoaderSubject.next(true);
-    this.service.getDistributionList( paginationParameters).subscribe({
+  loadSupportGroup(paginationParameters: any) {
+    this.showLoader();
+    this.service.getSupportGroupList( paginationParameters).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
           data: dataResponse['items'],
           total: dataResponse?.totalCount,
         };
         this.supportGroupSubject.next(gridView);
-        this.distributionDataLoaderSubject.next(false);
+        this.hideLoader();
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.distributionDataLoaderSubject.next(false);
         this.hideLoader();
       },
     });
-  }
+    }
+
+    loadDistributionGroup(paginationParameters: any) {
+        this.distributionDataLoaderSubject.next(true);
+        this.service.getDistributionList(paginationParameters).subscribe({
+            next: (dataResponse: any) => {
+                const gridView: any = {
+                    data: dataResponse['items'],
+                    total: dataResponse?.totalCount,
+                };
+                this.supportGroupSubject.next(gridView);
+                this.distributionDataLoaderSubject.next(false);
+            },
+            error: (err) => {
+                this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+                this.distributionDataLoaderSubject.next(false);
+                this.hideLoader();
+            },
+        });
+    }
 
 
   loadDistributionLists() {
@@ -128,7 +146,24 @@ export class SystemInterfaceSupportFacade {
   }
 
   addSupportGroup(notificationGroup: any) {
-    return this.systemInterfaceSupportService.addSupportGroup(notificationGroup);
+
+    this.systemInterfaceSupportService.addSupportGroup(notificationGroup).subscribe(
+      {
+        next: (response: any) => {
+          this.hideLoader();
+          this.notificationSnackbarService.manageSnackBar(
+            SnackBarNotificationType.SUCCESS,
+            response.message
+          );
+          this.addSupportGroupSubject.next(response);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+        },
+      }
+    );
+    //return this.systemInterfaceSupportService.addSupportGroup(notificationGroup).subscribe();
   }
 
   supportGroupAdded(): Observable<any>  {
