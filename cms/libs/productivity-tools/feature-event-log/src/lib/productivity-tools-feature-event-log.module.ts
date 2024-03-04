@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 /** Modules **/
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
+import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { ProductivityToolsDomainModule } from '@cms/productivity-tools/domain';
 import { ProductivityToolsFeatureEventLogRoutingModule } from './productivity-tools-feature-event-log-routing.module';
 /** Components **/
@@ -17,6 +18,7 @@ import { EventLogComponentFabPageComponent } from './containers/event-log-fab-pa
     ProductivityToolsDomainModule,
     SharedUiTpaModule,
     ProductivityToolsFeatureEventLogRoutingModule,
+    SharedUiCommonModule
   ],
   declarations: [
     EventLogComponent,

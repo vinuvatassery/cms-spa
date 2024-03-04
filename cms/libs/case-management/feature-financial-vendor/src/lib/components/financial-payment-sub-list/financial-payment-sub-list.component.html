@@ -12,7 +12,7 @@
       </kendo-grid-column>
     <kendo-grid-column field="clientFullName" title="Client Name" [width]="150">
         <ng-template kendoGridCellTemplate let-dataItem>
-            <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="onClientClicked(dataItem.clientId)">
+            <button [attr.aria-label]="dataItem.clientFullName" *ngIf="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="onClientClicked(dataItem.clientId)">
                 {{ dataItem.clientFullName }}
             </button>
         </ng-template> </kendo-grid-column>

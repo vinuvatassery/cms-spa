@@ -98,7 +98,7 @@
       <kendo-grid-column field="batchName" title="Batch #" [width]="140">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
-          (click)="onbatchNumberClick(dataItem)">
+          (click)="onbatchNumberClick(dataItem)" *ngIf="dataItem.batchName">
             {{ dataItem.batchName }}
           </button>
         </ng-template>
@@ -114,7 +114,7 @@
      <kendo-grid-column field="pharmacyName" title="Pharmacy Name" [width]="160">
       <ng-template kendoGridCellTemplate let-dataItem>
         <button [attr.aria-label]="dataItem.pharmacyName" kendoButton look="flat" class="card-link-button"
-          (click)="onProviderNameClick(dataItem.paymentRequestId)">
+          (click)="onProviderNameClick(dataItem.paymentRequestId)" *ngIf="dataItem.pharmacyName">
           {{ dataItem.pharmacyName }}
         </button>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
@@ -141,7 +141,7 @@
       </kendo-grid-column>
       <kendo-grid-column field="clientFullName" title="Client Name" [width]="160">
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
+          <button [attr.aria-label]="dataItem.clientFullName" *ngIf="dataItem.clientFullName" kendoButton look="flat" class="card-link-button" (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog,dataItem)">
             {{ dataItem.clientFullName }}
           </button>
         </ng-template>

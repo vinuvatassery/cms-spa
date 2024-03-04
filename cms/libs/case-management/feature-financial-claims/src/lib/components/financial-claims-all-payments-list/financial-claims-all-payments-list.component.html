@@ -83,7 +83,7 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button [attr.aria-label]="dataItem.itemNumber" kendoButton look="flat" class="card-link-button"
+          <button [attr.aria-label]="dataItem.itemNumber" *ngIf="dataItem.itemNumber" kendoButton look="flat" class="card-link-button"
           (click)="onitemNumberClick(dataItem)">
             {{ dataItem.itemNumber }}
           </button>
@@ -100,7 +100,7 @@
           </kendo-grid-string-filter-menu>
         </ng-template>
         <ng-template kendoGridCellTemplate let-dataItem>
-          <button aria-label="batchNumber" kendoButton look="flat" class="card-link-button"
+          <button aria-label="batchNumber" kendoButton look="flat" *ngIf="dataItem.batchNumber" class="card-link-button"
           (click)="onbatchNumberClick(dataItem)">
             {{ dataItem.batchNumber }}
           </button>
@@ -120,7 +120,7 @@
       <kendo-grid-column field="providerName" title="Provider Name" [width]="160">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.providerName" kendoButton look="flat" class="card-link-button"
-          (click)="onProviderNameClick(dataItem.paymentRequestId)">
+          (click)="onProviderNameClick(dataItem.paymentRequestId)" *ngIf="dataItem.providerName">
             {{ dataItem.providerName }}
           </button>
         </ng-template>
@@ -156,7 +156,7 @@
       <kendo-grid-column field="clientFullName" title="Client Name" [width]="180">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.clientFullName" kendoButton look="flat" class="card-link-button"
-          (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)">
+          (click)="clientRecentClaimsModalClicked(clientRecentClaimsDialog, dataItem)" *ngIf="dataItem.clientFullName">
             {{ dataItem.clientFullName }}
           </button>
         </ng-template>

@@ -72,7 +72,7 @@
       <kendo-grid-column field="batchName" title="Batch #" [width]="120">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button [attr.aria-label]="dataItem.batchName" kendoButton look="flat" class="card-link-button"
-            (click)="navToBatchDetails(dataItem)">
+            (click)="navToBatchDetails(dataItem)" *ngIf="dataItem.batchName">
             {{ dataItem.batchName }}
           </button>
         </ng-template>
