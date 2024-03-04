@@ -371,6 +371,7 @@ export class CaseFacade {
           const activeSession = {
             clientCaseId: clientProfileResponse?.clientCaseId,
             clientId: clientProfileResponse?.clientId,
+            sessionId: clientProfileResponse?.workflowSessionId
           };
           this.createActiveSession(activeSession);
         }
