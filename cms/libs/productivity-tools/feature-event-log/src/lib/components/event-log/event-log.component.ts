@@ -268,7 +268,7 @@ export class EventLogComponent implements OnInit {
           {
             field: field,
             operator: operator,
-            value: this.eventLogFilterForm.controls[value].value.toString(),
+            value: this.eventLogFilterForm.controls[value].value,
           }
         ],
         logic: 'and',
@@ -282,17 +282,6 @@ export class EventLogComponent implements OnInit {
     
     this.filterDataQueryArray = [];
 
-    let object ={
-      filters: [
-        {
-          field: "entityId",
-          operator: "eq",
-          value: this.entityId,
-        }
-      ],
-      logic: 'and',
-    };
-    this.filterDataQueryArray.push(object);
     if (this.searchText.length > 0 && this.isShownSearch) {
       let object = {
         filters: [
@@ -306,6 +295,18 @@ export class EventLogComponent implements OnInit {
       };
       this.filterDataQueryArray.push(object);
     }
+
+    let object ={
+      filters: [
+        {
+          field: "entityId",
+          operator: "eq",
+          value: this.entityId,
+        }
+      ],
+      logic: 'and',
+    };
+    this.filterDataQueryArray.push(object);
     
     this.setFilterOfCaseWorkerAndEventType("createdBy","caseworkerfilterbyoperator","caseworkerfilterbyvalue");
     this.setFilterOfCaseWorkerAndEventType("eventLogDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
@@ -313,6 +314,11 @@ export class EventLogComponent implements OnInit {
     this.setFilterOfAfterAndBeforeDate("creationTime","lte","beforedatefilter");
     
     this.filterData = {logic:"and", filters: this.filterDataQueryArray};    
+  }
+
+  loadLogEvent() {
+    this.loadEventLogs();
+    this.subscribeEvents();
   }
 
   loadEventLogs()
@@ -323,7 +329,7 @@ export class EventLogComponent implements OnInit {
       pagesize: 10,
       sort: this.sortColumnName,
       sortType: this.sortType ?? 'asc',
-      filter: JSON.stringify(this.filterData.filters ?? [])
+      filter: JSON.stringify(this.filterData.filters ?? [])  
     };
     console.log(gridDataRefinerValue);
     this.eventLogFacade.loadEvents(gridDataRefinerValue);

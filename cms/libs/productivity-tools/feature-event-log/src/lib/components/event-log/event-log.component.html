@@ -20,7 +20,8 @@
     </div>
     <div class="sidePanel_header-right">
       <div class="input-search mat-form-no-b-space" *ngIf="isShownSearch">
-          <kendo-textbox aria-label="search event"  placeholder="Search Events"  [fillMode]="formUiStyle.inputFillMode">
+          <kendo-textbox aria-label="search event"  placeholder="Search Events"  [fillMode]="formUiStyle.inputFillMode"
+          [(ngModel)]="searchText" (valueChange)="loadLogEvent()">
            </kendo-textbox>
       </div>
       <button
