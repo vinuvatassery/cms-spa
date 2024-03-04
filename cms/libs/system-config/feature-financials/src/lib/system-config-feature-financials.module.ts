@@ -12,9 +12,10 @@ import { FundsPageComponent } from './containers/funds-page/funds-page.component
 import { IncomeTypesPageComponent } from './containers/income-types-page/income-types-page.component';
 import { PcaCodesPageComponent } from './containers/pca-codes-page/pca-codes-page.component';
 import { IndexPageComponent } from './containers/index-page/index-page.component';
+import { SystemConfigFeatureFinancialsRoutingModule } from './system-config-feature-financials.routing.module';
 
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureFinancialsRoutingModule],
   declarations: [
     ExpenseTypesListComponent,
     FundsListComponent,

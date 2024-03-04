@@ -21,8 +21,9 @@ import { RacialOrEthnicIdentityPageComponent } from './containers/racial-or-ethn
 import { GenderPageComponent } from './containers/gender-page/gender-page.component';
 import { PronounsPageComponent } from './containers/pronouns-page/pronouns-page.component';
 import { SexualOrientationPageComponent } from './containers/sexual-orientation-page/sexual-orientation-page.component';
+import { SystemConfigFeatureClientProfileManagementRoutingModule } from './system-config-feature-client-profile-management.routing.module';
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureClientProfileManagementRoutingModule],
   declarations: [
     GenderDetailComponent,
     GenderListComponent,
@@ -43,6 +44,7 @@ import { SexualOrientationPageComponent } from './containers/sexual-orientation-
     GenderPageComponent,
     PronounsPageComponent,
     SexualOrientationPageComponent
+    
   ],
   exports: [
     GenderDetailComponent,

@@ -27,9 +27,10 @@ import { ServiceProviderPageComponent } from './containers/service-provider-page
 import { SlotPageComponent } from './containers/slot-page/slot-page.component';
 import { IncomeInclusionsExclusionsPageComponent } from '..';
 import { RegionAssignmentPageComponent } from './containers/region-assignment-page/region-assignment-page.component';
+import { SystemConfigFeatureHousingCoordinationManagementRoutingModule } from './system-config-feature-housing-coordination-management.routing.module';
 
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureHousingCoordinationManagementRoutingModule],
   declarations: [
     CaseAvailabilityDetailComponent,
     CaseAvailabilityListComponent,

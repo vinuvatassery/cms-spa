@@ -9,36 +9,31 @@ import { PcaCodesPageComponent } from './containers/pca-codes-page/pca-codes-pag
 
 const routes: Routes = [
   {
+    path: ' ',
+    component: FundsPageComponent,
+ 
+  }, 
+  {
+    path: 'expense-types',
+    component: ExpenseTypePageComponent,
+  },
+  {
     path: 'funds',
     component: FundsPageComponent,
-    children: [
-      {
-        path: 'expense-types',
-        component: ExpenseTypePageComponent,
-      },
-      {
-        path: 'funds',
-        component: FundsPageComponent,
-      },
-      {
-        path: 'income-types',
-        component: IncomeTypesPageComponent,
-      },
-      {
-        path: 'pca-codes',
-        component: PcaCodesPageComponent,
-      },
-      {
-        path: 'index',
-        component: IndexPageComponent,
-      },
-      {
-        path: '',
-        redirectTo: 'email-template',
-        pathMatch: 'full',
-      },
-    ],
-  }, 
+  },
+  {
+    path: 'income-types',
+    component: IncomeTypesPageComponent,
+  },
+  {
+    path: 'pca-codes',
+    component: PcaCodesPageComponent,
+  },
+  {
+    path: 'index',
+    component: IndexPageComponent,
+  },
+ 
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

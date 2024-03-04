@@ -50,9 +50,10 @@ import { InsuranceVendorsPageComponent } from './container/insurance-vendors-pag
 import { MedicalProvidersPageComponent } from './container/medical-providers-page/medical-providers-page.component';
 import { PharmaciesPageComponent } from './container/pharmacies-page/pharmacies-page.component';
 import { ManufacturersPageComponent } from './container/manufacturers-page/manufacturers-page.component';
+import { SystemConfigFeatureServiceProviderRoutingModule } from './system-config-feature-service-provider.routing.module';
 
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureServiceProviderRoutingModule],
   declarations: [
     ManufacturersListComponent,
     DrugsListComponent,

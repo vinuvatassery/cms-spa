@@ -11,48 +11,43 @@ import { SlotPageComponent } from './containers/slot-page/slot-page.component';
 
 const routes: Routes = [
   {
+    path: '',
+    component: SlotPageComponent,
+ 
+  }, 
+  {
     path: 'slots',
     component: SlotPageComponent,
-    children: [
-      {
-        path: 'slots',
-        component: SlotPageComponent,
-      },
-      {
-        path: 'case-availability',
-        component: CaseAvailabilityPageComponent,
-      },
-      {
-        path: 'eid-period',
-        component: EidLifetimePeriodPageComponent,
-      },
-      {
-        path: 'housing-acuity-level',
-        component: HousingAcuityLevelPageComponent,
-      },
-      {
-        path: 'income-inclusions-exlusions',
-        component: IncomeInclusionsExclusionsPageComponent,
-      },
-      {
-        path: 'ps-fmr-zip',
-        component: PsMfrZipPageComponent,
-      },
-      {
-        path: 'region-assignment',
-        component: RegionAssignmentPageComponent,
-      },
-      {
-        path: 'service-provider',
-        component: ServiceProviderPageComponent,
-      },
-      {
-        path: '',
-        redirectTo: 'slots',
-        pathMatch: 'full',
-      },
-    ],
-  }, 
+  },
+  {
+    path: 'case-availability',
+    component: CaseAvailabilityPageComponent,
+  },
+  {
+    path: 'eid-period',
+    component: EidLifetimePeriodPageComponent,
+  },
+  {
+    path: 'housing-acuity-level',
+    component: HousingAcuityLevelPageComponent,
+  },
+  {
+    path: 'income-inclusions-exlusions',
+    component: IncomeInclusionsExclusionsPageComponent,
+  },
+  {
+    path: 'ps-fmr-zip',
+    component: PsMfrZipPageComponent,
+  },
+  {
+    path: 'region-assignment',
+    component: RegionAssignmentPageComponent,
+  },
+  {
+    path: 'service-provider',
+    component: ServiceProviderPageComponent,
+  },
+ 
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

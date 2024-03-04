@@ -9,40 +9,35 @@ import { TemplatePageComponent } from './containers/template-page/template-page.
 
 const routes: Routes = [
   {
+    path: '',
+    component: EmailTemplatePageComponent,
+ 
+  }, 
+  {
+    path: 'client-notification-defaults',
+    component: ClientNotificationDefaultsPageComponent,
+  },
+  {
     path: 'email-template',
     component: EmailTemplatePageComponent,
-    children: [
-      {
-        path: 'client-notification-defaults',
-        component: ClientNotificationDefaultsPageComponent,
-      },
-      {
-        path: 'email-template',
-        component: EmailTemplatePageComponent,
-      },
-      {
-        path: 'form-template',
-        component: FormDocumentsPageComponent,
-      },
-      {
-        path: 'email-template',
-        component: LetterTemplatePageComponent,
-      },
-      {
-        path: 'sms-text-template',
-        component: SmsTextTemplatePageComponent,
-      },
-      {
-        path: 'templates',
-        component: TemplatePageComponent,
-      },
-      {
-        path: '',
-        redirectTo: 'email-template',
-        pathMatch: 'full',
-      },
-    ],
-  }, 
+  },
+  {
+    path: 'form-template',
+    component: FormDocumentsPageComponent,
+  },
+  {
+    path: 'email-template',
+    component: LetterTemplatePageComponent,
+  },
+  {
+    path: 'sms-text-template',
+    component: SmsTextTemplatePageComponent,
+  },
+  {
+    path: 'templates',
+    component: TemplatePageComponent,
+  },
+ 
 ];
 @NgModule({
   imports: [RouterModule.forChild(routes)],

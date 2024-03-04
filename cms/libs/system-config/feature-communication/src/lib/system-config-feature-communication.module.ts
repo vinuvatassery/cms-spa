@@ -25,9 +25,10 @@ import { SmsTextTemplatePageComponent } from './containers/sms-text-template-pag
 import { FormDocumentsPageComponent } from './containers/form-documents-page/form-documents-page.component';
 import { LetterTemplatePageComponent } from './containers/letter-template-page/letter-template-page.component';
 import { TemplatePageComponent } from './containers/template-page/template-page.component';
+import { SystemConfigFeatureCommunicationRoutingModule } from './system-config-feature-communication.routing.module';
 
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureCommunicationRoutingModule],
   declarations: [
     EmailTemplateListComponent,
     LetterTemplateListComponent,
