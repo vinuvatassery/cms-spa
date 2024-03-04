@@ -208,23 +208,25 @@ export class EventLogComponent implements OnInit {
     this.isEnableFilterBtn = false;
     this.cd.detectChanges();
     this.filterData = { logic: 'and', filters: [] };
+    this.loadEvents();
   }
 
   onEventLogFilterFilterClicked()
   {
     this.setFilteredText();  
     this.loadEventLogs();
+    this.isShowFilter = false;
     this.cd.detectChanges();
   }
 
   private setFilteredText()
   {
     var text="";
-    if(this.eventLogFilterForm.controls["caseworkerfilterbyoperator"].value != "" && this.eventLogFilterForm.controls["caseworkerfilterbyoperator"].value != null)
+    if(this.eventLogFilterForm.controls["caseworkerfilterbyvalue"].value != "" && this.eventLogFilterForm.controls["caseworkerfilterbyvalue"].value != null)
     {
       text += " Case Worker,";
     }
-    if(this.eventLogFilterForm.controls["eventtypefilterbyoperator"].value != "" && this.eventLogFilterForm.controls["eventtypefilterbyoperator"].value != null)
+    if(this.eventLogFilterForm.controls["eventtypefilterbyvalue"].value != "" && this.eventLogFilterForm.controls["eventtypefilterbyvalue"].value != null)
     {
       text += " Event Type,";
     }
@@ -249,7 +251,7 @@ export class EventLogComponent implements OnInit {
             field: field,
             operator: this.eventLogFilterForm.controls[operator].value.toString(),
             value: this.eventLogFilterForm.controls[value].value.toString(),
-          },
+          }
         ],
         logic: 'and',
       };
@@ -267,7 +269,7 @@ export class EventLogComponent implements OnInit {
             field: field,
             operator: operator,
             value: this.eventLogFilterForm.controls[value].value.toString(),
-          },
+          }
         ],
         logic: 'and',
       };
@@ -286,7 +288,7 @@ export class EventLogComponent implements OnInit {
           field: "entityId",
           operator: "eq",
           value: this.entityId,
-        },
+        }
       ],
       logic: 'and',
     };
@@ -298,7 +300,7 @@ export class EventLogComponent implements OnInit {
             field: "ALL",
             operator: "contains",
             value: this.searchText,
-          },
+          }
         ],
         logic: 'and',
       };
