@@ -10,6 +10,17 @@ const routes: Routes = [
   {
     path: '',
     component: FinancialVendorPageComponent,
+     
+    children:[
+      {
+        outlet: 'todoReminderList',
+        path: '',
+        loadChildren: () =>
+          import('@cms/productivity-tools/feature-todo').then(
+            (m) => m.ProductivityToolsFeatureTodoModule
+          )   
+      }
+    ]
   },
   {
     path: 'profile',

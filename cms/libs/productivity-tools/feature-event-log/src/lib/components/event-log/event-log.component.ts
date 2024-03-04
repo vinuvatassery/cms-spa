@@ -7,13 +7,16 @@ import {
   OnInit,
   Output,
   TemplateRef,
-  Input
+  Input,
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { Lov, LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'productivity-tools-event-log',
@@ -24,16 +27,18 @@ import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 export class EventLogComponent implements OnInit {
   /** Output properties **/
   @Output() closeAction = new EventEmitter();
-  @Input() eventAttachmentTypeLov$: any;
+  @Input() eventAttachmentTypeLov$!: Observable<Lov[]>;
   @Input() entityType: any;
   @Input() entityId: any;
   @Input() clientCaseEligibilityId: any;
 
   /** Public properties **/
-  parentEventLogId : any;
-  eventList : any = [];
-  SubEventList : any = [];
-  eventResponseList : any = [];
+ 
+  clientId = 0;
+  parentEventLogId: any;
+  eventList: any = [];
+  SubEventList: any = [];
+  eventResponseList: any = [];
   events$ = this.eventLogFacade.events$;
   events: any = [];
   isShowEventLog = false;
@@ -42,6 +47,8 @@ export class EventLogComponent implements OnInit {
   isAddEventDialogOpen: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   eventsdata$ = this.eventLogFacade.eventsdata$;
+ 
+ 
   isSubEvent = false;
   // actions: Array<any> = [{ text: 'Action' }];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -72,31 +79,39 @@ export class EventLogComponent implements OnInit {
   constructor(
     private readonly eventLogFacade: EventLogFacade,
     private dialogService: DialogService,
-    private cd: ChangeDetectorRef
+    private route: ActivatedRoute,
+    private cd: ChangeDetectorRef,
+    private readonly lovFacade: LovFacade
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit() {
+    this.entityType = 'CLIENT';
+    this.eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$;
     this.loadEventsData();
     this.loadEvents();
+    this.clientCaseEligibilityId = this.route.snapshot.queryParams['cid'];
+   this.clientId =   this.route.snapshot.queryParams['id'];
+    this.entityId = this.clientId.toString();
     this.subscribeEvents();
     this.getEventList();
+    this.lovFacade.getEventAttachmentTypeLov();
   }
 
   /** Private methods **/
   private loadEvents(): void {
-    this.createFilterData("");
+    this.createFilterData('');
     const paginationData = {
       skipCount: 0,
       pagesize: 10,
       sortColumn: 'creationTime',
-      sortType: "desc",
+      sortType: 'desc',
       filter: JSON.stringify(this.filterData),
     };
     this.eventLogFacade.loadEvents(paginationData);
   }
 
-  createFilterData(data: string){
+  createFilterData(data: string) {
     this.filterData = [
       {
         filters: [{ field: 'entityId', operator: 'eq', value: data }],
@@ -111,14 +126,12 @@ export class EventLogComponent implements OnInit {
       this.cd.detectChanges();
     });
   }
-  
-  private loadEventsData()
-  {
+
+  private loadEventsData() {
     this.eventLogFacade.loadEventsData();
   }
 
-  getEventList()
-  {
+  getEventList() {
     this.eventsdata$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
         this.eventResponseList = response;
@@ -135,16 +148,25 @@ export class EventLogComponent implements OnInit {
     this.isShowEventLog = !this.isShowEventLog;
   }
 
-  onOpenEventDetailsClicked(template: TemplateRef<unknown>, isSubEvent: boolean, parentEventLogId : string|null = null, parentEventId : string|null = null): void {
+  onOpenEventDetailsClicked(
+    template: TemplateRef<unknown>,
+    isSubEvent: boolean,
+    parentEventLogId: string | null = null,
+    parentEventId: string | null = null
+  ): void {
     this.isSubEvent = isSubEvent;
     this.parentEventLogId = parentEventLogId;
-    if(isSubEvent && parentEventId)
-    {
-      this.SubEventList = this.eventResponseList.filter((item : any) => item.parentEventId ? item.parentEventId.toString().toLowerCase() == parentEventId.toLowerCase() : false);
-    }
-    else
-    {
-      this.eventList = this.eventResponseList.filter((item : any) => !item.parentEventId );
+    if (isSubEvent && parentEventId) {
+      this.SubEventList = this.eventResponseList.filter((item: any) =>
+        item.parentEventId
+          ? item.parentEventId.toString().toLowerCase() ==
+            parentEventId.toLowerCase()
+          : false
+      );
+    } else {
+      this.eventList = this.eventResponseList.filter(
+        (item: any) => !item.parentEventId
+      );
     }
     this.isAddEventDialogOpen = this.dialogService.open({
       content: template,
@@ -159,14 +181,10 @@ export class EventLogComponent implements OnInit {
 
   isShowReadMore(elementId: any) {
     return true;
-      var el = document.getElementById(elementId);
-      var divHeight = el?.offsetHeight
-      //var lineHeight = parseInt(el?.style?.lineHeight?.toString());
-      //var lines = divHeight?? 0 / lineHeight;
-      console.log("Lines: " + el?.style?.lineHeight?.toString());
+    var el = document.getElementById(elementId);
+    var divHeight = el?.offsetHeight;
+    //var lineHeight = parseInt(el?.style?.lineHeight?.toString());
+    //var lines = divHeight?? 0 / lineHeight;
+    console.log('Lines: ' + el?.style?.lineHeight?.toString());
   }
-
-  
 }
-
-
