@@ -16,35 +16,53 @@
   </span>
 </section>
 
-<h3>Support Group</h3>
-<p>Select a Group in the table below to view assigned Users and Error Categories</p>
+<h3 >Support Group</h3>
+<p >Select a Group in the table below to view assigned Users and Error Categories</p>
 
 <div class="app-c-table">
   <kendo-grid [resizable]="true" [loading]="isSupportGroupGridLoaderShow" [pageSize]="state.take" [pageable]="true"
-    [sortable]="false" [skip]="state.skip" [groupable]="false" [sort]="state.sort" [columnMenu]="{filter: true }"
-    [filter]="state.filter" [reorderable]="true" (dataStateChange)="dataStateChange($event)"
-    (filterChange)="filterChange($event)" [selectable]="true" [data]="gridDataResult.data">
-    <kendo-grid-column field="groupCode" title="Interface" [width]="120" [sortable]="false"></kendo-grid-column>
-    <!-- <kendo-grid-column field="groupName" title="Group Name" [width]="140"> </kendo-grid-column>
-    <kendo-grid-column field="groupDesc" title="User Per Group" [width]="100"> </kendo-grid-column>
+    [sortable]="false" [skip]="state.skip" [groupable]="false" [sort]="state.sort" [columnMenu]="false"
+    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
+    [data]="gridSupportGroupData$ | async">
+    <kendo-grid-column field="interface" title="Interface" [width]="120" [sortable]="false">
+    </kendo-grid-column>
+    <kendo-grid-column field="groupName" title="Group Name" [width]="140"> </kendo-grid-column>
+    <kendo-grid-column field="perGroup" title="User Per Group" [width]="100"> </kendo-grid-column>
+    <kendo-grid-column field="status" title="Status" [width]="80"> </kendo-grid-column>
+    <kendo-grid-column field="lastModified" title="Last Modified" [width]="80" class="text-center">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+          [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.modifiedBy">
+          <div class="app-c-avatar avatar-sm">
+            <span class="profile-text-avatar">AK</span>
+          </div>
+        </button>
+        <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+          <ng-template kendoPopoverBodyTemplate>
+            <common-user-profile-card> </common-user-profile-card>
+          </ng-template>
+        </kendo-popover>
+      </ng-template>
+    </kendo-grid-column>
     <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="gridMoreActionsSupport"
+        <kendo-dropdownbutton [data]="gridMoreActionsSupport" 
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-          <span class="material-icons" aria-label="More option"> more_vert </span>
-          <ng-template kendoDropDownButtonItemTemplate let-buttondataItem>
-            <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
-              aria-hidden="false" (click)="buttondataItem.click(dataItem)">
-              <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
-              <label> {{ buttondataItem.text }} </label>
-            </button>
-          </ng-template>
+          <span class="material-icons" aria-label="More option"> more_vert    </span>
+          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+            <ng-container>
+              <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                <label> {{ buttondataItem.text }} </label>
+              </button>
+            </ng-container> </ng-template>
         </kendo-dropdownbutton>
       </ng-template>
-    </kendo-grid-column> -->
-    <!-- <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+    </kendo-grid-column>
+    <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
       let-currentPage="currentPage">
       <div class="grid-custom-paginationtemplates d-flex">
         <div class="d-flex align-items-center">
@@ -72,9 +90,8 @@
       <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
       </div>
       <p>There is no data to display.</p>
-    </ng-template> -->
+    </ng-template>
   </kendo-grid>
-
 </div>
 
 
@@ -84,14 +101,54 @@
   <button kendoButton class="mr-1" [primary]="true" aria-label="Group" icon="add" (click)="onGroupDetailsClicked()">
     Group</button>
 </div>
-
-
 <kendo-dialog *ngIf="isGroupDetailPopup" (close)="onCloseGroupDetailPopupClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>Add Group</kendo-dialog-titlebar>
-  <support-group-detail [interfaceSupportGroupLov]="interfaceSupportGroupLov" [addSupportGroup$]="addSupportGroup$"
-    (addSupportGroupEvent)="addSupportGroup($event)" (close)="onCloseGroupDetailPopupClicked()"> </support-group-detail>
+
+  <section class="k-dialog-body">
+    <p class="text-muted">
+      Adds a user to the Group list for the selected role
+    </p>
+    <div class="flex-row">
+
+      <div class="flex-col">
+        <kendo-floatinglabel text="Interface"> 
+          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"> </kendo-dropdownlist> 
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col ">
+        <kendo-floatinglabel text="Group Name">
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+      <div class="flex-col ">
+        <kendo-floatinglabel text="Description">
+          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+          </kendo-textbox>
+        </kendo-floatinglabel>
+      </div>
+
+
+    </div>
+  </section>
+
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+          (click)="onCloseGroupDetailPopupClicked()">
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Add">
+          Add
+        </button>
+      </div>
+    </div>
+  </kendo-dialog-actions>
 </kendo-dialog>
+
+
 
 
 <kendo-dialog *ngIf="isSupportGroupDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
@@ -99,23 +156,23 @@
   </kendo-dialog-titlebar>
 
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">
-      Are you sure you want to deactivate this role?
-    </p>
+        <p class="text-muted mb-2">
+          Are you sure you want to deactivate this role?
+        </p>
   </section>
 
   <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-          (click)="onCloseSupportGroupDeactivateClicked()">
-          Cancel
-        </button>
-        <button kendoButton [primary]="true" aria-label="Deactivate">
-          Deactivate
-        </button>
-      </div>
-    </div>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                          (click)="onCloseSupportGroupDeactivateClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton [primary]="true" aria-label="Deactivate">
+                          Deactivate
+                    </button>
+              </div>
+        </div>
   </kendo-dialog-actions>
 </kendo-dialog>
 
@@ -124,23 +181,23 @@
   </kendo-dialog-titlebar>
 
   <section class="k-dialog-body">
-    <p class="text-muted mb-2">
-      Are you sure you want to reactivate this role?
-    </p>
+        <p class="text-muted mb-2">
+              Are you sure you want to reactivate this role?
+        </p>
   </section>
 
   <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-          (click)="onCloseSupportGroupReactivateClicked()">
-          Cancel
-        </button>
-        <button kendoButton [primary]="true" aria-label="Deactivate">
-          Re-activate
-        </button>
-      </div>
-    </div>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                          (click)="onCloseSupportGroupReactivateClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton [primary]="true" aria-label="Deactivate">
+                          Re-activate
+                    </button>
+              </div>
+        </div>
   </kendo-dialog-actions>
 </kendo-dialog>
 
@@ -148,47 +205,23 @@
   <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()"> Error Confirmation</kendo-dialog-titlebar>
 
   <section class="k-dialog-body mb-2">
-    <p>
-      Are you sure you want to delete this role? This action cannot be undone
-    </p>
+        <p>
+          Are you sure you want to delete this role? This action cannot be undone 
+        </p>
   </section>
   <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
-          (click)="onCloseSupportGroupDeleteClicked()">
-          Cancel
-        </button>
-        <button kendoButton class="k-error-button" aria-label="Delete"
-          (click)="onOpenSupportGroupDeleteConfirmationClicked()">
-          Delete
-        </button>
-      </div>
-    </div>
+        <div class="justify-content-between">
+              <div class="justify-content-end">
+                    <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
+                          (click)="onCloseSupportGroupDeleteClicked()">
+                          Cancel
+                    </button>
+                    <button kendoButton class="k-error-button" aria-label="Delete" (click)="onOpenSupportGroupDeleteConfirmationClicked()">
+                          Delete
+                    </button>
+              </div>
+        </div>
   </kendo-dialog-actions>
 </kendo-dialog>
 
-
-<kendo-dialog *ngIf="isSupportGroupDeleteConfirmationPopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteConfirmationClicked()"> Error
-    Confirmation</kendo-dialog-titlebar>
-
-  <section class="k-dialog-body mb-2">
-    <p>
-      Are you sure you want to delete this role? This action cannot be undone
-    </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
-          (click)="onCloseSupportGroupDeleteConfirmationClicked()">
-          Cancel
-        </button>
-        <button kendoButton class="k-error-button" aria-label="Delete">
-          Delete
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
-</kendo-dialog>
+ 

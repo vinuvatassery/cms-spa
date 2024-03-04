@@ -42,7 +42,6 @@ export class InterfaceSupportPageComponent {
 
   
   loadSupportGroup(event: any) {
-    debugger;
     this.systemInterfaceSupportFacade.loadSupportGroup(event);
   }
 

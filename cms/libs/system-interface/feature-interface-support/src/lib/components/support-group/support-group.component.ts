@@ -6,7 +6,7 @@ import {
   Input,
   OnChanges,
   OnInit,
-  Output,
+  Output
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
@@ -15,7 +15,6 @@ import { GridDataResult } from '@progress/kendo-angular-grid';
 import {
   State,
   CompositeFilterDescriptor,
-  filterBy,
 } from '@progress/kendo-data-query';
 import { LovFacade } from 'libs/system-config/domain/src/lib/application/lov.facade';
 import { Subject } from 'rxjs';
@@ -137,7 +136,6 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       sortType: sortTypeValue,
     };
     this.loadSupportGroupListEvent.emit(gridDataRefinerValue);
-    debugger;
     this.gridDataHandle();
   }
 
@@ -200,15 +198,18 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   gridDataHandle() {
     this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
+      // this.gridDataResult.data = filterBy(
+      //   this.gridDataResult.data,
+      //   this.filterData
+      // );
       this.gridSupportGroupDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isSupportGroupGridLoaderShow = false;
       }
     });
+    this.gridSupportGroupData$
+      .subscribe((data)=>{console.log(data)});
+    
     this.isSupportGroupGridLoaderShow = false;
   }
 

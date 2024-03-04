@@ -1,12 +1,9 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { SystemInterfaceSupportService } from '../infrastructure/system-interface-support.service';
 import { SnackBarNotificationType, NotificationSource, LoaderService, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { SortDescriptor } from '@progress/kendo-data-query';
-import { SystemInterfaceActivityStatusCode } from '../enums/system-interface-status-type-code';
-import { SystemInterfaceActivityStatusCodeDescription } from '../enums/system-interface-status-type-code.description';
-import { SystemInterfaceEecProcessTypeCode } from '../enums/system-interface-eec-process-type-code';
 
 @Injectable({ providedIn: 'root' })
 export class SystemInterfaceSupportFacade {
@@ -71,15 +68,51 @@ export class SystemInterfaceSupportFacade {
 
 
   loadSupportGroup(paginationParameters: any) {
-    this.systemInterfaceSupportService.getSupportGroupList(paginationParameters).subscribe({
-      next: (response) => {
-        this.supportGroupSubject.next(response);
+    // this.systemInterfaceSupportService.getSupportGroupList(paginationParameters).subscribe({
+    //   next: (response) => {
+    //     this.supportGroupSubject.next(response);
+    //   },
+    //   error: (err) => {
+    //     console.error('err', err);
+    //   },
+    // });
+
+    //this.batchLogsDataLoaderSubject.next(true);
+    this.service.getSupportGroupList( paginationParameters).subscribe({
+      next: (dataResponse: any) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.supportGroupSubject.next(gridView);
+        //this.batchLogsDataLoaderSubject.next(false);
       },
       error: (err) => {
-        console.error('err', err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        //this.batchLogsDataLoaderSubject.next(false);
+        this.hideLoader();
       },
     });
   }
+
+  // loadBatchLogsList(interfaceTypeCode: string, displayAll: boolean, paginationParameters: any) {
+  //   this.batchLogsDataLoaderSubject.next(true);
+  //   this.service.loadBatchLogsList(interfaceTypeCode, displayAll, paginationParameters).subscribe({
+  //     next: (dataResponse: any) => {
+  //       const gridView: any = {
+  //         data: dataResponse['items'],
+  //         total: dataResponse?.totalCount,
+  //       };
+  //       this.activityEventLogListSubject.next(gridView);
+  //       this.batchLogsDataLoaderSubject.next(false);
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+  //       this.batchLogsDataLoaderSubject.next(false);
+  //       this.hideLoader();
+  //     },
+  //   });
+  // }
 
   loadDistributionLists() {
     this.systemInterfaceSupportService.getDistributionLists().subscribe({
