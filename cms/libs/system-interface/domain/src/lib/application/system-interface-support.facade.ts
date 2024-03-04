@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, tap } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, tap } from 'rxjs';
 import { SystemInterfaceSupportService } from '../infrastructure/system-interface-support.service';
 import { SnackBarNotificationType, NotificationSource, LoaderService, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -65,19 +65,7 @@ export class SystemInterfaceSupportFacade {
     this.loaderService.hide();
   }
 
-
-
   loadSupportGroup(paginationParameters: any) {
-    // this.systemInterfaceSupportService.getSupportGroupList(paginationParameters).subscribe({
-    //   next: (response) => {
-    //     this.supportGroupSubject.next(response);
-    //   },
-    //   error: (err) => {
-    //     console.error('err', err);
-    //   },
-    // });
-
-    //this.batchLogsDataLoaderSubject.next(true);
     this.service.getSupportGroupList( paginationParameters).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
@@ -85,34 +73,36 @@ export class SystemInterfaceSupportFacade {
           total: dataResponse?.totalCount,
         };
         this.supportGroupSubject.next(gridView);
-        //this.batchLogsDataLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        //this.batchLogsDataLoaderSubject.next(false);
         this.hideLoader();
       },
     });
   }
 
-  // loadBatchLogsList(interfaceTypeCode: string, displayAll: boolean, paginationParameters: any) {
-  //   this.batchLogsDataLoaderSubject.next(true);
-  //   this.service.loadBatchLogsList(interfaceTypeCode, displayAll, paginationParameters).subscribe({
-  //     next: (dataResponse: any) => {
-  //       const gridView: any = {
-  //         data: dataResponse['items'],
-  //         total: dataResponse?.totalCount,
-  //       };
-  //       this.activityEventLogListSubject.next(gridView);
-  //       this.batchLogsDataLoaderSubject.next(false);
-  //     },
-  //     error: (err) => {
-  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-  //       this.batchLogsDataLoaderSubject.next(false);
-  //       this.hideLoader();
-  //     },
-  //   });
-  // }
+  private distributionDataLoaderSubject = new BehaviorSubject<boolean>(false);
+  distributionDataLoader$ = this.distributionDataLoaderSubject.asObservable();
+
+  loadDistributionGroup(paginationParameters: any) {
+    this.distributionDataLoaderSubject.next(true);
+    this.service.getDistributionList( paginationParameters).subscribe({
+      next: (dataResponse: any) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.supportGroupSubject.next(gridView);
+        this.distributionDataLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.distributionDataLoaderSubject.next(false);
+        this.hideLoader();
+      },
+    });
+  }
+
 
   loadDistributionLists() {
     this.systemInterfaceSupportService.getDistributionLists().subscribe({

@@ -121,4 +121,8 @@ export class SystemInterfaceSupportService {
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/support-group/support-group-list`, paginationParameters);
   }
 
+  getDistributionList(paginationParameters: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/support-group/distribution-list`, paginationParameters);
+  }
+
 }
