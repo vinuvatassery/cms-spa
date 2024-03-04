@@ -577,8 +577,12 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
   }
 
   isControlValid(controlName: string, index: any) {
-    let control = this.addClaimServicesForm.at(index) as FormGroup;
-    return control.controls[controlName].status == 'INVALID' && !control.controls[controlName].value;
+    let form = this.addClaimServicesForm.at(index) as FormGroup;
+    let control = form.controls[controlName];
+    if(control){
+      return control?.errors?.['required'] && control.touched;
+    }
+    return false;
   }
 
   isAmountDueValid(index: any) {
@@ -616,7 +620,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     let serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     let startDate = serviceFormData.controls['serviceStartDate'].value;
     let endDate = serviceFormData.controls['serviceEndDate'].value;
-    if (startDate && endDate && startDate > endDate) {
+    if (startDate != "" && startDate != null && endDate != null && endDate != "" && startDate > endDate) {
       serviceFormData.get('serviceEndDate')?.setErrors({invalid : true});
       return true;
     }
