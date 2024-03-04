@@ -11,14 +11,15 @@ import {
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 /** Entities **/
-import { SnackBar } from '../entities/snack-bar';
+
 /** Services **/
 import { NotificationService } from '@progress/kendo-angular-notification';
 
 /** Providers **/
-import { ConfigurationProvider } from '@cms/shared/util-core';
+import { ConfigurationProvider, ReminderNotificationSnackbarService, ReminderSnackBarNotificationType } from '@cms/shared/util-core';
+import { SnackBar } from '@cms/shared/ui-common';
 @Component({
-  selector: 'common-reminder-notification-snack-bar',
+  selector: 'productivity-tools-reminder-notification-snack-bar',
   templateUrl: './reminder-notification-snack-bar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -59,20 +60,22 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
   /** Constructor **/
   constructor(
     private readonly notificationService: NotificationService,
-    private configurationProvider: ConfigurationProvider
+    private configurationProvider: ConfigurationProvider,
+    private readonly reminderNotificationSnackbarService: ReminderNotificationSnackbarService,
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    debugger
     this.removePreviousMessage();
     this.reminderSnackBarSubscribe();
   }
 
   reminderSnackBarSubscribe() {
-    this.data$.subscribe({
+    this.reminderNotificationSnackbarService.manageSnackBar(ReminderSnackBarNotificationType.LIGHT, '')
+    this.reminderNotificationSnackbarService.snackbar$.subscribe({
       next: (res) => {
-        if (res) {
-          
+        if (res) {          
           this.snackbarMessage = res;
           this.notificationService.show({
             content: this.alertTemplate,
@@ -90,9 +93,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
         );
    
       },
-      error: (err) => {
-        console.error('err', err);
-      },
+     
     });
   }
 

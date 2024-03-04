@@ -136,6 +136,9 @@
       "@cms/productivity-tools/feature-notification": [
         "libs/productivity-tools/feature-notification/src/index.ts"
       ],
+      "@cms/productivity-tools/feature-notification-snackbar": [
+        "libs/productivity-tools/feature-notification-snackbar/src/index.ts"
+      ],
       "@cms/productivity-tools/feature-todo": [
         "libs/productivity-tools/feature-todo/src/index.ts"
       ],
