@@ -18,6 +18,7 @@ import { TodoAndRemindersPageComponent } from './containers/todo-and-reminders-p
 import { TodoItemComponent } from './components/todo-item/todo-item.component';
 import { ReminderItemComponent } from './components/reminder-item/reminder-item.component';
 import { SubEventsDetailsComponent } from './components/sub-events-details/sub-events-details.component';
+import { TodoAndRemindersFabPageComponent } from './containers/todo-and-reminders-fab-page/todo-and-reminders-fab-page.component';
 
 @NgModule({
   imports: [
@@ -39,6 +40,7 @@ import { SubEventsDetailsComponent } from './components/sub-events-details/sub-e
     TodoItemComponent,
     ReminderItemComponent,
     SubEventsDetailsComponent,
+    TodoAndRemindersFabPageComponent
   ],
   exports: [
     TodoPageComponent,
@@ -50,6 +52,7 @@ import { SubEventsDetailsComponent } from './components/sub-events-details/sub-e
     TodoAndRemindersPageComponent,
     TodoItemComponent,
     ReminderItemComponent,
+    TodoAndRemindersFabPageComponent
   ],
 })
 export class ProductivityToolsFeatureTodoModule {}
