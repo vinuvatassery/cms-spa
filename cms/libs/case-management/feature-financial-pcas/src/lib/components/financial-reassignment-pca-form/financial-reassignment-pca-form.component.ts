@@ -233,42 +233,52 @@ this.loaderService.show();
     this.openDateErrorMsg=this.checkOpenDateValidity(startDate, endDate)
   }
   checkcloseDateValidity(opendate: string, closedate: string, pcaClosedate: string): string {
-
     this.openDateError=false;
     const openDateObj: Date = new Date(opendate);
     const closeDateObj: Date = new Date(closedate);
     const pcaCloseDateObj: Date = new Date(pcaClosedate);
-
+    this.pcaAssignmentForm.controls['openDate'].setErrors({ isInvalid: false})
+    this.pcaAssignmentForm.get('openDate')?.updateValueAndValidity();
+    
     switch (true) {
       case closeDateObj < openDateObj:
         this.closeDateError=true;
+        this.pcaAssignmentForm.controls['closeDate'].setErrors({ isInvalid: true});
         return "Close Date must be after Open Date";
 
       case closeDateObj > pcaCloseDateObj:
         this.closeDateError=true;
-        return "Assignment Close Date cannot exceed the PCA Close Date";
-
+        this.pcaAssignmentForm.controls['closeDate'].setErrors({ isInvalid: true});
+       return "Assignment Close Date cannot exceed the PCA Close Date";
+       
       default:
         this.closeDateError=false;
+     this.pcaAssignmentForm.controls['closeDate'].setErrors({ isInvalid: false})
+     this.pcaAssignmentForm.get('closeDate')?.updateValueAndValidity();
         return  "";
     }
   }
   checkOpenDateValidity(opendate: string, closedate: string): string {
-
+    
+    this.pcaAssignmentForm.controls['closeDate'].setErrors({ isInvalid: false})
+    this.pcaAssignmentForm.get('closeDate')?.updateValueAndValidity();
     this.closeDateError=false;
     const openDateObj: Date = new Date(opendate);
     const closeDateObj: Date = new Date(closedate);
     if(openDateObj>closeDateObj)
           {
       this.openDateError=true;
+      this.pcaAssignmentForm.controls['openDate'].setErrors({ isInvalid: true});
       return "Open Date must be before Close Date";
-    }
+   }
     else{
       this.openDateError=false;
+      this.pcaAssignmentForm.controls['openDate'].setErrors({ isInvalid: false})
+     this.pcaAssignmentForm.get('openDate')?.updateValueAndValidity();
       return "";
     }
   }
-
+ 
   amountChange(amount: any) {
     if (this.pcaCodeInfo?.totalAmount) {
       const numberOfGroups = this.pcaAssignmentForm?.controls["groupCodes"].value.length
