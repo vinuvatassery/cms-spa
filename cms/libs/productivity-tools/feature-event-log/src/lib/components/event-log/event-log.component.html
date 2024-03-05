@@ -39,12 +39,13 @@
           >search</span
         >
       </button>
-      <button kendoButton [primary]="true" class="c-default" kendoPopoverAnchor [popover]="eventFilterCard"
+      <button kendoButton  kendoPopoverAnchor [popover]="eventFilterCard"
         showOn="click" aria-label="More">
         <span class="material-icons" aria-label="More option"> more_vert </span>
       </button>
       <kendo-popover #eventFilterCard [width]="300" position="bottom">
         <ng-template kendoPopoverBodyTemplate>
+          <div class="event-filter-body">
           <div class="event-filters">
             <button kendoButton look="flat" aria-label="Sort Ascending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('Asc')">
               <span class="material-icons" aria-hidden="true" aria-label="Sort Ascending">arrow_upward</span>
@@ -60,7 +61,7 @@
               <label> Filter </label>
             </button>
           </div>
-          <div class="p-2 event-filters-field" *ngIf="isShowFilter" [formGroup]="eventLogFilterForm">
+          <div class="event-filters-field" *ngIf="isShowFilter" [formGroup]="eventLogFilterForm">
             <kendo-floatinglabel class="mb-1" text="Case Worker">
               <kendo-dropdownlist aria-label="Case Worker" [fillMode]="formUiStyle.dropDownFillMode" formControlName="caseworkerfilterbyoperator"
              [data]="operators" textField="text" valueField="value" [valuePrimitive]="true" placeholder="Case Worker">
@@ -91,7 +92,7 @@
                 (valueChange)="onChange('BEFOREDATE')" [min]="eventLogFilterForm.controls['afterdatefilter'].value" [incompleteDateValidation]="true">
               </kendo-datepicker>
             </kendo-floatinglabel>
-            <div class="d-flex">
+            <div class="d-flex event-filter-button">
               <button kendoButton [primary]="true" aria-label="Filter" (click)="onEventLogFilterFilterClicked()" [disabled]="!isEnableFilterBtn">
                 FILTER
               </button>&nbsp;&nbsp;
@@ -100,6 +101,7 @@
               </button>
             </div>            
           </div>
+        </div>
         </ng-template>
       </kendo-popover>
       <button kendoButton class="k-icon-button small-i-btn" aria-label="close" (click)="onCloseEventLogClicked()"
