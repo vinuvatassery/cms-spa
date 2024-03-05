@@ -58,7 +58,8 @@ export class EventDetailComponent implements OnInit {
     this.buildForm();
     this.addEventdata$.subscribe((response: any) => {
       if (response !== undefined && response !== null) {
-       this.closeEventDetails();
+       this.closeEventDetails(true);
+
       }
     });
   }
@@ -93,8 +94,8 @@ export class EventDetailComponent implements OnInit {
   private loadDdlEvents() {
     this.eventLogFacade.loadDdlEvents();
   }
-  closeEventDetails(){
-    this.closeEventDetailsClickedEmitter.emit(true);
+  closeEventDetails(isLoadEvent : boolean){
+    this.closeEventDetailsClickedEmitter.emit(isLoadEvent);
   }
 
   onEventDescriptionValueChange(event: any): void {
@@ -132,7 +133,7 @@ export class EventDetailComponent implements OnInit {
   setValidators()
   {
     this.eventForm.markAllAsTouched();
-    // this.eventForm.controls['eventId'].setValidators([Validators.required,]);
+    this.eventForm.controls['eventId'].setValidators([Validators.required,]);
     this.eventForm.controls['eventDesc'].setValidators([Validators.required,]);
     this.eventForm.controls['eventId'].updateValueAndValidity();
     this.eventForm.controls['eventDesc'].updateValueAndValidity();

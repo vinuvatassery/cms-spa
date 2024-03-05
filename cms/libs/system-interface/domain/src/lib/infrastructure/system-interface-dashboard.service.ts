@@ -239,4 +239,12 @@ export class SystemInterfaceDashboardService {
   getRamsellInterfaceActivity(interfaceTypeCode: string, displayAll: boolean, params:any) {
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/web-logs/${interfaceTypeCode}?displayAll=${displayAll}`, params);
   }
+
+  getDocumentDownload(clientDocumentId: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/${clientDocumentId}/content`
+      , {
+        responseType: 'blob'
+      });
+  }
 }
