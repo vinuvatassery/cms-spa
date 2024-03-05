@@ -125,11 +125,6 @@ dropDowncolumns : any = [
     "vendorTypeCode":["INSURANCE_VENDOR"],
   },
   {
-    "columnCode": "totalDrugs",
-    "columnDesc": "Total Drugs"   ,
-    "vendorTypeCode": ["MANUFACTURERS"],
-  },
-  {
     "columnCode": "address",
     "columnDesc": "Address"   ,
     "vendorTypeCode":  ["MANUFACTURERS"],
