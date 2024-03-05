@@ -24,16 +24,10 @@ import { Subject, first } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SupportGroupComponent implements OnInit, OnChanges {
-  selectedGroup:any;
+  selectedGroup: any;
   public selectedRowChange(selectionEvent: any) {
-
-    console.log(selectionEvent);
     this.selectedGroup = selectionEvent.selectedRows[0].dataItem;
-    // const id = selectionEvent.selectedRows[0].dataItem.notificationGroupId;
-    // const id = selectionEvent.selectedRows[0].dataItem.groupName;
     this.selectedRowEvent.emit(this.selectedGroup);
-    //alert('emit');
-    //alert(JSON.stringify(this.selectedGroup))
   }
 
   isGroupDetailPopup = false;
