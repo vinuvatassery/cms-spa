@@ -39,8 +39,15 @@ export class SystemInterfaceSupportFacade {
   private addSupportGroupSubject = new Subject<any>();
   addSupportGroup$ = this.addSupportGroupSubject.asObservable();
 
-  private addDistributionListUserSubject = new Subject<any>();
-  addDistributionListUser$ = this.addDistributionListUserSubject.asObservable();
+
+  private supportGroupReactivateSubject = new Subject<any>();
+  supportGroupReactivate$ = this.supportGroupReactivateSubject.asObservable();
+  private supportGroupRemoveSubject = new Subject<any>();
+    supportGroupRemove$ = this.supportGroupRemoveSubject.asObservable();
+
+    private addDistributionListUserSubject = new Subject<any>();
+    addDistributionListUser$ = this.addDistributionListUserSubject.asObservable();
+
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: NotificationSource = NotificationSource.API) {
     if (type === SnackBarNotificationType.ERROR) {
@@ -69,6 +76,7 @@ export class SystemInterfaceSupportFacade {
   }
 
   loadSupportGroup(paginationParameters: any) {
+    this.showLoader();
     this.service.getSupportGroupList(paginationParameters).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
@@ -97,6 +105,16 @@ export class SystemInterfaceSupportFacade {
         };
         this.distributionListsSubject.next(gridView);
         this.distributionListDataLoaderSubject.next(false);
+  //       this.batchLogsDataLoaderSubject.next(false);
+  //       this.hideLoader();
+  //     },
+  //   });
+  // }
+
+  loadDistributionLists() {
+    this.systemInterfaceSupportService.getDistributionLists().subscribe({
+      next: (response) => {
+        this.distributionListsSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
@@ -128,27 +146,48 @@ export class SystemInterfaceSupportFacade {
             SnackBarNotificationType.SUCCESS,
             response.message
           );
-          this.addSupportGroupSubject.next(response);
+  changeSupportGroupStatus(notificationGroupId: any, status: boolean) {
+    this.showLoader();
+    this.systemInterfaceSupportService.changeSupportGroupStatus(notificationGroupId, status)
+      .subscribe({
+        next: (removeResponse) => {
+          if (removeResponse ?? false) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, status ? 'Interface Support Group reactivated successfully' : 'Interface Support Group deactivated successfully')
+          }
+          this.supportGroupReactivateSubject.next(removeResponse);
         },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      });
         error: (err) => {
           this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         },
       }
     );
-    //return this.systemInterfaceSupportService.addSupportGroup(notificationGroup).subscribe();
   }
 
-  supportGroupAdded(): Observable<any> {
+  supportGroupAdded(): Observable<any>  {
     return this.addSupportGroupSubject.asObservable();
   }
 
-  addSupportGroupData(dto: any): Observable<any> {
-    return this.systemInterfaceSupportService.addSupportGroup(dto).pipe(
-      tap((response: any) => {
-        this.addSupportGroupSubject.next(response);
-      }),
-    );
+  deleteSupportGroup(notificationGroupId: string, isHardDelete: boolean): void {
+    this.showLoader();
+    this.systemInterfaceSupportService.deleteSupportGroup(notificationGroupId, isHardDelete)
+      .subscribe({
+        next: (removeResponse) => {
+          if (removeResponse ?? false) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Interface Support Group successfully deleted!');
+          }
+          this.supportGroupRemoveSubject.next(removeResponse);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      });
   }
 
   // distribution ----------------------------------------

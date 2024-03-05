@@ -121,14 +121,33 @@ export class SystemInterfaceSupportService {
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/support-group/support-group-list`, paginationParameters);
   }
 
-  // distribution ----------------------------------------
-  getDistributionList(paginationParameters: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/list`, paginationParameters);
+  changeSupportGroupStatus(notificationGroupId: string, status: boolean) {
+    const options = {
+      status: status,
+    }
+    return this.http.patch(
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-support/support-group/${notificationGroupId}`, options
+    );
   }
 
-  addDistributionListUser(user: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/add-user`, user);
-  }
+  deleteSupportGroup(notificationGroupId: string, isHardDelete: boolean) {
+    const options = {
+      body: {
+        hardDelete: isHardDelete,
+      }
+    }
+    return this.http.delete(
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-support/support-group/${notificationGroupId}`, options
+    );
+    }
 
-  // ----------------------------------------
+    // distribution ----------------------------------------
+    getDistributionList(paginationParameters: any) {
+        return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/list`, paginationParameters);
+    }
+
+    addDistributionListUser(user: any) {
+        return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/add-user`, user);
+    }
+
 }

@@ -90,7 +90,6 @@ export class SupportGroupDetailComponent implements OnInit {
 
     if (this.notiificationGroupForm.valid) {
       let finalData = this.mapFormValues();
-      //this.showLoader();
       this.addSupportGroupEvent.emit(finalData)
       this.addSupportGroup$
         .subscribe((addResponse: any) => {

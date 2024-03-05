@@ -8,6 +8,9 @@ import { DistributionListsComponent } from './components/distribution-lists/dist
 import { NotificationCategoryComponent } from './components/notification-category/notification-category.component'
 import { SystemInterfaceFeatureInterfaceSupportRoutingModule } from './system-interface-feature-interface-support.routing.module';
 import { SupportGroupDetailComponent } from './components/support-group-detail/support-group-detail.component';
+import { DeactivateSupportGroupComponent } from './components/deactivate-support-group/deactivate-support-group.component';
+import { ReactivateSupportGroupComponent } from './components/reactivate-support-group/reactivate-support-group.component';
+import { RemoveSupportGroupComponent } from './components/remove-support-group/remove-support-group.component';
 import { DistributionDetailComponent } from './components/distribution-detail/distribution-detail.component';
 
 @NgModule({
@@ -23,14 +26,20 @@ import { DistributionDetailComponent } from './components/distribution-detail/di
     DistributionListsComponent,
     DistributionDetailComponent,
     NotificationCategoryComponent,
-    SupportGroupDetailComponent
+    SupportGroupDetailComponent,
+    DeactivateSupportGroupComponent,
+    ReactivateSupportGroupComponent,
+    RemoveSupportGroupComponent
   ],
   exports: [
     InterfaceSupportPageComponent,
     SupportGroupComponent,
     DistributionListsComponent,
     NotificationCategoryComponent,
-    SupportGroupDetailComponent
+    SupportGroupDetailComponent,
+    DeactivateSupportGroupComponent,
+    ReactivateSupportGroupComponent,
+    RemoveSupportGroupComponent
   ],
 })
 export class SystemInterfaceFeatureInterfaceSupportModule {}
