@@ -5,6 +5,8 @@ import {
   OnInit,
   OnChanges,
   Output,
+  ViewChildren,
+  QueryList,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -12,8 +14,8 @@ import { LovFacade } from '@cms/system-config/domain';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
-import { Subject} from 'rxjs';
-import { FilterService} from '@progress/kendo-angular-grid';
+import { Subject, take } from 'rxjs';
+import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
 
 @Component({
   selector: 'cms-system-interface-batch-interface-logs',
@@ -30,9 +32,10 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   activityEventLogLists$ = this.systemInterfaceDashboardFacade.activityEventLogLists$;
   batchLogsDataLoader$ = this.systemInterfaceDashboardFacade.batchLogsDataLoader$;
   batchLogExcptionLists$ = this.systemInterfaceDashboardFacade.batchLogExcptionLists$;
-  
+  @ViewChildren(GridComponent) private grid !: QueryList<GridComponent>;
+
   showHistoricalFlag: boolean = true;
- @Input() lovsList$: any;
+  @Input() lovsList$: any;
   @Input() skipCount$: any;
   public state!: State;
   filteredBy = '';
@@ -95,7 +98,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     'totalRecords',
     'totalFailed'
   ];
- 
+
   selectedSearchColumn: string = '';
   private searchSubject = new Subject<string>();
   sortColumn = 'StartDate';
@@ -117,7 +120,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     private systemInterfaceDashboardFacade: SystemInterfaceDashboardFacade, private readonly intl: IntlService,
     private readonly configProvider: ConfigurationProvider, private readonly lovFacade: LovFacade,
   ) { }
-  processTypeCode:string='';
+  processTypeCode: string = '';
   ngOnInit(): void {
     this.sortType = 'desc';
     this.state = {
@@ -166,12 +169,21 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   handleShowHistoricalClick() {
     this.loadActivityListGrid();
   }
-
   onInterfaceChange(event: any) {
     this.InterfaceType = event;
     this.lovFacade.getInterfaceProcessBatchLov(this.InterfaceType);
     this.defaultGridState()
     this.loadActivityListGrid();
+    this.getHistoryByInterfaceType(this.InterfaceType);
+    this.collapseRowsInGrid();
+  }
+
+  private collapseRowsInGrid() {
+    this.activityEventLogLists$.pipe(take(1)).subscribe(({ data }) => {
+      data.forEach((item: any, idx: number) => {
+        this.grid.last.collapseRow((this.state.skip ?? 0) + idx);
+      });
+    });
   }
 
   loadActivityListGrid() {
@@ -195,7 +207,7 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
     this.sortColumn = this.gridColumns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
     const filterList = [];
-    if(stateData.filter?.filters.length > 0){
+    if (stateData.filter?.filters.length > 0) {
       for (const filter of stateData.filter.filters) {
         filterList.push(this.gridColumns[filter.filters[0].field]);
       }
@@ -233,77 +245,78 @@ export class BatchInterfaceLogsComponent implements OnChanges, OnInit {
   }
   onSearch(searchValue: any) {
 
-  const isDateSearch = searchValue.includes('/');
-  this.showDateSearchWarning =
-    isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
-  searchValue = this.formatSearchValue(searchValue, isDateSearch);
-  if (isDateSearch && !searchValue) return;
-  this.searchSubject.next(searchValue);
-}
-performSearch(data: any) {
-  this.defaultGridState();
-  const operator = [...this.numericColumns, ...this.dateColumns].includes(
-    this.selectedSearchColumn?? 'interface'
-  )
-    ? 'eq'
-    : 'startswith';
-  if (
-    this.dateColumns.includes(this.selectedSearchColumn) &&
-    !this.isValidDate(data) &&
-    data !== ''
-  ) {
-    return;
+    const isDateSearch = searchValue.includes('/');
+    this.showDateSearchWarning =
+      isDateSearch || this.dateColumns.includes(this.selectedSearchColumn);
+    searchValue = this.formatSearchValue(searchValue, isDateSearch);
+    if (isDateSearch && !searchValue) return;
+    this.searchSubject.next(searchValue);
   }
-  if (
-    this.numericColumns.includes(this.selectedSearchColumn) &&
-    isNaN(Number(data))
-  ) {
-    return;
+  performSearch(data: any) {
+    this.defaultGridState();
+    const operator = [...this.numericColumns, ...this.dateColumns].includes(
+      this.selectedSearchColumn ?? 'interface'
+    )
+      ? 'eq'
+      : 'startswith';
+    if (
+      this.dateColumns.includes(this.selectedSearchColumn) &&
+      !this.isValidDate(data) &&
+      data !== ''
+    ) {
+      return;
+    }
+    if (
+      this.numericColumns.includes(this.selectedSearchColumn) &&
+      isNaN(Number(data))
+    ) {
+      return;
+    }
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedSearchColumn ?? 'interface',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
   }
-  this.filterData = {
-    logic: 'and',
-    filters: [
-      {
-        filters: [
-          {
-            field: this.selectedSearchColumn ?? 'interface',
-            operator: operator,
-            value: data,
-          },
-        ],
-        logic: 'and',
-      },
-    ],
-  };
-  const stateData = this.state;
-  stateData.filter = this.filterData;
-  this.dataStateChange(stateData);
-}
-defaultGridState() {
-  this.state = {
-    skip: 0,
-    take: this.pageSizes[0]?.value,
-    sort: this.sort,
-    filter: { logic: 'and', filters: [] },
-  };
-}
-resetGrid() {
-  this.sortType = 'asc';
-  this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
-  this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
-  this.filteredBy ='';
-  this.filteredByColumnDesc = '';
-  this.sortColumnDesc = this.gridColumns[this.sortValue];
-  this.columnChangeDesc = 'Default Columns';
-  this.loadActivityListGrid();
+  defaultGridState() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter: { logic: 'and', filters: [] },
+    };
+  }
+  resetGrid() {
+    this.sortType = 'asc';
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : '';
+    this.sortDir = this.sort[0]?.dir === 'desc' ? 'Descending' : '';
+    this.filteredBy = '';
+    this.filteredByColumnDesc = '';
+    this.sortColumnDesc = this.gridColumns[this.sortValue];
+    this.columnChangeDesc = 'Default Columns';
+    this.loadActivityListGrid();
 
-}
-public onDetailExpand(e: any): void {
-this.fileId=e.dataItem.fileId;
-this.interfaceTypeCode=e.dataItem.interfaceTypeCode;
-this.processTypeCode=e.dataItem.processTypeCode;
-}
-  
+  }
+
+  public onDetailExpand(e: any): void {
+    this.fileId = e.dataItem.fileId;
+    this.interfaceTypeCode = e.dataItem.interfaceTypeCode;
+    this.processTypeCode = e.dataItem.processTypeCode;
+  }
+
   dropdownFilterChange(
     field: string,
     value: any,
@@ -327,6 +340,15 @@ this.processTypeCode=e.dataItem.processTypeCode;
       ],
       logic: 'or',
     });
+  }
+
+  downloadFile(filePath: any) {
+    this.systemInterfaceDashboardFacade.viewOrDownloadFile(filePath, "ramsell")
+  }
+
+  textToDisplay = "Last 2 Weeks";
+  getHistoryByInterfaceType(data: string) {
+    this.textToDisplay = (data === "RAMSELL") ? "Last 2 Weeks" : "Last 12 Months";
   }
 
 }
