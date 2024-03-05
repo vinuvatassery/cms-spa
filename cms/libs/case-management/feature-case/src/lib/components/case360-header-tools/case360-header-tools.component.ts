@@ -31,6 +31,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   emailScreenName = ScreenType.Case360PageEmail; 
   letterScreenName = ScreenType.Case360PageLetter; 
   smsScreenName = ScreenType.Case360PageSMS; 
+  smsNotificationGroup = ScreenType.Case360PageSMS;
   isIdCardOpened = false;
   isSendNewLetterOpened = false;
   isSendNewEmailOpened = false;
@@ -46,9 +47,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   isFirstLoad = false;
   isNewNotificationClicked: boolean = false;
   isContinueDraftClicked: boolean = false;
-  emailCommunicationEmailTypeCode = CommunicationEventTypeCode.ClientEmail;
-  letterCommunicationEmailTypeCode = CommunicationEventTypeCode.ClientLetter;
-  smsCommunicationEmailTypeCode = CommunicationEventTypeCode.ClientSMS;
+  emailCommunicationTypeCode = CommunicationEventTypeCode.ClientEmail;
+  letterCommunicationTypeCode = CommunicationEventTypeCode.ClientLetter;
+  smsCommunicationTypeCode = CommunicationEventTypeCode.ClientSMS;
   notificationGroup!: string;
   toEmail: Array<string> = [];
   currentCommunicationTypeCode!: string;
@@ -73,7 +74,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode = this.letterCommunicationEmailTypeCode;
+        this.currentCommunicationTypeCode = this.letterCommunicationTypeCode;
         this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -88,7 +89,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode = this.emailCommunicationEmailTypeCode;
+        this.currentCommunicationTypeCode = this.emailCommunicationTypeCode;
         this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -103,7 +104,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode = this.emailCommunicationEmailTypeCode;
+        this.currentCommunicationTypeCode = this.smsCommunicationTypeCode;
         this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -205,7 +206,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   onDraftNotificationExistsConfirmation(notificationDraftEmailDialog: TemplateRef<unknown>): void {
     this.isDraftNotificationOpenedDialog = this.dialogService.open({
       content: notificationDraftEmailDialog, 
-      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
     }); 
   }
 
@@ -333,14 +334,14 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   onNewNotificationClicked(){
     this.isNewNotificationClicked = true;
     this.isContinueDraftClicked = false;
-    this.onDraftNotificationCloseClicked('Close');
+    this.onDraftNotificationCloseClicked(CommunicationEvents.Close);
     this.loadNotificationTemplates(this.currentCommunicationTypeCode, this.selectedTemplateName);
   }
 
   onContinueDraftClicked(){
     this.isContinueDraftClicked = true;
     this.isNewNotificationClicked = false;
-    this.onDraftNotificationCloseClicked('Close');
+    this.onDraftNotificationCloseClicked(CommunicationEvents.Close);
     this.loadNotificationTemplates(this.currentCommunicationTypeCode, this.sendNewEmailDialog);
   }
 }

@@ -7,12 +7,13 @@ import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 /** Entities **/
 import { Email } from '../entities/email';
+import { SmsNotification } from '../entities/sms-notification';
 
 @Injectable({ providedIn: 'root' })
 export class EmailDataService {
   /** Constructor**/
   constructor(private readonly http: HttpClient,
-    private configurationProvider: ConfigurationProvider) {}
+    private configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadEmails(): Observable<Email[]> {
@@ -97,9 +98,9 @@ export class EmailDataService {
     );
   }
 
-  replaceAndGenerateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
+  replaceAndGenerateTextTemplate(entityId: string, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
       return this.http.post<string>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&vendorId=${vendorId}`,selectedTemplate
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&entityId=${entityId}&clientCaseEligibilityId=${clientCaseEligibilityId}2222`,selectedTemplate
       );
     }
 
@@ -111,9 +112,9 @@ export class EmailDataService {
         });
     }
 
-    sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
+    sendLetterToPrint(entityId: string, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
       return this.http.post(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&clientId=${clientId}&clientCaseEligibilityId=${clientCaseEligibilityId}&vendorId=${vendorId}`, selectedTemplate,
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&entityId=${entityId}&clientCaseEligibilityId=${clientCaseEligibilityId}`, selectedTemplate,
         {responseType: 'blob'}
       )
     }
@@ -190,6 +191,10 @@ export class EmailDataService {
       return this.http.delete(
         `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/draft/${id}`
       );
+    }
+
+    sendSms(smsNotification: SmsNotification) {
+      return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/sms`, smsNotification);
     }
 }
  

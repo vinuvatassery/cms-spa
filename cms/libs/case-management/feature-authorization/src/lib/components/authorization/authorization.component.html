@@ -194,8 +194,8 @@
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
 <case-management-send-letter
-  [data]="screenName"
-  [clientId]="clientId"
+  [notificationGroup]="screenName"
+  [entityId]="clientId"
   [isCerForm]="isCerForm"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   [communicationLetterTypeCode] = "communicationLetterTypeCode"
@@ -207,10 +207,10 @@
 <!-- Send New Email Modal -->
 <ng-template #sendEmailDialog>
 <case-management-send-email
-  [data]="screenName"
+  [notificationGroup]="screenName"
   [toEmail]="toEmail"
   [paperlessFlag]="paperlessFlag"
-  [clientId]="clientId"
+  [entityId]="clientId"
   [isCerForm]="isCerForm"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
   (closeSendEmailEvent)="handleCloseSendNewEmailClicked($event)"

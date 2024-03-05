@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component ,Input, TemplateRef,} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component ,Input, TemplateRef, ViewChild,} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { CommunicationEventTypeCode, CommunicationEvents, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
+import { CommunicationEventTypeCode, CommunicationEvents, CommunicationFacade, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { LoaderService, LoggingService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription } from 'rxjs';
 @Component({
@@ -11,6 +12,12 @@ import { Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VendorHeaderToolsComponent {
+  @ViewChild('notificationDraftEmailDialog', { read: TemplateRef })
+  notificationDraftEmailDialog!: TemplateRef<any>;
+  @ViewChild('sendLetterDialog', { read: TemplateRef })
+  sendLetterDialog!: TemplateRef<any>;
+  @ViewChild('sendNewEmailDialog', { read: TemplateRef })
+  sendNewEmailDialog!: TemplateRef<any>;
   SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -34,6 +41,7 @@ export class VendorHeaderToolsComponent {
   private isSendNewEmailOpenedDialog : any;
   private isNewSMSTextOpenedDialog : any;
   private isIdCardOpenedDialog : any;
+  private isDraftNotificationOpenedDialog: any;
   vendorId: any;
   vendorTypeCode: any;
   emailSubject: any;
@@ -41,6 +49,13 @@ export class VendorHeaderToolsComponent {
   communicationEmailTypeCode: string = CommunicationEventTypeCode.VendorEmail;
   toEmail: Array<any> = [];
   vendorAddressId:any;
+  notificationDraftId!: string;
+  draftDropdownCheck: boolean = false;
+  currentCommunicationTypeCode!: string;
+  selectedTemplateName!: TemplateRef<unknown>;
+  notificationGroup!: string;
+  isNewNotificationClicked: boolean = false;
+  isContinueDraftClicked: boolean = false;
 
   public sendActions = [
     {
@@ -50,7 +65,12 @@ export class VendorHeaderToolsComponent {
       isVisible: true,
       id: 'new_letter',
       click: (templatename: any): void => {
-        this.onSendNewLetterClicked(templatename);
+        if(this.draftDropdownCheck === false){
+          this.draftDropdownCheck = true;
+          this.selectedTemplateName = templatename;
+          this.currentCommunicationTypeCode = this.communicationLetterTypeCode;
+          this.notificationDraftCheck(this.vendorId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+          }
       },
     },
     {
@@ -60,7 +80,12 @@ export class VendorHeaderToolsComponent {
       id: 'new_email',
       isVisible: false,
       click: (templatename: any): void => {
-        this.onSendNewEmailClicked(templatename);
+        if(this.draftDropdownCheck === false){
+          this.draftDropdownCheck = true;
+          this.selectedTemplateName = templatename;
+          this.currentCommunicationTypeCode = this.communicationLetterTypeCode;
+          this.notificationDraftCheck(this.vendorId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+          }
       },
     },
     {
@@ -70,7 +95,12 @@ export class VendorHeaderToolsComponent {
       id: 'new_sms_text',
       isVisible: false,
       click: (templatename: any): void => {
-        this.onNewSMSTextClicked(templatename);
+        if(this.draftDropdownCheck === false){
+          this.draftDropdownCheck = true;
+          this.selectedTemplateName = templatename;
+          this.currentCommunicationTypeCode = this.communicationLetterTypeCode;
+          this.notificationDraftCheck(this.vendorId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+          }
       },
     },
     {
@@ -88,7 +118,8 @@ export class VendorHeaderToolsComponent {
 
   constructor(private route: Router,private activeRoute : ActivatedRoute,
     private readonly vendorContactFacade: VendorContactsFacade, private dialogService: DialogService,
-    private readonly ref: ChangeDetectorRef) {
+    private readonly loaderService: LoaderService, private readonly loggingService: LoggingService,
+    private readonly ref: ChangeDetectorRef, private readonly communicationFacade: CommunicationFacade,) {
   }
 
   ngOnInit(): void {
@@ -133,6 +164,64 @@ export class VendorHeaderToolsComponent {
 
   private refreshButtonList() {
     this.buttonList = this.sendActions?.filter((action: any) => action.isVisible === true);
+  }
+
+  notificationDraftCheck(vendorId: any, typeCode: string, notificationDraftEmailDialog: TemplateRef<unknown>, templateName: TemplateRef<unknown>) {
+    this.loaderService.show();
+    this.communicationFacade.loadDraftNotificationRequest(vendorId, typeCode)
+    .subscribe({
+      next: (data: any) =>{
+        if (data?.length > 0) {
+          for (let template of data){
+            this.notificationDraftId = template.notifcationDraftId;
+           }
+          if(typeCode == CommunicationEventTypeCode.ClientEmail){
+            this.notificationGroup = CommunicationEventTypeCode.EMAIL;
+          }
+          if(typeCode == CommunicationEventTypeCode.ClientLetter){
+            this.notificationGroup = CommunicationEventTypeCode.LETTER;
+          }
+          if(typeCode === CommunicationEventTypeCode.ClientSMS){
+            this.notificationGroup = CommunicationEventTypeCode.SMS;
+          }
+          this.onDraftNotificationExistsConfirmation(notificationDraftEmailDialog);
+          this.ref.detectChanges();
+        }else{
+          this.loadNotificationTemplates(this.currentCommunicationTypeCode, templateName);
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.vendorContactFacade.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+    },
+  });
+  }
+
+  loadNotificationTemplates(typeCode: string, templateName: TemplateRef<unknown>) {
+    if(typeCode == CommunicationEventTypeCode.ClientEmail){
+      templateName = this.sendNewEmailDialog;
+      this.onSendNewEmailClicked(templateName);
+    }
+    if(typeCode == CommunicationEventTypeCode.ClientLetter){
+      templateName = this.sendLetterDialog;
+      this.onSendNewLetterClicked(templateName);
+    }
+  }
+
+  onDraftNotificationExistsConfirmation(notificationDraftEmailDialog: TemplateRef<unknown>): void {
+    this.isDraftNotificationOpenedDialog = this.dialogService.open({
+      content: notificationDraftEmailDialog, 
+      cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
+    }); 
+  }
+
+  onDraftNotificationCloseClicked(result: any) {
+    if (result) {
+      this.draftDropdownCheck = false;
+      this.isDraftNotificationOpenedDialog.close();
+    }
   }
 
 
@@ -217,5 +306,19 @@ export class VendorHeaderToolsComponent {
     }
 
     onSendMenuClick(){
+    }
+
+    onNewNotificationClicked(){
+      this.isNewNotificationClicked = true;
+      this.isContinueDraftClicked = false;
+      this.onDraftNotificationCloseClicked(CommunicationEvents.Close);
+      this.loadNotificationTemplates(this.currentCommunicationTypeCode, this.selectedTemplateName);
+    }
+  
+    onContinueDraftClicked(){
+      this.isContinueDraftClicked = true;
+      this.isNewNotificationClicked = false;
+      this.onDraftNotificationCloseClicked(CommunicationEvents.Close);
+      this.loadNotificationTemplates(this.currentCommunicationTypeCode, this.sendNewEmailDialog);
     }
 }

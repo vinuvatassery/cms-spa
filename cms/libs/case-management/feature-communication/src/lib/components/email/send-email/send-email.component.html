@@ -17,6 +17,7 @@
             textField="description"
             valueField="documentTemplateId"
             (valueChange)="handleDdlEmailValueChange($event)"
+            [(ngModel)]="selectedTemplateId"
           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
@@ -65,7 +66,7 @@
           [dataEvent]="emailEditorValueEvent"
           [currentValue]="currentEmailData"
           [clientCaseEligibilityId]="clientCaseEligibilityId"
-          [clientId]="clientId"
+          [clientId]="entityId"
           [communicationTypeCode]="communicationEmailTypeCode"
           (cerEmailAttachments)="cerEmailAttachments($event)"
           (editorValue)="handleEmailEditor($event)"

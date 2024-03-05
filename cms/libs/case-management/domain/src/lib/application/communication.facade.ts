@@ -8,6 +8,7 @@ import { Email } from '../entities/email';
 import { EmailDataService } from '../infrastructure/email.data.service';
 import { CommunicationEvents } from '../enums/communication-event.enum';
 import { LoggingService} from '@cms/shared/util-core';
+import { SmsNotification } from '../entities/sms-notification';
 
 @Injectable({ providedIn: 'root' })
 export class CommunicationFacade {
@@ -100,16 +101,16 @@ export class CommunicationFacade {
     return this.emailDataService.loadCERAuthorizationEmailVariables(lovType);
   }
 
-  generateTextTemplate(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
-    return this.emailDataService.replaceAndGenerateTextTemplate(clientId, clientCaseEligibilityId, selectedTemplate, requestType, vendorId);
+  generateTextTemplate(entityId: string, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
+    return this.emailDataService.replaceAndGenerateTextTemplate(entityId, clientCaseEligibilityId, selectedTemplate, requestType);
   }
 
   loadAttachmentPreview(clientId: number, clientCaseEligibilityId: string, templateId: any) {
     return this.emailDataService.loadAttachmentPreview(clientId, clientCaseEligibilityId, templateId);
   }
 
-  sendLetterToPrint(clientId: number, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string, vendorId: string) {
-    return this.emailDataService.sendLetterToPrint(clientId, clientCaseEligibilityId, selectedTemplate, requestType, vendorId);
+  sendLetterToPrint(entityId: string, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
+    return this.emailDataService.sendLetterToPrint(entityId, clientCaseEligibilityId, selectedTemplate, requestType);
   }
 
   saveForLaterEmailTemplate(draftTemplate: any){
@@ -136,9 +137,9 @@ export class CommunicationFacade {
     return this.emailDataService.getLetterAttachment(documentTemplateId, typeCode);
 }
 
-prepareClientAndVendorLetterFormData(clientId: any, loginUserId: any) {
+prepareClientAndVendorLetterFormData(entityId: string, loginUserId: any) {
   const formData = new FormData();
-  formData.append('clientId', clientId ?? '');
+  formData.append('entityId', entityId ?? '');
   formData.append('loginUserId', loginUserId ?? '');
   return formData;
 }
@@ -176,11 +177,11 @@ prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[]) {
 return formData;
 }
 
-prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, clientCaseId: string, emailSubject: string, loginUserId: any, selectedCCEmail: any) {
+prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: any, entityId: any, clientCaseId: string, emailSubject: string, loginUserId: any, selectedCCEmail: any) {
   const formData = new FormData();
     formData.append('toEmailAddress', selectedToEmail ?? '');
     formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
-    formData.append('clientId', clientId ?? '');
+    formData.append('entityId', entityId ?? '');
     formData.append('requestSubject', emailSubject ?? ''); 
     formData.append('loginUserId', loginUserId ?? '');
     formData.append('cCEmail', selectedCCEmail ?? '');  
@@ -188,9 +189,8 @@ prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: an
     return formData;
 }
 
-prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[], vendorId: string) {
+prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[]) {
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
-    formData.append('vendorId', vendorId ?? '');
     formData.append('description', emailData?.description ?? '');
     formData.append('typeCode', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
@@ -235,5 +235,15 @@ loadClientAndVendorDefaultAttachments(templateId: string) {
 
 deleteNotificationDraft(notificationDraftId: any) {
   return this.emailDataService.deleteNotificationDraft(notificationDraftId);
+}
+
+sendSms(smsNotification: SmsNotification){
+  return this.emailDataService.sendSms(smsNotification);
+}
+
+loadNotificationTemplates(groupCode: string, categoryCode: string) {
+  return this.emailDataService.loadEmailTemplates(
+    groupCode, categoryCode
+  );
 }
 }

@@ -7,3 +7,9 @@ export enum CommunicationEvents {
   Letter="LETTER",
   Email="EMAIL"
 }
+
+export enum NotificationTemplateCategoryCode{
+  Letter="LETTER",
+  Email="EMAIL",
+  SMS="SMS"
+}

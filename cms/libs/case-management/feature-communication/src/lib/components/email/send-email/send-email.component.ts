@@ -32,15 +32,13 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 export class SendEmailComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @Input() paperlessFlag! : any
-  @Input() data!: any;
   @Input() ddlEmails$!: Observable<any>;
   @Input() toEmail: Array<string> = [];
   @Input() clientCaseEligibilityId!: any;
-  @Input() clientId!: any;
+  @Input() entityId!: any;
   @Input() isCerForm!: any;
   @Input() communicationEmailTypeCode!: any;
-  @Input() screenName!: any;
-  @Input() vendorId!: string;
+  @Input() notificationGroup!: any;
   @Input() clientCaseId!: string;
   @Input() isContinueDraftClicked!: boolean;
   @Input() isNewNotificationClicked!: boolean;
@@ -94,9 +92,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   isButtonsVisible: boolean = true;
   isCCDropdownVisible: boolean = true;
   attachmentCount: number = 0;
-  entityId!: string;
   draftNotificationRemoveDialogService = false;
-  isDraftExists: boolean = false;
+  selectedTemplateId!: string;
 
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
@@ -135,23 +132,17 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   loadClientAndVendorDraftEmailTemplates() {
-    if(this.clientId){
-      this.entityId = this.clientId;
-    }
-    if(this.vendorId){
-      this.entityId = this.vendorId;
-    }
     this.loaderService.show();
     this.communicationFacade.loadDraftNotificationRequest(this.entityId, this.communicationEmailTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data?.length > 0) {
           this.ddlTemplates = data;
-          for (let template of this.ddlTemplates){
-            template.documentTemplateId = template.notificationDraftId;
-           }
-           this.selectedTemplate = data[0];
-           this.isDraftExists = true;
+          // for (let template of this.ddlTemplates){
+          //   template.description = template.templateTypeCode;
+          //   template.documentTemplateId = template.notificationDraftId;
+          //  }
+           this.handleDdlEmailValueChange(data[0]);
           this.ref.detectChanges();
         }else{
           this.loadEmailTemplates();
@@ -187,7 +178,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   private updateOpenSendEmailFlag() {
-    if (this.data) {
+    if (this.notificationGroup) {
       this.isOpenSendEmailClicked = true;
     } else {
       this.isOpenSendEmailClicked = false;
@@ -199,12 +190,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       return;
     this.loaderService.show();
     const channelTypeCode = CommunicationEvents.Email;
-    this.communicationFacade.loadEmailTemplates(this.screenName, channelTypeCode??'')
+    this.communicationFacade.loadEmailTemplates(this.notificationGroup, channelTypeCode??'')
     .subscribe({
       next: (data: any) =>{
         if (data) {
           this.ddlTemplates = data;
-          this.isDraftExists = false;
           this.ref.detectChanges();
         }
       this.loaderService.hide();
@@ -219,7 +209,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private loadDraftEsignRequest() {
     this.loaderService.show();
-    this.esignFacade.loadDraftEsignRequestByClinetId(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', this.loginUserId)
+    this.esignFacade.loadDraftEsignRequestByClinetId(this.entityId ?? '', this.clientCaseEligibilityId ?? '', this.loginUserId)
     .subscribe({
       next: (data: any) =>{
         if (data.length > 0) {
@@ -259,8 +249,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
-    let emailRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.clientCaseId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
-    let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(emailRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
+    let emailRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.clientCaseId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
+    let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(emailRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
       if(draftTemplate?.notifcationDraftId == undefined || draftTemplate?.notifcationDraftId == null){
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
         .subscribe({
@@ -341,8 +331,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   initiateSendEmailProcess(selectedTemplate: any) {
     this.loaderService.show();
-    let esignRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.clientCaseId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
-    let formData = this.communicationFacade.prepareClientAndVendorEmailData(esignRequestFormdata, selectedTemplate, this.clientAndVendorAttachedFiles, this.vendorId);
+    let esignRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.clientCaseId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
+    let formData = this.communicationFacade.prepareClientAndVendorEmailData(esignRequestFormdata, selectedTemplate, this.clientAndVendorAttachedFiles);
     this.communicationFacade.initiateSendemailRequest(formData, selectedTemplate)
         .subscribe({
           next: (data: any) =>{
@@ -406,6 +396,7 @@ onClosePreviewEmail(){
   });
 }
 else{
+    this.selectedTemplateId = event.notificationTemplateId;
     this.selectedTemplate = event;
     this.handleEmailEditor(event);
     this.isClearEmails =true;
@@ -418,27 +409,10 @@ else{
     this.emailEditorValueEvent.emit(event);
     this.showToEmailLoader = false;
     if (CommunicationEventTypeCode.CerAuthorizationEmail===this.communicationEmailTypeCode) {
-      this.getCCEmailList(this.clientId, this.loginUserId);
+      this.getCCEmailList(this.entityId, this.loginUserId);
     }
     this.ref.detectChanges();
   }
-  }
-
-  continueWithDraftClicked(){
-    this.handleEmailEditor(this.selectedTemplate);
-    this.isClearEmails =true;
-    this.isShowToEmailLoader$.next(true);
-    this.isOpenDdlEmailDetails = true;
-    this.selectedEmail = [];
-    this.selectedEmail.push(this.toEmail[0]?.trim());
-    this.selectedToEmail = this.selectedEmail;
-    this.emailSubject = this.selectedTemplate.description;
-    this.emailEditorValueEvent.emit(this.selectedTemplate);
-    this.showToEmailLoader = false;
-    if (CommunicationEventTypeCode.CerAuthorizationEmail===this.communicationEmailTypeCode) {
-      this.getCCEmailList(this.clientId, this.loginUserId);
-    }
-    this.ref.detectChanges();
   }
 
   openNewEmailClicked(){
@@ -460,7 +434,6 @@ else{
   }
 
   closeDraftDailogCloseClicked() {
-    this.isDraftExists = false;
     this.draftNotificationRemoveDialogService = true;;
   }
 
@@ -474,7 +447,7 @@ else{
 
   private initiateAdobeEsignProcess(emailData: any, requestType: string){
     this.loaderService.show();
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
     let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
         .subscribe({
@@ -499,7 +472,7 @@ else{
   private generateText(emailData: any, requestType: string){
     this.loaderService.show();
     let formData = this.communicationFacade.preparePreviewModelData(emailData);
-    this.communicationFacade.generateTextTemplate(this.clientId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType ?? '', this.vendorId ?? '')
+    this.communicationFacade.generateTextTemplate(this.entityId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType ?? '')
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -520,7 +493,7 @@ else{
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
     this.isSaveFoLater = true;
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.clientId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
     let draftEsignRequest = this.esignFacade.prepareDraftAdobeEsignRequest(esignRequestFormdata, draftTemplate, this.cerEmailAttachedFiles);
       if(draftTemplate?.esignRequestId == undefined || draftTemplate?.esignRequestId == null){
         this.esignFacade.saveDraftEsignRequest(draftEsignRequest)
