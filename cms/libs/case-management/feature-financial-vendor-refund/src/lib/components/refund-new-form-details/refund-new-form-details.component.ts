@@ -154,9 +154,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  rxRefundInfoSortType = 'desc';
  rxRefundInfoFilter:any[]=[]
   filter!: any;  
-
   
- 
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
@@ -177,13 +175,10 @@ rxRefundInformationfilterChange(filter: CompositeFilterDescriptor): void {
 
 
 rxRefundInfoDataStateChange(stateData: any, index:any): void {
-  console.log(stateData)
   this.rxRefundInfoSort = stateData.sort;
   this.rxRefundInfoSortValue = stateData.sort[0]?.field ?? this.sortValue;
   this.rxRefundInfoSortType = stateData.sort[0]?.dir ?? 'asc';
   this.rxstate = stateData;
-
-  console.log(index)
   this.rxRefundInfoFilter = stateData?.filter?.filters;
   if(this.rxRefundInfoFilter){
  if(this.rxRefundInfoFilter?.length ==0){
@@ -191,7 +186,6 @@ rxRefundInfoDataStateChange(stateData: any, index:any): void {
   this.allSelectedVendorRefundsList[index].prescriptionFillItems
   return;
  }
- let res:any[] =[]
   this.rxRefundInfoFilter.forEach((element,ind) => {
     element.filters.forEach((fil:any) => {
 
@@ -207,8 +201,6 @@ rxRefundInfoDataStateChange(stateData: any, index:any): void {
 
   });
 }
-  console.log(this.selectedVendorRefundsList[0].prescriptionFillItems)
-
   this.selectedVendorRefundsList[0].prescriptionFillItems =
   this.sortPrescriptions(this.selectedVendorRefundsList[0].prescriptionFillItems)
 }
