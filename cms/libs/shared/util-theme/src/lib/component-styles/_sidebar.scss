@@ -115,6 +115,7 @@ cms-sidenav {
         cursor: pointer;
         letter-spacing: .5px;
         z-index: 5;
+        overflow: visible;
         .sidebar-menu_label-badge {
           background: $badge-alerts;
           color: $white !important;
