@@ -32,6 +32,8 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     // const id = selectionEvent.selectedRows[0].dataItem.notificationGroupId;
     // const id = selectionEvent.selectedRows[0].dataItem.groupName;
     this.selectedRowEvent.emit(this.selectedGroup);
+    //alert('emit');
+    //alert(JSON.stringify(this.selectedGroup))
   }
 
   isGroupDetailPopup = false;

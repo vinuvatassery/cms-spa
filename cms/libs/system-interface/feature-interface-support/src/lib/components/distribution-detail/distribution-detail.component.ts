@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
@@ -55,13 +55,13 @@ export class DistributionDetailComponent implements OnInit {
 
   createForm() {
     this.memberForm = this.formBuilder.group({
-      groupName: ['', [Validators.required]],
+      groupName: new FormControl({ value: '', disabled: true }),
       firstName: ['', [Validators.required, Validators.maxLength(200)]],
       lastName: ['', [Validators.maxLength(200)]],
       emailAddress: ['', [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]],
     });
 
-    alert(JSON.stringify(this.selectedGroup));
+    this.memberForm.controls['groupName'].setValue(this.selectedGroup.groupName)
   }
 
   mapFormValues() {

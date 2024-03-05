@@ -128,8 +128,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
-    this.loadDistributionListGrid();
+    //this.loadDistributionListGrid();
   }
 
   private loadDistributionListGrid(): void {
@@ -292,6 +291,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   groupsDropDownList = []
   addNotificationUser(data: any): void {
     this.systemInterfaceSupportFacade.addDistributionListUser(data);
-    // this.loadSupportGroupListGrid();
+     this.loadDistributionListGrid();
   }
 }

@@ -15,6 +15,7 @@
                   <div class="flex-col flex-col-12 mb-3">
                        
                         <system-interface-support-group [SupportGroupGridLists$]="supportGroup$"
+                        (selectedRowEvent)="selectedGroupChangeEvent($event)"
                         [pageSizes]="pageSizes" [sortValue]="sortValueSupportGroup"
                         [sortType]="sortType" [sort]="sortSupportGroupList"  
                         (loadSupportGroupListEvent)="loadSupportGroup($event)"
@@ -28,9 +29,9 @@
                   </div>
                   <div class="flex-col flex-col-6 mb-3">
                         <h3>Distribution List</h3>
-                        <system-interface-distribution-lists (selectedGroup)="selectedGroupChangeEvent($event)" [distributionGridLists$]="distributionLists$"
+                        <system-interface-distribution-lists  [distributionGridLists$]="distributionLists$"
                               [pageSizes]="pageSizes" [sortValue]="sortValueDistribution" [sortType]="sortType"
-                              [sort]="sortDistributionList" 
+                              [sort]="sortDistributionList" [selectedGroup]="selectedGroup"
                               (loadDistributionListEvent)="loadDistributionLists($event)"></system-interface-distribution-lists>
                   </div>
                   <div class="flex-col flex-col-6">

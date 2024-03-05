@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component} from '@angular/core';
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { State } from '@progress/kendo-data-query';
 
@@ -7,10 +7,11 @@ import { State } from '@progress/kendo-data-query';
   templateUrl: './interface-support-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class InterfaceSupportPageComponent {
+export class InterfaceSupportPageComponent implements AfterViewInit{
 selectedGroupChangeEvent(data: any) {
-  // alert(JSON.stringify(data))
-// this.selectedGroup = data;
+  //alert('received');
+   //alert(JSON.stringify(data))
+ this.selectedGroup = data;
 }
 selectedGroup:any;
   state!: State;
@@ -37,9 +38,18 @@ selectedGroup:any;
   constructor(
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
   ) {}
+  ngAfterViewInit(): void {
+    // if (this.distributionChild) {
+    //   alert(1)
+    //   this.distributionChild.selectedRowEvent.subscribe((data:any) => this.passDataToOtherComponent(data));
+    // }
+  }
+  // passDataToOtherComponent(data: any) {
+  //   alert(`receive ${data}`)
+  //   this.selectedGroup = data;
+  // }
+  // @ViewChild('distributionChild', { static: false }) distributionChild!: SupportGroupComponent;
 
-
-  
   loadSupportGroup(event: any) {
     this.systemInterfaceSupportFacade.loadSupportGroup(event);
   }
