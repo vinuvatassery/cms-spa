@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Route } from '@angular/router'; 
 import { SharedUiCommonModule } from '@cms/shared/ui-common';
 import { SharedUiTpaModule } from '@cms/shared/ui-tpa';
 import { InterfaceSupportPageComponent } from './container/interface-support-page/interface-support-page.component';
@@ -9,6 +8,7 @@ import { DistributionListsComponent } from './components/distribution-lists/dist
 import { NotificationCategoryComponent } from './components/notification-category/notification-category.component'
 import { SystemInterfaceFeatureInterfaceSupportRoutingModule } from './system-interface-feature-interface-support.routing.module';
 import { SupportGroupDetailComponent } from './components/support-group-detail/support-group-detail.component';
+import { DistributionDetailComponent } from './components/distribution-detail/distribution-detail.component';
 
 @NgModule({
   imports: [
@@ -21,6 +21,7 @@ import { SupportGroupDetailComponent } from './components/support-group-detail/s
     InterfaceSupportPageComponent,
     SupportGroupComponent,
     DistributionListsComponent,
+    DistributionDetailComponent,
     NotificationCategoryComponent,
     SupportGroupDetailComponent
   ],

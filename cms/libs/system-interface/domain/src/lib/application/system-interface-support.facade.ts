@@ -39,6 +39,9 @@ export class SystemInterfaceSupportFacade {
   private addSupportGroupSubject = new Subject<any>();
   addSupportGroup$ = this.addSupportGroupSubject.asObservable();
 
+  private groupNamesDropDownListSubject = new Subject<any>();
+  groupNamesDropDownList$ = this.groupNamesDropDownListSubject.asObservable();
+
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: NotificationSource = NotificationSource.API) {
     if (type === SnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -66,7 +69,7 @@ export class SystemInterfaceSupportFacade {
   }
 
   loadSupportGroup(paginationParameters: any) {
-    this.service.getSupportGroupList( paginationParameters).subscribe({
+    this.service.getSupportGroupList(paginationParameters).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
           data: dataResponse['items'],
@@ -84,43 +87,24 @@ export class SystemInterfaceSupportFacade {
   private distributionDataLoaderSubject = new BehaviorSubject<boolean>(false);
   distributionDataLoader$ = this.distributionDataLoaderSubject.asObservable();
 
-  loadSupportGroup(paginationParameters: any) {
-    this.showLoader();
-    this.service.getSupportGroupList( paginationParameters).subscribe({
+  loadDistributionGroup(paginationParameters: any) {
+    this.distributionDataLoaderSubject.next(true);
+    this.service.getDistributionList(paginationParameters).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
           data: dataResponse['items'],
           total: dataResponse?.totalCount,
         };
         this.supportGroupSubject.next(gridView);
-        this.hideLoader();
+        this.distributionDataLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.distributionDataLoaderSubject.next(false);
         this.hideLoader();
       },
     });
-    }
-
-    loadDistributionGroup(paginationParameters: any) {
-        this.distributionDataLoaderSubject.next(true);
-        this.service.getDistributionList(paginationParameters).subscribe({
-            next: (dataResponse: any) => {
-                const gridView: any = {
-                    data: dataResponse['items'],
-                    total: dataResponse?.totalCount,
-                };
-                this.supportGroupSubject.next(gridView);
-                this.distributionDataLoaderSubject.next(false);
-            },
-            error: (err) => {
-                this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-                this.distributionDataLoaderSubject.next(false);
-                this.hideLoader();
-            },
-        });
-    }
-
+  }
 
   loadDistributionLists() {
     this.systemInterfaceSupportService.getDistributionLists().subscribe({
@@ -133,6 +117,7 @@ export class SystemInterfaceSupportFacade {
       },
     });
   }
+
   loadNotificationCategory() {
     this.systemInterfaceSupportService.loadNotificationCategoryServices().subscribe({
       next: (response) => {
@@ -159,14 +144,14 @@ export class SystemInterfaceSupportFacade {
         },
         error: (err) => {
           this.hideLoader();
-          this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         },
       }
     );
     //return this.systemInterfaceSupportService.addSupportGroup(notificationGroup).subscribe();
   }
 
-  supportGroupAdded(): Observable<any>  {
+  supportGroupAdded(): Observable<any> {
     return this.addSupportGroupSubject.asObservable();
   }
 
@@ -176,6 +161,18 @@ export class SystemInterfaceSupportFacade {
         this.addSupportGroupSubject.next(response);
       }),
     );
+  }
+
+  loadGroupNamesDropDownList() {
+    this.systemInterfaceSupportService.getGroupNamesDropDownList().subscribe({
+      next: (response) => {
+        this.groupNamesDropDownListSubject.next(response);
+      },
+
+      error: (err) => {
+        console.error('err', err);
+      },
+    });
   }
 
 }

@@ -1,0 +1,46 @@
+<section class="k-dialog-body" [formGroup]="memberForm">
+    <p class="text-muted">
+        Adds a user to the distribution list for the selected role
+    </p>
+    <div class="flex-row">
+
+        <div class="flex-col">
+            <kendo-floatinglabel text="Group Name">
+                <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="groupId">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="First Name">
+                <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="firstName">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col flex-col-6">
+            <kendo-floatinglabel text="Last Name">
+                <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="lastName">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+        <div class="flex-col">
+            <kendo-floatinglabel text="Email Address">
+                <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="emailAddress">
+                </kendo-textbox>
+            </kendo-floatinglabel>
+        </div>
+
+    </div>
+</section>
+
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+        <div class="justify-content-end">
+            <button kendoButton [primary]="true" look="outline" aria-label="Cancel" (click)="onCancelClick()">
+                Cancel
+            </button>
+            <button kendoButton [primary]="true" aria-label="Add" (click)="save()">
+                Add
+            </button>
+        </div>
+    </div>
+</kendo-dialog-actions>

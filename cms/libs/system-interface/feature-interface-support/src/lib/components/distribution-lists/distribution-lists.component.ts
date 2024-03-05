@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa' 
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
@@ -10,13 +12,20 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DistributionListsComponent implements OnInit, OnChanges {
+onClosePopupClicked() {
+throw new Error('Method not implemented.');
+}
+  save() {
+    debugger;
+    alert(JSON.stringify(this.memberForm.value));
+  }
   isMemberDetailPopup = false;
   isMemberReactivatePopupShow = false;
   isMemberDeactivatePopupShow = false;
   isMemberDeletePopupShow = false;
   isMemberDeleteConfirmationPopupShow = false;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isDistributionGridLoaderShow = false;
   @Input() pageSizes: any;
   @Input() sortValue: any;
@@ -34,11 +43,12 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  memberForm!: FormGroup;
 
   gridDistributionDataSubject = new Subject<any>();
   gridDistributionData$ =
     this.gridDistributionDataSubject.asObservable();
- 
+
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public gridMoreActions = [
     {
@@ -55,7 +65,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       icon: 'block',
       click: (data: any): void => {
         this.onOpenMemberDeactivateClicked();
-     
+
 
       },
     },
@@ -64,7 +74,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       text: 'Re-activate',
       icon: 'done',
       click: (data: any): void => {
-     this.onOpenMemberReactivateClicked();
+        this.onOpenMemberReactivateClicked();
       },
     },
     {
@@ -78,18 +88,30 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     },
   ];
 
-  
 
- 
+
+
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
-  ) {}
+    private dialogService: DialogService,
+    private fb: FormBuilder,
+    private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
+  ) { }
+
+  createSupportGroupForm() {
+    this.memberForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.maxLength(200)]],
+      lastName: ['', [Validators.maxLength(200)]],
+      emailAddress: ['', [Validators.required]],
+    });
+  }
 
   ngOnInit(): void {
     this.loadDistributionListGrid();
+    this.createSupportGroupForm();
   }
+
   ngOnChanges(): void {
     this.state = {
       skip: 0,
@@ -195,38 +217,44 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     });
     this.isDistributionGridLoaderShow = false;
   }
- 
-  onMemberDetailsClicked(){
+
+  onMemberDetailsClicked() {
+    this.createSupportGroupForm();
     this.isMemberDetailPopup = true;
   }
-  onCloseMemberDetailPopupClicked(){
+  onCloseMemberDetailPopupClicked() {
     this.isMemberDetailPopup = false;
   }
 
-  onOpenMemberDeleteClicked(){
+  onOpenMemberDeleteClicked() {
     this.isMemberDeletePopupShow = true;
   }
-  onCloseMemberDeleteClicked(){
+  onCloseMemberDeleteClicked() {
     this.isMemberDeletePopupShow = false;
   }
-  onOpenMemberDeactivateClicked(){
+  onOpenMemberDeactivateClicked() {
     this.isMemberDeactivatePopupShow = true;
   }
-  onCloseMemberDeactivateClicked(){
+  onCloseMemberDeactivateClicked() {
     this.isMemberDeactivatePopupShow = false;
   }
-  onOpenMemberReactivateClicked(){
+  onOpenMemberReactivateClicked() {
     this.isMemberReactivatePopupShow = true;
   }
-  onCloseMemberReactivateClicked(){
+  onCloseMemberReactivateClicked() {
     this.isMemberReactivatePopupShow = false;
   }
-  onOpenMemberDeleteConfirmationClicked(){
+  onOpenMemberDeleteConfirmationClicked() {
     this.isMemberDeleteConfirmationPopupShow = true;
 
   }
-  onCloseMemberDeleteConfirmationClicked(){
+  onCloseMemberDeleteConfirmationClicked() {
     this.isMemberDeleteConfirmationPopupShow = false;
 
+  }
+  groupsDropDownList = []
+  addSupportGroup(data: any): void {
+    this.systemInterfaceSupportFacade.addSupportGroup(data);
+    // this.loadSupportGroupListGrid();
   }
 }
