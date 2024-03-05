@@ -296,6 +296,7 @@
                         (selectedClaimsChangeEvent)="selectedRxClaimsChangeEvent($event)"
                         (onProviderNameClickEvent)="onTpaProviderClick($event)"
                        ></cms-vendor-refund-client-claims-list>
+                       <kendo-formerror *ngIf="!claimsCount && isconfirmclicked"> At least one Claim selection is required. </kendo-formerror>
                 </div>
             </div>
             <div class="confirm-container" *ngIf="isConfirmationClicked">
@@ -576,7 +577,7 @@
     <div class="justify-content-end align-items-center" *ngIf="!isConfirmationClicked && selectedRefundType">
 
         <span class="mr-2">{{claimsCount}} refund(s) to be added</span>
-        <button kendoButton [primary]="true" aria-label="Confirm Selections" [disabled]="claimsCount<1"  (click)="confirmationClicked()"> Confirm Selections
+        <button kendoButton [primary]="true" aria-label="Confirm Selections"   (click)="confirmationClicked()"> Confirm Selections
         </button>
     </div>
 

@@ -55,6 +55,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
   serviceTypes$ = this.lovFacade.serviceType$
   onEditInitiallydontShowPremiumselection = false;
+  isconfirmclicked=false;
   @ViewChild('premiumProviderDetailsTemplate', { read: TemplateRef })
   premiumProviderDetailsTemplate!: TemplateRef<any>;
   @ViewChild('pharmacyProviderDetailsTemplate', { read: TemplateRef })
@@ -317,49 +318,50 @@ if(this.isEdit){
     this.selectedProvider=null;
   }
   confirmationClicked (){
+    this.isconfirmclicked=true;
+    if(this.claimsCount != 0){
       this.inputConfirmationClicked = true;
-    this.disableFeildsOnConfirmSelection = true
-
-    if(this.selectedRefundType=== ServiceTypeCode.insurancePremium
-    && this.insClaims.selectedInsuranceClaims &&  this.insClaims.selectedInsuranceClaims.length>0
-    ){
-      this.refundForm.controls['insVendor'].disable();
-    this.insurancePremiumPaymentReqIds =  [...this.insClaims.selectedInsuranceClaims]
-  }
-
-  if(this.selectedRefundType === ServiceTypeCode.tpa ){
-    this.refundForm.controls['tpaVendor'].disable();
-    const param ={
-      paymentRequestIds: this.selectedTpaRequests,
+      this.disableFeildsOnConfirmSelection = true
+      if(this.selectedRefundType=== ServiceTypeCode.insurancePremium
+      && this.insClaims.selectedInsuranceClaims &&  this.insClaims.selectedInsuranceClaims.length>0
+      ){
+        this.refundForm.controls['insVendor'].disable();
+      this.insurancePremiumPaymentReqIds =  [...this.insClaims.selectedInsuranceClaims]
     }
-      this.financialVendorRefundFacade.getTpaRefundInformation(param)
-  }
-   if (this.selectedRefundType === ServiceTypeCode.pharmacy || this.selectedRefundType === 'RX' || this.selectedRefundType === 'PHARMACY'){
-    this.refundForm.controls['rxVendor'].disable();
-    if(!this.isEdit){
-      this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
-    }else{
-      this.rxClaims.selectedPharmacyClaims.forEach(element => {
-        const data = (this.selectedVendorRefundsList[0].prescriptionFillItems).find((obj:any) =>{
-          return obj.refundedPrescriptionFillId ==  element.perscriptionFillId
+  
+    if(this.selectedRefundType === ServiceTypeCode.tpa ){
+      this.refundForm.controls['tpaVendor'].disable();
+      const param ={
+        paymentRequestIds: this.selectedTpaRequests,
+      }
+        this.financialVendorRefundFacade.getTpaRefundInformation(param)
+    }
+     if (this.selectedRefundType === ServiceTypeCode.pharmacy || this.selectedRefundType === 'RX' || this.selectedRefundType === 'PHARMACY'){
+      this.refundForm.controls['rxVendor'].disable();
+      if(!this.isEdit){
+        this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
+      }else{
+        this.rxClaims.selectedPharmacyClaims.forEach(element => {
+          const data = (this.selectedVendorRefundsList[0].prescriptionFillItems).find((obj:any) =>{
+            return obj.refundedPrescriptionFillId ==  element.perscriptionFillId
+          });
+          if(data){
+            element.daySupplyRefunded=data.daySupplyRefunded;
+            element.qtyRefunded =data.qtyRefunded;
+            element.qtyRefundedValid=data.qtyRefunded;
+            element.refundedAmount=data.refundedAmount;
+            element.refundedAmountValid=data.refundedAmountValid;
+            element.refundedPrescriptionFillId=data.refundedPrescriptionFillId;
+          };
         });
-        
-        if(data){
-          element.daySupplyRefunded=data.daySupplyRefunded;
-          element.qtyRefunded =data.qtyRefunded;
-          element.qtyRefundedValid=data.qtyRefunded;
-          element.refundedAmount=data.refundedAmount;
-          element.refundedAmountValid=data.refundedAmountValid;
-          element.refundedPrescriptionFillId=data.refundedPrescriptionFillId;
-        };
-      });
-      this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
-     }
+        this.getSelectedVendorRefundsList(this.rxClaims.selectedPharmacyClaims)
+       }
+    }
+    this.onEditInitiallydontShowPremiumselection = true
+    this.isConfirmationClicked = true
+    }
 
   }
-  this.onEditInitiallydontShowPremiumselection = true
-  this.isConfirmationClicked = true
-}
 
 onSelectedClaimsChangeEvent(event:any[]){
   this.selectedInsRequests = event
@@ -949,9 +951,11 @@ onSpotsPaymentChange(check: any) {
 }
 
 selectedRxClaimsChangeEvent(event:any){
+  if (this.claimsCount!=0){
   if( event != null){
   this.claimsCount = event.length;
   }
+}
 }
 validatePayable(validatePayable: any): string {
   const sanitizedValue = validatePayable.replace(/[^a-zA-Z\d]/g, '');
