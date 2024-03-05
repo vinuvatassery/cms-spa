@@ -4,15 +4,12 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
 } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { Observable } from 'rxjs';
+import { LoaderService} from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 
 @Component({

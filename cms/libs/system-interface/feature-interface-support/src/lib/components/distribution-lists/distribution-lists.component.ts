@@ -4,7 +4,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
+import { State, CompositeFilterDescriptor} from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'system-interface-distribution-lists',
@@ -12,13 +12,7 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DistributionListsComponent implements OnInit, OnChanges {
-onClosePopupClicked() {
-throw new Error('Method not implemented.');
-}
-  save() {
-    debugger;
-    alert(JSON.stringify(this.memberForm.value));
-  }
+
   isMemberDetailPopup = false;
   isMemberReactivatePopupShow = false;
   isMemberDeactivatePopupShow = false;
@@ -44,10 +38,13 @@ throw new Error('Method not implemented.');
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   memberForm!: FormGroup;
-
+  
   gridDistributionDataSubject = new Subject<any>();
   gridDistributionData$ =
     this.gridDistributionDataSubject.asObservable();
+
+  webLogListsLoader$ = this.systemInterfaceSupportFacade.distributionListDataLoader$;
+
 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public gridMoreActions = [
@@ -109,10 +106,22 @@ throw new Error('Method not implemented.');
 
   ngOnInit(): void {
     this.loadDistributionListGrid();
-    this.createSupportGroupForm();
+    // this.createSupportGroupForm();
   }
 
+  // ngOnChanges(): void {
+  //   this.state = {
+  //     skip: 0,
+  //     take: this.pageSizes[0]?.value,
+  //     sort: this.sort,
+  //   };
+
+  //   this.loadDistributionListGrid();
+  // }
+
+  
   ngOnChanges(): void {
+    this.sortType = 'desc'
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
@@ -130,18 +139,43 @@ throw new Error('Method not implemented.');
       this.sortType
     );
   }
+  // loadDistribution(
+  //   skipCountValue: number,
+  //   maxResultCountValue: number,
+  //   sortValue: string,
+  //   sortTypeValue: string
+  // ) {
+  //   this.isDistributionGridLoaderShow = true;
+  //   const gridDataRefinerValue = {
+  //     skipCount: skipCountValue,
+  //     pagesize: maxResultCountValue,
+  //     maxResultCount: maxResultCountValue,
+  //     sortColumn: sortValue,
+  //     sortType: sortTypeValue,
+  //   };
+  //   this.loadDistributionListEvent.emit(gridDataRefinerValue);
+  //   this.gridDataHandle();
+
+    
+  // }
+
   loadDistribution(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isDistributionGridLoaderShow = true;
+    //this.isVendorRefundAllPaymentsGridLoaderShow = true;
+
+    // if (sortValue === 'batchNumber') {
+    //   sortValue = 'entryDate'
+    // }
     const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
+      SkipCount: skipCountValue,
+      MaxResultCount: maxResultCountValue,
+      Sorting: 'firstName',
+      SortType: sortTypeValue,
+      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
     };
     this.loadDistributionListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -150,25 +184,27 @@ throw new Error('Method not implemented.');
   onChange(data: any) {
     this.defaultGridState();
 
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
+    // this.filterData = {
+    //   logic: 'and',
+    //   filters: [
+    //     {
+    //       filters: [
+    //         {
+    //           field: this.selectedColumn ?? 'vendorName',
+    //           operator: 'startswith',
+    //           value: data,
+    //         },
+    //       ],
+    //       logic: 'and',
+    //     },
+    //   ],
+    // };
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+    
   }
+  
 
   defaultGridState() {
     this.state = {
@@ -206,10 +242,10 @@ throw new Error('Method not implemented.');
   gridDataHandle() {
     this.distributionGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
+      // this.gridDataResult.data = filterBy(
+      //   this.gridDataResult.data,
+      //   this.filterData
+      // );
       this.gridDistributionDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isDistributionGridLoaderShow = false;
@@ -253,8 +289,8 @@ throw new Error('Method not implemented.');
 
   }
   groupsDropDownList = []
-  addSupportGroup(data: any): void {
-    this.systemInterfaceSupportFacade.addSupportGroup(data);
+  addNotificationUser(data: any): void {
+    this.systemInterfaceSupportFacade.addDistributionListUser(data);
     // this.loadSupportGroupListGrid();
   }
 }

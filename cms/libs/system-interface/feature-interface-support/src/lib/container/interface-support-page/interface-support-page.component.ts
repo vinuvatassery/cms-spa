@@ -1,6 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { LoggingService } from '@cms/shared/util-core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { State } from '@progress/kendo-data-query';
 
@@ -42,7 +40,7 @@ export class InterfaceSupportPageComponent {
   }
 
   loadDistributionLists(event: any) {
-    this.systemInterfaceSupportFacade.loadDistributionLists();
+    this.systemInterfaceSupportFacade.loadDistributionGroup(event);
   }
 
   loadNotificationCategory(event: any) {

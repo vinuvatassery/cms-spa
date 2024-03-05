@@ -9,8 +9,9 @@ import {
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LoaderService } from '@cms/shared/util-core';
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
+import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 
 @Component({
   selector: 'distribution-detail',
@@ -19,8 +20,7 @@ import { LovFacade } from '@cms/system-config/domain';
 })
 export class DistributionDetailComponent implements OnInit {
   @Input() groupsDropDownList: any;
-  @Input() addMember$: any;
-  @Output() close = new EventEmitter<any>();
+  @Output() closeForm = new EventEmitter<any>();
   @Output() addMemberEvent = new EventEmitter<any>();
   
   showLoader() {
@@ -44,6 +44,7 @@ export class DistributionDetailComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private readonly lovFacade: LovFacade,
     private readonly loaderService: LoaderService,
+    private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
     private cd: ChangeDetectorRef) {
   }
 
@@ -56,7 +57,7 @@ export class DistributionDetailComponent implements OnInit {
       groupId: ['', [Validators.required, Validators.maxLength(200)]],
       firstName: ['', [Validators.required, Validators.maxLength(200)]],
       lastName: ['', [Validators.maxLength(200)]],
-      emailAddress: ['', [Validators.required, Validators.maxLength(200)]],
+      emailAddress: ['', [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]],
     });
   }
 
@@ -67,13 +68,13 @@ export class DistributionDetailComponent implements OnInit {
       firstName: formValues.firstName,
       lastName: formValues.lastName,
       emailAddress: formValues.emailAddress,
-      //activeFlag: this.hasCreateUpdatePermission ? StatusFlag.Yes : StatusFlag.No,
+      userTypeCode : 'EXTERNAL',
     };
     return dto;
   }
 
   onCancelClick() {
-    this.close.emit();
+    this.closeForm.emit();
   }
 
   validateForm() {
@@ -84,8 +85,11 @@ export class DistributionDetailComponent implements OnInit {
     return this.memberForm.valid;
   }
 
+  getForm(index: number, fieldName: string) {
+    return this.memberForm;
+  }
+
   public save() {
-    debugger;
     this.memberForm.markAllAsTouched();
     const res = this.checkValidations();
     this.isSubmitted = true;
@@ -98,18 +102,25 @@ export class DistributionDetailComponent implements OnInit {
 
     if (this.memberForm.valid) {
       let finalData = this.mapFormValues();
-      //this.showLoader();
-      this.addMemberEvent.emit(finalData)
-      this.addMember$
-        .subscribe((addResponse: any) => {
-          if (addResponse) {
-            this.onCancelClick();
-            this.memberForm.reset();
-            this.isValidateForm = false;
-            this.cd.detectChanges();
-          }
+      this.showLoader();
 
-        })
+      this.systemInterfaceSupportFacade.addDistributionListUser(finalData).subscribe({
+        next: (response: any) => {
+          let notificationMessage = response.message;
+          this.onCancelClick();
+          this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
+          this.hideLoader();
+          this.memberForm.reset();
+          this.isValidateForm = false;
+         // this.loadCarrierSubject.next(true);
+          this.cd.detectChanges(); 
+        },
+        error: (err: any) => {
+          this.hideLoader();
+          this.lovFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        }
+      });
+
     }
   }
 

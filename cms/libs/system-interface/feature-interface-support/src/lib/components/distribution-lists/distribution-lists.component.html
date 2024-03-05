@@ -1,9 +1,9 @@
 <p>Users assigned to Kaiser Support. Users in this list will be notified in case of interface error</p>
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="isDistributionGridLoaderShow" [pageSize]="state.take" [pageable]="true"
+  <kendo-grid [resizable]="true" [loading]="(webLogListsLoader$  | async) === true"  [pageSize]="state.take" [pageable]="true"
     [sortable]="false" [skip]="state.skip" [groupable]="false" [columnMenu]="false" [sort]="state.sort"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-    [data]="distributionGridLists$ | async">
+    [data]="gridDistributionData$ | async">
 
 
 
@@ -78,8 +78,8 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>Add Member</kendo-dialog-titlebar>
 
-  <distribution-detail [groupsDropDownList]="groupsDropDownList" [addMember$]="addSupportGroup"
-  (addMemberEvent)="addSupportGroup($event)" (close)="onClosePopupClicked()"> </distribution-detail>
+  <distribution-detail [groupsDropDownList]="groupsDropDownList" (addMemberEvent)="addNotificationUser($event)"
+    (closeForm)="onCloseMemberDetailPopupClicked()"> </distribution-detail>
 
 </kendo-dialog>
 

@@ -39,8 +39,8 @@ export class SystemInterfaceSupportFacade {
   private addSupportGroupSubject = new Subject<any>();
   addSupportGroup$ = this.addSupportGroupSubject.asObservable();
 
-  private groupNamesDropDownListSubject = new Subject<any>();
-  groupNamesDropDownList$ = this.groupNamesDropDownListSubject.asObservable();
+  private addDistributionListUserSubject = new Subject<any>();
+  addDistributionListUser$ = this.addDistributionListUserSubject.asObservable();
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: NotificationSource = NotificationSource.API) {
     if (type === SnackBarNotificationType.ERROR) {
@@ -84,36 +84,24 @@ export class SystemInterfaceSupportFacade {
     });
   }
 
-  private distributionDataLoaderSubject = new BehaviorSubject<boolean>(false);
-  distributionDataLoader$ = this.distributionDataLoaderSubject.asObservable();
+  private distributionListDataLoaderSubject = new BehaviorSubject<boolean>(false);
+  distributionListDataLoader$ = this.distributionListDataLoaderSubject.asObservable();
 
   loadDistributionGroup(paginationParameters: any) {
-    this.distributionDataLoaderSubject.next(true);
+    this.distributionListDataLoaderSubject.next(true);
     this.service.getDistributionList(paginationParameters).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
           data: dataResponse['items'],
           total: dataResponse?.totalCount,
         };
-        this.supportGroupSubject.next(gridView);
-        this.distributionDataLoaderSubject.next(false);
+        this.distributionListsSubject.next(gridView);
+        this.distributionListDataLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.distributionDataLoaderSubject.next(false);
+        this.distributionListDataLoaderSubject.next(false);
         this.hideLoader();
-      },
-    });
-  }
-
-  loadDistributionLists() {
-    this.systemInterfaceSupportService.getDistributionLists().subscribe({
-      next: (response) => {
-        this.distributionListsSubject.next(response);
-      },
-
-      error: (err) => {
-        console.error('err', err);
       },
     });
   }
@@ -163,16 +151,44 @@ export class SystemInterfaceSupportFacade {
     );
   }
 
-  loadGroupNamesDropDownList() {
-    this.systemInterfaceSupportService.getGroupNamesDropDownList().subscribe({
-      next: (response) => {
-        this.groupNamesDropDownListSubject.next(response);
-      },
-
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
+  // distribution ----------------------------------------
+  addDistributionListUser(dto: any): Observable<any> {
+    return this.systemInterfaceSupportService.addDistributionListUser(dto).pipe(
+      tap((response: any) => {
+        this.addDistributionListUserSubject.next(response);
+      }),
+    );
   }
+
+  // loadDistributionLists(paginationParameters: any) {
+  //   this.systemInterfaceSupportService.getDistributionList(paginationParameters).subscribe({
+  //     next: (response) => {
+  //       this.distributionListsSubject.next(response);
+  //     },
+  //     error: (err) => {
+  //       console.error('err', err);
+  //     },
+  //   });
+  // }
+
+  // loadDistributionLists(paginationParameters: any) {
+  //   this.distributionDataLoaderSubject.next(true);
+  //   this.service.getDistributionList(paginationParameters).subscribe({
+  //     next: (dataResponse: any) => {
+  //       const gridView: any = {
+  //         data: dataResponse['items'],
+  //         total: dataResponse?.totalCount,
+  //       };
+  //       this.supportGroupSubject.next(gridView);
+  //       this.distributionDataLoaderSubject.next(false);
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+  //       this.distributionDataLoaderSubject.next(false);
+  //       this.hideLoader();
+  //     },
+  //   });
+  // }
+  // ----------------------------------------
 
 }
