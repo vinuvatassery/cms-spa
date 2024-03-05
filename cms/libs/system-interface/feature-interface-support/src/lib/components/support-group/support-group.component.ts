@@ -307,52 +307,64 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.systemInterfaceSupportFacade.addSupportGroup(data);
     this.loadSupportGroupListGrid();
   }
+  
+  handleSupportGroupDeactive(isDeactivate:any)
+  {
+     if(isDeactivate)
+     {
+       this.deactivateButtonEmitted =false;
+       this.deactivateConfimEvent.emit(this.notificationGroupId);
 
-  handleSupportGroupDeactive(isDeactivate: any) {
-    if (isDeactivate) {
-      this.deactivateButtonEmitted = false;
-      this.deactivateConfimEvent.emit(this.notificationGroupId);
+       this.supportGroupReactivate$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+       .subscribe((deleteResponse: any) =>
+       {
+         if(deleteResponse ?? false)
+         {
+           this.loadSupportGroupListGrid()
+         }
 
-      this.supportGroupReactivate$.pipe(first((deleteResponse: any) => deleteResponse != null))
-        .subscribe((deleteResponse: any) => {
-          if (deleteResponse ?? false) {
-            this.loadSupportGroupListGrid()
-          }
-
-        })
-    }
-    this.onCloseSupportGroupDeactivateClicked()
+       })
+     }
+     this.onCloseSupportGroupDeactivateClicked()
   }
 
-  handleSupportGroupReactive(isReactivate: any) {
-    if (isReactivate) {
-      this.reactivateButtonEmitted = false;
-      this.reactivateConfimEvent.emit(this.notificationGroupId);
+  handleSupportGroupReactive(isReactivate:any)
+  {
+     if(isReactivate)
+     {
+       this.reactivateButtonEmitted =false;
+       this.reactivateConfimEvent.emit(this.notificationGroupId);
 
-      this.supportGroupReactivate$.pipe(first((deleteResponse: any) => deleteResponse != null))
-        .subscribe((deleteResponse: any) => {
-          if (deleteResponse ?? false) {
-            this.loadSupportGroupListGrid()
-          }
+       this.supportGroupReactivate$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+       .subscribe((deleteResponse: any) =>
+       {
+         if(deleteResponse ?? false)
+         {
+           this.loadSupportGroupListGrid()
+         }
 
-        })
-    }
-    this.onCloseSupportGroupReactivateClicked()
+       })
+     }
+     this.onCloseSupportGroupReactivateClicked()
   }
 
-  handleSupportGroupDelete(isHardDelete: any) {
-    if (isHardDelete) {
-      this.deleteButtonEmitted = false;
-      this.deleteConfimedEvent.emit(this.notificationGroupId);
+  handleSupportGroupDelete(isHardDelete:any)
+  {
+     if(isHardDelete)
+     {
+       this.deleteButtonEmitted =false;
+       this.deleteConfimedEvent.emit(this.notificationGroupId);
 
-      this.supportGroupRemove$.pipe(first((deleteResponse: any) => deleteResponse != null))
-        .subscribe((deleteResponse: any) => {
-          if (deleteResponse ?? false) {
-            this.loadSupportGroupListGrid()
-          }
+       this.supportGroupRemove$.pipe(first((deleteResponse: any ) => deleteResponse != null))
+       .subscribe((deleteResponse: any) =>
+       {
+         if(deleteResponse ?? false)
+         {
+           this.loadSupportGroupListGrid()
+         }
 
-        })
-    }
-    this.onCloseSupportGroupDeleteClicked()
+       })
+     }
+     this.onCloseSupportGroupDeleteClicked()
   }
 }
