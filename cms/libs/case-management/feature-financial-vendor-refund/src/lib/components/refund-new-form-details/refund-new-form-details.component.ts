@@ -1,7 +1,7 @@
 import { Component , Output, EventEmitter, ViewChild, TemplateRef, Input, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { State } from '@progress/kendo-data-query';
-import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, ServiceTypeCode } from '@cms/case-management/domain';
+import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
+import { ContactFacade, FinancialVendorFacade, FinancialVendorRefundFacade, GridFilterParam, ServiceTypeCode } from '@cms/case-management/domain';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subject, Subscription, debounceTime, takeUntil } from 'rxjs';
@@ -119,6 +119,8 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   tpaPaymentReqIds :any[] =[]
   rxPaymentReqIds :any[] =[]
   selectedVendorRefundsList: any[] = [];
+  allSelectedVendorRefundsList: any[] = [];
+  rxstate!:State;
   creditMaskFormat: string = '000000-000';
 
  @Input() serviceType=''
@@ -146,6 +148,15 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   vendorRefundProfileSubject = new Subject();
   pharmacySearchResultSubscription = new Subscription();
   vendorRefundFormProfile$ = this.financialVendorRefundFacade.vendorRefundFormProfileSubject;
+  rxfilterData: any;
+ rxRefundInfoSort : SortDescriptor[] = [{ field: 'PcaCode', dir: 'asc' }];
+ rxRefundInfoSortValue = 'prescriptionFillDate';
+ rxRefundInfoSortType = 'desc';
+ rxRefundInfoFilter:any[]=[]
+  filter!: any;  
+
+  
+ 
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
     public contactFacade: ContactFacade,
@@ -159,7 +170,96 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();
   }
+  
+rxRefundInformationfilterChange(filter: CompositeFilterDescriptor): void {
+  this.rxfilterData = filter;
+}
+
+
+rxRefundInfoDataStateChange(stateData: any, index:any): void {
+  console.log(stateData)
+  this.rxRefundInfoSort = stateData.sort;
+  this.rxRefundInfoSortValue = stateData.sort[0]?.field ?? this.sortValue;
+  this.rxRefundInfoSortType = stateData.sort[0]?.dir ?? 'asc';
+  this.rxstate = stateData;
+
+  console.log(index)
+  this.rxRefundInfoFilter = stateData?.filter?.filters;
+  if(this.rxRefundInfoFilter){
+ if(this.rxRefundInfoFilter?.length ==0){
+  this.selectedVendorRefundsList[index].prescriptionFillItems  =  
+  this.allSelectedVendorRefundsList[index].prescriptionFillItems
+  return;
+ }
+ let res:any[] =[]
+  this.rxRefundInfoFilter.forEach((element,ind) => {
+    element.filters.forEach((fil:any) => {
+
+     if(ind ==0){
+      this.selectedVendorRefundsList[index].prescriptionFillItems =   this.filterWithOperators(fil, this.allSelectedVendorRefundsList[index].prescriptionFillItems, 
+        this.selectedVendorRefundsList[index].prescriptionFillItems);
+   
+  }else{
+    this.selectedVendorRefundsList[index].prescriptionFillItems =  this.filterWithOperators(fil,  this.selectedVendorRefundsList[index].prescriptionFillItems, 
+      this.selectedVendorRefundsList[index].prescriptionFillItems);
+  }
+})
+
+  });
+}
+  console.log(this.selectedVendorRefundsList[0].prescriptionFillItems)
+
+  this.selectedVendorRefundsList[0].prescriptionFillItems =
+  this.sortPrescriptions(this.selectedVendorRefundsList[0].prescriptionFillItems)
+}
+
+sortPrescriptions(source:any[]){
+  if(this.rxRefundInfoSortType == 'asc'){
+ return  source.sort((a, b) => (a[this.rxRefundInfoSortValue] < b[this.rxRefundInfoSortValue] ? -1 : 1));
+  }else{
+   return source.sort((a, b) => (a[this.rxRefundInfoSortValue] > b[this.rxRefundInfoSortValue] ? -1 : 1));
+  }
+}
+
+
+  filterWithOperators(fil:any, source:any[], destination:any[]){
+    switch(fil.operator){
+      case 'startswith': 
+       destination =
+      source.filter((x:any) => x[fil.field]?.toLowerCase().startsWith(fil.value?.toLowerCase()))
+      break;
+      case 'eq': 
+      destination =
+      source.filter((x:any) => x[fil.field]?.toLowerCase() == fil.value?.toLowerCase())
+      break;
+     case 'endswith':
+      destination =
+      source.filter((x:any) => x[fil.field]?.toLowerCase().endsWith(fil.value?.toLowerCase()))
+      break;
+      case 'contains':
+        destination =
+        source.filter((x:any) => x[fil.field]?.toString()?.toLowerCase().includes(fil.value?.toLowerCase()))
+      break;
+      case 'gte':
+        if(fil.field == 'prescriptionFillDate'){
+          destination =
+          source.filter((x:any) => new Date([fil.field]?.toString()) >= (new Date(fil.value)))
+      
+        }
+        break;
+      case 'lte':
+          destination =
+          source.filter((x:any) => new Date(x[fil.field]?.toString())<= new Date((fil.value)))
+      break;
+    }
+    return destination;
+  }
   ngOnInit(): void {
+
+    this.rxstate = {
+      skip: 0,
+      sort: this.rxRefundInfoSort
+    };
 
     this.subscribeLoadRefundClaimDataForRx();
     this.financialVendorRefundFacade.premiumsListData$.subscribe((res:any)=>{
@@ -262,7 +362,9 @@ if(this.isEdit){
       this.vendorId = vendors[0].vendorId
       this.initForm()
     });
-    this.existingRxRefundClaim$.subscribe((res:any)=>{
+    this.existingRxRefundClaim$.subscribe((res:any)=>{ 
+       this.rxPaymentReqIds = [res.prescriptionFillItems.map((x:any)=> x.refundedPrescriptionFillId).join(',')]
+
       this.getSelectedVendorRefundsList(res,"EDIT");
     })
   }
@@ -538,6 +640,7 @@ addTpa(event:any){
     this.isRefundGridClaimShow = true;
     if(this.selectedRefundType == ServiceTypeCode.pharmacy){
     this.claimsCount = this.pharmacyClaimsPaymentReqIds.length
+    this.pharmacyClaimsPaymentReqIds = this.rxPaymentReqIds
     }
   }
 
@@ -763,6 +866,7 @@ addTpa(event:any){
       })
     }
     }
+    this.allSelectedVendorRefundsList = JSON.parse(JSON.stringify(this.selectedVendorRefundsList))
 
    this.isConfirmationClicked = true;
  }
@@ -954,6 +1058,7 @@ selectedRxClaimsChangeEvent(event:any){
   if (this.claimsCount!=0){
   if( event != null){
   this.claimsCount = event.length;
+  this.rxPaymentReqIds = event;
   }
 }
 }

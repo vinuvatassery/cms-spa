@@ -73,7 +73,8 @@
   [skip]="state.skip" 
   [sort]="state.sort"
   [filter]="state.filter"
-  (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
+  (dataStateChange)="dataStateChange($event)" 
+  (filterChange)="filterChange($event)"
   >
   <kendo-grid-column field="coverageStartDate" title="Coverage Dates" [width]="200">
         <ng-template kendoGridCellTemplate let-dataItem>
