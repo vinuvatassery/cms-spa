@@ -28,8 +28,8 @@ export class InterfaceSupportPageComponent {
   supportGroup$ = this.systemInterfaceSupportFacade.supportGroup$;
   distributionLists$ = this.systemInterfaceSupportFacade.distributionLists$;
   notificationCategoryLists$ = this.systemInterfaceSupportFacade.notificationCategoryLists$;
-  
-
+  supportGroupReactivate$ = this.systemInterfaceSupportFacade.supportGroupReactivate$;
+  supportGroupRemove$ =this.systemInterfaceSupportFacade.supportGroupRemove$;
 
   constructor(
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
@@ -47,5 +47,15 @@ export class InterfaceSupportPageComponent {
 
   loadNotificationCategory(event: any) {
     this.systemInterfaceSupportFacade.loadNotificationCategory();
+  }
+
+  handleDeactivate(event: any){
+    this.systemInterfaceSupportFacade.changeSupportGroupStatus(event, false);
+  }
+  handleReactivate(event: any){
+    this.systemInterfaceSupportFacade.changeSupportGroupStatus(event, true);
+  }
+  handleDeleteSupportGroup(event: any){
+    this.systemInterfaceSupportFacade.deleteSupportGroup(event, false);
   }
 }

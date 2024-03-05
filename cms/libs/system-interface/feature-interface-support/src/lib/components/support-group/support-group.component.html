@@ -2,7 +2,7 @@
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
       <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc" aria-label="All Columns"
-        [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc" valueField="columnName" 
+        [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc" valueField="columnName"
         [data]="searchColumnList">
       </kendo-dropdownlist>
     </kendo-floatinglabel>
@@ -48,7 +48,7 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="groupDesc" title="Group Name" [width]="140">
+    <kendo-grid-column field="groupDesc" title="Group Desciption" [width]="140">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
@@ -58,7 +58,7 @@
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
       </ng-template>
-     </kendo-grid-column>
+    </kendo-grid-column>
     <kendo-grid-column field="userPerGroup" title="User Per Group" [width]="100">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -69,7 +69,7 @@
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
       </ng-template>
-     </kendo-grid-column>
+    </kendo-grid-column>
     <kendo-grid-column field="activeFlag" title="Status" [width]="80">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
@@ -80,7 +80,7 @@
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
         </kendo-grid-string-filter-menu>
       </ng-template>
-     </kendo-grid-column>
+    </kendo-grid-column>
     <kendo-grid-column field="lastModificationTime" title="Last Modified" [width]="80">
       <ng-template kendoGridCellTemplate let-dataItem>
         {{dataItem.lastModificationTime | date: 'MM/dd/yyyy'}}
@@ -101,22 +101,25 @@
         </kendo-popover>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="Option" title="Option" [sticky]="true" [columnMenu]="false" [width]="50"
+    <kendo-grid-column field="notificationGroupId" title="Option" [sticky]="true" [columnMenu]="false" [width]="50"
       class="text-center">
-      <ng-template kendoGridCellTemplate let-dataItem>
+      <ng-template kendoGridCellTemplate let-dataItem let-notificationSupportId="field">
         <kendo-dropdownbutton [data]="gridMoreActionsSupport"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
           aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
           <span class="material-icons" aria-label="More option"> more_vert </span>
-          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem
+            let-groupId="notificationGroupId">
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
+                [class]="buttondataItem.buttonType" aria-hidden="false"
+                (click)="buttondataItem.click(dataItem.notificationGroupId)">
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
               </button>
-            </ng-container> </ng-template>
+            </ng-container>
+          </ng-template>
         </kendo-dropdownbutton>
       </ng-template>
     </kendo-grid-column>
@@ -162,83 +165,27 @@
 <kendo-dialog *ngIf="isGroupDetailPopup" (close)="onCloseGroupDetailPopupClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>Add Group</kendo-dialog-titlebar>
-
   <support-group-detail [interfaceSupportGroupLov]="interfaceSupportGroupLov" [addSupportGroup$]="addSupportGroup$"
     (addSupportGroupEvent)="addSupportGroup($event)" (close)="onCloseGroupDetailPopupClicked()"> </support-group-detail>
-
 </kendo-dialog>
 
 
 <kendo-dialog *ngIf="isSupportGroupDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeactivateClicked()"> Deactivate
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeactivateClicked()"> Deactivate Confirmation
   </kendo-dialog-titlebar>
-
-  <section class="k-dialog-body">
-    <p class="text-muted mb-2">
-      Are you sure you want to deactivate this role?
-    </p>
-  </section>
-
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-          (click)="onCloseSupportGroupDeactivateClicked()">
-          Cancel
-        </button>
-        <button kendoButton [primary]="true" aria-label="Deactivate">
-          Deactivate
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
+  <deactivate-support-group (deactivateConfimEvent)="handleSupportGroupDeactive($event)"
+    (close)="onCloseSupportGroupDeactivateClicked()"></deactivate-support-group>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isSupportGroupReactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseSupportGroupReactivateClicked()"> Re-activate
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupReactivateClicked()"> Re-activate Confirmation
   </kendo-dialog-titlebar>
-
-  <section class="k-dialog-body">
-    <p class="text-muted mb-2">
-      Are you sure you want to reactivate this role?
-    </p>
-  </section>
-
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-          (click)="onCloseSupportGroupReactivateClicked()">
-          Cancel
-        </button>
-        <button kendoButton [primary]="true" aria-label="Deactivate">
-          Re-activate
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
+  <reactivate-support-group (reactivateConfimEvent)="handleSupportGroupReactive($event)"
+    (close)="onCloseSupportGroupReactivateClicked()"></reactivate-support-group>
 </kendo-dialog>
 
 <kendo-dialog *ngIf="isSupportGroupDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()"> Error Confirmation</kendo-dialog-titlebar>
-
-  <section class="k-dialog-body mb-2">
-    <p>
-      Are you sure you want to delete this role? This action cannot be undone
-    </p>
-  </section>
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
-          (click)="onCloseSupportGroupDeleteClicked()">
-          Cancel
-        </button>
-        <button kendoButton class="k-error-button" aria-label="Delete"
-          (click)="onOpenSupportGroupDeleteConfirmationClicked()">
-          Delete
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
+  <kendo-dialog-titlebar (close)="onCloseSupportGroupDeleteClicked()"> Delete Confirmation</kendo-dialog-titlebar>
+  <remove-support-group (deleteConfimEvent)="handleSupportGroupDelete($event)"
+    (close)="onCloseSupportGroupDeleteClicked()"></remove-support-group>
 </kendo-dialog>

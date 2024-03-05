@@ -16,7 +16,15 @@
                        
                         <system-interface-support-group [SupportGroupGridLists$]="supportGroup$"
                         [pageSizes]="pageSizes" [sortValue]="sortValueSupportGroup"
-                        [sortType]="sortType" [sort]="sortSupportGroupList"  (loadSupportGroupListEvent)="loadSupportGroup($event)"></system-interface-support-group>
+                        [sortType]="sortType" [sort]="sortSupportGroupList"  
+                        (loadSupportGroupListEvent)="loadSupportGroup($event)"
+                        [supportGroupReactivate$]="supportGroupReactivate$" 
+                        (deactivateConfimEvent)="handleDeactivate($event)" 
+                        (reactivateConfimEvent)="handleReactivate($event)"
+                        [supportGroupRemove$] ="supportGroupRemove$"
+                        (deleteConfimedEvent)="handleDeleteSupportGroup($event)"
+                        
+                        ></system-interface-support-group>
                   </div>
                   <div class="flex-col flex-col-6 mb-3">
                         <h3>Distribution List</h3>
