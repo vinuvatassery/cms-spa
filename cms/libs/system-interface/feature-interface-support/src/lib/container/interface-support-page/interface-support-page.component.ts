@@ -8,6 +8,11 @@ import { State } from '@progress/kendo-data-query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InterfaceSupportPageComponent {
+selectedGroupChangeEvent(data: any) {
+  // alert(JSON.stringify(data))
+// this.selectedGroup = data;
+}
+selectedGroup:any;
   state!: State;
   sortType = this.systemInterfaceSupportFacade.sortType;
   pageSizes = this.systemInterfaceSupportFacade.gridPageSizes;

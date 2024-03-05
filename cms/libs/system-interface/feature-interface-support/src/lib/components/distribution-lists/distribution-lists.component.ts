@@ -22,6 +22,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isDistributionGridLoaderShow = false;
   @Input() pageSizes: any;
+  @Input() selectedGroup: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;

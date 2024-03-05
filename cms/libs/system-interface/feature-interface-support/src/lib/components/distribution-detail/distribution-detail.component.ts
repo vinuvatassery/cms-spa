@@ -19,6 +19,7 @@ import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DistributionDetailComponent implements OnInit {
+  @Input() selectedGroup: any;
   @Input() groupsDropDownList: any;
   @Output() closeForm = new EventEmitter<any>();
   @Output() addMemberEvent = new EventEmitter<any>();
@@ -54,11 +55,13 @@ export class DistributionDetailComponent implements OnInit {
 
   createForm() {
     this.memberForm = this.formBuilder.group({
-      groupId: ['', [Validators.required, Validators.maxLength(200)]],
+      groupName: ['', [Validators.required]],
       firstName: ['', [Validators.required, Validators.maxLength(200)]],
       lastName: ['', [Validators.maxLength(200)]],
       emailAddress: ['', [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]],
     });
+
+    alert(JSON.stringify(this.selectedGroup));
   }
 
   mapFormValues() {

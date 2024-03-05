@@ -16,7 +16,7 @@ export class SystemInterfaceSupportFacade {
     field: this.sortValueSupportGroup,
   }];
 
-  public sortValueDistribution = 'batch';
+  public sortValueDistribution = 'firstName';
   public sortDistributionList: SortDescriptor[] = [{
     field: this.sortValueDistribution,
   }];
@@ -29,10 +29,6 @@ export class SystemInterfaceSupportFacade {
   private supportGroupSubject = new Subject<any>();
   public supportGroup$ = this.supportGroupSubject.asObservable();
 
-
-  private distributionListsSubject = new Subject<any>();
-  public distributionLists$ = this.distributionListsSubject.asObservable();
-
   private notificationCategoryListSubject = new Subject<any>();
   notificationCategoryLists$ = this.notificationCategoryListSubject.asObservable();
 
@@ -42,8 +38,16 @@ export class SystemInterfaceSupportFacade {
   private supportGroupReactivateSubject = new Subject<any>();
   supportGroupReactivate$ = this.supportGroupReactivateSubject.asObservable();
 
+  // distribution list ----------------------------------------
+  private distributionListsSubject = new Subject<any>();
+  public distributionLists$ = this.distributionListsSubject.asObservable();
+
   private addDistributionListUserSubject = new Subject<any>();
   addDistributionListUser$ = this.addDistributionListUserSubject.asObservable();
+
+  private distributionListDataLoaderSubject = new BehaviorSubject<boolean>(false);
+  distributionListDataLoader$ = this.distributionListDataLoaderSubject.asObservable();
+  //----------------------------------------
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: NotificationSource = NotificationSource.API) {
     if (type === SnackBarNotificationType.ERROR) {
@@ -82,28 +86,6 @@ export class SystemInterfaceSupportFacade {
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
-      },
-    });
-  }
-
-  private distributionListDataLoaderSubject = new BehaviorSubject<boolean>(false);
-  distributionListDataLoader$ = this.distributionListDataLoaderSubject.asObservable();
-
-  loadDistributionGroup(paginationParameters: any) {
-    this.distributionListDataLoaderSubject.next(true);
-    this.service.getDistributionList(paginationParameters).subscribe({
-      next: (dataResponse: any) => {
-        const gridView: any = {
-          data: dataResponse['items'],
-          total: dataResponse?.totalCount,
-        };
-        this.distributionListsSubject.next(gridView);
-        this.distributionListDataLoaderSubject.next(false);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.distributionListDataLoaderSubject.next(false);
         this.hideLoader();
       },
     });
@@ -190,7 +172,7 @@ export class SystemInterfaceSupportFacade {
       });
   }
 
-  // distribution ----------------------------------------
+  // distribution list-------------------------------------------------------
   addDistributionListUser(dto: any): Observable<any> {
     return this.systemInterfaceSupportService.addDistributionListUser(dto).pipe(
       tap((response: any) => {
@@ -199,35 +181,24 @@ export class SystemInterfaceSupportFacade {
     );
   }
 
-  // loadDistributionLists(paginationParameters: any) {
-  //   this.systemInterfaceSupportService.getDistributionList(paginationParameters).subscribe({
-  //     next: (response) => {
-  //       this.distributionListsSubject.next(response);
-  //     },
-  //     error: (err) => {
-  //       console.error('err', err);
-  //     },
-  //   });
-  // }
-
-  // loadDistributionLists(paginationParameters: any) {
-  //   this.distributionDataLoaderSubject.next(true);
-  //   this.service.getDistributionList(paginationParameters).subscribe({
-  //     next: (dataResponse: any) => {
-  //       const gridView: any = {
-  //         data: dataResponse['items'],
-  //         total: dataResponse?.totalCount,
-  //       };
-  //       this.supportGroupSubject.next(gridView);
-  //       this.distributionDataLoaderSubject.next(false);
-  //     },
-  //     error: (err) => {
-  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-  //       this.distributionDataLoaderSubject.next(false);
-  //       this.hideLoader();
-  //     },
-  //   });
-  // }
-  // ----------------------------------------
+  loadDistributionGroup(paginationParameters: any) {
+    this.distributionListDataLoaderSubject.next(true);
+    this.service.getDistributionList(paginationParameters).subscribe({
+      next: (dataResponse: any) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.distributionListsSubject.next(gridView);
+        this.distributionListDataLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.distributionListDataLoaderSubject.next(false);
+        this.hideLoader();
+      },
+    });
+  }
+  // ------------------------------------------------------------------------
 
 }

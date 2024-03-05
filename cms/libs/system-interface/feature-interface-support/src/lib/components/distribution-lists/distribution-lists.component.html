@@ -78,7 +78,7 @@
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>Add Member</kendo-dialog-titlebar>
 
-  <distribution-detail [groupsDropDownList]="groupsDropDownList" (addMemberEvent)="addNotificationUser($event)"
+  <distribution-detail [groupsDropDownList]="groupsDropDownList" (addMemberEvent)="addNotificationUser($event)" [selectedGroup]="selectedGroup"
     (closeForm)="onCloseMemberDetailPopupClicked()"> </distribution-detail>
 
 </kendo-dialog>
