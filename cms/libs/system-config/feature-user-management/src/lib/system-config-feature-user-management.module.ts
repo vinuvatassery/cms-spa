@@ -21,6 +21,7 @@ import { SystemConfigFeatureLovModule } from '@cms/system-config/feature-lov';
 import { RolesAndPermissionsPageComponent } from './containers/roles-and-permissions-page/roles-and-permissions-page.component';
 import { CaseManagerPageComponent } from './containers/case-manager-page/case-manager-page.component';
 import { CaseManagerListsComponent } from './components/case-manager-lists/case-manager-lists.component';
+import { RolesAndPermissionsDetailsPageComponent } from './containers/roles-and-permissions-details-page/roles-and-permissions-details-page.component';
 
 @NgModule({
   imports: [
@@ -43,6 +44,7 @@ import { CaseManagerListsComponent } from './components/case-manager-lists/case-
     RolesAndPermissionsPageComponent,
     CaseManagerPageComponent,
     CaseManagerListsComponent,
+    RolesAndPermissionsDetailsPageComponent,
   ],
   exports: [
     UserListComponent,
@@ -56,6 +58,7 @@ import { CaseManagerListsComponent } from './components/case-manager-lists/case-
     RolesAndPermissionsPageComponent,
     CaseManagerPageComponent,
     CaseManagerListsComponent,
+    RolesAndPermissionsDetailsPageComponent,
   ],
 })
 export class SystemConfigFeatureUserManagementModule {}

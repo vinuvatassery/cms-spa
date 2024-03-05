@@ -7,7 +7,8 @@ import { UserListComponent } from './components/user-list/user-list.component';
 import { UserManagementPageComponent } from './containers/user-management-page/user-management-page.component'; 
 import { RolesAndPermissionsPageComponent } from './containers/roles-and-permissions-page/roles-and-permissions-page.component';
 import { CaseManagerPageComponent } from './containers/case-manager-page/case-manager-page.component';
- 
+import { RolesAndPermissionsDetailsPageComponent } from './containers/roles-and-permissions-details-page/roles-and-permissions-details-page.component';
+
 const routes: Routes = [
   {
     path: 'users',
@@ -16,12 +17,22 @@ const routes: Routes = [
   {
     path: 'roles-and-permissions',
     component: RolesAndPermissionsPageComponent,
+    children: [
+      
+    ]
   },
 
   {
     path: 'case-managers',
     component: CaseManagerPageComponent,
   },
+
+  {
+    path: 'roles-and-permissions/detail',
+    component: RolesAndPermissionsDetailsPageComponent,
+  },
+
+  
   
 ];
 

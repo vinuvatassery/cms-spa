@@ -16,3 +16,5 @@ export * from './lib/containers/roles-and-permissions-page/roles-and-permissions
 export * from './lib/containers/case-manager-page/case-manager-page.component';
 
 export * from './lib/components/case-manager-lists/case-manager-lists.component';
+
+export * from './lib/containers/roles-and-permissions-details-page/roles-and-permissions-details-page.component';
