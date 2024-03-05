@@ -40,7 +40,7 @@ export class SendLetterComponent implements OnInit {
   @Input() screenName!: any;
   @Input() isContinueDraftClicked!: boolean;
   @Input() isNewNotificationClicked!: boolean;
-  @Input() notificationDratId!: string;
+  @Input() notificationDraftId!: string;
 
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
@@ -97,9 +97,10 @@ export class SendLetterComponent implements OnInit {
       this.loadMailCodes();
       if(this.isContinueDraftClicked){
       this.loadClientAndVendorDraftLetterTemplates();
-      }
-      if(this.isNewNotificationClicked){
+      }else if(this.isNewNotificationClicked){
         this.openNewLetterClicked();
+      }else{
+        this.loadDropdownLetterTemplates();
       }
     }
     else {
@@ -348,7 +349,7 @@ export class SendLetterComponent implements OnInit {
 
   openNewLetterClicked(){
     this.loaderService.show();
-    this.communicationFacade.deleteNotificationDraft(this.notificationDratId)
+    this.communicationFacade.deleteNotificationDraft(this.notificationDraftId)
         .subscribe({
           next: (data: any) =>{
           if (data === true) {

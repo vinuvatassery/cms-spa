@@ -44,7 +44,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() clientCaseId!: string;
   @Input() isContinueDraftClicked!: boolean;
   @Input() isNewNotificationClicked!: boolean;
-  @Input() notificationDratId!: string;
+  @Input() notificationDraftId!: string;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -122,9 +122,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.communicationEmailTypeCode){
       if(this.isContinueDraftClicked){
         this.loadClientAndVendorDraftEmailTemplates();
-      }
-      if(this.isNewNotificationClicked){
+      }else if(this.isNewNotificationClicked){
         this.openNewEmailClicked();
+      }else{
+        this.loadEmailTemplates();
       }
     }
     else{
@@ -404,29 +405,23 @@ onClosePreviewEmail(){
     },
   });
 }
-// else{
-//   if(event.notifcationDraftId){
-//       this.draftNotificationRemoveDialogService = this.dialogService.open({
-//         content: this.notificationDraftDialogTemplate,
-//         cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
-//       });
-//     }
-    // this.selectedTemplate = event;
-    // this.handleEmailEditor(event);
-    // this.isClearEmails =true;
-    // this.isShowToEmailLoader$.next(true);
-    // this.isOpenDdlEmailDetails = true;
-    // this.selectedEmail = [];
-    // this.selectedEmail.push(this.toEmail[0]?.trim());
-    // this.selectedToEmail = this.selectedEmail;
-    // this.emailSubject = event.description;
-    // this.emailEditorValueEvent.emit(event);
-    // this.showToEmailLoader = false;
-    // if (CommunicationEventTypeCode.CerAuthorizationEmail===this.communicationEmailTypeCode) {
-    //   this.getCCEmailList(this.clientId, this.loginUserId);
-    // }
-    // this.ref.detectChanges();
-  // }
+else{
+    this.selectedTemplate = event;
+    this.handleEmailEditor(event);
+    this.isClearEmails =true;
+    this.isShowToEmailLoader$.next(true);
+    this.isOpenDdlEmailDetails = true;
+    this.selectedEmail = [];
+    this.selectedEmail.push(this.toEmail[0]?.trim());
+    this.selectedToEmail = this.selectedEmail;
+    this.emailSubject = event.description;
+    this.emailEditorValueEvent.emit(event);
+    this.showToEmailLoader = false;
+    if (CommunicationEventTypeCode.CerAuthorizationEmail===this.communicationEmailTypeCode) {
+      this.getCCEmailList(this.clientId, this.loginUserId);
+    }
+    this.ref.detectChanges();
+  }
   }
 
   continueWithDraftClicked(){
@@ -448,7 +443,7 @@ onClosePreviewEmail(){
 
   openNewEmailClicked(){
     this.loaderService.show();
-    this.communicationFacade.deleteNotificationDraft(this.notificationDratId)
+    this.communicationFacade.deleteNotificationDraft(this.notificationDraftId)
         .subscribe({
           next: (data: any) =>{
           if (data === true) {

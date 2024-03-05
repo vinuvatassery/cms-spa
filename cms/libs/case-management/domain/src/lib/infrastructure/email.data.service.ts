@@ -188,7 +188,7 @@ export class EmailDataService {
 
     deleteNotificationDraft(id: any) {
       return this.http.delete(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/${id}`
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/draft/${id}`
       );
     }
 }

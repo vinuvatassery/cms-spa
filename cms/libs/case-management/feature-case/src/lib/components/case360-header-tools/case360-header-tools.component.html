@@ -57,7 +57,7 @@
 <ng-template #sendLetterDialog>
   <case-management-send-letter  [data]="screenName" [mailingAddress$]="mailingAddress$" [communicationLetterTypeCode]="letterCommunicationEmailTypeCode" [screenName]="screenName"
   (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()" [clientId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId"
-  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDratId]="notificationDratId"
+  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
   kendoTooltip></case-management-send-letter>
 </ng-template>
 
@@ -72,7 +72,7 @@
 <ng-template #sendNewEmailDialog>
   <case-management-send-email [data]="screenName" [ddlEmails$]="emailAddress$" [communicationEmailTypeCode]="emailCommunicationEmailTypeCode"
   [clientId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [screenName]="screenName" [clientCaseId]="clientCaseId"
-  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDratId]="notificationDratId"
+  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
   [toEmail]="toEmail" (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
 </ng-template>
 
@@ -86,6 +86,6 @@
 <!-- New SMS Text Modal Html-->
 <ng-template #sendTextMessageDialog>
 <case-management-send-text-message [data]="smsScreenName" [ddlMessageRecipients$] ="phoneNumbers$"
-  (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" [notificationDratId]="notificationDratId"
+  (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" [notificationDraftId]="notificationDraftId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" kendoTooltip></case-management-send-text-message>
 </ng-template>
