@@ -81,8 +81,8 @@ export class TodoFacade {
     });
   }
 
-  loadTodoGrid(payload:any): void {
-    this.todoDataService.loadTodoGrid(payload).subscribe({
+  loadAlerts(payload:any,alertTypeCode:any): void {
+    this.todoDataService.loadAlerts(payload,alertTypeCode).subscribe({
       next: (todoGridResponse: any) => {
         this.todoGridSubject.next(todoGridResponse);
       },
@@ -106,10 +106,10 @@ export class TodoFacade {
     })
   }
 
-    doneTodoItem(alertId:any):any {
+  markAlertAsDone(alertId:any):any {
       return new Promise((resolve,reject) =>{
         this.loaderService.show()
-        this.todoDataService.doneTodoItem(alertId).subscribe({
+        this.todoDataService.markAlertAsDone(alertId).subscribe({
           next: (todoGridResponse: any) => {
             this.loaderService.hide()
             this.todoCreateSubject.next(true);
@@ -126,10 +126,10 @@ export class TodoFacade {
       })
   }
 
-  deleteTodoItem(alertId:any):any {
+  deleteAlert(alertId:any):any {
     return new Promise((resolve,reject) =>{
       this.loaderService.show()
-      this.todoDataService.deleteTodoItem(alertId).subscribe({
+      this.todoDataService.deleteAlert(alertId).subscribe({
         next: (todoGridResponse: any) => {
           this.loaderService.hide()
           this.todoCreateSubject.next(true);

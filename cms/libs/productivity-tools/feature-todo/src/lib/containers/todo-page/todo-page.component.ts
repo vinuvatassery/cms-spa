@@ -60,8 +60,8 @@ export class TodoPageComponent implements OnInit {
     });
     this.isToDODetailsActionOpen = true;
   }
-  onloadTodoGrid(event: any){
-    this.todoFacade.loadTodoGrid(event);
+  onloadTodoGrid(event: any, alertTypeCode:any){
+    this.todoFacade.loadAlerts(event,alertTypeCode.alertType);
   }
 
   onTodoItemCreateClick(payload:any){

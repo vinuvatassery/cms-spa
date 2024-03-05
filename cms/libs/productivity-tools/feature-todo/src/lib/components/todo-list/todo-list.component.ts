@@ -10,8 +10,9 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
-import { AlertFrequencyTypeCode, TodoFacade } from '@cms/productivity-tools/domain';
+import { FinancialServiceTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { AlertEntityTypeCode, AlertFrequencyTypeCode, AlertTypeCode, TodoFacade } from '@cms/productivity-tools/domain';
+import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 /** Facades **/
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -105,18 +106,19 @@ export class TodoListComponent implements OnInit {
   
 
   /** Private methods **/
-  private loadTodoGrid() { 
+  private loadTodoGrid() {
     this.loadTodoGridData(
       this.toDoGridState.skip?? 0,
       this.toDoGridState.take?? 10,
       this.toDoGridState?.sort![0]?.field ?? this.sortValue,
       this.toDoGridState?.sort![0]?.dir ?? 'asc',
+      AlertTypeCode.Todo.toString()
     )
   }
   private loadTodoGridData(skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
-    sortTypeValue: string){
+    sortTypeValue: string, alertType:string){
       this.isToDoGridLoaderShow.next(true);
       const gridDataRefinerValue = {
         SkipCount: skipCountValue,
@@ -125,7 +127,8 @@ export class TodoListComponent implements OnInit {
         SortType: sortTypeValue,
         Filter: "[]",
       };
-        this.isLoadTodoGridEvent.emit(gridDataRefinerValue)
+
+        this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
         this.todoGrid$.subscribe((data: any) => {
           this.gridDataResult = data?.items;
           if(data?.totalCount >=0 || data?.totalCount === -1){
@@ -156,7 +159,7 @@ export class TodoListComponent implements OnInit {
     if (result) {
       this.isToDODeleteActionOpen = false;
       this.deleteToDoDialog.close();
-      let res = await this.todoFacade.deleteTodoItem(this.selectedAlertId);
+      let res = await this.todoFacade.deleteAlert(this.selectedAlertId);
       if(res==1)
         this.loadTodoGrid();
     }
@@ -168,10 +171,10 @@ export class TodoListComponent implements OnInit {
     return FinancialVendorProviderTabCode;
   }
     onToDoClicked(gridItem: any) {
-      if (gridItem && gridItem.entityTypeCode == "CLIENT") {
+      if (gridItem && gridItem.entityTypeCode == this.entityTypes.Vendor) {
         this.router.navigate([`/case-management/cases/case360/${gridItem?.entityId}`]);
       }
-      else if (gridItem && gridItem.entityTypeCode == "VENDOR") {
+      else if (gridItem && gridItem.entityTypeCode == this.entityTypes.Vendor) {
         const query = {
           queryParams: {
             v_id: gridItem?.entityId ,
@@ -180,13 +183,13 @@ export class TodoListComponent implements OnInit {
         };
         this.router.navigate(['/financial-management/vendors/profile'], query )
       }
-      else if (gridItem && gridItem.entityTypeCode == "TPA") {
+      else if (gridItem && gridItem.entityTypeCode == this.entityTypes.Tpa) {
         this.router.navigate(
           [`/financial-management/claims/medical/batch`],
           { queryParams: { bid: gridItem?.paymentRequestBatchId } }
         );
     }
-    else if (gridItem && gridItem.entityTypeCode == "INSURANCE_PREMIUM") {
+    else if (gridItem && gridItem.entityTypeCode == this.entityTypes.Insurance) {
       this.router.navigate(
         [`/financial-management/claims/dental/batch`],
         { queryParams: { bid: gridItem?.paymentRequestBatchId } }
@@ -222,6 +225,12 @@ export class TodoListComponent implements OnInit {
     }
   }
   onDoneTodoItem(payload:any){
-    return this.todoFacade.doneTodoItem(payload);
+    return this.todoFacade.markAlertAsDone(payload);
+  }
+  public get claimTypes(): typeof FinancialServiceTypeCode {
+    return FinancialServiceTypeCode;
+  }
+  public get entityTypes(): typeof ToDoEntityTypeCode {
+    return ToDoEntityTypeCode;
   }
 }

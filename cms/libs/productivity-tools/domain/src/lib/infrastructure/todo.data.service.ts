@@ -40,17 +40,17 @@ export class TodoDataService {
     ]);
   }
 
-  loadTodoGrid(payload:any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/GetToDoItemList`,payload);
+  loadAlerts(payload:any, alertTypeCode:any) {
+    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/list/${alertTypeCode}`,payload);
   }
 
   createTodoItem(payload:any){  
       return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/todo`,payload);
     }
-  doneTodoItem(payload:any){  
+  markAlertAsDone (payload:any){  
     return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/markdone/${payload}`,null);
   }
-  deleteTodoItem(payload:any){  
+  deleteAlert(payload:any){  
     return this.http.delete<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${payload}`);
   }
 }
