@@ -227,7 +227,7 @@
         </kendo-grid-string-filter-menu>
          </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="insuranceType" title="Health Insurance Type" [width]="210" >
+    <kendo-grid-column field="insuranceType" title="Health Insurance Type" [width]="210" [hidden]="(selectedTab != tabOptions.ALL)">
       <ng-template kendoGridCellTemplate let-dataItem>
        {{ dataItem.healthInsuranceType }}
       </ng-template>
@@ -246,7 +246,7 @@
         </ng-template>
         
    </kendo-grid-column>
-   <kendo-grid-column field="fplPercentage" title="FPL %" [width]="110">
+   <kendo-grid-column field="fplPercentage" title="FPL %" [width]="110" [hidden]="(selectedTab != tabOptions.ALL)">
     <ng-template kendoGridCellTemplate let-dataItem>
      {{ dataItem.fplPercentage }}
     </ng-template> 
