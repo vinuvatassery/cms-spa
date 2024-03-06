@@ -24,6 +24,7 @@ export class DistributionDetailComponent implements OnInit {
   isEditMode = false;
   @Output() closeForm = new EventEmitter<any>();
   @Output() addMemberEvent = new EventEmitter<any>();
+  @Output() refreshData = new EventEmitter<any>();
 
   showLoader() {
     this.loaderService.show();
@@ -123,13 +124,12 @@ export class DistributionDetailComponent implements OnInit {
 
       this.systemInterfaceSupportFacade.addDistributionListUser(finalData, this.isEditMode).subscribe({
         next: (response: any) => {
+          this.refreshData.emit(true);
           const notificationMessage = response.message;
-          this.onCancelClick();
           this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
           this.hideLoader();
           this.memberForm.reset();
           this.isValidateForm = false;
-          // this.loadCarrierSubject.next(true);
           this.cd.detectChanges();
         },
         error: (err: any) => {

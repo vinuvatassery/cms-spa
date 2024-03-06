@@ -162,7 +162,7 @@ export class SystemInterfaceSupportService {
     const options = {
       status: status,
     }
-    return this.http.patch(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${memberId}`, options);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${memberId}`, options);
   }
 
   deleteDistributionListUser(memberId: string) {

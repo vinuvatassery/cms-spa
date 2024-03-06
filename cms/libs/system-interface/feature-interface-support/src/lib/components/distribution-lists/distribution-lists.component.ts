@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LovFacade } from '@cms/system-config/domain';
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -42,8 +44,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   memberForm!: FormGroup;
 
   gridDistributionDataSubject = new Subject<any>();
-  gridDistributionData$ =
-    this.gridDistributionDataSubject.asObservable();
+  gridDistributionData$ = this.gridDistributionDataSubject.asObservable();
 
   dataListsLoader$ = this.systemInterfaceSupportFacade.distributionListDataLoader$;
   selectedInterface = '';
@@ -67,8 +68,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       icon: 'block',
       click: (data: any): void => {
         this.onOpenMemberDeactivateClicked();
-
-
+        if (data.email) {
+          this.selectedMemberData = data;
+        }
       },
     },
     {
@@ -77,6 +79,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       icon: 'done',
       click: (data: any): void => {
         this.onOpenMemberReactivateClicked();
+        if (data.email) {
+          this.selectedMemberData = data;
+        }
       },
     },
     {
@@ -85,13 +90,17 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       icon: 'delete',
       click: (data: any): void => {
         this.onOpenMemberDeleteClicked();
-
+        if (data.email) {
+          this.selectedMemberData = data;
+        }
       },
     },
   ];
 
   /** Constructor **/
   constructor(
+    private readonly loaderService: LoaderService,
+    private readonly lovFacade: LovFacade,
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private fb: FormBuilder,
@@ -225,37 +234,64 @@ export class DistributionListsComponent implements OnInit, OnChanges {
 
   onCloseMemberDetailPopupClicked() {
     this.isMemberDetailPopup = false;
+    this.isEditMode = false;
   }
 
-  onOpenMemberDeleteClicked() {
-    this.isMemberDeletePopupShow = true;
+  onChildDataUpdate() {
+    this.isMemberDetailPopup = false;
+    this.loadDistributionListGrid();
   }
-  onCloseMemberDeleteClicked() {
-    this.isMemberDeletePopupShow = false;
-  }
-  onOpenMemberDeactivateClicked() {
-    this.isMemberDeactivatePopupShow = true;
-  }
-  onCloseMemberDeactivateClicked() {
-    this.isMemberDeactivatePopupShow = false;
-  }
-  onOpenMemberReactivateClicked() {
-    this.isMemberReactivatePopupShow = true;
-  }
-  onCloseMemberReactivateClicked() {
-    this.isMemberReactivatePopupShow = false;
-  }
-  onOpenMemberDeleteConfirmationClicked() {
-    this.isMemberDeleteConfirmationPopupShow = true;
 
-  }
-  onCloseMemberDeleteConfirmationClicked() {
-    this.isMemberDeleteConfirmationPopupShow = false;
-
-  }
+  onOpenMemberDeleteClicked() { this.isMemberDeletePopupShow = true; }
+  onCloseMemberDeleteClicked() { this.isMemberDeletePopupShow = false; }
+  onOpenMemberDeactivateClicked() { this.isMemberDeactivatePopupShow = true; }
+  onCloseMemberDeactivateClicked() { this.isMemberDeactivatePopupShow = false; }
+  onOpenMemberReactivateClicked() { this.isMemberReactivatePopupShow = true; }
+  onCloseMemberReactivateClicked() { this.isMemberReactivatePopupShow = false; }
+  onOpenMemberDeleteConfirmationClicked() { this.isMemberDeleteConfirmationPopupShow = true; }
+  onCloseMemberDeleteConfirmationClicked() { this.isMemberDeleteConfirmationPopupShow = false; }
 
   addNotificationUser(data: any): void {
     this.systemInterfaceSupportFacade.addDistributionListUser(data, this.isEditMode);
     this.loadDistributionListGrid();
   }
+
+  deactivateUser() {
+    if (this.selectedMemberData.status === 'InActive') {
+      this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Already Deactivated.");
+      return;
+    }
+    this.systemInterfaceSupportFacade.changeDistributionListUserStatus(this.selectedMemberData.notificationUserId, false)
+    this.isMemberDeactivatePopupShow = false;
+    this.systemInterfaceSupportFacade.changeStatusDistributionListUser$.subscribe({
+      next: () => {
+        this.loadDistributionListGrid();
+      }
+    });
+  }
+
+  reactivateUser() {
+    if (this.selectedMemberData.status === 'Active') {
+      this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Already Activated.");
+      return;
+    }
+    this.systemInterfaceSupportFacade.changeDistributionListUserStatus(this.selectedMemberData.notificationUserId, true)
+    this.isMemberReactivatePopupShow = false;
+    this.systemInterfaceSupportFacade.changeStatusDistributionListUser$.subscribe({
+      next: () => {
+        this.loadDistributionListGrid();
+      }
+    });
+  }
+
+  deleteUser() {
+    this.systemInterfaceSupportFacade.deleteDistributionListUser(this.selectedMemberData.notificationUserId)
+    this.isMemberDeletePopupShow = false;
+    this.systemInterfaceSupportFacade.deleteDistributionListUser$.subscribe({
+      next: () => {
+        this.loadDistributionListGrid();
+      }
+    });
+  }
+
 }

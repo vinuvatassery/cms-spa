@@ -66,7 +66,7 @@
   <button kendoButton class="mr-1" [primary]="true" aria-label="Member" icon="add" (click)="onMemberDetailsClicked()">
     Member</button>
 </div>
-<kendo-dialog *ngIf="isMemberDetailPopup" (close)="onCloseMemberDetailPopupClicked()"
+<kendo-dialog *ngIf="isMemberDetailPopup" (close)="onCloseMemberDetailPopupClicked()" 
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>{{ isEditMode ? 'Edit Member' : 'Add Member' }} </kendo-dialog-titlebar>
 
@@ -74,7 +74,8 @@
     [selectedMemberData]="selectedMemberData"
     [selectedGroup]="selectedGroup"
     (addMemberEvent)="addNotificationUser($event)"
-    (closeForm)="onCloseMemberDetailPopupClicked()"> 
+    (closeForm)="onCloseMemberDetailPopupClicked()"
+    (refreshData)="onChildDataUpdate()"> 
   </distribution-detail>
 
 </kendo-dialog>
@@ -97,7 +98,7 @@
           (click)="onCloseMemberDeactivateClicked()">
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Deactivate">
+        <button kendoButton [primary]="true" aria-label="Deactivate" (click)="deactivateUser()">
           Deactivate
         </button>
       </div>
@@ -122,7 +123,7 @@
           (click)="onCloseMemberReactivateClicked()">
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Deactivate">
+        <button kendoButton [primary]="true" aria-label="Deactivate"  (click)="reactivateUser()">
           Re-activate
         </button>
       </div>
@@ -145,7 +146,7 @@
           Cancel
         </button>
         <button kendoButton class="k-error-button" aria-label="Delete"
-          (click)="onOpenMemberDeleteConfirmationClicked()">
+          (click)="deleteUser()">
           Delete
         </button>
       </div>

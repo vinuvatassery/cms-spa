@@ -262,9 +262,9 @@ export class SystemInterfaceSupportFacade {
       .subscribe({
         next: (removeResponse) => {
           if (removeResponse ?? false) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, status ? 'Interface Support Group reactivated successfully' : 'Interface Support Group deactivated successfully')
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, status ? 'Member reactivated successfully.' : 'Member deactivated successfully.')
           }
-          this.deleteDistributionListUserSubject.next(true);
+          this.changeStatusDistributionListUserSubject.next(true);
         },
         error: (err) => {
           this.hideLoader();
