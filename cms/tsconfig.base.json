@@ -115,8 +115,14 @@
       "@cms/dashboard/feature-home": [
         "libs/dashboard/feature-home/src/index.ts"
       ],
+      "@cms/system-interface/feature-interface-support": [
+        "libs/system-interface/feature-interface-support/src/index.ts"
+      ],
       "@cms/feature-productivity-tools": [
         "libs/case-management/feature-productivity-tools/src/index.ts"
+      ],
+      "@cms/system-interface/feature-system-interface-home": [
+        "libs/system-interface/feature-system-interface-home/src/index.ts"
       ],
       "@cms/productivity-tools/domain": [
         "libs/productivity-tools/domain/src/index.ts"
