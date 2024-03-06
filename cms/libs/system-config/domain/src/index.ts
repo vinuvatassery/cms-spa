@@ -28,6 +28,7 @@ export * from './lib/application/address-validation.facade';
 export * from './lib/application/zip-code.facade';
 export * from './lib/application/navigation-menu.facade';
 export * from './lib/application/tin-validation.facade';
+export * from './lib/application/scroll-focus-validation.facade';
 
 /** Enums **/
 export * from './lib/enums/lov-types.enum';

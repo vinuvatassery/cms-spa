@@ -17,6 +17,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { AddressValidationFacade, MailAddress, AddressValidation, LovFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
+import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-contact-page',
@@ -102,7 +103,8 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly router: Router,
     private readonly configurationProvider: ConfigurationProvider,
-    private readonly cd: ChangeDetectorRef
+    private readonly cd: ChangeDetectorRef,
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade
   ) { }
 
   /** Lifecycle hooks **/
@@ -752,6 +754,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       return this.saveContactInfo();
     }
 
+    const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.contactInfoForm, this.elementRef.nativeElement,null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
+      }
     return of(false);
   }
 
@@ -876,7 +883,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     if (homelessFlag !== StatusFlag.Yes) {
       homeAddress.address1 = homeAddressGroup?.controls['address1']?.value;
       homeAddress.address2 = homeAddressGroup?.controls['address2']?.value;
-      homeAddress.zip = homeAddressGroup?.controls['zip']?.value;      
+      homeAddress.zip = homeAddressGroup?.controls['zip']?.value;
       homeAddress.addressTypeCode = AddressTypeCode.Home;
     }
     else{
@@ -1205,7 +1212,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.enable();
         this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.enable();
       }
-    }   
+    }
   }
 
   getPhoneUseOldText(phone: ClientPhone | undefined | null) {
@@ -1234,7 +1241,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       if(phone?.phoneNbr !== null && phone?.phoneNbr !== '' && phone?.phoneNbr !== undefined){
         this.contactInfoForm?.get(`${formGroupName}.smsTextConsentFlag`)?.enable();
         this.contactInfoForm?.get(`${formGroupName}.detailMsgConsentFlag`)?.enable();
-      }     
+      }
       this.contactInfoForm.get(`${formGroupName}.contactPhoneNbr`)?.patchValue(phone?.phoneNbr);
     }
     else{
@@ -1285,7 +1292,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.contactInfoForm.get('homeAddress.homeAddressChangedFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homeAddressChangedFlag);
         this.contactInfoForm.get('homePhone.phoneNumberChangedFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.phoneNumberChangedFlag);
         this.contactInfoForm.get('email.emailAddressChangedFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.emailAddressChangedFlag);
-        this.contactInfoForm.get('familyAndFriendsContact.friendFamilyChangedFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.friendFamilyChangedFlag);        
+        this.contactInfoForm.get('familyAndFriendsContact.friendFamilyChangedFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.friendFamilyChangedFlag);
       }
 
       this.setMailAndHomeAddress();
@@ -1333,10 +1340,10 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.contactInfoForm.get('homeAddress.state')?.patchValue(homeAddress?.state);
       this.contactInfoForm.get('homeAddress.zip')?.patchValue(homeAddress?.zip);
       this.contactInfoForm.get('homeAddress.county')?.patchValue(homeAddress?.county);
-      this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.patchValue(homeAddress?.sameAsMailingAddressFlag === StatusFlag.Yes);      
+      this.contactInfoForm?.get('homeAddress.sameAsMailingAddressFlag')?.patchValue(homeAddress?.sameAsMailingAddressFlag === StatusFlag.Yes);
       if(homeAddress.addressTypeCode === AddressTypeCode.UnHoused){
         this.contactInfoForm?.get('homeAddress.homelessFlag')?.patchValue(StatusFlag.Yes);
-      }     
+      }
       this.contactInfoForm?.get('homeAddress.noHomeAddressProofFlag')?.patchValue(this.contactInfo?.clientCaseEligibility?.homeAddressProofFlag === StatusFlag.Yes);
       this.contactInfoForm?.get('homeAddress.housingStabilityCode')?.patchValue(this.contactInfo?.clientCaseEligibility?.housingStabilityCode);
       this.homeAddressEntered = {
@@ -2082,7 +2089,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.contactInfoForm.get('familyAndFriendsContact.smsTextConsentFlag')?.patchValue(false);
           this.contactInfoForm.get('familyAndFriendsContact.detailMsgConsentFlag')?.patchValue(false);
           this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.disable();
-          this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();       
+          this.contactInfoForm?.get('familyAndFriendsContact.detailMsgConsentFlag')?.disable();
       }
       else{
         this.contactInfoForm?.get('familyAndFriendsContact.smsTextConsentFlag')?.enable();
