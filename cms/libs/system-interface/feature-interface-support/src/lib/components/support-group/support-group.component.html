@@ -113,8 +113,7 @@
             let-groupId="notificationGroupId">
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                [class]="buttondataItem.buttonType" aria-hidden="false"
-                (click)="buttondataItem.click(dataItem.notificationGroupId)">
+                [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
               </button>
@@ -165,8 +164,8 @@
 <kendo-dialog *ngIf="isGroupDetailPopup" (close)="onCloseGroupDetailPopupClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>{{ isEditSupportGroup ? 'Edit Support Group' : 'Add Support Group' }} </kendo-dialog-titlebar>
-  <support-group-detail [isEditSupportGroup] = "isEditSupportGroup" [interfaceSupportGroupLov]="interfaceSupportGroupLov" [addSupportGroup$]="addSupportGroup$"
-    (addSupportGroupEvent)="addSupportGroup($event)" (close)="onCloseGroupDetailPopupClicked()"> </support-group-detail>
+  <support-group-detail [isEditSupportGroup]="isEditSupportGroup" [selectedSupportGroup]="selectedSupportGroup" [interfaceSupportGroupLov]="interfaceSupportGroupLov"
+    (addSupportGroupEvent)="addSupportGroup($event)" (editSupportGroupEvent)="editSupportGroup($event)" (close)="onCloseGroupDetailPopupClicked()"> </support-group-detail>
 </kendo-dialog>
 
 

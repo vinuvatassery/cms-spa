@@ -22,10 +22,13 @@ import { LovFacade } from '@cms/system-config/domain';
 })
 export class SupportGroupDetailComponent implements OnInit {
   @Input() interfaceSupportGroupLov: any;
-  @Input() addSupportGroup$: any;
+
   @Input() isEditSupportGroup: any;
+  @Input() selectedSupportGroup: any;
   @Output() close = new EventEmitter<any>();
   @Output() addSupportGroupEvent = new EventEmitter<any>();
+  @Output() editSupportGroupEvent = new EventEmitter<any>();
+  
   showLoader() {
     this.loaderService.show();
   }
@@ -41,6 +44,7 @@ export class SupportGroupDetailComponent implements OnInit {
   isSubmitted: boolean = false;
   isLoading = false;
   isValidateForm = false;
+  supportGroup!: any;
 
 
   /** Constructor **/
@@ -52,7 +56,10 @@ export class SupportGroupDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.buildForm();
+    if (this.isEditSupportGroup) {
+      this.bindDataToForm(this.selectedSupportGroup)
+    }
   }
 
   createSupportGroupForm() {
@@ -61,6 +68,21 @@ export class SupportGroupDetailComponent implements OnInit {
       groupName: [this.notiificationGroup?.groupName, [Validators.required, Validators.maxLength(200)]],
       groupDesc: [this.notiificationGroup?.groupName, [Validators.required, Validators.maxLength(500)]],
     });
+  }
+  buildForm() {
+    this.notiificationGroupForm = this.formBuilder.group({
+      groupCode: [''],
+      groupName: [''],
+      groupDesc: ['']
+    });
+  }
+  bindDataToForm(supportGroup: any) {
+    this.supportGroup = supportGroup;
+    this.notiificationGroupForm.controls["groupCode"].setValue(supportGroup.groupCode);
+    this.notiificationGroupForm.controls["groupName"].setValue(supportGroup.groupName);
+    this.notiificationGroupForm.controls["groupDesc"].setValue(supportGroup.groupDesc);
+    this.notiificationGroupForm.markAllAsTouched();
+    this.cd.detectChanges();
   }
   mapFormValues() {
     const formValues = this.notiificationGroupForm.value;
@@ -81,7 +103,7 @@ export class SupportGroupDetailComponent implements OnInit {
   checkValidations() {
     return this.notiificationGroupForm.valid;
   }
-  public save() {
+  public addAndSaveSupportGroup() {
     this.notiificationGroupForm.markAllAsTouched();
     const res = this.checkValidations();
     this.isSubmitted = true;
@@ -94,17 +116,14 @@ export class SupportGroupDetailComponent implements OnInit {
 
     if (this.notiificationGroupForm.valid) {
       let finalData = this.mapFormValues();
-      this.addSupportGroupEvent.emit(finalData)
-      this.addSupportGroup$
-        .subscribe((addResponse: any) => {
-          if (addResponse) {
-            this.onCancelClick();
-            this.notiificationGroupForm.reset();
-            this.isValidateForm = false;
-            this.cd.detectChanges();
-          }
 
-        })
+      if (this.isEditSupportGroup) {
+        this.editSupportGroupEvent.emit(finalData)
+      } else {
+        this.addSupportGroupEvent.emit(finalData)
+      }
+
+
     }
   }
 

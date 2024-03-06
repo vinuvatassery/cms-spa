@@ -23,8 +23,11 @@
                         (reactivateConfimEvent)="handleReactivate($event)"
                         [supportGroupRemove$] ="supportGroupRemove$"
                         (deleteConfimedEvent)="handleDeleteSupportGroup($event)"
-                        
-                        ></system-interface-support-group>
+                        [addSupportGroup$]="addSupportGroup$"
+                        [editSupportGroup$]="editSupportGroup$"
+                        (addSupportGroupEvent) ="handleAddSuppportGroup($event)" 
+                        (editSupportGroupEvent) ="handleEditSupportGroup($event)" >
+                  </system-interface-support-group>
                   </div>
                   <div class="flex-col flex-col-6 mb-3">
                         <h3>Distribution List</h3>
