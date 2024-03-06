@@ -72,6 +72,8 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
   public selectableSettings: SelectableSettings;
 
+  dataListsLoader$ = this.systemInterfaceSupportFacade.supportGroupListDataLoader$;
+
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     {

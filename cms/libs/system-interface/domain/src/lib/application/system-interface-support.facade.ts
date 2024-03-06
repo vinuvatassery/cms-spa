@@ -38,6 +38,9 @@ export class SystemInterfaceSupportFacade {
   private supportGroupReactivateSubject = new Subject<any>();
   supportGroupReactivate$ = this.supportGroupReactivateSubject.asObservable();
 
+  private supportGroupListDataLoaderSubject = new BehaviorSubject<boolean>(false);
+  supportGroupListDataLoader$ = this.supportGroupListDataLoaderSubject.asObservable();
+
   // distribution list ----------------------------------------
   private distributionListsSubject = new Subject<any>();
   public distributionLists$ = this.distributionListsSubject.asObservable();
@@ -79,7 +82,7 @@ export class SystemInterfaceSupportFacade {
   }
 
   loadSupportGroup(paginationParameters: any) {
-    this.showLoader();
+    this.supportGroupListDataLoaderSubject.next(true);
     this.service.getSupportGroupList(paginationParameters).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
@@ -87,10 +90,11 @@ export class SystemInterfaceSupportFacade {
           total: dataResponse?.totalCount,
         };
         this.supportGroupSubject.next(gridView);
+        this.supportGroupListDataLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
+        this.supportGroupListDataLoaderSubject.next(false);
       },
     });
   }

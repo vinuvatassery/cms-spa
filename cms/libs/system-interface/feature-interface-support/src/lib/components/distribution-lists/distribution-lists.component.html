@@ -1,23 +1,15 @@
-<p>Users assigned to Kaiser Support. Users in this list will be notified in case of interface error</p>
+<p>Users assigned to {{selectedInterface}} Support. Users in this list will be notified in case of interface error</p>
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="(webLogListsLoader$  | async) === true"  [pageSize]="state.take" [pageable]="true"
+  <kendo-grid [resizable]="true" [loading]="(dataListsLoader$  | async) === true"  [pageSize]="state.take" [pageable]="true"
     [sortable]="false" [skip]="state.skip" [groupable]="false" [columnMenu]="false" [sort]="state.sort"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
     [data]="gridDistributionData$ | async">
-
-
-
     <kendo-grid-column field="email" title="Email" [width]="120" [columnMenu]="false" [sortable]="false">
     </kendo-grid-column>
     <kendo-grid-column field="firstName" title="First Name" [width]="100"> </kendo-grid-column>
     <kendo-grid-column field="lastName" title="Last name" [width]="180"> </kendo-grid-column>
-
-
     <kendo-grid-column field="status" title="Status" [width]="140">
     </kendo-grid-column>
-
-
-
     <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="gridMoreActions" class="TableActionPopup app-dropdown-action more_action_wid"

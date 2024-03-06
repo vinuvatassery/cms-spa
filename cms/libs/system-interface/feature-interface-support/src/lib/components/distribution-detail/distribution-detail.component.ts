@@ -23,7 +23,7 @@ export class DistributionDetailComponent implements OnInit {
   @Input() groupsDropDownList: any;
   @Output() closeForm = new EventEmitter<any>();
   @Output() addMemberEvent = new EventEmitter<any>();
-  
+
   showLoader() {
     this.loaderService.show();
   }
@@ -57,21 +57,22 @@ export class DistributionDetailComponent implements OnInit {
     this.memberForm = this.formBuilder.group({
       groupName: new FormControl({ value: '', disabled: true }),
       firstName: ['', [Validators.required, Validators.maxLength(200)]],
-      lastName: ['', [Validators.maxLength(200)]],
+      lastName: ['', [Validators.required, Validators.maxLength(200)]],
       emailAddress: ['', [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]],
     });
 
-    this.memberForm.controls['groupName'].setValue(this.selectedGroup.groupName)
+    if (this.selectedGroup)
+      this.memberForm.controls['groupName'].setValue(this.selectedGroup.groupName)
   }
 
   mapFormValues() {
     const formValues = this.memberForm.value;
     const dto = {
-      groupId: formValues.groupId,
+      groupId: this.selectedGroup.notificationGroupId,
       firstName: formValues.firstName,
       lastName: formValues.lastName,
       emailAddress: formValues.emailAddress,
-      userTypeCode : 'EXTERNAL',
+      userTypeCode: 'EXTERNAL',
     };
     return dto;
   }
@@ -115,8 +116,8 @@ export class DistributionDetailComponent implements OnInit {
           this.hideLoader();
           this.memberForm.reset();
           this.isValidateForm = false;
-         // this.loadCarrierSubject.next(true);
-          this.cd.detectChanges(); 
+          // this.loadCarrierSubject.next(true);
+          this.cd.detectChanges();
         },
         error: (err: any) => {
           this.hideLoader();

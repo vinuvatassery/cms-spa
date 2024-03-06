@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { State, CompositeFilterDescriptor} from '@progress/kendo-data-query';
+import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'system-interface-distribution-lists',
@@ -39,14 +39,13 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   memberForm!: FormGroup;
-  
+
   gridDistributionDataSubject = new Subject<any>();
   gridDistributionData$ =
     this.gridDistributionDataSubject.asObservable();
 
-  webLogListsLoader$ = this.systemInterfaceSupportFacade.distributionListDataLoader$;
-
-
+  dataListsLoader$ = this.systemInterfaceSupportFacade.distributionListDataLoader$;
+  selectedInterface = '';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public gridMoreActions = [
     {
@@ -86,9 +85,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     },
   ];
 
-
-
-
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
@@ -97,30 +93,10 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
   ) { }
 
-  createSupportGroupForm() {
-    this.memberForm = this.fb.group({
-      firstName: ['', [Validators.required, Validators.maxLength(200)]],
-      lastName: ['', [Validators.maxLength(200)]],
-      emailAddress: ['', [Validators.required]],
-    });
-  }
-
   ngOnInit(): void {
     this.loadDistributionListGrid();
-    // this.createSupportGroupForm();
   }
 
-  // ngOnChanges(): void {
-  //   this.state = {
-  //     skip: 0,
-  //     take: this.pageSizes[0]?.value,
-  //     sort: this.sort,
-  //   };
-
-  //   this.loadDistributionListGrid();
-  // }
-
-  
   ngOnChanges(): void {
     this.sortType = 'desc'
     this.state = {
@@ -128,10 +104,15 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-    //this.loadDistributionListGrid();
+    this.loadDistributionListGrid();
   }
 
   private loadDistributionListGrid(): void {
+    if (!this.selectedGroup)
+      return;
+
+    this.selectedInterface = this.selectedGroup.groupName
+
     this.loadDistribution(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -139,25 +120,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       this.sortType
     );
   }
-  // loadDistribution(
-  //   skipCountValue: number,
-  //   maxResultCountValue: number,
-  //   sortValue: string,
-  //   sortTypeValue: string
-  // ) {
-  //   this.isDistributionGridLoaderShow = true;
-  //   const gridDataRefinerValue = {
-  //     skipCount: skipCountValue,
-  //     pagesize: maxResultCountValue,
-  //     maxResultCount: maxResultCountValue,
-  //     sortColumn: sortValue,
-  //     sortType: sortTypeValue,
-  //   };
-  //   this.loadDistributionListEvent.emit(gridDataRefinerValue);
-  //   this.gridDataHandle();
-
-    
-  // }
 
   loadDistribution(
     skipCountValue: number,
@@ -165,18 +127,15 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     sortValue: string,
     sortTypeValue: string
   ) {
-    //this.isVendorRefundAllPaymentsGridLoaderShow = true;
-
-    // if (sortValue === 'batchNumber') {
-    //   sortValue = 'entryDate'
-    // }
     const gridDataRefinerValue = {
       SkipCount: skipCountValue,
       MaxResultCount: maxResultCountValue,
       Sorting: 'firstName',
       SortType: sortTypeValue,
       Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
+      notificationGroupId: this.selectedGroup.notificationGroupId,
     };
+
     this.loadDistributionListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
@@ -202,9 +161,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
-    
+
   }
-  
+
 
   defaultGridState() {
     this.state = {
@@ -242,10 +201,10 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   gridDataHandle() {
     this.distributionGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      // this.gridDataResult.data = filterBy(
-      //   this.gridDataResult.data,
-      //   this.filterData
-      // );
+      this.gridDataResult.data = filterBy(
+        this.gridDataResult.data,
+        this.filterData
+      );
       this.gridDistributionDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isDistributionGridLoaderShow = false;
@@ -255,9 +214,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   }
 
   onMemberDetailsClicked() {
-    this.createSupportGroupForm();
     this.isMemberDetailPopup = true;
   }
+
   onCloseMemberDetailPopupClicked() {
     this.isMemberDetailPopup = false;
   }
@@ -291,6 +250,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   groupsDropDownList = []
   addNotificationUser(data: any): void {
     this.systemInterfaceSupportFacade.addDistributionListUser(data);
-     this.loadDistributionListGrid();
+    this.loadDistributionListGrid();
   }
 }

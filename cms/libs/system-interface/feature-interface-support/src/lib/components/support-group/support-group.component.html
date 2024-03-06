@@ -1,7 +1,7 @@
 <section class="table-filter-section mat-form-no-b-space">
   <span class="filter-section_items filter--select">
     <kendo-floatinglabel>
-      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc" aria-label="All Columns"
+      <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"  textField="columnDesc" aria-label="All Columns"
         [fillMode]="formUiStyle.dropDownFillMode" textField="columnDesc" valueField="columnName"
         [data]="searchColumnList">
       </kendo-dropdownlist>
@@ -21,7 +21,7 @@
 <p>Select a Group in the table below to view assigned Users and Notification Categories</p>
 
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="isSupportGroupGridLoaderShow" [pageSize]="state.take" [pageable]="true"
+  <kendo-grid [resizable]="true" [loading]="(dataListsLoader$  | async) === true"  [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [filter]="state.filter"
     [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)" (columnReorder)="onColumnReorder($event)"
