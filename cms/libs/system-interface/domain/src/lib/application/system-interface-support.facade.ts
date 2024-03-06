@@ -115,7 +115,7 @@ export class SystemInterfaceSupportFacade {
   }
 
   addSupportGroup(notificationGroup: any) {
-
+    debugger;
     this.systemInterfaceSupportService.addSupportGroup(notificationGroup).subscribe(
       {
         next: (response: any) => {
@@ -124,7 +124,7 @@ export class SystemInterfaceSupportFacade {
             SnackBarNotificationType.SUCCESS,
             response.message
           );
-          this.addSupportGroupSubject.next(response);
+          this.addSupportGroupSubject.next(true);
         },
         error: (err) => {
           this.hideLoader();

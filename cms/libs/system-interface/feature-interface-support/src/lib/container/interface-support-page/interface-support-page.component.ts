@@ -49,6 +49,11 @@ export class InterfaceSupportPageComponent {
     this.systemInterfaceSupportFacade.loadNotificationCategory();
   }
 
+  handleAddSuppportGroup(event: any){
+    debugger;
+    this.systemInterfaceSupportFacade.addSupportGroup(event);
+  }
+
   handleDeactivate(event: any){
     this.systemInterfaceSupportFacade.changeSupportGroupStatus(event, false);
   }

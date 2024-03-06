@@ -66,7 +66,7 @@
                     Cancel
                 </button>
                 <button kendoButton [primary]="true" aria-label="Add" (click)="save()">
-                    Add
+                    {{ isEditSupportGroup ? 'Update' : 'Add' }}
                 </button>
             </div>
         </div>
