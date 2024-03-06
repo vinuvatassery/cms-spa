@@ -209,6 +209,16 @@ prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVen
     return formData;
 }
 
+prepareClientAndVendorSmsData(formData: FormData, draftTemplate: any, messageRecipient: any, arg2: undefined[]) {
+  formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
+  formData.append('description', draftTemplate?.description ?? '');
+  formData.append('typeCode', draftTemplate?.typeCode ?? '');
+  formData.append('requestBody', draftTemplate?.templateContent ?? '');
+  formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
+  formData.append('recepients', messageRecipient.phoneNbr ?? null);
+  return formData;
+}
+
 initiateSendemailRequest(formData: FormData, selectedTemplate: any) {
     return this.emailDataService.sendClientAndVendorEmail(formData);
 }

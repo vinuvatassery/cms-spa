@@ -52,6 +52,9 @@ export class TextMessageEditorComponent implements OnInit {
   stringValues: string[] = ['MyFullName', 'MyJobTitle', 'MyPhone', 'MyEmail'];
   editor!: EditorComponent;
   smsEditorvalue!: any;
+  isDeleteDisabled: boolean = false;
+  requestBody!: string;
+  item: any;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -66,15 +69,11 @@ export class TextMessageEditorComponent implements OnInit {
     this.smsEditorValueEvent(this.currentValue);
   }
 
-  smsEditorValueEvent(smsData:any){
-    this.smsEditorvalue = smsData.templateContent == undefined? smsData.requestBody : smsData.templateContent;
-  }
-
   private dataEventSubscribed() {
     this.dataEvent.subscribe({
       next: (event: any) => {
         if (event) {
-          this.templateContent = this.smsEditorvalue;
+          this.currentValue.templateContent = this.templateContent;
           this.editorValue.emit(this.currentValue);
         }
       },
@@ -86,6 +85,20 @@ export class TextMessageEditorComponent implements OnInit {
       },
     });
   }
+
+  smsEditorValueEvent(smsData:any){
+    this.smsEditorvalue = smsData.templateContent == undefined? smsData.requestBody : smsData.templateContent;
+    this.templateContent = this.smsEditorvalue;
+    this.requestBody = this.templateContent;
+    this.tareaMessages = [
+      {
+        id: this.tareaMessagesCounter,
+        description: this.templateContent,
+        wordCount: 0,
+      },
+    ];
+  }
+
   /** Private methods **/
   private contains(target: any): boolean {
     return (
@@ -114,12 +127,17 @@ export class TextMessageEditorComponent implements OnInit {
   }
 
   onDeleteMessageClicked(id: any) {
+    if(this.tareaMessagesCounter == 1){
+      this.isDeleteDisabled = true;
+    }
+    if(this.tareaMessagesCounter > 1){
     this.tareaMessagesCounter -= 1;
     this.tareaMessages.forEach((message) => {
       if (message.id === id) {
         this.tareaMessages.splice(id, 1);
       }
     });
+  }
   }
 
   onAddNewMessageClicked() {
@@ -140,6 +158,7 @@ export class TextMessageEditorComponent implements OnInit {
 
     this.messages = this.tareaMessages.map(user => user.description);
     this.messageContentChangedEvent.emit(this.messages);
+    this.templateContent = this.messages[0];
   }
 
   onSearchClosed() {

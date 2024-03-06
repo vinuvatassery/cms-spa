@@ -198,6 +198,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
 
   handleSendNewEmailClosed(value: CommunicationEvents) {
     if (value === CommunicationEvents.Close) {
+      this.draftDropdownCheck = false;
       this.isSendNewEmailOpened = false;
       this.isSendNewEmailOpenedDialog.close();
     }

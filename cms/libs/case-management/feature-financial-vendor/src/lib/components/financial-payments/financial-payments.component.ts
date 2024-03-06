@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy } from '@angular/core';
 import { GridFilterParam, PaymentsFacade, PremiumType } from '@cms/case-management/domain';
 import { CompositeFilterDescriptor, SortDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -6,8 +6,8 @@ import { ColumnVisibilityChangeEvent, FilterService } from '@progress/kendo-angu
 import { Subject, Subscription, debounceTime } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
 import { Router } from '@angular/router';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-payments',
   templateUrl: './financial-payments.component.html',

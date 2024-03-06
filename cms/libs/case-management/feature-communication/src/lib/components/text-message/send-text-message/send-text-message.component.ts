@@ -29,18 +29,17 @@ export class SendTextMessageComponent implements OnInit {
   @Input() notificationGroup!: any;
   @Input() entityId!: any;
   @Input() ddlMessageRecipients$!: Observable<any>;
-  @Input() isContinueDraftClicked!: boolean;
-  @Input() isNewNotificationClicked!: boolean;
   @Input() notificationDraftId!: string;
   @Input() clientCaseEligibilityId!: string;
   @Input() communicationSmsTypeCode!: string;
+  @Input() isContinueDraftClicked!: boolean;
+  @Input() isNewNotificationClicked!: boolean;
 
   /** Output properties  **/
   @Output() closeSendMessageEvent = new EventEmitter<CommunicationEvents>();
   @Output() loadInitialData = new EventEmitter();
   @Output() sendMessageEvent = new EventEmitter<SmsNotification>();
   @Output() smsEditorValueEvent = new EventEmitter<any>();
-  @Output() editorValue = new EventEmitter<any>();
   /** Public properties **/
   ddlLetterTemplates$ = this.communicationFacade.ddlLetterTemplates$;
   ddlTemplates: any;
@@ -54,11 +53,11 @@ export class SendTextMessageComponent implements OnInit {
   phoneNumbers!: any[];
   isClearPhoneNumbers = false;
   templateContent = '';
-  templateTypeCode!: string;
   documentTemplate!: any;
   messageRecipient!: any;
-  selectedTemplate!: any;
+  templateTypeCode!: string;
   currentSmsData:any;
+  selectedSmsTemplate!: any;
   loginUserId!: any;
 
   /** Constructor **/
@@ -73,7 +72,7 @@ export class SendTextMessageComponent implements OnInit {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.updateSendMessageFlag();
-    this.loadSmsTemplates();
+    this.addPhoneNumbersSubscription();
     if(this.isContinueDraftClicked){
       this.loadClientAndVendorDraftSmsTemplates();
     }else if(this.isNewNotificationClicked){
@@ -81,7 +80,6 @@ export class SendTextMessageComponent implements OnInit {
     }else{
       this.loadSmsTemplates();
     }
-    this.addPhoneNumbersSubscription();
   }
   ngOnDestroy(): void {
     this.phoneNumbersSubscription$.unsubscribe();
@@ -94,7 +92,7 @@ export class SendTextMessageComponent implements OnInit {
       next: (data: any) =>{
         if (data?.length > 0) {
           this.ddlTemplates = data;
-           this.handleDdlEmailValueChange(data[0]);
+            this.handleDdlTextMessageValueChange(data[0]);
           this.ref.detectChanges();
         }else{
           this.loadSmsTemplates();
@@ -107,39 +105,6 @@ export class SendTextMessageComponent implements OnInit {
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
     },
   });
-  }
-
-  handleDdlEmailValueChange(event: any) {
-    this.selectedTemplate = event;
-    if(event.documentTemplateId){
-    this.loaderService.show();
-    this.communicationFacade.loadTemplateById(event.documentTemplateId)
-    .subscribe({
-      next: (data: any) =>{
-      if (data) {
-        this.selectedTemplate = data;
-        this.handleSmsEditor(data);
-        this.smsEditorValueEvent.emit(data);
-        this.ref.detectChanges();
-      }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-    },
-  });
-}
-else{
-  this.selectedTemplate = event;
-  this.handleSmsEditor(event);
-  // this.openDdlLetterEvent.emit();
-  this.ref.detectChanges();
-  }
-  }
-
-  handleSmsEditor(smsData: any) {
-    this.currentSmsData = smsData;
   }
 
   openNewSmsClicked(){
@@ -187,35 +152,21 @@ else{
     return '';
   }
 
-  // private loadDdlLetterTemplates() {
-  //   this.communicationFacade.loadDdlLetterTemplates();
-  //   this.ddlLetterTemplates$.subscribe({
-  //     next: (ddlTemplates) => {
-  //       this.ddlTemplates = ddlTemplates.filter((templates: any) => {
-  //         return templates.screenName === this.data;
-  //       });
-  //     },
-  //     error: (err: any) => {
-  //       console.log(err);
-  //     },
-  //   });
-  // }
-
   private loadSmsTemplates() {
-    //this.loaderService.show();
+    this.loaderService.show();
     this.communicationFacade.loadNotificationTemplates(this.notificationGroup, NotificationTemplateCategoryCode.SMS) // define an enum for category
       .subscribe({
         next: (data: any) => {
           if (data) {
             this.ddlTemplates = data;
-            //this.ref.detectChanges();
+            this.ref.detectChanges();
           }
-          //this.loaderService.hide();
+          this.loaderService.hide();
         },
         error: (err: any) => {
-          //this.loaderService.hide();
-          //this.loggingService.logException(err);
-          //this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
         },
       });
   }
@@ -259,7 +210,7 @@ else{
   }
 
   onSendMessagesClick() {
-    var sms: SmsNotification = {
+    const sms: SmsNotification = {
       templateId: this.documentTemplate?.documentTemplateId,
       entity: this.notificationGroup,
       entityId: this.entityId,
@@ -275,11 +226,8 @@ else{
     this.loaderService.show();
     this.communicationFacade.sendSms(sms).subscribe({
       next: (template: any) => {
-        if(template == true){
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'SMS Text Sent.');
         this.onCloseSendMessageConfirmClicked();
         this.loaderService.hide();
-        }
       },
       error: (err: any) => {
         this.loaderService.hide();
@@ -291,6 +239,38 @@ else{
     this.isShowSaveForLaterPopupClicked = false;
   }
 
+  onSaveSmsForLaterClicked(){
+    this.isShowSaveForLaterPopupClicked = true;
+    this.smsEditorValueEvent.emit(this.currentSmsData);
+    this.selectedSmsTemplate.templateContent = this.currentSmsData.templateContent;
+    this.saveClientAndVendorNotificationForLater(this.selectedSmsTemplate);
+  }
+
+  saveClientAndVendorNotificationForLater(draftTemplate: any) {
+    this.loaderService.show();
+    let smsRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId);
+    let draftNotificationRequest = this.communicationFacade.prepareClientAndVendorSmsData(smsRequestFormdata, draftTemplate, this.messageRecipient, []);
+      if(draftTemplate?.notifcationDraftId == undefined || draftTemplate?.notifcationDraftId == null){
+        this.communicationFacade.saveClientAndVendorNotificationForLater(draftNotificationRequest)
+        .subscribe({
+          next: (data: any) =>{
+          if (data) {
+            this.onCloseSaveForLaterClicked();
+            this.onCloseSendMessageClicked()
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Sms Saved As Draft');
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.isShowSaveForLaterPopupClicked = true;
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+        },
+      });
+      }
+  }
+
   loadTemplateContent(documentTemplateId: string) {
     if (documentTemplateId) {
       this.loaderService.show();
@@ -298,13 +278,13 @@ else{
         .subscribe({
           next: (template: any) => {
             if (template) {
-              console.log(template);
               this.templateContent = template.templateContent;
-              this.templateTypeCode = template.templateTypeCode;
-              this.selectedTemplate = template;
-              this.handleSMSEditor(template);
+              this.selectedSmsTemplate = template;
+              this.handleSmsEditor(template);
+              this.isOpenMessageTemplate=true;
+              this.smsEditorValueEvent.emit(template);
+              this.ref.detectChanges();
             }
-
             this.loaderService.hide();
           },
           error: (err: any) => {
@@ -315,7 +295,50 @@ else{
     }
   }
 
-  handleSMSEditor(event: any) {
+  /** External event methods **/
+  handleDdlTextMessageValueChange(event: any) {
+    this.isOpenMessageTemplate = true;
+    this.isClearPhoneNumbers = true;
+    this.isShowToPhoneNumbersLoader$.next(true);
+    if(event.documentTemplateId){
+        this.loaderService.show();
+        this.communicationFacade.loadTemplateById(event.documentTemplateId)
+          .subscribe({
+            next: (template: any) => {
+              if (template) {
+                this.templateContent = template.templateContent;
+                this.selectedSmsTemplate = template;
+                this.handleSmsEditor(template);
+                this.isOpenMessageTemplate=true;
+                this.smsEditorValueEvent.emit(template);
+                this.ref.detectChanges();
+              }
+              this.loaderService.hide();
+            },
+            error: (err: any) => {
+              this.loaderService.hide();
+              this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+            },
+          });
+      }else{
+      this.templateContent = event.requestBody;
+      this.messageRecipient = {
+        'formattedPhoneNbr': this.formatPhoneNumber(event?.recepients),
+        'phoneNbr': event.recepients
+      };
+      this.selectedSmsTemplate = event;
+      this.handleSmsEditor(event);
+      this.smsEditorValueEvent.emit(event);
+      this.documentTemplate = {
+        'description': event.description,
+        'documentTemplateId': event.notificationTemplateId
+      };
+      this.ref.detectChanges();
+    }
+    this.isShowToPhoneNumbersLoader$.next(false);
+  }
+
+  handleSmsEditor(event: any) {
     this.currentSmsData = event;
   }
 
@@ -335,22 +358,6 @@ else{
     this.loaderService.hide();
   }
 
-  /** External event methods **/
-  handleDdlTextMessageValueChange(event: any) {
-    this.isOpenMessageTemplate = true;
-    this.isClearPhoneNumbers = true;
-    this.isShowToPhoneNumbersLoader$.next(true);
-    this.loadInitialData.emit();
-    this.loadTemplateContent(event.documentTemplateId);
-  }
-
-  onSaveForLaterTemplateClicked() {
-    this.isShowSaveForLaterPopupClicked = true;
-    this.smsEditorValueEvent.emit(this.currentSmsData);
-    this.selectedTemplate.templateContent = this.currentSmsData.templateContent;
-      this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
-  }
-
   getLoggedInUserProfile(){
     this.loaderService.show();
     this.userDataService.getProfile$.subscribe((profile:any)=>{
@@ -359,30 +366,5 @@ else{
       }
     })
     this.loaderService.hide();
-  }
-
-  saveClientAndVendorNotificationForLater(draftTemplate: any) {
-    this.loaderService.show();
-    let smsRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId);
-    let draftNotificationRequest = this.communicationFacade.prepareClientAndVendorEmailData(smsRequestFormdata, draftTemplate, []);
-      if(draftTemplate?.notifcationDraftId == undefined || draftTemplate?.notifcationDraftId == null){
-        this.communicationFacade.saveClientAndVendorNotificationForLater(draftNotificationRequest)
-        .subscribe({
-          next: (data: any) =>{
-          if (data) {
-            this.onCloseSaveForLaterClicked();
-            this.onCloseSendMessageClicked()
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft');
-          }
-          this.loaderService.hide();
-        },
-        error: (err: any) => {
-          this.loaderService.hide();
-          this.isShowSaveForLaterPopupClicked = true;
-          this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-        },
-      });
-      }
   }
 }

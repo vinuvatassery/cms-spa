@@ -27,7 +27,7 @@ import {
 import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { Subject, Subscription, first } from 'rxjs';
 import { Router } from '@angular/router';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-claims-process-list',
   templateUrl: './financial-claims-process-list.component.html',

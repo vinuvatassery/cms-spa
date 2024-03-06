@@ -7,7 +7,6 @@ import {
   EventEmitter,
   Input,
   ChangeDetectorRef,
-  OnDestroy
 } from '@angular/core';
 
 
@@ -87,6 +86,7 @@ export class SendLetterComponent implements OnInit {
   isButtonVisible: boolean = true;
   loginUserId!: any;
   selectedTemplateId!: string;
+  documentTemplate!: any;
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
@@ -124,10 +124,6 @@ export class SendLetterComponent implements OnInit {
       next: (data: any) =>{
         if (data?.length > 0) {
           this.ddlTemplates = data;
-          // for (let template of this.ddlTemplates){
-          //   template.description = template.templateTypeCode;
-          //   template.documentTemplateId = template.notificationDraftId;
-          //  }
            this.handleDdlLetterValueChange(data[0]);
           this.ref.detectChanges();
         }else{
@@ -436,6 +432,10 @@ export class SendLetterComponent implements OnInit {
   this.selectedTemplate = event;
   this.handleLetterEditor(event);
   this.openDdlLetterEvent.emit();
+  this.documentTemplate = {
+    'description': event.description,
+    'documentTemplateId': event.notificationTemplateId
+  };
   this.loadMailingAddress();
   this.ref.detectChanges();
 }

@@ -22,7 +22,6 @@ import { State } from '@progress/kendo-data-query';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { LoggingService } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
-import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-pharmacies-list',
   templateUrl: './pharmacies-list.component.html',

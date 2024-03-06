@@ -26,7 +26,6 @@ export class CommonActionsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    debugger;
   }
   /** Internal event methods **/
   onDialItemClicked(event: any): void {

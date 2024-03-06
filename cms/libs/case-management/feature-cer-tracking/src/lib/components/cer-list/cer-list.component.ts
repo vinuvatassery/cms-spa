@@ -12,7 +12,7 @@ import {
 import { CerTrackingFacade } from '@cms/case-management/domain';
 /** Facades **/
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { CompositeFilterDescriptor, State ,} from '@progress/kendo-data-query';
+import { CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { BehaviorSubject, Observable, Subject, first } from 'rxjs';
 import { ColumnVisibilityChangeEvent, FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { StatusFlag } from '@cms/shared/ui-common';
@@ -178,15 +178,7 @@ export class CerListComponent implements OnInit, OnChanges {
     this.statusTitle = data?.isHistorical === StatusFlag.Yes ?  'Status @ End of EP' : 'Current Status'
     this.titleSubject.next(this.statusTitle)
   }
-  public dataStateChange(stateData: any): void {      
-    // if (this.caseStatus != '') {
-    //   this.state?.filter?.filters?.push(
-    //     { 
-    //       field: "eligibilityStatus",
-    //       operator: "eq",
-    //       value:this.caseStatus
-    //     });
-    // } 
+  public dataStateChange(stateData: any): void {
     if(stateData.filter?.filters.length > 0)
     {
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];

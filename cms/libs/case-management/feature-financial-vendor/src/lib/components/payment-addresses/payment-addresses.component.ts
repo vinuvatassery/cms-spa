@@ -5,7 +5,7 @@ import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
-import { Subscription, take } from 'rxjs';
+import { take } from 'rxjs';
 import { LovFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';

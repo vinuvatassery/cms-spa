@@ -6,9 +6,6 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State } from '@progress/kendo-data-query';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
-import { UserManagementFacade } from '@cms/system-config/domain';
-import { Subject } from 'rxjs';
-
 @Component({
   selector: 'case-management-status-period',
   templateUrl: './status-period.component.html',

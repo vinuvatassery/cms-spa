@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core
 /** Facades **/
 import { CerTrackingFacade, GridFacade, GridStateKey, ModuleCode, WorkflowFacade } from '@cms/case-management/domain';
 import { UserDataService } from '@cms/system-config/domain';
-import { State } from '@progress/kendo-data-query/dist/npm/state';
 import { Subject } from 'rxjs';
 
 @Component({

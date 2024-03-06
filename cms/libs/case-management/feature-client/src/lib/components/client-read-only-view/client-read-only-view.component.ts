@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import {
   ClientProfile, ClientFacade, Client,
   ClientCaseEligibility, ClientPronoun, ClientGender,
@@ -14,7 +14,6 @@ import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { Subject, Subscription, of } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { UserManagementFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-client-read-only-view',
   templateUrl: './client-read-only-view.component.html',
@@ -36,7 +35,6 @@ export class ClientReadOnlyViewComponent implements OnInit{
   @Input() userLastModifierProfilePhoto$!: any;
 
   applicantInfo = {} as ApplicantInfo;
-  //public client! : ClientProfile
   isEditClientInformationPopup = false;
   caseManagerHoverDataItem! : any
   appInfoForm!: FormGroup;

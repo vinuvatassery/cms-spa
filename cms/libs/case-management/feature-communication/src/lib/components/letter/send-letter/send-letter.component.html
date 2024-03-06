@@ -12,6 +12,7 @@
               [data]="ddlTemplates"
               textField="description"
               valueField="documentTemplateId"
+              [(ngModel)]="documentTemplate"
               (valueChange)="handleDdlLetterValueChange($event)"
             >
             </kendo-dropdownlist>

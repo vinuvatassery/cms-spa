@@ -93,7 +93,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   isCCDropdownVisible: boolean = true;
   attachmentCount: number = 0;
   draftNotificationRemoveDialogService = false;
-  selectedTemplateId!: string;
+  selectedTemplateId!: any;
+  documentTemplate!: any;
 
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
@@ -138,10 +139,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       next: (data: any) =>{
         if (data?.length > 0) {
           this.ddlTemplates = data;
-          // for (let template of this.ddlTemplates){
-          //   template.description = template.templateTypeCode;
-          //   template.documentTemplateId = template.notificationDraftId;
-          //  }
            this.handleDdlEmailValueChange(data[0]);
           this.ref.detectChanges();
         }else{
@@ -408,6 +405,10 @@ else{
     this.emailSubject = event.description;
     this.emailEditorValueEvent.emit(event);
     this.showToEmailLoader = false;
+    this.documentTemplate = {
+      'description': event.description,
+      'documentTemplateId': event.notificationTemplateId
+    };
     if (CommunicationEventTypeCode.CerAuthorizationEmail===this.communicationEmailTypeCode) {
       this.getCCEmailList(this.entityId, this.loginUserId);
     }

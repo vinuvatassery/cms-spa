@@ -35,7 +35,7 @@
       </kendo-floatinglabel>
     </div>
     <div class="flex-col mb-2" *ngIf="isOpenMessageTemplate">
-      <case-management-text-message-editor [templateContent] ="templateContent" [dataEvent]="smsEditorValueEvent" [currentValue]="currentSmsData"></case-management-text-message-editor>
+      <case-management-text-message-editor [templateContent] ="templateContent" [dataEvent]="smsEditorValueEvent" [currentValue]="currentSmsData" (editorValue)="handleSmsEditor($event)" ></case-management-text-message-editor>
     </div>
   </div>
 </section>
@@ -94,7 +94,7 @@ title="SMS Draft Saved"
       <button
         kendoButton
         [primary]="true" 
-        (click)="onSaveForLaterTemplateClicked()"
+        (click)="onSaveSmsForLaterClicked()"
         aria-label="OK"
       >
         OK

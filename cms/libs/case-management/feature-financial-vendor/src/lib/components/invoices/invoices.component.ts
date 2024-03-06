@@ -1,5 +1,5 @@
 /** Angular libraries **/
-import { ChangeDetectionStrategy, Component, Input, ViewChild, OnInit, OnDestroy, EventEmitter, Output, ChangeDetectorRef } from '@angular/core'; 
+import { ChangeDetectionStrategy, Component, Input, ViewChild, OnInit, OnDestroy, EventEmitter, Output } from '@angular/core'; 
 import { Router } from '@angular/router';
 
 /** External libraries **/
@@ -10,7 +10,7 @@ import { Subject, Subscription, debounceTime } from 'rxjs';
 /** Facade **/
 import { FinancialVendorProviderTabCode, GridFilterParam, InvoiceFacade } from '@cms/case-management/domain';
 import { FilterService, GridComponent } from '@progress/kendo-angular-grid';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider, DocumentFacade } from '@cms/shared/util-core';
 

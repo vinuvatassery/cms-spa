@@ -18,7 +18,7 @@ import {
 import { Subject, BehaviorSubject, first, Subscription} from 'rxjs';
 import { FilterService } from '@progress/kendo-angular-treelist/filtering/filter.service';
 import { PendingApprovalPaymentTypeCode } from '@cms/case-management/domain';
-import { UserLevel, UserManagementFacade } from '@cms/system-config/domain';
+import { UserLevel } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-approval-batch-lists',
   templateUrl: './approval-batch-lists.component.html',
