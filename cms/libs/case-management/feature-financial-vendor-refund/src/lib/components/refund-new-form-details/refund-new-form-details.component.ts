@@ -993,7 +993,7 @@ addNewRefundRx() {
           this.financialVendorRefundFacade.hideLoader();
           this.closeAddEditRefundFormModalClicked(true)
           this.financialVendorRefundFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS,
-            'Pharmacy Refund Added Successfuly')
+            'Refund added! An event has been logged')
         },
         error: (error: any) => {
           if (error) {
