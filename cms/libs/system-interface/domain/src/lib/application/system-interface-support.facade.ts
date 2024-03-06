@@ -53,6 +53,15 @@ export class SystemInterfaceSupportFacade {
 
   private distributionListDataLoaderSubject = new BehaviorSubject<boolean>(false);
   distributionListDataLoader$ = this.distributionListDataLoaderSubject.asObservable();
+
+  private editDistributionListUserSubject = new Subject<boolean>();
+  editDistributionListUser$ = this.editDistributionListUserSubject.asObservable();
+
+  private changeStatusDistributionListUserSubject = new Subject<boolean>();
+  changeStatusDistributionListUser$ = this.changeStatusDistributionListUserSubject.asObservable();
+
+  private deleteDistributionListUserSubject = new Subject<boolean>();
+  deleteDistributionListUser$ = this.deleteDistributionListUserSubject.asObservable();
   //----------------------------------------
 
   private supportGroupRemoveSubject = new Subject<any>();
@@ -120,7 +129,7 @@ export class SystemInterfaceSupportFacade {
       {
         next: (response: any) => {
           this.loaderService.hide();
-          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS,'Support Group saved successfully');
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Support Group saved successfully');
           this.addSupportGroupSubject.next(true);
         },
         error: (err) => {
@@ -151,8 +160,6 @@ export class SystemInterfaceSupportFacade {
       },
     });
   }
-
-
 
   changeSupportGroupStatus(notificationGroupId: any, status: boolean) {
     this.showLoader();
@@ -190,13 +197,25 @@ export class SystemInterfaceSupportFacade {
 
 
 
+
+
+
   // distribution list-------------------------------------------------------
-  addDistributionListUser(dto: any): Observable<any> {
-    return this.systemInterfaceSupportService.addDistributionListUser(dto).pipe(
-      tap((response: any) => {
-        this.addDistributionListUserSubject.next(response);
-      }),
-    );
+  addDistributionListUser(dto: any, isEditMode: boolean): Observable<any> {
+    if(!isEditMode){
+      return this.systemInterfaceSupportService.addDistributionListUser(dto).pipe(
+        tap((response: any) => {
+          this.addDistributionListUserSubject.next(response);
+        }),
+      );
+    }else{
+      return this.systemInterfaceSupportService.editDistributionListUser(dto).pipe(
+        tap((response: any) => {
+          this.addDistributionListUserSubject.next(response);
+        }),
+      );
+    }
+    
   }
 
   loadDistributionGroup(paginationParameters: any) {
@@ -217,6 +236,60 @@ export class SystemInterfaceSupportFacade {
       },
     });
   }
+
+  editDistributionListUser(memberData: any) {
+    this.loaderService.show();
+    const notificationGroupId = memberData.notificationGroupId;
+    return this.systemInterfaceSupportService.editDistributionListUser(memberData).subscribe({
+      next: (response) => {
+        if (response === true) {
+          this.editDistributionListUserSubject.next(true);
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Support Group updated successfully');
+        }
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+
+  changeDistributionListUserStatus(notificationGroupId: any, status: boolean) {
+    this.showLoader();
+    this.systemInterfaceSupportService.changeDistributionListUserStatus(notificationGroupId, status)
+      .subscribe({
+        next: (removeResponse) => {
+          if (removeResponse ?? false) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, status ? 'Interface Support Group reactivated successfully' : 'Interface Support Group deactivated successfully')
+          }
+          this.deleteDistributionListUserSubject.next(true);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      });
+  }
+
+  deleteDistributionListUser(notificationGroupId: string): void {
+    this.showLoader();
+    this.systemInterfaceSupportService.deleteDistributionListUser(notificationGroupId)
+      .subscribe({
+        next: (removeResponse) => {
+          if (removeResponse ?? false) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Member successfully deleted!');
+          }
+          this.deleteDistributionListUserSubject.next(true);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      });
+  }
+
   // ------------------------------------------------------------------------
 
 }

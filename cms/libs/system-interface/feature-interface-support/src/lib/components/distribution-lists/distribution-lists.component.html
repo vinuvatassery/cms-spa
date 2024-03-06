@@ -1,9 +1,9 @@
 <p>Users assigned to {{selectedInterface}} Support. Users in this list will be notified in case of interface error</p>
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="(dataListsLoader$  | async) === true"  [pageSize]="state.take" [pageable]="true"
-    [sortable]="false" [skip]="state.skip" [groupable]="false" [columnMenu]="false" [sort]="state.sort"
-    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-    [data]="gridDistributionData$ | async">
+  <kendo-grid [resizable]="true" [loading]="(dataListsLoader$  | async) === true" [pageSize]="state.take"
+    [pageable]="true" [sortable]="false" [skip]="state.skip" [groupable]="false" [columnMenu]="false"
+    [sort]="state.sort" (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
+    [selectable]="true" [data]="gridDistributionData$ | async">
     <kendo-grid-column field="email" title="Email" [width]="120" [columnMenu]="false" [sortable]="false">
     </kendo-grid-column>
     <kendo-grid-column field="firstName" title="First Name" [width]="100"> </kendo-grid-column>
@@ -68,10 +68,14 @@
 </div>
 <kendo-dialog *ngIf="isMemberDetailPopup" (close)="onCloseMemberDetailPopupClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar>Add Member</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar>{{ isEditMode ? 'Edit Member' : 'Add Member' }} </kendo-dialog-titlebar>
 
-  <distribution-detail [groupsDropDownList]="groupsDropDownList" (addMemberEvent)="addNotificationUser($event)" [selectedGroup]="selectedGroup"
-    (closeForm)="onCloseMemberDetailPopupClicked()"> </distribution-detail>
+  <distribution-detail
+    [selectedMemberData]="selectedMemberData"
+    [selectedGroup]="selectedGroup"
+    (addMemberEvent)="addNotificationUser($event)"
+    (closeForm)="onCloseMemberDetailPopupClicked()"> 
+  </distribution-detail>
 
 </kendo-dialog>
 

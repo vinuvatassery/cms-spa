@@ -28,7 +28,7 @@
                 </kendo-textbox>
             </kendo-floatinglabel>
         </div>
-        
+
 
     </div>
 </section>
@@ -40,7 +40,7 @@
                 Cancel
             </button>
             <button kendoButton [primary]="true" aria-label="Add" (click)="save()">
-                Add
+                {{ isEditMode ? 'Update' : 'Add' }}
             </button>
         </div>
     </div>

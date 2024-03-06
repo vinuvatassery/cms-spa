@@ -20,7 +20,8 @@ import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 })
 export class DistributionDetailComponent implements OnInit {
   @Input() selectedGroup: any;
-  @Input() groupsDropDownList: any;
+  @Input() selectedMemberData: any;
+  isEditMode = false;
   @Output() closeForm = new EventEmitter<any>();
   @Output() addMemberEvent = new EventEmitter<any>();
 
@@ -50,7 +51,10 @@ export class DistributionDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    if (this.selectedMemberData)
+      this.isEditMode = true;
     this.createForm();
+
   }
 
   createForm() {
@@ -60,6 +64,12 @@ export class DistributionDetailComponent implements OnInit {
       lastName: ['', [Validators.required, Validators.maxLength(200)]],
       emailAddress: ['', [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]],
     });
+    if (this.selectedMemberData) {
+      this.isEditMode = true;
+      this.memberForm.controls['firstName'].setValue(this.selectedMemberData.firstName);
+      this.memberForm.controls['lastName'].setValue(this.selectedMemberData.lastName);
+      this.memberForm.controls['emailAddress'].setValue(this.selectedMemberData.email);
+    }
 
     if (this.selectedGroup)
       this.memberForm.controls['groupName'].setValue(this.selectedGroup.groupName)
@@ -73,7 +83,10 @@ export class DistributionDetailComponent implements OnInit {
       lastName: formValues.lastName,
       emailAddress: formValues.emailAddress,
       userTypeCode: 'EXTERNAL',
+      notificationUserId: null,
     };
+    if (this.isEditMode)
+      dto.notificationUserId = this.selectedMemberData.notificationUserId;
     return dto;
   }
 
@@ -105,12 +118,12 @@ export class DistributionDetailComponent implements OnInit {
     this.isValidateForm = true;
 
     if (this.memberForm.valid) {
-      let finalData = this.mapFormValues();
+      const finalData = this.mapFormValues();
       this.showLoader();
 
-      this.systemInterfaceSupportFacade.addDistributionListUser(finalData).subscribe({
+      this.systemInterfaceSupportFacade.addDistributionListUser(finalData, this.isEditMode).subscribe({
         next: (response: any) => {
-          let notificationMessage = response.message;
+          const notificationMessage = response.message;
           this.onCancelClick();
           this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
           this.hideLoader();

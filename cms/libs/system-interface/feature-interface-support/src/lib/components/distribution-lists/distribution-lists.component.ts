@@ -12,7 +12,8 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DistributionListsComponent implements OnInit, OnChanges {
-
+  selectedMemberData: any;
+  isEditMode = false;
   isMemberDetailPopup = false;
   isMemberReactivatePopupShow = false;
   isMemberDeactivatePopupShow = false;
@@ -53,7 +54,11 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
-        console.log("edit")
+        if (data.email) {
+          this.selectedMemberData = data;
+          this.isEditMode = true;
+          this.isMemberDetailPopup = true;
+        }
       },
     },
     {
@@ -135,7 +140,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
       notificationGroupId: this.selectedGroup.notificationGroupId,
     };
-    //
     this.loadDistributionListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
@@ -214,6 +218,8 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   }
 
   onMemberDetailsClicked() {
+    this.isEditMode = false;
+    this.selectedMemberData = null;
     this.isMemberDetailPopup = true;
   }
 
@@ -247,9 +253,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     this.isMemberDeleteConfirmationPopupShow = false;
 
   }
-  groupsDropDownList = []
+
   addNotificationUser(data: any): void {
-    this.systemInterfaceSupportFacade.addDistributionListUser(data);
+    this.systemInterfaceSupportFacade.addDistributionListUser(data, this.isEditMode);
     this.loadDistributionListGrid();
   }
 }

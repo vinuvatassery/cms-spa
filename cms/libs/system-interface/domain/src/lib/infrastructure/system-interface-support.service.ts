@@ -8,6 +8,7 @@ import { Observable, of } from 'rxjs';
 export class SystemInterfaceSupportService {
   constructor(private readonly http: HttpClient,
     private configurationProvider: ConfigurationProvider) { }
+  private distributionBaseUrl = '/system-interface/interface-support/distribution';
 
   getSupportGroup(): Observable<any> {
     return of([
@@ -113,7 +114,7 @@ export class SystemInterfaceSupportService {
   }
 
   addSupportGroup(notificationGroup: any) {
-    
+
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/support-group`, notificationGroup);
   }
   editSupportGroup(notificationGroupId: string, notificationGroup: any) {
@@ -146,15 +147,31 @@ export class SystemInterfaceSupportService {
     return this.http.delete(
       `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-support/support-group/${notificationGroupId}`, options
     );
-    }
+  }
 
-    // distribution ----------------------------------------
-    getDistributionList(paginationParameters: any) {
-        return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/list`, paginationParameters);
-    }
+  // distribution ----------------------------------------
+  getDistributionList(paginationParameters: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `${this.distributionBaseUrl}/list`, paginationParameters);
+  }
 
-    addDistributionListUser(user: any) {
-        return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/add-user`, user);
+  addDistributionListUser(user: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `${this.distributionBaseUrl}/add-user`, user);
+  }
+
+  changeDistributionListUserStatus(memberId: string, status: boolean) {
+    const options = {
+      status: status,
     }
+    return this.http.patch(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${memberId}`, options);
+  }
+
+  deleteDistributionListUser(memberId: string) {
+    return this.http.delete(
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${memberId}`);
+  }
+
+  editDistributionListUser(body: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${body.notificationUserId}`, body);
+  }
 
 }
