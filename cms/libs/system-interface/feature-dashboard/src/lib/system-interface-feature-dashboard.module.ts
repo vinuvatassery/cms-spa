@@ -10,13 +10,27 @@ import { WebServiceLogsPageComponent } from './containers/web-service-logs-page/
 import { BatchInterfaceLogsPageComponent } from './containers/batch-interface-logs-page/batch-interface-logs-page.component';
 import { BatchInterfaceLogsComponent } from './components/batch-Interface-logs/batch-Interface-logs.component';
 import { ExceptionDetailComponent } from './components/exception-detail/exception-detail.component';
-
+import { ClientRecordSentComponent } from './components/client-record-sent/client-record-sent.component';
+import { CardRequestsComponent } from './components/card-requests/card-requests.component';
+import { PrescriptionfillloadingComponent } from './components/prescriptionfillloading/prescriptionfillloading.component';
+import { OrderDataComponent } from './components/order-data/order-data.component';
+import { GridsterModule } from 'angular-gridster2';
+import { DynamicModule } from 'ng-dynamic-component';
+const WidgetComponents = [
+  CardRequestsComponent,
+  ClientRecordSentComponent,
+  OrderDataComponent,
+  PrescriptionfillloadingComponent
+];
 @NgModule({
   imports: [
     CommonModule,
     SystemInterfaceFeatureDashboardRoutingModule,
     SharedUiTpaModule,
     SharedUiCommonModule,
+    SharedUiTpaModule,
+    GridsterModule,
+    DynamicModule,
   ],
   declarations: [
     SystemInterfaceDashboardPageComponent,
@@ -26,6 +40,12 @@ import { ExceptionDetailComponent } from './components/exception-detail/exceptio
     BatchInterfaceLogsPageComponent,
     BatchInterfaceLogsComponent,
     ExceptionDetailComponent,
+    ClientRecordSentComponent,
+    CardRequestsComponent,
+    PrescriptionfillloadingComponent,
+    OrderDataComponent,
+    WidgetComponents    
+
   ],
   exports: [
     SystemInterfaceDashboardPageComponent,
@@ -35,6 +55,12 @@ import { ExceptionDetailComponent } from './components/exception-detail/exceptio
     BatchInterfaceLogsPageComponent,
     BatchInterfaceLogsComponent,
     ExceptionDetailComponent,
+    ClientRecordSentComponent,
+    CardRequestsComponent,
+    PrescriptionfillloadingComponent,
+    OrderDataComponent,
+    WidgetComponents    
+
   ],
 })
 export class SystemInterfaceFeatureDashboardModule {}
