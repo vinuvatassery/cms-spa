@@ -141,7 +141,6 @@ private clientClaimsListDataSubject =  new Subject<any>();
     {debugger
       let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
       if(stateFilter.field ==="ndc"){
-        let noOfhypen =   stateFilter.value.split("-").length - 1
         stateFilter.value = stateFilter.value.replace(/-/g, "")
       }
       this.filter = stateFilter.value;
