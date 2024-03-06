@@ -23,6 +23,8 @@ export class TodoPageComponent implements OnInit {
   @Output() isToDODetailsActionOpen!: boolean;
   todoGrid$ = this.todoFacade.todoGrid$;
   frequencyTypeCodeSubject$ = this.lovFacade.frequencyTypeCodeSubject$
+  entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
+  getTodo$ = this.todoFacade.getTodo$;
   showHeaderSearchInputLoader = false;
   clientSearchResult$ = this.searchFacade.clientSearch$;
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
@@ -66,5 +68,9 @@ export class TodoPageComponent implements OnInit {
 
   onTodoItemCreateClick(payload:any){
     this.todoFacade.createTodoItem(payload);
+  }
+
+  onGetTodoItem($event){
+    this.todoFacade.getTodoItem($event);
   }
 }

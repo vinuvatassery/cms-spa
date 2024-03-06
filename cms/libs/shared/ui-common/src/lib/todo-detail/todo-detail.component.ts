@@ -24,11 +24,14 @@ export class TodoDetailComponent implements OnInit {
   tareaCustomTodoCharactersCount!: number;
   tareaCustomTodoCounter!: string;
   tareaCustomTodoDescription = '';
+  @Input() isEdit= true;
+  @Input() alertId!:any
   @Input() clientSearchResult$! : Observable<any>
+  @Input() getTodo$! : Observable<any>
   @Input() createTodo$! : Observable<any>
   @Input() providerSearchResult$ :any
-  EntityTypeCodeData =['CLIENT','MEDICAL_PROVIDER','DENTAL_PROVIDER','INSURANCE_VENDOR']
   @Input() frequencyTypeCodeSubject$ : any;
+  @Input() entityTypeCodeSubject$:any;
   showTimePicker =false
   showClientSearch = false;
   showVendorSearch = false;
@@ -43,6 +46,7 @@ export class TodoDetailComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   todoDetailsForm: FormGroup;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  isValidateForm= false;
   constructor(public formBuilder: FormBuilder,
     public intl: IntlService,
     private configurationProvider: ConfigurationProvider,){
@@ -50,6 +54,17 @@ export class TodoDetailComponent implements OnInit {
   }
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.getTodo$.subscribe(res =>{
+      if (this.isEdit) {
+        this.todoDetailsForm.patchValue({
+          title: res.alertName,
+          dueDate: res.alertDueDate,
+          repeat: res.alertFrequencyCode,
+          endDate:res.alertEndDate,
+          alertDesc: res.alertDesc
+        })
+      }
+    });
     this.loadToDoSearch();
     this.tareaVaribalesIntialization();
     this.buildTodoForm()
@@ -58,14 +73,13 @@ export class TodoDetailComponent implements OnInit {
   buildTodoForm(){
     this.todoDetailsForm = this.formBuilder.group({
       title: ['', Validators.required],
-      dueDate: [''],
+      dueDate: ['',Validators.required],
       repeat: [{value: '', disabled: true}],
       endDate: [{value: '', disabled: true}],
       alertDesc: [''],
       linkTo: [''],
       clientId :[{}],
-      vendorId: [{}],
-      repeatTime:['']
+      vendorId: [{}]
     });
     this.todoDetailsForm.controls['repeat'].setValue('NEVER')
 
@@ -145,6 +159,7 @@ export class TodoDetailComponent implements OnInit {
     let entityTypeCode ='';
     let entityId =''
     this.todoDetailsForm.markAllAsTouched()
+    this.isValidateForm =true;
     if (this.todoDetailsForm.invalid) {
       return;
     }
@@ -166,7 +181,6 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
       entityId :entityId ,
       alertFrequencyCode :  this.todoDetailsForm.controls['repeat'].value,
       customAlertFlag : 'Y',
-      repeatTime:new Date(this.todoDetailsForm.controls['repeatTime'].value).getHours()+":"+new Date(this.todoDetailsForm.controls['repeatTime'].value).getMinutes()
     }
 
     this.onTodoItemCreateClick.emit(payload);

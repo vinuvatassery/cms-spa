@@ -19,12 +19,13 @@ export class TodoFacade {
   private searchSubject = new Subject<any>();
   private todoGridSubject = new Subject<any>();
   private todoCreateSubject = new Subject<any>();
-
+  private todoGetSubject = new Subject<any>();
   /** Public properties **/
   todo$ = this.todoSubject.asObservable();
   search$ = this.searchSubject.asObservable();
   todoGrid$ = this.todoGridSubject.asObservable();
   createTodo$ = this.todoCreateSubject.asObservable();
+  getTodo$ = this.todoGetSubject.asObservable();
   signalrReminders$!: Observable<any>;
 
   /** Constructor **/
@@ -90,6 +91,21 @@ export class TodoFacade {
         console.error('err', err);
       },
     });
+  }
+
+  getTodoItem(payload:any){
+    this.loaderService.show()
+    this.todoDataService.getTodoItem(payload).subscribe({
+      next: (todoGridResponse: any) => {
+        this.loaderService.hide()
+        this.todoGetSubject.next(true);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)    
+      },
+      error: (err) => {
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
   }
 
   createTodoItem(payload:any){
