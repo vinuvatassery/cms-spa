@@ -35,6 +35,9 @@ export class SystemInterfaceSupportFacade {
   private addSupportGroupSubject = new Subject<any>();
   addSupportGroup$ = this.addSupportGroupSubject.asObservable();
 
+  private editSupportGroupSubject = new Subject<boolean>();
+  editSupportGroup$ = this.editSupportGroupSubject.asObservable();
+
   private supportGroupReactivateSubject = new Subject<any>();
   supportGroupReactivate$ = this.supportGroupReactivateSubject.asObservable();
 
@@ -112,24 +115,44 @@ export class SystemInterfaceSupportFacade {
   }
 
   addSupportGroup(notificationGroup: any) {
-    debugger;
+    this.loaderService.show();
     this.systemInterfaceSupportService.addSupportGroup(notificationGroup).subscribe(
       {
         next: (response: any) => {
-          this.hideLoader();
-          this.notificationSnackbarService.manageSnackBar(
-            SnackBarNotificationType.SUCCESS,
-            response.message
-          );
+          this.loaderService.hide();
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS,'Support Group saved successfully');
           this.addSupportGroupSubject.next(true);
         },
         error: (err) => {
-          this.hideLoader();
+          this.loaderService.hide();
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         },
       }
     );
   }
+
+
+  editSupportGroup(notificationGroup: any) {
+
+    this.loaderService.show();
+    let notificationGroupId = notificationGroup.notificationGroupId;
+    return this.systemInterfaceSupportService.editSupportGroup(notificationGroupId, notificationGroup).subscribe({
+      next: (response) => {
+        if (response === true) {
+          this.editSupportGroupSubject.next(true);
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Support Group updated successfully');
+        }
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+
+
 
   changeSupportGroupStatus(notificationGroupId: any, status: boolean) {
     this.showLoader();

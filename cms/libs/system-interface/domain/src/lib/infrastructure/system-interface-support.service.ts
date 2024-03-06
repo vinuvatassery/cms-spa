@@ -116,7 +116,14 @@ export class SystemInterfaceSupportService {
     
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/support-group`, notificationGroup);
   }
-
+  editSupportGroup(notificationGroupId: string, notificationGroup: any) {
+    const body = {
+      groupCode: notificationGroup.groupCode,
+      groupName: notificationGroup.groupName,
+      groupDesc: notificationGroup.groupDesc
+    }
+    return this.http.put(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-support/support-group/${notificationGroupId}`, body);
+  }
   getSupportGroupList(paginationParameters: any) {
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/support-group/support-group-list`, paginationParameters);
   }

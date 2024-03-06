@@ -21,7 +21,7 @@ import { Subject, first } from 'rxjs';
 @Component({
   selector: 'system-interface-support-group',
   templateUrl: './support-group.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  //changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SupportGroupComponent implements OnInit, OnChanges {
   selectedGroup: any;
@@ -35,7 +35,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   isSupportGroupDeactivatePopupShow = false;
   isSupportGroupDeletePopupShow = false;
   isSupportGroupDeleteConfirmationPopupShow = false;
-  addSupportGroup$ = this.systemInterfaceSupportFacade.addSupportGroup$;
+
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isSupportGroupGridLoaderShow = false;
@@ -43,14 +43,18 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
+  @Input() addSupportGroup$: any;
+  @Input() editSupportGroup$: any;
   @Input() SupportGroupGridLists$: any;
   @Input() supportGroupReactivate$: any;
   @Input() supportGroupRemove$: any;
   @Output() loadSupportGroupListEvent = new EventEmitter<any>();
-  @Output() deactivateConfimEvent = new EventEmitter<string>();
-  @Output() reactivateConfimEvent = new EventEmitter<string>();
-  @Output() deleteConfimedEvent = new EventEmitter<string>();
-  @Output() selectedRowEvent = new EventEmitter<any>();
+  @Output() deactivateConfimEvent =  new EventEmitter<string>();
+  @Output() reactivateConfimEvent =  new EventEmitter<string>();
+  @Output() deleteConfimedEvent =  new EventEmitter<string>();
+  @Output() addSupportGroupEvent =  new EventEmitter<string>();
+    @Output() editSupportGroupEvent = new EventEmitter<string>();
+    @Output() selectedRowEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'groupName';
   sortDir = 'Ascending';
@@ -69,6 +73,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   reletebuttonEmitted = false;
   isEditSupportGroup = false;
   editButtonEmitted =false;
+  selectedSupportGroup!:any;
 
   gridSupportGroupDataSubject = new Subject<any>();
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
@@ -108,7 +113,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       click: (data: any): void => {
         if (!this.deactivateButtonEmitted) {
           this.deactivateButtonEmitted = true;
-          this.onOpenSupportGroupDeactivateClicked(data);
+          this.onOpenSupportGroupDeactivateClicked(data.notificationGroupId);
         }
       },
     },
@@ -120,7 +125,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       click: (data: any): void => {
         if (!this.reactivateButtonEmitted) {
           this.reactivateButtonEmitted = true;
-          this.onOpenSupportGroupReactivateClicked(data);
+          this.onOpenSupportGroupReactivateClicked(data.notificationGroupId);
         }
       },
     },
@@ -132,7 +137,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       click: (data: any): void => {
         if (!this.deleteButtonEmitted) {
           this.deleteButtonEmitted = true;
-          this.onOpenSupportGroupDeleteClicked(data);
+          this.onOpenSupportGroupDeleteClicked(data.notificationGroupId);
         }
 
       },
@@ -268,9 +273,10 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.isSupportGroupGridLoaderShow = false;
   }
 
-  onEditGroupDetailsClicked(notificationGroupId : any) {
+  onEditGroupDetailsClicked(notificationGroup : any) {
+    this.selectedSupportGroup = notificationGroup;
     this.isEditSupportGroup = true;
-    this.notificationGroupId = notificationGroupId;
+    this.notificationGroupId = notificationGroup.notificationGroupId;
     this.isGroupDetailPopup = true;
   }
 
@@ -281,6 +287,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   onCloseGroupDetailPopupClicked() {
     this.editButtonEmitted = false;
     this.isGroupDetailPopup = false;
+    this.isEditSupportGroup = false;
   }
   onOpenSupportGroupDeleteClicked(notificationGroupId: any) {
     this.isSupportGroupDeletePopupShow = true;
@@ -319,10 +326,37 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   }
 
   addSupportGroup(data: any): void {
-    this.systemInterfaceSupportFacade.addSupportGroup(data);
-    this.loadSupportGroupListGrid();
+    this.addSupportGroupEvent.emit(data);
+    this.addSupportGroup$.pipe(first((response: any ) => response != null))
+       .subscribe((response: any) =>
+       {
+         if(response ?? false)
+         {
+           this.loadSupportGroupListGrid()
+         }
+
+       })
+
+       this.onCloseGroupDetailPopupClicked();
   }
-  
+
+  editSupportGroup(data: any): void {
+    data["notificationGroupId"] = this.notificationGroupId;
+    this.editSupportGroupEvent.emit(data);
+    this.editSupportGroup$.pipe(first((response: any ) => response != null))
+       .subscribe((response: any) =>
+       {
+         if(response ?? false)
+         {
+           this.loadSupportGroupListGrid()
+           this.cdr.detectChanges();
+         }
+
+       })
+
+       this.onCloseGroupDetailPopupClicked();
+  }
+
   handleSupportGroupDeactive(isDeactivate:any)
   {
      if(isDeactivate)

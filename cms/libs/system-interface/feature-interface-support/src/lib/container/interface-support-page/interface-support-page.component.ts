@@ -27,6 +27,8 @@ export class InterfaceSupportPageComponent {
   sortNotificationCategoryList = this.systemInterfaceSupportFacade.sortNotificationCategoryList;
 
   supportGroup$ = this.systemInterfaceSupportFacade.supportGroup$;
+  addSupportGroup$ = this.systemInterfaceSupportFacade.addSupportGroup$;
+  editSupportGroup$ = this.systemInterfaceSupportFacade.editSupportGroup$;
   distributionLists$ = this.systemInterfaceSupportFacade.distributionLists$;
   notificationCategoryLists$ = this.systemInterfaceSupportFacade.notificationCategoryLists$;
   supportGroupReactivate$ = this.systemInterfaceSupportFacade.supportGroupReactivate$;
@@ -50,6 +52,9 @@ export class InterfaceSupportPageComponent {
 
   handleAddSuppportGroup(event: any){
     this.systemInterfaceSupportFacade.addSupportGroup(event);
+  }
+  handleEditSupportGroup(event: any){
+      this.systemInterfaceSupportFacade.editSupportGroup(event);
   }
 
   handleDeactivate(event: any){
