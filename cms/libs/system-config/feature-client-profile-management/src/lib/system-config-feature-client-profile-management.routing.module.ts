@@ -13,7 +13,7 @@ const routes: Routes = [
     component: DirectMessagePageComponent,
   },
   {
-    path: 'language',
+    path: 'languages',
     component: LanguagePageComponent,
   },
   {
