@@ -55,6 +55,8 @@ export class TodoListComponent implements OnInit {
   columns:any;
   filter!: any;
   @Input() loadAlertGrid$ : any;
+  @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
+  @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
   public moreactions = [
     {
       buttonType: 'btn-h-primary',
@@ -80,8 +82,7 @@ export class TodoListComponent implements OnInit {
   constructor( 
     private dialogService: DialogService,
     private configurationProvider: ConfigurationProvider,
-    private readonly router: Router,
-    public todoFacade: TodoFacade,
+    private readonly router: Router
   ) {}
 
   /** Lifecycle hooks **/
@@ -162,7 +163,7 @@ export class TodoListComponent implements OnInit {
     if (result) {
       this.isToDODeleteActionOpen = false;
       this.deleteToDoDialog.close();
-      await this.todoFacade.deleteAlert(this.selectedAlertId);
+      this.onDeleteAlertGridClicked.emit(this.selectedAlertId);
     }
   }
   public get alertFrequencyTypes(): typeof AlertFrequencyTypeCode {
@@ -209,9 +210,11 @@ export class TodoListComponent implements OnInit {
   }
   async onToDoActionClicked(item: any,gridItem: any){ 
     if(item.id == 'done'){
-       this.onDoneTodoItem(gridItem.alertId);
+      this.selectedAlertId = gridItem.alertId;
+       this.onDoneTodoItem();
     }else if(item.id == 'edit'){ 
       if (!this.isToDODetailsActionOpen) {
+        this.selectedAlertId = gridItem.alertId;
           this.onOpenTodoDetailsClicked();
         }
     }
@@ -223,8 +226,8 @@ export class TodoListComponent implements OnInit {
         }
     }
   }
-  onDoneTodoItem(payload:any){
-    return this.todoFacade.markAlertAsDone(payload);
+  onDoneTodoItem(){
+    this.onMarkAlertAsDoneGridClicked.emit(this.selectedAlertId);
   }
   public get claimTypes(): typeof FinancialServiceTypeCode {
     return FinancialServiceTypeCode;

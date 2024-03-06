@@ -32,6 +32,8 @@
   [isToDODetailsActionOpen]="isToDODetailsActionOpen"
   [todoGrid$]="todoGrid$"
   [loadAlertGrid$]="loadAlertGrid$"
+  (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
+  (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
   ></productivity-tools-todo-list>
 </section>
 

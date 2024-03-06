@@ -64,6 +64,12 @@ export class TodoPageComponent implements OnInit {
   onloadTodoGrid(event: any, alertTypeCode:any){
     this.todoFacade.loadAlerts(event,alertTypeCode.alertType);
   }
+  onMarkAlertDoneGrid(selectedAlertId: any){
+    this.todoFacade.markAlertAsDone(selectedAlertId);
+  }
+  onDeleteAlertGrid(selectedAlertId: any){
+    this.todoFacade.deleteAlert(selectedAlertId);
+  }
 
   onTodoItemCreateClick(payload:any){
     this.todoFacade.createTodoItem(payload);
