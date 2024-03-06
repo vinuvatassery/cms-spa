@@ -1,4 +1,4 @@
-<div class="interface-chart-cards">
+<div class="interface-chart-cards"   >
     <h3 class="mb-1">Prescription Fill Loading</h3>
     <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel>
 
@@ -14,13 +14,16 @@
         <h5> File Record Failures: </h5>
         <h3>{{prescriptionsFills.totalRecordExceptions}}</h3>
 
-        <div class="mt-2"> <button kendoButton aria-label="View Details" [primary]="true" look="flat"> View Details
+        <div class="mt-2"> <button kendoButton aria-label="View Details" [primary]="true" look="flat"[routerLink]="['batch-interface-logs']"> View Details
           </button></div>
       </div>
       <div class="flex-col flex-col-4">
 
-        <span class="material-icons green-text-color status_icon" aria-hidden="true">
+        <span class="material-icons green-text-color status_icon" aria-hidden="true" *ngIf="prescriptionsFills.totalRecordExceptions==0">
           check_circle_outline
+        </span>
+        <span class="material-icons warn-text-color status_icon" aria-hidden="true" *ngIf="prescriptionsFills.totalRecordExceptions!=0">
+          warning_amber
         </span>
       </div>
     </div>
