@@ -72,6 +72,7 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
     this.data$.subscribe({
       next: (res) => {
         if (res) {
+          
           this.snackbarMessage = res;
           this.notificationService.show({
             content: this.alertTemplate,

@@ -131,20 +131,20 @@ export class SystemInterfaceDashboardFacade {
   }
 
   getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string, params: any) {
- 
+
     return this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode, params);
-    
+
   }
 
-  getStatusArray():string[]{
+  getStatusArray(): string[]{
     return Object.values(SystemInterfaceActivityStatusCode)
   }
 
-  getStatusDescriptionArray():string[]{
+  getStatusDescriptionArray(): string[]{
     return Object.values(SystemInterfaceActivityStatusCodeDescription)
   }
 
-  getEecProcessTypeCodeArray():string[]{
+  getEecProcessTypeCodeArray(): string[]{
     return Object.values(SystemInterfaceEecProcessTypeCode)
   }
 
@@ -167,6 +167,44 @@ export class SystemInterfaceDashboardFacade {
         },
       });
   }
+
+  getDocumentDownload(fileId: string) {
+    return this.systemInterfaceDashboardService.getDocumentDownload(fileId).subscribe({
+      next: (dataResponse: any) => {
+
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });;
+  }
   // ----------------------------------
+
+  getClientDocumentsViewDownload(clientDocumentId: string) {
+    return this.service.getDocumentDownload(clientDocumentId);
+  }
+
+  viewOrDownloadFile(documentId: string, documentName: string) {
+    if (documentId === undefined || documentId === '') {
+      return;
+    }
+    this.loaderService.show()
+    this.getClientDocumentsViewDownload(documentId).subscribe({
+      next: (data: any) => {
+
+        const fileUrl = window.URL.createObjectURL(data);
+        window.open(fileUrl, "_blank");
+        const downloadLink = document.createElement('a');
+        downloadLink.href = fileUrl;
+        downloadLink.download = documentName;
+        downloadLink.click();
+        this.loaderService.hide();
+      },
+      error: (error: any) => {
+        this.loaderService.hide();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+      }
+    })
+  }
 
 }

@@ -249,4 +249,12 @@ export class SystemInterfaceDashboardService {
   getClientSendCardsinfo(days: number, isCardRequest: boolean) {
     return this.http.get(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/Dashboard/ramsell-clientrecords-sent?days=${days}'&isCardRequest=${isCardRequest}`);
   }
+
+  getDocumentDownload(clientDocumentId: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/${clientDocumentId}/content`
+      , {
+        responseType: 'blob'
+      });
+  }
 }

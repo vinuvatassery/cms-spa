@@ -76,6 +76,15 @@ const routes: Routes = [
       ),
     canLoad: [AutoLoginAllRoutesGuard],
   },
+  {
+    outlet: 'notifications',
+    path: '',
+    loadChildren: () =>
+      import('@cms/productivity-tools/feature-notification-snackbar').then(
+        (m) => m.ProductivityToolsFeatureNotificationSnackbarModule
+      ),
+    canLoad: [AutoLoginAllRoutesGuard],
+  },
   {   
    
     path: 'forbidden' , component : ForbiddenComponent 
