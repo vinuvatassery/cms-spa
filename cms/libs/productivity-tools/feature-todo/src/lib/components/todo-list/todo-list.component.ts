@@ -121,13 +121,12 @@ export class TodoListComponent implements OnInit {
     sortTypeValue: string, alertType:string){
       this.isToDoGridLoaderShow.next(true);
       const gridDataRefinerValue = {
-        SkipCount: skipCountValue,
-        MaxResultCount: maxResultCountValue,
-        Sorting: sortValue,
-        SortType: sortTypeValue,
-        Filter: "[]",
-      };
-
+        skipCount: skipCountValue,
+        maxResultCount: maxResultCountValue,
+        sorting: sortValue,
+        sortType: sortTypeValue,
+        filter: "[]",
+      }; 
         this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
         this.todoGrid$.subscribe((data: any) => {
           this.gridDataResult = data?.items;

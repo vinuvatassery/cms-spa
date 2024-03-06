@@ -1,6 +1,8 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { GridFilterParam } from '@cms/case-management/domain';
+
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
@@ -41,7 +43,7 @@ export class TodoDataService {
   }
 
   loadAlerts(payload:any, alertTypeCode:any) {
-    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/list/${alertTypeCode}`,payload);
+    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/list/${alertTypeCode}`,payload.gridDataRefinerValue);
   }
 
   createTodoItem(payload:any){  
