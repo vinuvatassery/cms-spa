@@ -21,7 +21,7 @@ import { Subject, first } from 'rxjs';
 @Component({
   selector: 'system-interface-support-group',
   templateUrl: './support-group.component.html',
-  //changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SupportGroupComponent implements OnInit, OnChanges {
   isGroupDetailPopup = false;
@@ -29,10 +29,11 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   isSupportGroupDeactivatePopupShow = false;
   isSupportGroupDeletePopupShow = false;
   isSupportGroupDeleteConfirmationPopupShow = false;
+  isSupportGroupGridLoaderShow = false;
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isSupportGroupGridLoaderShow = false;
+
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -43,45 +44,47 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() supportGroupReactivate$: any;
   @Input() supportGroupRemove$: any;
   @Output() loadSupportGroupListEvent = new EventEmitter<any>();
-  @Output() deactivateConfimEvent =  new EventEmitter<string>();
-  @Output() reactivateConfimEvent =  new EventEmitter<string>();
-  @Output() deleteConfimedEvent =  new EventEmitter<string>();
-  @Output() addSupportGroupEvent =  new EventEmitter<string>();
-  @Output() editSupportGroupEvent =  new EventEmitter<string>();
+  @Output() deactivateConfimEvent = new EventEmitter<string>();
+  @Output() reactivateConfimEvent = new EventEmitter<string>();
+  @Output() deleteConfimedEvent = new EventEmitter<string>();
+  @Output() addSupportGroupEvent = new EventEmitter<string>();
+  @Output() editSupportGroupEvent = new EventEmitter<string>();
   public state!: State;
   sortColumn = 'groupName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
+  searchText = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn: any ='ALL'
   gridDataResult!: GridDataResult;
-  deactivateButtonEmitted =false;
-  reactivateButtonEmitted =false;
-  deleteButtonEmitted =false;
-  notificationGroupId! :any;
+  deactivateButtonEmitted = false;
+  reactivateButtonEmitted = false;
+  deleteButtonEmitted = false;
+  notificationGroupId!: any;
   deactivebuttonEmitted = false;
   reletebuttonEmitted = false;
   isEditSupportGroup = false;
-  editButtonEmitted =false;
-  selectedSupportGroup!:any;
+  editButtonEmitted = false;
+  selectedSupportGroup!: any;
+  selectedSearchColumn = 'ALL';
 
   gridSupportGroupDataSubject = new Subject<any>();
+  private searchSubject = new Subject<string>();
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  searchColumnList: { columnName: string, columnDesc: string }[] = [
-    {
-      columnName: 'ALL',
-      columnDesc: 'All Columns'
-    },
-    {
-      columnName: "groupName",
-      columnDesc: "Group Name"
-    },
-  ]
+  columns: any = {
+    ALL: 'All Columns',
+    groupCode: 'Interface',
+    groupName: 'Group Name'
+  };
+  searchColumnList = [
+    { columnName: 'ALL', columnDesc: 'All Columns' },
+    { columnName: 'groupCode', columnDesc: 'Interface' },
+    { columnName: 'groupName', columnDesc: 'Group Name' }
+  ];
 
   public gridMoreActionsSupport = [
     {
@@ -137,10 +140,9 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
     private dialogService: DialogService,
     private readonly lovFacade: LovFacade
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.loadSupportGroupListGrid();
@@ -157,41 +159,34 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   }
 
   private loadSupportGroupListGrid(): void {
-    this.loadSupportGroup(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
+    this.loadSupportGroup(this.state?.skip ?? 0, this.state?.take ?? 0, this.sortValue, this.sortType);
   }
-  loadSupportGroup(
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string
-  ) {
+  loadSupportGroup(skipCountValue: number, maxResultCountValue: number, sortValue: string, sortTypeValue: string) {
     this.isSupportGroupGridLoaderShow = true;
+    debugger;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       maxResultCount: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
-      filter: this.filter
+      filter: JSON.stringify(this.filter)
     };
+    debugger;
     this.loadSupportGroupListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
 
   onChange(data: any) {
     this.defaultGridState();
+    let operator = 'contains';
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'groupName',
-              operator: 'startswith',
+              field: this.selectedSearchColumn ?? 'groupName',
+              operator: operator,
               value: data,
             },
           ],
@@ -201,6 +196,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     };
     const stateData = this.state;
     stateData.filter = this.filterData;
+    debugger;
     this.dataStateChange(stateData);
   }
 
@@ -223,7 +219,15 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+    this.filter = stateData?.filter?.filters;
+    const filterList = [];
+    if(stateData.filter?.filters.length > 0){
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+    }
+    this.filteredBy = filterList.toString();
     this.loadSupportGroupListGrid();
   }
 
@@ -237,32 +241,34 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-
+  searchColumnChangeHandler(value: string) { 
+    this.filter = [];
+    if (this.searchText) {
+      this.onSearch(this.searchText);
+    }
+  }
+  onSearch(searchValue: any) {
+    this.onChange(searchValue);
+    //this.searchSubject.next(searchValue);
+  }
   gridDataHandle() {
     this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      // this.gridDataResult.data = filterBy(
-      //   this.gridDataResult.data,
-      //   this.filterData
-      // );
       this.gridSupportGroupDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isSupportGroupGridLoaderShow = false;
       }
     });
-    this.gridSupportGroupData$
-      .subscribe((data)=>{console.log(data)});
-    
+    //this.gridSupportGroupData$.subscribe((data) => { console.log(data) });
     this.isSupportGroupGridLoaderShow = false;
   }
 
-  onEditGroupDetailsClicked(notificationGroup : any) {
+  onEditGroupDetailsClicked(notificationGroup: any) {
     this.selectedSupportGroup = notificationGroup;
     this.isEditSupportGroup = true;
     this.notificationGroupId = notificationGroup.notificationGroupId;
     this.isGroupDetailPopup = true;
   }
-
   onGroupDetailsClicked() {
     this.isEditSupportGroup = false;
     this.isGroupDetailPopup = true;
@@ -272,131 +278,110 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.isGroupDetailPopup = false;
     this.isEditSupportGroup = false;
   }
-  onOpenSupportGroupDeleteClicked(notificationGroupId : any){
+  onOpenSupportGroupDeleteClicked(notificationGroupId: any) {
     this.isSupportGroupDeletePopupShow = true;
     this.notificationGroupId = notificationGroupId;
   }
-  onCloseSupportGroupDeleteClicked(){
-    this.deleteButtonEmitted= false;
+  onCloseSupportGroupDeleteClicked() {
+    this.deleteButtonEmitted = false;
     this.isSupportGroupDeletePopupShow = false;
- 
+
   }
-  onOpenSupportGroupDeactivateClicked(notificationGroupId : any){
+  onOpenSupportGroupDeactivateClicked(notificationGroupId: any) {
     this.isSupportGroupDeactivatePopupShow = true;
     this.notificationGroupId = notificationGroupId;
   }
-  onCloseSupportGroupDeactivateClicked(){
+  onCloseSupportGroupDeactivateClicked() {
 
-    this.deactivateButtonEmitted=false;
+    this.deactivateButtonEmitted = false;
     this.isSupportGroupDeactivatePopupShow = false;
-    
+
   }
-  onOpenSupportGroupReactivateClicked(notificationGroupId : any){
+  onOpenSupportGroupReactivateClicked(notificationGroupId: any) {
     this.isSupportGroupReactivatePopupShow = true;
     this.notificationGroupId = notificationGroupId;
   }
-  onCloseSupportGroupReactivateClicked(){
-    this.reactivateButtonEmitted=false;
+  onCloseSupportGroupReactivateClicked() {
+    this.reactivateButtonEmitted = false;
     this.isSupportGroupReactivatePopupShow = false;
   }
-  onOpenSupportGroupDeleteConfirmationClicked(){
+  onOpenSupportGroupDeleteConfirmationClicked() {
     this.isSupportGroupDeleteConfirmationPopupShow = true;
 
   }
-  onCloseSupportGroupDeleteConfirmationClicked(){
+  onCloseSupportGroupDeleteConfirmationClicked() {
     this.isSupportGroupDeleteConfirmationPopupShow = false;
 
   }
-
   addSupportGroup(data: any): void {
     this.addSupportGroupEvent.emit(data);
-    this.addSupportGroup$.pipe(first((response: any ) => response != null))
-       .subscribe((response: any) =>
-       {
-         if(response ?? false)
-         {
-           this.loadSupportGroupListGrid()
-         }
+    this.addSupportGroup$.pipe(first((response: any) => response != null))
+      .subscribe((response: any) => {
+        if (response ?? false) {
+          this.loadSupportGroupListGrid()
+        }
 
-       })
+      })
 
-       this.onCloseGroupDetailPopupClicked();
+    this.onCloseGroupDetailPopupClicked();
   }
-
   editSupportGroup(data: any): void {
     data["notificationGroupId"] = this.notificationGroupId;
     this.editSupportGroupEvent.emit(data);
-    this.editSupportGroup$.pipe(first((response: any ) => response != null))
-       .subscribe((response: any) =>
-       {
-         if(response ?? false)
-         {
-           this.loadSupportGroupListGrid()
-           this.cdr.detectChanges();
-         }
+    this.editSupportGroup$.pipe(first((response: any) => response != null))
+      .subscribe((response: any) => {
+        if (response ?? false) {
+          this.loadSupportGroupListGrid()
+          this.cdr.detectChanges();
+        }
 
-       })
+      })
 
-       this.onCloseGroupDetailPopupClicked();
+    this.onCloseGroupDetailPopupClicked();
   }
+  handleSupportGroupDeactive(isDeactivate: any) {
+    if (isDeactivate) {
+      this.deactivateButtonEmitted = false;
+      this.deactivateConfimEvent.emit(this.notificationGroupId);
 
-  handleSupportGroupDeactive(isDeactivate:any)
-  {
-     if(isDeactivate)
-     {
-       this.deactivateButtonEmitted =false;
-       this.deactivateConfimEvent.emit(this.notificationGroupId);
+      this.supportGroupReactivate$.pipe(first((response: any) => response != null))
+        .subscribe((response: any) => {
+          if (response ?? false) {
+            this.loadSupportGroupListGrid()
+          }
 
-       this.supportGroupReactivate$.pipe(first((response: any ) => response != null))
-       .subscribe((response: any) =>
-       {
-         if(response ?? false)
-         {
-           this.loadSupportGroupListGrid()
-         }
-
-       })
-     }
-     this.onCloseSupportGroupDeactivateClicked()
+        })
+    }
+    this.onCloseSupportGroupDeactivateClicked()
   }
+  handleSupportGroupReactive(isReactivate: any) {
+    if (isReactivate) {
+      this.reactivateButtonEmitted = false;
+      this.reactivateConfimEvent.emit(this.notificationGroupId);
 
-  handleSupportGroupReactive(isReactivate:any)
-  {
-     if(isReactivate)
-     {
-       this.reactivateButtonEmitted =false;
-       this.reactivateConfimEvent.emit(this.notificationGroupId);
+      this.supportGroupReactivate$.pipe(first((response: any) => response != null))
+        .subscribe((response: any) => {
+          if (response ?? false) {
+            this.loadSupportGroupListGrid()
+          }
 
-       this.supportGroupReactivate$.pipe(first((response: any ) => response != null))
-       .subscribe((response: any) =>
-       {
-         if(response ?? false)
-         {
-           this.loadSupportGroupListGrid()
-         }
-
-       })
-     }
-     this.onCloseSupportGroupReactivateClicked()
+        })
+    }
+    this.onCloseSupportGroupReactivateClicked()
   }
+  handleSupportGroupDelete(isHardDelete: any) {
+    if (isHardDelete) {
+      this.deleteButtonEmitted = false;
+      this.deleteConfimedEvent.emit(this.notificationGroupId);
 
-  handleSupportGroupDelete(isHardDelete:any)
-  {
-     if(isHardDelete)
-     {
-       this.deleteButtonEmitted =false;
-       this.deleteConfimedEvent.emit(this.notificationGroupId);
+      this.supportGroupRemove$.pipe(first((response: any) => response != null))
+        .subscribe((response: any) => {
+          if (response ?? false) {
+            this.loadSupportGroupListGrid()
+          }
 
-       this.supportGroupRemove$.pipe(first((response: any ) => response != null))
-       .subscribe((response: any) =>
-       {
-         if(response ?? false)
-         {
-           this.loadSupportGroupListGrid()
-         }
-
-       })
-     }
-     this.onCloseSupportGroupDeleteClicked()
+        })
+    }
+    this.onCloseSupportGroupDeleteClicked()
   }
 }

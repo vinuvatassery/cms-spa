@@ -62,7 +62,7 @@ export class SystemInterfaceSupportFacade {
     private configurationProvider: ConfigurationProvider,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
-    public intl: IntlService, private service: SystemInterfaceSupportService) { }
+    public intl: IntlService) { }
 
   /** Public methods **/
   showLoader() {
@@ -77,7 +77,7 @@ export class SystemInterfaceSupportFacade {
 
   loadSupportGroup(paginationParameters: any) {
     this.showLoader();
-    this.service.getSupportGroupList(paginationParameters).subscribe({
+    this.systemInterfaceSupportService.getSupportGroupList(paginationParameters).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
           data: dataResponse['items'],
