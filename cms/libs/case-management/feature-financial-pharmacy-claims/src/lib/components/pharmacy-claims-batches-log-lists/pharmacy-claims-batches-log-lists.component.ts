@@ -240,8 +240,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     clientId: 'Client ID',
     paymentMethodCode: 'Payment Method',
     paymentMethodDesc: 'Payment Method',
-    paymentTypeCode: 'Payment Type',
-    paymentTypeDesc: 'Payment Type',
     creationTime : 'Entry Date',
     paymentStatusCode: 'Payment Status',
     paymentStatusDesc: 'Payment Status',
@@ -295,10 +293,6 @@ export class PharmacyClaimsBatchesLogListsComponent implements OnInit, OnChanges
     {
       columnCode: 'paymentMethodCode',
       columnDesc: 'Payment Method',
-    },
-    {
-      columnCode: 'paymentTypeCode',
-      columnDesc: 'Payment Type',
     },
     {
       columnCode: 'creationTime',

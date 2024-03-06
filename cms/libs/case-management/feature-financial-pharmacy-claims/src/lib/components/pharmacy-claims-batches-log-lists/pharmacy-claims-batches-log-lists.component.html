@@ -132,17 +132,6 @@
                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
              </kendo-grid-numeric-filter-menu>
          </ng-template> </kendo-grid-column>
-        <kendo-grid-column field="paymentTypeDesc" title="Payment Type" [width]="140">
-          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-            <kendo-dropdownlist
-            [data]="paymentTypes"
-            [value]="paymentTypeFilter"
-            textField="lovDesc"
-            valueField="lovCode"
-            (valueChange)="dropdownFilterChange('paymentTypeDesc',$event, filterService)">
-            </kendo-dropdownlist>
-       </ng-template>
-            </kendo-grid-column>
         <kendo-grid-column field="amountPaid" title="Amount Paid" [width]="140">  <ng-template kendoGridCellTemplate
           let-dataItem>
           <span class="tableamountview"> <strong>$</strong> {{dataItem.amountPaid | kendoNumber: 'n2'}}</span>
