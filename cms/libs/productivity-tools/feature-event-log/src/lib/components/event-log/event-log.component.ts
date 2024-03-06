@@ -107,7 +107,7 @@ export class EventLogComponent implements OnInit {
 
   /** Private methods **/
   private loadEvents(): void {
-    this.createFilterData(this.entityId);
+    this.filterData = [];
     const paginationData = {
       skipCount: 0,
       pagesize: 10,
@@ -116,10 +116,6 @@ export class EventLogComponent implements OnInit {
       filter: JSON.stringify(this.filterData),
     };
     this.eventLogFacade.loadEvents(paginationData,this.entityId);
-  }
-
-  createFilterData(data: string) {
-    this.filterData = [];
   }
 
   private subscribeEvents() {
