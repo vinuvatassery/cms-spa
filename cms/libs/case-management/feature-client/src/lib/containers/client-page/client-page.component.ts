@@ -5,8 +5,9 @@ import {
   OnDestroy,
   Component,
   ChangeDetectionStrategy,
+  ElementRef,
 } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 /** External libraries **/
 import {
@@ -48,6 +49,7 @@ import {
   SnackBarNotificationType,
   ConfigurationProvider,
 } from '@cms/shared/util-core';
+import { ScrollFocusValidationfacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'case-management-client-page',
@@ -77,6 +79,7 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   isCerForm = false;
   prevClientCaseEligibilityId!: string;
+  nform!: FormGroup;
   /** Constructor **/
   constructor(
     private workFlowFacade: WorkflowFacade,
@@ -88,6 +91,8 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private router: Router,
     private intl: IntlService,
     private configurationProvider: ConfigurationProvider,
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade,
+    private elementRef: ElementRef
   ) {}
 
   /** Lifecycle hooks **/
@@ -365,6 +370,12 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }
     } else {
       this.loaderService.hide();
+      const frmControls = this.reorderControls(this.getFormOrder());
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(frmControls, this.elementRef.nativeElement,null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
+      }
       return of(false);
     }
   }
@@ -1628,4 +1639,106 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.appInfoForm.controls[key].updateValueAndValidity();
     }
   }
+
+  private reorderControls(controlOrder: string[]) {
+    const controlsCopy: { [key: string]: any } = {}; // Provide an index signature
+    controlOrder.forEach((controlName, index) => {
+      controlsCopy[controlName] = this.appInfoForm.controls[controlName];
+    });
+    return new FormGroup(controlsCopy);
+  }
+
+  public getFormOrder() {
+    return ([
+      "firstName",
+      "middleName",
+      "lastName",
+      "chkmiddleName",
+      "prmInsFirstName",
+      "prmInsMiddleName",
+      "prmInsLastName",
+      "prmInsNotApplicable",
+      "chkPrmInsMiddleName",
+      "officialIdFirstName",
+      "officialIdMiddleName",
+      "officialIdLastName",
+      "chkOfficialIdMiddleName",
+      "officialIdsNotApplicable",
+      "dateOfBirth",
+      "ssn",
+      "ssnNotApplicable",
+      "registerToVote",
+      "pronoun",
+      "pronouns",
+      "pronoun_SHE_HER_HERS",
+      "pronoun_HE_HIM_HIS",
+      "pronoun_THEY_THEM_THEIRS",
+      "pronoun_ELLA",
+      "pronoun_EL",
+      "pronoun_ELLES",
+      "pronoun_NO_PRONOUN",
+      "pronoun_NOT_LISTED",
+      "pronoun_DONT_KNOW",
+      "pronoun_DONT_WANT",
+      "GenderGroup",
+      "gender_WOMAN_OR_GIRL",
+      "gender_MAN_OR_BOY",
+      "gender_AGENDER_OR_NO_GENDER",
+      "gender_FEMININE_LEARNING",
+      "gender_MASCULINE_LEARNING",
+      "gender_NON_BINARY",
+      "gender_QUESTIONING",
+      "gender_NOT_LISTED",
+      "gender_DONT_KNOW",
+      "gender_DONT_KNOW_ANSWER",
+      "gender_DONT_KNOW_QUESTION",
+      "genderDescription",
+      "Transgender",
+      "TransgenderDescription",
+      "yesTransgender",
+      "SexualIdentityDescription",
+      "SexualIdentityGroup",
+      "sexualIdentity_ASEXUAL",
+      "sexualIdentity_BISEXUAL",
+      "sexualIdentity_DONT_KNOW",
+      "sexualIdentity_DONT_KNOW_QUESTION",
+      "sexualIdentity_DONT_WANT",
+      "sexualIdentity_GAY",
+      "sexualIdentity_LESBIAN",
+      "sexualIdentity_NOT_LISTED",
+      "sexualIdentity_PANSEXUAL",
+      "sexualIdentity_QUEER",
+      "sexualIdentity_QUESTIONING",
+      "sexualIdentity_SAME_GENDER_LOVING",
+      "sexualIdentity_STRAIGHT",
+      "BirthGender",
+      "BirthGenderDescription",
+      "Ethnicity",
+      "RaceAndEthnicity",
+      "RaceAndEthnicityNotListed",
+      "RaceAndEthnicityPrimary",
+      "materialInAlternateFormatCode",
+      "materialInAlternateFormatDesc",
+      "materialInAlternateFormatOther",
+      "spokenLanguage",
+      "englishProficiency",
+      "writtenLanguage",
+      "interpreterCode",
+      "interpreterType",
+      "deafOrHearingCode",
+      "startAgeDeafOrHearing",
+      "startAgeBlindSeeing",
+      "blindSeeingCode",
+      "limitingConditionCode",
+      "startAgeWalkingClimbingDifficulty",
+      "walkingClimbingDifficultyCode",
+      "startAgeDressingBathingDifficulty",
+      "dressingBathingDifficultyCode",
+      "concentratingDifficultyCode",
+      "startAgeConcentratingDifficulty",
+      "startAgeErrandsDifficulty",
+      "errandsDifficultyCode",
+    ]);
+  }
+
 }

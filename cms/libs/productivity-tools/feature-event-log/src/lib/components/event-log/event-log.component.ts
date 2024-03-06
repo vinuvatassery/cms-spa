@@ -107,7 +107,7 @@ export class EventLogComponent implements OnInit {
 
   /** Private methods **/
   private loadEvents(): void {
-    this.createFilterData(this.entityId);
+    this.filterData = [];
     const paginationData = {
       skipCount: 0,
       pagesize: 10,
@@ -115,16 +115,7 @@ export class EventLogComponent implements OnInit {
       sortType: 'desc',
       filter: JSON.stringify(this.filterData),
     };
-    this.eventLogFacade.loadEvents(paginationData);
-  }
-
-  createFilterData(data: string) {
-    this.filterData = [
-      {
-        filters: [{ field: 'entityId', operator: 'eq', value: data }],
-        logic: 'and',
-      },
-    ];
+    this.eventLogFacade.loadEvents(paginationData,this.entityId);
   }
 
   private subscribeEvents() {
@@ -277,19 +268,6 @@ export class EventLogComponent implements OnInit {
       };
       this.filterDataQueryArray.push(object);
     }
-
-    let object ={
-      filters: [
-        {
-          field: "entityId",
-          operator: "eq",
-          value: this.entityId,
-        }
-      ],
-      logic: 'and',
-    };
-    this.filterDataQueryArray.push(object);
-
     this.setFilterOfCaseWorkerAndEventType("createdBy","caseworkerfilterbyoperator","caseworkerfilterbyvalue");
     this.setFilterOfCaseWorkerAndEventType("eventLogDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
     this.setDateFilters("creationTime");
@@ -312,7 +290,7 @@ export class EventLogComponent implements OnInit {
       filter: JSON.stringify(this.filterData.filters ?? [])
     };
     console.log(gridDataRefinerValue);
-    this.eventLogFacade.loadEvents(gridDataRefinerValue);
+    this.eventLogFacade.loadEvents(gridDataRefinerValue, this.entityId);
   }
 
   sortByMethod(event:any)
@@ -385,4 +363,24 @@ export class EventLogComponent implements OnInit {
     };
     this.filterDataQueryArray.push(object);
   }
+
+
+  private setFilterOfAfterAndBeforeDate(field:string, operator:string, value:string,)
+  {
+    if(this.eventLogFilterForm.controls[value].value != "" && this.eventLogFilterForm.controls[value].value != null)
+    {
+      let object ={
+        filters: [
+          {
+            field: field,
+            operator: operator,
+            value: this.eventLogFilterForm.controls[value].value,
+          }
+        ],
+        logic: 'and',
+      };
+     this.filterDataQueryArray.push(object);
+    }
+  }
+
 }
