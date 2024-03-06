@@ -19,13 +19,15 @@ export class TodoFacade {
   private searchSubject = new Subject<any>();
   private todoGridSubject = new Subject<any>();
   private todoCreateSubject = new Subject<any>();
-
+  private loadAlertGridSubject = new Subject<any>();
   /** Public properties **/
   todo$ = this.todoSubject.asObservable();
   search$ = this.searchSubject.asObservable();
   todoGrid$ = this.todoGridSubject.asObservable();
   createTodo$ = this.todoCreateSubject.asObservable();
+  loadAlertGrid$ = this.loadAlertGridSubject.asObservable();
   signalrReminders$!: Observable<any>;
+
 
   /** Constructor **/
   constructor(
@@ -106,44 +108,39 @@ export class TodoFacade {
     })
   }
 
-  markAlertAsDone(alertId:any):any {
-      return new Promise((resolve,reject) =>{
+  markAlertAsDone(alertId:any):any { 
         this.loaderService.show()
         this.todoDataService.markAlertAsDone(alertId).subscribe({
           next: (todoGridResponse: any) => {
             this.loaderService.hide()
             this.todoCreateSubject.next(true);
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
-            resolve(true)
-            return  todoGridResponse.status;
+            this.loadAlertGridSubject.next(true);
           },
           error: (err) => {
             this.loaderService.hide()
             this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-            resolve(false)
+            
           },
         })
-      })
+      
   }
 
   deleteAlert(alertId:any):any {
-    return new Promise((resolve,reject) =>{
       this.loaderService.show()
       this.todoDataService.deleteAlert(alertId).subscribe({
         next: (todoGridResponse: any) => {
           this.loaderService.hide()
           this.todoCreateSubject.next(true);
           this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
-          resolve(true)
-          return  todoGridResponse.status;
+          this.loadAlertGridSubject.next(true);
         },
         error: (err) => {
           this.loaderService.hide()
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-          resolve(false)
         },
       })
-    })
+   
 }
 
   

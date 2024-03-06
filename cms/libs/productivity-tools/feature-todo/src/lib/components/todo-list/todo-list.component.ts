@@ -54,6 +54,7 @@ export class TodoListComponent implements OnInit {
   }];
   columns:any;
   filter!: any;
+  @Input() loadAlertGrid$ : any;
   public moreactions = [
     {
       buttonType: 'btn-h-primary',
@@ -92,6 +93,9 @@ export class TodoListComponent implements OnInit {
     };
     this.loadColumnsData();
     this.loadTodoGrid();
+    this.loadAlertGrid$.subscribe((data: any) => {
+      this.loadTodoGrid();
+    });
   }
   private loadColumnsData(){
     this.columns = {
@@ -158,9 +162,7 @@ export class TodoListComponent implements OnInit {
     if (result) {
       this.isToDODeleteActionOpen = false;
       this.deleteToDoDialog.close();
-      let res = await this.todoFacade.deleteAlert(this.selectedAlertId);
-      if(res==1)
-        this.loadTodoGrid();
+      await this.todoFacade.deleteAlert(this.selectedAlertId);
     }
   }
   public get alertFrequencyTypes(): typeof AlertFrequencyTypeCode {
@@ -207,9 +209,7 @@ export class TodoListComponent implements OnInit {
   }
   async onToDoActionClicked(item: any,gridItem: any){ 
     if(item.id == 'done'){
-      let res = await this.onDoneTodoItem(gridItem.alertId);
-      if(res==1)
-        this.loadTodoGrid();
+       this.onDoneTodoItem(gridItem.alertId);
     }else if(item.id == 'edit'){ 
       if (!this.isToDODetailsActionOpen) {
           this.onOpenTodoDetailsClicked();

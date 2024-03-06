@@ -22,6 +22,7 @@ export class TodoPageComponent implements OnInit {
   private todoDetailsDialog: any;
   @Output() isToDODetailsActionOpen!: boolean;
   todoGrid$ = this.todoFacade.todoGrid$;
+  loadAlertGrid$ = this.todoFacade.loadAlertGrid$;
   frequencyTypeCodeSubject$ = this.lovFacade.frequencyTypeCodeSubject$
   showHeaderSearchInputLoader = false;
   clientSearchResult$ = this.searchFacade.clientSearch$;
