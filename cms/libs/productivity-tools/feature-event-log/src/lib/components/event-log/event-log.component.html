@@ -38,11 +38,16 @@
           aria-hidden="true"
           >search</span
         >
-      </button>
-      <button kendoButton  kendoPopoverAnchor [popover]="eventFilterCard"
-        showOn="click" aria-label="More">
+      </button>     
+      <button id="eventFilterCardBtn" kendoButton (click)="anchor.toggle()">
         <span class="material-icons" aria-label="More option"> more_vert </span>
-      </button>
+      </button>      
+      <div
+          kendoPopoverAnchor [popover]="eventFilterCard"
+          showOn="none"
+          #anchor="kendoPopoverAnchor"
+          class="popoverAnchor"
+        >
       <kendo-popover #eventFilterCard [width]="300" position="bottom">
         <ng-template kendoPopoverBodyTemplate>
           <div class="event-filter-body">
@@ -96,7 +101,7 @@
               <button kendoButton [primary]="true" aria-label="Filter" (click)="onEventLogFilterFilterClicked()" [disabled]="!isEnableFilterBtn">
                 FILTER
               </button>&nbsp;&nbsp;
-              <button kendoButton [primary]="true" look="outline" aria-label="Clear" (click)="onEventLogFilterClearClicked()">
+              <button kendoButton [primary]="true" look="outline" aria-label="Clear" (click)="onEventLogFilterClearClicked()" [disabled]="!isEnableFilterBtn">
                 CLEAR
               </button>
             </div>            
@@ -104,6 +109,7 @@
         </div>
         </ng-template>
       </kendo-popover>
+      </div>
       <button kendoButton class="k-icon-button small-i-btn" aria-label="close" (click)="onCloseEventLogClicked()"
         title="close">
         <span class="material-icons" aria-label="close" aria-hidden="true">close</span>
@@ -169,7 +175,7 @@
         <!-- Event sub list items -->
       </li>
     </ul>
-    <div class="filter-footer-event">
+    <div class="filter-footer-event" *ngIf="filterBy.length > 0">
       <small>Filtered By: {{filterBy}} <a (click)="onEventLogFilterClearClicked()">Clear</a></small>
     </div>
   </div>

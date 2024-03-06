@@ -209,6 +209,11 @@ export class EventLogComponent implements OnInit {
     this.cd.detectChanges();
     this.filterData = { logic: 'and', filters: [] };
     this.loadEventLogs();
+    if(this.isShowFilter)
+    {
+      let element:HTMLElement = document.getElementById('eventFilterCardBtn') as HTMLElement;
+      element.click();
+    }
   }
 
   onEventLogFilterFilterClicked()
@@ -216,6 +221,8 @@ export class EventLogComponent implements OnInit {
     this.setFilteredText();  
     this.loadEventLogs();
     this.isShowFilter = false;
+    let element:HTMLElement = document.getElementById('eventFilterCardBtn') as HTMLElement;
+    element.click();
     this.cd.detectChanges();
   }
 
@@ -291,7 +298,7 @@ export class EventLogComponent implements OnInit {
     this.filterDataQueryArray.push(object);
     
     this.setFilterOfCaseWorkerAndEventType("createdBy","caseworkerfilterbyoperator","caseworkerfilterbyvalue");
-    this.setFilterOfCaseWorkerAndEventType("eventLogDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
+    this.setFilterOfCaseWorkerAndEventType("eventDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
     this.setDateFilters("creationTime");
     this.filterData = {logic:"and", filters: this.filterDataQueryArray};    
   }
@@ -319,6 +326,9 @@ export class EventLogComponent implements OnInit {
   {
     this.sortType = event;
     this.loadEventLogs();
+    let element:HTMLElement = document.getElementById('eventFilterCardBtn') as HTMLElement;
+    element.click();
+    this.cd.detectChanges();
   }
 
   
@@ -384,5 +394,5 @@ export class EventLogComponent implements OnInit {
       logic: 'and',
     };
     this.filterDataQueryArray.push(object);
-  }
+  }  
 }
