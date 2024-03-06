@@ -208,6 +208,196 @@ export class EventLogComponent implements OnInit {
     this.isEnableFilterBtn = false;
     this.cd.detectChanges();
     this.filterData = { logic: 'and', filters: [] };
+    this.loadEventLogs();
+  }
+
+  onEventLogFilterFilterClicked()
+  {
+    this.setFilteredText();  
+    this.loadEventLogs();
+    this.isShowFilter = false;
+    this.cd.detectChanges();
+  }
+
+  private setFilteredText()
+  {
+    var text="";
+    if(this.eventLogFilterForm.controls["caseworkerfilterbyvalue"].value != "" && this.eventLogFilterForm.controls["caseworkerfilterbyvalue"].value != null)
+    {
+      text += " Case Worker,";
+    }
+    if(this.eventLogFilterForm.controls["eventtypefilterbyvalue"].value != "" && this.eventLogFilterForm.controls["eventtypefilterbyvalue"].value != null)
+    {
+      text += " Event Type,";
+    }
+    if((this.eventLogFilterForm.controls["afterdatefilter"].value != "" && this.eventLogFilterForm.controls["afterdatefilter"].value != null) ||
+    (this.eventLogFilterForm.controls["beforedatefilter"].value != "" && this.eventLogFilterForm.controls["beforedatefilter"].value != null))
+    {
+      text += " Date,";
+    }
+    if(text.length > 0)
+    {
+      this.filterBy = text.substring(0,text.length -1);
+    }    
+  }
+
+  private setFilterOfCaseWorkerAndEventType(field:string, operator:string, value:string,)
+  {
+    if(this.eventLogFilterForm.controls[operator].value != "" && this.eventLogFilterForm.controls[operator].value != null)
+    {
+      let object ={
+        filters: [
+          {
+            field: field,
+            operator: this.eventLogFilterForm.controls[operator].value.toString(),
+            value: this.eventLogFilterForm.controls[value].value.toString(),
+          }
+        ],
+        logic: 'and',
+      };
+     this.filterDataQueryArray.push(object);
+    }
+  }
+
+  private setFiltersForDataQuery()
+  {
+    
+    this.filterDataQueryArray = [];
+
+    if (this.searchText.length > 0 && this.isShownSearch) {
+      let object = {
+        filters: [
+          {
+            field: "ALL",
+            operator: "contains",
+            value: this.searchText,
+          }
+        ],
+        logic: 'and',
+      };
+      this.filterDataQueryArray.push(object);
+    }
+
+    let object ={
+      filters: [
+        {
+          field: "entityId",
+          operator: "eq",
+          value: this.entityId,
+        }
+      ],
+      logic: 'and',
+    };
+    this.filterDataQueryArray.push(object);
+    
+    this.setFilterOfCaseWorkerAndEventType("createdBy","caseworkerfilterbyoperator","caseworkerfilterbyvalue");
+    this.setFilterOfCaseWorkerAndEventType("eventLogDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
+    this.setDateFilters("creationTime");
+    this.filterData = {logic:"and", filters: this.filterDataQueryArray};    
+  }
+
+  loadLogEvent() {
+    this.loadEventLogs();
+    this.subscribeEvents();
+  }
+
+  loadEventLogs()
+  {
+    this.setFiltersForDataQuery();
+    const gridDataRefinerValue = {
+      skipCount: 0,
+      pagesize: 10,
+      sort: this.sortColumnName,
+      sortType: this.sortType ?? 'asc',
+      filter: JSON.stringify(this.filterData.filters ?? [])  
+    };
+    console.log(gridDataRefinerValue);
+    this.eventLogFacade.loadEvents(gridDataRefinerValue);
+  }
+
+  sortByMethod(event:any)
+  {
+    this.sortType = event;
+    this.loadEventLogs();
+  }
+
+  
+  onChange(field:any)
+  {
+    if(field==='AFTERDATE')
+    {
+      this.eventLogFilterForm.controls["beforedatefilter"].setValue('');
+    }
+    this.isEnableFilterBtn = this.enableDisableFilterButton();
+  }
+
+  enableDisableFilterButton()
+  {
+    if(this.eventLogFilterForm.controls["caseworkerfilterbyvalue"].value != "" && this.eventLogFilterForm.controls["caseworkerfilterbyvalue"].value != null)
+    {
+      return true;
+    }
+    if(this.eventLogFilterForm.controls["eventtypefilterbyvalue"].value != "" && this.eventLogFilterForm.controls["eventtypefilterbyvalue"].value != null)
+    {
+      return true;
+    }
+    if(this.eventLogFilterForm.controls["afterdatefilter"].value != ""  && this.eventLogFilterForm.controls["afterdatefilter"].value != null)
+    {
+      return true;
+    }
+    if(this.eventLogFilterForm.controls["beforedatefilter"].value != "" && this.eventLogFilterForm.controls["beforedatefilter"].value != null)
+    {
+      return true;
+    }
+    return false;
+  }
+
+  
+  private setDateFilters(field:string)
+  {
+    var filterArray=[];
+    if(this.eventLogFilterForm.controls["afterdatefilter"].value != "" && this.eventLogFilterForm.controls["afterdatefilter"].value != null)
+    {
+      filterArray.push(
+        {
+          field: field,
+          operator: "gte",
+          value: this.eventLogFilterForm.controls["afterdatefilter"].value
+        }
+      )
+    }
+    if(this.eventLogFilterForm.controls["beforedatefilter"].value != "" && this.eventLogFilterForm.controls["beforedatefilter"].value != null)
+    {
+      filterArray.push(
+        {
+          field: field,
+          operator: "lte",
+          value: this.eventLogFilterForm.controls["beforedatefilter"].value
+        }
+      )
+    }
+    
+    let object ={
+      filters: 
+        filterArray
+      ,
+      logic: 'and',
+    };
+    this.filterDataQueryArray.push(object);
+  }
+
+  onEventLogFilterClearClicked()
+  {
+    this.eventLogFilterForm.controls["caseworkerfilterbyoperator"].setValue('');
+    this.eventLogFilterForm.controls["caseworkerfilterbyvalue"].setValue('');
+    this.eventLogFilterForm.controls["eventtypefilterbyoperator"].setValue('');
+    this.eventLogFilterForm.controls["eventtypefilterbyvalue"].setValue('');
+    this.eventLogFilterForm.controls["afterdatefilter"].setValue('');
+    this.eventLogFilterForm.controls["beforedatefilter"].setValue('');
+    this.filterBy = "";
+    this.isEnableFilterBtn = false;
+    this.cd.detectChanges();
+    this.filterData = { logic: 'and', filters: [] };
     this.loadEvents();
   }
 
