@@ -16,7 +16,7 @@ export class SystemInterfaceSupportFacade {
     field: this.sortValueSupportGroup,
   }];
 
-  public sortValueDistribution = 'batch';
+  public sortValueDistribution = 'firstName';
   public sortDistributionList: SortDescriptor[] = [{
     field: this.sortValueDistribution,
   }];
@@ -29,10 +29,6 @@ export class SystemInterfaceSupportFacade {
   private supportGroupSubject = new Subject<any>();
   public supportGroup$ = this.supportGroupSubject.asObservable();
 
-
-  private distributionListsSubject = new Subject<any>();
-  public distributionLists$ = this.distributionListsSubject.asObservable();
-
   private notificationCategoryListSubject = new Subject<any>();
   notificationCategoryLists$ = this.notificationCategoryListSubject.asObservable();
 
@@ -44,6 +40,21 @@ export class SystemInterfaceSupportFacade {
 
   private supportGroupReactivateSubject = new Subject<any>();
   supportGroupReactivate$ = this.supportGroupReactivateSubject.asObservable();
+
+  private supportGroupListDataLoaderSubject = new BehaviorSubject<boolean>(false);
+  supportGroupListDataLoader$ = this.supportGroupListDataLoaderSubject.asObservable();
+
+  // distribution list ----------------------------------------
+  private distributionListsSubject = new Subject<any>();
+  public distributionLists$ = this.distributionListsSubject.asObservable();
+
+  private addDistributionListUserSubject = new Subject<any>();
+  addDistributionListUser$ = this.addDistributionListUserSubject.asObservable();
+
+  private distributionListDataLoaderSubject = new BehaviorSubject<boolean>(false);
+  distributionListDataLoader$ = this.distributionListDataLoaderSubject.asObservable();
+  //----------------------------------------
+
   private supportGroupRemoveSubject = new Subject<any>();
   supportGroupRemove$ = this.supportGroupRemoveSubject.asObservable();
 
@@ -73,10 +84,9 @@ export class SystemInterfaceSupportFacade {
     this.loaderService.hide();
   }
 
-
-
   loadSupportGroup(paginationParameters: any) {
-    this.showLoader();
+ 
+    this.supportGroupListDataLoaderSubject.next(true);
     this.systemInterfaceSupportService.getSupportGroupList(paginationParameters).subscribe({
       next: (dataResponse: any) => {
         const gridView: any = {
@@ -84,26 +94,15 @@ export class SystemInterfaceSupportFacade {
           total: dataResponse?.totalCount,
         };
         this.supportGroupSubject.next(gridView);
-        this.hideLoader();
+        this.supportGroupListDataLoaderSubject.next(false);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-        this.hideLoader();
+        this.supportGroupListDataLoaderSubject.next(false);
       },
     });
   }
 
-  loadDistributionLists() {
-    this.systemInterfaceSupportService.getDistributionLists().subscribe({
-      next: (response) => {
-        this.distributionListsSubject.next(response);
-      },
-
-      error: (err) => {
-        console.error('err', err);
-      },
-    });
-  }
   loadNotificationCategory() {
     this.systemInterfaceSupportService.loadNotificationCategoryServices().subscribe({
       next: (response) => {
@@ -122,7 +121,7 @@ export class SystemInterfaceSupportFacade {
       {
         next: (response: any) => {
           this.loaderService.hide();
-          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS,'Support Group saved successfully');
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Support Group saved successfully');
           this.addSupportGroupSubject.next(true);
         },
         error: (err) => {

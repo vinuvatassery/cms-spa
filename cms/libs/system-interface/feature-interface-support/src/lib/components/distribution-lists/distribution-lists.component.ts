@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa' 
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
@@ -10,20 +12,20 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DistributionListsComponent implements OnInit, OnChanges {
+
   isMemberDetailPopup = false;
   isMemberReactivatePopupShow = false;
   isMemberDeactivatePopupShow = false;
   isMemberDeletePopupShow = false;
   isMemberDeleteConfirmationPopupShow = false;
-  public formUiStyle : UIFormStyle = new UIFormStyle();
-  popupClassAction = 'TableActionPopup app-dropdown-action-list'; 
+  public formUiStyle: UIFormStyle = new UIFormStyle();
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
   isDistributionGridLoaderShow = false;
   @Input() pageSizes: any;
+  @Input() selectedGroup: any;
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-  @Input() distributionGridLists$: any;
-  @Output() loadDistributionListEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -34,11 +36,13 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
+  memberForm!: FormGroup;
 
   gridDistributionDataSubject = new Subject<any>();
   gridDistributionData$ =
     this.gridDistributionDataSubject.asObservable();
- 
+
+  selectedInterface = '';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public gridMoreActions = [
     {
@@ -55,7 +59,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       icon: 'block',
       click: (data: any): void => {
         this.onOpenMemberDeactivateClicked();
-     
+
 
       },
     },
@@ -64,7 +68,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       text: 'Re-activate',
       icon: 'done',
       click: (data: any): void => {
-     this.onOpenMemberReactivateClicked();
+        this.onOpenMemberReactivateClicked();
       },
     },
     {
@@ -78,29 +82,34 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     },
   ];
 
-  
-
- 
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private dialogService: DialogService
-  ) {}
+    private dialogService: DialogService,
+    private fb: FormBuilder,
+    private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
+  ) { }
 
   ngOnInit(): void {
     this.loadDistributionListGrid();
   }
+
   ngOnChanges(): void {
+    this.sortType = 'desc'
     this.state = {
       skip: 0,
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
     this.loadDistributionListGrid();
   }
 
   private loadDistributionListGrid(): void {
+    if (!this.selectedGroup)
+      return;
+
+    this.selectedInterface = this.selectedGroup.groupName
+
     this.loadDistribution(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -108,45 +117,48 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       this.sortType
     );
   }
+
   loadDistribution(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isDistributionGridLoaderShow = true;
     const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
+      SkipCount: skipCountValue,
+      MaxResultCount: maxResultCountValue,
+      Sorting: 'firstName',
+      SortType: sortTypeValue,
+      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
+      notificationGroupId: this.selectedGroup.notificationGroupId,
     };
-    this.loadDistributionListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
 
   onChange(data: any) {
     this.defaultGridState();
 
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedColumn ?? 'vendorName',
-              operator: 'startswith',
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
+    // this.filterData = {
+    //   logic: 'and',
+    //   filters: [
+    //     {
+    //       filters: [
+    //         {
+    //           field: this.selectedColumn ?? 'vendorName',
+    //           operator: 'startswith',
+    //           value: data,
+    //         },
+    //       ],
+    //       logic: 'and',
+    //     },
+    //   ],
+    // };
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
+
   }
+
 
   defaultGridState() {
     this.state = {
@@ -182,51 +194,44 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   }
 
   gridDataHandle() {
-    this.distributionGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
-      this.gridDistributionDataSubject.next(this.gridDataResult);
-      if (data?.total >= 0 || data?.total === -1) {
-        this.isDistributionGridLoaderShow = false;
-      }
-    });
-    this.isDistributionGridLoaderShow = false;
   }
- 
-  onMemberDetailsClicked(){
+
+  onMemberDetailsClicked() {
     this.isMemberDetailPopup = true;
   }
-  onCloseMemberDetailPopupClicked(){
+
+  onCloseMemberDetailPopupClicked() {
     this.isMemberDetailPopup = false;
   }
 
-  onOpenMemberDeleteClicked(){
+  onOpenMemberDeleteClicked() {
     this.isMemberDeletePopupShow = true;
   }
-  onCloseMemberDeleteClicked(){
+  onCloseMemberDeleteClicked() {
     this.isMemberDeletePopupShow = false;
   }
-  onOpenMemberDeactivateClicked(){
+  onOpenMemberDeactivateClicked() {
     this.isMemberDeactivatePopupShow = true;
   }
-  onCloseMemberDeactivateClicked(){
+  onCloseMemberDeactivateClicked() {
     this.isMemberDeactivatePopupShow = false;
   }
-  onOpenMemberReactivateClicked(){
+  onOpenMemberReactivateClicked() {
     this.isMemberReactivatePopupShow = true;
   }
-  onCloseMemberReactivateClicked(){
+  onCloseMemberReactivateClicked() {
     this.isMemberReactivatePopupShow = false;
   }
-  onOpenMemberDeleteConfirmationClicked(){
+  onOpenMemberDeleteConfirmationClicked() {
     this.isMemberDeleteConfirmationPopupShow = true;
 
   }
-  onCloseMemberDeleteConfirmationClicked(){
+  onCloseMemberDeleteConfirmationClicked() {
     this.isMemberDeleteConfirmationPopupShow = false;
 
+  }
+  groupsDropDownList = []
+  addNotificationUser(data: any): void {
+    this.loadDistributionListGrid();
   }
 }

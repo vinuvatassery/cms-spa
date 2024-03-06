@@ -11,10 +11,10 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import {
   State,
-  CompositeFilterDescriptor,
+  CompositeFilterDescriptor
 } from '@progress/kendo-data-query';
 import { LovFacade } from 'libs/system-config/domain/src/lib/application/lov.facade';
 import { Subject, first } from 'rxjs';
@@ -24,6 +24,7 @@ import { Subject, first } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SupportGroupComponent implements OnInit, OnChanges {
+  selectedGroup: any;
   isGroupDetailPopup = false;
   isSupportGroupReactivatePopupShow = false;
   isSupportGroupDeactivatePopupShow = false;
@@ -49,6 +50,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Output() deleteConfimedEvent = new EventEmitter<string>();
   @Output() addSupportGroupEvent = new EventEmitter<string>();
   @Output() editSupportGroupEvent = new EventEmitter<string>();
+
   public state!: State;
   sortColumn = 'groupName';
   sortDir = 'Ascending';
@@ -73,6 +75,8 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   gridSupportGroupDataSubject = new Subject<any>();
   private searchSubject = new Subject<string>();
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
+
+  dataListsLoader$ = this.systemInterfaceSupportFacade.supportGroupListDataLoader$;
 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   columns: any = {
@@ -136,13 +140,14 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       },
     },
   ];
+  public mode: SelectableMode = 'single';
   interfaceSupportGroupLov = this.lovFacade.interfaceSupportGroupLov$;
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
-    private readonly lovFacade: LovFacade
-  ) { }
+    private readonly lovFacade: LovFacade, private systemInterfaceSupportFacade: SystemInterfaceSupportFacade
+  ) {}
 
   ngOnInit(): void {
     this.loadSupportGroupListGrid();

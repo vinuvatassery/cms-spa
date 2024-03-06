@@ -8,7 +8,7 @@
 
             <div class="flex-col">
                 <kendo-floatinglabel text="Interface">
-                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
+                    <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
                         valueField="lovCode" [data]="interfaceSupportGroupLov | async" aria-label="State"
                         [valuePrimitive]="true" formControlName="groupCode"> </kendo-dropdownlist>
                         <kendo-formerror *ngIf="(!notiificationGroupForm.controls['groupCode'].valid) && notiificationGroupForm.controls['groupCode'].hasError('required') &&isSubmitted">
@@ -20,7 +20,7 @@
                 <kendo-floatinglabel text="Group Name">
                     <div>
                         <kendo-textbox [fillMode]="formUiStyle.inputFillMode" [maxlength]="tAreaCessationMaxLength"
-                            resizable="none" formControlName="groupName" aria-label="Group Name"
+                            resizable="none" formControlName="groupName" aria-label="Group Name" [disabled]="true"
                             class="form-control table-text-area">
                         </kendo-textbox>
                         <div class="flex-row">

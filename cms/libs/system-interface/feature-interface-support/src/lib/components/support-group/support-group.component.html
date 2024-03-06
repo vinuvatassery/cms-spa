@@ -26,12 +26,12 @@
 <p>Select a Group in the table below to view assigned Users and Notification Categories</p>
 
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="isSupportGroupGridLoaderShow" [pageSize]="state.take" [pageable]="true"
+  <kendo-grid [resizable]="true" [loading]="(dataListsLoader$  | async) === true" [pageSize]="state.take" [pageable]="true"
     [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [filter]="state.filter"
     [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)"
     (filterChange)="filterChange($event)" (columnReorder)="onColumnReorder($event)"
     [data]="gridSupportGroupData$ | async">
-    <kendo-grid-column field="groupCode" title="Interface" [width]="100" [sortable]="true">
+    <kendo-grid-column field="groupCode" title="Interface" [width]="100" [sortable]="true" >
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">

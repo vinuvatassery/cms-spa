@@ -112,8 +112,8 @@ export class SystemInterfaceSupportService {
     ]);
   }
 
-
   addSupportGroup(notificationGroup: any) {
+    
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/support-group`, notificationGroup);
   }
   editSupportGroup(notificationGroupId: string, notificationGroup: any) {
@@ -146,6 +146,15 @@ export class SystemInterfaceSupportService {
     return this.http.delete(
       `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-support/support-group/${notificationGroupId}`, options
     );
-  }
+    }
+
+    // distribution ----------------------------------------
+    getDistributionList(paginationParameters: any) {
+        return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/list`, paginationParameters);
+    }
+
+    addDistributionListUser(user: any) {
+        return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/add-user`, user);
+    }
 
 }

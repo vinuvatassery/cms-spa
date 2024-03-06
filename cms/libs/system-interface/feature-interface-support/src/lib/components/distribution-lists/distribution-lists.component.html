@@ -1,30 +1,21 @@
-<p>Users assigned to Kaiser Support. Users in this list will be notified in case of interface error</p>
+<p>Users assigned to {{selectedInterface}} Support. Users in this list will be notified in case of interface error</p>
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="isDistributionGridLoaderShow" [pageSize]="state.take" [pageable]="true"
+  <kendo-grid [resizable]="true"  [pageSize]="state.take" [pageable]="true"
     [sortable]="false" [skip]="state.skip" [groupable]="false" [columnMenu]="false" [sort]="state.sort"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)" [selectable]="true"
-    [data]="distributionGridLists$ | async">
-
-
-
+    [data]="gridDistributionData$ | async">
     <kendo-grid-column field="email" title="Email" [width]="120" [columnMenu]="false" [sortable]="false">
     </kendo-grid-column>
     <kendo-grid-column field="firstName" title="First Name" [width]="100"> </kendo-grid-column>
     <kendo-grid-column field="lastName" title="Last name" [width]="180"> </kendo-grid-column>
-
-
     <kendo-grid-column field="status" title="Status" [width]="140">
     </kendo-grid-column>
-
-
-
     <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="gridMoreActions"  
-          class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
-          aria-label="more actions" title="More option"
+        <kendo-dropdownbutton [data]="gridMoreActions" class="TableActionPopup app-dropdown-action more_action_wid"
+          buttonClass="k-icon-button" aria-label="more actions" title="More option"
           [popupSettings]="{ popupClass: popupClassAction, animate: true }">
-          <span class="material-icons" aria-label="More option"> more_vert    </span>
+          <span class="material-icons" aria-label="More option"> more_vert </span>
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
@@ -78,54 +69,6 @@
 <kendo-dialog *ngIf="isMemberDetailPopup" (close)="onCloseMemberDetailPopupClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>Add Member</kendo-dialog-titlebar>
-
-  <section class="k-dialog-body">
-    <p class="text-muted">
-      Adds a user to the distribution list for the selected role
-    </p>
-    <div class="flex-row">
-
-      <div class="flex-col">
-        <kendo-floatinglabel text="Group Name">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-          </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col flex-col-6">
-        <kendo-floatinglabel text="First Name">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-          </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col flex-col-6">
-        <kendo-floatinglabel text="Last Name">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-          </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col">
-        <kendo-floatinglabel text="Email Address">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-          </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-
-    </div>
-  </section>
-
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-          (click)="onCloseMemberDetailPopupClicked()">
-          Cancel
-        </button>
-        <button kendoButton [primary]="true" aria-label="Add">
-          Add
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
 </kendo-dialog>
 
 
@@ -134,23 +77,23 @@
   </kendo-dialog-titlebar>
 
   <section class="k-dialog-body">
-        <p class="text-muted mb-2">
-          Are you sure you want to deactivate this member?
-        </p>
+    <p class="text-muted mb-2">
+      Are you sure you want to deactivate this member?
+    </p>
   </section>
 
   <kendo-dialog-actions>
-        <div class="justify-content-between">
-              <div class="justify-content-end">
-                    <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-                          (click)="onCloseMemberDeactivateClicked()">
-                          Cancel
-                    </button>
-                    <button kendoButton [primary]="true" aria-label="Deactivate">
-                          Deactivate
-                    </button>
-              </div>
-        </div>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+          (click)="onCloseMemberDeactivateClicked()">
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Deactivate">
+          Deactivate
+        </button>
+      </div>
+    </div>
   </kendo-dialog-actions>
 </kendo-dialog>
 
@@ -159,23 +102,23 @@
   </kendo-dialog-titlebar>
 
   <section class="k-dialog-body">
-        <p class="text-muted mb-2">
-              Are you sure you want to reactivate this member?
-        </p>
+    <p class="text-muted mb-2">
+      Are you sure you want to reactivate this member?
+    </p>
   </section>
 
   <kendo-dialog-actions>
-        <div class="justify-content-between">
-              <div class="justify-content-end">
-                    <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-                          (click)="onCloseMemberReactivateClicked()">
-                          Cancel
-                    </button>
-                    <button kendoButton [primary]="true" aria-label="Deactivate">
-                          Re-activate
-                    </button>
-              </div>
-        </div>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+          (click)="onCloseMemberReactivateClicked()">
+          Cancel
+        </button>
+        <button kendoButton [primary]="true" aria-label="Deactivate">
+          Re-activate
+        </button>
+      </div>
+    </div>
   </kendo-dialog-actions>
 </kendo-dialog>
 
@@ -183,23 +126,21 @@
   <kendo-dialog-titlebar (close)="onCloseMemberDeleteClicked()"> Error Confirmation</kendo-dialog-titlebar>
 
   <section class="k-dialog-body mb-2">
-        <p>
-          Are you sure you want to delete this member? This action cannot be undone
-        </p>
+    <p>
+      Are you sure you want to delete this member? This action cannot be undone
+    </p>
   </section>
   <kendo-dialog-actions>
-        <div class="justify-content-between">
-              <div class="justify-content-end">
-                    <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
-                          (click)="onCloseMemberDeleteClicked()">
-                          Cancel
-                    </button>
-                    <button kendoButton class="k-error-button" aria-label="Delete" (click)="onOpenMemberDeleteConfirmationClicked()">
-                          Delete
-                    </button>
-              </div>
-        </div>
+    <div class="justify-content-between">
+      <div class="justify-content-end">
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="onCloseMemberDeleteClicked()">
+          Cancel
+        </button>
+        <button kendoButton class="k-error-button" aria-label="Delete"
+          (click)="onOpenMemberDeleteConfirmationClicked()">
+          Delete
+        </button>
+      </div>
+    </div>
   </kendo-dialog-actions>
 </kendo-dialog>
-
- 
