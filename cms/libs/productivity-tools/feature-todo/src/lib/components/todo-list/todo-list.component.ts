@@ -158,7 +158,7 @@ export class TodoListComponent implements OnInit {
       this.deleteToDoDialog.close();
     }
   }
-  async onDeleteToDOClicked(result: any) 
+  onDeleteToDOClicked(result: any) 
   {
     if (result) {
       this.isToDODeleteActionOpen = false;
@@ -208,7 +208,7 @@ export class TodoListComponent implements OnInit {
     this.filter = stateData?.filter?.filters;
     this.loadTodoGrid();
   }
-  async onToDoActionClicked(item: any,gridItem: any){ 
+   onToDoActionClicked(item: any,gridItem: any){ 
     if(item.id == 'done'){
       this.selectedAlertId = gridItem.alertId;
        this.onDoneTodoItem();
