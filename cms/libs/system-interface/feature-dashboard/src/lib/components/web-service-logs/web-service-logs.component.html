@@ -6,15 +6,17 @@
         <kendo-floatinglabel text="Interface">
           <kendo-dropdownlist aria-label="Type" [fillMode]="formUiStyle.dropDownFillMode"
             [data]="interfaceFilterDataList" [ngModel]="interfaceFilterDropDown" textField="lovDesc"
-            valueField="lovCode" (selectionChange)="onInterfaceSelectionChanged($event)">
+            valueField="lovCode" (selectionChange)="onInterfaceSelectionChanged($event)"
+           >
           </kendo-dropdownlist>
         </kendo-floatinglabel>
       </div>
       <div>
         <span class="app-checkboxwidtext-wrapper">
-          <input type="checkbox" kendoCheckBox aria-labelledby="StatusshowHistorical" id="StatusshowHistorical"
-            [(ngModel)]="displayAll" (change)="handleShowHistoricalClick()" />
-          <label class="k-checkbox-label" for="StatusshowHistorical">Show activities within the last 7 days </label>
+          <input type="checkbox" kendoCheckBox
+            aria-labelledby="StatusshowHistorical" id="StatusshowHistorical" [(ngModel)]="displayAll"
+            (change)="handleShowHistoricalClick()" />
+          <label class="k-checkbox-label" for="StatusshowHistorical">Show activities within the last 2 Weeks </label>
         </span>
       </div>
     </div>
@@ -58,7 +60,7 @@
 
       <kendo-grid-column field="startDate" title="Process Date" [width]="180">
         <ng-template kendoGridCellTemplate let-dataItem>
-          {{dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss' | date: 'MM/dd/YYYY hh:mm:ss'}}
+          {{ dataItem.startDate | date: 'MM/dd/YYYY hh:mm:ss a' }}
         </ng-template>
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
           <common-grid-cell-date-range-filter [field]="'startDate'" [filter]="filter" [filterService]="filterService">
@@ -66,9 +68,13 @@
         </ng-template>
       </kendo-grid-column>
 
+      <kendo-grid-column field="clientId" title="Client ID" [width]="180" [field]="'clientId'">
+
+      </kendo-grid-column>
+
       <kendo-grid-column field="status" title="Status" [width]="180">
         <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-          <kendo-dropdownlist [data]="statusArrayDesc" [value]="statusFilter" 
+          <kendo-dropdownlist [data]="statusArrayDesc" [value]="statusFilter"
             (valueChange)="dropdownFilterChange('status',$event, filterService)">
           </kendo-dropdownlist>
         </ng-template>
@@ -78,7 +84,7 @@
             class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover">
             Failure
           </button>
-          <span *ngIf="dataItem.status === 'SUCCESS'"> Successful </span>
+          <span *ngIf="dataItem.status === 'SUCCESS'"> Success </span>
           <span *ngIf="dataItem.status === 'IN_PROGRESS'"> In Progress </span>
           <kendo-popover #userCard width="330" position="left">
             <ng-template kendoPopoverBodyTemplate>
@@ -91,7 +97,16 @@
         </ng-template>
       </kendo-grid-column>
 
-      <kendo-grid-column field="triggeredBy" title="Triggered By" [width]="70" [sortable]="false" [columnMenu]="false"
+      <kendo-grid-column title="File Download" [width]="180" [sortable]="false" [columnMenu]="false">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button [attr.aria-label]="dataItem.status" kendoButton look="flat" class="card-link-button"
+            kendoPopoverAnchor (click)="downloadFile(dataItem.fileId)">
+            Download
+          </button>
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column field="triggeredBy" title="Triggered By" [width]="120" [sortable]="false" [columnMenu]="false"
         class="text-center">
         <ng-template kendoGridCellTemplate let-dataItem>
           <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
