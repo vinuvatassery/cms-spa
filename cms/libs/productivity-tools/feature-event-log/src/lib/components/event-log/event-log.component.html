@@ -78,10 +78,6 @@
     <ul aria-label="event log menu" class="event-log-list">
       <!-- Event list items -->
 
-
-
-
-
       <li *ngFor="let eventLog of events; let i = index" aria-label="event log menu item" class="event-log-list_items">
         <section>
           <div class="items-head">
@@ -118,8 +114,16 @@
                 >add</span
               >
             </button>
-            <span class="items-body_details">{{eventLog.eventLogDesc}}</span>
-            <span class="text-primary text-underline c-pointer">View Letter</span>
+            <!-- <span class="items-body_details">{{eventLog.eventLogDesc}}</span> -->
+            <div class="items-body">                
+              <common-read-more
+              [content]="eventLog.eventLogDesc"
+              [limit]="250"
+              [completeWords]="true">
+  
+              </common-read-more>
+            </div>
+            <!-- <span class="text-primary text-underline c-pointer">View Letter</span> -->
           </div>
         </section>
 

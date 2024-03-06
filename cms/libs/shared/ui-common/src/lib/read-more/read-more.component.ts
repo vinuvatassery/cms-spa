@@ -1,4 +1,10 @@
-import { Component, OnInit, Input, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  EventEmitter,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 
 @Component({
   selector: 'common-read-more',
@@ -6,27 +12,33 @@ import { Component, OnInit, Input, EventEmitter, ChangeDetectionStrategy } from 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReadMoreComponent {
-
-  @Input() content: string = "";
+  @Input() content: string = '';
   @Input() limit: number = 0;
   @Input() completeWords: boolean = false;
 
   isContentToggled: boolean = false;
-  nonEditedContent: string = "";
+  nonEditedContent: string = '';
+  isShowReadMore: boolean = false;
 
-  constructor() {
-
-  }
+  constructor() {}
 
   ngOnInit() {
-    console.log(this.content);
     this.nonEditedContent = this.content;
-    this.content = this.formatContent(this.content);
+    this.setReadmoreDisplay();
+  }
+
+  setReadmoreDisplay() {
+    if (this.content.length > this.limit) {
+      this.content = this.formatContent(this.content);
+      this.isShowReadMore = true;
+    }
   }
 
   toggleContent() {
     this.isContentToggled = !this.isContentToggled;
-    this.content = this.isContentToggled ? this.nonEditedContent : this.formatContent(this.content);
+    this.content = this.isContentToggled
+      ? this.nonEditedContent
+      : this.formatContent(this.content);
   }
 
   formatContent(content: string) {
