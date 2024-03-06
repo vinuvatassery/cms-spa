@@ -73,5 +73,18 @@
   }
 }
 
-
+.filter-footer-event{
+  position: absolute;
+  bottom: 0px;
+  background: #f1f1f1;
+  text-align: center;
+  width: 100%;
+  padding: 2px 10px;
+   max-width: 450px;
+ }
  
+ .event-filter-button {
+  button{
+    width: 100%;
+  }
+ }
