@@ -115,15 +115,15 @@ export class EventLogComponent implements OnInit {
       sortType: 'desc',
       filter: JSON.stringify(this.filterData),
     };
-    this.eventLogFacade.loadEvents(paginationData);
+    this.eventLogFacade.loadEvents(paginationData,this.entityId);
   }
 
   createFilterData(data: string) {
     this.filterData = [
-      {
-        filters: [{ field: 'entityId', operator: 'eq', value: data }],
-        logic: 'and',
-      },
+      // {
+      //   filters: [{ field: 'entityId', operator: 'eq', value: data }],
+      //   logic: 'and',
+      // },
     ];
   }
 
@@ -296,17 +296,17 @@ export class EventLogComponent implements OnInit {
       this.filterDataQueryArray.push(object);
     }
 
-    let object ={
-      filters: [
-        {
-          field: "entityId",
-          operator: "eq",
-          value: this.entityId,
-        }
-      ],
-      logic: 'and',
-    };
-    this.filterDataQueryArray.push(object);
+    // let object ={
+    //   filters: [
+    //     {
+    //       field: "entityId",
+    //       operator: "eq",
+    //       value: this.entityId,
+    //     }
+    //   ],
+    //   logic: 'and',
+    // };
+    // this.filterDataQueryArray.push(object);
     
     this.setFilterOfCaseWorkerAndEventType("createdBy","caseworkerfilterbyoperator","caseworkerfilterbyvalue");
     this.setFilterOfCaseWorkerAndEventType("eventLogDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
@@ -332,7 +332,7 @@ export class EventLogComponent implements OnInit {
       filter: JSON.stringify(this.filterData.filters ?? [])  
     };
     console.log(gridDataRefinerValue);
-    this.eventLogFacade.loadEvents(gridDataRefinerValue);
+    this.eventLogFacade.loadEvents(gridDataRefinerValue, this.entityId);
   }
 
   sortByMethod(event:any)
