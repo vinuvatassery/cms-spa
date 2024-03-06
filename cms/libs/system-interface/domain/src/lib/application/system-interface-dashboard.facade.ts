@@ -18,8 +18,10 @@ export class SystemInterfaceDashboardFacade {
   public cardsRequestChart$ =
     this.cardsRequestChartSubject.asObservable();
   private activityEventLogListSubject = new Subject<any>();
-  activityEventLogLists$ =
-    this.activityEventLogListSubject.asObservable();
+  activityEventLogLists$ =    this.activityEventLogListSubject.asObservable();
+
+  private prescriptionsFillsSubject = new Subject<any>();
+  prescriptionsFills$ =    this.prescriptionsFillsSubject.asObservable();
 
   private batchLogExceptionListSubject = new Subject<any>();
   batchLogExcptionLists$ = this.batchLogExceptionListSubject.asObservable();
@@ -70,25 +72,40 @@ export class SystemInterfaceDashboardFacade {
 
   }
 
-  loadClientRecordSendChart() {
-    this.systemInterfaceDashboardService.getClientRecordSendChart().subscribe({
-      next: (ClientRecordSendChart) => {
+  prescriptionsFillsCard() {
+    this.systemInterfaceDashboardService.getPrescriptionsFills().subscribe({
+      next: (prescriptionsFills:any) => {
+        this.prescriptionsFillsSubject.next(prescriptionsFills);
+      },
+
+      error: (err:any) => {
+        console.error('err', err);
+      },
+    });
+  }
+  loadClientRecordSendChart(days:number,isCardRequest:boolean) {
+    this.systemInterfaceDashboardService.getClientSendCardsinfo(days,isCardRequest).subscribe({
+      next: (ClientRecordSendChart:any) => {
+        debugger
         this.ClientRecordSendChartSubject.next(ClientRecordSendChart);
       },
 
-      error: (err) => {
+      error: (err:any) => {
         console.error('err', err);
       },
     });
   }
 
-  loadCardsRequestChart() {
-    this.systemInterfaceDashboardService.getCardsRequestChart().subscribe({
+  loadCardsRequestChart(days:number,isCardRequest:boolean) {
+    this.loaderService.show();
+    this.systemInterfaceDashboardService.getCardsRequestinfo(days,isCardRequest).subscribe({
       next: (cardsRequestChart) => {
         this.cardsRequestChartSubject.next(cardsRequestChart);
+        this.loaderService.hide();
       },
 
       error: (err) => {
+        this.loaderService.hide();
         console.error('err', err);
       },
     });
