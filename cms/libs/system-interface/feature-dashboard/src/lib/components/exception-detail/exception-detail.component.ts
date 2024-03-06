@@ -45,7 +45,7 @@ export class ExceptionDetailComponent implements OnInit, OnChanges {
         this.keyIdColumnHeader = 'Hrn';
         break;
       case 'OHP':
-        this.keyIdColumnHeader = 'Key Id';
+        this.keyIdColumnHeader = 'Recipient Id';
         break;
       case 'MODA':
         this.keyIdColumnHeader = (this.processTypeCode === 'DENTAL_PREMIUM') ? 'Subscriber Id' : 'Claim Number';
