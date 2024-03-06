@@ -6,12 +6,11 @@ import {
   Input,
   OnInit,
   ChangeDetectorRef,
-  ElementRef,
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { State, groupBy } from '@progress/kendo-data-query';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Lov, UserManagementFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
+import { Lov, UserManagementFacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, first } from 'rxjs';
@@ -96,17 +95,11 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
   manufacturers: any = [];
 
   constructor(
-    private readonly elementRef: ElementRef,
-    private readonly financialPharmacyClaimsFacade: FinancialPharmacyClaimsFacade,
     private formBuilder: FormBuilder,private cd: ChangeDetectorRef,
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
-    private userManagementFacade: UserManagementFacade,
-    private readonly vendorFacade: VendorFacade,
-    private readonly drugsFacade: DrugsFacade,
-    private readonly financialVendorFacade: FinancialVendorFacade,
-    private scrollFocusValidationfacade: ScrollFocusValidationfacade
- ) {}
+    private userManagementFacade: UserManagementFacade
+  ) {}
 
   ngOnInit(): void {
     this.cd.markForCheck();
@@ -206,11 +199,6 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
     this.isSubmitted = true
     if (!this.pharmacyClaimForm.valid) {
       this.pharmacyClaimForm.markAllAsTouched()
-      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.pharmacyClaimForm, this.elementRef.nativeElement,null);
-      if (invalidControl) {
-        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        invalidControl.focus();
-      }
       return;
     }
 
