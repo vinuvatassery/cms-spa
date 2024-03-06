@@ -217,6 +217,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
           this.directRemoveClicked = true;
           this.onSinglePremiumRemove(data);
           this.onRemovePremiumsOpenClicked(this.removePremiumsConfirmationDialogTemplate);
+          this.cdr.detectChanges();
         }
       },
     },
@@ -704,7 +705,6 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
 
   getSelectedReportCount(selectedSendReportList: []) {
     this.sendReportCount = selectedSendReportList.length;
-    this.cdr.detectChanges();
   }
 
   selectionChange(dataItem: any, selected: boolean) {
@@ -908,10 +908,11 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
   }
 
   selectedKeysChange(selection: any) {
+    debugger;
     this.selectedProcessClaims = selection;
     this.selectedSendReportList = selection;
     this.checkedAndUncheckedRecordsFromSelectAll = [];
-    this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': selection.paymentRequestId, 'vendorAddressId': selection.vendorAddressId });
+    this.checkedAndUncheckedRecordsFromSelectAll.push({ 'paymentRequestId': selection?.paymentRequestId, 'vendorAddressId': selection?.vendorId });
     this.selectedSendReportList = { 'SelectedSendReports': this.checkedAndUncheckedRecordsFromSelectAll };
     this.getSelectedReportCount(this.selectedSendReportList?.SelectedSendReports);
   }
