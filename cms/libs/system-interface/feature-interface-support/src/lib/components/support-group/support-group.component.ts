@@ -67,6 +67,8 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   notificationGroupId!: any;
   deactivebuttonEmitted = false;
   reletebuttonEmitted = false;
+  isEditSupportGroup = false;
+  editButtonEmitted =false;
 
   gridSupportGroupDataSubject = new Subject<any>();
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
@@ -92,7 +94,10 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
-        console.log("edit")
+        if (!this.editButtonEmitted) {
+          this.editButtonEmitted = true;
+          this.onEditGroupDetailsClicked(data);
+        }
       },
     },
     {
@@ -263,10 +268,18 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.isSupportGroupGridLoaderShow = false;
   }
 
+  onEditGroupDetailsClicked(notificationGroupId : any) {
+    this.isEditSupportGroup = true;
+    this.notificationGroupId = notificationGroupId;
+    this.isGroupDetailPopup = true;
+  }
+
   onGroupDetailsClicked() {
+    this.isEditSupportGroup = false;
     this.isGroupDetailPopup = true;
   }
   onCloseGroupDetailPopupClicked() {
+    this.editButtonEmitted = false;
     this.isGroupDetailPopup = false;
   }
   onOpenSupportGroupDeleteClicked(notificationGroupId: any) {
@@ -317,10 +330,10 @@ export class SupportGroupComponent implements OnInit, OnChanges {
        this.deactivateButtonEmitted =false;
        this.deactivateConfimEvent.emit(this.notificationGroupId);
 
-       this.supportGroupReactivate$.pipe(first((deleteResponse: any ) => deleteResponse != null))
-       .subscribe((deleteResponse: any) =>
+       this.supportGroupReactivate$.pipe(first((response: any ) => response != null))
+       .subscribe((response: any) =>
        {
-         if(deleteResponse ?? false)
+         if(response ?? false)
          {
            this.loadSupportGroupListGrid()
          }
@@ -337,10 +350,10 @@ export class SupportGroupComponent implements OnInit, OnChanges {
        this.reactivateButtonEmitted =false;
        this.reactivateConfimEvent.emit(this.notificationGroupId);
 
-       this.supportGroupReactivate$.pipe(first((deleteResponse: any ) => deleteResponse != null))
-       .subscribe((deleteResponse: any) =>
+       this.supportGroupReactivate$.pipe(first((response: any ) => response != null))
+       .subscribe((response: any) =>
        {
-         if(deleteResponse ?? false)
+         if(response ?? false)
          {
            this.loadSupportGroupListGrid()
          }
@@ -357,10 +370,10 @@ export class SupportGroupComponent implements OnInit, OnChanges {
        this.deleteButtonEmitted =false;
        this.deleteConfimedEvent.emit(this.notificationGroupId);
 
-       this.supportGroupRemove$.pipe(first((deleteResponse: any ) => deleteResponse != null))
-       .subscribe((deleteResponse: any) =>
+       this.supportGroupRemove$.pipe(first((response: any ) => response != null))
+       .subscribe((response: any) =>
        {
-         if(deleteResponse ?? false)
+         if(response ?? false)
          {
            this.loadSupportGroupListGrid()
          }

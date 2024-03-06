@@ -20,6 +20,7 @@ import { LovFacade } from '@cms/system-config/domain';
 export class SupportGroupDetailComponent implements OnInit {
   @Input() interfaceSupportGroupLov: any;
   @Input() addSupportGroup$: any;
+  @Input() isEditSupportGroup: any;
   @Output() close = new EventEmitter<any>();
   @Output() addSupportGroupEvent = new EventEmitter<any>();
   showLoader() {
