@@ -135,7 +135,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
       notificationGroupId: this.selectedGroup.notificationGroupId,
     };
-
+    //
     this.loadDistributionListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
