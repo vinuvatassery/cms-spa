@@ -45,7 +45,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     public dashboardContentUpdate$ =    this.dashboardWrapperFacade.dashboardContentUpdate$;
     public userDashBoardsList$ = this.dashboardWrapperFacade.userDashBoardsList$;
     static dashBoardContentData: any = [];
-    dashBoardAllWidgetsData: any=[];
+    dashBoardAllWidgetsData: any;
     configSubscription!: Subscription;
     dashBoardContentSubscription!: Subscription;
     dashBoardAllWidgetsSubscription!: Subscription;
@@ -58,7 +58,8 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
       draggable: { enabled: false },
       resizable: { enabled: false },
     };
-    selectedDashBoard: string="b752bb13-153c-4f5c-854d-706abd8659e0";
+    selectedDashBoard!: string;
+    dashboardtemplate="SYSTEM_INTERFACE_TEMPLATE";
     dashBoardSubscriptionItems: any;
     //#endregion
     static updatedWidgets: any = [];
@@ -167,7 +168,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     }
     else
     {
-    this.dashboardWrapperFacade.getLoggedinUserDashboards('SYSTEM_INTERFACE');
+    this.dashboardWrapperFacade.getLoggedinUserDashboards(this.dashboardtemplate);
     }
   }
 
