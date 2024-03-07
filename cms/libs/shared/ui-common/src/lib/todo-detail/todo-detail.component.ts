@@ -139,8 +139,7 @@ export class TodoDetailComponent implements OnInit {
         })
         
       }
-        this.cdr.detectChanges()
-        this.todoDetailsForm.markAllAsTouched()
+       
       }
     });
   }
