@@ -14,10 +14,10 @@ import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { DocumentFacade } from '@cms/shared/util-core';
 import { Lov, LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
-import { DocumentFacade } from 'libs/shared/util-core/src/lib/application/document-facade';
 import { Observable } from 'rxjs';
 
 @Component({
