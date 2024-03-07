@@ -204,8 +204,8 @@
         <!-- Event sub list items -->
       </li>
     </ul>
-    <div>
-      <kendo-skeleton *ngIf="!events" *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
+    <div *ngIf="!events">
+      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
       class="event-list-skeleton-loader"></kendo-skeleton>
     </div>
     <div class="filter-footer-event">
