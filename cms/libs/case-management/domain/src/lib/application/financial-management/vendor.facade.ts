@@ -50,6 +50,7 @@ export class FinancialVendorFacade {
   public insuranceVendorsSubject = new Subject<any>;
   insuranceVendors$ = this.insuranceVendorsSubject.asObservable();
 
+
   private providerListSubject = new Subject<any>();
   providerList$ = this.providerListSubject.asObservable();
   public selectedVendorType = FinancialVendorTypeCode.Manufacturers
@@ -364,6 +365,25 @@ export class FinancialVendorFacade {
         this.loggingService.logException(err);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.hideLoader();
+      },
+    });
+  }
+
+  searchAllProvider(payload: any) {
+    this.medicalProviderSearchLoaderVisibilitySubject.next(true)
+  
+    return this.financialVendorDataService.searchProvider(payload).subscribe({
+      next: (response: any[]) => {
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false)
+        this.searchProviderSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+          err
+        );
+        this.loggingService.logException(err);
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false)     
       },
     });
   }

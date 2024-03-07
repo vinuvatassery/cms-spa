@@ -49,6 +49,10 @@
   [entityTypeCodeSubject$]="entityTypeCodeSubject$"
   [getTodo$]="getTodo$"
   [createTodo$]="createTodo$"
+  (onGetTodoItem)="onGetTodoItem($event)"
+  (getTodoItemsLov)="getTodoItemsLov()"
+  [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
+  [medicalProviderSearchLoaderVisibility$]="  medicalProviderSearchLoaderVisibility$"
   ></productivity-tools-todo-detail>
 </ng-template>
 

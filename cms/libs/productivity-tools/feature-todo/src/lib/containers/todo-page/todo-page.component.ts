@@ -6,7 +6,7 @@ import {
   TemplateRef,
   OnInit,
 } from '@angular/core';
-import { FinancialVendorFacade, SearchFacade, VendorFacade } from '@cms/case-management/domain';
+import { FinancialVendorFacade, FinancialVendorRefundFacade, SearchFacade, VendorFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -26,26 +26,33 @@ export class TodoPageComponent implements OnInit {
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   getTodo$ = this.todoFacade.getTodo$;
   showHeaderSearchInputLoader = false;
-  clientSearchResult$ = this.searchFacade.clientSearch$;
+  clientSearchLoaderVisibility$ = this.FinancialRefundFacade.  clientSearchLoaderVisibility$;
+  clientSearchResult$ = this.FinancialRefundFacade.clients$;
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
+  medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
+  
   createTodo$ = this.todoFacade.createTodo$
   /** Constructor **/
   constructor(private dialogService: DialogService, 
     public todoFacade: TodoFacade,
     public lovFacade : LovFacade,
-    private readonly searchFacade: SearchFacade,
+    private readonly FinancialRefundFacade: FinancialVendorRefundFacade,
     private readonly financialVendorFacade : FinancialVendorFacade) {}
  
     ngOnInit(): void {
-      this.lovFacade.getFrequencyTypeLov()
+     
   }
 
   searchClientName(event:any){
-    this.searchFacade.loadCaseBySearchText(event);
+    this.FinancialRefundFacade.loadClientBySearchText(event);
   }
 
+  getTodoItemsLov(){
+    this.lovFacade.getFrequencyTypeLov()
+    this.lovFacade.getEntityTypeCodeLov()
+  }
   searchProvider(data:any){
-    this.financialVendorFacade.searchProvider(data);
+    this.financialVendorFacade.searchAllProvider(data);
   }
   /** Public methods **/
   onCloseTodoClicked(result: any) {
@@ -70,7 +77,7 @@ export class TodoPageComponent implements OnInit {
     this.todoFacade.createTodoItem(payload);
   }
 
-  onGetTodoItem($event){
+  onGetTodoItem($event:any){
     this.todoFacade.getTodoItem($event);
   }
 }

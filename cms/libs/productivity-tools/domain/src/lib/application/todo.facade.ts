@@ -98,8 +98,7 @@ export class TodoFacade {
     this.todoDataService.getTodoItem(payload).subscribe({
       next: (todoGridResponse: any) => {
         this.loaderService.hide()
-        this.todoGetSubject.next(true);
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)    
+        this.todoGetSubject.next(todoGridResponse);
       },
       error: (err) => {
         this.loaderService.hide()
