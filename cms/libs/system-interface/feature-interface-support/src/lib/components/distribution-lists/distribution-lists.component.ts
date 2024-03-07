@@ -49,6 +49,30 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   dataListsLoader$ = this.systemInterfaceSupportFacade.distributionListDataLoader$;
   selectedInterface = '';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+
+  searchColumnList: { columnName: string, columnDesc: string }[] = [
+    {
+      columnName: 'ALL',
+      columnDesc: 'All Columns'
+    },
+    {
+      columnName: "email",
+      columnDesc: "Email"
+    },
+    {
+      columnName: "firstName",
+      columnDesc: "First Name"
+    },
+    {
+      columnName: "lastName",
+      columnDesc: "Last Name"
+    },
+    {
+      columnName: "status",
+      columnDesc: "Status"
+    },
+  ]
+
   public gridMoreActions = [
     {
       buttonType: 'btn-h-primary',
@@ -156,21 +180,21 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   onChange(data: any) {
     this.defaultGridState();
 
-    // this.filterData = {
-    //   logic: 'and',
-    //   filters: [
-    //     {
-    //       filters: [
-    //         {
-    //           field: this.selectedColumn ?? 'vendorName',
-    //           operator: 'startswith',
-    //           value: data,
-    //         },
-    //       ],
-    //       logic: 'and',
-    //     },
-    //   ],
-    // };
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'firstName',
+              operator: 'contains',
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
@@ -292,6 +316,10 @@ export class DistributionListsComponent implements OnInit, OnChanges {
         this.loadDistributionListGrid();
       }
     });
+  }
+
+  performSearch(searchValue: any) { 
+    this.onChange(searchValue);
   }
 
 }

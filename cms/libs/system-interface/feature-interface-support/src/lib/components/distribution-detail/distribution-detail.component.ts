@@ -63,13 +63,13 @@ export class DistributionDetailComponent implements OnInit {
       groupName: new FormControl({ value: '', disabled: true }),
       firstName: ['', [Validators.required, Validators.maxLength(200)]],
       lastName: ['', [Validators.required, Validators.maxLength(200)]],
-      emailAddress: ['', [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]],
+      email: ['', [Validators.required, Validators.pattern(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,60}$/)]],
     });
     if (this.selectedMemberData) {
       this.isEditMode = true;
       this.memberForm.controls['firstName'].setValue(this.selectedMemberData.firstName);
       this.memberForm.controls['lastName'].setValue(this.selectedMemberData.lastName);
-      this.memberForm.controls['emailAddress'].setValue(this.selectedMemberData.email);
+      this.memberForm.controls['email'].setValue(this.selectedMemberData.email);
     }
 
     if (this.selectedGroup)
@@ -82,7 +82,7 @@ export class DistributionDetailComponent implements OnInit {
       groupId: this.selectedGroup.notificationGroupId,
       firstName: formValues.firstName,
       lastName: formValues.lastName,
-      emailAddress: formValues.emailAddress,
+      email: formValues.email,
       userTypeCode: 'EXTERNAL',
       notificationUserId: null,
     };
