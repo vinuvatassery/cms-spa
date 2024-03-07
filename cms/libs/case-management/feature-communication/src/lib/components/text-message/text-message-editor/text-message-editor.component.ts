@@ -23,15 +23,18 @@ import { EditorComponent } from '@progress/kendo-angular-editor';
 })
 export class TextMessageEditorComponent implements OnInit {
   /** Input properties **/
-  @Input() templateContent!: string;
+  @Input() templateContent!: any;
   @Input() dataEvent!: EventEmitter<any>;
   @Input() currentValue!: any;
+  @Input() smsMessages!: any;
 
     /** Output properties **/
   @Output() messageContentChangedEvent = new EventEmitter<any>();
   @Output() editorValue = new EventEmitter<any>();
+  @Output() messagesEditor = new EventEmitter<any>();
 
   /** Public properties **/
+  @ViewChild('textareaRef') textareaRef: any;
   @ViewChild('anchor') public anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef }) public popup!: ElementRef;
   isShowPopupClicked = false;
@@ -52,7 +55,6 @@ export class TextMessageEditorComponent implements OnInit {
   stringValues: string[] = ['MyFullName', 'MyJobTitle', 'MyPhone', 'MyEmail'];
   editor!: EditorComponent;
   smsEditorvalue!: any;
-  isDeleteDisabled: boolean = false;
   requestBody!: string;
   item: any;
   /** Constructor **/
@@ -73,7 +75,8 @@ export class TextMessageEditorComponent implements OnInit {
     this.dataEvent.subscribe({
       next: (event: any) => {
         if (event) {
-          this.currentValue.templateContent = this.templateContent;
+          this.currentValue.messages = this.messages;
+          this.templateContent = this.messages;
           this.editorValue.emit(this.currentValue);
         }
       },
@@ -86,17 +89,23 @@ export class TextMessageEditorComponent implements OnInit {
     });
   }
 
-  smsEditorValueEvent(smsData:any){
-    this.smsEditorvalue = smsData.templateContent == undefined? smsData.requestBody : smsData.templateContent;
-    this.templateContent = this.smsEditorvalue;
-    this.requestBody = this.templateContent;
-    this.tareaMessages = [
-      {
-        id: this.tareaMessagesCounter,
-        description: this.templateContent,
+  smsEditorValueEvent(currentValue: any){
+    let i = 0;
+    this.smsMessages?.forEach((msg: any) => {
+      const item ={
+        id: i,
+        description: msg,
         wordCount: 0,
-      },
-    ];
+      };
+      i++;
+    this.tareaMessages.push(item);
+    });
+    this.tareaMessages = this.tareaMessages.filter((item: any) => item.description.trim() !== '');
+    this.messages = this.tareaMessages.map(user => user.description);
+    currentValue.messages = this.messages;
+    this.templateContent = this.messages;
+    this.messageContentChangedEvent.emit(this.messages);
+    
   }
 
   /** Private methods **/
@@ -127,10 +136,7 @@ export class TextMessageEditorComponent implements OnInit {
   }
 
   onDeleteMessageClicked(id: any) {
-    if(this.tareaMessagesCounter == 1){
-      this.isDeleteDisabled = true;
-    }
-    if(this.tareaMessagesCounter > 1){
+    if(this.tareaMessagesCounter > 0){
     this.tareaMessagesCounter -= 1;
     this.tareaMessages.forEach((message) => {
       if (message.id === id) {
@@ -141,6 +147,7 @@ export class TextMessageEditorComponent implements OnInit {
   }
 
   onAddNewMessageClicked() {
+    this.loadClientVariables();
     this.tareaMessagesCounter += 1;
     this.tareaMessages.push({
       id: this.tareaMessagesCounter,
@@ -158,11 +165,10 @@ export class TextMessageEditorComponent implements OnInit {
 
     this.messages = this.tareaMessages.map(user => user.description);
     this.messageContentChangedEvent.emit(this.messages);
-    this.templateContent = this.messages[0];
   }
 
   onSearchClosed() {
-    this.isSearchOpened = false;
+    this.isShowPopupClicked = false;
   }
 
   private loadClientVariables() {
@@ -192,15 +198,12 @@ export class TextMessageEditorComponent implements OnInit {
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
   }
 
-  BindVariableToEditor(editor: EditorComponent, item: any) {
-    if(item === 'MySignature'){
-      this.stringValues.forEach(value => {
-        editor.exec('insertText', { text: '{{' +value + '}}' });
-      });
-    }else{
-    editor.exec('insertText', { text: '{{' +item + '}}' });
-    editor.value = editor.value.replace(/#CURSOR#/, item);
-    }
-    this.onSearchClosed();
+  BindVariableToEditor(option: any) {
+    const valueToInsert = option;
+    const currentValue = this.textareaRef.value;
+    const newValue1 = '{{' + valueToInsert + '}}';
+    const newValue = currentValue + newValue1;
+    this.textareaRef.value = newValue;
+    this.isShowPopupClicked = false;
   }
 }

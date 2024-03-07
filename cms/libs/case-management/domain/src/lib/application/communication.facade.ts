@@ -213,9 +213,14 @@ prepareClientAndVendorSmsData(formData: FormData, draftTemplate: any, messageRec
   formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
   formData.append('description', draftTemplate?.description ?? '');
   formData.append('typeCode', draftTemplate?.typeCode ?? '');
-  formData.append('requestBody', draftTemplate?.templateContent ?? '');
+  formData.append('requestBody', draftTemplate?.messages[0] ?? '');
   formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
   formData.append('recepients', messageRecipient.phoneNbr ?? null);
+  let i = 0;
+  draftTemplate.messages.forEach((msg: any) => { 
+        formData.append('messages['+i+']', msg);
+      i++;
+    });
   return formData;
 }
 

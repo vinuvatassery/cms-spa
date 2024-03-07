@@ -53,6 +53,7 @@ export class SendTextMessageComponent implements OnInit {
   phoneNumbers!: any[];
   isClearPhoneNumbers = false;
   templateContent = '';
+  smsMessages!: string[];
   documentTemplate!: any;
   messageRecipient!: any;
   templateTypeCode!: string;
@@ -211,7 +212,7 @@ export class SendTextMessageComponent implements OnInit {
 
   onSendMessagesClick() {
     const sms: SmsNotification = {
-      templateId: this.documentTemplate?.documentTemplateId,
+      templateId: this.documentTemplate?.documentTemplateId ?? this.selectedSmsTemplate.notifcationDraftId,
       entity: this.notificationGroup,
       entityId: this.entityId,
       recepients: [('+1' + this.messageRecipient?.phoneNbr)],
@@ -227,10 +228,14 @@ export class SendTextMessageComponent implements OnInit {
     this.communicationFacade.sendSms(sms).subscribe({
       next: (template: any) => {
         this.onCloseSendMessageConfirmClicked();
+        this.onCloseSendMessageClicked();
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Sms sent.');
         this.loaderService.hide();
       },
       error: (err: any) => {
         this.loaderService.hide();
+        this.loggingService.logException(err);
+        this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
       },
     });
   }
@@ -255,7 +260,7 @@ export class SendTextMessageComponent implements OnInit {
           next: (data: any) =>{
           if (data) {
             this.onCloseSaveForLaterClicked();
-            this.onCloseSendMessageClicked()
+            this.onCloseSendMessageClicked();
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Sms Saved As Draft');
           }
           this.loaderService.hide();
@@ -319,7 +324,8 @@ export class SendTextMessageComponent implements OnInit {
             },
           });
       }else{
-      this.templateContent = event.requestBody;
+      this.templateContent = event.templateContent;
+      this.smsMessages = event.messages;
       this.messageRecipient = {
         'formattedPhoneNbr': this.formatPhoneNumber(event?.recepients),
         'phoneNbr': event.recepients
