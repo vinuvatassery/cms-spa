@@ -470,7 +470,16 @@ else{
       });
   }
 
-  private generateText(emailData: any, requestType: string){
+  private generateText(letterData: any, requestType: CommunicationEvents){
+    if(this.communicationEmailTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
+      this.generateClientTextTemplate(letterData, requestType);
+    }else{
+    this.entityId = this.workflowFacade.clientId ?? 0;
+    this.clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+    }
+  }
+
+  private generateClientTextTemplate(emailData: any, requestType: string){
     this.loaderService.show();
     let formData = this.communicationFacade.preparePreviewModelData(emailData);
     this.communicationFacade.generateTextTemplate(this.entityId ?? 0, this.clientCaseEligibilityId ?? '', formData ?? '', requestType ?? '')

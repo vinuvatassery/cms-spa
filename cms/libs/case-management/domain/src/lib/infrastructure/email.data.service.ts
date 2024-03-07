@@ -100,7 +100,7 @@ export class EmailDataService {
 
   replaceAndGenerateTextTemplate(entityId: string, clientCaseEligibilityId: string, selectedTemplate: any, requestType: string) {
       return this.http.post<string>(
-        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&entityId=${entityId}&clientCaseEligibilityId=${clientCaseEligibilityId}2222`,selectedTemplate
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/templates/generate?requestType=${requestType}&entityId=${entityId}&clientCaseEligibilityId=${clientCaseEligibilityId}`,selectedTemplate
       );
     }
 

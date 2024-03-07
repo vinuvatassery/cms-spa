@@ -267,7 +267,6 @@ export class SendLetterComponent implements OnInit {
   }
 
   private generateText(letterData: any, requestType: CommunicationEvents){
-    this.loaderService.show();
     if(this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
       this.generateClientTextTemplate(letterData, requestType);
     }else{
@@ -277,6 +276,7 @@ export class SendLetterComponent implements OnInit {
   }
 
   private generateClientTextTemplate(letterData: any, requestType: CommunicationEvents){
+    this.loaderService.show();
     let formData = this.communicationFacade.preparePreviewModelData(letterData);
     this.communicationFacade.generateTextTemplate(this.entityId ?? '', this.clientCaseEligibilityId ?? '', formData ?? '', requestType.toString() ??'')
         .subscribe({
