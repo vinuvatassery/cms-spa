@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { DocumentFacade } from '@cms/shared/util-core';
 import { Lov, LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
@@ -73,12 +74,12 @@ export class EventLogComponent implements OnInit {
   public eventLogFilterForm: FormGroup = new FormGroup({
     caseworkerfilterbyoperator: new FormControl('', []),
     eventtypefilterbyoperator: new FormControl('', []),
-    caseworkerfilterbyvalue: new FormControl('', []),    
+    caseworkerfilterbyvalue: new FormControl('', []),
     eventtypefilterbyvalue: new FormControl('', []),
     afterdatefilter : new FormControl('', []),
     beforedatefilter : new FormControl('', []),
   });
-  
+
   /** Constructor **/
 
   constructor(
@@ -86,7 +87,8 @@ export class EventLogComponent implements OnInit {
     private dialogService: DialogService,
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
+    private documentFacade: DocumentFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -95,7 +97,7 @@ export class EventLogComponent implements OnInit {
     if(this.entityType =='CLIENT')
     {
       this.clientId =   this.route.snapshot.queryParams['id'];
-      this.clientCaseEligibilityId = this.route.snapshot.queryParams['cid'];
+      this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
       this.entityId = this.clientId.toString();
     };
     this.eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$
@@ -107,7 +109,7 @@ export class EventLogComponent implements OnInit {
 
   /** Private methods **/
   private loadEvents(): void {
-    this.createFilterData(this.entityId);
+    this.filterData = [];
     const paginationData = {
       skipCount: 0,
       pagesize: 10,
@@ -115,16 +117,7 @@ export class EventLogComponent implements OnInit {
       sortType: 'desc',
       filter: JSON.stringify(this.filterData),
     };
-    this.eventLogFacade.loadEvents(paginationData);
-  }
-
-  createFilterData(data: string) {
-    this.filterData = [
-      {
-        filters: [{ field: 'entityId', operator: 'eq', value: data }],
-        logic: 'and',
-      },
-    ];
+    this.eventLogFacade.loadEvents(paginationData,this.entityId);
   }
 
   private subscribeEvents() {
@@ -218,7 +211,7 @@ export class EventLogComponent implements OnInit {
 
   onEventLogFilterFilterClicked()
   {
-    this.setFilteredText();  
+    this.setFilteredText();
     this.loadEventLogs();
     this.isShowFilter = false;
     let element:HTMLElement = document.getElementById('eventFilterCardBtn') as HTMLElement;
@@ -245,7 +238,7 @@ export class EventLogComponent implements OnInit {
     if(text.length > 0)
     {
       this.filterBy = text.substring(0,text.length -1);
-    }    
+    }
   }
 
   private setFilterOfCaseWorkerAndEventType(field:string, operator:string, value:string,)
@@ -268,7 +261,7 @@ export class EventLogComponent implements OnInit {
 
   private setFiltersForDataQuery()
   {
-    
+
     this.filterDataQueryArray = [];
 
     if (this.searchText.length > 0 && this.isShownSearch) {
@@ -284,23 +277,10 @@ export class EventLogComponent implements OnInit {
       };
       this.filterDataQueryArray.push(object);
     }
-
-    let object ={
-      filters: [
-        {
-          field: "entityId",
-          operator: "eq",
-          value: this.entityId,
-        }
-      ],
-      logic: 'and',
-    };
-    this.filterDataQueryArray.push(object);
-    
     this.setFilterOfCaseWorkerAndEventType("createdBy","caseworkerfilterbyoperator","caseworkerfilterbyvalue");
     this.setFilterOfCaseWorkerAndEventType("eventDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
     this.setDateFilters("creationTime");
-    this.filterData = {logic:"and", filters: this.filterDataQueryArray};    
+    this.filterData = {logic:"and", filters: this.filterDataQueryArray};
   }
 
   loadLogEvent() {
@@ -316,10 +296,9 @@ export class EventLogComponent implements OnInit {
       pagesize: 10,
       sort: this.sortColumnName,
       sortType: this.sortType ?? 'asc',
-      filter: JSON.stringify(this.filterData.filters ?? [])  
+      filter: JSON.stringify(this.filterData.filters ?? [])
     };
-    console.log(gridDataRefinerValue);
-    this.eventLogFacade.loadEvents(gridDataRefinerValue);
+    this.eventLogFacade.loadEvents(gridDataRefinerValue, this.entityId);
   }
 
   sortByMethod(event:any)
@@ -331,7 +310,7 @@ export class EventLogComponent implements OnInit {
     this.cd.detectChanges();
   }
 
-  
+
   onChange(field:any)
   {
     if(field==='AFTERDATE')
@@ -362,7 +341,7 @@ export class EventLogComponent implements OnInit {
     return false;
   }
 
-  
+
   private setDateFilters(field:string)
   {
     var filterArray=[];
@@ -386,13 +365,40 @@ export class EventLogComponent implements OnInit {
         }
       )
     }
-    
+
     let object ={
-      filters: 
+      filters:
         filterArray
       ,
       logic: 'and',
     };
     this.filterDataQueryArray.push(object);
-  }  
+    
+  }
+
+  downloadAttachment(eventLogAttachmentId: any, filePath: string){
+    let pathSplitArray = filePath.split('$');
+    let fileNmae = pathSplitArray[pathSplitArray.length-1];
+    this.documentFacade.viewOrDownloadEventFile(true, eventLogAttachmentId, fileNmae);
+  }
+
+
+  private setFilterOfAfterAndBeforeDate(field:string, operator:string, value:string,)
+  {
+    if(this.eventLogFilterForm.controls[value].value != "" && this.eventLogFilterForm.controls[value].value != null)
+    {
+      let object ={
+        filters: [
+          {
+            field: field,
+            operator: operator,
+            value: this.eventLogFilterForm.controls[value].value,
+          }
+        ],
+        logic: 'and',
+      };
+     this.filterDataQueryArray.push(object);
+    }
+  }
+
 }

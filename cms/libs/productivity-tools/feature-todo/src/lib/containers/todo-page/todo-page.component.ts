@@ -6,7 +6,7 @@ import {
   TemplateRef,
   OnInit,
 } from '@angular/core';
-import { FinancialVendorFacade, SearchFacade, VendorFacade } from '@cms/case-management/domain';
+import { FinancialVendorFacade, SearchFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
@@ -22,6 +22,7 @@ export class TodoPageComponent implements OnInit {
   private todoDetailsDialog: any;
   @Output() isToDODetailsActionOpen!: boolean;
   todoGrid$ = this.todoFacade.todoGrid$;
+  loadAlertGrid$ = this.todoFacade.loadAlertGrid$;
   frequencyTypeCodeSubject$ = this.lovFacade.frequencyTypeCodeSubject$
   showHeaderSearchInputLoader = false;
   clientSearchResult$ = this.searchFacade.clientSearch$;
@@ -60,8 +61,14 @@ export class TodoPageComponent implements OnInit {
     });
     this.isToDODetailsActionOpen = true;
   }
-  onloadTodoGrid(event: any){
-    this.todoFacade.loadTodoGrid();
+  onloadTodoGrid(event: any, alertTypeCode:any){
+    this.todoFacade.loadAlerts(event,alertTypeCode.alertType);
+  }
+  onMarkAlertDoneGrid(selectedAlertId: any){
+    this.todoFacade.markAlertAsDone(selectedAlertId);
+  }
+  onDeleteAlertGrid(selectedAlertId: any){
+    this.todoFacade.deleteAlert(selectedAlertId);
   }
 
   onTodoItemCreateClick(payload:any){
