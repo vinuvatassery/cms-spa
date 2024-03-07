@@ -36,3 +36,15 @@ export * from './lib/containers/email-template-page/email-template-page.componen
 export * from './lib/containers/sms-text-template-page/sms-text-template-page.component';
 
 export * from './lib/containers/form-documents-page/form-documents-page.component';
+
+export * from './lib/containers/letter-template-header-footer-page/letter-template-header-footer-page.component';
+
+export * from './lib/containers/email-template-new-form-page/email-template-new-form-page.component';
+
+export * from './lib/containers/letter-template-header-footer-page/letter-template-header-footer-page.component';
+
+export * from './lib/containers/letter-template-new-form-page/letter-template-new-form-page.component';
+
+export * from './lib/containers/sms-text-template-new-form-page/sms-text-template-new-form-page.component';
+
+export * from './lib/containers/email-template-header-footer-page/email-template-header-footer-page.component';

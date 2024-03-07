@@ -7,16 +7,25 @@ import { EligibilityCheckPageComponent } from './containers/eligibility-check-pa
 
 const routes: Routes = [
   {
-    path: ' ',
+    path: '',
     component: CaseAssignmentPageComponent,
+    data: {
+      title: 'Case Assignment',
+    },
   },
   {
-    path: 'case-assignment',
+    path: 'case-management',
     component: CaseAssignmentPageComponent,
+    data: {
+      title: 'Case Assignment',
+    },
   },
   {
     path: 'eligibility-checklist',
     component: EligibilityCheckPageComponent,
+    data: {
+      title: 'Eligibility Checklist',
+    },
   },
  
 ];

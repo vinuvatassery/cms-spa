@@ -26,9 +26,19 @@ import { FormDocumentsPageComponent } from './containers/form-documents-page/for
 import { LetterTemplatePageComponent } from './containers/letter-template-page/letter-template-page.component';
 import { TemplatePageComponent } from './containers/template-page/template-page.component';
 import { SystemConfigFeatureCommunicationRoutingModule } from './system-config-feature-communication.routing.module';
+import { LetterTemplateHeaderFooterPageComponent } from './containers/letter-template-header-footer-page/letter-template-header-footer-page.component';
+import { EmailTemplateNewFormPageComponent } from './containers/email-template-new-form-page/email-template-new-form-page.component';
+import { LetterTemplateNewFormPageComponent } from './containers/letter-template-new-form-page/letter-template-new-form-page.component';
+import { SmsTextTemplateNewFormPageComponent } from './containers/sms-text-template-new-form-page/sms-text-template-new-form-page.component';
+import { EmailTemplateHeaderFooterPageComponent } from './containers/email-template-header-footer-page/email-template-header-footer-page.component';
 
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureCommunicationRoutingModule],
+  imports: [
+    CommonModule,
+    SharedUiTpaModule,
+    SharedUiCommonModule,
+    SystemConfigFeatureCommunicationRoutingModule,
+  ],
   declarations: [
     EmailTemplateListComponent,
     LetterTemplateListComponent,
@@ -52,7 +62,13 @@ import { SystemConfigFeatureCommunicationRoutingModule } from './system-config-f
     SmsTextTemplatePageComponent,
     FormDocumentsPageComponent,
     LetterTemplatePageComponent,
-    TemplatePageComponent
+    TemplatePageComponent,
+    LetterTemplateHeaderFooterPageComponent,
+    EmailTemplateNewFormPageComponent,
+    LetterTemplateHeaderFooterPageComponent,
+    LetterTemplateNewFormPageComponent,
+    SmsTextTemplateNewFormPageComponent,
+    EmailTemplateHeaderFooterPageComponent,
   ],
   exports: [
     ClientNotificationDefaultsListComponent,
@@ -75,6 +91,12 @@ import { SystemConfigFeatureCommunicationRoutingModule } from './system-config-f
     SmsTextTemplatePageComponent,
     FormDocumentsPageComponent,
     TemplatePageComponent,
+    LetterTemplateHeaderFooterPageComponent,
+    EmailTemplateNewFormPageComponent,
+    LetterTemplateHeaderFooterPageComponent,
+    LetterTemplateNewFormPageComponent,
+    SmsTextTemplateNewFormPageComponent,
+    EmailTemplateHeaderFooterPageComponent,
   ],
 })
 export class SystemConfigFeatureCommunicationModule {}

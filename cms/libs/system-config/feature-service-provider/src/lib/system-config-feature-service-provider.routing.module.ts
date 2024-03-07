@@ -18,27 +18,27 @@ const routes: Routes = [
     component: CptCodePageComponent,
   }, 
   {
-    path: 'healthcare-provider',
+    path: 'hiv-care-provider',
     component: HealthcareProviderPageComponent,
   }, 
   {
-    path: 'insurance-plans',
+    path: 'ins-plans',
     component: InsurancePlanPageComponent,
   }, 
   {
-    path: 'insurance-provides',
+    path: 'ins-providers',
     component: InsuranceProvidePageComponent,
   }, 
   {
-    path: 'insurance-vendors',
+    path: 'ins-vendors',
     component: InsuranceVendorsPageComponent,
   }, 
   {
-    path: 'manufacturers',
+    path: 'manufacturer',
     component: ManufacturersPageComponent,
   }, 
   {
-    path: 'medical-providers',
+    path: 'medical-provider',
     component: MedicalProvidersPageComponent,
   }, 
   {

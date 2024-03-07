@@ -6,11 +6,16 @@ import { FormDocumentsPageComponent } from './containers/form-documents-page/for
 import { LetterTemplatePageComponent } from './containers/letter-template-page/letter-template-page.component';
 import { SmsTextTemplatePageComponent } from './containers/sms-text-template-page/sms-text-template-page.component';
 import { TemplatePageComponent } from './containers/template-page/template-page.component';
+import { EmailTemplateHeaderFooterPageComponent } from './containers/email-template-header-footer-page/email-template-header-footer-page.component';
+import { EmailTemplateNewFormPageComponent } from './containers/email-template-new-form-page/email-template-new-form-page.component';
+import { LetterTemplateHeaderFooterPageComponent } from './containers/letter-template-header-footer-page/letter-template-header-footer-page.component';
+import { SmsTextTemplateNewFormPageComponent } from './containers/sms-text-template-new-form-page/sms-text-template-new-form-page.component';
+import { LetterTemplateNewFormPageComponent } from './containers/letter-template-new-form-page/letter-template-new-form-page.component';
 
 const routes: Routes = [
   {
     path: '',
-    component: EmailTemplatePageComponent,
+    component: ClientNotificationDefaultsPageComponent,
  
   }, 
   {
@@ -22,16 +27,36 @@ const routes: Routes = [
     component: EmailTemplatePageComponent,
   },
   {
-    path: 'form-template',
+    path: 'email-template/header-footer',
+    component: EmailTemplateHeaderFooterPageComponent,
+  },
+  {
+    path: 'email-template/form',
+    component: EmailTemplateNewFormPageComponent,
+  },
+  {
+    path: 'forms-documents',
     component: FormDocumentsPageComponent,
   },
   {
-    path: 'email-template',
+    path: 'letter-template',
     component: LetterTemplatePageComponent,
+  },
+  {
+    path: 'letter-template/header-footer',
+    component: LetterTemplateHeaderFooterPageComponent,
+  },
+  {
+    path: 'letter-template/form',
+    component: LetterTemplateNewFormPageComponent,
   },
   {
     path: 'sms-text-template',
     component: SmsTextTemplatePageComponent,
+  },
+  {
+    path: 'sms-text-template/form',
+    component: SmsTextTemplateNewFormPageComponent,
   },
   {
     path: 'templates',
