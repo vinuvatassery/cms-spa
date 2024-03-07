@@ -5,7 +5,7 @@
     icon="add"
     [primary]="true"
     class="add-new-button"
-    (click)="onOpenTodoClicked(todoDetailTemplate)"
+    (click)="onOpenTodoClicked(null,todoDetailTemplate)"
     aria-label="To-Do Item"
   >
     To-Do Item
@@ -28,7 +28,7 @@
 <section>
   <productivity-tools-todo-list
   #todoList
-  (isModalTodoDetailsOpenClicked)="onOpenTodoClicked(todoDetailTemplate)"
+  (isModalTodoDetailsOpenClicked)="onOpenTodoClicked($event,todoDetailTemplate)"
   (isLoadTodoGridEvent)="onloadTodoGrid($event,$event)"
   [isToDODetailsActionOpen]="isToDODetailsActionOpen"
   [todoGrid$]="todoGrid$"
@@ -58,6 +58,8 @@
   (onUpdateTodoItemClick)="onUpdateTodoItemClick($event)"
   [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
   [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
+  [alertId]="selectedAlertId"
+  [isEdit]="!!this.selectedAlertId"
   ></productivity-tools-todo-detail>
 </ng-template>
 

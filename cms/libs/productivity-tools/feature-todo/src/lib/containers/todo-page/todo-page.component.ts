@@ -35,7 +35,7 @@ export class TodoPageComponent implements OnInit {
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
   @ViewChild('todoList', { static: false })
   todoList!: TodoListComponent;
-
+  selectedAlertId! :any
   createTodo$ = this.todoFacade.createTodo$
   /** Constructor **/
   constructor(private dialogService: DialogService, 
@@ -67,7 +67,8 @@ export class TodoPageComponent implements OnInit {
     }
   }
 
-  onOpenTodoClicked(template: TemplateRef<unknown>): void {
+  onOpenTodoClicked(alertId:any ,template: TemplateRef<unknown>): void {
+   this.selectedAlertId = alertId
     this.todoDetailsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np mnl',

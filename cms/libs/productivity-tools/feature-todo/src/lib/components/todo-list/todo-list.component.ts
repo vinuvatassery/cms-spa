@@ -147,7 +147,7 @@ export class TodoListComponent implements OnInit {
         });
   }
   onOpenTodoDetailsClicked() {
-    this.isModalTodoDetailsOpenClicked.emit();
+    this.isModalTodoDetailsOpenClicked.emit(this.selectedAlertId);
   }
 
   onOpenDeleteToDoClicked(template: TemplateRef<unknown>): void {
