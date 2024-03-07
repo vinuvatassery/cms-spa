@@ -64,9 +64,9 @@
             <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
                 <div class="flex-col flex-col-6" >
                     <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">  
+                        <div class="combotable_search_list new_refund_Search">
                             <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>                         
+                            aria-hidden="true">search</span>
                             <span *ngIf="isShownSearchLoader"
                                       class=" k-icon k-i-loading k-input-loading-icon input-inline-loader"></span>
                                     <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
@@ -115,13 +115,13 @@
             <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
                 <div class="flex-col flex-col-6">
                     <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">  
+                        <div class="combotable_search_list new_refund_Search">
                             <span class="material-icons global-search-icon" aria-label="search"
-                            aria-hidden="true">search</span>                         
+                            aria-hidden="true">search</span>
                             <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
                                 class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
                             </span>
-                                      <kendo-multicolumncombobox [data]="tpavendors$ | async" 
+                                      <kendo-multicolumncombobox [data]="tpavendors$ | async"
                                       textField="providerFullName"
                                                                    valueField="vendorAddressId" [fillMode]="formUiStyle.dropDownFillMode"
                                       placeholder="Search Vendor Name, ID"
@@ -168,13 +168,13 @@
                     <div class="combotable_search_list new_refund_Search">
                         <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>
-                       
+
                             <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
                         </span>
                     <kendo-multicolumncombobox textField="providerFullName"
                     valueField="vendorAddressId"
-                   
+
                     [fillMode]="formUiStyle.dropDownFillMode"
                     placeholder="Search Pharmacy name or TIN"
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
@@ -509,7 +509,7 @@
                         <div class="flex-col flex-col-3">
                             <kendo-floatinglabel text="Refund Warrant #">
                                 <kendo-textbox aria-label="Refund Warrant #" [fillMode]="formUiStyle.inputFillMode"
-                                 formControlName="warantNumber">
+                                 formControlName="warantNumber" id="warantNumber">
                                 </kendo-textbox>
                             </kendo-floatinglabel>
                             <kendo-formerror *ngIf="refundRXForm.hasError('required','warantNumber') && isRefundRxSubmitted">Refund Warrant # is required.
