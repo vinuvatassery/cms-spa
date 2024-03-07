@@ -184,6 +184,8 @@ rxRefundInfoDataStateChange(stateData: any, index:any): void {
  if(this.rxRefundInfoFilter?.length ==0){
   this.selectedVendorRefundsList[index].prescriptionFillItems  =  
   this.allSelectedVendorRefundsList[index].prescriptionFillItems
+  this.selectedVendorRefundsList[index].prescriptionFillItems =
+  this.sortPrescriptions(this.selectedVendorRefundsList[index].prescriptionFillItems)
   return;
  }
   this.rxRefundInfoFilter.forEach((element,ind) => {
@@ -194,15 +196,17 @@ rxRefundInfoDataStateChange(stateData: any, index:any): void {
         this.selectedVendorRefundsList[index].prescriptionFillItems);
    
   }else{
+    if(this.selectedVendorRefundsList[index].prescriptionFillItems){
     this.selectedVendorRefundsList[index].prescriptionFillItems =  this.filterWithOperators(fil,  this.selectedVendorRefundsList[index].prescriptionFillItems, 
       this.selectedVendorRefundsList[index].prescriptionFillItems);
+    }
   }
 })
 
   });
 }
-  this.selectedVendorRefundsList[0].prescriptionFillItems =
-  this.sortPrescriptions(this.selectedVendorRefundsList[0].prescriptionFillItems)
+  this.selectedVendorRefundsList[index].prescriptionFillItems =
+  this.sortPrescriptions(this.selectedVendorRefundsList[index].prescriptionFillItems)
 }
 
 sortPrescriptions(source:any[]){
