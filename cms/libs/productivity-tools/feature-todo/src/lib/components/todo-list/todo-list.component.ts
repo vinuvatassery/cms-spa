@@ -87,16 +87,21 @@ export class TodoListComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+   this.initilizeGridRefinersAndGrid()
+    this.loadColumnsData();
+   
+    this.loadAlertGrid$.subscribe((data: any) => {
+      this.loadTodoGrid();
+    });
+  }
+
+  initilizeGridRefinersAndGrid(){
     this.toDoGridState = {
       skip: 0,
       take: 10,
       sort: this.sort,
     };
-    this.loadColumnsData();
     this.loadTodoGrid();
-    this.loadAlertGrid$.subscribe((data: any) => {
-      this.loadTodoGrid();
-    });
   }
   private loadColumnsData(){
     this.columns = {

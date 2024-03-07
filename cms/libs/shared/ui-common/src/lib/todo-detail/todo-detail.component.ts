@@ -198,6 +198,7 @@ export class TodoDetailComponent implements OnInit {
 
   CreateToDoItem(){
     this.createTodo$.subscribe(res =>{
+      this.loadToDoSearch()
       this.closeTodoDetailsClicked()
     })
     let entityTypeCode ='';

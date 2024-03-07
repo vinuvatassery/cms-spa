@@ -5,11 +5,13 @@ import {
   Output,
   TemplateRef,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import { FinancialVendorFacade, FinancialVendorRefundFacade, SearchFacade, VendorFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { TodoListComponent } from '../../components/todo-list/todo-list.component';
 
 @Component({
   selector: 'productivity-tools-todo-page',
@@ -31,7 +33,9 @@ export class TodoPageComponent implements OnInit {
   clientSearchResult$ = this.FinancialRefundFacade.clients$;
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
-  
+  @ViewChild('todoList', { static: false })
+  todoList!: TodoListComponent;
+
   createTodo$ = this.todoFacade.createTodo$
   /** Constructor **/
   constructor(private dialogService: DialogService, 
@@ -73,6 +77,10 @@ export class TodoPageComponent implements OnInit {
   onloadTodoGrid(event: any, alertTypeCode:any){
     this.todoFacade.loadAlerts(event,alertTypeCode.alertType);
   }
+
+   loadTodoList(){
+    this.todoList.initilizeGridRefinersAndGrid()
+   }
   onMarkAlertDoneGrid(selectedAlertId: any){
     this.todoFacade.markAlertAsDone(selectedAlertId);
   }
