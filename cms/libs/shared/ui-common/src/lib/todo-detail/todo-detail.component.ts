@@ -105,7 +105,7 @@ export class TodoDetailComponent implements OnInit {
         })
         this.todoDetailsForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
         this.todoDetailsForm.controls["endDate"].setValue(new Date(res.alertEndDate));
-       if(res.EntityTypeCode !=='CLIENT'){
+       if(res.entityTypeCode !=='CLIENT'){
         this.showVendorSearch = true;
         this.showClientSearch = false;
         this.placeholderText = this.vendorPlaceHolderText;
