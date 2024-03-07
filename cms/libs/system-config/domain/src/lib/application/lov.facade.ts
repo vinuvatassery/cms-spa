@@ -972,7 +972,7 @@ export class LovFacade {
   getEntityTypeCodeLov(){
     this.lovDataService.getLovsbyType(LovType.EntityTypeCode).subscribe({
       next: (lovResponse) => {
-        this.lovFrequencyTypeCodeSubject.next(lovResponse);
+        this.lovEntityTypeCodeSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
