@@ -99,7 +99,7 @@ export class TodoDetailComponent implements OnInit {
           title: res.alertName,
           repeat: res.alertFrequencyCode,
           alertDesc: res.alertDesc,
-          linkTo: res.EntityTypeCode
+          linkTo: res.entityTypeCode
         })
         this.todoDetailsForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
         this.todoDetailsForm.controls["endDate"].setValue(new Date(res.alertEndDate));
@@ -110,6 +110,7 @@ export class TodoDetailComponent implements OnInit {
           providerId: res.clientId
         })
       }else{
+        this.loadClientBySearchText(res.clientFullName)
         this.todoDetailsForm.controls["clientId"].setValue({
           providerName : res.clientFullName,
           dob : res.dob,
