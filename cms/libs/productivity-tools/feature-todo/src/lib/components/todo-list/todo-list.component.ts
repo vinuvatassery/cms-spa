@@ -103,6 +103,7 @@ export class TodoListComponent implements OnInit {
     };
     this.loadTodoGrid();
   }
+  
   private loadColumnsData(){
     this.columns = {
       alertName:"Title",

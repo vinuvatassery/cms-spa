@@ -47,6 +47,8 @@ export class TodoDetailComponent implements OnInit {
   @Output() onUpdateTodoItemClick = new EventEmitter();
   @Output() onGetTodoItem = new EventEmitter();
   @Output() getTodoItemsLov = new EventEmitter();
+  @Input() searchProviderSubject! : Subject<any>
+  @Input() clientSubject! : Subject<any>
   showClientSearchInputLoader = false
   placeolderText =""
   vendorPlaceHolderText = "Search for Vendor Name or TIN";
@@ -104,15 +106,26 @@ export class TodoDetailComponent implements OnInit {
         this.todoDetailsForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
         this.todoDetailsForm.controls["endDate"].setValue(new Date(res.alertEndDate));
        if(res.EntityTypeCode !=='CLIENT'){
+        this.searchProviderSubject.next([
+          { providerName : res.providerName,
+            tin : res.tin,
+            providerId: res.clientId
+          }
+        ])
         this.todoDetailsForm.controls["vendorId"].setValue({
           providerName : res.providerName,
           tin : res.tin,
           providerId: res.clientId
         })
       }else{
-        this.loadClientBySearchText(res.clientFullName)
+        this.clientSubject.next([{
+          clientFullName : res.clientFullName,
+          dob : res.dob,
+          ssn: res.ssn,
+          clientId : res.entityId
+        }])
         this.todoDetailsForm.controls["clientId"].setValue({
-          providerName : res.clientFullName,
+          clientFullName : res.clientFullName,
           dob : res.dob,
           ssn: res.ssn,
           clientId : res.entityId
@@ -233,8 +246,7 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
       this.onTodoItemCreateClick.emit(payload)
     }
     else{
-    this.onTodoItemCreateClick.emit(payload);
+    this.onUpdateTodoItemClick.emit(payload);
     }
-    console.log(payload)
   }
 }

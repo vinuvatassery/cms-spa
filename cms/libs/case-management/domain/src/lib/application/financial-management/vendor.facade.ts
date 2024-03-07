@@ -25,7 +25,7 @@ export class FinancialVendorFacade {
   private providePanelSubject = new Subject<any>();
   private updateProviderPanelSubject = new Subject<any>();
   private addProviderNewSubject = new Subject<any>();
-  private searchProviderSubject = new Subject<any>();
+  public searchProviderSubject = new Subject<any>();
   private removeprovidersubject = new Subject<any>();
   searchProvider$ = this.searchProviderSubject.asObservable();
   removeprovider$ = this.removeprovidersubject.asObservable();

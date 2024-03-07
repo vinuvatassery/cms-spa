@@ -29,8 +29,10 @@ export class TodoPageComponent implements OnInit {
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   getTodo$ = this.todoFacade.getTodo$;
   showHeaderSearchInputLoader = false;
-  clientSearchLoaderVisibility$ = this.FinancialRefundFacade.  clientSearchLoaderVisibility$;
+  searchProviderSubject = this.financialVendorFacade.searchProviderSubject
+  clientSearchLoaderVisibility$ = this.FinancialRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.FinancialRefundFacade.clients$;
+  clientSubject = this.FinancialRefundFacade.clientSubject;
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
   medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
   @ViewChild('todoList', { static: false })
