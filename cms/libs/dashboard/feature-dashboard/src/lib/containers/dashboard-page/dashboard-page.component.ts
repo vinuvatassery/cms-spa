@@ -227,6 +227,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   dashBoardAllWidgetsSubscribe() {
+    
     this.dashboardWrapperFacade
       .getDashboardAllWidgets()
       .pipe(first((response) => response != null))

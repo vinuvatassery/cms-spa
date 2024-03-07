@@ -39,7 +39,7 @@
           >search</span
         >
       </button>
-      <button kendoButton  kendoPopoverAnchor [popover]="eventFilterCard"
+      <button kendoButton [primary]="true" class="c-default" kendoPopoverAnchor [popover]="eventFilterCard"
         showOn="click" aria-label="More">
         <span class="material-icons" aria-label="More option"> more_vert </span>
       </button>
@@ -162,7 +162,8 @@
   
               </common-read-more>
             </div>
-            <!-- <span class="text-primary text-underline c-pointer">View Letter</span> -->
+            <span *ngIf="eventLog.userEventFlag && eventLog.attachments?.length > 0" 
+              class="text-primary text-underline c-pointer" (click)="downloadAttachment(eventLog.attachments[0]?.eventLogAttachmentId, eventLog.attachments[0]?.attachmentFilePath)">View Attachment</span>
           </div>
         </section>
 

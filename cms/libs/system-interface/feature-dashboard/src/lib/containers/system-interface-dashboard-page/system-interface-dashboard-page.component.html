@@ -1,103 +1,76 @@
 <common-bread-crumb></common-bread-crumb>
+
 <div class="app-l-inner-rapper pt-0" kendoRippleContainer>
   <!-- Main Title Section -->
+  <div >
   <div class="app-l-mainTittle" kendoRippleContainer>
     <h2>
-
       <span class="material-icons sidebar-menu_icon" aria-hidden="true">
         insights
       </span>
       System Interface Dashboard
     </h2>
+    <div style="float: right">
+      <button kendoButton *ngIf="!isReorderEnable"><span class="material-icons" aria-hidden="true"
+          (click)="editDashboardClicked(configSubscriptionItems)"> dashboard </span></button>
+      <div *ngIf="isReorderEnable">
+        <button kendoButton (click)="editDashboardCancelClicked('true')" class="mr-1" [primary]="true"
+          aria-label="Save">
+          Save</button>
+        <button kendoButton fillMode="outline" (click)="editDashboardCancelClicked('false')"> Cancel </button>
+      </div>
+    </div>
+    <br>
+    <br>
+</div>
   </div>
-  <section class="pt-2">
-    <div class="interface-chart-wrapper">
-      <div class="interface-chart-cards">
-        <h3 class="mb-1">Client Records Sent</h3>
-        <kendo-chart  *ngIf="clientRecordSendChart" [series]="clientRecordSendChart?.chartData?.series"
-          [legend]="clientRecordSendChart?.chartData?.legend" [title]="clientRecordSendChart?.chartData?.title"
-          [categoryAxis]="clientRecordSendChart?.chartData?.categoryAxis"
-          [tooltip]="clientRecordSendChart?.chartData?.tooltip">
-        </kendo-chart>
-        <div class="text-center pt-3" *ngIf="!clientRecordSendChart">
-          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-          </div>
-          <p>There is no data to display.</p>
-        </div>
-      </div>
-      <div class="interface-chart-cards">
-        <h3 class="mb-1">Prescription Fill Loading</h3>
-        <div class="flex-row">
-          <div class="flex-col flex-col-8">
 
-            <h5> Latest File Received: </h5>
-            <h3> 05/07/2021</h3>
 
-            <h5> Total Record Received: </h5>
-            <h3> 456</h3>
+  <div class="mt-1" [ngClass]="{'reorder_wrapper_enabled': isReorderEnable}">
+    <gridster [options]="configSubscriptionItems" *ngIf="configSubscriptionItems" class="main-gridster">
+      <gridster-item *ngFor="let item of dashboardContentListData$ | async"
+        [item]="item?.widgetProperties?.componentData">
+        <div class="dashboard-cards-wrapper">
+          <button *ngIf="isReorderEnable" kendoButton class="widget_remove_btn" (click)="removeWidget(item)"><span
+              class="material-icons">
+              remove
+            </span></button>
+          <button class="drag-button drag-handler" *ngIf="isReorderEnable"> <span class="material-icons"> drag_indicator
+            </span> </button>
+          <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
+            [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
 
-            <h5> File Record Failures: </h5>
-            <h3>0</h3>
-
-            <div class="mt-2"> <button kendoButton aria-label="View Details" [primary]="true" look="flat"> View Details
-              </button></div>
-          </div>
-          <div class="flex-col flex-col-4">
-
-            <span class="material-icons green-text-color status_icon" aria-hidden="true">
-              check_circle_outline
-            </span>
-          </div>
+          </ndc-dynamic>
         </div>
 
-      </div>
-      <div class="interface-chart-cards">
-        <h3 class="mb-1">Cards Request</h3>
-        <kendo-chart   *ngIf="cardsRequestChart"  [series]="cardsRequestChart?.chartData?.series"
-        [legend]="cardsRequestChart?.chartData?.legend" [title]="cardsRequestChart?.chartData?.title"
-        [categoryAxis]="cardsRequestChart?.chartData?.categoryAxis"
-        [tooltip]="cardsRequestChart?.chartData?.tooltip">
- 
-        </kendo-chart>
-        <div class="text-center pt-3" *ngIf="!cardsRequestChart">
-          <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+      </gridster-item>
+    </gridster>
+
+  </div>
+  <div class="add-more-wrapper" *ngIf="isReorderEnable">
+    <h2 class="mb-2">{{isReorderEnable ? "Add More Widgets" : ""}} </h2>
+    <div class="add-more-container">
+      <div *ngIf="addWidgetConfiguration" class="add-gridster">
+
+
+        <div class="add-more-list" *ngFor="let item of dashboardAllWidgetsListData$ | async">
+
+          <div class="chart-view-point">
+            <div class="dashboard-cards-wrapper">
+
+              <ndc-dynamic class="no-drag" [ndcDynamicComponent]="item?.widgetProperties?.componentData?.component"
+                [ndcDynamicInputs]="inputs" [ndcDynamicOutputs]="outputs">
+
+              </ndc-dynamic>
+            </div>
           </div>
-          <p>There is no data to display.</p>
+          <button kendoRippleContainer class="bottom-title" (click)="addItem(item)"> <span class="material-icons">
+              add_circle </span>
+            <h2>{{item?.widgetDesc}}</h2>
+          </button>
         </div>
-      </div>
-      <div class="interface-chart-cards">
-        <h3 class="mb-1"> Order Data</h3>
-        <div class="flex-row">
-          <div class="flex-col flex-col-8">
 
-            <h5> Latest File Received:</h5>
-            <h3> 05/07/2021</h3>
-
-            <h5> Total Record Received:</h5>
-            <h3> 456</h3>
-
-            <h5> File Record Failures:</h5>
-            <h3>0</h3>
-
-            <div class="mt-2"> <button kendoButton aria-label="View Details" [primary]="true" look="flat"> View Details
-              </button></div>
-          </div>
-          <div class="flex-col flex-col-4">
-            <span class="material-icons warn-text-color status_icon" aria-hidden="true">
-              warning_amber
-            </span>
-          </div>
-        </div>
-      </div>
-      <!-- Page Content Section -->
-    </div>
-    <div>
-      <div class="interface-chart-cards mt-2">
-        <h3> Activity Log</h3>
-        <cms-system-interface-activity-log-lists [activityEventLogList$]="activityEventLogLists$"
-          [pageSizes]="pageSizes" [sortValue]="sortValue" [sortType]="sortType" [sort]="sort"
-          (loadActivityLogListEvent)="loadActivityEventLog()"></cms-system-interface-activity-log-lists>
       </div>
     </div>
-  </section>
+  </div>
 </div>
