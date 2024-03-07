@@ -50,7 +50,7 @@ export class TodoDetailComponent implements OnInit {
   @Input() searchProviderSubject! : Subject<any>
   @Input() clientSubject! : Subject<any>
   showClientSearchInputLoader = false
-  placeolderText =""
+  placeholderText =""
   vendorPlaceHolderText = "Search for Vendor Name or TIN";
   clientPlaceHolderText = "Search for Client Name, ID or SSN";
   filterManager: Subject<string> = new Subject<string>();
@@ -106,6 +106,9 @@ export class TodoDetailComponent implements OnInit {
         this.todoDetailsForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
         this.todoDetailsForm.controls["endDate"].setValue(new Date(res.alertEndDate));
        if(res.EntityTypeCode !=='CLIENT'){
+        this.showVendorSearch = true;
+        this.showClientSearch = false;
+        this.placeholderText = this.vendorPlaceHolderText;
         this.searchProviderSubject.next([
           { providerName : res.providerName,
             tin : res.tin,
@@ -118,6 +121,10 @@ export class TodoDetailComponent implements OnInit {
           providerId: res.clientId
         })
       }else{
+        this.showVendorSearch = false;
+        this.showClientSearch = true;
+        this.placeholderText = this.clientPlaceHolderText;
+
         this.clientSubject.next([{
           clientFullName : res.clientFullName,
           dob : res.dob,
@@ -130,6 +137,7 @@ export class TodoDetailComponent implements OnInit {
           ssn: res.ssn,
           clientId : res.entityId
         })
+        
       }
         this.cdr.detectChanges()
         this.todoDetailsForm.markAllAsTouched()
@@ -174,12 +182,12 @@ export class TodoDetailComponent implements OnInit {
       this.todoDetailsForm.controls['clientId'].enable()
   this.showClientSearch = true;
   this.showVendorSearch = false;
-  this.placeolderText= this.clientPlaceHolderText
+  this.placeholderText= this.clientPlaceHolderText
     }else{
     this.todoDetailsForm.controls['vendorId'].enable()
       this.showClientSearch = false;
       this.showVendorSearch = true;
-     this.placeolderText= this.vendorPlaceHolderText
+     this.placeholderText= this.vendorPlaceHolderText
 
     }
   }

@@ -114,7 +114,7 @@
             valueField="providerId"
             [data]="providerSearchResult$ | async"
             [fillMode]="formUiStyle.dropDownFillMode"
-            [placeholder]="placeolderText"
+            [placeholder]="placeholderText"
            
             (filterChange)="loadVendorsBySearchText($event)"
             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
@@ -147,10 +147,10 @@
     </span>
         <kendo-multicolumncombobox 
        
-          [data]="clientSearchResult$  | async"
-          textField="clientNames"
+          [data]="clientSearchResult$ |async"
+          textField="clientFullName"
           valueField="clientId"
-          [placeholder]="placeolderText"
+          [placeholder]="placeholderText"
           [fillMode]="formUiStyle.dropDownFillMode"
           (filterChange)="loadClientBySearchText($event)"
           [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
