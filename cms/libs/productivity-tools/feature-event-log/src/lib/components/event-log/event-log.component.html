@@ -21,7 +21,7 @@
     <div class="sidePanel_header-right">
       <div class="input-search mat-form-no-b-space" *ngIf="isShownSearch">
           <kendo-textbox aria-label="search event"  placeholder="Search Events"  [fillMode]="formUiStyle.inputFillMode"
-          [(ngModel)]="searchText" (valueChange)="loadLogEvent()">
+          [(ngModel)]="searchText" (valueChange)="loadLogEvent()" (blur)="showHideSearch()">
            </kendo-textbox>
       </div>
       <button
@@ -39,29 +39,24 @@
           >search</span
         >
       </button>     
-      <button id="eventFilterCardBtn" kendoButton (click)="anchor.toggle()">
-        <span class="material-icons" aria-label="More option"> more_vert </span>
-      </button>      
-      <div
-          kendoPopoverAnchor [popover]="eventFilterCard"
-          showOn="none"
-          #anchor="kendoPopoverAnchor"
-          class="popoverAnchor"
-        >
-      <kendo-popover #eventFilterCard [width]="300" position="bottom">
-        <ng-template kendoPopoverBodyTemplate>
-          <div class="event-filter-body">
+      <button #eventFilterCardBtn kendoButton (click)="isEventFilterPopoverOpen = !isEventFilterPopoverOpen">
+        <span class="material-icons" aria-label="More option" *ngIf="!isEventFilterPopoverOpen"> more_vert </span>
+        
+        <span class="material-icons" aria-label="Close more option" *ngIf="isEventFilterPopoverOpen"> close </span>
+      </button>   
+      <div class="event-filter_popover_wrapper" *ngIf="isEventFilterPopoverOpen" #eventtFilterPopover>
+        <div class="event-filter-body">
           <div class="event-filters">
-            <button kendoButton look="flat" aria-label="Sort Ascending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('Asc')">
+            <button kendoButton look="flat" aria-label="Sort Ascending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('asc')" [selected]="sortType=='asc'">
               <span class="material-icons" aria-hidden="true" aria-label="Sort Ascending">arrow_upward</span>
               <label> Sort Ascending </label>
             </button>
-            <button kendoButton look="flat" aria-label="Sort Descending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('desc')">
+            <button kendoButton look="flat" aria-label="Sort Descending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('desc')" [selected]="sortType=='desc'">
               <span class="material-icons" aria-hidden="true" aria-label="Sort Descending">arrow_downward</span>
               <label> Sort Descending </label>
             </button>
             <button kendoButton look="flat" aria-label="Filter" class="btn-h-primary" aria-hidden="false"
-              (click)="isShowFilter = !isShowFilter">
+              (click)="isShowFilter = !isShowFilter" [toggleable]="isShowFilter">
               <span class="material-icons" aria-hidden="true" aria-label="Filter">filter_list</span>
               <label> Filter </label>
             </button>
@@ -107,9 +102,8 @@
             </div>            
           </div>
         </div>
-        </ng-template>
-      </kendo-popover>
-      </div>
+      </div>   
+     
       <button kendoButton class="k-icon-button small-i-btn" aria-label="close" (click)="onCloseEventLogClicked()"
         title="close">
         <span class="material-icons" aria-label="close" aria-hidden="true">close</span>
