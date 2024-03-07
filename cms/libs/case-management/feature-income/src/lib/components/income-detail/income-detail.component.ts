@@ -1,13 +1,13 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit, ElementRef, } from '@angular/core';
 /** Facades **/
-import { IncomeFacade, IncomeTypeCode,ClientDocumentFacade } from '@cms/case-management/domain';
+import { IncomeFacade, IncomeTypeCode} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { SnackBar,StatusFlag } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { Lov, LovFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
+import { LoaderService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
@@ -17,33 +17,38 @@ import { IntlService } from '@progress/kendo-angular-intl';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class IncomeDetailComponent implements OnInit {
-  btnDisabled = false;
+
   public uploadRemoveUrl = 'removeUrl';
   public uploadedIncomeFile: any[] = [];
   public formUiStyle: UIFormStyle = new UIFormStyle();
   public uploadFileRestrictions: UploadFileRistrictionOptions =
     new UploadFileRistrictionOptions();
+
   /** Input properties **/
   @Input() isEditValue!: boolean;
   @Input() clientCaseEligibilityId: string = '';
   @Input() clientId: string = '';
   @Input() clientCaseId: string = '';
   @Input() selectedIncome: any;
-  isRemoveIncomeConfirmationPopupOpened = false;
-  snackbarMessage!: SnackBar;
-  snackbarSubject = new Subject<SnackBar>();
-  snackbar$ = this.snackbarSubject.asObservable();
+
+    /** Output properties **/
   @Output() public sendDetailToIncomeList = new EventEmitter<any>();
   @Output() public loadIncomeList = new EventEmitter<any>();
   @Output() public closePopup = new EventEmitter<any>();
   @Output() public closeModal: EventEmitter<boolean> = new EventEmitter();
+
+    /** Public properties **/
   isIncomeDetailsPopupOpen = false;
   proofOfIncomeFiles: any;
   proofOfIncomeValidator: boolean = false;
   proofOfIncomeValidatorSize: boolean = false;
   noProofOfIncomeFlag!: StatusFlag;
   currentDate = new Date();
-  /** Public properties **/
+  isRemoveIncomeConfirmationPopupOpened = false;
+  snackbarMessage!: SnackBar;
+  snackbarSubject = new Subject<SnackBar>();
+  snackbar$ = this.snackbarSubject.asObservable();
+  btnDisabled = false;
   incomeTypes$: Lov[] = [];
   incomeSources$: Lov[] = [];
   frequencies$: Lov[] = [];
@@ -86,12 +91,9 @@ export class IncomeDetailComponent implements OnInit {
     private readonly incomeFacade: IncomeFacade,
     private lov: LovFacade,
     private readonly loaderService: LoaderService,
-    private loggingService: LoggingService,
-    private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly configurationProvider: ConfigurationProvider,
-    public readonly clientDocumentFacade: ClientDocumentFacade,
     private scrollFocusValidationfacade: ScrollFocusValidationfacade,
-    public intl: IntlService,
+    private intl: IntlService,
   ) { }
 
   /** Lifecycle hooks **/
@@ -380,6 +382,15 @@ export class IncomeDetailComponent implements OnInit {
       this.IncomeDetailsForm.controls['incomeEndDate'].setErrors({'incorrect':true})
     }
 
+    let incomeTypeEmployerRequired = ['W','SE','OI'];
+    if(incomeTypeEmployerRequired.filter((x:any) => x === this.IncomeDetailsForm.controls['incomeTypeCode'].value).length > 0){
+      this.IncomeDetailsForm.controls['employerId'].setValidators([Validators.required,]);
+      this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
+    }
+    else{
+      this.IncomeDetailsForm.controls['employerId'].removeValidators([Validators.required,]);
+      this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
+    }
 
     if (!this.hasNoProofOfIncome) {
       if (this.IncomeDetailsForm.controls['proofIncomeTypeCode'].value === 'O') {

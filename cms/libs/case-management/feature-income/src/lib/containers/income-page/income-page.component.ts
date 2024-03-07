@@ -32,21 +32,9 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   private employerIncomeSubscription !: Subscription;
   private incomeResponseSubscription !: Subscription;
 
-  incomes$ = this.incomeFacade.incomes$;
-  completeStaus$ = this.completionStatusFacade.completionStatus$;
-  lovProofOfIncomeByType$  = this.lov.lovProofOfIncomeByType$;
-  incomeSourcelov$ = this.lov.incomeSourcelov$;
-  incomeTypelov$ = this.lov.incomeTypelov$;
-  incomeFrequencylov$  = this.lov.incomeFrequencylov$;
-  incomesLoader$ = this.incomeFacade.incomesLoader$;
-  employerIncome$ = this.incomeFacade. employerIncome$;
-  hasNoIncome = false;
-  isNodateSignatureNoted = false;
-  public formUiStyle: UIFormStyle = new UIFormStyle();
   /** Input properties **/
   @Input() isEditValue!: boolean;
-  todaysDate = new Date();
-  noIncomeData = new NoIncomeData();
+
   /** Public properties **/
   incomeTypes$ = this.incomeFacade.ddlIncomeTypes$;
   incomeSources$ = this.incomeFacade.ddlIncomeSources$;
@@ -68,7 +56,19 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   noIncomeFlag: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
   setOption:boolean = true;
-
+  todaysDate = new Date();
+  noIncomeData = new NoIncomeData();
+  incomes$ = this.incomeFacade.incomes$;
+  completeStaus$ = this.completionStatusFacade.completionStatus$;
+  lovProofOfIncomeByType$  = this.lov.lovProofOfIncomeByType$;
+  incomeSourcelov$ = this.lov.incomeSourcelov$;
+  incomeTypelov$ = this.lov.incomeTypelov$;
+  incomeFrequencylov$  = this.lov.incomeFrequencylov$;
+  incomesLoader$ = this.incomeFacade.incomesLoader$;
+  employerIncome$ = this.incomeFacade. employerIncome$;
+  hasNoIncome = false;
+  isNodateSignatureNoted = false;
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   public noIncomeDetailsForm: FormGroup = new FormGroup({
     noIncomeClientSignedDate: new FormControl('', []),
     noIncomeSignatureNotedDate: new FormControl({value: this.todaysDate, disabled: true}, []),
@@ -86,7 +86,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   dependentsProofOfSchools:any = [];
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   employerIncome:any;
-
   minDate = new Date();
   totalIncome:any = 0;
   public actions = [
@@ -115,8 +114,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.onBlur();
       },
     },
-
-
   ];
 
   /** Constructor **/
@@ -135,6 +132,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+
     this.loadIncomeSubscription();
     this.initEmployerIncomeSubscription();
     this.lov.getProofOfIncomeTypesByTypeLov();

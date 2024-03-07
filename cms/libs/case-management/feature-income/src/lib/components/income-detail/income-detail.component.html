@@ -39,6 +39,8 @@
             </kendo-combobox-column>        
           </kendo-multicolumncombobox>
         </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!IncomeDetailsForm.controls['employerId'].valid"> Employer Name is required.
+        </kendo-formerror>
       </div>
 
         <div class="flex-col flex-col-6">
