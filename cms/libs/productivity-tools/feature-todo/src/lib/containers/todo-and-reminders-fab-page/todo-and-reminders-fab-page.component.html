@@ -1,4 +1,21 @@
 <productivity-tools-todo-and-reminders-page *ngIf="isShowTodoReminders" (closeAction)="closeAction()"></productivity-tools-todo-and-reminders-page>
 
 
-<productivity-tools-reminder-list *ngIf="showRemindersList"></productivity-tools-reminder-list>
+<productivity-tools-reminder-list *ngIf="showRemindersList"
+[todoGrid$]="todoGrid$"
+(isLoadTodoGridEvent)="onloadTodoGrid($event,$event)"
+(onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
+(onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
+
+></productivity-tools-reminder-list>
+
+<!-- [todoItemList$]="todoItemList$"
+ -->
+
+
+  
+   
+    
+    
+    
+  
