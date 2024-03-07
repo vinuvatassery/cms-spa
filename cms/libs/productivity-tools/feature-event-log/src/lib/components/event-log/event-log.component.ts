@@ -14,6 +14,7 @@ import { ActivatedRoute } from '@angular/router';
 /** Facades **/
 import { EventLogFacade } from '@cms/productivity-tools/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { DocumentFacade } from '@cms/shared/util-core';
 import { Lov, LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { State } from '@progress/kendo-data-query';
@@ -86,7 +87,8 @@ export class EventLogComponent implements OnInit {
     private dialogService: DialogService,
     private route: ActivatedRoute,
     private cd: ChangeDetectorRef,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
+    private documentFacade: DocumentFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -362,6 +364,13 @@ export class EventLogComponent implements OnInit {
       logic: 'and',
     };
     this.filterDataQueryArray.push(object);
+    
+  }
+
+  downloadAttachment(eventLogAttachmentId: any, filePath: string){
+    let pathSplitArray = filePath.split('$');
+    let fileNmae = pathSplitArray[pathSplitArray.length-1];
+    this.documentFacade.viewOrDownloadEventFile(true, eventLogAttachmentId, fileNmae);
   }
 
 
