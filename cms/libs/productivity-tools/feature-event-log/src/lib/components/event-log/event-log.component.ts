@@ -74,12 +74,12 @@ export class EventLogComponent implements OnInit {
   public eventLogFilterForm: FormGroup = new FormGroup({
     caseworkerfilterbyoperator: new FormControl('', []),
     eventtypefilterbyoperator: new FormControl('', []),
-    caseworkerfilterbyvalue: new FormControl('', []),    
+    caseworkerfilterbyvalue: new FormControl('', []),
     eventtypefilterbyvalue: new FormControl('', []),
     afterdatefilter : new FormControl('', []),
     beforedatefilter : new FormControl('', []),
   });
-  
+
   /** Constructor **/
 
   constructor(
@@ -97,7 +97,7 @@ export class EventLogComponent implements OnInit {
     if(this.entityType =='CLIENT')
     {
       this.clientId =   this.route.snapshot.queryParams['id'];
-      this.clientCaseEligibilityId = this.route.snapshot.queryParams['cid'];
+      this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
       this.entityId = this.clientId.toString();
     };
     this.eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$
@@ -109,7 +109,7 @@ export class EventLogComponent implements OnInit {
 
   /** Private methods **/
   private loadEvents(): void {
-    this.createFilterData(this.entityId);
+    this.filterData = [];
     const paginationData = {
       skipCount: 0,
       pagesize: 10,
@@ -117,16 +117,7 @@ export class EventLogComponent implements OnInit {
       sortType: 'desc',
       filter: JSON.stringify(this.filterData),
     };
-    this.eventLogFacade.loadEvents(paginationData);
-  }
-
-  createFilterData(data: string) {
-    this.filterData = [
-      {
-        filters: [{ field: 'entityId', operator: 'eq', value: data }],
-        logic: 'and',
-      },
-    ];
+    this.eventLogFacade.loadEvents(paginationData,this.entityId);
   }
 
   private subscribeEvents() {
@@ -215,7 +206,7 @@ export class EventLogComponent implements OnInit {
 
   onEventLogFilterFilterClicked()
   {
-    this.setFilteredText();  
+    this.setFilteredText();
     this.loadEventLogs();
     this.isShowFilter = false;
     this.cd.detectChanges();
@@ -240,7 +231,7 @@ export class EventLogComponent implements OnInit {
     if(text.length > 0)
     {
       this.filterBy = text.substring(0,text.length -1);
-    }    
+    }
   }
 
   private setFilterOfCaseWorkerAndEventType(field:string, operator:string, value:string,)
@@ -263,7 +254,7 @@ export class EventLogComponent implements OnInit {
 
   private setFiltersForDataQuery()
   {
-    
+
     this.filterDataQueryArray = [];
 
     if (this.searchText.length > 0 && this.isShownSearch) {
@@ -279,23 +270,10 @@ export class EventLogComponent implements OnInit {
       };
       this.filterDataQueryArray.push(object);
     }
-
-    let object ={
-      filters: [
-        {
-          field: "entityId",
-          operator: "eq",
-          value: this.entityId,
-        }
-      ],
-      logic: 'and',
-    };
-    this.filterDataQueryArray.push(object);
-    
     this.setFilterOfCaseWorkerAndEventType("createdBy","caseworkerfilterbyoperator","caseworkerfilterbyvalue");
     this.setFilterOfCaseWorkerAndEventType("eventLogDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
     this.setDateFilters("creationTime");
-    this.filterData = {logic:"and", filters: this.filterDataQueryArray};    
+    this.filterData = {logic:"and", filters: this.filterDataQueryArray};
   }
 
   loadLogEvent() {
@@ -311,10 +289,10 @@ export class EventLogComponent implements OnInit {
       pagesize: 10,
       sort: this.sortColumnName,
       sortType: this.sortType ?? 'asc',
-      filter: JSON.stringify(this.filterData.filters ?? [])  
+      filter: JSON.stringify(this.filterData.filters ?? [])
     };
     console.log(gridDataRefinerValue);
-    this.eventLogFacade.loadEvents(gridDataRefinerValue);
+    this.eventLogFacade.loadEvents(gridDataRefinerValue, this.entityId);
   }
 
   sortByMethod(event:any)
@@ -323,7 +301,7 @@ export class EventLogComponent implements OnInit {
     this.loadEventLogs();
   }
 
-  
+
   onChange(field:any)
   {
     if(field==='AFTERDATE')
@@ -354,7 +332,7 @@ export class EventLogComponent implements OnInit {
     return false;
   }
 
-  
+
   private setDateFilters(field:string)
   {
     var filterArray=[];
@@ -378,9 +356,9 @@ export class EventLogComponent implements OnInit {
         }
       )
     }
-    
+
     let object ={
-      filters: 
+      filters:
         filterArray
       ,
       logic: 'and',
@@ -394,4 +372,24 @@ export class EventLogComponent implements OnInit {
     let fileNmae = pathSplitArray[pathSplitArray.length-1];
     this.documentFacade.viewOrDownloadEventFile(true, eventLogAttachmentId, fileNmae);
   }
+
+
+  private setFilterOfAfterAndBeforeDate(field:string, operator:string, value:string,)
+  {
+    if(this.eventLogFilterForm.controls[value].value != "" && this.eventLogFilterForm.controls[value].value != null)
+    {
+      let object ={
+        filters: [
+          {
+            field: field,
+            operator: operator,
+            value: this.eventLogFilterForm.controls[value].value,
+          }
+        ],
+        logic: 'and',
+      };
+     this.filterDataQueryArray.push(object);
+    }
+  }
+
 }

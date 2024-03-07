@@ -72,7 +72,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
   @Output()  searchPharmacyDataEvent = new EventEmitter<any>();
   @Output()  loadRecentClaimListEvent = new EventEmitter<any>();
   @Output() loadManufacturer = new EventEmitter<any>();
- 
+
   deliveryMethodLovs! :any
   vendorDetails$!: Observable<any>;
   isFinancialDrugsDetailShow = false
@@ -419,7 +419,7 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit{
 
   }
 
-  clickOpenAddEditFinancialDrugsDetails() {  
+  clickOpenAddEditFinancialDrugsDetails() {
     this.hasDrugCreateUpdatePermission = this.userManagementFacade.hasPermission(['Service_Provider_Drug_Create_Update']);
     this.dialogTitle = this.hasDrugCreateUpdatePermission ? "Add" : "Request New";
     this.isFinancialDrugsDetailShow = true;
