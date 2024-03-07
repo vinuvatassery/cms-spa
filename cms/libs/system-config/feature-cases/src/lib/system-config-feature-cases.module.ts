@@ -6,9 +6,10 @@ import { EligibilityCheckListComponent } from './components//eligibility-check-l
 import { CaseAssignmentComponent } from './components/case-assignment/case-assignment.component';
 import { CaseAssignmentPageComponent } from './containers/case-assignment-page/case-assignment-page.component';
 import { EligibilityCheckPageComponent } from './containers/eligibility-check-page/eligibility-check-page.component';
+import { SystemConfigFeatureCasesRoutingModule } from './system-config-feature-cases.routing.module';
 
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureCasesRoutingModule],
   declarations: [
     EligibilityCheckListComponent,
     CaseAssignmentComponent,

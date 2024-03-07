@@ -15,9 +15,7 @@ const routes: Routes = [
           import('@cms/system-config/feature-cases').then(
             (m) => m.SystemConfigFeatureCasesModule
           ),
-        data: {
-          title: '',
-        },
+    
       },
       {
         path: 'client-profile',
@@ -25,9 +23,7 @@ const routes: Routes = [
           import('@cms/system-config/feature-client-profile-management').then(
             (m) => m.SystemConfigFeatureClientProfileManagementModule
           ),
-        data: {
-          title: '',
-        },
+    
       },
       {
         path: 'communication',
@@ -35,9 +31,7 @@ const routes: Routes = [
           import('@cms/system-config/feature-communication').then(
             (m) => m.SystemConfigFeatureCommunicationModule
           ),
-        data: {
-          title: '',
-        },
+    
       },
       {
         path: 'financials',
@@ -45,9 +39,7 @@ const routes: Routes = [
           import('@cms/system-config/feature-financials').then(
             (m) => m.SystemConfigFeatureFinancialsModule
           ),
-        data: {
-          title: '',
-        },
+     
       },
       {
         path: 'housing-coordination',
@@ -57,9 +49,7 @@ const routes: Routes = [
           ).then(
             (m) => m.SystemConfigFeatureHousingCoordinationManagementModule
           ),
-        data: {
-          title: '',
-        },
+    
       },
       {
         path: 'lov',
@@ -67,9 +57,7 @@ const routes: Routes = [
           import('@cms/system-config/feature-lov').then(
             (m) => m.SystemConfigFeatureLovModule
           ),
-        data: {
-          title: '',
-        },
+     
       },
       {
         path: 'other-lists',
@@ -77,9 +65,7 @@ const routes: Routes = [
           import('@cms/system-config-feature-other-lists').then(
             (m) => m.SystemConfigFeatureOtherListsModule
           ),
-        data: {
-          title: '',
-        },
+    
       },
       {
         path: 'service-provider',
@@ -87,9 +73,7 @@ const routes: Routes = [
           import('@cms/system-config/feature-service-provider').then(
             (m) => m.SystemConfigFeatureServiceProviderModule
           ),
-        data: {
-          title: '',
-        },
+      
       },
       {
         path: 'template-management',
@@ -97,9 +81,7 @@ const routes: Routes = [
           import('@cms/system-config/feature-template-management').then(
             (m) => m.SystemConfigFeatureTemplateManagementModule
           ),
-        data: {
-          title: '',
-        },
+       
       },
       {
         path: 'user-management',
@@ -107,9 +89,7 @@ const routes: Routes = [
           import('@cms/system-config/feature-user-management').then(
             (m) => m.SystemConfigFeatureUserManagementModule
           ),
-        data: {
-          title: '',
-        },
+      
       },
     ],
   },
