@@ -194,13 +194,12 @@ export class SendLetterComponent implements OnInit {
     this.loaderService.show();
     let letterRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId);
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
-      if(draftTemplate?.notifcationDraftId == undefined || draftTemplate?.notifcationDraftId == null){
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
         .subscribe({
           next: (data: any) =>{
           if (data) {
             this.onCloseNewLetterClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft');
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Letter Saved As Draft');
           }
           this.loaderService.hide();
         },
@@ -211,24 +210,6 @@ export class SendLetterComponent implements OnInit {
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
         },
       });
-    }else{
-        this.communicationFacade.updateSavedClientandVendorEmailTemplate(draftEsignRequest)
-        .subscribe({
-          next: (data: any) =>{
-          if (data) {
-            this.onCloseNewLetterClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft');
-          }
-          this.loaderService.hide();
-        },
-        error: (err: any) => {
-          this.loaderService.hide();
-          this.isOpenLetterTemplate = true;
-          this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-        },
-      });
-      }
   }
 
   onSaveForLaterClicked() {

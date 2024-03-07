@@ -250,7 +250,6 @@ export class SendTextMessageComponent implements OnInit {
     this.loaderService.show();
     let smsRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId);
     let draftNotificationRequest = this.communicationFacade.prepareClientAndVendorSmsData(smsRequestFormdata, draftTemplate, this.messageRecipient, []);
-      if(draftTemplate?.notifcationDraftId == undefined || draftTemplate?.notifcationDraftId == null){
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftNotificationRequest)
         .subscribe({
           next: (data: any) =>{
@@ -268,7 +267,6 @@ export class SendTextMessageComponent implements OnInit {
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
         },
       });
-      }
   }
 
   loadTemplateContent(documentTemplateId: string) {

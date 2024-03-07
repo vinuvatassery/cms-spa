@@ -80,6 +80,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   selectedEmail: any=[];
   ccEmail: Array<string> = [];
   selectedCCEmail: any = [];
+  defaultCCEmail: any = [];
   showToEmailLoader: boolean = true;
   caseEligibilityId!:any;
   cerEmailAttachedFiles: any[] = [];
@@ -248,7 +249,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.loaderService.show();
     let emailRequestFormdata = this.communicationFacade.prepareClientAndVendorFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.clientCaseId, this.emailSubject, this.loginUserId, this.selectedCCEmail);
     let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(emailRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
-      if(draftTemplate?.notifcationDraftId == undefined || draftTemplate?.notifcationDraftId == null){
         this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
         .subscribe({
           next: (data: any) =>{
@@ -265,24 +265,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
         },
       });
-    }else{
-        this.communicationFacade.updateSavedClientandVendorEmailTemplate(draftEsignRequest)
-        .subscribe({
-          next: (data: any) =>{
-          if (data) {
-            this.onCloseSendEmailClicked();
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Email Saved As Draft');
-          }
-          this.loaderService.hide();
-        },
-        error: (err: any) => {
-          this.loaderService.hide();
-          this.isOpenSendEmailClicked = true;
-          this.loggingService.logException(err);
-          this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-        },
-      });
-      }
   }
 
   onCloseSaveForLaterClicked(){
@@ -381,6 +363,9 @@ onClosePreviewEmail(){
         this.selectedEmail.push(this.toEmail[0]?.trim());
         this.selectedToEmail = this.selectedEmail;
         this.emailSubject = data.description;
+        this.ccEmail = data.ccEmail;
+        this.selectedCCEmail = data.ccEmail;
+        this.defaultCCEmail = data.ccEmail;
         this.showToEmailLoader = false;
         this.ref.detectChanges();
       }
@@ -401,8 +386,9 @@ else{
     this.isOpenDdlEmailDetails = true;
     this.selectedEmail = [];
     this.selectedEmail.push(this.toEmail[0]?.trim());
-    this.selectedToEmail = this.selectedEmail;
+    this.selectedToEmail = this.selectedEmail;  
     this.emailSubject = event.description;
+    this.selectedCCEmail = event.ccEmail;
     this.emailEditorValueEvent.emit(event);
     this.showToEmailLoader = false;
     this.documentTemplate = {
