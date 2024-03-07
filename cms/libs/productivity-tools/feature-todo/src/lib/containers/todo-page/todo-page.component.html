@@ -28,9 +28,12 @@
 <section>
   <productivity-tools-todo-list
   (isModalTodoDetailsOpenClicked)="onOpenTodoClicked(todoDetailTemplate)"
-  (isLoadTodoGridEvent)="onloadTodoGrid($event)"
+  (isLoadTodoGridEvent)="onloadTodoGrid($event,$event)"
   [isToDODetailsActionOpen]="isToDODetailsActionOpen"
-  (todoGrid$)="todoGrid$"
+  [todoGrid$]="todoGrid$"
+  [loadAlertGrid$]="loadAlertGrid$"
+  (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
+  (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
   ></productivity-tools-todo-list>
 </section>
 
@@ -38,7 +41,7 @@
 <ng-template #todoDetailTemplate>
   <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">Create a Custom To Do Item </kendo-dialog-titlebar>
   <productivity-tools-todo-detail 
-  (isLoadTodoGridEvent)="onloadTodoGrid($event)" 
+  (isLoadTodoGridEvent)="onloadTodoGrid($event,$event)" 
   [frequencyTypeCodeSubject$]="frequencyTypeCodeSubject$"
   (isModalTodoDetailsCloseClicked)="onCloseTodoClicked($event)"
   [clientSearchResult$]="clientSearchResult$"

@@ -20,13 +20,16 @@ export class TodoFacade {
   private todoGridSubject = new Subject<any>();
   private todoCreateSubject = new Subject<any>();
   private todoGetSubject = new Subject<any>();
+  private loadAlertGridSubject = new Subject<any>();
   /** Public properties **/
   todo$ = this.todoSubject.asObservable();
   search$ = this.searchSubject.asObservable();
   todoGrid$ = this.todoGridSubject.asObservable();
   createTodo$ = this.todoCreateSubject.asObservable();
   getTodo$ = this.todoGetSubject.asObservable();
+  loadAlertGrid$ = this.loadAlertGridSubject.asObservable();
   signalrReminders$!: Observable<any>;
+
 
   /** Constructor **/
   constructor(
@@ -82,8 +85,8 @@ export class TodoFacade {
     });
   }
 
-  loadTodoGrid(): void {
-    this.todoDataService.loadTodoGrid().subscribe({
+  loadAlerts(payload:any,alertTypeCode:any): void {
+    this.todoDataService.loadAlerts(payload,alertTypeCode).subscribe({
       next: (todoGridResponse: any) => {
         this.todoGridSubject.next(todoGridResponse);
       },
@@ -111,8 +114,7 @@ export class TodoFacade {
     this.loaderService.show()
     this.todoDataService.createTodoItem(payload).subscribe({
       next: (todoGridResponse: any) => {
-        this.loaderService.hide()
-        this.todoCreateSubject.next(true);
+        this.loaderService.hide() 
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)    
       },
       error: (err) => {
@@ -121,4 +123,41 @@ export class TodoFacade {
       },
     })
   }
+
+  markAlertAsDone(alertId:any):any { 
+        this.loaderService.show()
+        this.todoDataService.markAlertAsDone(alertId).subscribe({
+          next: (todoGridResponse: any) => {
+            this.loaderService.hide()
+            this.todoCreateSubject.next(true);
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
+            this.loadAlertGridSubject.next(true);
+          },
+          error: (err) => {
+            this.loaderService.hide()
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+            
+          },
+        })
+      
+  }
+
+  deleteAlert(alertId:any):any {
+      this.loaderService.show()
+      this.todoDataService.deleteAlert(alertId).subscribe({
+        next: (todoGridResponse: any) => {
+          this.loaderService.hide()
+          this.todoCreateSubject.next(true);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
+          this.loadAlertGridSubject.next(true);
+        },
+        error: (err) => {
+          this.loaderService.hide()
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      })
+   
+}
+
+  
 }

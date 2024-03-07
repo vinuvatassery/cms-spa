@@ -22,6 +22,7 @@ export class TodoPageComponent implements OnInit {
   private todoDetailsDialog: any;
   @Output() isToDODetailsActionOpen!: boolean;
   todoGrid$ = this.todoFacade.todoGrid$;
+  loadAlertGrid$ = this.todoFacade.loadAlertGrid$;
   frequencyTypeCodeSubject$ = this.lovFacade.frequencyTypeCodeSubject$
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   getTodo$ = this.todoFacade.getTodo$;
@@ -69,8 +70,14 @@ export class TodoPageComponent implements OnInit {
     });
     this.isToDODetailsActionOpen = true;
   }
-  onloadTodoGrid(event: any){
-    this.todoFacade.loadTodoGrid();
+  onloadTodoGrid(event: any, alertTypeCode:any){
+    this.todoFacade.loadAlerts(event,alertTypeCode.alertType);
+  }
+  onMarkAlertDoneGrid(selectedAlertId: any){
+    this.todoFacade.markAlertAsDone(selectedAlertId);
+  }
+  onDeleteAlertGrid(selectedAlertId: any){
+    this.todoFacade.deleteAlert(selectedAlertId);
   }
 
   onTodoItemCreateClick(payload:any){
