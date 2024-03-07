@@ -9,8 +9,10 @@ import { CaseManagementFeatureCerTrackingModule } from '@cms/case-management/fea
 import { CaseManagementFeatureCommunicationModule } from '@cms/case-management/feature-communication';
 import { SystemConfigFeatureUserManagementModule } from '@cms/system-config/feature-user-management';
 import { ProductivityToolsFeatureEventLogModule } from '@cms/productivity-tools/feature-event-log';
-import { ProductivityToolsFeatureTodoModule } from '@cms/productivity-tools/feature-todo';
+ import { ProductivityToolsFeatureTodoModule } from '@cms/productivity-tools/feature-todo';
 import { ProductivityToolsFeatureDirectMessageModule } from '@cms/productivity-tools/feature-direct-message';
+import { ProductivityToolsFeatureFabsMenuModule } from '@cms/productivity-tools/feature-fabs-menu';
+
 import { CaseManagementFeatureClientEligibilityModule } from '@cms/case-management/feature-client-eligibility';
 import { CaseManagementFeatureClientModule } from '@cms/case-management/feature-client';
 import { CaseManagementFeatureContactModule } from '@cms/case-management/feature-contact';
@@ -29,7 +31,7 @@ import { NewCaseComponent } from './components/new-case/new-case.component';
 import { CaseDetailPageComponent } from './containers/case-detail-page/case-detail-page.component';
 import { Case360PageComponent } from './containers/case360-page/case360-page.component';
 import { Case360HeaderComponent } from './components/case360-header/case360-header.component';
-import { CommonActionsComponent } from './components/common-actions/common-actions.component';
+//import { CommonActionsComponent } from './components/common-actions/common-actions.component';
 import { SendLetterProfileComponent } from './components/send-letter-profile/send-letter-profile.component';
 import { CaseSummaryComponent } from './containers/case-summary/case-summary.component';
 import { CaseDetailsSummaryComponent } from './components/case-details/case-details.component';
@@ -50,7 +52,7 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     SharedUiTpaModule,
     SharedUiCommonModule,
     CaseManagementFeatureCerTrackingModule,
-    ProductivityToolsFeatureTodoModule,
+   ProductivityToolsFeatureTodoModule,
     CaseManagementFeatureClientModule,
     CaseManagementFeatureCommunicationModule,
     SystemConfigFeatureUserManagementModule,
@@ -66,7 +68,8 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     CaseManagementFeatureDrugModule,
     CaseManagementFeatureManagementModule,
     CaseManagementFeatureDocumentModule,
-    CaseManagementFeatureSmokingCessationModule   
+    CaseManagementFeatureSmokingCessationModule,
+    ProductivityToolsFeatureFabsMenuModule
   ],
   declarations: [
     LastVisitedCasesComponent,
@@ -77,14 +80,15 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     CaseDetailPageComponent,
     Case360PageComponent,
     Case360HeaderComponent,
-    CommonActionsComponent,
+    
     SendLetterProfileComponent,
     CaseSummaryComponent,
     CaseDetailsSummaryComponent,  
     PageCompletionStatusComponent,
     Case360HeaderNotificationsComponent,
     ClientImportantInfoComponent,
-    Case360HeaderToolsComponent     
+    Case360HeaderToolsComponent
+   
   ],
   exports: [
     CasePageComponent,
@@ -95,7 +99,7 @@ import { Case360HeaderToolsComponent } from './components/case360-header-tools/c
     CaseDetailPageComponent,
     Case360PageComponent,
     Case360HeaderComponent,
-    CommonActionsComponent,
+
     SendLetterProfileComponent,
     CaseSummaryComponent,
     CaseDetailsSummaryComponent,  

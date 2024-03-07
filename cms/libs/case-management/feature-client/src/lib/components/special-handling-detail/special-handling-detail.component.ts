@@ -6,6 +6,7 @@ import {
   ChangeDetectorRef,
   Output,
   EventEmitter,
+  ElementRef,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** Facades **/
@@ -18,7 +19,7 @@ import {
   Client,
   ClientCaseEligibilityAndFlag,
 } from '@cms/case-management/domain';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { ActivatedRoute } from '@angular/router';
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -71,15 +72,17 @@ export class SpecialHandlingDetailComponent implements OnInit {
   textFieldDisable = true;
   ageMinLimit = 1;
   ageMaxLimit = 9999999999;
-  
+
   /** Constructor **/
   constructor(
+    private readonly elementRef: ElementRef,
     private clientfacade: ClientFacade,
     private route: ActivatedRoute,
     private loaderService: LoaderService,
     private formBuilder: FormBuilder,
     private cdRef: ChangeDetectorRef,
-    private lovFacade: LovFacade
+    private lovFacade: LovFacade,
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade
   ) {
     this.buildSpecialCaseHandlingForm();
   }
@@ -99,7 +102,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
     this.textFieldDisable = true;
     this.cdRef.detectChanges();
   }
- 
+
   private loadLovs() {
     this.lovFacade.getMaterialYesLovs();
     this.lovFacade.getApplicantInfoLovs();
@@ -133,9 +136,9 @@ export class SpecialHandlingDetailComponent implements OnInit {
             this.loaderService.hide();
             this.isShowForm = true;
             /**Populating Client */
-        
+
             this.applicantInfo.client = response.client;
-            
+
             if(response.clientNotes?.length > 0){
               this.tareacaseWorkerNote = response.clientNotes
               this.tareacaseWorkerNote.forEach ((clientNote:any,index:any) =>{
@@ -144,7 +147,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
               this.applicantInfo.ClientNotes = [];
               this.tareacaseWorkerNote = [];
             }
-            
+
             /* Populate Client Case Eligibility */
             if (
               this.applicantInfo.clientCaseEligibilityAndFlag
@@ -168,7 +171,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
               response.clientCaseEligibilityAndFlag.clientCaseEligibilityFlag;
             this.assignModelToForm(this.applicantInfo);
           }
-         
+
         },
         error: (error: any) => {
           this.loaderService.hide();
@@ -231,7 +234,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
       this.applicantInfo.client.startAgeErrandsDifficulty =
       this.specialCaseHandlingForm.controls['startAgeErrandsDifficulty']?.value;
     this.applicantInfo.client.isSpecialCaseHandlingUpdate = true;
-   
+
     this.applicantInfo.ClientNotes = this.tareacaseWorkerNote;
   }
   onUpdateSpecialCaseHandlingDetail() {
@@ -242,30 +245,39 @@ export class SpecialHandlingDetailComponent implements OnInit {
       return;
      }
     }
-    this.setModelValuesForUpdate();
-    this.loaderService.show();
-    this.clientfacade
-      .update(this.applicantInfo, this.profileClientId)
-      .subscribe({
-        next: (response: any) => {
-          if (response) {
-            this.loaderService.hide();
-            this.onEditSpecialHandlingClosed();
+    if(this.specialCaseHandlingForm.valid){
+      this.setModelValuesForUpdate();
+      this.loaderService.show();
+      this.clientfacade
+        .update(this.applicantInfo, this.profileClientId)
+        .subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.loaderService.hide();
+              this.onEditSpecialHandlingClosed();
 
+              this.clientfacade.showHideSnackBar(
+                SnackBarNotificationType.SUCCESS,
+                'Special Handling  updated successfully'
+              );
+            }
+          },
+          error: (error: any) => {
+            this.loaderService.hide();
             this.clientfacade.showHideSnackBar(
-              SnackBarNotificationType.SUCCESS,
-              'Special Handling  updated successfully'
+              SnackBarNotificationType.ERROR,
+              error
             );
-          }
-        },
-        error: (error: any) => {
-          this.loaderService.hide();
-          this.clientfacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            error
-          );
-        },
-      });
+          },
+        });
+    }else{
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.specialCaseHandlingForm, this.elementRef.nativeElement,null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
+      }
+    }
+
   }
   /** Private methods **/
   buildSpecialCaseHandlingForm() {
@@ -290,7 +302,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
       startAgeErrandsDifficulty: ['', Validators.required],
     });
   }
-  
+
   private assignModelToForm(applicantInfo: ApplicantInfo) {
     this.specialCaseHandlingForm.controls[
       'materialInAlternateFormatCode'
@@ -298,14 +310,14 @@ export class SpecialHandlingDetailComponent implements OnInit {
     this.specialCaseHandlingForm.controls[
       'materialInAlternateFormatDesc'
     ].setValue(applicantInfo.client.materialInAlternateFormatDesc);
-   
+
     if (this.applicantInfo.client?.materialInAlternateFormatCode === 'YES') {
       this.specialCaseHandlingForm.controls[
         'materialInAlternateFormatDesc'
       ].setValue(this.applicantInfo.client.materialInAlternateFormatDesc);
     }else {
       this.specialCaseHandlingForm.controls['materialInAlternateFormatDesc'].disable();
-      
+
     }
     if (this.applicantInfo.client?.materialInAlternateFormatDesc === 'OTHER') {
       this.specialCaseHandlingForm.controls[
@@ -319,7 +331,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
         'materialInAlternateFormatOther'
       ].setValidators(null);
       this.specialCaseHandlingForm.controls['materialInAlternateFormatOther'].updateValueAndValidity();
-      
+
     }
     this.specialCaseHandlingForm.controls['interpreterCode'].setValue(
       applicantInfo.client.interpreterCode
@@ -424,7 +436,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
           this.specialCaseHandlingForm.controls[
             otherControlerName
           ].updateValueAndValidity();
-         
+
           this.cdRef.detectChanges();
         } else {
           this.specialCaseHandlingForm.controls[otherControlerName].setValue(
@@ -521,7 +533,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
     }
   }
 
-  deleteClientNote(item:any) { 
+  deleteClientNote(item:any) {
     if(item.clientNotesId){
       this.loaderService.show();
       this.clientfacade.deleteClientNote(
@@ -548,12 +560,12 @@ export class SpecialHandlingDetailComponent implements OnInit {
     }else {
       this.onDeleteCaseWorkerNote(item.id)
     }
-    
-  
+
+
 }
 
   onAddCaseWorkerNote() {
-  
+
     this.tareaCaseWorkerNoteCharachtersCount = 0;
     this.tareaCaseWorkerNoteCounter += 1;
     this.tareacaseWorkerNote.push({
@@ -576,7 +588,7 @@ export class SpecialHandlingDetailComponent implements OnInit {
       clientId: Number(this.profileClientId),
       noteTypeCode:ClientNoteTypeCode.specialHandling
     });
-    
+
   }
   onEditSpecialHandlingClosed() {
     this.isSpecialHandlingPopupClose.emit(true);

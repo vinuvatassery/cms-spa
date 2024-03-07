@@ -1,0 +1,53 @@
+{
+  "name": "productivity-tools-feature-fabs-menu",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/productivity-tools/feature-fabs-menu/src",
+  "prefix": "cms",
+  "tags": ["domain:productivity-tools", "type:feature"],
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/angular:ng-packagr-lite",
+      "outputs": [
+        "{workspaceRoot}/dist/libs/productivity-tools/feature-fabs-menu"
+      ],
+      "options": {
+        "project": "libs/productivity-tools/feature-fabs-menu/ng-package.json",
+        "updateBuildableProjectDepsInPackageJson": true
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/productivity-tools/feature-fabs-menu/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/productivity-tools/feature-fabs-menu/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "libs/productivity-tools/feature-fabs-menu/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": [
+          "libs/productivity-tools/feature-fabs-menu/**/*.ts",
+          "libs/productivity-tools/feature-fabs-menu/**/*.html"
+        ]
+      }
+    }
+  }
+}

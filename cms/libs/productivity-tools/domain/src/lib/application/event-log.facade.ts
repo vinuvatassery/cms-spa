@@ -12,7 +12,7 @@ import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNot
 @Injectable({ providedIn: 'root' })
 export class EventLogFacade {
   /** Private properties **/
-  private eventsSubject = new Subject<Event[]>();
+  private eventsSubject = new Subject<any>();
   private ddlEventsSubject = new Subject<any[]>();
   private eventsDataSubject = new Subject<any>();
   private addEventDataSubject = new Subject<any>();
@@ -30,6 +30,7 @@ export class EventLogFacade {
     private readonly loaderService: LoaderService) {}
 
   /** Public methods **/
+
   showHideSnackBar(type : SnackBarNotificationType , subtitle : any, title : string = '')
   {
       if(type == SnackBarNotificationType.ERROR)
@@ -51,8 +52,8 @@ export class EventLogFacade {
     this.loaderService.hide();
   }
 
-  loadEvents(): void {
-    this.eventDataService.loadEvents().subscribe({
+  loadEvents(params: any, entityId:string): void {
+    this.eventDataService.loadEvents(params,entityId).subscribe({
       next: (eventResponse) => {
         this.eventsSubject.next(eventResponse);
       },

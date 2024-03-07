@@ -1,12 +1,12 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit, } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, OnInit, ElementRef, } from '@angular/core';
 /** Facades **/
 import { IncomeFacade, IncomeTypeCode,ClientDocumentFacade } from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { SnackBar,StatusFlag } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
-import { Lov, LovFacade } from '@cms/system-config/domain';
+import { Lov, LovFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType,ConfigurationProvider } from '@cms/shared/util-core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -81,6 +81,7 @@ export class IncomeDetailComponent implements OnInit {
 
   /** Constructor **/
   constructor(
+    private readonly elementRef: ElementRef,
     private sanitizer: DomSanitizer,
     private readonly incomeFacade: IncomeFacade,
     private lov: LovFacade,
@@ -89,6 +90,7 @@ export class IncomeDetailComponent implements OnInit {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly configurationProvider: ConfigurationProvider,
     public readonly clientDocumentFacade: ClientDocumentFacade,
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade,
     public intl: IntlService,
   ) { }
 
@@ -322,6 +324,12 @@ export class IncomeDetailComponent implements OnInit {
               this.incomeFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
             },
           });
+      }
+    }else{
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.IncomeDetailsForm, this.elementRef.nativeElement,null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
       }
     }
   }

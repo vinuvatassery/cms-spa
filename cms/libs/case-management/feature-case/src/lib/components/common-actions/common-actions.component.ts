@@ -1,60 +1,43 @@
-/** Angular **/
-import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
-/** External libraries **/
-import { DialItem } from '@progress/kendo-angular-buttons';
-import { LovFacade } from '@cms/system-config/domain'
+// /** Angular **/
+// import { Component, ChangeDetectionStrategy } from '@angular/core';
+// /** External libraries **/
+// import { DialItem } from '@progress/kendo-angular-buttons';
 
+// @Component({
+//   selector: 'case-management-common-actions',
+//   templateUrl: './common-actions.component.html',
+//   styleUrls: ['./common-actions.component.scss'],
+//   changeDetection: ChangeDetectionStrategy.OnPush,
+// })
+// export class CommonActionsComponent {
+//   /** Public properties **/
+//   isShownEventLog = false;
+//   isShownDirectMessage = false;
+//   isShownTodoReminders = false;
+//   clickedContact!: any;
+//   item: Array<DialItem> = [{}];
 
-@Component({
-  selector: 'case-management-common-actions',
-  templateUrl: './common-actions.component.html',
-  styleUrls: ['./common-actions.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class CommonActionsComponent implements OnInit {
-  /** Public properties **/
-  eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$;
+//   /** Internal event methods **/
+//   onDialItemClicked(event: any): void {
+//     this.clickedContact = event.item;
+//   }
 
-  isShownEventLog = false;
-  isShownDirectMessage = false;
-  isShownTodoReminders = false;
-  clickedContact!: any;
-  item: Array<DialItem> = [{}];
-  @Input() entityType: any;
-  @Input() entityId: any;
-  @Input() clientCaseEligibilityId: any;
+//   /** External event methods **/
+//   handleShowEventLogClicked() {
+//     this.isShownEventLog = !this.isShownEventLog;
+//     this.isShownDirectMessage = false;
+//     this.isShownTodoReminders = false;
+//   }
 
-   /** Constructor **/
+//   handleShowDirectMessageClicked() {
+//     this.isShownDirectMessage = !this.isShownDirectMessage;
+//     this.isShownEventLog = false;
+//     this.isShownTodoReminders = false;
+//   }
 
-   constructor( private readonly lovFacade : LovFacade
-    ) {}
-
-  ngOnInit() {
-   this.lovFacade.getEventAttachmentTypeLov();
-  }
-
-
-  /** Internal event methods **/
-  onDialItemClicked(event: any): void {
-    this.clickedContact = event.item;
-  }
-
-  /** External event methods **/
-  handleShowEventLogClicked() {
-    this.isShownEventLog = !this.isShownEventLog;
-    this.isShownDirectMessage = false;
-    this.isShownTodoReminders = false;
-  }
-
-  handleShowDirectMessageClicked() {
-    this.isShownDirectMessage = !this.isShownDirectMessage;
-    this.isShownEventLog = false;
-    this.isShownTodoReminders = false;
-  }
-
-  handleShowTodoRemindersClicked() {
-    this.isShownTodoReminders = !this.isShownTodoReminders;
-    this.isShownDirectMessage = false;
-    this.isShownEventLog = false;
-  }
-}
+//   handleShowTodoRemindersClicked() {
+//     this.isShownTodoReminders = !this.isShownTodoReminders;
+//     this.isShownDirectMessage = false;
+//     this.isShownEventLog = false;
+//   }
+// }
