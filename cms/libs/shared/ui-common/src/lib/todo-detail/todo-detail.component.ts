@@ -249,7 +249,7 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
       customAlertFlag : 'Y',
     }
 
-    if(this.isEdit){
+    if(!this.isEdit){
       this.onTodoItemCreateClick.emit(payload)
     }
     else{

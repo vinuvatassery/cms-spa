@@ -189,7 +189,8 @@
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Create" (click)="CreateToDoItem()">Create</button>
+      <button kendoButton [primary]="true" aria-label="Create" 
+      (click)="CreateToDoItem()">{{isEdit? 'Update' :'Create'}}</button>
     </div>
   </div>
 </kendo-dialog-actions>
