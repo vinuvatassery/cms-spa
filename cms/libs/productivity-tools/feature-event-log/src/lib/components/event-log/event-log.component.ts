@@ -34,7 +34,9 @@ export class EventLogComponent implements OnInit {
   @Input() clientCaseEligibilityId: any;
 
   /** Public properties **/
-
+  skeletonCounts = [
+    1, 2, 3, 4, 5
+  ]
   clientId = 0;
   parentEventLogId: any;
   eventList: any = [];
@@ -48,8 +50,6 @@ export class EventLogComponent implements OnInit {
   isAddEventDialogOpen: any;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   eventsdata$ = this.eventLogFacade.eventsdata$;
-
-
   isSubEvent = false;
   // actions: Array<any> = [{ text: 'Action' }];
   filterData: any = { logic: 'and', filters: [] };

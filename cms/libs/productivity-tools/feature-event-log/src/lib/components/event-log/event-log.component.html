@@ -112,7 +112,9 @@
   </div>
 
   <div class="sidePanel_body">
-    <ul aria-label="event log menu" class="event-log-list">
+    
+   
+    <ul aria-label="event log menu" class="event-log-list" *ngIf="events">
       <!-- Event list items -->
 
       <li *ngFor="let eventLog of events; let i = index" aria-label="event log menu item" class="event-log-list_items">
@@ -201,6 +203,10 @@
         <!-- Event sub list items -->
       </li>
     </ul>
+    <div *ngIf="!events">
+      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
+      class="event-list-skeleton-loader"></kendo-skeleton>
+    </div>
     <div class="filter-footer-event">
       <small>Filtered By: {{filterBy}} <a (click)="onEventLogFilterClearClicked()">Clear</a></small>
     </div>

@@ -6,8 +6,10 @@
 }
 .sidePanel-event-log {
   .sidePanel_body {
-    max-height: calc(100vh - 40vh);
+    max-height: calc(100vh - 280px);
     overflow: auto;
+    min-height: 200px;
+    height: 100%;
   }
 }
 .sidePanel_header-right{
@@ -88,3 +90,13 @@
     width: 100%;
   }
  }
+
+ .event-list-skeleton-loader {
+
+  height: 70px;
+  width: 92%;
+  border-radius: 6px;
+  background: rgb(163, 163, 163,25%);
+  margin: 0 auto;
+  margin-top: 10px;
+}
