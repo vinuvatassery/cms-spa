@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { FinancialPharmacyClaimsFacade, GridFilterParam } from '@cms/case-management/domain';
+import { FinancialPharmacyClaimsFacade, GridFilterParam} from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { SortDescriptor, State } from '@progress/kendo-data-query';

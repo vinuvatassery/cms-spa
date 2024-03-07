@@ -137,7 +137,7 @@ dropDowncolumns : any = [
   {
     "columnCode": "physicalAddress",
     "columnDesc": "Physical Address"   ,
-    "vendorTypeCode": [""],
+    "vendorTypeCode": ["PHARMACY"],
   }
 
 ]

@@ -137,6 +137,14 @@ private clientClaimsListDataSubject =  new Subject<any>();
     this.cdr.detectChanges();
   }
   dataStateChange(stateData: any): void {
+    if(stateData.filter?.filters.length > 0)
+    {
+      let stateFilter = stateData.filter?.filters.slice(-1)[0].filters[0];
+      if(stateFilter.field ==="ndc"){
+        stateFilter.value = stateFilter.value.replace(/-/g, "")
+      }
+      this.filter = stateFilter.value;
+    }
     this.openResetDialog(this.filterResetConfirmationDialogTemplate);
    this.gridState = stateData;
   }
