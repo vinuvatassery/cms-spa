@@ -27,12 +27,13 @@ export class IncomeFacade {
   private ddlFrequenciesSubject = new BehaviorSubject<any>([]);
   private ddlProofOfIncomeTypesSubject = new BehaviorSubject<any>([]);
   private incomesSubject = new BehaviorSubject<any>([]);
-  private incomesResponseSubject = new BehaviorSubject<any>([]);
+  private incomesResponseSubject = new Subject<any>();
   private dependentsProofofSchoolsSubject = new BehaviorSubject<any>([]);
   incomeValidSubject = new Subject<boolean>();
   dependantProofProfilePhotoSubject = new Subject();
   incomeListProfilePhotoSubject = new Subject();
   employerSubject = new Subject<any>();
+  employerIncomeSubject = new Subject<any>();
   private incomesLoaderSubject = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
@@ -46,6 +47,7 @@ export class IncomeFacade {
   incomeValid$ = this.incomeValidSubject.asObservable();
   employers$ = this.employerSubject.asObservable();
   incomesLoader$ = this.incomesLoaderSubject.asObservable();
+  employerIncome$ = this.employerIncomeSubject.asObservable();
   /** Constructor**/
   constructor(
     private readonly contactDataService: ContactDataService,
@@ -205,7 +207,7 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
     });
   }
 
-  save(clientCaseEligibilityId : any, noIncomeData : any): Observable<any> {
+  save(clientCaseEligibilityId : any, noIncomeData : any): Observable<any> {   
     return this.contactDataService.updateNoIncomeData(clientCaseEligibilityId, noIncomeData);
   }
 
@@ -264,4 +266,11 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
     }
   }
   
+  loadEmployerIncomes(clientId:string,clientCaseEligibilityId:string): void {
+    this.contactDataService.loadEmployerIncomes(clientId,clientCaseEligibilityId).subscribe({
+      next: (EmployerIncomesResponse: any) => {
+        this.employerIncomeSubject.next(EmployerIncomesResponse);
+      }
+    });
+  }
 }

@@ -31,22 +31,13 @@
             [filterable]="true" (filterChange)="loadEmployers($event)" [data]="employers$ | async"
             formControlName="employerId" [valuePrimitive]="true"
             valueField="employerId">
-            <button kendoButton fillMode="clear" icon="image"></button>
-        
+            <button kendoButton fillMode="clear" icon="image"></button>        
             <kendo-combobox-column>
               <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                 <span>Employer Name:{{ dataItem.employerName }}</span>
               </ng-template>
-            </kendo-combobox-column>       
-         
-        
+            </kendo-combobox-column>        
           </kendo-multicolumncombobox>
-          <kendo-formerror
-            *ngIf="!IncomeDetailsForm.controls['employerId'].valid"
-            class="d-flex align-items-center">
-        
-            Employer name is required.
-          </kendo-formerror>
         </kendo-floatinglabel>
       </div>
 

@@ -61,7 +61,7 @@ export class ContactDataService {
     
     //params = params.append('clientId',clientId);
     //params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);   
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibility/${clientCaseEligibilityId}/income`,gridFilterParam);
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilities/${clientCaseEligibilityId}/income`,gridFilterParam);
   }
 
   loadDependentsProofofSchools() {
@@ -363,4 +363,7 @@ export class ContactDataService {
     return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/employers/SearchText=${searchText}`);
   }
 
+  loadEmployerIncomes(clientId: string, eligibilityId: string){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilities/${eligibilityId}/employer-income`);
+  }
 }

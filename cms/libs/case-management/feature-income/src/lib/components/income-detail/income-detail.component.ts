@@ -359,7 +359,6 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeFrequencyCode'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeStartDate'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeNote'].setValidators([Validators.required,]);
-    this.IncomeDetailsForm.controls['employerId'].setValidators([Validators.required,]);
     this.IncomeDetailsForm.controls['incomeSourceCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeTypeCode'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeAmt'].updateValueAndValidity();
@@ -367,7 +366,6 @@ export class IncomeDetailComponent implements OnInit {
     this.IncomeDetailsForm.controls['incomeStartDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeEndDate'].updateValueAndValidity();
     this.IncomeDetailsForm.controls['incomeNote'].updateValueAndValidity();
-    this.IncomeDetailsForm.controls['employerId'].updateValueAndValidity();
     const endDate=this.IncomeDetailsForm.controls['incomeEndDate'].value;
     const startDate= this.IncomeDetailsForm.controls['incomeStartDate'].value;
     if(endDate<=startDate && this.IncomeDetailsForm.controls['incomeEndDate'].value ){

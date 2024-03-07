@@ -26,6 +26,7 @@ export class IncomeListComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @Input() hasNoIncome!: boolean;
   @Input() clientCaseEligibilityId: string = "";
+  @Input() currentClientCaseEligibilityId: string ='';
   @Input() clientId: any;
   @Input() clientCaseId: any;
   @Input() isClientProfileTab: boolean = false;
@@ -81,6 +82,7 @@ export class IncomeListComponent implements OnInit, OnDestroy {
   dependantProofProfilePhoto$ = this.incomeFacade.dependantProofProfilePhotoSubject;
   incomeListProfilePhoto$ = this.incomeFacade.incomeListProfilePhotoSubject;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  cerStarted:any = true;
   public actions = [
     {
       buttonType: "btn-h-primary",
@@ -167,6 +169,7 @@ export class IncomeListComponent implements OnInit, OnDestroy {
 
     this.incomes$.subscribe({
       next: (income: any) => {
+        this.cerStarted = income.data.filter((x:any)=>x.cerStarted).length > 0;
         this.updateWorkFlowStatus(income?.total > 0);
       },
       error: () => {
@@ -210,7 +213,7 @@ ngOnDestroy(): void {
 
   private includeAddIncomeButtonAndFooterNote() {
     if (this.data === ScreenType.Case360Page) {
-      this.isAddIncomeButtonAndFooterNoteDisplay = false;
+      this.isAddIncomeButtonAndFooterNoteDisplay = true;
     } else {
       this.isAddIncomeButtonAndFooterNoteDisplay = true;
     }

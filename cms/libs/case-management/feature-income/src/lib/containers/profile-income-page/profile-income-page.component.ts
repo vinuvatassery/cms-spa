@@ -64,7 +64,7 @@ export class ProfileIncomePageComponent implements OnInit {
 
   /** Load Incomes **/
   public loadIncomes() {
-    debugger;
+
     const gridFilterParam = new GridFilterParam(this.gridSkipCount, this.pageSize, this.sortValue, this.sortType, JSON.stringify(null));   
     this.loadIncomeData(
       this.clientId?.toString(),
@@ -73,14 +73,7 @@ export class ProfileIncomePageComponent implements OnInit {
   }
 
   loadIncomeListHandle(gridDataRefinerValue: any): void {
-    debugger;
     const gridFilterParam = new GridFilterParam(gridDataRefinerValue.skipCount, gridDataRefinerValue.pageSize, gridDataRefinerValue.sortColumn, gridDataRefinerValue.sortType, JSON.stringify(gridDataRefinerValue.filter));   
-    // const gridDataRefiner = {
-    //   skipcount: gridDataRefinerValue.skipCount,
-    //   maxResultCount: gridDataRefinerValue.pagesize,
-    //   sortColumn: gridDataRefinerValue.sortColumn,
-    //   sortType: gridDataRefinerValue.sortType,
-    // };
     this.loadIncomeData(
       this.clientId.toString(),
       this.clientCaseEligibilityId,
@@ -89,7 +82,6 @@ export class ProfileIncomePageComponent implements OnInit {
   }
 
   onPeriodSelectionChange(value: any) {
-    debugger;
     this.clientCaseEligibilityId = value.id;
     this.loadIncomes();
   }

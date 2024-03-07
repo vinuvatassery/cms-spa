@@ -981,7 +981,6 @@ export class LovFacade {
   }
 
   getProofOfIncomeTypesByTypeLov() {
-    debugger;
     return this.lovDataService.getLovsbyType(LovType.ProofOfIncomeType).subscribe({
       next: (lovResponse) => {
         this.lovProofOfIncomeByTypeSubject.next(lovResponse);
