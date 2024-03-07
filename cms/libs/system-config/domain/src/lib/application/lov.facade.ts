@@ -91,6 +91,7 @@ export class LovFacade {
   private lovYesOrNoSubject = new BehaviorSubject<Lov[]>([]);
   private pendingApprovalPaymentTypeSubject = new Subject<any>();
   private lovVendorTypeCodeSubject = new Subject<any>();
+  private lovFrequencyTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
 
   private serviceTypeSubject = new Subject<any>();
   private refundTypeSubject = new Subject<any>();
@@ -99,8 +100,6 @@ export class LovFacade {
   private interfaceExceptionSubject = new BehaviorSubject<Lov[]>([]);
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
-  private interfaceSupportGroupSubject = new BehaviorSubject<Lov[]>([]);
-  private interfaceSupportMemberSubject = new BehaviorSubject<Lov[]>([]);
 
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
@@ -174,12 +173,10 @@ export class LovFacade {
   yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
   deliveryMethodLov$ = this.lovDeliveryMethodSubject.asObservable();
   VendorTypeCodeLov$ = this.lovVendorTypeCodeSubject.asObservable();
-
+  frequencyTypeCodeSubject$ = this.lovFrequencyTypeCodeSubject.asObservable()
   interfaceExceptionLov$ = this.interfaceExceptionSubject.asObservable();
   BatchInterfaceStatusLov$ = this.BatchInterfaceStatusSubject.asObservable();
   interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
-  interfaceSupportGroupLov$ = this.interfaceSupportGroupSubject.asObservable();
-  interfaceSupportMemberSubjectLov$ = this.interfaceSupportMemberSubject.asObservable();
 
 
   /** Public methods **/
@@ -966,18 +963,6 @@ export class LovFacade {
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       }
-    });
-  }
-
-  getInterfaceSupportGroupNames(): void {
-    this.lovDataService.getLovsbyType(LovType.BatchInterface).subscribe({
-      next: (relationsResponse) => {
-        this.interfaceSupportGroupSubject.next(relationsResponse);
-      },
-
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      },
     });
   }
 }
