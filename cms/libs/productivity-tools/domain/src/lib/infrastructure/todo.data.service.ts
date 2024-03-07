@@ -46,6 +46,9 @@ export class TodoDataService {
     return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${alertTypeCode}`,payload.gridDataRefinerValue);
   }
 
+  getTodoItem(alertId:any){  
+    return this.http.get<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${alertId}`);
+  }
   createTodoItem(payload:any){  
       return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/todo`,payload);
     }
@@ -54,6 +57,10 @@ export class TodoDataService {
   }
   deleteAlert(payload:any){  
     return this.http.delete<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${payload}`);
+  }
+  updateTodoItem(payload:any){
+    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts`,payload);
+
   }
 }
 
