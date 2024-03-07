@@ -44,6 +44,7 @@ export class TodoDetailComponent implements OnInit {
   @Output() searchClientName = new EventEmitter();
   @Output() searchProvider = new EventEmitter();
   @Output() onTodoItemCreateClick = new EventEmitter();
+  @Output() onUpdateTodoItemClick = new EventEmitter();
   @Output() onGetTodoItem = new EventEmitter();
   @Output() getTodoItemsLov = new EventEmitter();
   showClientSearchInputLoader = false
@@ -226,7 +227,12 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
       customAlertFlag : 'Y',
     }
 
+    if(this.isEdit){
+      this.onTodoItemCreateClick.emit(payload)
+    }
+    else{
     this.onTodoItemCreateClick.emit(payload);
+    }
     console.log(payload)
   }
 }

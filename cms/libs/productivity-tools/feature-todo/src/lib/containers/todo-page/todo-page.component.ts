@@ -84,6 +84,10 @@ export class TodoPageComponent implements OnInit {
     this.todoFacade.createTodoItem(payload);
   }
 
+  onUpdateTodoItemClick(payload:any){
+    this.todoFacade.updateTodoItem(payload)
+  }
+
   onGetTodoItem($event:any){
     this.todoFacade.getTodoItem($event);
   }

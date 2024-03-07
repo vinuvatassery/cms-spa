@@ -58,5 +58,9 @@ export class TodoDataService {
   deleteAlert(payload:any){  
     return this.http.delete<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${payload}`);
   }
+  updateTodoItem(payload:any){
+    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts`,payload);
+
+  }
 }
 
