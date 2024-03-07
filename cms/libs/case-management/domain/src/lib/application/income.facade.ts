@@ -129,7 +129,7 @@ export class IncomeFacade {
   }
 
   loadIncomes(clientId:string,clientCaseEligibilityId:string,gridFilterParam:GridFilterParam): void {
-    //this.showLoader();
+    this.showLoader();
     this.incomesLoaderSubject.next(true);
     this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,gridFilterParam).subscribe({
       next: (incomesResponse: any) => {
@@ -155,11 +155,11 @@ export class IncomeFacade {
         if(incomesResponse.clientIncomes){
           this.loadIncomeDistinctUserIdsAndProfilePhoto(incomesResponse.clientIncomes);
         }
-        //this.hideLoader();
+        this.hideLoader();
          this.incomesLoaderSubject.next(false);
       },
       error: (err) => {
-        //this.hideLoader();
+        this.hideLoader();
         this.incomesLoaderSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },

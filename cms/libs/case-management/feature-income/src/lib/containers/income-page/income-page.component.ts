@@ -289,10 +289,8 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /** Private Methods **/
   private loadIncomes(clientId: string, clientCaseEligibilityId: string, gridFilterParam: GridFilterParam, setOption: boolean = true): void {
-    this.loaderService.show();
     this.setOption = setOption;
     this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId, gridFilterParam);    
-    this.loaderService.hide();
   }
 
   private loadIncomeSubscription() {
@@ -781,7 +779,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     this.workflowFacade.updateBasedOnDtAttrChecklist([clientDependentsMinorEmployedFlag, clientDependentsMinorAdditionalIncomeFlag]);
-
+    this.workflowFacade.updateChecklist([clientDependentsMinorEmployedFlag,clientDependentsMinorAdditionalIncomeFlag]);
     if (clientDependentsMinorEmployedFlag.status === StatusFlag.Yes && clientDependentsMinorAdditionalIncomeFlag.status === StatusFlag.Yes) {
       this.updateOtherDataPoints();
     }
