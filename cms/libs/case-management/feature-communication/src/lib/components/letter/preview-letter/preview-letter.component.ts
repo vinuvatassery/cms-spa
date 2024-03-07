@@ -1,5 +1,5 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'case-management-preview-letter',
@@ -11,4 +11,11 @@ export class PreviewLetterComponent {
   @Input() letterContent!: any;
   @Input() paperlessFlag! : any
   @Input() attachmentCount!: number;
+
+  /** Input properties **/
+  @Output() closeEvent = new EventEmitter();
+
+  closeClicked(){
+    this.closeEvent.emit();
+  }
 }

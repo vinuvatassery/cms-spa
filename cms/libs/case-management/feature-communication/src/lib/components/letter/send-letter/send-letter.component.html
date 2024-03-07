@@ -105,6 +105,7 @@
   <case-management-preview-letter
     [letterContent]="currentLetterPreviewData"
     [attachmentCount]="attachmentCount"
+    (closeEvent)="onPreviewLetterClose()"
   ></case-management-preview-letter>
   <kendo-dialog-actions>
     <div class="justify-content-between bigbtn-wrapper ">

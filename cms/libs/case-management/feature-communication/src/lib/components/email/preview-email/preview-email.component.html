@@ -7,7 +7,16 @@
           <div [innerHTML]="emailContent"></div>         
         </div>
       </div>
-      <span class="">{{attachmentCount}} attachment(s) to be printed</span> 
     </div>
   </section>
 </section>
+<kendo-dialog-actions>
+  <div class="justify-content-between bigbtn-wrapper">
+    <div class="justify-content-end">
+      <span class="">{{attachmentCount}} attachment(s) to be printed</span>
+      <button kendoButton [primary]="true" look="outline" aria-label="Close" (click)="closeClicked()">
+        Close
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>

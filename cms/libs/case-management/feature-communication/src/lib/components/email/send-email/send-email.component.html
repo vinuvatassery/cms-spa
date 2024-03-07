@@ -156,7 +156,10 @@
   title="Preview Email"
 >
   <case-management-preview-email
-    [emailContent]="emailContentValue" [paperlessFlag]="paperlessFlag" [attachmentCount]="attachmentCount"
+    [emailContent]="emailContentValue" 
+    [paperlessFlag]="paperlessFlag" 
+    [attachmentCount]="attachmentCount"
+    (closeEvent)="onClosePreviewEmail()"
   ></case-management-preview-email>
   <kendo-dialog-actions>
     <div class="justify-content-between bigbtn-wrapper">
