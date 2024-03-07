@@ -168,15 +168,13 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   }
   loadSupportGroup(skipCountValue: number, maxResultCountValue: number, sortValue: string, sortTypeValue: string) {
     this.isSupportGroupGridLoaderShow = true;
-    debugger;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       maxResultCount: maxResultCountValue,
-      sortColumn: sortValue,
+      sorting: sortValue,
       sortType: sortTypeValue,
       filter: JSON.stringify(this.filter)
     };
-    debugger;
     this.loadSupportGroupListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
