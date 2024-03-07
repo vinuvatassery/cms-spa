@@ -39,7 +39,7 @@
           >search</span
         >
       </button>
-      <button kendoButton [primary]="true" class="c-default" kendoPopoverAnchor [popover]="eventFilterCard"
+      <button kendoButton class="c-default" kendoPopoverAnchor [popover]="eventFilterCard"
         showOn="click" aria-label="More">
         <span class="material-icons" aria-label="More option"> more_vert </span>
       </button>
@@ -204,8 +204,8 @@
         <!-- Event sub list items -->
       </li>
     </ul>
-    <div *ngIf="!events">
-      <kendo-skeleton  *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
+    <div>
+      <kendo-skeleton *ngIf="!events" *ngFor="let skeletonCount of skeletonCounts" shape="rectangle" animation="pulse"
       class="event-list-skeleton-loader"></kendo-skeleton>
     </div>
     <div class="filter-footer-event">
