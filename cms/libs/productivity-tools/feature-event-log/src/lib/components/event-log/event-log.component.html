@@ -39,7 +39,7 @@
           >search</span
         >
       </button>
-      <button kendoButton  kendoPopoverAnchor [popover]="eventFilterCard"
+      <button kendoButton [primary]="true" class="c-default" kendoPopoverAnchor [popover]="eventFilterCard"
         showOn="click" aria-label="More">
         <span class="material-icons" aria-label="More option"> more_vert </span>
       </button>
@@ -115,16 +115,25 @@
     <ul aria-label="event log menu" class="event-log-list">
       <!-- Event list items -->
 
-
-
-
-
       <li *ngFor="let eventLog of events; let i = index" aria-label="event log menu item" class="event-log-list_items">
         <section>
           <div class="items-head">
             <p class="items-head_label">{{eventLog.eventDesc}}</p>
-            <p class="items-head_info">
-              {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by <span class="items-head_info-user">{{eventLog.createdBy}}</span>
+            <p class="items-head_info text-right">
+              {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by
+              
+            <span class="items-head_info-user">
+
+              <common-user-photo-icon  
+              [userId]="eventLog.creatorId" 
+              [userFirstName]="eventLog.createdBy"
+              [userLastName]="''"
+              [linkType]="'profileLink'"
+              [position]="'left'"
+              [callout]="false">
+            </common-user-photo-icon>
+
+            </span>
             </p>
           </div>
           <div class="items-body">
@@ -142,8 +151,17 @@
                 >add</span
               >
             </button>
-            <span class="items-body_details">{{eventLog.eventLogDesc}}</span>
-            <span class="text-primary text-underline c-pointer">View Letter</span>
+            <!-- <span class="items-body_details">{{eventLog.eventLogDesc}}</span> -->
+            <div class="items-body">                
+              <common-read-more
+              [content]="eventLog.eventLogDesc"
+              [limit]="250"
+              [completeWords]="true">
+  
+              </common-read-more>
+            </div>
+            <span *ngIf="eventLog.userEventFlag && eventLog.attachments?.length > 0" 
+              class="text-primary text-underline c-pointer" (click)="downloadAttachment(eventLog.attachments[0]?.eventLogAttachmentId, eventLog.attachments[0]?.attachmentFilePath)">View Attachment</span>
           </div>
         </section>
 
@@ -154,14 +172,29 @@
             <section>
               <div class="items-head">
                 <p class="items-head_label">{{subEventLog.eventDesc}}</p>
-                <p class="items-head_info">
+                <p class="items-head_info text-right">
                   {{subEventLog.creationTime | date: 'MM-dd-yyyy'}} by
-                  <span class="items-head_info-user">{{subEventLog.createdBy}}</span>
+                  <span class="items-head_info-user">
+
+                    <common-user-photo-icon  
+                    [userId]="eventLog.creatorId" 
+                    [userFirstName]="subEventLog.createdBy"
+                    [userLastName]="''"
+                    [linkType]="'profileLink'"
+                    [position]="'left'"
+                    [callout]="false">
+                  </common-user-photo-icon>
+      
+                  </span>
                 </p>
               </div>
-              <div class="items-body">
-                <span [id]="subEventLog.eventLogId" class="items-body_details text-ellipsis">{{subEventLog.eventLogDesc}}</span>
-                <span class="text-primary text-underline c-pointer" *ngIf="isShowReadMore(subEventLog.eventLogId)">Read More</span>
+              <div class="items-body">                
+                <common-read-more
+                [content]="subEventLog.eventLogDesc"
+                [limit]="250"
+                [completeWords]="true">
+    
+                </common-read-more>
               </div>
             </section>
           </li>
