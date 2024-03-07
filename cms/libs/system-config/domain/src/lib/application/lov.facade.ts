@@ -96,7 +96,7 @@ export class LovFacade {
   private serviceTypeSubject = new Subject<any>();
   private refundTypeSubject = new Subject<any>();
   private batchStatusSubject = new Subject<any>();
-  
+  private eventAttachmentTypeLovSubject = new Subject<any>();
   private interfaceExceptionSubject = new BehaviorSubject<Lov[]>([]);
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
@@ -178,7 +178,7 @@ export class LovFacade {
   BatchInterfaceStatusLov$ = this.BatchInterfaceStatusSubject.asObservable();
   interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
   interfaceSupportGroupLov$ = this.interfaceSupportGroupSubject.asObservable();
-
+  eventAttachmentTypeLov$ = this.eventAttachmentTypeLovSubject.asObservable();
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
     if (type == SnackBarNotificationType.ERROR) {
@@ -211,6 +211,16 @@ export class LovFacade {
     });
   }
 
+  getEventAttachmentTypeLov(): void {
+    this.lovDataService.getLovsbyType(LovType.EventAttachemntType).subscribe({
+      next: (lovResponse) => {
+        this.eventAttachmentTypeLovSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
   getRelationShipsLovs(): void {
     this.lovDataService.getLovsbyType(LovType.RelationshipCode).subscribe({
       next: (relationsResponse) => {
@@ -243,6 +253,7 @@ export class LovFacade {
     });
 
   }
+  
   getPronounLovs(): void {
     this.lovDataService.getLovsbyType(LovType.Pronoun).subscribe({
       next: (lovPronounResponse) => {
@@ -864,7 +875,16 @@ export class LovFacade {
       },
     });
   }
-
+  getFrequencyTypeLov(){
+    this.lovDataService.getLovsbyType(LovType.AlertFrequencyCode).subscribe({
+      next: (lovResponse) => {
+        this.lovFrequencyTypeCodeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
   getServiceTypeLov() {
     this.lovDataService.getLovsbyType(LovType.ServiceType).subscribe({
       next: (lovResponse) => {
