@@ -1,15 +1,15 @@
 
 
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, ElementRef, AfterViewInit,ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnDestroy, OnInit, AfterViewInit,ChangeDetectorRef, ViewChildren, QueryList } from '@angular/core';
 /** External libraries **/
-import {catchError, debounceTime, distinctUntilChanged, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
+import {catchError, first, forkJoin, mergeMap, of, pairwise, startWith, Subscription, tap } from 'rxjs';
 /** Internal Libraries **/
-import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam, CerReviewStatusCode } from '@cms/case-management/domain';
+import { WorkflowFacade, CompletionStatusFacade, IncomeFacade, NavigationType, NoIncomeData, CompletionChecklist, ClientDocumentFacade, FamilyAndDependentFacade, GridFilterParam, CerReviewStatusCode, WorkflowTypeCode } from '@cms/case-management/domain';
 import { IntlDateService,UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { Validators, FormGroup, FormControl, } from '@angular/forms';
 import { LovFacade } from '@cms/system-config/domain';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import {ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { DropDownListComponent } from "@progress/kendo-angular-dropdowns";
@@ -133,6 +133,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
 
+    this.loadQueryParams();
     this.loadIncomeSubscription();
     this.initEmployerIncomeSubscription();
     this.lov.getProofOfIncomeTypesByTypeLov();
@@ -156,6 +157,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     this.saveForLaterValidationSubscription.unsubscribe();
     this.discardChangesSubscription.unsubscribe();
     this.incomeResponseSubscription.unsubscribe();
+    this.employerIncomeSubscription.unsubscribe()
   }
 
   ngAfterViewInit(){
@@ -171,6 +173,11 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
+  loadQueryParams()
+  {
+    debugger;
+    this.isCerForm = this.route.snapshot.queryParams['wtc'] === WorkflowTypeCode.CaseEligibilityReview;
+  }
   public onBlur() {
     this.proofSchoolDropdown.forEach((element) => {element.toggle(false);})
   }
@@ -245,8 +252,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
           )
         }
       }
-      else {
-        if (this.incomeData.clientIncomes != null && this.isProofOfSchoolDocumentUploaded) {
+      else if (this.incomeData.clientIncomes != null && this.isProofOfSchoolDocumentUploaded) {
           this.loaderService.show();
           this.incomeFacade.incomeValidSubject.next(true);
           this.noIncomeData.clientDependentsMinorEmployedFlag = this.noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value;
@@ -270,12 +276,12 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.incomeFacade.incomeValidSubject.next(false);
           return of(false);
         }
-      }
     }
     this.cdr.detectChanges();
     return of(false)
   }
   
+
   /** Internal event methods **/
   onIncomeNoteValueChange(event: any): void {
     this.incomeNoteCharachtersCount = event.length;
@@ -290,7 +296,7 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
   /** Private Methods **/
   private loadIncomes(clientId: string, clientCaseEligibilityId: string, gridFilterParam: GridFilterParam, setOption: boolean = true): void {
     this.setOption = setOption;
-    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId, gridFilterParam);    
+    this.incomeFacade.loadIncomes(clientId, clientCaseEligibilityId, gridFilterParam, this.isCerForm);    
   }
 
   private loadIncomeSubscription() {

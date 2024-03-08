@@ -55,13 +55,8 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes(clientId: string, clientCaseEligibilityId: string,gridFilterParam:GridFilterParam) {
-    //return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/?clientCaseEligibilityId=${clientCaseEligibilityId}&SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`);
-
-    
-    //params = params.append('clientId',clientId);
-    //params = params.append('clientCaseEligibilityId',clientCaseEligibilityId);   
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilities/${clientCaseEligibilityId}/income`,gridFilterParam);
+  loadIncomes(clientId: string, clientCaseEligibilityId: string,gridFilterParam:GridFilterParam, isCerForm: boolean = false) {  
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilities/${clientCaseEligibilityId}/income?isCerForm=${isCerForm}`,gridFilterParam);
   }
 
   loadDependentsProofofSchools() {
