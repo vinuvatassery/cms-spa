@@ -108,10 +108,7 @@ export class WidgetPharmacyClaimsComponent implements OnInit {
       CountOrAmount: this.selectedDataCount,
       TimeFrame: this.selectedTimeFrame,
     };
-    this.widgetFacade.loadPharmacyClaimsChart(
-      this.dashboardId,
-      payload
-    );
+    this.widgetFacade.loadPharmacyClaimsChart( this.dashboardId,      payload    );
     this.widgetFacade.pharmacyClaimsChart$
       .pipe(takeUntil(this.destroy$))
       .subscribe({
