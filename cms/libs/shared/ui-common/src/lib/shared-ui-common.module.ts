@@ -50,6 +50,7 @@ import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-re
 import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboard-loader-panel.component';
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { ReadMoreComponent } from './read-more/read-more.component';
+import { AlertBannerComponent } from './alert-banner/alert-banner.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -94,6 +95,7 @@ import { ReadMoreComponent } from './read-more/read-more.component';
     CmsPharmacyClaimsRecentClaimsComponent,
     TodoDetailComponent,
     ReadMoreComponent,
+    AlertBannerComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -137,6 +139,7 @@ import { ReadMoreComponent } from './read-more/read-more.component';
     CmsPharmacyClaimsRecentClaimsComponent,
     TodoDetailComponent,
     ReadMoreComponent,
+    AlertBannerComponent
   ],
 })
 export class SharedUiCommonModule {}
