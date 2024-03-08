@@ -14,7 +14,8 @@
                         <span *ngIf="clientSearchLoaderVisibility$ | async"
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
                         </span>
-                        <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField='clientNames'
+                        <kendo-multicolumncombobox [data]="clientSearchResult$ | async" 
+                        textField='clientNames'
                         valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
                         placeholder="Search Client Name, ID, SSN"
                         [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
