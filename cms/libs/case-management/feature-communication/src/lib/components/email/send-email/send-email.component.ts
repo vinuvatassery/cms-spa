@@ -12,7 +12,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
 /** Internal Libraries **/
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -81,6 +81,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   ccEmail: Array<string> = [];
   selectedCCEmail: any = [];
   defaultCCEmail: any = [];
+  bccEmail: Array<string> = [];
+  selectedbCCEmail: any = [];
   showToEmailLoader: boolean = true;
   caseEligibilityId!:any;
   cerEmailAttachedFiles: any[] = [];
@@ -92,6 +94,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   isSaveFoLater: boolean = false;
   isButtonsVisible: boolean = true;
   isCCDropdownVisible: boolean = true;
+  isBCCDropdownVisible: boolean = true;
   attachmentCount: number = 0;
   draftNotificationRemoveDialogService = false;
   selectedTemplateId!: any;
@@ -99,6 +102,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Private properties **/
   private currentSessionSubscription !: Subscription;
+
+  emailFormControl = new FormControl('', [
+    Validators.required,
+    Validators.email,
+  ]);
+
 
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
@@ -386,7 +395,7 @@ else{
     this.isOpenDdlEmailDetails = true;
     this.selectedEmail = [];
     this.selectedEmail.push(this.toEmail[0]?.trim());
-    this.selectedToEmail = this.selectedEmail;  
+    this.selectedToEmail = this.selectedEmail;
     this.emailSubject = event.description;
     this.selectedCCEmail = event.ccEmail;
     this.emailEditorValueEvent.emit(event);
@@ -556,7 +565,7 @@ else{
       next: (data: any) =>{
       if (data){
         this.ccEmail = data;
-        this.selectedCCEmail = data;
+        //this.selectedCCEmail = data;
         this.ref.detectChanges();
       }
       this.loaderService.hide();
@@ -568,6 +577,33 @@ else{
       this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
     },
   });
+  }
+  onBccEmailClicked(){
+    this.isBCCDropdownVisible=!this.isBCCDropdownVisible;
+    this.selectedbCCEmail='';
+  }
+  onCCValueChange(values: any) {
+    const removedItem = this.defaultCCEmail.find((item:any) => !values.includes(item));
+    if(removedItem != null){
+      values.push(removedItem);
+      this.showHideSnackBar(SnackBarNotificationType.WARNING,'Default CC could not be removed.');
+    }
+    //get invalid email
+    const inValidEmail = values.filter((email:any) => Validators.email(new FormControl(email)));
+    if(inValidEmail.length > 0 && removedItem == null){
+      this.showHideSnackBar(SnackBarNotificationType.WARNING,'Invalid Email not allowed.');
+    }
+    const validEmails = values.filter((email:any) => !Validators.email(new FormControl(email)));
+    this.selectedCCEmail = validEmails;
+  }
+  onBCCValueChange(values: any) {
+    //get invalid email
+    const inValidEmail = values.filter((email:any) => Validators.email(new FormControl(email)));
+    if(inValidEmail.length > 0){
+      this.showHideSnackBar(SnackBarNotificationType.WARNING,'Invalid Email not allowed.');
+    }
+    const validEmails = values.filter((email:any) => !Validators.email(new FormControl(email)));
+    this.selectedbCCEmail = validEmails;
   }
 }
 

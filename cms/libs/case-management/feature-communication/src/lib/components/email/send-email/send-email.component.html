@@ -35,18 +35,58 @@
           ></kendo-multiselect>
           </kendo-floatinglabel>
         </div>
-        <div class="flex-col">
+        <div class="flex-col" [style]="{'display': 'flex'}">
           <kendo-floatinglabel text="CC" class="inline-search-loader" *ngIf="isCCDropdownVisible">
             <kendo-multiselect
           [fillMode]="formUiStyle.dropDownFillMode"
           [data]="ccEmail"
           [(ngModel)]="selectedCCEmail"
+          [filterable]="true"
+          [allowCustom]="true"
           aria-label="cc of email"
+          (valueChange)="onCCValueChange($event)"
           ></kendo-multiselect>
           </kendo-floatinglabel>
           <kendo-floatinglabel text="CC" *ngIf="isCCDropdownVisible===false">
             <kendo-textbox  placeholder="CC" [(ngModel)]="selectedCCEmail" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
+          <button *ngIf="isBCCDropdownVisible" [style]="{'height': 'fit-content','margin': 'auto','margin-top': '1.5rem','margin-left': '1rem'}"
+          kendoButton
+          [primary]="true"
+          (click)="onBccEmailClicked()"
+          aria-label="BCC of email"
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+        >
+         BCC
+        </button>
+        </div>
+        <div class="flex-col" [style]="{'display': 'flex'}">
+          <kendo-floatinglabel text="BCC" class="inline-search-loader" *ngIf="!isBCCDropdownVisible">
+            <kendo-multiselect
+          [fillMode]="formUiStyle.dropDownFillMode"
+          [data]="bccEmail"
+          [(ngModel)]="selectedbCCEmail"
+          [filterable]="true"
+          [allowCustom]="true"
+          aria-label="bcc of email"
+          (valueChange)="onBCCValueChange($event)"
+          ></kendo-multiselect>
+          </kendo-floatinglabel>
+
+          <kendo-floatinglabel text="BCC" *ngIf="isCCDropdownVisible===false">
+            <kendo-textbox  placeholder="BCC" [(ngModel)]="selectedCCEmail" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+          </kendo-floatinglabel>
+
+          <button *ngIf="!isBCCDropdownVisible" [style]="{'height': 'fit-content','margin': 'auto','margin-top': '1.5rem','margin-left': '1rem'}"
+          kendoButton
+          [primary]="true"
+          (click)="onBccEmailClicked()"
+          aria-label="BCC of email"
+          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+        >
+         Clear
+        </button>
+
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Subject">
@@ -155,8 +195,8 @@
   title="Preview Email"
 >
   <case-management-preview-email
-    [emailContent]="emailContentValue" 
-    [paperlessFlag]="paperlessFlag" 
+    [emailContent]="emailContentValue"
+    [paperlessFlag]="paperlessFlag"
     [attachmentCount]="attachmentCount"
     (closeEvent)="onClosePreviewEmail()"
   ></case-management-preview-email>
