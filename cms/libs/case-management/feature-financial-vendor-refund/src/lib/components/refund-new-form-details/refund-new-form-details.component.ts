@@ -871,15 +871,21 @@ addTpa(event:any){
    let isTouched = document.getElementById(`${control}${tblIndex}-${rowIndex}`)?.classList.contains('ng-touched')
    let inValid = false;
    if (control === 'qtyRefunded') {
-       dataItem.qtyRefundedValid = isTouched && (dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0);
+     inValid= isTouched && !(dataItem.qtyRefunded != null && dataItem.qtyRefunded > 0) ? true : false;
+     dataItem.qtyRefundedValid = !inValid;
    }
    if (control === 'daySupplyRefunded') {
-     dataItem.daySupplyRefundedValid = isTouched && (dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0);
+     inValid = isTouched && !(dataItem.daySupplyRefunded != null && dataItem.daySupplyRefunded > 0) ? true : false;
+     dataItem.daySupplyRefundedValid = !inValid;
      let rxRatio = dataItem.rxqty / dataItem.daySupply;
      let refundRatio = dataItem.qtyRefunded / dataItem.daySupplyRefunded;
-     if (isNaN(refundRatio))
-       refundRatio = 0;
-     dataItem.daySupplyRefundedRatioValid = rxRatio >= refundRatio;
+     if (!isNaN(refundRatio) && isFinite(refundRatio) && refundRatio > 0)
+     {
+       inValid = !(rxRatio >= refundRatio);
+       dataItem.daySupplyRefundedRatioValid = inValid;
+     } else {
+       dataItem.daySupplyRefundedRatioValid = false;
+     }
    }
    if (control === 'refundedAmount') {
     inValid = isTouched && !(dataItem.refundedAmount != null && dataItem.refundedAmount > 0) ? true : false;
