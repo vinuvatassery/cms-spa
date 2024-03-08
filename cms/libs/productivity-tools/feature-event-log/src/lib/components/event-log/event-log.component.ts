@@ -95,7 +95,7 @@ export class EventLogComponent implements OnInit {
     if(this.entityType =='CLIENT')
     {
       this.clientId =   this.route.snapshot.queryParams['id'];
-      this.clientCaseEligibilityId = this.route.snapshot.queryParams['cid'];
+      this.clientCaseEligibilityId = this.route.snapshot.queryParams['e_id'];
       this.entityId = this.clientId.toString();
     };
     this.eventAttachmentTypeLov$ = this.lovFacade.eventAttachmentTypeLov$
