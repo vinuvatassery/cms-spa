@@ -92,6 +92,7 @@ export class LovFacade {
   private pendingApprovalPaymentTypeSubject = new Subject<any>();
   private lovVendorTypeCodeSubject = new Subject<any>();
   private lovFrequencyTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovEntityTypeCodeSubject = new BehaviorSubject<Lov[]>([])
 
   private serviceTypeSubject = new Subject<any>();
   private refundTypeSubject = new Subject<any>();
@@ -176,6 +177,7 @@ export class LovFacade {
   deliveryMethodLov$ = this.lovDeliveryMethodSubject.asObservable();
   VendorTypeCodeLov$ = this.lovVendorTypeCodeSubject.asObservable();
   frequencyTypeCodeSubject$ = this.lovFrequencyTypeCodeSubject.asObservable()  
+  entityTypeCodeSubject$ = this.lovEntityTypeCodeSubject.asObservable()
   lovProofOfIncomeByType$ = this.lovProofOfIncomeByTypeSubject.asObservable();
 
   interfaceExceptionLov$ = this.interfaceExceptionSubject.asObservable();
@@ -969,6 +971,18 @@ export class LovFacade {
       }
     });
   }
+
+  getEntityTypeCodeLov(){
+    this.lovDataService.getLovsbyType(LovType.EntityTypeCode).subscribe({
+      next: (lovResponse) => {
+        this.lovEntityTypeCodeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
   getEventAttachmentTypeLov(): void {
     this.lovDataService.getLovsbyType(LovType.EventAttachemntType).subscribe({
       next: (lovResponse) => {
