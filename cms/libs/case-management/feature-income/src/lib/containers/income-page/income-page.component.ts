@@ -175,7 +175,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadQueryParams()
   {
-    debugger;
     this.isCerForm = this.route.snapshot.queryParams['wtc'] === WorkflowTypeCode.CaseEligibilityReview;
   }
   public onBlur() {
