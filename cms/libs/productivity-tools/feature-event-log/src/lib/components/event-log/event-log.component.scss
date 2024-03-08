@@ -29,6 +29,7 @@
       justify-content: space-between;
       font-size: 0.857rem;
       color: #666666;
+      gap:10px;
       &_info {
         &-user {
           text-decoration: underline;
@@ -82,3 +83,8 @@
    max-width: 450px;
  }
  
+ .event-filter-button {
+  button{
+    width: 100%;
+  }
+ }

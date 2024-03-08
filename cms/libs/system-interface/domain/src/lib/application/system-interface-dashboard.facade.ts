@@ -18,8 +18,10 @@ export class SystemInterfaceDashboardFacade {
   public cardsRequestChart$ =
     this.cardsRequestChartSubject.asObservable();
   private activityEventLogListSubject = new Subject<any>();
-  activityEventLogLists$ =
-    this.activityEventLogListSubject.asObservable();
+  activityEventLogLists$ =    this.activityEventLogListSubject.asObservable();
+
+  private prescriptionsFillsSubject = new Subject<any>();
+  prescriptionsFills$ =    this.prescriptionsFillsSubject.asObservable();
 
   private batchLogExceptionListSubject = new Subject<any>();
   batchLogExcptionLists$ = this.batchLogExceptionListSubject.asObservable();
@@ -70,25 +72,40 @@ export class SystemInterfaceDashboardFacade {
 
   }
 
-  loadClientRecordSendChart() {
-    this.systemInterfaceDashboardService.getClientRecordSendChart().subscribe({
-      next: (ClientRecordSendChart) => {
+  prescriptionsFillsCard() {
+    this.systemInterfaceDashboardService.getPrescriptionsFills().subscribe({
+      next: (prescriptionsFills:any) => {
+        this.prescriptionsFillsSubject.next(prescriptionsFills);
+      },
+
+      error: (err:any) => {
+        console.error('err', err);
+      },
+    });
+  }
+  loadClientRecordSendChart(days:number,isCardRequest:boolean) {
+    this.systemInterfaceDashboardService.getClientSendCardsinfo(days,isCardRequest).subscribe({
+      next: (ClientRecordSendChart:any) => {
+        debugger
         this.ClientRecordSendChartSubject.next(ClientRecordSendChart);
       },
 
-      error: (err) => {
+      error: (err:any) => {
         console.error('err', err);
       },
     });
   }
 
-  loadCardsRequestChart() {
-    this.systemInterfaceDashboardService.getCardsRequestChart().subscribe({
+  loadCardsRequestChart(days:number,isCardRequest:boolean) {
+    this.loaderService.show();
+    this.systemInterfaceDashboardService.getCardsRequestinfo(days,isCardRequest).subscribe({
       next: (cardsRequestChart) => {
         this.cardsRequestChartSubject.next(cardsRequestChart);
+        this.loaderService.hide();
       },
 
       error: (err) => {
+        this.loaderService.hide();
         console.error('err', err);
       },
     });
@@ -114,20 +131,20 @@ export class SystemInterfaceDashboardFacade {
   }
 
   getBatchLogExceptionsLists(fileId: string, interfaceTypeCode: string, processTypeCode: string, params: any) {
- 
+
     return this.systemInterfaceDashboardService.getBatchlogsExceptions(fileId, interfaceTypeCode, processTypeCode, params);
-    
+
   }
 
-  getStatusArray():string[]{
+  getStatusArray(): string[]{
     return Object.values(SystemInterfaceActivityStatusCode)
   }
 
-  getStatusDescriptionArray():string[]{
+  getStatusDescriptionArray(): string[]{
     return Object.values(SystemInterfaceActivityStatusCodeDescription)
   }
 
-  getEecProcessTypeCodeArray():string[]{
+  getEecProcessTypeCodeArray(): string[]{
     return Object.values(SystemInterfaceEecProcessTypeCode)
   }
 
@@ -150,6 +167,44 @@ export class SystemInterfaceDashboardFacade {
         },
       });
   }
+
+  getDocumentDownload(fileId: string) {
+    return this.systemInterfaceDashboardService.getDocumentDownload(fileId).subscribe({
+      next: (dataResponse: any) => {
+
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+      },
+    });;
+  }
   // ----------------------------------
+
+  getClientDocumentsViewDownload(clientDocumentId: string) {
+    return this.service.getDocumentDownload(clientDocumentId);
+  }
+
+  viewOrDownloadFile(documentId: string, documentName: string) {
+    if (documentId === undefined || documentId === '') {
+      return;
+    }
+    this.loaderService.show()
+    this.getClientDocumentsViewDownload(documentId).subscribe({
+      next: (data: any) => {
+
+        const fileUrl = window.URL.createObjectURL(data);
+        window.open(fileUrl, "_blank");
+        const downloadLink = document.createElement('a');
+        downloadLink.href = fileUrl;
+        downloadLink.download = documentName;
+        downloadLink.click();
+        this.loaderService.hide();
+      },
+      error: (error: any) => {
+        this.loaderService.hide();
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, error)
+      }
+    })
+  }
 
 }
