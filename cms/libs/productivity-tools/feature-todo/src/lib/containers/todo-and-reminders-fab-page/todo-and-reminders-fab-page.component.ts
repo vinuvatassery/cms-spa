@@ -29,11 +29,11 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     frequencyTypeCodeSubject$ = this.lovFacade.frequencyTypeCodeSubject$
     entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
     searchProviderSubject = this.financialVendorFacade.searchProviderSubject
-    clientSearchLoaderVisibility$ = this.FinancialRefundFacade.clientSearchLoaderVisibility$;
-    clientSearchResult$ = this.FinancialRefundFacade.clients$;
+    clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
+    clientSearchResult$ = this.financialRefundFacade.clients$;
     providerSearchResult$ =this.financialVendorFacade.searchProvider$
     createTodo$ = this.todoFacade.createTodo$
-     clientSubject = this.FinancialRefundFacade.clientSubject;
+     clientSubject = this.financialRefundFacade.clientSubject;
      medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
      getTodo$ = this.todoFacade.getTodo$;
     @Output() isToDODetailsActionOpen!: boolean;
@@ -45,7 +45,7 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     constructor( private route: ActivatedRoute,
       public readonly todoFacade: TodoFacade,
       public lovFacade : LovFacade,
-      private readonly FinancialRefundFacade: FinancialVendorRefundFacade,
+      private readonly financialRefundFacade: FinancialVendorRefundFacade,
       private dialogService: DialogService, 
       private readonly financialVendorFacade : FinancialVendorFacade
     ) {}
@@ -99,7 +99,7 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
         this.financialVendorFacade.searchAllProvider(data);
       }
       searchClientName(event:any){
-        this.FinancialRefundFacade.loadClientBySearchText(event);
+        this.financialRefundFacade.loadClientBySearchText(event);
       }
       onTodoItemCreateClick(payload:any){
         this.todoFacade.createTodoItem(payload);
