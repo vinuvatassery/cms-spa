@@ -42,7 +42,6 @@ export class DistributionDetailComponent implements OnInit {
   isLoading = false;
   isValidateForm = false;
 
-
   /** Constructor **/
   constructor(private formBuilder: FormBuilder,
     private readonly lovFacade: LovFacade,
@@ -73,7 +72,7 @@ export class DistributionDetailComponent implements OnInit {
     }
 
     if (this.selectedGroup)
-      this.memberForm.controls['groupName'].setValue(this.selectedGroup.groupName)
+      this.memberForm.controls['groupName'].setValue(this.selectedGroup.groupName);
   }
 
   mapFormValues() {

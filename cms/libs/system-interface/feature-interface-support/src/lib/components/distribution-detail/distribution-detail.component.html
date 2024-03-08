@@ -37,13 +37,18 @@
 
         </div>
         <div class="flex-col">
+            <kendo-formfield>
             <kendo-floatinglabel text="Email Address">
                 <kendo-textbox [fillMode]="formUiStyle.inputFillMode" formControlName="email">
                 </kendo-textbox>
             </kendo-floatinglabel>
-            <kendo-formerror *ngIf="!memberForm.controls['email'].valid">
+            <kendo-formerror *ngIf="isSubmitted && !memberForm.controls['email'].valid && !memberForm.controls['email'].value">
                 Email Address is required
             </kendo-formerror>
+            <kendo-formerror *ngIf="isSubmitted && !memberForm.controls['email'].valid && memberForm.controls['email'].value">
+                Invalid Email Address
+            </kendo-formerror>
+        </kendo-formfield>
         </div>
 
 

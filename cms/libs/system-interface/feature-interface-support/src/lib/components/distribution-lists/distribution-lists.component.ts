@@ -251,6 +251,8 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   }
 
   onMemberDetailsClicked() {
+    if (!this.selectedGroup)
+      return;
     this.isEditMode = false;
     this.selectedMemberData = null;
     this.isMemberDetailPopup = true;
@@ -318,7 +320,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     });
   }
 
-  performSearch(searchValue: any) { 
+  performSearch(searchValue: any) {
     this.onChange(searchValue);
   }
 
