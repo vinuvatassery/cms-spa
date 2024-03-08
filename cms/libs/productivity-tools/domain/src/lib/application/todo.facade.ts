@@ -132,7 +132,8 @@ export class TodoFacade {
       next: (todoGridResponse: any) => {
         this.loaderService.hide() 
         this.todoCreateSubject.next(true);
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)    
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)  
+        this.loadAlertGridSubject.next(true);  
       },
       error: (err) => {
         this.loaderService.hide()
