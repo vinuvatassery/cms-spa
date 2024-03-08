@@ -513,7 +513,7 @@
                                   </kendo-numerictextbox>
                                   
                                   <kendo-formerror *ngIf="isAddClicked && !dataItem.daySupplyRefundedValid">Days Supply Refunded is required</kendo-formerror>
-                                  <kendo-formerror *ngIf="isAddClicked && !dataItem.daySupplyRefundedRatioValid">Days Supply Refunded can not be more than the RX supply per Rx qty</kendo-formerror>
+                                  <kendo-formerror *ngIf="isAddClicked && dataItem.daySupplyRefundedRatioValid">Days Supply Refunded cannot be more than the RX supply per Rx qty</kendo-formerror>
                                   
                                 </ng-template>
                                 </kendo-grid-column>
