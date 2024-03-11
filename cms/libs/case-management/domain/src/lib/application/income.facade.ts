@@ -234,8 +234,8 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
     return this.contactDataService.loadIncomeDetailsService(clientId, clientIncomeId)
   }
 
-  loadEmployers(searchText :any): void {
-    this.contactDataService.loadEmployers(searchText).subscribe({
+  loadEmployers(employerName :any): void {
+    this.contactDataService.loadEmployers(employerName).subscribe({
       next: (employers) => {
         this.employerSubject.next(employers);
       },

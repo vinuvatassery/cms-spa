@@ -354,8 +354,8 @@ export class ContactDataService {
     )
   }
 
-  loadEmployers(searchText : string) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/employers/SearchText=${searchText}`);
+  loadEmployers(employerName : string) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/employers/employerName=${employerName}`);
   }
 
   loadEmployerIncomes(clientId: string, eligibilityId: string){

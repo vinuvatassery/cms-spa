@@ -137,12 +137,12 @@ export class IncomeDetailComponent implements OnInit {
     });
   }
 
-  loadEmployers(searchText: any){
+  loadEmployers(employerName: any){
 
-    if (!searchText || searchText.length == 0) {
+    if (!employerName || employerName.length == 0) {
       return;
     }
-    this.incomeFacade.loadEmployers(searchText);
+    this.incomeFacade.loadEmployers(employerName);
   }
   loadProofOfIncomeTypes(proofIncomeTypeStatus: boolean = false) {
     switch (this.IncomeDetailsForm.controls['incomeTypeCode'].value.toUpperCase()) {
