@@ -9,6 +9,7 @@ import { EmailDataService } from '../infrastructure/email.data.service';
 import { CommunicationEvents } from '../enums/communication-event.enum';
 import { LoggingService } from '@cms/shared/util-core';
 import { SmsNotification } from '../entities/sms-notification';
+import { DocumentDataService } from '../infrastructure/document.data.service';
 
 @Injectable({ providedIn: 'root' })
 export class CommunicationFacade {
@@ -27,7 +28,8 @@ export class CommunicationFacade {
   ddlEmails$ = this.ddlEmailsSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly emailDataService: EmailDataService, private readonly loggingService: LoggingService,) { }
+  constructor(private readonly emailDataService: EmailDataService, private readonly loggingService: LoggingService,
+    private readonly documentDataService: DocumentDataService) { }
 
   /** Public methods **/
   loadEmails(): void {
@@ -240,20 +242,32 @@ export class CommunicationFacade {
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('description', emailData?.description ?? '');
     formData.append('typeCode', emailData?.typeCode ?? '');
+    formData.append('entity', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('notifcationDraftId', emailData?.notifcationDraftId ?? '');
     let i = 0;
-    clientAndVendorEmailAttachedFiles.forEach((file) => {
+    clientAndVendorEmailAttachedFiles[0].forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {
-        formData.append('AttachmentDetails[' + i + '][fileName]', file.document.description == undefined ? file.document.fileName : file.document.description);
-        formData.append('AttachmentDetails[' + i + '][filePath]', file.document.templatePath == undefined ? file.document.filePath : file.document.templatePath);
-        formData.append('AttachmentDetails[' + i + '][typeCode]', file.document.typeCode === undefined || file.document.typeCode === null ? file.document.typeCode : file.document.typeCode);
+        formData.append('AttachmentDetails[' + i + '][fileName]', file.name ?? file.document.fileName);
+        formData.append('AttachmentDetails[' + i + '][filePath]', this.getDocumentFilePath(file.document));
+        formData.append('AttachmentDetails[' + i + '][clientDocumentId]', file.document.clientDocumentId ?? '');
+        formData.append('AttachmentDetails[' + i + '][documentTemplateId]', file.document.documentTemplateId ?? '');
         i++;
       } else {
         formData.append('attachments', file.rawFile);
       }
     });
     return formData;
+  }
+
+  getDocumentFilePath(document: any){
+    if(document.templatePath){
+      return document.templatePath;
+    }else if(document.filePath){
+      return document.filePath;
+    }else{
+      return document.documentPath;
+    }
   }
 
   prepareClientAndVendorSmsData(formData: FormData, draftTemplate: any, messageRecipient: any, arg2: undefined[]) {
@@ -307,5 +321,15 @@ export class CommunicationFacade {
     return this.emailDataService.loadEmailTemplates(
       groupCode, categoryCode
     );
+  }
+
+  loadClientAttachments(clientId: any) {
+    return this.documentDataService.getDocumentsByClientCaseEligibilityId(
+      clientId, 0, 1000, '', 'asc', null, null
+    );
+  }
+
+  loadFormsAndDocuments(typeCode: string) {
+    return this.emailDataService.loadFormsAndDocuments(typeCode);
   }
 }

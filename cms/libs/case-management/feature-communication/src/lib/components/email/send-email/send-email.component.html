@@ -78,17 +78,6 @@
           <kendo-floatinglabel text="BCC" *ngIf="isCCDropdownVisible===false">
             <kendo-textbox  placeholder="BCC" [(ngModel)]="selectedCCEmail" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
-
-          <!-- <button *ngIf="!isBCCDropdownVisible" [style]="{'height': 'fit-content','margin': 'auto','margin-top': '1.5rem','margin-left': '1rem'}"
-          kendoButton
-          [primary]="true"
-          (click)="onBccEmailClicked()"
-          aria-label="BCC of email"
-          pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-        >
-         Clear
-        </button> -->
-
         </div>
         <div class="flex-col">
           <kendo-floatinglabel text="Subject">

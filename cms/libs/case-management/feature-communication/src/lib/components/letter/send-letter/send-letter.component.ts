@@ -468,7 +468,11 @@ export class SendLetterComponent implements OnInit {
     this.cerEmailAttachedFiles = event;
     this.attachmentCount = this.cerEmailAttachedFiles?.length;
   }else{
-    this.clientAndVendorAttachedFiles = event;
+    const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
+    if(!isFileExists)
+    {
+    this.clientAndVendorAttachedFiles?.push(event);
+    }
     this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
   }
 }

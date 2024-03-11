@@ -13,12 +13,12 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 /** Facades **/
-import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode} from '@cms/case-management/domain';
+import { CommunicationFacade, ClientDocumentFacade, EsignFacade, CommunicationEventTypeCode, DocumentFacade} from '@cms/case-management/domain';
 import { UIFormStyle, UploadFileRistrictionOptions } from '@cms/shared/ui-tpa';
 import { EditorComponent } from '@progress/kendo-angular-editor';
 
 /** External Libraries **/
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider} from '@cms/shared/util-core';
+import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 
 /** Internal Libraries **/
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -63,7 +63,6 @@ export class EmailEditorComponent implements OnInit {
   public uploadedAttachedFile: any[] = [];
   public selectedAttachedFile: any[] = [];
   cerFormPreviewData:any;
-  clientAllDocumentList$: any;
   public uploadFileRestrictions: UploadFileRistrictionOptions = new UploadFileRistrictionOptions();
   public uploadRemoveUrl = 'removeUrl';
   stringValues: string[] = ['MyFullName', 'MyJobTitle', 'MyPhone', 'MyEmail'];
@@ -99,7 +98,8 @@ export class EmailEditorComponent implements OnInit {
       },
     },
   ];
-
+  clientAllDocumentList$!: any;  
+  formsAndDocumentList$!: any;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -109,12 +109,15 @@ export class EmailEditorComponent implements OnInit {
     private formBuilder: FormBuilder,
     public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly ref: ChangeDetectorRef,
-    private readonly esignFacade: EsignFacade) {}
+    private readonly esignFacade: EsignFacade,
+    private readonly documentFacade: DocumentFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.dataEventSubscribed();
+    this.loadClientAttachments(this.clientId);
+    this.loadFormsAndDocuemnts();
     this.emailEditorValueEvent(this.currentValue);
+    this.dataEventSubscribed();
     this.loadClientVariables();
     this.loadDdlEditorVariables();
     this.cerAuthorizationForm = this.formBuilder.group({
@@ -334,6 +337,28 @@ if(!this.attachedFileValidatorSize){
     this.uploadedAttachedFile = [];
     this.cerEmailAttachments.emit(event);
     this.showClientAttachmentUpload = false;
+    this.showFormsAndDocumentsUpload = false;
+  }
+
+  formsAndDocumentChange(event:any)
+  {
+    this.uploadedAttachedFile = [{
+      document: event,
+      size: event.templateSize,
+      name: event.description,
+      documentTemplateId: event.documentTemplateId,
+      uid: ''
+    }];
+    if(this.selectedAttachedFile.length == 0){
+      this.selectedAttachedFile = this.uploadedAttachedFile;
+    }else{
+      for (let file of this.uploadedAttachedFile){
+        this.selectedAttachedFile.push(file);
+       }
+      }
+    this.uploadedAttachedFile = [];
+    this.cerEmailAttachments.emit(event);
+    this.showFormsAndDocumentsUpload = false;
   }
 
 clientAttachmentClick(item:any)
@@ -461,6 +486,46 @@ clientAttachmentClick(item:any)
           }
         this.ref.detectChanges();
         this.cerEmailAttachments.emit(this.selectedAttachedFile);
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      this.loggingService.logException(err);
+    },
+  });
+  }
+
+  loadClientAttachments(clientId: any) {
+    this.loaderService.show();
+    this.communicationFacade.loadClientAttachments(clientId)
+    .subscribe({
+      next: (attachments: any) =>{
+        if (attachments.totalCount > 0) {
+            this.clientAllDocumentList$ = attachments?.items;
+            this.ref.detectChanges();
+        }
+      this.loaderService.hide();
+    },
+    error: (err: any) => {
+      this.loaderService.hide();
+      this.loggingService.logException(err);
+      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
+      this.loggingService.logException(err);
+    },
+  });
+  }
+
+  loadFormsAndDocuemnts() {
+    this.loaderService.show();
+    this.communicationFacade.loadFormsAndDocuments('FORM')
+    .subscribe({
+      next: (attachments: any) =>{
+        if (attachments.length > 0) {
+            this.formsAndDocumentList$ = attachments;
+            this.ref.detectChanges();
         }
       this.loaderService.hide();
     },

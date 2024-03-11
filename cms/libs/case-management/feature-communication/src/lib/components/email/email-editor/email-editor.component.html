@@ -20,6 +20,33 @@
   (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
   ></common-clients-attachment>
 </div>
+<!-- Select file form forms and documents -->
+<div *ngIf="showFormsAndDocumentsUpload" class="mb-2 mt-2">
+<kendo-floatinglabel  text="Forms & Documents">
+    
+  <kendo-multicolumncombobox
+    (valueChange)="formsAndDocumentChange($event)"
+    [data]="formsAndDocumentList$"
+    textField="description"
+    valueField="documentTemplateId"
+    autofocusfield
+    [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
+    [fillMode]="formUiStyle.dropDownFillMode"
+    [filterable]="true"
+ >
+    <kendo-combobox-column >
+      <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+        <span  >{{ dataItem.description }}</span>
+      </ng-template>
+    </kendo-combobox-column>
+    <!-- <kendo-combobox-column  [width]="200">
+      <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+        <span>  {{dataItem.typeCode}}</span>
+      </ng-template>
+    </kendo-combobox-column> -->
+  </kendo-multicolumncombobox>
+</kendo-floatinglabel>
+</div>
 <div class="app-c-editor letter-editor-height">
   <!-- Variable dropdown -->
   <button

@@ -381,6 +381,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           next: (data: any) => {
             if (data) {
               this.selectedTemplate = data;
+              this.emailContentValue = data.templateContent;
               this.handleEmailEditor(data);
               this.emailEditorValueEvent.emit(data);
               this.isClearEmails = true;
@@ -411,6 +412,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     else {
       this.selectedTemplateId = event.notificationTemplateId;
       this.selectedTemplate = event;
+      this.emailContentValue = event.templateContent == undefined? event.requestBody : event.templateContent;
       this.handleEmailEditor(event);
       this.isClearEmails = true;
       this.isShowToEmailLoader$.next(true);

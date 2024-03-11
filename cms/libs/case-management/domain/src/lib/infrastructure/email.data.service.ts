@@ -196,5 +196,11 @@ export class EmailDataService {
     sendSms(smsNotification: SmsNotification) {
       return this.http.post<any>(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/notifications/sms`, smsNotification);
     }
+
+    loadFormsAndDocuments(typeCode: string){
+      return this.http.get(
+        `${this.configurationProvider.appSettings.caseApiUrl}/case-management/notification/templates/${typeCode}/templates`
+      );
+    }
 }
  
