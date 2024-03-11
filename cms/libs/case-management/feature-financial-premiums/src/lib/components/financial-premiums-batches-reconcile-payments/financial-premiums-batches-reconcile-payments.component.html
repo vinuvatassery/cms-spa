@@ -134,7 +134,7 @@
                         [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true" filterable="menu" [filter]="state.filter"
                         [data]="reconcilePaymentGridPagedResult"   (columnReorder)="onColumnReorder($event)"  (columnVisibilityChange)="columnChange($event)"
                         (cellClick)="onRowSelection(grid, $event)" field="add">    
-                        <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments">
+                        <kendo-grid-column field="batchName" title="Batch #" [width]="160" *ngIf="loadType == loadTypeAllPayments" [sticky]="loadType == loadTypeAllPayments">
                               <ng-template kendoGridCellTemplate let-dataItem>
                                     <button [attr.aria-label]="dataItem?.batchName" kendoButton look="flat" 
                                                 class="card-link-button"  (click)="onBatchNumberClick(dataItem)">
@@ -152,7 +152,7 @@
                                         </ng-template>
                         </kendo-grid-column>
 
-                        <kendo-grid-column field="vendorName" title="Insurance Vendor" [width]="160">
+                        <kendo-grid-column field="vendorName" title="Insurance Vendor" [width]="160" [sticky]="loadType != loadTypeAllPayments">
                         <ng-template kendoGridCellTemplate let-dataItem>
                               <button [attr.aria-label]="dataItem?.vendorName" kendoButton look="flat"
                                           class="card-link-button" (click)="onProviderNameClick(dataItem.paymentRequestId)" >
