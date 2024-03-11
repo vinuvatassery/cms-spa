@@ -33,6 +33,7 @@ export class InterfaceSupportPageComponent {
   notificationCategoryLists$ = this.systemInterfaceSupportFacade.notificationCategoryLists$;
   supportGroupReactivate$ = this.systemInterfaceSupportFacade.supportGroupReactivate$;
   supportGroupRemove$ = this.systemInterfaceSupportFacade.supportGroupRemove$;
+  supportGroupProfilePhoto$ = this.systemInterfaceSupportFacade.supportGroupProfilePhoto$;
 
   constructor(
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,

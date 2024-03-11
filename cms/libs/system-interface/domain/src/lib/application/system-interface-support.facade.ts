@@ -4,6 +4,7 @@ import { SystemInterfaceSupportService } from '../infrastructure/system-interfac
 import { SnackBarNotificationType, NotificationSource, LoaderService, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { UserManagementFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class SystemInterfaceSupportFacade {
@@ -58,6 +59,9 @@ export class SystemInterfaceSupportFacade {
   private supportGroupRemoveSubject = new Subject<any>();
   supportGroupRemove$ = this.supportGroupRemoveSubject.asObservable();
 
+  private supportGroupProfilePhotoSubject = new Subject();
+  supportGroupProfilePhoto$ = this.supportGroupProfilePhotoSubject.asObservable();
+
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: NotificationSource = NotificationSource.API) {
     if (type === SnackBarNotificationType.ERROR) {
       const err = subtitle;
@@ -73,6 +77,7 @@ export class SystemInterfaceSupportFacade {
     private configurationProvider: ConfigurationProvider,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
+    private readonly userManagementFacade: UserManagementFacade,
     public intl: IntlService) { }
 
   /** Public methods **/
@@ -85,7 +90,7 @@ export class SystemInterfaceSupportFacade {
   }
 
   loadSupportGroup(paginationParameters: any) {
- 
+
     this.supportGroupListDataLoaderSubject.next(true);
     this.systemInterfaceSupportService.getSupportGroupList(paginationParameters).subscribe({
       next: (dataResponse: any) => {
@@ -94,6 +99,7 @@ export class SystemInterfaceSupportFacade {
           total: dataResponse?.totalCount,
         };
         this.supportGroupSubject.next(gridView);
+        this.loadSupportGroupDistinctUserIdsAndProfilePhoto(gridView?.data);
         this.supportGroupListDataLoaderSubject.next(false);
       },
       error: (err) => {
@@ -110,7 +116,7 @@ export class SystemInterfaceSupportFacade {
       },
 
       error: (err) => {
-        console.error('err', err);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -121,7 +127,7 @@ export class SystemInterfaceSupportFacade {
       {
         next: (response: any) => {
           this.loaderService.hide();
-          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Support Group saved successfully');
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
           this.addSupportGroupSubject.next(true);
         },
         error: (err) => {
@@ -138,10 +144,10 @@ export class SystemInterfaceSupportFacade {
     this.loaderService.show();
     let notificationGroupId = notificationGroup.notificationGroupId;
     return this.systemInterfaceSupportService.editSupportGroup(notificationGroupId, notificationGroup).subscribe({
-      next: (response) => {
-        if (response === true) {
+      next: (response: any) => {
+        if (response.status) {
           this.editSupportGroupSubject.next(true);
-          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, 'Support Group updated successfully');
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
         }
         this.loaderService.hide();
       },
@@ -159,11 +165,11 @@ export class SystemInterfaceSupportFacade {
     this.showLoader();
     this.systemInterfaceSupportService.changeSupportGroupStatus(notificationGroupId, status)
       .subscribe({
-        next: (removeResponse) => {
-          if (removeResponse ?? false) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, status ? 'Interface Support Group reactivated successfully' : 'Interface Support Group deactivated successfully')
+        next: (response: any) => {
+          if (response.status) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message)
           }
-          this.supportGroupReactivateSubject.next(removeResponse);
+          this.supportGroupReactivateSubject.next(true);
         },
         error: (err) => {
           this.hideLoader();
@@ -176,17 +182,31 @@ export class SystemInterfaceSupportFacade {
     this.showLoader();
     this.systemInterfaceSupportService.deleteSupportGroup(notificationGroupId, isHardDelete)
       .subscribe({
-        next: (removeResponse) => {
-          if (removeResponse ?? false) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Interface Support Group successfully deleted!');
+        next: (response: any) => {
+          if (response.status) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
           }
-          this.supportGroupRemoveSubject.next(removeResponse);
+          this.supportGroupRemoveSubject.next(true);
         },
         error: (err) => {
           this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         },
       });
+  }
+
+  loadSupportGroupDistinctUserIdsAndProfilePhoto(data: any[]) {
+    const distinctUserIds = Array.from(new Set(data?.map(user => user.lastModifierId))).join(',');
+    if (distinctUserIds) {
+      this.userManagementFacade.getProfilePhotosByUserIds(distinctUserIds)
+        .subscribe({
+          next: (data: any[]) => {
+            if (data.length > 0) {
+              this.supportGroupProfilePhotoSubject.next(data);
+            }
+          },
+        });
+    }
   }
 
 }

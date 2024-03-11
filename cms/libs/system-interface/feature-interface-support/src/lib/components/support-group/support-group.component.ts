@@ -44,6 +44,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() SupportGroupGridLists$: any;
   @Input() supportGroupReactivate$: any;
   @Input() supportGroupRemove$: any;
+  @Input() supportGroupProfilePhoto$:any;
   @Output() loadSupportGroupListEvent = new EventEmitter<any>();
   @Output() deactivateConfimEvent = new EventEmitter<string>();
   @Output() reactivateConfimEvent = new EventEmitter<string>();
@@ -199,7 +200,6 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     };
     const stateData = this.state;
     stateData.filter = this.filterData;
-    debugger;
     this.dataStateChange(stateData);
   }
 
