@@ -273,7 +273,8 @@ if(this.isEdit){
   console.log(this.tpaRefundGridLists)
   this.disableFeildsOnConfirmSelection = true
   this.selectedRefundType = this.serviceType
-  this.onEditInitiallydontShowPremiumselection = true
+  this.onEditInitiallydontShowPremiumselection = true;
+  this.isClientSelected = true;
   this.selectedClient={
     clientId: this.clientId,
     clientNames :this.clientName
@@ -304,7 +305,7 @@ if(this.isEdit){
     this.initForm()
   })
   this.onInputChange(this.vendorName);
-
+  
   this.financialVendorRefundFacade.insurancevendorsSubject.next([this.selectedVendor])
    }
 
