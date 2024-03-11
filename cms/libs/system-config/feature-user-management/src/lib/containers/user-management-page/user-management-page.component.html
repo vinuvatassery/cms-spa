@@ -1,6 +1,13 @@
 <section class="systemconfig-components app-l-inner-rapper pt-0 ">
   <common-bread-crumb></common-bread-crumb>
  
-<system-config-user-list></system-config-user-list>
+<system-config-user-list
+[usersDataLists$]="usersDataLists$"
+[usersFilterColumn$]="usersFilterColumn$"
+[pageSizes]="pageSizes" [sortValue]="sortValueUserListGrid"
+[sortType]="sortType" [sort]="sortUserListGrid" 
+(loadUserListEvent)="loadUserLists($event)"
+(usersFilterColumnEvent)="loadUserGridFilterLists($event)"
+> </system-config-user-list>
 </section>
  

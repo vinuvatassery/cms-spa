@@ -1,7 +1,7 @@
 
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
+import { ConfigurationProvider, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType, NotificationSource } from '@cms/shared/util-core';
 import { Subject, first } from 'rxjs';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
@@ -10,10 +10,26 @@ import { LoginUser } from '../entities/login-user';
 import { User } from '../entities/user';
 /** Data services **/
 import { UserDataService } from '../infrastructure/user.data.service';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class UserManagementFacade {
   /** Private properties **/
+
+
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public sortType = 'asc';
+
+  public sortValueUserListGrid = 'creationTime'; 
+  public sortUserListGrid: SortDescriptor[] = [{
+    field: this.sortValueUserListGrid,
+  }];
+
+  public sortValueRolesPermissionListGrid = 'creationTime'; 
+  public sortRolesPermissionListGrid: SortDescriptor[] = [{
+    field: this.sortValueRolesPermissionListGrid,
+  }];
 
   private userListSubject = new BehaviorSubject<User[]>([]);
   private usersDataSubject = new BehaviorSubject<any>([]);
@@ -77,7 +93,8 @@ export class UserManagementFacade {
   constructor(private readonly userDataService: UserDataService,
     private loggingService : LoggingService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly configurationProvider: ConfigurationProvider,
     ) {}
 
 
@@ -244,8 +261,8 @@ export class UserManagementFacade {
 
   loadUsersData(): void {
     this.userDataService.loadUsersData().subscribe({
-      next: (usersDataResponse) => {
-        this.usersDataSubject.next(usersDataResponse);
+      next: (response) => {
+        this.usersDataSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -255,8 +272,8 @@ export class UserManagementFacade {
 
   loadUserFilterColumn(): void {
     this.userDataService.loadUserFilterColumn().subscribe({
-      next: (usersFilterColumnResponse) => {
-        this.usersFilterColumnSubject.next(usersFilterColumnResponse);
+      next: (response) => {
+        this.usersFilterColumnSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -266,8 +283,8 @@ export class UserManagementFacade {
 
   loadDdlUserRole(): void {
     this.userDataService.loadDdlUserRole().subscribe({
-      next: (ddlUserRoleResponse) => {
-        this.ddlUserRoleSubject.next(ddlUserRoleResponse);
+      next: (response) => {
+        this.ddlUserRoleSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -277,9 +294,9 @@ export class UserManagementFacade {
 
   loadUsersRoleAndPermissions(): void {
     this.userDataService.loadUsersRoleAndPermissions().subscribe({
-      next: (usersRoleAndPermissionsResponse) => {
+      next: (response) => {
         this.usersRoleAndPermissionsSubject.next(
-          usersRoleAndPermissionsResponse
+          response
         );
       },
       error: (err) => {
@@ -290,9 +307,9 @@ export class UserManagementFacade {
 
   loadDdlRolesAndPermissionsFilter(): void {
     this.userDataService.loadDdlRolesAndPermissionsFilter().subscribe({
-      next: (ddlRolesAndPermissionsFilterResponse) => {
+      next: (response) => {
         this.ddlRolesAndPermissionsFilterSubject.next(
-          ddlRolesAndPermissionsFilterResponse
+          response
         );
       },
       error: (err) => {
@@ -303,8 +320,8 @@ export class UserManagementFacade {
 
   loadDdlColumnFilters() {
     this.userDataService.loadDdlColumnFilter().subscribe({
-      next: (ddlColumnFilters) => {
-        this.ddlColumnFiltersSubject.next(ddlColumnFilters);
+      next: (response) => {
+        this.ddlColumnFiltersSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -314,8 +331,8 @@ export class UserManagementFacade {
 
   loadClientProfileLanguages() {
     this.userDataService.loadClientProfileLanguage().subscribe({
-      next: (clientProfileLanguages) => {
-        this.clientProfileLanguagesSubject.next(clientProfileLanguages);
+      next: (response) => {
+        this.clientProfileLanguagesSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -325,8 +342,8 @@ export class UserManagementFacade {
 
   loadClientProfileSlots() {
     this.userDataService.loadClientProfileSlots().subscribe({
-      next: (clientProfileSlots) => {
-        this.clientProfileSlotsSubject.next(clientProfileSlots);
+      next: (response) => {
+        this.clientProfileSlotsSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -336,9 +353,9 @@ export class UserManagementFacade {
 
   loadClientProfileCaseAvailabilities() {
     this.userDataService.loadClientProfileCaseAvailabilities().subscribe({
-      next: (clientProfileCaseAvailabilities) => {
+      next: (response) => {
         this.clientProfileCaseAvailabilitiesSubject.next(
-          clientProfileCaseAvailabilities
+          response
         );
       },
       error: (err) => {
@@ -349,8 +366,8 @@ export class UserManagementFacade {
 
   loadClientProfilePeriods() {
     this.userDataService.loadClientProfilePeriods().subscribe({
-      next: (clientProfilePeriods) => {
-        this.clientProfilePeriodsSubject.next(clientProfilePeriods);
+      next: (response) => {
+        this.clientProfilePeriodsSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -360,8 +377,8 @@ export class UserManagementFacade {
 
   loadSexualOrientationList(){
     this.userDataService.loadSexualOrientationList().subscribe({
-      next: (clientProfileSexualOrientation) => {
-        this.clientProfileSexualOrientationSubject.next(clientProfileSexualOrientation);
+      next: (response) => {
+        this.clientProfileSexualOrientationSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -370,8 +387,8 @@ export class UserManagementFacade {
   }
   loadRacialOrEthnicIdentityList(){
     this.userDataService.loadRacialOrEthnicIdentityList().subscribe({
-      next: (clientProfileRacialOrEthnicIdentity) => {
-        this.clientProfileRacialOrEthnicIdentitySubject.next(clientProfileRacialOrEthnicIdentity);
+      next: (response) => {
+        this.clientProfileRacialOrEthnicIdentitySubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -380,8 +397,8 @@ export class UserManagementFacade {
   }
   loadPronounsList(){
     this.userDataService.loadPronounsList().subscribe({
-      next: (clientProfilePronouns) => {
-        this.clientProfilePronounsSubject.next(clientProfilePronouns);
+      next: (response) => {
+        this.clientProfilePronounsSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -391,8 +408,8 @@ export class UserManagementFacade {
   }
   loadGenderList(){
     this.userDataService.loadGenderList().subscribe({
-      next: (clientProfileGender) => {
-        this.clientProfileGenderSubject.next(clientProfileGender);
+      next: (response) => {
+        this.clientProfileGenderSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -402,8 +419,8 @@ export class UserManagementFacade {
 
   loadHousingAcuityLevelList(){
     this.userDataService.loadHousingAcuityLevelList().subscribe({
-      next: (clientProfileHousingAcuityLevel) => {
-        this.clientProfileHousingAcuityLevelSubject.next(clientProfileHousingAcuityLevel);
+      next: (response) => {
+        this.clientProfileHousingAcuityLevelSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -412,8 +429,8 @@ export class UserManagementFacade {
   }
   loadIncomeInclusionsExlusionsList(){
     this.userDataService.loadIncomeInclusionsExlusionsList().subscribe({
-      next: (clientProfileIncomeInclusionsExclusions) => {
-        this.clientProfileIncomeInclusionsExclusionsSubject.next(clientProfileIncomeInclusionsExclusions);
+      next: (response) => {
+        this.clientProfileIncomeInclusionsExclusionsSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -423,8 +440,8 @@ export class UserManagementFacade {
 
   loadRegionAssignmentList(){
     this.userDataService.loadRegionAssignmentList().subscribe({
-      next: (clientProfileRegionAssignment) => {
-        this.clientProfileRegionAssignmentSubject.next(clientProfileRegionAssignment);
+      next: (response) => {
+        this.clientProfileRegionAssignmentSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -433,8 +450,8 @@ export class UserManagementFacade {
   }
   loadPSMFRZIPList(){
     this.userDataService.loadPSMFRZIPList().subscribe({
-      next: (clientProfilePSMFRZIP) => {
-        this.clientProfilePSMFRZIPSubject.next(clientProfilePSMFRZIP);
+      next: (response) => {
+        this.clientProfilePSMFRZIPSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -444,8 +461,8 @@ export class UserManagementFacade {
 
   loadServiceProviderList(){
     this.userDataService.loadServiceProviderList().subscribe({
-      next: (clientProfileServiceProvider) => {
-        this.clientProfileServiceProviderSubject.next(clientProfileServiceProvider);
+      next: (response) => {
+        this.clientProfileServiceProviderSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
@@ -483,8 +500,8 @@ export class UserManagementFacade {
   }
   loadDirectMessageLogEvent() {
     this.userDataService.loadDirectMessageLogEventService().subscribe({
-      next: (directMessageLogEvent) => {
-        this.directMessageLogEventSubject.next(directMessageLogEvent);
+      next: (response) => {
+        this.directMessageLogEventSubject.next(response);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
