@@ -170,6 +170,7 @@ export class CerListComponent implements OnInit, OnChanges {
   epDateOnChange(date: any) {
     this.loader = true;
     this.selectedDate = date;
+    this.state.skip = 0;   
     this.loadCerTrackingList();
   }
 
