@@ -30,7 +30,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() distributionGridLists$: any;
+
   @Output() loadDistributionListEvent = new EventEmitter<any>();
+
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -42,8 +44,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
   memberForm!: FormGroup;
-
-
 
   gridDistributionDataSubject = new Subject<any>();
   gridDistributionData$ = this.gridDistributionDataSubject.asObservable();
@@ -139,13 +139,8 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.loadDistributionListGrid();
   }
-  statusFilter: any;
-  statusList =
-    {
-      'Y': 'Active',
-      'N': 'InActive'
-    }
 
+  statusFilter: any;
   dropdownFilterChange(
     field: string,
     value: any,
@@ -205,7 +200,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     const gridDataRefinerValue = {
       SkipCount: skipCountValue,
       MaxResultCount: maxResultCountValue,
-      Sorting: 'firstName',
+      Sorting: sortValue,
       SortType: sortTypeValue,
       Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
       notificationGroupId: this.selectedGroup.notificationGroupId,

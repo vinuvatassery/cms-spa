@@ -39,7 +39,7 @@ export class DistributionDetailComponent implements OnInit {
   notiificationGroup: any;
   memberForm!: FormGroup;
   tAreaCessationMaxLength = 200;
-  isSubmitted: boolean = false;
+  isSubmitted = false;
   isLoading = false;
   isValidateForm = false;
 
@@ -55,7 +55,6 @@ export class DistributionDetailComponent implements OnInit {
   dataList: any;
 
   ngOnInit(): void {
-    debugger;
     if (this.selectedMemberData)
       this.isEditMode = true;
     this.createForm();
@@ -63,7 +62,6 @@ export class DistributionDetailComponent implements OnInit {
   }
 
   createForm() {
-    debugger;
     this.memberForm = this.formBuilder.group({
       groupName: new FormControl({ value: '', disabled: true }),
       firstName: ['', [Validators.required, Validators.maxLength(200)]],
@@ -79,21 +77,6 @@ export class DistributionDetailComponent implements OnInit {
 
     if (this.selectedGroup)
       this.memberForm.controls['groupName'].setValue(this.selectedGroup.groupName);
-  }
-
-  mapFormValues() {
-    const formValues = this.memberForm.value;
-    const dto = {
-      groupId: this.selectedGroup.notificationGroupId,
-      firstName: formValues.firstName,
-      lastName: formValues.lastName,
-      email: formValues.email,
-      userTypeCode: 'EXTERNAL',
-      notificationUserId: null,
-    };
-    if (this.isEditMode)
-      dto.notificationUserId = this.selectedMemberData.notificationUserId;
-    return dto;
   }
 
   onCancelClick() {
@@ -114,6 +97,22 @@ export class DistributionDetailComponent implements OnInit {
 
   onItemSelected(selectedValue: any) {
     this.selectedUser = this.userDataList.find((item: any) => item.firstName === selectedValue);
+  }
+
+  mapFormValues() {
+    const formValues = this.memberForm.value;
+    const dto = {
+      groupId: this.selectedGroup.notificationGroupId,
+      firstName: formValues.firstName,
+      lastName: formValues.lastName,
+      email: formValues.email,
+      userTypeCode: 'EXTERNAL',
+      notificationUserId: this.selectedGroup.notificationUserId,
+      selectedUserId : this.selectedUser?.notificationUserId,
+    };
+    if (this.isEditMode)
+      dto.notificationUserId = this.selectedMemberData.notificationUserId;
+    return dto;
   }
 
   public save() {

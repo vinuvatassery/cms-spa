@@ -155,7 +155,7 @@ export class SystemInterfaceSupportService {
   }
 
   addDistributionListUser(user: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `${this.distributionBaseUrl}/add-user`, user);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `${this.distributionBaseUrl}`, user);
   }
 
   changeDistributionListUserStatus(memberId: string, status: boolean) {
