@@ -251,7 +251,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   }
 
   onMemberDetailsClicked() {
-    if (!this.selectedGroup)
+    if (!this.selectedGroup || !this.gridDataResult)
       return;
     this.isEditMode = false;
     this.selectedMemberData = null;

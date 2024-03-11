@@ -20,12 +20,13 @@ import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 })
 export class DistributionDetailComponent implements OnInit {
   @Input() selectedGroup: any;
+  @Input() userDataList: any;
   @Input() selectedMemberData: any;
   isEditMode = false;
   @Output() closeForm = new EventEmitter<any>();
   @Output() addMemberEvent = new EventEmitter<any>();
   @Output() refreshData = new EventEmitter<any>();
-
+  selectedUser: any;
   showLoader() {
     this.loaderService.show();
   }
@@ -49,6 +50,9 @@ export class DistributionDetailComponent implements OnInit {
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
     private cd: ChangeDetectorRef) {
   }
+
+  selectedFirstName: any;
+  dataList: any;
 
   ngOnInit(): void {
     if (this.selectedMemberData)
@@ -104,6 +108,11 @@ export class DistributionDetailComponent implements OnInit {
 
   getForm(index: number, fieldName: string) {
     return this.memberForm;
+  }
+
+  onItemSelected(selectedValue: any) {
+    this.selectedUser = this.userDataList.find((item: any) => item.firstName === selectedValue);
+    console.log('Selected object:', this.selectedUser);
   }
 
   public save() {

@@ -103,6 +103,7 @@
   <kendo-dialog-titlebar>{{ isEditMode ? 'Edit Member' : 'Add Member' }} </kendo-dialog-titlebar>
 
   <distribution-detail
+    [userDataList]="gridDataResult.data"
     [selectedMemberData]="selectedMemberData"
     [selectedGroup]="selectedGroup"
     (addMemberEvent)="addNotificationUser($event)"
