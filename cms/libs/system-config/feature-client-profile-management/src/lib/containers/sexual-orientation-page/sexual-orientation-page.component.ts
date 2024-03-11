@@ -14,7 +14,7 @@ export class SexualOrientationPageComponent {
   gridSkipCount = this.userManagementFacade.skipCount;
   sortValueSexualOrientationListGrid = this.userManagementFacade.sortValueSexualOrientationListGrid;
   sortSexualOrientationListGrid = this.userManagementFacade.sortSexualOrientationListGrid;
-  sexualOrientation$ = this.userManagementFacade.clientProfileRacialOrEthnicIdentity$; 
+  sexualOrientation$ = this.userManagementFacade.clientProfileSexualOrientation$; 
   /** Constructor **/
   constructor(private readonly userManagementFacade: UserManagementFacade) { }
 

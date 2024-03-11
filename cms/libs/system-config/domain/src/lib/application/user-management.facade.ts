@@ -78,7 +78,6 @@ export class UserManagementFacade {
   private clientProfilePronounsSubject = new BehaviorSubject<any>([]);
   private clientProfileGenderSubject = new BehaviorSubject<any>([]);
   private directMessageLogEventSubject = new BehaviorSubject<any>([]);
-
   private clientProfileHousingAcuityLevelSubject = new BehaviorSubject<any>([]);
   private clientProfileIncomeInclusionsExclusionsSubject = new BehaviorSubject<any>([]);
   private clientProfileRegionAssignmentSubject = new BehaviorSubject<any>([]);

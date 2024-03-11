@@ -24,7 +24,7 @@ export class SexualOrientationListComponent implements OnInit, OnChanges {
  @Input() sort: any;
  @Input() sexualOrientationDataLists$: any;
  @Input() sexualOrientationFilterColumn$: any;
- @Output() loadSexualOrientationListsEvent = new EventEmitter<any>();
+ @Output() loadRacialEthnicListsEvent = new EventEmitter<any>();
  @Output() sexualOrientationFilterColumnEvent = new EventEmitter<any>();
  
  public state!: State;
@@ -117,7 +117,7 @@ export class SexualOrientationListComponent implements OnInit, OnChanges {
       sortColumn: sortValue,
       sortType: sortTypeValue,
     };
-    this.loadSexualOrientationListsEvent.emit(gridDataRefinerValue);
+    this.loadRacialEthnicListsEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
   loadSexualOrientationFilterColumn(){
