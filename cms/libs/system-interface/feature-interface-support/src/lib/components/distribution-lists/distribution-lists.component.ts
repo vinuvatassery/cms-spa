@@ -5,7 +5,7 @@ import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
 import { LovFacade } from '@cms/system-config/domain';
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
@@ -133,7 +133,43 @@ export class DistributionListsComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.loadDistributionListGrid();
+    alert(this.statusList)
   }
+  statusFilter :any;
+  statusList =
+    {
+      'Y': 'Active',
+      'N': 'InActive'
+    }
+
+
+
+
+
+    dropdownFilterChange(
+      field: string,
+      value: any,
+      filterService: FilterService
+    ): void {
+      if (field === 'status') {
+        this.statusFilter = value;
+      }
+      if (field === 'process') {
+        this.statusFilter = value;
+      }
+  
+      filterService.filter({
+        filters: [
+          {
+            field: field,
+            operator: 'eq',
+            value: value,
+          },
+        ],
+        logic: 'or',
+      });
+    }
+  
 
   ngOnChanges(): void {
     this.sortType = 'desc'

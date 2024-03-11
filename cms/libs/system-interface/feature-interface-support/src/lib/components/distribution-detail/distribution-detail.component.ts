@@ -112,7 +112,6 @@ export class DistributionDetailComponent implements OnInit {
 
   onItemSelected(selectedValue: any) {
     this.selectedUser = this.userDataList.find((item: any) => item.firstName === selectedValue);
-    console.log('Selected object:', this.selectedUser);
   }
 
   public save() {
