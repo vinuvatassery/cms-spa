@@ -73,50 +73,8 @@
 </div>
 <kendo-dialog *ngIf="isNotificationCategoryDetailPopup" (close)="onCloseNotificationCategoryDetailPopupClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
-  <kendo-dialog-titlebar>Add NotificationCategory</kendo-dialog-titlebar>
-
-  <section class="k-dialog-body">
-    <p class="text-muted">
-      Adds a notification category to the selected group
-    </p>
-    <div class="flex-row">
-
-      <div class="flex-col">
-        <kendo-floatinglabel text="Group Name">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-          </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col ">
-        <kendo-floatinglabel text="Notification Category">
-          <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"> </kendo-dropdownlist>
-
-        </kendo-floatinglabel>
-      </div>
-      <div class="flex-col ">
-        <kendo-floatinglabel text="Description">
-          <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
-          </kendo-textbox>
-        </kendo-floatinglabel>
-      </div>
-
-
-    </div>
-  </section>
-
-  <kendo-dialog-actions>
-    <div class="justify-content-between">
-      <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
-          (click)="onCloseNotificationCategoryDetailPopupClicked()">
-          Cancel
-        </button>
-        <button kendoButton [primary]="true" aria-label="Add">
-          Add
-        </button>
-      </div>
-    </div>
-  </kendo-dialog-actions>
+  <kendo-dialog-titlebar>Add Notification Category</kendo-dialog-titlebar>
+  <notification-category-detail></notification-category-detail>
 </kendo-dialog>
 
 

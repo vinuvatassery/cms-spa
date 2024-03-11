@@ -22,7 +22,7 @@ export class SystemInterfaceSupportFacade {
     field: this.sortValueDistribution,
   }];
 
-  public sortValueNotificationCategory = 'batch';
+  public sortValueNotificationCategory = 'notifcationCategoryId';
   public sortNotificationCategoryList: SortDescriptor[] = [{
     field: this.sortValueNotificationCategory,
   }];
@@ -30,8 +30,6 @@ export class SystemInterfaceSupportFacade {
   private supportGroupSubject = new Subject<any>();
   public supportGroup$ = this.supportGroupSubject.asObservable();
 
-  private notificationCategoryListSubject = new Subject<any>();
-  notificationCategoryLists$ = this.notificationCategoryListSubject.asObservable();
 
   private addSupportGroupSubject = new Subject<any>();
   addSupportGroup$ = this.addSupportGroupSubject.asObservable();
@@ -45,6 +43,12 @@ export class SystemInterfaceSupportFacade {
   private supportGroupListDataLoaderSubject = new BehaviorSubject<boolean>(false);
   supportGroupListDataLoader$ = this.supportGroupListDataLoaderSubject.asObservable();
 
+  private supportGroupRemoveSubject = new Subject<any>();
+  supportGroupRemove$ = this.supportGroupRemoveSubject.asObservable();
+
+  private supportGroupProfilePhotoSubject = new Subject();
+  supportGroupProfilePhoto$ = this.supportGroupProfilePhotoSubject.asObservable();
+
   // distribution list ----------------------------------------
   private distributionListsSubject = new Subject<any>();
   public distributionLists$ = this.distributionListsSubject.asObservable();
@@ -56,11 +60,31 @@ export class SystemInterfaceSupportFacade {
   distributionListDataLoader$ = this.distributionListDataLoaderSubject.asObservable();
   //----------------------------------------
 
-  private supportGroupRemoveSubject = new Subject<any>();
-  supportGroupRemove$ = this.supportGroupRemoveSubject.asObservable();
 
-  private supportGroupProfilePhotoSubject = new Subject();
-  supportGroupProfilePhoto$ = this.supportGroupProfilePhotoSubject.asObservable();
+  // Notification Category 
+
+  private notificationCategorySubject = new Subject<any>();
+  public notificationCategories$ = this.notificationCategorySubject.asObservable();
+
+  private addnotificationCategorySubject = new Subject<any>();
+  addnotificationCategory$ = this.addnotificationCategorySubject.asObservable();
+
+  private editNotificationCategorySubject = new Subject<boolean>();
+  editnotificationCategory$ = this.editNotificationCategorySubject.asObservable();
+
+  private notificationCategoryReactivateSubject = new Subject<any>();
+  notificationCategoryReactivate$ = this.notificationCategoryReactivateSubject.asObservable();
+
+  private notificationCategoryListDataLoaderSubject = new BehaviorSubject<boolean>(false);
+  notificationCategoryListDataLoader$ = this.notificationCategoryListDataLoaderSubject.asObservable();
+
+  private notificationCategoryRemoveSubject = new Subject<any>();
+  notificationCategoryRemove$ = this.notificationCategoryRemoveSubject.asObservable();
+
+  private notificationCategoryListSubject = new Subject<any>();
+  notificationCategoryLists$ = this.notificationCategoryListSubject.asObservable();
+
+
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: NotificationSource = NotificationSource.API) {
     if (type === SnackBarNotificationType.ERROR) {
@@ -109,17 +133,6 @@ export class SystemInterfaceSupportFacade {
     });
   }
 
-  loadNotificationCategory() {
-    this.systemInterfaceSupportService.loadNotificationCategoryServices().subscribe({
-      next: (response) => {
-        this.notificationCategoryListSubject.next(response);
-      },
-
-      error: (err) => {
-        this.loggingService.logException(err);
-      },
-    });
-  }
 
   addSupportGroup(notificationGroup: any) {
     this.loaderService.show();
@@ -207,6 +220,98 @@ export class SystemInterfaceSupportFacade {
           },
         });
     }
+  }
+
+
+
+  // Notification Catergory 
+
+  loadNotificationCategory(paginationParameters: any) {
+    this.notificationCategoryListDataLoaderSubject.next(true);
+    this.systemInterfaceSupportService.getNotificationCategoryList(paginationParameters).subscribe({
+      next: (dataResponse: any) => {
+        const gridView: any = {
+          data: dataResponse['items'],
+          total: dataResponse?.totalCount,
+        };
+        this.notificationCategorySubject.next(gridView);
+        this.notificationCategoryListDataLoaderSubject.next(false);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.notificationCategoryListDataLoaderSubject.next(false);
+      },
+    });
+  }
+
+  addNotificationCategory(eventNotificationGroup: any) {
+    this.loaderService.show();
+    this.systemInterfaceSupportService.addNotificationCategory(eventNotificationGroup).subscribe(
+      {
+        next: (response: any) => {
+          this.loaderService.hide();
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+          this.addnotificationCategorySubject.next(true);
+        },
+        error: (err) => {
+          this.loaderService.hide();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      }
+    );
+  }
+
+  editNotificationCategory(eventNotificationGroup: any) {
+    this.loaderService.show();
+    let eventNotificationGroupId = eventNotificationGroup.eventNotificationGroupId;
+    return this.systemInterfaceSupportService.editNotificationCategory(eventNotificationGroupId, eventNotificationGroup).subscribe({
+      next: (response: any) => {
+        if (response.status) {
+          this.editNotificationCategorySubject.next(true);
+          this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+        }
+        this.loaderService.hide();
+      },
+      error: (err) => {
+        this.hideLoader();
+        this.notificationSnackbarService.manageSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
+      },
+    });
+  }
+
+ changeNotificationCategoryStatus(eventNotificationGroupId: any, status: boolean) {
+    this.showLoader();
+    this.systemInterfaceSupportService.changeNotificationCategoryStatus(eventNotificationGroupId, status)
+      .subscribe({
+        next: (response: any) => {
+          if (response.status) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message)
+          }
+          this.notificationCategoryReactivateSubject.next(true);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      });
+  }
+
+  deleteNotificationCategory(eventNotificationGroupId: string, isHardDelete: boolean): void {
+    this.showLoader();
+    this.systemInterfaceSupportService.deleteNotificationCategory(eventNotificationGroupId, isHardDelete)
+      .subscribe({
+        next: (response: any) => {
+          if (response.status) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, response.message);
+          }
+          this.notificationCategoryRemoveSubject.next(true);
+        },
+        error: (err) => {
+          this.hideLoader();
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      });
   }
 
 }

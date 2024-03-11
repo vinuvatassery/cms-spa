@@ -19,8 +19,8 @@
                         [sortType]="sortType" [sort]="sortSupportGroupList"  
                         (loadSupportGroupListEvent)="loadSupportGroup($event)"
                         [supportGroupReactivate$]="supportGroupReactivate$" 
-                        (deactivateConfimEvent)="handleDeactivate($event)" 
-                        (reactivateConfimEvent)="handleReactivate($event)"
+                        (deactivateConfimEvent)="handleDeactivateSupportGroup($event)" 
+                        (reactivateConfimEvent)="handleReactivateSupportGroup($event)"
                         [supportGroupRemove$] ="supportGroupRemove$"
                         (deleteConfimedEvent)="handleDeleteSupportGroup($event)"
                         [addSupportGroup$]="addSupportGroup$"
@@ -41,7 +41,7 @@
                   </div>
 
                   <div class="flex-col flex-col-6">
-                        <h3>Error Category</h3>
+                        <h3>Notification Category</h3>
                         <system-interface-notification-category
                               [notificationCategoryGridLists$]="notificationCategoryLists$" [pageSizes]="pageSizes"
                               [sortValue]="sortValueNotificationCategory" [sortType]="sortType"

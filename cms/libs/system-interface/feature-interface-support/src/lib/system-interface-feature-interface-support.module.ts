@@ -11,6 +11,7 @@ import { SupportGroupDetailComponent } from './components/support-group-detail/s
 import { DeactivateSupportGroupComponent } from './components/deactivate-support-group/deactivate-support-group.component';
 import { ReactivateSupportGroupComponent } from './components/reactivate-support-group/reactivate-support-group.component';
 import { RemoveSupportGroupComponent } from './components/remove-support-group/remove-support-group.component';
+import { NotiificationGroupDetailComponent } from './components/notification-category-detail/notification-category-detail.component';
 
 @NgModule({
   imports: [
@@ -27,7 +28,8 @@ import { RemoveSupportGroupComponent } from './components/remove-support-group/r
     SupportGroupDetailComponent,
     DeactivateSupportGroupComponent,
     ReactivateSupportGroupComponent,
-    RemoveSupportGroupComponent
+    RemoveSupportGroupComponent,
+    NotiificationGroupDetailComponent
   ],
   exports: [
     InterfaceSupportPageComponent,
@@ -37,7 +39,8 @@ import { RemoveSupportGroupComponent } from './components/remove-support-group/r
     SupportGroupDetailComponent,
     DeactivateSupportGroupComponent,
     ReactivateSupportGroupComponent,
-    RemoveSupportGroupComponent
+    RemoveSupportGroupComponent,
+    NotiificationGroupDetailComponent
   ],
 })
 export class SystemInterfaceFeatureInterfaceSupportModule {}

@@ -26,14 +26,24 @@ export class InterfaceSupportPageComponent {
   sortValueNotificationCategory = this.systemInterfaceSupportFacade.sortValueNotificationCategory;
   sortNotificationCategoryList = this.systemInterfaceSupportFacade.sortNotificationCategoryList;
 
+
+  distributionLists$ = this.systemInterfaceSupportFacade.distributionLists$;
+  notificationCategoryLists$ = this.systemInterfaceSupportFacade.notificationCategoryLists$;
+
   supportGroup$ = this.systemInterfaceSupportFacade.supportGroup$;
   addSupportGroup$ = this.systemInterfaceSupportFacade.addSupportGroup$;
   editSupportGroup$ = this.systemInterfaceSupportFacade.editSupportGroup$;
-  distributionLists$ = this.systemInterfaceSupportFacade.distributionLists$;
-  notificationCategoryLists$ = this.systemInterfaceSupportFacade.notificationCategoryLists$;
   supportGroupReactivate$ = this.systemInterfaceSupportFacade.supportGroupReactivate$;
   supportGroupRemove$ = this.systemInterfaceSupportFacade.supportGroupRemove$;
   supportGroupProfilePhoto$ = this.systemInterfaceSupportFacade.supportGroupProfilePhoto$;
+
+
+  notificationCategories$ = this.systemInterfaceSupportFacade.notificationCategories$;
+  addnotificationCategory$ = this.systemInterfaceSupportFacade.addnotificationCategory$;
+  editnotificationCategory$ = this.systemInterfaceSupportFacade.editnotificationCategory$;
+  notificationCategoryReactivate$ = this.systemInterfaceSupportFacade.notificationCategoryReactivate$;
+  notificationCategoryRemove$ = this.systemInterfaceSupportFacade.notificationCategoryRemove$;
+  notificationCategoryListDataLoader$ = this.systemInterfaceSupportFacade.notificationCategoryListDataLoader$
 
   constructor(
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
@@ -43,26 +53,49 @@ export class InterfaceSupportPageComponent {
     this.systemInterfaceSupportFacade.loadSupportGroup(event);
   }
 
-  loadNotificationCategory(event: any) {
-    this.systemInterfaceSupportFacade.loadNotificationCategory();
-  }
-
-  handleAddSuppportGroup(event: any){
+  handleAddSuppportGroup(event: any) {
     this.systemInterfaceSupportFacade.addSupportGroup(event);
   }
-  handleEditSupportGroup(event: any){
-      this.systemInterfaceSupportFacade.editSupportGroup(event);
+  handleEditSupportGroup(event: any) {
+    this.systemInterfaceSupportFacade.editSupportGroup(event);
   }
 
-  handleDeactivate(event: any){
+  handleDeactivateSupportGroup(event: any) {
     this.systemInterfaceSupportFacade.changeSupportGroupStatus(event, false);
   }
 
-  handleReactivate(event: any) {
+  handleReactivateSupportGroup(event: any) {
     this.systemInterfaceSupportFacade.changeSupportGroupStatus(event, true);
   }
 
   handleDeleteSupportGroup(event: any) {
     this.systemInterfaceSupportFacade.deleteSupportGroup(event, false);
   }
+
+  // Notification Category 
+
+  loadNotificationCategory(event: any) {
+    this.systemInterfaceSupportFacade.loadNotificationCategory(event);
+  }
+
+  handleAddNotificationCategory(event: any) {
+    this.systemInterfaceSupportFacade.addNotificationCategory(event);
+  }
+  handleEditNotificationCategory(event: any) {
+    this.systemInterfaceSupportFacade.editNotificationCategory(event);
+  }
+
+  handleDeactivateNotificationCategory(event: any) {
+    this.systemInterfaceSupportFacade.changeNotificationCategoryStatus(event, false);
+  }
+
+  handleReactivateNotificationCategory(event: any) {
+    this.systemInterfaceSupportFacade.changeNotificationCategoryStatus(event, true);
+  }
+
+  handleDeleteNotificationCategory(event: any) {
+    this.systemInterfaceSupportFacade.deleteNotificationCategory(event, false);
+  }
+
+
 }
