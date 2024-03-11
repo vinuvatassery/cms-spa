@@ -30,7 +30,28 @@ export class SystemConfigFinancialDataService {
   hideLoader() {
     this.loaderService.hide();
   }
-
+  loadFundsListsService() {
+    return of([
+      {
+        lifetimePeriod: '48 months',
+        effectiveDate: 'MM/DD/YYYY',
+        comments: 'Lorem data comments in lorem ipsum',
+        lastModified: 'MM/DD/YYYY',
+      },
+      {
+        lifetimePeriod: '33 months',
+        effectiveDate: 'MM/DD/YYYY',
+        comments: 'Lorem data comments in lorem ipsum',
+        lastModified: 'MM/DD/YYYY',
+      },
+      {
+        lifetimePeriod: '44 months',
+        effectiveDate: 'MM/DD/YYYY',
+        comments: 'Lorem data comments in lorem ipsum',
+        lastModified: 'MM/DD/YYYY',
+      },
+    ]);
+  }
   loadIndexListsService() {
     return of([
       {

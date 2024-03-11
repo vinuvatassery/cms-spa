@@ -1,3 +1,5 @@
-<section class="systemconfig-components app-l-inner-rapper pt-0 ">
-      <common-bread-crumb></common-bread-crumb> <system-config-index-list></system-config-index-list>
-      </section>
+<system-config-index-list 
+[indexListDataLists$]="indexService$" 
+[pageSizes]="pageSizes" [sortValue]="sortValueIndex"
+[sortType]="sortType" [sort]="sortIndexGrid" 
+(loadIndexListsEvent)="loadIndexLists($event)"></system-config-index-list>

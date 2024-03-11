@@ -5,6 +5,7 @@ import {
   LoggingService,
   NotificationSnackbarService,
   SnackBarNotificationType,
+  ConfigurationProvider
 } from '@cms/shared/util-core';
 import { Subject, first, Observable } from 'rxjs';
 /** External libraries **/
@@ -17,9 +18,43 @@ import { Counties } from '../entities/counties';
 import { State } from '../entities/state';
 import { ZipCodeDataService } from '../infrastructure/zip-code.data.service';
 import { SystemConfigFinancialDataService } from '../infrastructure/sysconfig-financials.data.service';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class SystemConfigFinancialFacade {
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public sortType = 'asc';
+
+  public sortValueFunds = 'creationTime'; 
+  public sortFundsGrid: SortDescriptor[] = [{
+    field: this.sortValueFunds,
+  }];
+
+  public sortValueExpenseType = 'creationTime'; 
+  public sortExpenseTypeGrid: SortDescriptor[] = [{
+    field: this.sortValueExpenseType,
+  }];
+
+  public sortValueIncomeType = 'creationTime'; 
+  public sortIncomeTypeGrid: SortDescriptor[] = [{
+    field: this.sortValueIncomeType,
+  }];
+
+  public sortValueIndex = 'creationTime'; 
+  public sortIndexGrid: SortDescriptor[] = [{
+    field: this.sortValueIndex,
+  }];
+
+  public sortValuePcaCode = 'creationTime'; 
+  public sortPcaCodeGrid: SortDescriptor[] = [{
+    field: this.sortValuePcaCode,
+  }];
+
+
+  private loadFundsServiceSubject = new BehaviorSubject<any>([]);
+  loadFundsService$ = this.loadFundsServiceSubject.asObservable();
+
   private loadIndexListsServiceSubject = new BehaviorSubject<any>([]);
   loadIndexListsService$ = this.loadIndexListsServiceSubject.asObservable();
 
@@ -39,6 +74,7 @@ export class SystemConfigFinancialFacade {
   /** Constructor **/
   constructor(
     private readonly zipCodeDataService: ZipCodeDataService,
+    private readonly configurationProvider: ConfigurationProvider,
     private readonly systemConfigFinancialDataService: SystemConfigFinancialDataService,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
@@ -68,6 +104,17 @@ export class SystemConfigFinancialFacade {
 
   getCounties(stateCode: string): Observable<Counties[]> {
     return this.zipCodeDataService.getCounties(stateCode);
+  }
+
+  loadFunds() {
+    this.systemConfigFinancialDataService.loadFundsListsService().subscribe({
+      next: (response) => {
+        this.loadFundsServiceSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
   }
 
   loadIndexLists() {

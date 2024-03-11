@@ -1,4 +1,5 @@
-<section class="systemconfig-components app-l-inner-rapper pt-0 ">
-      <common-bread-crumb></common-bread-crumb> 
-<system-config-income-types-list></system-config-income-types-list>
-</section>
+<system-config-income-types-list 
+[incomeTypeDataLists$]="incomeTypeService$" 
+[pageSizes]="pageSizes" [sortValue]="sortValueIncomeType"
+[sortType]="sortType" [sort]="sortIncomeTypeGrid" 
+(loadIncomeTypeListsEvent)="loadIncomeTypeLists($event)"></system-config-income-types-list>
