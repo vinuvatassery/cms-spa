@@ -7,7 +7,7 @@ import { Email } from '../entities/email';
 /** Data services **/
 import { EmailDataService } from '../infrastructure/email.data.service';
 import { CommunicationEvents } from '../enums/communication-event.enum';
-import { LoggingService} from '@cms/shared/util-core';
+import { LoggingService } from '@cms/shared/util-core';
 import { SmsNotification } from '../entities/sms-notification';
 
 @Injectable({ providedIn: 'root' })
@@ -27,7 +27,7 @@ export class CommunicationFacade {
   ddlEmails$ = this.ddlEmailsSubject.asObservable();
 
   /** Constructor**/
-  constructor(private readonly emailDataService: EmailDataService, private readonly loggingService: LoggingService,) {}
+  constructor(private readonly emailDataService: EmailDataService, private readonly loggingService: LoggingService,) { }
 
   /** Public methods **/
   loadEmails(): void {
@@ -113,7 +113,7 @@ export class CommunicationFacade {
     return this.emailDataService.sendLetterToPrint(entityId, clientCaseEligibilityId, selectedTemplate, requestType);
   }
 
-  saveForLaterEmailTemplate(draftTemplate: any){
+  saveForLaterEmailTemplate(draftTemplate: any) {
     return this.emailDataService.saveEmailForLater(draftTemplate);
   }
 
@@ -121,144 +121,191 @@ export class CommunicationFacade {
     return this.emailDataService.getClientDocumentsViewDownload(clientDocumentId);
   }
 
-  loadCERAuthorizationTemplateAttachment(typeCode: string){
+  loadCERAuthorizationTemplateAttachment(typeCode: string) {
     return this.emailDataService.getTemplateAttachment(typeCode);
   }
 
-  loadCERAuthorizationDraftAttachment(esignRequestId: string){
+  loadCERAuthorizationDraftAttachment(esignRequestId: string) {
     return this.emailDataService.getDraftTemplateAttachment(esignRequestId);
   }
 
-  getCCList(clientId: number, loginUserId: string){
+  getCCList(clientId: number, loginUserId: string) {
     return this.emailDataService.getCCEmailListForCER(clientId, loginUserId);
   }
 
-  loadLetterAttachment(documentTemplateId: string, typeCode: string){
+  loadLetterAttachment(documentTemplateId: string, typeCode: string) {
     return this.emailDataService.getLetterAttachment(documentTemplateId, typeCode);
-}
+  }
 
-prepareClientAndVendorLetterFormData(entityId: string, loginUserId: any) {
-  const formData = new FormData();
-  formData.append('entityId', entityId ?? '');
-  formData.append('loginUserId', loginUserId ?? '');
-  return formData;
-}
+  prepareClientAndVendorLetterFormData(entityId: string, loginUserId: any) {
+    const formData = new FormData();
+    formData.append('entityId', entityId ?? '');
+    formData.append('loginUserId', loginUserId ?? '');
+    return formData;
+  }
 
-preparePreviewModelData(emailData: any) {
-  const formData = new FormData();
-      formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
-      formData.append('typeCode', emailData?.typeCode ?? '');
-      formData.append('subtypeCode', CommunicationEvents?.Email ?? '');
-      formData.append('channelTypeCode', CommunicationEvents?.Email ?? '');
-      formData.append('description', emailData?.description ?? '');
-      formData.append('templateContent', emailData?.templateContent ?? '');
-      return formData;
-}
+  preparePreviewModelData(emailData: any) {
+    const formData = new FormData();
+    formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
+    formData.append('typeCode', emailData?.typeCode ?? '');
+    formData.append('subtypeCode', CommunicationEvents?.Email ?? '');
+    formData.append('channelTypeCode', CommunicationEvents?.Email ?? '');
+    formData.append('description', emailData?.description ?? '');
+    formData.append('templateContent', emailData?.templateContent ?? '');
+    return formData;
+  }
 
-prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[]) {
-  const formData = new FormData();
-  formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
-  formData.append('typeCode', draftTemplate?.typeCode ?? '');
-  formData.append('languageCode', draftTemplate?.languageCode ?? '');
-  formData.append('description', draftTemplate?.description ?? '');
-  formData.append('templateContent', draftTemplate?.templateContent ?? '');
-  formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');  
+  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[]) {
+    const formData = new FormData();
+    formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
+    formData.append('typeCode', draftTemplate?.typeCode ?? '');
+    formData.append('languageCode', draftTemplate?.languageCode ?? '');
+    formData.append('description', draftTemplate?.description ?? '');
+    formData.append('templateContent', draftTemplate?.templateContent ?? '');
+    formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
     let i = 0;
-    clientAndVendorAttachedFiles.forEach((file) => { 
-      if(file.rawFile == undefined || file.rawFile == null){
-        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.fileName : file.document.description);
-        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.filePath : file.document.templatePath);
-        formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.typeCode : file.document.typeCode);
-      i++;
-      }else{
-        formData.append('attachments', file.rawFile); 
+    clientAndVendorAttachedFiles.forEach((file) => {
+      if (file.rawFile == undefined || file.rawFile == null) {
+        formData.append('AttachmentDetails[' + i + '][fileName]', file.document.description == undefined ? file.document.fileName : file.document.description);
+        formData.append('AttachmentDetails[' + i + '][filePath]', file.document.templatePath == undefined ? file.document.filePath : file.document.templatePath);
+        formData.append('AttachmentDetails[' + i + '][typeCode]', file.document.typeCode == undefined ? file.document.typeCode : file.document.typeCode);
+        i++;
+      } else {
+        formData.append('attachments', file.rawFile);
       }
     });
-return formData;
-}
+    return formData;
+  }
 
-prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: any, entityId: any, clientCaseId: string, emailSubject: string, loginUserId: any, selectedCCEmail: any) {
-  const formData = new FormData();
+  createFormDataForEmail(data: { subject: string, toEmail: string, ccEmail: string, bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
+    const formData = new FormData();
+    formData.append('requestSubject', data?.subject ?? '');
+    formData.append('loginUserId', data?.userId ?? '');
+    formData.append('clientCaseId', data?.caseId ?? '');
+    formData.append('entity', data?.entity ?? '');
+    formData.append('entityId', data?.entityId ?? '');
+    formData.append('clientCaseEligibilityId', data?.eligibilityId ?? '');
+    this.addCommaSeperatedEmailToFormData(formData, data?.toEmail, 'toEmailAddress');
+    this.addCommaSeperatedEmailToFormData(formData, data?.ccEmail, 'cCEmail');
+    this.addCommaSeperatedEmailToFormData(formData, data?.bccEmail, 'bCCEmail'); 
+
+    if (data?.emailData) {
+      formData.append('documentTemplateId', data?.emailData?.documentTemplateId ?? '');
+      formData.append('description', data?.emailData?.description ?? '');
+      formData.append('typeCode', data?.emailData?.typeCode ?? '');
+      formData.append('requestBody', data?.emailData?.templateContent ?? '');
+      formData.append('notifcationDraftId', data?.emailData?.notifcationDraftId ?? '');
+    }
+
+    if (data?.clientAndVendorEmailAttachedFiles) {
+      let i = 0;
+      data?.clientAndVendorEmailAttachedFiles.forEach((file) => {
+        if (file.rawFile == undefined || file.rawFile == null) {
+          formData.append('AttachmentDetails[' + i + '][fileName]', file.document.description == undefined ? file.document.fileName : file.document.description);
+          formData.append('AttachmentDetails[' + i + '][filePath]', file.document.templatePath == undefined ? file.document.filePath : file.document.templatePath);
+          formData.append('AttachmentDetails[' + i + '][typeCode]', file.document.typeCode === undefined || file.document.typeCode === null ? file.document.typeCode : file.document.typeCode);
+          i++;
+        } else {
+          formData.append('attachments', file.rawFile);
+        }
+      });
+    }
+
+    return formData;
+  }
+
+  addCommaSeperatedEmailToFormData(formData: FormData, emailAddress: any, fieldName: string) {
+    if (emailAddress?.length > 0) {
+      for (let email of emailAddress) {
+        formData.append(fieldName, email);
+      }
+    }
+  }
+
+  //{subject:string, toEmail: string, ccEmail:string, bccEmail:string, eligibilityId: string, entity string, entityId:string, caseId: :string,  userId:string} 
+  //prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: any, entityId: any, clientCaseId: string, emailSubject: string, loginUserId: any, selectedCCEmail: any) {
+  prepareClientAndVendorFormData(selectedToEmail: any, clientCaseEligibilityId: any, entityId: any, clientCaseId: string, emailSubject: string, loginUserId: any, selectedCCEmail: any) {
+    const formData = new FormData();
     formData.append('toEmailAddress', selectedToEmail ?? '');
     formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
     formData.append('entityId', entityId ?? '');
-    formData.append('requestSubject', emailSubject ?? ''); 
+    formData.append('requestSubject', emailSubject ?? '');
     formData.append('loginUserId', loginUserId ?? '');
-    formData.append('cCEmail', selectedCCEmail ?? '');  
-    formData.append('clientCaseId', clientCaseId ?? ''); 
+    formData.append('cCEmail', selectedCCEmail ?? '');
+    formData.append('clientCaseId', clientCaseId ?? '');
     return formData;
-}
+  }
 
-prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[]) {
+  prepareClientAndVendorEmailData(formData: FormData, emailData: any, clientAndVendorEmailAttachedFiles: any[]) {
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('description', emailData?.description ?? '');
     formData.append('typeCode', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('notifcationDraftId', emailData?.notifcationDraftId ?? '');
     let i = 0;
-    clientAndVendorEmailAttachedFiles.forEach((file) => { 
-      if(file.rawFile == undefined || file.rawFile == null){
-        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.fileName : file.document.description);
-        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.filePath : file.document.templatePath);
-        formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode === undefined || file.document.typeCode === null ? file.document.typeCode : file.document.typeCode);
-      i++;
-      }else{
-        formData.append('attachments', file.rawFile); 
+    clientAndVendorEmailAttachedFiles.forEach((file) => {
+      if (file.rawFile == undefined || file.rawFile == null) {
+        formData.append('AttachmentDetails[' + i + '][fileName]', file.document.description == undefined ? file.document.fileName : file.document.description);
+        formData.append('AttachmentDetails[' + i + '][filePath]', file.document.templatePath == undefined ? file.document.filePath : file.document.templatePath);
+        formData.append('AttachmentDetails[' + i + '][typeCode]', file.document.typeCode === undefined || file.document.typeCode === null ? file.document.typeCode : file.document.typeCode);
+        i++;
+      } else {
+        formData.append('attachments', file.rawFile);
       }
     });
     return formData;
-}
+  }
 
-prepareClientAndVendorSmsData(formData: FormData, draftTemplate: any, messageRecipient: any, arg2: undefined[]) {
-  formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
-  formData.append('description', draftTemplate?.description ?? '');
-  formData.append('typeCode', draftTemplate?.typeCode ?? '');
-  formData.append('requestBody', draftTemplate?.messages[0] ?? '');
-  formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
-  formData.append('recepients', messageRecipient.phoneNbr ?? null);
-  let i = 0;
-  draftTemplate.messages.forEach((msg: any) => { 
-        formData.append('messages['+i+']', msg);
+  prepareClientAndVendorSmsData(formData: FormData, draftTemplate: any, messageRecipient: any, arg2: undefined[]) {
+    formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
+    formData.append('description', draftTemplate?.description ?? '');
+    formData.append('typeCode', draftTemplate?.typeCode ?? '');
+    formData.append('requestBody', draftTemplate?.messages[0] ?? '');
+    formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
+    formData.append('recepients', messageRecipient?.phoneNbr ?? null);
+    let i = 0;
+    draftTemplate.messages.forEach((msg: any) => {
+      formData.append('messages[' + i + ']', msg);
       i++;
     });
-  return formData;
-}
+    return formData;
+  }
 
-initiateSendemailRequest(formData: FormData, selectedTemplate: any) {
+  initiateSendEmailRequest(formData: FormData) {
     return this.emailDataService.sendClientAndVendorEmail(formData);
-}
+  }
 
-saveClientAndVendorNotificationForLater(formData: FormData) {
-  return this.emailDataService.saveEmailNotificationForLater(formData);
-}
+  saveClientAndVendorNotificationForLater(formData: FormData) {
+    return this.emailDataService.saveEmailNotificationForLater(formData);
+  }
 
-updateSavedClientandVendorEmailTemplate(formData: FormData) {
-  return this.emailDataService.saveEmailNotificationForLater(formData);
-}
+  updateSavedClientandVendorEmailTemplate(formData: FormData) {
+    return this.emailDataService.saveEmailNotificationForLater(formData);
+  }
 
-loadDraftNotificationRequest(entityId: string, typeCode: string) {
-  return this.emailDataService.getDraftNotification(entityId, typeCode);
-}
+  loadDraftNotificationRequest(entityId: string, typeCode: string) {
+    return this.emailDataService.getDraftNotification(entityId, typeCode);
+  }
 
-loadTemplateById(notificationTemplateId: string) {
-  return this.emailDataService.loadEmailTemplateById(notificationTemplateId);
-}
+  loadTemplateById(notificationTemplateId: string) {
+    return this.emailDataService.loadEmailTemplateById(notificationTemplateId);
+  }
 
-loadClientAndVendorDefaultAttachments(templateId: string) {
-  return this.emailDataService.loadClientVendorDefaultAttachmentById(templateId);
-}
+  loadClientAndVendorDefaultAttachments(templateId: string) {
+    return this.emailDataService.loadClientVendorDefaultAttachmentById(templateId);
+  }
 
-deleteNotificationDraft(notificationDraftId: any) {
-  return this.emailDataService.deleteNotificationDraft(notificationDraftId);
-}
+  deleteNotificationDraft(notificationDraftId: any) {
+    return this.emailDataService.deleteNotificationDraft(notificationDraftId);
+  }
 
-sendSms(smsNotification: SmsNotification){
-  return this.emailDataService.sendSms(smsNotification);
-}
+  sendSms(smsNotification: SmsNotification) {
+    return this.emailDataService.sendSms(smsNotification);
+  }
 
-loadNotificationTemplates(groupCode: string, categoryCode: string) {
-  return this.emailDataService.loadEmailTemplates(
-    groupCode, categoryCode
-  );
-}
+  loadNotificationTemplates(groupCode: string, categoryCode: string) {
+    return this.emailDataService.loadEmailTemplates(
+      groupCode, categoryCode
+    );
+  }
 }

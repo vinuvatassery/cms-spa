@@ -34,7 +34,7 @@
         </kendo-dropdownlist>
       </kendo-floatinglabel>
     </div>
-    <div class="flex-col mb-2" *ngIf="isOpenMessageTemplate">
+    <div class="flex-col mb-2" *ngIf="currentSmsData">
       <case-management-text-message-editor [templateContent] ="templateContent" [smsMessages]="smsMessages" [dataEvent]="smsEditorValueEvent" [currentValue]="currentSmsData" (editorValue)="handleSmsEditor($event)" ></case-management-text-message-editor>
     </div>
   </div>

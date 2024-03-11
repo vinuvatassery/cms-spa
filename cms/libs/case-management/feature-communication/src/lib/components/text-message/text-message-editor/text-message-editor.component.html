@@ -1,12 +1,12 @@
-<div class="flex-row">
-  <div class="flex-col" *ngFor="let item of tareaMessages">
+<div class="flex-row  sms-temp-scroll">
+  <div class="flex-col mb-2" *ngFor="let item of tareaMessages">
     <div class="sms-text-header">
       <h5>Message</h5>
       <div>
         <button
           kendoButton
           #anchor
-          (click)="onToggleInsertVariableClicked()"
+          (click)="onToggleInsertVariableClicked(item)"
           class="text-t-normal"
           aria-label="Insert a variable"
           title="Insert a variable"
@@ -22,7 +22,7 @@
         <kendo-popup
           #popup
           [anchor]="$any(anchor)"
-          *ngIf="isShowPopupClicked"
+          *ngIf="item.showVariables"
           popupClass="notification-inner"
         >
         <div class="sms-popup-content">
@@ -53,9 +53,9 @@
               <ul
                 class="var-list-item"
                 aria-label="client variables"
-                *ngFor="let item of clientVariables"
+                *ngFor="let variable of clientVariables"
               >
-                <li (click)="BindVariableToEditor(item.lovCode)" *ngIf="item.parentCode =='CER_CLIENT_VARIABLE'" aria-label="client variables item">{{ item.lovDesc }}</li>
+                <li (click)="bindVariableToEditor(variable.lovCode, item)" *ngIf="variable.parentCode =='CER_CLIENT_VARIABLE'" aria-label="client variables item">{{ variable.lovDesc }}</li>
               </ul>
             </section>
             <section>
@@ -63,9 +63,9 @@
               <ul
                 class="var-list-item"
                 aria-label="my variables"
-                *ngFor="let item of clientVariables"
+                *ngFor="let variable of clientVariables"
               >
-                <li (click)="BindVariableToEditor(item.lovCode)" *ngIf="item.parentCode =='CER_CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ item.lovDesc }}</li>
+                <li (click)="bindVariableToEditor(variable.lovCode, item)" *ngIf="variable.parentCode =='CER_CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ variable.lovDesc }}</li>
               </ul>
             </section>
             <section>
@@ -73,19 +73,20 @@
               <ul
                 class="var-list-item"
                 aria-label="other variables"
-                *ngFor="let item of clientVariables"
+                *ngFor="let variable of clientVariables"
               >
-                <li (click)="BindVariableToEditor(item.lovCode)" *ngIf="item.parentCode =='CER_OTHER_VARIABLE'" aria-label="other variables item">{{ item.lovDesc }}</li>
+                <li (click)="bindVariableToEditor(variable.lovCode, item)" *ngIf="variable.parentCode =='CER_OTHER_VARIABLE'" aria-label="other variables item">{{ variable.lovDesc }}</li>
               </ul>
             </section>
           </div>
         </div>
-        <case-management-send-text-message
+        <!-- <case-management-send-text-message
         (editorValue)="smsEditorValueEvent($event)"
-        ></case-management-send-text-message>
+        ></case-management-send-text-message> -->
         </kendo-popup>
-        <button *ngIf="tareaMessagesCounter > 0"
+        <button 
           kendoButton
+          [disabled]="this.tareaMessages.length <= 1"
           class="k-danger-link"
           (click)="onDeleteMessageClicked(item.id)"
           aria-label="Delete"
@@ -98,11 +99,11 @@
       <kendo-textarea #textareaRef
         [fillMode]="formUiStyle.inputFillMode"
         name="Message Description"
-        [rows]="6"
+        [rows]="3"
         [cols]="40"
         [maxlength]="tareaMessageMaxLength"
-        [value]="templateContent"
         [id]="item.id"
+        [class]="'c-'+item.id"
         (valueChange)="onMessageValueChange($event, item.id)"
         [(ngModel)]="item.description"
         aria-label="message description"
@@ -112,12 +113,13 @@
    
     </kendo-floatinglabel>
   </div>
-  <div class="flex-col" *ngIf="tareaMessagesCounter < 9">
+  <div class="flex-col mt-1 mb-1">
     <button
       kendoButton
       [primary]="true"
       look="flat"
       icon="add"
+      [disabled]="this.tareaMessages.length >=10 "
       (click)="onAddNewMessageClicked()"
       aria-label="Message"
     >

@@ -215,7 +215,7 @@ export class SendTextMessageComponent implements OnInit {
       templateId: this.documentTemplate?.documentTemplateId ?? this.selectedSmsTemplate.notifcationDraftId,
       entity: this.notificationGroup,
       entityId: this.entityId,
-      recepients: [('+1' + this.messageRecipient?.phoneNbr)],
+      recepients: this.messageRecipient?.phoneNbr ? [('+1' + this.messageRecipient?.phoneNbr)] : null,
       Messages: this.textMessageEditor.messages,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
       typeCode: this.templateTypeCode

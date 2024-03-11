@@ -2,7 +2,7 @@ export interface SmsNotification {
     templateId: string;
     entity: string;
     entityId: string;
-    recepients: string[];
+    recepients: string[] | null;
     Messages: string[];
     clientCaseEligibilityId: string;
     typeCode: string;

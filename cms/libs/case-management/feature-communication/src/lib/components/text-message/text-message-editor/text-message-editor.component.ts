@@ -28,7 +28,7 @@ export class TextMessageEditorComponent implements OnInit {
   @Input() currentValue!: any;
   @Input() smsMessages!: any;
 
-    /** Output properties **/
+  /** Output properties **/
   @Output() messageContentChangedEvent = new EventEmitter<any>();
   @Output() editorValue = new EventEmitter<any>();
   @Output() messagesEditor = new EventEmitter<any>();
@@ -41,17 +41,17 @@ export class TextMessageEditorComponent implements OnInit {
   isSearchOpened = true;
   tareaMessagesCounter = 0;
   tareaMessageMaxLength = 140;
-  tareaMessages = [
+  tareaMessages:
     {
-      id: this.tareaMessagesCounter,
-      description: '',
-      wordCount: 0,
-    },
-  ];
+      id: number,
+      description: string,
+      wordCount: number,
+      showVariables: boolean
+    }[] = [];
   messages!: string[];
   clientVariables!: any;
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
-  public formUiStyle : UIFormStyle = new UIFormStyle();
+  public formUiStyle: UIFormStyle = new UIFormStyle();
   stringValues: string[] = ['MyFullName', 'MyJobTitle', 'MyPhone', 'MyEmail'];
   editor!: EditorComponent;
   smsEditorvalue!: any;
@@ -60,15 +60,29 @@ export class TextMessageEditorComponent implements OnInit {
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
-    private readonly notificationSnackbarService : NotificationSnackbarService,
+    private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly ref: ChangeDetectorRef,
-    private readonly loggingService: LoggingService,) {}
+    private readonly loggingService: LoggingService,
+    private readonly elementRef: ElementRef,) { }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadClientVariables();
+    this.initializeMessage();
     this.dataEventSubscribed();
     this.smsEditorValueEvent(this.currentValue);
+  }
+
+  private initializeMessage() {
+    this.tareaMessages = [
+      {
+        id: this.getMessageId(),
+        description: this.templateContent,
+        wordCount: this.templateContent?.length ?? 0,
+        showVariables: false
+      },
+    ];
+    this.onMessageChange();
   }
 
   private dataEventSubscribed() {
@@ -83,29 +97,37 @@ export class TextMessageEditorComponent implements OnInit {
       error: (err: any) => {
         this.loaderService.hide();
         this.loggingService.logException(err);
-        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         this.loggingService.logException(err);
       },
     });
   }
 
-  smsEditorValueEvent(currentValue: any){
+  smsEditorValueEvent(currentValue: any) {
     let i = 0;
-    this.smsMessages?.forEach((msg: any) => {
-      const item ={
-        id: i,
-        description: msg,
-        wordCount: 0,
-      };
-      i++;
-    this.tareaMessages.push(item);
-    });
-    this.tareaMessages = this.tareaMessages.filter((item: any) => item.description.trim() !== '');
+    if (this.smsMessages?.length > 0) {
+      this.smsMessages?.forEach((msg: any) => {
+        const item = {
+          id: this.getMessageId(),
+          description: msg,
+          wordCount: 0,
+          showVariables: false
+        };
+        i++;
+        this.tareaMessages.push(item);
+      });
+      this.tareaMessages = this.tareaMessages.filter((item: any) => item.description.trim() !== '');
+    }
     this.messages = this.tareaMessages.map(user => user.description);
     currentValue.messages = this.messages;
     this.templateContent = this.messages;
     this.messageContentChangedEvent.emit(this.messages);
-    
+
+  }
+
+  onMessageChange() {
+    this.messages = this.tareaMessages.map(user => user.description);
+    this.messageContentChangedEvent.emit(this.messages);
   }
 
   /** Private methods **/
@@ -119,47 +141,71 @@ export class TextMessageEditorComponent implements OnInit {
   @HostListener('document:click', ['$event'])
   private onDocumentClick(event: any): void {
     if (!this.contains(event.target)) {
-      this.onToggleInsertVariableClicked(false);
+      this.closeAllVariablePanels();
     }
   }
 
   @HostListener('keydown', ['$event'])
   private onKeydown(event: any): void {
-    this.onToggleInsertVariableClicked(false);
+    this.closeAllVariablePanels();
   }
 
   /** Internal event methods **/
-  onToggleInsertVariableClicked(show?: boolean): void {
-    this.isShowPopupClicked =
-      show !== undefined ? show : !this.isShowPopupClicked;
-    this.isSearchOpened = true;
+  onToggleInsertVariableClicked(item: any): void {
+    // this.isShowPopupClicked =
+    //   show !== undefined ? show : !this.isShowPopupClicked;
+    item.showVariables = !item.showVariables;
+    //this.isSearchOpened = true;
+  }
+
+  private closeAllVariablePanels() {
+    const isVariableAnyOpen = this.tareaMessages.findIndex(m => m.showVariables === true) !== -1;
+    if (isVariableAnyOpen) {
+      this.tareaMessages = this.tareaMessages.map((m: any) => ({ ...m, showVariables: false }));
+    }
   }
 
   onDeleteMessageClicked(id: any) {
-    if(this.tareaMessagesCounter > 0){
-    this.tareaMessagesCounter -= 1;
-    this.tareaMessages.forEach((message) => {
-      if (message.id === id) {
-        this.tareaMessages.splice(id, 1);
+    if (this.tareaMessages.length > 0) {
+      const messageIndex = this.tareaMessages.findIndex(m => m.id === id)
+      if (messageIndex > -1) {
+        this.tareaMessages.splice(messageIndex, 1);
       }
-    });
-  }
+    }
   }
 
   onAddNewMessageClicked() {
-    this.loadClientVariables();
-    this.tareaMessagesCounter += 1;
-    this.tareaMessages.push({
-      id: this.tareaMessagesCounter,
-      description: '',
-      wordCount: 0,
-    });
+    if (this.tareaMessages.length < 10) {
+      this.tareaMessages.push({
+        id: this.getMessageId(),
+        description: this.templateContent,
+        wordCount: this.templateContent.length,
+        showVariables: false
+      });
+
+      this.onMessageChange();
+    }
+  }
+
+  private getMessageId() {
+    let isDuplicate = false;
+    let id = this.getRandomNumber();
+    do {
+      isDuplicate = this.tareaMessages.findIndex(m => m.id === id) !== -1;
+      id = this.getRandomNumber();
+    }
+    while (isDuplicate);
+    return id;
+  }
+
+  private getRandomNumber() {
+    return Math.floor((Math.random() * 6) + 1);
   }
 
   onMessageValueChange(event: any, id: number): void {
     this.tareaMessages.forEach((message) => {
       if (message.id === id) {
-        message.wordCount = event.length;
+        message.wordCount = event?.length ?? 0;
       }
     });
 
@@ -174,20 +220,20 @@ export class TextMessageEditorComponent implements OnInit {
   private loadClientVariables() {
     this.loaderService.show();
     this.communicationFacade.loadCERAuthorizationEmailEditVariables(CommunicationEventTypeCode.TemplateVariable)
-    .subscribe({
-      next: (variables: any) =>{
-        if (variables) {
-          this.clientVariables = variables;
-        }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.loggingService.logException(err);
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
-      this.loggingService.logException(err);
-    },
-  });
+      .subscribe({
+        next: (variables: any) => {
+          if (variables) {
+            this.clientVariables = variables;
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loggingService.logException(err);
+        },
+      });
   }
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -198,12 +244,18 @@ export class TextMessageEditorComponent implements OnInit {
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
   }
 
-  BindVariableToEditor(option: any) {
-    const valueToInsert = option;
-    const currentValue = this.textareaRef.value;
-    const newValue1 = '{{' + valueToInsert + '}}';
-    const newValue = currentValue + newValue1;
-    this.textareaRef.value = newValue;
+  bindVariableToEditor(variable: any, item: { id: number, description: string, wordCount: number, showVariables: boolean }) {
+    if (variable) {
+      const cursorPosition = this.textareaRef?.nativeElement?.selectionStart;
+      item.description = `${ item.description?.slice(0, cursorPosition)} {{${variable}}} ${item.description?.slice(cursorPosition)}`
+    }
+    // const valueToInsert = option;
+    // const currentValue = this.textareaRef.value;
+    // const newValue1 = '{{' + valueToInsert + '}}';
+    // const newValue = currentValue + newValue1;
+    // this.textareaRef.value = newValue;
     this.isShowPopupClicked = false;
   }
+
+  
 }
