@@ -1,8 +1,7 @@
-<section class="systemconfig-components app-l-inner-rapper pt-0 ">
-      <common-bread-crumb></common-bread-crumb>
+ 
       <system-config-roles-and-permissions-list [usersRoleAndPermissionsLists$]="usersRoleAndPermissions$"
             [rolesPermissionFilterColumn$]="ddlRolesAndPermissionsFilter$" [pageSizes]="pageSizes"
             [sortValue]="sortValueRolesPermissionListGrid" [sortType]="sortType" [sort]="sortRolesPermissionListGrid"
             (loadUsersRoleAndPermissions)="loadUsersRoleAndPermissions($event)"
             (loadDdlRolesAndPermissionsFilterColumnEvent)="loadDdlRolesAndPermissionsFilter($event)"></system-config-roles-and-permissions-list>
-</section>
+ 
