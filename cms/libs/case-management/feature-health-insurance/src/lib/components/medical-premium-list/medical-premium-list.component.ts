@@ -189,6 +189,12 @@ export class MedicalPremiumListComponent implements OnInit {
   }
 
   onDeleteConfirmOpenClicked() {
+    if(this.selectedPolicyPriority === PriorityCode.Primary){
+      this.isTriggerPriorityPopup = true;
+    }
+    else{
+      this.isTriggerPriorityPopup = false;
+    }
     if (this.isCerForm) {
       this.isOpenedRemoveConfirm = true;
     }
