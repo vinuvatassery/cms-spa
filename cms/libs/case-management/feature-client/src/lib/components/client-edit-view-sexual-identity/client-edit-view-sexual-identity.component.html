@@ -17,7 +17,7 @@
           attr.aria-labelledby="sex{{ Identity.lovCode }}"
           (change)="onCheckChange($event, Identity.lovCode)"
         />
-        <label class="k-checkbox-label" for="sex{{ Identity.lovCode }}"
+        <label class="k-checkbox-label" for="{{ ControlPrefix + Identity.lovCode }}"
           >{{ Identity.lovDesc }}
         </label>
 
