@@ -1,5 +1,8 @@
-
-<section class="systemconfig-components app-l-inner-rapper pt-0 ">
-      <common-bread-crumb></common-bread-crumb> 
-    <system-config-gender-list></system-config-gender-list>
-    </section>
+ 
+    <system-config-gender-list 
+    [genderDataLists$]="gender$" 
+    [pageSizes]="pageSizes" [sortValue]="sortValueGenderListGrid"
+    [sortType]="sortType" [sort]="sortGenderListGrid" 
+    (loadGenderListsEvent)="loadGenderLists($event)" 
+    ></system-config-gender-list>
+  

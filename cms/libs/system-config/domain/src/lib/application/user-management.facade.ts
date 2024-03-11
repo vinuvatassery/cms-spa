@@ -31,6 +31,36 @@ export class UserManagementFacade {
     field: this.sortValueRolesPermissionListGrid,
   }];
 
+
+  public sortValueDirectMessageListGrid = 'creationTime'; 
+  public sortDirectMessageListGrid: SortDescriptor[] = [{
+    field: this.sortValueDirectMessageListGrid,
+  }];
+
+  public sortValueGenderListGrid = 'creationTime'; 
+  public sortGenderListGrid: SortDescriptor[] = [{
+    field: this.sortValueGenderListGrid,
+  }];
+  public sortValueLanguageListGrid = 'creationTime'; 
+  public sortLanguageListGrid: SortDescriptor[] = [{
+    field: this.sortValueLanguageListGrid,
+  }];
+
+  public sortValuePronounsListGrid = 'creationTime'; 
+  public sortPronounsListGrid: SortDescriptor[] = [{
+    field: this.sortValuePronounsListGrid,
+  }];
+  
+  public sortValueRacialEthnicListGrid = 'creationTime'; 
+  public sortRacialEthnicListGrid: SortDescriptor[] = [{
+    field: this.sortValueRacialEthnicListGrid,
+  }];
+
+  public sortValueSexualOrientationListGrid = 'creationTime'; 
+  public sortSexualOrientationListGrid: SortDescriptor[] = [{
+    field: this.sortValueSexualOrientationListGrid,
+  }];
+
   private userListSubject = new BehaviorSubject<User[]>([]);
   private usersDataSubject = new BehaviorSubject<any>([]);
   private usersFilterColumnSubject = new BehaviorSubject<any>([]);

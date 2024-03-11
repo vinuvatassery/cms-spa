@@ -1,5 +1,8 @@
-
-<section class="systemconfig-components app-l-inner-rapper pt-0 ">
-      <common-bread-crumb></common-bread-crumb> 
-    <system-config-pronouns-list></system-config-pronouns-list>
-    </section>
+ 
+    <system-config-pronouns-list
+    [pronounsDataLists$]="pronouns$" 
+    [pageSizes]="pageSizes" [sortValue]="sortValuePronounsListGrid"
+    [sortType]="sortType" [sort]="sortPronounsListGrid" 
+    (loadPronounsListsEvent)="loadPronounsList($event)"
+    ></system-config-pronouns-list>
+  

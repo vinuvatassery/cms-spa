@@ -1,5 +1,9 @@
 
-<section class="systemconfig-components app-l-inner-rapper pt-0 ">
-      <common-bread-crumb></common-bread-crumb> 
-    <system-config-direct-messages-list></system-config-direct-messages-list>
-    </section>
+ 
+    <system-config-direct-messages-list 
+    [directMessagesDataLists$]="directMessageLogEvent$" 
+[pageSizes]="pageSizes" [sortValue]="sortValueDirectMessageListGrid"
+[sortType]="sortType" [sort]="sortDirectMessageListGrid" 
+(loadDirectMessageListsEvent)="loadDirectMessageLists($event)" 
+ ></system-config-direct-messages-list>
+  

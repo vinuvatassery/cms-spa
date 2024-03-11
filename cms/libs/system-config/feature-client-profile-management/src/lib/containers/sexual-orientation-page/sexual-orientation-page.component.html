@@ -1,5 +1,6 @@
-
-<section class="systemconfig-components app-l-inner-rapper pt-0 ">
-      <common-bread-crumb></common-bread-crumb> 
-       <system-config-sexual-orientation-list></system-config-sexual-orientation-list>
-    </section>
+<system-config-sexual-orientation-list    [sexualOrientationDataLists$]="sexualOrientation$" 
+       [pageSizes]="pageSizes" [sortValue]="sortValueSexualOrientationListGrid"
+       [sortType]="sortType" [sort]="sortSexualOrientationListGrid" 
+       (loadRacialEthnicListsEvent)="loadSexualOrientationList($event)"
+       ></system-config-sexual-orientation-list>
+   
