@@ -8,7 +8,8 @@ import {
   OnChanges,
   EventEmitter,
   Input,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnInit
 } from '@angular/core';
 /** External libraries **/
 import { SnackBar } from '@cms/shared/ui-common';
@@ -26,7 +27,7 @@ import { SortDescriptor, State } from '@progress/kendo-data-query';
   styleUrls: ['./reminder-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReminderListComponent implements  OnChanges{
+export class ReminderListComponent implements  OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('reminderDetailsTemplate', { read: TemplateRef })
   reminderDetailsTemplate!: TemplateRef<any>;
@@ -54,6 +55,7 @@ export class ReminderListComponent implements  OnChanges{
   public deleteReminderDialog: any;
   public deleteToDoDialog: any;
   gridDataResult!: GridDataResult;
+  @Input() loadAlertGrid$ : any;
   gridTodoDataSubject = new Subject<any>();
   gridToDoItemData$ = this.gridTodoDataSubject.asObservable();
   @Output() ReminderEventClicked  = new EventEmitter<any>();
@@ -94,13 +96,16 @@ export class ReminderListComponent implements  OnChanges{
     private readonly Todofacade: TodoFacade,
     private cdr : ChangeDetectorRef
   ) {}
-  ngOnChanges(): void {
+  ngOnInit(): void {
     this.toDoGridState = {
       skip: 0,
       take: 10,
       sort: this.sort,
     };
     this.loadTodoGrid();
+    this.loadAlertGrid$.subscribe((data: any) => {
+      this.loadTodoGrid();
+    });
   }
   /** Internal event methods **/
   onReminderDoneClicked() { 
@@ -221,7 +226,7 @@ export class ReminderListComponent implements  OnChanges{
   }
  
   onOpenTodoDetailsClicked() {
-    this.isModalTodoDetailsOpenClicked.emit();
+    this.isModalTodoDetailsOpenClicked.emit(this.selectedAlertId);
   }
   onDoneTodoItem(){
     this.onMarkAlertAsDoneGridClicked.emit(this.selectedAlertId);
