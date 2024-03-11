@@ -83,7 +83,7 @@ export class VendorHeaderToolsComponent {
         if(this.draftDropdownCheck === false){
           this.draftDropdownCheck = true;
           this.selectedTemplateName = templatename;
-          this.currentCommunicationTypeCode = this.communicationLetterTypeCode;
+          this.currentCommunicationTypeCode = this.communicationEmailTypeCode;
           this.notificationDraftCheck(this.vendorId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
           }
       },
@@ -175,13 +175,13 @@ export class VendorHeaderToolsComponent {
           for (let template of data){
             this.notificationDraftId = template.notifcationDraftId;
            }
-          if(typeCode == CommunicationEventTypeCode.ClientEmail){
+          if(typeCode == CommunicationEventTypeCode.VendorEmail){
             this.notificationGroup = CommunicationEventTypeCode.EMAIL;
           }
-          if(typeCode == CommunicationEventTypeCode.ClientLetter){
+          if(typeCode == CommunicationEventTypeCode.VendorLetter){
             this.notificationGroup = CommunicationEventTypeCode.LETTER;
           }
-          if(typeCode === CommunicationEventTypeCode.ClientSMS){
+          if(typeCode === CommunicationEventTypeCode.VendorSMS){
             this.notificationGroup = CommunicationEventTypeCode.SMS;
           }
           this.onDraftNotificationExistsConfirmation(notificationDraftEmailDialog);
@@ -200,11 +200,11 @@ export class VendorHeaderToolsComponent {
   }
 
   loadNotificationTemplates(typeCode: string, templateName: TemplateRef<unknown>) {
-    if(typeCode == CommunicationEventTypeCode.ClientEmail){
+    if(typeCode == CommunicationEventTypeCode.VendorEmail){
       templateName = this.sendNewEmailDialog;
       this.onSendNewEmailClicked(templateName);
     }
-    if(typeCode == CommunicationEventTypeCode.ClientLetter){
+    if(typeCode == CommunicationEventTypeCode.VendorLetter){
       templateName = this.sendLetterDialog;
       this.onSendNewLetterClicked(templateName);
     }
@@ -212,9 +212,9 @@ export class VendorHeaderToolsComponent {
 
   onDraftNotificationExistsConfirmation(notificationDraftEmailDialog: TemplateRef<unknown>): void {
     this.isDraftNotificationOpenedDialog = this.dialogService.open({
-      content: notificationDraftEmailDialog, 
+      content: notificationDraftEmailDialog,
       cssClass: 'app-c-modal app-c-modal-md app-c-modal-np',
-    }); 
+    });
   }
 
   onDraftNotificationCloseClicked(result: any) {
@@ -257,6 +257,7 @@ export class VendorHeaderToolsComponent {
 
     handleSendNewLetterClosed(value: CommunicationEvents) {
       if (value === CommunicationEvents.Close) {
+        this.draftDropdownCheck = false;
         this.isSendNewLetterDialog.close(value);
         this.isSendNewLetterOpened = false;
       }
@@ -270,6 +271,7 @@ export class VendorHeaderToolsComponent {
     }
     handleSendNewEmailClosed(value: CommunicationEvents) {
       if (value === CommunicationEvents.Close) {
+        this.draftDropdownCheck = false;
         this.isSendNewEmailOpened = false;
         this.isSendNewEmailOpenedDialog.close();
       }
@@ -314,7 +316,7 @@ export class VendorHeaderToolsComponent {
       this.onDraftNotificationCloseClicked(CommunicationEvents.Close);
       this.loadNotificationTemplates(this.currentCommunicationTypeCode, this.selectedTemplateName);
     }
-  
+
     onContinueDraftClicked(){
       this.isContinueDraftClicked = true;
       this.isNewNotificationClicked = false;
