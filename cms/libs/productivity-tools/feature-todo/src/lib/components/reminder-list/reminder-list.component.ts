@@ -12,7 +12,7 @@ import {
   OnInit
 } from '@angular/core';
 /** External libraries **/
-import { SnackBar } from '@cms/shared/ui-common';
+import { SnackBar, ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** Facades **/ 
@@ -21,6 +21,8 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { AlertTypeCode, TodoFacade } from '@cms/productivity-tools/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
+import { FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
 @Component({
   selector: 'productivity-tools-reminder-list',
   templateUrl: './reminder-list.component.html',
@@ -56,6 +58,7 @@ export class ReminderListComponent implements  OnInit{
   public deleteToDoDialog: any;
   gridDataResult!: GridDataResult;
   @Input() loadAlertGrid$ : any;
+  tabCode= 'MEDICAL_CLINIC'
   gridTodoDataSubject = new Subject<any>();
   gridToDoItemData$ = this.gridTodoDataSubject.asObservable();
   @Output() ReminderEventClicked  = new EventEmitter<any>();
@@ -94,6 +97,7 @@ export class ReminderListComponent implements  OnInit{
     private loaderService: LoaderService,
     private dialogService: DialogService,
     private readonly Todofacade: TodoFacade,
+  private readonly router: Router,
     private cdr : ChangeDetectorRef
   ) {}
   ngOnInit(): void {
@@ -239,4 +243,56 @@ export class ReminderListComponent implements  OnInit{
       this.onDeleteAlertGridClicked.emit(this.selectedAlertId);
     }
   }
+  public get entityTypes(): typeof ToDoEntityTypeCode {
+    return ToDoEntityTypeCode;
+  }
+  onNavigationClicked(result: any) {
+    if (result.entityTypeCode == this.entityTypes.Client) {
+      this.router.navigate([`/case-management/cases/case360/${result.entityId}`]);
+    }
+    else if(result.entityTypeCode == this.entityTypes.Vendor)
+    { 
+      this.getVendorProfile(result.vendorTypeCode);
+     
+      const query = {
+        queryParams: {
+          v_id: result?.entityId ,
+          tab_code : this.tabCode
+        },
+      };
+      this.router.navigate(['/financial-management/vendors/profile'], query )
+    }
+  }
+  getVendorProfile(vendorTypeCode :any) {
+    switch (vendorTypeCode) {
+      case ("MANUFACTURERS")  :
+        this.tabCode = FinancialVendorProviderTabCode.Manufacturers;
+        break;
+
+      case  ("MEDICAL_CLINIC") :
+        this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
+        break;
+
+        case  ("MEDICAL_PROVIDER") :
+          this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
+          break;
+      case  ("INSURANCE_VENDOR"):
+        this.tabCode = FinancialVendorProviderTabCode.InsuranceVendors;
+        break;
+
+      case  ("PHARMACY"):
+        this.tabCode = FinancialVendorProviderTabCode.Pharmacy;
+        break;
+
+      case ("DENTAL_CLINIC")  :
+        this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
+        break;
+
+        case ("DENTAL_PROVIDER")  :
+          this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
+          break;
+    }
+  }
+
+
 }
