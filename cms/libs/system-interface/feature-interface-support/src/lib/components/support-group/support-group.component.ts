@@ -12,10 +12,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
-import {
-  State,
-  CompositeFilterDescriptor
-} from '@progress/kendo-data-query';
+import { State, CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { LovFacade } from 'libs/system-config/domain/src/lib/application/lov.facade';
 import { Subject, first } from 'rxjs';
 @Component({
@@ -44,13 +41,14 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() SupportGroupGridLists$: any;
   @Input() supportGroupReactivate$: any;
   @Input() supportGroupRemove$: any;
-  @Input() supportGroupProfilePhoto$:any;
+  @Input() supportGroupProfilePhoto$: any;
   @Output() loadSupportGroupListEvent = new EventEmitter<any>();
   @Output() deactivateConfimEvent = new EventEmitter<string>();
   @Output() reactivateConfimEvent = new EventEmitter<string>();
   @Output() deleteConfimedEvent = new EventEmitter<string>();
   @Output() addSupportGroupEvent = new EventEmitter<string>();
   @Output() editSupportGroupEvent = new EventEmitter<string>();
+  @Output() selectedRowEvent = new EventEmitter<any>();
 
   public state!: State;
   sortColumn = 'groupName';
@@ -74,9 +72,8 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   selectedSearchColumn = 'ALL';
 
   gridSupportGroupDataSubject = new Subject<any>();
-  private searchSubject = new Subject<string>();
+  public selectableSettings: SelectableSettings;
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
-
   dataListsLoader$ = this.systemInterfaceSupportFacade.supportGroupListDataLoader$;
 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -148,7 +145,13 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private readonly lovFacade: LovFacade, private systemInterfaceSupportFacade: SystemInterfaceSupportFacade
-  ) {}
+  ) {
+
+    this.selectableSettings = {
+      checkboxOnly: false,
+      drag: false,
+    };
+  }
 
   ngOnInit(): void {
     this.loadSupportGroupListGrid();
@@ -163,6 +166,12 @@ export class SupportGroupComponent implements OnInit, OnChanges {
 
     this.loadSupportGroupListGrid();
   }
+
+  public selectedRowChange(selectionEvent: any) {
+    this.selectedGroup = selectionEvent.selectedRows[0].dataItem;
+    this.selectedRowEvent.emit(this.selectedGroup);
+  }
+
 
   private loadSupportGroupListGrid(): void {
     this.loadSupportGroup(this.state?.skip ?? 0, this.state?.take ?? 0, this.sortValue, this.sortType);
@@ -225,7 +234,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.sortColumn = this.columns[stateData.sort[0]?.field];
     this.filter = stateData?.filter?.filters;
     const filterList = [];
-    if(stateData.filter?.filters.length > 0){
+    if (stateData.filter?.filters.length > 0) {
       for (const filter of stateData.filter.filters) {
         filterList.push(this.columns[filter.filters[0].field]);
       }
@@ -244,7 +253,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-  searchColumnChangeHandler(value: string) { 
+  searchColumnChangeHandler(value: string) {
     this.filter = [];
     if (this.searchText) {
       this.onSearch(this.searchText);

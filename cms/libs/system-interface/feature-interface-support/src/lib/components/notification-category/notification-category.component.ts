@@ -16,7 +16,7 @@ import {
   CompositeFilterDescriptor,
   filterBy,
 } from '@progress/kendo-data-query';
-import { Subject } from 'rxjs';
+import { Subject, first } from 'rxjs';
 @Component({
   selector: 'system-interface-notification-category',
   templateUrl: './notification-category.component.html',
@@ -36,21 +36,26 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   @Input() sortType: any;
   @Input() sort: any;
   @Input() notificationCategoryGridLists$: any;
+  @Input() selectedGroup: any;
+  @Input() eventLov$: any;
+  @Input() notificationCategoryListDataLoader$: any;
+  @Input() addnotificationCategory$: any;
   @Output() loadNotificationCategoryListEvent = new EventEmitter<any>();
+  @Output() addNotificationCategoryEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
+  selectedInterface = '';
   isFiltered = false;
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
 
   gridNotificationCategoryDataSubject = new Subject<any>();
-  gridNotificationCategoryData$ =
-    this.gridNotificationCategoryDataSubject.asObservable();
+  gridNotificationCategoryData$ = this.gridNotificationCategoryDataSubject.asObservable();
 
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   public gridMoreActionsNotification = [
@@ -111,6 +116,10 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   }
 
   private loadNotificationCategoryListGrid(): void {
+    if (!this.selectedGroup)
+    return;
+
+    this.selectedInterface = this.selectedGroup.groupName
     this.loadNotificationCategory(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
@@ -126,10 +135,11 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   ) {
     this.isNotificationCategoryGridLoaderShow = true;
     const gridDataRefinerValue = {
-      skipCount: skipCountValue,
-      pagesize: maxResultCountValue,
-      sortColumn: sortValue,
-      sortType: sortTypeValue,
+      SkipCount: skipCountValue,
+      MaxResultCount: maxResultCountValue,
+      Sorting: 'EventGroupCode',
+      SortType: sortTypeValue,
+      notificationGroupId: this.selectedGroup.notificationGroupId,
     };
     this.loadNotificationCategoryListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
@@ -193,7 +203,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
 
   gridDataHandle() {
     this.notificationCategoryGridLists$.subscribe((data: GridDataResult) => {
-      this.gridDataResult = data;
+      this.gridDataResult = data;      
       this.gridDataResult.data = filterBy(
         this.gridDataResult.data,
         this.filterData
@@ -207,6 +217,8 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   }
 
   onNotificationCategoryDetailsClicked() {
+    if (!this.selectedGroup || !this.gridDataResult)
+      return;
     this.isNotificationCategoryDetailPopup = true;
   }
   onCloseNotificationCategoryDetailPopupClicked() {
@@ -239,4 +251,19 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
     this.isNotificationCategoryDeleteConfirmationPopupShow = false;
 
   }
+
+  addNotificationCategory(data: any): void {
+    debugger;
+    this.addNotificationCategoryEvent.emit(data);
+    this.addnotificationCategory$.pipe(first((response: any) => response != null))
+      .subscribe((response: any) => {
+        if (response ?? false) {
+          this.loadNotificationCategoryListGrid();
+        }
+
+      })
+
+    this.onCloseNotificationCategoryDetailPopupClicked();
+  }
+
 }

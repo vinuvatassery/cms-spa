@@ -163,7 +163,7 @@ export class SystemInterfaceSupportService {
 
 
   getNotificationCategoryList(paginationParameters: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/api/system-interface/interface-support/notification-category/list`, paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/list`, paginationParameters);
   }
 
   addNotificationCategory(eventNotificationGroup: any) {
@@ -196,6 +196,10 @@ export class SystemInterfaceSupportService {
     return this.http.delete(
       `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-support/notification-category/${eventNotificationGroupId}`, options
     );
+  }
+
+  getEventLovList(groupCode: string) {
+    return this.http.get<any[]>(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/events-list/${groupCode}`);
   }
 
 }

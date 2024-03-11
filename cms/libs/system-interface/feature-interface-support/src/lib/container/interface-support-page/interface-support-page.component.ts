@@ -8,9 +8,7 @@ import { State } from '@progress/kendo-data-query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InterfaceSupportPageComponent {
-  selectedGroupChangeEvent(data: any) {
-    this.selectedGroup = data;
-  }
+
   selectedGroup: any;
   state!: State;
   sortType = this.systemInterfaceSupportFacade.sortType;
@@ -44,10 +42,17 @@ export class InterfaceSupportPageComponent {
   notificationCategoryReactivate$ = this.systemInterfaceSupportFacade.notificationCategoryReactivate$;
   notificationCategoryRemove$ = this.systemInterfaceSupportFacade.notificationCategoryRemove$;
   notificationCategoryListDataLoader$ = this.systemInterfaceSupportFacade.notificationCategoryListDataLoader$
+  eventLov$ = this.systemInterfaceSupportFacade.eventLov$;
 
   constructor(
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
   ) { }
+
+  selectedGroupChangeEvent(data: any) {
+    this.selectedGroup = data;
+    this.systemInterfaceSupportFacade.loadEventLov('SYSTEM_INTERFACE');
+
+  }
 
   loadSupportGroup(event: any) {
     this.systemInterfaceSupportFacade.loadSupportGroup(event);
@@ -77,8 +82,8 @@ export class InterfaceSupportPageComponent {
   loadNotificationCategory(event: any) {
     this.systemInterfaceSupportFacade.loadNotificationCategory(event);
   }
-
   handleAddNotificationCategory(event: any) {
+    debugger;
     this.systemInterfaceSupportFacade.addNotificationCategory(event);
   }
   handleEditNotificationCategory(event: any) {

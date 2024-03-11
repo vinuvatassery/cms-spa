@@ -84,6 +84,10 @@ export class SystemInterfaceSupportFacade {
   private notificationCategoryListSubject = new Subject<any>();
   notificationCategoryLists$ = this.notificationCategoryListSubject.asObservable();
 
+  private eventLovSubject = new BehaviorSubject<any[]>([]);
+  eventLov$ = this.eventLovSubject.asObservable();
+
+
 
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any, source: NotificationSource = NotificationSource.API) {
@@ -313,5 +317,18 @@ export class SystemInterfaceSupportFacade {
         },
       });
   }
+
+  loadEventLov(groupCode: string) {
+    this.systemInterfaceSupportService.getEventLovList(groupCode).subscribe({
+      next: (response) => {        
+        this.eventLovSubject.next(response);
+      },
+
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    });
+  }
+  
 
 }
