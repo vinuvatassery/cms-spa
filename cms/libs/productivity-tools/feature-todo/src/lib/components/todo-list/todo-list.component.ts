@@ -47,6 +47,7 @@ export class TodoListComponent implements OnInit {
   sortColumn = 'alertDueDate';
   sortDir = 'Ascending';
   sortColumnName = '';
+  tabCode ='';
   sortType = 'asc';
   sort: SortDescriptor[] = [{
     field: this.sortColumn,
@@ -179,14 +180,15 @@ export class TodoListComponent implements OnInit {
     return FinancialVendorProviderTabCode;
   }
     onToDoClicked(gridItem: any) {
-      if (gridItem && gridItem.entityTypeCode == this.entityTypes.Vendor) {
+      if (gridItem && gridItem.entityTypeCode == this.entityTypes.Client) {
         this.router.navigate([`/case-management/cases/case360/${gridItem?.entityId}`]);
       }
       else if (gridItem && gridItem.entityTypeCode == this.entityTypes.Vendor) {
+        this.getVendorProfile(gridItem.vendorTypeCode)
         const query = {
           queryParams: {
             v_id: gridItem?.entityId ,
-            tab_code : this.financeManagementTabs.MedicalProvider
+            tab_code : this.tabCode
           },
         };
         this.router.navigate(['/financial-management/vendors/profile'], query )
@@ -240,5 +242,35 @@ export class TodoListComponent implements OnInit {
   }
   public get entityTypes(): typeof ToDoEntityTypeCode {
     return ToDoEntityTypeCode;
+  }
+  getVendorProfile(vendorTypeCode :any) {
+    switch (vendorTypeCode) {
+      case ("MANUFACTURERS")  :
+        this.tabCode = FinancialVendorProviderTabCode.Manufacturers;
+        break;
+
+      case  ("MEDICAL_CLINIC") :
+        this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
+        break;
+
+        case  ("MEDICAL_PROVIDER") :
+          this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
+          break;
+      case  ("INSURANCE_VENDOR"):
+        this.tabCode = FinancialVendorProviderTabCode.InsuranceVendors;
+        break;
+
+      case  ("PHARMACY"):
+        this.tabCode = FinancialVendorProviderTabCode.Pharmacy;
+        break;
+
+      case ("DENTAL_CLINIC")  :
+        this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
+        break;
+
+        case ("DENTAL_PROVIDER")  :
+          this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
+          break;
+    }
   }
 }
