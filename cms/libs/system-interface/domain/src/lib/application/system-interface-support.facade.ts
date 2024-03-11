@@ -4,6 +4,7 @@ import { SystemInterfaceSupportService } from '../infrastructure/system-interfac
 import { SnackBarNotificationType, NotificationSource, LoaderService, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { SortDescriptor } from '@progress/kendo-data-query';
+import { SystemInterfaceSupportStatus } from '../enums/system-interface-support-status';
 
 @Injectable({ providedIn: 'root' })
 export class SystemInterfaceSupportFacade {
@@ -288,6 +289,10 @@ export class SystemInterfaceSupportFacade {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
         },
       });
+  }
+
+  getStatusArray(): string[]{
+    return Object.values(SystemInterfaceSupportStatus)
   }
 
   // ------------------------------------------------------------------------

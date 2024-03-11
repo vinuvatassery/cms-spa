@@ -55,6 +55,7 @@ export class DistributionDetailComponent implements OnInit {
   dataList: any;
 
   ngOnInit(): void {
+    debugger;
     if (this.selectedMemberData)
       this.isEditMode = true;
     this.createForm();
@@ -62,6 +63,7 @@ export class DistributionDetailComponent implements OnInit {
   }
 
   createForm() {
+    debugger;
     this.memberForm = this.formBuilder.group({
       groupName: new FormControl({ value: '', disabled: true }),
       firstName: ['', [Validators.required, Validators.maxLength(200)]],

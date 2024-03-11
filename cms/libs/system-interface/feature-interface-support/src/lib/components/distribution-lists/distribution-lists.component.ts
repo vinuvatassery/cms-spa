@@ -43,13 +43,15 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   gridDataResult!: GridDataResult;
   memberForm!: FormGroup;
 
+
+
   gridDistributionDataSubject = new Subject<any>();
   gridDistributionData$ = this.gridDistributionDataSubject.asObservable();
 
   dataListsLoader$ = this.systemInterfaceSupportFacade.distributionListDataLoader$;
   selectedInterface = '';
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-
+  processArray: any;
   searchColumnList: { columnName: string, columnDesc: string }[] = [
     {
       columnName: 'ALL',
@@ -79,6 +81,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
+        debugger;
         if (data.email) {
           this.selectedMemberData = data;
           this.isEditMode = true;
@@ -129,47 +132,45 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     private dialogService: DialogService,
     private fb: FormBuilder,
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
-  ) { }
+  ) {
+    this.processArray = systemInterfaceSupportFacade.getStatusArray()
+  }
 
   ngOnInit(): void {
     this.loadDistributionListGrid();
-    alert(this.statusList)
   }
-  statusFilter :any;
+  statusFilter: any;
   statusList =
     {
       'Y': 'Active',
       'N': 'InActive'
     }
 
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    if (value == 'Active')
+      value = 'Y'
+    else if (value == 'InActive')
+      value = 'N'
 
-
-
-
-    dropdownFilterChange(
-      field: string,
-      value: any,
-      filterService: FilterService
-    ): void {
-      if (field === 'status') {
-        this.statusFilter = value;
-      }
-      if (field === 'process') {
-        this.statusFilter = value;
-      }
-  
-      filterService.filter({
-        filters: [
-          {
-            field: field,
-            operator: 'eq',
-            value: value,
-          },
-        ],
-        logic: 'or',
-      });
+    if (field === 'status') {
+      this.statusFilter = value;
     }
-  
+
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+  }
 
   ngOnChanges(): void {
     this.sortType = 'desc'

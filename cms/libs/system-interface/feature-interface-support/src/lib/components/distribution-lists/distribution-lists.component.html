@@ -40,9 +40,12 @@
       </ng-template>
     </kendo-grid-column>
 
-    <kendo-grid-column field="status" title="Status" [width]="180">
+    <kendo-grid-column field="status" title="Status" [width]="120">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.status === 'Y' ? 'Active' : 'InActive' }}
+      </ng-template>
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
-        <kendo-dropdownlist [data]="statusList" [textField]="'value'" [valueField]="'key'" [value]="statusFilter"
+        <kendo-dropdownlist [data]="processArray" 
           (valueChange)="dropdownFilterChange('status',$event, filterService)">
         </kendo-dropdownlist>
       </ng-template>
@@ -56,9 +59,7 @@
         </kendo-grid-string-filter-menu>
       </ng-template>
     </kendo-grid-column>
-    
-    <!-- <kendo-grid-column field="status" title="Status" [width]="140">
-    </kendo-grid-column> -->
+
     <kendo-grid-column field="Option" title=" " [sticky]="true" [columnMenu]="false" [width]="50" class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem>
         <kendo-dropdownbutton [data]="gridMoreActions" class="TableActionPopup app-dropdown-action more_action_wid"
@@ -68,7 +69,7 @@
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                [disabled]="(dataItem.status === 'InActive' && buttondataItem.text === 'Deactivate') || (dataItem.status === 'Active' && buttondataItem.text === 'Re-activate')"
+                [disabled]="(dataItem.status === 'N' && buttondataItem.text === 'Deactivate') || (dataItem.status === 'Y' && buttondataItem.text === 'Re-activate')"
                 [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>
@@ -121,6 +122,8 @@
   <kendo-dialog-titlebar>{{ isEditMode ? 'Edit Member' : 'Add Member' }} </kendo-dialog-titlebar>
 
   <distribution-detail
+    [selectedMemberData]="selectedMemberData"
+    [selectedGroup]="selectedGroup"
     (addMemberEvent)="addNotificationUser($event)"
     (closeForm)="onCloseMemberDetailPopupClicked()"
     (refreshData)="onChildDataUpdate()"> 
