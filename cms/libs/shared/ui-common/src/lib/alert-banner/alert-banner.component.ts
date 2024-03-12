@@ -2,8 +2,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnInit,
+  Output,
 } from '@angular/core';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
@@ -18,6 +20,12 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 export class AlertBannerComponent implements OnInit {
   /** Input properties **/
   // @Input() data$!: Observable<SnackBar>;
+  @Input() entityId:any;
+  @Input() entityType:any;
+  @Input() alertTypeCode:any;
+  @Input()  alertList$ :any;
+  @Output() isLoadAlertListEvent = new EventEmitter<any>();
+
   public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
   public duration =this.configurationProvider.appSettings.snackbarAnimationDuration;
   showMoreAlert = false;
@@ -49,10 +57,15 @@ export class AlertBannerComponent implements OnInit {
     },
   ];
   /** Constructor **/
-  constructor(private configurationProvider : ConfigurationProvider) {}
+  constructor(private configurationProvider : ConfigurationProvider) {
+
+  }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {   
+    //alert(this.entityId)
+    this.loadTodoGridData();
+    this.isLoadAlertListEvent.emit();
     // this.data$.subscribe({
     //   next: (res) => {
     //     if (res) {
@@ -71,5 +84,32 @@ export class AlertBannerComponent implements OnInit {
     //     console.error('err', err);
     //   },
     // });
-  }   
+  }  
+  private loadTodoGridData(){
+    debugger;
+      //this.isToDoGridLoaderShow.next(true);
+      let alertType=this.alertTypeCode;
+      var xfilter=[
+        {"filters":[{"field":"entityId","operator":"eq","value":this.entityId},
+        {"field":"entityTypeCode","operator":"eq","value":this.entityType},
+        {"field":"alertTypeCode","operator":"eq","value":this.alertTypeCode}
+      ],"logic":"and"}
+      ]; 
+      const gridDataRefinerValue = {
+        skipCount: 0,
+        maxResultCount: 10,
+        sorting: 'alertDueDate',
+        sortType: 'asc',
+        filter: xfilter,
+      }; 
+        this.isLoadAlertListEvent.emit({gridDataRefinerValue, alertType})
+
+        this.alertList$.subscribe((data: any) => {
+          var xyz = data?.items;
+          if(data?.totalCount >=0 || data?.totalCount === -1){
+            //this.isToDoGridLoaderShow.next(false);
+          }
+          //this.gridTodoDataSubject.next(this.gridDataResult);
+        });
+  } 
 }

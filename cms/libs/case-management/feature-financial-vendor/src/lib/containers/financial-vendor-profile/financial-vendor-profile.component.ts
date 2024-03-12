@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ContactFacade, DrugsFacade, FinancialVendorFacade, FinancialVendorProviderTabCode, InvoiceFacade } from '@cms/case-management/domain';
+import { TodoFacade } from '@cms/productivity-tools/domain';
 import { FinancialVendorTypeCode } from '@cms/shared/ui-common';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
@@ -63,6 +64,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
   hasDrugCreateUpdatePermission = false;
   vendorProfileId: any;
+  alertList$ = this.todoFacade.todoGrid$;
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -72,7 +74,8 @@ export class FinancialVendorProfileComponent implements OnInit {
     private readonly userManagementFacade: UserManagementFacade,
     private readonly contactFacade: ContactFacade,
     private dialogService: DialogService,
-    private lovFacade: LovFacade
+    private lovFacade: LovFacade,
+    public todoFacade: TodoFacade,
   ) { }
 
   ngOnInit(): void {
@@ -230,5 +233,10 @@ export class FinancialVendorProfileComponent implements OnInit {
 
   updateRecentlyViewedEvent(vendorId:any){
     this.financialVendorFacade.addVendorRecentlyViewed(vendorId);
+  }
+
+  getVendorAlertList(event:any){
+    debugger;
+    this.todoFacade.loadAlerts(event.gridDataRefinerValue.gridDataRefinerValue,event.gridDataRefinerValue.alertTypeCode);
   }
 }

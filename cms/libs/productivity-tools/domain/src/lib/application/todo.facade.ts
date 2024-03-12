@@ -86,6 +86,7 @@ export class TodoFacade {
   }
 
   loadAlerts(payload:any,alertTypeCode:any): void {
+    debugger;
     this.todoDataService.loadAlerts(payload,alertTypeCode).subscribe({
       next: (todoGridResponse: any) => {
         this.todoGridSubject.next(todoGridResponse);

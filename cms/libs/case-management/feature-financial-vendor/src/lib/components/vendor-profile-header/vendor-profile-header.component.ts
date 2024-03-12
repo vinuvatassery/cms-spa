@@ -15,6 +15,9 @@ vendorProfile:any
 @Input() clientId!: any;
 @Output() loadSpecialHandlingEvent =  new EventEmitter();
 @Output() updateRecentlyViewedEvent = new EventEmitter();
+@Input()  alertList$ :any;
+@Output() isLoadAlertListContainerEvent = new EventEmitter<any>();
+
 notificationReminderDialog : any;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   showMoreAlert = false;
@@ -109,6 +112,10 @@ notificationReminderDialog : any;
       content: template,
       cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
     });  
+  } 
+  isLoadAlertListEvent(gridDataRefinerValue: any)
+  {
+    debugger;
+    this.isLoadAlertListContainerEvent.emit({gridDataRefinerValue})
   }
-   
 }
