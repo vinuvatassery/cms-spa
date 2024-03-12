@@ -20,9 +20,9 @@
             <div class="last-visited-case"  >
               <button aria-label="Remove" title="Remove" (click)="deleteActiveSession(item)"
                 kendoButton icon="close" look="flat" class="last-visited-case-close"></button>
-              <p class="last-visited-case-heading" role="region" attr.aria-label="{{item.clientName}}" (click)="onCaseClicked(item)" ><strong>{{ item.clientName }}</strong>
+              <p class="last-visited-case-heading" role="region" attr.aria-label="{{item.clientName}}" (click)="onCaseClicked(item)" title="{{ item.clientName }}"><strong>{{ item.clientName }}</strong>
               </p>
-              <p class="last-visited-case-details" role="region" attr.aria-label="ID: {{ item.clientId }}" (click)="onCaseClicked(item)" title="ID: {{ item.clientId }}">ID {{ item.clientId ?? '000' }}</p>
+              <p class="last-visited-case-details" role="region" attr.aria-label="ID: {{ item.clientId ?? '000' }}" (click)="onCaseClicked(item)" title="ID: {{ item.clientId ?? '000' }}">ID {{ item.clientId ?? '000' }}</p>
             </div>
           </ng-template>
         </kendo-sortable>

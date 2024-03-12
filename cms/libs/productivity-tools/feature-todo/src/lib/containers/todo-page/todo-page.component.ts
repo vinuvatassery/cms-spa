@@ -64,6 +64,7 @@ export class TodoPageComponent implements OnInit {
   /** Public methods **/
   onCloseTodoClicked(result: any) {
     if (result) {
+      this.selectedAlertId = undefined
       this.isToDODetailsActionOpen = false;
       this.todoDetailsDialog.close();
     }
