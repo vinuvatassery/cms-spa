@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { SnackBar } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'cms-financial-reminder',
   templateUrl: './financial-reminder.component.html',
@@ -10,8 +12,20 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
 })
 export class FinancialReminderComponent {
 
+  constructor( private lovFacade : LovFacade,
+    private financialVendorFacade : FinancialVendorFacade,
+    private financialRefundFacade : FinancialVendorRefundFacade) {
+    
+  }
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  
+  medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
+  providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
+  clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
+  clientSearchResult$ = this.financialRefundFacade.clients$;
+  clientSubject = this.financialRefundFacade.clientSubject;
+  entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
+  reminderIsFor =''
+
   /** Public properties **/
   snackbarMessage!: SnackBar;
   snackbarSubject = new Subject<SnackBar>();
@@ -53,5 +67,17 @@ export class FinancialReminderComponent {
 
   onAddReminderClicked() {
     this.isShowReminderDetailsModal = true;
+  }
+
+  searchClientName(event:any){
+    this.financialRefundFacade.loadClientBySearchText(event);
+  }
+
+  searchProvider(data:any){
+    this.financialVendorFacade.searchAllProvider(data);
+  }
+
+  remainderFor(event:any){
+    this.reminderIsFor= event
   }
 }

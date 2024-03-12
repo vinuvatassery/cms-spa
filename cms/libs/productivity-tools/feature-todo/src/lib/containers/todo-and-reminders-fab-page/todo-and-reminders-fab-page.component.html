@@ -1,4 +1,47 @@
 <productivity-tools-todo-and-reminders-page *ngIf="isShowTodoReminders" (closeAction)="closeAction()"></productivity-tools-todo-and-reminders-page>
 
 
-<productivity-tools-reminder-list *ngIf="showRemindersList"></productivity-tools-reminder-list>
+<productivity-tools-reminder-list *ngIf="showRemindersList"
+[todoGrid$]="todoGrid$"
+(isLoadTodoGridEvent)="onloadTodoGrid($event,$event)"
+(onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
+(onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
+[isToDODetailsActionOpen]="isToDODetailsActionOpen"
+[loadAlertGrid$]="loadAlertGrid$"
+(isModalTodoDetailsOpenClicked)="onOpenTodoClicked($event,todoDetailTemplate)"
+
+></productivity-tools-reminder-list>
+
+<!-- Create To Do Modal Html-->
+<ng-template #todoDetailTemplate>
+    <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">
+   {{!!this.selectedAlertId?  'Edit or delete this item' : 'Create a Custom To Do Item'}}    </kendo-dialog-titlebar>
+    <productivity-tools-todo-detail 
+    (isModalTodoDetailsCloseClicked)="onCloseTodoClicked($event)"
+    (isLoadTodoGridEvent)="loadTodoList()" 
+    [frequencyTypeCodeSubject$]="frequencyTypeCodeSubject$"
+    [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+    (searchProvider)="searchProvider($event)"
+    [providerSearchResult$]="providerSearchResult$"
+    [clientSearchResult$]="clientSearchResult$"
+    (searchClientName)="searchClientName($event)"
+    (onTodoItemCreateClick)="onTodoItemCreateClick($event)"
+    (onUpdateTodoItemClick)="onUpdateTodoItemClick($event)"
+    [alertId]="selectedAlertId"
+    [getTodo$]="getTodo$"
+    [createTodo$]="createTodo$"
+    (onGetTodoItem)="onGetTodoItem($event)"
+    (getTodoItemsLov)="getTodoItemsLov()"
+    [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
+    [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
+    [isEdit]="!!this.selectedAlertId"
+    [searchProviderSubject]="searchProviderSubject"
+    [clientSubject]="clientSubject"
+    ></productivity-tools-todo-detail>
+  </ng-template>
+  
+   
+    
+    
+    
+  

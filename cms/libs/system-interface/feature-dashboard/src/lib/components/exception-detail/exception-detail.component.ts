@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridFilterParam, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { Subject } from 'rxjs';
@@ -8,7 +8,7 @@ import { Subject } from 'rxjs';
   templateUrl: './exception-detail.component.html',
   styleUrls: ['./exception-detail.component.scss'],
 })
-export class ExceptionDetailComponent implements OnInit {
+export class ExceptionDetailComponent implements OnInit, OnChanges {
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
   @Input() fileId: any;
@@ -28,6 +28,11 @@ export class ExceptionDetailComponent implements OnInit {
     this.initializeGrid();
     this.setKeyIdColumnHeader();
   }
+  ngOnChanges(): void {
+    this.initializeGrid();
+    this.setKeyIdColumnHeader();
+  }
+
 
   gridLoaderShow = false
 
@@ -40,7 +45,7 @@ export class ExceptionDetailComponent implements OnInit {
         this.keyIdColumnHeader = 'Hrn';
         break;
       case 'OHP':
-        this.keyIdColumnHeader = 'Key Id';
+        this.keyIdColumnHeader = 'Recipient Id';
         break;
       case 'MODA':
         this.keyIdColumnHeader = (this.processTypeCode === 'DENTAL_PREMIUM') ? 'Subscriber Id' : 'Claim Number';

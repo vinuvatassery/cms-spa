@@ -8,6 +8,9 @@ import {
   Output,
   TemplateRef,
   Input,
+  ViewChild,
+  ElementRef,
+  HostListener,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -27,6 +30,10 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EventLogComponent implements OnInit {
+  @ViewChild('eventtFilterPopover', { read: ElementRef })
+  public eventtFilterPopover!: ElementRef;
+  @ViewChild('eventFilterCardBtn')
+  eventFilterCardBtn!: ElementRef;
   /** Output properties **/
   @Output() closeAction = new EventEmitter();
   @Input() eventAttachmentTypeLov$!: Observable<Lov[]>;
@@ -50,7 +57,7 @@ export class EventLogComponent implements OnInit {
   public formUiStyle: UIFormStyle = new UIFormStyle();
   eventsdata$ = this.eventLogFacade.eventsdata$;
 
-
+  isEventFilterPopoverOpen = false;
   isSubEvent = false;
   // actions: Array<any> = [{ text: 'Action' }];
   filterData: any = { logic: 'and', filters: [] };
@@ -199,6 +206,7 @@ export class EventLogComponent implements OnInit {
     this.eventLogFilterForm.controls["beforedatefilter"].setValue('');
     this.filterBy = "";
     this.isEnableFilterBtn = false;
+    this.isEventFilterPopoverOpen = false;
     this.cd.detectChanges();
     this.filterData = { logic: 'and', filters: [] };
     this.loadEventLogs();
@@ -208,7 +216,7 @@ export class EventLogComponent implements OnInit {
   {
     this.setFilteredText();
     this.loadEventLogs();
-    this.isShowFilter = false;
+    this.isEventFilterPopoverOpen = false;
     this.cd.detectChanges();
   }
 
@@ -271,7 +279,7 @@ export class EventLogComponent implements OnInit {
       this.filterDataQueryArray.push(object);
     }
     this.setFilterOfCaseWorkerAndEventType("createdBy","caseworkerfilterbyoperator","caseworkerfilterbyvalue");
-    this.setFilterOfCaseWorkerAndEventType("eventLogDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
+    this.setFilterOfCaseWorkerAndEventType("eventDesc","eventtypefilterbyoperator","eventtypefilterbyvalue");
     this.setDateFilters("creationTime");
     this.filterData = {logic:"and", filters: this.filterDataQueryArray};
   }
@@ -291,7 +299,6 @@ export class EventLogComponent implements OnInit {
       sortType: this.sortType ?? 'asc',
       filter: JSON.stringify(this.filterData.filters ?? [])
     };
-    console.log(gridDataRefinerValue);
     this.eventLogFacade.loadEvents(gridDataRefinerValue, this.entityId);
   }
 
@@ -299,6 +306,8 @@ export class EventLogComponent implements OnInit {
   {
     this.sortType = event;
     this.loadEventLogs();
+    this.isEventFilterPopoverOpen = false;
+    this.cd.detectChanges();
   }
 
 
@@ -372,24 +381,39 @@ export class EventLogComponent implements OnInit {
     let fileNmae = pathSplitArray[pathSplitArray.length-1];
     this.documentFacade.viewOrDownloadEventFile(true, eventLogAttachmentId, fileNmae);
   }
-
-
-  private setFilterOfAfterAndBeforeDate(field:string, operator:string, value:string,)
-  {
-    if(this.eventLogFilterForm.controls[value].value != "" && this.eventLogFilterForm.controls[value].value != null)
-    {
-      let object ={
-        filters: [
-          {
-            field: field,
-            operator: operator,
-            value: this.eventLogFilterForm.controls[value].value,
-          }
-        ],
-        logic: 'and',
-      };
-     this.filterDataQueryArray.push(object);
+ 
+  @HostListener('document:keydown', ['$event'])
+  public keydown(event: KeyboardEvent): void {
+    if (event) {
+      if (event.code === 'Escape') {
+        this.toggleFilterPopoverOpen(false);
+      }
     }
   }
 
+  @HostListener('document:click', ['$event'])
+  public documentClick(event: KeyboardEvent): void {
+    if (event) {
+      if (!this.contains(event.target)) {
+        // this.toggleFilterPopoverOpen(false);
+      }
+    }
+  }
+
+  public toggleFilterPopoverOpen(show?: boolean): void {
+    this.isEventFilterPopoverOpen = show ?? !this.isEventFilterPopoverOpen;
+  }
+
+  private contains(target: any): boolean {
+    return (
+      this.eventFilterCardBtn.nativeElement.contains(target) ||
+      (this.eventtFilterPopover
+        ? this.eventtFilterPopover.nativeElement.contains(target)
+        : false)
+    );
+  }
+  showHideSearch()
+  {
+    this.isShownSearch = this.searchText.length > 0 ? true:false;
+  }
 }

@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommunicationEventTypeCode, CommunicationEvents, FinancialVendorProviderTabCode, ScreenType, VendorContactsFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-vendor-header-tools',
   templateUrl: './vendor-header-tools.component.html',
@@ -14,7 +14,7 @@ export class VendorHeaderToolsComponent {
   SpecialHandlingLength = 100;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  @Input() vendorProfile$:any;
+  @Input() vendorProfile$!:Observable<any>;
 
   isIdCardOpened = false;
   isSendNewLetterOpened = false;
@@ -22,6 +22,7 @@ export class VendorHeaderToolsComponent {
   isNewSMSTextOpened = false;
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
+  vendorProfile:any
   emailScreenName = ScreenType.FinancialManagementVendorPageEmail;
   letterScreenName = ScreenType.FinancialManagementVendorPageLetter;
   contacts$ = this.vendorContactFacade.allContacts$;
@@ -93,6 +94,9 @@ export class VendorHeaderToolsComponent {
   ngOnInit(): void {
     this.vendorId = this.activeRoute.snapshot.queryParams['v_id'];
     this.vendorTypeCode = this.activeRoute.snapshot.queryParams['tab_code'];
+    this.vendorProfile$.subscribe(vp =>{
+      this.vendorProfile = vp
+    })
     this.initialize();
     this.getVendorTypeCode();
     this.addEmailSubscription();

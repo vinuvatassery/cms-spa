@@ -23,7 +23,26 @@
           <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeTypeCode'].valid"> Income Type is required
           </kendo-formerror>
 
-        </div>
+        </div>       
+        <div class="flex-col">
+        <kendo-floatinglabel text="Employer Name">
+          <kendo-multicolumncombobox textField="employerName" [fillMode]="formUiStyle.dropDownFillMode"
+            placeholder="Employer Name" [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+            [filterable]="true" (filterChange)="loadEmployers($event)" [data]="employers$ | async"
+            formControlName="employerId" [valuePrimitive]="true"
+            valueField="employerId">
+            <button kendoButton fillMode="clear" icon="image"></button>        
+            <kendo-combobox-column>
+              <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                <span>Employer Name:{{ dataItem.employerName }}</span>
+              </ng-template>
+            </kendo-combobox-column>        
+          </kendo-multicolumncombobox>
+        </kendo-floatinglabel>
+        <kendo-formerror *ngIf="!IncomeDetailsForm.controls['employerId'].valid"> Employer Name is required.
+        </kendo-formerror>
+      </div>
+
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Gross Amount" class="amount-with-symbol">
             <span class="k-input-prefix custom-currencysymbol"> $ </span>
@@ -43,32 +62,36 @@
             valueField="lovCode" [valuePrimitive]="true" aria-label="frequencies" name="frequencies" formControlName="incomeFrequencyCode" #incomeFrequencies>
             </kendo-dropdownlist>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeFrequencyCode'].valid"> Frequency is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeFrequencyCode'].valid"> Frequency is required.
           </kendo-formerror>
 
         </div>
         <div class="flex-col flex-col-6">
-          <kendo-floatinglabel text="Date of Hire">
+          <kendo-floatinglabel [text]="incomeTypeDateLabel">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
               formatPlaceholder="formatPattern" aria-label="income start" name="income start"
-              formControlName="incomeStartDate"  placeholder="" #incomeStartDate>
+              formControlName="incomeStartDate" (valueChange)="startDateOnChange()" placeholder="" #incomeStartDate>
             </kendo-datepicker>
           </kendo-floatinglabel>
-          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid"> Date of Hire is required
+          <kendo-formerror *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid && !IncomeDetailsForm.controls['incomeStartDate'].disabled && insuranceEndDateIsgreaterthanStartDate">Income Start Date is required.
           </kendo-formerror>
+          <kendo-formerror
+          *ngIf="!IncomeDetailsForm.controls['incomeStartDate'].valid && !insuranceEndDateIsgreaterthanStartDate && 
+          !IncomeDetailsForm.controls['incomeStartDate'].disabled">Start Date must be before End Date.</kendo-formerror>
 
         </div>
         <div class="flex-col flex-col-6">
           <kendo-floatinglabel text="Income End (optional)">
             <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
-              formatPlaceholder="formatPattern" [min]="startDate"
+              formatPlaceholder="formatPattern" [min]="startDate" (focus)="changeMinDate()" (blur)="endDateOnChange()"
+              (valueChange)="endDateValueChange($event)"
                placeholder="" aria-label="income end" name="income end" formControlName="incomeEndDate"
               #incomeEndDate>
             </kendo-datepicker>
-            <kendo-formerror *ngIf="IncomeDetailsForm.controls['incomeEndDate'].hasError('incorrect')"> 'Income End Date' should be greater than 'Date of Hire'
-            </kendo-formerror>
+            <kendo-formerror
+            *ngIf="!IncomeDetailsForm.controls['incomeEndDate'].valid && !insuranceEndDateIsgreaterthanStartDate && 
+            !IncomeDetailsForm.controls['incomeEndDate'].disabled">End date must be after Start date.</kendo-formerror>
           </kendo-floatinglabel>
-
 
         </div>
         <div class="flex-col justify-content-between align-items-center ">

@@ -3,8 +3,17 @@ import {
     Component,
     ChangeDetectionStrategy,  
     OnInit,
+    TemplateRef,
+    Output,
+    ViewChild,
   } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+
+import { FabMenuFacade, TodoFacade } from '@cms/productivity-tools/domain';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { TodoListComponent } from '../../components/todo-list/todo-list.component';
+import { LovFacade } from '@cms/system-config/domain';
+import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
   
   @Component({
     selector: 'productivity-tools-todo-and-reminders-fab-page',
@@ -15,8 +24,32 @@ import { ActivatedRoute } from '@angular/router';
     isShowTodoReminders = false
     showRemindersList = false
     clientId = 0
-
-    constructor( private route: ActivatedRoute) {}
+    todoItemList:any;
+    private todoDetailsDialog: any;
+    frequencyTypeCodeSubject$ = this.lovFacade.frequencyTypeCodeSubject$
+    entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
+    searchProviderSubject = this.financialVendorFacade.searchProviderSubject
+    clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
+    clientSearchResult$ = this.financialRefundFacade.clients$;
+    providerSearchResult$ =this.financialVendorFacade.searchProvider$
+    createTodo$ = this.todoFacade.curdAlert$
+     clientSubject = this.financialRefundFacade.clientSubject;
+     medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
+     getTodo$ = this.todoFacade.getTodo$;
+    @Output() isToDODetailsActionOpen!: boolean;
+    todoGrid$ = this.todoFacade.todoGrid$
+    loadAlertGrid$ = this.todoFacade.loadAlertGrid$;
+    selectedAlertId! :any
+    @ViewChild('todoList', { static: false })
+    todoList!: TodoListComponent;
+    constructor( private route: ActivatedRoute,
+      public readonly todoFacade: TodoFacade,
+      public lovFacade : LovFacade,
+      private readonly financialRefundFacade: FinancialVendorRefundFacade,
+      private dialogService: DialogService, 
+      private readonly financialVendorFacade : FinancialVendorFacade,
+      public readonly fabMenuFacade: FabMenuFacade  
+    ) {}
     /** Lifecycle hooks **/
     ngOnInit(): void {        
 
@@ -34,6 +67,52 @@ import { ActivatedRoute } from '@angular/router';
       }
       closeAction()
       {
-        this.isShowTodoReminders = false
+        this.fabMenuFacade.isShownTodoReminders = !this.fabMenuFacade.isShownTodoReminders;
+      }
+
+      onloadTodoGrid(payload: any, alertTypeCode:any){
+        this.todoFacade.loadAlerts(payload,alertTypeCode.alertType);
+      }
+      onMarkAlertDoneGrid(selectedAlertId: any){
+        this.todoFacade.markAlertAsDone(selectedAlertId);
+      }
+      onDeleteAlertGrid(selectedAlertId: any){
+        this.todoFacade.deleteAlert(selectedAlertId);
+      }
+      onOpenTodoClicked(alertId:any ,template: TemplateRef<unknown>): void {
+        this.selectedAlertId = alertId;
+         this.todoDetailsDialog = this.dialogService.open({
+           content: template,
+           cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np mnl',
+         });
+         this.isToDODetailsActionOpen = true;
+       }
+       onCloseTodoClicked(result: any) {
+        if (result) {
+          this.isToDODetailsActionOpen = false;
+          this.todoDetailsDialog.close();
+        }
+      }
+      loadTodoList(){
+        this.todoList.initilizeGridRefinersAndGrid()
+       }
+       searchProvider(data:any){
+        this.financialVendorFacade.searchAllProvider(data);
+      }
+      searchClientName(event:any){
+        this.financialRefundFacade.loadClientBySearchText(event);
+      }
+      onTodoItemCreateClick(payload:any){
+        this.todoFacade.createAlertItem(payload);
+      }
+      onGetTodoItem($event:any){
+        this.todoFacade.getTodoItem($event);
+      }
+      onUpdateTodoItemClick(payload:any){
+        this.todoFacade.updateAlertItem(payload)
+      }
+      getTodoItemsLov(){
+        this.lovFacade.getFrequencyTypeLov()
+        this.lovFacade.getEntityTypeCodeLov()
       }
   }
