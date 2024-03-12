@@ -71,9 +71,9 @@ export class TodoDetailComponent implements OnInit {
     this.getTodoItemsLov.emit()
     this.todoDetailsForm = this.formBuilder.group({
       title: ['', Validators.required],
-      dueDate: ['',Validators.required],
+      dueDate: [null,Validators.required],
       repeat: [{value: ''}],
-      endDate: [{value: ''}],
+      endDate: [null],
       alertDesc: [''],
       linkTo: ['',Validators.required],
       clientId :[{}],
@@ -82,7 +82,6 @@ export class TodoDetailComponent implements OnInit {
     if(this.isEdit){
       this.onGetTodoItem.emit(this.alertId);
     }
-    this.loadToDoSearch();
     this.tareaVaribalesIntialization();
     this.buildTodoForm()
   }
@@ -120,6 +119,8 @@ export class TodoDetailComponent implements OnInit {
           tin : res.tin,
           providerId: res.clientId
         })
+        this.todoDetailsForm.controls['vendorId'].setValidators([Validators.required]);
+        this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
       }else{
         this.showVendorSearch = false;
         this.showClientSearch = true;
@@ -137,7 +138,8 @@ export class TodoDetailComponent implements OnInit {
           ssn: res.ssn,
           clientId : res.entityId
         })
-        
+        this.todoDetailsForm.controls['clientId'].setValidators([Validators.required]);
+        this.todoDetailsForm.controls['clientId'].updateValueAndValidity();
       }
        
       }
@@ -152,15 +154,7 @@ export class TodoDetailComponent implements OnInit {
     this.searchProvider.emit({SearchText : vendorSearchText, 
       VendorTypeCode : this.todoDetailsForm.controls['linkTo'].value})
   }
-  onRepeatChange(event:any){
-    console.log(event)
-    if(event !== 'NEVER'){
-      this.showTimePicker =true
-    }else{
-      this.showTimePicker =false
-    }
 
-  }
 
     
   loadClientBySearchText(clientSearchText: any) {
@@ -182,12 +176,19 @@ export class TodoDetailComponent implements OnInit {
   this.showClientSearch = true;
   this.showVendorSearch = false;
   this.placeholderText= this.clientPlaceHolderText
+  this.todoDetailsForm.controls['clientId'].setValidators([Validators.required]);
+  this.todoDetailsForm.controls['clientId'].updateValueAndValidity();
+  this.todoDetailsForm.controls['vendorId'].clearValidators();
+  this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
     }else{
     this.todoDetailsForm.controls['vendorId'].enable()
       this.showClientSearch = false;
       this.showVendorSearch = true;
      this.placeholderText= this.vendorPlaceHolderText
-
+     this.todoDetailsForm.controls['clientId'].clearValidators();
+     this.todoDetailsForm.controls['clientId'].updateValueAndValidity();
+     this.todoDetailsForm.controls['vendorId'].setValidators([Validators.required]);
+     this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
     }
   }
 
@@ -219,8 +220,10 @@ export class TodoDetailComponent implements OnInit {
 
   CreateToDoItem(){
     this.createTodo$.subscribe(res =>{
+      if(res){
       this.loadToDoSearch()
       this.closeTodoDetailsClicked()
+      }
     })
     let entityTypeCode ='';
     let entityId =''
@@ -248,6 +251,7 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
       entityId :entityId ,
       alertFrequencyCode :  this.todoDetailsForm.controls['repeat'].value,
       customAlertFlag : 'Y',
+      type:'TODO'
     }
 
     if(!this.isEdit){
