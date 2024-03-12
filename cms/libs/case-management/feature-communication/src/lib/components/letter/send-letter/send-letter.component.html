@@ -43,11 +43,12 @@
         </div>
         <div class="flex-col">
           <case-management-email-editor
-          [dataEvent]="emailEditorValueEvent"
-          [currentValue]="currentLetterData"
+          [selectedTemplate]="selectedTemplate" 
+          [selectedTemplateContent]="selectedTemplateContent"         
           [clientCaseEligibilityId]="clientCaseEligibilityId"
           [clientId]="entityId"
           [communicationTypeCode]="communicationLetterTypeCode"
+          (editorValueChangeEvent) ="editorValueChange($event)"
           (cerEmailAttachments)="cerEmailAttachments($event)"
           ></case-management-email-editor>
         </div>

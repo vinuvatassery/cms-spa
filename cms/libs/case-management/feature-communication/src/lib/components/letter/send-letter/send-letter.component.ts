@@ -7,13 +7,13 @@ import {
   EventEmitter,
   Input,
   ChangeDetectorRef,
+  OnDestroy,
 } from '@angular/core';
 
 
 /** Internal Libraries **/
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade, ScreenType, AddressTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { ActivatedRoute } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 
 /** External Libraries **/
@@ -27,7 +27,7 @@ import { UserDataService } from '@cms/system-config/domain';
   styleUrls: ['./send-letter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SendLetterComponent implements OnInit {
+export class SendLetterComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @Input() mailingAddress$!: Observable<any>;
   @Input() communicationLetterTypeCode!:any;
@@ -42,16 +42,12 @@ export class SendLetterComponent implements OnInit {
   /** Output properties  **/
   @Output() closeSendLetterEvent = new EventEmitter<CommunicationEvents>();
   @Output() loadInitialData = new EventEmitter();
-  @Output() openDdlLetterEvent = new EventEmitter();
-  @Output() emailEditorValueEvent = new EventEmitter<any>();
 
-  private currentSessionSubscription !: Subscription;
    /** Constructor **/
    constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly ref: ChangeDetectorRef,
-    private readonly route: ActivatedRoute,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private readonly workflowFacade: WorkflowFacade,
     private readonly contactFacade: ContactFacade,
@@ -59,8 +55,8 @@ export class SendLetterComponent implements OnInit {
     private readonly userDataService: UserDataService,) { }
 
   /** Public properties **/
+
   public formUiStyle : UIFormStyle = new UIFormStyle();
-  letterEditorValueEvent = new EventEmitter<boolean>();
   letterContentValue!: any;
   isNewLetterClicked!: any;
   isOpenLetterTemplate = false;
@@ -70,11 +66,14 @@ export class SendLetterComponent implements OnInit {
   currentLetterData:any;
   currentLetterPreviewData:any;
   prevClientCaseEligibilityId!: string;
+  selectedTemplateContent !:any;
+  updatedTemplateContent !:any;
   selectedTemplate!: any;
   cerEmailAttachedFiles: any[] = [];
   clientAndVendorAttachedFiles: any[] = [];
   mailingAddress: any;
   mailingAddressSubscription= new Subscription();
+  clientAddressSubscription = new Subscription();
   attachmentCount: number = 0;
   dataValue: Array<any> = [
     {
@@ -91,6 +90,7 @@ export class SendLetterComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.getLoggedInUserProfile();
+    this.getClientAddressSubscription();
     if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.loadMailCodes();
       if(this.isContinueDraftClicked){
@@ -105,6 +105,10 @@ export class SendLetterComponent implements OnInit {
       this.vendorContactFacade.loadMailCodes(this.entityId);
     }
     this.isNewLetterClicked =  this.notificationGroup ? true : false;
+  }
+
+  ngOnDestroy(): void {
+    this.clientAddressSubscription.unsubscribe();
   }
 
   getLoggedInUserProfile(){
@@ -154,25 +158,14 @@ export class SendLetterComponent implements OnInit {
 
   private loadClientMailingAddress() {
     this.contactFacade.getClientAddress(this.entityId);
-    this.contactFacade.address$.subscribe((address:any)=>{
-      let selectedAddress = address.filter((x:any)=>x.activeFlag == StatusFlag.Yes && x.addressTypeCode === AddressTypeCode.Mail)[0];
-      this.mailingAddress = selectedAddress;
-    });
     this.ref.detectChanges();
   }
 
-  private loadCurrentSession() {
-    const sessionId = this.route.snapshot.queryParams['sid'];
-    this.loaderService.show();
-    this.workflowFacade.loadWorkFlowSessionData(sessionId);
-    this.currentSessionSubscription = this.workflowFacade.sessionDataSubject$.subscribe((resp) => {
-      if (resp) {
-        this.prevClientCaseEligibilityId = JSON.parse(resp.sessionData)?.prevClientCaseEligibilityId;
-        if (this.prevClientCaseEligibilityId) {
-          this.isCerForm = true;
-        }
-        this.loaderService.hide();
-      }
+  private getClientAddressSubscription() {
+    this.clientAddressSubscription = this.contactFacade.address$.subscribe((address: any) => {
+      let selectedAddress = address.filter((x: any) => x.activeFlag == StatusFlag.Yes && x.addressTypeCode === AddressTypeCode.Mail)[0];
+      this.mailingAddress = selectedAddress;
+      this.ref.detectChanges();
     });
   }
 
@@ -218,8 +211,7 @@ export class SendLetterComponent implements OnInit {
 
   onSaveForLaterTemplateClicked() {
     this.isShowSaveForLaterPopupClicked = true;
-    this.emailEditorValueEvent.emit(this.currentLetterData);
-    this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
+    this.selectedTemplate.templateContent = this.updatedTemplateContent;
     if (this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
     {
       this.saveDraftLetterTemplate(this.selectedTemplate);
@@ -228,11 +220,10 @@ export class SendLetterComponent implements OnInit {
     }
   }
 
-  onSendLetterToPrintDialogClicked(event: any) {
+  onSendLetterToPrintDialogClicked(event: any) { 
     this.isShowSendLetterToPrintPopupClicked = false;
     if (event === CommunicationEvents.Print) {
-      this.emailEditorValueEvent.emit(this.currentLetterData);
-    this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
+    this.selectedTemplate.templateContent = this.updatedTemplateContent;
     this.sendLetterToPrint(this.selectedTemplate, CommunicationEvents.SendLetter);
     this.closeSendLetterEvent.emit(CommunicationEvents.Print);
     } else if (event === CommunicationEvents.Close) {
@@ -242,8 +233,7 @@ export class SendLetterComponent implements OnInit {
 
   onPreviewLetterClicked() {
     this.isShowPreviewLetterPopupClicked = true;
-    this.emailEditorValueEvent.emit(this.currentLetterData);
-    this.selectedTemplate.templateContent = this.currentLetterData.templateContent;
+    this.selectedTemplate.templateContent = this.updatedTemplateContent;
     this.generateText(this.selectedTemplate, CommunicationEvents.Preview);
   }
 
@@ -264,7 +254,6 @@ export class SendLetterComponent implements OnInit {
           next: (data: any) =>{
           if (data) {
             this.currentLetterPreviewData = data;
-            this.letterEditorValueEvent.emit(this.currentLetterPreviewData);
             this.ref.detectChanges();
             if(requestType === CommunicationEvents.SendLetter){
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print');
@@ -386,41 +375,41 @@ export class SendLetterComponent implements OnInit {
   }
 
   handleDdlLetterValueChange(event: any) {
-    if(event.documentTemplateId){
-    this.loaderService.show();
-    this.communicationFacade.loadTemplateById(event.documentTemplateId)
-    .subscribe({
-      next: (data: any) =>{
-      if (data) {
-        this.selectedTemplate = data;
-        this.handleLetterEditor(data);
-        this.isOpenLetterTemplate=true;
-        this.openDdlLetterEvent.emit();
-        this.loadMailingAddress();
-        this.emailEditorValueEvent.emit(data);
-        this.ref.detectChanges();
-      }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-    },
-  });
-}else{
-  this.selectedTemplateId = event.notificationTemplateId;
-  this.isOpenLetterTemplate=true;
-  this.selectedTemplate = event;
-  this.handleLetterEditor(event);
-  this.openDdlLetterEvent.emit();
-  this.documentTemplate = {
-    'description': event.description,
-    'documentTemplateId': event.notificationTemplateId
-  };
-  this.loadMailingAddress();
-  this.ref.detectChanges();
-}
-}
+    if (event.documentTemplateId) {
+      this.loaderService.show();
+      this.communicationFacade.loadTemplateById(event.documentTemplateId)
+        .subscribe({
+          next: (data: any) => {
+            if (data) {
+              this.selectedTemplate = data;
+              this.selectedTemplateContent = data.templateContent;
+              this.updatedTemplateContent = data.templateContent;
+              this.isOpenLetterTemplate = true;
+              this.loadMailingAddress();
+              this.ref.detectChanges();
+            }
+            this.loaderService.hide();
+          },
+          error: (err: any) => {
+            this.loaderService.hide();
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          },
+        });
+    } 
+    else {
+      this.selectedTemplateId = event.notificationTemplateId;
+      this.isOpenLetterTemplate = true;
+      this.selectedTemplate = event;
+      this.selectedTemplateContent = event.requestBody;
+      this.updatedTemplateContent = event.requestBody;
+      this.documentTemplate = {
+        'description': event.description,
+        'documentTemplateId': event.notificationTemplateId
+      };
+      this.loadMailingAddress();
+      this.ref.detectChanges();
+    }
+  }
 
   private saveDraftLetterTemplate(draftTemplate: any) {
     this.loaderService.show();
@@ -503,4 +492,9 @@ getFileNameFromTypeCode(typeCode: string): string {
       throw new Error('Invalid type code');
   }
 }
+
+editorValueChange(event: any){
+  this.updatedTemplateContent = event;
+}
+
 }

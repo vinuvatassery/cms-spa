@@ -39,11 +39,6 @@
         <span  >{{ dataItem.description }}</span>
       </ng-template>
     </kendo-combobox-column>
-    <!-- <kendo-combobox-column  [width]="200">
-      <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
-        <span>  {{dataItem.typeCode}}</span>
-      </ng-template>
-    </kendo-combobox-column> -->
   </kendo-multicolumncombobox>
 </kendo-floatinglabel>
 </div>
@@ -125,7 +120,7 @@
     </div>
   </kendo-popup>
   <!-- Editor -->
-  <kendo-editor #editor [(value)]="emailEditorvalue">
+  <kendo-editor #editor [(value)]="selectedTemplateContent" (valueChange)="editorValueChange($event)">
   <case-management-send-email
   (editorValue)="emailEditorValueEvent($event)"
   [clientCaseEligibilityId]="clientCaseEligibilityId"

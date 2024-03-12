@@ -29,5 +29,6 @@ export enum CommunicationEventTypeCode {
     VendorSMS="VENDOR_SMS",
     EMAIL="EMAIL",
     LETTER="Letter",
-    SMS="Sms"
+    SMS="Sms",
+    PendingNoticeLetter = 'PENDING_NOTICE_LETTER'
   }

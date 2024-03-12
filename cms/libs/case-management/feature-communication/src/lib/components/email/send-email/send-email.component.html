@@ -92,14 +92,14 @@
           </p>
         </div>
         <div class="flex-col  ">
-          <case-management-email-editor
-          [dataEvent]="emailEditorValueEvent"
-          [currentValue]="currentEmailData"
+          <case-management-email-editor  
+          [selectedTemplate]="selectedTemplate" 
+          [selectedTemplateContent]="selectedTemplateContent"           
           [clientCaseEligibilityId]="clientCaseEligibilityId"
           [clientId]="entityId"
           [communicationTypeCode]="communicationEmailTypeCode"
-          (cerEmailAttachments)="cerEmailAttachments($event)"
-          (editorValue)="handleEmailEditor($event)"
+          (editorValueChangeEvent) ="editorValueChange($event)"
+          (cerEmailAttachments)="cerEmailAttachments($event)"          
           class="editor-lg-email"
           ></case-management-email-editor>
         </div>

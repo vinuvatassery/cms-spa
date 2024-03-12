@@ -32,15 +32,15 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 })
 export class EmailEditorComponent implements OnInit {
   /** Input properties **/
-  @Input() dataEvent!: EventEmitter<any>;
+  @Input() selectedTemplate!: any;
+  @Input() selectedTemplateContent !:any;
   @Input() loadInitialData = new EventEmitter();
-  @Input() currentValue!: any;
   @Input() clientCaseEligibilityId!:string;
   @Input() clientId!:any;
   @Input() communicationTypeCode!:any;
   /** Output properties  **/
-  @Output() editorValue = new EventEmitter<any>();
   @Output() cerEmailAttachments = new EventEmitter();
+  @Output() editorValueChangeEvent = new EventEmitter();
 
   /** Public properties **/
   @ViewChild('anchor',{ read: ElementRef }) public anchor!: ElementRef;
@@ -109,31 +109,28 @@ export class EmailEditorComponent implements OnInit {
     private formBuilder: FormBuilder,
     public readonly clientDocumentFacade: ClientDocumentFacade,
     private readonly ref: ChangeDetectorRef,
-    private readonly esignFacade: EsignFacade,
-    private readonly documentFacade: DocumentFacade) {}
+    private readonly esignFacade: EsignFacade) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadClientAttachments(this.clientId);
     this.loadFormsAndDocuemnts();
-    this.emailEditorValueEvent(this.currentValue);
-    this.dataEventSubscribed();
     this.loadClientVariables();
     this.loadDdlEditorVariables();
     this.cerAuthorizationForm = this.formBuilder.group({
       clientsAttachment:[]
     });
+
   }
 
   ngOnChanges(){
-    if(this.currentValue){
+    if(this.selectedTemplate){
       this.selectedAttachedFile = [];
       if(this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter){
         this.loadUserDraftTemplateAttachment();
-        this.loadLetterAttachment(this.currentValue.documentTemplateId, CommunicationEventTypeCode.CERAttachmentTypeCode);
-      }else{
-        if(this.currentValue?.notifcationDraftId && this.currentValue?.notificationRequestAttachments){
-            for (let file of this.currentValue?.notificationRequestAttachments){
+        this.loadLetterAttachment(this.selectedTemplate.documentTemplateId, CommunicationEventTypeCode.CERAttachmentTypeCode);
+      }else if(this.selectedTemplate?.notifcationDraftId && this.selectedTemplate?.notificationRequestAttachments){
+            for (let file of this.selectedTemplate?.notificationRequestAttachments){
               this.selectedAttachedFile.push({
                 document: file,
                 size: file.fileSize,
@@ -146,9 +143,8 @@ export class EmailEditorComponent implements OnInit {
           this.ref.detectChanges();
           this.cerEmailAttachments.emit(this.selectedAttachedFile);
         }else{
-        this.loadClientVendorDefaultAttachment(this.currentValue.documentTemplateId);
+        this.loadClientVendorDefaultAttachment(this.selectedTemplate.documentTemplateId);
         }
-      }
     }
   }
 
@@ -193,23 +189,6 @@ export class EmailEditorComponent implements OnInit {
       this.loggingService.logException(err)
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
-  }
-
-  private dataEventSubscribed() {
-    this.dataEvent.subscribe({
-      next: (event: any) => {
-        if (event) {
-          this.currentValue.templateContent = this.emailEditorvalue;
-          this.editorValue.emit(this.currentValue);
-        }
-      },
-      error: (err: any) => {
-        this.loaderService.hide();
-        this.loggingService.logException(err);
-        this.showHideSnackBar(SnackBarNotificationType.ERROR,err)
-        this.loggingService.logException(err);
-      },
-    });
   }
 
   private loadClientVariables() {
@@ -265,7 +244,7 @@ export class EmailEditorComponent implements OnInit {
   }
 
   emailEditorValueEvent(emailData:any){
-    this.emailEditorvalue = emailData.templateContent == undefined? emailData.requestBody : emailData.templateContent;
+    this.selectedTemplateContent = emailData.templateContent == undefined? emailData.requestBody : emailData.templateContent;
     this.showAttachmentUpload = false;
   }
 
@@ -281,29 +260,32 @@ export class EmailEditorComponent implements OnInit {
     this.onSearchClosed();
   }
 
-  handleFileSelected(event: any) {
-    this.attachedFileValidatorSize=false;
-    for (let file of event.files){
-   if(file.size>this.configurationProvider.appSettings.uploadFileSizeLimit)
-   {
-    this.attachedFileValidatorSize = true;
-    this.showAttachmentUpload = true;
-    event.files = [];
-    this.uploadedAttachedFile = [];
-   }
+  editorValueChange(event: any){
+   this.editorValueChangeEvent.emit(event);
   }
-if(!this.attachedFileValidatorSize){
-  if(this.selectedAttachedFile.length == 0){
-    this.selectedAttachedFile = event.files;
-    this.showAttachmentUpload = false;
-  }else{
-    for (let file of event.files){
-      this.selectedAttachedFile.push(file);
-      this.showAttachmentUpload = false;
-     }
+
+  handleFileSelected(event: any) {
+    this.attachedFileValidatorSize = false;
+    for (let file of event.files) {
+      if (file.size > this.configurationProvider.appSettings.uploadFileSizeLimit) {
+        this.attachedFileValidatorSize = true;
+        this.showAttachmentUpload = true;
+        event.files = [];
+        this.uploadedAttachedFile = [];
+      }
     }
-   }
-   this.cerEmailAttachments.emit(this.selectedAttachedFile);
+    if (!this.attachedFileValidatorSize) {
+      if (this.selectedAttachedFile.length == 0) {
+        this.selectedAttachedFile = event.files;
+        this.showAttachmentUpload = false;
+      } else {
+        for (let file of event.files) {
+          this.selectedAttachedFile.push(file);
+          this.showAttachmentUpload = false;
+        }
+      }
+    }
+    this.cerEmailAttachments.emit(this.selectedAttachedFile);
   }
 
   handleFileRemoved(event: any) {
@@ -384,157 +366,157 @@ clientAttachmentClick(item:any)
 
   getClientDocumentsViewDownload(clientDocumentId: string) {
     return this.communicationFacade.getClientDocumentsViewDownload(clientDocumentId);
- }
+  }
 
   private loadDefaultTemplateAttachment() {
     this.loaderService.show();
     this.communicationFacade.loadCERAuthorizationTemplateAttachment(CommunicationEventTypeCode.TemplateAttachmentTypeCode)
-    .subscribe({
-      next: (attachments: any) =>{
-        if (attachments) {
-          for (let file of attachments){
-          this.selectedAttachedFile.push({
-            document: file,
-            size: file.templateSize,
-            name: file.description,
-            documentTemplateId: file.documentTemplateId,
-            typeCode: file.typeCode
-          })
-        }
-        this.ref.detectChanges();
-        this.cerEmailAttachments.emit(this.selectedAttachedFile);
-        }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.loggingService.logException(err);
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-      this.loggingService.logException(err);
-    },
-  });
+      .subscribe({
+        next: (attachments: any) => {
+          if (attachments) {
+            for (let file of attachments) {
+              this.selectedAttachedFile.push({
+                document: file,
+                size: file.templateSize,
+                name: file.description,
+                documentTemplateId: file.documentTemplateId,
+                typeCode: file.typeCode
+              })
+            }
+            this.ref.detectChanges();
+            this.cerEmailAttachments.emit(this.selectedAttachedFile);
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.loggingService.logException(err);
+        },
+      });
   }
 
   private deleteEsignRequestAttachment(attachmentRequest: any, index: any) {
     this.loaderService.show();
     this.esignFacade.deleteAttachmentRequest(attachmentRequest.document.esignRequestAttachmentId)
-    .subscribe({
-      next: (data: any) =>{
-        if (data) {
-        this.selectedAttachedFile.splice(index, 1);
-        this.ref.detectChanges();
-        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Attachment removed successfully.');
-        }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.loggingService.logException(err);
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-      this.loggingService.logException(err);
-    },
-  });
+      .subscribe({
+        next: (data: any) => {
+          if (data) {
+            this.selectedAttachedFile.splice(index, 1);
+            this.ref.detectChanges();
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Attachment removed successfully.');
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.loggingService.logException(err);
+        },
+      });
   }
 
   private loadUserDraftTemplateAttachment() {
     this.loaderService.show();
-    this.communicationFacade.loadCERAuthorizationDraftAttachment(this.currentValue.documentTemplateId)
-    .subscribe({
-      next: (attachments: any) =>{
-        if (attachments) {
-          if(attachments?.esignRequestAttachments != undefined || attachments?.esignRequestAttachments != null){
-            for (let file of attachments.esignRequestAttachments){
-              this.selectedAttachedFile.push({
-                document: file,
-                size: file.attachmentSize,
-                name: file.attachmentName,
-                esignRequestId: file.esignRequestId,
-                typeCode: file.attachmentTypeCode
-              })
+    this.communicationFacade.loadCERAuthorizationDraftAttachment(this.selectedTemplate.documentTemplateId)
+      .subscribe({
+        next: (attachments: any) => {
+          if (attachments) {
+            if (attachments?.esignRequestAttachments != undefined || attachments?.esignRequestAttachments != null) {
+              for (let file of attachments.esignRequestAttachments) {
+                this.selectedAttachedFile.push({
+                  document: file,
+                  size: file.attachmentSize,
+                  name: file.attachmentName,
+                  esignRequestId: file.esignRequestId,
+                  typeCode: file.attachmentTypeCode
+                })
+              }
+            } else {
+              this.loadDefaultTemplateAttachment();
             }
-          }else{
-            this.loadDefaultTemplateAttachment();
+            this.ref.detectChanges();
+            this.cerEmailAttachments.emit(this.selectedAttachedFile);
           }
-        this.ref.detectChanges();
-        this.cerEmailAttachments.emit(this.selectedAttachedFile);
-        }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.loggingService.logException(err);
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-      this.loggingService.logException(err);
-    },
-  });
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.loggingService.logException(err);
+        },
+      });
   }
 
-  loadLetterAttachment(documentTemplateId: string, typeCode: string){
+  loadLetterAttachment(documentTemplateId: string, typeCode: string) {
     this.loaderService.show();
     this.communicationFacade.loadLetterAttachment(documentTemplateId, typeCode)
-    .subscribe({
-      next: (attachments: any) =>{
-        if (attachments.length > 0) {
-          for (let file of attachments){
-            this.selectedAttachedFile.push({
-              document: file,
-              size: file.templateSize,
-              name: file.description,
-              documentTemplateId: file.documentTemplateId,
-              typeCode: file.typeCode
-            })
+      .subscribe({
+        next: (attachments: any) => {
+          if (attachments.length > 0) {
+            for (let file of attachments) {
+              this.selectedAttachedFile.push({
+                document: file,
+                size: file.templateSize,
+                name: file.description,
+                documentTemplateId: file.documentTemplateId,
+                typeCode: file.typeCode
+              })
+            }
+            this.ref.detectChanges();
+            this.cerEmailAttachments.emit(this.selectedAttachedFile);
           }
-        this.ref.detectChanges();
-        this.cerEmailAttachments.emit(this.selectedAttachedFile);
-        }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.loggingService.logException(err);
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-      this.loggingService.logException(err);
-    },
-  });
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.loggingService.logException(err);
+        },
+      });
   }
 
   loadClientAttachments(clientId: any) {
     this.loaderService.show();
     this.communicationFacade.loadClientAttachments(clientId)
-    .subscribe({
-      next: (attachments: any) =>{
-        if (attachments.totalCount > 0) {
+      .subscribe({
+        next: (attachments: any) => {
+          if (attachments.totalCount > 0) {
             this.clientAllDocumentList$ = attachments?.items;
             this.ref.detectChanges();
-        }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.loggingService.logException(err);
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-      this.loggingService.logException(err);
-    },
-  });
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.loggingService.logException(err);
+        },
+      });
   }
 
   loadFormsAndDocuemnts() {
     this.loaderService.show();
     this.communicationFacade.loadFormsAndDocuments('FORM')
-    .subscribe({
-      next: (attachments: any) =>{
-        if (attachments.length > 0) {
+      .subscribe({
+        next: (attachments: any) => {
+          if (attachments.length > 0) {
             this.formsAndDocumentList$ = attachments;
             this.ref.detectChanges();
-        }
-      this.loaderService.hide();
-    },
-    error: (err: any) => {
-      this.loaderService.hide();
-      this.loggingService.logException(err);
-      this.showHideSnackBar(SnackBarNotificationType.ERROR,err);
-      this.loggingService.logException(err);
-    },
-  });
+          }
+          this.loaderService.hide();
+        },
+        error: (err: any) => {
+          this.loaderService.hide();
+          this.loggingService.logException(err);
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.loggingService.logException(err);
+        },
+      });
   }
 }
