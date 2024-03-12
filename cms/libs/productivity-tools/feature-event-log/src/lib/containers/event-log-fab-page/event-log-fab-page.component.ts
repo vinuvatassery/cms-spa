@@ -17,7 +17,7 @@ import {    ChangeDetectionStrategy,    Component,     OnInit  } from '@angular/
   
       /** Lifecycle hooks **/
       ngOnInit(): void {
-        debugger
+        
         this.showEventLogs = true
       }
   }

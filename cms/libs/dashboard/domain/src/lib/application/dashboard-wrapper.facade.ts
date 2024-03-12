@@ -39,14 +39,12 @@ showLoader(){  this.loaderService.show();}
 hideLoader() { this.loaderService.hide();}
 
 getLoggedinUserDashboards(typeCode :  string) {
-    this.showLoader();
     this.dashboardWrapperService.getLoggedinUserDashboards(typeCode).subscribe({
       next: (result) => { 
         this.userDashBoardsSubject.next(result);      
-        this.hideLoader();
+        
       },       
       error: (error) => { 
-        this.hideLoader();
         this.showSnackBar(SnackBarNotificationType.ERROR, error)
       },
     });

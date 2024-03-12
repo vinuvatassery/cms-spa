@@ -18,7 +18,7 @@ export class ClientRecordSentComponent {
   constructor(private systemInterfaceDashboardFacade:SystemInterfaceDashboardFacade){
     this.systemInterfaceDashboardFacade.loadClientRecordSendChart(this.DaysRange,this.isCardRequest);
     this.systemInterfaceDashboardFacade.ClientRecordSendChart$.subscribe((res:any)=>{
-      debugger
+      
       this.isloader=false;
       this.clientRecordSendChart={
         component: 'ClientRecordsSent',
@@ -34,8 +34,16 @@ export class ClientRecordSentComponent {
           },
           categoryAxis: {
             categories:res.dates,
+            title: {
+              text: 'Dates' // Add title for x-axis
+          },
             labels: { format: 'd', rotation: 'auto' },
           },
+          valueAxis: {
+            title: {
+                text: 'Number of Records sent' // Add title for y-axis
+            }
+        },
           tooltip: {
             visible: true,
             shared: true,

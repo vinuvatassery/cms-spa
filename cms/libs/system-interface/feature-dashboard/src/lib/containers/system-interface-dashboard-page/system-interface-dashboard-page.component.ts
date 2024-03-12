@@ -4,7 +4,7 @@ import { DashboardWrapperFacade, WidgetFacade } from '@cms/dashboard/domain';
 import { LocalStorageService } from '@cms/shared/util-core';
 import { AuthService } from '@cms/shared/util-oidc';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
+import { DashboardTemplate, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { State } from '@progress/kendo-data-query';
 import { DisplayGrid, GridType, GridsterConfig, GridsterItem, GridsterItemComponentInterface } from 'angular-gridster2';
 import { Subject, Subscription, first } from 'rxjs';
@@ -59,7 +59,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
       resizable: { enabled: false },
     };
     selectedDashBoard!: string;
-    dashboardtemplate="SYSTEM_INTERFACE_TEMPLATE";
+    dashboardtemplate=DashboardTemplate.SYSTEM_INTERFACE_TEMPLATE;
     dashBoardSubscriptionItems: any;
     //#endregion
     static updatedWidgets: any = [];
@@ -153,8 +153,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.dashboardWrapperFacade.showLoader();    
-    this.userDashBoardLstSubscribe();
+   this.userDashBoardLstSubscribe();
     this.initializeDashboard();
   }
 
@@ -223,10 +222,8 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
             
           });
           this.dashboardContentListDataSubject.next(SystemInterfaceDashboardPageComponent.dashBoardContentData);
-          this.dashboardWrapperFacade.hideLoader();
         
       });
-      this.dashboardWrapperFacade.hideLoader();
   }
 
   dashBoardAllWidgetsSubscribe() {
@@ -355,8 +352,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
   }
 
   dashBoardUpdateSubscribe() {
-    this.dashboardWrapperFacade.showLoader();
-    this.dashboardContentUpdate$.subscribe((response) => {
+ this.dashboardContentUpdate$.subscribe((response) => {
       if (response === true) {
         
         this.initializeDashboard();
@@ -424,7 +420,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
   }
 
   removeWidget(item: any) {
-    debugger
+    
     this.dashBoardAllWidgetsData.push(item);
 
     SystemInterfaceDashboardPageComponent.dashBoardContentData =

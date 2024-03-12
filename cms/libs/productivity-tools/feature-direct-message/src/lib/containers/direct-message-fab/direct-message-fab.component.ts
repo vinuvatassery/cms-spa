@@ -18,7 +18,7 @@ export class DirectMessageFabComponent implements OnInit{
 
     /** Lifecycle hooks **/
     ngOnInit(): void {
-      debugger
+      
       this.showDirectMessages = true
     }
 }

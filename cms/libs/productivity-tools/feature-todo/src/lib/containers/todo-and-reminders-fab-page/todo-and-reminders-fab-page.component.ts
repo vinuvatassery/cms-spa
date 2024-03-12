@@ -19,7 +19,7 @@ import { ActivatedRoute } from '@angular/router';
     constructor( private route: ActivatedRoute) {}
     /** Lifecycle hooks **/
     ngOnInit(): void {        
-debugger
+
         this.clientId = this.route.snapshot.queryParams['id'];
         if(this.clientId > 0 )
         {
