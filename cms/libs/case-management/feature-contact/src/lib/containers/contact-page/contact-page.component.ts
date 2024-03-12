@@ -465,7 +465,6 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
     else {
       this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.disable();
       this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.disable();
-      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.disable();
       this.contactInfoForm?.get('otherPhone.detailMsgConsentFlag')?.reset();
       this.contactInfoForm?.get('otherPhone.smsTextConsentFlag')?.reset();
       this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.removeValidators(Validators.required);
@@ -685,7 +684,7 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
       }),
       otherPhone: new FormGroup({
         phoneNbr: new FormControl(''),
-        otherPhoneNote: new FormControl({ value: '', disabled: true }),
+        otherPhoneNote: new FormControl({ value: '', disabled: false }),
         applicableFlag: new FormControl(false),
         detailMsgConsentFlag: new FormControl({ value: false, disabled: true }),
         smsTextConsentFlag: new FormControl({ value: false, disabled: true }),
@@ -1517,9 +1516,11 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
   private setVisibilityByOtherPhoneNotApplicable(isChecked: boolean) {
     if (isChecked) {
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.disable();
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.disable();
     }
     else {
       this.contactInfoForm?.get('otherPhone.phoneNbr')?.enable();
+      this.contactInfoForm?.get('otherPhone.otherPhoneNote')?.enable();
     }
     this.loadPreferredContactMethod();
   }
