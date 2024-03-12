@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { ClientAddress, ContactInfo, FriendsOrFamilyContactClientProfile } from '../entities/contact';
+import { GridFilterParam } from '../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class ContactDataService {
@@ -54,8 +55,8 @@ export class ContactDataService {
     return of(['Value 1', 'Value 2', 'Value 3', 'other']);
   }
 
-  loadIncomes(clientId: string, clientCaseEligibilityId: string, skip: any, pageSize: any, sortBy: any, sortType: any) {
-    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/income/?clientCaseEligibilityId=${clientCaseEligibilityId}&SkipCount=${skip}&MaxResultCount=${pageSize}&Sorting=${sortBy}&SortType=${sortType}`);
+  loadIncomes(clientId: string, clientCaseEligibilityId: string,gridFilterParam:GridFilterParam, isCerForm: boolean = false) {  
+    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilities/${clientCaseEligibilityId}/income?isCerForm=${isCerForm}`,gridFilterParam);
   }
 
   loadDependentsProofofSchools() {
@@ -351,5 +352,13 @@ export class ContactDataService {
       `${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${phoneData?.clientId}/phones/deactivate-and-add`,
       phoneData
     )
+  }
+
+  loadEmployers(employerName : string) {
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/employers/employerName=${employerName}`);
+  }
+
+  loadEmployerIncomes(clientId: string, eligibilityId: string){
+    return this.http.get(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/clients/${clientId}/eligibilities/${eligibilityId}/employer-income`);
   }
 }

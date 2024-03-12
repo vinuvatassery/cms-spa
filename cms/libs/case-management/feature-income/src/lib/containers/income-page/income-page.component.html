@@ -3,60 +3,194 @@
   <h3>Income</h3>
   <section>
     <div class="block-section pt-1">
-      <div class="flex-row">
-        <div class="flex-col mb-2" *ngIf="isCerForm">
-          <h5 >Gather the client’s income:</h5>
-        </div>
+      <div class="flex-row"> 
         <div class="flex-col mb-1">
-          <span>
-            <input class="adjust-attr" type="checkbox" kendoCheckBox [(ngModel)]="noIncomeFlag" (change)="onIncomeValueChanged($event)"
-              aria-labelledby="clientDoesNotRecieveAnyIncome" name="client does ot recieve any income"
-              id="clientDoesNotRecieveAnyIncome" [disabled]="isCerForm && hasValidIncome && !noIncomeFlag" />
-            <label class="k-checkbox-label" for="clientDoesNotRecieveAnyIncome">Client does not receive any
-              income</label>
-          </span>
-        </div>
-        <div class="flex-col">
-          <div  *ngIf="hasNoIncome">
-            <form [formGroup]="noIncomeDetailsForm">
+            <div  *ngIf="isCerForm">
+              <div class="flex-col mb-1" *ngFor="let prvEmployer of employerIncome let i = index">    
+              <fieldset class="k-form-fieldset mb-0"
+                *ngIf="prvEmployer.employerId !== null && prvEmployer.employerId !== '' 
+                && prvEmployer.employerId !== undefined && prvEmployer.cerReviewStatusCode !== null
+                && prvEmployer.employerId  !== '00000000-0000-0000-0000-000000000000'">
+                <legend class="k-form-legend">
+                  <h5>Is the {{[prvEmployer.incomeSourceCodeDesc]}} still employed with {{prvEmployer.employerName}}</h5>
+                </legend>              
+                <div class="component-list-h comp-list-horizontal">
+                  <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton aria-labelledby="employerIncomeYes" name="employerIncomeYes_{{i}}"
+                      id="employerIncomeYes_{{i}}" class="form-control" value="ACTIVE" [(ngModel)]="prvEmployer.cerReviewStatusCode"
+                      (change)="employerIncomeYesNoChange(prvEmployer)"   [ngClass]="ngDirtyInValid(prvEmployer,'employerIncomeYes_',i)" />
+                    <kendo-label class="k-radio-label" for="employerIncomeYes_{{i}}" text="Yes"></kendo-label>
+                  </span>
+                  <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton aria-labelledby="employerIncomeNo" id="employerIncomeNo_{{i}}"
+                      name="employerIncomeNo_{{i}}" value="INACTIVE" [(ngModel)]="prvEmployer.cerReviewStatusCode"
+                      (change)="employerIncomeYesNoChange(prvEmployer)" [ngClass]="ngDirtyInValid(prvEmployer,'employerIncomeNo_',i)"/>
+                    <kendo-label class="k-radio-label" for="employerIncomeNo_{{i}}" text="No"></kendo-label>
+                  </span>
+                </div>
+                <kendo-formerror
+                  *ngIf="!prvEmployer.employerIncomeYesNoValid && prvEmployer.employerIncomeYesNoValid !== undefined">Is the
+                  {{[prvEmployer.incomeSourceCodeDesc]}} still employed with {{prvEmployer.employerName}} is
+                  required.
+                </kendo-formerror>
+
+                  <div class="flex-col flex-col-6 p-0" *ngIf="prvEmployer.cerReviewStatusCode === 'INACTIVE'">                 
+                      <kendo-floatinglabel text="End Date">
+                        <kendo-datepicker [incompleteDateValidation]="true" #empHireDate [fillMode]="formUiStyle.dateInputFillMode"
+                          [(ngModel)]="prvEmployer.incomeEndDate" format="MM-dd-yyyy" formatPlaceholder="formatPattern" id="endDate_{{i}}"
+                          placeholder="End Date" [ngClass]="ngDirtyInValid(prvEmployer,'endDate_',i)"
+                          (valueChange)="onEndDateChange(prvEmployer)">
+                        </kendo-datepicker>
+                      </kendo-floatinglabel>
+                      <kendo-formerror
+                        *ngIf="!prvEmployer.endDateValid && prvEmployer.endDateValid !== undefined && (prvEmployer.afterStartDate || prvEmployer.afterStartDate === undefined)">End date is required.
+                      </kendo-formerror>  
+                      <kendo-formerror
+                        *ngIf="!prvEmployer.afterStartDate && prvEmployer.afterStartDate !== undefined">End date must be after Start date.
+                      </kendo-formerror>                    
+                  </div>
+
+              </fieldset>
+              
+              <fieldset class="k-form-fieldset mb-0"
+                *ngIf="(prvEmployer.employerId === null || prvEmployer.employerId === '' || prvEmployer.employerId === undefined || prvEmployer.employerId  === '00000000-0000-0000-0000-000000000000')
+                 && prvEmployer.cerReviewStatusCode !== null">
+                <legend class="k-form-legend">
+                  <h5>Is the {{[prvEmployer.incomeSourceCodeDesc]}} still receiving {{prvEmployer.incomeTypeCodeDesc}} Income </h5>
+                </legend>              
+                <div class="component-list-h comp-list-horizontal">
+                  <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton aria-labelledby="employerIncomeYes" name="employerIncomeYes_{{i}}"
+                      id="employerIncomeYes_{{i}}" class="form-control" value="ACTIVE" [(ngModel)]="prvEmployer.cerReviewStatusCode"
+                      (change)="employerIncomeYesNoChange(prvEmployer)"  [ngClass]="ngDirtyInValid(prvEmployer,'employerIncomeYes_',i)"/>
+                    <kendo-label class="k-radio-label" for="employerIncomeYes_{{i}}" text="Yes"></kendo-label>
+                  </span>
+                  <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton aria-labelledby="employerIncomeNo" id="employerIncomeNo_{{i}}"
+                      name="employerIncomeNo_{{i}}" value="INACTIVE" [(ngModel)]="prvEmployer.cerReviewStatusCode"
+                      (change)="employerIncomeYesNoChange(prvEmployer)" [ngClass]="ngDirtyInValid(prvEmployer,'endDate_',i)" />
+                    <kendo-label class="k-radio-label" for="employerIncomeNo_{{i}}" text="No"></kendo-label>
+                  </span>
+                </div>
+                <kendo-formerror
+                  *ngIf="!prvEmployer.employerIncomeYesNoValid && prvEmployer.employerIncomeYesNoValid !== undefined">Is the
+                  {{[prvEmployer.incomeSourceCodeDesc]}} still employed with {{prvEmployer.employerName}} is
+                  required.</kendo-formerror>
+
+                  <div class="flex-col flex-col-6 p-0" *ngIf="prvEmployer.cerReviewStatusCode === 'INACTIVE'">                 
+                    <kendo-floatinglabel text="End Date">
+                      <kendo-datepicker [incompleteDateValidation]="true" #empHireDate [fillMode]="formUiStyle.dateInputFillMode"
+                        [(ngModel)]="prvEmployer.incomeEndDate" format="MM-dd-yyyy" formatPlaceholder="formatPattern" id="endDate_{{i}}"
+                        placeholder="End Date"  [ngClass]="ngDirtyInValid(prvEmployer,'endDate_',i)"
+                        (valueChange)="onEndDateChange(prvEmployer)">
+                      </kendo-datepicker>
+                    </kendo-floatinglabel>
+                    <kendo-formerror
+                      *ngIf="!prvEmployer.endDateValid && prvEmployer.endDateValid !== undefined && (prvEmployer.afterStartDate || prvEmployer.afterStartDate === undefined)">End date is required.
+                    </kendo-formerror>  
+                    <kendo-formerror
+                      *ngIf="!prvEmployer.afterStartDate && prvEmployer.afterStartDate !== undefined">End date Must after Income start date.
+                    </kendo-formerror>                    
+                </div>
+              </fieldset>
+              </div>
+            </div>    
+          <form [formGroup]="noIncomeDetailsForm">
+            <div class="flex-col mb-1">
+              <fieldset class="k-form-fieldset">
+                <legend class="k-form-legend">
+                  <h5> Are the Client, Spouse, Partner w/ Shared minor child or Parent of minor client employed? </h5>
+                </legend>          
+                <div class="component-list-h">
+                  <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton name="clientDependentsMinorAdditionalIncomeFlag" aria-labelledby="additionalIncomeFlagYes"
+                      id="additionalIncomeFlagYes" class="form-control" formControlName="clientDependentsMinorAdditionalIncomeFlag" value="Y" 
+                      (change)="additionalIncomeFlagSelected($event)"/>
+                    <kendo-label class="k-radio-label" for="additionalIncomeFlagYes" text="Yes"></kendo-label>
+                  </span>
+                  <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton aria-labelledby="additionalIncomeFlagNo" name="clientDependentsMinorAdditionalIncomeFlag"
+                      id="additionalIncomeFlagNo" value="N" formControlName="clientDependentsMinorAdditionalIncomeFlag" 
+                      (change)="additionalIncomeFlagSelected($event)"/>
+                    <kendo-label class="k-radio-label" for="additionalIncomeFlagNo" text="No"></kendo-label>
+                  </span>
+                </div>
+                <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].valid">
+                  Are the Client, Spouse, Partner w/ Shared minor child or Parent of minor client employed is required.
+                </kendo-formerror>
+              </fieldset>          
+            </div>
+            <div class="flex-col mb-1">
+              <fieldset class="k-form-fieldset">
+                <legend class="k-form-legend">
+                  <h5> Does the Client, Spouse, Partner w/ Shared child or Parent of minor client  have additional income? </h5>
+                </legend>          
+                <div class="component-list-h">
+                  <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton name="clientDependentsMinorEmployedFlag" aria-labelledby="employedFlagYes"
+                      id="employedFlagYes" class="form-control" formControlName="clientDependentsMinorEmployedFlag" value="Y" 
+                      (change)="dependentsMinorEmployedFlagSelected($event)"/>
+                    <kendo-label class="k-radio-label" for="employedFlagYes" text="Yes"></kendo-label>
+                  </span>
+                  <span class="app-radiobtnwidtext-wrapper">
+                    <input type="radio" kendoRadioButton aria-labelledby="employedFlagNo" name="clientDependentsMinorEmployedFlag"
+                      id="employedFlagNo" value="N" formControlName="clientDependentsMinorEmployedFlag"
+                      (change)="dependentsMinorEmployedFlagSelected($event)"/>
+                    <kendo-label class="k-radio-label" for="employedFlagNo" text="No"></kendo-label>
+                  </span>
+                </div>
+                <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].valid">
+                  Does the Client, Spouse, Partner w/ Shared child or Parent of minor client  have additional income is required.
+                </kendo-formerror>
+              </fieldset>          
+            </div>
+         
+          <div *ngIf="noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === 'N' && noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === 'N'">
+            
               <div class="flex-row">
                 <div class="flex-col ">
-                  <label class="k-checkbox-label">Once the application has been returned by the client, enter the No income statement, Signature Date from the application.</label>
-                  </div>
+                  <label class="k-checkbox-label">Once the application has been returned by the client, enter the No income
+                    statement, Signature Date from the application.</label>
+                </div>
                 <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Date Client Signed">
                     <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
                       formatPlaceholder="formatPattern" aria-label="Date Client Signed" name="Date Client Signed"
-                      formControlName="noIncomeClientSignedDate" #noIncomeClientSignedDate  placeholder=""
+                      formControlName="noIncomeClientSignedDate" #noIncomeClientSignedDate placeholder=""
                       (blur)="dateChange(noIncomeClientSignedDate)">
                     </kendo-datepicker>
                   </kendo-floatinglabel>
-                  <kendo-formerror *ngIf="!noIncomeDetailsForm.controls['noIncomeClientSignedDate'].valid && !noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')"> Date Client
+                  <kendo-formerror
+                    *ngIf="!noIncomeDetailsForm.controls['noIncomeClientSignedDate'].valid && !noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')">
+                    Date Client
                     Signed is required
                   </kendo-formerror>
-                  <kendo-formerror *ngIf=" !isInValidDateRange && noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')"> Future date is not allowed
+                  <kendo-formerror
+                    *ngIf=" !isInValidDateRange && noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')">
+                    Future date is not allowed
                   </kendo-formerror>
-                  <kendo-formerror *ngIf="isInValidDateRange && noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')"> Date must be between 1/1/1753 and 12/31/9999
+                  <kendo-formerror
+                    *ngIf="isInValidDateRange && noIncomeDetailsForm.controls['noIncomeClientSignedDate'].hasError('incorrect')">
+                    Date must be between 1/1/1753 and 12/31/9999
                   </kendo-formerror>
                 </div>
                 <div class="flex-col flex-col-6">
                   <kendo-floatinglabel text="Date Signature Noted">
-                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode"  format="MM-dd-yyyy" [max]="todaysDate"
+                    <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy" [max]="todaysDate"
                       formatPlaceholder="formatPattern" aria-label="Date Signature Noted" name="Date Signature Noted"
                       formControlName="noIncomeSignatureNotedDate" #noIncomeSignatureNotedDate>
                     </kendo-datepicker>
                   </kendo-floatinglabel>
                 </div>
-
-
-
+        
+        
+        
                 <div class="flex-col">
                   <kendo-floatinglabel
                     text="What resources do they use to meet basic needs such as food, housing, transportation, etc.?">
                     <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #incomeNotes resizable="auto"
-                      [maxlength]="incomeNoteMaxLength" [value]="incomeNote"
-                      (valueChange)="onIncomeNoteValueChange($event)" aria-label="income note"
-                      name="income-note" formControlName="noIncomeNote">
+                      [maxlength]="incomeNoteMaxLength" [value]="incomeNote" (valueChange)="onIncomeNoteValueChange($event)"
+                      aria-label="income note" name="income-note" formControlName="noIncomeNote">
                       <kendo-textarea-suffix class="justify-content-end">
                         <span class="tareajustificationcounter">{{
                           incomeNoteCounter
@@ -69,80 +203,93 @@
                   </kendo-formerror>
                 </div>
               </div>
+        
+            
 
-            </form>
             <!-- Dependents' Proof of School -->
-<div class="flex-row mt-3" *ngIf="dependentsProofOfSchools.length > 0 && !isCerForm">
-  <div class="flex-col">
-    <h5 class="text-capital align-items-center">Dependents' Proof of School</h5>
-    <div class="app-c-table">
-      <kendo-grid [data]="dependentsProofOfSchools" [resizable]="true">
-        <kendo-grid-column field="name" title="Name" [width]="130">
-        </kendo-grid-column>
-        <kendo-grid-column field="age" title="Age" [width]="130">
-        </kendo-grid-column>
-        <kendo-grid-column
-          field="relationship"
-          title="Relationship"
-          [width]="130"
-        ></kendo-grid-column>
-        <kendo-grid-column
-          field="ProofofSchool"
-          title="Proof of School"
-          [width]="130"
-          class="text-center"
-          [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
-        >
-        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-          <div class="proof_income-more">
-              <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
-              class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
-           </span>
-          <kendo-dropdownbutton #proofSchoolDropdown  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button"  (close)="onClose($event,rowIndex)"  (blur)="onBlur()"
-            aria-label="more actions"  [popupSettings]="{ popupClass: popupClassAction, animate: true }" >
-
-            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-
-          <button   kendoButton *ngIf="buttondataItem.id === 'attachFromClient' || (buttondataItem.id === 'removeFile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
-            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachFromClient'">{{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New  from client\'s attachments" : "Attach from client\'s attachments" }}  </label>
-            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removeFile'"><span class="material-icons middleicon" aria-hidden="true">
-              delete
-              </span> {{ buttondataItem.text }}  </label>
-        </button>
-          <button  kendoButton  *ngIf="buttondataItem.id === 'proofOfSchoolUploaded' "  class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
-            <label  [for]="proofOfSchoolUploaded"> {{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? 'Upload New from computer' : 'Attach from computer ' }} </label>
-        </button>
-          </ng-template>
-
-          </kendo-dropdownbutton>
-          <button [attr.aria-label]="dataItem.documentName" *ngIf="dataItem.clientDocumentId !== null && dataItem.clientDocumentId!==' '" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
-            <a>{{dataItem.documentName}}</a>
-          </button>
-
-
-          <kendo-upload hidden  aria-label="upload proof" name="upload proof"
-          [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event,dataItem)"
-          #proofOfSchoolUploaded [ngModel]="proofOfSchoolDocument" [ngModelOptions]="{standalone: true}">
-          </kendo-upload>
-        </div>
-        </ng-template>
-        </kendo-grid-column>
-
-         <!-- grid Loader Template -->
-    <ng-template kendoGridLoadingTemplate>
-      <common-grid-loader-component></common-grid-loader-component>
-     </ng-template>
-     <!-- grid No data Template -->
-     <ng-template kendoGridNoRecordsTemplate>
-      <common-grid-no-records></common-grid-no-records>
-     </ng-template>
-      </kendo-grid>
-    </div>
-  </div>
-</div>
+            <div class="flex-row mt-3" *ngIf="dependentsProofOfSchools.length > 0 && !isCerForm">
+              <div class="flex-col">
+                <h5 class="text-capital align-items-center">Dependents' Proof of School</h5>
+                <div class="app-c-table">
+                  <kendo-grid [data]="dependentsProofOfSchools" [resizable]="true">
+                    <kendo-grid-column field="name" title="Name" [width]="130">
+                    </kendo-grid-column>
+                    <kendo-grid-column field="age" title="Age" [width]="130">
+                    </kendo-grid-column>
+                    <kendo-grid-column field="relationship" title="Relationship" [width]="130"></kendo-grid-column>
+                    <kendo-grid-column field="ProofofSchool" title="Proof of School" [width]="130" class="text-center"
+                      [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled">
+                      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                        <div class="proof_income-more">
+                          <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
+                              class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
+                          </span>
+                          <kendo-dropdownbutton #proofSchoolDropdown [data]="actions" icon="upload"
+                            class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
+                            (close)="onClose($event,rowIndex)" (blur)="onBlur()" aria-label="more actions"
+                            [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+        
+                            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+        
+                              <button kendoButton
+                                *ngIf="buttondataItem.id === 'attachFromClient' || (buttondataItem.id === 'removeFile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "
+                                class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text"
+                                [class]="buttondataItem.buttonType" aria-hidden="false"
+                                (click)="buttondataItem.click($event,dataItem)">
+                                <label [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachFromClient'">{{
+                                  (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New from
+                                  client\'s attachments" : "Attach from client\'s attachments" }} </label>
+                                <label [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removeFile'"><span
+                                    class="material-icons middleicon" aria-hidden="true">
+                                    delete
+                                  </span> {{ buttondataItem.text }} </label>
+                              </button>
+                              <button kendoButton *ngIf="buttondataItem.id === 'proofOfSchoolUploaded' " class="upoadlistbtn"
+                                look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
+                                aria-hidden="false" (click)="buttondataItem.click($event,dataItem)">
+                                <label [for]="proofOfSchoolUploaded"> {{ (dataItem.clientDocumentId !== null &&
+                                  dataItem.clientDocumentId !== ' ') ? 'Upload New from computer' : 'Attach from computer ' }}
+                                </label>
+                              </button>
+                            </ng-template>
+        
+                          </kendo-dropdownbutton>
+                          <button [attr.aria-label]="dataItem.documentName"
+                            *ngIf="dataItem.clientDocumentId !== null && dataItem.clientDocumentId!==' '" kendoButton
+                            look="flat" class="card-link-button"
+                            (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+                            <a>{{dataItem.documentName}}</a>
+                          </button>
+        
+        
+                          <kendo-upload hidden aria-label="upload proof" name="upload proof"
+                            [restrictions]="uploadFileRestrictions.fileRestrictions" [multiple]="false" [autoUpload]="false"
+                            (select)="handleFileSelected($event,dataItem)" #proofOfSchoolUploaded
+                            [ngModel]="proofOfSchoolDocument" [ngModelOptions]="{standalone: true}">
+                          </kendo-upload>
+                        </div>
+                      </ng-template>
+                    </kendo-grid-column>
+        
+                    <!-- grid Loader Template -->
+                    <ng-template kendoGridLoadingTemplate>
+                      <common-grid-loader-component></common-grid-loader-component>
+                    </ng-template>
+                    <!-- grid No data Template -->
+                    <ng-template kendoGridNoRecordsTemplate>
+                      <common-grid-no-records></common-grid-no-records>
+                    </ng-template>
+                  </kendo-grid>
+                </div>
+              </div>
+            </div>
           </div>
-          <div *ngIf="!hasNoIncome">
-            <case-management-income-list [isProofOfSchoolDocumentUploaded] = "isProofOfSchoolDocumentUploaded"  [isCerForm]="isCerForm" [hasNoIncome]="hasNoIncome" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
+        </form>
+          <div *ngIf="noIncomeDetailsForm.controls['clientDependentsMinorAdditionalIncomeFlag'].value === 'Y' || noIncomeDetailsForm.controls['clientDependentsMinorEmployedFlag'].value === 'Y'">
+            <case-management-income-list [isProofOfSchoolDocumentUploaded] = "isProofOfSchoolDocumentUploaded"  [isCerForm]="isCerForm"  [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" 
+            (loadIncomeListEvent)="loadIncomeListHandle($event)"  (loadIncomeList)="loadIncomeListGrid($event)" 
+            [lovProofOfIncomeByType$]="lovProofOfIncomeByType$" [incomeSourcelov$] = "incomeSourcelov$ " [incomeTypelov$]="incomeTypelov$"
+            [incomeFrequencylov$]="incomeFrequencylov$" [incomesLoader$] ="incomesLoader$"></case-management-income-list>
           </div>
           <kendo-formerror *ngIf="!isProofOfSchoolDocumentUploaded"> Proof of school upload is required
           </kendo-formerror>
