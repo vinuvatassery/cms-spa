@@ -19,6 +19,11 @@
             </kendo-grid-column>
 
             <kendo-grid-column field="activeFlag" title="Status" [width]="100">
+                  <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                        <kendo-dropdownlist [data]="['Active', 'Inactive']" [(ngModel)]="statusFilter"
+                          (valueChange)="dropdownFilterChange('activeFlag',$event, filterService)">
+                        </kendo-dropdownlist>
+                      </ng-template>
                   <ng-template kendoGridFilterMenuTemplate let-filter let-column="column"
                         let-filterService="filterService">
                         <kendo-grid-string-filter-menu [column]="column" [filter]="filter"
@@ -40,7 +45,7 @@
                                     let-buttondataItem let-eventNotificationgroupId="eventNotificationGroupId">
                                     <ng-container>
                                           <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-                                          [disabled]="(dataItem.activeFlag === 'N' && buttondataItem.text === 'Deactivate') || (dataItem.activeFlag === 'Y' && buttondataItem.text === 'Re-activate')"
+                                          [disabled]="(dataItem.activeFlag === 'Inactive' && buttondataItem.text === 'Deactivate') || (dataItem.activeFlag === 'Active' && buttondataItem.text === 'Re-activate')"
                                                 [class]="buttondataItem.buttonType" aria-hidden="false"
                                                 (click)="buttondataItem.click(dataItem)">
                                                 <span class="material-icons"

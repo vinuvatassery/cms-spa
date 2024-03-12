@@ -9,9 +9,10 @@ import {
   Output
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
+import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import { State, CompositeFilterDescriptor } from '@progress/kendo-data-query';
 import { LovFacade } from 'libs/system-config/domain/src/lib/application/lov.facade';
 import { Subject, first } from 'rxjs';
@@ -64,6 +65,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   reactivateButtonEmitted = false;
   deleteButtonEmitted = false;
   notificationGroupId!: any;
+  userPerGroupCount!: any;
   deactivebuttonEmitted = false;
   reletebuttonEmitted = false;
   isEditSupportGroup = false;
@@ -75,7 +77,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   public selectableSettings: SelectableSettings;
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
   dataListsLoader$ = this.systemInterfaceSupportFacade.supportGroupListDataLoader$;
-
+  statusFilter: any;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   columns: any = {
     ALL: 'All Columns',
@@ -132,7 +134,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       click: (data: any): void => {
         if (!this.deleteButtonEmitted) {
           this.deleteButtonEmitted = true;
-          this.onOpenSupportGroupDeleteClicked(data.notificationGroupId);
+          this.onOpenSupportGroupDeleteClicked(data.notificationGroupId, data.userPerGroup);
         }
 
       },
@@ -188,6 +190,26 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.loadSupportGroupListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
+
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    this.statusFilter = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+  }
+
+
 
   onChange(data: any) {
     this.defaultGridState();
@@ -290,9 +312,15 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.isGroupDetailPopup = false;
     this.isEditSupportGroup = false;
   }
-  onOpenSupportGroupDeleteClicked(notificationGroupId: any) {
-    this.isSupportGroupDeletePopupShow = true;
-    this.notificationGroupId = notificationGroupId;
+  onOpenSupportGroupDeleteClicked(notificationGroupId: any, userPerGroupCount: number) {
+    // if (userPerGroupCount > 0) {
+    //   this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Group has dependencies and cannot be deleted.");
+    //   this.deleteButtonEmitted = false;
+    //   return;
+    // } else {
+      this.notificationGroupId = notificationGroupId;
+      this.isSupportGroupDeletePopupShow = true;
+    //}
   }
   onCloseSupportGroupDeleteClicked() {
     this.deleteButtonEmitted = false;

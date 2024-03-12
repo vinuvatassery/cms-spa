@@ -48,10 +48,10 @@ export class NotiificationCategoryDetailComponent implements OnInit {
   constructor(private formBuilder: FormBuilder,
     private readonly loaderService: LoaderService,
     private cd: ChangeDetectorRef) {
-      this.createNotiificationCategoryForm();
   }
 
   ngOnInit(): void {
+    this.createNotiificationCategoryForm();
     if (this.isEditNotificationCategory) {
       this.bindDataToForm(this.selectedNotificationCategory)
     }
@@ -82,7 +82,6 @@ export class NotiificationCategoryDetailComponent implements OnInit {
       notificationGroupId: this.selectedGroup.notificationGroupId,
       eventId: formValues.eventId,
     };
-    debugger;
     return dto;
   }
 

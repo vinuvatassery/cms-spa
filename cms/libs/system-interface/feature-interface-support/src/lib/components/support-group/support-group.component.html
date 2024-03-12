@@ -67,6 +67,11 @@
     </kendo-grid-column>
     <kendo-grid-column field="activeFlag" title="Status" [width]="80">
       <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-dropdownlist [data]="['Active', 'Inactive']" [(ngModel)]="statusFilter"
+          (valueChange)="dropdownFilterChange('activeFlag',$event, filterService)">
+        </kendo-dropdownlist>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
         <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
           [extra]="false" operator="eq">
           <kendo-filter-contains-operator></kendo-filter-contains-operator>
@@ -82,7 +87,7 @@
         </common-grid-cell-date-range-filter>
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="70" class="text-center" [sortable]="false" [filterable]="false">
+    <kendo-grid-column field="lastModifierId" title="Modified By" [width]="70" class="text-center" [columnMenu]="false" [sortable]="false" [filterable]="false">
       <ng-template kendoGridCellTemplate let-dataItem>
         <common-user-photo-icon  
         [userId]="dataItem.lastModifierId" 
@@ -96,7 +101,7 @@
   
       </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="notificationGroupId" title="Option" [sticky]="true" [columnMenu]="false" [width]="50"
+    <kendo-grid-column field="notificationGroupId" title="Option" [sticky]="true" [columnMenu]="false" [sortable]="false"  [width]="50"
       class="text-center">
       <ng-template kendoGridCellTemplate let-dataItem let-notificationSupportId="field">
         <kendo-dropdownbutton [data]="gridMoreActionsSupport"
@@ -108,7 +113,7 @@
             let-groupId="notificationGroupId">
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
-              [disabled]="(dataItem.activeFlag === 'N' && buttondataItem.text === 'Deactivate') || (dataItem.activeFlag === 'Y' && buttondataItem.text === 'Re-activate')"
+              [disabled]="(dataItem.activeFlag === 'Inactive' && buttondataItem.text === 'Deactivate') || (dataItem.activeFlag === 'Active' && buttondataItem.text === 'Re-activate')"
                 [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>

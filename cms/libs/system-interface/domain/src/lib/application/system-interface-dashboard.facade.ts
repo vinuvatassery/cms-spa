@@ -85,8 +85,7 @@ export class SystemInterfaceDashboardFacade {
   }
   loadClientRecordSendChart(days:number,isCardRequest:boolean) {
     this.systemInterfaceDashboardService.getClientSendCardsinfo(days,isCardRequest).subscribe({
-      next: (ClientRecordSendChart:any) => {
-        debugger
+      next: (ClientRecordSendChart:any) => {       
         this.ClientRecordSendChartSubject.next(ClientRecordSendChart);
       },
 

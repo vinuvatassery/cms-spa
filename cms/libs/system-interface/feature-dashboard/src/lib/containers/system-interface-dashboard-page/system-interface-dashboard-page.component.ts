@@ -422,8 +422,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
   }
 
-  removeWidget(item: any) {
-    debugger
+  removeWidget(item: any) {    
     this.dashBoardAllWidgetsData.push(item);
 
     SystemInterfaceDashboardPageComponent.dashBoardContentData =

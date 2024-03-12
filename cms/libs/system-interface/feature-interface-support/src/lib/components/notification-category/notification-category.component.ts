@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { FilterService, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   State,
   CompositeFilterDescriptor,
@@ -69,7 +69,7 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
   editButtonEmitted = false;
   isEditNotificationCategory = false;
   selectedNotificationCategory!: any;
-
+  statusFilter: any;
   gridNotificationCategoryDataSubject = new Subject<any>();
   gridNotificationCategoryData$ = this.gridNotificationCategoryDataSubject.asObservable();
 
@@ -193,7 +193,23 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
   }
-
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    this.statusFilter = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+  }
   defaultGridState() {
     this.state = {
       skip: 0,
@@ -330,7 +346,6 @@ export class NotificationCategoryComponent implements OnInit, OnChanges {
 
       this.notificationCategoryReactivate$.pipe(first((response: any) => response != null))
         .subscribe((response: any) => {
-          debugger;
           if (response ?? false) {
             this.loadNotificationCategoryListGrid()
           }
