@@ -16,7 +16,7 @@ import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 /** Facades **/
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult,FilterService } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { BehaviorSubject, Subject } from 'rxjs';
 @Component({
@@ -36,6 +36,7 @@ export class TodoListComponent implements OnInit {
   @Output() isLoadTodoGridEvent = new EventEmitter<any>();
   @Input() isToDODetailsActionOpen: any;
   @Input()  todoGrid$ :any;
+  entityTypeList:any=[];
   public toDoGridState!: State;
   gridDataResult!: GridDataResult;
   gridTodoDataSubject = new Subject<any>();
@@ -94,8 +95,15 @@ export class TodoListComponent implements OnInit {
     this.loadAlertGrid$.subscribe((data: any) => {
       this.loadTodoGrid();
     });
+    this.loadEntityTypeList();
   }
-
+  loadEntityTypeList(){
+    this.entityTypeList.push({"lovDesc":this.entityTypes.Client.toString(),"lovCode":this.entityTypes.Client.toString()});
+    this.entityTypeList.push({"lovDesc":this.entityTypes.Vendor.toString(),"lovCode":this.entityTypes.Vendor.toString()});
+    this.entityTypeList.push({"lovDesc":this.entityTypes.Pharmacy.toString(),"lovCode":this.entityTypes.Pharmacy.toString()});
+    this.entityTypeList.push({"lovDesc":this.entityTypes.Insurance.toString().replace('_',' '),"lovCode":this.entityTypes.Insurance.toString()});
+    this.entityTypeList.push({"lovDesc":this.entityTypes.Tpa.toString(),"lovCode":this.entityTypes.Tpa.toString()});
+  }
   initilizeGridRefinersAndGrid(){
     this.toDoGridState = {
       skip: 0,
@@ -137,7 +145,7 @@ export class TodoListComponent implements OnInit {
         maxResultCount: maxResultCountValue,
         sorting: sortValue,
         sortType: sortTypeValue,
-        filter: "[]",
+        filter: JSON.stringify(this.filter),
       }; 
         this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
         this.todoGrid$.subscribe((data: any) => {
@@ -272,5 +280,16 @@ export class TodoListComponent implements OnInit {
           this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
           break;
     }
+  }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovDesc
+      }],
+        logic: "or"
+    });
   }
 }
