@@ -1,1 +1,4 @@
-<p>domain-page works!</p>
+<system-config-domains-list [domainDataLists$]="domainService$" 
+[pageSizes]="pageSizes" [sortValue]="sortValueDomain"
+[sortType]="sortType" [sort]="sortDomainGrid" 
+(loadDomainListsEvent)="loadDomainLists($event)"></system-config-domains-list>

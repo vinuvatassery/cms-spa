@@ -20,8 +20,6 @@ import { Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FundsListComponent implements OnInit, OnChanges {
-
-
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;

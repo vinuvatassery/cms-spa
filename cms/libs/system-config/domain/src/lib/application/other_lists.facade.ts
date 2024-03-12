@@ -1,6 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import {
+  ConfigurationProvider,
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
@@ -12,9 +13,24 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 /** Data services **/
 import { SystemConfigOtherListsDataService } from '../infrastructure/other_lists.data.service';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class SystemConfigOtherListsFacade {
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public sortType = 'asc';
+
+  public sortValueAssisterGroup = 'creationTime'; 
+  public sortAssisterGroupGrid: SortDescriptor[] = [{
+    field: this.sortValueAssisterGroup,
+  }];
+
+  public sortValueDomain = 'creationTime'; 
+  public sortDomainGrid: SortDescriptor[] = [{
+    field: this.sortValueDomain,
+  }];
+
   private loadDomainsListsServiceSubject = new BehaviorSubject<any>([]);
   loadDomainsListsService$ = this.loadDomainsListsServiceSubject.asObservable();
 
@@ -27,7 +43,8 @@ export class SystemConfigOtherListsFacade {
     private readonly systemConfigOtherListsDataService: SystemConfigOtherListsDataService,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly configurationProvider: ConfigurationProvider
   ) {}
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
