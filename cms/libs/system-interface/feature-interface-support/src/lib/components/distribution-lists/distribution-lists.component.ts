@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
 import { LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -82,7 +82,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       text: 'Edit',
       icon: 'edit',
       click: (data: any): void => {
-        debugger;
         if (data.email) {
           this.selectedMemberData = data;
           this.isEditMode = true;
@@ -374,5 +373,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   performSearch(searchValue: any) {
     this.onChange(searchValue);
   }
+
+  
 
 }

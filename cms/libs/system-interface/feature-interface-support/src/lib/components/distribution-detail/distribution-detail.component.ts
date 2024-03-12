@@ -108,7 +108,7 @@ export class DistributionDetailComponent implements OnInit {
       email: formValues.email,
       userTypeCode: 'EXTERNAL',
       notificationUserId: this.selectedGroup.notificationUserId,
-      selectedUserId : this.selectedUser?.notificationUserId,
+      selectedUserId: this.selectedUser?.notificationUserId,
     };
     if (this.isEditMode)
       dto.notificationUserId = this.selectedMemberData.notificationUserId;
@@ -148,5 +148,6 @@ export class DistributionDetailComponent implements OnInit {
 
     }
   }
+
 
 }
