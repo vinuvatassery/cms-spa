@@ -1,15 +1,49 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
-import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { LoaderService, LoggingService,ConfigurationProvider, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 /** External libraries **/
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 import { Template } from '../entities/template';
 /** Data services **/
 import { TemplateDataService } from '../infrastructure/template.data.service';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class TemplateManagementFacade {
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public sortType = 'asc';
+
+  public sortValueClientNotification = 'creationTime'; 
+  public sortClientNotificationGrid: SortDescriptor[] = [{
+    field: this.sortValueClientNotification,
+  }];
+  public sortValueEmailTemplates = 'creationTime'; 
+  public sortEmailTemplatesGrid: SortDescriptor[] = [{
+    field: this.sortValueEmailTemplates,
+  }];
+  public sortValueLetterTemplates = 'creationTime'; 
+  public sortLetterTemplatesGrid: SortDescriptor[] = [{
+    field: this.sortValueLetterTemplates,
+  }];
+  public sortValueFunds = 'creationTime'; 
+  public sortFundsGrid: SortDescriptor[] = [{
+    field: this.sortValueFunds,
+  }];
+  public sortValueFromsDocs = 'creationTime'; 
+  public sortFromsDocsGrid: SortDescriptor[] = [{
+    field: this.sortValueFromsDocs,
+  }];
+  public sortValueSmsTemplates = 'creationTime'; 
+  public sortSmsTemplatesGrid: SortDescriptor[] = [{
+    field: this.sortValueSmsTemplates,
+  }];
+  public sortValueLayoutTemplates = 'creationTime'; 
+  public sortLayoutTemplatesGrid: SortDescriptor[] = [{
+    field: this.sortValueLayoutTemplates,
+  }];
+
   /** Private properties **/
   private templateSubject = new BehaviorSubject<Template[]>([]);
   private clientNotificationDefaultsListsSubject = new BehaviorSubject<any>([]);
@@ -31,7 +65,8 @@ export class TemplateManagementFacade {
     private readonly templateDataService: TemplateDataService,
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
-    private readonly snackbarService: NotificationSnackbarService) { }
+    private readonly snackbarService: NotificationSnackbarService,
+    private readonly configurationProvider: ConfigurationProvider) { }
 
   /** Public methods **/
   loadTemplates(): void {
