@@ -251,7 +251,7 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
       entityId :entityId ,
       alertFrequencyCode :  this.todoDetailsForm.controls['repeat'].value,
       customAlertFlag : 'Y',
-      type:'todo'
+      type:'TODO'
     }
 
     if(!this.isEdit){
