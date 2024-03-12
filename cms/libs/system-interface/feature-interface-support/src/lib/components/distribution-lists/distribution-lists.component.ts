@@ -32,6 +32,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   @Input() distributionGridLists$: any;
 
   @Output() loadDistributionListEvent = new EventEmitter<any>();
+  @Output() loadSupportGroupListEvent = new EventEmitter<any>();
 
   public state!: State;
   sortColumn = 'vendorName';
@@ -181,6 +182,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     if (!this.selectedGroup)
       return;
 
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+
     this.selectedInterface = this.selectedGroup.groupName
 
     this.loadDistribution(
@@ -189,6 +193,15 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       this.sortValue,
       this.sortType
     );
+  }
+
+  defaultGridState() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter: { logic: 'and', filters: [] },
+    };
   }
 
   loadDistribution(
@@ -233,16 +246,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
 
   }
 
-
-  defaultGridState() {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-      filter: { logic: 'and', filters: [] },
-    };
-  }
-
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
@@ -253,6 +256,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.filterData = stateData.filter;
     this.loadDistributionListGrid();
   }
 
@@ -298,6 +302,18 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   onChildDataUpdate() {
     this.isMemberDetailPopup = false;
     this.loadDistributionListGrid();
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+
+    this.selectedInterface = this.selectedGroup.groupName
+
+    const gridDataRefinerValue = {
+      SkipCount: this.state?.skip ?? 0,
+      MaxResultCount: this.state?.take ?? 0,
+      Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
+      notificationGroupId: this.selectedGroup.notificationGroupId,
+    };
+    this.loadSupportGroupListEvent.emit(gridDataRefinerValue);
   }
 
   onOpenMemberDeleteClicked() { this.isMemberDeletePopupShow = true; }
@@ -324,6 +340,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     this.systemInterfaceSupportFacade.changeStatusDistributionListUser$.subscribe({
       next: () => {
         this.loadDistributionListGrid();
+        this.onChildDataUpdate();
       }
     });
   }
@@ -338,6 +355,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     this.systemInterfaceSupportFacade.changeStatusDistributionListUser$.subscribe({
       next: () => {
         this.loadDistributionListGrid();
+        this.onChildDataUpdate();
       }
     });
   }
@@ -348,6 +366,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     this.systemInterfaceSupportFacade.deleteDistributionListUser$.subscribe({
       next: () => {
         this.loadDistributionListGrid();
+        this.onChildDataUpdate();
       }
     });
   }

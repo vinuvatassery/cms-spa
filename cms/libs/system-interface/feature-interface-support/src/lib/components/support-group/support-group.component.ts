@@ -1,5 +1,4 @@
 import {
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -139,10 +138,10 @@ export class SupportGroupComponent implements OnInit, OnChanges {
           this.deleteButtonEmitted = true;
           this.onOpenSupportGroupDeleteClicked(data.notificationGroupId);
         }
-
       },
     },
   ];
+  
   public mode: SelectableMode = 'single';
   interfaceSupportGroupLov = this.lovFacade.interfaceSupportGroupLov$;
   /** Constructor **/

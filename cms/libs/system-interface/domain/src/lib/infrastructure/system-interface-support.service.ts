@@ -173,5 +173,6 @@ export class SystemInterfaceSupportService {
   editDistributionListUser(body: any) {
     return this.http.put(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${body.notificationUserId}`, body);
   }
-
+  // ----------------------------------------
+  
 }

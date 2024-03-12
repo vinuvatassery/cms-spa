@@ -102,7 +102,7 @@ export class DistributionDetailComponent implements OnInit {
   mapFormValues() {
     const formValues = this.memberForm.value;
     const dto = {
-      groupId: this.selectedGroup.notificationGroupId,
+      notificationGroupId: this.selectedGroup.notificationGroupId,
       firstName: formValues.firstName,
       lastName: formValues.lastName,
       email: formValues.email,
