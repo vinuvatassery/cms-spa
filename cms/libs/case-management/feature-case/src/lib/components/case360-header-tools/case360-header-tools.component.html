@@ -48,8 +48,11 @@
 
 <!-- Create New Reminder Popup -->
 <ng-template #NewReminderTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed()">Create New Reminder for {{loadedClientHeader?.clientFullName}} </kendo-dialog-titlebar>
-  <productivity-tools-reminder-detail   (isModalNewReminderCloseClicked)="onNewReminderClosed()"></productivity-tools-reminder-detail>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed()">Create New Reminder for 
+    {{clientHeader?.clientFullName}}</kendo-dialog-titlebar>
+  <productivity-tools-reminder-detail  
+   (isModalNewReminderCloseClicked)="onNewReminderClosed()">
+  </productivity-tools-reminder-detail>
 </ng-template>
  
 
