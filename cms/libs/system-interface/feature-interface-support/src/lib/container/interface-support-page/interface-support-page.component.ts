@@ -83,7 +83,6 @@ export class InterfaceSupportPageComponent {
     this.systemInterfaceSupportFacade.loadNotificationCategory(event);
   }
   handleAddNotificationCategory(event: any) {
-    debugger;
     this.systemInterfaceSupportFacade.addNotificationCategory(event);
   }
   handleEditNotificationCategory(event: any) {

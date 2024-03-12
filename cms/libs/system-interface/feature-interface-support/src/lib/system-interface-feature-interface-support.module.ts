@@ -12,6 +12,9 @@ import { DeactivateSupportGroupComponent } from './components/deactivate-support
 import { ReactivateSupportGroupComponent } from './components/reactivate-support-group/reactivate-support-group.component';
 import { RemoveSupportGroupComponent } from './components/remove-support-group/remove-support-group.component';
 import { NotiificationCategoryDetailComponent } from './components/notification-category-detail/notification-category-detail.component';
+import { DeactivateNotificationCategoryComponent } from './components/deactivate-notification-category/deactivate-notification-category.component';
+import { ReactivateNotificationCategoryComponent } from './components/reactivate-notification-category/reactivate-notification-category.component';
+import { RemoveNotificationCategoryComponent } from './components/remove-notifcation-category/remove-notification-category.component';
 
 @NgModule({
   imports: [
@@ -29,7 +32,10 @@ import { NotiificationCategoryDetailComponent } from './components/notification-
     DeactivateSupportGroupComponent,
     ReactivateSupportGroupComponent,
     RemoveSupportGroupComponent,
-    NotiificationCategoryDetailComponent
+    NotiificationCategoryDetailComponent,
+    DeactivateNotificationCategoryComponent,
+    ReactivateNotificationCategoryComponent,
+    RemoveNotificationCategoryComponent
   ],
   exports: [
     InterfaceSupportPageComponent,
@@ -40,7 +46,10 @@ import { NotiificationCategoryDetailComponent } from './components/notification-
     DeactivateSupportGroupComponent,
     ReactivateSupportGroupComponent,
     RemoveSupportGroupComponent,
-    NotiificationCategoryDetailComponent
+    NotiificationCategoryDetailComponent,
+    DeactivateNotificationCategoryComponent,
+    ReactivateNotificationCategoryComponent,
+    RemoveNotificationCategoryComponent
   ],
 })
 export class SystemInterfaceFeatureInterfaceSupportModule {}

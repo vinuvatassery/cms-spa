@@ -27,12 +27,13 @@ export class NotiificationCategoryDetailComponent implements OnInit {
     this.loaderService.hide();
   }
   @Input() selectedGroup: any;
-  @Input() isEditNotiificationCategory: any;
+  @Input() isEditNotificationCategory: any;
   @Input() selectedMemberData: any;
+  @Input() selectedNotificationCategory: any;
   @Input() eventLov: any
   @Output() close = new EventEmitter<any>();
-  @Output() addNotiificationCategoryEvent = new EventEmitter<any>();
-  @Output() editNotiificationCategoryEvent = new EventEmitter<any>();
+  @Output() addNotificationCategoryEvent = new EventEmitter<any>();
+  @Output() editNotificationCategoryEvent = new EventEmitter<any>();
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   notiificationCategoryForm!: FormGroup;
@@ -41,20 +42,23 @@ export class NotiificationCategoryDetailComponent implements OnInit {
   isSubmitted: boolean = false;
   isLoading = false;
   isValidateForm = false;
-
+  notiificationCategory!: any;
 
 
   constructor(private formBuilder: FormBuilder,
     private readonly loaderService: LoaderService,
     private cd: ChangeDetectorRef) {
+      this.createNotiificationCategoryForm();
   }
 
   ngOnInit(): void {
-    this.createForm();
+    if (this.isEditNotificationCategory) {
+      this.bindDataToForm(this.selectedNotificationCategory)
+    }
   }
 
 
-  createForm() {
+  createNotiificationCategoryForm() {
     this.notiificationCategoryForm = this.formBuilder.group({
       groupName: new FormControl({ value: '', disabled: true }),
       eventId: new FormControl({ value: '', disabled: false }, [Validators.required]),
@@ -62,6 +66,14 @@ export class NotiificationCategoryDetailComponent implements OnInit {
 
     if (this.selectedGroup)
       this.notiificationCategoryForm.controls['groupName'].setValue(this.selectedGroup.groupName);
+  }
+
+  bindDataToForm(notificationCategory: any) {
+    this.notiificationCategory = notificationCategory;
+    this.notiificationCategoryForm.controls["groupName"].setValue(this.selectedGroup.groupName);
+    this.notiificationCategoryForm.controls["eventId"].setValue(notificationCategory.eventId);
+    this.notiificationCategoryForm.markAllAsTouched();
+    this.cd.detectChanges();
   }
 
   mapFormValues() {
@@ -87,7 +99,7 @@ export class NotiificationCategoryDetailComponent implements OnInit {
     return this.notiificationCategoryForm.valid;
   }
 
-  public addAndSaveSupportGroup() {
+  public addAndSaveNotificationCategory() {
     this.notiificationCategoryForm.markAllAsTouched();
     const res = this.checkValidations();
     this.isSubmitted = true;
@@ -98,10 +110,10 @@ export class NotiificationCategoryDetailComponent implements OnInit {
 
     if (this.notiificationCategoryForm.valid) {
       let finalData = this.mapFormValues();
-      if (this.isEditNotiificationCategory) {
-        //this.addNotiificationCategoryEvent.emit(finalData)
+      if (this.isEditNotificationCategory) {
+        this.editNotificationCategoryEvent.emit(finalData)
       } else {
-        this.addNotiificationCategoryEvent.emit(finalData)
+        this.addNotificationCategoryEvent.emit(finalData)
       }
 
     }

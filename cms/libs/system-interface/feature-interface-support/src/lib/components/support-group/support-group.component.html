@@ -108,6 +108,7 @@
             let-groupId="notificationGroupId">
             <ng-container>
               <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+              [disabled]="(dataItem.activeFlag === 'N' && buttondataItem.text === 'Deactivate') || (dataItem.activeFlag === 'Y' && buttondataItem.text === 'Re-activate')"
                 [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click(dataItem)">
                 <span class="material-icons" [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
                 <label> {{ buttondataItem.text }} </label>

@@ -1,3 +1,4 @@
+
 import {
     ChangeDetectionStrategy,
     Component,
@@ -9,14 +10,15 @@ import {
   import { LoaderService } from '@cms/shared/util-core';
   
   @Component({
-    selector: 'deactivate-notification-category',
-    templateUrl: './deactivate-notification-category.component.html',
+    selector: 'remove-notification-category',
+    templateUrl: './remove-notification-category.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
   })
-  export class DeactivateNotificationCategoryComponent implements OnInit {
+  
+  export class RemoveNotificationCategoryComponent implements OnInit {
     @Input() eventNotificationGroupId: any;
     @Output() close = new EventEmitter<any>();
-    @Output() deactivateConfimEvent = new EventEmitter<any>();
+    @Output() deleteConfimEvent = new EventEmitter<any>();
  
   
     /** Constructor **/
@@ -27,9 +29,8 @@ import {
     onCancelClick() {
       this.close.emit();
     }
-
-    onDeactivateConfirm(isDelete: boolean) {
-        this.deactivateConfimEvent.emit(isDelete);
+    onDeleteConfirm(status: boolean) {
+        this.deleteConfimEvent.emit(status);
       }
   
   }

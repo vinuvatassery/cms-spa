@@ -1,7 +1,7 @@
 <form class="k-form" [formGroup]="notiificationCategoryForm">
 <section class="k-dialog-body">
     <p class="text-muted">
-      Adds a notification category to the selected group
+      {{ isEditNotificationCategory ? 'Update' : 'Adds' }} a notification category to the selected group
     </p>
     <div class="flex-row">
 
@@ -30,8 +30,8 @@
         <button kendoButton [primary]="true" (click)="onCancelClick()" look="outline" aria-label="Cancel">
           Cancel
         </button>
-        <button kendoButton [primary]="true" aria-label="Add" (click)="addAndSaveSupportGroup()">
-          Add
+        <button kendoButton [primary]="true" aria-label="Add" (click)="addAndSaveNotificationCategory()">
+          {{ isEditNotificationCategory ? 'Update' : 'Add' }}
         </button>
       </div>
     </div>

@@ -1,0 +1,19 @@
+<section class="k-dialog-body">
+    <p class="text-muted mb-2">
+          Are you sure you want to reactivate again?
+    </p>
+</section>
+
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+          <div class="justify-content-end">
+                <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                      (click)="onCancelClick()">
+                      Cancel
+                </button>
+                <button kendoButton [primary]="true" aria-label="Reactivate" (click)="onReactivateConfirm(true)">
+                      Re-activate
+                </button>
+          </div>
+    </div>
+</kendo-dialog-actions>

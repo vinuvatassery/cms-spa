@@ -51,7 +51,14 @@
                               (loadNotificationCategoryListEvent)="loadNotificationCategory($event)"
                               [eventLov$]="eventLov$"
                               [addnotificationCategory$]="addnotificationCategory$"
-                              (addNotificationCategoryEvent) ="handleAddNotificationCategory($event)" 
+                              (addNotificationCategoryEvent) ="handleAddNotificationCategory($event)"
+                              [notificationCategoryReactivate$]="notificationCategoryReactivate$" 
+                              [notificationCategoryRemove$]="notificationCategoryRemove$"
+                              [editnotificationCategory$]="editnotificationCategory$"
+                              (deactivateConfimEvent)="handleDeactivateNotificationCategory($event)"
+                              (reactivateConfimEvent)="handleReactivateNotificationCategory($event)"
+                              (deleteConfimedEvent)="handleDeleteNotificationCategory($event)"
+                              (editNotificationCategoryEvent) ="handleEditNotificationCategory($event)"
                               ></system-interface-notification-category>
                   </div>
 
