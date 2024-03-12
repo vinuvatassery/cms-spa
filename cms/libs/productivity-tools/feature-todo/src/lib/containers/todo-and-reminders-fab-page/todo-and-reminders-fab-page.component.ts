@@ -32,7 +32,7 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
     clientSearchResult$ = this.financialRefundFacade.clients$;
     providerSearchResult$ =this.financialVendorFacade.searchProvider$
-    createTodo$ = this.todoFacade.createTodo$
+    createTodo$ = this.todoFacade.curdAlert$
      clientSubject = this.financialRefundFacade.clientSubject;
      medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
      getTodo$ = this.todoFacade.getTodo$;
@@ -103,13 +103,13 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
         this.financialRefundFacade.loadClientBySearchText(event);
       }
       onTodoItemCreateClick(payload:any){
-        this.todoFacade.createTodoItem(payload);
+        this.todoFacade.createAlertItem(payload);
       }
       onGetTodoItem($event:any){
         this.todoFacade.getTodoItem($event);
       }
       onUpdateTodoItemClick(payload:any){
-        this.todoFacade.updateTodoItem(payload)
+        this.todoFacade.updateAlertItem(payload)
       }
       getTodoItemsLov(){
         this.lovFacade.getFrequencyTypeLov()
