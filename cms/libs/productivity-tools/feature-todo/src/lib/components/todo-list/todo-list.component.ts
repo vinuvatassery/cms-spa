@@ -18,7 +18,7 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult,FilterService } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 @Component({
   selector: 'productivity-tools-todo-list',
   templateUrl: './todo-list.component.html',
@@ -36,6 +36,7 @@ export class TodoListComponent implements OnInit {
   @Output() isLoadTodoGridEvent = new EventEmitter<any>();
   @Input() isToDODetailsActionOpen: any;
   @Input()  todoGrid$ :any;
+  @Input() entityTypeCodeSubject$!: Observable<any>;
   entityTypeList:any=[];
   public toDoGridState!: State;
   gridDataResult!: GridDataResult;
@@ -59,6 +60,7 @@ export class TodoListComponent implements OnInit {
   @Input() loadAlertGrid$ : any;
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
   @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
+  @Output() getTodoItemsLov = new EventEmitter();
   public moreactions = [
     {
       buttonType: 'btn-h-primary',
@@ -95,15 +97,10 @@ export class TodoListComponent implements OnInit {
     this.loadAlertGrid$.subscribe((data: any) => {
       this.loadTodoGrid();
     });
-    this.loadEntityTypeList();
+    this.getTodoItemsLov.emit()
+    this.getEntityTypeLovs()
   }
-  loadEntityTypeList(){
-    this.entityTypeList.push({"lovDesc":this.entityTypes.Client.toString(),"lovCode":this.entityTypes.Client.toString()});
-    this.entityTypeList.push({"lovDesc":this.entityTypes.Vendor.toString(),"lovCode":this.entityTypes.Vendor.toString()});
-    this.entityTypeList.push({"lovDesc":this.entityTypes.Pharmacy.toString(),"lovCode":this.entityTypes.Pharmacy.toString()});
-    this.entityTypeList.push({"lovDesc":this.entityTypes.Insurance.toString().replace('_',' '),"lovCode":this.entityTypes.Insurance.toString()});
-    this.entityTypeList.push({"lovDesc":this.entityTypes.Tpa.toString(),"lovCode":this.entityTypes.Tpa.toString()});
-  }
+
   initilizeGridRefinersAndGrid(){
     this.toDoGridState = {
       skip: 0,
@@ -290,6 +287,17 @@ export class TodoListComponent implements OnInit {
           value:value.lovDesc
       }],
         logic: "or"
+    });
+  }
+  private getEntityTypeLovs() {
+    this.entityTypeCodeSubject$
+    .subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.entityTypeList=data.sort((value1:any,value2:any) => value1.sequenceNbr - value2.sequenceNbr);
+      }
     });
   }
 }

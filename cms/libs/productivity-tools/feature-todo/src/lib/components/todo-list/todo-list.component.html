@@ -44,7 +44,8 @@
       <kendo-dropdownlist
       [data]="entityTypeList"
       textField="lovDesc"
-      valueField="lovCode" 
+      valueField="lovCode"
+      [valuePrimitive]="false"
       (valueChange)="dropdownFilterChange('entityTypeCode',$event, filterService)">
     </kendo-dropdownlist>
     </ng-template>
