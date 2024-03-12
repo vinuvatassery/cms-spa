@@ -1,3 +1,7 @@
  
-      <system-config-medical-providers-list></system-config-medical-providers-list>
+      <system-config-medical-providers-list 
+      [medicalProviderDataLists$]="medicalProviderService$" 
+      [pageSizes]="pageSizes" [sortValue]="sortValueMedicalProvider"
+      [sortType]="sortType" [sort]="sortMedicalProviderGrid" 
+      (loadMedicalProviderListsEvent)="loadMedicalProviderLists($event)" ></system-config-medical-providers-list>
  

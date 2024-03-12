@@ -1,6 +1,7 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import {
+  ConfigurationProvider,
   LoaderService,
   LoggingService,
   NotificationSnackbarService,
@@ -12,9 +13,61 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Entities **/
 /** Data services **/
 import { SystemConfigServiceProvidersDataService } from '../infrastructure/service_providers.data.service';
+import { SortDescriptor } from '@progress/kendo-data-query';
 
 @Injectable({ providedIn: 'root' })
 export class SystemConfigServiceProviderFacade {
+
+  public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
+  public skipCount = this.configurationProvider.appSettings.gridSkipCount;
+  public sortType = 'asc';
+
+  public sortValueCptCode = 'creationTime'; 
+  public sortCptCodeGrid: SortDescriptor[] = [{
+    field: this.sortValueCptCode,
+  }];
+
+  public sortValueManufacturer = 'creationTime'; 
+  public sortManufacturerGrid: SortDescriptor[] = [{
+    field: this.sortValueManufacturer,
+  }];
+
+  public sortValueDrugs = 'creationTime'; 
+  public sortDrugsGrid: SortDescriptor[] = [{
+    field: this.sortValueDrugs,
+  }];
+
+  public sortValueMedicalProvider = 'creationTime'; 
+  public sortMedicalProviderGrid: SortDescriptor[] = [{
+    field: this.sortValueMedicalProvider,
+  }];
+
+  public sortValueInsProviders = 'creationTime'; 
+  public sortInsProvidersGrid: SortDescriptor[] = [{
+    field: this.sortValueInsProviders,
+  }];
+
+  public sortValueInsVendors = 'creationTime'; 
+  public sortInsVendorsGrid: SortDescriptor[] = [{
+    field: this.sortValueInsVendors,
+  }];
+
+  public sortValueInsurancePlans = 'creationTime'; 
+  public sortInsurancePlansGrid: SortDescriptor[] = [{
+    field: this.sortValueInsurancePlans,
+  }];
+
+  public sortValuePharmacies = 'creationTime'; 
+  public sortPharmaciesGrid: SortDescriptor[] = [{
+    field: this.sortValuePharmacies,
+  }];
+
+  public sortValueHealthcareProvider = 'creationTime'; 
+  public sortHealthcareProviderGrid: SortDescriptor[] = [{
+    field: this.sortValueHealthcareProvider,
+  }];
+
+
   private loadManufacturerListsServiceSubject = new BehaviorSubject<any>([]);
   loadManufacturerListsService$ =  this.loadManufacturerListsServiceSubject.asObservable();
 
@@ -47,7 +100,8 @@ export class SystemConfigServiceProviderFacade {
     private readonly systemConfigServiceProvidersDataService: SystemConfigServiceProvidersDataService,
     private loggingService: LoggingService,
     private readonly notificationSnackbarService: NotificationSnackbarService,
-    private readonly loaderService: LoaderService
+    private readonly loaderService: LoaderService,
+    private readonly configurationProvider: ConfigurationProvider
   ) {}
 
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
