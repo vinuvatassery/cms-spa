@@ -132,71 +132,24 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
 
   dropDowncolumns: any = [
     {
+      columnCode: 'ALL',
+      columnDesc: 'All Columns',
+    },
+    {
       columnCode: 'vendorName',
       columnDesc: 'Vendor',
     },
     {
-      columnCode: 'serviceType',
-      columnDesc: 'Type',
-    },
-
-    {
       columnCode: 'clientFullName',
       columnDesc: 'Client Name',
-    },
-    {
-      columnCode: 'nameOnInsuranceCard',
-      columnDesc: 'Name on Primary Insurance Card',
     },
     {
       columnCode: 'clientId',
       columnDesc: 'Client ID',
     },
     {
-      columnCode: 'refundWarrant',
-      columnDesc: 'Refund Warrant #',
-    },
-    {
-      columnCode: 'refundAmount',
-      columnDesc: 'Refund Amount',
-    }
-    ,
-    {
-      columnCode: 'depositDate',
-      columnDesc: 'Deposit Date',
-    }
-    ,
-    {
-      columnCode: 'originalWarrant',
-      columnDesc: 'Original Warrant #',
-    }
-    ,
-    {
-      columnCode: 'originalAmount',
-      columnDesc: 'Original Amount',
-    }
-    ,
-    {
-      columnCode: 'indexCode',
-      columnDesc: 'Index Code',
-    }
-    ,
-    {
-      columnCode: 'pcaCode',
-      columnDesc: 'PCA',
-    }
-    ,
-    {
-      columnCode: 'grantNumber',
-      columnDesc: 'Grant #',
-    },
-    {
       columnCode: 'voucherPayable',
       columnDesc: 'VP - Suffix',
-    },
-    {
-      columnCode: 'refundNote',
-      columnDesc: 'Refund Note',
     }
   ];
   showExportLoader = false;
@@ -210,7 +163,7 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   searchValue = '';
   isFiltered = false;
   filter!: any;
-  selectedColumn = 'vendorName'
+  selectedColumn = 'ALL'
   gridDataResult!: GridDataResult;
 
   gridVendorsBatchLogDataSubject = new Subject<any>();
@@ -265,10 +218,6 @@ export class RefundBatchLogListComponent implements OnInit, OnChanges {
   handleAllPaymentsGridData() {
     this.batchLogGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
       this.gridVendorsBatchLogDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.gridLoaderSubject.next(false);
