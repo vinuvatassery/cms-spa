@@ -38,7 +38,7 @@ export class TodoPageComponent implements OnInit {
   @ViewChild('todoList', { static: false })
   todoList!: TodoListComponent;
   selectedAlertId! :any
-  createTodo$ = this.todoFacade.createTodo$
+  createTodo$ = this.todoFacade.curdAlert$
   /** Constructor **/
   constructor(private dialogService: DialogService, 
     public todoFacade: TodoFacade,
@@ -93,11 +93,11 @@ export class TodoPageComponent implements OnInit {
   }
 
   onTodoItemCreateClick(payload:any){
-    this.todoFacade.createTodoItem(payload);
+    this.todoFacade.createAlertItem(payload);
   }
 
   onUpdateTodoItemClick(payload:any){
-    this.todoFacade.updateTodoItem(payload)
+    this.todoFacade.updateAlertItem(payload)
   }
 
   onGetTodoItem($event:any){
