@@ -19,6 +19,7 @@ export * from './lib/application/event-log.facade';
 export * from './lib/application/notification.facade';
 export * from './lib/application/direct-message.facade';
 export * from './lib/application/reminder.facade';
+export * from './lib/application/fab-menu.facade'
 
 /** Enums **/
 export * from './lib/enums/alert-type-code.enum'
