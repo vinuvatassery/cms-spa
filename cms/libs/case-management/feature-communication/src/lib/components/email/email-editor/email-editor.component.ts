@@ -265,27 +265,30 @@ export class EmailEditorComponent implements OnInit {
   }
 
   handleFileSelected(event: any) {
-    this.attachedFileValidatorSize = false;
-    for (let file of event.files) {
-      if (file.size > this.configurationProvider.appSettings.uploadFileSizeLimit) {
-        this.attachedFileValidatorSize = true;
-        this.showAttachmentUpload = true;
-        event.files = [];
-        this.uploadedAttachedFile = [];
-      }
+    this.attachedFileValidatorSize=false;
+    for (let file of event.files){
+   if(file.size>this.configurationProvider.appSettings.uploadFileSizeLimit)
+   {
+    this.attachedFileValidatorSize = true;
+    this.showAttachmentUpload = true;
+    event.files = [];
+    this.uploadedAttachedFile = [];
+   }
+  }
+  if(!this.attachedFileValidatorSize){
+  if(this.selectedAttachedFile.length == 0){
+    this.selectedAttachedFile = event.files;
+  }else{
+    for (let file of event.files){
+    const isFileExists = this.selectedAttachedFile?.some((item: any) => item.name === file.name);
+    if(!isFileExists){
+      this.selectedAttachedFile.push(file);
+     }
     }
-    if (!this.attachedFileValidatorSize) {
-      if (this.selectedAttachedFile.length == 0) {
-        this.selectedAttachedFile = event.files;
-        this.showAttachmentUpload = false;
-      } else {
-        for (let file of event.files) {
-          this.selectedAttachedFile.push(file);
-          this.showAttachmentUpload = false;
-        }
-      }
-    }
-    this.cerEmailAttachments.emit(this.selectedAttachedFile);
+   }
+   this.cerEmailAttachments.emit(this.selectedAttachedFile);
+  }
+   this.showAttachmentUpload = false;
   }
 
   handleFileRemoved(event: any) {
@@ -302,6 +305,8 @@ export class EmailEditorComponent implements OnInit {
 
   clientAttachmentChange(event:any)
   {
+    const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.documentName);
+    if(!isFileExists){
     this.uploadedAttachedFile = [{
       document: event,
       size: event.documentSize,
@@ -318,12 +323,14 @@ export class EmailEditorComponent implements OnInit {
       }
     this.uploadedAttachedFile = [];
     this.cerEmailAttachments.emit(event);
+    }
     this.showClientAttachmentUpload = false;
-    this.showFormsAndDocumentsUpload = false;
   }
 
   formsAndDocumentChange(event:any)
   {
+    const isFileExists = this.selectedAttachedFile?.some((file: any) => file.name === event.description);
+    if(!isFileExists){
     this.uploadedAttachedFile = [{
       document: event,
       size: event.templateSize,
@@ -340,6 +347,7 @@ export class EmailEditorComponent implements OnInit {
       }
     this.uploadedAttachedFile = [];
     this.cerEmailAttachments.emit(event);
+    }
     this.showFormsAndDocumentsUpload = false;
   }
 

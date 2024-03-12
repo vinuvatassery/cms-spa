@@ -81,7 +81,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   selectedCCEmail: any = [];
   defaultCCEmail: any = [];
   bccEmail: Array<string> = [];
-  selectedbCCEmail: any = [];
+  selectedBccEmail: any = [];
   showToEmailLoader: boolean = true;
   caseEligibilityId!: any;
   cerEmailAttachedFiles: any[] = [];
@@ -313,7 +313,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       subject: this.emailSubject,
       toEmail: this.selectedToEmail,
       ccEmail: this.selectedCCEmail,
-      bccEmail: this.isBCCDropdownVisible ? null : this.selectedbCCEmail,
+      bccEmail: this.isBCCDropdownVisible ? null : this.selectedBccEmail,
       eligibilityId: this.clientCaseEligibilityId,
       entity: this.notificationGroup,
       entityId: this.entityId,
@@ -383,12 +383,13 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.selectedEmail.push(this.toEmail[0]?.trim());
               this.selectedToEmail = this.selectedEmail;
               this.emailSubject = data.description;
-              this.ccEmail = data.ccEmail;
+              const ccEmails = data.ccEmail?.map((item: any)=> item.email);
+              this.ccEmail = ccEmails;
               if (data?.bccEmail?.length > 0) {
-                this.bccEmail = data.bccEmail;
+                this.bccEmail.push(data.bccEmail?.map((item: any)=> item.email));
                 this.isBCCDropdownVisible = false;
               }
-              this.selectedCCEmail = data.ccEmail;
+              this.selectedCCEmail = this.ccEmail;
               this.defaultCCEmail = data.ccEmail;
               this.showToEmailLoader = false;
               this.ref.detectChanges();
@@ -415,7 +416,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.emailSubject = event.description;
       this.selectedCCEmail = event.ccEmail;
       if (event?.bccEmail?.length > 0) {
-        this.bccEmail = this.selectedbCCEmail = event.bccEmail;
+        this.bccEmail = this.selectedBccEmail = event.bccEmail;
         this.isBCCDropdownVisible = false;
       }
       this.showToEmailLoader = false;
@@ -557,7 +558,11 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.cerEmailAttachedFiles = event;
       this.attachmentCount = this.cerEmailAttachedFiles?.length;
     } else {
-      this.clientAndVendorAttachedFiles = event;
+      const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
+      if(!isFileExists)
+      {
+      this.clientAndVendorAttachedFiles?.push(event);
+      }
       this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
     }
   }
@@ -597,17 +602,17 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   onCCValueChange(values: any) {
-    const removedItem = this.defaultCCEmail.find((item: any) => !values.includes(item));
-    if (removedItem != null) {
-      values.push(removedItem);
+    const removedItem = this.defaultCCEmail.find((item: any) => !values.includes(item?.email?.trim()));
+    if (removedItem != null && removedItem.isDefault) {
+      values.push(removedItem?.email.trim());
       this.showHideSnackBar(SnackBarNotificationType.WARNING, 'Default CC could not be removed.');
     }
     //get invalid email
-    const inValidEmail = values.filter((email: any) => Validators.email(new FormControl(email)));
+    const inValidEmail = values.filter((email: any) => Validators.email(new FormControl(email.trim())));
     if (inValidEmail.length > 0 && removedItem == null) {
       this.showHideSnackBar(SnackBarNotificationType.WARNING, 'Invalid Email not allowed.');
     }
-    const validEmails = values.filter((email: any) => !Validators.email(new FormControl(email)));
+    const validEmails = values.filter((email: any) => !Validators.email(new FormControl(email.trim())));
     this.selectedCCEmail = validEmails;
   }
   onBCCValueChange(values: any) {
@@ -617,7 +622,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.showHideSnackBar(SnackBarNotificationType.WARNING, 'Invalid Email not allowed.');
     }
     const validEmails = values.filter((email: any) => !Validators.email(new FormControl(email)));
-    this.selectedbCCEmail = validEmails;
+    this.selectedBccEmail = validEmails;
   }
 
   editorValueChange(event: any){

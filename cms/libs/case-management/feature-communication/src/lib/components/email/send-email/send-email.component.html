@@ -66,7 +66,7 @@
             <kendo-multiselect
           [fillMode]="formUiStyle.dropDownFillMode"
           [data]="bccEmail"
-          [(ngModel)]="selectedbCCEmail"
+          [(ngModel)]="selectedBccEmail"
           [filterable]="true"
           [allowCustom]="true"
           [clearButton]="false"
@@ -76,7 +76,7 @@
           </kendo-floatinglabel>
 
           <kendo-floatinglabel text="BCC" *ngIf="isCCDropdownVisible===false">
-            <kendo-textbox  placeholder="BCC" [(ngModel)]="selectedCCEmail" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
+            <kendo-textbox  placeholder="BCC" [(ngModel)]="selectedBccEmail" aria-label="subject of email" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>
           </kendo-floatinglabel>
         </div>
         <div class="flex-col">
