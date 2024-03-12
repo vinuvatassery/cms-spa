@@ -262,7 +262,7 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
     }
   }
 
-  dueDateValidation(){
+  endDateValidation(){
     const endDate = this.todoDetailsForm.controls['endDate'].value;
     const dueDate = this.todoDetailsForm.controls['dueDate'].value;
     if (endDate < dueDate && this.todoDetailsForm.controls['endDate'].value) {
