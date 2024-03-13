@@ -14,10 +14,10 @@
             <kendo-formfield>
 
             <kendo-floatinglabel text="First Name">
-                <!-- <kendo-textbox [fillMode]="formUiStyle.inputFillMode" >
-                </kendo-textbox> -->
+                <kendo-textbox [fillMode]="formUiStyle.inputFillMode"    formControlName="firstName">
+                </kendo-textbox>
 
-                <kendo-autocomplete
+                <!-- <kendo-autocomplete
                 formControlName="firstName"
                 autofocusfield
                 [fillMode]="formUiStyle.dropDownFillMode" 
@@ -29,7 +29,7 @@
                 placeholder="Search First Name"
                 [popupSettings]="{ popupClass: 'auto-complete-with-template', animate: true }" 
                 > 
-                </kendo-autocomplete>
+                </kendo-autocomplete> -->
             </kendo-floatinglabel>
             <kendo-formerror *ngIf="!memberForm.controls['firstName'].valid">
                 First Name is required

@@ -96,7 +96,7 @@ export class DistributionDetailComponent implements OnInit {
   }
 
   onItemSelected(selectedValue: any) {
-    this.selectedUser = this.userDataList.find((item: any) => item.firstName === selectedValue);
+    //this.selectedUser = this.userDataList.find((item: any) => item.firstName === selectedValue);
   }
 
   mapFormValues() {
