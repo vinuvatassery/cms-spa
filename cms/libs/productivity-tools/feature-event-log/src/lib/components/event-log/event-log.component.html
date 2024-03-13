@@ -20,7 +20,7 @@
     </div>
     <div class="sidePanel_header-right">
       <div class="input-search mat-form-no-b-space" *ngIf="isShownSearch">
-          <kendo-textbox aria-label="search event"  placeholder="Search Events"  [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="search event"  placeholder="Search events"  [fillMode]="formUiStyle.inputFillMode"
           [(ngModel)]="searchText" (valueChange)="loadLogEvent()" (blur)="showHideSearch()">
            </kendo-textbox>
       </div>
@@ -42,7 +42,7 @@
       <button #eventFilterCardBtn kendoButton (click)="isEventFilterPopoverOpen = !isEventFilterPopoverOpen">
         <span class="material-icons" aria-label="More option" *ngIf="!isEventFilterPopoverOpen"> more_vert </span>
         
-        <span class="material-icons" aria-label="Close more option" *ngIf="isEventFilterPopoverOpen"> close </span>
+        <span class="material-icons" aria-label="Cancel" *ngIf="isEventFilterPopoverOpen"> cancel </span>
       </button>   
       <div class="event-filter_popover_wrapper" *ngIf="isEventFilterPopoverOpen" #eventtFilterPopover>
         <div class="event-filter-body">

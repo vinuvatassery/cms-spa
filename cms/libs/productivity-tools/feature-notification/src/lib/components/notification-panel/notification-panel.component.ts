@@ -20,6 +20,8 @@ import {
 } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
+import { LovFacade } from '@cms/system-config/domain';
 @Component({
   selector: 'productivity-tools-notification-panel',
   templateUrl: './notification-panel.component.html',
@@ -34,6 +36,13 @@ export class NotificationPanelComponent implements OnInit {
   @ViewChild('NewReminderTemplate', { read: TemplateRef })
   NewReminderTemplate!: TemplateRef<any>;
   // data: Array<any> = [{}];
+  medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
+  providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
+  clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
+  clientSearchResult$ = this.financialRefundFacade.clients$;
+  clientSubject = this.financialRefundFacade.clientSubject;
+  entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
+  reminderFor =""
   notifications: any = [];
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
   isNotificationPopupOpened = false;
@@ -81,7 +90,10 @@ export class NotificationPanelComponent implements OnInit {
     private loggingService: LoggingService,
     private dialogService: DialogService,
     private reminderFacade: ReminderFacade,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private lovFacade : LovFacade,
+    private financialVendorFacade : FinancialVendorFacade,
+    private financialRefundFacade : FinancialVendorRefundFacade
   ) {}
 
   /** Lifecycle hooks **/
@@ -139,6 +151,7 @@ export class NotificationPanelComponent implements OnInit {
 
   onNewReminderClosed(result: any) {
     if (result) {
+      this.reminderFor ='';
       this.newReminderDetailsDialog.close();
     }
   }
@@ -191,4 +204,20 @@ export class NotificationPanelComponent implements OnInit {
   sanitizeHtml(html: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
+
+  searchClientName(event:any){
+    this.financialRefundFacade.loadClientBySearchText(event);
+  }
+
+  searchProvider(data:any){
+    this.financialVendorFacade.searchAllProvider(data);
+  }
+
+  remainderFor(event:any){
+  this.reminderFor = event
+  }
+
+  getReminderDetailsLov(){
+    this.lovFacade.getEntityTypeCodeLov()
+    }
 }

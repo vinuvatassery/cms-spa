@@ -9,7 +9,7 @@
             [fillMode]="formUiStyle.dateInputFillMode"
             formControlName="dueDate"
             formatPlaceholder="formatPattern"
-            (select)="dateValidate($event)" (keyup)="dateValidate($event)"
+         
             placeholder=""
           >
           </kendo-datepicker>
@@ -46,11 +46,20 @@
       </div>
       <div class="flex-col mt-3 field_with_info" *ngIf="isShow">
         <kendo-floatinglabel text="Link Reminder To">
-          <kendo-dropdownlist aria-label="Link Reminder To" [fillMode]="formUiStyle.dropDownFillMode" > </kendo-dropdownlist>
+          <kendo-dropdownlist aria-label="Link Reminder To"
+           [fillMode]="formUiStyle.dropDownFillMode" 
+          formControlName="linkTo"
+          (valueChange)="onLinkToChange($event)"
+          textField="lovDesc"
+          valueField="lovCode"
+          [valuePrimitive]="true"
+          [data]="entityTypeCodeSubject$ | async "> </kendo-dropdownlist>
+        
       </kendo-floatinglabel>
-      <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
+
+      <span class="material-icons" aria-hidden="true" title="Select a client or service provider if you want this reminder to be displayed in their profile.">info</span>
       </div>
-      <div class="flex-col mt-3 field_with_info" *ngIf="isShow">
+      <div class="flex-col mt-3" *ngIf="isShow && showVendorSearch">
         <div class="autoSelect-search mat-form-no-b-space">
           <div class="global-search">
             <span
@@ -59,29 +68,35 @@
               aria-hidden="true"
               >search</span
             >
+            <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
+            class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+        </span>
             <kendo-multicolumncombobox
-              [data]="search$ | async"
-              textField="name"
-              valueField="id"
-              [fillMode]="formUiStyle.dropDownFillMode"
-              placeholder="Link to Client or Service Provider (Optional)"
+            textField="providerName"
+            valueField="providerId"
+            [data]="providerSearchResult$ | async"
+            [fillMode]="formUiStyle.dropDownFillMode"
+            [placeholder]="placeholderText"            
+            (filterChange)="loadVendorsBySearchText($event)"
+            [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+            [filterable]="true"
+            formControlName="vendorId"
+            (selectionChange)="providerSelectionChange($event)"
             >
               <kendo-combobox-column [width]="250">
                 <ng-template
                   kendoMultiColumnComboBoxColumnCellTemplate
                   let-dataItem
                 >
-                  <span class="pr-1">{{ dataItem.name }}</span>
-                  <span class="pr-1 text-muted">ID {{ dataItem.id }}</span>
-                  <span class="text-muted">URN {{ dataItem.urn }}</span>
+                <span class="pr-1">{{ dataItem.providerName }}</span>
+                  <span class="text-muted">{{ dataItem.tin | tin }}</span>
                 </ng-template>
               </kendo-combobox-column>
             </kendo-multicolumncombobox>
           </div>
         </div>
-        <span class="material-icons" aria-hidden="true" title="Select a client or service provider if you want this reminder to be displayed in their profile.">info</span>
       </div>
-        <div class="flex-col mt-3" *ngIf="isShow"  >
+        <div class="flex-col mt-3" *ngIf="isShow && showClientSearch"  >
           <div class="global-search mat-form-no-b-space">
             <span
               class="material-icons global-search-icon"
@@ -89,25 +104,36 @@
               aria-hidden="true"
               >search</span
             >
-            <kendo-multicolumncombobox
-              [data]="caseSearched$ | async"
-              textField="name"
-              valueField="id"
-              placeholder="Search Case Name, Member ID or SSN"
-              [fillMode]="formUiStyle.dropDownFillMode"
+
+            <span *ngIf="clientSearchLoaderVisibility$ |async"
+            class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+        </span>
+                <kendo-multicolumncombobox 
+       
+          [data]="clientSearchResult$ |async"
+          textField="clientFullName"
+          valueField="clientId"
+          [placeholder]="placeholderText"
+          [fillMode]="formUiStyle.dropDownFillMode"
+          (filterChange)="loadClientBySearchText($event)"
+          [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
+          [filterable]="true"
+          formControlName="clientId"
+          [loading]="showClientSearchInputLoader"
+          (selectionChange)="clientSelectionChange($event)"
+          >
+          <kendo-combobox-column>
+            <ng-template
+              kendoMultiColumnComboBoxColumnCellTemplate
+              let-dataItem
             >
-              <kendo-combobox-column>
-                <ng-template
-                  kendoMultiColumnComboBoxColumnCellTemplate
-                  let-dataItem
-                >
-                  <span class="pr-1">{{ dataItem.name }}</span>
-                  <span class="pr-1 text-muted">ID {{ dataItem.id }}</span>
-                  <span class="pr-1 text-muted">DOB {{ dataItem.dob }}</span>
-                  <span class="text-muted">SSN {{ dataItem.ssn }}</span>
-                </ng-template>
-              </kendo-combobox-column>
-            </kendo-multicolumncombobox>
+              <span class="pr-1">{{ dataItem.clientFullName}}</span>
+              <span class="pr-1 text-muted">ID {{ dataItem.clientId }}</span>
+              <span class="text-muted">SSN {{ dataItem.ssn }}</span>
+            </ng-template>
+          </kendo-combobox-column>
+          
+        </kendo-multicolumncombobox>
           </div>
         </div>
       
@@ -140,7 +166,7 @@
     >
       Cancel
     </button>
-    <button kendoButton [primary]="true" (click)="save()"  aria-label="Create">
+    <button kendoButton [primary]="true" (click)="save()"  aria-label="Create" >
       Create
     </button>
   </div>

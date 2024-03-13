@@ -8,10 +8,11 @@ import {
   OnChanges,
   EventEmitter,
   Input,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnInit
 } from '@angular/core';
 /** External libraries **/
-import { SnackBar } from '@cms/shared/ui-common';
+import { SnackBar, ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** Facades **/ 
@@ -20,13 +21,17 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { AlertTypeCode, TodoFacade } from '@cms/productivity-tools/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
+import { FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { Router } from '@angular/router';
+import { LovFacade } from '@cms/system-config/domain';
+import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 @Component({
   selector: 'productivity-tools-reminder-list',
   templateUrl: './reminder-list.component.html',
   styleUrls: ['./reminder-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReminderListComponent implements  OnChanges{
+export class ReminderListComponent implements  OnInit{
   public formUiStyle: UIFormStyle = new UIFormStyle();
   @ViewChild('reminderDetailsTemplate', { read: TemplateRef })
   reminderDetailsTemplate!: TemplateRef<any>;
@@ -54,11 +59,20 @@ export class ReminderListComponent implements  OnChanges{
   public deleteReminderDialog: any;
   public deleteToDoDialog: any;
   gridDataResult!: GridDataResult;
+  @Input() loadAlertGrid$ : any;
+  tabCode= 'MEDICAL_CLINIC'
   gridTodoDataSubject = new Subject<any>();
+  entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
   gridToDoItemData$ = this.gridTodoDataSubject.asObservable();
+  remainderIsFor ="";
   @Output() ReminderEventClicked  = new EventEmitter<any>();
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
   @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
+  medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
+  providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
+  clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
+  clientSearchResult$ = this.financialRefundFacade.clients$;
+  clientSubject = this.financialRefundFacade.clientSubject;
   todoItemList: any[] = [];
   selectedAlertId:string="";
   public toDoGridState!: State;
@@ -92,15 +106,22 @@ export class ReminderListComponent implements  OnChanges{
     private loaderService: LoaderService,
     private dialogService: DialogService,
     private readonly Todofacade: TodoFacade,
-    private cdr : ChangeDetectorRef
+  private readonly router: Router,
+    private cdr : ChangeDetectorRef,
+    private lovFacade : LovFacade,
+    private financialVendorFacade : FinancialVendorFacade,
+    private financialRefundFacade : FinancialVendorRefundFacade
   ) {}
-  ngOnChanges(): void {
+  ngOnInit(): void {
     this.toDoGridState = {
       skip: 0,
       take: 10,
       sort: this.sort,
     };
     this.loadTodoGrid();
+    this.loadAlertGrid$.subscribe((data: any) => {
+      this.loadTodoGrid();
+    });
   }
   /** Internal event methods **/
   onReminderDoneClicked() { 
@@ -109,8 +130,20 @@ export class ReminderListComponent implements  OnChanges{
 
   onNewReminderClosed(result: any) {
     if (result) {
+      this.remainderIsFor = ''
       this.newReminderDetailsDialog.close();
     }
+  }
+
+  getReminderDetailsLov(){
+    this.lovFacade.getEntityTypeCodeLov()
+  }
+  searchClientName(event:any){
+    this.financialRefundFacade.loadClientBySearchText(event);
+  }
+
+  searchProvider(data:any){
+    this.financialVendorFacade.searchAllProvider(data);
   }
 
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
@@ -221,7 +254,7 @@ export class ReminderListComponent implements  OnChanges{
   }
  
   onOpenTodoDetailsClicked() {
-    this.isModalTodoDetailsOpenClicked.emit();
+    this.isModalTodoDetailsOpenClicked.emit(this.selectedAlertId);
   }
   onDoneTodoItem(){
     this.onMarkAlertAsDoneGridClicked.emit(this.selectedAlertId);
@@ -233,5 +266,61 @@ export class ReminderListComponent implements  OnChanges{
       this.deleteToDoDialog.close();
       this.onDeleteAlertGridClicked.emit(this.selectedAlertId);
     }
+  }
+  public get entityTypes(): typeof ToDoEntityTypeCode {
+    return ToDoEntityTypeCode;
+  }
+  onNavigationClicked(result: any) {
+    if (result.entityTypeCode == this.entityTypes.Client) {
+      this.router.navigate([`/case-management/cases/case360/${result.entityId}`]);
+    }
+    else if(result.entityTypeCode == this.entityTypes.Vendor)
+    { 
+      this.getVendorProfile(result.vendorTypeCode);
+     
+      const query = {
+        queryParams: {
+          v_id: result?.entityId ,
+          tab_code : this.tabCode
+        },
+      };
+      this.router.navigate(['/financial-management/vendors/profile'], query )
+    }
+  }
+  getVendorProfile(vendorTypeCode :any) {
+    switch (vendorTypeCode) {
+      case (FinancialVendorProviderTab.Manufacturers)  :
+        this.tabCode = FinancialVendorProviderTabCode.Manufacturers;
+        break;
+ 
+      case  (FinancialVendorProviderTab.MedicalClinic) :
+        this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
+        break;
+ 
+        case  (FinancialVendorProviderTab.MedicalProvider) :
+          this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
+          break;
+      case  (FinancialVendorProviderTab.InsuranceVendors):
+        this.tabCode = FinancialVendorProviderTabCode.InsuranceVendors;
+        break;
+ 
+      case  (FinancialVendorProviderTab.Pharmacy):
+        this.tabCode = FinancialVendorProviderTabCode.Pharmacy;
+        break;
+ 
+      case (FinancialVendorProviderTab.DentalClinic)  :
+        this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
+        break;
+ 
+        case (FinancialVendorProviderTab.DentalProvider)  :
+          this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
+          break;
+    }
+  }
+
+
+
+  remainderFor(event:any){
+    this.remainderIsFor = event
   }
 }

@@ -61,5 +61,6 @@ export * from './lib/document-upload/document-upload.component';
 export * from './lib/clients-attachment/clients-attachment.component';
 export * from './lib/vendor-details/vendor-details.component';
 export * from './lib/directives/placeholder.directive';
+export * from './lib/grid-no-records/grid-no-records.component';
 export * from './lib/read-more/read-more.component';
 export * from './lib/alert-banner/alert-banner.component';
