@@ -80,6 +80,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   ccEmail: Array<string> = [];
   selectedCCEmail: any = [];
   defaultCCEmail: any = [];
+  defaultBCCEmail: any = [];
   bccEmail: Array<string> = [];
   selectedBccEmail: any = [];
   showToEmailLoader: boolean = true;
@@ -308,12 +309,35 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getSelectedEmails(emailList: any, emailType: string){
+    const emailRecipients:any=[];
+     emailList.forEach((recipient:any) => {
+      let defaultItem: any;
+      if(emailType=="CC"){
+         defaultItem = this.defaultCCEmail.find((item: any) => recipient.includes(item?.email?.trim()));
+      }else{
+        defaultItem = this.defaultBCCEmail.find((item: any) => recipient.includes(item?.email?.trim()));
+      }
+      if(defaultItem!=null){
+        emailRecipients.push(defaultItem)
+      }else{
+        const newCCReciepent={
+          email:recipient,
+          isDefault:false
+        };
+        emailRecipients.push(newCCReciepent)
+      }
+    });
+    return emailRecipients;
+  }
+
   private getEmailPayload(selectedTemplate: any) {
+
     return {
       subject: this.emailSubject,
       toEmail: this.selectedToEmail,
-      ccEmail: this.selectedCCEmail,
-      bccEmail: this.isBCCDropdownVisible ? null : this.selectedBccEmail,
+      ccEmail: this.getSelectedEmails(this.selectedCCEmail,"CC"),
+      bccEmail: this.isBCCDropdownVisible ? null : this.getSelectedEmails(this.selectedCCEmail,"BCC"),
       eligibilityId: this.clientCaseEligibilityId,
       entity: this.notificationGroup,
       entityId: this.entityId,
@@ -373,7 +397,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           next: (data: any) => {
             if (data) {
               this.selectedTemplate = data;
-              this.emailContentValue = data.templateContent; 
+              this.emailContentValue = data.templateContent;
               this.selectedTemplateContent = data.templateContent;
               this.updatedTemplateContent = data.templateContent;
               this.isClearEmails = true;

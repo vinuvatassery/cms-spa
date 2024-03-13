@@ -181,7 +181,7 @@ export class CommunicationFacade {
     return formData;
   }
 
-  createFormDataForEmail(data: { subject: string, toEmail: string, ccEmail: string, bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
+  createFormDataForEmail(data: { subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
     const formData = new FormData();
     formData.append('requestSubject', data?.subject ?? '');
     formData.append('loginUserId', data?.userId ?? '');
@@ -191,7 +191,7 @@ export class CommunicationFacade {
     formData.append('clientCaseEligibilityId', data?.eligibilityId ?? '');
     this.addCommaSeperatedEmailToFormData(formData, data?.toEmail, 'toEmailAddress');
     this.addCommaSeperatedEmailToFormData(formData, data?.ccEmail, 'cCEmail');
-    this.addCommaSeperatedEmailToFormData(formData, data?.bccEmail, 'bCCEmail'); 
+    this.addCommaSeperatedEmailToFormData(formData, data?.bccEmail, 'bCCEmail');
 
     if (data?.emailData) {
       formData.append('notificationTemplateId', data?.emailData?.notificationTemplateId ?? '');
