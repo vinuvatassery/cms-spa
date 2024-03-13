@@ -1,5 +1,5 @@
   export enum SystemInterfaceActivityStatusCodeDescription {
-    FAILURE = "Failure",
-    SUCCESSFUL = "Successful" ,
+    FAILURE = "Failed",
+    SUCCESSFUL = "Success" ,
     IN_PROGRESS = "In Progress"
     };
