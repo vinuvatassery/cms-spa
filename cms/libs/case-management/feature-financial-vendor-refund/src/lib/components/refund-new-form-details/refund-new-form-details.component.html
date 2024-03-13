@@ -642,7 +642,8 @@
     <div class="justify-content-end align-items-center" *ngIf="!isConfirmationClicked && selectedRefundType">
 
         <span class="mr-2">{{claimsCount}} refund(s) to be added</span>
-        <button kendoButton [primary]="true" aria-label="Confirm Selections"   (click)="confirmationClicked()"> Confirm Selections
+        <button kendoButton [primary]="true" aria-label="Confirm Selections"  
+         (click)="confirmationClicked()" [disabled]="claimsCount==0"> Confirm Selections
         </button>
     </div>
 

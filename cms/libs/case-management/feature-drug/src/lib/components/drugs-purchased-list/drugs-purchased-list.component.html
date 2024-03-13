@@ -120,7 +120,7 @@
             </kendo-grid-numeric-filter-menu>
           </ng-template>
           <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="tableamountview"><strong>$</strong> {{dataItem.amountPaid}}</span>
+            <span class="tableamountview"><strong>$</strong> {{dataItem.amountPaid | kendoNumber: 'n2'}}</span>
           </ng-template>
         </kendo-grid-column>
 
