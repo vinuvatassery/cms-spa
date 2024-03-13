@@ -22,6 +22,7 @@ export * from './lib/infrastructure/sysconfig-financials.data.service';
 export * from './lib/infrastructure/service_providers.data.service';
 export * from './lib/infrastructure/tin-validation.data.service';
 export * from './lib/infrastructure/other_lists.data.service';
+export * from './lib/infrastructure/housing-coordination.service';
 
 /** Facades **/
 export * from './lib/application/lov.facade';
@@ -34,6 +35,7 @@ export * from './lib/application/sysconfig-financials.facade';
 export * from './lib/application/service_providers.facade';
 export * from './lib/application/tin-validation.facade';
 export * from './lib/application/other_lists.facade';
+export * from './lib/application/housing-coordination.facade';
 
 /** Enums **/
 export * from './lib/enums/lov-types.enum';

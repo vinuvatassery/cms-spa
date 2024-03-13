@@ -369,40 +369,8 @@ export class UserManagementFacade {
     });
   }
 
-  loadClientProfileSlots() {
-    this.userDataService.loadClientProfileSlots().subscribe({
-      next: (response) => {
-        this.clientProfileSlotsSubject.next(response);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
-  }
-
-  loadClientProfileCaseAvailabilities() {
-    this.userDataService.loadClientProfileCaseAvailabilities().subscribe({
-      next: (response) => {
-        this.clientProfileCaseAvailabilitiesSubject.next(
-          response
-        );
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
-  }
-
-  loadClientProfilePeriods() {
-    this.userDataService.loadClientProfilePeriods().subscribe({
-      next: (response) => {
-        this.clientProfilePeriodsSubject.next(response);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
-  }
+ 
+ 
 
   loadSexualOrientationList(){
     this.userDataService.loadSexualOrientationList().subscribe({
@@ -446,59 +414,7 @@ export class UserManagementFacade {
     });
   }
 
-  loadHousingAcuityLevelList(){
-    this.userDataService.loadHousingAcuityLevelList().subscribe({
-      next: (response) => {
-        this.clientProfileHousingAcuityLevelSubject.next(response);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
-  }
-  loadIncomeInclusionsExlusionsList(){
-    this.userDataService.loadIncomeInclusionsExlusionsList().subscribe({
-      next: (response) => {
-        this.clientProfileIncomeInclusionsExclusionsSubject.next(response);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
-  }
-
-  loadRegionAssignmentList(){
-    this.userDataService.loadRegionAssignmentList().subscribe({
-      next: (response) => {
-        this.clientProfileRegionAssignmentSubject.next(response);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
-  }
-  loadPSMFRZIPList(){
-    this.userDataService.loadPSMFRZIPList().subscribe({
-      next: (response) => {
-        this.clientProfilePSMFRZIPSubject.next(response);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
-  }
-
-  loadServiceProviderList(){
-    this.userDataService.loadServiceProviderList().subscribe({
-      next: (response) => {
-        this.clientProfileServiceProviderSubject.next(response);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
-      },
-    });
-  }
-
+    
   reassignCase(caseReassignData : any){
     return this.userDataService.reassignCase(caseReassignData);
   }

@@ -1,4 +1,7 @@
-<section class="systemconfig-components app-l-inner-rapper pt-0 ">
-      <common-bread-crumb></common-bread-crumb>
-<system-config-case-availability-list></system-config-case-availability-list>
-</section>
+ 
+<system-config-case-availability-list 
+[caseAvailabilityDataLists$]="caseAvailabilityService$" 
+[pageSizes]="pageSizes" [sortValue]="sortValueCaseAvailability"
+[sortType]="sortType" [sort]="sortCaseAvailabilityGrid" 
+(loadCaseAvailabilityListsEvent)="loadCaseAvailabilityLists($event)" ></system-config-case-availability-list>
+ 
