@@ -103,7 +103,13 @@ export class TodoDetailComponent implements OnInit {
           linkTo: res.entityTypeCode
         })
         this.todoDetailsForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
+        if(res.alertEndDate){
         this.todoDetailsForm.controls["endDate"].setValue(new Date(res.alertEndDate));
+        }
+        else{
+        this.todoDetailsForm.controls["endDate"].setValue(null);
+
+        }
        if(res.entityTypeCode !=='CLIENT'){
         this.showVendorSearch = true;
         this.showClientSearch = false;
@@ -111,13 +117,13 @@ export class TodoDetailComponent implements OnInit {
         this.searchProviderSubject.next([
           { providerName : res.providerName,
             tin : res.tin,
-            providerId: res.clientId
+            providerId: res.entityId
           }
         ])
         this.todoDetailsForm.controls["vendorId"].setValue({
           providerName : res.providerName,
           tin : res.tin,
-          providerId: res.clientId
+          providerId: res.entityId
         })
         this.todoDetailsForm.controls['vendorId'].setValidators([Validators.required]);
         this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
@@ -259,6 +265,16 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
     }
     else{
     this.onUpdateTodoItemClick.emit(payload);
+    }
+  }
+
+  endDateValidation(){
+    const endDate = this.todoDetailsForm.controls['endDate'].value;
+    const dueDate = this.todoDetailsForm.controls['dueDate'].value;
+    if (endDate < dueDate && this.todoDetailsForm.controls['endDate'].value) {
+      this.todoDetailsForm.controls['endDate'].setErrors({ 'incorrect': true });
+    
+      return;
     }
   }
 }

@@ -111,6 +111,7 @@ export * from './lib/enums/insurance-type-code.enum';
 export * from './lib/enums/payment-request-type.enum';
 export * from './lib/enums/search-header-type.enum';
 export * from './lib/enums/financial-vendor-provider-tab-code';
+export * from './lib/enums/financial-vendor-provider-tab';
 export * from './lib/enums/service-sub-type-code';
 export * from './lib/enums/grid-column-filter.enum';
 export * from './lib/enums/drug-category-code.enum';

@@ -10,7 +10,7 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialServiceTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
 import { AlertFrequencyTypeCode, AlertTypeCode } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -249,30 +249,30 @@ export class TodoListComponent implements OnInit {
   }
   getVendorProfile(vendorTypeCode :any) {
     switch (vendorTypeCode) {
-      case ("MANUFACTURERS")  :
+      case (FinancialVendorProviderTab.Manufacturers)  :
         this.tabCode = FinancialVendorProviderTabCode.Manufacturers;
         break;
-
-      case  ("MEDICAL_CLINIC") :
+ 
+      case  (FinancialVendorProviderTab.MedicalClinic) :
         this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
         break;
-
-        case  ("MEDICAL_PROVIDER") :
+ 
+        case  (FinancialVendorProviderTab.MedicalProvider) :
           this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
           break;
-      case  ("INSURANCE_VENDOR"):
+      case  (FinancialVendorProviderTab.InsuranceVendors):
         this.tabCode = FinancialVendorProviderTabCode.InsuranceVendors;
         break;
-
-      case  ("PHARMACY"):
+ 
+      case  (FinancialVendorProviderTab.Pharmacy):
         this.tabCode = FinancialVendorProviderTabCode.Pharmacy;
         break;
-
-      case ("DENTAL_CLINIC")  :
+ 
+      case (FinancialVendorProviderTab.DentalClinic)  :
         this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
         break;
-
-        case ("DENTAL_PROVIDER")  :
+ 
+        case (FinancialVendorProviderTab.DentalProvider)  :
           this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
           break;
     }
