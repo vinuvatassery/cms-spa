@@ -176,7 +176,7 @@
     </ng-template>
          </kendo-grid-column>
 
-        <kendo-grid-column field="by" title="By" [width]="70" [sticky]="false" [sortable]="false">
+        <kendo-grid-column field="by" title="By" [width]="70" [sticky]="false" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <common-user-photo-icon  
             [userId]="dataItem.creatorId" 
