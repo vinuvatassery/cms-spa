@@ -43,8 +43,10 @@
       </div>
 
       <div class="app-c-table">
-            <kendo-grid [pageSize]="5" [pageable]="true" [sortable]="true" [groupable]="false" [reorderable]="true"
-                  [resizable]="true" [columnMenu]="{ filter: true }" [data]="smsTemplatesLists$ | async">
+            <kendo-grid  [data]="smsTextTemplatesDataLists$ | async" [resizable]="true" [pageSize]="state.take"
+            [pageable]="true" [loading]="isSmsTextTemplatesListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
+            [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
+            (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
                   <kendo-grid-column field="templateName" title="Template Name" [width]="180">
                         <ng-template kendoGridCellTemplate let-dataItem>
                               <button [attr.aria-label]="dataItem.templateName" kendoButton look="flat"
@@ -104,25 +106,26 @@
                         </ng-template>
                   </kendo-grid-column>
                   <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
-                        let-currentPage="currentPage">
-                        <div class="grid-custom-paginationtemplates d-flex">
-                              <div class="d-flex align-items-center">
-                                    <label class="mr-1">Rows Per Page</label>
-                                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
-                                          [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true"
-                                          [(value)]="pageSize"></kendo-dropdownlist>
-                                    <kendo-pager-info> </kendo-pager-info>
-                                    <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'">
-                                    </kendo-grid-messages>
-                              </div>
-                              <div class="d-flex">
-                                    <kendo-pager-input></kendo-pager-input>
-                                    <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
-                                    <kendo-pager-next-buttons></kendo-pager-next-buttons>
-                              </div>
-
+                  let-currentPage="currentPage">
+                  <div class="grid-custom-paginationtemplates d-flex">
+                        <div class="d-flex align-items-center">
+                              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
+                                    [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true"
+                                    aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
+                                    (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+                              <kendo-pager-info> </kendo-pager-info>
+                              <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
+                              </kendo-grid-messages>
+            
                         </div>
-                  </ng-template>
+                        <div class="d-flex">
+                              <kendo-pager-input></kendo-pager-input>
+                              <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                              <kendo-pager-next-buttons></kendo-pager-next-buttons>
+                        </div>
+                  </div>
+            </ng-template>
                   <ng-template kendoGridLoadingTemplate>
                         <common-grid-loader-component></common-grid-loader-component>
                   </ng-template>

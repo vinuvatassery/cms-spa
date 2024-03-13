@@ -7,8 +7,8 @@ import {
   EventEmitter,
   Input,
   Output,
-} from '@angular/core';
-import { TemplateManagementFacade } from '@cms/system-config/domain';
+  OnChanges,
+} from '@angular/core'; 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
 import { GridDataResult } from '@progress/kendo-angular-grid';
@@ -19,7 +19,7 @@ import { Subject } from 'rxjs';
   templateUrl: './letter-template-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class LetterTemplateListComponent implements OnInit {
+export class LetterTemplateListComponent implements OnInit, OnChanges {
  
   /** Public properties **/ 
   isLetterTemplateDeletePopupShow = false;
@@ -85,10 +85,10 @@ export class LetterTemplateListComponent implements OnInit {
   @Input() sortValue: any;
   @Input() sortType: any;
   @Input() sort: any;
-  @Input() emailTemplatesDataLists$: any;
-  @Input() emailTemplatesFilterColumn$: any;
-  @Output() loadEmailTemplatesListsEvent = new EventEmitter<any>();
-  @Output() emailTemplatesFilterColumnEvent = new EventEmitter<any>();
+  @Input() letterTemplatesDataLists$: any;
+  @Input() letterTemplatesFilterColumn$: any;
+  @Output() loadLetterTemplatesListsEvent = new EventEmitter<any>();
+  @Output() letterTemplatesFilterColumnEvent = new EventEmitter<any>();
   public state!: State;
   sortColumn = 'vendorName';
   sortDir = 'Ascending';
@@ -99,10 +99,10 @@ export class LetterTemplateListComponent implements OnInit {
   filter!: any;
   selectedColumn!: any;
   gridDataResult!: GridDataResult;
-  isEmailTemplatesListGridLoaderShow = false;
-  gridEmailTemplatesDataSubject = new Subject<any>();
-  gridEmailTemplatesData$ =
-    this.gridEmailTemplatesDataSubject.asObservable();
+  isLetterTemplatesListGridLoaderShow = false;
+  gridLetterTemplatesDataSubject = new Subject<any>();
+  gridLetterTemplatesData$ =
+    this.gridLetterTemplatesDataSubject.asObservable();
   columnDropListSubject = new Subject<any[]>();
   columnDropList$ = this.columnDropListSubject.asObservable();
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
@@ -110,7 +110,7 @@ export class LetterTemplateListComponent implements OnInit {
   
   
   ngOnInit(): void {
-    this.loadEmailTemplatesList(); 
+    this.loadLetterTemplatesList(); 
   }
   ngOnChanges(): void {
     this.state = {
@@ -119,35 +119,35 @@ export class LetterTemplateListComponent implements OnInit {
       sort: this.sort,
     };
   
-    this.loadEmailTemplatesList();
+    this.loadLetterTemplatesList();
   }
   
-  private loadEmailTemplatesList(): void {
-    this.loadEmailTemplatesLitData(
+  private loadLetterTemplatesList(): void {
+    this.loadLetterTemplatesLitData(
       this.state?.skip ?? 0,
       this.state?.take ?? 0,
       this.sortValue,
       this.sortType
     );
   }
-  loadEmailTemplatesLitData(
+  loadLetterTemplatesLitData(
     skipCountValue: number,
     maxResultCountValue: number,
     sortValue: string,
     sortTypeValue: string
   ) {
-    this.isEmailTemplatesListGridLoaderShow = true;
+    this.isLetterTemplatesListGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       pagesize: maxResultCountValue,
       sortColumn: sortValue,
       sortType: sortTypeValue,
     };
-    this.loadEmailTemplatesListsEvent.emit(gridDataRefinerValue);
+    this.loadLetterTemplatesListsEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
-  loadEmailTemplatesFilterColumn(){
-    this.emailTemplatesFilterColumnEvent.emit();
+  loadLetterTemplatesFilterColumn(){
+    this.letterTemplatesFilterColumnEvent.emit();
   
   }
   onChange(data: any) {
@@ -192,14 +192,14 @@ export class LetterTemplateListComponent implements OnInit {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-    this.loadEmailTemplatesList();
+    this.loadLetterTemplatesList();
   }
   
   // updating the pagination infor based on dropdown selection
   pageSelectionChange(data: any) {
     this.state.take = data.value;
     this.state.skip = 0;
-    this.loadEmailTemplatesList();
+    this.loadLetterTemplatesList();
   }
   
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -207,20 +207,20 @@ export class LetterTemplateListComponent implements OnInit {
   }
   
   gridDataHandle() {
-    this.emailTemplatesDataLists$.subscribe(
+    this.letterTemplatesDataLists$.subscribe(
       (data: GridDataResult) => {
         this.gridDataResult = data;
         this.gridDataResult.data = filterBy(
           this.gridDataResult.data,
           this.filterData
         );
-        this.gridEmailTemplatesDataSubject.next(this.gridDataResult);
+        this.gridLetterTemplatesDataSubject.next(this.gridDataResult);
         if (data?.total >= 0 || data?.total === -1) {
-          this.isEmailTemplatesListGridLoaderShow = false;
+          this.isLetterTemplatesListGridLoaderShow = false;
         }
       }
     );
-    this.isEmailTemplatesListGridLoaderShow = false;
+    this.isLetterTemplatesListGridLoaderShow = false;
   }
 
   

@@ -32,7 +32,7 @@
             <!-- Table header show only in list -->
             <div class="flex-col">
                   <p class="pt-1">Add, edit, or deactivate letter templates. Templates that are used in specific processes, indicated with a padlock icon, cannot be deactivated or deleted.</p>
-                  <p class="mt-1"><strong>Note:</strong> a client will receive emails instead of letters for items with “Email” as the default notification method in <a>Client Notification Defaults</a>.</p>
+                  <p class="mt-1"><strong>Note:</strong> a client will receive letters instead of letters for items with “Letter” as the default notification method in <a>Client Notification Defaults</a>.</p>
                   <div class="table-filter-section mat-form-no-b-space">
 
                         <span class="filter-section_items filter--search">
@@ -60,8 +60,8 @@
       </div>
 
       <div class="app-c-table">
-            <kendo-grid [data]="emailTemplatesDataLists$ | async" [resizable]="true" [pageSize]="state.take"
-            [pageable]="true" [loading]="isEmailTemplatesListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
+            <kendo-grid [data]="letterTemplatesDataLists$ | async" [resizable]="true" [pageSize]="state.take"
+            [pageable]="true" [loading]="isLetterTemplatesListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
             [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
             (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
                   <kendo-grid-column field="templateName" title="Template Name" [width]="180">

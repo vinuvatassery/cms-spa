@@ -35,9 +35,9 @@ export class TemplateManagementFacade {
   public sortFromsDocsGrid: SortDescriptor[] = [{
     field: this.sortValueFromsDocs,
   }];
-  public sortValueSmsTemplates = 'creationTime'; 
-  public sortSmsTemplatesGrid: SortDescriptor[] = [{
-    field: this.sortValueSmsTemplates,
+  public sortValueSmsTextTemplates = 'creationTime'; 
+  public sortSmsTextTemplatesGrid: SortDescriptor[] = [{
+    field: this.sortValueSmsTextTemplates,
   }];
   public sortValueLayoutTemplates = 'creationTime'; 
   public sortLayoutTemplatesGrid: SortDescriptor[] = [{
@@ -49,15 +49,15 @@ export class TemplateManagementFacade {
   private clientNotificationDefaultsListsSubject = new BehaviorSubject<any>([]);
   private emailTemplatesListsSubject = new BehaviorSubject<any>([]); 
   private letterTemplatesListsSubject = new BehaviorSubject<any>([]); 
-  private smsTemplatesListsSubject = new BehaviorSubject<any>([]); 
+  private smsTextTemplatesListsSubject = new BehaviorSubject<any>([]); 
   private templatesListSubject = new BehaviorSubject<any>([]);
 
   /** Public properties **/
   templates$ = this.templateSubject.asObservable();
   clientNotificationDefaultsLists$ = this.clientNotificationDefaultsListsSubject.asObservable();
   emailTemplatesLists$ = this.emailTemplatesListsSubject.asObservable();
- letterTemplatesLists$ = this.emailTemplatesListsSubject.asObservable();
-  smsTemplatesLists$ = this.emailTemplatesListsSubject.asObservable();
+ letterTemplatesLists$ = this.letterTemplatesListsSubject.asObservable();
+  smsTextTemplatesLists$ = this.smsTextTemplatesListsSubject.asObservable();
   templatesList$ = this.templatesListSubject.asObservable();
 
   /** Constructor **/
@@ -146,12 +146,12 @@ export class TemplateManagementFacade {
       });
   }
 
-  loadSmsTemplateLists() {
+  loadSmsTextTemplateLists() {
     this.templateDataService
       .loadSmsTemplatesListsService()
       .subscribe({
         next: (response) => {
-          this.smsTemplatesListsSubject.next(response);
+          this.smsTextTemplatesListsSubject.next(response);
         },
         error: (err) => {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);

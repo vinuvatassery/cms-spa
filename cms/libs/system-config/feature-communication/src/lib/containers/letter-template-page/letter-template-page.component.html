@@ -1,3 +1,7 @@
  
-<system-config-letter-template-list></system-config-letter-template-list>
+<system-config-letter-template-list 
+[letterTemplatesDataLists$]="letterTemplatesService$" 
+      [pageSizes]="pageSizes" [sortValue]="sortValueLetterTemplates"
+      [sortType]="sortType" [sort]="sortLetterTemplatesGrid" 
+      (loadLetterTemplatesListsEvent)="loadLetterTemplateLists($event)"></system-config-letter-template-list>
  
