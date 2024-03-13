@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
-import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { GridDataResult } from '@progress/kendo-angular-grid';
-import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
+import { State, CompositeFilterDescriptor} from '@progress/kendo-data-query';
 import { Subject } from 'rxjs';
 @Component({
   selector: 'system-interface-distribution-lists',
@@ -87,7 +86,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
     private fb: FormBuilder,
-    private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
   ) { }
 
   ngOnInit(): void {

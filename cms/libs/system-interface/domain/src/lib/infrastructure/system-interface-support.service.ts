@@ -150,11 +150,11 @@ export class SystemInterfaceSupportService {
 
   // distribution ----------------------------------------
   getDistributionList(paginationParameters: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/list`, paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distributions`, paginationParameters);
   }
 
   addDistributionListUser(user: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/add-user`, user);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/user`, user);
   }
 
 
