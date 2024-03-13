@@ -283,9 +283,9 @@ export class CommunicationFacade {
     formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
     formData.append('description', draftTemplate?.description ?? '');
     formData.append('typeCode', draftTemplate?.typeCode ?? '');
-    formData.append('requestBody', draftTemplate?.messages[0] ?? '');
     formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
-    formData.append('recepients', messageRecipient?.phoneNbr ?? null);
+    formData.append('recepients', messageRecipient?.phoneNbr ?? '');
+    formData.append('entity', draftTemplate?.typeCode ?? '');
     let i = 0;
     draftTemplate.messages.forEach((msg: any) => {
       formData.append('messages[' + i + ']', msg);

@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 /** Internal Libraries **/
-import { CommunicationEvents, ScreenType, CommunicationFacade, NotificationTemplateCategoryCode, SmsNotification } from '@cms/case-management/domain';
+import { CommunicationEvents, ScreenType, CommunicationFacade, NotificationTemplateCategoryCode, SmsNotification, CommunicationEventTypeCode } from '@cms/case-management/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
@@ -218,7 +218,7 @@ export class SendTextMessageComponent implements OnInit {
       recepients: this.messageRecipient?.phoneNbr ? [('+1' + this.messageRecipient?.phoneNbr)] : null,
       Messages: this.textMessageEditor.messages,
       clientCaseEligibilityId: this.clientCaseEligibilityId,
-      typeCode: this.templateTypeCode
+      typeCode: CommunicationEventTypeCode.ClientSMS
     };
     this.sendSms(sms);
   }
@@ -247,7 +247,7 @@ export class SendTextMessageComponent implements OnInit {
   onSaveSmsForLaterClicked(){
     this.isShowSaveForLaterPopupClicked = true;
     this.smsEditorValueEvent.emit(this.currentSmsData);
-    this.selectedSmsTemplate.templateContent = this.currentSmsData.templateContent;
+    this.selectedSmsTemplate.messages = this.textMessageEditor.messages;
     this.saveClientAndVendorNotificationForLater(this.selectedSmsTemplate);
   }
 
@@ -325,7 +325,7 @@ export class SendTextMessageComponent implements OnInit {
           });
       }else{
       this.templateContent = event.templateContent;
-      this.smsMessages = event.messages;
+      this.smsMessages = event.messages?.map((item: any)=> item);
       this.messageRecipient = {
         'formattedPhoneNbr': this.formatPhoneNumber(event?.recepients),
         'phoneNbr': event.recepients

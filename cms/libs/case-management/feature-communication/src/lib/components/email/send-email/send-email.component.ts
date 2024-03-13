@@ -435,7 +435,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isShowToEmailLoader$.next(true);
       this.isOpenDdlEmailDetails = true;
       this.selectedEmail = [];
-      this.selectedEmail = event.to; //.push(this.toEmail[0]?.trim());
+      this.selectedEmail = event.to;
       this.selectedToEmail = this.selectedEmail;
       this.emailSubject = event.description;
       this.defaultCCEmail = event.cc;

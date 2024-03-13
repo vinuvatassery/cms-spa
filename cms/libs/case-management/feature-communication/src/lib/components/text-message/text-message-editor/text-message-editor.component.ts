@@ -74,6 +74,7 @@ export class TextMessageEditorComponent implements OnInit {
   }
 
   private initializeMessage() {
+    if (!this.smsMessages){
     this.tareaMessages = [
       {
         id: this.getMessageId(),
@@ -82,6 +83,7 @@ export class TextMessageEditorComponent implements OnInit {
         showVariables: false
       },
     ];
+  }
     this.onMessageChange();
   }
 
@@ -90,7 +92,6 @@ export class TextMessageEditorComponent implements OnInit {
       next: (event: any) => {
         if (event) {
           this.currentValue.messages = this.messages;
-          this.templateContent = this.messages;
           this.editorValue.emit(this.currentValue);
         }
       },
@@ -116,11 +117,9 @@ export class TextMessageEditorComponent implements OnInit {
         i++;
         this.tareaMessages.push(item);
       });
-      this.tareaMessages = this.tareaMessages.filter((item: any) => item.description.trim() !== '');
+      this.tareaMessages = this.tareaMessages.filter((item: any) => item?.description?.trim() !== '');
     }
-    this.messages = this.tareaMessages.map(user => user.description);
-    currentValue.messages = this.messages;
-    this.templateContent = this.messages;
+    this.messages = this.tareaMessages.reverse().map(user => user.description);
     this.messageContentChangedEvent.emit(this.messages);
 
   }
@@ -172,18 +171,21 @@ export class TextMessageEditorComponent implements OnInit {
         this.tareaMessages.splice(messageIndex, 1);
       }
     }
+    this.messages = this.tareaMessages.map(user => user.description);
+    this.messageContentChangedEvent.emit(this.messages);
   }
 
   onAddNewMessageClicked() {
     if (this.tareaMessages.length < 10) {
       this.tareaMessages.push({
         id: this.getMessageId(),
-        description: this.templateContent,
-        wordCount: this.templateContent.length,
-        showVariables: false
+        description: this.templateContent ?? '', //Make it as empty string if don't want to auto-populate the defau;t template.
+        wordCount: this.templateContent?.length,
+        showVariables: true
       });
 
       this.onMessageChange();
+      this.loadClientVariables();
     }
   }
 
@@ -247,7 +249,7 @@ export class TextMessageEditorComponent implements OnInit {
   bindVariableToEditor(variable: any, item: { id: number, description: string, wordCount: number, showVariables: boolean }) {
     if (variable) {
       const cursorPosition = this.textareaRef?.nativeElement?.selectionStart;
-      item.description = `${ item.description?.slice(0, cursorPosition)} {{${variable}}} ${item.description?.slice(cursorPosition)}`
+      item.description = `${ item.description?.slice(0, cursorPosition)} {{${variable}}} ${item.description?.slice(cursorPosition)}`;
     }
     // const valueToInsert = option;
     // const currentValue = this.textareaRef.value;
