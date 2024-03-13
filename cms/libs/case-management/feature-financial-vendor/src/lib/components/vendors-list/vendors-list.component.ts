@@ -103,42 +103,6 @@ dropDowncolumns : any = [
     "columnDesc": "TIN"   ,
     "vendorTypeCode": "ALL",
   }    
-  ,
-  {
-    "columnCode": "totalPayments",
-    "columnDesc": "Total Payments"   ,
-    "vendorTypeCode": ["INSURANCE_VENDOR"],
-  },
-  {
-    "columnCode": "unreconciledPayments",
-    "columnDesc": "Unreconciled Payments"   ,
-    "vendorTypeCode": ["INSURANCE_VENDOR"],
-  },
-  {
-    "columnCode": "insurancePlans",
-    "columnDesc": "Insurance Plans"   ,
-    "vendorTypeCode": ["INSURANCE_VENDOR"],
-  },
-  {
-    "columnCode": "clients",
-    "columnDesc": "Clients"   ,
-    "vendorTypeCode":["INSURANCE_VENDOR"],
-  },
-  {
-    "columnCode": "address",
-    "columnDesc": "Address"   ,
-    "vendorTypeCode":  ["MANUFACTURERS"],
-  },
-  {
-    "columnCode": "NpiNbr",
-    "columnDesc": "Npi Number"   ,
-    "vendorTypeCode": [""],
-  },
-  {
-    "columnCode": "physicalAddress",
-    "columnDesc": "Physical Address"   ,
-    "vendorTypeCode": ["PHARMACY"],
-  }
 
 ]
 
