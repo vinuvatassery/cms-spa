@@ -75,7 +75,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   previewEmailContent!: any;
   prevClientCaseEligibilityId!: string;
   cerAuthorizationEmailTypeCode!: string;
-  selectedToEmail!: any;
+  selectedToEmail: any = [];
   selectedEmail: any = [];
   ccEmail: Array<string> = [];
   selectedCCEmail: any = [];
@@ -300,7 +300,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   onSendEmailConfirmationDialogClicked(event: any) {
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
-      this.selectedTemplate.templateContent = this.currentEmailData.templateContent;
+      this.selectedTemplate.templateContent = this.updatedTemplateContent;
       if (this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail) {
         this.initiateAdobeEsignProcess(this.selectedTemplate, CommunicationEvents.SendEmail);
       } else {
@@ -407,14 +407,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.selectedEmail.push(this.toEmail[0]?.trim());
               this.selectedToEmail = this.selectedEmail;
               this.emailSubject = data.description;
-              const ccEmails = data.ccEmail?.map((item: any)=> item.email);
+              const ccEmails = data.cc?.map((item: any)=> item.email);
               this.ccEmail = ccEmails;
               if (data?.bccEmail?.length > 0) {
-                this.bccEmail.push(data.bccEmail?.map((item: any)=> item.email));
+                this.bccEmail.push(data.bcc?.map((item: any)=> item.email));
                 this.isBCCDropdownVisible = false;
               }
               this.selectedCCEmail = this.ccEmail;
-              this.defaultCCEmail = data.ccEmail;
+              this.defaultCCEmail = data.cc;
               this.showToEmailLoader = false;
               this.ref.detectChanges();
             }
@@ -435,12 +435,14 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       this.isShowToEmailLoader$.next(true);
       this.isOpenDdlEmailDetails = true;
       this.selectedEmail = [];
-      this.selectedEmail.push(this.toEmail[0]?.trim());
+      this.selectedEmail = event.to; //.push(this.toEmail[0]?.trim());
       this.selectedToEmail = this.selectedEmail;
       this.emailSubject = event.description;
-      this.selectedCCEmail = event.ccEmail;
+      this.defaultCCEmail = event.cc;
+      this.defaultBCCEmail = event.bcc;
+      this.selectedCCEmail = event.cc?.map((item: any)=> item.email);
       if (event?.bccEmail?.length > 0) {
-        this.bccEmail = this.selectedBccEmail = event.bccEmail;
+        this.bccEmail = this.selectedBccEmail = event.bcc;
         this.isBCCDropdownVisible = false;
       }
       this.showToEmailLoader = false;

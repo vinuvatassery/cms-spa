@@ -1,9 +1,5 @@
-<kendo-dialog
-  *ngIf="isOpenSendEmailClicked"
-  (close)="onCloseSendEmailClicked()"
-  class="app-c-modal app-c-modal-lg app-c-modal-np"
-  title="Send New Email"
->
+ 
+<kendo-dialog-titlebar  (close)="onCloseSendEmailClicked()">Send New Email </kendo-dialog-titlebar>
   <section class="k-dialog-body">
     <p class="text-muted mb-1">
       Select an existing template or draft a custom email.

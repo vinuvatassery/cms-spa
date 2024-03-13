@@ -197,6 +197,9 @@ export class EmailEditorComponent implements OnInit {
     .subscribe({
       next: (variables: any) =>{
         if (variables) {
+          if(this.communicationTypeCode !== CommunicationEventTypeCode.CerAuthorizationEmail || this.communicationTypeCode !== CommunicationEventTypeCode.CerAuthorizationLetter){
+          variables = variables.filter((option: any) => option.lovDesc !== 'Signature');
+          }
           this.clientVariables = variables;
         }
       this.loaderService.hide();

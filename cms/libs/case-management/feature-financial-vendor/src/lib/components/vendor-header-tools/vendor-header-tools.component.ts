@@ -255,7 +255,7 @@ export class VendorHeaderToolsComponent {
     onSendNewLetterClicked(template: TemplateRef<unknown>): void {
       this.isSendNewLetterDialog = this.dialogService.open({
         content: template,
-        cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+        cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np'
       });
     }
 
@@ -270,7 +270,7 @@ export class VendorHeaderToolsComponent {
     onSendNewEmailClicked(template: TemplateRef<unknown>): void {
       this.isSendNewEmailOpenedDialog = this.dialogService.open({
         content: template,
-        cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+        cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np',
       });
     }
     handleSendNewEmailClosed(value: CommunicationEvents) {
@@ -284,7 +284,7 @@ export class VendorHeaderToolsComponent {
     onNewSMSTextClicked(template: TemplateRef<unknown>): void {
       this.isNewSMSTextOpenedDialog = this.dialogService.open({
         content: template,
-        cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np',
+        cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np',
       });
     }
     handleNewSMSTextClosed(value: CommunicationEvents) {
