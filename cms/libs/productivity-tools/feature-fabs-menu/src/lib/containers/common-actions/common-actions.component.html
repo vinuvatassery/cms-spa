@@ -75,9 +75,9 @@
   </kendo-floatingactionbutton>
   <!-- Event Log Side Panel -->
 
-  <router-outlet name="eventLog" *ngIf="isShownEventLog" (closeAction)="handleShowEventLogClicked()"></router-outlet> 
+  <router-outlet name="eventLog" *ngIf="fabMenuFacade.isShownEventLog" (closeAction)="handleShowEventLogClicked()"></router-outlet> 
 
-  <router-outlet name="directMessage" *ngIf="isShownDirectMessage" (closeAction)="handleShowDirectMessageClicked()"></router-outlet> 
+  <router-outlet name="directMessage" *ngIf="fabMenuFacade.isShownDirectMessage" (closeAction)="handleShowDirectMessageClicked()"></router-outlet> 
 
-  <router-outlet name="todoReminder" *ngIf="isShownTodoReminders" (closeAction)="handleShowTodoRemindersClicked()"></router-outlet> 
+  <router-outlet name="todoReminder" *ngIf="fabMenuFacade.isShownTodoReminders" (closeAction)="handleShowTodoRemindersClicked()"></router-outlet> 
 </div>

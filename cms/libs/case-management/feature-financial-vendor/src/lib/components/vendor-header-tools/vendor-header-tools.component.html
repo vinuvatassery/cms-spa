@@ -37,7 +37,9 @@
 
 <!-- Create New Reminder Popup -->
 <ng-template #NewReminderTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">Create New Reminder for {{vendorProfile$?.vendorName}} </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar 
+  (close)="onNewReminderClosed($event)"
+  >Create New Reminder for {{vendorProfile?.vendorName}} </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail   (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
 </ng-template>
 

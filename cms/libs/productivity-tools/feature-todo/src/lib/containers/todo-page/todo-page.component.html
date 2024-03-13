@@ -33,8 +33,10 @@
   [isToDODetailsActionOpen]="isToDODetailsActionOpen"
   [todoGrid$]="todoGrid$"
   [loadAlertGrid$]="loadAlertGrid$"
+  [entityTypeCodeSubject$]="entityTypeCodeSubject$"
   (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
   (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
+  (getTodoItemsLov)="getTodoItemsLov()"
   ></productivity-tools-todo-list>
 </section>
 

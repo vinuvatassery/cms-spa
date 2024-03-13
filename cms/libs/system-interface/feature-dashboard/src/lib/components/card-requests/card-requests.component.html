@@ -1,16 +1,23 @@
-<div class="interface-chart-cards">
-    <h3 class="mb-1">Cards Request</h3>
-    <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel>
 
-    <kendo-chart   *ngIf="cardsRequestChart"  [series]="cardsRequestChart?.chartData?.series"
-    [legend]="cardsRequestChart?.chartData?.legend" [title]="cardsRequestChart?.chartData?.title"
-    [categoryAxis]="cardsRequestChart?.chartData?.categoryAxis"
-    [tooltip]="cardsRequestChart?.chartData?.tooltip">
-
-    </kendo-chart>
-    <div class="text-center pt-3" *ngIf="!cardsRequestChart&&!isloader">
-      <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+<div class="dash-header-with-filters">
+  <h5>Cards Request</h5>
+  </div>  
+  <div class="dashboard-cards-container">
+    <div class="interface-chart-cards">
+      <h3 class="mb-1"></h3>
+      <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel>
+  
+      <kendo-chart   *ngIf="cardsRequestChart"  [series]="cardsRequestChart?.chartData?.series"
+      [legend]="cardsRequestChart?.chartData?.legend" [title]="cardsRequestChart?.chartData?.title"
+      [categoryAxis]="cardsRequestChart?.chartData?.categoryAxis"
+      [valueAxis]="cardsRequestChart?.chartData?.valueAxis"
+      [tooltip]="cardsRequestChart?.chartData?.tooltip">
+  
+      </kendo-chart>
+      <div class="text-center pt-3" *ngIf="!cardsRequestChart&&!isloader">
+        <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        </div>
+        <p>There is no data to display.</p>
       </div>
-      <p>There is no data to display.</p>
     </div>
-  </div>
+  </div> 

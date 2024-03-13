@@ -9,7 +9,7 @@ import {
   } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
-import { TodoFacade } from '@cms/productivity-tools/domain';
+import { FabMenuFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { TodoListComponent } from '../../components/todo-list/todo-list.component';
 import { LovFacade } from '@cms/system-config/domain';
@@ -32,7 +32,7 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
     clientSearchResult$ = this.financialRefundFacade.clients$;
     providerSearchResult$ =this.financialVendorFacade.searchProvider$
-    createTodo$ = this.todoFacade.createTodo$
+    createTodo$ = this.todoFacade.curdAlert$
      clientSubject = this.financialRefundFacade.clientSubject;
      medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
      getTodo$ = this.todoFacade.getTodo$;
@@ -47,7 +47,8 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
       public lovFacade : LovFacade,
       private readonly financialRefundFacade: FinancialVendorRefundFacade,
       private dialogService: DialogService, 
-      private readonly financialVendorFacade : FinancialVendorFacade
+      private readonly financialVendorFacade : FinancialVendorFacade,
+      public readonly fabMenuFacade: FabMenuFacade  
     ) {}
     /** Lifecycle hooks **/
     ngOnInit(): void {        
@@ -66,7 +67,7 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
       }
       closeAction()
       {
-        this.isShowTodoReminders = false
+        this.fabMenuFacade.isShownTodoReminders = !this.fabMenuFacade.isShownTodoReminders;
       }
 
       onloadTodoGrid(payload: any, alertTypeCode:any){
@@ -102,13 +103,13 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
         this.financialRefundFacade.loadClientBySearchText(event);
       }
       onTodoItemCreateClick(payload:any){
-        this.todoFacade.createTodoItem(payload);
+        this.todoFacade.createAlertItem(payload);
       }
       onGetTodoItem($event:any){
         this.todoFacade.getTodoItem($event);
       }
       onUpdateTodoItemClick(payload:any){
-        this.todoFacade.updateTodoItem(payload)
+        this.todoFacade.updateAlertItem(payload)
       }
       getTodoItemsLov(){
         this.lovFacade.getFrequencyTypeLov()

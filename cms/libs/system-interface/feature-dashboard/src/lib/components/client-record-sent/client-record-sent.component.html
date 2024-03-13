@@ -1,11 +1,17 @@
+
+<div class="dash-header-with-filters">
+  <h5>Client Records Sent</h5>
+  </div> 
+  <div class="dashboard-cards-container"> 
 <div class="interface-chart-wrapper">
     <div class="interface-chart-cards">
-      <h3 class="mb-1">Client Records Sent</h3>
+      <h3 class="mb-1"></h3>
       <common-dashboard-loader-panel *ngIf="isloader" ></common-dashboard-loader-panel>
 
       <kendo-chart  *ngIf="clientRecordSendChart" [series]="clientRecordSendChart?.chartData?.series"
         [legend]="clientRecordSendChart?.chartData?.legend" [title]="clientRecordSendChart?.chartData?.title"
         [categoryAxis]="clientRecordSendChart?.chartData?.categoryAxis"
+        [valueAxis]="clientRecordSendChart?.chartData?.valueAxis"
         [tooltip]="clientRecordSendChart?.chartData?.tooltip">
       </kendo-chart>
       <div class="text-center pt-3" *ngIf="!clientRecordSendChart&&!isloader">
@@ -17,4 +23,5 @@
  
  
 
+  </div>
   </div>
