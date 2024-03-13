@@ -15,6 +15,7 @@
                   <div class="flex-col flex-col-12 mb-3">
 
                         <system-interface-support-group [SupportGroupGridLists$]="supportGroup$"
+                        [supportGroupListsLoader$] ="supportGroupListsLoader$"
                         [pageSizes]="pageSizes" [sortValue]="sortValueSupportGroup"
                         [sortType]="sortType" [sort]="sortSupportGroupList"  
                         (loadSupportGroupListEvent)="loadSupportGroup($event)"

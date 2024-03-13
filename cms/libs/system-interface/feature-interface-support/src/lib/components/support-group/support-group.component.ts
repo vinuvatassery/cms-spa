@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import { State, CompositeFilterDescriptor } from '@progress/kendo-data-query';
@@ -43,6 +42,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() supportGroupReactivate$: any;
   @Input() supportGroupRemove$: any;
   @Input() supportGroupProfilePhoto$: any;
+  @Input() supportGroupListsLoader$: any;
   @Output() loadSupportGroupListEvent = new EventEmitter<any>();
   @Output() deactivateConfimEvent = new EventEmitter<string>();
   @Output() reactivateConfimEvent = new EventEmitter<string>();
@@ -76,7 +76,6 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   gridSupportGroupDataSubject = new Subject<any>();
   public selectableSettings: SelectableSettings;
   gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
-  dataListsLoader$ = this.systemInterfaceSupportFacade.supportGroupListDataLoader$;
   statusFilter: any;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   columns: any = {
@@ -146,7 +145,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private dialogService: DialogService,
-    private readonly lovFacade: LovFacade, private systemInterfaceSupportFacade: SystemInterfaceSupportFacade
+    private readonly lovFacade: LovFacade,
   ) {
 
     this.selectableSettings = {
@@ -317,10 +316,9 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     //   this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Group has dependencies and cannot be deleted.");
     //   this.deleteButtonEmitted = false;
     //   return;
-    // } else {
+    // }
       this.notificationGroupId = notificationGroupId;
       this.isSupportGroupDeletePopupShow = true;
-    //}
   }
   onCloseSupportGroupDeleteClicked() {
     this.deleteButtonEmitted = false;

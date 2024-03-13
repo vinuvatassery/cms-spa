@@ -150,6 +150,7 @@ export class SystemInterfaceSupportFacade {
         error: (err) => {
           this.loaderService.hide();
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loggingService.logException(err);
         },
       }
     );
@@ -191,6 +192,7 @@ export class SystemInterfaceSupportFacade {
         error: (err) => {
           this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loggingService.logException(err);
         },
       });
   }
@@ -208,6 +210,7 @@ export class SystemInterfaceSupportFacade {
         error: (err) => {
           this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loggingService.logException(err);
         },
       });
   }
@@ -244,6 +247,7 @@ export class SystemInterfaceSupportFacade {
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.notificationCategoryListDataLoaderSubject.next(false);
+        this.loggingService.logException(err);
       },
     });
   }
@@ -260,6 +264,7 @@ export class SystemInterfaceSupportFacade {
         error: (err) => {
           this.loaderService.hide();
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loggingService.logException(err);
         },
       }
     );
@@ -297,6 +302,7 @@ export class SystemInterfaceSupportFacade {
         error: (err) => {
           this.hideLoader();
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.loggingService.logException(err);
         },
       });
   }
@@ -313,7 +319,8 @@ export class SystemInterfaceSupportFacade {
         },
         error: (err) => {
           this.hideLoader();
-          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          this.loggingService.logException(err);
         },
       });
   }
@@ -325,7 +332,8 @@ export class SystemInterfaceSupportFacade {
       },
 
       error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        this.loggingService.logException(err);
       },
     });
   }

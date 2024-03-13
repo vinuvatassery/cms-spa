@@ -34,7 +34,7 @@ export class InterfaceSupportPageComponent {
   supportGroupReactivate$ = this.systemInterfaceSupportFacade.supportGroupReactivate$;
   supportGroupRemove$ = this.systemInterfaceSupportFacade.supportGroupRemove$;
   supportGroupProfilePhoto$ = this.systemInterfaceSupportFacade.supportGroupProfilePhoto$;
-
+  supportGroupListsLoader$ = this.systemInterfaceSupportFacade.supportGroupListDataLoader$;
 
   notificationCategories$ = this.systemInterfaceSupportFacade.notificationCategories$;
   addnotificationCategory$ = this.systemInterfaceSupportFacade.addnotificationCategory$;

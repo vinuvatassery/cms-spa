@@ -22,7 +22,7 @@
 <p>Select a Group in the table below to view assigned Users and Notification Categories</p>
 
 <div class="app-c-table">
-  <kendo-grid [resizable]="true" [loading]="(dataListsLoader$  | async) === true" [pageSize]="state.take"
+  <kendo-grid [resizable]="true" [loading]="(supportGroupListsLoader$  | async) === true" [pageSize]="state.take"
     [pageable]="true" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
     [filter]="state.filter" [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
     (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)"
