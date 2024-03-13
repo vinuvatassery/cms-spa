@@ -10,7 +10,7 @@ import {
   ViewChild,
   ChangeDetectorRef,
 } from '@angular/core';
-import { UIFormStyle } from '@cms/shared/ui-tpa'; 
+import { UIFormStyle } from '@cms/shared/ui-tpa';
 import {  ColumnVisibilityChangeEvent, FilterService, GridComponent, GridDataResult } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
@@ -32,7 +32,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   @ViewChild('PrintAuthorizationDialog', { read: TemplateRef })
-  PrintAuthorizationDialog!: TemplateRef<any>; 
+  PrintAuthorizationDialog!: TemplateRef<any>;
   @ViewChild('grid') grid!: GridComponent;
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
@@ -123,6 +123,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   claimReconcileCount:any=0;
   isRecordForPrint:any=0;
   bulkNoteCounter:any=0;
+  hasWarrantNo:any=0;
   showExportLoader = false;
   loadType:any = null;
   loadTypeAllPayments:any = LoadTypes.allPayments
@@ -182,9 +183,9 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   spotsPayment:any = PaymentMethodCode.SPOTS;
   /** Constructor **/
   constructor(private route: Router,   private dialogService: DialogService, public activeRoute: ActivatedRoute,
-    private readonly cd: ChangeDetectorRef, public intl: IntlService, 
+    private readonly cd: ChangeDetectorRef, public intl: IntlService,
     private configurationProvider: ConfigurationProvider,private readonly lovFacade: LovFacade ) {}
-  
+
   ngOnInit(): void {
     this.reconcilePaymentGridUpdatedResult = [];
     this.loadQueryParams();
@@ -272,8 +273,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       this.paymentMethodDesc = value;
     }
   }
-  
-  checkErrorCount() {    
+
+  checkErrorCount() {
     const datePaymentSentInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentSentInValid);
     const datePaymentRecInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.datePaymentRecInValid);
     const warrantNumberInValidCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberInValid);
@@ -309,7 +310,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
-  
+
   columnChange(event: ColumnVisibilityChangeEvent) {
     let columnsRemoved = false;
     for (const column of this.grid.columns.toArray()){
@@ -394,7 +395,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     return searchValue;
   }
 
-  private isValidDate(searchValue: any) {   
+  private isValidDate(searchValue: any) {
     let dateValue = isNaN(searchValue) && !isNaN(Date.parse(searchValue));
     if(dateValue !== null){
       let dateArray = searchValue.split('/');
@@ -433,7 +434,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
             this.showTinSearchWarning = false;
             stateFilter.value = stateFilter.value.replace("-","")
           }
-  
+
         }
 
       this.isFiltered = true;
@@ -508,6 +509,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     }
     this.claimReconcileCount = this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.warrantNumberChanged).length;
     this.isRecordForPrint =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.isPrintAdviceLetter).length;
+    this.hasWarrantNo =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr).length;
   }
 
   assignPaymentReconciledDateToPagedList() {
@@ -563,7 +565,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         itemResponse.data[index].datePaymentSentInValidMsg = ifExist?.datePaymentSentInValidMsg;
         itemResponse.data[index].isPrintAdviceLetter = ifExist?.isPrintAdviceLetter;
         itemResponse.data[index].tAreaCessationCounter = ifExist?.tAreaCessationCounter;
-        itemResponse.data[index].batchId = ifExist?.batchId;       
+        itemResponse.data[index].batchId = ifExist?.batchId;
       }
       else {
         itemResponse.data[index].paymentReconciledDate = itemResponse.data[index].paymentReconciledDate !== null ? new Date(itemResponse.data[index].paymentReconciledDate) : itemResponse.data[index].paymentReconciledDate;
@@ -571,10 +573,10 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         if((itemResponse.data[index].checkNbr !== null && itemResponse.data[index].checkNbr !== '' && itemResponse.data[index].checkNbr !== undefined )){
           itemResponse.data[index].reconciled = true;
         }
-      }     
-         
+      }
+
     });
-    this.reconcilePaymentGridPagedResult = itemResponse;   
+    this.reconcilePaymentGridPagedResult = itemResponse;
   }
 
   public filterChange(filter: CompositeFilterDescriptor): void {
@@ -738,7 +740,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
 
   printAdviceLetterChange(dataItem: any) {
     let ifExist = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
-    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChanged){           
+    if(!dataItem.isPrintAdviceLetter && !ifExist.warrantNumberChanged){
       this.reconcilePaymentGridUpdatedResult = this.reconcilePaymentGridUpdatedResult.filter((x:any)=>x.paymentRequestId !== dataItem.paymentRequestId);
     }
     else{
@@ -748,9 +750,10 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     this.selectedReconcileDataRows = this.reconcilePaymentGridUpdatedResult.find((x: any) => x.paymentRequestId === dataItem.paymentRequestId);
     }
     this.isRecordForPrint =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.isPrintAdviceLetter).length;
+    this.hasWarrantNo =  this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr).length;
   }
 
-  noteChange(dataItem: any) {    
+  noteChange(dataItem: any) {
     if(dataItem.checkNbr !== null && dataItem.checkNbr !== undefined && dataItem.checkNbr !== ''){
       dataItem.warrantNumberChanged = true;
     }
@@ -802,7 +805,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       dataItem.datePaymentRecInValidMsg = null;
     }
     if (dataItem.checkNbr !== '') {
-      dataItem.isPrintAdviceLetter = true;      
+      dataItem.isPrintAdviceLetter = true;
+      this.hasWarrantNo =  this.hasWarrantNo + 1;
     }
     this.assignRowDataToMainList(dataItem);
 
@@ -865,7 +869,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         }
       }
     })
-  }  
+  }
 
   ngDirtyInValid(dataItem: any, control: any, rowIndex: any) {
     let inValid = false;
@@ -958,18 +962,18 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     onRowSelection(grid:any, selection:any)
     {
       this.warrantCalculationArray=[];
-      const data = selection.dataItem;    
+      const data = selection.dataItem;
       this.isBreakoutPanelShow=true;
-      this.entityId=data.entityId; 
-      let warrantTotal=0; 
-      this.batchId=data.batchId;    
-      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined 
-      && x.checkNbr !== '' && x.checkNbr=== data.checkNbr).forEach((item: any) => {  
+      this.entityId=data.entityId;
+      let warrantTotal=0;
+      this.batchId=data.batchId;
+      this.reconcilePaymentGridUpdatedResult.filter((x: any) => x.checkNbr != null && x.checkNbr !== undefined
+      && x.checkNbr !== '' && x.checkNbr=== data.checkNbr).forEach((item: any) => {
         let object={
           vendorId:item?.entityId,
           batchId:item?.batchId,
           paymentRequestId:item?.paymentRequestId,
-          warrantNumber:item?.checkNbr,  
+          warrantNumber:item?.checkNbr,
           amountDue:item?.amountDue
         }
         this.warrantCalculationArray.push(object);
@@ -983,8 +987,8 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
         warrantNbr : data.checkNbr,
         warrantCalculation:this.warrantCalculationArray,
         paymentToReconcileCount : data.checkNbr == null || data.checkNbr == undefined ? 0 : 1,
-        loadType:this.loadType 
-      }      
+        loadType:this.loadType
+      }
       this.loadReconcilePaymentSummary(ReconcilePaymentResponseDto);
     }
 
@@ -1003,7 +1007,7 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
       sort:event.sortColumn,
       sortType:event.sortType,
       filter:event.filter,
-      loadType:this.loadType 
+      loadType:this.loadType
     });
   }
   getItemNumber() {
@@ -1026,17 +1030,17 @@ export class PharmacyClaimsBatchesReconcilePaymentsComponent implements OnInit{
     }
   }
 
-  onViewProviderDetailClicked(paymentRequestId:any) {  
+  onViewProviderDetailClicked(paymentRequestId:any) {
     this.onVendorClickedEvent.emit(paymentRequestId);
   }
   onClickedExport(){
     this.showExportLoader = true
-    this.exportGridDataEvent.emit()        
+    this.exportGridDataEvent.emit()
     this.exportButtonShow$
     .subscribe((response: any) =>
     {
       if(response)
-      {        
+      {
          this.showExportLoader = false
         this.cd.detectChanges()
       }
