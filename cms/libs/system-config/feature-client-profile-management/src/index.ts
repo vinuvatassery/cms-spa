@@ -1,5 +1,5 @@
 export * from './lib/system-config-feature-client-profile-management.module';
-export * from './lib/containers/client-profile-management-page/client-profile-management-page.component';
+
 export * from './lib/components/pronouns-list/pronouns-list.component';
 export * from './lib/components/pronouns-detail/pronouns-detail.component';
 export * from './lib/components/gender-list/gender-list.component';
@@ -14,10 +14,11 @@ export * from './lib/components/language-list/language-list.component';
 export * from './lib/components/language-detail/language-detail.component';
 export * from './lib/components/direct-messages-list/direct-messages-list.component';
 
+export * from './lib/containers/client-profile-management-page/client-profile-management-page.component';
 export * from './lib/components/direct-messages-frequencies-form/direct-messages-frequencies-form.component';
-
 export * from './lib/containers/direct-message-page/direct-message-page.component';
-
 export * from './lib/containers/language-page/language-page.component';
-
 export * from './lib/containers/racial-or-ethnic-identity-page/racial-or-ethnic-identity-page.component';
+export * from './lib/containers/gender-page/gender-page.component';
+export * from './lib/containers/pronouns-page/pronouns-page.component';
+export * from './lib/containers/sexual-orientation-page/sexual-orientation-page.component';

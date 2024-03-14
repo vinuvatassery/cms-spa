@@ -60,7 +60,23 @@ import { SystemConfigFeatureHousingCoordinationManagementRoutingModule } from '.
     CaseAvailabilityPageComponent
   ],
   exports: [
-    CaseAvailabilityPageComponent,
+    CaseAvailabilityDetailComponent,
+    CaseAvailabilityListComponent,
+    EidLifetimePeriodDetailComponent,
+    EidLifetimePeriodListComponent,
+    HousingAcuityLevelDetailComponent,
+    HousingAcuityLevelListComponent,
+    IncomeInclusionsExclusionsDetailComponent,
+    IncomeInclusionsExclusionsListComponent,
+    PsMfrZipDetailComponent,
+    PsMfrZipListComponent,
+    RegionAssignmentDetailComponent,
+    RegionAssignmentListComponent,
+    ServiceProviderDetailComponent,
+    ServiceProviderListComponent,
+    SlotDetailComponent,
+    SlotListComponent,
+    HousingCoordinationPageComponent,
     EidLifetimePeriodPageComponent,
     HousingAcuityLevelPageComponent,
     HousingCoordinationPageComponent,
@@ -69,6 +85,7 @@ import { SystemConfigFeatureHousingCoordinationManagementRoutingModule } from '.
     RegionAssignmentPageComponent,
     ServiceProviderPageComponent,
     SlotPageComponent,
+    CaseAvailabilityPageComponent
   ],
 })
 export class SystemConfigFeatureHousingCoordinationManagementModule {}

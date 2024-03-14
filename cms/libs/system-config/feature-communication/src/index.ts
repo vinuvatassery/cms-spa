@@ -48,3 +48,5 @@ export * from './lib/containers/letter-template-new-form-page/letter-template-ne
 export * from './lib/containers/sms-text-template-new-form-page/sms-text-template-new-form-page.component';
 
 export * from './lib/containers/email-template-header-footer-page/email-template-header-footer-page.component';
+export * from './lib/containers/letter-template-page/letter-template-page.component';
+export * from './lib/containers/template-page/template-page.component';
