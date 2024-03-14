@@ -81,7 +81,6 @@ export class ReminderDetailComponent implements OnInit {
     }
     if(this.router.url.includes('case360')){
       this.entityTypeCode='CLIENT'
-
       const id = this.route.snapshot.queryParamMap.get('id')
       if(id){
       this.caseFacade.clientProfileHeader$.subscribe(cp =>{      
@@ -170,13 +169,18 @@ export class ReminderDetailComponent implements OnInit {
         type :'REMINDER',
         alertFrequencyCode :'NEVER',
         alertName :  'REMINDER',
-        repeatTime : new Date(this.clientReminderForm.controls['time'].value).getHours()+":"+new Date(this.clientReminderForm.controls['time'].value).getMinutes(),
-
+        AddToOutlookFlag :  this.clientReminderForm.controls['addToOutlookCalender'].value ? "Y" : "N"
       }
-  
-      this.todoFacade.createAlertItem(payload)
-
-       this.isModalNewReminderCloseClicked.emit();
+     if(this.clientReminderForm.controls['time'].value){
+     let payloadWithRepeat ={
+        ... payload,
+        repeatTime : new Date(this.clientReminderForm.controls['time'].value).getHours()+":"+new Date(this.clientReminderForm.controls['time'].value).getMinutes()
+      }    
+      this.todoFacade.createAlertItem(payloadWithRepeat)
+     }else{
+     this.todoFacade.createAlertItem(payload)
+     }
+     this.isModalNewReminderCloseClicked.emit();
     }
   }
 

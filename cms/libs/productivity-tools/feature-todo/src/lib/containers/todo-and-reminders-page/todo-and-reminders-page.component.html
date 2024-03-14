@@ -2,7 +2,7 @@
   <!-- Side Panel Header -->
   <div class="sidePanel_header">
     <div class="sidePanel_header-left">
-      <h3>Donna’s To-Do & Reminders</h3>
+      <h3>{{clientName}}’s To-Do & Reminders</h3>
     </div>
     <div class="sidePanel_header-right max-w-small">
       <button
@@ -20,18 +20,23 @@
   <div class="sidePanel_body todo-list">
     <section>
       <p class="due-main-heading text-red-dark">DUE WITHIN 7 DAYS</p>
-      <productivity-tools-todo-item></productivity-tools-todo-item>
-      <productivity-tools-reminder-item></productivity-tools-reminder-item>
+      <productivity-tools-todo-item  [nDays]="'DUE WITHIN 7 DAYS'"
+      [todoAndReminders$]="todoAndReminders$"></productivity-tools-todo-item>
+      <productivity-tools-reminder-item [nDays]="'DUE WITHIN 7 DAYS'"
+                    [todoAndReminders$]="todoAndReminders$"></productivity-tools-reminder-item>
     </section>
     <section class="pt-2">
-      <p class="due-main-heading text-canyon-dark">DUE WITHIN 7 DAYS</p>
-      <productivity-tools-reminder-item></productivity-tools-reminder-item>
-      <productivity-tools-todo-item></productivity-tools-todo-item>
+      <p class="due-main-heading text-canyon-dark">DUE WITHIN 30 DAYS</p>
+      <productivity-tools-reminder-item  [nDays]="'DUE WITHIN 30 DAYS'"
+            [todoAndReminders$]="todoAndReminders$"></productivity-tools-reminder-item>
+      <productivity-tools-todo-item [nDays]="'DUE WITHIN 30 DAYS'"
+       [todoAndReminders$]="todoAndReminders$"></productivity-tools-todo-item>
     </section>
     <section class="pt-2">
       <p class="due-main-heading">DUE LATER</p>
-      <productivity-tools-reminder-item></productivity-tools-reminder-item>
-      <productivity-tools-todo-item></productivity-tools-todo-item>
+      <productivity-tools-reminder-item [nDays]="'DUE LATER'"
+      [todoAndReminders$]="todoAndReminders$"></productivity-tools-reminder-item>
+      <productivity-tools-todo-item  [nDays]="'DUE LATER'" [todoAndReminders$]="todoAndReminders$"></productivity-tools-todo-item>
     </section>
   </div>
 </div>
