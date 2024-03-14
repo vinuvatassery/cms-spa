@@ -95,57 +95,13 @@ export class FinancialPremiumsAllPaymentsListComponent
       columnDesc: 'All Columns',
     },
     {
-      columnName: 'itemNumber',
-      columnDesc: 'Item #',
-    },
-    {
       columnName: 'batchNumber',
       columnDesc: 'Batch #',
     },
     {
       columnName: 'providerName',
       columnDesc: 'Insurance Vendor',
-    },
-    {
-      columnName: 'itemsCountInBatch',
-      columnDesc: 'Item Count',
-    },
-    {
-      columnName: 'totalDue',
-      columnDesc: 'Total Amount',
-    },
-    {
-      columnName: 'acceptsReportsFlag',
-      columnDesc: 'Accepts reports',
-    },
-    {
-      columnName: 'paymentRequestedDate',
-      columnDesc: 'Date Payment Requested',
-    },
-    {
-      columnName: 'paymentSentDate',
-      columnDesc: 'Date Payment Sent',
-    },
-    {
-      columnName: 'paymentMethodDesc',
-      columnDesc: 'Payment Method',
-    },
-    {
-      columnName: 'paymentStatusDesc',
-      columnDesc: 'Payment Status',
-    },
-    {
-      columnName: 'pcaCode',
-      columnDesc: 'PCA',
-    },
-    {
-      columnName: 'mailCode',
-      columnDesc: 'Mail Code',
-    },
-    {
-      columnName: 'by',
-      columnDesc: 'By',
-    },
+    }
   ];
 
   @ViewChild('editPremiumsDialogTemplate', { read: TemplateRef })
