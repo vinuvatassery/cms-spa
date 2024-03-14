@@ -145,7 +145,7 @@
                                       </kendo-combobox-column>
                                       <kendo-combobox-column [width]="150">
                                         <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
-                                            <span class="text-muted"><em> </em>MailCode: {{ dataItem.MmilCode }}</span>
+                                            <span class="text-muted"><em> </em>MailCode: {{ dataItem.mailCode }}</span>
                                         </ng-template>
                                     </kendo-combobox-column>
                                       <kendo-combobox-column [width]="150">
@@ -164,7 +164,7 @@
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'PHARMACY' || selectedRefundType === 'RX'">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel  text="Pharmacy Provider ">
+                    <kendo-floatinglabel  text="Pharmacy" >
                     <div class="combotable_search_list new_refund_Search">
                         <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>
@@ -174,7 +174,7 @@
                         </span>
                     <kendo-multicolumncombobox textField="providerFullName"
                     valueField="vendorAddressId"
-                   
+
                     [fillMode]="formUiStyle.dropDownFillMode"
                     placeholder="Search Pharmacy name or TIN"
                     [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
@@ -193,12 +193,16 @@
                                 <span class="text-muted"><em> TIN:</em> {{ dataItem.tin | tin }}</span>
                             </ng-template>
                         </kendo-combobox-column>
-
                         <kendo-combobox-column>
                             <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
                                 <span class="text-muted"><em> Mail Code:</em> {{ dataItem.mailCode }}</span>
                             </ng-template>
-                        </kendo-combobox-column>
+                        </kendo-combobox-column>                        
+                        <kendo-combobox-column [width]="150">
+                              <ng-template kendoMultiColumnComboBoxColumnCellTemplate let-dataItem>
+                                  <span class="text-muted"><em> </em>Address: {{ dataItem.address }}</span>
+                              </ng-template>
+                          </kendo-combobox-column>
                         <ng-template kendoMultiColumnComboBoxNoDataTemplate>
                             <div class="no-data-text">No Vendors found</div>
                         </ng-template>
