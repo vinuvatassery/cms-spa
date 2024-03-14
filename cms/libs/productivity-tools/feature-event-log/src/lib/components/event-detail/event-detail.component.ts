@@ -121,7 +121,8 @@ export class EventDetailComponent implements OnInit {
         attachmentTypeCode : this.eventForm.controls['attachmentType'].value,
         attachment : this.attachmentFile,
         attachmentNote :  this.eventForm.controls['attachmentNote'].value,
-        entityId : this.entityId ? this.entityId.toString() : null,
+        sourceEntityId : this.entityId ? this.entityId.toString() : null,
+        sourceEntityTypeCode: this.entityType,
         entityTypeCode: this.entityType,
         parentEventLogId : this.parentEventLogId ? this.parentEventLogId : null,
         isSubEvent : this.isSubEvent
