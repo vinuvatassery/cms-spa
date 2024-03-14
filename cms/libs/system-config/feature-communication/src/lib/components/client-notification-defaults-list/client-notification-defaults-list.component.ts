@@ -1,14 +1,12 @@
 import {
   Component,
-  OnInit,
-  ViewEncapsulation,
+  OnInit, 
   ChangeDetectionStrategy,
   EventEmitter,
   Input,
   Output,
   OnChanges,
-} from '@angular/core';
-import { TemplateManagementFacade } from '@cms/system-config/domain';
+} from '@angular/core'; 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {

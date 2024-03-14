@@ -1,7 +1,6 @@
 import {
   Component,
-  OnInit,
-  ViewEncapsulation,
+  OnInit, 
   ChangeDetectionStrategy,
   Input,
   EventEmitter,

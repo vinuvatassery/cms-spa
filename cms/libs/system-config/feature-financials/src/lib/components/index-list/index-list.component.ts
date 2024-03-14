@@ -6,8 +6,7 @@ import {
   EventEmitter,
   Input,
   Output,
-} from '@angular/core';
-import { SystemConfigFinancialFacade } from '@cms/system-config/domain';
+} from '@angular/core'; 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
