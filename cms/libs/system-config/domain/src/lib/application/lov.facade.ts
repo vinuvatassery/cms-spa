@@ -216,16 +216,16 @@ export class LovFacade {
     });
   }
 
-  getEventAttachmentTypeLov(): void {
-    this.lovDataService.getLovsbyType(LovType.EventAttachemntType).subscribe({
-      next: (lovResponse) => {
-        this.eventAttachmentTypeLovSubject.next(lovResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      }
-    });
-  }
+  // getEventAttachmentTypeLov(): void {
+  //   this.lovDataService.getLovsbyType(LovType.EventAttachemntType).subscribe({
+  //     next: (lovResponse) => {
+  //       this.eventAttachmentTypeLovSubject.next(lovResponse);
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+  //     }
+  //   });
+  // }
   getRelationShipsLovs(): void {
     this.lovDataService.getLovsbyType(LovType.RelationshipCode).subscribe({
       next: (relationsResponse) => {
@@ -880,16 +880,16 @@ export class LovFacade {
       },
     });
   }
-  getFrequencyTypeLov(){
-    this.lovDataService.getLovsbyType(LovType.AlertFrequencyCode).subscribe({
-      next: (lovResponse) => {
-        this.lovFrequencyTypeCodeSubject.next(lovResponse);
-      },
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      }
-    });
-  }
+  // getFrequencyTypeLov(){
+  //   this.lovDataService.getLovsbyType(LovType.AlertFrequencyCode).subscribe({
+  //     next: (lovResponse) => {
+  //       this.lovFrequencyTypeCodeSubject.next(lovResponse);
+  //     },
+  //     error: (err) => {
+  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+  //     }
+  //   });
+  // }
   getServiceTypeLov() {
     this.lovDataService.getLovsbyType(LovType.ServiceType).subscribe({
       next: (lovResponse) => {
