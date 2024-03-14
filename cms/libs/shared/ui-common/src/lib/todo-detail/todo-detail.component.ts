@@ -72,12 +72,12 @@ export class TodoDetailComponent implements OnInit {
     this.todoDetailsForm = this.formBuilder.group({
       title: ['', Validators.required],
       dueDate: [null,Validators.required],
-      repeat: [{value: ''}],
+      repeat: [''],
       endDate: [null],
       alertDesc: [''],
       linkTo: ['',Validators.required],
-      clientId :[{}],
-      vendorId: [{}]
+      clientId :[null],
+      vendorId: [null]
     });
     if(this.isEdit){
       this.onGetTodoItem.emit(this.alertId);
@@ -95,7 +95,7 @@ export class TodoDetailComponent implements OnInit {
     this.todoDetailsForm.controls['endDate'].disable()
   }else{
     this.getTodo$.subscribe(res =>{
-      if (this.isEdit) {
+      if (this.isEdit && res) {
         this.todoDetailsForm.patchValue({
           title: res.alertName,
           repeat: res.alertFrequencyCode,
@@ -146,9 +146,8 @@ export class TodoDetailComponent implements OnInit {
         })
         this.todoDetailsForm.controls['clientId'].setValidators([Validators.required]);
         this.todoDetailsForm.controls['clientId'].updateValueAndValidity();
-      }
-       
-      }
+      }   
+    }
     });
   }
   }
@@ -182,10 +181,10 @@ export class TodoDetailComponent implements OnInit {
   this.showClientSearch = true;
   this.showVendorSearch = false;
   this.placeholderText= this.clientPlaceHolderText
-  this.todoDetailsForm.controls['clientId'].setValidators([Validators.required]);
-  this.todoDetailsForm.controls['clientId'].updateValueAndValidity();
   this.todoDetailsForm.controls['vendorId'].clearValidators();
   this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
+  this.todoDetailsForm.controls['clientId'].setValidators([Validators.required]);
+  this.todoDetailsForm.controls['clientId'].updateValueAndValidity(); 
     }else{
     this.todoDetailsForm.controls['vendorId'].enable()
       this.showClientSearch = false;
@@ -235,6 +234,9 @@ export class TodoDetailComponent implements OnInit {
     let entityId =''
     this.todoDetailsForm.markAllAsTouched()
     this.isValidateForm =true;
+    if(!this.todoDetailsForm.controls['clientId'].value?.clientId && this.showClientSearch){
+      this.todoDetailsForm.controls['clientId'].setErrors({ 'required': true });
+    }
     if (this.todoDetailsForm.invalid) {
       return;
     }

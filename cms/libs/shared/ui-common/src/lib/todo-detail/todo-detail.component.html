@@ -1,4 +1,4 @@
-<section class="k-dialog-body" kendoTooltip  [formGroup]="todoDetailsForm">
+<section class="k-dialog-body" kendoTooltip  [formGroup]="todoDetailsForm" >
   <p class="text-muted mb-2">
     All fields are required unless otherwise stated.
   </p>
@@ -40,7 +40,9 @@
           [data]="frequencyTypeCodeSubject$ | async"
           >
         </kendo-dropdownlist>
-        <kendo-formerror *ngIf="!todoDetailsForm.controls['repeat']?.valid && isValidateForm && todoDetailsForm.controls['title'].valid">
+        <kendo-formerror *ngIf="!todoDetailsForm.controls['repeat']?.valid 
+        && isValidateForm 
+        && todoDetailsForm.controls['dueDate'].valid">
           Repeat is required
         </kendo-formerror>
       </kendo-floatinglabel>
@@ -176,6 +178,9 @@
           </kendo-combobox-column>
           
         </kendo-multicolumncombobox>
+        <kendo-formerror *ngIf="!todoDetailsForm.controls['clientId']?.valid && isValidateForm && todoDetailsForm.controls['linkTo'].valid">
+          Client is required
+        </kendo-formerror>
       </div>
     </div>
   </div>
