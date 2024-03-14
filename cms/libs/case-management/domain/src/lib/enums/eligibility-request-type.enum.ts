@@ -4,5 +4,6 @@ export enum EligibilityRequestType {
     clientEligibilityInfoProfile =  "ClientEligibilityInfoProfile",
     acceptedEligibility = "AcceptedEligibility",
     eligibilityStatus ="EligibilityStatus",
-    copyEligibility =  "CopyEligibility"
+    copyEligibility =  "CopyEligibility",
+    newEligibilityPeriod =  "NewEligibilityPeriod"
 }

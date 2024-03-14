@@ -245,7 +245,7 @@ export class EligibilityPeriodDetailComponent implements OnInit {
     } else if (this.isCopyPeriod) {
       eligibilityRequestType = EligibilityRequestType.copyEligibility;
     } else {
-      eligibilityRequestType = EligibilityRequestType.acceptedEligibility;
+      eligibilityRequestType = EligibilityRequestType.newEligibilityPeriod;
     }
 
     this.clientEligibilityFacade.getEligibility(this.clientId,this.clientCaseId,this.clientCaseEligibilityId, eligibilityRequestType)
