@@ -1,6 +1,7 @@
 .dash-top-cards-wrapper {
   display: flex;
   gap: 10px;
+
 }
 
 .dashboard-wrapper {
@@ -8,24 +9,24 @@
     min-height: 10px;
   }
 }
-.today_glanse_title {
-  .h3 {
+.today_glanse_title{
+  .h3{
     font-size: $font-size-xl;
   }
 }
 .dash-info-card {
-  background: #ffffff 0% 0% no-repeat padding-box;
-  border: 1px solid #0000000f;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
+  border: 1px solid #0000000F;
   border-radius: 4px;
   padding: 1rem;
   border-left: 5px solid;
   width: 100%;
   cursor: pointer;
-  transition: 0.2s;
+  transition: .2s;
   box-shadow: 0px 0px 0px 0px #00000014;
-  &:hover {
-    box-shadow: 0px 4px 8px -1px #00000014;
-  }
+&:hover{
+  box-shadow: 0px 4px 8px -1px #00000014;
+}
   p {
     letter-spacing: 0px;
     color: #00000099;
@@ -35,16 +36,18 @@
 
   h3 {
     letter-spacing: 0px;
-    color: #000000de;
+    color: #000000DE;
     font-family: $font-family-light;
     font-size: $font-size-xxx !important;
   }
+
 
   &.yellow_card {
     border-left-color: $dash-yellow-1;
 
     span {
       color: $dash-yellow-1;
+
     }
   }
 
@@ -83,8 +86,8 @@
 
 .dashboard-page-wrapper {
   text {
-    font-family: $font-family;
-  }
+    font-family: $font-family ;
+}
 }
 
 .dashboard_config_wrapper {
@@ -106,25 +109,25 @@
       color: rgba($black, 0.7);
     }
 
-    padding: 0.5rem 0px;
+    padding: .5rem 0px;
   }
 
   .k-tilelayout-item-body {
     background: #ffffff;
-    border: 1px solid #0000000f;
+    border: 1px solid #0000000F;
   }
 
   &.reorder_wrapper_enabled {
     .k-card-header {
       h3 {
-        background: #efefef;
+        background: #EFEFEF;
         border-radius: 18px;
         display: inline;
         padding: 8px 8px;
 
         &::before {
-          content: '\e945';
-          font-family: 'Material Icons';
+          content: "\e945";
+          font-family: "Material Icons";
           display: inline-block;
           font-size: 20px;
           vertical-align: middle;
@@ -138,7 +141,7 @@
     }
 
     .k-tilelayout-item {
-      background: #f7f7f7 0% 0% no-repeat padding-box;
+      background: #F7F7F7 0% 0% no-repeat padding-box;
       padding: 8px;
       border-radius: 6px;
       position: relative;
@@ -149,29 +152,38 @@
         position: absolute;
         left: 0;
         top: 0;
-        background: #efefef;
+        background: #EFEFEF;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         border-radius: 10px;
-        transition: 0.2s;
+        transition: .2s;
 
         &:hover {
+
           background: #dcdcdc;
+
         }
+
       }
+
+
     }
+
+
   }
 }
 
 .reorder_wrapper_enabled {
   gridster-item {
-    background: #f7f7f7 !important;
+    background: #F7F7F7 !important;
     border-radius: 6px !important;
     padding: 10px !important;
     padding-left: 2rem !important;
 
     // position: relative;
+
+
   }
 }
 
@@ -180,7 +192,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  background: #efefef;
+  background: #EFEFEF;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -200,13 +212,14 @@
   .flex-row {
     align-items: flex-end;
     padding-bottom: 10px;
-    border-bottom: 1px solid #0000000f;
+    border-bottom: 1px solid #0000000F;
     margin-bottom: 10px;
 
     &:last-child {
       border-bottom: 0px;
       margin-bottom: 0px;
     }
+
   }
 
   h4 {
@@ -222,8 +235,9 @@
   }
 }
 
+
 .dashboard-cards-container {
-  background: #ffffff 0% 0% no-repeat padding-box;
+  background: #FFFFFF 0% 0% no-repeat padding-box;
   border: 2px solid $black-e;
   border-radius: 4px;
   opacity: 1;
@@ -231,14 +245,16 @@
   overflow: auto;
 }
 
+
 .app-cars-row {
   padding: 8px 0px;
   border-bottom: 1px solid $black-e;
   display: grid;
-  grid-template-columns: 1.2fr 0.9fr 1.1fr;
+  grid-template-columns: 1.2fr .9fr 1.1fr;
   grid-gap: 8px;
   align-items: flex-end;
   justify-content: flex-start;
+
 
   &:first-child {
     padding-top: 0;
@@ -259,26 +275,27 @@
   .orange-frame-icon {
     .icon-frame {
       background: rgba($color: $dash-orange-1, $alpha: 0.1);
-      color: $dash-orange-1;
+      color: $dash-orange-1 ;
     }
   }
 
   .lightpink-frame-icon {
     .icon-frame {
       background: rgba($color: $role-color-1, $alpha: 0.1);
-      color: $role-color-1;
+      color: $role-color-1 ;
     }
   }
 
   .lightpurple-frame-icon {
     .icon-frame {
       background: rgba($color: $dash-purple-2, $alpha: 0.1);
-      color: $dash-purple-2;
+      color: $dash-purple-2 ;
     }
   }
 
   .app-cars-col {
     &.red-frame {
+
       h4,
       .btm_texts,
       .material-icons {
@@ -351,8 +368,10 @@
     font-size: $font-size-xlg-22 !important;
     margin: 0;
     font-family: $font-family-light;
+
   }
 }
+
 
 .dash_quick_links_wrapper {
   display: grid;
@@ -370,6 +389,7 @@
     }
   }
 }
+
 
 .dash_chart {
   max-height: 340px;
@@ -394,6 +414,7 @@
   }
 }
 
+
 .gridster-preview {
   background: white;
   transform: translate3d(0px, 142px, 0px) !important;
@@ -409,18 +430,20 @@ gridster .gridster-row {
   padding: 2rem;
 
   .add-more-container {
+
     // display: grid;
     // grid-template-columns: 1fr 1fr;
     // grid-gap: 10px;
-    .add-gridster {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-gap: 10px;
-    }
+.add-gridster{
+  
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
     .chart-view-point {
       pointer-events: none;
       cursor: default;
-      zoom: 0.5;
+      zoom: .5;
       max-width: 70%;
       margin: 0 auto;
       margin-bottom: 4rem;
@@ -439,7 +462,7 @@ gridster .gridster-row {
 
     .add-more-list {
       background: $white;
-      box-shadow: 0px 0px 12px #0000000f;
+      box-shadow: 0px 0px 12px #0000000F;
       border-radius: 10px;
       padding-top: 2rem;
       height: max-content;
@@ -448,7 +471,7 @@ gridster .gridster-row {
         border-radius: 0px 0px 10px 10px;
         font-size: $font-size-xx;
         color: $white;
-        text-shadow: 0px 3px 6px #0000002e;
+        text-shadow: 0px 3px 6px #0000002E;
         display: flex;
         align-items: center;
         padding: 1.5rem;
@@ -487,6 +510,7 @@ gridster .gridster-row {
       .k-selected {
         background: $dash-green-1;
       }
+
     }
 
     h4 {
@@ -501,6 +525,7 @@ gridster .gridster-row {
       margin: 0;
       color: $black-6;
     }
+
   }
 
   h2 {
@@ -521,12 +546,12 @@ gridster .gridster-row {
     color: $black-59;
   }
 }
-
+ 
 .widget_remove_btn {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #c3372c;
+  background: #C3372C;
   position: absolute;
   top: -8px;
   right: -10px;
@@ -537,21 +562,22 @@ gridster .gridster-row {
 }
 
 .dash-header-with-filters {
-  display: flex;
+  display: flex; 
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 8px; 
   flex-direction: column;
   gap: 8px;
   > div {
     display: flex;
-
+    
     .kendo-multiselect,
-    .k-dropdownlist {
+    .k-dropdownlist{
       width: 100%;
       max-width: 180px;
     }
+    
   }
-  .k-multiselect {
+  .k-multiselect { 
     min-height: 28px;
     .k-searchbar {
       position: absolute;
@@ -582,47 +608,51 @@ gridster .gridster-row {
   h5 {
     margin: 0px;
   }
+
+  
 }
 
 .app-c-drag-row-table.recently-view .k-grid .k-grid-content {
   min-height: auto;
 }
 
-/* Loader Panel Styles */
-.k-loading-panel {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 68%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 100;
-}
+ 
+      /* Loader Panel Styles */
+      .k-loading-panel {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 68%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+      }
 
-.k-loading-panel-wrapper {
-  position: relative;
-  z-index: 2;
-}
+      .k-loading-panel-wrapper {
+        position: relative;
+        z-index: 2;
+      }
 
-.k-loading-panel-text {
-  margin-top: 15px;
-  margin-left: 10px;
-  text-align: center;
-  color: red;
-}
+      .k-loading-panel-text {
+        margin-top: 15px;
+        margin-left: 10px;
+        text-align: center;
+        color: red;
+      }
 
-.common-dashboard-loader-panel {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
+      .common-dashboard-loader-panel{
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
 
-.k-picker-md .k-input-inner {
-  padding: 10px 16px;
-  width: 146px;
-}
+      .k-picker-md .k-input-inner {
+        padding: 10px 16px;
+        width: 146px;
+    }
+
