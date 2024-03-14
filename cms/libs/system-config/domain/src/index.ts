@@ -36,6 +36,7 @@ export * from './lib/application/service_providers.facade';
 export * from './lib/application/tin-validation.facade';
 export * from './lib/application/other_lists.facade';
 export * from './lib/application/housing-coordination.facade';
+export * from './lib/application/scroll-focus-validation.facade';
 
 /** Enums **/
 export * from './lib/enums/lov-types.enum';

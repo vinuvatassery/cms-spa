@@ -6,6 +6,7 @@ import {
   Output,
   EventEmitter,
   Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 /** facades **/
@@ -24,51 +25,131 @@ export class TodoDetailComponent implements OnInit {
   tareaCustomTodoCharactersCount!: number;
   tareaCustomTodoCounter!: string;
   tareaCustomTodoDescription = '';
-  @Input() clientSearchResult$! : Observable<any>
+   @Input() isEdit= false;
+   @Input() alertId='62E3DDBA-2B16-49F3-9DA2-06EDA4CA76FF'
+  @Input() getTodo$! : Observable<any>
   @Input() createTodo$! : Observable<any>
   @Input() providerSearchResult$ :any
-  EntityTypeCodeData =['CLIENT','MEDICAL_PROVIDER','DENTAL_PROVIDER','INSURANCE_VENDOR']
-  @Input() frequencyTypeCodeSubject$ : any;
+  @Input() clientSearchResult$! : Observable<any>
+  @Input() frequencyTypeCodeSubject$! :  Observable<any>;
+  @Input() entityTypeCodeSubject$!: Observable<any>;
+  @Input() medicalProviderSearchLoaderVisibility$! : Observable<any>
+  @Input() clientSearchLoaderVisibility$! : Observable<any>
   showTimePicker =false
   showClientSearch = false;
-  showVendorSearch = false;
+  showVendorSearch = true;
+  
   @Output() isModalTodoDetailsCloseClicked = new EventEmitter();
   @Output() isLoadTodoGridEvent = new EventEmitter();
   @Output() searchClientName = new EventEmitter();
   @Output() searchProvider = new EventEmitter();
   @Output() onTodoItemCreateClick = new EventEmitter();
+  @Output() onUpdateTodoItemClick = new EventEmitter();
+  @Output() onGetTodoItem = new EventEmitter();
+  @Output() getTodoItemsLov = new EventEmitter();
+  @Input() searchProviderSubject! : Subject<any>
+  @Input() clientSubject! : Subject<any>
   showClientSearchInputLoader = false
+  placeholderText =""
+  vendorPlaceHolderText = "Search for Vendor Name or TIN";
+  clientPlaceHolderText = "Search for Client Name, ID or SSN";
   filterManager: Subject<string> = new Subject<string>();
   public date = new Date();
   public formUiStyle: UIFormStyle = new UIFormStyle();
-  todoDetailsForm: FormGroup;
+  todoDetailsForm:any
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+  isValidateForm= false;
+
   constructor(public formBuilder: FormBuilder,
     public intl: IntlService,
-    private configurationProvider: ConfigurationProvider,){
-    this.todoDetailsForm = this.formBuilder.group({})
+    private configurationProvider: ConfigurationProvider,
+    private cdr : ChangeDetectorRef){
+      this.todoDetailsForm = this.formBuilder.group({})
   }
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadToDoSearch();
+    this.getTodoItemsLov.emit()
+    this.todoDetailsForm = this.formBuilder.group({
+      title: ['', Validators.required],
+      dueDate: [null,Validators.required],
+      repeat: [''],
+      endDate: [null],
+      alertDesc: [''],
+      linkTo: ['',Validators.required],
+      clientId :[null],
+      vendorId: [null]
+    });
+    if(this.isEdit){
+      this.onGetTodoItem.emit(this.alertId);
+    }
     this.tareaVaribalesIntialization();
     this.buildTodoForm()
   }
 
   buildTodoForm(){
-    this.todoDetailsForm = this.formBuilder.group({
-      title: ['', Validators.required],
-      dueDate: [''],
-      repeat: [{value: '', disabled: true}],
-      endDate: [{value: '', disabled: true}],
-      alertDesc: [''],
-      linkTo: [''],
-      clientId :[{}],
-      vendorId: [{}],
-      repeatTime:['']
-    });
+    if(!this.isEdit){
+    this.todoDetailsForm.controls['clientId'].disable()
+    this.todoDetailsForm.controls['vendorId'].disable()
     this.todoDetailsForm.controls['repeat'].setValue('NEVER')
+    this.todoDetailsForm.controls['repeat'].disable()
+    this.todoDetailsForm.controls['endDate'].disable()
+  }else{
+    this.getTodo$.subscribe(res =>{
+      if (this.isEdit && res) {
+        this.todoDetailsForm.patchValue({
+          title: res.alertName,
+          repeat: res.alertFrequencyCode,
+          alertDesc: res.alertDesc,
+          linkTo: res.entityTypeCode
+        })
+        this.todoDetailsForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
+        if(res.alertEndDate){
+        this.todoDetailsForm.controls["endDate"].setValue(new Date(res.alertEndDate));
+        }
+        else{
+        this.todoDetailsForm.controls["endDate"].setValue(null);
 
+        }
+       if(res.entityTypeCode !=='CLIENT'){
+        this.showVendorSearch = true;
+        this.showClientSearch = false;
+        this.placeholderText = this.vendorPlaceHolderText;
+        this.searchProviderSubject.next([
+          { providerName : res.providerName,
+            tin : res.tin,
+            providerId: res.entityId
+          }
+        ])
+        this.todoDetailsForm.controls["vendorId"].setValue({
+          providerName : res.providerName,
+          tin : res.tin,
+          providerId: res.entityId
+        })
+        this.todoDetailsForm.controls['vendorId'].setValidators([Validators.required]);
+        this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
+      }else{
+        this.showVendorSearch = false;
+        this.showClientSearch = true;
+        this.placeholderText = this.clientPlaceHolderText;
+
+        this.clientSubject.next([{
+          clientFullName : res.clientFullName,
+          dob : res.dob,
+          ssn: res.ssn,
+          clientId : res.entityId
+        }])
+        this.todoDetailsForm.controls["clientId"].setValue({
+          clientFullName : res.clientFullName,
+          dob : res.dob,
+          ssn: res.ssn,
+          clientId : res.entityId
+        })
+        this.todoDetailsForm.controls['clientId'].setValidators([Validators.required]);
+        this.todoDetailsForm.controls['clientId'].updateValueAndValidity();
+      }   
+    }
+    });
+  }
   }
 
   loadVendorsBySearchText(vendorSearchText:any){
@@ -78,15 +159,7 @@ export class TodoDetailComponent implements OnInit {
     this.searchProvider.emit({SearchText : vendorSearchText, 
       VendorTypeCode : this.todoDetailsForm.controls['linkTo'].value})
   }
-  onRepeatChange(event:any){
-    console.log(event)
-    if(event !== 'NEVER'){
-      this.showTimePicker =true
-    }else{
-      this.showTimePicker =false
-    }
 
-  }
 
     
   loadClientBySearchText(clientSearchText: any) {
@@ -104,11 +177,23 @@ export class TodoDetailComponent implements OnInit {
 
   onLinkToChange(event:any){
     if(event == 'CLIENT'){
+      this.todoDetailsForm.controls['clientId'].enable()
   this.showClientSearch = true;
   this.showVendorSearch = false;
+  this.placeholderText= this.clientPlaceHolderText
+  this.todoDetailsForm.controls['vendorId'].clearValidators();
+  this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
+  this.todoDetailsForm.controls['clientId'].setValidators([Validators.required]);
+  this.todoDetailsForm.controls['clientId'].updateValueAndValidity(); 
     }else{
+    this.todoDetailsForm.controls['vendorId'].enable()
       this.showClientSearch = false;
       this.showVendorSearch = true;
+     this.placeholderText= this.vendorPlaceHolderText
+     this.todoDetailsForm.controls['clientId'].clearValidators();
+     this.todoDetailsForm.controls['clientId'].updateValueAndValidity();
+     this.todoDetailsForm.controls['vendorId'].setValidators([Validators.required]);
+     this.todoDetailsForm.controls['vendorId'].updateValueAndValidity();
     }
   }
 
@@ -140,11 +225,18 @@ export class TodoDetailComponent implements OnInit {
 
   CreateToDoItem(){
     this.createTodo$.subscribe(res =>{
+      if(res){
+      this.loadToDoSearch()
       this.closeTodoDetailsClicked()
+      }
     })
     let entityTypeCode ='';
     let entityId =''
     this.todoDetailsForm.markAllAsTouched()
+    this.isValidateForm =true;
+    if(!this.todoDetailsForm.controls['clientId'].value?.clientId && this.showClientSearch){
+      this.todoDetailsForm.controls['clientId'].setErrors({ 'required': true });
+    }
     if (this.todoDetailsForm.invalid) {
       return;
     }
@@ -161,15 +253,30 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
       alertName :  this.todoDetailsForm.controls['title'].value,
       alertDueDate : dueDate,
       alertEndDate : endDate,
+      alertId :    this.alertId,
       alertDesc : this.todoDetailsForm.controls['alertDesc'].value,
       entityTypeCode : entityTypeCode,
       entityId :entityId ,
       alertFrequencyCode :  this.todoDetailsForm.controls['repeat'].value,
       customAlertFlag : 'Y',
-      repeatTime:new Date(this.todoDetailsForm.controls['repeatTime'].value).getHours()+":"+new Date(this.todoDetailsForm.controls['repeatTime'].value).getMinutes()
+      type:'TODO'
     }
 
-    this.onTodoItemCreateClick.emit(payload);
-    console.log(payload)
+    if(!this.isEdit){
+      this.onTodoItemCreateClick.emit(payload)
+    }
+    else{
+    this.onUpdateTodoItemClick.emit(payload);
+    }
+  }
+
+  endDateValidation(){
+    const endDate = this.todoDetailsForm.controls['endDate'].value;
+    const dueDate = this.todoDetailsForm.controls['dueDate'].value;
+    if (endDate < dueDate && this.todoDetailsForm.controls['endDate'].value) {
+      this.todoDetailsForm.controls['endDate'].setErrors({ 'incorrect': true });
+    
+      return;
+    }
   }
 }

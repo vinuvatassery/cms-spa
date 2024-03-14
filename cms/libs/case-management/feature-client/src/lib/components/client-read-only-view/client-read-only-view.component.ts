@@ -1,5 +1,6 @@
 /** Angular **/
-import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input, ChangeDetectorRef, OnDestroy } from '@angular/core';
+
+import { Component, ChangeDetectionStrategy, Output, EventEmitter, OnInit, Input, ChangeDetectorRef, OnDestroy, ElementRef } from '@angular/core';
 import {
   ClientProfile, ClientFacade, Client,
   ClientCaseEligibility, ClientPronoun, ClientGender,
@@ -14,7 +15,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { LoaderService, LoggingService, SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { Subject, Subscription, of } from 'rxjs';
 import { IntlService } from '@progress/kendo-angular-intl';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { UserManagementFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 @Component({
   selector: 'case-management-client-read-only-view',
   templateUrl: './client-read-only-view.component.html',
@@ -52,13 +53,14 @@ export class ClientReadOnlyViewComponent implements OnInit{
   clientProfileSubscription = new Subscription();
 
   constructor(
+      private readonly elementRef: ElementRef,
       private loaderService: LoaderService,
       private loggingService: LoggingService,
       private clientFacade: ClientFacade,
       private caseFacade: CaseFacade,
       private intl: IntlService,
-      private configurationProvider: ConfigurationProvider,){}
-
+      private configurationProvider: ConfigurationProvider,
+      private scrollFocusValidationfacade: ScrollFocusValidationfacade){}
    /** Lifecycle hooks **/
  ngOnInit(): void {
   this.loadReadOnlyClientInfoEvent.emit();
@@ -233,6 +235,11 @@ export class ClientReadOnlyViewComponent implements OnInit{
     }
     else {
       this.loaderService.hide();
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.appInfoForm, this.elementRef.nativeElement,null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
+      }
       return of(false);
     }
   }

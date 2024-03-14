@@ -1,9 +1,9 @@
-<kendo-grid [resizable]="true" [navigable]="true" [loading]="gridLoaderShow" [data]="batchLogExcptionLists$ | async" >
+<kendo-grid [resizable]="true" [navigable]="true" [loading]="gridLoaderShow" [data]="batchLogExceptionLists$ | async" >
   <kendo-grid-column field="errorCode" title="Error Code" [width]="100">
   </kendo-grid-column>
   <kendo-grid-column field="rowNo" title="File Row Number" [width]="120">
   </kendo-grid-column>
-  <kendo-grid-column field="keyRecordId" title="Key Record ID" [width]="120">
+  <kendo-grid-column field="keyRecordId" title="{{keyIdColumnHeader}}" [width]="120">
   </kendo-grid-column>
   <kendo-grid-column field="description" title="Error Description" [width]="180">
   </kendo-grid-column>
@@ -24,11 +24,7 @@
         </div>
       </div>
     </ng-template>
-    </kendo-grid>
     <ng-template kendoGridNoRecordsTemplate>
-    <div  class="text-center">
-      <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-      </div>
-      <p>There is no error log.</p>
-    </div>
+      <common-grid-no-records></common-grid-no-records>
     </ng-template>
+    </kendo-grid>

@@ -1,32 +1,105 @@
 <!-- Case List table -->
 <div class="app-c-drag-row-table">
-  <kendo-grid [data]="todoGrid$ | async" [columnMenu]="true" [sortable]="true" >
-    <kendo-grid-column field="Title" title="Title" [width]="100">
+  <kendo-grid [data]="gridToDoItemData$ | async" [columnMenu]="true" [sortable]="true" 
+  (dataStateChange)="dataStateChange($event)"
+  [loading]="(isToDoGridLoaderShow | async) === true"
+  [sort]="toDoGridState.sort"
+  [pageSize]="toDoGridState.take"
+  [filter]="toDoGridState.filter"
+  [columnMenu]="{filter: true }">
+    <kendo-grid-column field="alertName" title="Title" [width]="100">
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="TodoItemFor" title="To Do Item For" [width]="130">
+    <kendo-grid-column field="entityName" title="To Do Item For" [width]="130">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <button kendoButton look="flat" *ngIf="dataItem.TodoItemFor" [attr.aria-label]="dataItem.TodoItemFor" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover"
-          aria-label="todo item for">
-          {{ dataItem.TodoItemFor }}
+        <button kendoButton look="flat" *ngIf="dataItem.entityName" [attr.aria-label]="dataItem.entityName" class="card-link-button"
+        (click)="onToDoClicked(dataItem)" aria-label="todo item for">
+          {{ dataItem.entityName }}
         </button>
       </ng-template>
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="Type" title="Type" [width]="100">
+    <kendo-grid-column field="entityTypeCode" title="Type" [width]="100">
       <ng-template kendoGridCellTemplate let-dataItem>
-      <span class="text-upper">  {{ dataItem.Type }}</span>
+      <span class="text-upper">  {{ dataItem.entityTypeCode }}</span>
       </ng-template>
+      <ng-template kendoGridFilterMenuTemplate
+      let-column="column"
+      let-filter="filter"
+      let-filterService="filterService">
+      <kendo-dropdownlist
+      [data]="entityTypeList"
+      textField="lovDesc"
+      valueField="lovCode"
+      [valuePrimitive]="false"
+      (valueChange)="dropdownFilterChange('entityTypeCode',$event, filterService)">
+    </kendo-dropdownlist>
+    </ng-template>
     </kendo-grid-column>
-    <kendo-grid-column field="Description" title="Description" [width]="300"></kendo-grid-column>
-    <kendo-grid-column field="DueDate" title="Due Date" [width]="100"></kendo-grid-column>
-    <kendo-grid-column field="Option" title="" [width]="40" class="text-center" [columnMenu]="false">
+    <kendo-grid-column field="alertDesc" title="Description" [width]="300">
       <ng-template kendoGridCellTemplate let-dataItem>
-        <kendo-dropdownbutton [data]="moreactions"  title="More option" aria-label="more actions"
+        <button kendoButton look="flat" *ngIf="dataItem.creatorCw && dataItem.entityTypeCode=='INSURANCE_PREMIUM'" [attr.aria-label]="dataItem.creatorCw" class="card-link-button" kendoPopoverAnchor [popover]="userCard" showOn="hover"
+          aria-label="todo item for">
+          {{ dataItem.creatorCw }}
+        </button>
+        <p style="margin-top: 7px;">{{dataItem.alertDesc}}</p>
+        <kendo-popover #userCard width="330">
+          <ng-template kendoPopoverBodyTemplate>
+            <common-user-profile-card
+            [userId]="dataItem.creatorUserId"
+            ></common-user-profile-card>
+          </ng-template>
+        </kendo-popover>
+      </ng-template>
+      <ng-template kendoGridFilterMenuTemplate  let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                  <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                  <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                  <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                  <kendo-filter-contains-operator></kendo-filter-contains-operator>
+        </kendo-grid-string-filter-menu>
+         </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="alertDueDate" title="Due Date" [width]="100">
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{dataItem.alertDueDate |date:'MM/dd/YYYY'}}
+        <span class="material-icons" aria-label="repeat" *ngIf="dataItem.alertFrequencyCode!=alertFrequencyTypes.Never">loop</span>
+        
+    </ng-template>
+    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+      <common-grid-cell-date-range-filter
+        [field]="'alertDueDate'"
+        [filter]="filter"
+        [filterService]="filterService"
+      >
+      </common-grid-cell-date-range-filter>
+    </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="alertDueDate" title="" [width]="40" class="text-center" [columnMenu]="false">
+      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        <kendo-dropdownbutton [data]="moreactions" *ngIf="dataItem.customAlertFlag && dataItem.customAlertFlag=='Y'" 
+          title="More option" aria-label="more actions"
           class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
-          [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+          [popupSettings]="{ popupClass: popupClassAction, animate: true }"
+          (itemClick)="onToDoActionClicked($event,dataItem)">
           <span class="material-icons" aria-label="More option"> more_vert    </span>
           <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-            <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-              aria-hidden="false" (click)="dataItem.click()">
+            <button kendoButton look="flat" [attr.aria-label]="dataItem.text" id="done" [class]="dataItem.buttonType"
+              aria-hidden="false">
               <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
               <label> {{ dataItem.text }} </label>
             </button>
@@ -40,23 +113,17 @@
     </ng-template>
     <!-- grid No data Template -->
     <ng-template kendoGridNoRecordsTemplate>
-      <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
-      </div>
-      <p>There is no data to display.</p>
+      <common-grid-no-records></common-grid-no-records>
     </ng-template>
   </kendo-grid>
 </div>
 
 <!-- User Card -->
-<kendo-popover #userCard width="330">
-  <ng-template kendoPopoverBodyTemplate>
-    <common-user-profile-card></common-user-profile-card>
-  </ng-template>
-</kendo-popover>
+
 
 
 <ng-template #deleteToDODialogTemplate>   
-  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
 </ng-template>
 
 

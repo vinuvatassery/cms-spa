@@ -1,17 +1,23 @@
-<section class="k-dialog-body" kendoTooltip  [formGroup]="todoDetailsForm">
+<section class="k-dialog-body" kendoTooltip  [formGroup]="todoDetailsForm" >
   <p class="text-muted mb-2">
     All fields are required unless otherwise stated.
   </p>
-  <div class="flex-row">
+  
+  <div class="flex-row" >
     <div class="flex-col">
       <kendo-floatinglabel text="Title">
         <kendo-textbox aria-label="todo title"    
         [fillMode]="formUiStyle.inputFillMode"
-        formControlName="title" >   </kendo-textbox>
+        formControlName="title" 
+        [maxlength]="100">  
+       </kendo-textbox>
+       <kendo-formerror *ngIf="!todoDetailsForm.controls['title']?.valid && isValidateForm">
+        Title is required
+      </kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
-      <kendo-floatinglabel text="Due Date (Optional)">
+      <kendo-floatinglabel text="Due Date">
         <kendo-datepicker  format="MM-dd-yyyy"
          [fillMode]="formUiStyle.dateInputFillMode" 
          formatPlaceholder="formatPattern"
@@ -19,6 +25,9 @@
          (valueChange)="onDueChange($event)"
          >
         </kendo-datepicker>
+        <kendo-formerror *ngIf="!todoDetailsForm.controls['dueDate']?.valid && isValidateForm">
+          Due Date is required
+        </kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
@@ -29,18 +38,13 @@
                 valueField="lovCode"
                 [valuePrimitive]="true"
           [data]="frequencyTypeCodeSubject$ | async"
-          (valueChange)="onRepeatChange($event)"
           >
         </kendo-dropdownlist>
-      </kendo-floatinglabel>
-    </div>
-    <div class="flex-col flex-col-6" *ngIf="showTimePicker">
-      <kendo-floatinglabel text="Time (Optional)">
-        <kendo-timepicker
-          [fillMode]="formUiStyle.dateInputFillMode"
-          formControlName="repeatTime"
-          formatPlaceholder="formatPattern"
-        ></kendo-timepicker>
+        <kendo-formerror *ngIf="!todoDetailsForm.controls['repeat']?.valid 
+        && isValidateForm 
+        && todoDetailsForm.controls['dueDate'].valid">
+          Repeat is required
+        </kendo-formerror>
       </kendo-floatinglabel>
     </div>
     <div class="flex-col flex-col-6">
@@ -50,8 +54,12 @@
           formatPlaceholder="formatPattern"
           [fillMode]="formUiStyle.dateInputFillMode"
           formControlName="endDate"
+          (keyup)="endDateValidation()"
+          (valueChange)="endDateValidation()"
         >
         </kendo-datepicker>
+        <kendo-formerror *ngIf="todoDetailsForm.controls['endDate'].hasError('incorrect')"> Must be after Due Date.</kendo-formerror>
+
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
@@ -75,17 +83,24 @@
       </kendo-floatinglabel>
     </div>
     <div class="flex-col mt-2 field_with_info">
-      <kendo-floatinglabel text="Link Reminder To">
+      <kendo-floatinglabel text="Link Item To">
         <kendo-dropdownlist aria-label="Link Reminder To"
          [fillMode]="formUiStyle.dropDownFillMode" 
         formControlName="linkTo"
         (valueChange)="onLinkToChange($event)"
-        [data]="EntityTypeCodeData"> </kendo-dropdownlist>
+        textField="lovDesc"
+        valueField="lovCode"
+        [valuePrimitive]="true"
+        [data]="entityTypeCodeSubject$ | async "> </kendo-dropdownlist>
+        <kendo-formerror *ngIf="!todoDetailsForm.controls['linkTo']?.valid
+         && isValidateForm ">
+         Link Item To is required
+        </kendo-formerror>
     </kendo-floatinglabel>
     <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
     
       </div>
-    <div class="flex-col mt-2 field_with_info" *ngIf="showVendorSearch">
+    <div class="flex-col mt-2"   *ngIf="showVendorSearch">
       <div class="autoSelect-search mat-form-no-b-space ">
         <div class="global-search">
           <span
@@ -94,12 +109,15 @@
             aria-hidden="true"
             >search</span
           >
+          <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
+          class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
+      </span>
           <kendo-multicolumncombobox 
             textField="providerName"
             valueField="providerId"
             [data]="providerSearchResult$ | async"
             [fillMode]="formUiStyle.dropDownFillMode"
-            placeholder="Link to Client or Service Provider (Optional)"
+            [placeholder]="placeholderText"
            
             (filterChange)="loadVendorsBySearchText($event)"
             [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
@@ -112,14 +130,16 @@
                 let-dataItem
               >
                 <span class="pr-1">{{ dataItem.providerName }}</span>
-                <span class="text-muted">Tin {{ dataItem.tin }}</span>
+                <span class="text-muted">Tin {{ dataItem.tin | tin }}</span>
               </ng-template>
             </kendo-combobox-column>
           </kendo-multicolumncombobox>
+          <kendo-formerror *ngIf="!todoDetailsForm.controls['vendorId']?.valid && isValidateForm && todoDetailsForm.controls['linkTo'].valid">
+            Vendor is required
+          </kendo-formerror>
         </div>
       </div>
-      <span class="material-icons" aria-hidden="true" title="Select a client or service provider if you want this reminder to be displayed in their profile.">info</span>
-    </div> 
+     </div> 
     <div class="flex-col mt-2" *ngIf="showClientSearch">
       <div class="global-search mat-form-no-b-space">
         <span
@@ -128,21 +148,22 @@
           aria-hidden="true"
           >search</span
         >
-        <span *ngIf="showClientSearchInputLoader"
+      <span *ngIf="clientSearchLoaderVisibility$ |async"
         class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
     </span>
         <kendo-multicolumncombobox 
        
-          [data]="clientSearchResult$  | async"
+          [data]="clientSearchResult$ |async"
           textField="clientFullName"
           valueField="clientId"
-          placeholder="Search Case Name, Member ID or SSN"
+          [placeholder]="placeholderText"
           [fillMode]="formUiStyle.dropDownFillMode"
           (filterChange)="loadClientBySearchText($event)"
           [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
           [filterable]="true"
           formControlName="clientId"
           [loading]="showClientSearchInputLoader"
+
           >
           <kendo-combobox-column>
             <ng-template
@@ -157,6 +178,9 @@
           </kendo-combobox-column>
           
         </kendo-multicolumncombobox>
+        <kendo-formerror *ngIf="!todoDetailsForm.controls['clientId']?.valid && isValidateForm && todoDetailsForm.controls['linkTo'].valid">
+          Client is required
+        </kendo-formerror>
       </div>
     </div>
   </div>
@@ -177,7 +201,8 @@
       >
         Cancel
       </button>
-      <button kendoButton [primary]="true" aria-label="Create" (click)="CreateToDoItem()">Create</button>
+      <button kendoButton [primary]="true" aria-label="Create" 
+      (click)="CreateToDoItem()">{{isEdit? 'Update' :'Create'}}</button>
     </div>
   </div>
 </kendo-dialog-actions>

@@ -92,10 +92,12 @@ export class LovFacade {
   private pendingApprovalPaymentTypeSubject = new Subject<any>();
   private lovVendorTypeCodeSubject = new Subject<any>();
   private lovFrequencyTypeCodeSubject = new BehaviorSubject<Lov[]>([]);
+  private lovEntityTypeCodeSubject = new BehaviorSubject<Lov[]>([])
 
   private serviceTypeSubject = new Subject<any>();
   private refundTypeSubject = new Subject<any>();
   private batchStatusSubject = new Subject<any>();
+  private lovProofOfIncomeByTypeSubject = new BehaviorSubject<Lov[]>([]);
 
   private interfaceExceptionSubject = new BehaviorSubject<Lov[]>([]);
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
@@ -174,7 +176,10 @@ export class LovFacade {
   yesOrNoLov$ = this.lovYesOrNoSubject.asObservable();
   deliveryMethodLov$ = this.lovDeliveryMethodSubject.asObservable();
   VendorTypeCodeLov$ = this.lovVendorTypeCodeSubject.asObservable();
-  frequencyTypeCodeSubject$ = this.lovFrequencyTypeCodeSubject.asObservable()
+  frequencyTypeCodeSubject$ = this.lovFrequencyTypeCodeSubject.asObservable()  
+  entityTypeCodeSubject$ = this.lovEntityTypeCodeSubject.asObservable()
+  lovProofOfIncomeByType$ = this.lovProofOfIncomeByTypeSubject.asObservable();
+
   interfaceExceptionLov$ = this.interfaceExceptionSubject.asObservable();
   BatchInterfaceStatusLov$ = this.BatchInterfaceStatusSubject.asObservable();
   interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
@@ -966,10 +971,33 @@ export class LovFacade {
       }
     });
   }
+
+  getEntityTypeCodeLov(){
+    this.lovDataService.getLovsbyType(LovType.EntityTypeCode).subscribe({
+      next: (lovResponse) => {
+        this.lovEntityTypeCodeSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
   getEventAttachmentTypeLov(): void {
     this.lovDataService.getLovsbyType(LovType.EventAttachemntType).subscribe({
       next: (lovResponse) => {
         this.eventAttachmentTypeLovSubject.next(lovResponse);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      }
+    });
+  }
+
+  getProofOfIncomeTypesByTypeLov() {
+    return this.lovDataService.getLovsbyType(LovType.ProofOfIncomeType).subscribe({
+      next: (lovResponse) => {
+        this.lovProofOfIncomeByTypeSubject.next(lovResponse);
       },
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
