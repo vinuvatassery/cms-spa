@@ -11,9 +11,9 @@ export class HousingAcuityLevelPageComponent {
   sortType = this.systemConfigHousingCoordinationFacade.sortType;
   pageSizes = this.systemConfigHousingCoordinationFacade.gridPageSizes;
   gridSkipCount = this.systemConfigHousingCoordinationFacade.skipCount;
-  sortValueHousingAcuity = this.systemConfigHousingCoordinationFacade.sortValueHousingAcuityListGrid;
-  sortHousingAcuityGrid = this.systemConfigHousingCoordinationFacade.sortCaseHousingAcuityListGrid;
-  eidLifeTimeService$ = this.systemConfigHousingCoordinationFacade.housingAcuityLevel$; 
+  sortValueHousingAcuityListGrid = this.systemConfigHousingCoordinationFacade.sortValueHousingAcuityListGrid;
+  sortHousingAcuityListGrid = this.systemConfigHousingCoordinationFacade.sortHousingAcuityListGrid;
+  housingAcuityLevel$ = this.systemConfigHousingCoordinationFacade.housingAcuityLevel$; 
   /** Constructor **/
   constructor(private readonly systemConfigHousingCoordinationFacade: SystemConfigHousingCoordinationFacade) { }
 

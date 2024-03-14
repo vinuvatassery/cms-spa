@@ -11,16 +11,16 @@ export class EidLifetimePeriodPageComponent {
   sortType = this.systemConfigHousingCoordinationFacade.sortType;
   pageSizes = this.systemConfigHousingCoordinationFacade.gridPageSizes;
   gridSkipCount = this.systemConfigHousingCoordinationFacade.skipCount;
-  sortValueEidLifeTime = this.systemConfigHousingCoordinationFacade.sortValueEidLifeListGrid;
-  sortEidLifeTimeGrid = this.systemConfigHousingCoordinationFacade.sortCaseEidLifeListGrid;
-  eidLifeTimeService$ = this.systemConfigHousingCoordinationFacade.caseAvailabilities$; 
+  sortValuePeriods = this.systemConfigHousingCoordinationFacade.sortValueEidLifeListGrid;
+  sortPeriodsGrid = this.systemConfigHousingCoordinationFacade.sortCaseEidLifeListGrid;
+ Periods$ = this.systemConfigHousingCoordinationFacade.Periods$; 
   /** Constructor **/
   constructor(private readonly systemConfigHousingCoordinationFacade: SystemConfigHousingCoordinationFacade) { }
 
 
  
   loadEidLifeTimeLists(data: any){
-    this.systemConfigHousingCoordinationFacade.loadClientProfileCaseAvailabilities();
+    this.systemConfigHousingCoordinationFacade.loadPeriods();
   }
 
 }

@@ -1,4 +1,7 @@
-<section class="systemconfig-components app-l-inner-rapper pt-0 ">
-      <common-bread-crumb></common-bread-crumb>
-<system-config-ps-mfr-zip-list></system-config-ps-mfr-zip-list>
-</section>
+ 
+<system-config-ps-mfr-zip-list 
+[psMfrZipDataLists$]="pSMFRZIP$" 
+[pageSizes]="pageSizes" [sortValue]="sortValuePSMFRZIPListGrid"
+[sortType]="sortType" [sort]="sortPSMFRZIPListGrid" 
+(loadPsMfrZipListsEvent)="loadPSMFRZIPList($event)" ></system-config-ps-mfr-zip-list>
+ 

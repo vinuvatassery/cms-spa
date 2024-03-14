@@ -34,15 +34,15 @@ export class SystemConfigHousingCoordinationFacade {
     field: this.sortValueEidLifeListGrid,
   }];
   public sortValueHousingAcuityListGrid = 'creationTime'; 
-  public sortCaseHousingAcuityListGrid: SortDescriptor[] = [{
+  public sortHousingAcuityListGrid: SortDescriptor[] = [{
     field: this.sortValueHousingAcuityListGrid,
   }];
   public sortValueIncomeInclusionsListGrid = 'creationTime'; 
-  public sortCaseIncomeInclusionsListGrid: SortDescriptor[] = [{
+  public sortIncomeInclusionsListGrid: SortDescriptor[] = [{
     field: this.sortValueIncomeInclusionsListGrid,
   }];
   public sortValuePSMFRZIPListGrid = 'creationTime'; 
-  public sortCasePSMFRZIPListGrid: SortDescriptor[] = [{
+  public sortPSMFRZIPListGrid: SortDescriptor[] = [{
     field: this.sortValuePSMFRZIPListGrid,
   }];
   public sortValueRegionAssignmentListGrid = 'creationTime'; 
@@ -109,7 +109,7 @@ export class SystemConfigHousingCoordinationFacade {
  
  
 
-  loadClientProfileSlots() {
+  loadSlots() {
     this.systemConfigHousingCoordinationService.loadClientProfileSlots().subscribe({
       next: (response) => {
         this.slotsSubject.next(response);
