@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
-import { AlertEntityTypeCode, AlertFrequencyTypeCode, AlertTypeCode, TodoFacade } from '@cms/productivity-tools/domain';
+import { AlertFrequencyTypeCode, AlertTypeCode } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 /** Facades **/
@@ -97,8 +97,7 @@ export class TodoListComponent implements OnInit {
     this.loadAlertGrid$.subscribe((data: any) => {
       this.loadTodoGrid();
     });
-    this.getTodoItemsLov.emit()
-    this.getEntityTypeLovs()
+    this.loadEntityTypeList()
   }
 
   initilizeGridRefinersAndGrid(){
@@ -123,7 +122,7 @@ export class TodoListComponent implements OnInit {
   
 
   /** Private methods **/
-  private loadTodoGrid() {
+  public loadTodoGrid() {
     this.loadTodoGridData(
       this.toDoGridState.skip?? 0,
       this.toDoGridState.take?? 10,
@@ -299,5 +298,9 @@ export class TodoListComponent implements OnInit {
         this.entityTypeList=data.sort((value1:any,value2:any) => value1.sequenceNbr - value2.sequenceNbr);
       }
     });
+  }
+  loadEntityTypeList(){
+    this.entityTypeList.push({"lovDesc":this.entityTypes.Client.toString(),"lovCode":this.entityTypes.Client.toString()});
+    this.entityTypeList.push({"lovDesc":this.entityTypes.Vendor.toString(),"lovCode":this.entityTypes.Vendor.toString()});
   }
 }
