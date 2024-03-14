@@ -5,11 +5,13 @@ import {
   Output,
   TemplateRef,
   OnInit,
+  ViewChild,
 } from '@angular/core';
-import { FinancialVendorFacade, SearchFacade } from '@cms/case-management/domain';
+import { FinancialVendorFacade, FinancialVendorRefundFacade, SearchFacade, VendorFacade } from '@cms/case-management/domain';
 import { TodoFacade } from '@cms/productivity-tools/domain';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { TodoListComponent } from '../../components/todo-list/todo-list.component';
 
 @Component({
   selector: 'productivity-tools-todo-page',
@@ -24,37 +26,52 @@ export class TodoPageComponent implements OnInit {
   todoGrid$ = this.todoFacade.todoGrid$;
   loadAlertGrid$ = this.todoFacade.loadAlertGrid$;
   frequencyTypeCodeSubject$ = this.lovFacade.frequencyTypeCodeSubject$
+  entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
+  getTodo$ = this.todoFacade.getTodo$;
   showHeaderSearchInputLoader = false;
-  clientSearchResult$ = this.searchFacade.clientSearch$;
+  searchProviderSubject = this.financialVendorFacade.searchProviderSubject
+  clientSearchLoaderVisibility$ = this.FinancialRefundFacade.clientSearchLoaderVisibility$;
+  clientSearchResult$ = this.FinancialRefundFacade.clients$;
+  clientSubject = this.FinancialRefundFacade.clientSubject;
   providerSearchResult$ =this.financialVendorFacade.searchProvider$ 
-  createTodo$ = this.todoFacade.createTodo$
+  medicalProviderSearchLoaderVisibility$ = this.financialVendorFacade.medicalProviderSearchLoaderVisibility$
+  @ViewChild('todoList', { static: false })
+  todoList!: TodoListComponent;
+  selectedAlertId! :any
+  createTodo$ = this.todoFacade.curdAlert$
   /** Constructor **/
   constructor(private dialogService: DialogService, 
     public todoFacade: TodoFacade,
     public lovFacade : LovFacade,
-    private readonly searchFacade: SearchFacade,
+    private readonly FinancialRefundFacade: FinancialVendorRefundFacade,
     private readonly financialVendorFacade : FinancialVendorFacade) {}
  
     ngOnInit(): void {
-      this.lovFacade.getFrequencyTypeLov()
+     
   }
 
   searchClientName(event:any){
-    this.searchFacade.loadCaseBySearchText(event);
+    this.FinancialRefundFacade.loadClientBySearchText(event);
   }
 
+  getTodoItemsLov(){
+    this.lovFacade.getFrequencyTypeLov()
+    this.lovFacade.getEntityTypeCodeLov()
+  }
   searchProvider(data:any){
-    this.financialVendorFacade.searchProvider(data);
+    this.financialVendorFacade.searchAllProvider(data);
   }
   /** Public methods **/
   onCloseTodoClicked(result: any) {
     if (result) {
+      this.selectedAlertId = undefined
       this.isToDODetailsActionOpen = false;
       this.todoDetailsDialog.close();
     }
   }
 
-  onOpenTodoClicked(template: TemplateRef<unknown>): void {
+  onOpenTodoClicked(alertId:any ,template: TemplateRef<unknown>): void {
+   this.selectedAlertId = alertId
     this.todoDetailsDialog = this.dialogService.open({
       content: template,
       cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np mnl',
@@ -64,6 +81,10 @@ export class TodoPageComponent implements OnInit {
   onloadTodoGrid(event: any, alertTypeCode:any){
     this.todoFacade.loadAlerts(event,alertTypeCode.alertType);
   }
+
+   loadTodoList(){
+    this.todoList.initilizeGridRefinersAndGrid()
+   }
   onMarkAlertDoneGrid(selectedAlertId: any){
     this.todoFacade.markAlertAsDone(selectedAlertId);
   }
@@ -72,6 +93,14 @@ export class TodoPageComponent implements OnInit {
   }
 
   onTodoItemCreateClick(payload:any){
-    this.todoFacade.createTodoItem(payload);
+    this.todoFacade.createAlertItem(payload);
+  }
+
+  onUpdateTodoItemClick(payload:any){
+    this.todoFacade.updateAlertItem(payload)
+  }
+
+  onGetTodoItem($event:any){
+    this.todoFacade.getTodoItem($event);
   }
 }

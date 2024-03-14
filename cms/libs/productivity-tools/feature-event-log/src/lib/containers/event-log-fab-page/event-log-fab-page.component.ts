@@ -1,23 +1,25 @@
 /** Angular **/
-import {    ChangeDetectionStrategy,    Component,     OnInit  } from '@angular/core'; 
+import {
+  ChangeDetectionStrategy,
+  Component,
+} from '@angular/core';
+import { FabMenuFacade } from '@cms/productivity-tools/domain';
 
-  @Component({
-    selector: 'productivity-tools-event-log-fab-page',
-    templateUrl: './event-log-fab-page.component.html',  
-    changeDetection: ChangeDetectionStrategy.OnPush,
-  })
-  export class EventLogComponentFabPageComponent implements OnInit {
-
-    showEventLogs = false
-    /** Public properties **/
-    closeAction()
-    {
-      this.showEventLogs = false
-    }
+@Component({
+  selector: 'productivity-tools-event-log-fab-page',
+  templateUrl: './event-log-fab-page.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class EventLogComponentFabPageComponent 
+{  
+  constructor(
+    public readonly fabMenuFacade: FabMenuFacade  
+  ) {}
   
-      /** Lifecycle hooks **/
-      ngOnInit(): void {
-        debugger
-        this.showEventLogs = true
-      }
+  /** Public properties **/
+  closeAction() {
+   
+    this.fabMenuFacade.isShownEventLog = !this.fabMenuFacade.isShownEventLog;
   }
+
+}

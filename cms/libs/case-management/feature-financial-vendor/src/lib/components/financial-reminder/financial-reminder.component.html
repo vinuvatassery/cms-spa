@@ -37,9 +37,20 @@
       class="app-c-modal app-c-modal-md app-c-modal-np"
     >
       <kendo-dialog-titlebar>
-        Create New Reminder for Donna
+        Create New Reminder {{reminderIsFor ? 'for '+reminderIsFor : ''}}
       </kendo-dialog-titlebar>
-      <productivity-tools-reminder-detail></productivity-tools-reminder-detail>
+      <productivity-tools-reminder-detail
+      [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+      (isModalNewReminderCloseClicked)="onCloseReminderClicked()"
+      [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
+      [providerSearchResult$]="  providerSearchResult$"
+      [clientSubject]="clientSubject"
+      [clientSearchResult$]="clientSearchResult$"
+      [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
+      (searchClientName)="searchClientName($event)"
+      (searchProvider)="searchProvider($event)"
+      (remainderFor)="remainderFor($event)"
+      ></productivity-tools-reminder-detail>
     </kendo-dialog>
   </section>
   

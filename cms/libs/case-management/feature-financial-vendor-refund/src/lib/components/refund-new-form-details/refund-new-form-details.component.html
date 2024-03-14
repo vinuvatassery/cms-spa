@@ -14,7 +14,8 @@
                         <span *ngIf="clientSearchLoaderVisibility$ | async"
                             class=" k-icon k-i-loading k-input-loading-icon input-inline-loader">
                         </span>
-                        <kendo-multicolumncombobox [data]="clientSearchResult$ | async" textField='clientNames'
+                        <kendo-multicolumncombobox [data]="clientSearchResult$ | async" 
+                        textField='clientNames'
                         valueField="clientId" [fillMode]="formUiStyle.dropDownFillMode"
                         placeholder="Search Client Name, ID, SSN"
                         [popupSettings]="{popupClass: 'combotable_search_list', animate: true }"
@@ -472,10 +473,7 @@
                             </ng-template>
                             <!-- grid No data Template -->
                             <ng-template kendoGridNoRecordsTemplate>
-                                <div> <kendo-badge-container> <span class="material-icons"> info </span>
-                                    </kendo-badge-container>
-                                </div>
-                                <p>There is no data to display.</p>
+                                <common-grid-no-records></common-grid-no-records>
                             </ng-template>
                         </kendo-grid>
                     </div>

@@ -49,6 +49,7 @@ import { CmsPharmacyClaimsDetailComponent } from './cms-pharmacy-claims-detail/c
 import { CmsPharmacyClaimsRecentClaimsComponent } from './cms-pharmacy-claims-recent-claims/cms-pharmacy-claims-recent-claims.component';
 import { DashboardLoaderPanelComponent } from './dashboard-loader-panel/dashboard-loader-panel.component';
 import { TodoDetailComponent } from './todo-detail/todo-detail.component';
+import { GridNoRecordsComponent } from './grid-no-records/grid-no-records.component';
 import { ReadMoreComponent } from './read-more/read-more.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
@@ -93,6 +94,7 @@ import { ReadMoreComponent } from './read-more/read-more.component';
     CmsPharmacyClaimsDetailComponent,
     CmsPharmacyClaimsRecentClaimsComponent,
     TodoDetailComponent,
+    GridNoRecordsComponent,
     ReadMoreComponent,
   ],
   exports: [
@@ -136,7 +138,8 @@ import { ReadMoreComponent } from './read-more/read-more.component';
     CmsPharmacyClaimsDetailComponent,
     CmsPharmacyClaimsRecentClaimsComponent,
     TodoDetailComponent,
-    ReadMoreComponent,
+    GridNoRecordsComponent, 
+    ReadMoreComponent, 
   ],
 })
 export class SharedUiCommonModule {}

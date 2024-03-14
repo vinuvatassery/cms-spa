@@ -4,7 +4,7 @@ import { DashboardWrapperFacade, WidgetFacade } from '@cms/dashboard/domain';
 import { LocalStorageService } from '@cms/shared/util-core';
 import { AuthService } from '@cms/shared/util-oidc';
 import { UserManagementFacade } from '@cms/system-config/domain';
-import { SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
+import { DashboardTemplate, SystemInterfaceDashboardFacade } from '@cms/system-interface/domain';
 import { State } from '@progress/kendo-data-query';
 import { DisplayGrid, GridType, GridsterConfig, GridsterItem, GridsterItemComponentInterface } from 'angular-gridster2';
 import { Subject, Subscription, first } from 'rxjs';
@@ -45,7 +45,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     public dashboardContentUpdate$ =    this.dashboardWrapperFacade.dashboardContentUpdate$;
     public userDashBoardsList$ = this.dashboardWrapperFacade.userDashBoardsList$;
     static dashBoardContentData: any = [];
-    dashBoardAllWidgetsData: any=[];
+    dashBoardAllWidgetsData: any;
     configSubscription!: Subscription;
     dashBoardContentSubscription!: Subscription;
     dashBoardAllWidgetsSubscription!: Subscription;
@@ -58,7 +58,8 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
       draggable: { enabled: false },
       resizable: { enabled: false },
     };
-    selectedDashBoard: string="b752bb13-153c-4f5c-854d-706abd8659e0";
+    selectedDashBoard!: string;
+    dashboardtemplate=DashboardTemplate.SYSTEM_INTERFACE_TEMPLATE;
     dashBoardSubscriptionItems: any;
     //#endregion
     static updatedWidgets: any = [];
@@ -152,8 +153,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit() {
-    this.dashboardWrapperFacade.showLoader();    
-    this.userDashBoardLstSubscribe();
+   this.userDashBoardLstSubscribe();
     this.initializeDashboard();
   }
 
@@ -167,7 +167,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     }
     else
     {
-    this.dashboardWrapperFacade.getLoggedinUserDashboards('SYSTEM_INTERFACE');
+    this.dashboardWrapperFacade.getLoggedinUserDashboards(this.dashboardtemplate);
     }
   }
 
@@ -222,10 +222,8 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
             
           });
           this.dashboardContentListDataSubject.next(SystemInterfaceDashboardPageComponent.dashBoardContentData);
-          this.dashboardWrapperFacade.hideLoader();
         
       });
-      this.dashboardWrapperFacade.hideLoader();
   }
 
   dashBoardAllWidgetsSubscribe() {
@@ -354,8 +352,7 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
   }
 
   dashBoardUpdateSubscribe() {
-    this.dashboardWrapperFacade.showLoader();
-    this.dashboardContentUpdate$.subscribe((response) => {
+ this.dashboardContentUpdate$.subscribe((response) => {
       if (response === true) {
         
         this.initializeDashboard();
@@ -422,7 +419,8 @@ export class SystemInterfaceDashboardPageComponent implements OnInit,OnDestroy {
     this.dashboardAllWidgetsDataSubject.next(this.dashBoardAllWidgetsData);
   }
 
-  removeWidget(item: any) {    
+  removeWidget(item: any) {
+    
     this.dashBoardAllWidgetsData.push(item);
 
     SystemInterfaceDashboardPageComponent.dashBoardContentData =

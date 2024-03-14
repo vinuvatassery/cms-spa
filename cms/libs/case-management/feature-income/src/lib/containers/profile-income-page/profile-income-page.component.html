@@ -20,8 +20,11 @@
         </div>
         <div class="flex-col">
             <case-management-income-list [data]="screenName" [clientId]="clientId" [clientCaseId]="clientCaseId"
-                [clientCaseEligibilityId]="clientCaseEligibilityId" [isClientProfileTab]="true"
-                (loadIncomeListEvent)="loadIncomeListHandle($event)"></case-management-income-list>
+                [clientCaseEligibilityId]="clientCaseEligibilityId" [currentClientCaseEligibilityId]="currentClientCaseEligibilityId"
+                [isClientProfileTab]="true"
+                (loadIncomeListEvent)="loadIncomeListHandle($event)" 
+                [lovProofOfIncomeByType$]="lovProofOfIncomeByType$" [incomeSourcelov$] = "incomeSourcelov$ " [incomeTypelov$]="incomeTypelov$"
+                [incomeFrequencylov$]="incomeFrequencylov$" [incomesLoader$] ="incomesLoader$"></case-management-income-list>
         </div>
     </div>
 </div>

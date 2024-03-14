@@ -65,7 +65,7 @@
     
     <!-- grid No data Template -->
     <ng-template kendoGridNoRecordsTemplate>
-        <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        <div role="cell" > <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
         </div>
         <p *ngIf="!isPaymentLoadFailed">There is no data to display.</p>
         <p *ngIf="isPaymentLoadFailed">Something went wrong while loading data.</p>
