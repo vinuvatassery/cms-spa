@@ -63,8 +63,9 @@
             <ng-container [formGroup]="refundForm"  *ngIf="selectedRefundType">
             <div class="flex-row" *ngIf="selectedRefundType === 'INSURANCE_PREMIUM'">
                 <div class="flex-col flex-col-6" >
-                    <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">  
+                  
+                        <div class="combotable_search_list new_refund_Search with_float_label">  
+                            <kendo-floatinglabel  text="Vendor">
                             <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>                         
                             <span *ngIf="isShownSearchLoader"
@@ -108,14 +109,16 @@
                                           <div class="no-data-text">No vendors found</div>
                                       </ng-template>
                                   </kendo-multicolumncombobox>
+                                </kendo-floatinglabel>
                               </div>
-                      </kendo-floatinglabel>
+                    
                 </div>
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'TPA'">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel  text="Vendor">
-                        <div class="combotable_search_list new_refund_Search">  
+                   
+                        <div class="combotable_search_list new_refund_Search with_float_label">  
+                            <kendo-floatinglabel  text="Vendor">
                             <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>                         
                             <span *ngIf="medicalProviderSearchLoaderVisibility$ | async"
@@ -157,15 +160,17 @@
                                         <div class="no-data-text">No providers found</div>
                                     </ng-template>
                                   </kendo-multicolumncombobox>
+                                </kendo-floatinglabel>
                               </div>
-                      </kendo-floatinglabel>
+                    
                 </div>
 
             </div>
             <div class="flex-row" *ngIf="selectedRefundType === 'PHARMACY' || selectedRefundType === 'RX'">
                 <div class="flex-col flex-col-6">
-                    <kendo-floatinglabel  text="Pharmacy" >
-                    <div class="combotable_search_list new_refund_Search">
+                 
+                    <div class="combotable_search_list new_refund_Search with_float_label">
+                        <kendo-floatinglabel  text="Pharmacy" >
                         <span class="material-icons global-search-icon" aria-label="search"
                             aria-hidden="true">search</span>
                        
@@ -207,8 +212,9 @@
                             <div class="no-data-text">No Vendors found</div>
                         </ng-template>
                       </kendo-multicolumncombobox>
+                    </kendo-floatinglabel>
                    </div>
-                </kendo-floatinglabel>
+              
                 </div>
 
             </div>
