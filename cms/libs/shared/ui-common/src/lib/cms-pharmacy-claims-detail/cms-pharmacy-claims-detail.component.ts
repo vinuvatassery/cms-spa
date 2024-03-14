@@ -192,10 +192,11 @@ export class CmsPharmacyClaimsDetailComponent implements OnInit, OnDestroy{
 
   addClaimServiceGroup()
   {
+    const currentDate = new Date();
     const pharmacyClaimService = this.formBuilder.group({
       prescriptionFillId : ['00000000-0000-0000-0000-000000000000'],
       claimNbr  : ['', Validators.required],
-      prescriptionFillDate  : ['', Validators.required],
+      prescriptionFillDate  :  [currentDate, Validators.required], 
       copayAmountPaid  : ['', Validators.required],
       ndc  : ['', Validators.required],
       qntType  : ['', Validators.required],
