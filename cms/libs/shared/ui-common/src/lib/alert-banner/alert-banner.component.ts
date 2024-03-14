@@ -1,6 +1,7 @@
 /** Angular **/
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -11,7 +12,7 @@ import {
 import { Observable } from 'rxjs/internal/Observable';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
-
+import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
   selector: 'common-alert-banner',
   templateUrl: './alert-banner.component.html',
@@ -30,6 +31,9 @@ export class AlertBannerComponent implements OnInit {
   public duration =this.configurationProvider.appSettings.snackbarAnimationDuration;
   showMoreAlert = false;
   reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
+  alertText:string='';
+  DueDate="";
+  moreItems="";
   public reminderActions = [
     {
       buttonType:"btn-h-primary",
@@ -57,59 +61,55 @@ export class AlertBannerComponent implements OnInit {
     },
   ];
   /** Constructor **/
-  constructor(private configurationProvider : ConfigurationProvider) {
-
+  constructor(private configurationProvider : ConfigurationProvider,
+              private readonly cdr: ChangeDetectorRef,
+              private readonly intl: IntlService,) {
   }
 
   /** Lifecycle hooks **/
-  ngOnInit(): void {   
-    //alert(this.entityId)
+  ngOnInit(): void {
     this.loadTodoGridData();
-    this.isLoadAlertListEvent.emit();
-    // this.data$.subscribe({
-    //   next: (res) => {
-    //     if (res) {
-    //       // this.notificationService.show({
-    //       //   content: this.alertTemplate,
-    //       //   position: { horizontal: 'center', vertical: 'top' },
-    //       //   animation: { type: 'fade', duration: this.duration },
-    //       //   closable: false,
-    //       //   type: { style: res.type, icon: true },
-    //       //   hideAfter: this.hideAfter,
-          
-    //       // });
-    //     }
-    //   },
-    //   error: (err) => {
-    //     console.error('err', err);
-    //   },
-    // });
   }  
   private loadTodoGridData(){
-    debugger;
-      //this.isToDoGridLoaderShow.next(true);
       let alertType=this.alertTypeCode;
-      var xfilter=[
-        {"filters":[{"field":"entityId","operator":"eq","value":this.entityId},
+      var xfilter=
+        [{"filters":[{"field":"entityId","operator":"eq","value":this.entityId},
         {"field":"entityTypeCode","operator":"eq","value":this.entityType},
         {"field":"alertTypeCode","operator":"eq","value":this.alertTypeCode}
-      ],"logic":"and"}
-      ]; 
+      ],"logic":"and"}]; 
       const gridDataRefinerValue = {
         skipCount: 0,
         maxResultCount: 10,
         sorting: 'alertDueDate',
         sortType: 'asc',
-        filter: xfilter,
+        filter:JSON.stringify(xfilter),
       }; 
         this.isLoadAlertListEvent.emit({gridDataRefinerValue, alertType})
 
-        this.alertList$.subscribe((data: any) => {
-          var xyz = data?.items;
+        this.alertList$.subscribe((data: any) => { 
           if(data?.totalCount >=0 || data?.totalCount === -1){
-            //this.isToDoGridLoaderShow.next(false);
+            this.alertText=data.items[0].alertName;
+            this.DueDate=this.DueOn(data.items[0].alertDueDate);
+            this.moreItems = (data?.totalCount-1) + "+ More Items";
+            this.cdr.detectChanges();
           }
-          //this.gridTodoDataSubject.next(this.gridDataResult);
         });
   } 
+  private DueOn(alertDueDate:any):any{
+    let dateNow = new Date();
+    let dueDate = new Date(alertDueDate); 
+         if (dueDate.toLocaleDateString() == dateNow.toLocaleDateString()) {
+             return "(Due today)";
+          } else if(dueDate.toLocaleDateString() < this.addDays(dateNow,1).toLocaleDateString()) {
+             return "(Due tomorrow)";
+           }
+           return this.intl.formatDate(
+            new Date(alertDueDate), this.configurationProvider?.appSettings?.displayFormat);
+
+  }
+  private addDays(date: Date, days: number): Date {
+    let result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+  }
 }

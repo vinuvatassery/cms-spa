@@ -235,8 +235,7 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.financialVendorFacade.addVendorRecentlyViewed(vendorId);
   }
 
-  getVendorAlertList(event:any){
-    debugger;
-    this.todoFacade.loadAlerts(event.gridDataRefinerValue.gridDataRefinerValue,event.gridDataRefinerValue.alertTypeCode);
+  getVendorAlertList(event:any,alertType:any){
+    this.todoFacade.loadAlerts(event.gridDataRefinerValue,alertType.alertType);
   }
 }

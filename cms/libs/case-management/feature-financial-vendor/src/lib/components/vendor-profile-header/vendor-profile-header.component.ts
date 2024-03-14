@@ -113,9 +113,8 @@ notificationReminderDialog : any;
       cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
     });  
   } 
-  isLoadAlertListEvent(gridDataRefinerValue: any)
+  isLoadAlertListEvent(gridDataRefinerValue: any,alertType: any)
   {
-    debugger;
-    this.isLoadAlertListContainerEvent.emit({gridDataRefinerValue})
+    this.isLoadAlertListContainerEvent.emit({gridDataRefinerValue, alertType})
   }
 }

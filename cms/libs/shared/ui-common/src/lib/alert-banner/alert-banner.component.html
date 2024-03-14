@@ -1,13 +1,12 @@
-<section>
-
+<section *ngIf="alertText">
   <div class="flex-row align-items-end">
     <div class="flex-col flex-col-10">
       <div class="info-banners red-banner hover-link ">
 
         <div class="flex-col info-banners p-0">
           <span class="material-icons" aria-label="to do" aria-hidden="true">playlist_add_check</span>
-          <span class="text-bold">Renew Eligibility</span>
-          <span class="text-normal">(Due today)</span>
+          <span class="text-bold">{{alertText}}</span>
+          <span class="text-normal">{{DueDate}}</span>
         </div>
 
         <div class="">
@@ -81,10 +80,10 @@
     </div>
     <div class="flex-col flex-col-2 mt-1">
       <!-- [popover]="moreAlertmessage" -->
-      <button attr.aria-label=" {{ showMoreAlert ? 'Hide Items' : ' 2+ More Items ' }}" kendoButton look="flat" class="card-link-button"  kendoPopoverAnchor showOn="click" >
+      <button attr.aria-label=" {{ showMoreAlert ? 'Hide Items' : moreItems }}" kendoButton look="flat" class="card-link-button"  kendoPopoverAnchor showOn="click" >
 
 
-        {{ showMoreAlert ? 'Hide Items' : ' 2+ More Items ' }}
+        {{ showMoreAlert ? 'Hide Items' : moreItems }}
       </button>
     </div>
   </div>
