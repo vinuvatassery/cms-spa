@@ -1,0 +1,19 @@
+<section class="k-dialog-body mb-2">
+    <p>
+          This action cannot be undone. It will be permanently deleted from the system.
+    </p>
+</section>
+<kendo-dialog-actions>
+    <div class="justify-content-between">
+          <div class="justify-content-end">
+                <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
+                      (click)="onCancelClick()">
+                      Cancel
+                </button>
+                <button kendoButton class="k-error-button" aria-label="Delete"
+                      (click)="onDeleteConfirm(true)">
+                      Delete
+                </button>
+          </div>
+    </div>
+</kendo-dialog-actions>
