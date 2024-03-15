@@ -1,0 +1,17 @@
+<section class="k-dialog-body mb-2">
+  <p>
+    Are you sure you want to delete this role? This action cannot be undone.
+  </p>
+</section>
+<kendo-dialog-actions>
+  <div class="justify-content-between">
+    <div class="justify-content-end">
+      <button kendoButton [primary]="true" aria-label="Cancel" look="outline" (click)="onCancelClick()">
+        Cancel
+      </button>
+      <button kendoButton class="k-error-button" aria-label="Delete" (click)="onDeleteConfirm(true)">
+        Delete
+      </button>
+    </div>
+  </div>
+</kendo-dialog-actions>
