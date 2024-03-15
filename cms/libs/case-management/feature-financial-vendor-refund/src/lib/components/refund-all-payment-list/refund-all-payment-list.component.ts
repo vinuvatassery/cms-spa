@@ -20,7 +20,6 @@ import {
 import { BehaviorSubject, Subject, first } from 'rxjs';
 import { FinancialClaimsFacade, FinancialPharmacyClaimsFacade, FinancialServiceTypeCode, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { UserManagementFacade } from '@cms/system-config/domain';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 @Component({
@@ -225,7 +224,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     }
 
   ngOnInit(): void {
-    this.sortType = 'desc'
+        this.sortType = 'desc'
     this.handleAllPaymentsGridData();
   }
   gridLoaderSubject = new BehaviorSubject(false);
@@ -297,7 +296,7 @@ export class RefundAllPaymentListComponent implements OnInit, OnChanges {
     this.sortType = 'desc'
     this.state = {
       skip: 0,
-      take: this.pageSizes[0]?.value,
+      take: 10,
       sort: this.sort,
     };
 
