@@ -1,6 +1,7 @@
 /** Angular **/
 /** Facades **/
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { FabMenuFacade } from '@cms/productivity-tools/domain';
 
 
 @Component({
@@ -8,17 +9,14 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
   templateUrl: './direct-message-fab.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DirectMessageFabComponent implements OnInit{
-  showDirectMessages = false
+export class DirectMessageFabComponent {
+  constructor(
+    public readonly fabMenuFacade: FabMenuFacade  
+  ) {}
+  
   /** Public properties **/
-  closeAction()
-  {
-    this.showDirectMessages = false
+  closeAction() {
+   
+    this.fabMenuFacade.isShownDirectMessage = !this.fabMenuFacade.isShownDirectMessage;
   }
-
-    /** Lifecycle hooks **/
-    ngOnInit(): void {
-      debugger
-      this.showDirectMessages = true
-    }
 }

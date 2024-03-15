@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy,   TemplateRef,} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommunicationEvents, ContactFacade, ScreenType } from '@cms/case-management/domain';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { StatusFlag } from '@cms/shared/ui-common';
 @Component({
@@ -15,7 +15,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   /* Input properties */
   @Input() clientCaseEligibilityId: any
   @Input() clientId: any
-  @Input() loadedClientHeader: any;
+  @Input() loadedClientHeader!: Observable<any>;
   /* Public properties */ 
   screenName = ScreenType.Case360Page;
   emailScreenName = ScreenType.Case360PageEmail; 
@@ -40,6 +40,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   private isSendNewEmailOpenedDialog : any;
   private isNewSMSTextOpenedDialog : any;
   private isIdCardOpenedDialog : any;  
+  clientHeader:any
   public sendActions = [
     {
       buttonType: 'btn-h-primary',
@@ -95,6 +96,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   /* Internal Methods */
   ngOnInit(): void {    
     this.initialize();
+    this.loadedClientHeader.subscribe(res =>{
+      this.clientHeader = res;
+    })
   }
 
   private initialize() {
@@ -215,4 +219,5 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   loadEmailAddress() {
     this.contactFacade.loadEmailAddress(this.clientId, this.clientCaseEligibilityId);
   }
+
 }

@@ -17,7 +17,7 @@
 
   <!-- Main Title Section -->
   <section class="app-l-mainTittle" *ngIf="loadedClientHeader?.clientFullName">
-    <h2 class="title-md">
+    <h1 class="title-md title_with_bld mat-h2">
       {{loadedClientHeader?.clientFullName}}
       <span class="normal-text text-muted pl-1"
       *ngIf="(loadedClientHeader?.clientOfficialIdFullName.trim().length > 0) && (loadedClientHeader?.clientOfficialIdFullName.trim() !== loadedClientHeader?.clientFullName)">({{loadedClientHeader?.clientOfficialIdFullName}}) </span>
@@ -37,7 +37,7 @@
         >
       </span>
       <span class="client-pronouns text-muted" title="{{loadedClientHeader?.pronouns}}">{{loadedClientHeader?.pronouns}} </span>
-    </h2>
+    </h1>
     <div class="title-client-info-block">
       <span class="title-client-info">ID {{loadedClientHeader?.clientId}} </span>
       <span class="title-client-info">CASE ID {{loadedClientHeader?.clientCaseIdentity}} </span>

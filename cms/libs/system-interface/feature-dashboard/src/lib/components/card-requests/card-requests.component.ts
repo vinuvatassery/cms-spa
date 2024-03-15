@@ -33,8 +33,16 @@ cardsRequestChart: any;
         },
         categoryAxis: {
           categories:res.dates,
+          title: {
+            text: 'Dates' // Add title for x-axis
+        },
           labels: { format: 'd', rotation: 'auto' },
         },
+        valueAxis: {
+          title: {
+              text: 'Numbers Of Cards Requests' // Add title for y-axis
+          }
+      },
         tooltip: {
           visible: true,
           shared: true,

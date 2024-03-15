@@ -85,7 +85,8 @@ export class SystemInterfaceDashboardFacade {
   }
   loadClientRecordSendChart(days:number,isCardRequest:boolean) {
     this.systemInterfaceDashboardService.getClientSendCardsinfo(days,isCardRequest).subscribe({
-      next: (ClientRecordSendChart:any) => {       
+      next: (ClientRecordSendChart:any) => {
+        
         this.ClientRecordSendChartSubject.next(ClientRecordSendChart);
       },
 
@@ -96,15 +97,12 @@ export class SystemInterfaceDashboardFacade {
   }
 
   loadCardsRequestChart(days:number,isCardRequest:boolean) {
-    this.loaderService.show();
     this.systemInterfaceDashboardService.getCardsRequestinfo(days,isCardRequest).subscribe({
       next: (cardsRequestChart) => {
         this.cardsRequestChartSubject.next(cardsRequestChart);
-        this.loaderService.hide();
       },
 
-      error: (err) => {
-        this.loaderService.hide();
+      error: (err) => {       
         console.error('err', err);
       },
     });
@@ -124,7 +122,6 @@ export class SystemInterfaceDashboardFacade {
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.batchLogsDataLoaderSubject.next(false);
-        this.hideLoader();
       },
     });
   }

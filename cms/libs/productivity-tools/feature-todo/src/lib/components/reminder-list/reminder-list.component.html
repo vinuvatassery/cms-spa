@@ -25,56 +25,28 @@
     <span class="material-icons" aria-label="reminder list" aria-hidden="true">playlist_add_check</span>DUE WITHIN 30 DAYS
   </p>
   <div class="due-items-wrapper">
-    <div class="due-item-blocks red-item-block">
-      <p class="due-item-heading">James Bond - Renew Application</p>
-      <div class="due-item-details">
-        <span>Today</span>
+    <ng-container *ngFor="let todoItem of todoItemList; let i=index">
+      <div class="due-item-blocks " [ngClass]="todoItemCrossedDueDate(todoItem) ? 'red-item-block' : 'canyon-item-block'" (click)="onNavigationClicked(todoItem)">
+        <p class="due-item-heading">{{todoItem?.entityName}} - {{todoItem?.alertName}}</p>
+        <div class="due-item-details">
+          <span>{{todoItem.isToday ? 'Today' : todoItem.isTomorrow ? 'Tomorrow' : (todoItem?.alertDueDate | date : 'MM/dd/YYYY')}}</span>
+          <kendo-dropdownbutton  title="More option" [data]="reminderActions" (itemClick)="onToDoActionClicked($event,todoItem)"  (click)="$event.stopPropagation()" look="bare" aria-label="More option"
+           class="small-i-btn app-dropdown-action more_action_wid" [popupSettings]="{
+              popupClass: reminderActionPopupClass,
+              animate: true
+            }">
+        <span *ngIf="todoItem.customAlertFlag == 'Y'" class="material-icons" aria-label="More option"> more_vert    </span>
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+              <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+                aria-hidden="false" (click)="dataItem.click">
+                <span class="material-icons" aria-hidden="true">{{dataItem.icon}}</span>
+                <label> {{ dataItem.text }} </label>
+              </button>
+            </ng-template>
+          </kendo-dropdownbutton>
+        </div>
       </div>
-    </div>
-    <div class="due-item-blocks">
-      <p class="due-item-heading">Donna Summer - House Client</p>
-      <div class="due-item-details">
-        <span>10-11-2021</span>
-        <kendo-dropdownbutton  title="More option" [data]="reminderActions" look="bare" aria-label="More option"
-         class="small-i-btn app-dropdown-action more_action_wid" [popupSettings]="{
-            popupClass: reminderActionPopupClass,
-            animate: true
-          }">
-      <span class="material-icons" aria-label="More option"> more_vert    </span>
-          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-            <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-              aria-hidden="false" (click)="dataItem.click">
-              <span class="material-icons" aria-hidden="true">{{dataItem.icon}}</span>
-              <label> {{ dataItem.text }} </label>
-            </button>
-          </ng-template>
-        </kendo-dropdownbutton>
-      </div>
-    </div>
-    <div class="due-item-blocks canyon-item-block">
-      <p class="due-item-heading">David Miller - Review Application</p>
-      <div class="due-item-details">
-        <span>10-10-2021</span>
-      </div>
-    </div>
-    <div class="due-item-blocks canyon-item-block">
-      <p class="due-item-heading">Philip Disco - Review Application</p>
-      <div class="due-item-details">
-        <span>10-10-2021</span>
-      </div>
-    </div>
-    <div class="due-item-blocks red-item-block">
-      <p class="due-item-heading">Sara Leo - Call to get proof</p>
-      <div class="due-item-details">
-        <span>10-10-2021</span>
-      </div>
-    </div>
-    <div class="due-item-blocks red-item-block">
-      <p class="due-item-heading">Clever Booster - Renew Application</p>
-      <div class="due-item-details">
-        <span>10-10-2021</span>
-      </div>
-    </div>
+    </ng-container>
   </div>
 </section>
 
@@ -82,9 +54,21 @@
 
 <!-- Create New Reminder Popup -->
 <ng-template #reminderDetailsTemplate>
-  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">Create New Reminder for Donna </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onNewReminderClosed($event)">Create New Reminder {{remainderIsFor? 'For' + remainderIsFor :''}} </kendo-dialog-titlebar>
   <productivity-tools-reminder-detail
-    (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
+  [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+    (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"
+    [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
+    [providerSearchResult$]="  providerSearchResult$"
+    [clientSubject]="clientSubject"
+    [clientSearchResult$]="clientSearchResult$"
+    [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
+    (searchClientName)="searchClientName($event)"
+    (searchProvider)="searchProvider($event)"
+    (remainderFor)="remainderFor($event)"
+    (getReminderDetailsLov)="getReminderDetailsLov()"
+   
+    ></productivity-tools-reminder-detail>
 </ng-template>
 
 <ng-template #deleteReminderTemplate> 
@@ -92,5 +76,5 @@
     (isModalDeleteReminderCloseClicked)="onDeleteReminderClosed($event)"></productivity-tools-delete-reminder-confirmation>
 </ng-template>
 <ng-template #deleteToDODialogTemplate>   
-  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+  <productivity-tools-delete-todo-confirmation  (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
 </ng-template>

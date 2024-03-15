@@ -25,7 +25,7 @@ export class FinancialVendorFacade {
   private providePanelSubject = new Subject<any>();
   private updateProviderPanelSubject = new Subject<any>();
   private addProviderNewSubject = new Subject<any>();
-  private searchProviderSubject = new Subject<any>();
+  public searchProviderSubject = new Subject<any>();
   private removeprovidersubject = new Subject<any>();
   searchProvider$ = this.searchProviderSubject.asObservable();
   removeprovider$ = this.removeprovidersubject.asObservable();
@@ -49,6 +49,7 @@ export class FinancialVendorFacade {
   medicalProviderSearchLoaderVisibility$ = this.medicalProviderSearchLoaderVisibilitySubject.asObservable();
   public insuranceVendorsSubject = new Subject<any>;
   insuranceVendors$ = this.insuranceVendorsSubject.asObservable();
+
 
   private providerListSubject = new Subject<any>();
   providerList$ = this.providerListSubject.asObservable();
@@ -364,6 +365,25 @@ export class FinancialVendorFacade {
         this.loggingService.logException(err);
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         this.hideLoader();
+      },
+    });
+  }
+
+  searchAllProvider(payload: any) {
+    this.medicalProviderSearchLoaderVisibilitySubject.next(true)
+  
+    return this.financialVendorDataService.searchProvider(payload).subscribe({
+      next: (response: any[]) => {
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false)
+        this.searchProviderSubject.next(response);
+      },
+      error: (err) => {
+        this.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+          err
+        );
+        this.loggingService.logException(err);
+        this.medicalProviderSearchLoaderVisibilitySubject.next(false)     
       },
     });
   }

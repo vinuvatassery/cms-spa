@@ -1,6 +1,7 @@
 /** Angular **/
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FabMenuFacade } from '@cms/productivity-tools/domain';
 /** External libraries **/
 import { DialItem } from '@progress/kendo-angular-buttons';
 
@@ -10,19 +11,17 @@ import { DialItem } from '@progress/kendo-angular-buttons';
   styleUrls: ['./common-actions.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CommonActionsComponent implements OnInit {
+export class CommonActionsComponent {
   /** Public properties **/
-  isShownEventLog = false;
-  isShownDirectMessage = false;
-  isShownTodoReminders = false;
+ 
   clickedContact!: any;
   item: Array<DialItem> = [{}];
-
+  
   
   constructor(
     private readonly router: Router,
     private readonly route: ActivatedRoute,
-
+    public readonly fabMenuFacade : FabMenuFacade
   ) {}
 
   ngOnInit(): void {
@@ -36,22 +35,22 @@ export class CommonActionsComponent implements OnInit {
   /** External event methods **/
   handleShowEventLogClicked() {
     
-    this.isShownEventLog = !this.isShownEventLog;
-    this.isShownDirectMessage = false;
-    this.isShownTodoReminders = false;
+    this.fabMenuFacade.isShownEventLog = !this.fabMenuFacade.isShownEventLog;
+    this.fabMenuFacade.isShownDirectMessage = false;
+    this.fabMenuFacade.isShownTodoReminders = false;  
   }
 
   handleShowDirectMessageClicked() {
- 
-   this.router.navigate([{ outlets: { directMessage: [ 'fabs'] }}]);
-    this.isShownDirectMessage = !this.isShownDirectMessage;
-    this.isShownEventLog = false;
-    this.isShownTodoReminders = false;
+    this.fabMenuFacade.isShownDirectMessage = !this.fabMenuFacade.isShownDirectMessage;
+    this.fabMenuFacade.isShownEventLog = false;
+    this.fabMenuFacade.isShownTodoReminders = false;
+   
   }
 
   handleShowTodoRemindersClicked() {
-    this.isShownTodoReminders = !this.isShownTodoReminders;
-    this.isShownDirectMessage = false;
-    this.isShownEventLog = false;
+    this.fabMenuFacade.isShownTodoReminders = !this.fabMenuFacade.isShownTodoReminders;
+    this.fabMenuFacade.isShownDirectMessage = false;
+    this.fabMenuFacade.isShownEventLog = false;
+   
   }
 }
