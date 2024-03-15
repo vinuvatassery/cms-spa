@@ -76,9 +76,10 @@
     </kendo-grid-column>
     <kendo-grid-column field="alertDueDate" title="Due Date" [width]="100">
       <ng-template kendoGridCellTemplate let-dataItem>
-        {{dataItem.alertDueDate |date:'MM/dd/YYYY'}}
-        <span class="material-icons" aria-label="repeat" *ngIf="dataItem.alertFrequencyCode!=alertFrequencyTypes.Never">loop</span>
-        
+        <div class="d-flex">
+          <span>{{dataItem.alertDueDate |date:'MM/dd/YYYY'}}</span>
+          <span class="material-icons loop-icon-size" aria-label="repeat" *ngIf="dataItem.alertFrequencyCode!=alertFrequencyTypes.Never">loop</span>
+        </div>
     </ng-template>
     <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
       <common-grid-cell-date-range-filter
