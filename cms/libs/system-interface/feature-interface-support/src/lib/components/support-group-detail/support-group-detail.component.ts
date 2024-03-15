@@ -10,7 +10,6 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LoaderService} from '@cms/shared/util-core';
-import { LovFacade } from '@cms/system-config/domain';
 
 @Component({
   selector: 'support-group-detail',
@@ -46,7 +45,6 @@ export class SupportGroupDetailComponent implements OnInit {
 
   /** Constructor **/
   constructor(private formBuilder: FormBuilder,
-    private readonly lovFacade: LovFacade,
     private readonly loaderService: LoaderService,
     private cd: ChangeDetectorRef) {
     this.createSupportGroupForm();
@@ -119,7 +117,6 @@ export class SupportGroupDetailComponent implements OnInit {
       } else {
         this.addSupportGroupEvent.emit(finalData)
       }
-
 
     }
   }
