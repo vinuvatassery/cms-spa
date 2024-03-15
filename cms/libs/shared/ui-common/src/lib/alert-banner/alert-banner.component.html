@@ -51,11 +51,10 @@
  <div class="">
    <kendo-dropdownbutton  title="More option" [data]="popoverAlertActions" look="bare"
      aria-label="more actions" class="small-i-btn app-dropdown-action cvp_three_dot_drop_btn" [popupSettings]="{
-   popupClass: reminderActionPopupClass, animate: true}">
+   popupClass: reminderActionPopupClass, animate: true}" (itemClick)="onToDoActionClicked($event,alertItem)">
      <span class="material-icons" aria-label="More option"> more_vert    </span>
      <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
-           (click)="dataItem.click">
+       <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType">
          <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
          <label> {{ dataItem.text }} </label>
        </button>

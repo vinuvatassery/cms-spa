@@ -9,8 +9,6 @@ import {
   Output,
   TemplateRef,
 } from '@angular/core';
-/** External libraries **/
-import { Observable } from 'rxjs/internal/Observable';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -18,7 +16,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'common-alert-banner',
   templateUrl: './alert-banner.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class AlertBannerComponent implements OnInit {
   /** Input properties **/
@@ -45,16 +43,18 @@ export class AlertBannerComponent implements OnInit {
       buttonType:"btn-h-primary",
       text: "Done",
       icon: "done",
+      id:"done",
       click: (): void => {
-        this.onMarkAlertAsDoneClick.emit(this.topAlert.alertId);
-        this.loadTodoAlertBannerData();
-        this.cdr.detectChanges();
+        // this.onMarkAlertAsDoneClick.emit(this.topAlert.alertId);
+        // this.loadTodoAlertBannerData();
+        // this.cdr.detectChanges();
       },
     },
     {
       buttonType:"btn-h-primary",
       text: "Edit",
       icon: "edit",
+      id:"edit",
       click: (): void => {
         
       },
@@ -63,10 +63,11 @@ export class AlertBannerComponent implements OnInit {
       buttonType:"btn-h-danger",
       text: "Delete",
       icon: "delete",
+      id:"del",
       click: (): void => {
-        this.onDeleteAlertClick.emit(this.topAlert.alertId);
-        this.loadTodoAlertBannerData();
-        this.cdr.detectChanges();
+        // this.onDeleteAlertClick.emit(this.topAlert.alertId);
+        // this.loadTodoAlertBannerData();
+        // this.cdr.detectChanges();
       },
     },
   ];
@@ -131,7 +132,6 @@ export class AlertBannerComponent implements OnInit {
         filter:JSON.stringify(xfilter),
       }; 
         this.isLoadAlertListEvent.emit({gridDataRefinerValue, alertType})
-
         this.alertList$.subscribe((data: any) => { 
           if(data?.totalCount >0 ){
             this.topAlert=data.items[0];
@@ -139,6 +139,9 @@ export class AlertBannerComponent implements OnInit {
             this.DueDate=this.DueOn(data.items[0].alertDueDate);
             this.moreItems = (data?.totalCount-1) < 1 ? "" : (data?.totalCount-1) + "+ More Items";
             this.makePopoverAlertBanner(data);
+            this.cdr.detectChanges();
+          }else{
+            this.alertText = '';
             this.cdr.detectChanges();
           }
         });
@@ -189,5 +192,19 @@ export class AlertBannerComponent implements OnInit {
       content: template,
       cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
     });  
+  }
+  onToDoActionClicked(item: any,gridItem: any){ 
+    if(item.id == 'done'){ 
+      this.onMarkAlertAsDoneClick.emit(gridItem.alertId);
+      this.loadTodoAlertBannerData();
+      this.cdr.detectChanges();
+    }else if(item.id == 'edit'){ 
+
+    }
+    else if(item.id == 'del'){ 
+      this.onDeleteAlertClick.emit(gridItem.alertId);
+      this.loadTodoAlertBannerData();
+      this.cdr.detectChanges();
+    }
   } 
 }
