@@ -91,7 +91,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
-    if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter) {
+    if (this.communicationLetterTypeCode !== CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode !== CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.loadMailCodes();
       if(this.isContinueDraftClicked){
       this.loadClientAndVendorDraftLetterTemplates();
@@ -186,8 +186,8 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   saveClientAndVendorNotificationForLater(draftTemplate: any) {
     this.loaderService.show();
     let letterRequestFormdata = this.communicationFacade.prepareClientAndVendorLetterFormData(this.entityId, this.loginUserId);
-    let draftEsignRequest = this.communicationFacade.prepareClientAndVendorEmailData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
-        this.communicationFacade.saveClientAndVendorNotificationForLater(draftEsignRequest)
+    let draftLetterRequest = this.communicationFacade.prepareClientAndVendorEmailData(letterRequestFormdata, draftTemplate, this.clientAndVendorAttachedFiles);
+        this.communicationFacade.saveClientAndVendorNotificationForLater(draftLetterRequest)
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -212,9 +212,9 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   onSaveForLaterTemplateClicked() {
     this.isShowSaveForLaterPopupClicked = true;
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
-    if (this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
+    if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter)
     {
-      this.saveDraftLetterTemplate(this.selectedTemplate);
+      this.saveDraftEsignLetterRequest(this.selectedTemplate);
     }else{
       this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
     }
@@ -238,7 +238,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   }
 
   private generateText(letterData: any, requestType: CommunicationEvents){
-    if(this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
+    if(this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
       this.generateClientTextTemplate(letterData, requestType);
     }else{
     this.entityId = this.workflowFacade.clientId ?? 0;
@@ -271,7 +271,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     this.loaderService.show();
-    if(this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
+    if(this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
       this.sendClientAndVendorLetterToPrint(draftTemplate, requestType);
     }else{
       this.entityId = this.workflowFacade.clientId ?? 0;
@@ -411,10 +411,12 @@ export class SendLetterComponent implements OnInit, OnDestroy {
     }
   }
 
-  private saveDraftLetterTemplate(draftTemplate: any) {
+  private saveDraftEsignLetterRequest(draftTemplate: any) {
     this.loaderService.show();
-    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.cerEmailAttachedFiles);
-    this.communicationFacade.saveForLaterEmailTemplate(formData)
+    draftTemplate.entity = this.communicationLetterTypeCode;
+    draftTemplate.entity = this.communicationLetterTypeCode;
+    let formData = this.communicationFacade.prepareEsignLetterData(draftTemplate, this.entityId,this.loginUserId, this.cerEmailAttachedFiles);
+    this.communicationFacade.saveEsignLetterForLater(formData)
         .subscribe({
           next: (data: any) =>{
           if (data) {
@@ -452,9 +454,13 @@ export class SendLetterComponent implements OnInit, OnDestroy {
  }
 
  cerEmailAttachments(event:any){
-  if (this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
+  if (this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
   {
-    this.cerEmailAttachedFiles = event;
+    const isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
+    if(!isFileExists)
+    {
+    this.cerEmailAttachedFiles?.push(event);
+    }
     this.attachmentCount = this.cerEmailAttachedFiles?.length;
   }else{
     const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
@@ -467,7 +473,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 }
 
 loadMailingAddress() {
-  if (this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
+  if (this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter)
   {
     if(this.notificationGroup == ScreenType.ClientProfile){
       this.loadClientMailingAddress();
@@ -486,8 +492,10 @@ getFileNameFromTypeCode(typeCode: string): string {
       return "Client Letter_"+ this.entityId +".zip";
     case CommunicationEventTypeCode.VendorLetter:
       return "Vendor Letter+"+ this.entityId +".zip"; 
-    case CommunicationEventTypeCode.CerAuthorizationLetter:
-      return "CER Authorization Letter.zip";
+    case CommunicationEventTypeCode.ApplicationAuthorizationLetter:
+      return "Application Authorization Letter.zip";
+      case CommunicationEventTypeCode.CerAuthorizationLetter:
+        return "CER Authorization Letter.zip";
     default:
       throw new Error('Invalid type code');
   }

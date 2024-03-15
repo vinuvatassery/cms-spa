@@ -91,7 +91,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() emailSubject!: string;
   existingFile: any = [];
   loginUserId!: any;
-  isSaveFoLater: boolean = false;
+  isSaveForLater: boolean = false;
   isButtonsVisible: boolean = true;
   isCCDropdownVisible: boolean = true;
   isBCCDropdownVisible: boolean = true;
@@ -126,8 +126,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.updateOpenSendEmailFlag();
-    if (this.communicationEmailTypeCode) {
-      if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.communicationEmailTypeCode) {
+      if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
+        this.loadDraftEsignRequest();
+      }
+      else {
         if (this.isContinueDraftClicked) {
           this.loadClientAndVendorDraftEmailTemplates();
         } else if (this.isNewNotificationClicked) {
@@ -136,10 +138,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           this.loadEmailTemplates();
         }
       }
-      else {
-        this.loadDraftEsignRequest();
-      }
-    }
   }
 
   loadClientAndVendorDraftEmailTemplates() {
@@ -193,7 +191,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (this.communicationEmailTypeCode == undefined)
       return;
     this.loaderService.show();
-    const channelTypeCode = CommunicationEvents.Email;
     this.communicationFacade.loadEmailTemplates(this.notificationGroup, this.communicationEmailTypeCode ?? '')
       .subscribe({
         next: (data: any) => {
@@ -242,7 +239,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isOpenSendEmailClicked = true;
     this.selectedTemplate.templateContent = this.updatedTemplateContent;
     this.selectedTemplate.toEmailAddress = this.selectedToEmail;
-    if (this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
+    if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
       this.saveDraftEsignRequest(this.selectedTemplate);
     } else {
       this.saveClientAndVendorNotificationForLater(this.selectedTemplate);
@@ -301,7 +298,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
       this.selectedTemplate.templateContent = this.updatedTemplateContent;
-      if (this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail) {
+      if (this.communicationEmailTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail) {
         this.initiateAdobeEsignProcess(this.selectedTemplate, CommunicationEvents.SendEmail);
       } else {
         this.initiateSendEmailProcess(this.selectedTemplate);
@@ -359,7 +356,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           if (data) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message)
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message) //'Email Sent! Event Logged.'
             this.onCloseSendEmailClicked();
           }
           this.ref.detectChanges();
@@ -390,7 +387,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   /** External event methods **/
   handleDdlEmailValueChange(event: any) {
     this.selectedTemplate = event;
-    if (event.documentTemplateId) {
+    if (event.documentTemplateId && !event.esignRequestId) {
       this.loaderService.show();
       this.communicationFacade.loadTemplateById(event.documentTemplateId)
         .subscribe({
@@ -416,6 +413,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.selectedCCEmail = this.ccEmail;
               this.defaultCCEmail = data.cc;
               this.showToEmailLoader = false;
+              if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail  || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
+                this.getCCEmailList(this.entityId, this.loginUserId);
+              }
               this.ref.detectChanges();
             }
             this.loaderService.hide();
@@ -450,9 +450,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         'description': event.description,
         'documentTemplateId': event.notificationTemplateId
       };
-      if (CommunicationEventTypeCode.CerAuthorizationEmail === this.communicationEmailTypeCode) {
-        this.getCCEmailList(this.entityId, this.loginUserId);
-      }
       this.ref.detectChanges();
     }
   }
@@ -485,7 +482,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private initiateAdobeEsignProcess(emailData: any, requestType: string) {
     this.loaderService.show();
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.ccEmail, this.selectedBccEmail, this.isSaveForLater);
     let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);
     this.esignFacade.initiateAdobeesignRequest(formData, emailData)
       .subscribe({
@@ -539,8 +536,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   private saveDraftEsignRequest(draftTemplate: any) {
     this.loaderService.show();
-    this.isSaveFoLater = true;
-    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.isSaveFoLater);
+    this.isSaveForLater = true;
+    let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.selectedCCEmail, this.selectedBccEmail, this.isSaveForLater);
     let draftEsignRequest = this.esignFacade.prepareDraftAdobeEsignRequest(esignRequestFormdata, draftTemplate, this.cerEmailAttachedFiles);
     if (draftTemplate?.esignRequestId == undefined || draftTemplate?.esignRequestId == null) {
       this.esignFacade.saveDraftEsignRequest(draftEsignRequest)
@@ -580,8 +577,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   cerEmailAttachments(event: any) {
-    if (this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter) {
-      this.cerEmailAttachedFiles = event;
+    if (this.communicationEmailTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode === CommunicationEventTypeCode.CerAuthorizationEmail) {
+      const isFileExists = this.cerEmailAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
+      if(!isFileExists)
+      {
+      this.cerEmailAttachedFiles?.push(event);
+      }
       this.attachmentCount = this.cerEmailAttachedFiles?.length;
     } else {
       const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
@@ -610,6 +611,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         next: (data: any) => {
           if (data) {
             this.ccEmail = data;
+            this.selectedCCEmail = data?.map((item: any)=> item.email);
             this.ref.detectChanges();
           }
           this.loaderService.hide();

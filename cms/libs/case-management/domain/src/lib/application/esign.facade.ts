@@ -43,8 +43,9 @@ prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: 
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('esignRequestId', emailData?.esignRequestId ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
+    if(cerEmailAttachedFiles?.length > 0){
     let i = 0;
-    cerEmailAttachedFiles.forEach((file) => { 
+    cerEmailAttachedFiles[0].forEach((file: any) => { 
       if(file.rawFile == undefined || file.rawFile == null){
         formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
         formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
@@ -54,6 +55,7 @@ prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: 
         formData.append('attachments', file.rawFile); 
       }
     });
+  }
     return formData;
 }
 
@@ -67,8 +69,9 @@ prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAtt
       formData.append('languageCode', draftTemplate?.languageCode ?? '');
       formData.append('description', draftTemplate?.description ?? '');
       formData.append('requestBody', draftTemplate?.templateContent ?? '');
+      if(cerEmailAttachedFiles?.length > 0){
       let i = 0;
-      cerEmailAttachedFiles.forEach((file) => { 
+      cerEmailAttachedFiles.forEach((file: any) => { 
         if(file.rawFile == undefined || file.rawFile == null){
         formData.append('AttachmentDetails['+i+'][fileName]', file.document.description);
         formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath);
@@ -78,22 +81,44 @@ prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAtt
           formData.append('attachments', file.rawFile); 
         }
       });  
+    }
       return formData;
 }
 
-prepareDraftAdobeEsignFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, isSaveFoLater: boolean) {
+prepareDraftAdobeEsignFormData(selectedToEmail: any, clientCaseEligibilityId: any, clientId: any, emailSubject: string, loginUserId: any, selectedCCEmail: any, selectedBccEmail: any, isSaveForLater: boolean) {
   const formData = new FormData();
-    formData.append('toEmailAddress', selectedToEmail ?? '');
+    formData.append('to', selectedToEmail ?? '');
     formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
     formData.append('clientId', clientId ?? '');
     formData.append('requestSubject', emailSubject ?? ''); 
     formData.append('loginUserId', loginUserId ?? '');
-    if(isSaveFoLater){
+    if(isSaveForLater){
       formData.append('esignRequestStatusCode', EsignStatusCode.Draft ?? '');
     }
-    formData.append('cCEmail', selectedCCEmail ?? ''); 
-    formData.append('isSaveForLater', Boolean(isSaveFoLater).toString()); 
+    formData.append('bcc',selectedBccEmail ?? ''); 
+    if(selectedCCEmail?.length > 0){
+      let i = 0;
+      selectedCCEmail.forEach((item: any) =>{
+        formData.append('cc[' + i + '][email]', item.email ?? '');
+        formData.append('cc[' + i + '][isDefault]', item.isDefault ?? '');
+        i++;
+      });
+    } 
+    formData.append('isSaveForLater', Boolean(isSaveForLater).toString()); 
     return formData;
 }
+
+prepareEsignLetterDraftFormData(clientCaseEligibilityId: any, entityId: any, loginUserId: any, isSaveForLater: boolean) {
+  const formData = new FormData();
+    formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
+    formData.append('clientId', entityId ?? '');
+    formData.append('loginUserId', loginUserId ?? '');
+    if(isSaveForLater){
+      formData.append('esignRequestStatusCode', EsignStatusCode.Draft ?? '');
+    }
+    formData.append('isSaveForLater', Boolean(isSaveForLater).toString()); 
+    return formData;
+}
+
 
 }

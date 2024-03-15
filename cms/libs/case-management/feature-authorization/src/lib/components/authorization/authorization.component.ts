@@ -42,7 +42,9 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   showCopyOfSignedApplicationRequiredValidation = new BehaviorSubject(false);
   showCopyOfSignedApplicationSizeValidation = new BehaviorSubject(false);
   documentTypeCode!: string;
-  screenName = ScreenType.Authorization;
+  emailScreenName = CommunicationEventTypeCode.ClientEmail;
+  letterScreenName = CommunicationEventTypeCode.ClientLetter;
+  notificationGroup = ScreenType.ClientProfile;
   isPrintClicked!: boolean;
   isSendEmailClicked!: boolean;
   isAuthorizationNoticePopupOpened = false;
@@ -77,9 +79,10 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   signedClietDocumentId!: string;
   paperlessFlag: any;
   minApplicantSignedDate: any = '01/01/1900';
-  communicationLetterTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationLetter;
-  communicationEmailTypeCode: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
-  emailSubject: CommunicationEventTypeCode = CommunicationEventTypeCode.CerAuthorizationEmail;
+  cerCommunicationLetterTypeCode!: string;
+  communicationLetterTypeCode!: string;
+  communicationEmailTypeCode!: string;
+  emailSubject!: string;
 
   /** Private properties **/
   private userProfileSubsriction !: Subscription;
@@ -104,12 +107,21 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   /** Lifecycle hooks **/
   ngOnInit(): void
   {
+    this.getNotificationTypeCode();
     this.loadUserContactInfo(this.clientId, this.clientCaseEligibilityId);
     this.buildForm();
     this.addApplicationSignatureDetailsSubscription();
     this.addSaveSubscription();
     this.addSignedDateSubscription();
     this.addDiscardChangesSubscription();
+  }
+
+  getNotificationTypeCode() {
+    // this.communicationLetterTypeCode = CommunicationEventTypeCode.LETTER;
+    // this.communicationEmailTypeCode = CommunicationEventTypeCode.EMAIL;
+    this.communicationLetterTypeCode = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationLetter :  CommunicationEventTypeCode.ApplicationAuthorizationLetter;
+    this.communicationEmailTypeCode = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail :  CommunicationEventTypeCode.ApplicationAuthorizationEmail;
+    this.emailSubject = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail: CommunicationEventTypeCode.ApplicationAuthorizationEmail;
   }
 
   ngOnDestroy(): void {
@@ -286,14 +298,14 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   onSendNewLetterClicked(template: TemplateRef<unknown>): void {
     this.isSendLetterOpenedDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np'
     });
   }
 
   onSendNewEmailClicked(template: TemplateRef<unknown>): void {
     this.isSendEmailOpenedDialog = this.dialogService.open({
       content: template,
-      cssClass: 'app-c-modal app-c-modal-lg app-c-modal-np'
+      cssClass: 'app-c-modal app-c-modal-xl just_start app-c-modal-np'
     });
   }
 

@@ -194,7 +194,7 @@
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
 <case-management-send-letter
-  [notificationGroup]="screenName"
+  [notificationGroup]="notificationGroup"
   [entityId]="clientId"
   [isCerForm]="isCerForm"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
@@ -207,7 +207,7 @@
 <!-- Send New Email Modal -->
 <ng-template #sendEmailDialog>
 <case-management-send-email
-  [notificationGroup]="screenName"
+  [notificationGroup]="notificationGroup"
   [toEmail]="toEmail"
   [paperlessFlag]="paperlessFlag"
   [entityId]="clientId"

@@ -345,4 +345,36 @@ export class CommunicationFacade {
   loadFormsAndDocuments(typeCode: string) {
     return this.emailDataService.loadFormsAndDocuments(typeCode);
   }
+
+  saveEsignLetterForLater(formData: FormData) {
+    return this.emailDataService.saveEmailNotificationForLater(formData);
+  }
+
+  prepareEsignLetterData(draftTemplate: any, entityId: any, loginUserId: string, cerEmailAttachedFiles: any[]) {
+    const formData = new FormData();
+    formData.append('documentTemplateId', draftTemplate?.documentTemplateId ?? '');
+    formData.append('typeCode', draftTemplate?.typeCode ?? '');
+    formData.append('entityId', entityId ?? '');
+    formData.append('entity', draftTemplate?.entity ?? '');
+    formData.append('loginUserId', loginUserId ?? '');
+    formData.append('description', draftTemplate?.description ?? '');
+    formData.append('requestBody', draftTemplate?.templateContent ?? '');
+    formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
+    if (cerEmailAttachedFiles?.length > 0){
+    let i = 0;
+    cerEmailAttachedFiles[0].forEach((file: any) => {
+      if (file.rawFile == undefined || file.rawFile == null) {
+        formData.append('systemAttachments[' + i + '][fileName]', file.name ?? file?.document?.fileName);
+        formData.append('systemAttachments[' + i + '][filePath]', this.getDocumentFilePath(file.document));
+        formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode ?? file?.document?.documentTypeCode);
+        formData.append('systemAttachments[' + i + '][clientDocumentId]', file?.document?.clientDocumentId ?? '');
+        formData.append('systemAttachments[' + i + '][documentTemplateId]', file.typeCode !== 'CLIENT_DEFAULT' ? file?.document?.documentTemplateId : '');
+        i++;
+      } else {
+        formData.append('uploadedAttachments', file.rawFile);
+      }
+    });
+  }
+    return formData;
+ }
 }
