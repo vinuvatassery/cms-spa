@@ -77,8 +77,6 @@ export class SystemInterfaceSupportFacade {
 
   private addnotificationCategorySubject = new Subject<any>();
   addnotificationCategory$ = this.addnotificationCategorySubject.asObservable();
-  //private supportGroupRemoveSubject = new Subject<any>();
-  //supportGroupRemove$ = this.supportGroupRemoveSubject.asObservable();
 
   private editNotificationCategorySubject = new Subject<boolean>();
   editnotificationCategory$ = this.editNotificationCategorySubject.asObservable();
@@ -92,11 +90,9 @@ export class SystemInterfaceSupportFacade {
   private notificationCategoryRemoveSubject = new Subject<any>();
   notificationCategoryRemove$ = this.notificationCategoryRemoveSubject.asObservable();
 
-  //private notificationCategoryListSubject = new Subject<any>();
-  //notificationCategoryLists$ = this.notificationCategoryListSubject.asObservable();
-
   private eventLovSubject = new BehaviorSubject<any[]>([]);
   eventLov$ = this.eventLovSubject.asObservable();
+
 
 
 
@@ -147,18 +143,6 @@ export class SystemInterfaceSupportFacade {
       },
     });
   }
-
-  // loadNotificationCategory() {
-  //   this.systemInterfaceSupportService.loadNotificationCategoryServices().subscribe({
-  //     next: (response) => {
-  //       this.notificationCategoryListSubject.next(response);
-  //     },
-
-  //     error: (err) => {
-  //       console.error('err', err);
-  //     },
-  //   });
-  // }
 
   addSupportGroup(notificationGroup: any) {
     this.loaderService.show();
