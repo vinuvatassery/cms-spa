@@ -24,7 +24,9 @@ export class CommonActionsComponent {
     public readonly fabMenuFacade : FabMenuFacade
   ) {}
 
+  ngOnInit(): void {
 
+  }
   /** Internal event methods **/
   onDialItemClicked(event: any): void {
     this.clickedContact = event.item;

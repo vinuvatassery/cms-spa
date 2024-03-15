@@ -1,0 +1,68 @@
+<common-bread-crumb></common-bread-crumb>
+<div class="app-l-inner-rapper pt-0">
+      <!-- Main Title Section -->
+      <div class="app-l-mainTittle">
+            <h2>
+
+                  <span class="material-icons sidebar-menu_icon" aria-hidden="true">
+                        insights
+                  </span>
+                  Interface Support
+            </h2>
+      </div>
+      <section>
+            <div class="flex-row">
+                  <div class="flex-col flex-col-12 mb-3">
+
+                        <system-interface-support-group [SupportGroupGridLists$]="supportGroup$"
+                        [supportGroupListsLoader$] ="supportGroupListsLoader$"
+                        [pageSizes]="pageSizes" [sortValue]="sortValueSupportGroup"
+                        [sortType]="sortType" [sort]="sortSupportGroupList"  
+                        (loadSupportGroupListEvent)="loadSupportGroup($event)"
+                        [supportGroupReactivate$]="supportGroupReactivate$" 
+                        (deactivateConfimEvent)="handleDeactivateSupportGroup($event)" 
+                        (reactivateConfimEvent)="handleReactivateSupportGroup($event)"
+                        [supportGroupRemove$] ="supportGroupRemove$"
+                        (deleteConfimedEvent)="handleDeleteSupportGroup($event)"
+                        [addSupportGroup$]="addSupportGroup$"
+                        [editSupportGroup$]="editSupportGroup$"
+                        (addSupportGroupEvent) ="handleAddSuppportGroup($event)" 
+                        (editSupportGroupEvent) ="handleEditSupportGroup($event)" 
+                        (selectedRowEvent)="selectedGroupChangeEvent($event)"
+                        [supportGroupProfilePhoto$]="supportGroupProfilePhoto$"
+                        (selectedRowEvent)="selectedGroupChangeEvent($event)"  [pageSizes]="pageSizes"
+                                                        >
+                  </system-interface-support-group>
+                  </div>
+
+                  <div class="flex-col flex-col-6 mb-3">
+                        <h3>Distribution List</h3>
+                        <system-interface-distribution-lists
+                              [pageSizes]="pageSizes" [sortValue]="sortValueDistribution" [sortType]="sortType"
+                              [sort]="sortDistributionList"></system-interface-distribution-lists>
+                  </div>
+
+                  <div class="flex-col flex-col-6">
+                        <h3>Notification Category</h3>
+                        <system-interface-notification-category
+                              [notificationCategoryGridLists$]="notificationCategories$" [pageSizes]="pageSizes"
+                              [notificationCategoryListDataLoader$]="notificationCategoryListDataLoader$"
+                              [sortValue]="sortValueNotificationCategory" [sortType]="sortType"
+                              [sort]="sortNotificationCategoryList" [selectedGroup]="selectedGroup"
+                              (loadNotificationCategoryListEvent)="loadNotificationCategory($event)"
+                              [eventLov$]="eventLov$"
+                              [addnotificationCategory$]="addnotificationCategory$"
+                              (addNotificationCategoryEvent) ="handleAddNotificationCategory($event)"
+                              [notificationCategoryReactivate$]="notificationCategoryReactivate$" 
+                              [notificationCategoryRemove$]="notificationCategoryRemove$"
+                              [editnotificationCategory$]="editnotificationCategory$"
+                              (deactivateConfimEvent)="handleDeactivateNotificationCategory($event)"
+                              (reactivateConfimEvent)="handleReactivateNotificationCategory($event)"
+                              (deleteConfimedEvent)="handleDeleteNotificationCategory($event)"
+                              (editNotificationCategoryEvent) ="handleEditNotificationCategory($event)"
+                              ></system-interface-notification-category>
+                  </div>
+
+            </div>
+      </section>
+</div>

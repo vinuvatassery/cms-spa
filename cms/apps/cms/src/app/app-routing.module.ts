@@ -62,8 +62,8 @@ const routes: Routes = [
   {
     path: 'system-interface',
     loadChildren: () =>
-      import('@cms/system-interface/feature-dashboard').then(
-        (m) => m.SystemInterfaceFeatureDashboardModule
+      import('@cms/system-interface/feature-system-interface-home').then(
+        (m) => m.FeatureSystemInterfaceHomeModule
       ),
     canLoad: [AutoLoginAllRoutesGuard],
   },
