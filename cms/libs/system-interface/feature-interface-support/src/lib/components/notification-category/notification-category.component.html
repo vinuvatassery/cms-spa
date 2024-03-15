@@ -32,8 +32,6 @@
                         </kendo-grid-string-filter-menu>
                   </ng-template>
             </kendo-grid-column>
-    <kendo-grid-column field="description" title="Description" [width]="100"> </kendo-grid-column>
-    <kendo-grid-column field="status" title="Status" [width]="100"> </kendo-grid-column>
 
             <kendo-grid-column field="eventNotificationGroupId" title="Option" [sticky]="true" [columnMenu]="false"
                   [width]="50" class="text-center">
@@ -96,7 +94,6 @@
 <div class="mt-1">
       <button kendoButton class="mr-1" [primary]="true" aria-label="Notification Category" icon="add"
             (click)="onNotificationCategoryDetailsClicked()"> Notification Category</button>
-
 </div>
 <kendo-dialog *ngIf="isNotificationCategoryDetailPopup" (close)="onCloseNotificationCategoryDetailPopupClicked()"
       class="app-c-modal app-c-modal-sm app-c-modal-np">
@@ -107,8 +104,6 @@
       (editNotificationCategoryEvent)="editNotificationCategory($event)"
       (addNotificationCategoryEvent)="addNotificationCategory($event)"></notification-category-detail>
 </kendo-dialog>
-
-
 
 <kendo-dialog *ngIf="isNotificationCategoryDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
       <kendo-dialog-titlebar (close)="onCloseNotificationCategoryDeactivateClicked()"> Deactivate?
@@ -128,24 +123,4 @@
       <kendo-dialog-titlebar (close)="onCloseNotificationCategoryDeleteClicked()"> Delete?</kendo-dialog-titlebar>
       <remove-notification-category (close)="onCloseNotificationCategoryDeleteClicked()" (deleteConfimEvent)="handleNotificationCategoryDelete($event)"></remove-notification-category>
 
-  <section class="k-dialog-body mb-2">
-        <p>
-              This action cannot be undone. It will be permanently deleted from the system. 
-        </p>
-  </section>
-  <kendo-dialog-actions>
-        <div class="justify-content-between">
-              <div class="justify-content-end">
-                    <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
-                          (click)="onCloseNotificationCategoryDeleteClicked()">
-                          Cancel
-                    </button>
-                    <button kendoButton class="k-error-button" aria-label="Delete" (click)="onOpenNotificationCategoryDeleteConfirmationClicked()">
-                          Delete
-                    </button>
-              </div>
-        </div>
-  </kendo-dialog-actions>
 </kendo-dialog>
-
- 
