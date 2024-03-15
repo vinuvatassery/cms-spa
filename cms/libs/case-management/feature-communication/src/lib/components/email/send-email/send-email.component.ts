@@ -194,7 +194,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       return;
     this.loaderService.show();
     const channelTypeCode = CommunicationEvents.Email;
-    this.communicationFacade.loadEmailTemplates(this.notificationGroup, channelTypeCode ?? '')
+    this.communicationFacade.loadEmailTemplates(this.notificationGroup, this.communicationEmailTypeCode ?? '')
       .subscribe({
         next: (data: any) => {
           if (data) {
@@ -358,8 +358,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.communicationFacade.initiateSendEmailRequest(emailFormData)
       .subscribe({
         next: (data: any) => {
-          if (data === true) {
-            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'Email Sent! Event Logged.')
+          if (data) {
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS, data?.message)
             this.onCloseSendEmailClicked();
           }
           this.ref.detectChanges();

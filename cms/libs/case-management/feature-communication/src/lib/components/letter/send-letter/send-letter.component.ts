@@ -358,7 +358,7 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   private loadDropdownLetterTemplates() {
     this.loaderService.show();
     const channelTypeCode = CommunicationEvents.Letter;
-    this.communicationFacade.loadLetterTemplates(this.notificationGroup, channelTypeCode)
+    this.communicationFacade.loadLetterTemplates(this.notificationGroup, this.communicationLetterTypeCode)
     .subscribe({
       next: (data: any) =>{
         if (data) {
