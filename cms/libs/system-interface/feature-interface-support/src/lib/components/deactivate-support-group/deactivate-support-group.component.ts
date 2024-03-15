@@ -14,7 +14,6 @@ import {
     changeDetection: ChangeDetectionStrategy.OnPush,
   })
   export class DeactivateSupportGroupComponent implements OnInit {
-    @Input() notificationGroupId: any;
     @Output() close = new EventEmitter<any>();
     @Output() deactivateConfimEvent = new EventEmitter<any>();
  

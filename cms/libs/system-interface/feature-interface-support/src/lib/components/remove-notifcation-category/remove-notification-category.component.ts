@@ -16,7 +16,6 @@ import {
   })
   
   export class RemoveNotificationCategoryComponent implements OnInit {
-    @Input() eventNotificationGroupId: any;
     @Output() close = new EventEmitter<any>();
     @Output() deleteConfimEvent = new EventEmitter<any>();
  
