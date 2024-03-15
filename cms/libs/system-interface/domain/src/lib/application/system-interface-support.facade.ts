@@ -251,23 +251,6 @@ export class SystemInterfaceSupportFacade {
     }
   }
 
-
-  // distribution list-------------------------------------------------------
-  // addDistributionListUser(dto: any, isEditMode: boolean): Observable<any> {
-  //   if(!isEditMode){
-  //     return this.systemInterfaceSupportService.addDistributionListUser(dto).pipe(
-  //       tap((response: any) => {
-  //         this.addDistributionListUserSubject.next(response);
-  //       }),
-  //     );
-  //   }else{
-  //     return this.systemInterfaceSupportService.editDistributionListUser(dto).pipe(
-  //       tap((response: any) => {
-  //         this.addDistributionListUserSubject.next(response);
-  //       }),
-  //     );
-  //   }}
-
   // Notification Catergory 
 
   loadNotificationCategory(paginationParameters: any) {
@@ -289,24 +272,6 @@ export class SystemInterfaceSupportFacade {
     });
   }
 
-  // loadDistributionGroup(paginationParameters: any) {
-  //   this.distributionListDataLoaderSubject.next(true);
-  //   this.service.getDistributionList(paginationParameters).subscribe({
-  //     next: (dataResponse: any) => {
-  //       const gridView: any = {
-  //         data: dataResponse['items'],
-  //         total: dataResponse?.totalCount,
-  //       };
-  //       this.distributionListsSubject.next(gridView);
-  //       this.distributionListDataLoaderSubject.next(false);
-  //     },
-  //     error: (err) => {
-  //       this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
-  //       this.distributionListDataLoaderSubject.next(false);
-  //       this.hideLoader();
-  //     },
-  //   });
-  // }
   addNotificationCategory(eventNotificationGroup: any) {
     this.loaderService.show();
     this.systemInterfaceSupportService.addNotificationCategory(eventNotificationGroup).subscribe(
@@ -394,6 +359,7 @@ export class SystemInterfaceSupportFacade {
   }
 
   // distribution list-------------------------------------------------------
+
   addDistributionListUser(dto: any, isEditMode: boolean): Observable<any> {
     if (!isEditMode) {
       return this.systemInterfaceSupportService.addDistributionListUser(dto).pipe(
@@ -408,7 +374,6 @@ export class SystemInterfaceSupportFacade {
         }),
       );
     }
-
   }
 
   loadDistributionGroup(paginationParameters: any) {
@@ -482,7 +447,6 @@ export class SystemInterfaceSupportFacade {
         },
       });
   }
-
   // ------------------------------------------------------------------------
 
 }

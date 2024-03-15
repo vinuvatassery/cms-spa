@@ -103,9 +103,6 @@ export class LovFacade {
   private BatchInterfaceStatusSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceSupportGroupSubject = new BehaviorSubject<Lov[]>([]);
-  private interfaceSupportMemberSubject = new BehaviorSubject<Lov[]>([]);
-  //private eventAttachmentTypeLovSubject = new BehaviorSubject<Lov[]>([]);
-
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);
   /** Public properties **/
@@ -186,7 +183,6 @@ export class LovFacade {
   BatchInterfaceStatusLov$ = this.BatchInterfaceStatusSubject.asObservable();
   interfaceProcessBatchLov$ = this.interfaceProcessBatchSubject.asObservable();
   interfaceSupportGroupLov$ = this.interfaceSupportGroupSubject.asObservable();
-  interfaceSupportMemberSubjectLov$ = this.interfaceSupportMemberSubject.asObservable();
   eventAttachmentTypeLov$ = this.eventAttachmentTypeLovSubject.asObservable();
   /** Public methods **/
   showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
@@ -992,18 +988,6 @@ export class LovFacade {
       error: (err) => {
         this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       }
-    });
-  }
-
-  getInterfaceSupportGroupNames(): void {
-    this.lovDataService.getLovsbyType(LovType.BatchInterface).subscribe({
-      next: (relationsResponse) => {
-        this.interfaceSupportGroupSubject.next(relationsResponse);
-      },
-
-      error: (err) => {
-        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
-      },
     });
   }
 
