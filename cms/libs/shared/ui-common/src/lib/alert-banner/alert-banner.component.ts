@@ -28,7 +28,8 @@ export class AlertBannerComponent implements OnInit {
   @Input() alertTypeCode:any;
   @Input()  alertList$ :any;
   @Output() isLoadAlertListEvent = new EventEmitter<any>();
-
+  @Output() onMarkAlertAsDoneClick = new EventEmitter<any>();
+  @Output() onDeleteAlertClick = new EventEmitter<any>();
   public hideAfter = this.configurationProvider.appSettings.snackbarHideAfter;
   public duration =this.configurationProvider.appSettings.snackbarAnimationDuration;
   showMoreAlert = false;
@@ -39,13 +40,15 @@ export class AlertBannerComponent implements OnInit {
   moreItems="";
   secondaryAlertList!:any[];
   notificationReminderDialog : any;
-  public reminderActions = [
+  public popoverAlertActions = [
     {
       buttonType:"btn-h-primary",
       text: "Done",
       icon: "done",
       click: (): void => {
-        alert("Done")
+        this.onMarkAlertAsDoneClick.emit(this.topAlert.alertId);
+        this.loadTodoAlertBannerData();
+        this.cdr.detectChanges();
       },
     },
     {
@@ -61,7 +64,40 @@ export class AlertBannerComponent implements OnInit {
       text: "Delete",
       icon: "delete",
       click: (): void => {
-        alert("Delete")
+        this.onDeleteAlertClick.emit(this.topAlert.alertId);
+        this.loadTodoAlertBannerData();
+        this.cdr.detectChanges();
+      },
+    },
+  ];
+
+  public bannerAlertActions = [
+    {
+      buttonType:"btn-h-primary",
+      text: "Done",
+      icon: "done",
+      click: (): void => { 
+        this.onMarkAlertAsDoneClick.emit(this.topAlert.alertId);
+        this.loadTodoAlertBannerData();
+        this.cdr.detectChanges();
+      },
+    },
+    {
+      buttonType:"btn-h-primary",
+      text: "Edit",
+      icon: "edit",
+      click: (): void => {
+        alert("Edit")
+      },
+    },
+    {
+      buttonType:"btn-h-danger",
+      text: "Delete",
+      icon: "delete",
+      click: (): void => {
+        this.onDeleteAlertClick.emit(this.topAlert.alertId);
+        this.loadTodoAlertBannerData();
+        this.cdr.detectChanges();
       },
     },
   ];
@@ -137,6 +173,7 @@ export class AlertBannerComponent implements OnInit {
      return isCrossedDueDate;
   }
   makePopoverAlertBanner(alertData:any){
+    this.secondaryAlertList.splice(0);
     if(alertData.totalCount > 1){
       for (let index = 1; index < alertData.items.length; index++) { 
         this.secondaryAlertList.push(alertData.items[index])

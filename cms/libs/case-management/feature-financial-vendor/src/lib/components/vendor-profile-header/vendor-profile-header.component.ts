@@ -17,7 +17,8 @@ vendorProfile:any
 @Output() updateRecentlyViewedEvent = new EventEmitter();
 @Input()  alertList$ :any;
 @Output() isLoadAlertListContainerEvent = new EventEmitter<any>();
-
+@Output() onMarkAlertAsDoneEvent = new EventEmitter<any>();
+@Output() onDeleteAlertEvent = new EventEmitter<any>();
 notificationReminderDialog : any;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   showMoreAlert = false;
@@ -116,5 +117,11 @@ notificationReminderDialog : any;
   isLoadAlertListEvent(gridDataRefinerValue: any,alertType: any)
   {
     this.isLoadAlertListContainerEvent.emit({gridDataRefinerValue, alertType})
+  }
+  onMarkAlertAsDoneClick(event:any){
+    this.onMarkAlertAsDoneEvent.emit(event);
+  }
+  onDeleteAlertClick(event:any){
+    this.onDeleteAlertEvent.emit(event);
   }
 }

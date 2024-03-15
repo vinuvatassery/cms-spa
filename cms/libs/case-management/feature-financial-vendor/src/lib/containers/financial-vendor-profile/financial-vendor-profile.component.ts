@@ -238,4 +238,10 @@ export class FinancialVendorProfileComponent implements OnInit {
   getVendorAlertList(event:any,alertType:any){
     this.todoFacade.loadAlerts(event.gridDataRefinerValue,alertType.alertType);
   }
+  onMarkAlertAsDone(event:any){
+    this.todoFacade.markAlertAsDone(event);
+  }
+  onDeleteAlert(event:any){
+    this.todoFacade.deleteAlert(event);
+  }
 }
