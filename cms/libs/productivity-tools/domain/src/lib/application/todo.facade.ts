@@ -22,6 +22,7 @@ export class TodoFacade {
   private curdAlertSubject = new Subject<any>();
   private todoGetSubject = new Subject<any>();
   private loadAlertGridSubject = new Subject<any>();
+  private clientTodoAndRemindersSubject = new Subject<any>();
   /** Public properties **/
   todo$ = this.todoSubject.asObservable();
   search$ = this.searchSubject.asObservable();
@@ -30,7 +31,7 @@ export class TodoFacade {
   getTodo$ = this.todoGetSubject.asObservable();
   loadAlertGrid$ = this.loadAlertGridSubject.asObservable();
   signalrReminders$!: Observable<any>;
-
+   clientTodoAndReminders$ = this.clientTodoAndRemindersSubject.asObservable()
  
   /** Constructor **/
   constructor(
@@ -179,5 +180,17 @@ export class TodoFacade {
    
 }
 
+  todoAndRemindersByClient(clientId:any):any {
+  this.todoDataService.todoAndReminderByClient(clientId).subscribe({
+    next: (clientsTodoReminders: any) => {
+   
+      this.clientTodoAndRemindersSubject.next(clientsTodoReminders);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+    },
+  })
+
+}
   
 }

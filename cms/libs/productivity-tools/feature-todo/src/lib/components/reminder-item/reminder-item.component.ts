@@ -4,19 +4,27 @@ import {
   ChangeDetectionStrategy,
   Output,
   EventEmitter,
+  Input,
+  OnInit,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { ReminderFacade } from '@cms/productivity-tools/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { Observable } from 'rxjs';
 @Component({
   selector: 'productivity-tools-reminder-item',
   templateUrl: './reminder-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReminderItemComponent {
+export class ReminderItemComponent implements OnInit {
   /** Public properties **/
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
   public newReminderDetailsDialog: any;
   public deleteReminderDialog: any;
+  @Input() nDays =""
+  items!:any[]
+  isDueWithIn7Days = false;
+  @Input() todoAndReminders$! : Observable<any>
   @Output() reminderDetailsClickedEvent = new EventEmitter();
   @Output() deleteReminderOpenClickedEvent = new EventEmitter();
   public data = [
@@ -47,7 +55,38 @@ export class ReminderItemComponent {
     },
   ];
 
-  constructor(private reminderFacade: ReminderFacade) {}
+  constructor(private reminderFacade: ReminderFacade,
+    private cdr : ChangeDetectorRef) {}
+  ngOnInit(): void {
+    this.todoAndReminders$.subscribe((clientsTodoReminders :any) =>{
+      const clientsReminder  = 
+      clientsTodoReminders.filter((x:any) => x.alertTypeCode =="REMINDER")
+   
+      if(this.nDays=="DUE WITHIN 7 DAYS"){
+           this.items = 
+        clientsReminder.filter((x:any)=> new Date(x.alertDueDate) >= new Date() && new Date(x.alertDueDate) <= this.addDays(new Date(), 7) )
+      this.isDueWithIn7Days = true
+      }
+      if(this.nDays=="DUE WITHIN 30 DAYS"){
+          this.items = 
+        clientsReminder.filter((x:any)=> new Date(x.alertDueDate) >= this.addDays(new Date(), 8) && new Date(x.alertDueDate) <= this.addDays(new Date(), 30) )   
+      }
+      if(this.nDays=="DUE LATER"){
+        this.items = 
+        clientsReminder.filter((x:any)=> new Date(x.alertDueDate) >= this.addDays(new Date(), 31) )
+      }
+       this.cdr.detectChanges()
+    })
+  }
+
+  addDays(date: Date, days: any): Date {
+    console.log('adding ' + days + ' days');
+    console.log(date);
+    date.setDate(date.getDate() + parseInt(days));
+    console.log(date);
+    return date;
+  }
+
   onNewReminderOpenClicked() {
     this.reminderDetailsClickedEvent.emit(true);
   }
