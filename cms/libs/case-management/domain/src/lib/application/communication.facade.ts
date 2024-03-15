@@ -165,6 +165,7 @@ export class CommunicationFacade {
     formData.append('description', draftTemplate?.description ?? '');
     formData.append('templateContent', draftTemplate?.templateContent ?? '');
     formData.append('notifcationDraftId', draftTemplate?.notifcationDraftId ?? '');
+    if (clientAndVendorAttachedFiles[0]?.length > 0){
     let i = 0;
     clientAndVendorAttachedFiles[0].forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {
@@ -178,6 +179,7 @@ export class CommunicationFacade {
         formData.append('uploadedAttachments', file.rawFile);
       }
     });
+  }
     return formData;
   }
 
@@ -207,7 +209,7 @@ export class CommunicationFacade {
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
       formData.append('notifcationDraftId', data?.emailData?.notifcationDraftId ?? '');
     }
-    if (data?.clientAndVendorEmailAttachedFiles) {
+    if (data?.clientAndVendorEmailAttachedFiles[0]?.length > 0) {
       let i = 0;
       data?.clientAndVendorEmailAttachedFiles[0].forEach((file: any) => {
         if (file.rawFile == undefined || file.rawFile == null) {
@@ -253,6 +255,7 @@ export class CommunicationFacade {
     formData.append('entity', emailData?.typeCode ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
     formData.append('notifcationDraftId', emailData?.notifcationDraftId ?? '');
+    if(clientAndVendorEmailAttachedFiles[0]?.length > 0){
     let i = 0;
     clientAndVendorEmailAttachedFiles[0].forEach((file: any) => {
       if (file.rawFile == undefined || file.rawFile == null) {
@@ -266,6 +269,7 @@ export class CommunicationFacade {
         formData.append('uploadedAttachments', file.rawFile);
       }
     });
+  }
     return formData;
   }
 
