@@ -13,7 +13,7 @@ import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
 import { State, CompositeFilterDescriptor } from '@progress/kendo-data-query';
-import { LovFacade } from 'libs/system-config/domain/src/lib/application/lov.facade';
+import { LovFacade } from '@cms/system-config/domain';
 import { Subject, first } from 'rxjs';
 @Component({
   selector: 'system-interface-support-group',

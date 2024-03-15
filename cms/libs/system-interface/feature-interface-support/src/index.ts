@@ -4,7 +4,6 @@ export * from './lib/container/interface-support-page/interface-support-page.com
 export * from './lib/components/support-group/support-group.component';
 export * from './lib/components/distribution-lists/distribution-lists.component';
 export * from './lib/components/notification-category/notification-category.component';
-export * from './lib/components/notification-category-detail/notification-category-detail.component';
 export * from './lib/components/deactivate-notification-category/deactivate-notification-category.component';
 export * from './lib/components/deactivate-support-group/deactivate-support-group.component';
 export * from './lib/components/notification-category-detail/notification-category-detail.component';
