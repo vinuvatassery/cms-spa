@@ -519,10 +519,11 @@ onSelectedRxClaimsChangeEvent(event:any){
       let response :any[] =[]
       response = res.data
       if(this.tpaRefundGridLists && this.tpaRefundGridLists.length>0){
-        this.tpaRefundGridLists.forEach(element => {
+        const tpaList =  [... this.tpaRefundGridLists];
+        tpaList.forEach((element,ind) => {
           let index =  response.findIndex(x=> x.paymentRequestId == element.paymentRequestId)
-          if(index>=0)
-           response.splice(index)
+          if(index<=0)
+           this.tpaRefundGridLists.splice(index);
       })
       this.tpaRefundGridLists =  this.tpaRefundGridLists.concat(response)
       }else{

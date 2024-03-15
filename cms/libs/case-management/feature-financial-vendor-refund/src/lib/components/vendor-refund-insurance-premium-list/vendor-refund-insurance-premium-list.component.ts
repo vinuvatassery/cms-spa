@@ -20,9 +20,11 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { LovFacade } from '@cms/system-config/domain';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import {
-  FilterService,
-  GridComponent,
-  GridDataResult,
+  FilterService, 
+  GridComponent, 
+  GridDataResult, 
+  SelectableMode, 
+  SelectableSettings
 } from '@progress/kendo-angular-grid';
 import {
   CompositeFilterDescriptor,
@@ -97,13 +99,23 @@ export class VendorRefundInsurancePremiumListComponent
   private userInitiatedPageChange = false;
   defaultpageSize = 20;
   tempStateData!: any;
+  public selectableSettings: SelectableSettings;
+  public checkboxOnly = true;
+  public mode: SelectableMode = 'multiple';
+  public drag = false;
   constructor(
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private readonly router: Router,
     private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private dialogService: DialogService,
     private readonly lovFacade: LovFacade
-  ) {}
+  ) {
+    this.selectableSettings = {
+      checkboxOnly: this.checkboxOnly,
+      mode: this.mode,
+      drag: this.drag,
+    };
+  }
   selectedKeysChange(selection: any) {
     this.selectedClaimsChangeEvent.emit(selection);
     const includeClaim = this.cliams.filter((obj) =>
