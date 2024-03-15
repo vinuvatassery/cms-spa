@@ -25,7 +25,7 @@
       </div>
     </section>
   </div>
-  <common-alert-banner [alertList$]="alertList$" [entityId]='"0056642E-030E-4C10-9148-257689A1CD86"' [entityType]='"VENDOR"' [alertTypeCode]='"TODO"' (isLoadAlertListEvent) = "isLoadAlertListEvent($event,$event)"></common-alert-banner>
+  <common-alert-banner *ngIf="vendorProfile?.vendorId" [alertList$]="alertList$" [entityId]="vendorProfile?.vendorId" [entityType]='"VENDOR"' [alertTypeCode]='"TODO"' (isLoadAlertListEvent) = "isLoadAlertListEvent($event,$event)"></common-alert-banner>
   <!-- <section>
 
     <div class="flex-row align-items-end">

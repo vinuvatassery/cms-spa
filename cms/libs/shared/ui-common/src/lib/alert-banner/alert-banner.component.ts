@@ -7,12 +7,14 @@ import {
   Input,
   OnInit,
   Output,
+  TemplateRef,
 } from '@angular/core';
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
+import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'common-alert-banner',
   templateUrl: './alert-banner.component.html',
@@ -33,7 +35,10 @@ export class AlertBannerComponent implements OnInit {
   reminderActionPopupClass = 'more-action-dropdown app-dropdown-action-list';
   alertText:string='';
   DueDate="";
+  topAlert:any;
   moreItems="";
+  secondaryAlertList!:any[];
+  notificationReminderDialog : any;
   public reminderActions = [
     {
       buttonType:"btn-h-primary",
@@ -63,20 +68,25 @@ export class AlertBannerComponent implements OnInit {
   /** Constructor **/
   constructor(private configurationProvider : ConfigurationProvider,
               private readonly cdr: ChangeDetectorRef,
-              private readonly intl: IntlService,) {
+              private readonly intl: IntlService,
+              private dialogService: DialogService) {
+              this.secondaryAlertList = new Array();
   }
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.loadTodoGridData();
+    this.loadTodoAlertBannerData();
   }  
-  private loadTodoGridData(){
+  private loadTodoAlertBannerData(){
       let alertType=this.alertTypeCode;
-      var xfilter=
-        [{"filters":[{"field":"entityId","operator":"eq","value":this.entityId},
+      let alertDueDate =this.intl.formatDate(
+        new Date(), this.configurationProvider?.appSettings?.dateFormat)
+      var xfilter=[
+        {"filters":[{"field":"entityId","operator":"eq","value":this.entityId},
         {"field":"entityTypeCode","operator":"eq","value":this.entityType},
-        {"field":"alertTypeCode","operator":"eq","value":this.alertTypeCode}
-      ],"logic":"and"}]; 
+        {"field":"alertTypeCode","operator":"eq","value":this.alertTypeCode},
+        {"field":"alertDueDate","operator":"gte","value":alertDueDate}],
+        "logic":"and"}]; 
       const gridDataRefinerValue = {
         skipCount: 0,
         maxResultCount: 10,
@@ -87,29 +97,60 @@ export class AlertBannerComponent implements OnInit {
         this.isLoadAlertListEvent.emit({gridDataRefinerValue, alertType})
 
         this.alertList$.subscribe((data: any) => { 
-          if(data?.totalCount >=0 || data?.totalCount === -1){
+          if(data?.totalCount >0 ){
+            this.topAlert=data.items[0];
             this.alertText=data.items[0].alertName;
             this.DueDate=this.DueOn(data.items[0].alertDueDate);
-            this.moreItems = (data?.totalCount-1) + "+ More Items";
+            this.moreItems = (data?.totalCount-1) < 1 ? "" : (data?.totalCount-1) + "+ More Items";
+            this.makePopoverAlertBanner(data);
             this.cdr.detectChanges();
           }
         });
   } 
-  private DueOn(alertDueDate:any):any{
+  public DueOn(alertDueDate:any):any{
     let dateNow = new Date();
     let dueDate = new Date(alertDueDate); 
          if (dueDate.toLocaleDateString() == dateNow.toLocaleDateString()) {
              return "(Due today)";
-          } else if(dueDate.toLocaleDateString() < this.addDays(dateNow,1).toLocaleDateString()) {
+          } else if(!(dueDate.toLocaleDateString() < dateNow.toLocaleDateString()) && (dueDate.toLocaleDateString() < this.addDays(dateNow,1).toLocaleDateString())) {
              return "(Due tomorrow)";
            }
-           return this.intl.formatDate(
-            new Date(alertDueDate), this.configurationProvider?.appSettings?.displayFormat);
-
+           return "Due on "+(this.intl.formatDate(
+           new Date(alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
   }
   private addDays(date: Date, days: number): Date {
     let result = new Date(date);
     result.setDate(result.getDate() + days);
     return result;
   }
+  todoItemCrossedDueDate(alertDueDate:any):boolean{
+    let isCrossedDueDate = false;
+    let dueDate = alertDueDate == null ? this.topAlert.alertDueDate: alertDueDate;
+    if(dueDate){
+      var currentDate = new Date();
+      var numberOfDaysToAdd = 7;
+      var resultDate =new Date(currentDate.setDate(currentDate.getDate() + numberOfDaysToAdd));
+      if(new Date(dueDate) < resultDate){
+        isCrossedDueDate = true;
+      }
+    }
+     return isCrossedDueDate;
+  }
+  makePopoverAlertBanner(alertData:any){
+    if(alertData.totalCount > 1){
+      for (let index = 1; index < alertData.items.length; index++) { 
+        this.secondaryAlertList.push(alertData.items[index])
+      }
+    } 
+  }
+  onNotificationsAndRemindersClosed() { 
+    this.notificationReminderDialog.close()
+  }
+
+  onNotificationsAndRemindersOpenClicked(template: TemplateRef<unknown>): void {
+    this.notificationReminderDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
+    });  
+  } 
 }
