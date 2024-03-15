@@ -56,7 +56,7 @@ export class AlertBannerComponent implements OnInit {
       text: "Edit",
       icon: "edit",
       click: (): void => {
-        alert("Edit")
+        
       },
     },
     {
@@ -87,7 +87,7 @@ export class AlertBannerComponent implements OnInit {
       text: "Edit",
       icon: "edit",
       click: (): void => {
-        alert("Edit")
+        
       },
     },
     {
