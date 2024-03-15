@@ -220,22 +220,22 @@ export class SupportGroupComponent implements OnInit, OnChanges {
 
   onChange(data: any) {
     this.defaultGridState();
-    // let operator = 'contains';
-    // this.filterData = {
-    //   logic: 'and',
-    //   filters: [
-    //     {
-    //       filters: [
-    //         {
-    //           field: this.selectedSearchColumn ?? 'groupName',
-    //           operator: operator,
-    //           value: data,
-    //         },
-    //       ],
-    //       logic: 'and',
-    //     },
-    //   ],
-    // };
+    let operator = 'contains';
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedSearchColumn ?? 'groupName',
+              operator: operator,
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);

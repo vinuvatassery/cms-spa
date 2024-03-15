@@ -349,7 +349,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     this.systemInterfaceSupportFacade.changeStatusDistributionListUser$.subscribe({
       next: () => {
         this.loadDistributionListGrid();
-        this.onChildDataUpdate();
       }
     });
   }
@@ -364,7 +363,6 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     this.systemInterfaceSupportFacade.changeStatusDistributionListUser$.subscribe({
       next: () => {
         this.loadDistributionListGrid();
-        this.onChildDataUpdate();
       }
     });
   }
