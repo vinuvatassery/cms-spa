@@ -432,7 +432,7 @@
                               </kendo-grid-string-filter-menu>
                             </ng-template>
                             <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-                              <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionFillItems,'amountPaid')}} </span>
+                              <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionFillItems,'amountPaid')| number: '2.'}} </span>
                           </ng-template>
                           </kendo-grid-column>
 
@@ -533,7 +533,7 @@
                                   <kendo-formerror *ngIf="!dataItem.refundedAmountValid">Refund Amount is required</kendo-formerror>
                                 </ng-template>
                                 <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
-                                    <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionFillItems, 'refundedAmount')}} </span>
+                                    <span class="tableamountview"> <strong>$</strong> {{getSumOfColumn(item.prescriptionFillItems, 'refundedAmount') | number: '2.' }} </span>
                                 </ng-template>
                             </kendo-grid-column>
                             <ng-template kendoGridLoadingTemplate>
