@@ -205,15 +205,7 @@ export class SystemInterfaceSupportService {
   }
   // ----------------------------------------
 
-  // distribution ----------------------------------------
-  // getDistributionList(paginationParameters: any) {
-  //   return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `${this.distributionBaseUrl}/list`, paginationParameters);
-  // }
-
-  // addDistributionListUser(user: any) {
-  //   return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `${this.distributionBaseUrl}`, user);
-  // }
-
+  // distribution list ----------------------------------------
   changeDistributionListUserStatus(memberId: string, status: boolean) {
     const options = {
       status: status,
