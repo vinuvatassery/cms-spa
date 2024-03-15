@@ -10,6 +10,8 @@ import {
   EventEmitter,
   ChangeDetectorRef,
   OnInit,
+  ViewEncapsulation,
+  QueryList,
 } from '@angular/core';
 import { CommunicationEventTypeCode, CommunicationFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
@@ -20,8 +22,12 @@ import { EditorComponent } from '@progress/kendo-angular-editor';
   templateUrl: './text-message-editor.component.html',
   styleUrls: ['./text-message-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class TextMessageEditorComponent implements OnInit {
+  @ViewChild("anchorInsert", { read: ElementRef }) public anchorInsert!: ElementRef;
+  @ViewChild("popupInsert", { read: ElementRef })  public popupInsert!: QueryList<any>; 
+
   /** Input properties **/
   @Input() templateContent!: any;
   @Input() dataEvent!: EventEmitter<any>;
@@ -41,6 +47,7 @@ export class TextMessageEditorComponent implements OnInit {
   isSearchOpened = true;
   tareaMessagesCounter = 0;
   tareaMessageMaxLength = 140;
+  selectedItem: number = -0;
   tareaMessages:
     {
       id: number,
@@ -57,6 +64,8 @@ export class TextMessageEditorComponent implements OnInit {
   smsEditorvalue!: any;
   requestBody!: string;
   item: any;
+  public toggleText = "Show";
+  public showInsert = false;
   /** Constructor **/
   constructor(private readonly communicationFacade: CommunicationFacade,
     private readonly loaderService: LoaderService,
@@ -130,33 +139,47 @@ export class TextMessageEditorComponent implements OnInit {
   }
 
   /** Private methods **/
-  private contains(target: any): boolean {
-    return (
-      this.anchor.nativeElement.contains(target) ||
-      (this.popup ? this.popup.nativeElement.contains(target) : false)
-    );
-  }
+ 
+ 
 
-  @HostListener('document:click', ['$event'])
-  private onDocumentClick(event: any): void {
-    if (!this.contains(event.target)) {
-      this.closeAllVariablePanels();
+  /** Internal event methods **/
+  onToggleInsertVariableClicked(item: any, index:any): void {
+if(this.selectedItem > 0){
+  this.selectedItem = 0;
+} else{
+  this.selectedItem = index + 1;
+}
+    
+ 
+   
+    // this.showInsert = item !== undefined ? item : !this.showInsert;
+    // this.toggleText = this.showInsert ? "Hide" : "Show";
+    // this.isShowPopupClicked =
+    //   show !== undefined ? show : !this.isShowPopupClicked;
+    // item.showVariables = !item.showVariables;
+    //this.isSearchOpened = true;
+  }
+  @HostListener("document:keydown", ["$event"])
+  public keydown(event: KeyboardEvent): void {
+    if (event.code === "Escape") {
+       this.selectedItem = 0; 
     }
   }
 
-  @HostListener('keydown', ['$event'])
-  private onKeydown(event: any): void {
-    this.closeAllVariablePanels();
+  @HostListener("document:click", ["$event"])
+  public documentClick(event: any): void {
+    if (!this.contains(event.target)) {
+      this.selectedItem = 0; 
+    }
   }
+  private contains(target: EventTarget): boolean {
+    return (
+      this.anchorInsert.nativeElement.contains(target) ||
+      // (this.popupInsert ? this.popupInsert.nativeElement.contains(target) : false)
 
-  /** Internal event methods **/
-  onToggleInsertVariableClicked(item: any): void {
-    // this.isShowPopupClicked =
-    //   show !== undefined ? show : !this.isShowPopupClicked;
-    item.showVariables = !item.showVariables;
-    //this.isSearchOpened = true;
+      this.popupInsert.forEach((element) => { element.valueToInsert.selectedItem=0 })
+    );
   }
-
   private closeAllVariablePanels() {
     const isVariableAnyOpen = this.tareaMessages.findIndex(m => m.showVariables === true) !== -1;
     if (isVariableAnyOpen) {
@@ -181,7 +204,7 @@ export class TextMessageEditorComponent implements OnInit {
         id: this.getMessageId(),
         description: this.templateContent ?? '', //Make it as empty string if don't want to auto-populate the defau;t template.
         wordCount: this.templateContent?.length,
-        showVariables: true
+        showVariables: false
       });
 
       this.onMessageChange();
@@ -217,6 +240,7 @@ export class TextMessageEditorComponent implements OnInit {
 
   onSearchClosed() {
     this.isShowPopupClicked = false;
+    this.selectedItem = 0;
   }
 
   private loadClientVariables() {
