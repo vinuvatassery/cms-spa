@@ -17,7 +17,7 @@ export class FinancialVendorRefundFacade {
   selectedRefundsTab = 1
   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
-  public sortType = 'asc';
+  public sortType = 'desc';
 
   public sortValueRefundInformationGrid = 'creationTime';
   public sortValueEntryInformationGrid = 'entryDate';
@@ -57,7 +57,7 @@ export class FinancialVendorRefundFacade {
   }];
 
 
-  public sortValueClientClaims = 'clientId';
+  public sortValueClientClaims = 'EntryDate';
   public sortClientClaimsList: SortDescriptor[] = [{
     field: this.sortValueClientClaims,
   }];
