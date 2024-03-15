@@ -1,0 +1,77 @@
+<section class="k-dialog-body">
+
+      <p class="text-muted  ">
+            All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row">
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Insurance Provider">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true">
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Insurance Plan Name">
+                        <kendo-textbox aria-label="Insurance Plan Name" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Health Insurance Type">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true">
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col mt-1"> 
+                        <div class="component-list-h">
+                              <span class="app-checkboxwidtext-wrapper">
+                                    <input type="checkbox" kendoCheckBox aria-labelledby="payformedication" id="payformedication"
+                                          name="payForMedication" />
+                                    <label class="k-checkbox-label" for="payformedication"> This insurance plan can pay for medication </label> 
+                              </span> 
+                        </div>
+                  
+            </div>
+            <div class="flex-col mt-1"> 
+                  <div class="component-list-h">
+                        <span class="app-checkboxwidtext-wrapper">
+                              <input type="checkbox" kendoCheckBox aria-labelledby="dentalplan" id="dentalplan"
+                                    name="dentalPlan" />
+                              <label class="k-checkbox-label" for="dentalplan"> This is a Dental Plan </label> 
+                        </span> 
+                  </div>
+            
+      </div>
+            <div class="flex-col ">
+                  <kendo-floatinglabel text="Start Date">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="dd/mm/yyyy"
+                              formatPlaceholder="formatPattern">
+                        </kendo-datepicker>
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col ">
+                  <kendo-floatinglabel text="Term Date (optional)">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="dd/mm/yyyy"
+                              formatPlaceholder="formatPattern">
+                        </kendo-datepicker>
+                  </kendo-floatinglabel>
+            </div>
+      </div>
+
+
+</section>
+
+<kendo-dialog-actions>
+      <div class="justify-content-between">
+            <div class="justify-content-end">
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel
+                  </button>
+                  <button kendoButton [primary]="true" aria-label="Add"> ADD </button>
+            </div>
+      </div>
+
+</kendo-dialog-actions>

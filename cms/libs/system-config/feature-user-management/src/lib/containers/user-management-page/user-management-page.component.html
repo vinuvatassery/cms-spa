@@ -1,21 +1,12 @@
-<div class="inner-split-wrapper" kendoRippleContainer  [ngClass]="{'innerleftmenu-opened': isInnerLeftMenuOpen}">
-  <!--//NOSONAR Navigation Menu Section -->
-  <div class="inner-split_right">
-    <!--//NOSONAR Breadcrumb Section -->
-    <section class="app-l-breadcrumb py-0 fixed-top-breadcrumb">
-     <div class="d-flex">
-      <button class="createcase-mobile-menu-btn" (click)="openInnerLeftMenu()" title="Open Menu" aria-label="Open Menu"> <span class="material-icons" aria-hidden="true">
-        list
-      </span>
-    </button>
-     <common-bread-crumb></common-bread-crumb>
-     </div>
-    </section>
-    <!-- //NOSONAR Page details Section -->
-    <section class="systemconfig-components">
-      <!-- //NOSONAR <system-config-user-list></system-config-user-list> -->
-      <router-outlet></router-outlet>
-      <!-- //NOSONAR <system-config-roles-and-permissions-list></system-config-roles-and-permissions-list> -->
-    </section>
-  </div>
-</div>
+
+ 
+<system-config-user-list
+[usersDataLists$]="usersDataLists$"
+[usersFilterColumn$]="usersFilterColumn$"
+[pageSizes]="pageSizes" [sortValue]="sortValueUserListGrid"
+[sortType]="sortType" [sort]="sortUserListGrid" 
+(loadUserListEvent)="loadUserLists($event)"
+(usersFilterColumnEvent)="loadUserGridFilterLists($event)"
+> </system-config-user-list>
+ 
+ 

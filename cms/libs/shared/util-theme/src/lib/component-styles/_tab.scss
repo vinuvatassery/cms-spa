@@ -149,3 +149,19 @@
 }
 }
  
+.tab_or_style{
+
+
+.k-tabstrip-items-wrapper {
+  .k-item.k-active{
+    &::after{
+      border-color: $app-primary;
+    }
+  }
+
+  .k-tabstrip-items {
+    .k-link{
+      padding-block:10px ;
+    }
+  }
+}}

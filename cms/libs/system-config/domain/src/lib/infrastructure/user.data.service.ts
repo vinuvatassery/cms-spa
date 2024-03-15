@@ -9,7 +9,7 @@ import { User } from '../entities/user';
 import { LoginUser } from '../entities/login-user';
 
 /** Providers **/
-import { ConfigurationProvider, LoaderService } from "@cms/shared/util-core";
+import { ConfigurationProvider, LoaderService } from '@cms/shared/util-core';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -18,75 +18,78 @@ export class UserDataService {
   private getUserProfileData = new BehaviorSubject<any>([]);
   getProfile$ = this.getUserProfileData.asObservable();
   /** Constructor **/
-  constructor(private readonly http: HttpClient,
+  constructor(
+    private readonly http: HttpClient,
     private readonly router: Router,
-    private configurationProvider : ConfigurationProvider,
-    private readonly loaderService: LoaderService 
-    ) {}
+    private configurationProvider: ConfigurationProvider,
+    private readonly loaderService: LoaderService
+  ) {}
 
-    showLoader()
-    {
-      this.loaderService.show();
-    }
-      
-    hideLoader()
-    {
-      this.loaderService.hide();
-    }
+  showLoader() {
+    this.loaderService.show();
+  }
+
+  hideLoader() {
+    this.loaderService.hide();
+  }
   /** Public methods **/
-  getUserProfileDetails()
-  {   
-    this.showLoader()
+  getUserProfileDetails() {
+    this.showLoader();
     this.getUserProfile().subscribe({
       next: (response: any) => {
-        if (response) {               
-          this.getUserProfileData.next(response);    
-          this.hideLoader()  
-        }        
-        this.hideLoader()
+        if (response) {
+          this.getUserProfileData.next(response);
+          this.hideLoader();
+        }
+        this.hideLoader();
       },
-      error: (err: any) => {    
-       this.hideLoader()
+      error: (err: any) => {
+        this.hideLoader();
         this.router.navigate(['/forbidden']);
-      }
+      },
     });
   }
-  getUserProfile() {  
-    return this.http.get(`${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/user-profile`)
-   }
-   
-  getUserById(userId : string) {
-    return this.http.get<LoginUser[]>(
-      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
-      `/system-config/users/${userId}`
-    );  
-  }  
+  getUserProfile() {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}/system-config/users/user-profile`
+    );
+  }
 
-  getUsersByRole(roleCode : string) {
+  getUserById(userId: string) {
     return this.http.get<LoginUser[]>(
-      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
-      `/system-config/users/roleCode=${roleCode}`
-    );  
-  }  
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/${userId}`
+    );
+  }
+
+  getUsersByRole(roleCode: string) {
+    return this.http.get<LoginUser[]>(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/roleCode=${roleCode}`
+    );
+  }
 
   //text should be either name or P#
-  searchUsersByRole(roleCode : string,text : string) {
+  searchUsersByRole(roleCode: string, text: string) {
     return this.http.get<LoginUser[]>(
-      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
-      `/system-config/users/roleCode=${roleCode}/text=${text}`
-    );  
-  }  
-
-  
-  getUserImage(userId : string) { 
-    return this.http.get(
-      `${this.configurationProvider.appSettings.sysConfigApiUrl}`+
-      `/system-config/users/${userId}/profile-photo`, {responseType: 'text'}
-    );  
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/roleCode=${roleCode}/text=${text}`
+    );
   }
-  
-  reassignCase(caseReassignData : any){
-    return this.http.post(`${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case/reassign`, caseReassignData);
+
+  getUserImage(userId: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.sysConfigApiUrl}` +
+        `/system-config/users/${userId}/profile-photo`,
+      { responseType: 'text' }
+    );
+  }
+
+  reassignCase(caseReassignData: any) {
+    return this.http.post(
+      `${this.configurationProvider.appSettings.caseApiUrl}/case-management/client-case/reassign`,
+      caseReassignData
+    );
   }
 
   getUserProfilePhotos(userIds : string) { 
@@ -110,7 +113,6 @@ export class UserDataService {
       },
     ]);
   }
- 
 
   loadUsersData() {
     return of([
@@ -304,311 +306,309 @@ export class UserDataService {
     ]);
   }
 
-  loadSexualOrientationList(){
+  loadSexualOrientationList() {
     return of([
-      
-        {
-          order: "1",
-          sexualOrientation: "Type one 1",
-          lastModified: "XX/XX/XXXX",
-          status: "Active",
-        },
-        {
-          order: "2",
-          sexualOrientation: "Lorem ipsum 2",
-          lastModified: "XX/XX/XXXX",
-          status: "Active",
-        },
-        {
-          order: "3",
-          sexualOrientation: "Lorem ipsum 3",
-          lastModified: "XX/XX/XXXX",
-          status: "Active",
-        },
-        {
-          order: "4",
-          sexualOrientation: "Lorem ipsum 4",
-          lastModified: "XX/XX/XXXX",
-          status: "Active",
-        },
-      
-    ])
+      {
+        order: '1',
+        sexualOrientation: 'Type one 1',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
+      },
+      {
+        order: '2',
+        sexualOrientation: 'Lorem ipsum 2',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
+      },
+      {
+        order: '3',
+        sexualOrientation: 'Lorem ipsum 3',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
+      },
+      {
+        order: '4',
+        sexualOrientation: 'Lorem ipsum 4',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
+      },
+    ]);
   }
 
-  loadRacialOrEthnicIdentityList(){
-    return of( [
+  loadRacialOrEthnicIdentityList() {
+    return of([
       {
-        category: "category 1",
-        identity: "Lorem data 1",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        category: 'category 1',
+        identity: 'Lorem data 1',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        category: "Lorem category 2",
-        identity: "Lorem data 2",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        category: 'Lorem category 2',
+        identity: 'Lorem data 2',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        category: "Lorem category 3",
-        identity: "Lorem data 3",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        category: 'Lorem category 3',
+        identity: 'Lorem data 3',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        category: "Lorem category 4",
-        identity: "Lorem data 4",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        category: 'Lorem category 4',
+        identity: 'Lorem data 4',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
-    ])
+    ]);
   }
 
-  loadPronounsList(){
+  loadPronounsList() {
     return of([
       {
-        order: "1",
-        pronouns: "She/Her",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        order: '1',
+        pronouns: 'She/Her',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        order: "2",
-        pronouns: "He/Him/His",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        order: '2',
+        pronouns: 'He/Him/His',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        order: "3",
-        pronouns: "They/Them/Theirs",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        order: '3',
+        pronouns: 'They/Them/Theirs',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        order: "4",
-        pronouns: "Ella",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        order: '4',
+        pronouns: 'Ella',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
-    ])
+    ]);
   }
-  
-  loadGenderList(){
+
+  loadGenderList() {
     return of([
       {
-        order: "1",
-        gender: "Male",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        order: '1',
+        gender: 'Male',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        order: "2",
-        gender: "Lorem ipsum 2",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        order: '2',
+        gender: 'Lorem ipsum 2',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        order: "3",
-        gender: "Lorem ipsum 3",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        order: '3',
+        gender: 'Lorem ipsum 3',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        order: "4",
-        gender: "Lorem ipsum 4",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        order: '4',
+        gender: 'Lorem ipsum 4',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        order: "5",
-        gender: "Lorem ipsum 5",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        order: '5',
+        gender: 'Lorem ipsum 5',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
-    ])
+    ]);
   }
- 
-  loadHousingAcuityLevelList(){
+
+  loadHousingAcuityLevelList() {
     return of([
       {
-        acuitylevel:"2",
-        order: "1",
-        suitation:"Formerly Individual family",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        acuitylevel: '2',
+        order: '1',
+        suitation: 'Formerly Individual family',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        acuitylevel:"2",
-        order: "1",
-        suitation:"Formerly Individual family",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        acuitylevel: '2',
+        order: '1',
+        suitation: 'Formerly Individual family',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        acuitylevel:"2",
-        order: "1",
-        suitation:"Formerly Individual family",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        acuitylevel: '2',
+        order: '1',
+        suitation: 'Formerly Individual family',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        acuitylevel:"2",
-        order: "1",
-        suitation:"Formerly Individual family",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        acuitylevel: '2',
+        order: '1',
+        suitation: 'Formerly Individual family',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
       {
-        acuitylevel:"2",
-        order: "1",
-        suitation:"Formerly Individual family",
-        lastModified: "XX/XX/XXXX",
-        status: "Active",
+        acuitylevel: '2',
+        order: '1',
+        suitation: 'Formerly Individual family',
+        lastModified: 'XX/XX/XXXX',
+        status: 'Active',
       },
-    ])
+    ]);
   }
-  loadIncomeInclusionsExlusionsList(){
+  loadIncomeInclusionsExlusionsList() {
     return of([
-     {
-      inclusions:"Formerly Individual family",
-      lastModified: "XX/XX/XXXX",
-      
-     },
-     {
-      inclusions:"Formerly Individual family",
-      lastModified: "XX/XX/XXXX",
-     },
-     {
-      inclusions:"Formerly Individual family",
-      lastModified: "XX/XX/XXXX",
-     },
-     {
-      inclusions:"Formerly Individual family",
-      lastModified: "XX/XX/XXXX",
-     },
-     {
-      inclusions:"Formerly Individual family",
-      lastModified: "XX/XX/XXXX",
-     },
-      
-    ])
+      {
+        inclusions: 'Formerly Individual family',
+        lastModified: 'XX/XX/XXXX',
+      },
+      {
+        inclusions: 'Formerly Individual family',
+        lastModified: 'XX/XX/XXXX',
+      },
+      {
+        inclusions: 'Formerly Individual family',
+        lastModified: 'XX/XX/XXXX',
+      },
+      {
+        inclusions: 'Formerly Individual family',
+        lastModified: 'XX/XX/XXXX',
+      },
+      {
+        inclusions: 'Formerly Individual family',
+        lastModified: 'XX/XX/XXXX',
+      },
+    ]);
   }
-  loadRegionAssignmentList(){
+  loadRegionAssignmentList() {
     return of([
-     {
-      region:"Region1",
-      assignto:"Ethan Endrson",
-      countries:"Baker, Grant , Union,Umatilla",
-      lastmodified: "XX/XX/XXXX",
-      
-     },
-     
-     {
-      region:"Region2",
-      assignto:"Sophia Brown",
-      countries:"Harney, Lake , Malehur,Polk",
-      lastmodified: "XX/XX/XXXX",
-      
-     },
-     {
-      region:"Region3",
-      assignto:"Noah Davis",
-      countries:"Coos , Curry , Douglas,Jackson",
-      lastmodified: "XX/XX/XXXX",
-      
-     },
-     {
-      region:"Region4",
-      assignto:"Ava Johnson",
-      countries:"Crook, Deschutes , Lane,Wheeler",
-      lastmodified: "XX/XX/XXXX",
-      
-     },
-     {
-      region:"Region5",
-      assignto:"Sophia Jhons",
-      countries:"Benton, Morrow , Sherman,clatsop",
-      lastmodified: "XX/XX/XXXX",
-      
-     },
-     
-      
-    ])
+      {
+        region: 'Region1',
+        assignto: 'Ethan Endrson',
+        countries: 'Baker, Grant , Union,Umatilla',
+        lastmodified: 'XX/XX/XXXX',
+      },
+
+      {
+        region: 'Region2',
+        assignto: 'Sophia Brown',
+        countries: 'Harney, Lake , Malehur,Polk',
+        lastmodified: 'XX/XX/XXXX',
+      },
+      {
+        region: 'Region3',
+        assignto: 'Noah Davis',
+        countries: 'Coos , Curry , Douglas,Jackson',
+        lastmodified: 'XX/XX/XXXX',
+      },
+      {
+        region: 'Region4',
+        assignto: 'Ava Johnson',
+        countries: 'Crook, Deschutes , Lane,Wheeler',
+        lastmodified: 'XX/XX/XXXX',
+      },
+      {
+        region: 'Region5',
+        assignto: 'Sophia Jhons',
+        countries: 'Benton, Morrow , Sherman,clatsop',
+        lastmodified: 'XX/XX/XXXX',
+      },
+    ]);
   }
-  loadPSMFRZIPList(){
+  loadPSMFRZIPList() {
     return of([
-     {
-      year:"2020",
-      county:"Benton",
-      housingtype:"0-Studio",
-      psmfrzip:"FMR",
-      amount:"869.00",
-      lastModified: "XX/XX/XXXX",
-      status: "status",
-      
-     },
-     {
-      year:"2020",
-      county:"Benton",
-      housingtype:"0-Studio",
-      psmfrzip:"Payment Standard",
-      amount:"785.00",
-      lastModified: "XX/XX/XXXX",
-      status: "status",
-      
-     },
-     {
-      year:"2020",
-      county:"Benton",
-      housingtype:"0-Studio",
-      psmfrzip:"ZIP Code",
-      amount:"785.00",
-      lastModified: "XX/XX/XXXX",
-      status: "status",
-      
-     },
-     {
-      year:"2020",
-      county:"Benton",
-      housingtype:"0-Studio",
-      psmfrzip:"ZIP Code",
-      amount:"785.00",
-      lastModified: "XX/XX/XXXX",
-      status: "status",
-      
-     },
-     
-     
-     
-     
-      
-    ])
+      {
+        year: '2020',
+        county: 'Benton',
+        housingtype: '0-Studio',
+        psmfrzip: 'FMR',
+        amount: '869.00',
+        lastModified: 'XX/XX/XXXX',
+        status: 'status',
+      },
+      {
+        year: '2020',
+        county: 'Benton',
+        housingtype: '0-Studio',
+        psmfrzip: 'Payment Standard',
+        amount: '785.00',
+        lastModified: 'XX/XX/XXXX',
+        status: 'status',
+      },
+      {
+        year: '2020',
+        county: 'Benton',
+        housingtype: '0-Studio',
+        psmfrzip: 'ZIP Code',
+        amount: '785.00',
+        lastModified: 'XX/XX/XXXX',
+        status: 'status',
+      },
+      {
+        year: '2020',
+        county: 'Benton',
+        housingtype: '0-Studio',
+        psmfrzip: 'ZIP Code',
+        amount: '785.00',
+        lastModified: 'XX/XX/XXXX',
+        status: 'status',
+      },
+    ]);
   }
-  loadServiceProviderList(){
+  loadServiceProviderList() {
     return of([
-     {
-      serviceprovidername:"2020",
-      type:"Benton",
-      vendorid:"0-Studio",
-      mailcode:"FMR",
-      accountno:"869.00",
-      phoneno:"Benton",
-      address:"0-Studio",
-      emailid:"FMR",
-      contactperson:"869.00",
-      combinedpayments:"0-Studio",
-      nameoncheck:"FMR",
-      comments:"869.00",
-      lastModified: "XX/XX/XXXX",
-      
-     },
-     
-     
-     
-     
-     
-      
-    ])
+      {
+        serviceprovidername: '2020',
+        type: 'Benton',
+        vendorid: '0-Studio',
+        mailcode: 'FMR',
+        accountno: '869.00',
+        phoneno: 'Benton',
+        address: '0-Studio',
+        emailid: 'FMR',
+        contactperson: '869.00',
+        combinedpayments: '0-Studio',
+        nameoncheck: 'FMR',
+        comments: '869.00',
+        lastModified: 'XX/XX/XXXX',
+      },
+    ]);
   }
- 
+
+  loadDirectMessageLogEventService() {
+    return of([
+      {
+        id: 1,
+        scenario: 'Automatic event logging of direct messages',
+        frequency: 'Every 90 days',
+        lastModified: '01/01/2021',
+        modifiedBy: 'LM',
+      },
+      {
+        id: 1,
+        scenario: 'Automatic archival of direct messages',
+        frequency: 'Every 180 days',
+        lastModified: '01/01/2021',
+        modifiedBy: 'LM',
+      },
+      {
+        id: 1,
+        scenario: 'Automatic event logging of direct messages',
+        frequency: 'Every 180 days',
+        lastModified: '01/01/2021',
+        modifiedBy: 'LM',
+      },
+    ]);
+  }
 }
