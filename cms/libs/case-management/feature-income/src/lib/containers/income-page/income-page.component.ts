@@ -713,11 +713,13 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  initEmployerIncomeSubscription(){
-    this.employerIncomeSubscription = this.employerIncome$.subscribe((employerIncome:any)=>{
+  initEmployerIncomeSubscription() {
+    this.employerIncomeSubscription = this.employerIncome$.subscribe((employerIncome: any) => {
       this.employerIncome = employerIncome;
-      this.employerIncome.forEach((item:any)=>{
-        item.incomeEndDate = new Date(item.incomeEndDate);
+      this.employerIncome.forEach((item: any) => {
+        if (item.incomeEndDate != null) {
+          item.incomeEndDate = new Date(item.incomeEndDate);
+        }
       })
       this.cdr.detectChanges();
     });
