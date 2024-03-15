@@ -104,7 +104,7 @@ export class LovFacade {
   private interfaceProcessBatchSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceSupportGroupSubject = new BehaviorSubject<Lov[]>([]);
   private interfaceSupportMemberSubject = new BehaviorSubject<Lov[]>([]);
-  private eventAttachmentTypeLovSubject = new BehaviorSubject<Lov[]>([]);
+  //private eventAttachmentTypeLovSubject = new BehaviorSubject<Lov[]>([]);
 
   /** Public properties **/
   private lovDeliveryMethodSubject = new BehaviorSubject<Lov[]>([]);

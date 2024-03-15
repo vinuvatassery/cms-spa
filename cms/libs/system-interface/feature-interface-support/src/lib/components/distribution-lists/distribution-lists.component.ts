@@ -133,7 +133,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
   ) {
-    this.processArray = systemInterfaceSupportFacade.getStatusArray()
+    //this.processArray = systemInterfaceSupportFacade.getStatusArray()
   }
 
   ngOnInit(): void {
@@ -246,14 +246,14 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   }
 
 
-  defaultGridState() {
-    this.state = {
-      skip: 0,
-      take: this.pageSizes[0]?.value,
-      sort: this.sort,
-      filter: { logic: 'and', filters: [] },
-    };
-  }
+  // defaultGridState() {
+  //   this.state = {
+  //     skip: 0,
+  //     take: this.pageSizes[0]?.value,
+  //     sort: this.sort,
+  //     filter: { logic: 'and', filters: [] },
+  //   };
+  // }
 
   onColumnReorder($event: any) {
     this.columnsReordered = true;
@@ -368,9 +368,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       }
     });
   }
-  onOpenMemberDeleteConfirmationClicked() {
-    this.isMemberDeleteConfirmationPopupShow = true;
-
+  // onOpenMemberDeleteConfirmationClicked() {
+  //   this.isMemberDeleteConfirmationPopupShow = true;
+  // }
   deleteUser() {
     this.systemInterfaceSupportFacade.deleteDistributionListUser(this.selectedMemberData.notificationUserId)
     this.isMemberDeletePopupShow = false;
@@ -381,13 +381,14 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       }
     });
   }
-  onCloseMemberDeleteConfirmationClicked() {
-    this.isMemberDeleteConfirmationPopupShow = false;
+  // onCloseMemberDeleteConfirmationClicked() {
+  //   this.isMemberDeleteConfirmationPopupShow = false;
 
-  performSearch(searchValue: any) {
-    this.onChange(searchValue);
-  }
+  // performSearch(searchValue: any) {
+  //   this.onChange(searchValue);
+  // }
 
   
+
 
 }

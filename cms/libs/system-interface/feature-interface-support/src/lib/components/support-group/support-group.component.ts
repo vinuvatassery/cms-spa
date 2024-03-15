@@ -9,10 +9,9 @@ import {
   Output
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
-import { State, CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { FilterService, GridDataResult, RowArgs, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
+import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subject, first } from 'rxjs';
 @Component({
@@ -177,10 +176,10 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.loadSupportGroupListGrid();
   }
 
-  public selectedRowChange(selectionEvent: any) {
-    this.selectedGroup = selectionEvent.selectedRows[0].dataItem;
-    this.selectedRowEvent.emit(this.selectedGroup);
-  }
+  // public selectedRowChange(selectionEvent: any) {
+  //   this.selectedGroup = selectionEvent.selectedRows[0].dataItem;
+  //   this.selectedRowEvent.emit(this.selectedGroup);
+  // }
 
 
   private loadSupportGroupListGrid(): void {
@@ -221,22 +220,22 @@ export class SupportGroupComponent implements OnInit, OnChanges {
 
   onChange(data: any) {
     this.defaultGridState();
-    let operator = 'contains';
-    this.filterData = {
-      logic: 'and',
-      filters: [
-        {
-          filters: [
-            {
-              field: this.selectedSearchColumn ?? 'groupName',
-              operator: operator,
-              value: data,
-            },
-          ],
-          logic: 'and',
-        },
-      ],
-    };
+    // let operator = 'contains';
+    // this.filterData = {
+    //   logic: 'and',
+    //   filters: [
+    //     {
+    //       filters: [
+    //         {
+    //           field: this.selectedSearchColumn ?? 'groupName',
+    //           operator: operator,
+    //           value: data,
+    //         },
+    //       ],
+    //       logic: 'and',
+    //     },
+    //   ],
+    // };
     const stateData = this.state;
     stateData.filter = this.filterData;
     this.dataStateChange(stateData);
