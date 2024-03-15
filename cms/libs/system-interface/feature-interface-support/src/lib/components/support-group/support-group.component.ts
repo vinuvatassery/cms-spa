@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -8,20 +9,16 @@ import {
   Output
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { SystemInterfaceSupportFacade } from '@cms/system-interface/domain';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult, RowArgs, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
-import {
-  State,
-  CompositeFilterDescriptor,
-  filterBy
-} from '@progress/kendo-data-query';
-import { LovFacade } from 'libs/system-config/domain/src/lib/application/lov.facade';
+import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
+import { State, CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { LovFacade } from '@cms/system-config/domain';
 import { Subject, first } from 'rxjs';
 @Component({
   selector: 'system-interface-support-group',
   templateUrl: './support-group.component.html',
-  //changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SupportGroupComponent implements OnInit, OnChanges {
   selectedGroup: any;
@@ -36,10 +33,11 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   isSupportGroupDeactivatePopupShow = false;
   isSupportGroupDeletePopupShow = false;
   isSupportGroupDeleteConfirmationPopupShow = false;
+  isSupportGroupGridLoaderShow = false;
 
   public formUiStyle: UIFormStyle = new UIFormStyle();
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
-  isSupportGroupGridLoaderShow = false;
+
   @Input() pageSizes: any;
   @Input() sortValue: any;
   @Input() sortType: any;
@@ -49,6 +47,8 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() SupportGroupGridLists$: any;
   @Input() supportGroupReactivate$: any;
   @Input() supportGroupRemove$: any;
+  @Input() supportGroupProfilePhoto$: any;
+  @Input() supportGroupListsLoader$: any;
   @Output() loadSupportGroupListEvent = new EventEmitter<any>();
   @Output() deactivateConfimEvent = new EventEmitter<string>();
   @Output() reactivateConfimEvent = new EventEmitter<string>();
@@ -56,12 +56,14 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Output() addSupportGroupEvent = new EventEmitter<string>();
   @Output() editSupportGroupEvent = new EventEmitter<string>();
   @Output() selectedRowEvent = new EventEmitter<any>();
+
   public state!: State;
   sortColumn = 'groupName';
   sortDir = 'Ascending';
   columnsReordered = false;
   filteredBy = '';
   searchValue = '';
+  searchText = '';
   isFiltered = false;
   filter!: any;
   selectedColumn: any = 'ALL'
@@ -70,29 +72,29 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   reactivateButtonEmitted = false;
   deleteButtonEmitted = false;
   notificationGroupId!: any;
+  userPerGroupCount!: any;
   deactivebuttonEmitted = false;
   reletebuttonEmitted = false;
   isEditSupportGroup = false;
   editButtonEmitted = false;
   selectedSupportGroup!: any;
+  selectedSearchColumn = 'ALL';
 
   gridSupportGroupDataSubject = new Subject<any>();
-  gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
   public selectableSettings: SelectableSettings;
-
-  dataListsLoader$ = this.systemInterfaceSupportFacade.supportGroupListDataLoader$;
-
+  gridSupportGroupData$ = this.gridSupportGroupDataSubject.asObservable();
+  statusFilter: any;
   filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
-  searchColumnList: { columnName: string, columnDesc: string }[] = [
-    {
-      columnName: 'ALL',
-      columnDesc: 'All Columns'
-    },
-    {
-      columnName: "groupName",
-      columnDesc: "Group Name"
-    },
-  ]
+  columns: any = {
+    ALL: 'All Columns',
+    groupCode: 'Interface',
+    groupName: 'Group Name'
+  };
+  searchColumnList = [
+    { columnName: 'ALL', columnDesc: 'All Columns' },
+    { columnName: 'groupCode', columnDesc: 'Interface' },
+    { columnName: 'groupName', columnDesc: 'Group Name' }
+  ];
 
   public gridMoreActionsSupport = [
     {
@@ -138,8 +140,9 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       click: (data: any): void => {
         if (!this.deleteButtonEmitted) {
           this.deleteButtonEmitted = true;
-          this.onOpenSupportGroupDeleteClicked(data.notificationGroupId);
+          this.onOpenSupportGroupDeleteClicked(data.notificationGroupId, data.userPerGroup);
         }
+
       },
     },
   ];
@@ -149,10 +152,10 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   /** Constructor **/
   constructor(
     private readonly cdr: ChangeDetectorRef,
-    private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
     private dialogService: DialogService,
-    private readonly lovFacade: LovFacade
+    private readonly lovFacade: LovFacade,
   ) {
+
     this.selectableSettings = {
       checkboxOnly: false,
       drag: false,
@@ -174,42 +177,59 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.loadSupportGroupListGrid();
   }
 
-  private loadSupportGroupListGrid(): void {
-    this.loadSupportGroup(
-      this.state?.skip ?? 0,
-      this.state?.take ?? 0,
-      this.sortValue,
-      this.sortType
-    );
+  public selectedRowChange(selectionEvent: any) {
+    this.selectedGroup = selectionEvent.selectedRows[0].dataItem;
+    this.selectedRowEvent.emit(this.selectedGroup);
   }
-  loadSupportGroup(
-    skipCountValue: number,
-    maxResultCountValue: number,
-    sortValue: string,
-    sortTypeValue: string
-  ) {
+
+
+  private loadSupportGroupListGrid(): void {
+    this.loadSupportGroup(this.state?.skip ?? 0, this.state?.take ?? 0, this.sortValue, this.sortType);
+  }
+  loadSupportGroup(skipCountValue: number, maxResultCountValue: number, sortValue: string, sortTypeValue: string) {
     this.isSupportGroupGridLoaderShow = true;
     const gridDataRefinerValue = {
       skipCount: skipCountValue,
       maxResultCount: maxResultCountValue,
-      sortColumn: sortValue,
+      sorting: sortValue,
       sortType: sortTypeValue,
-      filter: this.filter
+      filter: JSON.stringify(this.filter)
     };
     this.loadSupportGroupListEvent.emit(gridDataRefinerValue);
     this.gridDataHandle();
   }
 
+  dropdownFilterChange(
+    field: string,
+    value: any,
+    filterService: FilterService
+  ): void {
+    this.statusFilter = value;
+    filterService.filter({
+      filters: [
+        {
+          field: field,
+          operator: 'eq',
+          value: value,
+        },
+      ],
+      logic: 'or',
+    });
+  }
+
+
+
   onChange(data: any) {
     this.defaultGridState();
+    let operator = 'contains';
     this.filterData = {
       logic: 'and',
       filters: [
         {
           filters: [
             {
-              field: this.selectedColumn ?? 'groupName',
-              operator: 'startswith',
+              field: this.selectedSearchColumn ?? 'groupName',
+              operator: operator,
               value: data,
             },
           ],
@@ -241,7 +261,15 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.sortType = stateData.sort[0]?.dir ?? 'asc';
     this.state = stateData;
     this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
-
+    this.sortColumn = this.columns[stateData.sort[0]?.field];
+    this.filter = stateData?.filter?.filters;
+    const filterList = [];
+    if (stateData.filter?.filters.length > 0) {
+      for (const filter of stateData.filter.filters) {
+        filterList.push(this.columns[filter.filters[0].field]);
+      }
+    }
+    this.filteredBy = filterList.toString();
     this.loadSupportGroupListGrid();
   }
 
@@ -255,7 +283,16 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   public filterChange(filter: CompositeFilterDescriptor): void {
     this.filterData = filter;
   }
-
+  searchColumnChangeHandler(value: string) {
+    this.filter = [];
+    if (this.searchText) {
+      this.onSearch(this.searchText);
+    }
+  }
+  onSearch(searchValue: any) {
+    this.onChange(searchValue);
+    //this.searchSubject.next(searchValue);
+  }
   gridDataHandle() {
     this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
@@ -277,9 +314,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
         this.isSupportGroupGridLoaderShow = false;
       }
     });
-    this.gridSupportGroupData$
-      .subscribe((data) => { console.log(data) });
-
+    //this.gridSupportGroupData$.subscribe((data) => { console.log(data) });
     this.isSupportGroupGridLoaderShow = false;
 
   }
@@ -300,9 +335,14 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.isGroupDetailPopup = false;
     this.isEditSupportGroup = false;
   }
-  onOpenSupportGroupDeleteClicked(notificationGroupId: any) {
-    this.isSupportGroupDeletePopupShow = true;
-    this.notificationGroupId = notificationGroupId;
+  onOpenSupportGroupDeleteClicked(notificationGroupId: any, userPerGroupCount: number) {
+    // if (userPerGroupCount > 0) {
+    //   this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Group has dependencies and cannot be deleted.");
+    //   this.deleteButtonEmitted = false;
+    //   return;
+    // }
+      this.notificationGroupId = notificationGroupId;
+      this.isSupportGroupDeletePopupShow = true;
   }
   onCloseSupportGroupDeleteClicked() {
     this.deleteButtonEmitted = false;

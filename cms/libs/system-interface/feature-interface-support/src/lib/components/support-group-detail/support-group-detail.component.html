@@ -8,8 +8,8 @@
 
             <div class="flex-col">
                 <kendo-floatinglabel text="Interface">
-                    <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" textField="lovDesc"
-                        valueField="lovCode" [data]="interfaceSupportGroupLov | async" aria-label="State"
+                    <kendo-dropdownlist  [fillMode]="formUiStyle.dropDownFillMode" textField="lovCode"
+                        valueField="lovDesc" [data]="interfaceSupportGroupLov | async" aria-label="Interface"  
                         [valuePrimitive]="true" formControlName="groupCode"> </kendo-dropdownlist>
                         <kendo-formerror *ngIf="(!notiificationGroupForm.controls['groupCode'].valid) && notiificationGroupForm.controls['groupCode'].hasError('required') &&isSubmitted">
                             Interface must be selected</kendo-formerror>

@@ -1,7 +1,7 @@
-<kendo-dialog-titlebar (close)="onCloseDeleteToDOClicked()"> Delete TO DO Item? </kendo-dialog-titlebar>
+<kendo-dialog-titlebar (close)="onCloseDeleteToDOClicked()"> Delete To-Do item? </kendo-dialog-titlebar>
 <section class="k-dialog-body">
   <p class="text-muted mb-2">
-  Once deleted the to do item won't be available anymore. If needed a new to  de item can be created. </p>
+  This action cannot be undone. You may create a new item at any time.</p>
 </section>
 
 <kendo-dialog-actions>
@@ -16,7 +16,8 @@
       >
         Cancel
       </button>
-      <button kendoButton class="k-error-button" aria-label="Delete">
+      <button kendoButton class="k-error-button" aria-label="Delete"
+      (click)="onDeleteToDOClicked()">
         Delete
       </button>
     </div>

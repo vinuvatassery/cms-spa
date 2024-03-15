@@ -1,6 +1,8 @@
 /** Angular **/
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { GridFilterParam } from '@cms/case-management/domain';
+
 /** External libraries **/
 import { Observable } from 'rxjs/internal/Observable';
 import { of } from 'rxjs/internal/observable/of';
@@ -40,85 +42,29 @@ export class TodoDataService {
     ]);
   }
 
-  loadTodoGrid() {
-    return of([
-      {
-        Title: 'House Inspection',
-        TodoItemFor: 'John Sakariya',
-        Type: 'Client',
-        Description:
-          'Lorem With Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Certification',
-        TodoItemFor: 'David Miller',
-        Type: 'Client',
-        Description: 'Lorem With Custom Template. .',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'House Inspection',
-        TodoItemFor: 'Drill Kole',
-        Type: 'Client',
-        Description: 'Lorem With Custom Template.Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Documentation',
-        TodoItemFor: 'Rock Pedels',
-        Type: 'Client',
-        Description:
-          'Lorem With Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-      {
-        Title: 'Housing Search',
-        TodoItemFor: 'Sakariya Pothen',
-        Type: 'Service Provider',
-        Description: 'Custom Template. Editor Preview Both. Project.',
-        DueDate: '01-03-2022',
-      },
-    ]);
+  loadAlerts(payload:any, alertTypeCode:any) {
+    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${alertTypeCode}`,payload.gridDataRefinerValue);
   }
 
-  createTodoItem(payload:any){  
-      return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/todo`,payload);
-    }
+  getTodoItem(alertId:any){  
+    return this.http.get<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${alertId}`);
   }
+  createAlertItem(payload:any){  
+      return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${payload.type}`,payload);
+    }
+  markAlertAsDone (payload:any){  
+    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/markdone/${payload}`,null);
+  }
+  deleteAlert(payload:any){  
+    return this.http.delete<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${payload}`);
+  }
+  updateAlertItem(payload:any){
+    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts`,payload);
+
+  }
+
+   todoAndReminderByClient(clientId:any){  
+    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/clients/${clientId}`, null);
+  }
+}
 

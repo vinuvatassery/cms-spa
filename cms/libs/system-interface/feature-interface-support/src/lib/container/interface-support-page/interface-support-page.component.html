@@ -15,19 +15,22 @@
                   <div class="flex-col flex-col-12 mb-3">
 
                         <system-interface-support-group [SupportGroupGridLists$]="supportGroup$"
+                        [supportGroupListsLoader$] ="supportGroupListsLoader$"
                         [pageSizes]="pageSizes" [sortValue]="sortValueSupportGroup"
                         [sortType]="sortType" [sort]="sortSupportGroupList"  
                         (loadSupportGroupListEvent)="loadSupportGroup($event)"
                         [supportGroupReactivate$]="supportGroupReactivate$" 
-                        (deactivateConfimEvent)="handleDeactivate($event)" 
-                        (reactivateConfimEvent)="handleReactivate($event)"
+                        (deactivateConfimEvent)="handleDeactivateSupportGroup($event)" 
+                        (reactivateConfimEvent)="handleReactivateSupportGroup($event)"
                         [supportGroupRemove$] ="supportGroupRemove$"
                         (deleteConfimedEvent)="handleDeleteSupportGroup($event)"
                         [addSupportGroup$]="addSupportGroup$"
                         [editSupportGroup$]="editSupportGroup$"
                         (addSupportGroupEvent) ="handleAddSuppportGroup($event)" 
                         (editSupportGroupEvent) ="handleEditSupportGroup($event)" 
-                        (selectedRowEvent)="selectedGroupChangeEvent($event)" [pageSizes]="pageSizes"
+                        (selectedRowEvent)="selectedGroupChangeEvent($event)"
+                        [supportGroupProfilePhoto$]="supportGroupProfilePhoto$"
+                        (selectedRowEvent)="selectedGroupChangeEvent($event)"  [pageSizes]="pageSizes"
                                                         >
                   </system-interface-support-group>
                   </div>
@@ -49,12 +52,24 @@
                   </div>
 
                   <div class="flex-col flex-col-6">
-                        <h3>Error Category</h3>
+                        <h3>Notification Category</h3>
                         <system-interface-notification-category
-                              [notificationCategoryGridLists$]="notificationCategoryLists$" [pageSizes]="pageSizes"
+                              [notificationCategoryGridLists$]="notificationCategories$" [pageSizes]="pageSizes"
+                              [notificationCategoryListDataLoader$]="notificationCategoryListDataLoader$"
                               [sortValue]="sortValueNotificationCategory" [sortType]="sortType"
-                              [sort]="sortNotificationCategoryList"
-                              (loadNotificationCategoryListEvent)="loadNotificationCategory($event)"></system-interface-notification-category>
+                              [sort]="sortNotificationCategoryList" [selectedGroup]="selectedGroup"
+                              (loadNotificationCategoryListEvent)="loadNotificationCategory($event)"
+                              [eventLov$]="eventLov$"
+                              [addnotificationCategory$]="addnotificationCategory$"
+                              (addNotificationCategoryEvent) ="handleAddNotificationCategory($event)"
+                              [notificationCategoryReactivate$]="notificationCategoryReactivate$" 
+                              [notificationCategoryRemove$]="notificationCategoryRemove$"
+                              [editnotificationCategory$]="editnotificationCategory$"
+                              (deactivateConfimEvent)="handleDeactivateNotificationCategory($event)"
+                              (reactivateConfimEvent)="handleReactivateNotificationCategory($event)"
+                              (deleteConfimedEvent)="handleDeleteNotificationCategory($event)"
+                              (editNotificationCategoryEvent) ="handleEditNotificationCategory($event)"
+                              ></system-interface-notification-category>
                   </div>
 
             </div>

@@ -3,7 +3,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  ChangeDetectorRef,EventEmitter,Output, OnDestroy, OnInit
+  ChangeDetectorRef,EventEmitter,Output, OnDestroy, OnInit, ElementRef
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormArray, FormControl, AbstractControl } from '@angular/forms';
 
@@ -25,7 +25,7 @@ import {
   FinancialClaimTypeCode,
 } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import {  Lov, LovFacade } from '@cms/system-config/domain';
+import {  Lov, LovFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 
 import { SnackBarNotificationType, ConfigurationProvider, LoggingService, NotificationSnackbarService } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -119,6 +119,8 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
     private readonly insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly financialClaimsFacade: FinancialClaimsFacade,
     private cd: ChangeDetectorRef,
+    private readonly elementRef: ElementRef,
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade
   ) {
     this.copayPaymentForm = this.formBuilder.group({});
 
@@ -340,6 +342,11 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
     this.isSubmitted = true;
     if (!this.claimForm.valid) {
       this.claimForm.markAllAsTouched()
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.claimForm, this.elementRef.nativeElement, null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
+      }
       return;
     }
     if(this.isClientInEligibleForDates){
@@ -659,13 +666,13 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
     const serviceFormData = this.addClaimServicesForm.at(index) as FormGroup;
     const data = {
       invoiceId: this.claimForm.value?.invoiceId,
-      clientId: this.claimForm.value?.client.clientId, 
+      clientId: this.claimForm.value?.client.clientId,
       startDate: this.intl.formatDate(serviceFormData.controls['serviceStartDate'].value,  this.dateFormat ),
-      endDate: this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ), 
+      endDate: this.intl.formatDate(serviceFormData.controls['serviceEndDate'].value,  this.dateFormat ),
       vendorId: this.claimForm.value?.medicalProvider?.vendorId,
       totalAmountDue:serviceFormData.controls['amountDue'].value,
-      paymentRequestId :null, 
-      indexNumber: index, 
+      paymentRequestId :null,
+      indexNumber: index,
       typeCode : this.claimsType == this.financialProvider ? ServiceSubTypeCode.medicalClaim : ServiceSubTypeCode.dentalClaim
     };
 
@@ -673,7 +680,7 @@ export class MedicalPaymentDetailComponent implements OnDestroy, OnInit {
       this.financialClaimsFacade.checkDuplicatePaymentException(data);
     }
   }
-  
+
   calculateMedicadeRate(index: number) {
     const serviceForm = this.addClaimServicesForm.at(index) as FormGroup;
     let paymentType = serviceForm.controls['paymentType'].value;

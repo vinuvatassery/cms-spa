@@ -6,3 +6,6 @@ export * from './lib/infrastructure/system-interface-support.service';
 
 // entities
 export * from './lib/entities/grid-filter-param'; 
+
+//enums
+export * from './lib/enums/dashboard-template'

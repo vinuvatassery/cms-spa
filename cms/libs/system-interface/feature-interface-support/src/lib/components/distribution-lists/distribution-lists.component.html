@@ -112,11 +112,12 @@
 </div>
 
 
+
 <div class="mt-1">
   <button kendoButton class="mr-1" [primary]="true" aria-label="Member" icon="add" (click)="onMemberDetailsClicked()">
     Member</button>
 </div>
-<kendo-dialog *ngIf="isMemberDetailPopup" (close)="onCloseMemberDetailPopupClicked()" 
+<kendo-dialog *ngIf="isMemberDetailPopup" (close)="onCloseMemberDetailPopupClicked()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar>{{ isEditMode ? 'Edit Member' : 'Add Member' }} </kendo-dialog-titlebar>
 

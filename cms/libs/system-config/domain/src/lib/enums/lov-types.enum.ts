@@ -65,5 +65,6 @@ export enum LovType {
     BatchInterfaceStatus = 'BATCH_INTERFACE_STATUS',
     InterfaceProcessBatch = 'INTERFACE_PROCESS_BATCH',
     EventAttachemntType = 'EVENT_ATTACHMENT_TYPE_CODE',
-    AlertFrequencyCode ='ALERT_FREQUENCY_CODE'
+    AlertFrequencyCode ='ALERT_FREQUENCY_CODE',
+    EntityTypeCode ='ALERT_ENTITY_TYPE_CODE'
   }

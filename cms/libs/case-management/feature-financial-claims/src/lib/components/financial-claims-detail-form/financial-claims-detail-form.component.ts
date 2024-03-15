@@ -9,14 +9,15 @@ import {
   OnInit,
   ViewChild,
   TemplateRef,
-  OnDestroy
+  OnDestroy,
+  ElementRef
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { groupBy, State } from '@progress/kendo-data-query';
 import { EntityTypeCode, FinancialClaimsFacade, PaymentMethodCode, FinancialClaims, ServiceSubTypeCode, PaymentRequestType, FinancialPcaFacade, ExceptionTypeCode, ContactFacade, FinancialVendorFacade } from '@cms/case-management/domain';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConfigurationProvider, LoaderService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { Lov, LovFacade, NavigationMenuFacade } from '@cms/system-config/domain';
+import { Lov, LovFacade, NavigationMenuFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { IntlService } from '@progress/kendo-angular-intl';
@@ -136,6 +137,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
 
 
   constructor(private readonly financialClaimsFacade: FinancialClaimsFacade,
+    private readonly elementRef: ElementRef,
     private formBuilder: FormBuilder,
     private cd: ChangeDetectorRef,
     private readonly loaderService: LoaderService,
@@ -149,6 +151,7 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     private readonly financialVendorFacade : FinancialVendorFacade,
     private readonly navigationMenuFacade: NavigationMenuFacade,
     private route: Router,
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade
   ) {
     this.initMedicalClaimObject();
     this.initClaimForm();
@@ -668,6 +671,11 @@ export class FinancialClaimsDetailFormComponent implements OnDestroy, OnInit {
     if (!this.claimForm.valid) {
       this.claimForm.markAllAsTouched()
       this.cd.detectChanges();
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.claimForm, this.elementRef.nativeElement,null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
+      }
       return;
     }
     let formValues = this.claimForm.value;

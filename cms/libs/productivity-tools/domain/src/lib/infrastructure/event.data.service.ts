@@ -15,8 +15,8 @@ export class EventDataService {
     private configurationProvider : ConfigurationProvider) {}
 
   /** Public methods **/
-  loadEvents(params: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/by-entity-id`, params);
+  loadEvents(params: any, entityId:string) {
+    return this.http.post(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/${entityId}/by-entity-id`, params);
   }
 
   loadEventsData() {
@@ -47,6 +47,8 @@ export class EventDataService {
     eventFormData.append("entityTypeCode", event?.entityTypeCode ?? '');
     eventFormData.append("parentEventLogId", event?.parentEventLogId ?? '');
     eventFormData.append("isSubEvent", event?.isSubEvent ?? '');
+    eventFormData.append("sourceEntityId", event?.sourceEntityId ?? '');
+    eventFormData.append("sourceEntityTypeCode", event?.sourceEntityTypeCode ?? '');
 
     return eventFormData;
   }

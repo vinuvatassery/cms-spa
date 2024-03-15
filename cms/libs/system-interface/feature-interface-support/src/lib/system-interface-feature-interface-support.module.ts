@@ -11,7 +11,10 @@ import { SupportGroupDetailComponent } from './components/support-group-detail/s
 import { DeactivateSupportGroupComponent } from './components/deactivate-support-group/deactivate-support-group.component';
 import { ReactivateSupportGroupComponent } from './components/reactivate-support-group/reactivate-support-group.component';
 import { RemoveSupportGroupComponent } from './components/remove-support-group/remove-support-group.component';
-import { DistributionDetailComponent } from './components/distribution-detail/distribution-detail.component';
+import { NotiificationCategoryDetailComponent } from './components/notification-category-detail/notification-category-detail.component';
+import { DeactivateNotificationCategoryComponent } from './components/deactivate-notification-category/deactivate-notification-category.component';
+import { ReactivateNotificationCategoryComponent } from './components/reactivate-notification-category/reactivate-notification-category.component';
+import { RemoveNotificationCategoryComponent } from './components/remove-notifcation-category/remove-notification-category.component';
 
 @NgModule({
   imports: [
@@ -29,7 +32,11 @@ import { DistributionDetailComponent } from './components/distribution-detail/di
     SupportGroupDetailComponent,
     DeactivateSupportGroupComponent,
     ReactivateSupportGroupComponent,
-    RemoveSupportGroupComponent
+    RemoveSupportGroupComponent,
+    NotiificationCategoryDetailComponent,
+    DeactivateNotificationCategoryComponent,
+    ReactivateNotificationCategoryComponent,
+    RemoveNotificationCategoryComponent
   ],
   exports: [
     InterfaceSupportPageComponent,
@@ -39,7 +46,11 @@ import { DistributionDetailComponent } from './components/distribution-detail/di
     SupportGroupDetailComponent,
     DeactivateSupportGroupComponent,
     ReactivateSupportGroupComponent,
-    RemoveSupportGroupComponent
+    RemoveSupportGroupComponent,
+    NotiificationCategoryDetailComponent,
+    DeactivateNotificationCategoryComponent,
+    ReactivateNotificationCategoryComponent,
+    RemoveNotificationCategoryComponent
   ],
 })
 export class SystemInterfaceFeatureInterfaceSupportModule {}

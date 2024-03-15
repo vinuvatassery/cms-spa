@@ -66,7 +66,6 @@ export class ReminderNotificationSnackBarComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    debugger
     this.removePreviousMessage();
     this.reminderSnackBarSubscribe();
   }

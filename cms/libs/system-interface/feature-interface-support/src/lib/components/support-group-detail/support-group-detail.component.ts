@@ -53,7 +53,7 @@ export class SupportGroupDetailComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.buildForm();
+    //this.buildForm();
     if (this.isEditSupportGroup) {
       this.bindDataToForm(this.selectedSupportGroup)
     }

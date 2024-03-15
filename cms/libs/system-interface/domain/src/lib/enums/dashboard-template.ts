@@ -1,0 +1,3 @@
+export enum DashboardTemplate {
+    SYSTEM_INTERFACE_TEMPLATE="SYSTEM_INTERFACE_TEMPLATE"
+}

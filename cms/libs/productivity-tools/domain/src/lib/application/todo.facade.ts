@@ -11,6 +11,7 @@ import { Todo } from '../entities/todo';
 import { TodoDataService } from '../infrastructure/todo.data.service';
 /** Services **/
 import { SignalrEventHandlerService } from '@cms/shared/util-common';
+import { LovFacade } from '@cms/system-config/domain';
 
 @Injectable({ providedIn: 'root' })
 export class TodoFacade {
@@ -18,22 +19,28 @@ export class TodoFacade {
   private todoSubject = new Subject<Todo[]>();
   private searchSubject = new Subject<any>();
   private todoGridSubject = new Subject<any>();
-  private todoCreateSubject = new Subject<any>();
-
+  private curdAlertSubject = new Subject<any>();
+  private todoGetSubject = new Subject<any>();
+  private loadAlertGridSubject = new Subject<any>();
+  private clientTodoAndRemindersSubject = new Subject<any>();
   /** Public properties **/
   todo$ = this.todoSubject.asObservable();
   search$ = this.searchSubject.asObservable();
   todoGrid$ = this.todoGridSubject.asObservable();
-  createTodo$ = this.todoCreateSubject.asObservable();
+  curdAlert$ = this.curdAlertSubject.asObservable();
+  getTodo$ = this.todoGetSubject.asObservable();
+  loadAlertGrid$ = this.loadAlertGridSubject.asObservable();
   signalrReminders$!: Observable<any>;
-
+   clientTodoAndReminders$ = this.clientTodoAndRemindersSubject.asObservable()
+ 
   /** Constructor **/
   constructor(
     private readonly todoDataService: TodoDataService,
     private readonly signalrEventHandlerService: SignalrEventHandlerService,
     private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
-    private loggingService : LoggingService
+    private loggingService : LoggingService,
+    private lovFacade : LovFacade
   ) {
     this.loadSignalrReminders();
   }
@@ -81,8 +88,8 @@ export class TodoFacade {
     });
   }
 
-  loadTodoGrid(): void {
-    this.todoDataService.loadTodoGrid().subscribe({
+  loadAlerts(payload:any,alertTypeCode:any): void {
+    this.todoDataService.loadAlerts(payload,alertTypeCode).subscribe({
       next: (todoGridResponse: any) => {
         this.todoGridSubject.next(todoGridResponse);
       },
@@ -92,12 +99,26 @@ export class TodoFacade {
     });
   }
 
-  createTodoItem(payload:any){
+  getTodoItem(payload:any){
     this.loaderService.show()
-    this.todoDataService.createTodoItem(payload).subscribe({
+    this.todoDataService.getTodoItem(payload).subscribe({
       next: (todoGridResponse: any) => {
         this.loaderService.hide()
-        this.todoCreateSubject.next(true);
+        this.todoGetSubject.next(todoGridResponse);
+      },
+      error: (err) => {
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
+
+  createAlertItem(payload:any){
+    this.loaderService.show()
+    this.todoDataService.createAlertItem(payload).subscribe({
+      next: (todoGridResponse: any) => {
+        this.loaderService.hide() 
+        this.curdAlertSubject.next(true);
         this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)    
       },
       error: (err) => {
@@ -106,4 +127,70 @@ export class TodoFacade {
       },
     })
   }
+
+  
+  updateAlertItem(payload:any){
+    this.loaderService.show()
+    this.todoDataService.updateAlertItem(payload).subscribe({
+      next: (todoGridResponse: any) => {
+        this.loaderService.hide() 
+        this.curdAlertSubject.next(true);
+        this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)  
+        this.loadAlertGridSubject.next(true);  
+      },
+      error: (err) => {
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+      },
+    })
+  }
+
+  markAlertAsDone(alertId:any):any { 
+        this.loaderService.show()
+        this.todoDataService.markAlertAsDone(alertId).subscribe({
+          next: (todoGridResponse: any) => {
+            this.loaderService.hide()
+            this.curdAlertSubject.next(true);
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
+            this.loadAlertGridSubject.next(true);
+          },
+          error: (err) => {
+            this.loaderService.hide()
+            this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+            
+          },
+        })
+      
+  }
+
+  deleteAlert(alertId:any):any {
+      this.loaderService.show()
+      this.todoDataService.deleteAlert(alertId).subscribe({
+        next: (todoGridResponse: any) => {
+          this.loaderService.hide()
+          this.curdAlertSubject.next(true);
+          this.showHideSnackBar(SnackBarNotificationType.SUCCESS , todoGridResponse.message)   
+          this.loadAlertGridSubject.next(true);
+        },
+        error: (err) => {
+          this.loaderService.hide()
+          this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+        },
+      })
+   
+}
+
+  todoAndRemindersByClient(clientId:any):any {
+  this.todoDataService.todoAndReminderByClient(clientId).subscribe({
+    next: (clientsTodoReminders: any) => {
+   
+      this.clientTodoAndRemindersSubject.next(clientsTodoReminders);
+    },
+    error: (err) => {
+      this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
+    },
+  })
+
+}
+  
 }

@@ -3,7 +3,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  ChangeDetectorRef,EventEmitter,Output
+  ChangeDetectorRef,EventEmitter,Output, ElementRef
 } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
@@ -20,7 +20,7 @@ import {
 } from '@cms/case-management/domain';
 import { SnackBarNotificationType, ConfigurationProvider } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade } from '@cms/system-config/domain';
+import { LovFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DropDownFilterSettings } from '@progress/kendo-angular-dropdowns';
 
@@ -62,7 +62,7 @@ export class MedicalPremiumPaymentDetailComponent {
   public caseOwnerfilterSettings: DropDownFilterSettings = {
     caseSensitive: false,
     operator: 'startsWith',
-  };    
+  };
   statusEndDateIsGreaterThanStartDate: boolean = true;
   startDateIsFutureDate: boolean = false;
   dateFormat = this.configurationProvider.appSettings.dateFormat;
@@ -77,6 +77,8 @@ export class MedicalPremiumPaymentDetailComponent {
     private readonly insurancePolicyFacade: HealthInsurancePolicyFacade,
     private readonly vendorFacade: VendorFacade,
     private configurationProvider: ConfigurationProvider,
+    private readonly elementRef: ElementRef,
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade
   ) {
     this.premiumPaymentForm = this.formBuilder.group({});
   }
@@ -97,22 +99,28 @@ export class MedicalPremiumPaymentDetailComponent {
   savePaymentDetailsClicked() {
     this.validateForm();
     if (this.premiumPaymentForm.valid) {
-      this.populatePaymentRequest();    
+      this.populatePaymentRequest();
       this.insurancePolicyFacade.showLoader();
       this.insurancePolicyFacade.savePaymentRequest(this.paymentRequest).subscribe({
-        next: () => {  
+        next: () => {
           this.insurancePolicyFacade.showHideSnackBar(
             SnackBarNotificationType.SUCCESS,
             'Insurance premium payment saved successfully.'
-          );        
+          );
           this.insurancePolicyFacade.triggeredPremiumPaymentSaveSubject.next(true);
           this.insurancePolicyFacade.hideLoader();
         },
-        error: (error: any) => {          
+        error: (error: any) => {
           this.insurancePolicyFacade.triggeredPremiumPaymentSaveSubject.next(true);
           this.insurancePolicyFacade.showHideSnackBar(SnackBarNotificationType.ERROR, error)
         }
       })
+    } else {
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.premiumPaymentForm, this.elementRef.nativeElement, null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
+      }
     }
   }
   resetForm() {
@@ -127,25 +135,25 @@ export class MedicalPremiumPaymentDetailComponent {
     this.premiumPaymentForm.controls['serviceDescription'].setValidators([Validators.required,]);
     this.premiumPaymentForm.controls['serviceTypeCode'].setValidators([Validators.required,]);
     this.premiumPaymentForm.controls['amountRequested'].setValidators([Validators.required,]);
-    this.premiumPaymentForm.controls['paymentTypeCode'].setValidators([Validators.required,]);   
-       
+    this.premiumPaymentForm.controls['paymentTypeCode'].setValidators([Validators.required,]);
+
     this.premiumPaymentForm.controls['serviceStartDate'].setValidators([Validators.required,]);
-    this.premiumPaymentForm.controls['entryDate'].setValidators([Validators.required,]); 
+    this.premiumPaymentForm.controls['entryDate'].setValidators([Validators.required,]);
 
     this.premiumPaymentForm.controls['vendorId'].updateValueAndValidity();
     this.premiumPaymentForm.controls['clientInsurancePolicyId'].updateValueAndValidity();
     this.premiumPaymentForm.controls['serviceDescription'].updateValueAndValidity();
     this.premiumPaymentForm.controls['serviceTypeCode'].updateValueAndValidity();
     this.premiumPaymentForm.controls['amountRequested'].updateValueAndValidity();
-    this.premiumPaymentForm.controls['paymentTypeCode'].updateValueAndValidity();    
+    this.premiumPaymentForm.controls['paymentTypeCode'].updateValueAndValidity();
     this.premiumPaymentForm.controls['reversalTypeCode'].updateValueAndValidity();
     this.premiumPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
-    this.premiumPaymentForm.controls['entryDate'].updateValueAndValidity(); 
+    this.premiumPaymentForm.controls['entryDate'].updateValueAndValidity();
   }
   populatePaymentRequest() {
     this.paymentRequest = new PaymentRequest()
     this.paymentRequest.clientId = this.clientId;
-    this.paymentRequest.clientCaseEligibilityId =  this.caseEligibilityId;    
+    this.paymentRequest.clientCaseEligibilityId =  this.caseEligibilityId;
     this.paymentRequest.entityId = this.premiumPaymentForm.controls['vendorId'].value;
     this.paymentRequest.entityTypeCode = EntityTypeCode.Vendor.toUpperCase();
     this.paymentRequest.clientInsurancePolicyId = this.premiumPaymentForm.controls['clientInsurancePolicyId'].value;
@@ -154,12 +162,12 @@ export class MedicalPremiumPaymentDetailComponent {
     this.paymentRequest.amountRequested = this.premiumPaymentForm.controls['amountRequested'].value;
     this.paymentRequest.paymentTypeCode = this.premiumPaymentForm.controls['paymentTypeCode'].value;
     this.paymentRequest.paymentRequestTypeCode = 'Expense'
-    this.paymentRequest.txtDate = this.intl.formatDate(this.premiumPaymentForm.controls['entryDate'].value, this.dateFormat); 
+    this.paymentRequest.txtDate = this.intl.formatDate(this.premiumPaymentForm.controls['entryDate'].value, this.dateFormat);
     this.paymentRequest.reversalTypeCode = this.premiumPaymentForm.controls['reversalTypeCode'].value;
-    this.paymentRequest.serviceStartDate = this.intl.formatDate(this.premiumPaymentForm.controls['serviceStartDate'].value, this.dateFormat); 
-    this.paymentRequest.serviceEndDate = this.intl.formatDate(this.premiumPaymentForm.controls['serviceEndDate'].value, this.dateFormat); 
+    this.paymentRequest.serviceStartDate = this.intl.formatDate(this.premiumPaymentForm.controls['serviceStartDate'].value, this.dateFormat);
+    this.paymentRequest.serviceEndDate = this.intl.formatDate(this.premiumPaymentForm.controls['serviceEndDate'].value, this.dateFormat);
     this.paymentRequest.comments = this.premiumPaymentForm.controls['comments'].value;
-    
+
   }
 
   private loadServiceProviderName(type: string, vendorType: string, clientId: any, clientCaseligibilityId: any) {
@@ -238,7 +246,7 @@ export class MedicalPremiumPaymentDetailComponent {
       entryDate: [''],
       comments: [''],
     });
-    
+
     this.setPremiumPaymentForm();
   }
 
@@ -262,7 +270,7 @@ export class MedicalPremiumPaymentDetailComponent {
       this.premiumPaymentForm.controls['serviceStartDate'].markAllAsTouched();
       this.premiumPaymentForm.controls['serviceStartDate'].setValidators([Validators.required]);
       this.premiumPaymentForm.controls['serviceStartDate'].updateValueAndValidity();
-      
+
       this.statusEndDateIsGreaterThanStartDate = false;
     }
     else if (this.premiumPaymentForm.controls['serviceEndDate'].value !== null) {

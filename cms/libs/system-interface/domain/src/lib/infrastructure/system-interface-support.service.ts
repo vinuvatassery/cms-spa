@@ -151,28 +151,83 @@ export class SystemInterfaceSupportService {
 
   // distribution ----------------------------------------
   getDistributionList(paginationParameters: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `${this.distributionBaseUrl}/list`, paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distributions`, paginationParameters);
   }
 
   addDistributionListUser(user: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `${this.distributionBaseUrl}`, user);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/user`, user);
   }
 
-  changeDistributionListUserStatus(memberId: string, status: boolean) {
+
+
+  // Notification Category Services 
+
+
+  getNotificationCategoryList(paginationParameters: any) {
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/list`, paginationParameters);
+  }
+
+  addNotificationCategory(eventNotificationGroup: any) {
+
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category`, eventNotificationGroup);
+  }
+
+  editNotificationCategory(eventNotificationGroupId: string, eventNotificationGroup: any) {
+    const body = {
+      eventId: eventNotificationGroup.eventId
+    }
+    return this.http.put(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-support/notification-category/${eventNotificationGroupId}`, body);
+  }
+
+  changeNotificationCategoryStatus(eventNotificationGroupId: string, status: boolean) {
     const options = {
       status: status,
     }
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${memberId}`, options);
+    return this.http.patch(
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-support/notification-category/${eventNotificationGroupId}`, options
+    );
   }
 
-  deleteDistributionListUser(memberId: string) {
+  deleteNotificationCategory(eventNotificationGroupId: string, isHardDelete: boolean) {
+    const options = {
+      body: {
+        hardDelete: isHardDelete,
+      }
+    }
     return this.http.delete(
-      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${memberId}`);
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-support/notification-category/${eventNotificationGroupId}`, options
+    );
   }
 
-  editDistributionListUser(body: any) {
-    return this.http.put(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${body.notificationUserId}`, body);
+  getEventLovList(groupCode: string) {
+    return this.http.get<any[]>(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/events-list/${groupCode}`);
   }
   // ----------------------------------------
-  
+
+    // distribution ----------------------------------------
+    getDistributionList(paginationParameters: any) {
+        return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `${this.distributionBaseUrl}/list`, paginationParameters);
+    }
+
+    addDistributionListUser(user: any) {
+        return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `${this.distributionBaseUrl}`, user);
+    }
+
+    changeDistributionListUserStatus(memberId: string, status: boolean) {
+        const options = {
+            status: status,
+        }
+        return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${memberId}`, options);
+    }
+
+    deleteDistributionListUser(memberId: string) {
+        return this.http.delete(
+            `${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${memberId}`);
+    }
+
+    editDistributionListUser(body: any) {
+        return this.http.put(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${body.notificationUserId}`, body);
+    }
+    // ----------------------------------------
+
 }

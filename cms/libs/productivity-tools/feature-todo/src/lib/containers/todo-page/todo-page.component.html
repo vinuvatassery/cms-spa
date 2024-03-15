@@ -5,7 +5,7 @@
     icon="add"
     [primary]="true"
     class="add-new-button"
-    (click)="onOpenTodoClicked(todoDetailTemplate)"
+    (click)="onOpenTodoClicked(null,todoDetailTemplate)"
     aria-label="To-Do Item"
   >
     To-Do Item
@@ -27,18 +27,25 @@
  <!-- Page Content Section -->
 <section>
   <productivity-tools-todo-list
-  (isModalTodoDetailsOpenClicked)="onOpenTodoClicked(todoDetailTemplate)"
-  (isLoadTodoGridEvent)="onloadTodoGrid($event)"
+  #todoList
+  (isModalTodoDetailsOpenClicked)="onOpenTodoClicked($event,todoDetailTemplate)"
+  (isLoadTodoGridEvent)="onloadTodoGrid($event,$event)"
   [isToDODetailsActionOpen]="isToDODetailsActionOpen"
-  (todoGrid$)="todoGrid$"
+  [todoGrid$]="todoGrid$"
+  [loadAlertGrid$]="loadAlertGrid$"
+  [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+  (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
+  (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
+  (getTodoItemsLov)="getTodoItemsLov()"
   ></productivity-tools-todo-list>
 </section>
 
 <!-- Create To Do Modal Html-->
 <ng-template #todoDetailTemplate>
-  <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">Create a Custom To Do Item </kendo-dialog-titlebar>
+  <kendo-dialog-titlebar (close)="onCloseTodoClicked($event)">
+ {{!!this.selectedAlertId?  'Edit or delete this item' : 'Create a Custom To Do Item'}}    </kendo-dialog-titlebar>
   <productivity-tools-todo-detail 
-  (isLoadTodoGridEvent)="onloadTodoGrid($event)" 
+  (isLoadTodoGridEvent)="loadTodoList()" 
   [frequencyTypeCodeSubject$]="frequencyTypeCodeSubject$"
   (isModalTodoDetailsCloseClicked)="onCloseTodoClicked($event)"
   [clientSearchResult$]="clientSearchResult$"
@@ -46,7 +53,18 @@
   (searchProvider)="searchProvider($event)"
   [providerSearchResult$]="providerSearchResult$"
   (onTodoItemCreateClick)="onTodoItemCreateClick($event)"
+  [entityTypeCodeSubject$]="entityTypeCodeSubject$"
+  [getTodo$]="getTodo$"
   [createTodo$]="createTodo$"
+  (onGetTodoItem)="onGetTodoItem($event)"
+  (getTodoItemsLov)="getTodoItemsLov()"
+  (onUpdateTodoItemClick)="onUpdateTodoItemClick($event)"
+  [clientSearchLoaderVisibility$]="clientSearchLoaderVisibility$"
+  [medicalProviderSearchLoaderVisibility$]="medicalProviderSearchLoaderVisibility$"
+  [alertId]="selectedAlertId"
+  [isEdit]="!!this.selectedAlertId"
+  [searchProviderSubject]="searchProviderSubject"
+  [clientSubject]="clientSubject"
   ></productivity-tools-todo-detail>
 </ng-template>
 

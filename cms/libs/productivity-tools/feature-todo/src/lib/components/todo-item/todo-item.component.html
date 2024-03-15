@@ -1,5 +1,8 @@
 <div class="due-items-wrapper">
-  <div class="due-item-blocks red-item-block">
+  <ng-container *ngFor="let item of items">
+  <div class="due-item-blocks"
+  [className]="isDueWithIn7Days ? 'due-item-blocks red-item-block' : 'due-item-blocks canyon-item-block'"
+ >
     <div class="due-item-details">
       <span
         class="material-icons item-list-icon"
@@ -8,77 +11,11 @@
         >playlist_add_check</span
       >
       <div class="item-list-info">
-        <p>Renew Eligibility</p>
-        <p>Due Today</p>
+        <p>{{item.alertDesc}}</p>
+        <p>{{item.alertDueDate  | date:'MM/dd/yyyy'}}</p>
       </div>
     </div>
   </div>
-  <div class="due-item-blocks canyon-item-block">
-    <div class="due-item-details">
-      <span
-        class="material-icons item-list-icon"
-        aria-label="todo"
-        aria-hidden="true"
-        >playlist_add_check</span
-      >
-      <div class="item-list-info">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod et ligula luctus
-        </p>
-        <p>10-10-2021</p>
-      </div>
-      <kendo-dropdownbutton
-      [data]="moreactions"
-        
-        title="More option"
-        look="bare"
-        aria-label="more actions"
-        class="small-i-btn app-dropdown-action more_action_wid"
-        [popupSettings]="{ popupClass: popupClass1, animate: true }"
-      >
-      <span class="material-icons" aria-label="More option"> more_vert    </span>
-        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-          <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-            <label>   {{ dataItem.text }} </label>
-        </button>
-        </ng-template>
-      </kendo-dropdownbutton>
-    </div>
-  </div>
-  <div class="due-item-blocks">
-    <div class="due-item-details">
-      <span
-        class="material-icons item-list-icon"
-        aria-label="todo"
-        aria-hidden="true"
-        >playlist_add_check</span
-      >
-      <div class="item-list-info">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod et ligula luctus
-        </p>
-        <p>10-10-2021</p>
-      </div>
-      <kendo-dropdownbutton
-      [data]="moreactions"
-        
-        title="More option"
-        look="bare"
-        aria-label="more actions"
-        class="small-i-btn app-dropdown-action more_action_wid"
-        [popupSettings]="{ popupClass: popupClass1, animate: true }"
-      >
-      <span class="material-icons" aria-label="More option"> more_vert    </span>
-        <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-          <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-            <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-            <label>   {{ dataItem.text }} </label>
-        </button>
-        </ng-template>
-      </kendo-dropdownbutton>
-    </div>
-  </div>
+</ng-container>
+
 </div>

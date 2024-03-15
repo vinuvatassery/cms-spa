@@ -20,8 +20,8 @@
     </div>
     <div class="sidePanel_header-right">
       <div class="input-search mat-form-no-b-space" *ngIf="isShownSearch">
-          <kendo-textbox aria-label="search event"  placeholder="Search Events"  [fillMode]="formUiStyle.inputFillMode"
-          [(ngModel)]="searchText" (valueChange)="loadLogEvent()">
+          <kendo-textbox aria-label="search event"  placeholder="Search events"  [fillMode]="formUiStyle.inputFillMode"
+          [(ngModel)]="searchText" (valueChange)="loadLogEvent()" (blur)="showHideSearch()">
            </kendo-textbox>
       </div>
       <button
@@ -38,25 +38,25 @@
           aria-hidden="true"
           >search</span
         >
-      </button>
-      <button kendoButton  kendoPopoverAnchor [popover]="eventFilterCard"
-        showOn="click" aria-label="More">
-        <span class="material-icons" aria-label="More option"> more_vert </span>
-      </button>
-      <kendo-popover #eventFilterCard [width]="300" position="bottom">
-        <ng-template kendoPopoverBodyTemplate>
-          <div class="event-filter-body">
+      </button>     
+      <button #eventFilterCardBtn kendoButton (click)="isEventFilterPopoverOpen = !isEventFilterPopoverOpen">
+        <span class="material-icons" aria-label="More option" *ngIf="!isEventFilterPopoverOpen"> more_vert </span>
+        
+        <span class="material-icons" aria-label="Cancel" *ngIf="isEventFilterPopoverOpen"> cancel </span>
+      </button>   
+      <div class="event-filter_popover_wrapper" *ngIf="isEventFilterPopoverOpen" #eventtFilterPopover>
+        <div class="event-filter-body">
           <div class="event-filters">
-            <button kendoButton look="flat" aria-label="Sort Ascending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('Asc')">
+            <button kendoButton look="flat" aria-label="Sort Ascending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('asc')" [selected]="sortType=='asc'">
               <span class="material-icons" aria-hidden="true" aria-label="Sort Ascending">arrow_upward</span>
               <label> Sort Ascending </label>
             </button>
-            <button kendoButton look="flat" aria-label="Sort Descending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('desc')">
+            <button kendoButton look="flat" aria-label="Sort Descending" class="btn-h-primary" aria-hidden="false" (click)="sortByMethod('desc')" [selected]="sortType=='desc'">
               <span class="material-icons" aria-hidden="true" aria-label="Sort Descending">arrow_downward</span>
               <label> Sort Descending </label>
             </button>
             <button kendoButton look="flat" aria-label="Filter" class="btn-h-primary" aria-hidden="false"
-              (click)="isShowFilter = !isShowFilter">
+              (click)="isShowFilter = !isShowFilter" [toggleable]="isShowFilter">
               <span class="material-icons" aria-hidden="true" aria-label="Filter">filter_list</span>
               <label> Filter </label>
             </button>
@@ -96,14 +96,14 @@
               <button kendoButton [primary]="true" aria-label="Filter" (click)="onEventLogFilterFilterClicked()" [disabled]="!isEnableFilterBtn">
                 FILTER
               </button>&nbsp;&nbsp;
-              <button kendoButton [primary]="true" look="outline" aria-label="Clear" (click)="onEventLogFilterClearClicked()">
+              <button kendoButton [primary]="true" look="outline" aria-label="Clear" (click)="onEventLogFilterClearClicked()" [disabled]="!isEnableFilterBtn">
                 CLEAR
               </button>
             </div>            
           </div>
         </div>
-        </ng-template>
-      </kendo-popover>
+      </div>   
+     
       <button kendoButton class="k-icon-button small-i-btn" aria-label="close" (click)="onCloseEventLogClicked()"
         title="close">
         <span class="material-icons" aria-label="close" aria-hidden="true">close</span>
@@ -115,16 +115,25 @@
     <ul aria-label="event log menu" class="event-log-list">
       <!-- Event list items -->
 
-
-
-
-
       <li *ngFor="let eventLog of events; let i = index" aria-label="event log menu item" class="event-log-list_items">
         <section>
           <div class="items-head">
             <p class="items-head_label">{{eventLog.eventDesc}}</p>
-            <p class="items-head_info">
-              {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by <span class="items-head_info-user">{{eventLog.createdBy}}</span>
+            <p class="items-head_info text-right">
+              {{eventLog.creationTime | date : 'MM-dd-yyyy'}} by
+              
+            <span class="items-head_info-user">
+
+              <common-user-photo-icon  
+              [userId]="eventLog.creatorId" 
+              [userFirstName]="eventLog.createdBy"
+              [userLastName]="''"
+              [linkType]="'profileLink'"
+              [position]="'left'"
+              [callout]="false">
+            </common-user-photo-icon>
+
+            </span>
             </p>
           </div>
           <div class="items-body">
@@ -142,8 +151,19 @@
                 >add</span
               >
             </button>
-            <span class="items-body_details">{{eventLog.eventLogDesc}}</span>
-            <span class="text-primary text-underline c-pointer">View Letter</span>
+            <!-- <span class="items-body_details">{{eventLog.eventLogDesc}}</span> -->
+            <div class="items-body">                
+              <common-read-more
+              [content]="eventLog.eventLogDesc"
+              [limit]="250"
+              [completeWords]="true">
+  
+              </common-read-more>
+            </div>
+            <span *ngIf="eventLog.userEventFlag && eventLog.attachments?.length > 0" 
+              class="text-primary text-underline c-pointer" 
+              (click)="downloadAttachment(eventLog.attachments[0]?.eventLogAttachmentId, eventLog.attachments[0]?.attachmentFilePath)">
+              View Attachment</span>
           </div>
         </section>
 
@@ -154,14 +174,33 @@
             <section>
               <div class="items-head">
                 <p class="items-head_label">{{subEventLog.eventDesc}}</p>
-                <p class="items-head_info">
+                <p class="items-head_info text-right">
                   {{subEventLog.creationTime | date: 'MM-dd-yyyy'}} by
-                  <span class="items-head_info-user">{{subEventLog.createdBy}}</span>
+                  <span class="items-head_info-user">
+
+                    <common-user-photo-icon  
+                    [userId]="subEventLog.creatorId" 
+                    [userFirstName]="subEventLog.createdBy"
+                    [userLastName]="''"
+                    [linkType]="'profileLink'"
+                    [position]="'left'"
+                    [callout]="false">
+                  </common-user-photo-icon>
+      
+                  </span>
                 </p>
               </div>
-              <div class="items-body">
-                <span [id]="subEventLog.eventLogId" class="items-body_details text-ellipsis">{{subEventLog.eventLogDesc}}</span>
-                <span class="text-primary text-underline c-pointer" *ngIf="isShowReadMore(subEventLog.eventLogId)">Read More</span>
+              <div class="items-body">                
+                <common-read-more
+                [content]="subEventLog.eventLogDesc"
+                [limit]="250"
+                [completeWords]="true">
+                </common-read-more>
+
+                <span *ngIf="subEventLog.userEventFlag && subEventLog.attachments?.length > 0" 
+                  class="text-primary text-underline c-pointer" 
+                  (click)="downloadAttachment(subEventLog.attachments[0]?.eventLogAttachmentId, subEventLog.attachments[0]?.attachmentFilePath)">
+                  View Attachment</span>
               </div>
             </section>
           </li>
@@ -169,7 +208,7 @@
         <!-- Event sub list items -->
       </li>
     </ul>
-    <div class="filter-footer-event">
+    <div class="filter-footer-event" *ngIf="filterBy.length > 0">
       <small>Filtered By: {{filterBy}} <a (click)="onEventLogFilterClearClicked()">Clear</a></small>
     </div>
   </div>

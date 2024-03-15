@@ -87,4 +87,12 @@ export class DocumentDataService {
       )
     }
   }
+
+  getEventtDocumentsViewDownload(eventLogAttachmentId: string) {
+    return this.http.get(
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/event-logs/${eventLogAttachmentId}/content`
+      , {
+        responseType: 'blob'
+      });
+  }
 }

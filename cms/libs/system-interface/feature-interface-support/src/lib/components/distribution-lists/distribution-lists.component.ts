@@ -245,6 +245,16 @@ export class DistributionListsComponent implements OnInit, OnChanges {
 
   }
 
+
+  defaultGridState() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter: { logic: 'and', filters: [] },
+    };
+  }
+
   onColumnReorder($event: any) {
     this.columnsReordered = true;
   }
@@ -333,7 +343,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     if (this.selectedMemberData.status === 'InActive') {
       this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Already Deactivated.");
       return;
-    }
+  }
     this.systemInterfaceSupportFacade.changeDistributionListUserStatus(this.selectedMemberData.notificationUserId, false)
     this.isMemberDeactivatePopupShow = false;
     this.systemInterfaceSupportFacade.changeStatusDistributionListUser$.subscribe({
@@ -348,7 +358,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     if (this.selectedMemberData.status === 'Active') {
       this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Already Activated.");
       return;
-    }
+  }
     this.systemInterfaceSupportFacade.changeDistributionListUserStatus(this.selectedMemberData.notificationUserId, true)
     this.isMemberReactivatePopupShow = false;
     this.systemInterfaceSupportFacade.changeStatusDistributionListUser$.subscribe({
@@ -358,6 +368,8 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       }
     });
   }
+  onOpenMemberDeleteConfirmationClicked() {
+    this.isMemberDeleteConfirmationPopupShow = true;
 
   deleteUser() {
     this.systemInterfaceSupportFacade.deleteDistributionListUser(this.selectedMemberData.notificationUserId)
@@ -369,6 +381,8 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       }
     });
   }
+  onCloseMemberDeleteConfirmationClicked() {
+    this.isMemberDeleteConfirmationPopupShow = false;
 
   performSearch(searchValue: any) {
     this.onChange(searchValue);

@@ -1,7 +1,7 @@
-import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Input, ChangeDetectionStrategy, Component, OnInit, ChangeDetectorRef, Output, EventEmitter, OnDestroy, ElementRef } from '@angular/core';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { LovFacade,TinValidationFacade } from '@cms/system-config/domain';
+import { LovFacade,TinValidationFacade, ScrollFocusValidationfacade } from '@cms/system-config/domain';
 import { ConfigurationProvider, LoaderService, } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { FinancialVendorTypeCode } from '../enums/financial-vendor-type-code';
@@ -84,7 +84,9 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     public readonly intl: IntlService,
     private readonly configurationProvider: ConfigurationProvider,
     private readonly loaderService: LoaderService,
-    private tinValidationFacade: TinValidationFacade
+    private tinValidationFacade: TinValidationFacade,
+    private readonly elementRef: ElementRef,
+    private scrollFocusValidationfacade: ScrollFocusValidationfacade
   ) {
     this.medicalProviderForm = this.formBuilder.group({});
   }
@@ -208,6 +210,12 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
     if (this.medicalProviderForm.valid) {
       let providerData = this.mappVendorProfileData();
       this.saveProviderEventClicked.next(providerData);
+    }else{
+      const invalidControl = this.scrollFocusValidationfacade.findInvalidControl(this.medicalProviderForm, this.elementRef.nativeElement,null);
+      if (invalidControl) {
+        invalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        invalidControl.focus();
+      }
     }
   }
 
@@ -248,7 +256,7 @@ export class VendorDetailsComponent implements OnInit, OnDestroy {
           .setValidators([
               Validators.required,
           ]);
-      this.medicalProviderForm.controls['mailCode'].updateValueAndValidity();    
+      this.medicalProviderForm.controls['mailCode'].updateValueAndValidity();
       this.mailCodeLengthError = false;
       this.cdr.detectChanges();
     }

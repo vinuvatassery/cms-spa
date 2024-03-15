@@ -105,4 +105,30 @@ export class DocumentFacade {
             },
         });
     }
+
+    viewOrDownloadEventFile(isFileViewable: boolean, eventLogAttachmentId: string, documentName: string) {
+        if (eventLogAttachmentId === undefined || eventLogAttachmentId === '') {
+            return;
+        }
+        this.loaderService.show()
+        this.documentDataService.getEventtDocumentsViewDownload(eventLogAttachmentId).subscribe({
+            next: (data: any) => {
+
+                const fileUrl = window.URL.createObjectURL(data);
+                if (isFileViewable === true) {
+                    window.open(fileUrl, "_blank");
+                } else {
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = fileUrl;
+                    downloadLink.download = documentName;
+                    downloadLink.click();
+                }
+                this.loaderService.hide();
+            },
+            error: (error: any) => {
+                this.loaderService.hide();
+                this.showSnackBar(SnackBarNotificationType.ERROR, error)
+            }
+        })
+    }
 }
