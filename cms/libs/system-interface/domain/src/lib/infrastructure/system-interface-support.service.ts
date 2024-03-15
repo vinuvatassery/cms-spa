@@ -155,14 +155,11 @@ export class SystemInterfaceSupportService {
   }
 
   addDistributionListUser(user: any) {
-    debugger;
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution`, user);
   }
 
 
-
   // Notification Category Services 
-
 
   getNotificationCategoryList(paginationParameters: any) {
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/list`, paginationParameters);
