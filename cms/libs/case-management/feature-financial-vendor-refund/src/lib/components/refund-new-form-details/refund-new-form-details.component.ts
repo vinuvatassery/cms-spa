@@ -225,8 +225,7 @@ sortPrescriptions(source:any[]){
       source.filter((x:any) => x[fil.field]?.toLowerCase().startsWith(fil.value?.toLowerCase()))
       break;
       case 'eq': 
-      destination =
-      source.filter((x:any) => x[fil.field]?.toLowerCase() == fil.value?.toLowerCase())
+      destination = source.filter((x:any) => x[fil.field]?.toString().toLowerCase() == fil.value?.toString().toLowerCase())
       break;
      case 'endswith':
       destination =
@@ -238,14 +237,31 @@ sortPrescriptions(source:any[]){
       break;
       case 'gte':
         if(fil.field == 'prescriptionFillDate'){
-          destination =
-          source.filter((x:any) => new Date([fil.field]?.toString()) >= (new Date(fil.value)))
-      
+          destination = source.filter((x:any) => new Date([fil.field]?.toString()) >= (new Date(fil.value)))
+        } else {
+          destination = source.filter((x:any) => x[fil.field]?.toString() >= fil.value)
+        }
+        break;        
+      case 'gt':
+        if(fil.field == 'prescriptionFillDate'){
+          destination = source.filter((x:any) => new Date([fil.field]?.toString()) > (new Date(fil.value)))
+        } else {
+          destination = source.filter((x:any) => x[fil.field]?.toString() > fil.value)
         }
         break;
       case 'lte':
-          destination =
-          source.filter((x:any) => new Date(x[fil.field]?.toString())<= new Date((fil.value)))
+        if(fil.field == 'prescriptionFillDate'){
+          destination = source.filter((x:any) => new Date(x[fil.field]?.toString())<= new Date((fil.value)))
+        } else {
+          destination = source.filter((x:any) => x[fil.field]?.toString() <= fil.value)
+        }
+        break;
+      case 'lt':
+        if(fil.field == 'prescriptionFillDate'){
+          destination = source.filter((x:any) => new Date(x[fil.field]?.toString())< new Date((fil.value)))
+        } else {
+          destination = source.filter((x:any) => x[fil.field]?.toString() < fil.value)
+        }          
       break;
     }
     return destination;
