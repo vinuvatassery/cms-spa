@@ -30,9 +30,6 @@ export class SystemInterfaceSupportFacade {
   private supportGroupSubject = new Subject<any>();
   public supportGroup$ = this.supportGroupSubject.asObservable();
 
-  private notificationCategoryListSubject = new Subject<any>();
-  notificationCategoryLists$ = this.notificationCategoryListSubject.asObservable();
-
   private addSupportGroupSubject = new Subject<any>();
   addSupportGroup$ = this.addSupportGroupSubject.asObservable();
 
@@ -89,6 +86,9 @@ export class SystemInterfaceSupportFacade {
 
   private notificationCategoryRemoveSubject = new Subject<any>();
   notificationCategoryRemove$ = this.notificationCategoryRemoveSubject.asObservable();
+
+  private notificationCategoryListSubject = new Subject<any>();
+  notificationCategoryLists$ = this.notificationCategoryListSubject.asObservable();
 
   private eventLovSubject = new BehaviorSubject<any[]>([]);
   eventLov$ = this.eventLovSubject.asObservable();
