@@ -15,8 +15,8 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class TextMessageEditorComponent {
   /** Public properties **/
-  @ViewChild('anchor') public anchor!: ElementRef;
-  @ViewChild('popup', { read: ElementRef }) public popup!: ElementRef;
+  @ViewChild('smsAnchor') public smsAnchor!: ElementRef;
+  @ViewChild('smsPopup', { read: ElementRef }) public smsPopup!: ElementRef;
   isShowPopupClicked = false;
   isSearchOpened = true;
   tareaMessagesCounter = 0;
@@ -28,13 +28,13 @@ export class TextMessageEditorComponent {
       wordCount: 0,
     },
   ];
-  popupClass1 = 'more-action-dropdown app-dropdown-action-list';
+  smsPopupClass1 = 'more-action-dropdown app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   /** Private methods **/
   private contains(target: any): boolean {
     return (
-      this.anchor.nativeElement.contains(target) ||
-      (this.popup ? this.popup.nativeElement.contains(target) : false)
+      this.smsAnchor.nativeElement.contains(target) ||
+      (this.smsPopup ? this.smsPopup.nativeElement.contains(target) : false)
     );
   }
 

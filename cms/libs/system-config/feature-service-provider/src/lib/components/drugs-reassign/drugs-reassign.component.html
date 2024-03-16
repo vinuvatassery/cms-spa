@@ -1,0 +1,58 @@
+<section class="k-dialog-body">
+
+      <p class="text-muted mb-1">
+            All NDCs beginning with the same first five digits will be assigned to the new manufacturer. Re-assignment
+            will update the master list of drugs and create new manufacturer invoices with the suffix ".1" or ".2" etc.
+            New invoices will generate retroactively based on the date entered below. All fields are required unless
+            otherwise stated.
+
+      </p>
+      <p> NDC first five digits: <strong>XXXXX</strong> </p>
+      <p> Total drugs to be re-assigned: <strong>20</strong> </p>
+      <p> New invoices to be generated: <strong>1</strong></p>
+      <div class="flex-row mt-2"> 
+            <div class="flex-col"> 
+                  <kendo-floatinglabel text="New Manufacturer">
+                        <kendo-textbox aria-label="New Manufacturer" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox> 
+                  </kendo-floatinglabel>
+            </div>
+
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Date the Drugs Changed Manufacturer">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="MM-dd-yyyy"
+                              formatPlaceholder="formatPattern" aria-label="Date the Drugs Changed Manufacturer"
+                              placeholder="">
+                        </kendo-datepicker>
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Reason for Re-assignment">
+                        <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto"
+                              id="ReasonForReassignment" aria-label="ReasonForReassignment">
+                              <kendo-textarea-suffix class="justify-content-end">
+                                    <span class="specialhandlingCounter">0/100</span>
+                              </kendo-textarea-suffix>
+                        </kendo-textarea>
+
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col mt-2">
+                  <h5 class="mb-0"> ATTACH PROOF OF MANUFACTURER CHANGE (OPTIONAL)</h5>
+                  <kendo-upload></kendo-upload>
+                  <kendo-formhint>Max file size 25MB</kendo-formhint>
+            </div>
+      </div> 
+
+</section>
+
+<kendo-dialog-actions>
+      <div class="justify-content-between">
+            <div class="justify-content-end">
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel
+                  </button>
+                  <button kendoButton [primary]="true" aria-label="Re-Assign"> Re-Assign </button>
+            </div>
+      </div>
+
+</kendo-dialog-actions>

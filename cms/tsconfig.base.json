@@ -155,7 +155,13 @@
       "@cms/shared/util-oidc": ["libs/shared/util-oidc/src/index.ts"],
       "@cms/shared/util-signalr": ["libs/shared/util-signalr/src/index.ts"],
       "@cms/shared/util-theme": ["libs/shared/util-theme/src/index.ts"],
+      "@cms/system-config-feature-other-lists": [
+        "libs/system-config/feature-other-lists/src/index.ts"
+      ],
       "@cms/system-config/domain": ["libs/system-config/domain/src/index.ts"],
+      "@cms/system-config/feature-cases": [
+        "libs/system-config/feature-cases/src/index.ts"
+      ],
       "@cms/system-config/feature-client-profile-management": [
         "libs/system-config/feature-client-profile-management/src/index.ts"
       ],
@@ -173,6 +179,9 @@
       ],
       "@cms/system-config/feature-lov": [
         "libs/system-config/feature-lov/src/index.ts"
+      ],
+      "@cms/system-config/feature-service-provider": [
+        "libs/system-config/feature-service-provider/src/index.ts"
       ],
       "@cms/system-config/feature-template-management": [
         "libs/system-config/feature-template-management/src/index.ts"

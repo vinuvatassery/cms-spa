@@ -1,0 +1,42 @@
+<section class="k-dialog-body">
+
+      <p class="text-muted mb-2">
+            All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row">
+            <div class="flex-col">
+                  <kendo-floatinglabel text="CPT Code">
+                        <kendo-textbox aria-label="CPT Code" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+                  </kendo-floatinglabel>
+            </div>
+
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Service Description">
+                        <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto"
+                              id="ServiceDescription" aria-label="Service Description">
+                              <kendo-textarea-suffix class="justify-content-end">
+                                    <span class="specialhandlingCounter">0/100</span>
+                              </kendo-textarea-suffix>
+                        </kendo-textarea>
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Medicaid Rate (optional)">
+                        <kendo-textbox aria-label="Medicaid Rate (optional)" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+                  </kendo-floatinglabel>
+            </div>
+      </div>
+</section>
+
+<kendo-dialog-actions>
+      <div class="justify-content-between">
+            <div class="justify-content-end">
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel
+                  </button>
+                  <button kendoButton [primary]="true" aria-label="Add"> ADD </button>
+            </div>
+      </div>
+
+</kendo-dialog-actions>

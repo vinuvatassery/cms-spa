@@ -1,0 +1,269 @@
+ 
+
+<section class="template-form-wrapper  pb-3">
+
+      <!-- form inputs elements -->
+      <div>
+            <div class="flex-col dash_bordered_big-input">
+                  <kendo-textbox aria-label="New Letter Template" [fillMode]="formUiStyle.inputFillMode"
+                        value="New Letter Template">
+                  </kendo-textbox>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Template Description">
+                        <kendo-textarea [fillMode]="formUiStyle.inputFillMode">
+                              <kendo-textarea-suffix class="justify-content-end">
+                                    <span class="tareacounter"> 0/250</span>
+                              </kendo-textarea-suffix>
+                        </kendo-textarea>
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Program This is For">
+                        <kendo-dropdownlist aria-label="Program This is For" [fillMode]="formUiStyle.dropDownFillMode">
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+            </div>
+
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Module This is For">
+                        <kendo-multiselect aria-label="Module This is For" placeholder="Module This is For"
+                              [checkboxes]="true" [autoClose]="false" [fillMode]="formUiStyle.dropDownFillMode"
+                              [data]="listItems" [(ngModel)]="value"></kendo-multiselect>
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Roles That Can Use This Template">
+                        <kendo-multiselect aria-label="Module This is For" placeholder="Module This is For"
+                              [checkboxes]="true" [autoClose]="false" [fillMode]="formUiStyle.dropDownFillMode"
+                              [data]="listItems" [(ngModel)]="value"></kendo-multiselect>
+                  </kendo-floatinglabel>
+            </div> 
+      </div>
+
+      <!-- editors  -->
+      <div class="mt-2 pb-3 tab_editors app-c-tab">
+            <div class="text-right">
+                  <button icon="add" (click)="onOpenAddLanguageDetailClicked()" kendoButton [primary]="true"
+                  aria-label="New Language"  > New Language
+            </button>
+            </div>
+            <kendo-tabstrip #letterHeaderFooter (tabClose)="onOpenRemoveLanguageClicked($event)">
+                  <kendo-tabstrip-tab *ngFor="let tab of languageTabs" [title]="tab.title" [selected]="tab.selected"
+                        [closable]="tab.Closable">
+                        <ng-template kendoTabContent> 
+                               <div>
+                              <h5>{{tab.title | uppercase}} VERSION</h5>
+                              <p>Type the body of the template. Click “Preview Template” to see what the client will receive.</p>
+                        </div>
+                              <div class="app-c-editor editor-height-two mt-1">
+                                    <!-- Variable dropdown -->
+                                    <button kendoButton #anchor (click)="onToggle()"
+                                          class="text-t-normal editor-variable-button" look="outline"
+                                          aria-label="Insert a variable" title="Insert a variable">
+                                          Insert a variable
+                                          <span class="material-icons" aria-label="dropdown arrow"
+                                                aria-hidden="true">arrow_drop_down</span>
+                                    </button>
+                                    <kendo-popup #popup [anchor]="anchor.element" popupClass="content"
+                                          *ngIf="isShowPopupClicked">
+                                          <div class="sms-popup-content">
+                                                <div class="variable-search-block">
+                                                      <div class="input-search mat-form-no-b-space">
+                                                            <div class="medium-input-form sms-variable-search_input">
+                                                                  <kendo-textbox aria-label="input a variable"
+                                                                        placeholder="Search"
+                                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                                  </kendo-textbox>
+                                                            </div>
+                                                      </div>
+                                                      <button kendoButton
+                                                            class="k-icon-button sms-variable-search_close"
+                                                            aria-label="Close" title="Close">
+                                                            <span class="material-icons" aria-label="Close"
+                                                                  aria-hidden="true">close</span>
+                                                      </button>
+                                                </div>
+                                                <div class="var-list-block">
+                                                      <section>
+                                                            <h5>Client Variables</h5>
+                                                            <ul class="var-list-item" aria-label="client variables">
+                                                                  <li>Client Variables</li>
+                                                                  <li>Client Variables</li>
+                                                                  <li>Client Variables</li>
+                                                                  <li>Client Variables</li>
+                                                                  <li>Client Variables</li>
+                                                            </ul>
+                                                      </section>
+                                                      <section>
+                                                            <h5>My Variables</h5>
+                                                            <ul class="var-list-item" aria-label="my variables">
+                                                                  <li>My Variables</li>
+                                                                  <li>My Variables</li>
+                                                                  <li>My Variables</li>
+                                                                  <li>My Variables</li>
+                                                                  <li>My Variables</li>
+                                                            </ul>
+                                                      </section>
+                                                      <section>
+                                                            <h5>Other Variables</h5>
+                                                            <ul class="var-list-item" aria-label="other variables">
+                                                                  <li>Other Variables</li>
+                                                                  <li>Other Variables</li>
+                                                                  <li>Other Variables</li>
+                                                                  <li>Other Variables</li>
+                                                                  <li>Other Variables</li>
+                                                            </ul>
+                                                      </section>
+                                                </div>
+                                          </div>
+                                    </kendo-popup>
+                                    <!-- Editor -->
+                                    <kendo-editor #editor>
+
+                                          <kendo-toolbar>
+                                                <kendo-toolbar-buttongroup>
+                                                      <kendo-toolbar-button kendoEditorUndoButton
+                                                            aria-label="undo"></kendo-toolbar-button>
+                                                      <kendo-toolbar-button kendoEditorRedoButton
+                                                            aria-label="redo"></kendo-toolbar-button>
+                                                      <kendo-toolbar-button kendoEditorBoldButton
+                                                            aria-label="bold"></kendo-toolbar-button>
+                                                      <kendo-toolbar-button kendoEditorItalicButton
+                                                            aria-label="italic"></kendo-toolbar-button>
+                                                      <kendo-toolbar-button kendoEditorUnderlineButton
+                                                            aria-label="underline"></kendo-toolbar-button>
+                                                </kendo-toolbar-buttongroup>
+
+                                                <kendo-toolbar-dropdownlist
+                                                      kendoEditorFontSize></kendo-toolbar-dropdownlist>
+
+                                                <kendo-toolbar-buttongroup>
+                                                      <kendo-toolbar-button kendoEditorAlignLeftButton
+                                                            aria-label="align left"></kendo-toolbar-button>
+                                                      <kendo-toolbar-button kendoEditorAlignCenterButton
+                                                            aria-label="align center"></kendo-toolbar-button>
+                                                      <kendo-toolbar-button kendoEditorAlignRightButton
+                                                            aria-label="align right"></kendo-toolbar-button>
+                                                      <kendo-toolbar-button kendoEditorAlignJustifyButton
+                                                            aria-label="align justify"></kendo-toolbar-button>
+                                                </kendo-toolbar-buttongroup>
+
+                                                <kendo-toolbar-buttongroup>
+                                                      <kendo-toolbar-button kendoEditorInsertUnorderedListButton
+                                                            aria-label="insert unordered list"></kendo-toolbar-button>
+                                                      <kendo-toolbar-button kendoEditorInsertOrderedListButton
+                                                            aria-label="insert ordered list"></kendo-toolbar-button>
+                                                      <kendo-toolbar-button kendoEditorIndentButton
+                                                            aria-label="indent"></kendo-toolbar-button>
+                                                      <kendo-toolbar-button kendoEditorOutdentButton
+                                                            aria-label="outdent"></kendo-toolbar-button>
+                                                </kendo-toolbar-buttongroup>
+                                                <kendo-toolbar-button kendoEditorInsertImageButton
+                                                      aria-label="insert image"></kendo-toolbar-button>
+                                                <kendo-toolbar-dropdownbutton aria-label="attachment" icon="attachment">
+                                                      <ng-template kendoDropDownButtonItemTemplate let-dataItem>
+                                                            <label [for]="dataItem.id">{{ dataItem.text }}</label>
+                                                      </ng-template>
+                                                </kendo-toolbar-dropdownbutton>
+                                          </kendo-toolbar>
+                                    </kendo-editor>
+
+                                    <!-- Attachment Panel -->
+                                    <div class="panelbar-wrapper">
+                                          <kendo-panelbar>
+                                                <kendo-panelbar-item title="5 attachment(s)">
+                                                      <ng-template kendoPanelBarContent>
+                                                            <div class="attachment-item-list" kendoTooltip>
+                                                                  <a class="attachment-item_name">\attasd asda da sd
+                                                                        asd</a>
+                                                                 <div class="d-flex">
+                                                                  <span class="attachment-item_size">20 MB</span>
+                                                                  <button kendoButton
+                                                                        class="attachment-item_remove k-icon-button small-i-btn"
+                                                                        title="Remove Attachment"
+                                                                        aria-label="Remove Attachment">
+                                                                        <span class="material-icons"
+                                                                              aria-label="Remove Attachment"
+                                                                              aria-hidden="true">close</span>
+                                                                  </button>
+                                                                 </div>
+                                                            </div>
+                                                      </ng-template>
+                                                </kendo-panelbar-item>
+                                          </kendo-panelbar>
+                                    </div>
+                              </div>
+                        </ng-template>
+                  </kendo-tabstrip-tab>
+
+            </kendo-tabstrip>
+
+      </div>
+</section>
+<div class="bottom-fixed-wrapper  flex-space-bw">
+      <div>
+            <button kendoButton [primary]="true" look="flat" aria-label="Preview Template"
+                  (click)="onPreviewLetterHeaderFooterOpenClicked()">
+                  Preview Template
+            </button>
+      </div>
+      <div>
+            <button kendoButton [primary]="true" class="mr-1" look="outline" aria-label="Cancel" (click)="onLetterTemplateLeaveClicked()"> Cancel </button>
+            <button kendoButton [primary]="true" aria-label="Save"> Save </button>
+
+      </div>
+</div>
+
+<kendo-dialog *ngIf="isShowPreviewLetterHeaderFooterDialog" class="app-c-modal app-c-modal-lg app-c-modal-np"
+      (close)="onPreviewLetterHeaderFooterCloseClicked()">
+
+      <kendo-dialog-titlebar> Preview Letter Template </kendo-dialog-titlebar>
+      <section class="k-dialog-body">
+            <p>This is a legal disclaimer. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean at ante a mi
+                  luctus placerat quis non neque. Donec sollicitudin elit nec ipsum tristique, id varius sapien
+                  pulvinar. Donec ultrices vel urna ac consectetur. Nulla porta pulvinar lectus vel ultrices. Cras et
+                  interdum nibh, quis malesuada dolor. Vivamus rutrum quam at scelerisque vestibulum. Aliquam erat
+                  volutpat. Nullam risus massa, congue at interdum at, iaculis ut leo. Cras pretium luctus neque. Donec
+                  at efficitur mi.</p>
+      </section>
+      <kendo-dialog-actions>
+            <div class="justify-content-between  ">
+                  <div class="w100">
+                        <button kendoButton [primary]="true" look="flat" aria-label="Send Test">
+                              Send Test
+                        </button>
+                  </div>
+                  <div class="justify-content-end align-items-center">
+                        <button kendoButton [primary]="true" class="mr-1" look="outline" aria-label="Cancel"
+                              (click)="onPreviewLetterHeaderFooterCloseClicked()"> Cancel </button>
+                        <button kendoButton [primary]="true" aria-label="Save Header & Footer"> Save
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>
+
+ 
+
+
+<kendo-dialog *ngIf="isAddLanguageDetailPopup" (close)="onCloseAddLanguageDetailClicked()"
+      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar> Add Language </kendo-dialog-titlebar>
+      <system-config-template-add-language></system-config-template-add-language>
+</kendo-dialog>
+
+
+<kendo-dialog *ngIf="isRemoveLanguagePopup" (close)="onCloseRemoveLanguageClicked()"
+      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar> Delete Spanish version? </kendo-dialog-titlebar>
+      <system-config-template-delete-language></system-config-template-delete-language>
+</kendo-dialog>
+
+
+<kendo-dialog *ngIf="isLetterTemplateLeavePopupShow" (close)="onCloseLetterTemplateLeaveClicked()"
+      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar> Leave this page? </kendo-dialog-titlebar>
+      <system-config-letter-template-leave-page></system-config-letter-template-leave-page> 
+</kendo-dialog>

@@ -1,0 +1,26 @@
+
+      <section class="k-dialog-body">
+            <p class="text-muted">
+                 Select the language you want to add
+            </p>
+            <div class="flex-row">
+                  <div class="flex-col">
+                        <kendo-floatinglabel text="Language">
+                              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode">
+                              </kendo-dropdownlist>
+                        </kendo-floatinglabel>
+                  </div>
+            </div>
+      </section>
+
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                              > Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Add"> ADD </button>
+                  </div>
+            </div>
+
+      </kendo-dialog-actions>

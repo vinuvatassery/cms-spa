@@ -57,6 +57,9 @@ const routes: Routes = [
       import('@cms/system-config/feature-home').then(
         (m) => m.SystemConfigFeatureHomeModule
       ),
+      data: {
+        title: 'System Configuration',
+      },
     canLoad: [AutoLoginAllRoutesGuard],
   },
   {

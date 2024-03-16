@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+import { Component, OnInit, ViewEncapsulation, ChangeDetectionStrategy, EventEmitter, Input, Output } from '@angular/core'; 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
+import { GridDataResult } from '@progress/kendo-angular-grid';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'system-config-housing-acuity-level-list',
@@ -11,19 +13,9 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 })
 export class HousingAcuityLevelListComponent implements OnInit {
 
-
-  public pageSize = 10;
-  public skip = 0;
-  public pageSizes = [
-    {text: '5', value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20},
-    {text: 'All', value: 100}
-  ];
+ 
    /** Public properties **/
-   isHousingAcuityLevelDetailPopup = false;
-   ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
-   clientProfileHousingAcuityLevel$ = this.userManagementFacade.clientProfileHousingAcuityLevel$;
+   isHousingAcuityLevelDetailPopup = false; 
    popupClassAction = 'TableActionPopup app-dropdown-action-list';
    public formUiStyle : UIFormStyle = new UIFormStyle();
  
@@ -63,19 +55,148 @@ export class HousingAcuityLevelListComponent implements OnInit {
     },
   
    ];
-  constructor(private readonly userManagementFacade: UserManagementFacade) { }
-
+   
+  
+  @Input() pageSizes: any;
+  @Input() sortValue: any;
+  @Input() sortType: any;
+  @Input() sort: any;
+  @Input() housingAcuityDataLists$: any;
+  @Input() housingAcuityFilterColumn$: any;
+  @Output() loadHousingAcuityListsEvent = new EventEmitter<any>();
+  @Output() housingAcuityFilterColumnEvent = new EventEmitter<any>();
+  public state!: State;
+  sortColumn = 'vendorName';
+  sortDir = 'Ascending';
+  columnsReordered = false;
+  filteredBy = '';
+  searchValue = '';
+  isFiltered = false;
+  filter!: any;
+  selectedColumn!: any;
+  gridDataResult!: GridDataResult;
+  isHousingAcuityListGridLoaderShow = false;
+  gridHousingAcuityDataSubject = new Subject<any>();
+  gridHousingAcuityData$ =
+    this.gridHousingAcuityDataSubject.asObservable();
+  columnDropListSubject = new Subject<any[]>();
+  columnDropList$ = this.columnDropListSubject.asObservable();
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
+  /** Internal event methods **/
+  
+  
   ngOnInit(): void {
-    this.loadDdlColumnFilters();
-    this.loadHousingAcuityLevelList();
+    this.loadHousingAcuityList(); 
   }
-  /** Private methods **/
-   private loadDdlColumnFilters() {
-    this.userManagementFacade.loadDdlColumnFilters();
+  ngOnChanges(): void {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+  
+    this.loadHousingAcuityList();
   }
-
-  private loadHousingAcuityLevelList() {
-    this.userManagementFacade.loadHousingAcuityLevelList();
+  
+  private loadHousingAcuityList(): void {
+    this.loadHousingAcuityLitData(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
+  }
+  loadHousingAcuityLitData(
+    skipCountValue: number,
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string
+  ) {
+    this.isHousingAcuityListGridLoaderShow = true;
+    const gridDataRefinerValue = {
+      skipCount: skipCountValue,
+      pagesize: maxResultCountValue,
+      sortColumn: sortValue,
+      sortType: sortTypeValue,
+    };
+    this.loadHousingAcuityListsEvent.emit(gridDataRefinerValue);
+    this.gridDataHandle();
+  }
+  loadHousingAcuityFilterColumn(){
+    this.housingAcuityFilterColumnEvent.emit();
+  
+  }
+  onChange(data: any) {
+    this.defaultGridState();
+  
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'vendorName',
+              operator: 'startswith',
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+  }
+  
+  defaultGridState() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter: { logic: 'and', filters: [] },
+    };
+  }
+  
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+  
+  dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.loadHousingAcuityList();
+  }
+  
+  // updating the pagination infor based on dropdown selection
+  pageSelectionChange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadHousingAcuityList();
+  }
+  
+  public filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+  
+  gridDataHandle() {
+    this.housingAcuityDataLists$.subscribe(
+      (data: GridDataResult) => {
+        this.gridDataResult = data;
+        this.gridDataResult.data = filterBy(
+          this.gridDataResult.data,
+          this.filterData
+        );
+        this.gridHousingAcuityDataSubject.next(this.gridDataResult);
+        if (data?.total >= 0 || data?.total === -1) {
+          this.isHousingAcuityListGridLoaderShow = false;
+        }
+      }
+    );
+    this.isHousingAcuityListGridLoaderShow = false;
   }
 
   /** Internal event methods **/

@@ -3,9 +3,15 @@ import {
   OnInit,
   ViewEncapsulation,
   ChangeDetectionStrategy,
-} from '@angular/core';
-import { UserManagementFacade } from '@cms/system-config/domain';
+  EventEmitter,
+  Input,
+  Output,
+  OnChanges,
+} from '@angular/core'; 
 import { UIFormStyle } from '@cms/shared/ui-tpa';
+import { GridDataResult } from '@progress/kendo-angular-grid';
+import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'system-config-funds-list',
   templateUrl: './funds-list.component.html',
@@ -13,21 +19,35 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FundsListComponent implements OnInit {
-
-
-  public pageSize = 10;
-  public skip = 0;
-  public pageSizes = [
-    {text: '5', value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20},
-    {text: 'All', value: 100}
-  ];
+export class FundsListComponent implements OnInit, OnChanges {
+  @Input() pageSizes: any;
+  @Input() sortValue: any;
+  @Input() sortType: any;
+  @Input() sort: any;
+  @Input() fundsDataLists$: any;
+  @Input() fundsFilterColumn$: any;
+  @Output() loadFundsListsEvent = new EventEmitter<any>();
+  @Output() fundsFilterColumnEvent = new EventEmitter<any>();
+  directMsgLoader = false;
+  public state!: State;
+  sortColumn = 'vendorName';
+  sortDir = 'Ascending';
+  columnsReordered = false;
+  filteredBy = '';
+  searchValue = '';
+  isFiltered = false;
+  filter!: any;
+  selectedColumn!: any;
+  gridDataResult!: GridDataResult;
+  isFundsListGridLoaderShow = false;
+  gridFundsDataSubject = new Subject<any>();
+  gridFundsData$ =
+    this.gridFundsDataSubject.asObservable();
+  columnDropListSubject = new Subject<any[]>();
+  columnDropList$ = this.columnDropListSubject.asObservable();
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
   /** Public properties **/
-  isPeriodDetailPopup = false;
-  ddlColumnFilters$ = this.userManagementFacade.ddlColumnFilters$;
-  clientProfilePeriods$ = this.userManagementFacade.clientProfilePeriods$;
+  isPeriodDetailPopup = false; 
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
   public formUiStyle : UIFormStyle = new UIFormStyle();
   public moreactions = [
@@ -35,34 +55,131 @@ export class FundsListComponent implements OnInit {
       buttonType:"btn-h-primary",
       text: "Edit",
       icon: "edit",
-      click: (): void => {
-      },
+    
     }, 
     {
       buttonType:"btn-h-danger",
       text: "Delete",
       icon: "delete",
-      click: (): void => {
-      },
+  
     }, 
  
   ];
-  /** Constructor **/
-  constructor(private readonly userManagementFacade: UserManagementFacade) {}
+ 
 
-  /** Lifecycle hooks **/
+  
   ngOnInit(): void {
-    this.loadDdlColumnFilters();
-    this.loadClientProfilePeriods();
+    this.loadFundsList(); 
   }
-
-  /** Private  methods **/
-  private loadDdlColumnFilters() {
-    this.userManagementFacade.loadDdlColumnFilters();
+  ngOnChanges(): void {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
+  
+    this.loadFundsList();
   }
-
-  private loadClientProfilePeriods() {
-    this.userManagementFacade.loadClientProfilePeriods();
+  
+  private loadFundsList(): void {
+    this.loadFundsLitData(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
+  }
+  loadFundsLitData(
+    skipCountValue: number,
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string
+  ) {
+    this.isFundsListGridLoaderShow = true;
+    const gridDataRefinerValue = {
+      skipCount: skipCountValue,
+      pagesize: maxResultCountValue,
+      sortColumn: sortValue,
+      sortType: sortTypeValue,
+    };
+    this.loadFundsListsEvent.emit(gridDataRefinerValue);
+    this.gridDataHandle();
+  }
+  loadFundsFilterColumn(){
+    this.fundsFilterColumnEvent.emit();
+  
+  }
+  onChange(data: any) {
+    this.defaultGridState();
+  
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'vendorName',
+              operator: 'startswith',
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+  }
+  
+  defaultGridState() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter: { logic: 'and', filters: [] },
+    };
+  }
+  
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+  
+  dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.loadFundsList();
+  }
+  
+  // updating the pagination infor based on dropdown selection
+  pageSelectionChange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadFundsList();
+  }
+  
+  public filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+  
+  gridDataHandle() {
+    this.fundsDataLists$.subscribe(
+      (data: GridDataResult) => {
+        this.gridDataResult = data;
+        this.gridDataResult.data = filterBy(
+          this.gridDataResult.data,
+          this.filterData
+        );
+        this.gridFundsDataSubject.next(this.gridDataResult);
+        if (data?.total >= 0 || data?.total === -1) {
+          this.isFundsListGridLoaderShow = false;
+        }
+      }
+    );
+    this.isFundsListGridLoaderShow = false;
   }
 
   /** Internal event methods **/

@@ -1,1 +1,244 @@
-<p>sms-text-template-list works!</p>
+<!-- Header Section -->
+<section class="app-l-mainTittle">
+      <h1 class="maintitle_withicon text-bold"><span aria-label="Cpt Code" aria-hidden="true"
+                  class="material-icons sidebar-menu_icon"> settings </span> SMS Text Templates </h1>
+      <div class="add-button-top"> 
+            <button icon="add" kendoButton [primary]="true" aria-label="TEMPLATE"> TEMPLATE </button>
+      </div>
+</section>
+
+
+
+<section>
+
+      <div class="flex-row">
+
+            <!-- Table header show only in list -->
+            <div class="flex-col">
+                  <p class="pt-1">Add, edit, or deactivate SMS Text templates. Templates that are used in specific processes, indicated with a padlock icon, cannot be deactivated or deleted.</p>
+                      <div class="table-filter-section mat-form-no-b-space">
+
+                        <span class="filter-section_items filter--search">
+                              <span class="material-icons">search</span>
+                              <kendo-floatinglabel text="Search all columns">
+                                    <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+                                    </kendo-textbox>
+                              </kendo-floatinglabel>
+                        </span>
+                        
+                              <button kendoButton [primary]="true" look="flat" aria-label="Export" class="system-export">
+                                    <span class="material-icons" aria-label="Export"
+                                          aria-invalid="true">exit_to_app</span>Export
+                              </button>
+                        
+                  </div>
+            </div>
+      </div>
+
+      <!-- Sorted Info show only in list -->
+      <div class="table-sorted-info">
+            Sorted by <span class="sort-items">Name</span>
+            <span class="sort-items">No Filters</span>
+            <span class="sort-items">All Columns</span>
+      </div>
+
+      <div class="app-c-table">
+            <kendo-grid  [data]="smsTextTemplatesDataLists$ | async" [resizable]="true" [pageSize]="state.take"
+            [pageable]="true" [loading]="isSmsTextTemplatesListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
+            [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
+            (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
+                  <kendo-grid-column field="templateName" title="Template Name" [width]="180">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                              <button [attr.aria-label]="dataItem.templateName" kendoButton look="flat"
+                                    class="card-link-button">
+                                    {{ dataItem.templateName }}
+                              </button>
+                        </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="description" title="Description" [width]="280">
+                  </kendo-grid-column> 
+                  <kendo-grid-column field="lastModified" title="Last Modified" [width]="110">
+                  </kendo-grid-column>
+                  <kendo-grid-column field="modifiedBy" title="Modified By" [width]="110" class="text-center">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                              <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+                                    [popover]="onUserProfileDetailsHovered" showOn="hover"
+                                    [attr.aria-label]="dataItem.modifiedBy">
+                                    <div class="app-c-avatar avatar-sm">
+                                          <span class="profile-text-avatar">AK</span>
+                                    </div>
+                              </button>
+                              <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+                                    <ng-template kendoPopoverBodyTemplate>
+                                          <common-user-profile-card> </common-user-profile-card>
+                                    </ng-template>
+                              </kendo-popover>
+                        </ng-template>
+                  </kendo-grid-column>
+                  <kendo-grid-column field="status" title="Status" [width]="100">
+                        <ng-template kendoGridCellTemplate let-dataItem>
+                              <span *ngIf="dataItem.status === 'active'">  {{dataItem.status}} </span>
+                              <span class="red-text-color align-items-center" *ngIf="dataItem.status === 'incomplete'"> <span class="material-icons red-text-color"> error  </span> {{dataItem.status}}</span>
+                        </ng-template>  </kendo-grid-column>
+                  <kendo-grid-column field="" title="" [width]="50" class="text-center" [sticky]="true"
+                        [columnMenu]="false">
+                        <ng-template kendoGridCellTemplate let-isNew="isNew">
+
+                              <kendo-dropdownbutton [data]="gridMoreActions" title="More option"
+                              aria-label="more actions"
+                              class="TableActionPopup app-dropdown-action more_action_wid"
+                              buttonClass="k-icon-button"
+                              [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+                              <span class="material-icons" aria-label="More option"> more_vert    </span>
+                          
+                              <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate
+                                    let-dataItem>
+                                    <button kendoButton look="flat" [attr.aria-label]="dataItem.text"
+                                          [class]="dataItem.buttonType" aria-hidden="false"
+                                          (click)="dataItem.click">
+                                          <span class="material-icons"
+                                                [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                                          <label> {{ dataItem.text }} </label>
+                                    </button>
+
+                              </ng-template>
+                        </kendo-dropdownbutton>
+                        </ng-template>
+                  </kendo-grid-column>
+                  <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+                  let-currentPage="currentPage">
+                  <div class="grid-custom-paginationtemplates d-flex">
+                        <div class="d-flex align-items-center">
+                              <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
+                                    [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true"
+                                    aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
+                                    (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+                              <kendo-pager-info> </kendo-pager-info>
+                              <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
+                              </kendo-grid-messages>
+            
+                        </div>
+                        <div class="d-flex">
+                              <kendo-pager-input></kendo-pager-input>
+                              <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                              <kendo-pager-next-buttons></kendo-pager-next-buttons>
+                        </div>
+                  </div>
+            </ng-template>
+                  <ng-template kendoGridLoadingTemplate>
+                        <common-grid-loader-component></common-grid-loader-component>
+                  </ng-template>
+                  <!-- grid No data Template -->
+                  <ng-template kendoGridNoRecordsTemplate>
+                        <div> <kendo-badge-container> <span class="material-icons"> info </span>
+                              </kendo-badge-container>
+                        </div>
+                        <p>There is no data to display.</p>
+                  </ng-template>
+            </kendo-grid>
+      </div>
+      <div class="mt-2 block-section"> 
+            <button icon="add" kendoButton [primary]="true" aria-label="TEMPLATE"> TEMPLATE </button>
+      </div>
+</section>
+
+
+<kendo-dialog *ngIf="isSmsTemplateDeletePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseSmsTemplateDeleteClicked()"> Delete SMS Text template?</kendo-dialog-titlebar>
+
+      <section class="k-dialog-body mb-2">
+            <p>
+                  This action cannot be undone. It will be permanently deleted from the system. 
+            </p>
+      </section>
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" aria-label="Cancel" look="outline"
+                              (click)="onCloseSmsTemplateDeleteClicked()">
+                              Cancel
+                        </button>
+                        <button kendoButton class="k-error-button" aria-label="Delete">
+                              Delete
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isSmsTemplateDeactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseSmsTemplateDeactivateClicked()"> Deactivate SMS Text template?
+      </kendo-dialog-titlebar>
+
+      <section class="k-dialog-body">
+            <p class="text-muted mb-2">
+                  Users will no longer be able to send SMS Text using this template. You may re-activate it at any time.
+            </p>
+      </section>
+
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                              (click)="onCloseSmsTemplateDeactivateClicked()">
+                              Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Deactivate">
+                              Deactivate
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isSmsTemplateReactivatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseSmsTemplateReactivateClicked()"> Re-activate SMS Text template?
+      </kendo-dialog-titlebar>
+
+      <section class="k-dialog-body">
+            <p class="text-muted mb-2">
+                  Are you sure you want to reactivate again?
+            </p>
+      </section>
+
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                              (click)="onCloseSmsTemplateReactivateClicked()">
+                              Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Deactivate">
+                              Re-activate
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>
+
+<kendo-dialog *ngIf="isSmsTemplateDuplicatePopupShow" class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar (close)="onCloseSmsTemplateDuplicateClicked()">Duplicate SMS Text template?
+      </kendo-dialog-titlebar>
+
+      <section class="k-dialog-body">
+            <p class="text-muted mb-2">
+                  Are you sure you want to Duplicate the SMS Text template <strong>Template Name</strong>?
+            </p>
+      </section>
+
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+                        <button kendoButton [primary]="true" look="outline" aria-label="Cancel"
+                              (click)="onCloseSmsTemplateDuplicateClicked()">
+                              Cancel
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Deactivate">
+                              Duplicate
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>
+

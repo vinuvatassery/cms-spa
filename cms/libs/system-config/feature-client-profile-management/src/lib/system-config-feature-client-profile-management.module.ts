@@ -13,8 +13,17 @@ import { RacialOrEthnicIdentityListComponent } from './components/racial-or-ethn
 import { SexualOrientationDetailComponent } from './components/sexual-orientation-detail/sexual-orientation-detail.component';
 import { SexualOrientationListComponent } from './components/sexual-orientation-list/sexual-orientation-list.component';
 import { ClientProfileManagementPageComponent } from './containers/client-profile-management-page/client-profile-management-page.component';
+import { DirectMessagesListComponent } from './components/direct-messages-list/direct-messages-list.component';
+import { DirectMessagesFrequenciesFormComponent } from './components/direct-messages-frequencies-form/direct-messages-frequencies-form.component';
+import { DirectMessagePageComponent } from './containers/direct-message-page/direct-message-page.component';
+import { LanguagePageComponent } from './containers/language-page/language-page.component';
+import { RacialOrEthnicIdentityPageComponent } from './containers/racial-or-ethnic-identity-page/racial-or-ethnic-identity-page.component';
+import { GenderPageComponent } from './containers/gender-page/gender-page.component';
+import { PronounsPageComponent } from './containers/pronouns-page/pronouns-page.component';
+import { SexualOrientationPageComponent } from './containers/sexual-orientation-page/sexual-orientation-page.component';
+import { SystemConfigFeatureClientProfileManagementRoutingModule } from './system-config-feature-client-profile-management.routing.module';
 @NgModule({
-  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule],
+  imports: [CommonModule, SharedUiTpaModule, SharedUiCommonModule, SystemConfigFeatureClientProfileManagementRoutingModule],
   declarations: [
     GenderDetailComponent,
     GenderListComponent,
@@ -27,6 +36,15 @@ import { ClientProfileManagementPageComponent } from './containers/client-profil
     SexualOrientationDetailComponent,
     SexualOrientationListComponent,
     ClientProfileManagementPageComponent,
+    DirectMessagesListComponent,
+    DirectMessagesFrequenciesFormComponent,
+    DirectMessagePageComponent,
+    LanguagePageComponent,
+    RacialOrEthnicIdentityPageComponent,
+    GenderPageComponent,
+    PronounsPageComponent,
+    SexualOrientationPageComponent
+    
   ],
   exports: [
     GenderDetailComponent,
@@ -40,6 +58,14 @@ import { ClientProfileManagementPageComponent } from './containers/client-profil
     SexualOrientationDetailComponent,
     SexualOrientationListComponent,
     ClientProfileManagementPageComponent,
+    DirectMessagesListComponent,
+    DirectMessagesFrequenciesFormComponent,
+    DirectMessagePageComponent,
+    LanguagePageComponent,
+    RacialOrEthnicIdentityPageComponent,
+    GenderPageComponent,
+    PronounsPageComponent,
+    SexualOrientationPageComponent
   ],
 })
 export class SystemConfigFeatureClientProfileManagementModule {}

@@ -228,7 +228,57 @@
     }
   }
 }
+.forms_doc-lists{
+.k-treeview{
+  width: 100%;
+  > .k-treeview-lines{
+    > .k-treeview-item{
+      border: 1px solid #0000000F;
+      padding: .5rem .5rem .5rem 2rem;
+      border-bottom: 0px;
+      &:last-child{
+        border-bottom: 1px solid #0000000F;
+      }
+    }
+  }
+  .k-treeview-group {
+    border-bottom: 0px;
+    .directory_list {
+      label{
+        font-size: 1.3rem;
+        span{
+          font-family: $font-family;
+        }
+    
+      }
+      &.attachments-lists-wrap { 
+        
+    
+        .material-icons.folder_icon{
+          font-size: 1.4rem;
+          margin-right: 10px;
+        }
+      }
+    }
 
+  }
+  .file_list{
+    &.attachments-lists-wrap { 
+      border-color: #0000000F;
+      border-left: 0px;
+      border-right: 0px;
+      padding: 1rem 8px;
+      &:last-child{
+        border-bottom: 0px;
+      }
+     }
+  }
+  .directory_list{
+    justify-content: space-between;
+  }
+}
+
+}
 .k-treeview-toggle { 
   border-radius: 5px; 
   &:hover {
