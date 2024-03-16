@@ -16,7 +16,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 @Component({
   selector: 'common-alert-banner',
   templateUrl: './alert-banner.component.html',
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AlertBannerComponent implements OnInit {
   /** Input properties **/
@@ -45,9 +45,6 @@ export class AlertBannerComponent implements OnInit {
       icon: "done",
       id:"done",
       click: (): void => {
-        // this.onMarkAlertAsDoneClick.emit(this.topAlert.alertId);
-        // this.loadTodoAlertBannerData();
-        // this.cdr.detectChanges();
       },
     },
     {
@@ -65,9 +62,6 @@ export class AlertBannerComponent implements OnInit {
       icon: "delete",
       id:"del",
       click: (): void => {
-        // this.onDeleteAlertClick.emit(this.topAlert.alertId);
-        // this.loadTodoAlertBannerData();
-        // this.cdr.detectChanges();
       },
     },
   ];
@@ -79,8 +73,6 @@ export class AlertBannerComponent implements OnInit {
       icon: "done",
       click: (): void => { 
         this.onMarkAlertAsDoneClick.emit(this.topAlert.alertId);
-        this.loadTodoAlertBannerData();
-        this.cdr.detectChanges();
       },
     },
     {
@@ -97,8 +89,6 @@ export class AlertBannerComponent implements OnInit {
       icon: "delete",
       click: (): void => {
         this.onDeleteAlertClick.emit(this.topAlert.alertId);
-        this.loadTodoAlertBannerData();
-        this.cdr.detectChanges();
       },
     },
   ];
@@ -113,8 +103,12 @@ export class AlertBannerComponent implements OnInit {
   /** Lifecycle hooks **/
   ngOnInit(): void {
     this.loadTodoAlertBannerData();
+    this.alertList$.subscribe((data: any) => {
+      this.loadTodoAlertBannerData();
+    });
   }  
   private loadTodoAlertBannerData(){
+    debugger;
       let alertType=this.alertTypeCode;
       let alertDueDate =this.intl.formatDate(
         new Date(), this.configurationProvider?.appSettings?.dateFormat)
@@ -196,15 +190,11 @@ export class AlertBannerComponent implements OnInit {
   onToDoActionClicked(item: any,gridItem: any){ 
     if(item.id == 'done'){ 
       this.onMarkAlertAsDoneClick.emit(gridItem.alertId);
-      this.loadTodoAlertBannerData();
-      this.cdr.detectChanges();
     }else if(item.id == 'edit'){ 
 
     }
     else if(item.id == 'del'){ 
       this.onDeleteAlertClick.emit(gridItem.alertId);
-      this.loadTodoAlertBannerData();
-      this.cdr.detectChanges();
     }
   } 
 }
