@@ -142,11 +142,11 @@ export class AlertBannerComponent implements OnInit {
       }; 
         this.isLoadAlertListEvent.emit({gridDataRefinerValue, alertType})
         this.alertList$.subscribe((data: any) => { 
-          if(data?.totalCount >0 ){
-            this.topAlert=data.items[0];
-            this.alertText=data.items[0].alertName;
-            this.DueDate=this.DueOn(data.items[0].alertDueDate);
-            this.moreItems = (data?.totalCount-1) < 1 ? "" : (data?.totalCount-1) + "+ More Items";
+          if(data?.total > 0 ){
+            this.topAlert=data.data[0];
+            this.alertText=data.data[0].alertName;
+            this.DueDate=this.DueOn(data.data[0].alertDueDate);
+            this.moreItems = (data?.total-1) < 1 ? "" : (data?.total-1) + "+ More Items";
             this.makePopoverAlertBanner(data);
             this.cdr.detectChanges();
           }else{
@@ -188,10 +188,10 @@ export class AlertBannerComponent implements OnInit {
   makePopoverAlertBanner(alertData:any){
     this.secondaryAlertList.splice(0); 
     let defaultCount = 3;
-    if(alertData.totalCount > 1){
-      let popOverBannerCount = alertData.items.length > defaultCount ? defaultCount : alertData.items.length;
+    if(alertData.total > 1){
+      let popOverBannerCount = alertData.data.length > defaultCount ? defaultCount : alertData.data.length;
       for (let index = 1; index < popOverBannerCount; index++) { 
-        this.secondaryAlertList.push(alertData.items[index])
+        this.secondaryAlertList.push(alertData.data[index])
       }
     } 
   }
