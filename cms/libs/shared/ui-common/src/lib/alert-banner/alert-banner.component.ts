@@ -8,6 +8,7 @@ import {
   OnInit,
   Output,
   TemplateRef,
+  ViewChild,
 } from '@angular/core';
 /** Providers **/
 import { ConfigurationProvider } from '@cms/shared/util-core';
@@ -39,6 +40,15 @@ export class AlertBannerComponent implements OnInit {
   moreItems="";
   secondaryAlertList!:any[];
   notificationReminderDialog : any;
+  //delete confirmation dailog
+  @ViewChild('deleteToDODialogTemplate', { read: TemplateRef })
+  deleteToDODialogTemplate!: TemplateRef<any>;
+  isOpenDeleteTodo = false;
+  popupClassAction = 'TableActionPopup app-dropdown-action-list';
+  public deleteToDoDialog: any;
+  isToDODeleteActionOpen = false;
+  selectedAlertId:string="";
+  @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
   public popoverAlertActions = [
     {
       buttonType:"btn-h-primary",
@@ -89,7 +99,12 @@ export class AlertBannerComponent implements OnInit {
       text: "Delete",
       icon: "delete",
       click: (): void => {
-        this.onDeleteAlertClick.emit(this.topAlert.alertId);
+        if (!this.isToDODeleteActionOpen) {
+          this.isToDODeleteActionOpen = true;
+          this.selectedAlertId = this.topAlert.alertId;
+          this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
+        }
+        //this.onDeleteAlertClick.emit(this.topAlert.alertId);
       },
     },
   ];
@@ -141,7 +156,6 @@ export class AlertBannerComponent implements OnInit {
         });
   } 
   public DueOn(alertDueDate:any):any{
-    debugger;
     let dateNow = new Date();
     let dueDate = new Date(alertDueDate); 
          if (dueDate.toLocaleDateString() == dateNow.toLocaleDateString()) {
@@ -197,8 +211,38 @@ export class AlertBannerComponent implements OnInit {
     }else if(item.id == 'edit'){ 
 
     }
-    else if(item.id == 'del'){ 
-      this.onDeleteAlertClick.emit(gridItem.alertId);
+    else if(item.id == 'del'){
+      if (!this.isToDODeleteActionOpen) {
+        this.isToDODeleteActionOpen = true;
+        this.selectedAlertId = gridItem.alertId;
+        this.onOpenDeleteToDoClicked(this.deleteToDODialogTemplate);
+      } 
     }
-  } 
+  }
+  
+  onOpenTodoDetailsClicked() {
+    this.isModalTodoDetailsOpenClicked.emit(this.selectedAlertId);
+  }
+
+  onOpenDeleteToDoClicked(template: TemplateRef<unknown>): void {
+    this.deleteToDoDialog = this.dialogService.open({
+      content: template,
+      cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+    });
+  }
+
+  onCloseDeleteToDoClicked(result: any) {
+    if (result) {
+      this.isToDODeleteActionOpen = false;
+      this.deleteToDoDialog.close();
+    }
+  }
+  onDeleteToDOClicked(result: any) 
+  {
+    if (result) {
+      this.isToDODeleteActionOpen = false;
+      this.deleteToDoDialog.close();
+      this.onDeleteAlertClick.emit(this.selectedAlertId);
+    }
+  }
 }

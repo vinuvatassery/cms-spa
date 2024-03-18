@@ -52,6 +52,7 @@ import { TodoDetailComponent } from './todo-detail/todo-detail.component';
 import { GridNoRecordsComponent } from './grid-no-records/grid-no-records.component';
 import { ReadMoreComponent } from './read-more/read-more.component';
 import { AlertBannerComponent } from './alert-banner/alert-banner.component';
+import { DeleteTodoConfirmationComponent } from './delete-todo-confirmation/delete-todo-confirmation.component';
 @NgModule({
   imports: [CommonModule, SharedUiTpaModule],
   declarations: [
@@ -97,7 +98,8 @@ import { AlertBannerComponent } from './alert-banner/alert-banner.component';
     TodoDetailComponent,
     GridNoRecordsComponent,
     ReadMoreComponent,
-    AlertBannerComponent
+    AlertBannerComponent,
+    DeleteTodoConfirmationComponent
   ],
   exports: [
     LoginStatusComponent,
@@ -142,7 +144,8 @@ import { AlertBannerComponent } from './alert-banner/alert-banner.component';
     TodoDetailComponent,
     GridNoRecordsComponent, 
     ReadMoreComponent, 
-    AlertBannerComponent
+    AlertBannerComponent,
+    DeleteTodoConfirmationComponent
   ],
 })
 export class SharedUiCommonModule {}
