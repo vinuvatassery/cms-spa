@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 /** Data services **/
 import { ContactDataService } from '../infrastructure/contact.data.service';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { GridFilterParam } from '../entities/grid-filter-param';
 
 @Injectable({ providedIn: 'root' })
 export class IncomeFacade {
@@ -15,6 +16,10 @@ export class IncomeFacade {
   public skipCount = this.configurationProvider.appSettings.gridSkipCount;
   public sortValue = 'incomeSourceCodeDesc';
   public sortType = 'asc';
+  public dateFields: Array<string> = [
+    'incomeStartDate',
+    'incomeEndDate',    
+  ];
 
   /** Private properties **/
   private ddlIncomeTypesSubject = new BehaviorSubject<any>([]);
@@ -22,11 +27,14 @@ export class IncomeFacade {
   private ddlFrequenciesSubject = new BehaviorSubject<any>([]);
   private ddlProofOfIncomeTypesSubject = new BehaviorSubject<any>([]);
   private incomesSubject = new BehaviorSubject<any>([]);
-  private incomesResponseSubject = new BehaviorSubject<any>([]);
+  private incomesResponseSubject = new Subject<any>();
   private dependentsProofofSchoolsSubject = new BehaviorSubject<any>([]);
   incomeValidSubject = new Subject<boolean>();
   dependantProofProfilePhotoSubject = new Subject();
   incomeListProfilePhotoSubject = new Subject();
+  employerSubject = new Subject<any>();
+  employerIncomeSubject = new Subject<any>();
+  private incomesLoaderSubject = new BehaviorSubject<boolean>(false);
 
   /** Public properties **/
   ddlIncomeTypes$ = this.ddlIncomeTypesSubject.asObservable();
@@ -37,7 +45,9 @@ export class IncomeFacade {
   incomesResponse$ = this.incomesResponseSubject.asObservable();
   dependentsProofofSchools$ = this.dependentsProofofSchoolsSubject.asObservable();
   incomeValid$ = this.incomeValidSubject.asObservable();
-
+  employers$ = this.employerSubject.asObservable();
+  incomesLoader$ = this.incomesLoaderSubject.asObservable();
+  employerIncome$ = this.employerIncomeSubject.asObservable();
   /** Constructor**/
   constructor(
     private readonly contactDataService: ContactDataService,
@@ -118,9 +128,10 @@ export class IncomeFacade {
     });
   }
 
-  loadIncomes(clientId:string,clientCaseEligibilityId:string,skip:any,pageSize:any, sortBy:any, sortType:any): void {
+  loadIncomes(clientId:string,clientCaseEligibilityId:string,gridFilterParam:GridFilterParam, isCerForm: boolean = false): void {
     this.showLoader();
-    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,skip,pageSize, sortBy, sortType).subscribe({
+    this.incomesLoaderSubject.next(true);
+    this.contactDataService.loadIncomes(clientId,clientCaseEligibilityId,gridFilterParam,isCerForm).subscribe({
       next: (incomesResponse: any) => {
         if(incomesResponse.clientIncomes!=null){
           const gridView: any = {
@@ -145,9 +156,11 @@ export class IncomeFacade {
           this.loadIncomeDistinctUserIdsAndProfilePhoto(incomesResponse.clientIncomes);
         }
         this.hideLoader();
+         this.incomesLoaderSubject.next(false);
       },
       error: (err) => {
         this.hideLoader();
+        this.incomesLoaderSubject.next(false);
         this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
       },
     });
@@ -194,43 +207,23 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
     });
   }
 
-  save(clientCaseEligibilityId : any, noIncomeData : any): Observable<any> {
+  save(clientCaseEligibilityId : any, noIncomeData : any): Observable<any> {   
     return this.contactDataService.updateNoIncomeData(clientCaseEligibilityId, noIncomeData);
   }
 
   saveClientIncome(clientId : any,clientIncome: any, proofOfIncomeFile: any, documentTypeCode: any) {
 
     const formData: any = new FormData();
-    for (let key in clientIncome) {
-      if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
-      }
-      if (key == "incomeStartDate") {
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
-      }
-      else {
-        formData.append(key, clientIncome[key]);
-      }
-    }
     formData.append('ProofOfIncomeFile', proofOfIncomeFile);
     formData.append('documentTypeCode', documentTypeCode);
+    this.formDataAppendObject(formData, clientIncome);
     return this.contactDataService.saveIncome(clientId,formData);
   }
   editClientIncome(clientId : any, clientIncomeId : any, clientIncome:any, proofOfIncomeFile:any, documentTypeCode: any){
-    const formData: any = new FormData();
-    for (let key in clientIncome) {
-      if( key == 'incomeEndDate'&& clientIncome.incomeEndDate !=null && clientIncome.incomeEndDate !=""){
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
-      }
-      if (key == "incomeStartDate") {
-        formData.append(key, (new Date(clientIncome[key]).toLocaleDateString("en-US")));
-      }
-      else {
-        formData.append(key, clientIncome[key]);
-      }
-    }
+    const formData: any = new FormData();    
     formData.append('proofOfIncomeFile',proofOfIncomeFile)
     formData.append('documentTypeCode', documentTypeCode);
+    this.formDataAppendObject(formData, clientIncome);
     return this.contactDataService.editIncome(clientId, clientIncomeId, formData);
   }
 
@@ -239,5 +232,45 @@ loadIncomeDistinctUserIdsAndProfilePhoto(data: any[]) {
   }
   loadIncomeDetails(clientId : any, clientIncomeId : string){
     return this.contactDataService.loadIncomeDetailsService(clientId, clientIncomeId)
+  }
+
+  loadEmployers(employerName :any): void {
+    this.contactDataService.loadEmployers(employerName).subscribe({
+      next: (employers) => {
+        this.employerSubject.next(employers);
+      },
+      error: (err) => {
+        this.showHideSnackBar(SnackBarNotificationType.ERROR , err)
+      },
+    });
+  }
+
+  private formDataAppendObject(fd: FormData, obj: any, key?: any) {
+    let i, k;
+    for (i in obj) {
+      k = key ? key + '[' + i + ']' : i;
+      if (obj[i] instanceof File) {
+        continue;
+      }
+      else if (typeof obj[i] == 'object') {
+        if (this.dateFields.indexOf(i) >= 0) {         
+            fd.append(i, obj[i]);
+        }
+        else {
+          this.formDataAppendObject(fd, obj[i], k);
+        }
+      }
+      else {
+        fd.append(k, obj[i]);
+      }
+    }
+  }
+  
+  loadEmployerIncomes(clientId:string,clientCaseEligibilityId:string): void {
+    this.contactDataService.loadEmployerIncomes(clientId,clientCaseEligibilityId).subscribe({
+      next: (EmployerIncomesResponse: any) => {
+        this.employerIncomeSubject.next(EmployerIncomesResponse);
+      }
+    });
   }
 }

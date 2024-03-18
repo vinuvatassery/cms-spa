@@ -1,107 +1,138 @@
 <!-- Income List -->
 <div class="flex-row">
   <div class="flex-col">
-    <div class="app-c-table income-grid" *ngIf="!hasNoIncome">
-      <kendo-grid [data]="incomes$ | async"[pageSize]="state.take" [pageable]="true"
-      [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true"
-      [columnMenu]="{ filter: true }" [sort]="state.sort" (dataStateChange)="dataStateChange($event)">
-        <kendo-grid-column
-          field="incomeSourceCodeDesc"
-          title="Income Source"
-          [width]="160"
-        >
-          <ng-template
-            kendoGridFooterTemplate
-            let-column
-            let-columnIndex="columnIndex"
-          >
+    <div class="app-c-table income-grid">
+      <kendo-grid [resizable]="true" [pageSize]="state.take" #grid [pageable]="true" [sortable]="true"
+        [skip]="state.skip" [groupable]="false" [reorderable]="true" [resizable]="true" [columnMenu]="{ filter: true }"
+        [sort]="state.sort" (dataStateChange)="dataStateChange($event)" [selectable]="true" filterable="menu"
+        [filter]="state.filter" [data]="incomes$ | async" [loading]="(incomesLoader$ | async)?? false">
+        <kendo-grid-column field="incomeSourceCodeDesc" title="Income Source" [width]="160">
+          <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+            let-filterService="filterService">
+            <kendo-dropdownlist [data]="incomeSourcelov$ | async" textField="lovDesc" valueField="lovCode"
+              [value]="incomeSourceCodeDesc"
+              (valueChange)="dropdownFilterChange('incomeSourceCodeDesc',$event, filterService)">
+            </kendo-dropdownlist>
+          </ng-template>
+          <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
             Total Monthly Income
           </ng-template>
         </kendo-grid-column>
         <kendo-grid-column field="incomeTypeCodeDesc" title="Income Type" [width]="140">
+          <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+            let-filterService="filterService">
+            <kendo-dropdownlist [data]="incomeTypelov$ | async" textField="lovDesc" valueField="lovCode"
+              [value]="incomeTypeCodeDesc"
+              (valueChange)="dropdownFilterChange('incomeTypeCodeDesc',$event, filterService)">
+            </kendo-dropdownlist>
+          </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column
-          field="incomeAmt"
-          [title]="isClientProfileTab ? 'Amount' : 'Gross Amount'"
-          [width]="130"
-        >
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.incomeAmt}}</span>
-        </ng-template>
-      </kendo-grid-column>
-        <kendo-grid-column
-          field="incomeFrequencyCodeDesc"
-          title="Frequency"
-          [width]="120"
-        ></kendo-grid-column>
-        <kendo-grid-column
-          field="incomeStartDate"
-          [title]="isClientProfileTab ? 'Income Start' : 'Date of Hire'"
-          [width]="140"
-        >
-        <ng-template kendoGridCellTemplate let-dataItem>
+        <kendo-grid-column field="employerName" title="Name of Employer" [width]="140">
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+              [extra]="false" operator="eq">
+              <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+              <kendo-filter-eq-operator></kendo-filter-eq-operator>
+              <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+              <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            </kendo-grid-string-filter-menu>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="incomeAmt" [title]="isClientProfileTab ? 'Gross Amount' : 'Gross Amount'" [width]="130">
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+              [extra]="false" operator="eq">
+              <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            </kendo-grid-string-filter-menu>
+          </ng-template>
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.incomeAmt}}</span>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="incomeFrequencyCodeDesc" title="Frequency" [width]="120">
+          <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+            let-filterService="filterService">
+            <kendo-dropdownlist [data]="incomeTypelov$ | async" textField="lovDesc" valueField="lovCode"
+              [value]="incomeFrequencyCodeDesc"
+              (valueChange)="dropdownFilterChange('incomeFrequencyCodeDesc',$event, filterService)">
+            </kendo-dropdownlist>
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="incomeStartDate" [title]="isClientProfileTab ? 'Income Start Date' : 'Income Start Date'"
+          [width]="140">
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <common-grid-cell-date-range-filter [field]="'incomeStartDate'" [filter]="filter"
+              [filterService]="filterService">
+            </common-grid-cell-date-range-filter>
+          </ng-template>
+          <ng-template kendoGridCellTemplate let-dataItem>
             {{dataItem.incomeStartDate| date: 'MM/dd/yyyy'}}
-        </ng-template>
-      </kendo-grid-column>
-        <kendo-grid-column
-          field="incomeEndDate"
-          title="Income End"
-          [width]="130"
-        >
-        <ng-template kendoGridCellTemplate let-dataItem>
-          {{dataItem.incomeEndDate| date: 'MM/dd/yyyy'}}
-      </ng-template>
-      </kendo-grid-column>
-        <kendo-grid-column
-          field="ProofofIncome"
-          title="Proof of Income"
-          [width]="150"
-          [sortable]="false"
-        >
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="incomeEndDate" title="Income End" [width]="130">
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <common-grid-cell-date-range-filter [field]="'incomeEndDate'" [filter]="filter"
+              [filterService]="filterService">
+            </common-grid-cell-date-range-filter>
+          </ng-template>
+          <ng-template kendoGridCellTemplate let-dataItem>
+            {{dataItem.incomeEndDate| date: 'MM/dd/yyyy'}}
+          </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="ProofofIncome" title="Proof of Income" [width]="150" [sortable]="false"
+          [filterable]="false" [columnMenu]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <div *ngIf="dataItem.noIncomeProofFlag != 'Y'">
-              <button [attr.aria-label]="dataItem.documentName" *ngIf="dataItem.documentName" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
-              <a>{{dataItem.documentName}}</a>
-            </button>
+              <button [attr.aria-label]="dataItem.documentName" *ngIf="dataItem.documentName" kendoButton look="flat" class="card-link-button"
+                (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+                <a>{{dataItem.documentName}}</a>
+              </button>
 
             </div>
 
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column
-          field="incomeNote"
-          title="Financial Justification or Income Note"
-          [width]="220"
-          [sortable]="false"
-        >
-          <ng-template
-            kendoGridFooterTemplate
-            let-column
-            let-columnIndex="columnIndex"
-          >
+        <kendo-grid-column field="proofIncomeTypeDesc" title="Proof of Income type" [width]="280">
+          <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+            let-filterService="filterService">
+            <kendo-dropdownlist [data]="lovProofOfIncomeByType$ | async" textField="lovDesc" valueField="lovCode"
+              [value]="proofIncomeTypeDesc"
+              (valueChange)="dropdownFilterChange('proofIncomeTypeDesc',$event, filterService)">
+            </kendo-dropdownlist>
+          </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="incomeNote" title="Financial Justification or Income Note" [width]="220">
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+              [extra]="false" operator="eq">
+              <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+              <kendo-filter-eq-operator></kendo-filter-eq-operator>
+              <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+              <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            </kendo-grid-string-filter-menu>
+          </ng-template>
+          <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
             ({{incomesTotal?.fplPercentage}}% FPL)
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column
-          field="monthlyIncome"
-          title="Monthly Income"
-          [width]="140"
-          format="{0:c2}"
-          [sticky]="true"
-        >
-        <ng-template kendoGridCellTemplate let-dataItem>
-          <span class="tableamountview"> <strong>$</strong> {{dataItem.monthlyIncome | kendoNumber: 'n2'}}</span>
-        </ng-template>
-          <ng-template
-            kendoGridFooterTemplate
-            let-column
-            let-columnIndex="columnIndex"  >
-          <span class="tableamountview"> <strong>$</strong> {{incomesTotal?.totalIncome | kendoNumber: 'n2'}} </span>
+        <kendo-grid-column field="monthlyIncome" title="Monthly Income" [width]="140" format="{0:c2}" [sticky]="true">
+          <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+            <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+              [extra]="false" operator="eq">
+              <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            </kendo-grid-string-filter-menu>
+          </ng-template>
+          <ng-template kendoGridCellTemplate let-dataItem>
+            <span class="tableamountview"> <strong>$</strong> {{dataItem.monthlyIncome | kendoNumber: 'n2'}}</span>
+          </ng-template>
+          <ng-template kendoGridFooterTemplate let-column let-columnIndex="columnIndex">
+            <span class="tableamountview"> <strong>$</strong> {{incomesTotal?.totalIncome | kendoNumber: 'n2'}} </span>
           </ng-template>
 
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center"
-        [sticky]="true" [sortable]="false">
+        <kendo-grid-column *ngIf="isClientProfileTab" field="by" title="By" [width]="70" class="text-center"
+          [sticky]="true" [sortable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
             <common-user-photo-icon  
             [userId]="dataItem?.creatorId" 
@@ -112,82 +143,68 @@
             [userPhotos$]="incomeListProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column *ngIf="!isClientProfileTab"
-          field="Option"
-          title="Options"
-          [width]="75"
-          [sticky]="true"
-          class="text-center"
-          [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
-        >
+        <kendo-grid-column *ngIf="!isClientProfileTab" field="Option" title="Options" [width]="75" [sticky]="true"
+          class="text-center" [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled"
+          [sortable]="columnOptionDisabled">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton
-              [data]="actionsmore"
-
-              title="More option"
-              class="TableActionPopup more_action_wid"
-              buttonClass="k-icon-button"
-              aria-label="more actions"
-              [popupSettings]="{ popupClass: popupClassAction,  animate: true }"
-            >
-            <span class="material-icons" aria-label="More option"> more_vert    </span>
+            <kendo-dropdownbutton [data]="actionsmore" title="More option" class="TableActionPopup more_action_wid"
+              buttonClass="k-icon-button" aria-label="more actions"
+              [popupSettings]="{ popupClass: popupClassAction,  animate: true }">
+              <span class="material-icons" aria-label="More option"> more_vert </span>
               <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
-                <button kendoButton  look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="onIncomeActionClicked(dataItem,buttondataItem.type)" [disabled]="(isReadOnly$ | async) ? true : false">
-                  <span class="material-icons" aria-hidden="true" [attr.aria-label]="buttondataItem.text" >{{buttondataItem.icon}}</span>
-                  <label>   {{ buttondataItem.text }} </label>
-              </button>
+                <button kendoButton look="flat" [attr.aria-label]="buttondataItem.text"
+                  [class]="buttondataItem.buttonType" aria-hidden="false"
+                  (click)="onIncomeActionClicked(dataItem,buttondataItem.type)"
+                  [disabled]="(isReadOnly$ | async) ? true : false">
+                  <span class="material-icons" aria-hidden="true"
+                    [attr.aria-label]="buttondataItem.text">{{buttondataItem.icon}}</span>
+                  <label> {{ buttondataItem.text }} </label>
+                </button>
 
               </ng-template>
             </kendo-dropdownbutton>
           </ng-template>
         </kendo-grid-column>
-         <!-- grid Pagination template -->
-         <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
-         let-currentPage="currentPage"  >
-         <div class="grid-custom-paginationtemplates d-flex">
-           <div class="d-flex align-items-center">
-             <label class="mr-1" for="IncomeListRowsPerPage">Rows Per Page</label>
-             <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
-               [valueField]="'value'" #IncomeListRowsPerPage id="IncomeListRowsPerPage" aria-label ="Rows Per Page" [valuePrimitive]="true" [(value)]="state.take"
-               (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
-             <kendo-pager-info> </kendo-pager-info>
-             <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
-           </div>
-           <div class="d-flex">
-             <kendo-pager-input></kendo-pager-input>
-             <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
-             <kendo-pager-next-buttons></kendo-pager-next-buttons>
-           </div>
-         </div>
-       </ng-template>
- <!-- grid Loader Template -->
- <ng-template kendoGridLoadingTemplate>
-  <common-grid-loader-component></common-grid-loader-component>
- </ng-template>
- <!-- grid No data Template -->
- <ng-template kendoGridNoRecordsTemplate>
-  <common-grid-no-records></common-grid-no-records>
- </ng-template>
+        <!-- grid Pagination template -->
+        <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+          let-currentPage="currentPage">
+          <div class="grid-custom-paginationtemplates d-flex">
+            <div class="d-flex align-items-center">
+              <label class="mr-1" for="IncomeListRowsPerPage">Rows Per Page</label>
+              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes" [textField]="'text'"
+                [valueField]="'value'" #IncomeListRowsPerPage id="IncomeListRowsPerPage" aria-label="Rows Per Page"
+                [valuePrimitive]="true" [(value)]="state.take"
+                (selectionChange)="pageselectionchange($event)"></kendo-dropdownlist>
+              <kendo-pager-info> </kendo-pager-info>
+              <kendo-grid-messages [pagerItems]="'rows'" [pagerPage]="'Page'"> </kendo-grid-messages>
+            </div>
+            <div class="d-flex">
+              <kendo-pager-input></kendo-pager-input>
+              <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+              <kendo-pager-next-buttons></kendo-pager-next-buttons>
+            </div>
+          </div>
+        </ng-template>
+        <!-- grid Loader Template -->
+        <ng-template kendoGridLoadingTemplate>
+          <common-grid-loader-component></common-grid-loader-component>
+        </ng-template>
+        <!-- grid No data Template -->
+        <ng-template kendoGridNoRecordsTemplate>
+          <common-grid-no-records></common-grid-no-records>
+        </ng-template>
       </kendo-grid>
     </div>
-    <kendo-formerror *ngIf="!isIncomeAvailable"><span class="material-icons"> error </span> A Response is required.</kendo-formerror>
-    <div
-      class="block-section mt-1 text-right"
-      *ngIf="!isAddIncomeButtonAndFooterNoteDisplay && !isClientProfileTab"
-    >
+    <kendo-formerror *ngIf="!isIncomeAvailable"><span class="material-icons"> error </span> A Response is
+      required.</kendo-formerror>
+    <div class="block-section mt-1 text-right" *ngIf="!isAddIncomeButtonAndFooterNoteDisplay && !isClientProfileTab">
       FPL changed from 155% to 150% on 03/01/2020
     </div>
-    <div class="flex-row" *ngIf="!hasNoIncome">
+    <div class="flex-row">
       <div class="flex-col mt-1">
-        <button
-          kendoButton
-          *ngIf="isAddIncomeButtonAndFooterNoteDisplay"
-          [primary]="true"
-          icon="add"
-          (click)="onIncomeClicked(false)"
-          aria-label="Income"
-          [disabled]="(isReadOnly$ | async) ? true : false"
-        >
+        <button kendoButton *ngIf="isAddIncomeButtonAndFooterNoteDisplay" [primary]="true" icon="add"
+          (click)="onIncomeClicked(false)" aria-label="Income" 
+          [disabled]="isCerForm? false : cerStarted ? true :(currentClientCaseEligibilityId !== '' && clientCaseEligibilityId !== currentClientCaseEligibilityId)? true : (isReadOnly$ | async) ? true : false">
           Income
         </button>
       </div>
@@ -205,53 +222,61 @@
         </kendo-grid-column>
         <kendo-grid-column *ngIf="!isClientProfileTab" field="age" title="Age" [width]="130">
         </kendo-grid-column>
-        <kendo-grid-column
-          field="relationship"
-          title="Relationship"
-          [width]="130"
-        ></kendo-grid-column>
-        <kendo-grid-column
-          field="ProofofSchool"
-          title="Proof of School"
-          [width]="130"
-          class="text-center"
-          [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled"
-        >
-        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
-          <div class="proof_income-more">
+        <kendo-grid-column field="relationship" title="Relationship" [width]="130"></kendo-grid-column>
+        <kendo-grid-column field="ProofofSchool" title="Proof of School" [width]="130" class="text-center"
+          [filterable]="columnOptionDisabled" [columnMenu]="columnOptionDisabled" [sortable]="columnOptionDisabled">
+          <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+            <div class="proof_income-more">
               <span class="app-c-badge" *ngIf="dataItem.uploaingProofDoc"><span
-              class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
-           </span>
-          <kendo-dropdownbutton #proofSchoolDropdownOne *ngIf="isAddIncomeButtonAndFooterNoteDisplay"  [data]="actions"   icon="upload"   class="TableActionPopup app-dropdown-action"   buttonClass="k-icon-button" (close)="onProofSchoolDropdownOneClose($event,rowIndex)"  (blur)="onProofSchoolDropdownOneBlur()"
-            aria-label="more actions"  [popupSettings]="{ popupClass: popupClassAction, animate: true }"  >
+                  class="k-icon k-i-loading k-input-loading-icon input-inline-loader"></span><span> </span>
+              </span>
+              <kendo-dropdownbutton #proofSchoolDropdownOne *ngIf="isAddIncomeButtonAndFooterNoteDisplay"
+                [data]="actions" icon="upload" class="TableActionPopup app-dropdown-action" buttonClass="k-icon-button"
+                (close)="onProofSchoolDropdownOneClose($event,rowIndex)" (blur)="onProofSchoolDropdownOneBlur()"
+                aria-label="more actions" [popupSettings]="{ popupClass: popupClassAction, animate: true }">
 
-            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
+                <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-buttondataItem>
 
-          <button   kendoButton *ngIf="buttondataItem.id === 'attachfromclient' || (buttondataItem.id === 'removefile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "   class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
-            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachfromclient'">{{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New  from client\'s attachments" : "Attach from client\'s attachments" }}  </label>
-            <label  [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removefile'"><span class="material-icons middleicon" aria-hidden="true">
-              delete
-              </span> {{ buttondataItem.text }}  </label>
-        </button>
-          <button  kendoButton  *ngIf="buttondataItem.id === 'proofOfSchoolUploaded' "  class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType" aria-hidden="false" (click)="buttondataItem.click($event,dataItem)" >
-            <label  [for]="proofOfSchoolUploaded"> {{ (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? 'Upload New from computer' : 'Attach from computer ' }} </label>
-        </button>
+                  <button kendoButton
+                    *ngIf="buttondataItem.id === 'attachfromclient' || (buttondataItem.id === 'removefile' && (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ')) "
+                    class="upoadlistbtn" look="flat" [attr.aria-label]="buttondataItem.text"
+                    [class]="buttondataItem.buttonType" aria-hidden="false"
+                    (click)="buttondataItem.click($event,dataItem)">
+                    <label [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'attachfromclient'">{{
+                      (dataItem.clientDocumentId !== null && dataItem.clientDocumentId !== ' ') ? "Upload New from
+                      client\'s attachments" : "Attach from client\'s attachments" }} </label>
+                    <label [for]="buttondataItem.id" *ngIf="buttondataItem.id === 'removefile'"><span
+                        class="material-icons middleicon" aria-hidden="true">
+                        delete
+                      </span> {{ buttondataItem.text }} </label>
+                  </button>
+                  <button kendoButton *ngIf="buttondataItem.id === 'proofOfSchoolUploaded' " class="upoadlistbtn"
+                    look="flat" [attr.aria-label]="buttondataItem.text" [class]="buttondataItem.buttonType"
+                    aria-hidden="false" (click)="buttondataItem.click($event,dataItem)">
+                    <label [for]="proofOfSchoolUploaded"> {{ (dataItem.clientDocumentId !== null &&
+                      dataItem.clientDocumentId !== ' ') ? 'Upload New from computer' : 'Attach from computer ' }}
+                    </label>
+                  </button>
+                </ng-template>
+
+              </kendo-dropdownbutton>
+              <button [attr.aria-label]="dataItem.documentName"
+                *ngIf="dataItem.clientDocumentId !== null && dataItem.clientDocumentId!==' '" kendoButton look="flat"
+                class="card-link-button"
+                (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
+                <a>{{dataItem.documentName}}</a>
+              </button>
+
+
+              <kendo-upload hidden aria-label="upload proof" name="upload proof"
+                [restrictions]="uploadFileRestrictions.fileRestrictions" [multiple]="false" [autoUpload]="false"
+                (select)="handleFileSelected($event,dataItem)" #proofOfSchoolUploaded [ngModel]="proofOfSchoolDocument"
+                [ngModelOptions]="{standalone: true}">
+              </kendo-upload>
+            </div>
           </ng-template>
-
-          </kendo-dropdownbutton>
-          <button [attr.aria-label]="dataItem.documentName" *ngIf="dataItem.clientDocumentId !== null && dataItem.clientDocumentId!==' '" kendoButton look="flat" class="card-link-button" (click)="viewOrDownloadFile('view',dataItem.clientDocumentId,dataItem.documentName)">
-            <a>{{dataItem.documentName}}</a>
-          </button>
-
-
-          <kendo-upload hidden  aria-label="upload proof" name="upload proof"
-          [restrictions]="uploadFileRestrictions.fileRestrictions"   [multiple]="false" [autoUpload]="false" (select)="handleFileSelected($event,dataItem)"
-          #proofOfSchoolUploaded [ngModel]="proofOfSchoolDocument" [ngModelOptions]="{standalone: true}">
-          </kendo-upload>
-        </div>
-        </ng-template>
         </kendo-grid-column>
-        <kendo-grid-column  *ngIf="isClientProfileTab" field="by" title="By" [width]="80" class="text-center">
+        <kendo-grid-column *ngIf="isClientProfileTab" field="by" title="By" [width]="80" class="text-center">
           <ng-template kendoGridCellTemplate let-dataItem>
             <common-user-photo-icon  
             [userId]="dataItem?.creatorId" 
@@ -262,14 +287,14 @@
             [userPhotos$]="dependantProofProfilePhoto$"></common-user-photo-icon>
           </ng-template>
         </kendo-grid-column>
-         <!-- grid Loader Template -->
-    <ng-template kendoGridLoadingTemplate>
-      <common-grid-loader-component></common-grid-loader-component>
-     </ng-template>
-     <!-- grid No data Template -->
-     <ng-template kendoGridNoRecordsTemplate>
-      <common-grid-no-records></common-grid-no-records>
-     </ng-template>
+        <!-- grid Loader Template -->
+        <ng-template kendoGridLoadingTemplate>
+          <common-grid-loader-component></common-grid-loader-component>
+        </ng-template>
+        <!-- grid No data Template -->
+        <ng-template kendoGridNoRecordsTemplate>
+          <common-grid-no-records></common-grid-no-records>
+        </ng-template>
       </kendo-grid>
     </div>
   </div>
@@ -279,22 +304,21 @@
 <kendo-dialog *ngIf="isOpenedIncome" (close)="onIncomeClosed()" class="app-c-modal app-c-modal-mdl app-c-modal-np">
   <kendo-dialog-titlebar>{{
     isEdit ? 'Edit Income' : 'Add Income'
-  }}</kendo-dialog-titlebar>
-  <case-management-income-detail  (closePopup)="closeIncomePopup($event)"[isEditValue]="isEdit" [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId" [selectedIncome]="selectedIncome" (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"> </case-management-income-detail>
+    }}</kendo-dialog-titlebar>
+  <case-management-income-detail (closePopup)="closeIncomePopup($event)" [isEditValue]="isEdit"
+    [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId"
+    [selectedIncome]="selectedIncome" (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"
+    (loadIncomeList)="loadIncomeListGrid($event)"> </case-management-income-detail>
 </kendo-dialog>
 
 
-<kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened"  (close)="onRemoveIncomeConfirmationClosed()"
+<kendo-dialog *ngIf="isRemoveIncomeConfirmationPopupOpened" (close)="onRemoveIncomeConfirmationClosed()"
   class="app-c-modal app-c-modal-sm app-c-modal-np">
   <kendo-dialog-titlebar class="transform-none"> Delete Income Source? </kendo-dialog-titlebar>
-  <case-management-remove-income-confirmation
-  (closeModal)="onRemoveIncomeConfirmationClosed()"
-  [selectedIncome]="selectedIncome"
-  (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"
-  [clientCaseEligibilityId]="clientCaseEligibilityId"
-  [clientId]="clientId"
-  [clientCaseId]="clientCaseId"></case-management-remove-income-confirmation>
+  <case-management-remove-income-confirmation (closeModal)="onRemoveIncomeConfirmationClosed()"
+    [selectedIncome]="selectedIncome" (sendDetailToIncomeList)="incomeDetailResponseHandle($event)"
+    [clientCaseEligibilityId]="clientCaseEligibilityId" [clientId]="clientId" [clientCaseId]="clientCaseId"
+    (loadIncomeList)="loadIncomeListGrid($event)"></case-management-remove-income-confirmation>
 
 
 </kendo-dialog>
-

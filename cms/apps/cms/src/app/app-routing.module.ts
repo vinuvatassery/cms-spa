@@ -57,13 +57,16 @@ const routes: Routes = [
       import('@cms/system-config/feature-home').then(
         (m) => m.SystemConfigFeatureHomeModule
       ),
+      data: {
+        title: 'System Configuration',
+      },
     canLoad: [AutoLoginAllRoutesGuard],
   },
   {
     path: 'system-interface',
     loadChildren: () =>
-      import('@cms/system-interface/feature-dashboard').then(
-        (m) => m.SystemInterfaceFeatureDashboardModule
+      import('@cms/system-interface/feature-system-interface-home').then(
+        (m) => m.FeatureSystemInterfaceHomeModule
       ),
     canLoad: [AutoLoginAllRoutesGuard],
   },

@@ -1,0 +1,235 @@
+<section class="k-dialog-body">
+
+      <p class="text-muted mb-2">
+            All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row">
+
+            <!-- for manufacturers -->
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Insurance Vendor Name">
+                        <kendo-textbox aria-label="Insurance Vendor name" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+
+            <div class="flex-col">
+                  <kendo-floatinglabel text="TIN (optional)">
+                        <kendo-textbox aria-label="TIN" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+
+      </div>
+      <div class="flex-row mt-1">
+            <div class="flex-col">
+                  <h4 class="mb-1">PAYMENT ADDRESS</h4>
+
+                  <p>Add a address and contacts for that address. Additional
+                        addresses may be added once the manufacturer is added.
+                        If you add a payment address, all fields are required unless otherwise stated.
+                  </p>
+
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Mail Code">
+                        <kendo-textbox aria-label="Mail Code" [maxlength]="200"
+                              [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Name on Check">
+                        <kendo-textbox aria-label="Name on Check" [maxlength]="200"
+                              [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+
+            <div class="flex-col">
+
+                  <kendo-floatinglabel text="Name on Envelope">
+                        <kendo-textbox aria-label="Name on Envelope" [maxlength]="200"
+                              [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Address Line 1">
+                        <kendo-textbox aria-label="Address Line 1" [maxlength]="200"
+                              [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Address Line 2 (optional)">
+                        <kendo-textbox aria-label="Address Line 2 (optional)" [maxlength]="50"
+                              [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="City">
+                        <kendo-textbox aria-label="City" [maxlength]="50" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col flex-col-6">
+                  <kendo-floatinglabel text="State">
+                        <kendo-dropdownlist aria-label="State" [fillMode]="formUiStyle.dropDownFillMode"
+                              textField="stateName" valueField="stateCode" [valuePrimitive]="true" placeholder="State">
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col flex-col-6">
+                  <kendo-floatinglabel text="Zip">
+                        <kendo-textbox aria-label="Zip" [fillMode]="formUiStyle.inputFillMode" [maxlength]="10">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+      </div>
+
+
+
+      <!-- Invoice Method -->
+      <div class="flex-col mt-1">
+            <fieldset class="k-form-fieldset ">
+                  <legend class="k-form-legend">
+                        <h5 class="mb-0"> Payment Method </h5>
+                  </legend>
+
+                  <div class="component-list-h">
+                        <span>
+                              <div class="flex-row">
+                                    <div class="flex-col flex-col-12">
+                                          <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="pmtMethod"
+                                                      aria-labelledby="pmtMethod_check" id="pmtMethod_check" />
+
+                                                <kendo-label class="k-radio-label" for="pmtMethod_check"
+                                                      text="Check"></kendo-label>
+                                          </span>
+                                    </div>
+                                    <div class="flex-col flex-col-12">
+                                          <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="pmtMethod"
+                                                      aria-labelledby="pmtMethod_ACH" id="pmtMethod_ACH" />
+
+                                                <kendo-label class="k-radio-label" for="pmtMethod_ACH"
+                                                      text="ACH"></kendo-label>
+                                          </span>
+                                    </div>
+                                    <div class="flex-col flex-col-12">
+                                          <span class="app-radiobtnwidtext-wrapper">
+                                                <input type="radio" kendoRadioButton name="pmtMethod"
+                                                      aria-labelledby="pmtMethod_spots" id="pmtMethod_spots" />
+
+                                                <kendo-label class="k-radio-label" for="pmtMethod_spots"
+                                                      text="SPOTS"></kendo-label>
+                                          </span>
+                                    </div>
+                              </div>
+                        </span>
+                  </div>
+
+            </fieldset>
+      </div>
+  
+      <!-- special handling -->
+      <div class="flex-col flex-col-12">
+            <kendo-floatinglabel text="Special Handling (optional)">
+                  <kendo-textarea [fillMode]="formUiStyle.inputFillMode" #SpecialHandling resizable="auto"
+                        id="SpecialHandling" aria-label="Special Handling">
+                        <kendo-textarea-suffix class="justify-content-end">
+                              <span class="specialhandlingCounter">0/100</span>
+                        </kendo-textarea-suffix>
+                  </kendo-textarea>
+
+            </kendo-floatinglabel>
+      </div>
+      <!-- Contacts -->
+
+      <div>
+            <div>
+                  <div class="flex-row mt-2">
+
+                        <div class="flex-col d-flex align-iems-center justify-content-between">
+                              <h4 class="mb-0">CONTACT 1 (OPTIONAL)</h4>
+                              <button kendoButton class="card-link-button no-ul text-bold k-danger-link"
+                                    aria-label="Delete Contact">
+                                    DELETE CONTACT
+                              </button>
+                        </div>
+
+                        <div class="flex-col">
+                              <kendo-floatinglabel text=" Name">
+                                    <kendo-textbox aria-label="Contact Name" [fillMode]="formUiStyle.inputFillMode"
+                                          [maxlength]="40">
+                                    </kendo-textbox>
+                              </kendo-floatinglabel>
+                              <p class="text-muted mb-2">
+                                    If adding a contact person, Name is required
+                              </p>
+
+                        </div>
+                        <div class="flex-col mb-1">
+                              <kendo-floatinglabel text="Description (Optional)">
+                                    <kendo-textbox aria-label="Description (Optional)"
+                                          [fillMode]="formUiStyle.inputFillMode" [maxlength]="500">
+                                    </kendo-textbox>
+                              </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col mb-1">
+
+                              <kendo-floatinglabel text="Phone Number (optional)">
+                                    <kendo-maskedtextbox aria-label="Phone Number (optional)"
+                                          [fillMode]="formUiStyle.inputFillMode" mask="(999) 000-0000">
+                                    </kendo-maskedtextbox>
+                              </kendo-floatinglabel>
+                        </div>
+                        <div class="flex-col mb-1">
+
+                              <kendo-floatinglabel text="Fax Number (optional)">
+                                    <kendo-maskedtextbox aria-label="Fax (optional)"
+                                          [fillMode]="formUiStyle.inputFillMode" mask="(999) 000-0000">
+                                    </kendo-maskedtextbox>
+                              </kendo-floatinglabel>
+                        </div>
+
+                        <div class="flex-col mb-1 ">
+                              <kendo-floatinglabel text="Email Address (optional)">
+                                    <kendo-textbox aria-label="Email Address (optional)"
+                                          [fillMode]="formUiStyle.inputFillMode" [maxlength]="200">
+                                    </kendo-textbox>
+                              </kendo-floatinglabel>
+                        </div>
+
+                  </div>
+            </div>
+            <div class="flex-col">
+                  <button kendoButton icon="add" [primary]="true" look="flat" aria-label="Contact">
+                        Contact
+                  </button>
+            </div>
+      </div>
+</section>
+
+<kendo-dialog-actions>
+      <div class="justify-content-between">
+            <div class="justify-content-end">
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel
+                  </button>
+                  <button kendoButton [primary]="true" aria-label="Add"> ADD </button>
+            </div>
+      </div>
+
+</kendo-dialog-actions>

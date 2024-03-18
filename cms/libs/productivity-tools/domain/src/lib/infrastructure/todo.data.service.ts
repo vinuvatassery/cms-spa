@@ -49,8 +49,8 @@ export class TodoDataService {
   getTodoItem(alertId:any){  
     return this.http.get<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${alertId}`);
   }
-  createTodoItem(payload:any){  
-      return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/todo`,payload);
+  createAlertItem(payload:any){  
+      return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${payload.type}`,payload);
     }
   markAlertAsDone (payload:any){  
     return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/markdone/${payload}`,null);
@@ -58,9 +58,13 @@ export class TodoDataService {
   deleteAlert(payload:any){  
     return this.http.delete<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${payload}`);
   }
-  updateTodoItem(payload:any){
+  updateAlertItem(payload:any){
     return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts`,payload);
 
+  }
+
+   todoAndReminderByClient(clientId:any){  
+    return this.http.post<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/clients/${clientId}`, null);
   }
 }
 

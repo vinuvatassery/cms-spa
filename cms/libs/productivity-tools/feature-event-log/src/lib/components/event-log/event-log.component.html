@@ -20,7 +20,7 @@
     </div>
     <div class="sidePanel_header-right">
       <div class="input-search mat-form-no-b-space" *ngIf="isShownSearch">
-          <kendo-textbox aria-label="search event"  placeholder="Search Events"  [fillMode]="formUiStyle.inputFillMode"
+          <kendo-textbox aria-label="search event"  placeholder="Search events"  [fillMode]="formUiStyle.inputFillMode"
           [(ngModel)]="searchText" (valueChange)="loadLogEvent()" (blur)="showHideSearch()">
            </kendo-textbox>
       </div>
@@ -42,7 +42,7 @@
       <button #eventFilterCardBtn kendoButton (click)="isEventFilterPopoverOpen = !isEventFilterPopoverOpen">
         <span class="material-icons" aria-label="More option" *ngIf="!isEventFilterPopoverOpen"> more_vert </span>
         
-        <span class="material-icons" aria-label="Close more option" *ngIf="isEventFilterPopoverOpen"> close </span>
+        <span class="material-icons" aria-label="Cancel" *ngIf="isEventFilterPopoverOpen"> cancel </span>
       </button>   
       <div class="event-filter_popover_wrapper" *ngIf="isEventFilterPopoverOpen" #eventtFilterPopover>
         <div class="event-filter-body">
@@ -161,7 +161,9 @@
               </common-read-more>
             </div>
             <span *ngIf="eventLog.userEventFlag && eventLog.attachments?.length > 0" 
-              class="text-primary text-underline c-pointer" (click)="downloadAttachment(eventLog.attachments[0]?.eventLogAttachmentId, eventLog.attachments[0]?.attachmentFilePath)">View Attachment</span>
+              class="text-primary text-underline c-pointer" 
+              (click)="downloadAttachment(eventLog.attachments[0]?.eventLogAttachmentId, eventLog.attachments[0]?.attachmentFilePath)">
+              View Attachment</span>
           </div>
         </section>
 
@@ -177,7 +179,7 @@
                   <span class="items-head_info-user">
 
                     <common-user-photo-icon  
-                    [userId]="eventLog.creatorId" 
+                    [userId]="subEventLog.creatorId" 
                     [userFirstName]="subEventLog.createdBy"
                     [userLastName]="''"
                     [linkType]="'profileLink'"
@@ -193,8 +195,12 @@
                 [content]="subEventLog.eventLogDesc"
                 [limit]="250"
                 [completeWords]="true">
-    
                 </common-read-more>
+
+                <span *ngIf="subEventLog.userEventFlag && subEventLog.attachments?.length > 0" 
+                  class="text-primary text-underline c-pointer" 
+                  (click)="downloadAttachment(subEventLog.attachments[0]?.eventLogAttachmentId, subEventLog.attachments[0]?.attachmentFilePath)">
+                  View Attachment</span>
               </div>
             </section>
           </li>

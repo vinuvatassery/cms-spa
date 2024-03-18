@@ -241,13 +241,13 @@ export class SystemInterfaceDashboardService {
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/interface-activity/web-logs/${interfaceTypeCode}?displayAll=${displayAll}`, params);
   }
   getPrescriptionsFills() {
-    return this.http.get(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/Dashboard/prescrption-fill-records`);
+    return this.http.get(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/dashboard/prescrption-fill-records`);
   }
   getCardsRequestinfo(days: number, isCardRequest: boolean) {
-    return this.http.get(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/Dashboard/ramsell-client-records-sent?days=${days}'&isCardRequest=${isCardRequest}`);
+    return this.http.get(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/dashboard/ramsell/client-records/sent?days=${days}'&isCardRequest=${isCardRequest}`);
   }
   getClientSendCardsinfo(days: number, isCardRequest: boolean) {
-    return this.http.get(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/Dashboard/ramsell-client-records-sent?days=${days}'&isCardRequest=${isCardRequest}`);
+    return this.http.get(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/dashboard/ramsell/client-records/sent?days=${days}'&isCardRequest=${isCardRequest}`);
   }
 
   getDocumentDownload(clientDocumentId: string) {

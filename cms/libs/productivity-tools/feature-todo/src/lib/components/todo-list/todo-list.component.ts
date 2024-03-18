@@ -10,15 +10,15 @@ import {
   EventEmitter,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { FinancialServiceTypeCode, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
-import { AlertEntityTypeCode, AlertFrequencyTypeCode, AlertTypeCode, TodoFacade } from '@cms/productivity-tools/domain';
+import { FinancialServiceTypeCode, FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
+import { AlertFrequencyTypeCode, AlertTypeCode } from '@cms/productivity-tools/domain';
 import { ToDoEntityTypeCode } from '@cms/shared/ui-common';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 /** Facades **/
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { GridDataResult } from '@progress/kendo-angular-grid';
+import { GridDataResult,FilterService } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 @Component({
   selector: 'productivity-tools-todo-list',
   templateUrl: './todo-list.component.html',
@@ -36,6 +36,8 @@ export class TodoListComponent implements OnInit {
   @Output() isLoadTodoGridEvent = new EventEmitter<any>();
   @Input() isToDODetailsActionOpen: any;
   @Input()  todoGrid$ :any;
+  @Input() entityTypeCodeSubject$!: Observable<any>;
+  entityTypeList:any=[];
   public toDoGridState!: State;
   gridDataResult!: GridDataResult;
   gridTodoDataSubject = new Subject<any>();
@@ -47,6 +49,7 @@ export class TodoListComponent implements OnInit {
   sortColumn = 'alertDueDate';
   sortDir = 'Ascending';
   sortColumnName = '';
+  tabCode ='';
   sortType = 'asc';
   sort: SortDescriptor[] = [{
     field: this.sortColumn,
@@ -57,6 +60,7 @@ export class TodoListComponent implements OnInit {
   @Input() loadAlertGrid$ : any;
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
   @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
+  @Output() getTodoItemsLov = new EventEmitter();
   public moreactions = [
     {
       buttonType: 'btn-h-primary',
@@ -93,6 +97,7 @@ export class TodoListComponent implements OnInit {
     this.loadAlertGrid$.subscribe((data: any) => {
       this.loadTodoGrid();
     });
+    this.loadEntityTypeList()
   }
 
   initilizeGridRefinersAndGrid(){
@@ -117,7 +122,7 @@ export class TodoListComponent implements OnInit {
   
 
   /** Private methods **/
-  private loadTodoGrid() {
+  public loadTodoGrid() {
     this.loadTodoGridData(
       this.toDoGridState.skip?? 0,
       this.toDoGridState.take?? 10,
@@ -136,7 +141,7 @@ export class TodoListComponent implements OnInit {
         maxResultCount: maxResultCountValue,
         sorting: sortValue,
         sortType: sortTypeValue,
-        filter: "[]",
+        filter: JSON.stringify(this.filter),
       }; 
         this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
         this.todoGrid$.subscribe((data: any) => {
@@ -179,14 +184,15 @@ export class TodoListComponent implements OnInit {
     return FinancialVendorProviderTabCode;
   }
     onToDoClicked(gridItem: any) {
-      if (gridItem && gridItem.entityTypeCode == this.entityTypes.Vendor) {
+      if (gridItem && gridItem.entityTypeCode == this.entityTypes.Client) {
         this.router.navigate([`/case-management/cases/case360/${gridItem?.entityId}`]);
       }
       else if (gridItem && gridItem.entityTypeCode == this.entityTypes.Vendor) {
+        this.getVendorProfile(gridItem.vendorTypeCode)
         const query = {
           queryParams: {
             v_id: gridItem?.entityId ,
-            tab_code : this.financeManagementTabs.MedicalProvider
+            tab_code : this.tabCode
           },
         };
         this.router.navigate(['/financial-management/vendors/profile'], query )
@@ -240,5 +246,61 @@ export class TodoListComponent implements OnInit {
   }
   public get entityTypes(): typeof ToDoEntityTypeCode {
     return ToDoEntityTypeCode;
+  }
+  getVendorProfile(vendorTypeCode :any) {
+    switch (vendorTypeCode) {
+      case (FinancialVendorProviderTab.Manufacturers)  :
+        this.tabCode = FinancialVendorProviderTabCode.Manufacturers;
+        break;
+ 
+      case  (FinancialVendorProviderTab.MedicalClinic) :
+        this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
+        break;
+ 
+        case  (FinancialVendorProviderTab.MedicalProvider) :
+          this.tabCode = FinancialVendorProviderTabCode.MedicalProvider;
+          break;
+      case  (FinancialVendorProviderTab.InsuranceVendors):
+        this.tabCode = FinancialVendorProviderTabCode.InsuranceVendors;
+        break;
+ 
+      case  (FinancialVendorProviderTab.Pharmacy):
+        this.tabCode = FinancialVendorProviderTabCode.Pharmacy;
+        break;
+ 
+      case (FinancialVendorProviderTab.DentalClinic)  :
+        this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
+        break;
+ 
+        case (FinancialVendorProviderTab.DentalProvider)  :
+          this.tabCode =FinancialVendorProviderTabCode.DentalProvider;
+          break;
+    }
+  }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovDesc
+      }],
+        logic: "or"
+    });
+  }
+  private getEntityTypeLovs() {
+    this.entityTypeCodeSubject$
+    .subscribe({
+      next: (data: any) => {
+        data.forEach((item: any) => {
+          item.lovDesc = item.lovDesc.toUpperCase();
+        });
+        this.entityTypeList=data.sort((value1:any,value2:any) => value1.sequenceNbr - value2.sequenceNbr);
+      }
+    });
+  }
+  loadEntityTypeList(){
+    this.entityTypeList.push({"lovDesc":this.entityTypes.Client.toString(),"lovCode":this.entityTypes.Client.toString()});
+    this.entityTypeList.push({"lovDesc":this.entityTypes.Vendor.toString(),"lovCode":this.entityTypes.Vendor.toString()});
   }
 }

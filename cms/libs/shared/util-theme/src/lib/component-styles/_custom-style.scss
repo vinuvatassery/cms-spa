@@ -1354,6 +1354,13 @@ padding: 8px;
   font-family: $font-family-medium;
 }
 
+ 
+
+.system-export {
+  position: absolute;
+  right: 5px;
+  top: 24px;
+}
 .event-filters{
   padding-left: 1rem;
   padding-right: 1rem;
@@ -1364,10 +1371,11 @@ padding: 8px;
 .event-filters-field{
   padding-left: 1rem;
   padding-right: 1rem;
-max-height: 180px;
-overflow-y: auto;
+  max-height: 340px;
+  overflow-y: auto;
 }
 .event-filter-body{
   padding-top: 1rem;
   padding-bottom: 1rem;
+ 
 }

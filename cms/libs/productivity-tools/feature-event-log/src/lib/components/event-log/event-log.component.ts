@@ -206,6 +206,7 @@ export class EventLogComponent implements OnInit {
     this.eventLogFilterForm.controls["beforedatefilter"].setValue('');
     this.filterBy = "";
     this.isEnableFilterBtn = false;
+    this.isEventFilterPopoverOpen = false;
     this.cd.detectChanges();
     this.filterData = { logic: 'and', filters: [] };
     this.loadEventLogs();

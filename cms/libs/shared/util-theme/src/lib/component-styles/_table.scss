@@ -21,6 +21,7 @@ $pagination-height : 48px;
       overflow: visible !important;
     }
   }
+  
 }
 
 .app-c-table,
@@ -214,6 +215,11 @@ $pagination-height : 48px;
   .k-grid-footer {
     padding: $size-0 !important;
   }
+  .k-grid-edit-row{
+    td, .k-table-td{
+     padding-inline: 6px;
+    }
+   }
 }
 
 /*drag and drop table*/
@@ -277,7 +283,7 @@ $pagination-height : 48px;
   color: $app-primary-font-color !important;
 }
    
- 
+
 
       .k-cell-inner>.k-link {
         padding: 12px 24px;
@@ -299,6 +305,7 @@ $pagination-height : 48px;
       .k-grid-table {
         border-collapse: separate;
         border-spacing: $size-0 $size-xx;
+ 
       }
 
       tr {
@@ -331,6 +338,8 @@ $pagination-height : 48px;
         }
       }
     }
+
+    
   }
 
   &.recently-view{

@@ -1,0 +1,68 @@
+<section class="k-dialog-body">
+
+      <p class="text-muted  ">
+            Select which policies to migrate by indicating the insurance vendor, insurance type and current premium
+            amount. Then enter the new premium amount and start date.
+      </p>
+      <p class="text-muted mt-1">
+            Bulk migration cannot not be undone.
+      </p>
+      <div class="flex-row">
+            <div class="flex-col mt-1">
+                  <h5 class="mb-0">SELECT PLANS TO MIGRATE</h5>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Insurance Vendor">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true">
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Insurance Type">
+                        <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [valuePrimitive]="true">
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Current Premium Amount" class="amount-with-symbol">
+                        <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                        <kendo-numerictextbox [spinners]="false" [fillMode]="formUiStyle.inputFillMode" format="#.00">
+                        </kendo-numerictextbox>
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col mt-2">
+                  <h5 class="mb-0">ENTER NEW POLICY INFORMATION</h5>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="New Premium Amount" class="amount-with-symbol">
+                        <span class="k-input-prefix custom-currencysymbol"> $ </span>
+                        <kendo-numerictextbox [spinners]="false" [fillMode]="formUiStyle.inputFillMode" format="#.00">
+                        </kendo-numerictextbox>
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col ">
+                  <kendo-floatinglabel text="New Start Date">
+                        <kendo-datepicker [fillMode]="formUiStyle.dateInputFillMode" format="dd/mm/yyyy"
+                              formatPlaceholder="formatPattern">
+                        </kendo-datepicker>
+                        <kendo-formhint>
+                              The selected plans will be termed one day before the New Start Date
+                            </kendo-formhint>
+                  </kendo-floatinglabel>
+            </div>
+      </div>
+
+
+</section>
+
+<kendo-dialog-actions>
+      <div class="justify-content-between">
+            <div class="justify-content-end">
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel
+                  </button>
+                  <button kendoButton [primary]="true" aria-label="Add"> ADD </button>
+            </div>
+      </div>
+
+</kendo-dialog-actions>

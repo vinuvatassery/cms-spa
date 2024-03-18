@@ -1,230 +1,192 @@
 <!-- Header Section -->
 <div class="block-section">
-    <h2>
-      <span
-        class="material-icons sidebar-menu_icon mr-1"
-        aria-label="user settings"
-        aria-hidden="true"
-      >
-        settings
-      </span>
-      Gender
-    </h2>
-    <button
-      icon="add"
-      kendoButton
-      [primary]="true"
-      aria-label="Gender"
-      class="add-button-top"
-      (click)="onGenderDetailClicked()"
-    >
+  <h1 class="maintitle_withicon text-bold">
+    <span class="material-icons sidebar-menu_icon mr-1" aria-label="user settings" aria-hidden="true">
+      settings
+    </span>Gender
+  </h1>
+  <button icon="add" kendoButton [primary]="true" aria-label="Gender" class="add-button-top"
+    (click)="onGenderDetailClicked()">
+    Gender
+  </button>
+</div>
+
+<!-- Gender List Section -->
+<section>
+  <!-- Label info show only in list -->
+  <p class="pt-1">Add, edit, deactivate and re-order genders.</p>
+  <!-- Label info show only in reorder list -->
+  <p class="pt-1" hidden>
+    Select a sorting option or manually drag and drop the items in the list.
+    This is how the items will be displayed in the interface.
+  </p>
+
+  <div class="flex-row">
+    <!-- Table header show only in list -->
+    <div class="flex-col">
+      <div class="table-filter-section mat-form-no-b-space">
+        <span class="filter-section_items filter--select">
+          <kendo-floatinglabel text="All Columns">
+            <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode"   >
+            </kendo-dropdownlist>
+          </kendo-floatinglabel>
+        </span>
+        <span class="filter-section_items filter--search">
+          <span class="material-icons">search</span>
+          <kendo-floatinglabel text="Search">
+            <kendo-textbox [fillMode]="formUiStyle.inputFillMode">
+            </kendo-textbox>
+          </kendo-floatinglabel>
+        </span>
+        
+          <button kendoButton [primary]="true" look="flat" aria-label="Export" class="system-export">
+            <span class="material-icons" aria-hidden="true">exit_to_app</span>Export
+          </button>
+         
+      </div>
+    </div>
+    <!-- Table header show only in reorder list -->
+    <div class="flex-col flex-col-4" hidden>
+      <kendo-floatinglabel text="Sort">
+        <kendo-dropdownlist > </kendo-dropdownlist>
+      </kendo-floatinglabel>
+    </div>
+  </div>
+
+  <!-- Sorted Info show only in list -->
+  <div class="table-sorted-info">
+    Sorted by <span class="sort-items">Name</span>
+    <span class="sort-items">No Filters</span>
+    <span class="sort-items">All Columns</span>
+  </div>
+
+  <!-- Gender list -->
+  <div class="app-c-table">
+    <kendo-grid [data]="genderDataLists$ |async" [resizable]="true" [pageSize]="state.take"
+    [pageable]="true" [loading]="isGenderListGridLoaderShow" [sortable]="true" [skip]="state.skip" [groupable]="false" [reorderable]="true"
+    [resizable]="true" [columnMenu]="{ filter: true }" [sort]="state.sort"
+    (dataStateChange)="dataStateChange($event)" (filterChange)="filterChange($event)">
+      <kendo-grid-column field="" title="" [width]="50" class="text-center text-muted">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <span class="material-icons">drag_indicator</span>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="order" title="Order" [width]="60">
+      </kendo-grid-column>
+      <kendo-grid-column field="gender" title="Gender" [width]="150">
+      </kendo-grid-column>
+      <kendo-grid-column field="lastModified" title="Last Modified" [width]="150">
+      </kendo-grid-column>
+      <kendo-grid-column field="modifiedBy" title="Modified By" [width]="100" class="text-center">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <button kendoButton [primary]="true" class="avatar-sm-btn c-default" kendoPopoverAnchor
+            [popover]="onUserProfileDetailsHovered" showOn="hover" [attr.aria-label]="dataItem.modifiedBy">
+            <div class="app-c-avatar avatar-sm">
+              <img src="../assets/images/avatar-1.png" alt="Profile Avatar" class="profile-avatar" hidden /><span
+                class="profile-text-avatar">AK</span>
+            </div>
+          </button>
+          <kendo-popover #onUserProfileDetailsHovered width="330" position="left">
+            <ng-template kendoPopoverBodyTemplate>
+              <common-user-profile-card> </common-user-profile-card>
+            </ng-template>
+          </kendo-popover>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column field="status" title="Status" [width]="150">
+      </kendo-grid-column>
+      <kendo-grid-column field="" title="" [width]="50" class="text-center" [sticky]="true">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <kendo-dropdownbutton [data]="moreactions" title="More option" aria-label="more actions"
+            class="TableActionPopup app-dropdown-action more_action_wid" buttonClass="k-icon-button"
+            [popupSettings]="{ popupClass: popupClassAction, animate: true }">
+            <span class="material-icons" aria-label="More option"> more_vert </span>
+            <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
+              <button kendoButton look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType"
+                aria-hidden="false" (click)="dataItem.click">
+                <span class="material-icons" aria-hidden="true"
+                  [attr.aria-label]="dataItem.text">{{dataItem.icon}}</span>
+                <label> {{ dataItem.text }} </label>
+              </button>
+
+            </ng-template>
+          </kendo-dropdownbutton>
+        </ng-template>
+      </kendo-grid-column>
+      <ng-template kendoPagerTemplate let-totalPages="totalPages" let-pagerFirstPage="pagerFirstPage"
+      let-currentPage="currentPage">
+      <div class="grid-custom-paginationtemplates d-flex">
+            <div class="d-flex align-items-center">
+                  <label class="mr-1" for="RowsPerPage">Rows Per Page</label>
+                  <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="pageSizes"
+                        [textField]="'text'" [valueField]="'value'" [valuePrimitive]="true"
+                        aria-label="Rows Per Page" id="RowsPerPage" [(value)]="state.take"
+                        (selectionChange)="pageSelectionChange($event)"></kendo-dropdownlist>
+                  <kendo-pager-info> </kendo-pager-info>
+                  <kendo-grid-messages [pagerItems]="' '" [pagerItems]="'Rows'" [pagerPage]="'Page'">
+                  </kendo-grid-messages>
+
+            </div>
+            <div class="d-flex">
+                  <kendo-pager-input></kendo-pager-input>
+                  <kendo-pager-prev-buttons></kendo-pager-prev-buttons>
+                  <kendo-pager-next-buttons></kendo-pager-next-buttons>
+            </div>
+      </div>
+</ng-template>
+      <!-- grid Loader Template -->
+      <ng-template kendoGridLoadingTemplate>
+        <common-grid-loader-component></common-grid-loader-component>
+      </ng-template>
+      <!-- grid No data Template -->
+      <ng-template kendoGridNoRecordsTemplate>
+        <div> <kendo-badge-container> <span class="material-icons"> info </span> </kendo-badge-container>
+        </div>
+        <p>There is no data to display.</p>
+      </ng-template>
+    </kendo-grid>
+  </div>
+
+  <!-- Add Gender show only in list -->
+  <div class="mt-2 block-section">
+    <!-- Add Gender Button -->
+    <button icon="add" kendoButton [primary]="true" aria-label="Gender" (click)="onGenderDetailClicked()">
       Gender
     </button>
   </div>
-  
-  <!-- Gender List Section -->
-  <section>
-    <!-- Label info show only in list -->
-    <p class="pt-1">Add, edit, deactivate and re-order genders.</p>
-    <!-- Label info show only in reorder list -->
-    <p class="pt-1" hidden>
-      Select a sorting option or manually drag and drop the items in the list.
-      This is how the items will be displayed in the interface.
-    </p>
-  
-    <div class="flex-row">
-      <!-- Table header show only in list -->
-      <div class="flex-col">
-        <div class="table-filter-section mat-form-no-b-space">
-          <span class="filter-section_items filter--select">
-            <kendo-floatinglabel text="All Columns">
-              <kendo-dropdownlist [fillMode]="formUiStyle.dropDownFillMode" [data]="  ddlColumnFilters$  |async "> </kendo-dropdownlist>
-            </kendo-floatinglabel>
-          </span>
-          <span class="filter-section_items filter--search">
-            <span class="material-icons">search</span>
-            <kendo-floatinglabel text="Search">
-              <kendo-textbox [fillMode]="formUiStyle.inputFillMode" >
-              </kendo-textbox>
-            </kendo-floatinglabel>
-          </span>
-          <span>
-            <button kendoButton [primary]="true" look="flat" aria-label="Export" class="button-lg">
-              <span class="material-icons" aria-hidden="true"  
-                >exit_to_app</span
-              >Export
-            </button>
-          </span>
-        </div>
-      </div>
-      <!-- Table header show only in reorder list -->
-      <div class="flex-col flex-col-4" hidden>
-        <kendo-floatinglabel text="Sort">
-          <kendo-dropdownlist [data]="  ddlColumnFilters$ | async"> </kendo-dropdownlist>
-        </kendo-floatinglabel>
-      </div>
-    </div>
-  
-    <!-- Sorted Info show only in list -->
-    <div class="table-sorted-info">
-      Sorted by <span class="sort-items">Name</span>
-      <span class="sort-items">No Filters</span>
-      <span class="sort-items">All Columns</span>
-    </div>
-  
-    <!-- Gender list -->
-    <div class="app-c-table">
-      <kendo-grid [data]="clientProfileGender$ |async">
-        <kendo-grid-column
-          field=""
-          title=""
-          [width]="50"
-          class="text-center text-muted"
-        >
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <span class="material-icons">drag_indicator</span>
-          </ng-template>
-        </kendo-grid-column>
-        <kendo-grid-column field="order" title="Order" [width]="60">
-        </kendo-grid-column>
-        <kendo-grid-column field="gender" title="Gender" [width]="150">
-        </kendo-grid-column>
-        <kendo-grid-column
-          field="lastModified"
-          title="Last Modified"
-          [width]="150"
-        >
-        </kendo-grid-column>
-        <kendo-grid-column
-          field="modifiedBy"
-          title="Modified By"
-          [width]="100"
-          class="text-center"
-        >
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <button
-              kendoButton
-              [primary]="true"
-              class="avatar-sm-btn c-default"
-              kendoPopoverAnchor
-              [popover]="onUserProfileDetailsHovered"
-              showOn="hover"
-              [attr.aria-label]="dataItem.modifiedBy"
-            >
-              <div class="app-c-avatar avatar-sm">
-                <img
-                  src="../assets/images/avatar-1.png"
-                  alt="Profile Avatar"
-                  class="profile-avatar"
-                  hidden
-                /><span class="profile-text-avatar">AK</span>
-              </div>
-            </button>
-            <kendo-popover
-              #onUserProfileDetailsHovered
-              width="330"
-              position="left"
-            >
-              <ng-template kendoPopoverBodyTemplate>
-                <common-user-profile-card> </common-user-profile-card>
-              </ng-template>
-            </kendo-popover>
-          </ng-template>
-        </kendo-grid-column>
-        <kendo-grid-column field="status" title="Status" [width]="150">
-        </kendo-grid-column>
-        <kendo-grid-column
-          field=""
-          title=""
-          [width]="50"
-          class="text-center"
-          [sticky]="true"
-        >
-          <ng-template kendoGridCellTemplate let-dataItem>
-            <kendo-dropdownbutton
-          [data]="moreactions"
-          title="More option"
-          
-          aria-label="more actions"
-          class="TableActionPopup app-dropdown-action more_action_wid"
-          buttonClass="k-icon-button"
-          [popupSettings]="{ popupClass: popupClassAction, animate: true }"
-        >
-        <span class="material-icons" aria-label="More option"> more_vert    </span>
-          <ng-template class="app-dropdown-action-list" kendoDropDownButtonItemTemplate let-dataItem>
-            <button kendoButton  look="flat" [attr.aria-label]="dataItem.text" [class]="dataItem.buttonType" aria-hidden="false" (click)="dataItem.click">
-              <span class="material-icons" aria-hidden="true" [attr.aria-label]="dataItem.text" >{{dataItem.icon}}</span>
-              <label>   {{ dataItem.text }} </label>
-          </button>
-   
-          </ng-template>
-        </kendo-dropdownbutton>
-          </ng-template>
-        </kendo-grid-column>
-                          <!-- grid Loader Template -->  
-    <ng-template kendoGridLoadingTemplate>
-      <common-grid-loader-component></common-grid-loader-component>
-     </ng-template>
-     <!-- grid No data Template -->  
-     <ng-template kendoGridNoRecordsTemplate>
-      <common-grid-no-records></common-grid-no-records>
-     </ng-template> 
-      </kendo-grid>
-    </div>
-  
-    <!-- Add Gender show only in list -->
-    <div class="mt-2 block-section">
-      <!-- Add Gender Button -->
-      <button
-        icon="add"
-        kendoButton
-        [primary]="true"
-        aria-label="Gender"
-        (click)="onGenderDetailClicked()"
-      >
-        Gender
+
+  <!-- Reorder button block show only in reorder list -->
+  <div class="mt-2 block-section" hidden>
+    <div class="justify-content-end">
+      <button kendoButton aria-label="Cancel" [primary]="true" look="outline">
+        Cancel
+      </button>
+      <button kendoButton aria-label="Update" [primary]="true" class="ml-1">
+        Update
       </button>
     </div>
-  
-    <!-- Reorder button block show only in reorder list -->
-    <div class="mt-2 block-section" hidden>
+  </div>
+</section>
+
+<!-- Add Gender Modal Html-->
+<kendo-dialog *ngIf="isGenderDetailPopup" (close)="onCloseGenderDetailClicked()"
+  class="app-c-modal app-c-modal-sm app-c-modal-np">
+  <kendo-dialog-titlebar> Add Gender </kendo-dialog-titlebar>
+  <system-config-gender-detail></system-config-gender-detail>
+</kendo-dialog>
+
+<!-- Deactivate Gender Modal Html-->
+<kendo-dialog *ngIf="isGenderDeactivatePopup" (close)="onCloseGenderDeactivateClicked()"
+  class="app-c-modal app-c-modal-sm">
+  <kendo-dialog-titlebar> Deactivate Gender </kendo-dialog-titlebar>
+  The selected gender will be deactivated and won’t be available for selection
+  for clients.
+  <kendo-dialog-actions>
+    <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton aria-label="Cancel" [primary]="true" look="outline">
-          Cancel
-        </button>
-        <button kendoButton aria-label="Update" [primary]="true" class="ml-1">
-          Update
-        </button>
+        <button kendoButton [primary]="true" aria-label="Cancel" look="outline">Cancel</button>
+        <button kendoButton [primary]="true" aria-label="Deactivate">Deactivate</button>
       </div>
     </div>
-  </section>
-  
-  <!-- Add Gender Modal Html-->
-  <kendo-dialog
-    *ngIf="isGenderDetailPopup"
-    (close)="onCloseGenderDetailClicked()"
-    class="app-c-modal app-c-modal-sm app-c-modal-np"
-  >
-    <kendo-dialog-titlebar> Add Gender </kendo-dialog-titlebar>
-    <system-config-gender-detail></system-config-gender-detail>
-  </kendo-dialog>
-  
-  <!-- Deactivate Gender Modal Html-->
-  <kendo-dialog
-    *ngIf="isGenderDeactivatePopup"
-    (close)="onCloseGenderDeactivateClicked()"
-    class="app-c-modal app-c-modal-sm"
-  >
-    <kendo-dialog-titlebar> Deactivate Gender </kendo-dialog-titlebar>
-    The selected gender will be deactivated and won’t be available for selection
-    for clients.
-    <kendo-dialog-actions>
-      <div class="justify-content-between">
-        <div class="justify-content-end">
-          <button kendoButton [primary]="true" aria-label="Cancel" look="outline">Cancel</button>
-          <button kendoButton [primary]="true" aria-label="Deactivate">Deactivate</button>
-        </div>
-      </div>
-    </kendo-dialog-actions>
-  </kendo-dialog>
-  
+  </kendo-dialog-actions>
+</kendo-dialog>

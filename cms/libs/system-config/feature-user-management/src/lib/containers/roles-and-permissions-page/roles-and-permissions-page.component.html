@@ -1,0 +1,7 @@
+ 
+      <system-config-roles-and-permissions-list [usersRoleAndPermissionsLists$]="usersRoleAndPermissions$"
+            [rolesPermissionFilterColumn$]="ddlRolesAndPermissionsFilter$" [pageSizes]="pageSizes"
+            [sortValue]="sortValueRolesPermissionListGrid" [sortType]="sortType" [sort]="sortRolesPermissionListGrid"
+            (loadUsersRoleAndPermissions)="loadUsersRoleAndPermissions($event)"
+            (loadDdlRolesAndPermissionsFilterColumnEvent)="loadDdlRolesAndPermissionsFilter($event)"></system-config-roles-and-permissions-list>
+ 

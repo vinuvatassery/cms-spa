@@ -1,4 +1,4 @@
-<section class="k-dialog-body" kendoTooltip  [formGroup]="todoDetailsForm">
+<section class="k-dialog-body" kendoTooltip  [formGroup]="todoDetailsForm" >
   <p class="text-muted mb-2">
     All fields are required unless otherwise stated.
   </p>
@@ -8,7 +8,8 @@
       <kendo-floatinglabel text="Title">
         <kendo-textbox aria-label="todo title"    
         [fillMode]="formUiStyle.inputFillMode"
-        formControlName="title" >  
+        formControlName="title" 
+        [maxlength]="100">  
        </kendo-textbox>
        <kendo-formerror *ngIf="!todoDetailsForm.controls['title']?.valid && isValidateForm">
         Title is required
@@ -37,10 +38,11 @@
                 valueField="lovCode"
                 [valuePrimitive]="true"
           [data]="frequencyTypeCodeSubject$ | async"
-          (valueChange)="onRepeatChange($event)"
           >
         </kendo-dropdownlist>
-        <kendo-formerror *ngIf="!todoDetailsForm.controls['repeat']?.valid && isValidateForm && todoDetailsForm.controls['title'].valid">
+        <kendo-formerror *ngIf="!todoDetailsForm.controls['repeat']?.valid 
+        && isValidateForm 
+        && todoDetailsForm.controls['dueDate'].valid">
           Repeat is required
         </kendo-formerror>
       </kendo-floatinglabel>
@@ -52,8 +54,12 @@
           formatPlaceholder="formatPattern"
           [fillMode]="formUiStyle.dateInputFillMode"
           formControlName="endDate"
+          (keyup)="endDateValidation()"
+          (valueChange)="endDateValidation()"
         >
         </kendo-datepicker>
+        <kendo-formerror *ngIf="todoDetailsForm.controls['endDate'].hasError('incorrect')"> Must be after Due Date.</kendo-formerror>
+
       </kendo-floatinglabel>
     </div>
     <div class="flex-col">
@@ -77,7 +83,7 @@
       </kendo-floatinglabel>
     </div>
     <div class="flex-col mt-2 field_with_info">
-      <kendo-floatinglabel text="Link Reminder To">
+      <kendo-floatinglabel text="Link Item To">
         <kendo-dropdownlist aria-label="Link Reminder To"
          [fillMode]="formUiStyle.dropDownFillMode" 
         formControlName="linkTo"
@@ -88,7 +94,7 @@
         [data]="entityTypeCodeSubject$ | async "> </kendo-dropdownlist>
         <kendo-formerror *ngIf="!todoDetailsForm.controls['linkTo']?.valid
          && isValidateForm ">
-         Link Reminder To is required
+         Link Item To is required
         </kendo-formerror>
     </kendo-floatinglabel>
     <span class="material-icons" aria-hidden="true" title="Select an entity if you want this item to be displayed in its profile.">info</span>
@@ -128,6 +134,9 @@
               </ng-template>
             </kendo-combobox-column>
           </kendo-multicolumncombobox>
+          <kendo-formerror *ngIf="!todoDetailsForm.controls['vendorId']?.valid && isValidateForm && todoDetailsForm.controls['linkTo'].valid">
+            Vendor is required
+          </kendo-formerror>
         </div>
       </div>
      </div> 
@@ -169,6 +178,9 @@
           </kendo-combobox-column>
           
         </kendo-multicolumncombobox>
+        <kendo-formerror *ngIf="!todoDetailsForm.controls['clientId']?.valid && isValidateForm && todoDetailsForm.controls['linkTo'].valid">
+          Client is required
+        </kendo-formerror>
       </div>
     </div>
   </div>
