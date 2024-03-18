@@ -141,11 +141,13 @@ export class AlertBannerComponent implements OnInit {
         });
   } 
   public DueOn(alertDueDate:any):any{
+    debugger;
     let dateNow = new Date();
     let dueDate = new Date(alertDueDate); 
          if (dueDate.toLocaleDateString() == dateNow.toLocaleDateString()) {
              return AlertDueOn.Today;
-          } else if(!(dueDate.toLocaleDateString() < dateNow.toLocaleDateString()) && (dueDate.toLocaleDateString() < this.addDays(dateNow,1).toLocaleDateString())) {
+          } else if(!(dueDate.toLocaleDateString() < dateNow.toLocaleDateString()) && 
+            (dueDate.toLocaleDateString() <= this.addDays(dateNow,1).toLocaleDateString())) {
              return AlertDueOn.Tomorrow;
            }
            return (this.intl.formatDate(
