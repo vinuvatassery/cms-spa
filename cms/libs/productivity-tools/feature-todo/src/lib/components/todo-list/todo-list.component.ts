@@ -57,6 +57,7 @@ export class TodoListComponent implements OnInit {
   }];
   columns:any;
   filter!: any;
+  @Input() pageSizes : any;
   @Input() loadAlertGrid$ : any;
   @Output() onMarkAlertAsDoneGridClicked = new EventEmitter<any>();
   @Output() onDeleteAlertGridClicked = new EventEmitter<any>();
@@ -103,7 +104,7 @@ export class TodoListComponent implements OnInit {
   initilizeGridRefinersAndGrid(){
     this.toDoGridState = {
       skip: 0,
-      take: 10,
+      take: this.pageSizes[2]?.value,
       sort: this.sort,
     };
     this.loadTodoGrid();
@@ -125,7 +126,7 @@ export class TodoListComponent implements OnInit {
   public loadTodoGrid() {
     this.loadTodoGridData(
       this.toDoGridState.skip?? 0,
-      this.toDoGridState.take?? 10,
+      this.toDoGridState.take?? this.pageSizes[2]?.value,
       this.toDoGridState?.sort![0]?.field ?? this.sortValue,
       this.toDoGridState?.sort![0]?.dir ?? 'asc',
       AlertTypeCode.Todo.toString()
@@ -145,8 +146,8 @@ export class TodoListComponent implements OnInit {
       }; 
         this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
         this.todoGrid$.subscribe((data: any) => {
-          this.gridDataResult = data?.items;
-          if(data?.totalCount >=0 || data?.totalCount === -1){
+          this.gridDataResult = data;
+          if(data?.total >=0 || data?.total === -1){
             this.isToDoGridLoaderShow.next(false);
           }
           this.gridTodoDataSubject.next(this.gridDataResult);
@@ -302,5 +303,11 @@ export class TodoListComponent implements OnInit {
   loadEntityTypeList(){
     this.entityTypeList.push({"lovDesc":this.entityTypes.Client.toString(),"lovCode":this.entityTypes.Client.toString()});
     this.entityTypeList.push({"lovDesc":this.entityTypes.Vendor.toString(),"lovCode":this.entityTypes.Vendor.toString()});
+  }
+  // updating the pagination infor based on dropdown selection
+  pageselectionchange(data: any) {
+    this.toDoGridState.take = data.value;
+    this.toDoGridState.skip = 0;
+    this.loadTodoGrid();
   }
 }

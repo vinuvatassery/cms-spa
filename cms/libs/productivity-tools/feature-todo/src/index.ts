@@ -3,7 +3,6 @@ export * from './lib/productivity-tools-feature-todo.module';
 
 /** Components **/
 export * from './lib/components/delete-reminder-confirmation/delete-reminder-confirmation.component';
-export * from './lib/components/delete-todo-confirmation/delete-todo-confirmation.component';
 export * from './lib/components/reminder-detail/reminder-detail.component';
 export * from './lib/components/reminder-list/reminder-list.component';
 export * from './lib/components/todo-list/todo-list.component';
