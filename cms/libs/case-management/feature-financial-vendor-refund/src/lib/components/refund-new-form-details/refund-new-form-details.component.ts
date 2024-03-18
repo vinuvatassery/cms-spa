@@ -9,6 +9,7 @@ import {  VendorRefundInsurancePremiumListComponent } from '@cms/case-management
 import { VendorRefundPharmacyPaymentsListComponent } from '../vendor-refund-pharmacy-payments-list/vendor-refund-pharmacy-payments-list.component';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
+import { FilterService } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'cms-refund-new-form-details',
   templateUrl: './refund-new-form-details.component.html',
@@ -53,6 +54,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$
   ddlStates$ = this.contactFacade.ddlStates$;
   paymentMethodCode$ = this.lovFacade.paymentMethodType$
+  paymentType$ = this.lovFacade.paymentRequestType$;
   serviceTypes$ = this.lovFacade.serviceType$
   onEditInitiallydontShowPremiumselection = false;
   isconfirmclicked=false;
@@ -154,6 +156,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  rxRefundInfoSortType = 'desc';
  rxRefundInfoFilter:any[]=[]
   filter!: any;  
+  paymentTypeData :any[] =[];
   
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
@@ -280,6 +283,8 @@ sortPrescriptions(source:any[]){
     })
     this.lovFacade.getRefundTypeLov();
     this.lovFacade.getServiceTypeLov();
+    this.lovFacade.getCoPaymentRequestTypeLov();
+    this.getPaymentTypeLov();
      this.initForm()
     this.lovFacade.refundType$.subscribe((res:any[]) =>{
 
@@ -1099,4 +1104,23 @@ validateVoucherPayable(event: any): void {
   const formattedValue = this.validatePayable(inputValue);
   event.target.value = formattedValue
 }
+
+  getPaymentTypeLov(){
+    this.paymentType$.subscribe({
+        next: (data: any) => {
+          this.paymentTypeData=data;
+        }
+      });
+  }
+
+  dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    filterService.filter({
+        filters: [{
+          field: field,
+          operator: "eq",
+          value:value.lovDesc
+      }],
+        logic: "or"
+    });
+  }
 }
