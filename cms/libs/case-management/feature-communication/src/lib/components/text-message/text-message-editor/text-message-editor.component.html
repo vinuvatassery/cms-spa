@@ -1,15 +1,16 @@
 <div class="flex-row  sms-temp-scroll">
-  <div class="flex-col mb-2" *ngFor="let item of tareaMessages">
+  <div class="flex-col mb-2" *ngFor="let item of tareaMessages; index as i">
     <div class="sms-text-header">
       <h5>Message</h5>
       <div>
         <button
           kendoButton
-          #anchor
-          (click)="onToggleInsertVariableClicked(item)"
+          #anchorInsert
+          (click)="onToggleInsertVariableClicked(item, i)"
           class="text-t-normal"
           aria-label="Insert a variable"
           title="Insert a variable"
+          [attr.data-index]="i"
         >
           Insert a variable
           <span
@@ -20,13 +21,14 @@
           >
         </button>
         <kendo-popup
-          #popup
-          [anchor]="$any(anchor)"
-          *ngIf="item.showVariables"
-          popupClass="notification-inner"
+        [attr.data-index]="i"
+        #popupAsf
+        [anchor]="anchorInsert.element" 
+        *ngIf="(i+1) === selectedItem"
+          popupClass="content notification-inner"
         >
         <div class="sms-popup-content">
-          <div class="variable-search-block">
+          <div class="sms-variable-search-block">
             <div class="input-search mat-form-no-b-space">
               <div  class="medium-input-form sms-variable-search_input"  >
                 <kendo-textbox aria-label="input a variable"  placeholder="Search" [fillMode]="formUiStyle.inputFillMode">   </kendo-textbox>

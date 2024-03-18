@@ -1,0 +1,201 @@
+<section class="template-form-wrapper  pb-3">
+
+      <!-- form inputs elements -->
+      <div>
+            <div class="flex-col dash_bordered_big-input">
+                  <kendo-textbox aria-label="New SMS Template Name" [fillMode]="formUiStyle.inputFillMode"
+                        value="New SMS Template">
+                  </kendo-textbox>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Template Description">
+                        <kendo-textarea [fillMode]="formUiStyle.inputFillMode">
+                              <kendo-textarea-suffix class="justify-content-end">
+                                    <span class="tareacounter"> 0/250</span>
+                              </kendo-textarea-suffix>
+                        </kendo-textarea>
+                  </kendo-floatinglabel>
+            </div>
+
+
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Roles That Can Use This Template">
+                        <kendo-multiselect aria-label="Module This is For" placeholder="Module This is For"
+                              [checkboxes]="true" [autoClose]="false" [fillMode]="formUiStyle.dropDownFillMode"
+                              [data]="listItems" [(ngModel)]="value"></kendo-multiselect>
+                  </kendo-floatinglabel>
+            </div>
+
+      </div>
+
+      <!-- editors  -->
+      <div class="mt-2 pb-3 tab_editors  ">
+
+            <div class="flex-row">
+                  <div class="flex-col">
+                        <p>Type the body of the template. Click “Preview Template” to see what the client will receive.
+                        </p>
+
+                  </div>
+                  <div class="flex-col mt-1" *ngFor="let item of tareaMessages">
+
+                        <div class="sms-text-header">
+                              <h5>Message </h5>
+                              <div>
+                                    <button kendoButton #smsAnchor (click)="onToggleInsertVariableClicked()" 
+                                          class="text-t-normal" aria-label="Insert a variable"
+                                          title="Insert a variable">
+                                          Insert a variable
+                                          <span class="material-icons" aria-label="dropdown arrow"
+                                                aria-hidden="true">arrow_drop_down</span>
+                                    </button>
+                                    <kendo-popup #smsPopup [anchor]="$any(smsAnchor)" popupClass="content"
+                                          *ngIf="isShowPopupClicked" popupClass="notification-inner">
+                                          <div class="sms-popup-content" *ngIf="isSearchOpened">
+                                                <div class="sms-variable-search-block">
+                                                      <div class="input-search mat-form-no-b-space">
+                                                            <div class="medium-input-form sms-variable-search_input">
+                                                                  <kendo-textbox aria-label="input a variable"
+                                                                        placeholder="Search"
+                                                                        [fillMode]="formUiStyle.inputFillMode">
+                                                                  </kendo-textbox>
+                                                            </div>
+                                                      </div>
+                                                      <button kendoButton
+                                                            class="k-icon-button sms-variable-search_close"
+                                                            (click)="onSearchClosed()" aria-label="Close" title="Close">
+                                                            <span class="material-icons" aria-label="Close"
+                                                                  aria-hidden="true">close</span>
+                                                      </button>
+                                                </div>
+                                                <div class="var-list-block">
+                                                      <section>
+                                                            <h5>Client Variables</h5>
+                                                            <ul aria-label="client variables" class="var-list-item">
+                                                                  <li aria-label="client variable item">Variable 1</li>
+                                                                  <li aria-label="client variable item">Variable 2</li>
+                                                                  <li aria-label="client variable item">Variable 3</li>
+                                                                  <li aria-label="client variable item">Variable 4</li>
+                                                                  <li aria-label="client variable item">Variable 5</li>
+                                                            </ul>
+                                                      </section>
+                                                      <section>
+                                                            <h5>My Variables</h5>
+                                                            <ul aria-label="my variable" class="var-list-item">
+                                                                  <li aria-label="my variable item">Variable 1</li>
+                                                                  <li aria-label="my variable item">Variable 2</li>
+                                                                  <li aria-label="my variable item">Variable 3</li>
+                                                                  <li aria-label="my variable item">Variable 4</li>
+                                                                  <li aria-label="my variable item">Variable 5</li>
+                                                            </ul>
+                                                      </section>
+                                                </div>
+                                          </div>
+                                    </kendo-popup>
+                                    <button kendoButton class="k-danger-link" (click)="onDeleteMessageClicked(item.id)"
+                                          aria-label="Delete">
+                                          Delete
+                                    </button>
+                              </div>
+                        </div>
+                        <kendo-floatinglabel text="" class="pt-0">
+                              <kendo-textarea [fillMode]="formUiStyle.inputFillMode" name="Message Description"
+                                    [rows]="2" [cols]="40" [maxlength]="tareaMessageMaxLength"
+                                    [value]="item.description" [id]="item.id"
+                                    (valueChange)="onMessageValueChange($event, item.id)"
+                                    aria-label="message description">
+                                    <kendo-textarea-suffix class="justify-content-end"> <span class="counter"> {{
+                                                item.wordCount }}/{{ tareaMessageMaxLength }} </span>
+                                    </kendo-textarea-suffix>
+                              </kendo-textarea>
+
+                        </kendo-floatinglabel>
+                  </div>
+                  <div class="flex-col mt-1">
+                        <button kendoButton [primary]="true" look="flat" icon="add" (click)="onAddNewMessageClicked()"
+                              aria-label="Message">
+                              Message
+                        </button>
+                  </div>
+            </div>
+
+
+      </div>
+</section>
+<div class="bottom-fixed-wrapper  flex-space-bw">
+      <div>
+            <button kendoButton [primary]="true" look="flat" aria-label="Preview Template"
+                  (click)="onPreviewSmsTextHeaderFooterOpenClicked()">
+                  Preview Template
+            </button>
+      </div>
+      <div>
+            <button kendoButton [primary]="true" class="mr-1" look="outline" aria-label="Cancel"
+                  (click)="onSmsTextTemplateLeaveClicked()"> Cancel </button>
+            <button kendoButton [primary]="true" aria-label="Save"> Save </button>
+
+      </div>
+</div>
+
+<kendo-dialog *ngIf="isShowPreviewSmsTextHeaderFooterDialog" class="app-c-modal app-c-modal-md app-c-modal-np"
+      (close)="onPreviewSmsTextHeaderFooterCloseClicked()">
+
+      <kendo-dialog-titlebar> Preview SMS Template </kendo-dialog-titlebar>
+      <section class="k-dialog-body text-message-preview-wrapper mt-4">
+            <div class="text-message-preview">
+                  <p>This is your CAREAssist Case Worker, Billy Bob. Did you know we have an online portal where you can manage your benefits?</p>
+            </div>
+            <div class="text-message-preview">
+                  <p>You can register at <a>www.careassist.com</a>. Please call me at <a>(XXX) XXX-XXXX</a> if you need any help!</p>
+            </div>
+      </section>
+      <kendo-dialog-actions>
+            <div class="justify-content-between  ">
+                  <div class="w100">
+                        <button kendoButton [primary]="true" look="flat" aria-label="Send Test"
+                              (click)="onSendTestOpenClicked()">
+                              Send Test
+                        </button>
+                  </div>
+                  <div class="justify-content-end align-items-center">
+                        <button kendoButton [primary]="true" class="mr-1" look="outline" aria-label="Cancel"
+                              (click)="onPreviewSmsTextHeaderFooterCloseClicked()"> Cancel </button>
+                        <button kendoButton [primary]="true" aria-label="Save Template"> Save Template
+                        </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+</kendo-dialog>
+
+
+<kendo-dialog *ngIf="isShowSendTextDialog" (close)="onSendTestCloseClicked()"
+      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar> Send Test </kendo-dialog-titlebar>
+      <system-config-sms-text-template-send-test></system-config-sms-text-template-send-test>
+</kendo-dialog>
+
+
+
+
+<kendo-dialog *ngIf="isSmsTextTemplateLeavePopupShow" (close)="onCloseSmsTextTemplateLeaveClicked()"
+      class="app-c-modal app-c-modal-sm app-c-modal-np">
+      <kendo-dialog-titlebar> Leave this page? </kendo-dialog-titlebar>
+
+      <section class="k-dialog-body mb-2">
+            <p>
+                  All progress to this template will be lost.
+            </p>
+      </section>
+      <kendo-dialog-actions>
+            <div class="justify-content-between">
+                  <div class="justify-content-end">
+
+                        <button kendoButton class="k-error-button" aria-label="Delete">
+                              LEAVE
+                        </button>
+                        <button kendoButton [primary]="true" aria-label="Keep"> STAY </button>
+                  </div>
+            </div>
+      </kendo-dialog-actions>
+
+</kendo-dialog>

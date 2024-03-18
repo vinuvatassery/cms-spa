@@ -1,7 +1,7 @@
 /** Angular **/
- 
+
 import { NgModule } from '@angular/core';
- 
+
 import { CommonModule } from '@angular/common';
 /** Modules **/
 import { SystemConfigDomainModule } from '@cms/system-config/domain';
@@ -18,7 +18,11 @@ import { RolesAndPermissionsListComponent } from './components/roles-and-permiss
 import { RolesAndPermissionsDetailComponent } from './components/roles-and-permissions-detail/roles-and-permissions-detail.component';
 import { DeactivateRolesAndPermissionsConfirmationComponent } from './components/deactivate-roles-and-permissions-confirmation/deactivate-roles-and-permissions-confirmation.component';
 import { SystemConfigFeatureLovModule } from '@cms/system-config/feature-lov';
- 
+import { RolesAndPermissionsPageComponent } from './containers/roles-and-permissions-page/roles-and-permissions-page.component';
+import { CaseManagerPageComponent } from './containers/case-manager-page/case-manager-page.component';
+import { CaseManagerListsComponent } from './components/case-manager-lists/case-manager-lists.component';
+import { RolesAndPermissionsDetailsPageComponent } from './containers/roles-and-permissions-details-page/roles-and-permissions-details-page.component';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -37,6 +41,10 @@ import { SystemConfigFeatureLovModule } from '@cms/system-config/feature-lov';
     RolesAndPermissionsListComponent,
     RolesAndPermissionsDetailComponent,
     DeactivateRolesAndPermissionsConfirmationComponent,
+    RolesAndPermissionsPageComponent,
+    CaseManagerPageComponent,
+    CaseManagerListsComponent,
+    RolesAndPermissionsDetailsPageComponent,
   ],
   exports: [
     UserListComponent,
@@ -47,6 +55,10 @@ import { SystemConfigFeatureLovModule } from '@cms/system-config/feature-lov';
     RolesAndPermissionsListComponent,
     RolesAndPermissionsDetailComponent,
     DeactivateRolesAndPermissionsConfirmationComponent,
+    RolesAndPermissionsPageComponent,
+    CaseManagerPageComponent,
+    CaseManagerListsComponent,
+    RolesAndPermissionsDetailsPageComponent,
   ],
 })
-export class SystemConfigFeatureUserManagementModule { }
+export class SystemConfigFeatureUserManagementModule {}

@@ -1,7 +1,8 @@
 <div class="app-l-inner-rapper pt-0 pb-0" kendoRippleContainer>
   <div class="assigned-to-right" *ngIf="assignedToVisibility$ | async">
-   <span> Assigned To</span>
+   <span class="mr-1"> Assigned To</span>
    <common-user-photo-icon  
+   class="ml-1"
    [userId]="caseWorkerId" 
    [userFirstName]="userFirstName"
    [userLastName]="userLastName"
