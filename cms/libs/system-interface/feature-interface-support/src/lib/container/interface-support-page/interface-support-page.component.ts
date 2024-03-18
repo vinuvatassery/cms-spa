@@ -8,9 +8,6 @@ import { State } from '@progress/kendo-data-query';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InterfaceSupportPageComponent {
-  // selectedGroupChangeEvent(data: any) {
-  //   this.selectedGroup = data;
-  // }
   selectedGroup: any;
   state!: State;
   sortType = this.systemInterfaceSupportFacade.sortType;
@@ -33,8 +30,6 @@ export class InterfaceSupportPageComponent {
   supportGroup$ = this.systemInterfaceSupportFacade.supportGroup$;
   addSupportGroup$ = this.systemInterfaceSupportFacade.addSupportGroup$;
   editSupportGroup$ = this.systemInterfaceSupportFacade.editSupportGroup$;
-  //distributionLists$ = this.systemInterfaceSupportFacade.distributionLists$;
-  //notificationCategoryLists$ = this.systemInterfaceSupportFacade.notificationCategoryLists$;
   supportGroupReactivate$ = this.systemInterfaceSupportFacade.supportGroupReactivate$;
   supportGroupRemove$ = this.systemInterfaceSupportFacade.supportGroupRemove$;
   supportGroupProfilePhoto$ = this.systemInterfaceSupportFacade.supportGroupProfilePhoto$;
@@ -54,20 +49,15 @@ export class InterfaceSupportPageComponent {
 
   selectedGroupChangeEvent(data: any) {
     this.selectedGroup = data;
-    this.systemInterfaceSupportFacade.loadEventLov('SYSTEM_INTERFACE');
+    this.systemInterfaceSupportFacade.loadEventLov();
   }
-  //   loadSupportGroup(event: any) {
-  //     this.systemInterfaceSupportFacade.loadSupportGroup(event);
-  // }
+
   loadDistributionLists(event: any) {
     this.systemInterfaceSupportFacade.loadDistributionGroup(event);
   }
   loadSupportGroup(event: any) {
     this.systemInterfaceSupportFacade.loadSupportGroup(event);
   }
-  // loadNotificationCategory(event: any) {
-  //   this.systemInterfaceSupportFacade.loadNotificationCategory();
-  // }
   handleAddSuppportGroup(event: any) {
     this.systemInterfaceSupportFacade.addSupportGroup(event);
   }

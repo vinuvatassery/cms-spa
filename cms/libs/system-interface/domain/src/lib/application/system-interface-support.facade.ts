@@ -329,8 +329,8 @@ export class SystemInterfaceSupportFacade {
       });
   }
 
-  loadEventLov(groupCode: string) {
-    this.systemInterfaceSupportService.getEventLovList(groupCode).subscribe({
+  loadEventLov() {
+    this.systemInterfaceSupportService.getEventLovList().subscribe({
       next: (response) => {
         this.eventLovSubject.next(response);
       },

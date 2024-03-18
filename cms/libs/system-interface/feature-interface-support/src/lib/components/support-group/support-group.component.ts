@@ -14,6 +14,7 @@ import { FilterService, GridDataResult, RowArgs, SelectableMode, SelectableSetti
 import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subject, first } from 'rxjs';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'system-interface-support-group',
   templateUrl: './support-group.component.html',
@@ -138,8 +139,15 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       buttonName: 'delete',
       click: (data: any): void => {
         if (!this.deleteButtonEmitted) {
-          this.deleteButtonEmitted = true;
-          this.onOpenSupportGroupDeleteClicked(data.notificationGroupId, data.userPerGroup);
+          if (data.userPerGroup > 0) {
+            // Show warning if userPerGroupCount > 0
+            this.deleteButtonEmitted = false;
+            this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Group has dependencies and cannot be deleted.");
+          } else {
+            // If userPerGroupCount <= 0, proceed with opening delete modal
+            this.deleteButtonEmitted = true;
+            this.onOpenSupportGroupDeleteClicked(data.notificationGroupId, data.userPerGroup);
+          }
         }
 
       },
@@ -175,12 +183,6 @@ export class SupportGroupComponent implements OnInit, OnChanges {
 
     this.loadSupportGroupListGrid();
   }
-
-  // public selectedRowChange(selectionEvent: any) {
-  //   this.selectedGroup = selectionEvent.selectedRows[0].dataItem;
-  //   this.selectedRowEvent.emit(this.selectedGroup);
-  // }
-
 
   private loadSupportGroupListGrid(): void {
     this.loadSupportGroup(this.state?.skip ?? 0, this.state?.take ?? 0, this.sortValue, this.sortType);
@@ -290,33 +292,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   }
   onSearch(searchValue: any) {
     this.onChange(searchValue);
-    //this.searchSubject.next(searchValue);
   }
-  // gridDataHandle() {
-  //   this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
-  //     this.gridDataResult = data;
-  //     this.gridDataResult.data = filterBy(
-  //       this.gridDataResult.data,
-  //       this.filterData
-  //     );
-  //     if (this.mySelection.length < 1)
-  //       this.selectedRowEvent.emit(this.gridDataResult.data[0]);
-  //     else
-  //       this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
-
-  //     if (this.mySelection.length < 1)
-  //       this.mySelection = [this.gridDataResult.data[0].notificationGroupId];
-  //     else
-  //       this.mySelection = [this.selectedGroup.notificationGroupId];
-  //     this.gridSupportGroupDataSubject.next(this.gridDataResult);
-  //     if (data?.total >= 0 || data?.total === -1) {
-  //       this.isSupportGroupGridLoaderShow = false;
-  //     }
-  //   });
-  //   //this.gridSupportGroupData$.subscribe((data) => { console.log(data) });
-  //   this.isSupportGroupGridLoaderShow = false;
-
-  // }
 
   gridDataHandle() {
     this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
@@ -339,9 +315,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
         this.isSupportGroupGridLoaderShow = false;
       }
     });
-    this.gridSupportGroupData$
-      .subscribe((data) => { console.log(data) });
-
+    //this.gridSupportGroupData$.subscribe((data) => { console.log(data) });
     this.isSupportGroupGridLoaderShow = false;
 
   }
@@ -361,14 +335,13 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.isGroupDetailPopup = false;
     this.isEditSupportGroup = false;
   }
-  onOpenSupportGroupDeleteClicked(notificationGroupId: any, userPerGroupCount: number) {
-    // if (userPerGroupCount > 0) {
-    //   this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Group has dependencies and cannot be deleted.");
-    //   this.deleteButtonEmitted = false;
-    //   return;
-    // }
-      this.notificationGroupId = notificationGroupId;
+  onOpenSupportGroupDeleteClicked(notificationGroupId: any, userPerGroup: number) {
+    this.notificationGroupId = notificationGroupId;
+    if (userPerGroup == 0) {
       this.isSupportGroupDeletePopupShow = true;
+    } else {
+      this.deleteButtonEmitted = false;
+    }
   }
   onCloseSupportGroupDeleteClicked() {
     this.deleteButtonEmitted = false;
