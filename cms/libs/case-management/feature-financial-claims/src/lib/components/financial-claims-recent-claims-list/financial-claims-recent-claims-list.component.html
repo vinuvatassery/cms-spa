@@ -1,3 +1,14 @@
+<div class="table-sorted-info">
+  Sorted {{sortDir}} by <span class="sort-items"> {{sortColumn}} </span>
+  <span class="sort-items" *ngIf="!isFiltered">No Filters</span>
+  <span class="sort-items" *ngIf="isFiltered">Filtered by {{filteredBy}}</span>
+  <span class="sort-items" *ngIf="!columnsReordered">Default Columns</span>
+  <span class="sort-items" *ngIf="columnsReordered">Columns Re-ordered</span>
+  <button aria-label="Set to Default" kendoButton look="flat" class="sort-items" (click)="setToDefault()">
+    <a>Set to Default</a>
+  </button>
+</div>
+
 <div class="app-c-table">
   <kendo-grid
     [reorderable]="true"
