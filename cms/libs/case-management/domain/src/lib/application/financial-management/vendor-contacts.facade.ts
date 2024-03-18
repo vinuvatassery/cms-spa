@@ -182,7 +182,8 @@ export class VendorContactsFacade {
    getContactAddress(vendorContactId: string){
     return this.vendorcontactsDataService.getContactAddress(vendorContactId);
    }
-   loadMailCodes(vendorId: number): void {
+
+   loadMailCodes(vendorId: string): void {
     this.showLoader();
     this.vendorcontactsDataService.loadVendorMailCodes(vendorId).subscribe({
       next: (reponse: any) => {

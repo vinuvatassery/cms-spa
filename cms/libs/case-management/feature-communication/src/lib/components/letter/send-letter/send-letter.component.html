@@ -12,6 +12,7 @@
               [data]="ddlTemplates"
               textField="description"
               valueField="documentTemplateId"
+              [(ngModel)]="documentTemplate"
               (valueChange)="handleDdlLetterValueChange($event)"
             >
             </kendo-dropdownlist>
@@ -42,11 +43,12 @@
         </div>
         <div class="flex-col">
           <case-management-email-editor
-          [dataEvent]="emailEditorValueEvent"
-          [currentValue]="currentLetterData"
+          [selectedTemplate]="selectedTemplate" 
+          [selectedTemplateContent]="selectedTemplateContent"         
           [clientCaseEligibilityId]="clientCaseEligibilityId"
-          [clientId]="clientId"
+          [clientId]="entityId"
           [communicationTypeCode]="communicationLetterTypeCode"
+          (editorValueChangeEvent) ="editorValueChange($event)"
           (cerEmailAttachments)="cerEmailAttachments($event)"
           ></case-management-email-editor>
         </div>
@@ -89,7 +91,7 @@
   <kendo-dialog-actions>
     <div class="justify-content-between">
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" (click)="onCloseSaveForLaterClicked()"
+        <button kendoButton [primary]="true" (click)="onSaveForLaterTemplateClicked()"
           aria-label="OK">
           OK
         </button>
@@ -103,6 +105,8 @@
   title="Preview Letter">
   <case-management-preview-letter
     [letterContent]="currentLetterPreviewData"
+    [attachmentCount]="attachmentCount"
+    (closeEvent)="onPreviewLetterClose()"
   ></case-management-preview-letter>
   <kendo-dialog-actions>
     <div class="justify-content-between bigbtn-wrapper ">

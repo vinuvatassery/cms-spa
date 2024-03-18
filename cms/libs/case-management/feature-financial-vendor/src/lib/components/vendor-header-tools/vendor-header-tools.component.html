@@ -43,20 +43,28 @@
   <productivity-tools-reminder-detail   (isModalNewReminderCloseClicked)="onNewReminderClosed($event)"></productivity-tools-reminder-detail>
 </ng-template>
 
+<!-- Draft Email Modal -->
+<ng-template #notificationDraftEmailDialog>
+  <case-management-notification-draft-confirmation [communicationTypeCode]="notificationGroup"
+  (closeNotificationEvent)="onDraftNotificationCloseClicked($event)"
+  (newNotificationClickEvent)="onNewNotificationClicked()"
+  (continueClickEvent)="onContinueDraftClicked()" kendoTooltip></case-management-notification-draft-confirmation>
+</ng-template>
+
 <!-- Send New Letter Popup -->
 <ng-template #sendLetterDialog>
-  <case-management-send-letter  [data]="letterScreenName" [mailingAddress$]="mailCodes$"
-  [vendorId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
-  (loadInitialData)="loadMailingAddress()"
+  <case-management-send-letter [mailingAddress$]="mailCodes$"
+  [entityId]="vendorId" (closeSendLetterEvent)="handleSendNewLetterClosed($event)"
+  (loadInitialData)="loadMailingAddress()" [notificationGroup]="screenName"
   [communicationLetterTypeCode]="communicationLetterTypeCode"
   kendoTooltip></case-management-send-letter>
 </ng-template>
 
 <!-- Send New Email Popup -->
 <ng-template #sendNewEmailDialog>
-  <case-management-send-email [data]="emailScreenName"
+  <case-management-send-email
   [communicationEmailTypeCode]="communicationEmailTypeCode"
-  [emailSubject]="emailSubject"
-  [toEmail]="toEmail"
+  [emailSubject]="emailSubject" [notificationGroup]="screenName"
+  [toEmail]="toEmail" [entityId]="vendorId"
   (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
 </ng-template>

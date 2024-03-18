@@ -20,6 +20,28 @@
   (clientAttachmentChangeEvent)="clientAttachmentChange($event)"
   ></common-clients-attachment>
 </div>
+<!-- Select file form forms and documents -->
+<div *ngIf="showFormsAndDocumentsUpload" class="mb-2 mt-2">
+<kendo-floatinglabel  text="Forms & Documents">
+    
+  <kendo-multicolumncombobox
+    (valueChange)="formsAndDocumentChange($event)"
+    [data]="formsAndDocumentList$"
+    textField="description"
+    valueField="documentTemplateId"
+    autofocusfield
+    [popupSettings]="{popupClass: 'case-search-footer combotable_search_list',  appendTo:'component' ,animate: true }"
+    [fillMode]="formUiStyle.dropDownFillMode"
+    [filterable]="true"
+ >
+    <kendo-combobox-column >
+      <ng-template   kendoMultiColumnComboBoxColumnCellTemplate  let-dataItem  >
+        <span  >{{ dataItem.description }}</span>
+      </ng-template>
+    </kendo-combobox-column>
+  </kendo-multicolumncombobox>
+</kendo-floatinglabel>
+</div>
 <div class="app-c-editor letter-editor-height">
   <!-- Variable dropdown -->
   <button
@@ -71,7 +93,7 @@
             aria-label="client variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CER_CLIENT_VARIABLE'" aria-label="client variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CLIENT_VARIABLE'" aria-label="client variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
         <section>
@@ -81,7 +103,7 @@
             aria-label="my variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CER_CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CASE_WORKER_VARIABLE'" aria-label="my variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
         <section>
@@ -91,19 +113,19 @@
             aria-label="other variables"
             *ngFor="let item of clientVariables"
           >
-            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='CER_OTHER_VARIABLE'" aria-label="other variables item">{{ item.lovDesc }}</li>
+            <li (click)="BindVariableToEditor(editor, item.lovCode)" *ngIf="item.parentCode =='OTHER_VARIABLE'" aria-label="other variables item">{{ item.lovDesc }}</li>
           </ul>
         </section>
       </div>
     </div>
   </kendo-popup>
   <!-- Editor -->
-  <kendo-editor #editor [(value)]="emailEditorvalue">
+  <kendo-editor #editor [(value)]="selectedTemplateContent" (valueChange)="editorValueChange($event)">
   <case-management-send-email
   (editorValue)="emailEditorValueEvent($event)"
   [clientCaseEligibilityId]="clientCaseEligibilityId"
-  [clientId]="clientId"
-  (cerEmailAttachments)="ceremailAttachmentEvent($event)"
+  [entityId]="clientId"
+  (cerEmailAttachments)="cerEmailAttachmentEvent($event)"
 ></case-management-send-email>
     <kendo-toolbar>
       <kendo-toolbar-buttongroup>
@@ -174,6 +196,12 @@
         kendoEditorInsertImageButton
         aria-label="insert image"
       ></kendo-toolbar-button>
+      <kendo-toolbar-buttongroup>
+        <kendo-toolbar-button
+          kendoEditorCreateLinkButton
+        ></kendo-toolbar-button>
+        <kendo-toolbar-button kendoEditorUnlinkButton></kendo-toolbar-button>
+      </kendo-toolbar-buttongroup>
       <kendo-toolbar-dropdownbutton
       aria-label="attachment"
         icon="attachment"

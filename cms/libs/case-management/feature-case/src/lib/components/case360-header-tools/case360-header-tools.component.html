@@ -58,15 +58,25 @@
 
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
-  <case-management-send-letter  [data]="letterScreenName" [mailingAddress$]="mailingAddress$"
-  (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()"
+  <case-management-send-letter [mailingAddress$]="mailingAddress$" [communicationLetterTypeCode]="letterCommunicationTypeCode" [notificationGroup]="screenName"
+  (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()" [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId"
+  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
   kendoTooltip></case-management-send-letter>
 </ng-template>
 
+<!-- Draft Email Modal -->
+<ng-template #notificationDraftEmailDialog>
+  <case-management-notification-draft-confirmation [communicationTypeCode]="notificationGroup"
+  (closeNotificationEvent)="onDraftNotificationCloseClicked($event)"
+  (newNotificationClickEvent)="onNewNotificationClicked()"
+  (continueClickEvent)="onContinueDraftClicked()" kendoTooltip></case-management-notification-draft-confirmation>
+</ng-template>
 <!-- Send New Email Modal -->
 <ng-template #sendNewEmailDialog>
-  <case-management-send-email [data]="emailScreenName" [ddlEmails$]="emailAddress$"
-  (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
+  <case-management-send-email [ddlEmails$]="emailAddress$" [communicationEmailTypeCode]="emailCommunicationTypeCode"
+  [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName" [clientCaseId]="clientCaseId"
+  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
+  [toEmail]="toEmail" (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>
 </ng-template>
 
 <!-- New ID Card Modal Html-->
@@ -78,6 +88,8 @@
 
 <!-- New SMS Text Modal Html-->
 <ng-template #sendTextMessageDialog>
-<case-management-send-text-message [data]="smsScreenName" [ddlMessageRecipients$] ="phoneNumbers$"
-  (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" kendoTooltip></case-management-send-text-message>
+<case-management-send-text-message [ddlMessageRecipients$] ="phoneNumbers$" [notificationGroup]="screenName" [entityId]="clientId"
+  (closeSendMessageEvent)="handleNewSMSTextClosed($event)" (loadInitialData)="loadPhoneNumbers()" [notificationDraftId]="notificationDraftId"
+  [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [communicationSmsTypeCode]="smsCommunicationTypeCode"
+  [clientCaseEligibilityId]="clientCaseEligibilityId" kendoTooltip></case-management-send-text-message>
 </ng-template>

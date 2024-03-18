@@ -47,7 +47,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   openedSaveForLater = false;
   openedSendLetterToPrint = false;
   caseStatuses: [] = [];
-  ScreenName = ScreenType.CaseDetailPage;
+  ScreenName = ScreenType.ClientProfile;
   popupClass = 'app-c-split-button';
   isShowSaveLaterPopup = false;
   isShowDeleteConfirmPopup = false;

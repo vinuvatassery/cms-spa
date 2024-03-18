@@ -23,8 +23,8 @@ export class EsignFacade {
     return this.esignDataService.saveDraftEsignRequest(formData);
   }
 
-  loadDraftEsignRequestByClinetId(clientId: number, clientCaseEligibilityId: string, loginUserId: string){
-    return this.esignDataService.loadDraftEsignRequestByClinetId(clientId, clientCaseEligibilityId, loginUserId);
+  loadDraftEsignRequestByClinetId(entityId: string, clientCaseEligibilityId: string, loginUserId: string){
+    return this.esignDataService.loadDraftEsignRequestByClinetId(entityId, clientCaseEligibilityId, loginUserId);
   }
 
   deleteAttachmentRequest(attachmentRequest: any){

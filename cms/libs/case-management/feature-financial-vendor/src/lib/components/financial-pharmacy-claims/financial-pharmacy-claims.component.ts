@@ -5,7 +5,7 @@ import {  DocumentFacade } from '@cms/shared/util-core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Router } from '@angular/router';
 import { FilterService } from '@progress/kendo-angular-grid';
-import { LovFacade, UserManagementFacade } from '@cms/system-config/domain';
+import { LovFacade } from '@cms/system-config/domain';
 import { Subject, Subscription } from 'rxjs';
 @Component({
   selector: 'cms-financial-pharmacy-claims',
