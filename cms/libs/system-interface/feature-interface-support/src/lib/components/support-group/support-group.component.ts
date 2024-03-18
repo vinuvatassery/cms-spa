@@ -114,7 +114,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       icon: 'block',
       buttonName: 'deactivate',
       click: (data: any): void => {
-        if (!this.deactivateButtonEmitted) {
+        if (!this.deactivateButtonEmitted && data.notificationGroupId) {
           this.deactivateButtonEmitted = true;
           this.onOpenSupportGroupDeactivateClicked(data.notificationGroupId);
         }
@@ -126,7 +126,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       icon: 'done',
       buttonName: 'reactivate',
       click: (data: any): void => {
-        if (!this.reactivateButtonEmitted) {
+        if (!this.reactivateButtonEmitted && data.notificationGroupId) {
           this.reactivateButtonEmitted = true;
           this.onOpenSupportGroupReactivateClicked(data.notificationGroupId);
         }
@@ -138,7 +138,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       icon: 'delete',
       buttonName: 'delete',
       click: (data: any): void => {
-        if (!this.deleteButtonEmitted) {
+        if (!this.deleteButtonEmitted && data.notificationGroupId) {
           if (data.userPerGroup > 0) {
             // Show warning if userPerGroupCount > 0
             this.deleteButtonEmitted = false;
