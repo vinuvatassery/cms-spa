@@ -39,6 +39,7 @@ export class TodoPageComponent implements OnInit {
   todoList!: TodoListComponent;
   selectedAlertId! :any
   createTodo$ = this.todoFacade.curdAlert$
+  pageSizes = this.todoFacade.gridPageSizes;
   /** Constructor **/
   constructor(private dialogService: DialogService, 
     public todoFacade: TodoFacade,

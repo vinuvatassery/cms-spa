@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /** External libraries **/ 
 import { Observable } from 'rxjs/internal/Observable';
 /** Enums **/
-import { HubEventTypes, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
+import { ConfigurationProvider, HubEventTypes, LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
 /** Entities **/
 import {  Subject } from 'rxjs';
 import { Todo } from '../entities/todo';
@@ -32,7 +32,7 @@ export class TodoFacade {
   loadAlertGrid$ = this.loadAlertGridSubject.asObservable();
   signalrReminders$!: Observable<any>;
    clientTodoAndReminders$ = this.clientTodoAndRemindersSubject.asObservable()
- 
+   public gridPageSizes = this.configurationProvider.appSettings.gridPageSizeValues;
   /** Constructor **/
   constructor(
     private readonly todoDataService: TodoDataService,
@@ -40,7 +40,8 @@ export class TodoFacade {
     private readonly loaderService: LoaderService,
     private readonly notificationSnackbarService : NotificationSnackbarService,
     private loggingService : LoggingService,
-    private lovFacade : LovFacade
+    private lovFacade : LovFacade,
+    private configurationProvider: ConfigurationProvider,
   ) {
     this.loadSignalrReminders();
   }
@@ -91,7 +92,11 @@ export class TodoFacade {
   loadAlerts(payload:any,alertTypeCode:any): void {
     this.todoDataService.loadAlerts(payload,alertTypeCode.alertType).subscribe({
       next: (todoGridResponse: any) => {
-        this.todoGridSubject.next(todoGridResponse);
+        const gridView: any = {
+          data: todoGridResponse.items,
+          total:todoGridResponse.totalCount,
+        }; 
+        this.todoGridSubject.next(gridView); 
       },
       error: (err) => {
         console.error('err', err);
