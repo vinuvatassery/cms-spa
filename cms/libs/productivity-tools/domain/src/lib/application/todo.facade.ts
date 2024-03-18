@@ -99,7 +99,8 @@ export class TodoFacade {
         this.todoGridSubject.next(gridView); 
       },
       error: (err) => {
-        console.error('err', err);
+        this.loaderService.hide()
+        this.showHideSnackBar(SnackBarNotificationType.ERROR, err)
       },
     });
   }
