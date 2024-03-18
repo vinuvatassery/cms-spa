@@ -1,0 +1,30 @@
+<section class="k-dialog-body">
+
+      <p class="text-muted  ">
+            All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row">
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Insurance Provider Name">
+                        <kendo-textbox aria-label="Insurance Provider name" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+
+
+      </div>
+
+
+</section>
+
+<kendo-dialog-actions>
+      <div class="justify-content-between">
+            <div class="justify-content-end">
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel
+                  </button>
+                  <button kendoButton [primary]="true" aria-label="Add"> ADD </button>
+            </div>
+      </div>
+
+</kendo-dialog-actions>

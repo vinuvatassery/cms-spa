@@ -149,15 +149,7 @@ if(this.selectedItem > 0){
 } else{
   this.selectedItem = index + 1;
 }
-    
- 
-   
-    // this.showInsert = item !== undefined ? item : !this.showInsert;
-    // this.toggleText = this.showInsert ? "Hide" : "Show";
-    // this.isShowPopupClicked =
-    //   show !== undefined ? show : !this.isShowPopupClicked;
-    // item.showVariables = !item.showVariables;
-    //this.isSearchOpened = true;
+
   }
   @HostListener("document:keydown", ["$event"])
   public keydown(event: KeyboardEvent): void {
@@ -175,8 +167,6 @@ if(this.selectedItem > 0){
   private contains(target: EventTarget): boolean {
     return (
       this.anchorInsert.nativeElement.contains(target) ||
-      // (this.popupInsert ? this.popupInsert.nativeElement.contains(target) : false)
-
       this.popupInsert.forEach((element) => { element.valueToInsert.selectedItem=0 })
     );
   }
@@ -275,13 +265,6 @@ if(this.selectedItem > 0){
       const cursorPosition = this.textareaRef?.nativeElement?.selectionStart;
       item.description = `${ item.description?.slice(0, cursorPosition)} {{${variable}}} ${item.description?.slice(cursorPosition)}`;
     }
-    // const valueToInsert = option;
-    // const currentValue = this.textareaRef.value;
-    // const newValue1 = '{{' + valueToInsert + '}}';
-    // const newValue = currentValue + newValue1;
-    // this.textareaRef.value = newValue;
     this.isShowPopupClicked = false;
   }
-
-  
 }

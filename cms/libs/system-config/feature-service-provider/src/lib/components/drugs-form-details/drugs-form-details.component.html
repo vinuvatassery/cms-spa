@@ -1,0 +1,119 @@
+<section class="k-dialog-body">
+
+      <p class="text-muted mb-2">
+            All fields are required unless otherwise stated.
+      </p>
+      <div class="flex-row">
+
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Manufacturer">
+                        <kendo-dropdownlist aria-label="Manufacturer" [fillMode]="formUiStyle.dropDownFillMode"
+                              textField="Manufacturer" valueField="Manufacturer" [valuePrimitive]="true" placeholder="Manufacturer">
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel>
+
+            </div>
+            <div class="flex-col">
+                  
+                  <kendo-floatinglabel text="NDC Code">
+                        <kendo-textbox aria-label="NDC Code" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Drug Name">
+                        <kendo-textbox aria-label="Drug Name" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col">
+                  <kendo-floatinglabel text="Brand Name">
+                        <kendo-textbox aria-label="Brand Name" [fillMode]="formUiStyle.inputFillMode">
+                        </kendo-textbox>
+
+                  </kendo-floatinglabel>
+            </div>
+            <div class="flex-col ">
+                  <kendo-floatinglabel text="Delivery Method">
+                        <kendo-dropdownlist aria-label="Delivery Method" [fillMode]="formUiStyle.dropDownFillMode"
+                                [valuePrimitive]="true" placeholder="Delivery Method">
+                        </kendo-dropdownlist>
+                  </kendo-floatinglabel> 
+            </div>
+            <div class="flex-col mt-1">
+                  <fieldset class="k-form-fieldset ">
+                        <legend class="k-form-legend">
+                              <h5 class="mb-0"> Drug type (Select all that apply) </h5>
+                        </legend>
+                        <div class="component-list-h">
+                              <span class="app-checkboxwidtext-wrapper">
+                                    <input type="checkbox" kendoCheckBox aria-labelledby="HIV" id="HIV"
+                                          name="drugType" />
+                                    <label class="k-checkbox-label" for="HIV"> HIV </label>
+      
+                              </span>
+                              <span class="app-checkboxwidtext-wrapper">
+                                    <input type="checkbox" kendoCheckBox aria-labelledby="hepatitis" id="hepatitis"
+                                          name="drugType" />
+                                    <label class="k-checkbox-label" for="hepatitis"> Hepatitis </label>
+      
+                              </span>
+      
+      
+                        </div>
+                  </fieldset>
+            </div>
+            <div class="flex-col mt-1">
+                  <fieldset class="k-form-fieldset ">
+                        <legend class="k-form-legend">
+                              <h5 class="mb-0"> Include in Manufacturer rebates? </h5>
+                        </legend>
+                        <div class="component-list-h">
+                              <span>
+                                    <div class="flex-row">
+                                          <div class="flex-col flex-col-12">
+                                                <span class="app-radiobtnwidtext-wrapper">
+                                                      <input type="radio" kendoRadioButton name="includeInRebates"
+                                                            aria-labelledby="includeinrebates_Yes" id="includeinrebates_Yes" />
+      
+                                                      <kendo-label class="k-radio-label" for="includeinrebates_Yes"
+                                                            text="Yes"></kendo-label>
+                                                </span>
+                                          </div>
+                                          <div class="flex-col flex-col-12">
+                                                <span class="app-radiobtnwidtext-wrapper">
+                                                      <input type="radio" kendoRadioButton name="includeInRebates"
+                                                            aria-labelledby="includeinrebates_No" id="includeinrebates_No" />
+      
+                                                      <kendo-label class="k-radio-label" for="includeinrebates_No"
+                                                            text="No"></kendo-label>
+                                                </span>
+                                          </div>
+                                    </div>
+                              </span>
+                        </div>
+                  </fieldset>
+            </div>
+           
+         
+      </div>
+ 
+
+   
+
+   
+</section>
+
+<kendo-dialog-actions>
+      <div class="justify-content-between">
+            <div class="justify-content-end">
+                  <button kendoButton [primary]="true" look="outline" aria-label="Cancel"> Cancel
+                  </button>
+                  <button kendoButton [primary]="true" aria-label="Add"> ADD </button>
+            </div>
+      </div>
+
+</kendo-dialog-actions>

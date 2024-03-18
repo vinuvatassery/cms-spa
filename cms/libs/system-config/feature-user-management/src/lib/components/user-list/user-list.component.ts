@@ -1,7 +1,10 @@
 /** Angular **/
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, OnChanges } from '@angular/core';
 import { UserManagementFacade } from '@cms/system-config/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa'
+import { GridDataResult } from '@progress/kendo-angular-grid';
+import { CompositeFilterDescriptor, State, filterBy } from '@progress/kendo-data-query';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'system-config-user-list',
@@ -9,30 +12,39 @@ import { UIFormStyle } from '@cms/shared/ui-tpa'
   styleUrls: ['./user-list.component.scss'],
   // changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UserListComponent implements OnInit {
-  public pageSize = 10;
-  public skip = 0;
-  public pageSizes = [
-    {text: '5', value: 5}, 
-    {text: '10', value: 10},
-    {text: '20', value: 20},
-    {text: 'All', value: 100}
-  ];
-  
- 
+export class UserListComponent implements OnInit, OnChanges {
   public formUiStyle : UIFormStyle = new UIFormStyle();
 
-  usersData$ = this.userManagementFacade.usersData$;
-  usersFilterColumn$ = this.userManagementFacade.usersFilterColumn$;
+
   isUserDetailsPopup = false;
   isUserDeactivatePopup = false;
   isEditUsersData!: boolean;
   popupClassAction = 'TableActionPopup app-dropdown-action-list';
- 
-  public buttonCount = 2;
-  public sizes = [10, 20, 50];
- 
- 
+  @Input() pageSizes: any;
+  @Input() sortValue: any;
+  @Input() sortType: any;
+  @Input() sort: any;
+  @Input() usersDataLists$: any;
+  @Input() usersFilterColumn$: any;
+  @Output() loadUserListEvent = new EventEmitter<any>();
+  @Output() usersFilterColumnEvent = new EventEmitter<any>();
+  public state!: State;
+  sortColumn = 'vendorName';
+  sortDir = 'Ascending';
+  columnsReordered = false;
+  filteredBy = '';
+  searchValue = '';
+  isFiltered = false;
+  filter!: any;
+  selectedColumn!: any;
+  gridDataResult!: GridDataResult;
+  isUserListGridLoaderShow = false;
+  gridUserDataSubject = new Subject<any>();
+  gridUserData$ =
+    this.gridUserDataSubject.asObservable();
+  columnDropListSubject = new Subject<any[]>();
+  columnDropList$ = this.columnDropListSubject.asObservable();
+  filterData: CompositeFilterDescriptor = { logic: 'and', filters: [] };
 
   public moreactions = [
     {
@@ -63,24 +75,126 @@ export class UserListComponent implements OnInit {
  
   ];
 
-  constructor(private userManagementFacade: UserManagementFacade) { }
+  constructor() { }
 
+  
   ngOnInit(): void {
-    this.loadUsersData();
+    this.loadUserListGrid();
     this.loadUserFilterColumn();
   }
+  ngOnChanges(): void {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+    };
 
-  private loadUsersData() {
-    this.userManagementFacade.loadUsersData();
+    this.loadUserListGrid();
   }
 
-  private loadUserFilterColumn() {
-    this.userManagementFacade.loadUserFilterColumn();
+  private loadUserListGrid(): void {
+    this.loadUsersLitData(
+      this.state?.skip ?? 0,
+      this.state?.take ?? 0,
+      this.sortValue,
+      this.sortType
+    );
+  }
+  loadUsersLitData(
+    skipCountValue: number,
+    maxResultCountValue: number,
+    sortValue: string,
+    sortTypeValue: string
+  ) {
+    this.isUserListGridLoaderShow = true;
+    const gridDataRefinerValue = {
+      skipCount: skipCountValue,
+      pagesize: maxResultCountValue,
+      sortColumn: sortValue,
+      sortType: sortTypeValue,
+    };
+    this.loadUserListEvent.emit(gridDataRefinerValue);
+    this.gridDataHandle();
+  }
+  loadUserFilterColumn(){
+    this.usersFilterColumnEvent.emit();
+
+  }
+  onChange(data: any) {
+    this.defaultGridState();
+
+    this.filterData = {
+      logic: 'and',
+      filters: [
+        {
+          filters: [
+            {
+              field: this.selectedColumn ?? 'vendorName',
+              operator: 'startswith',
+              value: data,
+            },
+          ],
+          logic: 'and',
+        },
+      ],
+    };
+    const stateData = this.state;
+    stateData.filter = this.filterData;
+    this.dataStateChange(stateData);
+  }
+
+  defaultGridState() {
+    this.state = {
+      skip: 0,
+      take: this.pageSizes[0]?.value,
+      sort: this.sort,
+      filter: { logic: 'and', filters: [] },
+    };
+  }
+
+  onColumnReorder($event: any) {
+    this.columnsReordered = true;
+  }
+
+  dataStateChange(stateData: any): void {
+    this.sort = stateData.sort;
+    this.sortValue = stateData.sort[0]?.field ?? this.sortValue;
+    this.sortType = stateData.sort[0]?.dir ?? 'asc';
+    this.state = stateData;
+    this.sortDir = this.sort[0]?.dir === 'asc' ? 'Ascending' : 'Descending';
+    this.loadUserListGrid();
+  }
+
+  // updating the pagination infor based on dropdown selection
+  pageSelectionChange(data: any) {
+    this.state.take = data.value;
+    this.state.skip = 0;
+    this.loadUserListGrid();
+  }
+
+  public filterChange(filter: CompositeFilterDescriptor): void {
+    this.filterData = filter;
+  }
+
+  gridDataHandle() {
+    this.usersDataLists$.subscribe(
+      (data: GridDataResult) => {
+        this.gridDataResult = data;
+        this.gridDataResult.data = filterBy(
+          this.gridDataResult.data,
+          this.filterData
+        );
+        this.gridUserDataSubject.next(this.gridDataResult);
+        if (data?.total >= 0 || data?.total === -1) {
+          this.isUserListGridLoaderShow = false;
+        }
+      }
+    );
+    this.isUserListGridLoaderShow = false;
   }
 
   onUserDetailsClosed() {
-    this.isUserDetailsPopup = false;
-    this.isUserDeactivatePopup = true;
+    this.isUserDetailsPopup = false; 
   }
   onUserDetailsClicked(editValue: boolean) {
     this.isUserDetailsPopup = true;

@@ -11,9 +11,10 @@ import { ConfigurationProvider } from '@cms/shared/util-core';
 @Injectable({ providedIn: 'root' })
 export class TemplateDataService {
   /** Constructor **/
-  constructor(private readonly http: HttpClient,
+  constructor(
+    private readonly http: HttpClient,
     private readonly configurationProvider: ConfigurationProvider
-   ) { }
+  ) {}
 
   /** Public methods **/
   loadTemplates(): Observable<Template[]> {
@@ -32,23 +33,176 @@ export class TemplateDataService {
     ]);
   }
 
-  getDirectoryContent(typeCode:any ,filepath?: any) {
+  getDirectoryContent(typeCode: any, filepath?: any) {
     let params = new HttpParams();
-    params = params.append('templateId',filepath);
-    params = params.append('typeCode',typeCode);
+    params = params.append('templateId', filepath);
+    params = params.append('typeCode', typeCode);
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}` + '/case-management/templates/'+`${typeCode}`+'/templates',{params:params}
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        '/case-management/templates/' +
+        `${typeCode}` +
+        '/templates',
+      { params: params }
     );
   }
 
   getFormsandDocumentsViewDownload(templateId: string) {
-    let roleId = "";
+    let roleId = '';
     let url = `/case-management/templates/${templateId}/content`;
     return this.http.get(
-      `${this.configurationProvider.appSettings.caseApiUrl}` + url+ `/${roleId}`
-      , {
-        responseType: 'blob'
-      });
+      `${this.configurationProvider.appSettings.caseApiUrl}` +
+        url +
+        `/${roleId}`,
+      {
+        responseType: 'blob',
+      }
+    );
   }
 
+  loadClientNotificationDefaultsListsService() {
+    return of([
+      {
+        id: 1,
+        templateName: 'templateName',
+        program: 'CAREAssist',
+        Scenario:'Scenario',
+        scenarioDescription:'scenarioDescription',
+        defaultMethod:'defaultMethod',
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 2,
+        templateName: 'templateName',
+        program: 'CAREAssist',
+        Scenario:'Scenario',
+        scenarioDescription:'scenarioDescription',
+        defaultMethod:'defaultMethod',
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 3,
+        templateName: 'templateName',
+        program: 'CAREAssist',
+        Scenario:'Scenario',
+        scenarioDescription:'scenarioDescription',
+        defaultMethod:'defaultMethod',
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+    ]);
+  }
+  loadEmailTemplatesListsService() {
+    return of([
+      {
+        id: 1,
+        templateName: 'Application - Approved',
+        program: 'CAREAssist',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 2,
+        templateName: 'Application - Pending',
+        program: 'CAREAssist',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 3,
+        templateName: 'CER - Approved',
+        program: 'CAREAssist',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'incomplete',
+      },
+    ]);
+  }
+  loadLetterTemplatesListsService() {
+    return of([
+      {
+        id: 1,
+        templateName: 'templateName',
+        program: 'CAREAssist',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 2,
+        templateName: 'templateName',
+        program: 'CAREAssist',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 3,
+        templateName: 'templateName',
+        program: 'CAREAssist',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+    ]);
+  }
+  loadSmsTemplatesListsService() {
+    return of([
+      {
+        id: 1,
+        templateName: 'templateName',
+        program: 'CAREAssist',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 2,
+        templateName: 'templateName',
+        program: 'CAREAssist',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+      {
+        id: 3,
+        templateName: 'templateName',
+        program: 'CAREAssist',
+        description:
+          'Used when a client’s application is approved and they selected to go paperless',
+
+        lastModified: 'MM/DD/YYYY',
+        modifiedBy: 'LS',
+        status: 'active',
+      },
+    ]);
+  }
 }
