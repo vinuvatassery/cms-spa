@@ -5,6 +5,7 @@ import { SnackBarNotificationType, NotificationSource, LoaderService, Configurat
 import { IntlService } from '@progress/kendo-angular-intl';
 import { SortDescriptor } from '@progress/kendo-data-query';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { SystemInterfaceSupportStatus } from '../enums/system-interface-support-status';
 
 @Injectable({ providedIn: 'root' })
 export class SystemInterfaceSupportFacade {
@@ -433,4 +434,7 @@ export class SystemInterfaceSupportFacade {
   }
   // ------------------------------------------------------------------------
 
+  getStatusArray(): string[]{
+    return Object.values(SystemInterfaceSupportStatus)
+  }
 }

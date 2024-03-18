@@ -132,9 +132,10 @@ export class DistributionDetailComponent implements OnInit {
 
       this.systemInterfaceSupportFacade.addDistributionListUser(finalData, this.isEditMode).subscribe({
         next: (response: any) => {
-          if(!this.isEditMode)
+          if (!this.isEditMode)
             this.refreshData.emit(true);
-
+          else
+            this.closeForm.emit();
           const notificationMessage = response.message;
           this.lovFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, notificationMessage);
           this.hideLoader();

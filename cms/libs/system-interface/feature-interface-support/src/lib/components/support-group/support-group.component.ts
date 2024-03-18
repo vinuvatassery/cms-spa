@@ -11,7 +11,7 @@ import {
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FilterService, GridDataResult, RowArgs, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
-import { State, CompositeFilterDescriptor, filterBy } from '@progress/kendo-data-query';
+import { State, CompositeFilterDescriptor} from '@progress/kendo-data-query';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subject, first } from 'rxjs';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
@@ -49,7 +49,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() supportGroupRemove$: any;
   @Input() supportGroupProfilePhoto$: any;
   @Input() supportGroupListsLoader$: any;
-  @Output() loadSupportGroupListEvent = new EventEmitter<any>();
+    @Output() loadSupportGroupListEvent = new EventEmitter<any>();
   @Output() deactivateConfimEvent = new EventEmitter<string>();
   @Output() reactivateConfimEvent = new EventEmitter<string>();
   @Output() deleteConfimedEvent = new EventEmitter<string>();
@@ -180,7 +180,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
+    
     this.loadSupportGroupListGrid();
   }
 
@@ -297,19 +297,19 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   gridDataHandle() {
     this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
-      this.gridDataResult.data = filterBy(
-        this.gridDataResult.data,
-        this.filterData
-      );
+      // this.gridDataResult.data = filterBy(
+      //   this.gridDataResult.data,
+      //   this.filterData
+      // );
       if (this.mySelection.length < 1)
         this.selectedRowEvent.emit(this.gridDataResult.data[0]);
       else
         this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
 
       if (this.mySelection.length < 1)
-        this.mySelection = [this.gridDataResult.data[0].notificationGroupId];
+        this.mySelection = [this.gridDataResult?.data[0]?.notificationGroupId];
       else
-        this.mySelection = [this.selectedGroup.notificationGroupId];
+        this.mySelection = [this.selectedGroup?.notificationGroupId];
       this.gridSupportGroupDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isSupportGroupGridLoaderShow = false;

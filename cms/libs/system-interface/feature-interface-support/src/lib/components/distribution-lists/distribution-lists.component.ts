@@ -133,7 +133,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private readonly systemInterfaceSupportFacade: SystemInterfaceSupportFacade,
   ) {
-    //this.processArray = systemInterfaceSupportFacade.getStatusArray()
+    this.processArray = systemInterfaceSupportFacade.getStatusArray()
   }
 
   ngOnInit(): void {
@@ -203,6 +203,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
     };
   }
 
+  @Output() eventEmitter: EventEmitter<any> = new EventEmitter();
   loadDistribution(
     skipCountValue: number,
     maxResultCountValue: number,
@@ -217,7 +218,9 @@ export class DistributionListsComponent implements OnInit, OnChanges {
       Filter: JSON.stringify(this.state?.['filter']?.['filters'] ?? []),
       notificationGroupId: this.selectedGroup.notificationGroupId,
     };
+
     this.loadDistributionListEvent.emit(gridDataRefinerValue);
+    this.eventEmitter.emit('Event data to pass');
     this.gridDataHandle();
   }
 
@@ -306,6 +309,7 @@ export class DistributionListsComponent implements OnInit, OnChanges {
   onCloseMemberDetailPopupClicked() {
     this.isMemberDetailPopup = false;
     this.isEditMode = false;
+    this.loadDistributionListGrid();
   }
 
   onChildDataUpdate() {

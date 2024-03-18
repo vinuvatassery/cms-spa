@@ -101,5 +101,5 @@ export class InterfaceSupportPageComponent {
     this.systemInterfaceSupportFacade.deleteNotificationCategory(event, false);
   }
 
-
-}
+  
+  }
