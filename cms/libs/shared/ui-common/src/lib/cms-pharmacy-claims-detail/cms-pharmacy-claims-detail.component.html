@@ -9,7 +9,8 @@
         <input type="hidden" formControlName="clientCaseEligibilityId">
         <input type="hidden" formControlName="vendorId">
         <div class="add_new_top_section" >
-            <p class="mb-3"> Make edits as needed and click "Update" to commit changes.</p>
+            <p class="mb-3" *ngIf="!isEdit"> Select a pharmacy and client to bulk add prescriptions</p>
+            <p class="mb-3" *ngIf="isEdit"> Make edits as needed and click "Update" to commit changes.</p>
             <div class="flex-row mb-3">
                 <div class="flex-col flex-col-6">
                     <div class="combotable_search_list new_refund_Search new_claims_Search ">

@@ -469,7 +469,7 @@ export class FinancialPremiumsProcessListComponent implements OnChanges, OnDestr
             {
               field: this.selectedColumn ?? 'clientFullName',
               operator: operator,
-              value: data,
+              value: this.searchValue,
             },
           ],
           logic: 'and',

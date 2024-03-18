@@ -136,7 +136,7 @@
             </kendo-grid-numeric-filter-menu>
         </ng-template>
         </kendo-grid-column>
-          <kendo-grid-column field="acceptsReports" title="Accepts Reports" [width]="180">
+          <kendo-grid-column field="acceptsReports" title="Accepts Reports?" [width]="180">
             <ng-template kendoGridCellTemplate let-dataItem>
                 {{ dataItem.acceptsReports === 'Y' ? 'Yes' : 'No' }}
             </ng-template>

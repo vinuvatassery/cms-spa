@@ -66,7 +66,7 @@
        [pageSize]="state.take" [loading]="(loader$ | async) ?? false"
         [pageable]="true" [sortable]="true" [skip]="state.skip"
          [groupable]="false" [reorderable]="true" [resizable]="true"
-        [columnMenu]="{ filter: true }" [sort]="state.sort" 
+        [columnMenu]="{ filter: true }" [sort]="state.sort"
         (dataStateChange)="dataStateChange($event)"
         (columnReorder)="onColumnReorder($event)"
         (filterChange)="filterChange($event)"
@@ -178,8 +178,8 @@
 
         <kendo-grid-column field="by" title="By" [width]="70" [sticky]="false" [sortable]="false" [filterable]="false">
           <ng-template kendoGridCellTemplate let-dataItem>
-            <common-user-photo-icon  
-            [userId]="dataItem.creatorId" 
+            <common-user-photo-icon
+            [userId]="dataItem.creatorId"
             [userFirstName]="dataItem.userFirstName"
             [userLastName]="dataItem.userLastName"
             [userProfilePhotoExists]="dataItem.isUserProfilePhotoExist"
@@ -276,7 +276,7 @@
 
 
   <ng-template #PrintAuthorizationDialogTemplate>
-  <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Preview and Print Authorization(s)</kendo-dialog-titlebar>
+  <kendo-dialog-titlebar  class="text-normal"  (close)="onPrintAuthorizationCloseClicked($event)">Review & Print Authorization Letter(s)</kendo-dialog-titlebar>
   <cms-pharmacy-claims-print-authorization
   [printOption]="true"
   [batchId]="batchId"
@@ -307,7 +307,7 @@
     <common-cms-pharmacy-claims-recent-claims [vendorId]="vendorId" [clientId]="clientId" [claimsType]="claimsType"
       (loadRecentClaimListEvent)="loadRecentClaimListEventHandler($event)" [recentClaimsGridLists$]="recentClaimsGridLists$"
       [pageSizes]="pageSizes" [sortType]="sortType" [sortValueRecentClaimList]="sortValueRecentClaimList"
-      [sortRecentClaimList]="sortRecentClaimList" [gridSkipCount]="gridSkipCount" [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$">    
+      [sortRecentClaimList]="sortRecentClaimList" [gridSkipCount]="gridSkipCount" [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$">
     </common-cms-pharmacy-claims-recent-claims>
 </section>
   <kendo-dialog-actions>
@@ -334,7 +334,7 @@
 <cms-pharmacy-claims-reverse-claims (reverseClaimsCloseClickedEvent)="onCloseReverseClaimsClickedEventClicked($event)"></cms-pharmacy-claims-reverse-claims>
 </ng-template>
 
-<ng-template #addEditClaimsDialog> 
+<ng-template #addEditClaimsDialog>
   <common-cms-pharmacy-claims-detail
       [deliveryMethodLov$]="deliveryMethodLov$"
       [paymentRequestType$]="paymentRequestType$"
@@ -370,6 +370,6 @@
       (loadManufacturer)="loadManufacturerEvent($event)"
       [pharmacyRecentClaimsProfilePhoto$]="pharmacyRecentClaimsProfilePhoto$"
       [fromDrugPurchased] ='fromDrugPurchased'
-    > 
+    >
     </common-cms-pharmacy-claims-detail>
 </ng-template>

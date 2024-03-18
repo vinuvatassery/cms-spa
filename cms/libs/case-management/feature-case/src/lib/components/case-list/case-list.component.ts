@@ -624,6 +624,20 @@ dropdownFilterChange(field:string, value: any, filterService: FilterService): vo
     if(this.sort[0]?.dir === 'desc'){
       this.sortDir = 'Descending';
     }
-
+    if (this.filteredBy?.includes('Status')) {
+      const eligibilityFilter = filters
+        ?.flatMap((filter: any) => filter.filters)
+        ?.find((filter: any) => filter.field === 'eligibilityStatusCode');
+      
+      if (eligibilityFilter) {
+        const filterValue = eligibilityFilter.value;
+        const obj = this.caseStatusTypes.find((x: any) => x.lovCode === filterValue);
+        this.selectedStatus = obj;
+      }
+    }
+    
+    
+    
+    
   }
 }
