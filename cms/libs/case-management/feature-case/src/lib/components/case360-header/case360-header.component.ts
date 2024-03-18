@@ -45,6 +45,10 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
   @Output() createCerSessionEvent = new EventEmitter<string>();
   @Input() clientProfileHeader$!: Observable<any>;
   @Input() userDetail$!: any;  
+  @Input()  alertList$ :any;
+  @Output() isLoadAlertListContainerEvent = new EventEmitter<any>();
+  @Output() onMarkAlertAsDoneEvent = new EventEmitter<any>();
+  @Output() onDeleteAlertEvent = new EventEmitter<any>();
 
   isAnimationOptionsOpened: boolean | DialItemAnimation = false;
   isStatusPeriodDetailOpened = false;
@@ -212,5 +216,15 @@ export class Case360HeaderComponent implements OnInit, OnDestroy {
       });
       this.cdr.detectChanges();
     }
+}
+isLoadAlertListEvent(gridDataRefinerValue: any,alertType: any)
+{
+  this.isLoadAlertListContainerEvent.emit({gridDataRefinerValue, alertType})
+}
+onMarkAlertAsDoneClick(event:any){
+  this.onMarkAlertAsDoneEvent.emit(event);
+}
+onDeleteAlertClick(event:any){
+  this.onDeleteAlertEvent.emit(event);
 }
 }

@@ -13,6 +13,7 @@ import {
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { IntlService } from '@progress/kendo-angular-intl';
 import { DialogService } from '@progress/kendo-angular-dialog';
+import { AlertDueOn } from '../enums/alert-due-on.enum';
 @Component({
   selector: 'common-alert-banner',
   templateUrl: './alert-banner.component.html',
@@ -108,7 +109,6 @@ export class AlertBannerComponent implements OnInit {
     });
   }  
   private loadTodoAlertBannerData(){
-    debugger;
       let alertType=this.alertTypeCode;
       let alertDueDate =this.intl.formatDate(
         new Date(), this.configurationProvider?.appSettings?.dateFormat)
@@ -144,11 +144,11 @@ export class AlertBannerComponent implements OnInit {
     let dateNow = new Date();
     let dueDate = new Date(alertDueDate); 
          if (dueDate.toLocaleDateString() == dateNow.toLocaleDateString()) {
-             return "(Due today)";
+             return AlertDueOn.Today;
           } else if(!(dueDate.toLocaleDateString() < dateNow.toLocaleDateString()) && (dueDate.toLocaleDateString() < this.addDays(dateNow,1).toLocaleDateString())) {
-             return "(Due tomorrow)";
+             return AlertDueOn.Tomorrow;
            }
-           return "Due on "+(this.intl.formatDate(
+           return (this.intl.formatDate(
            new Date(alertDueDate), this.configurationProvider?.appSettings?.displayFormat));
   }
   private addDays(date: Date, days: number): Date {
@@ -170,9 +170,11 @@ export class AlertBannerComponent implements OnInit {
      return isCrossedDueDate;
   }
   makePopoverAlertBanner(alertData:any){
-    this.secondaryAlertList.splice(0);
+    this.secondaryAlertList.splice(0); 
+    let defaultCount = 3;
     if(alertData.totalCount > 1){
-      for (let index = 1; index < alertData.items.length; index++) { 
+      let popOverBannerCount = alertData.items.length > defaultCount ? defaultCount : alertData.items.length;
+      for (let index = 1; index < popOverBannerCount; index++) { 
         this.secondaryAlertList.push(alertData.items[index])
       }
     } 
