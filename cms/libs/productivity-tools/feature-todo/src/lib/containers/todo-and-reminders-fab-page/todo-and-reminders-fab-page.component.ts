@@ -40,8 +40,14 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     todoGrid$ = this.todoFacade.todoGrid$
     loadAlertGrid$ = this.todoFacade.loadAlertGrid$;
     selectedAlertId! :any
+    isEdit = false;
+    isDelete = false;
     @ViewChild('todoList', { static: false })
     todoList!: TodoListComponent;
+    @ViewChild('newReminderTemplate', { read: TemplateRef })
+    newReminderTemplate!: TemplateRef<any>;
+
+    reminderDialog :any
     constructor( private route: ActivatedRoute,
       public readonly todoFacade: TodoFacade,
       public lovFacade : LovFacade,
@@ -64,12 +70,18 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
             this.isShowTodoReminders = false
             this.showRemindersList = true
         }
+        this.todoFacade.curdAlert$.subscribe(res =>{
+          this.todoFacade.todoAndRemindersByClient(this.clientId)
+        })
       }
       closeAction()
       {
         this.fabMenuFacade.isShownTodoReminders = !this.fabMenuFacade.isShownTodoReminders;
       }
 
+      editTodoItem(event:any){
+      
+      }
       onloadTodoGrid(payload: any, alertTypeCode:any){
         this.todoFacade.loadAlerts(payload,alertTypeCode.alertType);
       }
@@ -78,8 +90,11 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
       }
       onDeleteAlertGrid(selectedAlertId: any){
         this.todoFacade.deleteAlert(selectedAlertId);
+     
       }
+      
       onOpenTodoClicked(alertId:any ,template: TemplateRef<unknown>): void {
+        console.log('in parent')
         this.selectedAlertId = alertId;
          this.todoDetailsDialog = this.dialogService.open({
            content: template,
@@ -87,14 +102,18 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
          });
          this.isToDODetailsActionOpen = true;
        }
+
        onCloseTodoClicked(result: any) {
+        this.isEdit = false;
+        this.isDelete = false;
         if (result) {
           this.isToDODetailsActionOpen = false;
+          this.todoFacade.todoAndRemindersByClient(this.clientId)
           this.todoDetailsDialog.close();
         }
       }
       loadTodoList(){
-        this.todoList.initilizeGridRefinersAndGrid()
+        this.todoFacade.todoAndRemindersByClient(this.clientId)
        }
        searchProvider(data:any){
         this.financialVendorFacade.searchAllProvider(data);
@@ -115,4 +134,22 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
         this.lovFacade.getFrequencyTypeLov()
         this.lovFacade.getEntityTypeCodeLov()
       }
+
+      onReminderOpenClicked(event:any) {
+        console.log('in reminder open click')
+        this.selectedAlertId = event.alertId;
+        this.isEdit = event.type == 'edit'
+        this.isDelete = event.type == 'delete'
+        this.reminderDialog = this.dialogService.open({
+          content: this.newReminderTemplate,
+          cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+        });
+      
+    }
+
+    onNewReminderClosed(){
+      this.isDelete = false;
+      this.isEdit = false;
+     this.reminderDialog.close()
+    }
   }
