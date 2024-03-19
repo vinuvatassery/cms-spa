@@ -157,6 +157,7 @@ export class RefundNewFormDetailsComponent implements  OnInit, OnDestroy{
  rxRefundInfoFilter:any[]=[]
   filter!: any;  
   paymentTypeData :any[] =[];
+  selectedPaymentType: any = '';
   
   constructor(private readonly financialVendorRefundFacade: FinancialVendorRefundFacade,
     private lovFacade: LovFacade,
@@ -1114,6 +1115,7 @@ validateVoucherPayable(event: any): void {
   }
 
   dropdownFilterChange(field:string, value: any, filterService: FilterService): void {
+    this.selectedPaymentType = value;
     filterService.filter({
         filters: [{
           field: field,
