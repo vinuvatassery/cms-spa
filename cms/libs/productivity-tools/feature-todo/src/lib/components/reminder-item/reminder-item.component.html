@@ -1,6 +1,6 @@
 <ul class="card-list  pt-0" aria-label="reminder menu">
   <!-- List Item Repeatable -->
-  <ng-container *ngFor="let item of items">
+  <ng-container  *ngFor="let message of alertsData?.items">
   <li class="card-list_items"
     aria-label="reminder menu item">
     <div class="card-type-icon">
@@ -8,9 +8,9 @@
     </div>
     <div class="card-list_details">
       <p>
-      {{ item.alertDesc }}
+        {{message.alertDesc}}
       </p>
-      <p class="text-muted">{{item.alertDueDate  | date:'MM/dd/yyyy'}}</p>
+      <p class="text-muted">{{message?.alertDueDate | date:'MM-dd-YYYY'}}</p>
     </div>
     <div>
       <kendo-dropdownbutton

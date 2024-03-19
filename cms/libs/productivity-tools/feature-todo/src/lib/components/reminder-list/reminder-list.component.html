@@ -14,7 +14,10 @@
     </button>
   </div>
   <section>
-    <productivity-tools-reminder-item (reminderDetailsClickedEvent)="onNewReminderOpenClicked(reminderDetailsTemplate)"
+    <productivity-tools-reminder-item 
+    (isLoadReminderAndNotificationEvent)="onloadReminderAndNotificationsGrid()"
+    [notificationList$]="notificationList$"
+    (reminderDetailsClickedEvent)="onNewReminderOpenClicked(reminderDetailsTemplate)"
     (deleteReminderOpenClickedEvent)="onDeleteReminderOpenClicked(deleteReminderTemplate)"
     ></productivity-tools-reminder-item>
   </section>

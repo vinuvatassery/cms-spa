@@ -18,7 +18,7 @@ import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** Facades **/ 
 import { LoaderService } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { AlertTypeCode, TodoFacade } from '@cms/productivity-tools/domain';
+import { AlertTypeCode, NotificationFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { GridDataResult } from '@progress/kendo-angular-grid';
 import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { FinancialVendorProviderTab, FinancialVendorProviderTabCode } from '@cms/case-management/domain';
@@ -73,6 +73,7 @@ export class ReminderListComponent implements  OnInit{
   clientSearchLoaderVisibility$ = this.financialRefundFacade.clientSearchLoaderVisibility$;
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
+  notificationList$ = this.notificationFacade.notificationList$;
   todoItemList: any[] = [];
   selectedAlertId:string="";
   public toDoGridState!: State;
@@ -110,6 +111,7 @@ export class ReminderListComponent implements  OnInit{
     private cdr : ChangeDetectorRef,
     private lovFacade : LovFacade,
     private financialVendorFacade : FinancialVendorFacade,
+    public notificationFacade: NotificationFacade, 
     private financialRefundFacade : FinancialVendorRefundFacade
   ) {}
   ngOnInit(): void {
@@ -119,7 +121,7 @@ export class ReminderListComponent implements  OnInit{
       sort: this.sort,
     };
     this.loadTodoGrid();
-    this.loadAlertGrid$.subscribe((data: any) => {
+    this.loadAlertGrid$?.subscribe((data: any) => {
       this.loadTodoGrid();
     });
   }
@@ -127,7 +129,9 @@ export class ReminderListComponent implements  OnInit{
   onReminderDoneClicked() { 
     this.ReminderEventClicked.emit();
   }
-
+  onloadReminderAndNotificationsGrid(){
+    this.notificationFacade.loadNotificationsAndReminders();
+  }
   onNewReminderClosed(result: any) {
     if (result) {
       this.remainderIsFor = ''
@@ -201,7 +205,7 @@ export class ReminderListComponent implements  OnInit{
         Filter: "[]",
       };
         this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
-        this.todoGrid$.subscribe((todoItemList : any) =>{
+        this.todoGrid$?.subscribe((todoItemList : any) =>{
           this.todoItemList = todoItemList?.data ? todoItemList?.data : [];
           var currentDate = new Date();
           this.todoItemList = this.todoItemList.filter(todoItem => new Date(todoItem.alertDueDate) <= new Date(currentDate.setDate(currentDate.getDate() +30)));
