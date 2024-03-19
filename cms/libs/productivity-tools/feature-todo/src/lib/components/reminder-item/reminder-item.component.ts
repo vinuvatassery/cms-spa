@@ -13,7 +13,8 @@ import {
 import { ReminderFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { Observable } from 'rxjs';
+import { GridDataResult } from '@progress/kendo-angular-grid';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 @Component({
   selector: 'productivity-tools-reminder-item',
   templateUrl: './reminder-item.component.html',
@@ -25,6 +26,13 @@ export class ReminderItemComponent implements OnInit {
   public newReminderDetailsDialog: any;
   public deleteReminderDialog: any;
   @Input() nDays =""
+  @Output() isLoadReminderAndNotificationEvent = new EventEmitter<any>();
+  @Input() notificationList$: any;
+  alertsData:any = {};
+  isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
+  notificationaAndReminderDataSubject = new Subject<any>();
+  gridDataResult!: GridDataResult;
+  gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
   items!:any[]
   isDueWithIn7Days = false;
   @Input() todoAndReminders$! : Observable<any>
@@ -69,6 +77,12 @@ export class ReminderItemComponent implements OnInit {
     private dialogService: DialogService,
     private todoFacade : TodoFacade) {}
   ngOnInit(): void {
+    this.loadNotificationsAndReminders();
+      this.notificationList$?.subscribe((data: any) => {
+        this.alertsData.items =  data.items.filter((item:any) => item.alertTypeCode == 'REMINDER');
+        this.cdr.detectChanges();
+        this.loadNotificationsAndReminders;
+      });
     this.todoAndReminders$?.subscribe((clientsTodoReminders :any) =>{
       const clientsReminder  = 
       clientsTodoReminders.filter((x:any) => x.alertTypeCode =="REMINDER")
@@ -120,5 +134,16 @@ export class ReminderItemComponent implements OnInit {
     }
    
   }
-
+  public loadNotificationsAndReminders() {
+    this.isToDoGridLoaderShow.next(true);
+    this.isLoadReminderAndNotificationEvent.emit();
+    this.notificationList$?.subscribe((data: any) => {
+      this.gridDataResult = data?.items;
+      if (data?.totalCount >= 0 || data?.totalCount === -1) {
+        this.alertsData.items =  data.items.filter((item:any) => item.alertTypeCode == 'REMINDER');
+        this.isToDoGridLoaderShow.next(false);
+      }
+      this.notificationaAndReminderDataSubject.next(this.gridDataResult);
+    });
+  }
 }
