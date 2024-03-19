@@ -128,7 +128,6 @@ export class CaseNavigationComponent implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe({
         next: () => {
-          debugger;
           if(this.router.url.includes('send-letter')){
             this.isSendLetterProfileOpenedSubject.next(true);
           }

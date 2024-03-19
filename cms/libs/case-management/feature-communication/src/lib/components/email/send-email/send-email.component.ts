@@ -130,14 +130,12 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    debugger;
     if(this.templateLoadType === undefined){
       this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
     }
     this.getLoggedInUserProfile();
     this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
-    debugger;
     if (this.templateLoadType) {
       if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.templateLoadType) {
         if (this.isContinueDraftClicked) {
@@ -214,7 +212,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: any) => {
           if (data) {
-            debugger;
             this.ddlTemplates = data;
             this.currentTemplate = this.ddlTemplates.filter((x:any)=>x.templateTypeCode === this.communicationEmailTypeCode )
             if(this.currentTemplate .length>0){
@@ -223,6 +220,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             }
             if(this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
               ||this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail){
+              //this.getDrafterTemplate();
               this.templateDrpDisable = true;
               this.cancelDisplay = false;
             }
@@ -438,7 +436,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (data: any) => {
             if (data) {
-              debugger;
               this.selectedTemplate = data;
               this.emailContentValue = data.templateContent;
               this.selectedTemplateContent = data.templateContent;
@@ -699,5 +696,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   editorValueChange(event: any){
         this.updatedTemplateContent = event;
   }
+
 }
 

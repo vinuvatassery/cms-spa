@@ -463,7 +463,6 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   showSendNewsLetterPopup() {
     this.showSendNewsLetterSubscription = this.workflowFacade.sendEmailLetterClicked$.subscribe((response: any) => {
       if (response) {
-        debugger;
         if(this.paperlessFlag == 'Y'){
           this.onSendNewLetterClicked(this.sendNewEmailModalDialog);
         }else{

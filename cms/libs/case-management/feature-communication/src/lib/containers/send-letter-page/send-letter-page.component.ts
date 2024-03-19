@@ -90,11 +90,9 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
         this.printModelText = "This action cannot be undone, If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal."
       }
     }
-
     this.title = this.title + this.customTitle
     this.loadCase()
     this.addSaveForLaterValidationsSubscription();
-
     this.addEmailSubscription();
   }
 
@@ -196,7 +194,6 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
     this.paperless$
       ?.pipe(first((emailData: any) => emailData?.paperlessFlag != null))
       .subscribe((emailData: any) => {
-        debugger;
         if (emailData?.paperlessFlag) {
           let pageType = this.isDisenrollmentPage === true ? "Disenrollment" : this.customTitle
           this.paperlessFlag = emailData?.paperlessFlag;
@@ -244,7 +241,6 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
   }
 
   loadMailingAddress() {
-    debugger;
     this.contactFacade.loadMailingAddress(this.clientId);
     this.cdr.detectChanges();
   }

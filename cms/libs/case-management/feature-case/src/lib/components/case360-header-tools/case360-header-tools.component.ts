@@ -80,7 +80,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.selectedTemplateName = templatename;
         this.currentCommunicationTypeCode = '';
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
-        debugger;
         this.informationalText = "Select an existing template or draft a custom letter."
         this.templateHeader = 'Send New Letter';
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
@@ -99,7 +98,6 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.selectedTemplateName = templatename;
         this.currentCommunicationTypeCode ='';
         this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
-        debugger;
         this.informationalText = "Select an existing template or draft a custom email."
         this.templateHeader = 'Send New Email';
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);

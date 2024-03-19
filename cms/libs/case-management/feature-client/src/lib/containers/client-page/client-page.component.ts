@@ -1584,20 +1584,14 @@ export class ClientPageComponent implements OnInit, OnDestroy, AfterViewInit {
           if (this.checkValidations()) {
             this.saveAndUpdate().subscribe((response: any) => {
               if (response) {
-                this.loaderService.hide();
-                // this.workFlowFacade.handleSendNewsLetterpopup(
-                //   statusResponse
-                //);
+                this.loaderService.hide();          
                 this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
                   queryParamsHandling: "preserve"
                 });
               }
             });
           } else {
-            // this.workFlowFacade.handleSendNewsLetterpopup(
-            //   statusResponse
-            // );
-            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+             this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
               queryParamsHandling: "preserve"
             });
           }
