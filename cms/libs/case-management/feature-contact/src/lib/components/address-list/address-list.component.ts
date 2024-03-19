@@ -3,7 +3,6 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } 
 /** facades **/
 import { ClientAddress, ContactFacade, CaseFacade } from '@cms/case-management/domain';
 import { AddressType, StatusFlag } from '@cms/shared/ui-common';
-import { UserManagementFacade } from '@cms/system-config/domain';
 import { Subject } from 'rxjs';
 
 @Component({

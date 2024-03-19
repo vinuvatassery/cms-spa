@@ -23,9 +23,9 @@ export class EsignDataService {
       );
     }
 
-    loadDraftEsignRequestByClinetId(clientId: number, clientCaseEligibilityId: string, loggedInUserId: string){
+    loadDraftEsignRequestByClinetId(entityId: string, clientCaseEligibilityId: string, loggedInUserId: string){
       return this.http.get(
-        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${clientId}/${clientCaseEligibilityId}/${loggedInUserId}`,
+        `${this.configurationProvider.appSettings.sysInterfaceApiUrl}/system-interface/esign/${entityId}/${clientCaseEligibilityId}/${loggedInUserId}`,
       );
     }
 

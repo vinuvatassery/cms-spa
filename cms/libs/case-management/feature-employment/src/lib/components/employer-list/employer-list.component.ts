@@ -8,15 +8,12 @@ import {
   Output,
   OnChanges,
   ChangeDetectorRef,
-  OnDestroy
 } from '@angular/core';
 /** External Libraries **/
 import { State } from '@progress/kendo-data-query';
 /** Internal Libraries **/
 import { ClientEmployer, EmploymentFacade, CaseFacade } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { UserManagementFacade } from '@cms/system-config/domain';
-import { Subject, Subscription } from 'rxjs';
 
 @Component({
   selector: 'case-management-employer-list',
