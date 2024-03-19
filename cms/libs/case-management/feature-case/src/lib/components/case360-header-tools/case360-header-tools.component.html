@@ -58,7 +58,8 @@
 
 <!-- Send New Letter Modal -->
 <ng-template #sendLetterDialog>
-  <case-management-send-letter [mailingAddress$]="mailingAddress$" [communicationLetterTypeCode]="letterCommunicationTypeCode" [notificationGroup]="screenName"
+  <case-management-send-letter [mailingAddress$]="mailingAddress$" 
+  [notificationGroup]="screenName" [templateLoadType] ="templateLoadType"
   (closeSendLetterEvent)="handleSendNewLetterClosed($event)" (loadInitialData)="loadMailingAddress()" [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
   kendoTooltip></case-management-send-letter>
@@ -73,7 +74,8 @@
 </ng-template>
 <!-- Send New Email Modal -->
 <ng-template #sendNewEmailDialog>
-  <case-management-send-email [ddlEmails$]="emailAddress$" [communicationEmailTypeCode]="emailCommunicationTypeCode"
+  <case-management-send-email [ddlEmails$]="emailAddress$" 
+  [templateLoadType] ="templateLoadType"
   [entityId]="clientId"  [clientCaseEligibilityId]="clientCaseEligibilityId" [notificationGroup]="screenName" [clientCaseId]="clientCaseId"
   [isNewNotificationClicked]="isNewNotificationClicked" [isContinueDraftClicked]="isContinueDraftClicked" [notificationDraftId]="notificationDraftId"
   [toEmail]="toEmail" (closeSendEmailEvent)="handleSendNewEmailClosed($event)" (loadInitialData)="loadEmailAddress()" kendoTooltip></case-management-send-email>

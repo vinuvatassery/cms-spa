@@ -43,6 +43,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   @Input() isContinueDraftClicked!: boolean;
   @Input() isNewNotificationClicked!: boolean;
   @Input() notificationDraftId!: string;
+  @Input() templateLoadType!: string;
+  @Input() informationalText!:string;
+  @Input() templateHeader !:string;
 
   /** Output properties  **/
   @Output() closeSendEmailEvent = new EventEmitter<CommunicationEvents>();
@@ -101,6 +104,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   documentTemplate!: any;
   selectedTemplateContent !:any;
   updatedTemplateContent !: any;
+  currentTemplate!:any;
+  templateDrpDisable : boolean = false;
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -124,10 +129,15 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    if(this.templateLoadType === undefined){
+      this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+    }
     this.getLoggedInUserProfile();
+    this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
+    debugger;
     if (this.communicationEmailTypeCode) {
-      if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.communicationEmailTypeCode) {
+      if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.templateLoadType) {
         if (this.isContinueDraftClicked) {
           this.loadClientAndVendorDraftEmailTemplates();
         } else if (this.isNewNotificationClicked) {
@@ -154,6 +164,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           } else {
             this.loadEmailTemplates();
           }
+         
           this.loaderService.hide();
         },
         error: (err: any) => {
@@ -194,11 +205,23 @@ export class SendEmailComponent implements OnInit, OnDestroy {
       return;
     this.loaderService.show();
     const channelTypeCode = CommunicationEvents.Email;
-    this.communicationFacade.loadEmailTemplates(this.notificationGroup, this.communicationEmailTypeCode ?? '')
+    if(this.templateLoadType === null || this.templateLoadType === undefined || this.templateLoadType ===''){
+      this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+    }
+    this.communicationFacade.loadEmailTemplates(this.notificationGroup, this.templateLoadType ?? '')
       .subscribe({
         next: (data: any) => {
           if (data) {
+            debugger;
             this.ddlTemplates = data;
+            this.currentTemplate = this.ddlTemplates.filter((x:any)=>x.templateTypeCode === this.communicationEmailTypeCode )
+            if(this.currentTemplate .length>0){
+            this.documentTemplate = {'description': this.currentTemplate[0].description,'documentTemplateId':this.currentTemplate[0].documentTemplateId};
+            this.handleDdlEmailValueChange(this.currentTemplate[0]);
+            }
+            if(this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail){
+              this.templateDrpDisable = true;
+            }
             this.ref.detectChanges();
           }
           this.loaderService.hide();
@@ -301,7 +324,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.isShowSendEmailConfirmationPopupClicked = false;
     if (CommunicationEvents.Print === event) {
       this.selectedTemplate.templateContent = this.updatedTemplateContent;
-      if (this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail) {
+      if (this.templateLoadType == CommunicationEventTypeCode.CerAuthorizationEmail) {
         this.initiateAdobeEsignProcess(this.selectedTemplate, CommunicationEvents.SendEmail);
       } else {
         this.initiateSendEmailProcess(this.selectedTemplate);
@@ -334,6 +357,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   private getEmailPayload(selectedTemplate: any) {
 
     return {
+      templateTypeCode: this.communicationEmailTypeCode,
       subject: this.emailSubject,
       toEmail: this.selectedToEmail,
       ccEmail: this.getSelectedEmails(this.selectedCCEmail,"CC"),

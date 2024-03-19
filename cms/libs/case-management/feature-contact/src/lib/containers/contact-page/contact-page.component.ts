@@ -1929,12 +1929,18 @@ export class ContactPageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+            //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+            this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+              queryParamsHandling: "preserve"
+            });
           }
         })
       }
       else {
-        this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+        //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+        this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+          queryParamsHandling: "preserve"
+        });
       }
     });
   }

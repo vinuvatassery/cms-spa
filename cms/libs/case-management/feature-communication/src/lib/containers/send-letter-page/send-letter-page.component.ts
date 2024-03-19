@@ -12,7 +12,8 @@ import {
   AfterContentChecked,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ContactFacade, WorkflowFacade } from '@cms/case-management/domain';
+import { CommunicationEventTypeCode, ContactFacade, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
+import { StatusFlag } from '@cms/shared/ui-common';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription, first } from 'rxjs';
 
@@ -42,13 +43,24 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
   private disenrollLaterDialog: any;
   private approvalLaterDialog: any;
   private saveForLaterValidationSubscription !: Subscription;
+  emailSubscription!:Subscription;
   @ViewChild('disenrollment_letter_later', { read: TemplateRef })  disenrollment_letter_later!: TemplateRef<any>;
 
   @ViewChild('approval_letter_later', { read: TemplateRef })  approval_letter_later!: TemplateRef<any>;
   paperless$ = this.contactFacade.paperless$;
+  mailingAddress$ = this.contactFacade.mailingAddress$;
+  letterCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeLetter;
+  emailCommunicationTypeCode = CommunicationEventTypeCode.ClientEmail;
+  templateLoadType !:any;
+  screenName = ScreenType.ClientProfile;
+  isNewNotificationClicked: boolean = false;
+  isContinueDraftClicked:boolean = false;
+  notificationDraftId:string = ''
   paperlessFlag = 'N'
- 
-
+  emailAddress$ = this.contactFacade.emailAddress$;
+  toEmail: Array<string> = [];
+  informationalText :any = null;
+  templateHeader : string='';
     /** Constructor**/
     constructor(    
       private route: ActivatedRoute,
@@ -59,30 +71,31 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
     ) {
     }
 
-   ngOnInit(): void {   
-     
+  ngOnInit(): void {
+
     //NOSONAR this is a temporary title setting please work on it when the form is developed
     this.isCERForm = this.route.snapshot.queryParams['wtc'] === 'CA_CER';
 
-    this.customTitle ="Approval"
-    if(this.isCERForm)
-    {
-      this.customTitle = "Eligibility"   
-      
-      this.confirmTitle = this.customTitle + this.confirmTitle
-      
-     if(this.route.snapshot?.data?.["title"]?.toLowerCase().includes("disenrollment")){      
-      this.customTitle = "Disenrollment"   
-      this.isDisenrollmentPage = true;
-      this.printModelTitle = "Send Disenrollment Letter to "
-      this.printModelText = "This action cannot be undone, If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal."
-     }
-    }    
+    this.customTitle = "Approval"
+    if (this.isCERForm) {
+      this.customTitle = "Eligibility"
 
-    this.title =this.title + this.customTitle
-    this.loadCase()   
+      this.confirmTitle = this.customTitle + this.confirmTitle
+
+      if (this.route.snapshot?.data?.["title"]?.toLowerCase().includes("disenrollment")) {
+        this.customTitle = "Disenrollment"
+        this.isDisenrollmentPage = true;
+        this.printModelTitle = "Send Disenrollment Letter to "
+        this.printModelText = "This action cannot be undone, If applicable, the client will also automatically receive a notification via email, SMS text, and/or their online portal."
+      }
+    }
+
+    this.title = this.title + this.customTitle
+    this.loadCase()
     this.addSaveForLaterValidationsSubscription();
-   }
+
+    this.addEmailSubscription();
+  }
 
    ngOnDestroy(): void {     
     this.saveForLaterValidationSubscription.unsubscribe();
@@ -178,19 +191,76 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
    this.loadPeperLessStatus();
   }
   
-  loadPeperLessStatus() {    
+  loadPeperLessStatus() {
     this.paperless$
       ?.pipe(first((emailData: any) => emailData?.paperlessFlag != null))
       .subscribe((emailData: any) => {
+        debugger;
         if (emailData?.paperlessFlag) {
-          let pageType= this.isDisenrollmentPage === true? "Disenrollment" : this.customTitle
+          let pageType = this.isDisenrollmentPage === true ? "Disenrollment" : this.customTitle
           this.paperlessFlag = emailData?.paperlessFlag;
           this.printModelTitle = this.printModelTitle + (this.paperlessFlag === 'Y' ? 'email?' : 'print?')
-          this.confirmTitle =  (this.paperlessFlag === 'Y' ? "Send "+pageType+" Email?" : "Send "+pageType+" Letter to Print?")
-          this.sendType =  this.paperlessFlag === 'Y' ? 'Email' : 'Letter'       
-          this.cdr.detectChanges();     
+          this.confirmTitle = (this.paperlessFlag === 'Y' ? "Send " + pageType + " Email?" : "Send " + pageType + " Letter to Print?")
+          this.sendType = this.paperlessFlag === 'Y' ? 'Email' : 'Letter'
+          if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
+            if (this.paperlessFlag === StatusFlag.Yes) {
+              //this.contactFacade.loadEmailAddress(this.clientId,this.clientCaseEligibilityId);
+              debugger;
+              //if(this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes){
+              this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+              this.emailCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeEmail;
+              this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''SEND EMAIL'' once the email is complete."
+              this.templateHeader = 'Send Pending Email';
+              // }
+            }
+            else {
+              //if(this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes){
+              this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+              this.letterCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeLetter;
+              this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the letter is complete."
+              this.templateHeader = 'Send Pending Letter';
+              // }           
+            }
+            this.cdr.detectChanges();
+          }
+          else{
+            if (this.paperlessFlag === StatusFlag.Yes) {
+            this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+            this.emailCommunicationTypeCode = CommunicationEventTypeCode.RejectionNoticeEmail;
+            // this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the letter is complete."
+            // this.templateHeader = 'Send Pending Letter';
+            }
+            else{
+
+            }
+            
+          }
         }
       });
+  }
+
+  loadMailingAddress() {
+    debugger;
+    this.contactFacade.loadMailingAddress(this.clientId);
+    this.cdr.detectChanges();
+  }
+
+  private addEmailSubscription() {
+    this.emailSubscription = this.emailAddress$.subscribe((email: any) => {
+      const isEmailOk = email.filter((email:any) =>  email.paperlessFlag === StatusFlag.Yes)?.length > 0;
+      // Iterate over the list and push emails based on a condition
+      if(isEmailOk){
+      email.forEach((item: any) => {
+        if (item.paperlessFlag === StatusFlag.Yes) {
+          this.toEmail.push(item.email.trim());
+        }
+      });
+    }
+    });
+  }
+
+  loadEmailAddress(){
+    this.contactFacade.loadEmailAddress(this.clientId, this.clientCaseEligibilityId);
   }
 
 }

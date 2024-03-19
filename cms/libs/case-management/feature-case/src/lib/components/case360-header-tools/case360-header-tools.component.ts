@@ -56,6 +56,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   selectedTemplateName!: TemplateRef<unknown>;
   notificationDraftId!: string;
   draftDropdownCheck: boolean = false;
+  templateLoadType!:any;
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
   private isSendNewLetterDialog : any;
@@ -75,8 +76,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode = this.letterCommunicationTypeCode;
-        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+        this.currentCommunicationTypeCode = '';
+        this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+        this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -90,8 +92,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
-        this.currentCommunicationTypeCode = this.emailCommunicationTypeCode;
-        this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
+        this.currentCommunicationTypeCode ='';
+        this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+        this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
         }
       },
     },
@@ -105,6 +108,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         if(this.draftDropdownCheck === false){
         this.draftDropdownCheck = true;
         this.selectedTemplateName = templatename;
+        this.templateLoadType = this.smsCommunicationTypeCode
         this.currentCommunicationTypeCode = this.smsCommunicationTypeCode;
         this.notificationDraftCheck(this.clientId, this.currentCommunicationTypeCode, this.notificationDraftEmailDialog, templatename);
         }
@@ -134,7 +138,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   }
 
   /* Internal Methods */
-  ngOnInit(): void {    
+  ngOnInit(): void { 
     this.initialize();
     this.loadedClientHeader.subscribe(res =>{
       this.clientHeader = res;
@@ -297,7 +301,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
           this.onDraftNotificationExistsConfirmation(notificationDraftEmailDialog);
           this.ref.detectChanges();
         }else{
-          this.loadNotificationTemplates(this.currentCommunicationTypeCode, templateName);
+          this.loadNotificationTemplates(this.templateLoadType , templateName);
         }
       this.loaderService.hide();
     },

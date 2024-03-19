@@ -439,9 +439,11 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
         next: (casesResponse: any) => {
           this.loaderService.hide();
           if (this.sendLetterFlag == StatusFlag.Yes) {
+            this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
             this.workflowFacade.saveForLater(true);
           }
           else {
+            this.workflowFacade.sendLetterEmailFlag = this.sendLetterFlag;
             this.workflowFacade.saveForLater(false);
           }
           this.isShowSaveLaterPopup = false;
@@ -460,6 +462,7 @@ export class CaseDetailPageComponent implements OnInit, OnDestroy {
   showSendNewsLetterPopup() {
     this.showSendNewsLetterSubscription = this.workflowFacade.sendEmailLetterClicked$.subscribe((response: any) => {
       if (response) {
+        debugger;
         if(this.paperlessFlag == 'Y'){
           this.onSendNewLetterClicked(this.sendNewEmailModalDialog);
         }else{

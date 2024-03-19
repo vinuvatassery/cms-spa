@@ -334,7 +334,10 @@ export class FamilyAndDependentPageComponent implements OnInit, OnDestroy, After
       this.save().subscribe((response: any) => {
         if (response) {
           this.loaderService.hide();
-          this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+          //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
         }
       })
     });
