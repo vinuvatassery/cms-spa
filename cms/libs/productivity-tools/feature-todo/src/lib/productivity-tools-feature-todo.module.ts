@@ -13,7 +13,6 @@ import { ReminderListComponent } from './components/reminder-list/reminder-list.
 import { ReminderDetailComponent } from './components/reminder-detail/reminder-detail.component';
 import { DeleteReminderConfirmationComponent } from './components/delete-reminder-confirmation/delete-reminder-confirmation.component';
 import { TodoListComponent } from './components/todo-list/todo-list.component';
-import { DeleteTodoConfirmationComponent } from './components/delete-todo-confirmation/delete-todo-confirmation.component';
 import { TodoAndRemindersPageComponent } from './containers/todo-and-reminders-page/todo-and-reminders-page.component';
 import { TodoItemComponent } from './components/todo-item/todo-item.component';
 import { ReminderItemComponent } from './components/reminder-item/reminder-item.component';
@@ -35,7 +34,6 @@ import { TodoAndRemindersFabPageComponent } from './containers/todo-and-reminder
     ReminderDetailComponent,
     DeleteReminderConfirmationComponent,
     TodoListComponent,
-    DeleteTodoConfirmationComponent,
     TodoAndRemindersPageComponent,
     TodoItemComponent,
     ReminderItemComponent,
@@ -48,7 +46,6 @@ import { TodoAndRemindersFabPageComponent } from './containers/todo-and-reminder
     ReminderDetailComponent,
     DeleteReminderConfirmationComponent,
     TodoListComponent,
-    DeleteTodoConfirmationComponent,
     TodoAndRemindersPageComponent,
     TodoItemComponent,
     ReminderItemComponent,

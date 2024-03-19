@@ -21,6 +21,7 @@ import { filter, first, Subject, Subscription } from 'rxjs';
 import { UIFormStyle, UITabStripScroll } from '@cms/shared/ui-tpa';
 import { LoaderService, LoggingService } from '@cms/shared/util-core';
 import { UserManagementFacade } from '@cms/system-config/domain';
+import { TodoFacade } from '@cms/productivity-tools/domain';
 
 @Component({
   selector: 'case-management-case360-page',
@@ -73,6 +74,7 @@ export class Case360PageComponent implements OnInit, OnDestroy {
   drugs_button_grp = false;
   mng_button_grp = false;
   selectedTabName = 'clinfo';
+  alertList$ = this.todoFacade.todoGrid$;
   /** Constructor**/
   constructor(
     private readonly caseFacade: CaseFacade,
@@ -82,7 +84,8 @@ export class Case360PageComponent implements OnInit, OnDestroy {
     private readonly loaderService: LoaderService,
     private readonly loggingService: LoggingService,
     private readonly clientFacade: ClientFacade,
-    private readonly userManagementFacade: UserManagementFacade
+    private readonly userManagementFacade: UserManagementFacade,
+    public todoFacade: TodoFacade,
   ) {}
 
   /** Lifecycle hooks **/
@@ -313,5 +316,14 @@ export class Case360PageComponent implements OnInit, OnDestroy {
         this.loggingService.logException(err);
       }
     })
+  }
+  getVendorAlertList(event:any,alertType:any){
+    this.todoFacade.loadAlerts(event.gridDataRefinerValue,alertType.alertType);
+  }
+  onMarkAlertAsDone(event:any){
+    this.todoFacade.markAlertAsDone(event);
+  }
+  onDeleteAlert(event:any){
+    this.todoFacade.deleteAlert(event);
   }
 }
