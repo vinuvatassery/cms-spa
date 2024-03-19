@@ -145,8 +145,15 @@ export class DistributionDetailComponent implements OnInit {
           this.closeForm.emit();
         },
         error: (err: any) => {
-          this.hideLoader();
-          this.lovFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+          
+          if(err?.error?.error?.code?.includes('USER_ALREADY_EXISTS')){
+            this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, err?.error?.error?.message);
+            this.hideLoader();
+          }else{
+            this.lovFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+            this.hideLoader();
+          }
+          
         }
       });
 
