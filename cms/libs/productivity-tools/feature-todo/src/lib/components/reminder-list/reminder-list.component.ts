@@ -202,7 +202,7 @@ export class ReminderListComponent implements  OnInit{
       };
         this.isLoadTodoGridEvent.emit({gridDataRefinerValue, alertType})
         this.todoGrid$.subscribe((todoItemList : any) =>{
-          this.todoItemList = todoItemList?.items ? todoItemList?.items : [];
+          this.todoItemList = todoItemList?.data ? todoItemList?.data : [];
           var currentDate = new Date();
           this.todoItemList = this.todoItemList.filter(todoItem => new Date(todoItem.alertDueDate) <= new Date(currentDate.setDate(currentDate.getDate() +30)));
           this.todoItemList.forEach((todoItem:any)=>{
