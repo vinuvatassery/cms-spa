@@ -307,9 +307,9 @@ export class SupportGroupComponent implements OnInit, OnChanges {
         this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
 
       if (this.mySelection.length < 1)
-        this.mySelection = [this.gridDataResult.data[0].notificationGroupId];
+        this.mySelection = [this.gridDataResult?.data[0]?.notificationGroupId];
       else
-        this.mySelection = [this.selectedGroup.notificationGroupId];
+        this.mySelection = [this.selectedGroup?.notificationGroupId];
       this.gridSupportGroupDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isSupportGroupGridLoaderShow = false;
