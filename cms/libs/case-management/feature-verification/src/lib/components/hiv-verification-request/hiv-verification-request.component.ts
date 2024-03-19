@@ -115,9 +115,7 @@ export class HivVerificationRequestComponent implements OnInit{
     private readonly esignFacade: EsignFacade,){}
   /** Internal event methods **/
   ngOnInit(): void {
-    if (this.providerOption ===ProviderOption.HealthCareProvider) {
       this.loadHivVerificationEmail();
-    }
     this.providerValue$.subscribe(data=>{
       this.userId = this.hivVerificationForm.controls["userId"].value;
       this.providerOption = data;
@@ -298,6 +296,7 @@ export class HivVerificationRequestComponent implements OnInit{
   }
 
   loadHivVerificationEmail() {
+    this.verificationFacade.showLoader();
     this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail ?? '')
       .subscribe({
         next: (data: any) => {
@@ -308,10 +307,9 @@ export class HivVerificationRequestComponent implements OnInit{
                 this.notificationTemplateId = template.documentTemplateId;
               }
             }
-            this.emailSubject = data[0]?.templateName;
-            this.notificationTemplateId = data[0].notificationTemplateId;
-            this.loadEmailAttachment(data[0]?.notificationTemplateId, CommunicationEventTypeCode.HIVVerificationAttachmentTypeCode)
+            this.loadEmailAttachment(data[0]?.documentTemplateId)
             this.cdr.detectChanges();
+            this.verificationFacade.hideLoader();
           }
         },
         error: (err: any) => {
@@ -321,8 +319,9 @@ export class HivVerificationRequestComponent implements OnInit{
       });
   }
 
-  loadEmailAttachment(documentTemplateId: any, typeCode: any) {
-    this.communicationFacade.loadLetterAttachment(documentTemplateId, typeCode)
+  loadEmailAttachment(documentTemplateId: any) {
+    this.verificationFacade.showLoader();
+    this.communicationFacade.loadClientAndVendorDefaultAttachments(documentTemplateId)
       .subscribe({
         next: (attachments: any) => {
           if (attachments.length > 0) {
@@ -336,6 +335,7 @@ export class HivVerificationRequestComponent implements OnInit{
               })
             }
             this.cdr.detectChanges();
+            this.verificationFacade.hideLoader();
           }
         },
         error: (err: any) => {
@@ -351,10 +351,6 @@ export class HivVerificationRequestComponent implements OnInit{
       this.isResendRequest = false;
       this.verificationFacade.hivVerificationSaveSubject.next(true);
       this.sentDate =  this.clientHivVerification.verificationStatusDate;
-      this.verificationFacade.showHideSnackBar(
-        SnackBarNotificationType.SUCCESS,
-        'Client hiv verification request sent successfully.'
-      );
       this.verificationFacade.hideLoader();
       this.cdr.detectChanges();
     },

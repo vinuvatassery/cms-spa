@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 import { EsignDataService } from '../infrastructure/esign-data.service';
 import { EsignStatusCode } from '../enums/esign-status-code.enum';
 import { ClientHivVerification } from '../entities/client-hiv-verification';
+import { CommunicationEventTypeCode } from '../enums/communication-event-type-code.enum';
 
 @Injectable({ providedIn: 'root' })
 export class EsignFacade {
@@ -44,6 +45,7 @@ prepareAdobeEsingData(formData:FormData, emailData: any, cerEmailAttachedFiles: 
     formData.append('documentTemplateId', emailData?.documentTemplateId ?? '');
     formData.append('esignRequestId', emailData?.esignRequestId ?? '');
     formData.append('requestBody', emailData?.templateContent ?? '');
+    formData.append('typeCode', emailData?.typeCode ?? '');
     if(cerEmailAttachedFiles?.length > 0){
     let i = 0;
     cerEmailAttachedFiles[0].forEach((file: any) => { 
@@ -128,9 +130,11 @@ prepareHivVerificationdobeEsignFormData(clientHivVerification: ClientHivVerifica
     formData.append('clientId', clientHivVerification?.clientId.toString() ?? '');
     formData.append('notificationTemplateId', notificationTemplateId ?? '');
     formData.append('requestSubject', emailSubject ?? '');
+    formData.append('typeCode', CommunicationEventTypeCode.HIVVerificationEmail ?? '');
+    formData.append('requestBody', "");
     if(selectedAttachedFile?.length > 0){
     let i = 0;
-    selectedAttachedFile[0].forEach((file: any) => { 
+    selectedAttachedFile.forEach((file: any) => { 
       if(file.rawFile == undefined || file.rawFile == null){
         formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
         formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
