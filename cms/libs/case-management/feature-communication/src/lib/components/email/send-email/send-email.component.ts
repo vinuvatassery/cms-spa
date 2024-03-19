@@ -10,12 +10,8 @@ import {
   ChangeDetectorRef,
   TemplateRef,
   ViewChild
-  ChangeDetectorRef,
-  TemplateRef,
-  ViewChild
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 /** Internal Libraries **/
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade, EsignFacade, CommunicationEventTypeCode } from '@cms/case-management/domain';
@@ -190,13 +186,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     }
     this.notificationSnackbarService.manageSnackBar(type, subtitle)
     this.hideLoader();
-  showHideSnackBar(type: SnackBarNotificationType, subtitle: any) {
-    if (type == SnackBarNotificationType.ERROR) {
-      const err = subtitle;
-      this.loggingService.logException(err)
-    }
-    this.notificationSnackbarService.manageSnackBar(type, subtitle)
-    this.hideLoader();
+
   }
 
   hideLoader() {
