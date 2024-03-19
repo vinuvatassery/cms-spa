@@ -28,7 +28,6 @@ export class ReminderItemComponent implements OnInit {
   @Input() nDays =""
   @Output() isLoadReminderAndNotificationEvent = new EventEmitter<any>();
   @Input() notificationList$: any;
-  alertsData:any = {};
   isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
   notificationaAndReminderDataSubject = new Subject<any>();
   gridDataResult!: GridDataResult;
@@ -79,7 +78,7 @@ export class ReminderItemComponent implements OnInit {
   ngOnInit(): void {
     this.loadNotificationsAndReminders();
       this.notificationList$?.subscribe((data: any) => {
-        this.alertsData.items =  data.items.filter((item:any) => item.alertTypeCode == 'REMINDER');
+        this.items =  data.items.filter((item:any) => item.alertTypeCode == 'REMINDER');
         this.cdr.detectChanges();
         this.loadNotificationsAndReminders;
       });
@@ -140,7 +139,7 @@ export class ReminderItemComponent implements OnInit {
     this.notificationList$?.subscribe((data: any) => {
       this.gridDataResult = data?.items;
       if (data?.totalCount >= 0 || data?.totalCount === -1) {
-        this.alertsData.items =  data.items.filter((item:any) => item.alertTypeCode == 'REMINDER');
+        this.items =  data.items.filter((item:any) => item.alertTypeCode == 'REMINDER');
         this.isToDoGridLoaderShow.next(false);
       }
       this.notificationaAndReminderDataSubject.next(this.gridDataResult);

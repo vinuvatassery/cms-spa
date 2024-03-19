@@ -253,8 +253,7 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
     const payload ={
       alertName :  this.todoDetailsForm.controls['title'].value,
       alertDueDate : dueDate,
-      alertEndDate : endDate,
-      alertId :    this.alertId,
+      alertEndDate : endDate,  
       alertDesc : this.todoDetailsForm.controls['alertDesc'].value,
       entityTypeCode : entityTypeCode,
       entityId :entityId ,
@@ -264,10 +263,15 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
     }
 
     if(!this.isEdit){
+      
       this.onTodoItemCreateClick.emit(payload)
     }
     else{
-    this.onUpdateTodoItemClick.emit(payload);
+      const editPayload ={
+        ...payload,
+        alertId :    this.alertId,
+      }
+    this.onUpdateTodoItemClick.emit(editPayload);
     }
   }
 

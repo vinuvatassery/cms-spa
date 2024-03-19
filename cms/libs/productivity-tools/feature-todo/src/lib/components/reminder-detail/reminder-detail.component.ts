@@ -251,7 +251,6 @@ export class ReminderDetailComponent implements OnInit {
         entityId :this.entityId ,
         customAlertFlag : 'Y',
         type :'REMINDER',
-        alertId : this.alertId,
         alertFrequencyCode :'NEVER',
         alertName :  'REMINDER',
         AddToOutlookFlag :  this.clientReminderForm.controls['addToOutlookCalender'].value ? "Y" : "N"
@@ -268,8 +267,12 @@ export class ReminderDetailComponent implements OnInit {
 
       }  
      }else{
-      if(this.isEdit){
-        this.todoFacade.updateAlertItem(payload)
+      if(this.isEdit){      
+        const editPayload ={
+          ...payload,
+          alertId : this.alertId,
+        }
+        this.todoFacade.updateAlertItem(editPayload)
       }else{
         this.todoFacade.createAlertItem(payload)
 

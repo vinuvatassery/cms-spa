@@ -1,6 +1,6 @@
 <ul class="card-list  pt-0" aria-label="reminder menu">
   <!-- List Item Repeatable -->
-  <ng-container  *ngFor="let message of alertsData?.items">
+  <ng-container  *ngFor="let item of items">
     <li class="card-list_items"
       aria-label="reminder menu item">
       <div class="card-type-icon">
@@ -8,9 +8,9 @@
       </div>
       <div class="card-list_details">
         <p>
-          {{message.alertDesc}}
+          {{item.alertDesc}}
         </p>
-        <p class="text-muted">{{message?.alertDueDate | date:'MM-dd-YYYY'}}</p>
+        <p class="text-muted">{{item?.alertDueDate | date:'MM-dd-YYYY'}}</p>
       </div>
     <div>
       <kendo-dropdownbutton
@@ -21,7 +21,7 @@
       title="More option"
       class="small-i-btn app-dropdown-action more_action_wid"
       [popupSettings]="{ popupClass: popupClass1, animate: true }"
-      (itemClick)="onActionClicked($event,items)"
+      (itemClick)="onActionClicked($event,item)"
     >
     <span class="material-icons" aria-label="More option"> more_vert    </span>
     <ng-template class="app-dropdown-action-list"

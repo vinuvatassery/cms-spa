@@ -59,12 +59,18 @@ export class NotificationPanelComponent implements OnInit {
   isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
   isNotificationPopupOpened = false;
   unViewedCount : number = 0;
+  selectedAlertId =""
   isNewReminderOpened = false;
   isNotificationsAndRemindersOpened = false;
   private newReminderDetailsDialog: any;
   private notificationReminderDialog: any;
   private deleteReminderDialog: any;
   gridDataResult!: GridDataResult;
+  isEdit= false
+  isDelete = false
+  isReminderOpenClicked = false
+  getTodo$ = this.todoFacade.getTodo$
+  crudText ="Create New"
   public data = [
     {
       buttonType: 'btn-h-primary',
@@ -81,19 +87,17 @@ export class NotificationPanelComponent implements OnInit {
   public dataTwo = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Edit Remainder',
+      text: 'Edit Reminder',
       icon: 'edit',
       click: (): void => {
-        this.onNewReminderOpenClicked(this.NewReminderTemplate);
       },
     },
 
     {
       buttonType: 'btn-h-danger',
-      text: 'Delete Remainder',
+      text: 'Delete Reminder',
       icon: 'delete',
       click: (): void => {
-        this.onDeleteReminderOpenClicked(this.deleteReminderTemplate);
       },
     },
   ];
@@ -173,8 +177,15 @@ export class NotificationPanelComponent implements OnInit {
   onNewReminderClosed(result: any) {
     if (result) {
       this.reminderFor ='';
-      this.newReminderDetailsDialog.close();
+      this.isDelete = false;
+      this.isEdit = false;
+      this.crudText ="Create New"
+      this.isLoadReminderAndNotificationEvent.emit(true)
     }
+    this.isReminderOpenClicked = false
+
+    this.newReminderDetailsDialog.close();
+
   }
 
   onNewReminderOpenClicked(template: TemplateRef<unknown>): void {
@@ -270,4 +281,27 @@ export class NotificationPanelComponent implements OnInit {
         }
       });
   }
+
+  onGetTodoItemData(event:any){
+    this.todoFacade.getTodoItem(event)
+  }
+
+  onActionClicked(item: any,gridItem: any){ 
+    this.selectedAlertId = gridItem.alertId
+    if(item.text == 'Edit Reminder'){ 
+      this.isEdit=true
+      this.crudText = 'Edit'
+       if (!this.isReminderOpenClicked) {
+           this.onNewReminderOpenClicked(this.NewReminderTemplate)
+         }
+     }
+     if(item.text == 'Delete Reminder'){
+      this.isDelete= true 
+      this.crudText = 'Delete'
+       if (!this.isReminderOpenClicked) {
+        this.onNewReminderOpenClicked(this.NewReminderTemplate)
+         }
+     }
+    
+   }
 }
