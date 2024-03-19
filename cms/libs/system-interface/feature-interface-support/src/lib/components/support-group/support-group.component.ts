@@ -9,12 +9,12 @@ import {
   Output
 } from '@angular/core';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
-import { SnackBarNotificationType } from '@cms/shared/util-core';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { FilterService, GridDataResult, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
-import { State, CompositeFilterDescriptor } from '@progress/kendo-data-query';
+import { FilterService, GridDataResult, RowArgs, SelectableMode, SelectableSettings } from '@progress/kendo-angular-grid';
+import { State, CompositeFilterDescriptor} from '@progress/kendo-data-query';
 import { LovFacade } from '@cms/system-config/domain';
 import { Subject, first } from 'rxjs';
+import { SnackBarNotificationType } from '@cms/shared/util-core';
 @Component({
   selector: 'system-interface-support-group',
   templateUrl: './support-group.component.html',
@@ -22,6 +22,12 @@ import { Subject, first } from 'rxjs';
 })
 export class SupportGroupComponent implements OnInit, OnChanges {
   selectedGroup: any;
+  public selectedRowChange(selectionEvent: any) {
+    this.selectedGroup = selectionEvent.selectedRows[0].dataItem;
+    this.selectedRowEvent.emit(this.selectedGroup);
+    this.mySelection = [this.selectedGroup.notificationGroupId];
+  }
+
   isGroupDetailPopup = false;
   isSupportGroupReactivatePopupShow = false;
   isSupportGroupDeactivatePopupShow = false;
@@ -43,7 +49,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   @Input() supportGroupRemove$: any;
   @Input() supportGroupProfilePhoto$: any;
   @Input() supportGroupListsLoader$: any;
-  @Output() loadSupportGroupListEvent = new EventEmitter<any>();
+    @Output() loadSupportGroupListEvent = new EventEmitter<any>();
   @Output() deactivateConfimEvent = new EventEmitter<string>();
   @Output() reactivateConfimEvent = new EventEmitter<string>();
   @Output() deleteConfimedEvent = new EventEmitter<string>();
@@ -60,6 +66,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   searchText = '';
   isFiltered = false;
   filter!: any;
+  selectedColumn: any = 'ALL'
   gridDataResult!: GridDataResult;
   deactivateButtonEmitted = false;
   reactivateButtonEmitted = false;
@@ -107,7 +114,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       icon: 'block',
       buttonName: 'deactivate',
       click: (data: any): void => {
-        if (!this.deactivateButtonEmitted) {
+        if (!this.deactivateButtonEmitted && data.notificationGroupId) {
           this.deactivateButtonEmitted = true;
           this.onOpenSupportGroupDeactivateClicked(data.notificationGroupId);
         }
@@ -119,7 +126,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       icon: 'done',
       buttonName: 'reactivate',
       click: (data: any): void => {
-        if (!this.reactivateButtonEmitted) {
+        if (!this.reactivateButtonEmitted && data.notificationGroupId) {
           this.reactivateButtonEmitted = true;
           this.onOpenSupportGroupReactivateClicked(data.notificationGroupId);
         }
@@ -131,14 +138,22 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       icon: 'delete',
       buttonName: 'delete',
       click: (data: any): void => {
-        if (!this.deleteButtonEmitted) {
-          this.deleteButtonEmitted = true;
-          this.onOpenSupportGroupDeleteClicked(data.notificationGroupId, data.userPerGroup);
+        if (!this.deleteButtonEmitted && data.notificationGroupId) {
+          if (data.userPerGroup > 0) {
+            // Show warning if userPerGroupCount > 0
+            this.deleteButtonEmitted = false;
+            this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Group has dependencies and cannot be deleted.");
+          } else {
+            // If userPerGroupCount <= 0, proceed with opening delete modal
+            this.deleteButtonEmitted = true;
+            this.onOpenSupportGroupDeleteClicked(data.notificationGroupId, data.userPerGroup);
+          }
         }
 
       },
     },
   ];
+
   public mode: SelectableMode = 'single';
   interfaceSupportGroupLov = this.lovFacade.interfaceSupportGroupLov$;
   /** Constructor **/
@@ -152,6 +167,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       checkboxOnly: false,
       drag: false,
     };
+
   }
 
   ngOnInit(): void {
@@ -164,15 +180,9 @@ export class SupportGroupComponent implements OnInit, OnChanges {
       take: this.pageSizes[0]?.value,
       sort: this.sort,
     };
-
+    
     this.loadSupportGroupListGrid();
   }
-
-  public selectedRowChange(selectionEvent: any) {
-    this.selectedGroup = selectionEvent.selectedRows[0].dataItem;
-    this.selectedRowEvent.emit(this.selectedGroup);
-  }
-
 
   private loadSupportGroupListGrid(): void {
     this.loadSupportGroup(this.state?.skip ?? 0, this.state?.take ?? 0, this.sortValue, this.sortType);
@@ -282,11 +292,24 @@ export class SupportGroupComponent implements OnInit, OnChanges {
   }
   onSearch(searchValue: any) {
     this.onChange(searchValue);
-    //this.searchSubject.next(searchValue);
   }
+
   gridDataHandle() {
     this.SupportGroupGridLists$.subscribe((data: GridDataResult) => {
       this.gridDataResult = data;
+      // this.gridDataResult.data = filterBy(
+      //   this.gridDataResult.data,
+      //   this.filterData
+      // );
+      if (this.mySelection.length < 1)
+        this.selectedRowEvent.emit(this.gridDataResult.data[0]);
+      else
+        this.gridDataResult.data.find(row => row.notificationGroupId === this.mySelection[0]);
+
+      if (this.mySelection.length < 1)
+        this.mySelection = [this.gridDataResult?.data[0]?.notificationGroupId];
+      else
+        this.mySelection = [this.selectedGroup?.notificationGroupId];
       this.gridSupportGroupDataSubject.next(this.gridDataResult);
       if (data?.total >= 0 || data?.total === -1) {
         this.isSupportGroupGridLoaderShow = false;
@@ -294,14 +317,15 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     });
     //this.gridSupportGroupData$.subscribe((data) => { console.log(data) });
     this.isSupportGroupGridLoaderShow = false;
-  }
 
+  }
   onEditGroupDetailsClicked(notificationGroup: any) {
     this.selectedSupportGroup = notificationGroup;
     this.isEditSupportGroup = true;
     this.notificationGroupId = notificationGroup.notificationGroupId;
     this.isGroupDetailPopup = true;
   }
+
   onGroupDetailsClicked() {
     this.isEditSupportGroup = false;
     this.isGroupDetailPopup = true;
@@ -311,14 +335,13 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.isGroupDetailPopup = false;
     this.isEditSupportGroup = false;
   }
-  onOpenSupportGroupDeleteClicked(notificationGroupId: any, userPerGroupCount: number) {
-    // if (userPerGroupCount > 0) {
-    //   this.lovFacade.showHideSnackBar(SnackBarNotificationType.WARNING, "Group has dependencies and cannot be deleted.");
-    //   this.deleteButtonEmitted = false;
-    //   return;
-    // }
-      this.notificationGroupId = notificationGroupId;
+  onOpenSupportGroupDeleteClicked(notificationGroupId: any, userPerGroup: number) {
+    this.notificationGroupId = notificationGroupId;
+    if (userPerGroup == 0) {
       this.isSupportGroupDeletePopupShow = true;
+    } else {
+      this.deleteButtonEmitted = false;
+    }
   }
   onCloseSupportGroupDeleteClicked() {
     this.deleteButtonEmitted = false;
@@ -351,6 +374,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     this.isSupportGroupDeleteConfirmationPopupShow = false;
 
   }
+
   addSupportGroup(data: any): void {
     this.addSupportGroupEvent.emit(data);
     this.addSupportGroup$.pipe(first((response: any) => response != null))
@@ -363,6 +387,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
 
     this.onCloseGroupDetailPopupClicked();
   }
+
   editSupportGroup(data: any): void {
     data["notificationGroupId"] = this.notificationGroupId;
     this.editSupportGroupEvent.emit(data);
@@ -377,6 +402,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
 
     this.onCloseGroupDetailPopupClicked();
   }
+
   handleSupportGroupDeactive(isDeactivate: any) {
     if (isDeactivate) {
       this.deactivateButtonEmitted = false;
@@ -392,6 +418,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     }
     this.onCloseSupportGroupDeactivateClicked()
   }
+
   handleSupportGroupReactive(isReactivate: any) {
     if (isReactivate) {
       this.reactivateButtonEmitted = false;
@@ -407,6 +434,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     }
     this.onCloseSupportGroupReactivateClicked()
   }
+
   handleSupportGroupDelete(isHardDelete: any) {
     if (isHardDelete) {
       this.deleteButtonEmitted = false;
@@ -422,4 +450,7 @@ export class SupportGroupComponent implements OnInit, OnChanges {
     }
     this.onCloseSupportGroupDeleteClicked()
   }
+
+  public mySelection: any[] = [];
+  public isRowSelected = (e: RowArgs) => this.mySelection.indexOf(e.dataItem.notificationGroupId) >= 0;
 }
