@@ -57,6 +57,8 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
   notificationDraftId!: string;
   draftDropdownCheck: boolean = false;
   templateLoadType!:any;
+  informationalText!:any;
+  templateHeader!:any;
   private todoDetailsDialog : any;
   private newReminderDetailsDialog : any;
   private isSendNewLetterDialog : any;
@@ -78,6 +80,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.selectedTemplateName = templatename;
         this.currentCommunicationTypeCode = '';
         this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+        debugger;
+        this.informationalText = "Select an existing template or draft a custom letter."
+        this.templateHeader = 'Send New Letter';
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -94,6 +99,9 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
         this.selectedTemplateName = templatename;
         this.currentCommunicationTypeCode ='';
         this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+        debugger;
+        this.informationalText = "Select an existing template or draft a custom email."
+        this.templateHeader = 'Send New Email';
         this.notificationDraftCheck(this.clientId, this.templateLoadType, this.notificationDraftEmailDialog, templatename);
         }
       },
@@ -301,7 +309,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
           this.onDraftNotificationExistsConfirmation(notificationDraftEmailDialog);
           this.ref.detectChanges();
         }else{
-          this.loadNotificationTemplates(this.currentCommunicationTypeCode, templateName);
+          this.loadNotificationTemplates(this.templateLoadType, templateName);
         }
       this.loaderService.hide();
     },

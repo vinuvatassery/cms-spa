@@ -129,6 +129,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    debugger;
     if(this.templateLoadType === undefined){
       this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
     }
@@ -136,7 +137,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.loadInitialData.emit();
     this.updateOpenSendEmailFlag();
     debugger;
-    if (this.communicationEmailTypeCode) {
+    if (this.templateLoadType) {
       if (CommunicationEventTypeCode.CerAuthorizationEmail !== this.templateLoadType) {
         if (this.isContinueDraftClicked) {
           this.loadClientAndVendorDraftEmailTemplates();
@@ -202,7 +203,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   }
 
   private loadEmailTemplates() {
-    if (this.communicationEmailTypeCode == undefined)
+    if (this.templateLoadType == undefined)
       return;
     this.loaderService.show();
     const channelTypeCode = CommunicationEvents.Email;
