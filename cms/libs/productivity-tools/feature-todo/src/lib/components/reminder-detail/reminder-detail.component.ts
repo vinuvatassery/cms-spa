@@ -161,6 +161,7 @@ export class ReminderDetailComponent implements OnInit {
           this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
           this.entityTypeCode= res.entityTypeCode
           this.entityId = res.entityId
+          this.clientReminderForm.controls["linkTo"].setValue(res.entityTypeCode)
          if(res.entityTypeCode !=='CLIENT'){
           this.showVendorSearch = true;
           this.showClientSearch = false;
