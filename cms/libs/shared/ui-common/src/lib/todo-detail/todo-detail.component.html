@@ -191,8 +191,8 @@
 <kendo-dialog-actions kendoTooltip>
   <div class="justify-content-between">
     <div>
-      <button kendoButton aria-label="Delete"
-       class="k-danger-link">  Delete     </button>
+      <button kendoButton aria-label="Delete" *ngIf="isEdit"
+       class="k-danger-link"(click)="delete()" >  Delete     </button>
     </div>
 
     <div class="justify-content-end">

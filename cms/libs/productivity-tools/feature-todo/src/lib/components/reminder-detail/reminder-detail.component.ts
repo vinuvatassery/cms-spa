@@ -15,7 +15,7 @@ import { Observable, Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReminderDetailComponent implements OnInit {
-  currentDate = new Date();
+  currentDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
   showClientSearchInputLoader = false
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
@@ -243,7 +243,6 @@ export class ReminderDetailComponent implements OnInit {
       this.entityId =  this.clientReminderForm.controls['vendorId'].value.providerId?.toString()
     }
    const dueDate = new Date(this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat));
-    console.log(this.clientReminderForm.controls['time'].value)
     if (this.clientReminderForm.valid) {
       const payload ={
         alertDueDate :  dueDate,
