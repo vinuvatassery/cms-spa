@@ -38,7 +38,7 @@ export class NotificationDataService {
 
   viewNotifictaions(notifications: any[]) {
     return this.http.post(
-      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications`, notifications
+      `${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/notifications-viewed`, notifications
     );
   }
 }

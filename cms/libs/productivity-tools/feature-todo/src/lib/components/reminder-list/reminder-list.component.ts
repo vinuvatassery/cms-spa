@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 /** External libraries **/
 import { SnackBar, ToDoEntityTypeCode } from '@cms/shared/ui-common';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 /** Facades **/ 
 import { LoaderService } from '@cms/shared/util-core';
@@ -42,6 +42,12 @@ export class ReminderListComponent implements  OnInit{
   sortValue ="alertDueDate";
   isToDODeleteActionOpen = false;
   @Input() isToDODetailsActionOpen: any;
+  @Output() isLoadReminderAndNotificationEvent = new EventEmitter<any>();
+  @Input() notificationList$: any;
+  alertsData:any = {};
+  isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
+  notificationaAndReminderDataSubject = new Subject<any>();
+  notificationItemData$ = this.notificationaAndReminderDataSubject.asObservable();
    @Input()todoGrid$ : any;
   @Output() isLoadTodoGridEvent = new EventEmitter<any>();
   @Output() isModalTodoDetailsOpenClicked = new EventEmitter<any>();
@@ -121,6 +127,12 @@ export class ReminderListComponent implements  OnInit{
     this.loadTodoGrid();
     this.loadAlertGrid$.subscribe((data: any) => {
       this.loadTodoGrid();
+      this.loadNotificationsAndReminders();
+      this.notificationList$.subscribe((data: any) => {
+        this.alertsData = data;
+        this.cdr.detectChanges();
+        this.loadNotificationsAndReminders;
+      });
     });
   }
   /** Internal event methods **/
@@ -317,7 +329,19 @@ export class ReminderListComponent implements  OnInit{
           break;
     }
   }
-
+  public loadNotificationsAndReminders() {
+    this.isToDoGridLoaderShow.next(true);
+    this.isLoadReminderAndNotificationEvent.emit({ });
+    this.notificationList$.subscribe((data: any) => {
+      this.gridDataResult = data?.items;
+      if (data?.totalCount >= 0 || data?.totalCount === -1) {
+      this.alertsData =  data.items.filter((item:any) => item.alertTypeCode == 'NOTIFICATION');
+      console.log(this.alertsData);
+        this.isToDoGridLoaderShow.next(false);
+      }
+      this.notificationaAndReminderDataSubject.next(this.gridDataResult);
+    });
+  }
 
 
   remainderFor(event:any){
