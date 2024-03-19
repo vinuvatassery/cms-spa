@@ -466,7 +466,6 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
             this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
               queryParamsHandling: "preserve"
             });
@@ -474,7 +473,6 @@ export class HealthInsurancePageComponent implements OnInit, OnDestroy, AfterVie
         })
       }
       else {
-        //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
         this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
           queryParamsHandling: "preserve"
         });

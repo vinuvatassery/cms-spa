@@ -474,23 +474,13 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            //this.contactFacade.loadContactInfo(this.clientId, this.clientCaseEligibilityId).subscribe((contact: any) => {
-              //this.paperlessFlag = contact?.clientCaseEligibility?.paperlessFlag;
-              //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
               this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
                 queryParamsHandling: "preserve"
-                // queryParams: {
-                //   PF: this.paperlessFlag
-                // },
-                // queryParamsHandling: 'merge',
               });
-            //});
-
           }
         })
       }
       else {
-        //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
         this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
           queryParamsHandling: "preserve"          
         });
@@ -498,11 +488,6 @@ export class IncomePageComponent implements OnInit, OnDestroy, AfterViewInit {
       this.cdr.detectChanges();
     });
   }
-
-  // private loadAddress(){
-  //   this.address$.subscribe((address:any)=>{
-  //   })
-  // }
 
   private addSaveForLaterValidationsSubscription(): void {
     this.saveForLaterValidationSubscription = this.workflowFacade.saveForLaterValidationClicked$.subscribe((val) => {

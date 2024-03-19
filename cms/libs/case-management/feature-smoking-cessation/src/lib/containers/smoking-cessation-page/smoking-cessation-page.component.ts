@@ -267,7 +267,6 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
         this.save().subscribe((response: any) => {
           if (response) {
             this.loaderService.hide();
-            //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
             this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
               queryParamsHandling: "preserve"
             });
@@ -275,7 +274,6 @@ export class SmokingCessationPageComponent implements OnInit, OnDestroy, AfterVi
         })
       }
       else {
-        //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
         this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
           queryParamsHandling: "preserve"
         });
