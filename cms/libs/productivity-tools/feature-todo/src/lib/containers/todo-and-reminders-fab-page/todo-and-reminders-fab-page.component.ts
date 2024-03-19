@@ -46,7 +46,10 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
     todoList!: TodoListComponent;
     @ViewChild('newReminderTemplate', { read: TemplateRef })
     newReminderTemplate!: TemplateRef<any>;
-
+    @ViewChild('deleteToDOTemplate', { read: TemplateRef })
+    deleteTodoTemplate!: TemplateRef<any>;
+    deleteToDoDialog!:any
+    isToDODeleteActionOpen = false
     reminderDialog :any
     constructor( private route: ActivatedRoute,
       public readonly todoFacade: TodoFacade,
@@ -88,6 +91,7 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
       onMarkAlertDoneGrid(selectedAlertId: any){
         this.todoFacade.markAlertAsDone(selectedAlertId);
       }
+
       onDeleteAlertGrid(selectedAlertId: any){
         this.todoFacade.deleteAlert(selectedAlertId);
      
@@ -150,4 +154,28 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
       this.isEdit = false;
      this.reminderDialog.close()
     }
+
+    onDeleteToDoClicked(event:any): void {
+      this.selectedAlertId = event;
+      this.deleteToDoDialog = this.dialogService.open({
+        content: this.deleteTodoTemplate,
+        cssClass: 'app-c-modal app-c-modal-sm app-c-modal-np',
+      });
+    }
+
+    onCloseDeleteToDoClicked(result: any) {
+      if (result) {
+        this.isToDODeleteActionOpen = false;
+        this.deleteToDoDialog.close();
+      }
+    }
+    onConfirmDeleteToDOClicked(result: any) 
+    {
+      if (result) {
+        this.isToDODeleteActionOpen = false;
+        this.deleteToDoDialog.close();
+        this.onDeleteAlertGrid(this.selectedAlertId);
+      }
+    }
+
   }

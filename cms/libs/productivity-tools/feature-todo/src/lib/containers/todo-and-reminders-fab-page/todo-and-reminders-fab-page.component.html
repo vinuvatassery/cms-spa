@@ -4,7 +4,7 @@
  (onEditReminderClickedEvent)="onReminderOpenClicked($event)"
  (editTodoItemEvent)="onOpenTodoClicked($event,todoDetailTemplate)"
  (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
- (onDeleteAlertGridClicked)="onDeleteAlertGrid($event)"
+ (onDeleteAlertGridClicked)="onDeleteToDoClicked($event)"
  (onDeleteReminderAlertGridClicked)="onReminderOpenClicked($event)"
  ></productivity-tools-todo-and-reminders-page>
 
@@ -65,6 +65,11 @@
     </productivity-tools-reminder-detail>
   </ng-template>
   
+  
+  <ng-template #deleteToDOTemplate>   
+    <productivity-tools-delete-todo-confirmation
+      (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onConfirmDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+  </ng-template>
   
   
     
