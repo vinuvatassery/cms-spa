@@ -501,7 +501,8 @@
                                     <kendo-dropdownlist
                                         [data]="paymentTypeData"
                                         textField="lovDesc"
-                                        valueField="lovDesc"
+                                        valueField="lovCode"
+                                        [(ngModel)] = "selectedPaymentType"
                                         (valueChange)="dropdownFilterChange('paymentTypeDesc', $event, filterService)"
                                         >
                                      </kendo-dropdownlist>
