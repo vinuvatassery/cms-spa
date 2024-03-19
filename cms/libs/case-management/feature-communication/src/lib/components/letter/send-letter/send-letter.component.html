@@ -4,7 +4,7 @@
   <section class="k-dialog-body" >
     <p class="text-muted mb-1">
       <!-- 'Select an existing template or draft a custom letter.' -->
-     {{informationalText === null?'Select an existing template or draft a custom letter.':informationalText}} 
+     {{informationalText}} 
      
     </p>
     <div class="flex-row pb-2">
@@ -71,7 +71,7 @@
         </button>
       </div>
       <div class="justify-content-end">
-        <button kendoButton [primary]="true" look="outline" (click)="onCloseNewLetterClicked()"
+        <button kendoButton [primary]="true" look="outline" (click)="onCloseNewLetterClicked()" *ngIf="cancelDisplay"
           aria-label="Cancel">
           Cancel
         </button>

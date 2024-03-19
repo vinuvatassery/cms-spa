@@ -31,7 +31,11 @@ export enum CommunicationEventTypeCode {
     LETTER="Letter",
     SMS="Sms",
     PendingNoticeLetter = 'PENDING_NOTICE_LETTER',
+    PendingLetterSent = 'PENDING_LETTER_SENT' ,
     PendingNoticeEmail = 'PENDING_NOTICE_EMAIL',
+    PendingEmailSent = 'PENDING_EMAIL_SENT',
     RejectionNoticeLetter = 'REJECTION_NOTICE_LETTER',
-    RejectionNoticeEmail = 'REJECTION_NOTICE_EMAIL'
+    RejectionLetterSent = 'REJECTION_LETTER_SENT',
+    RejectionNoticeEmail = 'REJECTION_NOTICE_EMAIL',
+    RejectionEmailSent = 'REJECTION_EMAIL_SENT'
   }

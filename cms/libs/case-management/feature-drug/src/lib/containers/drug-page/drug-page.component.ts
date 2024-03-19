@@ -10,7 +10,7 @@ import {
 import { FormGroup, FormControl, Validators, } from '@angular/forms';
 /** Enums **/
 import { LoaderService, LoggingService, NotificationSnackbarService, SnackBarNotificationType } from '@cms/shared/util-core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StatusFlag, YesNoFlag } from '@cms/shared/ui-common';
 
 @Component({
@@ -60,6 +60,7 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
     private readonly notificationSnackbarService: NotificationSnackbarService,
     private readonly prescriptionDrugFacade: PrescriptionDrugFacade,
     private changeDetector: ChangeDetectorRef,
+    private readonly router: Router,
   ) {
 
   }
@@ -391,12 +392,18 @@ export class DrugPageComponent implements OnInit, OnDestroy, AfterViewInit {
           this.save().subscribe((response: any) => {
             if (response) {
               this.loaderService.hide();
-              this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+              //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+              this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+                queryParamsHandling: "preserve"
+              });
             }
           })
         }
         else {
-          this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+          //this.workflowFacade.handleSendNewsLetterpopup(statusResponse)
+          this.router.navigate(['/case-management/case-detail/application-review/send-letter'], {
+            queryParamsHandling: "preserve"
+          });
         }
       });
   }

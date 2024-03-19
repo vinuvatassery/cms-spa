@@ -134,6 +134,7 @@
           look="outline"
           (click)="onCloseSendEmailClicked()"
           aria-label="Cancel"
+          *ngIf ="cancelDisplay"
         >
           Cancel
         </button>

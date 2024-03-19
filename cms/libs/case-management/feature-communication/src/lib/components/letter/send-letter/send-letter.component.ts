@@ -8,8 +8,7 @@ import {
   Input,
   ChangeDetectorRef,
   OnDestroy,
-  AfterViewInit,
-} from '@angular/core';
+  } from '@angular/core';
 
 
 /** Internal Libraries **/
@@ -28,7 +27,7 @@ import { UserDataService } from '@cms/system-config/domain';
   styleUrls: ['./send-letter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
+export class SendLetterComponent implements OnInit, OnDestroy {
   /** Input properties **/
   @Input() mailingAddress$!: Observable<any>;
   @Input() communicationLetterTypeCode!:any;
@@ -92,9 +91,9 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
   documentTemplate!: any;
   currentTemplate!:any;
   templateDrpDisable: boolean = false;
+  cancelDisplay:boolean = true;
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    debugger;
     if(this.templateLoadType === undefined){
       this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
     }
@@ -108,14 +107,7 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
         this.openNewLetterClicked();
       }else{
         this.loadDropdownLetterTemplates();
-      }
-      if(this.isContinueDraftClicked){
-      this.loadClientAndVendorDraftLetterTemplates();
-      }else if(this.isNewNotificationClicked){
-        this.openNewLetterClicked();
-      }else{
-        this.loadDropdownLetterTemplates();
-      }
+      }      
     }
     else {
       this.vendorContactFacade.loadMailCodes(this.entityId);
@@ -125,10 +117,6 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.clientAddressSubscription.unsubscribe();
-  }
-
-  ngAfterViewInit(): void{
-
   }
 
   getLoggedInUserProfile(){
@@ -303,7 +291,8 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
   }
 
   private sendClientAndVendorLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
-    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.clientAndVendorAttachedFiles,this.communicationLetterTypeCode);
+    let templateTypeCode = this.getApiTemplateTypeCode();
+    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.clientAndVendorAttachedFiles, templateTypeCode);
     this.communicationFacade.sendLetterToPrint(this.entityId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
@@ -328,6 +317,19 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
           this.showHideSnackBar(SnackBarNotificationType.ERROR , err);
         },
       });
+  }
+
+  getApiTemplateTypeCode() :string{
+    let templateTypeCode ='';
+    switch(this.communicationLetterTypeCode){
+      case CommunicationEventTypeCode.PendingNoticeLetter :
+        templateTypeCode = CommunicationEventTypeCode.PendingLetterSent;
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeLetter :
+        templateTypeCode = CommunicationEventTypeCode.RejectionLetterSent;
+        break;
+    }
+    return templateTypeCode;
   }
 
   openNewLetterClicked(){
@@ -381,8 +383,6 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
 
   private loadDropdownLetterTemplates() {
     this.loaderService.show();
-    const channelTypeCode = CommunicationEvents.Letter;
-
     this.communicationFacade.loadLetterTemplates(this.notificationGroup, this.templateLoadType)
     .subscribe({
       next: (data: any) =>{
@@ -393,8 +393,10 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
           this.documentTemplate = {'description': this.currentTemplate[0].description,'documentTemplateId':this.currentTemplate[0].documentTemplateId};
           this.handleDdlLetterValueChange(this.currentTemplate[0]);
           }
-          if(this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter){
+          if(this.communicationLetterTypeCode === CommunicationEventTypeCode.PendingNoticeLetter
+            || this.communicationLetterTypeCode === CommunicationEventTypeCode.RejectionNoticeLetter){
             this.templateDrpDisable = true;
+            this.cancelDisplay = false;
           }
         }
       this.loaderService.hide();

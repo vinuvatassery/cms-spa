@@ -13,7 +13,7 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommunicationEventTypeCode, ContactFacade, ScreenType, WorkflowFacade } from '@cms/case-management/domain';
-import { StatusFlag } from '@cms/shared/ui-common';
+import { CaseStatusCode, StatusFlag } from '@cms/shared/ui-common';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { Subscription, first } from 'rxjs';
 
@@ -61,6 +61,7 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
   toEmail: Array<string> = [];
   informationalText :any = null;
   templateHeader : string='';
+  emailSubject:any = '';
     /** Constructor**/
     constructor(    
       private route: ActivatedRoute,
@@ -202,38 +203,41 @@ export class SendLetterPageComponent implements OnInit , OnDestroy , AfterViewIn
           this.printModelTitle = this.printModelTitle + (this.paperlessFlag === 'Y' ? 'email?' : 'print?')
           this.confirmTitle = (this.paperlessFlag === 'Y' ? "Send " + pageType + " Email?" : "Send " + pageType + " Letter to Print?")
           this.sendType = this.paperlessFlag === 'Y' ? 'Email' : 'Letter'
-          if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes) {
-            if (this.paperlessFlag === StatusFlag.Yes) {
-              //this.contactFacade.loadEmailAddress(this.clientId,this.clientCaseEligibilityId);
-              debugger;
-              //if(this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes){
+          if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes && this.workflowFacade.caseStatus === CaseStatusCode.incomplete) {
+            if (this.paperlessFlag === StatusFlag.Yes) {            
               this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
               this.emailCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeEmail;
               this.informationalText = "If there is an issue with this email template, please contact your Administrator. Make edits as needed, then click ''SEND EMAIL'' once the email is complete."
               this.templateHeader = 'Send Pending Email';
-              // }
+              this.emailSubject ='';
             }
             else {
-              //if(this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes){
               this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
               this.letterCommunicationTypeCode = CommunicationEventTypeCode.PendingNoticeLetter;
               this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the letter is complete."
               this.templateHeader = 'Send Pending Letter';
-              // }           
+              this.emailSubject ='';          
             }
             this.cdr.detectChanges();
           }
-          else{
-            if (this.paperlessFlag === StatusFlag.Yes) {
-            this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
-            this.emailCommunicationTypeCode = CommunicationEventTypeCode.RejectionNoticeEmail;
-            // this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''SEND TO PRINT'' once the letter is complete."
-            // this.templateHeader = 'Send Pending Letter';
+          else {
+            if (this.workflowFacade.sendLetterEmailFlag === StatusFlag.Yes && this.workflowFacade.caseStatus === CaseStatusCode.reject) {
+              if (this.paperlessFlag === StatusFlag.Yes) {
+                this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
+                this.emailCommunicationTypeCode = CommunicationEventTypeCode.RejectionNoticeEmail;              
+                this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send Email'' once the email is complete."
+                this.templateHeader = 'Send Denial Email';
+                this.emailSubject ="CAREAssist Denial Notice";
+              }
+              else{
+                this.templateLoadType = CommunicationEventTypeCode.ClientLetter;
+                this.emailCommunicationTypeCode = CommunicationEventTypeCode.RejectionNoticeLetter;
+                this.informationalText = "If there is an issue with this letter template, please contact your Administrator. Make edits as needed, then click ''Send to Print'' once the letter is complete."
+                this.templateHeader = 'Send Denial Letter';
+                this.emailSubject ='';
+              }
             }
-            else{
 
-            }
-            
           }
         }
       });

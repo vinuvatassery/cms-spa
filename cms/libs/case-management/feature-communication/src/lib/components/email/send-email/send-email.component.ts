@@ -106,6 +106,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
   updatedTemplateContent !: any;
   currentTemplate!:any;
   templateDrpDisable : boolean = false;
+  cancelDisplay:boolean = true;
   /** Private properties **/
 
   emailFormControl = new FormControl('', [
@@ -206,7 +207,6 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (this.templateLoadType == undefined)
       return;
     this.loaderService.show();
-    const channelTypeCode = CommunicationEvents.Email;
     if(this.templateLoadType === null || this.templateLoadType === undefined || this.templateLoadType ===''){
       this.templateLoadType = CommunicationEventTypeCode.ClientEmail;
     }
@@ -221,8 +221,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
             this.documentTemplate = {'description': this.currentTemplate[0].description,'documentTemplateId':this.currentTemplate[0].documentTemplateId};
             this.handleDdlEmailValueChange(this.currentTemplate[0]);
             }
-            if(this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail){
+            if(this.communicationEmailTypeCode === CommunicationEventTypeCode.PendingNoticeEmail
+              ||this.communicationEmailTypeCode === CommunicationEventTypeCode.RejectionNoticeEmail){
               this.templateDrpDisable = true;
+              this.cancelDisplay = false;
             }
             this.ref.detectChanges();
           }
@@ -356,10 +358,10 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     return emailRecipients;
   }
 
-  private getEmailPayload(selectedTemplate: any) {
+  private getEmailPayload(selectedTemplate: any, templateTypeCode:string='') {
 
     return {
-      templateTypeCode: this.communicationEmailTypeCode,
+      templateTypeCode: templateTypeCode,
       subject: this.emailSubject,
       toEmail: this.selectedToEmail,
       ccEmail: this.getSelectedEmails(this.selectedCCEmail,"CC"),
@@ -379,7 +381,8 @@ export class SendEmailComponent implements OnInit, OnDestroy {
      if (!this.selectedTemplate.documentTemplateId) {
       this.selectedTemplate.documentTemplateId = this.selectedTemplate.notificationTemplateId
     }
-    const emailData = this.getEmailPayload(selectedTemplate);
+    let templateTypeCode = this.getApiTemplateTypeCode();
+    const emailData = this.getEmailPayload(selectedTemplate,templateTypeCode);    
     const emailFormData = this.communicationFacade.createFormDataForEmail(emailData);
     this.communicationFacade.initiateSendEmailRequest(emailFormData)
       .subscribe({
@@ -398,6 +401,19 @@ export class SendEmailComponent implements OnInit, OnDestroy {
           this.showHideSnackBar(SnackBarNotificationType.ERROR, err);
         },
       });
+  }
+
+  getApiTemplateTypeCode() :string{
+    let templateTypeCode ='';
+    switch(this.communicationEmailTypeCode){
+      case CommunicationEventTypeCode.PendingNoticeEmail :
+        templateTypeCode = CommunicationEventTypeCode.PendingEmailSent;
+        break;
+      case CommunicationEventTypeCode.RejectionNoticeEmail :
+        templateTypeCode = CommunicationEventTypeCode.RejectionEmailSent;
+        break;
+    }
+    return templateTypeCode;
   }
 
   onSendEmailConfirmationClicked() {
@@ -422,6 +438,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
         .subscribe({
           next: (data: any) => {
             if (data) {
+              debugger;
               this.selectedTemplate = data;
               this.emailContentValue = data.templateContent;
               this.selectedTemplateContent = data.templateContent;
@@ -432,7 +449,9 @@ export class SendEmailComponent implements OnInit, OnDestroy {
               this.selectedEmail = [];
               this.selectedEmail.push(this.toEmail[0]?.trim());
               this.selectedToEmail = this.selectedEmail;
+              if(this.emailSubject == ''){
               this.emailSubject = data.description;
+              }
               const ccEmails = data.cc?.map((item: any)=> item.email);
               this.ccEmail = ccEmails;
               if (data?.bccEmail?.length > 0) {
