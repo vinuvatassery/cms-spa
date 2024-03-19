@@ -301,7 +301,7 @@ export class Case360HeaderToolsComponent implements OnInit, OnDestroy {
           this.onDraftNotificationExistsConfirmation(notificationDraftEmailDialog);
           this.ref.detectChanges();
         }else{
-          this.loadNotificationTemplates(this.templateLoadType , templateName);
+          this.loadNotificationTemplates(this.currentCommunicationTypeCode, templateName);
         }
       this.loaderService.hide();
     },

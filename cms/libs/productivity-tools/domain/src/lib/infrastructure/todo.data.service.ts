@@ -43,7 +43,7 @@ export class TodoDataService {
   }
 
   loadAlerts(payload:any, alertTypeCode:any) {
-    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${alertTypeCode}`,payload.gridDataRefinerValue);
+    return this.http.put<any>(`${this.configurationProvider.appSettings.productivityToolsApiUrl}/productivity-tools/alerts/${payload.alertType}`,payload.gridDataRefinerValue);
   }
 
   getTodoItem(alertId:any){  

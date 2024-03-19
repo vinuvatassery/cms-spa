@@ -14,11 +14,14 @@ import {
 
 /** Internal Libraries **/
 import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade, ScreenType, AddressTypeCode } from '@cms/case-management/domain';
+import { CommunicationEvents, CommunicationFacade, WorkflowFacade, ContactFacade, CommunicationEventTypeCode, VendorContactsFacade, ScreenType, AddressTypeCode } from '@cms/case-management/domain';
 import { UIFormStyle } from '@cms/shared/ui-tpa';
 import { Observable, Subscription } from 'rxjs';
 
 /** External Libraries **/
 import { LoaderService, LoggingService, SnackBarNotificationType, NotificationSnackbarService } from '@cms/shared/util-core';
+import { StatusFlag } from '@cms/shared/ui-common';
+import { UserDataService } from '@cms/system-config/domain';
 import { StatusFlag } from '@cms/shared/ui-common';
 import { UserDataService } from '@cms/system-config/domain';
 
@@ -33,6 +36,7 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
   @Input() mailingAddress$!: Observable<any>;
   @Input() communicationLetterTypeCode!:any;
   @Input() clientCaseEligibilityId!: any;
+  @Input() entityId!: any;
   @Input() entityId!: any;
   @Input() isCerForm!: any;
   @Input() notificationGroup!: any;
@@ -102,6 +106,13 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
     this.getClientAddressSubscription();
     if (this.templateLoadType != CommunicationEventTypeCode.CerAuthorizationLetter) {
       this.loadMailCodes();
+      if(this.isContinueDraftClicked){
+      this.loadClientAndVendorDraftLetterTemplates();
+      }else if(this.isNewNotificationClicked){
+        this.openNewLetterClicked();
+      }else{
+        this.loadDropdownLetterTemplates();
+      }
       if(this.isContinueDraftClicked){
       this.loadClientAndVendorDraftLetterTemplates();
       }else if(this.isNewNotificationClicked){
@@ -304,12 +315,14 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
             this.currentLetterPreviewData = data;
             const fileUrl = window.URL.createObjectURL(data);
             const documentName = this.getFileNameFromTypeCode(draftTemplate.typeCode);
+            const documentName = this.getFileNameFromTypeCode(draftTemplate.typeCode);
             this.ref.detectChanges();
             const downloadLink = document.createElement('a');
             downloadLink.href = fileUrl;
             downloadLink.download = documentName;
             downloadLink.click();
             this.onCloseNewLetterClicked();
+            this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print');
             this.showHideSnackBar(SnackBarNotificationType.SUCCESS , 'Document has been sent to Print');
           }
           this.loaderService.hide();
@@ -480,6 +493,14 @@ export class SendLetterComponent implements OnInit,AfterViewInit, OnDestroy {
   if (this.communicationLetterTypeCode == CommunicationEventTypeCode.CerAuthorizationLetter)
   {
     this.cerEmailAttachedFiles = event;
+    this.attachmentCount = this.cerEmailAttachedFiles?.length;
+  }else{
+    const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)
+    if(!isFileExists)
+    {
+    this.clientAndVendorAttachedFiles?.push(event);
+    }
+    this.attachmentCount = this.clientAndVendorAttachedFiles?.length;
     this.attachmentCount = this.cerEmailAttachedFiles?.length;
   }else{
     const isFileExists = this.clientAndVendorAttachedFiles?.some((item: any) => item.name === event?.document?.documentName)

@@ -157,7 +157,7 @@ export class CommunicationFacade {
     return formData;
   }
 
-  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[], templateTypeCode:any) {
+  prepareSendLetterData(draftTemplate: any, clientAndVendorAttachedFiles: any[],templateTypeCode:any) {
     const formData = new FormData();
     formData.append('templateTypeCode', templateTypeCode ?? '');
     formData.append('notificationTemplateId', draftTemplate?.notificationTemplateId ?? '');
@@ -184,9 +184,8 @@ export class CommunicationFacade {
     return formData;
   }
 
-  createFormDataForEmail(data: {templateTypeCode:any, subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
+  createFormDataForEmail(data: { subject: string, toEmail: string, ccEmail: any[], bccEmail: string, eligibilityId: string, entity: string, entityId: string, caseId: string, userId: string, emailData: any, clientAndVendorEmailAttachedFiles: any[] }) {
     const formData = new FormData();
-    formData.append('templateTypeCode', data?.templateTypeCode ?? '');
     formData.append('requestSubject', data?.subject ?? '');
     formData.append('loginUserId', data?.userId ?? '');
     formData.append('clientCaseId', data?.caseId ?? '');
@@ -211,7 +210,7 @@ export class CommunicationFacade {
       formData.append('requestBody', data?.emailData?.templateContent ?? '');
       formData.append('notifcationDraftId', data?.emailData?.notifcationDraftId ?? '');
     }
-    if (data?.clientAndVendorEmailAttachedFiles.length > 0) {
+    if (data?.clientAndVendorEmailAttachedFiles[0]?.length > 0) {
       let i = 0;
       data?.clientAndVendorEmailAttachedFiles[0].forEach((file: any) => {
         if (file.rawFile == undefined || file.rawFile == null) {
