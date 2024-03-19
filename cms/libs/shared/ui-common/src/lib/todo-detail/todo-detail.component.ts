@@ -49,6 +49,7 @@ export class TodoDetailComponent implements OnInit {
   @Output() getTodoItemsLov = new EventEmitter();
   @Input() searchProviderSubject! : Subject<any>
   @Input() clientSubject! : Subject<any>
+  @Output() onDeleteAlertClicked = new EventEmitter()
   showClientSearchInputLoader = false
   placeholderText =""
   vendorPlaceHolderText = "Search for Vendor Name or TIN";
@@ -270,6 +271,11 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
     }
   }
 
+  
+  delete(){
+    this.onDeleteAlertClicked.emit(this.alertId)
+   }
+
   endDateValidation(){
     const endDate = this.todoDetailsForm.controls['endDate'].value;
     const dueDate = this.todoDetailsForm.controls['dueDate'].value;
@@ -279,4 +285,5 @@ if(this.todoDetailsForm.controls['linkTo'].value =='CLIENT'){
       return;
     }
   }
+
 }

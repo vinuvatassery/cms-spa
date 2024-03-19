@@ -15,7 +15,7 @@ import { Observable, Subject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReminderDetailComponent implements OnInit {
-  currentDate = new Date();
+  currentDate = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate());
   showClientSearchInputLoader = false
   public formUiStyle: UIFormStyle = new UIFormStyle();
 
@@ -28,7 +28,7 @@ export class ReminderDetailComponent implements OnInit {
   tareaReminderCharachtersCount!: number;
   tareaReminderCounter!: string;
   tareaReminderDescription = '';
-  isShow = false;
+  isShowEntityTypeCode = false;
   dateValidator = false;
   @Input() entityTypeCodeSubject$! : Observable<any>
   @Input() providerSearchResult$!:Observable<any>
@@ -41,8 +41,14 @@ export class ReminderDetailComponent implements OnInit {
   @Output() searchClientName = new EventEmitter();
   @Output() searchProvider = new EventEmitter();
   @Output() onReminderItemCreateClick = new EventEmitter();
+  @Output() loadReminderItems = new EventEmitter();
   @Output() getReminderDetailsLov = new EventEmitter();
-
+  @Input() searchProviderSubject! : Subject<any>
+  @Output() onGetTodoItem = new EventEmitter();
+@Input() isEdit = false;
+@Input() isDelete = false;
+@Input() alertId!:any
+@Input() getTodo$!:any
   clientProfileHeader$ = this.caseFacade.clientProfileHeader$
   entityTypeCode =''
   entityId = ''
@@ -56,6 +62,7 @@ export class ReminderDetailComponent implements OnInit {
   manufacturerPlaceHolderText = "Search Manufacturer Name, TIN"
   PharmacyPlaceHolderText = "Search Pharmacy Name, TIN"
   dateFormat = this.configurationProvider.appSettings.dateFormat;
+ isSubmitted = false
   constructor(private readonly todoFacade: TodoFacade, 
     private router : Router,
     private route : ActivatedRoute,
@@ -66,7 +73,10 @@ export class ReminderDetailComponent implements OnInit {
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
-    this.buildForm();
+    if(this.isEdit ||  this.isDelete){
+      this.onGetTodoItem.emit(this.alertId);
+    }
+  
     if(this.router.url.includes('vendors')){
       const vid = this.route.snapshot.queryParamMap.get('v_id')
       const tabcode = this.route.snapshot.queryParamMap.get('tab_code')
@@ -88,15 +98,16 @@ export class ReminderDetailComponent implements OnInit {
       })
       this.entityId = id
     
-     this.caseFacade.loadClientProfileHeader(+id);
+     this.caseFacade.loadClientProfileHeaderWithOutLoader(+id);
     }
   }
      if(!this.entityTypeCode){
-      this.isShow = true
+      this.isShowEntityTypeCode = true
       this.getReminderDetailsLov.emit()
      }
 
     this.tareaVariablesIntialization();
+    this.buildForm();
   }
 
   /** Private methods **/
@@ -122,11 +133,78 @@ export class ReminderDetailComponent implements OnInit {
       clientId :new FormControl({}),
       addToOutlookCalender: new FormControl(''),
     });
+
+    if(this.isDelete){
+      this.getTodo$.subscribe((res:any) =>{
+        if (this.isDelete && res) {
+          this.clientReminderForm.patchValue({
+            description: res.alertDesc,
+            addToOutlookCalender: res.addToOutlookFlag =="Y"
+          })
+          this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
+          this.clientReminderForm.controls['time'].disable()
+          this.clientReminderForm.controls['description'].disable()
+          this.clientReminderForm.controls['addToOutlookCalender'].disable()
+          this.clientReminderForm.controls['dueDate'].disable()
+          this.isShowEntityTypeCode = false;
+        }
+
+      });
+
+    }else if(this.isEdit){
+      this.getTodo$.subscribe((res:any) =>{
+        if (this.isEdit && res) {
+          this.clientReminderForm.patchValue({
+            description: res.alertDesc,
+            addToOutlookCalender: res.addToOutlookFlag =="Y"
+          })
+          this.clientReminderForm.controls["dueDate"].setValue(new Date(res.alertDueDate));
+          this.entityTypeCode= res.entityTypeCode
+          this.entityId = res.entityId
+         if(res.entityTypeCode !=='CLIENT'){
+          this.showVendorSearch = true;
+          this.showClientSearch = false;
+          this.placeholderText = this.vendorPlaceHolderText;
+          this.searchProviderSubject.next([
+            { providerName : res.providerName,
+              tin : res.tin,
+              providerId: res.entityId
+            }
+          ])
+          this.clientReminderForm.controls["vendorId"].setValue({
+            providerName : res.providerName,
+            tin : res.tin,
+            providerId: res.entityId
+          })
+     
+        }else{
+          this.showVendorSearch = false;
+          this.showClientSearch = true;
+          this.placeholderText = this.clientPlaceHolderText;
+  
+          this.clientSubject.next([{
+            clientFullName : res.clientFullName,
+            dob : res.dob,
+            ssn: res.ssn,
+            clientId : res.entityId
+          }])
+          this.clientReminderForm.controls["clientId"].setValue({
+            clientFullName : res.clientFullName,
+            dob : res.dob,
+            ssn: res.ssn,
+            clientId : res.entityId
+          })
+        
+        }   
+      
+      }
+      });
+    }
   }
  
   onCloseReminderClicked() 
   {
-    this.isModalNewReminderCloseClicked.emit(true);
+    this.isModalNewReminderCloseClicked.emit();
   }
   setValidators() {
     this.clientReminderForm.markAllAsTouched();
@@ -150,15 +228,21 @@ export class ReminderDetailComponent implements OnInit {
   }
 
   public save() {
+    this.isSubmitted = true;
     this.todoFacade.curdAlert$.subscribe(res =>{
       if(res){    
+      this.loadReminderItems.emit()
       this.isModalNewReminderCloseClicked.emit(true)
       }
     })
-
-    this.setValidators();
+    if(this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value =='CLIENT'){
+      this.entityTypeCode = 'CLIENT'
+      this.entityId =  this.clientReminderForm.controls['clientId'].value.clientId?.toString()
+    }else   if(this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value =='VENDOR'){
+      this.entityTypeCode = 'VENDOR'
+      this.entityId =  this.clientReminderForm.controls['vendorId'].value.providerId?.toString()
+    }
    const dueDate = new Date(this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat));
-    console.log(this.clientReminderForm.controls['time'].value)
     if (this.clientReminderForm.valid) {
       const payload ={
         alertDueDate :  dueDate,
@@ -167,6 +251,7 @@ export class ReminderDetailComponent implements OnInit {
         entityId :this.entityId ,
         customAlertFlag : 'Y',
         type :'REMINDER',
+        alertId : this.alertId,
         alertFrequencyCode :'NEVER',
         alertName :  'REMINDER',
         AddToOutlookFlag :  this.clientReminderForm.controls['addToOutlookCalender'].value ? "Y" : "N"
@@ -175,15 +260,35 @@ export class ReminderDetailComponent implements OnInit {
      let payloadWithRepeat ={
         ... payload,
         repeatTime : new Date(this.clientReminderForm.controls['time'].value).getHours()+":"+new Date(this.clientReminderForm.controls['time'].value).getMinutes()
-      }    
-      this.todoFacade.createAlertItem(payloadWithRepeat)
+      }
+      if(this.isEdit){
+        this.todoFacade.updateAlertItem(payloadWithRepeat)
+      }else{
+        this.todoFacade.createAlertItem(payloadWithRepeat)
+
+      }  
      }else{
-     this.todoFacade.createAlertItem(payload)
+      if(this.isEdit){
+        this.todoFacade.updateAlertItem(payload)
+      }else{
+        this.todoFacade.createAlertItem(payload)
+
+      } 
      }
-     this.isModalNewReminderCloseClicked.emit();
+    
     }
   }
 
+  delete(){
+    this.todoFacade.curdAlert$.subscribe(res =>{
+      if(res){    
+      this.loadReminderItems.emit()
+      this.isModalNewReminderCloseClicked.emit(true)
+      }
+    })
+    this.todoFacade.deleteAlert(this.alertId);
+    
+  }
   onLinkToChange(event:any){
     if(event == 'CLIENT'){
       this.clientReminderForm.controls['clientId'].enable()

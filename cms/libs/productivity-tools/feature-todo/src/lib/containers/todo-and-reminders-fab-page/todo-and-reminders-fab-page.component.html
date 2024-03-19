@@ -1,4 +1,12 @@
-<productivity-tools-todo-and-reminders-page *ngIf="isShowTodoReminders" (closeAction)="closeAction()"></productivity-tools-todo-and-reminders-page>
+<productivity-tools-todo-and-reminders-page 
+*ngIf="isShowTodoReminders"
+ (closeAction)="closeAction()"
+ (onEditReminderClickedEvent)="onReminderOpenClicked($event)"
+ (editTodoItemEvent)="onOpenTodoClicked($event,todoDetailTemplate)"
+ (onMarkAlertAsDoneGridClicked)="onMarkAlertDoneGrid($event)"
+ (onDeleteAlertGridClicked)="onDeleteToDoClicked($event)"
+ (onDeleteReminderAlertGridClicked)="onReminderOpenClicked($event)"
+ ></productivity-tools-todo-and-reminders-page>
 
 
 <productivity-tools-reminder-list *ngIf="showRemindersList"
@@ -41,7 +49,29 @@
   </ng-template>
   
    
-    
+
+
+  <ng-template #newReminderTemplate>
+    <kendo-dialog-titlebar 
+    (close)="onNewReminderClosed()">{{ isEdit? 'Edit Reminder' : 'Add New Reminder'}}
+     </kendo-dialog-titlebar>
+    <productivity-tools-reminder-detail  
+     [isEdit]="isEdit" 
+     [isDelete]="isDelete"
+     [alertId] = "selectedAlertId"
+     (onGetTodoItem)="onGetTodoItem($event)"
+     [getTodo$]="getTodo$"
+     (isModalNewReminderCloseClicked)="onNewReminderClosed()">
+    </productivity-tools-reminder-detail>
+  </ng-template>
+  
+  
+  <ng-template #deleteToDOTemplate>   
+    <productivity-tools-delete-todo-confirmation
+      (isModalDeleteTodoCloseClicked)="onCloseDeleteToDoClicked($event)" (isModalDeleteTodoClicked)="onConfirmDeleteToDOClicked($event)"> </productivity-tools-delete-todo-confirmation> 
+  </ng-template>
+  
+  
     
     
   
