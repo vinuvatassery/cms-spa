@@ -1,8 +1,8 @@
 
       <div class="dash-header-with-filters">
-            <h5>PROGRAM EXPENSES</h5>
+            <h2 class="heading_card">PROGRAM EXPENSES</h2>
             <div *ngIf="!isEditDashboard">               
-                  <kendo-multiselect size="small" rounded="medium" class="mr-1"
+                  <kendo-multiselect size="small" rounded="medium" class="mr-1" aria-label="selectedType"
                        (valueChange)="onValueChange()"
                         [fillMode]="formUiStyle.inputFillMode"
                          [data]="dataExp" 
@@ -37,12 +37,12 @@
                               <span>{{ dataItem.Name }}</span>
                             </ng-template>
                   </kendo-multiselect>
-                  <kendo-dropdownlist size="small" value="M" rounded="medium" class="mr-1"
+                  <kendo-dropdownlist size="small" value="M" rounded="medium" class="mr-1" aria-label="Frequency"
                   [(ngModel)]="selectFrequency"
                         [fillMode]="formUiStyle.inputFillMode" [data]="dataMonth"  textField="Name" valueField="Value" [valuePrimitive]="true"
                         (valueChange)="frequecyValueChange($event)">
                   </kendo-dropdownlist>
-                  <kendo-dropdownlist size="small" [(ngModel)]="selectedTimeFrame" rounded="medium" class="mr-1"
+                  <kendo-dropdownlist size="small" [(ngModel)]="selectedTimeFrame" rounded="medium" class="mr-1" aria-label="Time Frame"
                         [fillMode]="formUiStyle.inputFillMode" [data]="dataYear"  (valueChange)="TimeFrameValueChange($event)">
                   </kendo-dropdownlist>
 

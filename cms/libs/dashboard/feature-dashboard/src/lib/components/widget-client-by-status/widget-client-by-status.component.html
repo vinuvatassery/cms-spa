@@ -1,8 +1,8 @@
 <div>
    
       <div class="dash-header-with-filters">
-            <h5>ACTIVE CLIENTS BY STATUS</h5>
-            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" textField="clientFullName" [valuePrimitive]="true" valueField="userId"  (valueChange)="clientsNavigate($event)" rounded="medium"
+            <h2 class="heading_card">ACTIVE CLIENTS BY STATUS</h2>
+            <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" textField="clientFullName" aria-label="clientFullName" [valuePrimitive]="true" valueField="userId"  (valueChange)="clientsNavigate($event)" rounded="medium"
                         [fillMode]="formUiStyle.inputFillMode" [data]="data"
                         [(ngModel)]="selectedActiveClientByStatus">
                   </kendo-dropdownlist></div>

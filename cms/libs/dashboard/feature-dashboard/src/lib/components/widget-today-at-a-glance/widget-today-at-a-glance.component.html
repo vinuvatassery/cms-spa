@@ -1,5 +1,5 @@
 
-<div class="flex-space-bw today_glanse_title">  <h5>TODAY AT A GLANCE</h5>  <h3 class="mr-1">You are assigned {{todayGlance ?? 0}} clients</h3></div>
+<div class="flex-space-bw today_glanse_title">  <h2 class="heading_card">TODAY AT A GLANCE</h2>  <h3 class="mr-1">You are assigned {{todayGlance ?? 0}} clients</h3></div>
   <div class="flex-row dashboard-page-wrapper">
     <section class="flex-col">
       <div class="dash-top-cards-wrapper">
@@ -7,7 +7,7 @@
           <p>TO DO ITEMS</p>
           <div class="justify-content-between">
             <span class="material-icons">playlist_add_check</span>
-            <h3>0</h3>
+            <p class="mat-h3">0</p>
           </div>
         </div>
         <div class="dash-info-card red_card" (click)="pendingApprovalsNavigate()">
@@ -16,7 +16,7 @@
             <span class="material-icons">
               assignment_turned_in
             </span>
-            <h3>0</h3>
+            <p class="mat-h3">0</p>
           </div>
         </div>
         <div class="dash-info-card green_card" (click)="directMessagesNavigate()">
@@ -25,7 +25,7 @@
             <span class="material-icons">
               send
             </span>
-            <h3>0</h3>
+            <p class="mat-h3">0</p>
           </div>
         </div>
         <div class="dash-info-card blue_card" (click)="remindersNavigate()">
@@ -35,7 +35,7 @@
               alarm
             </span>
 
-            <h3>0</h3>
+            <p class="mat-h3">0</p>
           </div>
         </div>
         <div class="dash-info-card purple_card" (click)="notificationsNavigate()">
@@ -44,7 +44,7 @@
             <span class="material-icons">
               notifications_active
             </span>
-            <h3>0</h3>
+            <p class="mat-h3">0</p>
           </div>
         </div>
 

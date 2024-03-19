@@ -1,7 +1,7 @@
 <div class="dash-header-with-filters">
-  <h5>ACTIVE CLIENTS BY GROUP </h5>
+  <h2 class="heading_card">ACTIVE CLIENTS BY GROUP </h2>
 
-  <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small" textField="clientFullName" [valuePrimitive]="true"
+  <div *ngIf="!isEditDashboard"><kendo-dropdownlist size="small"  aria-label="clientFullName" textField="clientFullName" [valuePrimitive]="true"
       valueField="userId" (valueChange)="clientsNavigate($event)" rounded="medium"
       [fillMode]="formUiStyle.inputFillMode" [data]="data" [(ngModel)]="selectedActiveClientByGroup">
     </kendo-dropdownlist></div>
