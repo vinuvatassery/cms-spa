@@ -12,7 +12,7 @@
   </div>
 </section>
 
-<section class="card-list-block">
+<section class="card-list-block" *ngFor="let message of alertsData?.items">
   <ul class="card-list pt-0" aria-label="notification menu">
     <li class="card-list_items unread-item" aria-label="notification menu item">
       <div class="card-type-icon">
@@ -24,12 +24,9 @@
         >
       </div>
       <div class="card-list_details">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing Lorem ipsum dolor
-          sit amet, consectetur adipiscing
-        </p>
+        <p> {{message.alertDesc}}</p>
         <a>Go to Payments</a>
-        <p class="text-muted">10-10-2021</p>
+        <p class="text-muted">{{message?.alertDueDate | date:'MM-dd-YYYY'}}</p>
       </div>
       <kendo-dropdownbutton
       [data]="data"
@@ -49,7 +46,7 @@
       </ng-template>
     </kendo-dropdownbutton>
     </li>
-    <li class="card-list_items unread-item" aria-label="notification menu item">
+    <!-- <li class="card-list_items unread-item" aria-label="notification menu item">
       <div class="card-type-icon">
         <span
           class="material-icons"
@@ -83,8 +80,8 @@
     </button>    
       </ng-template>
     </kendo-dropdownbutton>
-    </li>
-    <li class="card-list_items" aria-label="notification menu item">
+    </li> -->
+    <!-- <li class="card-list_items" aria-label="notification menu item">
       <div class="card-type-icon">
         <span
           class="material-icons"
@@ -223,6 +220,6 @@
     </button>    
       </ng-template>
     </kendo-dropdownbutton>
-    </li>
+    </li> -->
   </ul>
 </section>

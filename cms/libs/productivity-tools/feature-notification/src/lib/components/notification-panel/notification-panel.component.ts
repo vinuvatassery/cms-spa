@@ -7,6 +7,10 @@ import {
   ViewChild,
   ElementRef,
   TemplateRef,
+  Output,
+  EventEmitter,
+  Input,
+  ChangeDetectorRef,
 } from '@angular/core';
 /** Facades **/
 import {
@@ -22,6 +26,8 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-management/domain';
 import { LovFacade } from '@cms/system-config/domain';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { GridDataResult } from '@progress/kendo-angular-grid';
 @Component({
   selector: 'productivity-tools-notification-panel',
   templateUrl: './notification-panel.component.html',
@@ -42,15 +48,23 @@ export class NotificationPanelComponent implements OnInit {
   clientSearchResult$ = this.financialRefundFacade.clients$;
   clientSubject = this.financialRefundFacade.clientSubject;
   entityTypeCodeSubject$ = this.lovFacade.entityTypeCodeSubject$;
-  reminderFor =""
+  notificationaAndReminderDataSubject = new Subject<any>();
+  gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
+  @Output() isLoadReminderAndNotificationEvent = new EventEmitter<any>();
+  @Input() notificationList$: any;
+  reminderFor = '';
   notifications: any = [];
+  alertsData:any = {};
   popupClass1 = 'more-action-dropdown app-dropdown-action-list';
+  isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
   isNotificationPopupOpened = false;
+  unViewedCount : number = 0;
   isNewReminderOpened = false;
   isNotificationsAndRemindersOpened = false;
   private newReminderDetailsDialog: any;
   private notificationReminderDialog: any;
   private deleteReminderDialog: any;
+  gridDataResult!: GridDataResult;
   public data = [
     {
       buttonType: 'btn-h-primary',
@@ -91,15 +105,22 @@ export class NotificationPanelComponent implements OnInit {
     private dialogService: DialogService,
     private reminderFacade: ReminderFacade,
     private sanitizer: DomSanitizer,
-    private lovFacade : LovFacade,
-    private financialVendorFacade : FinancialVendorFacade,
-    private financialRefundFacade : FinancialVendorRefundFacade
+    private lovFacade: LovFacade,
+    private financialVendorFacade: FinancialVendorFacade,
+    private financialRefundFacade: FinancialVendorRefundFacade,
+    private cdr : ChangeDetectorRef
   ) {}
 
   /** Lifecycle hooks **/
   ngOnInit(): void {
+    this.loadNotificationsAndReminders();
     this.loadSignalrGeneralNotifications();
     this.loadSignalrReminders();
+    this.notificationList$.subscribe((data: any) => {
+      this.alertsData = data;
+      this.cdr.detectChanges();
+      this.loadNotificationsAndReminders;
+    });
   }
 
   /** Private methods */
@@ -175,11 +196,15 @@ export class NotificationPanelComponent implements OnInit {
         'app-c-modal app-c-modal-wid-md-full no_body_padding-modal reminder_modal',
     });
     this.isNotificationsAndRemindersOpened = true;
-  }
+  } 
 
   onNotificationButtonToggleClicked(show?: boolean): void {
     this.isNotificationPopupOpened =
       show !== undefined ? show : !this.isNotificationPopupOpened;
+       
+     if(this.isNotificationPopupOpened){
+        this.viewNotifications();
+      }
   }
 
   onDeleteReminderClosed(result: any) {
@@ -220,4 +245,29 @@ export class NotificationPanelComponent implements OnInit {
   getReminderDetailsLov(){
     this.lovFacade.getEntityTypeCodeLov()
     }
+
+  public loadNotificationsAndReminders() {
+    this.isToDoGridLoaderShow.next(true);
+    this.isLoadReminderAndNotificationEvent.emit({ });
+    this.notificationList$.subscribe((data: any) => {
+      this.gridDataResult = data?.items;
+      if (data?.totalCount >= 0 || data?.totalCount === -1) {
+      this.unViewedCount =  data.items.filter((item:any) => item.recentViewedFlag == 'N')?.length;
+        this.isToDoGridLoaderShow.next(false);
+      }
+      this.notificationaAndReminderDataSubject.next(this.gridDataResult);
+    });
+  }
+  viewNotifications ()
+  {
+    const viewedNotifications = this.alertsData.items?.slice(0,3);
+      this.notificationFacade.viewNotifications(viewedNotifications)
+      .subscribe({
+        next: (x:any) =>{
+          if(x){
+            this.unViewedCount = 0;
+          }
+        }
+      });
+  }
 }

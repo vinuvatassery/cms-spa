@@ -2,12 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ConfigurationProvider } from '@cms/shared/util-core';
 import { Observable, of } from 'rxjs';
+import { SystemInterfaceEventGroup } from '../enums/system-interface-event-group';
 @Injectable({
   providedIn: 'root',
 })
 export class SystemInterfaceSupportService {
   constructor(private readonly http: HttpClient,
     private configurationProvider: ConfigurationProvider) { }
+  private distributionBaseUrl = '/system-interface/interface-support/distribution';
 
   getSupportGroup(): Observable<any> {
     return of([
@@ -150,17 +152,15 @@ export class SystemInterfaceSupportService {
 
   // distribution ----------------------------------------
   getDistributionList(paginationParameters: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distributions`, paginationParameters);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/list`, paginationParameters);
   }
 
   addDistributionListUser(user: any) {
-    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution/user`, user);
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/distribution`, user);
   }
 
 
-
   // Notification Category Services 
-
 
   getNotificationCategoryList(paginationParameters: any) {
     return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/list`, paginationParameters);
@@ -198,8 +198,31 @@ export class SystemInterfaceSupportService {
     );
   }
 
-  getEventLovList(groupCode: string) {
-    return this.http.get<any[]>(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/events-list/${groupCode}`);
+  getEventLovList() {
+    const groupCodes: string[] = [
+      SystemInterfaceEventGroup.SYSTEM_INTERFACE_EXTERNAL,
+      SystemInterfaceEventGroup.SYSTEM_INTERFACE_INTERNAL
+    ];
+    return this.http.get<any[]>(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}` + `/system-interface/interface-support/notification-category/events-list/${groupCodes.join(',')}`);
   }
+  // ----------------------------------------
+
+  // distribution list ----------------------------------------
+  changeDistributionListUserStatus(memberId: string, status: boolean) {
+    const options = {
+      status: status,
+    }
+    return this.http.post(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${memberId}`, options);
+  }
+
+  deleteDistributionListUser(memberId: string) {
+    return this.http.delete(
+      `${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${memberId}`);
+  }
+
+  editDistributionListUser(body: any) {
+    return this.http.put(`${this.configurationProvider.appSettings.sysInterfaceApiUrl}${this.distributionBaseUrl}/${body.notificationUserId}`, body);
+  }
+  // ----------------------------------------
 
 }

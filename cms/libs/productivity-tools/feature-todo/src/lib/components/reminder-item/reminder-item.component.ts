@@ -7,10 +7,14 @@ import {
   Input,
   OnInit,
   ChangeDetectorRef,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
-import { ReminderFacade } from '@cms/productivity-tools/domain';
+import { ReminderFacade, TodoFacade } from '@cms/productivity-tools/domain';
 import { SnackBarNotificationType } from '@cms/shared/util-core';
-import { Observable } from 'rxjs';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { GridDataResult } from '@progress/kendo-angular-grid';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 @Component({
   selector: 'productivity-tools-reminder-item',
   templateUrl: './reminder-item.component.html',
@@ -22,18 +26,33 @@ export class ReminderItemComponent implements OnInit {
   public newReminderDetailsDialog: any;
   public deleteReminderDialog: any;
   @Input() nDays =""
+  @Output() isLoadReminderAndNotificationEvent = new EventEmitter<any>();
+  @Input() notificationList$: any;
+  alertsData:any = {};
+  isToDoGridLoaderShow = new BehaviorSubject<boolean>(true);
+  notificationaAndReminderDataSubject = new Subject<any>();
+  gridDataResult!: GridDataResult;
+  gridToDoItemData$ = this.notificationaAndReminderDataSubject.asObservable();
   items!:any[]
   isDueWithIn7Days = false;
   @Input() todoAndReminders$! : Observable<any>
-  @Output() reminderDetailsClickedEvent = new EventEmitter();
-  @Output() deleteReminderOpenClickedEvent = new EventEmitter();
+  @Output() onEditReminderClickedEvent = new EventEmitter();
+  @Output() onDeleteAlertGridClicked = new EventEmitter();
+  getTodo$ = this.todoFacade.getTodo$;
+
+  @ViewChild('newReminderTemplate', { read: TemplateRef })
+  newReminderTemplate!: TemplateRef<any>;
+  reminderDialog! :any
+  isEdit = false;
+  selectedAlertId!:any
+  isDelete = false
+  isReminderOpenClicked= false
   public data = [
     {
       buttonType: 'btn-h-primary',
-      text: 'Done',
+      text: 'Snooze',
       icon: 'check',
       click: (): void => {
-        this.onReminderDoneClicked();
       },
     },
 
@@ -42,7 +61,6 @@ export class ReminderItemComponent implements OnInit {
       text: 'Edit',
       icon: 'edit',
       click: (): void => {
-        this.onNewReminderOpenClicked();
       },
     },
     {
@@ -50,15 +68,22 @@ export class ReminderItemComponent implements OnInit {
       text: 'Delete',
       icon: 'delete',
       click: (): void => {
-        this.onDeleteReminderOpenClicked();
       },
     },
   ];
 
   constructor(private reminderFacade: ReminderFacade,
-    private cdr : ChangeDetectorRef) {}
+    private cdr : ChangeDetectorRef,
+    private dialogService: DialogService,
+    private todoFacade : TodoFacade) {}
   ngOnInit(): void {
-    this.todoAndReminders$.subscribe((clientsTodoReminders :any) =>{
+    this.loadNotificationsAndReminders();
+      this.notificationList$?.subscribe((data: any) => {
+        this.alertsData.items =  data.items.filter((item:any) => item.alertTypeCode == 'REMINDER');
+        this.cdr.detectChanges();
+        this.loadNotificationsAndReminders;
+      });
+    this.todoAndReminders$?.subscribe((clientsTodoReminders :any) =>{
       const clientsReminder  = 
       clientsTodoReminders.filter((x:any) => x.alertTypeCode =="REMINDER")
    
@@ -75,30 +100,50 @@ export class ReminderItemComponent implements OnInit {
         this.items = 
         clientsReminder.filter((x:any)=> new Date(x.alertDueDate) >= this.addDays(new Date(), 31) )
       }
+      if(!this.nDays){
+        this.items = clientsTodoReminders
+      }
        this.cdr.detectChanges()
     })
   }
 
+
   addDays(date: Date, days: any): Date {
-    console.log('adding ' + days + ' days');
-    console.log(date);
     date.setDate(date.getDate() + parseInt(days));
-    console.log(date);
     return date;
   }
 
-  onNewReminderOpenClicked() {
-    this.reminderDetailsClickedEvent.emit(true);
+
+  onGetTodoItem($event:any){
+    this.todoFacade.getTodoItem($event);
   }
 
-  onDeleteReminderOpenClicked() {
-    this.deleteReminderOpenClickedEvent.emit(true);
-  }
 
-  onReminderDoneClicked() {
-    this.reminderFacade.showHideSnackBar(
-      SnackBarNotificationType.SUCCESS,
-      'Item  updated to Done successfully'
-    );
+  onActionClicked(item: any,gridItem: any){ 
+   if(item.text == 'Edit'){ 
+      if (!this.isReminderOpenClicked) {
+          this.onEditReminderClickedEvent.emit(gridItem.alertId);
+          this.isReminderOpenClicked = false
+        }
+    }
+    if(item.text == 'Delete'){ 
+      if (!this.isReminderOpenClicked) {
+          this.onDeleteAlertGridClicked.emit(gridItem.alertId);
+          this.isReminderOpenClicked = false
+        }
+    }
+   
+  }
+  public loadNotificationsAndReminders() {
+    this.isToDoGridLoaderShow.next(true);
+    this.isLoadReminderAndNotificationEvent.emit();
+    this.notificationList$?.subscribe((data: any) => {
+      this.gridDataResult = data?.items;
+      if (data?.totalCount >= 0 || data?.totalCount === -1) {
+        this.alertsData.items =  data.items.filter((item:any) => item.alertTypeCode == 'REMINDER');
+        this.isToDoGridLoaderShow.next(false);
+      }
+      this.notificationaAndReminderDataSubject.next(this.gridDataResult);
+    });
   }
 }
