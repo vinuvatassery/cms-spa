@@ -64,8 +64,7 @@ export class FinancialVendorProfileComponent implements OnInit {
   updateProviderPanelSubject$ = this.financialVendorFacade.updateProviderPanelSubject$;
   hasDrugCreateUpdatePermission = false;
   vendorProfileId: any;
-  alertList$ = this.todoFacade.todoGrid$;
-
+  alertList$ = this.todoFacade.bannerAlertList$;
   constructor(
     private activeRoute: ActivatedRoute,
     private financialVendorFacade: FinancialVendorFacade,
@@ -235,8 +234,8 @@ export class FinancialVendorProfileComponent implements OnInit {
     this.financialVendorFacade.addVendorRecentlyViewed(vendorId);
   }
 
-  getVendorAlertList(event:any,alertType:any){
-    this.todoFacade.loadAlerts(event.gridDataRefinerValue,alertType.alertType);
+  getbannerAlertList(entityId:any){
+    this.todoFacade.loadAlertsBanner(entityId);
   }
   onMarkAlertAsDone(event:any){
     this.todoFacade.markAlertAsDone(event);
