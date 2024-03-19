@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 /** Data services **/
 import { EsignDataService } from '../infrastructure/esign-data.service';
 import { EsignStatusCode } from '../enums/esign-status-code.enum';
+import { ClientHivVerification } from '../entities/client-hiv-verification';
 
 @Injectable({ providedIn: 'root' })
 export class EsignFacade {
@@ -12,7 +13,7 @@ export class EsignFacade {
 
   /** Public methods **/
   initiateAdobeesignRequest(adobeEsignData: any, emailData: any) {
-    if(emailData.esignRequestId == undefined || emailData.esignRequestId === null){
+    if(emailData?.esignRequestId == undefined || emailData?.esignRequestId === null){
       return this.esignDataService.initiateAdobeEsignRequest(adobeEsignData);
     }else{
       return this.esignDataService.updateEsignRequestTemplate(adobeEsignData);
@@ -71,7 +72,7 @@ prepareDraftAdobeEsignRequest(formData:FormData, draftTemplate: any, cerEmailAtt
       formData.append('requestBody', draftTemplate?.templateContent ?? '');
       if(cerEmailAttachedFiles?.length > 0){
       let i = 0;
-      cerEmailAttachedFiles.forEach((file: any) => { 
+      cerEmailAttachedFiles[0].forEach((file: any) => { 
         if(file.rawFile == undefined || file.rawFile == null){
         formData.append('AttachmentDetails['+i+'][fileName]', file.document.description);
         formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath);
@@ -120,5 +121,24 @@ prepareEsignLetterDraftFormData(clientCaseEligibilityId: any, entityId: any, log
     return formData;
 }
 
-
+prepareHivVerificationdobeEsignFormData(clientHivVerification: ClientHivVerification, clientCaseEligibilityId: any, emailSubject: string, selectedAttachedFile: any[], notificationTemplateId: string) {
+    const formData = new FormData();
+    formData.append('to', clientHivVerification?.verificationToEmail ?? '');
+    formData.append('clientCaseEligibilityId', clientCaseEligibilityId ?? '');
+    formData.append('clientId', clientHivVerification?.clientId.toString() ?? '');
+    formData.append('notificationTemplateId', notificationTemplateId ?? '');
+    formData.append('requestSubject', emailSubject ?? '');
+    if(selectedAttachedFile?.length > 0){
+    let i = 0;
+    selectedAttachedFile[0].forEach((file: any) => { 
+      if(file.rawFile == undefined || file.rawFile == null){
+        formData.append('AttachmentDetails['+i+'][fileName]', file.document.description == undefined ? file.document.attachmentName : file.document.description);
+        formData.append('AttachmentDetails['+i+'][filePath]', file.document.templatePath == undefined ? file.document.path : file.document.templatePath);
+        formData.append('AttachmentDetails['+i+'][typeCode]', file.document.typeCode == undefined ? file.document.attachmentTypeCode : file.document.typeCode);
+      i++;
+      }
+    });
+  }
+    return formData;
+}
 }

@@ -299,7 +299,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     if (CommunicationEvents.Print === event) {
       this.selectedTemplate.templateContent = this.updatedTemplateContent;
       if (this.communicationEmailTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationEmail || this.communicationEmailTypeCode == CommunicationEventTypeCode.CerAuthorizationEmail) {
-        this.initiateAdobeEsignProcess(this.selectedTemplate, CommunicationEvents.SendEmail);
+        this.initiateAdobeEsignProcess(this.selectedTemplate);
       } else {
         this.initiateSendEmailProcess(this.selectedTemplate);
       }
@@ -480,7 +480,7 @@ export class SendEmailComponent implements OnInit, OnDestroy {
     this.selectedToEmail = event[0].email;
   }
 
-  private initiateAdobeEsignProcess(emailData: any, requestType: string) {
+  private initiateAdobeEsignProcess(emailData: any) {
     this.loaderService.show();
     let esignRequestFormdata = this.esignFacade.prepareDraftAdobeEsignFormData(this.selectedToEmail, this.clientCaseEligibilityId, this.entityId, this.emailSubject, this.loginUserId, this.ccEmail, this.selectedBccEmail, this.isSaveForLater);
     let formData = this.esignFacade.prepareAdobeEsingData(esignRequestFormdata, emailData, this.cerEmailAttachedFiles);

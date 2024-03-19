@@ -180,6 +180,17 @@ export class CommunicationFacade {
       }
     });
   }
+  if(clientAndVendorAttachedFiles?.length <= 0 && draftTemplate?.notificationRequestAttachments.length > 0){
+    let i = 0;
+    draftTemplate?.notificationRequestAttachments.forEach((file: any) => {
+      if (file.rawFile == undefined || file.rawFile == null) {
+        formData.append('systemAttachments[' + i + '][fileName]', file.fileName ?? '');
+        formData.append('systemAttachments[' + i + '][filePath]', file.filePath ?? '');
+        formData.append('systemAttachments[' + i + '][typeCode]', file.typeCode ?? file?.document?.documentTypeCode);
+        i++;
+      }
+  });
+}
     return formData;
   }
 
@@ -274,12 +285,12 @@ export class CommunicationFacade {
   }
 
   getDocumentFilePath(document: any){
-    if(document.templatePath){
+    if(document?.templatePath){
       return document.templatePath;
-    }else if(document.filePath){
+    }else if(document?.filePath){
       return document.filePath;
     }else{
-      return document.documentPath;
+      return document?.documentPath;
     }
   }
 

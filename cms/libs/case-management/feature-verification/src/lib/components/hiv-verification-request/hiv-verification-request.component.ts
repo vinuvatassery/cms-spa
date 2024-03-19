@@ -13,7 +13,11 @@ import { VerificationFacade,
   ClientDocumentFacade,
   HivVerificationDocument, 
   WorkflowFacade,
-  CompletionChecklist} from '@cms/case-management/domain';
+  CompletionChecklist,
+  ScreenType,
+  CommunicationEventTypeCode,
+  CommunicationFacade,
+  EsignFacade} from '@cms/case-management/domain';
 import { SnackBarNotificationType,ConfigurationProvider} from '@cms/shared/util-core';
 import { FileRestrictions, SelectEvent } from '@progress/kendo-angular-upload';
 import { StatusFlag } from '@cms/shared/ui-common';
@@ -98,14 +102,22 @@ export class HivVerificationRequestComponent implements OnInit{
        documentType:'Lorem ipsum Lorem ipsum'
       },
     ]
+  selectedAttachedFile: any[] = [];
+  emailSubject!: string;
+  notificationTemplateId: any;
 
   constructor( private verificationFacade: VerificationFacade,
     private readonly cdr: ChangeDetectorRef,
     private intl: IntlService, private readonly configurationProvider: ConfigurationProvider,
     public readonly clientDocumentFacade:ClientDocumentFacade,
-    private readonly workflowFacade: WorkflowFacade){}
+    private readonly workflowFacade: WorkflowFacade,
+    private readonly communicationFacade: CommunicationFacade,
+    private readonly esignFacade: EsignFacade,){}
   /** Internal event methods **/
   ngOnInit(): void {
+    if (this.providerOption ===ProviderOption.HealthCareProvider) {
+      this.loadHivVerificationEmail();
+    }
     this.providerValue$.subscribe(data=>{
       this.userId = this.hivVerificationForm.controls["userId"].value;
       this.providerOption = data;
@@ -230,30 +242,10 @@ export class HivVerificationRequestComponent implements OnInit{
 
   }
   private save(){
-    this.verificationFacade.showLoader();
-    this.verificationFacade.save( this.clientHivVerification).subscribe({
-      next:(data)=>{
-        this.isResendRequest = false;
-        this.verificationFacade.hivVerificationSaveSubject.next(true);
-        this.sentDate =  this.clientHivVerification.verificationStatusDate;
-        this.verificationFacade.showHideSnackBar(
-          SnackBarNotificationType.SUCCESS,
-          'Client hiv verification request sent successfully.'
-        );
-        this.verificationFacade.hideLoader();
-        this.cdr.detectChanges();
-      },
-      error:(error)=>{
-        if (error) {
-          this.verificationFacade.showHideSnackBar(
-            SnackBarNotificationType.ERROR,
-            error
-          );
-          this.verificationFacade.hideLoader();
-        }
-      }
-    });
+    //Initiate Adobe Esign request
+    this.initiateAdobeEsignProcess(this.clientHivVerification);
   }
+
   clientAttachmentChange(event:any)
   {
     this.verificationFacade.isSaveandContinueSubject.next(false);
@@ -283,4 +275,98 @@ export class HivVerificationRequestComponent implements OnInit{
 
     this.workflowFacade.updateChecklist(workFlowData);
   }
+
+  private initiateAdobeEsignProcess(clientHivVerification: ClientHivVerification) {
+    this.verificationFacade.showLoader();
+    let esignRequestFormdata = this.esignFacade.prepareHivVerificationdobeEsignFormData(clientHivVerification, this.clientCaseEligibilityId, this.emailSubject, this.selectedAttachedFile, this.notificationTemplateId);
+    const emailData = {};
+    this.esignFacade.initiateAdobeesignRequest(esignRequestFormdata, emailData)
+      .subscribe({
+        next: (data: any) => {
+          if (data) {
+            this.saveHivVerificationData();
+            this.verificationFacade.showHideSnackBar(SnackBarNotificationType.SUCCESS, 'HIV Verification sent successfully!');
+            this.cdr.detectChanges();
+          }
+          this.verificationFacade.hideLoader();
+        },
+        error: (err: any) => {
+          this.verificationFacade.hideLoader();
+          this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  loadHivVerificationEmail() {
+    this.communicationFacade.loadEmailTemplates(ScreenType.ClientProfile, CommunicationEventTypeCode.HIVVerificationEmail ?? '')
+      .subscribe({
+        next: (data: any) => {
+          if (data) {
+            if (data) {
+              for (let template of data) {
+                this.emailSubject = template.description;
+                this.notificationTemplateId = template.documentTemplateId;
+              }
+            }
+            this.emailSubject = data[0]?.templateName;
+            this.notificationTemplateId = data[0].notificationTemplateId;
+            this.loadEmailAttachment(data[0]?.notificationTemplateId, CommunicationEventTypeCode.HIVVerificationAttachmentTypeCode)
+            this.cdr.detectChanges();
+          }
+        },
+        error: (err: any) => {
+          this.verificationFacade.hideLoader();
+          this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  loadEmailAttachment(documentTemplateId: any, typeCode: any) {
+    this.communicationFacade.loadLetterAttachment(documentTemplateId, typeCode)
+      .subscribe({
+        next: (attachments: any) => {
+          if (attachments.length > 0) {
+            for (let file of attachments) {
+              this.selectedAttachedFile.push({
+                document: file,
+                size: file.templateSize,
+                name: file.description,
+                documentTemplateId: file.documentTemplateId,
+                typeCode: file.typeCode
+              })
+            }
+            this.cdr.detectChanges();
+          }
+        },
+        error: (err: any) => {
+          this.verificationFacade.hideLoader();
+          this.verificationFacade.showHideSnackBar(SnackBarNotificationType.ERROR, err);
+        },
+      });
+  }
+
+  saveHivVerificationData(){
+  this.verificationFacade.save( this.clientHivVerification).subscribe({
+    next:(data)=>{
+      this.isResendRequest = false;
+      this.verificationFacade.hivVerificationSaveSubject.next(true);
+      this.sentDate =  this.clientHivVerification.verificationStatusDate;
+      this.verificationFacade.showHideSnackBar(
+        SnackBarNotificationType.SUCCESS,
+        'Client hiv verification request sent successfully.'
+      );
+      this.verificationFacade.hideLoader();
+      this.cdr.detectChanges();
+    },
+    error:(error)=>{
+      if (error) {
+        this.verificationFacade.showHideSnackBar(
+          SnackBarNotificationType.ERROR,
+          error
+        );
+        this.verificationFacade.hideLoader();
+      }
+    }
+  });
+}
 }

@@ -117,8 +117,6 @@ export class AuthorizationComponent   implements OnInit, OnDestroy  {
   }
 
   getNotificationTypeCode() {
-    // this.communicationLetterTypeCode = CommunicationEventTypeCode.LETTER;
-    // this.communicationEmailTypeCode = CommunicationEventTypeCode.EMAIL;
     this.communicationLetterTypeCode = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationLetter :  CommunicationEventTypeCode.ApplicationAuthorizationLetter;
     this.communicationEmailTypeCode = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail :  CommunicationEventTypeCode.ApplicationAuthorizationEmail;
     this.emailSubject = this.isCerForm ? CommunicationEventTypeCode.CerAuthorizationEmail: CommunicationEventTypeCode.ApplicationAuthorizationEmail;

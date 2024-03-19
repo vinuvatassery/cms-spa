@@ -91,7 +91,11 @@ export class SendLetterComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getLoggedInUserProfile();
     this.getClientAddressSubscription();
-    if (this.communicationLetterTypeCode !== CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode !== CommunicationEventTypeCode.CerAuthorizationLetter) {
+    if (this.communicationLetterTypeCode === CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter) {
+      this.vendorContactFacade.loadMailCodes(this.entityId);
+      this.loadClientAndVendorDraftLetterTemplates();
+    }
+    else {
       this.loadMailCodes();
       if(this.isContinueDraftClicked){
       this.loadClientAndVendorDraftLetterTemplates();
@@ -100,9 +104,6 @@ export class SendLetterComponent implements OnInit, OnDestroy {
       }else{
         this.loadDropdownLetterTemplates();
       }
-    }
-    else {
-      this.vendorContactFacade.loadMailCodes(this.entityId);
     }
     this.isNewLetterClicked =  this.notificationGroup ? true : false;
   }
@@ -271,17 +272,18 @@ export class SendLetterComponent implements OnInit, OnDestroy {
 
   private sendLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
     this.loaderService.show();
-    if(this.communicationLetterTypeCode != CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode != CommunicationEventTypeCode.CerAuthorizationLetter){
-      this.sendClientAndVendorLetterToPrint(draftTemplate, requestType);
-    }else{
+    if(this.communicationLetterTypeCode == CommunicationEventTypeCode.ApplicationAuthorizationLetter || this.communicationLetterTypeCode === CommunicationEventTypeCode.CerAuthorizationLetter){
       this.entityId = this.workflowFacade.clientId ?? 0;
       this.clientCaseEligibilityId = this.workflowFacade.clientCaseEligibilityId ?? '';
+      this.sendClientAndVendorLetterToPrint(this.entityId, this.clientCaseEligibilityId, draftTemplate, requestType, this.cerEmailAttachedFiles);
+    }else{
+      this.sendClientAndVendorLetterToPrint(this.entityId, this.clientCaseEligibilityId, draftTemplate, requestType, this.clientAndVendorAttachedFiles);
     }
   }
 
-  private sendClientAndVendorLetterToPrint(draftTemplate: any, requestType: CommunicationEvents){
-    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, this.clientAndVendorAttachedFiles);
-    this.communicationFacade.sendLetterToPrint(this.entityId, this.clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
+  private sendClientAndVendorLetterToPrint(entityId: any, clientCaseEligibilityId: any, draftTemplate: any, requestType: CommunicationEvents, attachments: any[]){
+    let formData = this.communicationFacade.prepareSendLetterData(draftTemplate, attachments);
+    this.communicationFacade.sendLetterToPrint(entityId, clientCaseEligibilityId, formData ?? '', requestType.toString() ??'')
         .subscribe({
           next: (data: any) =>{
           if (data) {

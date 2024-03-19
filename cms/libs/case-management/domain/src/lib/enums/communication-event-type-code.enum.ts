@@ -32,5 +32,7 @@ export enum CommunicationEventTypeCode {
     EMAIL="EMAIL",
     LETTER="Letter",
     SMS="Sms",
-    PendingNoticeLetter = 'PENDING_NOTICE_LETTER'
+    PendingNoticeLetter = 'PENDING_NOTICE_LETTER',
+    HIVVerificationEmail="HIV_VERIFICATION_EMAIL",
+    HIVVerificationAttachmentTypeCode="HIV_VERIFICATION_FORM",
   }
