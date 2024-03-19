@@ -94,7 +94,6 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
       }
       
       onOpenTodoClicked(alertId:any ,template: TemplateRef<unknown>): void {
-        console.log('in parent')
         this.selectedAlertId = alertId;
          this.todoDetailsDialog = this.dialogService.open({
            content: template,
@@ -136,7 +135,6 @@ import { FinancialVendorFacade, FinancialVendorRefundFacade } from '@cms/case-ma
       }
 
       onReminderOpenClicked(event:any) {
-        console.log('in reminder open click')
         this.selectedAlertId = event.alertId;
         this.isEdit = event.type == 'edit'
         this.isDelete = event.type == 'delete'

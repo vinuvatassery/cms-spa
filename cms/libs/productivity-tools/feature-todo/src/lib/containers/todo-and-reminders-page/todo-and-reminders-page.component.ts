@@ -71,7 +71,6 @@ onMarkAlertDoneGrid(event:any){
 }
 
 onDeleteAlertGrid(event:any){
-  console.log('from delete alert ')
  this.onDeleteAlertGridClicked.emit(event)
 }
 
@@ -91,7 +90,6 @@ loadReminders(){
   }
 
   onDeleteReminderAlertGrid(event:any){
-    console.log(event)
     this.onDeleteReminderAlertGridClicked.emit({
       alertId:event,
       type:'delete'
