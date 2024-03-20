@@ -222,59 +222,72 @@ export class ReminderDetailComponent implements OnInit {
     }
   }
 
-  public save() {
-    this.isSubmitted = true;
+  afterCrudOperationAddSubscription(){
     this.todoFacade.curdAlert$.subscribe(res =>{
       if(res){    
       this.loadReminderItems.emit()
       this.isModalNewReminderCloseClicked.emit(true)
       }
     })
-    if(this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value =='CLIENT'){
+  }
+
+  setLinkToAndEntity(){
+    if(this.isShowEntityTypeCode && this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value =='CLIENT'){
       this.entityTypeCode = 'CLIENT'
       this.entityId =  this.clientReminderForm.controls['clientId'].value.clientId?.toString()
-    }else   if(this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value !=='VENDOR'){
+    }else   if( this.isShowEntityTypeCode && this.clientReminderForm.controls['linkTo'].value && this.clientReminderForm.controls['linkTo'].value !=='VENDOR'){
       this.entityTypeCode = 'VENDOR'
       this.entityId =  this.clientReminderForm.controls['vendorId'].value.providerId?.toString()
     }
+  }
+
+  prepareCommonPayload(){
    const dueDate = new Date(this.intl.formatDate(this.clientReminderForm.controls['dueDate'].value, this.dateFormat));
+    return {
+      alertDueDate :  dueDate,
+      alertDesc : this.clientReminderForm.controls['description'].value,
+      entityTypeCode : this.entityTypeCode,
+      entityId :this.entityId ,
+      customAlertFlag : 'Y',
+      type :'REMINDER',
+      alertFrequencyCode :'NEVER',
+      alertName :  'REMINDER',
+      AddToOutlookFlag :  this.clientReminderForm.controls['addToOutlookCalender'].value ? "Y" : "N"
+    }
+  }
+
+  prepareRepeatPayload(){
+    if(this.isEdit){
+    return {
+      ...this.prepareCommonPayload(),
+      repeatTime : new Date(this.clientReminderForm.controls['time'].value).getHours()+":"+new Date(this.clientReminderForm.controls['time'].value).getMinutes(),
+      alertId : this.alertId,
+    } 
+  }else{
+    return {
+      ...this.prepareCommonPayload(),
+      repeatTime : new Date(this.clientReminderForm.controls['time'].value).getHours()+":"+new Date(this.clientReminderForm.controls['time'].value).getMinutes(),
+    } 
+  }
+  }
+
+  public save() {
+    this.isSubmitted = true;
+    this.afterCrudOperationAddSubscription();
+    this.setLinkToAndEntity();
    this.clientReminderForm.markAllAsTouched();
    if (this.clientReminderForm.valid) {
-      const payload ={
-        alertDueDate :  dueDate,
-        alertDesc : this.clientReminderForm.controls['description'].value,
-        entityTypeCode : this.entityTypeCode,
-        entityId :this.entityId ,
-        customAlertFlag : 'Y',
-        type :'REMINDER',
-        alertFrequencyCode :'NEVER',
-        alertName :  'REMINDER',
-        AddToOutlookFlag :  this.clientReminderForm.controls['addToOutlookCalender'].value ? "Y" : "N"
-      }
-     if(this.clientReminderForm.controls['time'].value){
-     let payloadWithRepeat ={
-        ... payload,
-        repeatTime : new Date(this.clientReminderForm.controls['time'].value).getHours()+":"+new Date(this.clientReminderForm.controls['time'].value).getMinutes()
-      }
-      if(this.isEdit){
-        this.todoFacade.updateAlertItem(payloadWithRepeat)
-      }else{
-        this.todoFacade.createAlertItem(payloadWithRepeat)
-
-      }  
+    if(this.isEdit)
+    if(this.clientReminderForm.controls['time'].value){
+      this.todoFacade.updateAlertItem(this.prepareRepeatPayload()) 
      }else{
-      if(this.isEdit){      
-        const editPayload ={
-          ...payload,
-          alertId : this.alertId,
-        }
-        this.todoFacade.updateAlertItem(editPayload)
-      }else{
-        this.todoFacade.createAlertItem(payload)
-
-      } 
-     }
-    
+      this.todoFacade.updateAlertItem({
+        ...this.prepareCommonPayload(),
+        alertId : this.alertId,
+      }) 
+     }     
+    }else{
+      this.todoFacade.createAlertItem(this.prepareCommonPayload())
     }
   }
 
